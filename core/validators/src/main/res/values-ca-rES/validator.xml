@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_only_numeric_digits_allowed">Només es permeten dígits numèrics.</string>
+    <string name="error_only_numeric_digits_range_allowed">Només es permeten dígits numèrics dins del rang %1$s - %2$s.</string>
+    <string name="error_this_field_cannot_contain_special_character">Aquest camp no pot contenir cap caràcter especial</string>
+    <string name="error_only_standard_letters_are_allowed">Només es permeten lletres estàndard</string>
+    <string name="error_field_must_not_be_empty">Aquest camp no pot estar buit</string>
+    <string name="error_email_address_not_valid">Adreça de correu electrònic no vàlida</string>
+    <string name="error_creditcard_number_not_valid">Nr. de targeta de crèdit no vàlid</string>
+    <string name="error_phone_not_valid">Nr. de telèfon no vàlid</string>
+    <string name="error_domain_not_valid">Nom de domini no vàlid</string>
+    <string name="error_ip_not_valid">Adreça IP no vàlida</string>
+    <string name="error_url_not_valid">Adreça web (Url) no vàlida</string>
+    <string name="error_notvalid_personname">Nom o cognom no vàlid.</string>
+    <string name="error_notvalid_personfullname">Nom complet no vàlid.</string>
+    <string name="error_date_not_valid">Format no vàlid</string>
+    <string name="error_mustbe4digitnumber">El nr. ha de tenir 4 dígits</string>
+    <string name="error_mustbe6digitnumber">El nr. ha de tenir 6 dígits</string>
+    <string name="error_mustbe12hexadidits">Han de ser 12 caràcters d\'entre ABCDEF0123456789</string>
+    <string name="error_mustbe8hexadidits">Han de ser 8 caràcters d\'entre ABCDEF0123456789</string>
+    <string name="error_mustbe4hexadidits">Han de ser 4 caràcters d\'entre ABCDEF0123456789</string>
+    <string name="error_not_a_minimum_length">No compleix llargada mínima</string>
+    <string name="error_pin_not_valid">El PIN ha de tenir entre 3 i 6 dígits, no repetits ni seguits</string>
+</resources>

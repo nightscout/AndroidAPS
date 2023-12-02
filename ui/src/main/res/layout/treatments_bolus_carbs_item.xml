@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.MaterialComponents.CardView"
+    android:id="@+id/boluscarbs_card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="4dp"
+    android:layout_marginBottom="4dp"
+    app:cardCornerRadius="4dp"
+    app:contentPadding="2dp"
+    android:layout_gravity="center">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="?android:attr/dividerHorizontal"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            tools:text="1.1.2000" />
+
+        <LinearLayout
+            android:id="@+id/metadata_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:baselineAligned="true"
+            android:orientation="horizontal">
+
+            <com.joanzapata.iconify.widget.IconTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dp"
+                android:gravity="center"
+                tools:ignore="HardcodedText,RtlSymmetry"
+                android:text="{fa-clock-o}" />
+
+            <TextView
+                android:id="@+id/calc_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                tools:ignore="RtlSymmetry"
+                tools:text="11:45" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:text="" />
+
+            <TextView
+                android:id="@+id/calculation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/calculation_short"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/colorCalculatorButton"
+                tools:ignore="RtlSymmetry" />
+
+            <TextView
+                android:id="@+id/metadata_ns"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:textColor="?attr/setTempButton"
+                android:text="NS"
+                tools:ignore="HardcodedText" />
+
+            <CheckBox
+                android:id="@+id/cb_metadata_remove"
+                android:layout_width="wrap_content"
+                android:layout_height="19dp"
+                android:contentDescription="@string/select_for_removal"
+                android:minWidth="0dp"
+                android:visibility="gone" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/bolus_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <com.joanzapata.iconify.widget.IconTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dp"
+                android:gravity="center"
+                tools:ignore="HardcodedText,RtlSymmetry"
+                android:text="{fa-clock-o}" />
+
+            <TextView
+                android:id="@+id/bolus_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                tools:ignore="RtlSymmetry"
+                tools:text="11:45" />
+
+            <TextView
+                android:id="@+id/insulin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:textStyle="bold"
+                tools:text="1.00 U" />
+
+            <TextView
+                android:id="@+id/iob_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="5dp"
+                android:text="@string/treatments_iob_label_string" />
+
+            <TextView
+                android:id="@+id/iob"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textStyle="bold"
+                tools:text="0.45U" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:text="" />
+
+            <TextView
+                android:id="@+id/meal_or_correction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="textEnd"
+                tools:text="Meal" />
+
+            <TextView
+                android:id="@+id/bolus_ns"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:textColor="?attr/setTempButton"
+                android:text="NS"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/bolus_pump"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:textColor="?attr/setTempButton"
+                android:text="PH"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/bolus_invalid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="@string/invalid"
+                android:textColor="@android:color/holo_red_light" />
+
+            <CheckBox
+                android:id="@+id/cb_bolus_remove"
+                android:layout_width="wrap_content"
+                android:layout_height="19dp"
+                android:contentDescription="@string/select_for_removal"
+                android:minWidth="0dp"
+                android:visibility="gone" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/carbs_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <com.joanzapata.iconify.widget.IconTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dp"
+                android:gravity="center"
+                tools:ignore="HardcodedText,RtlSymmetry"
+                android:text="{fa-clock-o}" />
+
+            <TextView
+                android:id="@+id/carbs_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                tools:ignore="RtlSymmetry"
+                tools:text="11:45" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/treatments_carbs_label_string" />
+
+            <TextView
+                android:id="@+id/carbs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/carbs_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="" />
+
+            <TextView
+                android:id="@+id/carbs_ns"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:textColor="?attr/setTempButton"
+                android:text="NS"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/carbs_pump"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:textColor="?attr/setTempButton"
+                android:text="PH"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/carbs_invalid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="@string/invalid"
+                android:textColor="@android:color/holo_red_light" />
+
+            <CheckBox
+                android:id="@+id/cb_carbs_remove"
+                android:layout_width="wrap_content"
+                android:layout_height="19dp"
+                android:contentDescription="@string/select_for_removal"
+                android:minWidth="0dp"
+                android:visibility="gone" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/notes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:paddingEnd="10dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            tools:ignore="RtlSymmetry"
+            tools:text="Notes" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

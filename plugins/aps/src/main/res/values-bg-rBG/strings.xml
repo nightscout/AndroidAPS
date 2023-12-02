@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="DynISFAdjust_title" formatted="false">Настройка на динамична инсулинова чувствителност %</string>
+    <string name="DynISFAdjust_summary" formatted="false">Настройка на динамична инсулинова чувствителност. Настройте над 100% за по-агресивни корекционни дози и под 100% за по-не агресивни корекции.</string>
+    <string name="high_temptarget_raises_sensitivity_title">Високите временни цели да вдигат ли чувствителността?</string>
+    <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Да вдигам ли чувствителността при цели над 5.6]]></string>
+    <string name="low_temptarget_lowers_sensitivity_title">Ниските цели да свалят ли чувствителността ?</string>
+    <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Да се понижава ли чувствителността при цели < 5.6 ммол/л?]]></string>
+    <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">Динамично ISF</string>
+    <string name="smb_interval_summary">Интервал между SMB в минути</string>
+    <string name="resistance_lowers_target_title">Съпротивление намалява целта</string>
+    <string name="resistance_lowers_target_summary">Когато се установи резистентност, намалява целевата глюкоза.</string>
+    <string name="sensitivity_raises_target_title">Чувствителността увеличава целта</string>
+    <string name="sensitivity_raises_target_summary">Когато се установи чувствителност, повишаване на целевата глюкоза</string>
+    <string name="openapsma_disabled">Модулът е изключен</string>
+    <string name="openapsma_no_glucose_data">Няма данни за КЗ</string>
+    <string name="openaps_no_as_data">Няма налични данни за авточувствителност</string>
+    <string name="dynisf_shortname">Динамичен ISF</string>
+    <string name="executing">Изпълнява</string>
+    <string name="openapsama">OpenAPS AMA</string>
+    <string name="array_of_elements">Общо %1$d елемента.\nАктуална стойност:</string>
+    <string name="oaps_shortname">OAPS</string>
+    <string name="description_ama">Алгоритъмът, какъвто е бил през 2017</string>
+    <string name="description_smb">Най-новият алгоритъм (само за напреднали потребители)</string>
+    <string name="description_smb_dynamic_isf">Най-новия алгоритъм, за напреднали потребители с динамичен/автоматичен ISF</string>
+    <string name="openapsama_bolus_snooze_dia_divisor">Каква част от DIA след болус да изчаква AAPS, преди да направи нещо</string>
+    <string name="openapsma_run">Старт сега</string>
+    <string name="openapsma_last_run_label">Последно изпълнение</string>
+    <string name="openapsma_input_parameters_label">Параметри на входа</string>
+    <string name="openapsma_glucose_status_label">КЗ стастус</string>
+    <string name="openapsma_current_temp_label">Настоящ базал</string>
+    <string name="openapsma_iob_data_label">IOB данни</string>
+    <string name="openapsma_profile_label">Профил</string>
+    <string name="openapsma_meal_data_label">Данни за хранене</string>
+    <string name="openapsma_request_label">Искане</string>
+    <string name="constraints">Ограничения</string>
+    <string name="openapsma_autosensdata_label">Autosens данни</string>
+    <string name="openapsma_script_debug_data_label">От скрипта</string>
+    <string name="openapsama_use_autosens">Използвайте функцията за Autosens</string>
+    <string name="openapsma_max_basal_title">Максимален временен базал Е/ч</string>
+    <string name="openapsma_max_basal_summary">Макс. лимит на временен базал [Е/ч] </string>
+    <string name="openapsma_max_iob_title">Максимален IOB</string>
+    <string name="openapsma_max_iob_summary">Този параметър се нарича максимален IOB в OpenAPS и подразбиране е 0. След няколко дни или седмици можете да го увеличите.</string>
+    <string name="openapsama_autosens_adjust_targets_summary">По подразбиране: разрешено\nТова позволява на autosens да променя и целевите КЗ(освен чувствителност и базал).</string>
+    <string name="openapsama_autosens_adjust_targets">Да променя ли autosens и целевата КЗ</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Стойност по подразбиране: 3.0 (АМА) или 8.0 (SMB). Това е настройка на количеството на покачване на КЗ при усвояване на въглехидратите за всеки 5 минути. По подразбиране 3мг/дл за 5мин. Това се отразява на това колко бързо се усвояват COB според алгоритъма, и как това се отразява в предвиждането на КЗ, когато тя не се покачва или пада с различен темп от очакваното.</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">По подразбиране: 3 Това е основен параметър в сигурността на OpenAPS. Той ограничава максималният базал да бъде 3 пъти най-голямата стойност от дневните базали. Не би трябвало да има нужа от промяна, защото от опит сме проверили, че максимумите са “3x от най-високия дневен; 4x от текущия”.</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">По подразбиране: 4\nТова е другият основен параметър в сигурността на OpenAPS, и другата половина от \"3x от най-високия дневен; 4x от текущия\". Това означава, че независимо от макс базал настроен в помпата, стойността на базала не може да е по-висока от тази стойност умножена по стойността на базала за текущият час от денонощието. Това е с цел да предпази от прекалено високи стойности на максималния базал преди да разбират как работи алгоритъма. Повечето от Вас няма да имат нужда от смяна на тази стойност и могат да се справят с настойки на другите параметри.</string>
+    <string name="openapsama_bolus_snooze_dia_divisor_summary">По подразбиране: 2\nBolus snooze се активира след като поставите болус за основно хранене, така Loop няма да пуснка/намаля базалите веднага след като сте се хранили. Примерът тук е с 2; така при 3 часа DIA това ще означава че bolus snooze ще бъде внимателно изместен 1.5 часа (3DIA/2).</string>
+    <string name="openapsama_link_to_preference_json_doc_txt">Внимание! Обикновено Вие не трябва да променяте тези стойности. Моля НАТИСНЕТЕ ТУК, прочетете текста и бъдете сигурни, че го РАЗБИРАТЕ преди да направите каквито и да е промени!</string>
+    <string name="always_use_short_avg">Използвай краткоср. Δ вместо разлика от последната КЗ</string>
+    <string name="always_use_short_avg_summary">Полезно при данни за КЗ с много шум.</string>
+    <string name="openapsama_max_daily_safety_multiplier">Макс. множител за най-големия базал за денонощието</string>
+    <string name="openapsama_current_basal_safety_multiplier">Макс. множител за настоящ базал</string>
+    <string name="openapssmb_max_iob_title">Максималният общ IOB OpenAPS не може да бъде повече от [U]</string>
+    <string name="openapssmb_max_iob_summary">Тази стойност се нарича Max IOB в контекста на OpenAPS. OpenAPS няма да добавя инсулин, ако текущата IOB е по-голяма от тази стойност</string>
+    <string name="enable_uam">Разреши UAM</string>
+    <string name="enable_smb">Разреши SMB</string>
+    <string name="enable_smb_summary">Използвай супер микро болуси вместо временен базал за по бързо действие</string>
+    <string name="enable_uam_summary">Детекция на необявено хранене (UAM)</string>
+    <string name="enable_smb_always">Разреши SMB постоянно</string>
+    <string name="enable_smb_always_summary">Разрешава SMB постоянно и независимо от болусите. Възможно само с източник на КЗ с добра филтрация като G5  </string>
+    <string name="enable_smb_after_carbs">Разреши SMB след въглехидрати</string>
+    <string name="enable_smb_after_carbs_summary">Разрешава SMB 6 часа след въглехидрати, дори при COB=0. Възможно само с източник на КЗ с добра филтрация като G5 приложение </string>
+    <string name="enable_smb_with_cob">Разреши SMB с COB (въглехидрати)</string>
+    <string name="enable_smb_with_cob_summary">Разрешава SMB, когато има активни COB</string>
+    <string name="enable_smb_with_temp_target">Разреши SMB с временни цели</string>
+    <string name="enable_smb_with_temp_target_summary">Разрешава SMB, когато има активна временна цел на КЗ</string>
+    <string name="enable_smb_with_high_temp_target">Разреши SMB с по-високи временни цели на КЗ</string>
+    <string name="enable_smb_with_high_temp_target_summary">Активирайте SMB, когато има висока временна цел (опитайте с над 100 мг/дл или 5,5 ммол/л)</string>
+    <string name="smb_max_minutes_summary">Максимални минути за ограничаване на базала от SMB</string>
+    <string name="uam_smb_max_minutes">Максимум минути за отчитане на необявени хранения UAM</string>
+    <string name="uam_smb_max_minutes_summary">Максимални минути за ограничаване на базала при SMB за UAM</string>
+    <string name="carbs_req_threshold">Минимум въглехидрати, необходими за аларма</string>
+    <string name="carbs_req_threshold_summary">Грама въглехидрати минимум, за да се покаже аларма. Нужни въглехидрати под това число няма да доведат до уведомяване.</string>
+    <string name="lgs_threshold_summary">Кръвна захар, под която инсулинът ще бъде спрян. Стойността по подразбиране използва стандартен целеви модел. Потребителят може да използва стойности между 60mg/dl (3.3 ммол/л) и 100mg/dl (5.5 ммол/л). Стойности под 65/3.6 водят до използване на модел по подразбиране</string>
+    <string name="lgs_threshold_title">Ниво на кръвна захар, под което се активира прекъсване заради ниска захар</string>
+    <string name="increasing_max_basal">Повишавам максималната стойност на базал, защото тя е по-ниска от най-високата в базалния профил</string>
+    <string name="max_basal_multiplier">множител на макс. базал</string>
+    <string name="max_daily_basal_multiplier">множител на макс. дневен базал</string>
+    <string name="smb_disabled_in_preferences">SMB е забранен в настройките</string>
+    <string name="uam_disabled_in_preferences">UAM е забранен в настройките</string>
+    <string name="autosens_disabled_in_preferences">Аутосенс е забранен в настройките</string>
+    <!--    Verify if needed in safety-->
+    <string name="limiting_iob">Ограничаване на IOB до %1$.1f Е поради %2$s</string>
+    <string name="maxvalueinpreferences">макс. стойност в настройките</string>
+    <string name="hardlimit">твърд лимит</string>
+    <!--    Autotune   -->
+    <string name="insulin_peak">Връх</string>
+    <!--    Loop -->
+    <string name="run_now">Стартиране сега</string>
+    <string name="smb_frequency_exceeded">Има болус през последните 3 мин, пропускам SMB</string>
+    <string name="pump_not_initialized">Помпата не е инициализирана!</string>
+    <string name="loop_shortname">ЦИК</string>
+    <string name="description_loop">Включва или изключва затворения кръг (loop).</string>
+    <string name="no_aps_selected">НЕ Е ИЗБРАН APS ИЛИ НАМА РЕЗУЛТАТ ОТ НЕГО</string>
+    <string name="ignore5m">Игнориране за 5 мин</string>
+    <string name="ignore15m">Игнориране за 15 мин</string>
+    <string name="ignore30m">Игнориране за 30 мин</string>
+    <string name="carbs_suggestion">Предложение за въглехидрати</string>
+    <string name="open_loop_new_suggestion">Има ново предложение</string>
+    <string name="basal_set_correctly">Базалът е зададен коректно</string>
+    <string name="last_run_label">Последно стартиран</string>
+    <string name="loop_aps_label">Алгоритъм за APS</string>
+    <string name="request_label">Искане</string>
+    <string name="loop_constraints_processed_label">След обработените ограничения</string>
+    <string name="loop_tbr_request_time_label">Диапазон между временни базали</string>
+    <string name="loop_tbr_execution_time_label">Продължителност на временен базал</string>
+    <string name="loop_tbr_set_by_pump_label">Временен базал зададен от помпата</string>
+    <string name="loop_smb_request_time_label">Време за заявка на SMB</string>
+    <string name="loop_smb_execution_time_label">Време за изпълнение на SMB</string>
+    <string name="loop_smb_set_by_pump_label">SMB в помпата</string>
+    <string name="loop_open_mode_min_change">Минимална стойност за промяна [%]</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">Отворен цикъл ще покаже запитването за промяна на базала, само ако е по-голяма от тази стойност в %. Стойността по подразбиране е 20%</string>
+</resources>

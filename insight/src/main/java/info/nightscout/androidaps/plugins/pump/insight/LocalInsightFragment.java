@@ -19,10 +19,16 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import app.aaps.core.interfaces.queue.Callback;
+import app.aaps.core.interfaces.queue.CommandQueue;
+import app.aaps.core.interfaces.resources.ResourceHelper;
+import app.aaps.core.interfaces.rx.AapsSchedulers;
+import app.aaps.core.interfaces.rx.bus.RxBus;
+import app.aaps.core.interfaces.utils.DateUtil;
+import app.aaps.core.interfaces.utils.DecimalFormatter;
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy;
 import dagger.android.support.DaggerFragment;
 import info.nightscout.androidaps.insight.R;
-import info.nightscout.androidaps.interfaces.CommandQueue;
-import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.TBROverNotificationBlock;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.ActiveBasalRate;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.ActiveBolus;
@@ -31,12 +37,6 @@ import info.nightscout.androidaps.plugins.pump.insight.descriptors.CartridgeStat
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.InsightState;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.TotalDailyDose;
 import info.nightscout.androidaps.plugins.pump.insight.events.EventLocalInsightUpdateGUI;
-import info.nightscout.androidaps.queue.Callback;
-import info.nightscout.androidaps.utils.DateUtil;
-import info.nightscout.androidaps.utils.DecimalFormatter;
-import info.nightscout.androidaps.utils.FabricPrivacy;
-import info.nightscout.androidaps.interfaces.ResourceHelper;
-import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 public class LocalInsightFragment extends DaggerFragment implements View.OnClickListener {
@@ -47,6 +47,7 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
     @Inject FabricPrivacy fabricPrivacy;
     @Inject DateUtil dateUtil;
     @Inject AapsSchedulers aapsSchedulers;
+    @Inject DecimalFormatter decimalFormatter;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
@@ -202,7 +203,7 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
                 string = R.string.not_paired;
                 break;
             case DISCONNECTED:
-                string = R.string.disconnected;
+                string = app.aaps.core.ui.R.string.disconnected;
                 break;
             case CONNECTING:
             case SATL_CONNECTION_REQUEST:
@@ -217,10 +218,10 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
             case APP_FIRMWARE_VERSIONS:
             case APP_SYSTEM_IDENTIFICATION:
             case AWAITING_CODE_CONFIRMATION:
-                string = R.string.connecting;
+                string = app.aaps.core.ui.R.string.connecting;
                 break;
             case CONNECTED:
-                string = R.string.connected;
+                string = app.aaps.core.interfaces.R.string.connected;
                 break;
             case RECOVERING:
                 string = R.string.recovering;
@@ -272,7 +273,7 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
                 break;
             case PAUSED:
                 operatingMode.setText(R.string.start_pump);
-                string = R.string.paused;
+                string = app.aaps.core.ui.R.string.paused;
                 break;
         }
         statusItems.add(getStatusItem(rh.gs(R.string.operating_mode), rh.gs(string)));
@@ -280,7 +281,7 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
 
     private void getBatteryStatusItem(List<View> statusItems) {
         if (localInsightPlugin.getBatteryStatus() == null) return;
-        statusItems.add(getStatusItem(rh.gs(R.string.battery_label),
+        statusItems.add(getStatusItem(rh.gs(app.aaps.core.ui.R.string.battery_label),
                 localInsightPlugin.getBatteryStatus().getBatteryAmount() + "%"));
     }
 
@@ -289,30 +290,30 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
         if (cartridgeStatus == null) return;
         String status;
         if (cartridgeStatus.isInserted())
-            status = DecimalFormatter.INSTANCE.to2Decimal(cartridgeStatus.getRemainingAmount()) + "U";
+            status = decimalFormatter.to2Decimal(cartridgeStatus.getRemainingAmount()) + "U";
         else status = rh.gs(R.string.not_inserted);
-        statusItems.add(getStatusItem(rh.gs(R.string.reservoir_label), status));
+        statusItems.add(getStatusItem(rh.gs(app.aaps.core.ui.R.string.reservoir_label), status));
     }
 
     private void getTDDItems(List<View> statusItems) {
         if (localInsightPlugin.getTotalDailyDose() == null) return;
         TotalDailyDose tdd = localInsightPlugin.getTotalDailyDose();
-        statusItems.add(getStatusItem(rh.gs(R.string.tdd_bolus), DecimalFormatter.INSTANCE.to2Decimal(tdd.getBolus())));
-        statusItems.add(getStatusItem(rh.gs(R.string.tdd_basal), DecimalFormatter.INSTANCE.to2Decimal(tdd.getBasal())));
-        statusItems.add(getStatusItem(rh.gs(R.string.tdd_total), DecimalFormatter.INSTANCE.to2Decimal(tdd.getBolusAndBasal())));
+        statusItems.add(getStatusItem(rh.gs(R.string.tdd_bolus), decimalFormatter.to2Decimal(tdd.getBolus())));
+        statusItems.add(getStatusItem(rh.gs(R.string.tdd_basal), decimalFormatter.to2Decimal(tdd.getBasal())));
+        statusItems.add(getStatusItem(rh.gs(app.aaps.core.ui.R.string.tdd_total), decimalFormatter.to2Decimal(tdd.getBolusAndBasal())));
     }
 
     private void getBaseBasalRateItem(List<View> statusItems) {
         if (localInsightPlugin.getActiveBasalRate() == null) return;
         ActiveBasalRate activeBasalRate = localInsightPlugin.getActiveBasalRate();
-        statusItems.add(getStatusItem(rh.gs(R.string.basebasalrate_label),
-                DecimalFormatter.INSTANCE.to2Decimal(activeBasalRate.getActiveBasalRate()) + " U/h (" + activeBasalRate.getActiveBasalProfileName() + ")"));
+        statusItems.add(getStatusItem(rh.gs(app.aaps.core.ui.R.string.base_basal_rate_label),
+                decimalFormatter.to2Decimal(activeBasalRate.getActiveBasalRate()) + " U/h (" + activeBasalRate.getActiveBasalProfileName() + ")"));
     }
 
     private void getTBRItem(List<View> statusItems) {
         if (localInsightPlugin.getActiveTBR() == null) return;
         ActiveTBR activeTBR = localInsightPlugin.getActiveTBR();
-        statusItems.add(getStatusItem(rh.gs(R.string.tempbasal_label),
+        statusItems.add(getStatusItem(rh.gs(app.aaps.core.ui.R.string.tempbasal_label),
                 rh.gs(R.string.tbr_formatter, activeTBR.getPercentage(), activeTBR.getInitialDuration() - activeTBR.getRemainingDuration(), activeTBR.getInitialDuration())));
     }
 
@@ -320,7 +321,7 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
         if (localInsightPlugin.lastBolusAmount == 0 || localInsightPlugin.lastBolusTimestamp == 0) return;
         long agoMsc = System.currentTimeMillis() - localInsightPlugin.lastBolusTimestamp;
         double bolusMinAgo = agoMsc / 60d / 1000d;
-        String unit = rh.gs(R.string.insulin_unit_shortname);
+        String unit = rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname);
         String ago;
         if (bolusMinAgo < 60) {
             ago = dateUtil.minAgo(rh, localInsightPlugin.lastBolusTimestamp);
@@ -340,7 +341,7 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
                     label = rh.gs(R.string.multiwave_bolus);
                     break;
                 case EXTENDED:
-                    label = rh.gs(R.string.extended_bolus);
+                    label = rh.gs(app.aaps.core.ui.R.string.extended_bolus);
                     break;
                 default:
                     continue;

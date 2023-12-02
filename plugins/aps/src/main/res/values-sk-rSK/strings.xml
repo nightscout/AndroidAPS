@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="DynISFAdjust_title" formatted="false">Korekčný faktor pre Dynamickú ISF v %</string>
+    <string name="DynISFAdjust_summary" formatted="false">Korekčný faktor pre dynamickú ISF. Pre agresivnejšie korekčné dávky nastavte hodnoty väčšie ako 100%, pre menej agresívne korekcie, menšie než 100%.</string>
+    <string name="high_temptarget_raises_sensitivity_title">Vysoký dočasný cieľ zvýši citlivosť</string>
+    <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Zvýšenie citlivosti pre dočasné ciele >= 5.5]]></string>
+    <string name="low_temptarget_lowers_sensitivity_title">Nízky dočasný cieľ zníži citlivosť</string>
+    <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Nižšia citlivosť pre dočasné ciele < 5.5]]></string>
+    <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">Dynamická ISF</string>
+    <string name="smb_interval_summary">Ako často budú SMB podávané (v minutách)</string>
+    <string name="resistance_lowers_target_title">Rezistancia znižuje cieľ</string>
+    <string name="resistance_lowers_target_summary">Ak je zistená rezistancia, znížiť cieľovú hladinu glykémie</string>
+    <string name="sensitivity_raises_target_title">Citlivosť zvyšuje cieľ</string>
+    <string name="sensitivity_raises_target_summary">Ak je zistená vyššia citlivosť, zvýši cieľovú hladinu glykémie</string>
+    <string name="openapsma_disabled">Modul je deaktivovaný</string>
+    <string name="openapsma_no_glucose_data">Nedostupné dáta o glykémiách</string>
+    <string name="openaps_no_as_data">Nedostupná dáta o citlivosti</string>
+    <string name="dynisf_shortname">DYNISF</string>
+    <string name="executing">Vykonávam</string>
+    <string name="openapsama">OpenAPS AMA</string>
+    <string name="array_of_elements">Pole %1$d prvkov.\nAktuálna hodnota:</string>
+    <string name="oaps_shortname">OAPS</string>
+    <string name="description_ama">Stav algoritmu v roku 2017</string>
+    <string name="description_smb">Najnovší algoritmus pre pokročilých užívateľov</string>
+    <string name="description_smb_dynamic_isf">Najnovší algoritmus pre pokročilých užívateľov s dynamickým/automatickým ISF</string>
+    <string name="openapsama_bolus_snooze_dia_divisor">Deliteľ \"bolus snooze\"</string>
+    <string name="openapsma_run">Spustiť teraz</string>
+    <string name="openapsma_last_run_label">Posledné spustenie</string>
+    <string name="openapsma_input_parameters_label">Vstupné parametre</string>
+    <string name="openapsma_glucose_status_label">Stav glykémie</string>
+    <string name="openapsma_current_temp_label">Aktuálny bazál</string>
+    <string name="openapsma_iob_data_label">IOB dáta</string>
+    <string name="openapsma_profile_label">Profil</string>
+    <string name="openapsma_meal_data_label">Dáta o jedle</string>
+    <string name="openapsma_request_label">Požiadavka</string>
+    <string name="constraints">Obmedzenia</string>
+    <string name="openapsma_autosensdata_label">Dáta detekcie citlivosti</string>
+    <string name="openapsma_script_debug_data_label">Ladenie skriptu</string>
+    <string name="openapsama_use_autosens">Použi automatickú detekciu citlivosti</string>
+    <string name="openapsma_max_basal_title">Max. JI/h, ktoré je možné nastaviť pre dočas. bazál</string>
+    <string name="openapsma_max_basal_summary">Táto hodnota je nazývaná v kontexte OpenAPS ako \"max basal\"</string>
+    <string name="openapsma_max_iob_title">Maximálny bazálny IOB, ktorý OpenAPS môže podať [JI]</string>
+    <string name="openapsma_max_iob_summary">Táto hodnota je nazývaná v kontexte OpenAPS ako max IOB, je to maximálne množstvo inzulínu v [JI], ktoré APS môže naraz podať.</string>
+    <string name="openapsama_autosens_adjust_targets_summary">Štandardná hodnota: zapnuté\nToto je používané, aby automatická detekcia citlivosti mohla okrem cieľovej hodnoty glykémie, upravovať aj citlivosť, prevody a bazály.</string>
+    <string name="openapsama_autosens_adjust_targets">Autosense takisto upravuje cieľovú glykémiu</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Štandardná hodnota: 3.0 (AMA), alebo 8.0 (SMB) mg/dl/5min. Táto hodnota definuje minimálnu časť vstrebaných sacharidov za každých 5min. Táto hodnota ovplyvňuje výpočet COB.</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Štandardná hodnota: 3 Toto je kľúčová hodnota zabezpečenia. Hovorí, že maximálny nastaviteľný bazál je trojnásobkom maximálneho denného bazálu. Spravidla to zrejme nebudete musieť meniť, prípadne si prečítate o téme \"3x max denný; 4x aktuálny\".</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">Štandardná hodnota: 4 Toto je druhá kľúčová hodnota. Hovorí, že maximálna hodnota dočasného bazálu nikdy nebude väčšia, ako štvornásobok aktuálneho bazálu. Je to preto, aby se ľudia nedostali do nebezpečných hodnôt skôr, ako pochopia ako OpenAPS pracuje. Znovu, štandardná hodnota je 4 a väčšina ľudí ju nikdy nebude musieť meniť. Pokiaľ nestačí, obvykle je problém niekde inde.</string>
+    <string name="openapsama_bolus_snooze_dia_divisor_summary">Štandardná hodnota: 2\nToto nastavenie hovorí, po akú časť z hodnoty DIA uzavretý okruh po boluse čaká a nereaguje na zmeny glykémií (tu 3DIA/2 = 1,5h).</string>
+    <string name="openapsama_link_to_preference_json_doc_txt">Pozor!\nZa normálnych okolností tieto hodnoty nemusíte meniť. Kliknete TU, PREČÍTAJTE si informácie a UISTITE sa, že im rozumiete skôr, ako ich začnete meniť.</string>
+    <string name="always_use_short_avg">Vždy používať krátkodobý priemerný rozdiel glykémií, namiesto rozdielu posledných dvoch hodnôt</string>
+    <string name="always_use_short_avg_summary">Zmysluplné, pokiaľ dáta z xDrip+ obsahujú veľký šum.</string>
+    <string name="openapsama_max_daily_safety_multiplier">Max násobiteľ denného najvyššieho bazálu</string>
+    <string name="openapsama_current_basal_safety_multiplier">Max násobiteľ súčasného bazálu</string>
+    <string name="openapssmb_max_iob_title">Maximálne celkové IOB, ktoré OpenAPS nemôže prekročiť [JI]</string>
+    <string name="openapssmb_max_iob_summary">Táto hodnota je v kontexte OpenAPS nazývaná Max IOB.\nOpenAPS nikdy nepridá inzulín, pokiaľ je súčasné IOB väčšie, ako táto hodnota</string>
+    <string name="enable_uam">Povoliť UAM</string>
+    <string name="enable_smb">Povoliť SMB</string>
+    <string name="enable_smb_summary">Použiť Super Mikro Bolusy namiesto dočasných bazálov, pre zrýchleniu účinku</string>
+    <string name="enable_uam_summary">Detekcia neoznámených jedál</string>
+    <string name="enable_smb_always">Vždy povoliť SMB</string>
+    <string name="enable_smb_always_summary">Povoliť SMB nezávisle na bolusoch. Možno iba zo zdrojom glykémií s dobrým filtrovaním dát, ako napr. G5</string>
+    <string name="enable_smb_after_carbs">Povoliť SMB po jedle</string>
+    <string name="enable_smb_after_carbs_summary">Povoliť SMB 6 hodín po boluse aj pri nulovom COB. Možno iba zo zdrojom glykémií s dobrým filtrovaním dát, ako napr. G5</string>
+    <string name="enable_smb_with_cob">Povoliť SMB zo sacharidmi</string>
+    <string name="enable_smb_with_cob_summary">Povoliť SMB, pokiaľ zostávajú aktívne sacharidy.</string>
+    <string name="enable_smb_with_temp_target">Povoliť SMB s dočasnými cieľmi</string>
+    <string name="enable_smb_with_temp_target_summary">Povoliť SMB, pokiaľ je aktívny dočasný cieľ (aktivita, blížiace sa jedlo)</string>
+    <string name="enable_smb_with_high_temp_target">Povoliť SMB s vysokými dočasnými cieľmi</string>
+    <string name="enable_smb_with_high_temp_target_summary">Povoliť SMB, ak je aktívny vysoký cieľ (cvičenie, vyšší ako 5,5 mmol/l)</string>
+    <string name="smb_max_minutes_summary">Maximálny počet minút bazálu, ku ktorým se limituje SMB</string>
+    <string name="uam_smb_max_minutes">UAM SMB max. minút</string>
+    <string name="uam_smb_max_minutes_summary">Maximální počet minút bazálu, ku ktorým sa limituje SMB pre UAM</string>
+    <string name="carbs_req_threshold">Minimálne množstvo sacharidov potrebných pre návrh</string>
+    <string name="carbs_req_threshold_summary">Minimálne množstvo sacharidov v gramoch, ktoré spustí upozornenie návrhu sacharidov. Množstvo sacharidov pod touto hodnotou nespustí oznámenie.</string>
+    <string name="lgs_threshold_summary">Hodnota glykémie, pri ktorej bude podávanie inzulínu zastavené. Východzia hodnota využíva štandardný cieľový model. Užívateľ môže nastaviť hodnoty od 3,3 mmol/l do 5,5 mmol/l. Pri hodnotách pod 3,6 mmol/l se použije východzí model.</string>
+    <string name="lgs_threshold_title">Hodnota glykémie, pri ktorej sa aktivuje LGS</string>
+    <string name="increasing_max_basal">Zvýšenie maximálnej hodnoty bazálu, pretože nastavenie je nižšie, než je vaša maximálna hodnota bazálu v profile</string>
+    <string name="max_basal_multiplier">maximálny násobok bazálu</string>
+    <string name="max_daily_basal_multiplier">maximálny násobok najvyššieho bazálu</string>
+    <string name="smb_disabled_in_preferences">SMB zakázané v nastaveniach</string>
+    <string name="uam_disabled_in_preferences">UAM zakázané v nastaveniach</string>
+    <string name="autosens_disabled_in_preferences">Automatická detekcia citlivosti zakázaná v nastaveniach</string>
+    <string name="autosens_disabled_in_dyn_isf">Autosens zakázaný v DynISF</string>
+    <!--    Verify if needed in safety-->
+    <string name="limiting_iob">IOB obmedzený na %1$.1f JI: %2$s</string>
+    <string name="maxvalueinpreferences">maximálna hodnota v nastaveniach</string>
+    <string name="hardlimit">pevný limit</string>
+    <!--    Autotune   -->
+    <string name="insulin_peak">Vrchol</string>
+    <!--    Loop -->
+    <string name="run_now">Spustiť teraz</string>
+    <string name="smb_frequency_exceeded">Podaný bolus v priebehu posledných 3 minút, SMB preskočené</string>
+    <string name="pump_not_initialized">Pumpa nie je inicializovaná!</string>
+    <string name="loop_shortname">UZAVRETÝ OKRUH</string>
+    <string name="description_loop">Aktivuje alebo deaktivuje spustenie uzavretého okruhu.</string>
+    <string name="no_aps_selected">NEVYBRANÉ ŽIADNE APS, ALEBO NEBOL POSKYTNUTÝ ŽIADNY VÝSLEDOK</string>
+    <string name="ignore5m">Ignorovať 5m</string>
+    <string name="ignore15m">Ignorovať 15m</string>
+    <string name="ignore30m">Ignorovať 30m</string>
+    <string name="carbs_suggestion">Návrh sacharidov</string>
+    <string name="open_loop_new_suggestion">Dostupné nové doporučenie</string>
+    <string name="basal_set_correctly">Bazál nastavený správne</string>
+    <string name="last_run_label">Posledné spustenie</string>
+    <string name="loop_aps_label">APS</string>
+    <string name="request_label">Požiadavka</string>
+    <string name="loop_constraints_processed_label">Po spracovaní obmedzení</string>
+    <string name="loop_tbr_request_time_label">Čas požiadavky dočasného bazálu</string>
+    <string name="loop_tbr_execution_time_label">Čas spustenia dočasného bazálu</string>
+    <string name="loop_tbr_set_by_pump_label">Bazál nastavený pumpou</string>
+    <string name="loop_smb_request_time_label">Čas požiadavky SMB</string>
+    <string name="loop_smb_execution_time_label">Čas aplikácie SMB</string>
+    <string name="loop_smb_set_by_pump_label">SMB nastavené pumpou</string>
+    <string name="loop_open_mode_min_change">Minimálna požiadavka na zmenu [%]</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">Otvorený okruh vytvorí novú žiadosť o zmenu iba v prípade, že zmena je väčšia ako táto hodnota v %. Štandardná hodnota je 20%</string>
+    <string name="fallback_smb_no_tdd">Použiť algoritmus SMB. Nedostatok dát o CDD.</string>
+</resources>

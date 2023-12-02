@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="combov2_plugin_name">Accu-Chek Combo</string>
+    <string name="combov2_plugin_description">Native Pumpen-Integration für Accu-Chek Combo Pumpen</string>
+    <string name="combov2_could_not_connect">Konnte keine Verbindung zur Pumpe herstellen</string>
+    <string name="combov2_not_paired">Nicht mit einer Pumpe gepaart</string>
+    <string name="combov2_pump_terminated_connection">Pumpe hat die Verbindung beendet</string>
+    <string name="combov2_warning">Combo-Warnung</string>
+    <string name="combov2_error">Combo-Fehler</string>
+    <string name="combov2_warning_4">Hotline für Update anrufen</string>
+    <string name="combov2_warning_10">Bluetooth-Fehler; Wiederhole das Pairing</string>
+    <string name="combov2_error_1">Pumpenreservoir leer</string>
+    <string name="combov2_error_2">Batterie leer</string>
+    <string name="combov2_error_4">Verstopfung</string>
+    <string name="combov2_error_5">Ende der Backup-Pumpenoperation</string>
+    <string name="combov2_error_6">Mechanikfehler</string>
+    <string name="combov2_error_7">Elektronikfehler</string>
+    <string name="combov2_error_8">Stromzufuhr unterbrochen</string>
+    <string name="combov2_error_9">Ende des Betriebs der Leihpumpe</string>
+    <string name="combov2_error_10">Reservoir Fehler</string>
+    <string name="combov2_error_11">Infusionsset nicht vorgefüllt</string>
+    <string name="combov2_extended_bolus_not_supported">Erweiterter Bolus wird nicht unterstützt</string>
+    <string name="combov2_title">Accu-Check Combo v2</string>
+    <string name="combov2_pair_with_pump_title">Mit Pumpe verbinden</string>
+    <string name="combov2_unpair_pump_title">Pumpe trennen</string>
+    <string name="combov2_driver_state_label">Treiberstatus</string>
+    <string name="combov2_current_activity_label">Aktuelle Aktivität</string>
+    <string name="bluetooth_address">Bluetooth-Adresse</string>
+    <string name="combov2_start_pairing">Pairing starten</string>
+    <string name="combov2_pairing_in_progress">Combo-Pairing wird durchgeführt</string>
+    <string name="combov2_pairing_start_steps">Schritte zum Pairing mit Ihrer Combo:\n\n
+1. Navigieren Sie auf Ihrer Pumpe zu den Bluetooth-Einstellungen\n
+2. Überprüfen Sie, ob ein Gerät bereits als gepaart angezeigt wird; Wenn ja, gehen Sie auf den Pumpenbildschirm \"Gerät löschen\" um dieses Gerät zu löschen/zu entkoppeln\n
+3. Gehen Sie zum Pumpenbildschirm \"Gerät hinzufügen\" und starten Sie das Pairing auf der Pumpe\n
+4. Klicken Sie auf die Schaltfläche \"Pairing starten\", um das Pairing in AndroidAPS zu starten\n</string>
+    <string name="combov2_steps_if_no_connection_during_pairing">Nach einer Weile wird der Name des Telefons auf dem Bildschirm der Pumpe angezeigt; drücken Sie die Taste CHECK, um dies zu bestätigen.\n\n
+Wenn das Pairing erfolgreich abgeschlossen ist, bestätigen Sie das Pairing auf Ihrer Pumpe und kehren Sie zum Hauptpumpenbildschirm zurück, indem Sie zweimal die CHECK-Taste drücken.\n\n
+Wenn keine Verbindung nach mehr als ~5 Minuten hergestellt wird:\n\n
+1. Drücken Sie die Taste \"Pairing abbrechen\"\n
+2. Das Pairing auf dem Combo abbrechen (drücken Sie sowohl UP als auch MENU 
+Schaltflächen gleichzeitig, um das Paar abzubrechen)\n
+3. Versuche erneut zu pairen</string>
+    <string name="combov2_enter_pin">Geben Sie die PIN ein</string>
+    <string name="combov2_cancel_pairing">Pairing abbrechen</string>
+    <string name="combov2_pin_hint">10-stellige PIN</string>
+    <string name="combov2_pairing_finished_successfully">Erfolgreich mit Combo gekoppelt</string>
+    <string name="combov2_pairing_cancelled">Kopplung mit Combo durch Benutzer abgebrochen</string>
+    <string name="combov2_pairing_combo_scan_timeout_reached">Combo-Scan-Timeout erreicht</string>
+    <string name="combov2_pairing_failed_due_to_error">Pairing fehlgeschlagen wegen Fehler: %1$s</string>
+    <string name="combov2_pairing_aborted_unknown_reasons">Kopplung wurde aus unbekannten Gründen abgebrochen</string>
+    <string name="combov2_pairing_invalid_pin_length">"Ungültige PIN-Länge: Benötigt %1$d Ziffern, hat %2$d"</string>
+    <string name="combov2_scanning_for_pump">Suche nach Pumpe</string>
+    <string name="combov2_establishing_bt_connection">Bluetooth-Verbindung herstellen (Versuch Nr. %1$d)</string>
+    <string name="combov2_pairing_performing_handshake">Führe Handshake mit Pumpe aus</string>
+    <string name="combov2_pairing_pump_requests_pin">Pumpe fragt nach 10-stelliger PIN</string>
+    <string name="combov2_pairing_finishing">Kopplung abgeschlossen</string>
+    <string name="combov2_no_connection_for_n_mins">Keine Verbindung seit %1$d min</string>
+    <string name="combov2_less_than_one_minute_ago">Vor weniger als 1 Minute</string>
+    <string name="combov2_setting_current_pump_time">Aktuelle Pumpenzeit einstellen</string>
+    <string name="combov2_setting_current_pump_date">Setze aktuelles Pumpendatum</string>
+    <string name="combov2_not_initialized">Nicht initialisiert</string>
+    <string name="combov2_checking_pump">Pumpe wird überprüft</string>
+    <string name="combov2_ready">Bereit</string>
+    <string name="combov2_suspended">Angehalten</string>
+    <string name="combov2_pump_is_suspended">Pumpe ist gesperrt</string>
+    <string name="combov2_executing_command">Befehl ausführen</string>
+    <string name="combov2_getting_basal_profile_cmddesc">Basalratenprofil wird gelesen</string>
+    <string name="combov2_setting_basal_profile_cmddesc">BR-Profil wird aktualisiert.</string>
+    <string name="combov2_setting_tbr_cmddesc">Setze %1$d%% TBR für %2$d Minuten</string>
+    <string name="combov2_cancelling_tbr">Laufende TBR abbrechen</string>
+    <string name="combov2_delivering_bolus_cmddesc">Gebe %1$.1f IE Bolus ab</string>
+    <string name="combov2_fetching_tdd_history_cmddesc">TDD-Verlauf wird abgerufen</string>
+    <string name="combov2_updating_pump_datetime_cmddesc">Aktualisiere Pumpenzeit und -datum</string>
+    <string name="combov2_updating_pump_status_cmddesc">Pumpenstatus wird aktualisiert</string>
+    <string name="combov2_pairing_pin_failure">PIN hat nicht funktioniert. Überprüfe, ob es einen Tippfehler gab. Wenn dies weiterhin geschieht, brich ab und versuche es erneut.</string>
+    <string name="combov2_discovery_duration">Suchzeit (in Sekunden)</string>
+    <string name="combov2_verbose_logging">Ausführliche Combo-Protokollierung aktivieren</string>
+    <string name="combov2_getting_basal_profile">Basalprofil wird abgerufen; %1$d Faktor(en) gelesen</string>
+    <string name="combov2_setting_basal_profile">Basalprofil einstellen; %1$d Faktor(en) geschrieben</string>
+    <string name="combov2_delivering_bolus">Liefert Bolus (%1$.1f von %2$.1f IE geliefert)</string>
+    <string name="combov2_cannot_deliver_pump_suspended">Behandlung kann nicht geliefert werden - Pumpe ist getrennt</string>
+    <string name="combov2_insufficient_insulin_in_reservoir">Nicht ausreichend Insulin im Reservoir</string>
+    <string name="combov2_bolus_cancelled">Bolus-Abbruch</string>
+    <string name="combov2_bolus_delivery_failed">Die Bolusabgabe ist fehlgeschlagen: Es wurde scheinbar kein Bolus abgegeben. Bitte prüfe auf der Pumpe, ob ein Bolus abgegeben wurde. Um doppelte Boli durch Programmfehler zu vermeiden, werden Boli nicht automatisch wiederholt.</string>
+    <string name="combov2_bolus_not_delivered">Bolus nicht abgegeben</string>
+    <string name="combov2_cannot_access_pump_data">Zugriff auf Pumpendaten nicht möglich; die Pumpe muss wieder gekoppelt werden</string>
+    <string name="combov2_unaccounted_bolus_detected_cancelling_bolus">Ungeklärte Bolus Lieferungen wurden erkannt. Bolus wird aus Sicherheitsgründen abgebrochen.</string>
+    <string name="combov2_incorrect_active_basal_profile">Falsches Basalprofil; Profil 1 muss aktiviert sein, nicht Profil %1$d</string>
+    <string name="combov2_unrecognized_alert">Unbekannter Combo-Alarm</string>
+    <string name="combov2_combo_alert">Combo-Alarm</string>
+    <string name="combov2_current_tbr">%1$d%% (%2$d min verbleibend)</string>
+    <string name="combov2_current_tbr_less_than_1min">%1$d%% (weniger als 1 min verbleibend)</string>
+    <string name="combov2_load_tdds_cancelled">Laden von TDDs abgebrochen</string>
+    <string name="combov2_retrieving_tdds_failed">Abrufen von TDDs fehlgeschlagen</string>
+    <string name="combov2_battery_low_warning">Die Batterie in der Pumpe ist fast leer</string>
+    <string name="combov2_reservoir_low_warning">Das Reservoir in der Pumpe ist fast leer</string>
+    <string name="combov2_setting_tbr_succeeded">Das Setzen der TBR war erfolgreich</string>
+    <string name="combov2_setting_tbr_failed">Das Setzen der TBR wurde abgebrochen</string>
+    <string name="combov2_set_emulated_100_tbr">Emulierte 100% TBR festlegen</string>
+    <string name="combov2_letting_emulated_100_tbr_finish">Lass die laufende Emulation der 100% TBR abschließen</string>
+    <string name="combov2_ignoring_redundant_100_tbr">Ignoriere redundante 100% TBR-Anfrage</string>
+    <string name="combov2_hit_unexpected_tbr_limit">Unerwartetes Limit beim Anpassen des TBR gefunden: Ziel Prozentsatz war %1$d%%, Limit bei %2$d%%</string>
+    <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Absolute TBR kann nicht gesetzt werden, wenn die Basisbasalrate 0 ist</string>
+    <string name="combov2_pair_with_pump_summary">Verbinde AndroidAPS und Android mit einer derzeit nicht verbundenen Accu-Chek Combo Pumpe</string>
+    <string name="combov2_unpair_pump_summary">Trenne AndroidAPS und Android von der aktuell verbundenen Accu-Chek Combo Pumpe</string>
+    <string name="combov2_unknown_tbr_detected">Unbekannte TBR wurde erkannt und gestoppt; Prozentsatz: %1$d%%; verbleibende Dauer: %2$s</string>
+    <string name="combov2_connection_error">Verbindungsfehler :%1$</string>
+    <string name="combov2_short_status_last_connection">Letzte Verb.: vor %1$d min</string>
+    <string name="combov2_short_status_alert">Alarm: %s</string>
+    <string name="combov2_short_status_last_bolus">Letzter Bolus: %1$s @ %2$s</string>
+    <string name="combov2_short_status_temp_basal">Temp: %s</string>
+    <string name="combov2_short_status_reservoir">Reserv: %dU</string>
+    <string name="combov2_short_status_battery_state_empty">leer</string>
+    <string name="combov2_short_status_battery_state_low">niedrig</string>
+    <string name="combov2_short_status_battery_state_full">voll</string>
+    <string name="combov2_short_status_battery_state">Batterie: %s</string>
+    <string name="combov2_automatic_reservoir_entry">Insulinreservoirwechsel automatisch erkennen und eingeben</string>
+    <string name="combov2_automatic_battery_entry">Akkuwechsel automatisch erkennen und eingeben</string>
+    <string name="combov2_note_reservoir_change">Insulinreservoirwechsel automatisch durch Combov2-Treiber setzen</string>
+    <string name="combov2_note_battery_change">Batteriewechsel automatisch durch Combov2-Treiber setzen</string>
+    <string name="combov2_timezone_changed">Zeitzone geändert</string>
+    <string name="combov2_datetime_changed">Datum und/oder Uhrzeit geändert</string>
+    <string name="combov2_dst_started">Sommerzeit (DST) begonnen</string>
+    <string name="combov2_dst_ended">Sommerzeit (DST) endete</string>
+    <string name="combov2_cannot_connect_pump_error_observed">Keine Verbindung zur Pumpe möglich, da die Pumpe einen Fehler gemeldet hat. Der Benutzer muss den Fehler korrigieren und dann entweder 5 Minuten warten oder die Aktualisieren-Schaltfläche im Pumpen-Detail-Tab drücken.</string>
+    <string name="combov2_refresh_pump_status_after_error">Aktualisiere Pumpenstatus nachdem die Pumpe einen Fehler gemeldet hat</string>
+    <string name="combov2_go_back">Zurück</string>
+    <string name="combov2_cannot_pair_driver_not_initialized_explanation">Paarung kann nicht durchgeführt werden, da der Treiber nicht initialisiert wurde. Dies geschieht in der Regel, weil die notwendigen Bluetooth-Berechtigungen nicht erteilt wurden. Gehe zurück, erteile die Bluetooth-Berechtigungen, dann versuche es erneut.</string>
+    <string name="combov2_bluetooth_disabled">Treiber kann nicht gestartet werden - Bluetooth ist deaktiviert</string>
+    <string name="combov2_bluetooth_not_supported">Treiber kann nicht ausgeführt werden - dieses Gerät unterstützt kein Bluetooth</string>
+</resources>

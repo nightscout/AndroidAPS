@@ -1,0 +1,114 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    tools:context=".general.smsCommunicator.activities.SmsCommunicatorOtpActivity">
+
+    <LinearLayout
+        android:id="@+id/otp_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/section_header_label"
+            android:text="@string/smscommunicator_otp_step1_install_header" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5sp"
+            android:layout_marginBottom="5sp"
+            android:paddingStart="15sp"
+            android:paddingEnd="15sp"
+            android:text="@string/smscommunicator_otp_install_info" />
+
+        <TextView
+            style="@style/section_header_label"
+            android:text="@string/smscommunicator_otp_step2_provisioning_header" />
+
+        <ImageView
+            android:id="@+id/otp_provisioning"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:contentDescription="@string/a11y_otp_qr_code"
+            android:scaleType="center" />
+
+        <TextView
+            style="@style/warning_label"
+            android:text="" />
+
+        <TextView
+            style="@style/section_header_label"
+            android:text="@string/smscommunicator_otp_step3_test_header" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5sp"
+            android:layout_marginBottom="5sp"
+            android:paddingStart="15sp"
+            android:paddingEnd="15sp"
+            android:text="@string/smscommunicator_code_verify_info" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="15dp"
+                android:paddingEnd="5dp"
+                android:text="@string/smscommunicator_code_verify_label" />
+
+            <EditText
+                android:id="@+id/otp_verify_edit"
+                android:layout_width="140sp"
+                android:layout_height="wrap_content"
+                android:hint="@string/smscommunicator_code_verify_hint"
+                android:importantForAutofill="no"
+                android:inputType="number"
+                android:maxLength="12"
+                android:textAlignment="center"
+                android:textSize="19sp"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/otp_verify_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="15dp"
+                android:paddingEnd="5dp" />
+
+        </LinearLayout>
+
+        <TextView
+            style="@style/section_header_label"
+            android:text="@string/smscommunicator_otp_reset_header" />
+
+        <TextView
+            style="@style/warning_label"
+            android:text="@string/smscommunicator_otp_reset_warning" />
+
+        <app.aaps.core.ui.elements.SingleClickButton
+            android:id="@+id/otp_reset"
+            style="@style/GrayButton"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="3dp"
+            android:text="@string/smscommunicator_otp_reset_btn"
+            android:textColor="?attr/treatmentButton"
+            app:icon="@drawable/ic_local_reset"
+            app:iconTint="@color/ic_local_reset"  />
+
+    </LinearLayout>
+
+</ScrollView>
+

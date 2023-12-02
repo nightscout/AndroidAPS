@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="info.nightscout.androidaps.plugins.pump.eopatch.code.PatchStep" />
+        <variable
+            name="viewModel"
+            type="info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        tools:context=".ui.EopatchActivity">
+
+        <TextView
+            android:id="@+id/text_patch_manually_turning_off_alarm_desc_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/patch_manually_turning_off_alarm_desc_1"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/text_patch_manually_turning_off_alarm_desc_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/patch_manually_turning_off_alarm_desc_2"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_patch_manually_turning_off_alarm_desc_1" />
+
+        <TextView
+            android:id="@+id/text_patch_manually_turning_off_alarm_step_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/patch_manually_turning_off_alarm_step_1"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_patch_manually_turning_off_alarm_desc_2" />
+
+        <TextView
+            android:id="@+id/text_patch_manually_turning_off_alarm_step_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/patch_manually_turning_off_alarm_step_2"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_patch_manually_turning_off_alarm_step_1" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/patch_manually_turning_off_alarm_desc_2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_patch_manually_turning_off_alarm_step_2" />
+
+        <Button
+            android:id="@+id/btn_positive"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/next"
+            android:contentDescription="@string/next"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:onSafeClick="@{() -> viewModel.onConfirm() }" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="smoothing_shortname">UDJÆVNET</string>
+    <string name="exponential_smoothing_name">Eksponentiel udjævning</string>
+    <string name="description_exponential_smoothing">"Anden-ordens eksponentiel udjævning-algoritme"</string>
+    <string name="avg_smoothing_name">Gennemsnitlig udjævning</string>
+    <string name="description_avg_smoothing">"Gennemsnitlig udjævningsalgoritme, nyeste værdi påvirkes ikke"</string>
+    <string name="no_smoothing_name">Ingen udjævning</string>
+    <string name="description_no_smoothing">"Ingen udjævning udført på glucose data. Benyt denne indstilling, når du allerede har filtreret data f.eks. fra BYODA G6."</string>
+</resources>

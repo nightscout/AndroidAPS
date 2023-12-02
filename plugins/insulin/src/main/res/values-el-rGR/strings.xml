@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Insulin -->
+    <string name="lyumjev">Lyumjev</string>
+    <string name="description_insulin_rapid">Η ινσουλίνη που ορίζεται Humalog και NovoRapid / NovoLog</string>
+    <string name="description_insulin_ultra_rapid">Η ινσουλίνη που ορίζεται για Fiasp</string>
+    <string name="description_insulin_lyumjev">Προκαθορισμός ινσουλίνης για την Lyumjev</string>
+    <string name="description_insulin_free_peak">Σας επιτρέπει να ορίσετε το μέγιστο της δράσης της ινσουλίνης και πρέπει να χρησιμοποιείται μόνο από προχωρημένους χρήστες</string>
+    <string name="insulin_shortname">INS</string>
+    <string name="insulin_oref_peak">Μέγιστη τιμή καμπύλης IOB</string>
+    <string name="insulin_peak_time">Μέγιστο καμπύλης [λεπτά]</string>
+    <string name="free_peak_oref">Προαιρετικά-αιχμή Oref</string>
+    <string name="rapid_acting_oref">Γρήγορη δράση - Oref</string>
+    <string name="ultra_rapid_oref">Έξτρα Γρήγορη δράση - Oref</string>
+    <string name="dia_too_short">DIA για %1$f πολύ μικρή - χρησιμοποιήστε %2$f! </string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
+</resources>

@@ -1,0 +1,68 @@
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:validate="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:key="@string/key_medtrum_pump_settings"
+        android:title="@string/medtrum_pump_setting"
+        app:initialExpandedChildrenCount="0">
+
+        <EditTextPreference
+            android:key="@string/key_sn_input"
+            android:dialogMessage="@string/sn_input_summary"
+            android:singleLine="true"
+            android:title="@string/sn_input_title" />
+
+        <ListPreference
+            android:defaultValue="6"
+            android:key="@string/key_alarm_setting"
+            android:title="@string/alarm_setting_title"
+            android:dialogTitle="@string/alarm_setting_summary"
+            android:entries="@array/alarmSettings"
+            android:entryValues="@array/alarmSettingsValues" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_pump_warning_notification"
+            android:title="@string/pump_warning_notification_title"
+            android:summary="@string/pump_warning_notification_summary" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_patch_expiration"
+            android:title="@string/patch_expiration_title"
+            android:summary="@string/patch_expiration_summary" />
+
+        <app.aaps.core.validators.ValidatingEditTextPreference
+            android:defaultValue="72"
+            android:inputType="number"
+            android:key="@string/key_pump_warning_expiry_hour"
+            android:title="@string/pump_warning_expiry_hour_title"
+            android:dialogMessage="@string/pump_warning_expiry_hour_summary"
+            validate:maxNumber="80"
+            validate:minNumber="48"
+            validate:testType="numericRange" />
+
+        <app.aaps.core.validators.ValidatingEditTextPreference
+            android:defaultValue="25"
+            android:inputType="number"
+            android:key="@string/key_hourly_max_insulin"
+            android:title="@string/hourly_max_insulin_title"
+            android:dialogMessage="@string/hourly_max_insulin_summary"
+            validate:maxNumber="40"
+            validate:minNumber="10"
+            validate:testType="numericRange" />
+
+        <app.aaps.core.validators.ValidatingEditTextPreference
+            android:defaultValue="80"
+            android:inputType="number"
+            android:key="@string/key_daily_max_insulin"
+            android:title="@string/daily_max_insulin_title"
+            android:dialogMessage="@string/daily_max_insulin_summary"
+            validate:maxNumber="180"
+            validate:minNumber="20"
+            validate:testType="numericRange" />
+
+    </PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>

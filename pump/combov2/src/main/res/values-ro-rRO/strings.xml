@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="combov2_plugin_name">Accu-Chek Combo</string>
+    <string name="combov2_plugin_description">Integrare nativă a pompelor Accu-Chek Combo</string>
+    <string name="combov2_could_not_connect">Nu se poate conecta la pompă</string>
+    <string name="combov2_not_paired">Nu este împerecheat cu pompa</string>
+    <string name="combov2_pump_terminated_connection">Conexiune cu pompă oprită</string>
+    <string name="combov2_warning">Avertizare Combo</string>
+    <string name="combov2_error">Eroare Combo</string>
+    <string name="combov2_warning_4">Apelați linia telefonică pentru actualizare</string>
+    <string name="combov2_warning_10">Defecțiune Bluetooth; refaceți asocierea</string>
+    <string name="combov2_error_1">Rezervor pompă gol</string>
+    <string name="combov2_error_2">Baterie epuizată</string>
+    <string name="combov2_error_4">Ocluzie</string>
+    <string name="combov2_error_5">Sfârşitul operării pompei de rezervă</string>
+    <string name="combov2_error_6">Eroare mecanică</string>
+    <string name="combov2_error_7">Eroare electronică</string>
+    <string name="combov2_error_8">Întrerupere de energie</string>
+    <string name="combov2_error_9">Sfârşitul operaţiunii pompei de împrumut</string>
+    <string name="combov2_error_10">Eroare la rezervor</string>
+    <string name="combov2_error_11">Setul de infuzie neamorsat</string>
+    <string name="combov2_extended_bolus_not_supported">Bolusul extins nu este acceptat</string>
+    <string name="combov2_title">Accu-Check Combo v2</string>
+    <string name="combov2_pair_with_pump_title">Împerechere pompă</string>
+    <string name="combov2_unpair_pump_title">Deconectare pompă</string>
+    <string name="combov2_driver_state_label">Stare soft conexiune</string>
+    <string name="combov2_current_activity_label">Activitate curentă</string>
+    <string name="bluetooth_address">Adresa Bluetooth</string>
+    <string name="combov2_start_pairing">Începe asocierea</string>
+    <string name="combov2_pairing_in_progress">Asocierea Combo în curs</string>
+    <string name="combov2_pairing_start_steps">Pași pentru a efectua asocierea cu Combo:\n\n
+1. Pe pompă, navigați la Setările Bluetooth\n
+2. Verificați dacă un dispozitiv este deja afișat ca paired; în caz afirmativ, mergeți la ecranul pompei \"Șterge dispozitivul\" pentru a șterge/dezasocia dispozitivul\n
+3. Mergeți la ecranul pompei \"Adaugă dispozitiv\" și începeți asocierea cu pompa\n
+4. Faceți clic pe butonul \"Începeți asocierea\" de mai jos pentru a începe asocierea în AndroidAPS\n</string>
+    <string name="combov2_steps_if_no_connection_during_pairing">După un timp, numele telefonului este afișat pe ecranul pompei; apăsați CHECK pentru a confirma.\n\n
+Când asocierea este terminată cu succes, confirmați asocierea terminată a pompei și reveniți la ecranul principal al pompei apăsând butonul CHECK de două ori.\n\n
+Dacă nicio conexiune nu este stabilită după mai mult de ~5 minute:\n\n
+1. Apasă Înapoi sau butonul \"Anulează asocierea\"\n
+2. Anulează asocierea pe Combo (apasă atât butoanele UP cât şi MENU
+în acelaşi timp pentru a anula asocierea)\n
+3. Încearcă să asociezi din nou</string>
+    <string name="combov2_enter_pin">Introduceți PIN</string>
+    <string name="combov2_cancel_pairing">Anulați asocierea</string>
+    <string name="combov2_pin_hint">PIN de 10 cifre</string>
+    <string name="combov2_pairing_finished_successfully">Asociat cu succes cu Combo</string>
+    <string name="combov2_pairing_cancelled">Asocierea cu Combo a fost anulată de utilizator</string>
+    <string name="combov2_pairing_combo_scan_timeout_reached">Scanarea Combo a atins limita de timp</string>
+    <string name="combov2_pairing_failed_due_to_error">Asocierea a eșuat din cauza erorii: %1$s</string>
+    <string name="combov2_pairing_aborted_unknown_reasons">Asociere anulată din motive necunoscute</string>
+    <string name="combov2_pairing_invalid_pin_length">"Lungime PIN invalidă: are nevoie de %1$d cifre, a primit %2$d"</string>
+    <string name="combov2_scanning_for_pump">Scanare după pompă</string>
+    <string name="combov2_establishing_bt_connection">Se stabilește conexiunea Bluetooth (încercarea nr. %1$d)</string>
+    <string name="combov2_pairing_performing_handshake">Se efectuează negocierea cu pompa</string>
+    <string name="combov2_pairing_pump_requests_pin">Pompa solicită un PIN de 10 cifre</string>
+    <string name="combov2_pairing_finishing">Finalizare asociere</string>
+    <string name="combov2_no_connection_for_n_mins">Fără conexiune de %1$d min</string>
+    <string name="combov2_less_than_one_minute_ago">Mai puțin de un minut în urmă</string>
+    <string name="combov2_setting_current_pump_time">Setarea orei curente a pompei</string>
+    <string name="combov2_setting_current_pump_date">Setarea datei curente a pompei</string>
+    <string name="combov2_not_initialized">Neiniţializat</string>
+    <string name="combov2_checking_pump">Se verifică pompa</string>
+    <string name="combov2_ready">Pregătit</string>
+    <string name="combov2_suspended">Suspendat</string>
+    <string name="combov2_pump_is_suspended">Pompa este suspendată</string>
+    <string name="combov2_executing_command">Executare comandă</string>
+    <string name="combov2_getting_basal_profile_cmddesc">Se citește profilul bazal</string>
+    <string name="combov2_setting_basal_profile_cmddesc">Se setează profilul bazalei</string>
+    <string name="combov2_setting_tbr_cmddesc">Setarea a %1$d%% RBT pentru %2$d minute</string>
+    <string name="combov2_cancelling_tbr">Anulare RBT în desfășurare</string>
+    <string name="combov2_delivering_bolus_cmddesc">Livrare bolus %1$.1f U</string>
+    <string name="combov2_fetching_tdd_history_cmddesc">Preluare istoric TDD</string>
+    <string name="combov2_updating_pump_datetime_cmddesc">Se actualizează data pompei</string>
+    <string name="combov2_updating_pump_status_cmddesc">Se actualizează starea pompei</string>
+    <string name="combov2_pairing_pin_failure">Codul PIN nu a funcționat. Verifică eventuale erori de scriere.. Dacă eroarea persistă, anulează procesul și reia împerecherea.</string>
+    <string name="combov2_discovery_duration">Durată descoperire (în secunde)</string>
+    <string name="combov2_verbose_logging">Activează logare Combo detaliată</string>
+    <string name="combov2_getting_basal_profile">Preluare profil bazal; %1$d factori citiți</string>
+    <string name="combov2_setting_basal_profile">Setare profil bazal; %1$d factori scriși</string>
+    <string name="combov2_delivering_bolus">Livrarea bolusului (%1$.1f %2$.1f U livrate)</string>
+    <string name="combov2_cannot_deliver_pump_suspended">Nu se poate administra tratamentul - pompa este suspendată</string>
+    <string name="combov2_insufficient_insulin_in_reservoir">Insulină insuficientă în rezervor</string>
+    <string name="combov2_bolus_cancelled">Bolus anulat</string>
+    <string name="combov2_bolus_delivery_failed">Livrare eșuată. Se pare că nu a fost livrat bolusul. Pentru siguranță, verificați în pompă pentru a evita bolusarea dublă. Pentru evitarea greșelilor, bolusurile nu sunt retrimise automat.</string>
+    <string name="combov2_bolus_not_delivered">Bolusul nu s-a livrat</string>
+    <string name="combov2_cannot_access_pump_data">Nu se pot accesa datele pompei; pompa trebuie împerecheată din nou</string>
+    <string name="combov2_unaccounted_bolus_detected_cancelling_bolus">S-au detectat bolusuri administrate dar neînregistrate. Se anulează bolusul din motive de securitate.</string>
+    <string name="combov2_incorrect_active_basal_profile">Profil bazală activă incorect; profilul 1 trebuie să fie activ, nu profilul %1$d</string>
+    <string name="combov2_unrecognized_alert">Alertă Combo nerecunoscută</string>
+    <string name="combov2_combo_alert">Alertă Combo</string>
+    <string name="combov2_current_tbr">%1$d%% (%2$d min rămase)</string>
+    <string name="combov2_current_tbr_less_than_1min">%1$d%% (mai puțin de 1 min rămas)</string>
+    <string name="combov2_load_tdds_cancelled">Încărcarea TDD a fost anulată</string>
+    <string name="combov2_retrieving_tdds_failed">Preluarea TDD a eșuat</string>
+    <string name="combov2_battery_low_warning">Nivelul bateriei pompei este scăzut</string>
+    <string name="combov2_reservoir_low_warning">Nivelul rezervorului pompei este scăzut</string>
+    <string name="combov2_setting_tbr_succeeded">Setarea RBT a reușit</string>
+    <string name="combov2_setting_tbr_failed">Setarea RBT a eșuat</string>
+    <string name="combov2_set_emulated_100_tbr">Setare 100% RBT simulată</string>
+    <string name="combov2_letting_emulated_100_tbr_finish">Se permite finalizarea RBT 100% simulată</string>
+    <string name="combov2_ignoring_redundant_100_tbr">Se ignoră cererea redundantă pentru 100% RBT</string>
+    <string name="combov2_hit_unexpected_tbr_limit">Limită neprevăzută întâlnită în timpul ajustării RBT: procentul țintă a fost %1$d%%, dar s-a atins o limită la %2$d%%</string>
+    <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Nu se poate seta RBT absolută dacă rata bazală este zero</string>
+    <string name="combov2_pair_with_pump_summary">Împerechează AndroidAPS și Android cu o pompă Accu-Chek Combo neîmperecheată</string>
+    <string name="combov2_unpair_pump_summary">Desperechează AndroidAPS și Android de pompa Accu-Chek Combo asociată în prezent</string>
+    <string name="combov2_unknown_tbr_detected">RBT necunoscută a fost detectată și oprită; procentaj: %1$d%%; durată rămasă: %2$s</string>
+    <string name="combov2_connection_error">Eroare conexiune: %1$s</string>
+    <string name="combov2_short_status_last_connection">UltimaConexiune: acum %1$d min</string>
+    <string name="combov2_short_status_alert">Alertă: %s</string>
+    <string name="combov2_short_status_last_bolus">UltimulBolus: %1$s @ %2$s</string>
+    <string name="combov2_short_status_temp_basal">BazalaTemporara: %s</string>
+    <string name="combov2_short_status_reservoir">Rezervor: %dU</string>
+    <string name="combov2_short_status_battery_state_empty">gol</string>
+    <string name="combov2_short_status_battery_state_low">hipo</string>
+    <string name="combov2_short_status_battery_state_full">completă</string>
+    <string name="combov2_short_status_battery_state">Bat.: %s</string>
+    <string name="combov2_automatic_reservoir_entry">Autodetectează şi introdu automat schimbarea rezervorului de insulină</string>
+    <string name="combov2_automatic_battery_entry">Autodetectează și introdu automat schimbarea bateriei</string>
+    <string name="combov2_note_reservoir_change">Schimbarea rezervorului de insulină, introdusă automat de driverul combov2.</string>
+    <string name="combov2_note_battery_change">Schimbarea bateriei, inserată automat de către driverul combov2</string>
+    <string name="combov2_timezone_changed">Fus orar schimbat</string>
+    <string name="combov2_datetime_changed">Data și/sau ora schimbate</string>
+    <string name="combov2_dst_started">Început ora de vară (DST)</string>
+    <string name="combov2_dst_ended">Ora de vară s-a încheiat (DST)</string>
+    <string name="combov2_cannot_connect_pump_error_observed">Nu se poate conecta la pompă pentru că pompa a raportat o eroare. Utilizatorul trebuie să gestioneze eroarea și apoi fie să aștepte 5 minute, fie să apese butonul Reîmprospătare în fila driverului.</string>
+    <string name="combov2_refresh_pump_status_after_error">Reîmprospătarea stării pompei după ce pompa a raportat o eroare</string>
+    <string name="combov2_go_back">Înapoi</string>
+    <string name="combov2_cannot_pair_driver_not_initialized_explanation">Nu se poate efectua asocierea deoarece driverul nu este inițializat. Acest lucru se întâmplă de obicei deoarece permisiunile Bluetooth necesare nu au fost acordate. Mergeți înapoi, acordați permisiunile Bluetooth, apoi încercați din nou împerecherea.</string>
+    <string name="combov2_bluetooth_disabled">Nu se poate porni driver-ul - Bluetooth este dezactivat</string>
+    <string name="combov2_bluetooth_not_supported">Driverul nu poate rula - acest dispozitiv nu suportă Bluetooth</string>
+</resources>

@@ -11,13 +11,11 @@
     <string name="stop_pump">Zastaviť pumpu</string>
     <string name="started">Spustené</string>
     <string name="stopped">Zastavené</string>
-    <string name="paused">Pozastavené</string>
     <string name="operating_mode">Prevádzkový režim</string>
     <string name="description_pump_insight_local">Integrácia pre pumpu Accu-Chek Insight</string>
     <string name="not_inserted">Nieje vložené</string>
     <string name="tdd_bolus">CDD bolusov</string>
     <string name="tdd_basal">CDD bazálov</string>
-    <string name="tdd_total">CDD celkom</string>
     <string name="tbr_formatter">%1$d%% pre %2$d / %3$d min</string>
     <string name="multiwave_bolus">Duálny bolus</string>
     <string name="eb_formatter">%1$.2f / %2$.2f JI pre %3$d min</string>
@@ -38,7 +36,6 @@
     <string name="timeout_during_handshake">Vypršal čas na pripojenie - reštartuj Bluetooth</string>
     <string name="pump_stopped">Pumpa zastavená</string>
     <string name="pump_started">Pumpa spustená</string>
-    <string name="pump_paused">Pumpa pozastavená</string>
     <string name="short_status_last_connected">Posledné spoj: pred %1$d min</string>
     <string name="short_status_tbr">Doč. bazál: %1$d%% na %2$d / %3$d min</string>
     <string name="short_status_extended">Predl. bolus: %1$.2f / %2$.2f JI na %3$d min</string>
@@ -46,8 +43,6 @@
     <string name="short_status_tdd">CDD: %1$.2f</string>
     <string name="short_status_reservoir">Zásobník: %1$.2f JI</string>
     <string name="short_status_battery">Bat.: %1$d%%</string>
-    <string name="confirm">Potvrdiť</string>
-    <string name="mute_alert">Stlmiť</string>
     <string name="release_software_version">Verzia softwaru</string>
     <string name="ui_processor_software_version">Verzia softwaru UI procesora</string>
     <string name="pc_processor_software_version">Verzia softwaru PC procesora</string>
@@ -71,4 +66,5 @@
     <string name="min_recovery_duration">Min. doba trvania obnovenia [s]</string>
     <string name="pump_alert">Výstraha pumpy</string>
     <string name="pairing_information">Informácie o párovaní</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Insight Tlačítko Obnoviť</string>
 </resources>

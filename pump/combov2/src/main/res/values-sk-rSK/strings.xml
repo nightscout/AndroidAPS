@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="combov2_plugin_name">Accu-Chek Combo</string>
+    <string name="combov2_plugin_description">Natívna integrácia pre pumpy Accu-Chek Combo</string>
+    <string name="combov2_could_not_connect">Nedá sa pripojiť k pumpe</string>
+    <string name="combov2_not_paired">Nespárované s pumpou</string>
+    <string name="combov2_pump_terminated_connection">Spojenie ukončené pumpou</string>
+    <string name="combov2_warning">Upozornenie Combo</string>
+    <string name="combov2_error">Chyba Combo</string>
+    <string name="combov2_warning_4">Zavolajte hotline pre aktualizáciu</string>
+    <string name="combov2_warning_10">Chyba Bluetooth; opakujte párovanie</string>
+    <string name="combov2_error_1">Zásobník je prázdny</string>
+    <string name="combov2_error_2">Batéria vybitá</string>
+    <string name="combov2_error_4">Oklúzia</string>
+    <string name="combov2_error_5">Koniec zálohy činnosti pumpy</string>
+    <string name="combov2_error_6">Mechanická chyba</string>
+    <string name="combov2_error_7">Chyba elektroniky</string>
+    <string name="combov2_error_8">Prerušenie napájania</string>
+    <string name="combov2_error_9">Koniec doby zapožičania</string>
+    <string name="combov2_error_10">Chyba zásobníka</string>
+    <string name="combov2_error_11">Infúzny set nie je naplnený</string>
+    <string name="combov2_extended_bolus_not_supported">Predĺžený bolus nie je podporovaný</string>
+    <string name="combov2_title">Accu-Chek Combo v2</string>
+    <string name="combov2_pair_with_pump_title">Spárovať s pumpou</string>
+    <string name="combov2_unpair_pump_title">Zrušiť párovanie pumpy</string>
+    <string name="combov2_driver_state_label">Stav ovládača</string>
+    <string name="combov2_current_activity_label">Súčasná aktivita</string>
+    <string name="bluetooth_address">Adresa Bluetooth</string>
+    <string name="combov2_start_pairing">Spustiť párovanie</string>
+    <string name="combov2_pairing_in_progress">Prebieha Combo párovanie</string>
+    <string name="combov2_pairing_start_steps">Kroky k vykonaniu párovania s Combo:\n\n
+1. Na vašej pumpe prejdite do nastavení Bluetooth\n
+2. Zkontrolujte, či je zariadenie už zobrazené ako spárované. pokiaľ áno, prejdite na obrazovku pumpy \"Odstrániť zariadenie\" a odstrániť/zrušiť párovanie tohoto zariadenia\n
+3. Prejdite na obrazovku pumpy \"Pridať zariadenie\" a spárujte na pumpe\n
+4. Kliknite na tlačítko \"Spustiť párovanie\" nižšie pre zahájenie párovania v AndroidAPS\n</string>
+    <string name="combov2_steps_if_no_connection_during_pairing">Po nejakej dobe sa na obrazovke pumpy zobrazí meno telefónu; stlačte KONTROLA pre potvrdenie.\n\n
+Po úspešnom dokončení párovania, potvrďte dokončenie párovania na vašej pumpe a vráťte sa na hlavnú obrazovku pumpy dvojitým stlačením tlačítka KONIEC.\n\n
+Pokiaľ po viac ako ~5 minútach nie je nadviazané žiadne spojenie:\n\n
+1. Stlačte tlačítko Späť alebo tlačítko \"Zrušiť párovanie\"\n
+2. Zrušte párovanie na Combo (súčasne stlačte tlačítka „UP i MENU“ pre zrušenie párovania)\n
+3. Skúste znova spárovať</string>
+    <string name="combov2_enter_pin">Zadajte PIN</string>
+    <string name="combov2_cancel_pairing">Zrušiť párovanie</string>
+    <string name="combov2_pin_hint">10-miestny PIN</string>
+    <string name="combov2_pairing_finished_successfully">Úspešne spárované s Combo</string>
+    <string name="combov2_pairing_cancelled">Párovanie s Combo zrušené užívateľom</string>
+    <string name="combov2_pairing_combo_scan_timeout_reached">Časový limit pre vyhľadávanie Combo dosiahnutý</string>
+    <string name="combov2_pairing_failed_due_to_error">Párovanie se nepodarilo z dôvodu chyby: %1$s</string>
+    <string name="combov2_pairing_aborted_unknown_reasons">Párovanie prerušené z neznámych dôvodov</string>
+    <string name="combov2_pairing_invalid_pin_length">"Neplatná dĺžka PINu párovania: potrebných %1$d číslic, zadaných %2$d"</string>
+    <string name="combov2_scanning_for_pump">Vyhľadávanie pumpy</string>
+    <string name="combov2_establishing_bt_connection">Nadväzovanie Bluetooth pripojenia (pokus č. %1$d)</string>
+    <string name="combov2_pairing_performing_handshake">Nadväzovanie pripojenia s pumpou</string>
+    <string name="combov2_pairing_pump_requests_pin">Pumpa vyžaduje desaťmiestny kód PIN</string>
+    <string name="combov2_pairing_finishing">Dokončovanie párovania</string>
+    <string name="combov2_no_connection_for_n_mins">Žiadne spojenie v priebehu %1$d min</string>
+    <string name="combov2_less_than_one_minute_ago">Pred menej ako minútou</string>
+    <string name="combov2_setting_current_pump_time">Nastavenie aktuálneho času pumpy</string>
+    <string name="combov2_setting_current_pump_date">Nastavenie aktuálneho dátumu pumpy</string>
+    <string name="combov2_not_initialized">Nie je inicializovaný</string>
+    <string name="combov2_checking_pump">Kontrola pumpy</string>
+    <string name="combov2_ready">Pripravený</string>
+    <string name="combov2_suspended">Pozastavené</string>
+    <string name="combov2_pump_is_suspended">Pumpa je pozastavená</string>
+    <string name="combov2_executing_command">Vykonávanie príkazu</string>
+    <string name="combov2_getting_basal_profile_cmddesc">Načítavam bazálny profil</string>
+    <string name="combov2_setting_basal_profile_cmddesc">Nastavenie bazálneho profilu</string>
+    <string name="combov2_setting_tbr_cmddesc">Nastavenie %1$d%% dočasného bazálu na %2$d minút</string>
+    <string name="combov2_cancelling_tbr">Zrušenie prebiehajúceho dočasného bazálu</string>
+    <string name="combov2_delivering_bolus_cmddesc">Podávanie %1$.1f JI</string>
+    <string name="combov2_fetching_tdd_history_cmddesc">Načítavam CDD históriu</string>
+    <string name="combov2_updating_pump_datetime_cmddesc">Aktualizácia dátumu a času v pumpe</string>
+    <string name="combov2_updating_pump_status_cmddesc">Načítavam stav pumpy</string>
+    <string name="combov2_pairing_pin_failure">PIN nefungoval. Skontrolujte, či ste neurobili preklep. Pokiaľ sa to stále deje, zrušte a opakujte párovanie.</string>
+    <string name="combov2_discovery_duration">Dĺžka hľadania (v sekundách)</string>
+    <string name="combov2_verbose_logging">Povoliť podrobné logovanie Combo</string>
+    <string name="combov2_getting_basal_profile">Získávanie bazálneho profilu; čítanie %1$d. faktora</string>
+    <string name="combov2_setting_basal_profile">Nastavenie bazálneho profilu; zapisovanie %1$d. faktora</string>
+    <string name="combov2_delivering_bolus">Podávanie bolusu (podané %1$.1f z %2$.1f JI)</string>
+    <string name="combov2_cannot_deliver_pump_suspended">Nie je možné podať bolus - pumpa je pozastavená</string>
+    <string name="combov2_insufficient_insulin_in_reservoir">Nedostatok inzulínu v zásobníku</string>
+    <string name="combov2_bolus_cancelled">Bolus zrušený</string>
+    <string name="combov2_bolus_delivery_failed">Podávanie inzulínu zlyhalo. Zdá sa, že nebol podaný žiadny bolus. Aby ste si boli istí, skontrolujte pumpu a prípadne pošlite bolus znovu. Aby sa zabránilo nechcenému dvojitému bolusu, podanie bolusu nie je automaticky opakované.</string>
+    <string name="combov2_bolus_not_delivered">Bolus nebol podaný</string>
+    <string name="combov2_cannot_access_pump_data">Nie je možné získať prístup k dátam pumpy; pumpa musí byť znova spárovaná</string>
+    <string name="combov2_unaccounted_bolus_detected_cancelling_bolus">Zistené nečakané bolusy. Z bezpečnostných dôvodov bolus zrušený.</string>
+    <string name="combov2_incorrect_active_basal_profile">Nesprávny aktívny bazálny profil; profil 1 musí byť aktívny, nie profil %1$d</string>
+    <string name="combov2_unrecognized_alert">Nerozpoznané Combo upozornenie</string>
+    <string name="combov2_combo_alert">Combo upozornenie</string>
+    <string name="combov2_current_tbr">%1$d%% (%2$d min zostáva)</string>
+    <string name="combov2_current_tbr_less_than_1min">%1$d%% (zostáva menej ako 1 min)</string>
+    <string name="combov2_load_tdds_cancelled">Načítanie CDD zrušené</string>
+    <string name="combov2_retrieving_tdds_failed">Načítanie CDD zlyhalo</string>
+    <string name="combov2_battery_low_warning">Batéria v pumpe je takmer vybitá</string>
+    <string name="combov2_reservoir_low_warning">V zásobníku je málo inzulínu</string>
+    <string name="combov2_setting_tbr_succeeded">Nastavenie dočasného bazálu bolo úspešné</string>
+    <string name="combov2_setting_tbr_failed">Nastavenie dočasného bazálu zlyhalo</string>
+    <string name="combov2_set_emulated_100_tbr">Nastaviť emulovaný 100% dočasný bazál</string>
+    <string name="combov2_letting_emulated_100_tbr_finish">Nechávam emulovaný 100% dočasný bazál dokončiť</string>
+    <string name="combov2_ignoring_redundant_100_tbr">Ignorovanie požiadavky 100% dočasného bazálu</string>
+    <string name="combov2_hit_unexpected_tbr_limit">Pri úprave dočasného bazálu došlo k neočekávanému limitu: vyžadované %1$d%%, dosiahnutý limit %2$d%%</string>
+    <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Nie je možné nastaviť absolútny dočasný bazál, pokiaľ je bazálna dávka nulová</string>
+    <string name="combov2_pair_with_pump_summary">Párovať AndroidAPS a Android s momentálně nespárovanou pumpou Accu-Chek Combo</string>
+    <string name="combov2_unpair_pump_summary">Zrušiť párovanie AndroidAPS a Androidu v súčasnej dobe spárovanej Accu-Chek Combo</string>
+    <string name="combov2_unknown_tbr_detected">Neznámy dočasný bazál bol zistený a zastavený. Percentuálna hodnota: %1$d%%; zostávajúca doba trvania: %2$s</string>
+    <string name="combov2_connection_error">Chyba pripojenia: %1$s</string>
+    <string name="combov2_short_status_last_connection">Posledné spoj: pred %1$d min</string>
+    <string name="combov2_short_status_alert">Upozornenie: %s</string>
+    <string name="combov2_short_status_last_bolus">Posledný bolus: %1$sJI @ %2$s</string>
+    <string name="combov2_short_status_temp_basal">Doč. bazál: %s</string>
+    <string name="combov2_short_status_reservoir">Zásobník: %dJI</string>
+    <string name="combov2_short_status_battery_state_empty">prázdny</string>
+    <string name="combov2_short_status_battery_state_low">nízka</string>
+    <string name="combov2_short_status_battery_state_full">plná</string>
+    <string name="combov2_short_status_battery_state">Bat: %s</string>
+    <string name="combov2_automatic_reservoir_entry">Detekovať a vložiť automaticky výmenu zásobníka</string>
+    <string name="combov2_automatic_battery_entry">Detekovať a vložiť automaticky výmenu batérie</string>
+    <string name="combov2_note_reservoir_change">Výmena zásobníka inzulínu automaticky vložená ovládačom ComboV2</string>
+    <string name="combov2_note_battery_change">Výmena batérie automaticky vložená ovládačom ComboV2</string>
+    <string name="combov2_timezone_changed">Časové pásmo zmenené</string>
+    <string name="combov2_datetime_changed">Dátum a/alebo čas zmenený</string>
+    <string name="combov2_dst_started">Začal letný čas (DST)</string>
+    <string name="combov2_dst_ended">Letný čas (DST) skončil</string>
+    <string name="combov2_cannot_connect_pump_error_observed">Nemôžem sa pripojiť k pumpe, pretože pumpa zaznamenala chybu. Užívateľ musí spracovať chybu a potom čakať 5 minút, alebo stlačiť tlačítko Obnoviť na karte ovládača pumpy.</string>
+    <string name="combov2_refresh_pump_status_after_error">Obnovovanie stavu pumpy po zaznamenaní chyby</string>
+    <string name="combov2_go_back">Späť</string>
+    <string name="combov2_cannot_pair_driver_not_initialized_explanation">Nie je možné spárovať, pretože ovládač nie je inicializovaný. To sa obvykle stáva, ak neboli udelené potrebné oprávnenia Bluetooth. Choďte späť, udeľte oprávnenia Bluetooth, potom skúste znova spárovať.</string>
+    <string name="combov2_bluetooth_disabled">Nie je možné spustiť ovládač - Bluetooth je vypnuté</string>
+    <string name="combov2_bluetooth_not_supported">Ovládač nie je možné spustiť - toto zariadenie nepodporuje Bluetooth</string>
+</resources>

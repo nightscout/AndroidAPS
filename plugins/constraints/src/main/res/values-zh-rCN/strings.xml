@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PhoneChecker -->
+    <!-- DST Helper -->
+    <!-- Storage constraint -->
+    <!-- Version Checker -->
+    <!-- Signature verifier -->
+    <!-- BG Quality -->
+    <!-- Safety -->
+    <string name="limitingcarbs">由于 %2$s, 将碳水化合物限制为 %1$d 克</string>
+    <string name="pumpisnottempbasalcapable">这个泵无法设置临时基础率</string>
+    <string name="closedmodedisabledinpreferences">在参数选项中禁用了闭环模式</string>
+    <string name="closed_loop_disabled_on_dev_branch">正在运行开发版本，闭环被禁用了</string>
+    <string name="closed_loop_disabled_with_eb">由于运行扩展大剂量而禁用了闭环</string>
+    <string name="smbalwaysdisabled">SMB always and after carbs disabled 因为实时的血糖来源不支持高级筛选</string>
+    <string name="smbnotallowedinopenloopmode">在开环模式下不允许使用SMB－微型大剂量</string>
+    <string name="maxvalueinpreferences">在参数选项里的最大值</string>
+    <string name="hardlimit">硬限制</string>
+    <string name="treatmentssafety_title">治疗安全</string>
+    <!-- Objectives -->
+    <string name="not_completed_yet">尚未完成</string>
+    <string name="time_elapsed">已用时间</string>
+    <string name="maxiobset">合理地设置最大 IOB</string>
+    <string name="hasbgdata">所选的血糖值来源的血糖是可用的</string>
+    <string name="loopenabled">闭环启用了</string>
+    <string name="apsselected">APS已选择</string>
+    <string name="closedmodeenabled">闭环模式启用了</string>
+    <string name="objectives_shortname">目标</string>
+    <string name="description_objectives">学习计划</string>
+    <string name="doyouwantresetstart">你想要重置已启动的目标? 你会失去已有的进度。</string>
+</resources>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Insulin -->
+    <string name="lyumjev">Lyumjev</string>
+    <string name="description_insulin_rapid">Réglages pour les insulines Humalog et NovoRapid / NovoLog</string>
+    <string name="description_insulin_ultra_rapid">Réglages pour l\'insuline Fiasp</string>
+    <string name="description_insulin_lyumjev">Réglages pour l\'insuline Lyumjev</string>
+    <string name="description_insulin_free_peak">Permet de définir le pic de l’activité de l’insuline et ne doit être utilisé que par les utilisateurs avancés</string>
+    <string name="insulin_shortname">INS</string>
+    <string name="insulin_oref_peak">Délai du pic de la courbe IA</string>
+    <string name="insulin_peak_time">Délai du pic [min]</string>
+    <string name="free_peak_oref">Profil d\'insuline ajustable Oref</string>
+    <string name="rapid_acting_oref">Insuline à Action Rapide Oref </string>
+    <string name="ultra_rapid_oref">Insuline Ultra Rapide Oref</string>
+    <string name="dia_too_short">Durée d’Action pour %1$f trop courte - utiliser %2$f à la place !</string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
+</resources>

@@ -2,15 +2,12 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_watchface">AAPS</string>
     <string name="label_watchface_large">AAPS (Grande)</string>
     <string name="label_watchface_big_chart">AAPS (Aumentado)</string>
     <string name="label_watchface_no_chart">AAPS (SinGráfico)</string>
     <string name="label_watchface_circle">AAPS (Círculo)</string>
-    <string name="label_watchface_v2">AAPS(v2)</string>
-    <string name="label_watchface_cockpit">AAPS(Cockpit)</string>
-    <string name="label_watchface_steampunk">AAPS(Steampunk)</string>
     <string name="label_watchface_digital_style">AAPS (Digital)</string>
+    <string name="label_watchface_custom">AAPS(personalizado)</string>
     <string name="label_actions_tile">AAPS(Acciones)</string>
     <string name="label_temp_target_tile">AAPS(Objetivo Temporal)</string>
     <string name="label_quick_wizard_tile">AAPS(Asistente Rápido)</string>
@@ -22,20 +19,33 @@
     <string name="msg_warning_old">Los datos de AAPS son %1$s antiguos. Comprueba el sensor, xDrip+, NS, configuración de AAPS y otros</string>
     <string name="pref_vibrate_on_bolus">Vibrar en bolos</string>
     <string name="pref_units_for_actions">Unidades para Acciones</string>
+    <string name="units_short">U</string>
+    <string name="pref_display_settings">Pantalla</string>
+    <string name="pref_graph_settings">Gráfico</string>
+    <string name="pref_interface_settings">Interfaz</string>
+    <string name="pref_others_settings">Otros</string>
+    <string name="pref_complication_settings">Complicaciones</string>
     <string name="pref_show_date">Mostrar fecha</string>
     <string name="pref_show_iob">Mostrar Insulina activa (IOB)</string>
+    <string name="pref_show_detailed_iob">Mostrar IOB detallada</string>
     <string name="pref_show_cob">Mostrar COB</string>
     <string name="pref_show_delta">Mostrar delta</string>
+    <string name="pref_show_detailed_delta">Mostrar deltas detallados</string>
     <string name="pref_show_avgdelta">Mostrar delta promedio</string>
     <string name="pref_show_phone_battery">Mostrar batería del teléfono</string>
     <string name="pref_show_rig_battery">Mostrar batería de la plataforma</string>
     <string name="pref_show_basal_rate">Mostrar la tasa basal</string>
     <string name="pref_show_loop_status">Mostrar estado del lazo</string>
     <string name="pref_show_bg">Mostrar glucosa</string>
+    <string name="pref_show_bgi">Mostrar BGI (Índice de glucosa en sangre)</string>
     <string name="pref_show_direction_arrow">Mostrar flecha de dirección</string>
     <string name="pref_show_ago">Mostrar histórico</string>
+    <string name="pref_show_temp_basal">Mostrar TBR</string>
+    <string name="pref_show_bolus">Mostrar Bolos &amp; SMB</string>
+    <string name="pref_show_grid">Mostrar cuadrícula</string>
     <string name="pref_dark" comment="Enables dark visual theme">Tema oscuro</string>
     <string name="pref_highlight_basals">Resaltar las basales</string>
+    <string name="pref_prediction_lines">Mostrar predicciones</string>
     <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Divisor de coincidencia</string>
     <string name="pref_chart_timeframe">Gráfico por franja de tiempo</string>
     <string name="pref_1_hour">1 hora</string>
@@ -48,7 +58,6 @@
     <string name="pref_quick_righty">Rápido a la derecha</string>
     <string name="pref_quick_lefty">Rápido a la izquierda</string>
     <string name="pref_modern_sparse">Disperso moderno</string>
-    <string name="pref_delta_granularity">Granularidad delta (Steampunk)</string>
     <string name="pref_low">Bajo</string>
     <string name="pref_medium">Medio</string>
     <string name="pref_high">Alto</string>
@@ -103,18 +112,18 @@
     <string name="action_preset_1">Botón 1</string>
     <string name="action_preset_2">Botón 2</string>
     <string name="action_preset_3">Botón 3</string>
-    <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Cantidad libre</string>
+    <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Cantidad libre</string>
     <string name="action_confirm">CONFIRMAR</string>
-    <string name="action_timeshift">Intervalo de tiempo</string>
+    <string name="action_timeshift">Cambio de hora</string>
     <string name="action_bolus">Bolo</string>
     <string name="bolus_progress">Progreso del bolo</string>
     <string name="press_to_cancel">Presiona para cancelar</string>
     <string name="cancel_bolus">CANCELAR BOLO</string>
-    <string name="status_pump">Bomba</string>
+    <string name="status_pump">Infusora</string>
     <string name="status_loop">Lazo</string>
     <string name="status_profile_switch">Cambio de perfil</string>
     <string name="status_tdd">TDD</string>
-    <string name="activity_carb">Carbohidratos</string>
+    <string name="activity_carb">COB</string>
     <string name="activity_IOB">IOB</string>
     <string name="activity_no_status">Sin estado</string>
     <string name="color_name_red">Rojo</string>
@@ -143,6 +152,7 @@
     <string name="pref_simplify_ui_sum">Mostrar sólo la hora y la glucosa</string>
     <string name="pref_vibrate_hourly">Vibrar cada hora</string>
     <string name="pref_show_weeknumber">Mostrar número de semana</string>
+    <string name="custom_pref_show_seconds">Mostrar segundos</string>
     <string name="digitalstyle_pref_your_style">Tu estilo:</string>
     <string name="digitalstyle_style_none">Sin estilo</string>
     <string name="digitalstyle_style_minimal">Estilo mínimo</string>
@@ -170,15 +180,13 @@
     <string name="wear_control_no_data">No hay datos disponibles</string>
     <string name="increment">incremento</string>
     <string name="decrement">decremento</string>
-    <string name="first_char_high">A</string>
-    <string name="first_char_low">B</string>
     <string name="abbreviation_average">media</string>
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
     <string name="no_tmp_basal_u_h">-.--U/h</string>
-    <string name="uploader_na">Subido: ---%</string>
-    <string name="no_status">S: sin estado</string>
-    <string name="time_stamp_na_min_ago">-- minutos atrás</string>
+    <string name="uploader_na">U: --%</string>
+    <string name="no_status">S: --</string>
+    <string name="time_stamp_na_min_ago">-- Hace min.</string>
     <string name="delta_na">--- mg/dl</string>
     <string name="no_loop_status">Sin estado del lazo</string>
     <string name="cob_000g">000g</string>
@@ -186,4 +194,14 @@
     <string name="iob_0_00u">0,00U</string>
     <string name="snooze_alert">Posponer Alertas de AAPS</string>
     <string name="sending_snooze">Enviando aplazamientos a AAPS</string>
+    <string name="short_hour">h</string>
+    <string name="week_short">s</string>
+    <string name="day_short">d</string>
+    <string name="hour_short">h</string>
+    <string name="hour_minute">%1$s:%2$s</string>
+    <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
+    <string name="old">antiguo</string>
+    <string name="old_warning">¡antiguo!</string>
+    <string name="error">!err!</string>
+    <string name="pref_heartRateSampling">Ritmo cardíaco</string>
 </resources>

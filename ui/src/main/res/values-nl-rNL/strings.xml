@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bolus_constraint_applied">Bolus limiet ingesteld</string>
+    <string name="carbs_constraint_applied">Koolhydraten beperking ingesteld</string>
+    <string name="temp_target_short">TT</string>
+    <string name="dialog_canceled">Dialoog geannuleerd</string>
+    <string name="start_activity_tt">Start inspanning TT</string>
+    <string name="start_eating_soon_tt">Start binnenkort eten TT</string>
+    <string name="start_hypo_tt">Start Hypo TT</string>
+    <string name="time_offset">Tijdverschuiving</string>
+    <string name="unit_minute_short">min</string>
+    <string name="remind_to_bolus_later">Herinner later te bolussen</string>
+    <string name="a11y_carb_reminder">herinnering instellen</string>
+    <!--    Widget-->
+    <string name="configure">Configureer transparantie</string>
+    <string name="widget_description">AAPS widget</string>
+    <!--     Activities-->
+    <string name="activity_monitor">Activiteitsmonitor</string>
+    <string name="do_you_want_reset_stats">Wil je de activiteitenstatistieken resetten?</string>
+    <string name="do_you_want_reset_tdd_stats">Wilt u de TDD statistieken resetten?</string>
+    <string name="statistics">Statistieken</string>
+    <string name="calculation_in_progress">Berekening wordt uitgevoerd</string>
+    <string name="invalid_age">Ongeldige leeftijd ingevoerd</string>
+    <string name="invalid_weight">Ongeldige gewicht ingevoerd</string>
+    <string name="id">ID:</string>
+    <string name="submit">Verzenden</string>
+    <string name="age">Leeftijd</string>
+    <string name="weight_label">Gewicht</string>
+    <string name="most_common_profile">Meest voorkomende profiel:</string>
+    <string name="survey_comment">Opmerking: Alleen gegevens die zichtbaar zijn op dit scherm worden anoniem geüpload. ID is toegewezen aan deze installatie van AAPS. U kunt gegevens opnieuw indienen als uw hoofdprofiel wordt gewijzigd, maar laat het ten minste een week draaien om resultaat zichtbaar te maken in de tijd in het bereik. Uw hulp wordt gewaardeerd.</string>
+    <string name="glucose_type">Glucose type</string>
+    <string name="bg_other">Andere</string>
+    <string name="bg_meter">Meter</string>
+    <string name="bg_sensor">Sensor</string>
+    <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="treatments_wizard_total_label">Totaal</string>
+    <!-- FillDialog -->
+    <string name="fill_warning">Zorg ervoor dat de hoeveelheid overeenkomt met de specificatie van uw infusieset!</string>
+    <string name="record_pump_site_change">Markeer een infuuswissel in NS</string>
+    <string name="record_insulin_cartridge_change">Markeer een insuline ampul wissel in NS</string>
+    <!-- InsulinDialog -->
+    <string name="do_not_bolus_record_only">Geen bolus, enkel registreren</string>
+    <!-- ProfileSwitchDialog -->
+    <string name="reuse_profile_pct_hours">Hergebruik %1$d%% %2$dh</string>
+    <string name="timeshift_label">Tijd verschuiving</string>
+    <string name="percentage_label">Percentage</string>
+    <!-- LoopDialog -->
+    <string name="suspendloopfor1h">Onderbreek loop voor 1u</string>
+    <string name="suspendloopfor2h">Onderbreek loop voor 2u</string>
+    <string name="suspendloopfor3h">Onderbreek loop voor 3u</string>
+    <string name="suspendloopfor10h">Onderbreek loop voor 10u</string>
+    <string name="disconnectpump">Pomp afkoppelen</string>
+    <string name="disconnectpumpfor15m">Verbreek verbinding 15min met pomp</string>
+    <string name="disconnectpumpfor30m">Verbreek verbinding 30min met pomp</string>
+    <string name="disconnectpumpfor1h">Verbreek verbinding 1u met pomp</string>
+    <string name="disconnectpumpfor2h">Verbreek verbinding 2u met pomp</string>
+    <string name="disconnectpumpfor3h">Verbreek verbinding 3u met pomp</string>
+    <string name="resume">Hervatten</string>
+    <string name="reconnect">Opnieuw verbinden met pomp</string>
+    <string name="duration15m">15 min</string>
+    <string name="duration30m">30 min</string>
+    <string name="duration1h">1 uur</string>
+    <string name="duration2h">2 uur</string>
+    <string name="duration3h">3 uur</string>
+    <string name="duration10h">10 uur</string>
+    <!-- WizardDialog -->
+    <string name="a11_correction_percentage">corrigeer uitkomt met percentage</string>
+    <string name="a11_correction_units">corrigeer uitkomt met units</string>
+    <string name="two_hours">2u</string>
+    <string name="result_insulin_carbs">Resultaat: %1$s %2$s</string>
+    <string name="missing_carbs">Er ontbreekt %1$d g</string>
+    <string name="a11y_current_bg">huidige bloedglucose</string>
+    <string name="carb_time_label">KH tijdsduur</string>
+    <string name="a11y_set_carb_timer">koolhydraten timer alarm instellen</string>
+    <string name="show_calculation">Toon berekening</string>
+    <!-- Treatments -->
+    <string name="no_records_available">Geen records beschikbaar</string>
+    <string name="calculation_short">Calc</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="treatments_insulin_label_string">Insuline:</string>
+    <string name="treatments_carbs_label_string">Koolhydraten:</string>
+    <string name="treatments_iobtotal_label_string">Totale IOB:</string>
+    <string name="treatments_iob_activity_total_label_string">Totale IOB activiteit:</string>
+    <string name="tempbasals_realduration_label_string">Tijdsduur:</string>
+    <string name="tempbasals_netratio_label_string">Ratio:</string>
+    <string name="tempbasals_netinsulin_label_string">Ins:</string>
+    <string name="tempbasals_iob_label_string">IOB:</string>
+    <string name="treatments_wizard_correction_label">Corr</string>
+    <string name="meal_bolus">Maaltijd</string>
+    <string name="prime">Vullen</string>
+    <string name="profile_changes">Profiel wijzigingen</string>
+    <string name="tempt_targets">Tijdelijke streefdoelen</string>
+    <string name="carbs_and_bolus">Koolhydraten en bolus</string>
+    <string name="show_invalidated_records">Toon ongeldig gemarkeerde / verwijderde records</string>
+    <string name="hide_invalidated_records">Verberg ongeldig gemarkeerde / verwijderde records</string>
+    <string name="refresh_from_nightscout">Ververs vanaf Nightscout</string>
+    <string name="refresheventsfromnightscout">Ververs van NS</string>
+    <string name="show_invalidated">Toon ongeldig</string>
+    <string name="hide_invalidated">Verberg ongeldig</string>
+    <string name="careportal_remove_started_events">Verwijder AAPS is gestart items</string>
+    <string name="hide_loop">Verberg loop</string>
+    <string name="show_loop">Toon loop</string>
+    <string name="user_entry">Gebruikersinvoer</string>
+    <string name="clone_label">Dupliceren</string>
+    <string name="show_loop_records">Toon loop records</string>
+    <string name="show_hide_records">Verberg loop records</string>
+    <!-- ProfileHelperActivity -->
+    <string name="profile1">Profiel 1</string>
+    <string name="profile2">Profiel 2</string>
+    <string name="profile_type">Profieltype</string>
+    <string name="basal_pct_from_tdd_label">% van basaal</string>
+    <string name="selected_profile">Geselecteerd:</string>
+    <string name="compare_profile">Vergelijk profielen</string>
+    <string name="nav_profile_helper">Profiel hulp</string>
+    <string name="motol_default_profile">Basis profiel</string>
+    <string name="current_profile">Huidig profiel</string>
+    <string name="available_profile">Beschikbare profielen</string>
+    <string name="format_with_tdd">Duur: %1$d TDD: %2$.0f E</string>
+    <string name="format_with_tdd_and_pct">Leeftijd: %1$d TDD: %2$.0f E %3$d%%</string>
+    <string name="format_with_weight">Leeftijd: %1$d Gewicht: %2$.0f kg</string>
+    <string name="dpv_default_profile">DPV Basis profiel</string>
+    <string name="invalid_pct">Ongeldig % invoer</string>
+    <!-- Other dialogs -->
+    <string name="basal_rate">Basaalstand</string>
+    <!--    BolusProgressDialog-->
+    <string name="stop_pressed">STOP INGEDRUKT</string>
+    <!--QuickWizard-->
+    <string name="a11y_only_on_watch">alleen op smartwatch</string>
+    <string name="a11y_only_on_phone">alleen op telefoon</string>
+    <string name="quickwizard_settings">QuickWizard instellingen</string>
+    <string name="overview_edit_quickwizard_button_text">Knoptekst:</string>
+    <string name="overview_edit_quickwizard_carbs">Koolhydraten:</string>
+    <string name="overview_edit_quickwizard_valid">Geldig:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">Toevoegen</string>
+    <string name="overview_quickwizard_item_edit_button">Wijzig</string>
+    <string name="overview_edit_quickwizard_show_on_device">Toon invoer op apparaat:</string>
+    <string name="overview_edit_quickwizard_use_bg">BG berekening</string>
+    <string name="overview_edit_quickwizard_use_bolus_iob">Bolus IOB berekening</string>
+    <string name="overview_edit_quickwizard_use_basal_iob">Basaal IOB berekening</string>
+    <string name="overview_edit_quickwizard_use_trend">Trend berekening</string>
+    <string name="overview_edit_quickwizard_use_superbolus">Superbolus berekening</string>
+    <string name="overview_edit_quickwizard_percentage">Percentage</string>
+    <string name="device_all">Alle</string>
+    <string name="device_phone">Telefoon</string>
+    <string name="device_watch">Smartwatch</string>
+    <string name="positive_only">Enkel positief</string>
+    <string name="negative_only">Enkel negatief</string>
+    <string name="overview_editquickwizard_usecob">COB berekening</string>
+    <string name="overview_editquickwizard_usetemptarget">Tijdelijk doel berekening</string>
+    <string name="overview_editquickwizard_usepercentage">Percentage berekening</string>
+    <string name="app_default">Applicatie standaardwaarde</string>
+    <string name="a11y_drag_and_drop_handle">sleep-modus</string>
+</resources>

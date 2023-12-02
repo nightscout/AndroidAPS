@@ -1,0 +1,34 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+
+    <application>
+        <activity
+            android:name=".activities.BLEScanActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="info.nightscout.pump.danars.activities.BLEScanActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.PairingHelperActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activities.EnterPinActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTask" />
+
+        <service
+            android:name=".services.DanaRSService"
+            android:enabled="true"
+            android:exported="false" />
+    </application>
+</manifest>

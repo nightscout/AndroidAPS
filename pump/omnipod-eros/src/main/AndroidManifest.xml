@@ -1,0 +1,26 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application android:supportsRtl="true">
+        <service
+            android:name=".rileylink.service.RileyLinkOmnipodService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.wizard.activation.ErosPodActivationWizardActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.wizard.deactivation.ErosPodDeactivationWizardActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.ErosPodManagementActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.ErosPodHistoryActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme" />
+    </application>
+</manifest>

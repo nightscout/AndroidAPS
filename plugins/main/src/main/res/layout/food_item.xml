@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/food_card"
+    style="@style/Widget.MaterialComponents.CardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    app:cardCornerRadius="4dp"
+    app:contentPadding="2dp"
+    app:cardElevation="2dp"
+    app:cardUseCompatPadding="true" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Name"
+                android:textSize="24dp"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:gravity="start"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/carbs"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Carbs"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/portion"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Portion"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/fat"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Fat"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/protein"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Protein"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/energy"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Energy"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/ic_calculator"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:contentDescription="@string/calculator_label"
+            android:orientation="horizontal"
+            android:paddingStart="-5dp"
+            android:paddingEnd="-5dp"
+            android:scaleX=".5"
+            android:scaleY=".5"
+            android:src="@drawable/ic_calculator" />
+
+        <ImageView
+            android:id="@+id/ic_remove"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:contentDescription="@string/remove_label"
+            android:orientation="horizontal"
+            android:padding="2dp"
+            android:src="@drawable/ic_trash_outline" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

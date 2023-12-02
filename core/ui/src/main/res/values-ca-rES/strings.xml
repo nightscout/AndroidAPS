@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    General-->
+    <string name="refresh">Actualitzar</string>
+    <string name="error">Error</string>
+    <string name="profile_set_ok">Perfil de basal actualitzat a la bomba</string>
+    <string name="invalid_input">Dades no vàlides</string>
+    <string name="bolus_delivering">Lliurant %1$.2f U</string>
+    <string name="constraint_applied">Restricció aplicada!</string>
+    <string name="tempbasals_iobtotal_label_string">IOB total:</string>
+    <string name="tt_label">OT</string>
+    <string name="pump_unreachable">Bomba no accessible</string>
+    <string name="insulin_unit_shortname">U</string>
+    <string name="pump_base_basal_rate">%1$.2f U/h</string>
+    <string name="pump_not_initialized_profile_not_set">Bomba no iniciada, perfil no establert!</string>
+    <string name="failed_update_basal_profile">Error en actualitzar el perfil de basal</string>
+    <string name="no_valid_basal_rate">No s\'ha pogut llegir de la bomba cap ràtio vàlida de basal</string>
+    <string name="limiting_iob">Limitant IOB a %1$.1f U a causa de %2$s</string>
+    <string name="loop_disabled">LLAÇ DESACTIVAT PER RESTRICCIONS</string>
+    <string name="event_type">Tipus d\'esdeveniment</string>
+    <string name="reload">Actualitzar</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="save">Desar</string>
+    <string name="snooze">Postposar</string>
+    <string name="virtual_pump">Bomba virtual</string>
+    <string name="constraints">Restriccions</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="pump_paused">Bomba en pausa</string>
+    <string name="and">I</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Usuari</string>
+    <string name="result">Resultat</string>
+    <string name="settings">Configuració</string>
+    <string name="statuslights">Llums d\'estat</string>
+    <string name="do_ns_upload_title">Enviar dades de glucèmia a NS</string>
+    <string name="configbuilder_insulin">Insulina</string>
+    <string name="value_unavailable_short">n/d</string>
+    <string name="ue_export_to_csv">Exportar entrades d\'usuari a Excel (csv)</string>
+    <string name="confirm">Confirmar</string>
+    <string name="pump">Bomba</string>
+    <string name="missed_bg_readings">Falten lectures de glucèmia</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="mute5min">Silenciar 5 minuts</string>
+    <string name="mute">Silenciar</string>
+    <string name="success">Correcte</string>
+    <string name="extendedbolusdeliveryerror">Error en lliurar bolus estès</string>
+    <string name="extended_bolus">Bolus estès</string>
+    <string name="paused">En pausa</string>
+    <string name="tdd_total">TDD Total</string>
+    <string name="goingtodeliver">A punt de lliurar %1$.2f U</string>
+    <string name="waitingforpump">Esperant bomba</string>
+    <string name="formatsignedinsulinunits">%1$+.2f U</string>
+    <string name="format_carbs">%1$d g</string>
+    <string name="format_hours">%1$.2f h</string>
+    <string name="format_mins">%1$d min</string>
+    <string name="objectives">Objectius</string>
+    <string name="please_wait">Espereu si us plau…</string>
+    <string name="stop">Stop</string>
+    <string name="carbs">Carbs</string>
+    <string name="active"><![CDATA[<Actiu>]]></string>
+    <string name="date">Data</string>
+    <string name="units_label">Unitats</string>
+    <string name="dia_label">DIA</string>
+    <string name="ic_label">IC</string>
+    <string name="isf_label">ISF</string>
+    <string name="basal_label">Basal</string>
+    <string name="target_label">Objectiu</string>
+    <string name="basal_long_label">Ràtio de basal</string>
+    <string name="shortgram">g</string>
+    <string name="shortpercent">%</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="btwatchdog_title">BT Watchdog</string>
+    <string name="btwatchdog_summary">Apaga el bluetooth del telèfon un segon si no és possible connectar amb la bomba. Pot ajudar amb certs telèfons a on la connexió bluetooth es bloqueja.</string>
+    <string name="virtualpump_resultok">OK</string>
+    <string name="pump_time_updated">Actualitzada hora de la bomba</string>
+    <string name="exit">Sortir</string>
+    <string name="removerecord">Eliminar registre</string>
+    <string name="loopisdisabled">Llaç desactivat</string>
+    <string name="alarm">Alarma</string>
+    <string name="disableloop">Desactivar llaç</string>
+    <string name="enableloop">Activar llaç</string>
+    <string name="resumeloop">Reprendre llaç</string>
+    <string name="suspendloop">Aturar el llaç</string>
+    <string name="duration_min_label">Durada [min]</string>
+    <string name="notification">Avís</string>
+    <string name="noprofile">Encara cap perfil carregat des de NS</string>
+    <string name="exists">existeix</string>
+    <string name="notexists">no existeix</string>
+    <string name="glucose">Glucèmia</string>
+    <string name="iob">IOB</string>
+    <string name="cob">COB</string>
+    <string name="name_short">Nom:</string>
+    <string name="time">Hora</string>
+    <string name="ns_wifi_ssids">SSID WiFi</string>
+    <string name="loading">Carregant…</string>
+    <string name="notes_label">Notes</string>
+    <string name="remove_button">Eliminar</string>
+    <string name="wrong_pump_data">Dades procedents d\'una altra bomba. Canvieu el driver de la bomba per restablir el seu estat.</string>
+    <string name="bg_label">Glucèmia</string>
+    <string name="calibration">Calibració</string>
+    <string name="alarminxmin">Executar alarma en %1$d min</string>
+    <string name="treatmentdeliveryerror">Error en el bolus. Comprova manualment la quantitat real subministrada</string>
+    <string name="bolus_reminder">Recordatori de bolus</string>
+    <string name="duration_label">Durada</string>
+    <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Bomba aturada</string>
+    <string name="notconfigured">No configurat</string>
+    <string name="loopsuspended">Llaç aturat</string>
+    <string name="trend_arrow">Fletxa de tendència</string>
+    <string name="required">req</string>
+    <string name="a11y_arrow_none">cap</string>
+    <string name="a11y_arrow_unknown">desconegut</string>
+    <string name="a11y_high">alt</string>
+    <string name="a11y_low">baix</string>
+    <string name="average">Mitja</string>
+    <string name="tir">TIR (Temps en rang)</string>
+    <string name="none"><![CDATA[<cap>]]></string>
+    <string name="remove_label">ELIMINA</string>
+    <string name="activate_profile">Activar perfil</string>
+    <string name="reset">restablir</string>
+    <string name="profileswitch_ismissing">Falta canvi de perfil. Si us plau feu un canvi de perfil o cliqueu \"Activar perfil\" al perfil local.</string>
+    <string name="profile">Perfil</string>
+    <string name="overview_treatment_label">Tractament</string>
+    <string name="copytolocalprofile">Crear nou perfil local a partir d\'aquest perfil?</string>
+    <string name="wear_wizard_settings">Configuració de l\'assistent</string>
+    <string name="bg_trend_label">Tendència 15 min</string>
+    <string name="treatments_wizard_cob_label">COB</string>
+    <string name="bolus_iob_label">IOB Bolus</string>
+    <string name="treatments_wizard_basaliob_label">IOB Basal</string>
+    <string name="invalid">NO VÀLID</string>
+    <string name="login">Iniciar sessió</string>
+    <string name="stoptemptarget">Aturar objectiu temporal</string>
+    <string name="closedloop">Llaç tancat</string>
+    <string name="openloop">Llaç obert</string>
+    <string name="lowglucosesuspend">Suspensió per glucèmia baixa (LGS)</string>
+    <string name="dia">DIA (Durada de l\'Acció de la Insulina)</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">ISF</string>
+    <string name="suspendloop_label">Llaç desactivat/aturat</string>
+    <string name="iob_label">Insulina \"a bord\" (IOB)</string>
+    <!--    Protection-->
+    <string name="wrongpassword">Contrasenya incorrecta</string>
+    <string name="passwords_dont_match">Les contrasenyes no coincideixen</string>
+    <!--    Profile-->
+    <string name="basalprofilenotaligned">Valors basals no alineats amb les hores: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Valor basal reemplaçat pel màxim valor acceptat: %1$s</string>
+    <string name="profile_per_unit">/U</string>
+    <string name="profile_ins_units_per_hour">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+    <!--    ProfileFunction-->
+    <string name="startprofile">Iniciar perfil %1$d%% durant %2$d min</string>
+    <!--    APSResult-->
+    <string name="let_temp_basal_run">Deixar executar basal temporal</string>
+    <string name="rate">Dosi</string>
+    <string name="duration">Durada</string>
+    <string name="reason">Motiu</string>
+    <string name="nochangerequested">Cap canvi sol·licitat</string>
+    <!--    ProfileSwitch-->
+    <string name="zerovalueinprofile">Perfil no vàlid: %1$s</string>
+    <!--    Temptarget-->
+    <string name="mins">%1$d min</string>
+    <!--    Translator-->
+    <string name="careportal">Portal de cures</string>
+    <string name="careportal_bgcheck">Control glucèmia</string>
+    <string name="careportal_mbg">Glucèmia manual o calibració</string>
+    <string name="careportal_announcement">Avís</string>
+    <string name="careportal_note">Nota</string>
+    <string name="careportal_question">Pregunta</string>
+    <string name="careportal_exercise">Esport</string>
+    <string name="careportal_announcement_message">Anunci: %1$s</string>
+    <string name="careportal_note_message">Nota : %1$s</string>
+    <string name="careportal_question_message">Pregunta : %1$s</string>
+    <string name="careportal_exercise_message">Exercici : %1$s</string>
+    <string name="careportal_cgmsensorstart">Inici sensor CGM</string>
+    <string name="careportal_cgm_sensor_stop">Aturada sensor CGM</string>
+    <string name="careportal_dad_alert">Alerta D.A.D.</string>
+    <string name="careportal_profileswitch">Canvi de perfil</string>
+    <string name="careportal_snackbolus">Bolus de snack</string>
+    <string name="careportal_mealbolus">Bolus d\'àpat</string>
+    <string name="careportal_correctionbolus">Bolus de correcció</string>
+    <string name="careportal_combobolus">Bolus combo</string>
+    <string name="careportal_tempbasalstart">Inici basal temporal</string>
+    <string name="careportal_tempbasalend">Fi basal temporal</string>
+    <string name="careportal_carbscorrection">Correcció carbohidrats</string>
+    <string name="careportal_openapsoffline">OpenAPS fora de línia</string>
+    <string name="careportal_temporarytargetvalue">Valor objectiu temporal</string>
+    <string name="careportal_temporarytargetcancel">Cancel·lar objectiu temporal</string>
+    <string name="boluswizard">Calculadora de bolus</string>
+    <string name="glucosetype_finger">Dit</string>
+    <string name="glucosetype_sensor">Sensor</string>
+    <string name="manual">Manual</string>
+    <string name="unknown">desconegut</string>
+    <string name="eatingsoon">Menjar aviat</string>
+    <string name="hypo">Hipo</string>
+    <string name="activity">Activitat (esport)</string>
+    <string name="wear">Wear</string>
+    <string name="automation">Automatització</string>
+    <string name="custom">Personalitzat</string>
+    <string name="loop">Llaç</string>
+    <string name="ns">NS</string>
+    <string name="record">Registre</string>
+    <!--    Command-->
+    <string name="connectiontimedout">Temps de connexió esgotat</string>
+    <!--    PumpEnactResult-->
+    <string name="enacted">Activat</string>
+    <string name="comment">Comentari</string>
+    <string name="percent">Percentage</string>
+    <string name="absolute">Absolut</string>
+    <string name="waitingforpumpresult">Esperant resultat</string>
+    <string name="smb_shortname">SMB</string>
+    <!--    CarbsReq-->
+    <!--    TDDStatsActivity-->
+    <string name="expweight">TDD ponderada exponencialment</string>
+    <string name="basalrate">Basal</string>
+    <string name="bolus">Bolus</string>
+    <string name="tdd">TDD (Total Dosi Diària)</string>
+    <string name="ratio">Ràtio</string>
+    <string name="amount_days"># Dies</string>
+    <string name="weight">Ponderació</string>
+    <string name="warning_Message">Possiblement imprecís si feu servir bolus per encebar!</string>
+    <string name="tbb">Basal total</string>
+    <string name="tbb2">TBB (Total Basal Base) * 2</string>
+    <!--    Ntp-->
+    <string name="timedetection">Detecció de temps</string>
+    <!-- User Entry -->
+    <string name="uel_bolus">BOLUS</string>
+    <string name="uel_bolus_calculator">Calculador de bolus</string>
+    <string name="uel_bolus_advisor">CALCULADORA DE BOLUS</string>
+    <string name="uel_extended_bolus">BOLUS ESTÈS</string>
+    <string name="uel_superbolus_tbr">SUPERBOLUS TBR</string>
+    <string name="uel_carbs">CARBS</string>
+    <string name="uel_extended_carbs">CARBS ESTESOS</string>
+    <string name="uel_temp_basal">BASAL TEMP</string>
+    <string name="uel_tt">OBJECTIU TEMP</string>
+    <string name="uel_new_profile">NOU PERFIL</string>
+    <string name="uel_clone_profile">CLONAR PERFIL</string>
+    <string name="uel_store_profile">DESAR PERFIL</string>
+    <string name="uel_profile_switch">CANVI DE PERFIL</string>
+    <string name="uel_profile_switch_cloned">CANVI DE PERFIL CLONAT</string>
+    <string name="uel_closed_loop_mode">MODE LLAÇ TANCAT</string>
+    <string name="uel_lgs_loop_mode">MODE LLAÇ LGS</string>
+    <string name="uel_open_loop_mode">MODE LLAÇ OBERT</string>
+    <string name="uel_loop_disabled">LLAÇ DESACTIVAT</string>
+    <string name="uel_loop_enabled">LLAÇ ACTIVAT</string>
+    <string name="uel_reconnect">RECONNECTAR</string>
+    <string name="uel_disconnect">DESCONNECTAR</string>
+    <string name="uel_resume">REPRENDRE</string>
+    <string name="uel_suspend">ATURAR</string>
+    <string name="uel_hw_pump_allowed">BOMBA HW PERMESA</string>
+    <string name="uel_clear_pairing_keys">ESBORRAR CLAUS DE SINCRONITZACIÓ</string>
+    <string name="uel_accepts_temp_basal">ACCEPTA BASAL TEMP</string>
+    <string name="uel_cancel_temp_basal">CANCEL·LAR BASAL TEMP</string>
+    <string name="uel_cancel_bolus">CANCEL·LAR BOLUS</string>
+    <string name="uel_cancel_extended_bolus">CANCEL·LAR BOLUS ESTÈS</string>
+    <string name="uel_cancel_tt">CANCEL·LAR OBJECTIU TEMP</string>
+    <string name="uel_careportal">PORTAL DE CURES</string>
+    <string name="uel_site_change">CANVI CÀNULA</string>
+    <string name="uel_reservoir_change">CANVI RESERVORI</string>
+    <string name="uel_calibration">CALIBRACIÓ</string>
+    <string name="uel_prime_bolus">BOLUS D\'ENCEBAT</string>
+    <string name="uel_treatment">TRACTAMENT</string>
+    <string name="uel_careportal_ns_refresh">ACTUALITZAR PORTAL DE CURES NS</string>
+    <string name="uel_profile_switch_ns_refresh">ACTUALITZAR CANVI PERFIL NS</string>
+    <string name="uel_treatments_ns_refresh">ACTUALITZAR TRACTAMENTS NS</string>
+    <string name="uel_tt_ns_refresh">REFRESCAR OBJECTIU TEMP NS</string>
+    <string name="uel_automation_removed">AUTOMATITZACIÓ ELIMINADA</string>
+    <string name="uel_bg_removed">GLUCÈMIA ELIMINADA</string>
+    <string name="uel_careportal_removed">PORTAL DE CURES ELIMINAT</string>
+    <string name="uel_bolus_removed">BOLUS ELIMINAT</string>
+    <string name="uel_carbs_removed">CARBS ELIMINATS</string>
+    <string name="uel_temp_basal_removed">BASAL TEMP ELIMINADA</string>
+    <string name="uel_extended_bolus_removed">BOLUS ESTÈS ELIMINAT</string>
+    <string name="uel_food">ÀPAT</string>
+    <string name="uel_food_removed">ÀPAT ELIMINAT</string>
+    <string name="uel_profile_removed">PERFIL ELIMINAT</string>
+    <string name="uel_profile_switch_removed">CANVI PERFIL ELIMINAT</string>
+    <string name="uel_restart_events_removed">EVENTS DE REINICI ELIMINATS</string>
+    <string name="uel_treatment_removed">TRACTAMENT ELIMINAT</string>
+    <string name="uel_tt_removed">OBJECTIU TEMP ELIMINAT</string>
+    <string name="uel_ns_paused">NS EN PAUSA</string>
+    <string name="uel_ns_resume">REPRENDRE NS</string>
+    <string name="uel_ns_queue_cleared">CUA NS BUIDADA</string>
+    <string name="uel_ns_settings_copied">CONFIGURACIÓ NS COPIADA</string>
+    <string name="uel_error_dialog_ok">DIÀLEG D\'ERROR OK</string>
+    <string name="uel_error_dialog_mute">DIÀLEG D\'ERROR SILENCIAT</string>
+    <string name="uel_error_dialog_mute_5min">DIÀLEG D\'ERROR SILENCIAT 5MIN</string>
+    <string name="uel_objective_started">OBJECTIU INICIAT</string>
+    <string name="uel_objective_unstarted">OBJECTIU NO INICIAT</string>
+    <string name="uel_objectives_skipped">OBJECTIUS OMESOS</string>
+    <string name="uel_stat_reset">RESTABLIR ESTADÍSTICA</string>
+    <string name="uel_delete_logs">ELIMINAR LOGS</string>
+    <string name="uel_delete_future_treatments">ELIMINAR TRACTAMENTS FUTURS</string>
+    <string name="uel_export_settings">EXPORTAR CONFIGURACIÓ</string>
+    <string name="uel_import_settings">IMPORTAR CONFIGURACIÓ</string>
+    <string name="uel_reset_databases">RESTABLIR BASES DE DADES</string>
+    <string name="uel_export_databases">EXPORTAR BASES DE DADES</string>
+    <string name="uel_import_databases">IMPORTAR BASES DE DADES</string>
+    <string name="uel_otp_export">EXPORTAR OTP</string>
+    <string name="uel_otp_reset">RESTABLIR OTP</string>
+    <string name="uel_stop_sms">ATURAR SMS</string>
+    <string name="uel_export_csv">EXPORTAR ENTRADES USUARI</string>
+    <string name="uel_start_aaps">INICIAR SMS</string>
+    <string name="uel_exit_aaps">SORTIR</string>
+    <string name="uel_plugin_enabled">PLUGIN ACTIVAT</string>
+    <string name="uel_plugin_disabled">PLUGIN DESACTIVAT</string>
+    <string name="uel_unknown">DESCONEGUT</string>
+    <string name="ue_string">Text</string>
+    <string name="ue_source">Font</string>
+    <string name="ue_utc_offset">Decalatge UTC</string>
+    <string name="ue_action">Acció</string>
+    <string name="ue_timestamp">Data i hora</string>
+    <string name="ue_none">Cap unitat</string>
+    <string name="uel_loop_change">LLAÇ MODIFICAT</string>
+    <string name="uel_loop_removed">LLAÇ ELIMINAT</string>
+    <string name="uel_other">ALTRES</string>
+    <!-- HardLimits -->
+    <string name="profile_low_target">Objectiu baix del perfil</string>
+    <string name="profile_high_target">Objectiu alt del perfil</string>
+    <string name="temp_target_low_target">Valor mínim d\'objectiu temporal</string>
+    <string name="temp_target_high_target">Valor màxim d\'objectiu temporal</string>
+    <string name="temp_target_value">Valor objectiu temporal</string>
+    <string name="profile_dia">Valor DIA del perfil</string>
+    <string name="profile_sensitivity_value">Valor sensibilitat del perfil</string>
+    <string name="profile_max_daily_basal_value">Valor basal màxima del perfil</string>
+    <string name="current_basal_value">Valor basal actual</string>
+    <string name="profile_carbs_ratio_value">Valor ràtio de carbohidrats del perfil</string>
+    <string name="valuelimitedto">%1$.2f limitat a %2$.2f</string>
+    <string name="valueoutofrange">»%1$s« supera els límits</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f està fora dels límits estrictes</string>
+    <string name="basal_value">Valor basal</string>
+    <!-- Command Queue + readStatus reasons -->
+    <string name="bolus_u_min">BOLUS %1$.2f U</string>
+    <string name="carbs_g">HIDRATS DE CARBONI %1$d g</string>
+    <string name="extended_bolus_u_min">BOLUS ESTÈS %1$.2f U %2$d min</string>
+    <string name="load_events">CARREGAR EVENTS</string>
+    <string name="load_history">CARREGAR HITORIAL %1$d</string>
+    <string name="load_tdds">CARREGAR TDDs</string>
+    <string name="set_profile">ESTABLIR PERFIL</string>
+    <string name="set_user_settings">ESTABLIR CONFIGURACIÓ DE L\'USUARI</string>
+    <string name="sms" comment="26 characters max for translation">SMS</string>
+    <string name="formatPercent">%1$.0f%%</string>
+    <string name="basal">Basal</string>
+    <string name="basalpct">Basal %</string>
+    <string name="a11y_user">usuari</string>
+    <!-- Autotune -->
+    <string name="autotune_result">Resultat: %1$s</string>
+    <string name="autotune_compare_profile">Comparar perfils</string>
+    <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">Utilitzar avisos del sistema per alarmes i avisos</string>
+    <string name="urgent_alarm">Alarma urgent</string>
+    <string name="info">INFO</string>
+    <!-- BolusWizard -->
+    <string name="cobvsiob">COB vs IOB</string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Detectada absorció lenta de carbohidrats: %2$d%% del temps. Torneu a comprovar els vostres càlculs. Els COB (carbs actius) podrien sobreestimar-se i lliurar-se més insulina del compte!!!!!</font>]]></string>
+    <string name="partialboluswizard">Lliurar aquesta part del resultat del càlcul [%]</string>
+    <string name="advisoralarm">Executar alarma quan sigui hora de menjar</string>
+    <string name="no_action_selected">Cap acció sel·leccionada, no passarà res</string>
+    <string name="quickwizard">Assistent</string>
+    <!--    Preferences-->
+    <string name="teenage">Adolescent</string>
+    <string name="adult">Adult</string>
+    <string name="pregnant">Embaraç</string>
+    <!--    Protection-->
+    <!--    Pumps -->
+    <string name="battery_label">Bateria</string>
+    <string name="reservoir_label">Reservori</string>
+    <string name="last_connection_label">Última connexió</string>
+    <string name="last_bolus_label">Darrer bolus</string>
+    <string name="base_basal_rate_label">Ràtio de basal base</string>
+    <string name="tempbasal_label">Basal temporal</string>
+    <string name="extended_bolus_label">Bolus estès</string>
+    <string name="serial_number">Nr. de sèrie</string>
+    <string name="disconnected">Desconnectat</string>
+    <string name="connecting">Connectant</string>
+    <string name="reservoir_value">%1$.0f / %2$d U</string>
+    <string name="daily_units">Unitats diàries</string>
+    <string name="pump_icon">Icona de la bomba</string>
+    <string name="view_profile">Veure perfil</string>
+    <string name="pump_history">Historial de la bomba</string>
+    <string name="stats">Estadístiques</string>
+    <string name="temp_basal_delivery_error">Error en lliurar basal temporal</string>
+    <string name="not_set_short">No configurat</string>
+    <string name="pump_busy">Bomba ocupada</string>
+    <string name="connection_error">Error de connexió de la bomba</string>
+    <string name="reading_pump_history">Llegint històric bomba</string>
+    <string name="pairing">Sincronitzant</string>
+    <string name="initializing">Inicialitzant...</string>
+    <!--    Constraints-->
+    <string name="limitingbasalratio">Limitant màx ràtio basal a %1$.2f U a causa de %2$s</string>
+    <string name="pumplimit">límit de la bomba</string>
+    <string name="limitingpercentrate">Limitant percentatge màx a %1$d%% a causa de %2$s</string>
+    <string name="itmustbepositivevalue">ha de ser un valor positiu</string>
+    <string name="limitingbolus">Limitant bolus a %1$.1f U a causa de %2$s</string>
+    <!-- Locale -->
+    <!--    Dialogs-->
+    <string name="confirmation">Confirmació</string>
+    <string name="message">Missatge</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel·lar</string>
+    <string name="dismiss">DESCARTAR</string>
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
+    <string name="close">Tancar</string>
+    <!-- TwoMessagesDialog -->
+    <string name="password_preferences_decrypt_prompt">Se us demanarà una clau mestra, es necessita per desencriptar la configuració importada.</string>
+    <!-- NumberPicker -->
+    <string name="format_hour_minute">%1$dh %2$dm</string>
+    <!-- datetime layout -->
+    <string name="event_time_label">Hora de l\'esdeveniment</string>
+    <!-- BluetoothDevicePreference -->
+    <string name="need_connect_permission">L\'aplicació necessita el permís del bluethoot</string>
+    <!--    Combo-->
+    <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth de baixa energia no compatible.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth de baixa energia no compatible o dispositiu no sincronitzat.</string>
+    <string name="ble_not_enabled">Bluetooth no activat.</string>
+    <string name="location_not_found_title">Ubicació no habilitada</string>
+    <string name="location_not_found_message">Per a que el descobriment de nous dispositius en Bluetooth funcioni, la ubicació ha d\'estar habilitada. AAPS no fa un seguiment de la vostra localització. A més, pot ser deshabilitada un cop la sincronització s\'ha produït.</string>
+    <!--    Preferences -->
+    <string name="nav_plugin_preferences">Configuració plugin</string>
+    <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">Falta permís SMS</string>
+    <!-- About -->
+    <string name="fabric_upload_disabled">Enviament de logs d\'error desactivat!</string>
+    <plurals name="days">
+        <item quantity="one">%1$d dia</item>
+        <item quantity="other">%1$d dies</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d hora</item>
+        <item quantity="other">%1$d hores</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d minut</item>
+        <item quantity="other">%1$d minuts</item>
+    </plurals>
+    <!--    Maintenance-->
+    <!--    Weekday-->
+    <string name="weekday_saturday_short">Ds</string>
+    <string name="weekday_friday_short">Dv</string>
+    <string name="weekday_thursday_short">Dj</string>
+    <string name="weekday_wednesday_short">Dc</string>
+    <string name="weekday_tuesday_short">Dt</string>
+    <string name="weekday_monday_short">Dl</string>
+    <!-- WeekdayPicker -->
+    <string name="monday_short">Dl</string>
+    <string name="tuesday_short">Dt</string>
+    <string name="wednesday_short">Dc</string>
+    <string name="thursday_short">Dj</string>
+    <string name="friday_short">Dv</string>
+    <string name="saturday_short">Ds</string>
+    <string name="sunday_short">Dg</string>
+    <!--    DecimalFormatterImpl -->
+</resources>

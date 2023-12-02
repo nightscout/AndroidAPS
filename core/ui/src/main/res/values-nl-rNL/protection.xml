@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="biometric_title">Authentificatie vereist</string>
+    <string name="biometric_description">Plaats uw vinger op de vingerafdruklezer om uw identiteit te verifiëren</string>
+    <string name="settings_protection">Instellingen beveiliging</string>
+    <string name="application_protection">App beveiliging</string>
+    <string name="bolus_protection">Bolus beveiliging</string>
+    <string name="settings_password">Instellingen wachtwoord</string>
+    <string name="settings_pin">Pincode voor instellingen</string>
+    <string name="application_password">App wachtwoord</string>
+    <string name="application_pin">Applicatie PIN</string>
+    <string name="bolus_password">Bolus wachtwoord</string>
+    <string name="bolus_pin">Bolus PIN</string>
+    <string name="protection_timeout_title">Geldigheid wachtwoord en pincode [s]</string>
+    <string name="protection_timeout_summary">Tijd tot het wachtwoord of de pincode moet worden ingevoerd</string>
+    <string name="biometric">Biometrisch</string>
+    <string name="custom_password">Aangepast wachtwoord</string>
+    <string name="custom_pin">Aangepaste PIN</string>
+    <string name="noprotection">Geen beveiliging</string>
+    <string name="unsecure_fallback_biometric">Niet beveiligde fallback</string>
+    <string name="unsecure_fallback_descriotion_biometric">Om biometrische beveiliging te kunnen gebruiken, heb je een masterwachtwoord nodig als backup optie.\n\nStel dus een masterwachtwoord in!</string>
+    <string name="password_set">Wachtwoord ingesteld!</string>
+    <string name="pin_set">Pincode ingesteld!</string>
+    <string name="password_not_set">Wachtwoord niet ingesteld</string>
+    <string name="pin_not_set">Pincode niet ingesteld</string>
+    <string name="password_not_changed">Wachtwoord niet gewijzigd</string>
+    <string name="pin_not_changed">Pincode niet gewijzigd</string>
+    <string name="pin_cleared">Pincode gewist!</string>
+    <string name="password_hint">Vul hier het wachtwoord in</string>
+    <string name="pin_hint">Voer pincode hier in</string>
+</resources>

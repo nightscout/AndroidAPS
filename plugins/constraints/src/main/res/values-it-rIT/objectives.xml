@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="objectives_button_start">Avvia</string>
+    <string name="objectives_button_verify">Verifica</string>
+    <string name="nth_objective">%1$d. Obiettivo</string>
+    <string name="objectivenotstarted">Obiettivo %1$d non avviato</string>
+    <string name="objectivenotfinished">Obiettivo %1$d non terminato</string>
+    <string name="objectives_0_objective">Impostazione della visualizzazione e del monitoraggio. Analisi di basali e rapporti</string>
+    <string name="objectives_0_gate">Verifica che la glicemia sia disponibile su Nightscout e che i dati sull\'insulina del micro siano in fase di caricamento</string>
+    <string name="objectives_0_learned">Hai fatto la configurazione di base dell\'ecosistema AAPS. Nightscout non è necessario per il funzionamento di AAPS, ma è molto utile per i report o il monitoraggio di altri pazienti. Non è necessario essere connessi a NS tutto il tempo se usi NS solo per te stesso. È possibile impostare il caricamento, per esempio, solo sul wifi domestico e risparmiare batteria.</string>
+    <string name="objectives_openloop_objective">Avvio in un loop aperto</string>
+    <string name="objectives_openloop_gate">Esegui l\'applicazione in modalità loop aperto per alcuni giorni. Attiva manualmente il maggior numero possibile di basali temporanee suggerite. Imposta e usa i target temporanei, anche quelli predefiniti (ad esempio per l\'attività fisica o il trattamento dell\'ipoglicemia con carboidrati)</string>
+    <string name="objectives_openloop_learned">Il loop aperto può essere usato per ricevere consigli se non hai un micro compatibile o non sei pronto a usare il loop chiuso.</string>
+    <string name="objectives_maxbasal_objective">Comprensione del tuo loop aperto, incluse le relative raccomandazioni sulle basali temporanee</string>
+    <string name="objectives_maxbasal_gate">Sulla base di tale esperienza, decidi quale dovrebbe essere il valore di \'max basale\' e impostalo sul microinfusore e nelle preferenze</string>
+    <string name="objectives_maxbasal_learned">Presta attenzione alle funzionalità di sicurezza e regola i parametri di sicurezza quando necessario.</string>
+    <string name="objectives_maxiobzero_objective">Avvio della chiusura del loop con Low Glucose Suspend</string>
+    <string name="objectives_maxiobzero_gate">Esegui l\'applicazione in loop chiuso con max IOB = 0 per pochi giorni senza troppi eventi LGS</string>
+    <string name="objectives_maxiobzero_learned">Impostare MaxIOB a zero previene l\'ipoglicemia e non aggiungerà più insulina al di sopra della velocità basale (eccetto in caso di IOB negativo)</string>
+    <string name="objectives_maxiob_objective">Regolazione del loop chiuso, aumentando max IOB al di sopra di 0 e abbassando gradualmente i target glicemici</string>
+    <string name="objectives_maxiob_gate">Esegui l\'applicazione per alcuni giorni e almeno una notte senza allarmi di glicemia bassa, prima di abbassare il target glicemico</string>
+    <string name="objectives_maxiob_learned">Aggiorna MaxIOB in base alla crescita del bambino. Non permettere al sistema di dare più insulina di quanto si può coprire con il cibo è una cattiva idea quanto impostare un valore davvero alto.</string>
+    <string name="objectives_autosens_objective">Adatta basali e rapporti se necessario, quindi attiva auto-sens</string>
+    <string name="objectives_autosens_gate">1 settimana di looping diurno con inserimento regolare dei carboidrati, eseguito con successo</string>
+    <string name="objectives_autosens_learned">Se il risultato di autosens non è oscillante intorno al 100% il tuo profilo probabilmente è errato.</string>
+    <string name="objectives_smb_objective">Abilitazione funzioni aggiuntive per l\'uso diurno, come SMB</string>
+    <string name="objectives_smb_gate">È necessario leggere il wiki e aumentare maxIOB affinché le azioni di SMB funzionino adeguatamente! Un buon inizio è maxIOB = media bolo posto + 3 x max basale giornaliera</string>
+    <string name="objectives_smb_learned">Usare SMB è il tuo obiettivo. L\'algoritmo Oref1 è stato progettato per aiutarti anche con i tuoi boli. Non dovresti erogare un bolo completo per il tuo cibo, ma solo una parte di esso e lasciare che AAPS ti dia il resto se necessario. In questo modo hai più spazio di azione per i carboidrati mal calcolati. Lo sapevi che puoi impostare una percentuale del risultato del calcolatore per ridurre la dimensione del bolo?</string>
+    <string name="objectives_dyn_isf_objective">Attivazione di funzioni aggiuntive per l\'uso diurno, come il plugin sensibilità dinamica</string>
+    <string name="objectives_dyn_isf_gate">Assicurarsi che SMB stia funzionando correttamente. Abilitare il plugin ISF Dinamico e identificare la calibrazione appropriata per l\'unicità del proprio corpo. Per sicurezza è consigliabile iniziare con un valore inferiore al 100%.</string>
+    <string name="objectives_dyn_isf_learned">Il plugin Sensibilità Dinamica si basa sull\'idea che l\'assunzione totale di insulina e gli attuali livelli di glicemia influiscano sulla sensibilità attuale. Il plugin ISF Dinamico può regolare il fattore di sensibilità insulinica (ISF) utilizzato dall\'algoritmo per te.</string>
+    <string name="objectives_auto_objective">Abilitazione automazione</string>
+    <string name="objectives_auto_gate">Leggi la documentazione su come funziona l\'automazione. Configura le tue prime semplici regole. Consenti ad AAPS solo di visualizzare una notifica, non di eseguire un\'azione. Quando sei sicuro che l\'automazione viene attivata al momento giusto, sostituisci la notifica con un\'azione reale. (https://wiki.aaps.app/en/latest/Usage/Automation.html)</string>
+    <string name="objectives_auto_learned">L\'automazione può essere un buon \"servitore\" ma anche un cattivo \"padrone\". Non abusarne. Non cercare di sostituire l\'algoritmo di base. Verifica lo stato dell\'automazione con un messaggio prima dell\'uso.</string>
+    <string name="objectives_bgavailableinns">BG disponibile in NS o Tidepool</string>
+    <string name="objectives_pumpstatusavailableinns">Stato micro disponibile in NS o Tidepool</string>
+    <string name="objectives_manualenacts">Attivazioni manuali</string>
+    <string name="accomplished">Completato: %1$s</string>
+    <string name="objectives_usage_objective">Impara a controllare AAPS</string>
+    <string name="objectives_usage_gate">Esegui varie azioni in AAPS</string>
+    <string name="objectives_usage_learned">Hai imparato come gestire le basi di AAPS. I controlli principali sono nella schermata Panoramica accessibile con un click o un click lungo. Ci sono controlli aggiuntivi nella schermata Azioni. Dovresti sapere come mettere la schermata di un plugin nel menu scorrevole in alto o lasciare che il plugin sia visualizzato nell\'elenco dei plugin attivati in alto a sinistra.</string>
+    <string name="objectives_useprofileswitch">Imposta il profilo \"90%\" per 10 min (premi a lungo sul nome profilo nella sezione Panoramica)</string>
+    <string name="objectives_usedisconnectpump">Simula la doccia. Disconnetti il micro per 1h (premi a lungo su Loop aperto)</string>
+    <string name="objectives_usereconnectpump">... e riconnetti allo stesso modo</string>
+    <string name="objectives_usetemptarget">Crea un target temporaneo personalizzato con una durata di 10 min (premi a lungo sul tuo target corrente)</string>
+    <string name="objectives_useactions">Nel Configuratore strutturale attiva il plugin Azioni, rendilo visibile e visualizzane i contenuti tramite il menu in alto</string>
+    <string name="objectives_useloop">Visualizza il contenuto del plugin Loop</string>
+    <string name="objectives_usescale">Usa la funzione di ridimensionamento premendo a lungo sul grafico delle glicemie</string>
+    <string name="objectives_exam_objective">Dai prova della tua conoscenza</string>
+    <string name="objectives_exam_gate">Studia, leggi le domande e rifletti. Ti vengono fornite quattro possibili risposte per ogni domanda. Ci può essere più di una risposta corretta. Seleziona tutte quelle che sono corrette e poi vai su VERIFICA.</string>
+    <string name="objectives_exam_learned_prerequisites">Non hai bisogno di essere uno sviluppatore, ma hai bisogno di NS per superare gli obiettivi, micro e computer compatibili per costruire AAPS per la prima volta e per ogni aggiornamento.</string>
+    <string name="objectives_exam_learned_prerequisites2">AAPS può essere eseguito offline.</string>
+    <string name="objectives_exam_learned_basaltest">Il profilo dovrebbe essere rivisto e aggiornato. Profilo migliore = risultati migliori.</string>
+    <string name="objectives_exam_learned_dia">DIA nell\'attività di looping ha un significato diverso (tempo fino a quando tutta l’insulina viene assorbita) rispetto alla classica terapia con il micro (tempo fino a quando la maggior parte dell’insulina viene assorbita).</string>
+    <string name="objectives_exam_learned_isf">Hai imparato il significato del valore ISF e come influisce sulla quantità di insulina utilizzata per la correzione della glicemia.</string>
+    <string name="objectives_exam_learned_ic">Hai imparato il significato del valore IC e come influisce sulla quantità di insulina necessaria per \"coprire\" i CHO.</string>
+    <string name="objectives_exam_learned_hypott">Il target temporaneo \"ipoglicemia\" è usato solo per prevenire la sovracorrezione dopo l\'ipo, quando c\'è di solito un IOB negativo. Dovrebbero essere valutate ulteriori azioni per evitare che questa situazione si ripeta in futuro.</string>
+    <string name="objectives_exam_learned_profileswitch">L\'utilizzo della percentuale non influisce sui target glicemici. Ma basale, ISF e IC sono regolati per fornire più insulina (sopra il 100%%) o meno insulina (sotto il 100%%).</string>
+    <string name="objectives_exam_learned_profileswitchtime">Usando il timeshift nel cambio profilo puoi adattare il profilo circadiano a irregolarità come il risveglio tardivo.</string>
+    <string name="objectives_exam_learned_profileswitch4">La modifica del profilo in sé non è sufficiente per apportare una modifica. Hai ancora bisogno di fare un cambio profilo per attivare le modifiche.</string>
+    <string name="objectives_exam_learned_exercise">Dovresti ridurre la quantità di insulina nell’organismo almeno 1 ora prima di iniziare l’esercizio fisico selezionando il profilo al di sotto del 100%.</string>
+    <string name="objectives_exam_learned_exercise2">L\'impostazione di un target temporaneo \"alto\" almeno 1 ora prima dell\'esercizio fisico aiuta anche a ridurre la quantità di insulina nel corpo.</string>
+    <string name="objectives_exam_learned_noisycgm">Quando non puoi fidarti dei valori CGM non dovresti usare il loop senza supervisione.</string>
+    <string name="objectives_exam_learned_pumpdisconnect">AAPS deve sapere che il micro non è connesso per calcolare IOB correttamente.</string>
+    <string name="objectives_exam_learned_insulin">Far sapere quale insulina è nella micro è necessario perché influisce sul calcolo di IOB.</string>
+    <string name="objectives_exam_learned_sensitivity">Il rilevamento della sensibilità fa parte dell\'algoritmo che consente di adattare il dosaggio di insulina a diverse situazioni.</string>
+    <string name="objectives_exam_learned_objectives">I tuoi progressi negli Obiettivi sono memorizzati insieme alle altre impostazioni e dovrebbe essere eseguito il backup.</string>
+    <string name="objectives_exam_learned_objectives2">Manteni sempre le impostazioni esportate e l\'APK generato anche al di fuori del telefono. Il telefono può essere perso, danneggiato ecc. Un buon posto può essere qualsiasi cloud accessibile dal telefono. In questo caso puoi ripristinare AAPS su un altro dispositivo in pochi minuti. Una buona pratica è anche memorizzare in un posto sicuro la password master usata. Senza di essa il backup è inutile. Lo stesso vale per le chiavi di firma (file .jks) e le password usate per costruire AAPS. Il resto non è importante - può essere scaricato di nuovo e in qualsiasi momento da internet.</string>
+    <string name="objectives_exam_learned_wrongcarbs">Se hai fatto inserimenti errati in AAPS o non corrispondenti alla realtà, risolvi al più presto. Gli errori potrebbero portare a sovradosaggio. AAPS deve essere sempre informato nel migliore modo possibile riguardo carboidrati, insulina ecc.</string>
+    <string name="objectives_exam_learned_iob">Se stai verificando che AAPS funzioni bene per te, guardare il grafico IOB può darti un sacco di informazioni utili.</string>
+    <string name="objectives_exam_learned_cob">Il calcolo di COB dipende dalla relazione tra ISF a IC. Aumentare ISF o diminuire IC porterà a tempi di assorbimento più lunghi. Ma il cambio profilo in percentuale modifica entrambi i valori contemporaneamente e quindi la durata dell\'assorbimento non ne risente.</string>
+    <string name="objectives_exam_learned_breadgrams">Sono ammessi solo grammi per l\'inserimento di carboidrati.</string>
+    <string name="objectives_exam_learned_ecarbs">E-carbs è un sostituto del bolo esteso nel mondo dei microinfusori.</string>
+    <string name="objectives_exam_learned_nsclient">Monitoraggio e controllo remoto sono possibili, ma non tutte le funzionalità devono essere disponibili da remoto.</string>
+    <string name="answerdisabledto">Risposta disabilitata fino a: %1$s</string>
+    <string name="wronganswer">Risposta errata!</string>
+    <string name="unfinshed_button">Prossimo N.C.</string>
+    <string name="requestcode">Codice richiesta: %1$s</string>
+    <string name="objectives_hint">(segna tutte le risposte corrette)</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="notconnected">Non connesso a internet</string>
+    <string name="failedretrievetime">Impossibile recuperare l\'ora</string>
+    <string name="requirementnotmet">Requisiti obiettivo non soddisfatti</string>
+    <string name="what_i_ve_learned">Cosa ho imparato:</string>
+</resources>

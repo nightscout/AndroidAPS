@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="automation_short">Automatikus</string>
+    <string name="automation">Automatizálás</string>
+    <string name="alarm_short">Riasztás:</string>
+    <string name="or">vagy</string>
+    <string name="locationis">%1$s %2$s</string>
+    <string name="temptargetcompared">Átmeneti cél %1$s</string>
+    <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
+    <string name="autosenscompared">Autosens %1$s %2$s %%</string>
+    <string name="autosenslabel">Autosens %</string>
+    <string name="deltacompared">%3$s %1$s %2$s</string>
+    <string name="latitude_short">Szélesség:</string>
+    <string name="longitude_short">Hosszúság:</string>
+    <string name="triggercoblabel">COB</string>
+    <string name="every">Minden</string>
+    <string name="never">Soha</string>
+    <string name="condition">Feltétel:</string>
+    <string name="taskname">Feladat neve</string>
+    <string name="edit_short">SZERK</string>
+    <!--    Reminders-->
+</resources>

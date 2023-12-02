@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PhoneChecker -->
+    <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Změna letního času za méně než 24 hodin</string>
+    <string name="dst_loop_disabled_warning">Změna letního času za méně než 3 hodiny – Uzavřená smyčka zastavena</string>
+    <!-- Storage constraint -->
+    <string name="disk_full">Uvolněte alespoň %1$d MB z vnitřního úložiště! Smyčka zakázána!</string>
+    <!-- Version Checker -->
+    <string name="old_version">stará verze</string>
+    <string name="very_old_version">velmi stará verze</string>
+    <string name="application_expired">Platnost aplikace vypršela</string>
+    <string name="new_version_warning">Nová verze nebyla zkontrolována nejméně %1$d dní! V případě, že uplyne %2$d dní, přepne se režim na LGS a po %3$d dnech bude smyčka vypnuta. Obnovte připojení k internetu!</string>
+    <string name="running_invalid_version">Zjistili jsme, že používáte neplatnou verzi, smyčka zakázána!</string>
+    <string name="versionavailable">Verze %1$s je k dispozici</string>
+    <string name="version_expire">Platnost verze %1$s vyprší dne %2$s</string>
+    <!-- Signature verifier -->
+    <!-- BG Quality -->
+    <string name="recalculated_data_used">Použita přepočítaná data</string>
+    <string name="bg_too_close">Glykémie je příliš blízko:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">přepočítáno</string>
+    <string name="a11y_bg_quality_doubles">zdvojené záznamy</string>
+    <string name="a11y_bg_quality_flat">Neměnná data. Pravděpodobně jsou neplatná</string>
+    <!-- Safety -->
+    <string name="limitingextendedbolus">Prodloužený bolus omezen na %1$.1f U z důvodu %2$s</string>
+    <string name="limitingcarbs">Sacharidy omezeny na %1$d g: %2$s</string>
+    <string name="pumpisnottempbasalcapable">Pumpa nepodporuje dočasné bazály</string>
+    <string name="closedmodedisabledinpreferences">Uzavřená smyčka zakázána v nastavení</string>
+    <string name="closed_loop_disabled_on_dev_branch">Běží DEV verze. Uzavřená smyčka je zakázána.</string>
+    <string name="closed_loop_disabled_with_eb">Uzavřená smyčka je zastavena kvůli běžícímu prodlouženému bolusu</string>
+    <string name="smbalwaysdisabled">\"SMB vždy\" a \"po jídle\" zakázáno protože zdroj glykémie nepodporuje rozšířené filtrování</string>
+    <string name="smbnotallowedinopenloopmode">SBM není povoleno v otevřené smyčce</string>
+    <string name="maxvalueinpreferences">maximální hodnota v nastavení</string>
+    <string name="hardlimit">pevný limit</string>
+    <string name="treatmentssafety_title">Bezpečnost zadání ošetřeni</string>
+    <!-- Objectives -->
+    <string name="completed_well_done">Hotovo, gratulujeme!</string>
+    <string name="not_completed_yet">Nedokončeno</string>
+    <string name="time_elapsed">Čas</string>
+    <string name="maxiobset">Maximální IOB nastaveno správně</string>
+    <string name="hasbgdata">Glykémie dostupné z vybraného zdroje</string>
+    <string name="synchaswritepermission">Služba synchronizace má oprávnění k zápisu</string>
+    <string name="loopenabled">Smyčka povolena</string>
+    <string name="apsselected">APS vybráno</string>
+    <string name="closedmodeenabled">Uzavřená smyčka povolena</string>
+    <string name="objectives_shortname">CÍLE</string>
+    <string name="description_objectives">Výukový program</string>
+    <string name="doyouwantresetstart">Chcete resetovat začátek cíle? Můžete přijít o svůj pokrok.</string>
+    <string name="objectives_next_button">Další</string>
+    <string name="objectives_previous_button">Zpět</string>
+    <string name="objectives_button_unfinish">Resetovat dokončený stav</string>
+    <string name="objectives_button_unstart">Resetovat zahájený stav</string>
+</resources>

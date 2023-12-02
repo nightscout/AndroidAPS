@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PhoneChecker -->
+    <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Schimbare oră vară/iarnă în mai puțin de 24h</string>
+    <string name="dst_loop_disabled_warning">Schimbare oră vară/iarnă în mai puțin de 3 ore - buclă închisă dezactivată</string>
+    <!-- Storage constraint -->
+    <string name="disk_full">Eliberați cel puțin %1$d MB de pe stocarea internă! Buclă dezactivată!</string>
+    <!-- Version Checker -->
+    <string name="old_version">versiune veche</string>
+    <string name="very_old_version">versiune foarte veche</string>
+    <string name="application_expired">Aplicația a expirat</string>
+    <string name="new_version_warning">Noua versiune nu a fost confirmată de cel puțin %1$d zile! Se revine la LGS după %2$d zile, bucla va fi dezactivată după %3$d zile. Restabilește conexiunea la internet!</string>
+    <string name="running_invalid_version">S-a detectat rularea unei versiuni invalide. Buclă dezactivată!</string>
+    <string name="versionavailable">Versiunea %1$s este disponibilă</string>
+    <string name="version_expire">Versiunea %1$s expiră pe %2$s</string>
+    <!-- Signature verifier -->
+    <!-- BG Quality -->
+    <string name="recalculated_data_used">Date recalculate utilizate</string>
+    <string name="bg_too_close">BG prea aproape:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">recalculate</string>
+    <string name="a11y_bg_quality_doubles">intrări duble</string>
+    <string name="a11y_bg_quality_flat">Date plate. Se consideră greșite</string>
+    <!-- Safety -->
+    <string name="limitingextendedbolus">Se limitează bolusul extins la %1$.1f U din cauza %2$s</string>
+    <string name="limitingcarbs">Se limitează carbohidrații %1$d g datorită %2$s</string>
+    <string name="pumpisnottempbasalcapable">Pompa nu suportă bazale temporare</string>
+    <string name="closedmodedisabledinpreferences">Modul buclă închisă dezactivat în preferințe</string>
+    <string name="closed_loop_disabled_on_dev_branch">Se folosește versiunea dev. Bucla închisă este dezactivată.</string>
+    <string name="closed_loop_disabled_with_eb">Bucla închisă dezactivată din cauza livrării bolusului extins</string>
+    <string name="smbalwaysdisabled">SMB dezactivat întotdeauna și după carbohidrați, deoarece sursa glicemiei nu suportă filtrare avansată</string>
+    <string name="smbnotallowedinopenloopmode">SMB nu este permis în mod buclă deschisă</string>
+    <string name="maxvalueinpreferences">valoare maximă în preferințe</string>
+    <string name="hardlimit">limită fizică</string>
+    <string name="treatmentssafety_title">Setări siguranță tratament</string>
+    <!-- Objectives -->
+    <string name="completed_well_done">Finalizat cu succes. Bravo!</string>
+    <string name="not_completed_yet">Încă incomplet</string>
+    <string name="time_elapsed">Timp scurs</string>
+    <string name="maxiobset">IOB maxim configurat corect</string>
+    <string name="hasbgdata">Glicemie disponibilă din sursa selectată</string>
+    <string name="synchaswritepermission">Serviciul de sincronizare are permisiuni de scriere</string>
+    <string name="loopenabled">Buclă activată</string>
+    <string name="apsselected">APS selectat</string>
+    <string name="closedmodeenabled">Mod buclă închisă activat</string>
+    <string name="objectives_shortname">OBI</string>
+    <string name="description_objectives">Program de învăţare</string>
+    <string name="doyouwantresetstart">Doriți să reîncepeți obiectivul? Vă puteți pierde progresul.</string>
+    <string name="objectives_next_button">Următor</string>
+    <string name="objectives_previous_button">Anterior</string>
+    <string name="objectives_button_unfinish">Resetare stare finalizată</string>
+    <string name="objectives_button_unstart">Resetare stare de început</string>
+</resources>

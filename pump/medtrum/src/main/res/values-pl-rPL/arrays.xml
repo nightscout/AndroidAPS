@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="alarmSettings">
+        <item>Światło, wibracje i dźwięk</item>
+        <item>Światło i wibracje</item>
+        <item>Światło i dźwięk</item>
+        <item>Światło</item>
+        <item>Wibracje i dźwięk</item>
+        <item>Wibracje</item>
+        <item>Dźwięk</item>
+        <item>Cichy</item>
+    </string-array>
+</resources>

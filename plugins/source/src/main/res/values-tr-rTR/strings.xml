@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="ns_client_bg">NSClient KŞ</string>
+    <string name="ns_client_bg_short">NS KŞ</string>
+    <string name="description_source_ns_client">Nightscout\'tan KŞ verilerini yükler</string>
+    <string name="source_xdrip">xDrip+ KŞ</string>
+    <string name="description_source_xdrip">XDrip+\'ten KŞ değerlerini alır.</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">\'Kendi Dexcom Uygulamanızı Oluşturun\' uygulamasından KŞ değerlerini alın.</string>
+    <string name="eversense">Eversense App (yamalı)</string>
+    <string name="description_source_eversense">Yamalı Eversense uygulamasından KŞ değerleri alır.</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">Glimp\'ten KŞ değerleri alır.</string>
+    <string name="mm640g">MM640g</string>
+    <string name="description_source_mm640g">600SeriesAndroidUploader\'dan KŞ değerleri alır.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Poctech uygulamasından KŞ değerlerini alır</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Glunovo uygulamasından değerler alır</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Intelligo uygulamasından değerler alır</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">KŞ değerlerini Tomato uygulamasından (MiaoMiao Cihazından) al</string>
+    <string name="aidex">GlucoRx Aidex</string>
+    <string name="aidex_short">Aidex</string>
+    <string name="description_source_aidex">GlucoRx Aidex CGMS\'den KŞ değerleri alır.</string>
+    <string name="random_bg">Rastgele KŞ</string>
+    <string name="description_source_random_bg">Rastgele KŞ verileri oluşturun (Yalnızca demo modunda)</string>
+    <string name="random_bg_short">KŞ</string>
+    <string name="do_xdrip_upload_title">XDrip+\'a KŞ verilerini gönder</string>
+    <string name="do_xdrip_upload_summary">xDrip+ içerisinde 640g/Eversense veri kaynağı seç</string>
+    <string name="bgsource_upload">KŞ yükleme ayarları</string>
+    <string name="dexcom_log_ns_sensor_change_title">Sensör değişimlerini NS\'a kaydet</string>
+    <string name="dexcom_log_ns_sensor_change_summary">Sensör başlangıcında otomatik olarak NS\'de \"Sensör Değişimi\" olayı oluştur</string>
+    <string name="direction">yön</string>
+</resources>

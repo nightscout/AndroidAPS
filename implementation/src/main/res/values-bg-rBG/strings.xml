@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bg_label">КЗ</string>
+    <string name="executing_right_now">Командата се изпълнява в момента</string>
+    <string name="basal_value_below_minimum">Базалните стойности са под минимума. Не е зададен профил!</string>
+    <string name="permission">Разрешение</string>
+    <string name="need_whitelisting">%1$s се нуждае от изключване от списъка за оптимизиране на батерията за пълна функционалност</string>
+    <string name="need_location_permission">Приложение се нуждае от достъп до местоположението Ви за сканиране и WiFi идентификация</string>
+    <string name="need_storage_permission">Приложението се нуждае от разрешение да съхранява данни за да може съхранява лог файлове и експортира настройки</string>
+    <!--       Stats -->
+    <string name="veryLow" comment="below 3.1">Много ниска</string>
+    <string name="low" comment="3.1-3.9">Ниска</string>
+    <string name="high" comment="10.0-13.9">Висока</string>
+    <string name="veryHigh" comment="above 13.9">Много висока</string>
+    <string name="below" comment="below &quot;in range&quot;">Под</string>
+    <string name="in_range">В диапазон</string>
+    <string name="above" comment="above &quot;in range&quot;">Над</string>
+    <string name="hba1c">HbA1c: </string>
+    <string name="std_deviation">SD: %1$s</string>
+    <string name="detailed_14_days">Детайлни 14 дена</string>
+    <string name="day_tir">Дневен TIR</string>
+    <string name="night_tir">Нощен TIR</string>
+    <string name="carbs_short" comment="max 6 characters">Въглехидрати</string>
+</resources>

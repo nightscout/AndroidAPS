@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bg_label">KŞ</string>
+    <string name="executing_right_now">Komut şu anda çalıştırıldı</string>
+    <string name="basal_value_below_minimum">Bazal değer minimumun altında. Profil ayarlanmadı!</string>
+    <string name="permission">Yetki</string>
+    <string name="need_whitelisting">%1$s, düzgün bir şekilde çalışması için pil optimizasyonu yapılmalıdır</string>
+    <string name="need_location_permission">Uygulamanın BT taraması ve WiFi tanımlaması için konum iznine ihtiyacı var</string>
+    <string name="need_storage_permission">Uygulamanın, günlük dosyalarını saklayabilmesi ve ayarları dışa aktarabilmesi için depolama iznine ihtiyacı var</string>
+    <!--       Stats -->
+    <string name="veryLow" comment="below 3.1">Çok düşük</string>
+    <string name="low" comment="3.1-3.9">Düşük</string>
+    <string name="high" comment="10.0-13.9">Yüksek</string>
+    <string name="veryHigh" comment="above 13.9">Çok yüksek</string>
+    <string name="below" comment="below &quot;in range&quot;">Altında</string>
+    <string name="in_range">Aralıkta</string>
+    <string name="above" comment="above &quot;in range&quot;">Üstünde</string>
+    <string name="hba1c">HbA1c: </string>
+    <string name="std_deviation">SD: %1$s</string>
+    <string name="detailed_14_days">Ayrıntılı 14 gün</string>
+    <string name="day_tir">Gündüz TIR</string>
+    <string name="night_tir">Gece TIR</string>
+    <string name="carbs_short" comment="max 6 characters">Karbonhidrat</string>
+</resources>

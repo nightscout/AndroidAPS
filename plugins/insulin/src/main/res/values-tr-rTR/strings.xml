@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Insulin -->
+    <string name="lyumjev">Lyumjev</string>
+    <string name="description_insulin_rapid">Humalog ve NovoRapid / NovoLog için İnsülin Profili</string>
+    <string name="description_insulin_ultra_rapid">Fiasp için insülin Profili</string>
+    <string name="description_insulin_lyumjev">Lyumjev için insülin ayarı</string>
+    <string name="description_insulin_free_peak">İnsülin aktivitesinin zirvesini tanımlamanıza izin verir ve yalnızca ileri düzey kullanıcılar tarafından kullanılmalıdır.</string>
+    <string name="insulin_shortname">İNS</string>
+    <string name="insulin_oref_peak">AİNS Eğrisi Tepe Zamanı</string>
+    <string name="insulin_peak_time">Tepe zamanı [min]</string>
+    <string name="free_peak_oref">Serbest tepe Oref</string>
+    <string name="rapid_acting_oref">Hızlı etkili Oref</string>
+    <string name="ultra_rapid_oref">Ultra Hızlı Oref</string>
+    <string name="dia_too_short">DIA %1$f çok kısa - bunun yerine %2$f kullanıyor!</string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
+</resources>

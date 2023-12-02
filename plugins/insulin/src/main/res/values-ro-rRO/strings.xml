@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Insulin -->
+    <string name="lyumjev">Lyumjev</string>
+    <string name="description_insulin_rapid">Presetare de insulină pentru Humalog și NovoRapid / NovoLog</string>
+    <string name="description_insulin_ultra_rapid">Presetare de insulină pentru Fiasp</string>
+    <string name="description_insulin_lyumjev">Presetare de insulină pentru Lyumjev</string>
+    <string name="description_insulin_free_peak">Permite alegerea vârfului de acțiune al insulinei și ar trebui folosit doar de către utilizatorii avansați</string>
+    <string name="insulin_shortname">INS</string>
+    <string name="insulin_oref_peak">Timpul pentru vârful curbei IOB</string>
+    <string name="insulin_peak_time">Innterval de vârf [min]</string>
+    <string name="free_peak_oref">Free-Peak Oref</string>
+    <string name="rapid_acting_oref">Oref Acțiune-Rapidă</string>
+    <string name="ultra_rapid_oref">Oref Acțiune-UltraRapidă</string>
+    <string name="dia_too_short">DIA de %1$f prea scurtă - se folosește %2$f ca înlocuitor!</string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
+</resources>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- VirtualPump -->
+    <string name="virtual_pump_definition">Definicija pumpe</string>
+    <string name="virtual_pump_pump_def">Bolus: korak=%1$s\nProduženi bolus: [korak=%2$s, trajanje=%3$smin-%4$sh]\nBazal: korak=%5$s\nTBR: %6$s (do %7$s), Trajanje=%8$smin-%9$sh\n%10$s</string>
+    <string name="virtual_pump_shortname">VPUMP</string>
+    <string name="description_pump_virtual">Integracija pumpe za pumpe koje još nemaju upravljački program (otvorena petlja)</string>
+    <string name="virtualpump_settings">Postavke virtualne pumpe</string>
+    <!--    PumpType-->
+</resources>

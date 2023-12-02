@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- RL keys -->
+    <!-- RL BLE Config -->
+    <string name="riley_link_ble_config_button_scan_start">Keresés</string>
+    <string name="riley_link_ble_config_scan_stop">Leállít</string>
+    <string name="riley_link_ble_config_scan_selected">Kiválasztott</string>
+    <string name="riley_link_ble_config_scan_title">RileyLink keresése</string>
+    <string name="riley_link_ble_config_scan_scanning">Keresés</string>
+    <string name="riley_link_ble_config_scan_finished">Keresés befejezve</string>
+    <string name="riley_link_ble_config_scan_error">Hiba kereséskor: %1$d</string>
+    <string name="riley_link_ble_config_connected_never">Soha</string>
+    <string name="riley_link_ble_config_scan_currently_selected_riley_link">Jelenleg kiválasztott RileyLink</string>
+    <string name="riley_link_ble_config_remove_riley_link">Eltávolít</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation">Biztosan el akarja távolítani a RileyLink-et?</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">RileyLink eltávolítása</string>
+    <string name="riley_link_ble_config_no_riley_link_selected">Nincs RileyLink kiválasztva</string>
+    <!-- RL Status Page -->
+    <string name="rileylink_settings_tab1">Beállítások</string>
+    <string name="rileylink_settings_tab2">Előzmények</string>
+    <string name="rileylink_status">RileyLink állapot</string>
+    <string name="medtronic_pump_status">Pumpa állapot</string>
+    <string name="title_activity_rileylink_settings">RileyLink beállítások</string>
+    <string name="rileylink_title">RileyLink</string>
+    <string name="rileylink_address">Cím:</string>
+    <string name="rileylink_name">Név:</string>
+    <string name="rileylink_battery_level">Töltöttségi szint:</string>
+    <string name="rileylink_battery_level_value">%1$d%%</string>
+    <string name="rileylink_connection_status">Kapcsolat állapota:</string>
+    <string name="rileylink_connection_error">Kapcsolódási hiba:</string>
+    <string name="rileylink_device">Eszköz</string>
+    <string name="rileylink_device_type">Eszköz típusa:</string>
+    <string name="rileylink_configured_device_model">Beállított eszköz model:</string>
+    <string name="rileylink_connected_device_model">Kapcsolódott eszköz model:</string>
+    <string name="rileylink_last_used_frequency">Utoljára használt frekvencia:</string>
+    <string name="rileylink_last_device_contact">Utoljára kapcsolódott eszköz:</string>
+    <string name="rileylink_firmware_version">Firmware verzió:</string>
+    <string name="rileylink_firmware_version_value">BLE113: %1$s\nCC110: %2$s</string>
+    <string name="rileylink_firmware_version_value_orange">Fw: %1$s\nHw: %2$s</string>
+    <string name="rileylink_pump_serial_number">Pumpa sorozatszáma:</string>
+    <string name="rileylink_pump_frequency">Pumpa frekvencia:</string>
+    <string name="rileylink_pump_frequency_value">%1$.2f MHz</string>
+    <!-- RL State -->
+    <string name="rileylink_state_bt_init">Bluetooth inicializálása…</string>
+    <string name="rileylink_state_bt_error">Bluetooth hiba</string>
+    <string name="rileylink_state_bt_ready">Bluetooth készen áll</string>
+    <string name="rileylink_state_not_started">Nincs elindítva</string>
+    <string name="rileylink_state_rl_init">RileyLink inicializálása…</string>
+    <string name="rileylink_state_rl_error">RileyLink hiba</string>
+    <string name="rileylink_state_pc_tune_up">RileyLink és pumpa hangolása</string>
+    <string name="rileylink_state_pc_error">Hiba pumpához kapcsolódáskor</string>
+    <string name="rileylink_state_connected">Kapcsolódva</string>
+    <string name="rileylink_state_rl_ready">RileyLink készen áll</string>
+    <!-- RL Errors -->
+    <string name="rileylink_error_not_rl">Eszköz nem RileyLink</string>
+    <string name="rileylink_error_unreachable">RileyLink nem elérhető</string>
+    <string name="rileylink_error_bt_disabled">Bluetooth kikapcsolva</string>
+    <string name="rileylink_error_no_bt_adapter">Nincs Bluetooth adapter</string>
+    <string name="rileylink_error_tuneup_failed">Hangolás sikertelen</string>
+    <string name="rileylink_error_pump_unreachable">Pumpa nem elérhető</string>
+    <string name="rileylink_error_pod_unreachable">Pod nem elérhető</string>
+    <!-- RileyLink - Common -->
+    <string name="rileylink_target_device_medtronic">Medtronic pumpa</string>
+    <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
+    <string name="riley_link_common_yes">Igen</string>
+    <string name="riley_link_common_no">Nem</string>
+    <!-- RileyLink - Preferences -->
+    <string name="riley_link_show_battery_level">OrangeLink/EmaLink töltöttségének megjelenítése</string>
+    <string name="riley_link_show_battery_level_summary">NEM MŰKÖDIK az eredeti RileyLink-el. Lehet nem működik bizonyos RileyLink alternatívákkal.</string>
+    <plurals name="duration_days">
+        <item quantity="one">%1$d nap</item>
+        <item quantity="other">%1$d nap</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d óra</item>
+        <item quantity="other">%1$d óra</item>
+    </plurals>
+    <string name="orange_use_scanning_level">Keresés használata</string>
+    <string name="orange_use_scanning_level_summary">Keresés indítása OrangeLink-hez kapcsolódás előtt, ez segíthet a kapcsolódásban (RileyLink alternatívákkal is használható, ha szükséges)</string>
+</resources>

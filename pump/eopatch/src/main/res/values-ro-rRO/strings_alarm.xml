@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+    <string name="string_a002">Rezervor gol\nPatchul a fost dezactivat şi livrarea insulinei a fost oprită. Schimbă patchul acum.</string>
+    <string name="string_a003">Patch expirat\nPatch a fost dezactivat și livrarea insulinei a fost oprită. Schimbă patchul acum.</string>
+    <string name="string_a004">Ocluzie\nPatch a fost dezactivat și livrarea insulinei a fost oprită. Schimbă patchul acum.</string>
+    <string name="string_a005">Alimentare la auto-test eșuată\nPatchul a fost dezactivat. Schimbă patchul acum.</string>
+    <string name="string_a007">Temperatură necorespunzătoare\nLivrarea insulinei sau procesul \"Activare Patch\" a fost oprit. Evită acum temperatura extremă.</string>
+    <string name="string_a016">Eroare la inserarea acului\nVerifică poziția butonului și atinge \'Reîncercați\'.</string>
+    <string name="string_a018">Eroare baterie patch\nPatchul a fost dezactivat și\nlivrarea insulinei a fost oprită. Schimbă patchul acum.</string>
+    <string name="string_a019">Eroare baterie patch\nPatchul a fost dezactivat și livrarea insulinei a fost oprită. Schimbă patchul acum.</string>
+    <string name="string_a020">Eroare de activare Patch\nProcesul \'Activare patch\' a expirat. Atinge \'Confirm\' pentru a dezactiva patchul curent. Schimbă patchul acum.</string>
+    <string name="string_a022">Eroare patch\nPatchul a fost dezactivat și livrarea insulinei a fost oprită. Schimbă patchul acum.</string>
+    <string name="string_a023">Eroare patch\nPatchul a fost dezactivat și\nlivrarea insulinei a fost oprită. Schimbă patchul acum.</string>
+    <string name="string_a034">Eroare patch\nPatchul a fost dezactivat și livrarea insulinei a fost oprită. Schimbă patchul acum.</string>
+    <string name="string_a041">Eroare patch\nPatchul a fost dezactivat și livrarea insulinei a fost oprită. Schimbă patchul acum.</string>
+    <string name="string_a042">Eroare patch\nPatchul a fost dezactivat și livrarea insulinei a fost oprită. Schimbă patchul acum.</string>
+    <string name="string_a043">Eroare patch\nPatchul a fost dezactivat și livrarea insulinei a fost oprită. Schimbă patchul acum.</string>
+    <string name="string_a044">Eroare patch\nPatchul a fost dezactivat și livrarea insulinei a fost oprită. Schimbă patchul acum.</string>
+    <string name="string_a106">Eroare patch\nPatchul a fost dezactivat și livrarea insulinei a fost oprită. Schimbă patchul acum.</string>
+    <string name="string_a107">Eroare patch\nPatchul a fost dezactivat și livrarea insulinei a fost oprită. Schimbă patchul acum.</string>
+    <string name="string_a108">Eroare patch\nPatchul a fost dezactivat și livrarea insulinei a fost oprită. Schimbă patchul acum.</string>
+    <string name="string_a116">Eroare patch\nPatchul a fost dezactivat și livrarea insulinei a fost oprită. Schimbă patchul acum.</string>
+    <string name="string_a117">Eroare patch\nPatchul a fost dezactivat și livrarea insulinei a fost oprită. Schimbă patchul acum.</string>
+    <string name="string_a118">Eroare patch\nPatchul a fost dezactivat și livrarea insulinei a fost oprită. Schimbă patchul acum.</string>
+    <string name="string_b000">Durata de funcționare a patch-ului va expira %s. Fii pregătit să schimbi patchul.</string>
+    <string name="string_b001">Sfârşit suspendare insulină\nApasă \'Reluare\' pentru a reporni livrarea insulinei.</string>
+    <string name="string_b003">Rezervor pe terminate\nÎnlocuieşte patchul în curând.</string>
+    <string name="string_b005">Durata de operare a patchului a expirat\nSchimbă patchul acum.</string>
+    <string name="string_b006">Patchul va expira în curând\nSchimbă patch-ul acum.</string>
+    <string name="string_b012">Activare patch incompletă\nCompletează procesul \'Activare Patch\'.</string>
+    <string name="string_b018">Baterie patch pe terminate\nFii gata să schimbi patchul.</string>
+</resources>

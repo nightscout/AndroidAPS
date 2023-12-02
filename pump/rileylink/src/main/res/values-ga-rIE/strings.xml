@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- RL keys -->
+    <!-- RL BLE Config -->
+    <string name="riley_link_ble_config_scan_stop">Stad</string>
+    <string name="riley_link_ble_config_connected_never">Riamh</string>
+    <!-- RL Status Page -->
+    <string name="rileylink_title">RileyLink</string>
+    <string name="rileylink_name">Ainm:</string>
+    <string name="rileylink_battery_level_value">%1$d%%</string>
+    <!-- RL State -->
+    <string name="rileylink_state_connected">Nasctha</string>
+    <!-- RL Errors -->
+    <!-- RileyLink - Common -->
+    <string name="riley_link_common_yes">Tá</string>
+    <string name="riley_link_common_no">Níl</string>
+    <!-- RileyLink - Preferences -->
+    <plurals name="duration_days">
+        <item quantity="one">%1$d lá</item>
+        <item quantity="two">%1$d lá</item>
+        <item quantity="few">%1$d lá</item>
+        <item quantity="many">%1$d lá</item>
+        <item quantity="other">%1$d lá</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d uair</item>
+        <item quantity="two">%1$d uair</item>
+        <item quantity="few">%1$d uair</item>
+        <item quantity="many">%1$d uair</item>
+        <item quantity="other">%1$d uair</item>
+    </plurals>
+</resources>

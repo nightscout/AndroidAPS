@@ -2,14 +2,10 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_watchface">AAPS</string>
     <string name="label_watchface_large">AAPS (גדול)</string>
     <string name="label_watchface_big_chart">AAPS (תרשים גדול)</string>
     <string name="label_watchface_no_chart">AAPS (ללא תרשים)</string>
     <string name="label_watchface_circle">AAPS (עיגול)</string>
-    <string name="label_watchface_v2">AAPS (v2)</string>
-    <string name="label_watchface_cockpit">AAPS (תא טייס)</string>
-    <string name="label_watchface_steampunk">AAPS (סטימפאנק)</string>
     <string name="label_watchface_digital_style">AAPS (דיגיטלי)</string>
     <string name="label_actions_tile">AAPS (פעולות)</string>
     <string name="label_temp_target_tile">AAPS (מטרה זמנית)</string>
@@ -22,6 +18,11 @@
     <string name="msg_warning_old">נתוני AAPS מלפני %1$s! בדקו את החיישן, הגדרות xDrip, NS, AAPS או אחר!</string>
     <string name="pref_vibrate_on_bolus">רטט במתן בולוס</string>
     <string name="pref_units_for_actions">יחידות עבור פעולות</string>
+    <string name="pref_display_settings">תצוגה</string>
+    <string name="pref_graph_settings">גרף</string>
+    <string name="pref_interface_settings">ממשק</string>
+    <string name="pref_others_settings">אחרים</string>
+    <string name="pref_complication_settings">סיבוכים</string>
     <string name="pref_show_date">הצג תאריך</string>
     <string name="pref_show_iob">הצג אינסולין IOB</string>
     <string name="pref_show_cob">הצג COB</string>
@@ -36,6 +37,7 @@
     <string name="pref_show_ago">הצג עבר</string>
     <string name="pref_dark" comment="Enables dark visual theme">כהה</string>
     <string name="pref_highlight_basals">הדגש בזאלים</string>
+    <string name="pref_prediction_lines">הצג תחזיות</string>
     <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">מחיצות מותאמות</string>
     <string name="pref_chart_timeframe">מסגרת זמן התרשים</string>
     <string name="pref_1_hour">שעה</string>
@@ -48,7 +50,6 @@
     <string name="pref_quick_righty">ימני מהיר</string>
     <string name="pref_quick_lefty">שמאלי מהיר</string>
     <string name="pref_modern_sparse">מינימלי מודרני</string>
-    <string name="pref_delta_granularity">מפורט (סטימפאנק)</string>
     <string name="pref_low">נמוך</string>
     <string name="pref_medium">בינוני</string>
     <string name="pref_high">גבוה</string>
@@ -103,7 +104,7 @@
     <string name="action_preset_1">הגדרה מראש 1</string>
     <string name="action_preset_2">הגדרה מראש 2</string>
     <string name="action_preset_3">הגדרה מראש 3</string>
-    <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">כמות חופשית</string>
+    <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">כמות חופשית</string>
     <string name="action_confirm">אישור</string>
     <string name="action_timeshift">היסט זמן</string>
     <string name="action_bolus">בולוס</string>
@@ -170,18 +171,26 @@
     <string name="wear_control_no_data">אין נתונים זמינים</string>
     <string name="increment">תוספת</string>
     <string name="decrement">הפחתה</string>
-    <string name="first_char_high">גב\'</string>
-    <string name="first_char_low">נמ\'</string>
     <string name="abbreviation_average">ממוצע</string>
     <string name="no_iob_u">-- יח\'</string>
     <string name="no_cob_g">-- גר\'</string>
     <string name="no_tmp_basal_u_h">-.--יח\' לשעה</string>
-    <string name="uploader_na">מעלה: --- %</string>
-    <string name="no_status">אין סטטוס</string>
+    <string name="uploader_na">U: --%</string>
+    <string name="no_status">S: --</string>
     <string name="time_stamp_na_min_ago">לפני -- דקות</string>
     <string name="delta_na">--- mg/dl</string>
     <string name="no_loop_status">חסר סטטוס לולאה</string>
     <string name="cob_000g">000 גר\'</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00 יח\'</string>
+    <string name="snooze_alert">השתק התראה (נודניק)</string>
+    <string name="sending_snooze">מבצע נודניק ב-AndroidAPS</string>
+    <string name="short_hour">ש\'</string>
+    <string name="week_short">ש\'</string>
+    <string name="day_short">י\'</string>
+    <string name="hour_short">ש\'</string>
+    <string name="old">ישן</string>
+    <string name="old_warning">!ישן!</string>
+    <string name="error">!שגיאה!</string>
+    <string name="pref_heartRateSampling">דופק</string>
 </resources>

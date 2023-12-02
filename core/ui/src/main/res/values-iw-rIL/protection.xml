@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="biometric_title">דרושה הזדהות</string>
+    <string name="biometric_description">הניחו את האצבע על קורא טביעות האצבע כדי לאמת את זהותכם</string>
+    <string name="settings_protection">Settings protection (הגנה על הגדרות)</string>
+    <string name="application_protection">Application protection (הגנת האפליקציה)</string>
+    <string name="bolus_protection">Bolus protection (הגנת בולוס)</string>
+    <string name="settings_password">סיסמת ההגדרות</string>
+    <string name="settings_pin">קוד PIN של ההגדרות</string>
+    <string name="application_password">סיסמת האפליקציה</string>
+    <string name="application_pin">PIN היישום</string>
+    <string name="bolus_password">סיסמת בולוס</string>
+    <string name="bolus_pin">PIN בולוס</string>
+    <string name="protection_timeout_title">זמן השיהוי של הסיסמא וה-PIN [שניות]</string>
+    <string name="protection_timeout_summary">זמן לפני בקשת סיסמא או PIN</string>
+    <string name="biometric">זיהוי ביומטרי</string>
+    <string name="custom_password">סיסמא מותאמת אישית</string>
+    <string name="custom_pin">PIN מותאם אישית</string>
+    <string name="noprotection">ללא הגנה</string>
+    <string name="unsecure_fallback_biometric">גיבוי לא מאובטח</string>
+    <string name="unsecure_fallback_descriotion_biometric">על מנת להיות אפקטיבית, הגנה ביומטרית זקוקה לסיסמא ראשית להגדיר לגיבוי.\n\nנא להגדיר סיסמה ראשית!</string>
+    <string name="password_set">הסיסמה הוגדרה!</string>
+    <string name="pin_set">PIN הוגדר!</string>
+    <string name="password_not_set">הסיסמה לא הוגדרה</string>
+    <string name="pin_not_set">PIN לא הוגדר</string>
+    <string name="password_not_changed">הסיסמה לא השתנתה</string>
+    <string name="pin_not_changed">ה-PIN לא שונה</string>
+    <string name="pin_cleared">ה-PIN נמחק!</string>
+    <string name="password_hint">הזינו את הסיסמה</string>
+    <string name="pin_hint">הזינו PIN כאן</string>
+</resources>

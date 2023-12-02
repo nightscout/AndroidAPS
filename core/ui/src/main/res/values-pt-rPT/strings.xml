@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    General-->
+    <string name="refresh">Actualizar</string>
+    <string name="error">Erro</string>
+    <string name="profile_set_ok">Perfil Basal actualizado na bomba</string>
+    <string name="invalid_input">Entrada Inválida</string>
+    <string name="bolus_delivering">A administrar %1$.2f U</string>
+    <string name="constraint_applied">Restrição aplicada!</string>
+    <string name="tempbasals_iobtotal_label_string">Total da IA:</string>
+    <string name="tt_label">AT</string>
+    <string name="pump_unreachable">Bomba inacessível</string>
+    <string name="insulin_unit_shortname">U</string>
+    <string name="pump_base_basal_rate">%1$.2f U/h</string>
+    <string name="pump_not_initialized_profile_not_set">Bomba não inicializada, perfil não definido!</string>
+    <string name="failed_update_basal_profile">Falha a actualizar perfil da basal</string>
+    <string name="bolus_delivered_successfully">Bólus %1$.2f U administrado com sucesso</string>
+    <string name="no_valid_basal_rate">Nenhum valor de basal válido foi lido da bomba</string>
+    <string name="limiting_iob">A limitar IA para %1$.1f U porque %2$s</string>
+    <string name="loop_disabled">LOOP DESATIVADO POR RESTRIÇÕES</string>
+    <string name="event_type">Tipo de evento</string>
+    <string name="reload">Recarregar</string>
+    <string name="mgdl">mg/dL</string>
+    <string name="mmol">mmol/L</string>
+    <string name="save">Guardar</string>
+    <string name="snooze">Silenciar</string>
+    <string name="virtual_pump">Bomba virtual</string>
+    <string name="constraints">Restrições</string>
+    <string name="superbolus">Superbólus</string>
+    <string name="pump_paused">Bomba suspensa</string>
+    <string name="and">E</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Utilizador</string>
+    <string name="result">Resultado</string>
+    <string name="settings">Definições</string>
+    <string name="statuslights">Luzes de Estado</string>
+    <string name="do_ns_upload_title">Enviar dados Glicose para NS</string>
+    <string name="configbuilder_insulin">Insulina</string>
+    <string name="value_unavailable_short">n/a</string>
+    <string name="master_password">Senha Mestre</string>
+    <string name="ue_export_to_csv">Exportar Entradas do Utilizador para o Excel (csv)</string>
+    <string name="confirm">Confirmar</string>
+    <string name="pump">Bomba</string>
+    <string name="missed_bg_readings">Leituras Glicose perdidas</string>
+    <string name="treatments_iob_label_string">IA:</string>
+    <string name="mute5min">Silenciar por 5 minutos</string>
+    <string name="mute">Silêncio</string>
+    <string name="success">Sucesso</string>
+    <string name="advanced_settings_title">Configurações Avançadas</string>
+    <string name="extendedbolusdeliveryerror">Erro na administração Bólus Prolongado</string>
+    <string name="aps_mode_title">Modo APS</string>
+    <string name="extended_bolus">Bólus Prolongado</string>
+    <string name="paused">Em pausa</string>
+    <string name="tdd_total">TID Total</string>
+    <string name="goingtodeliver">A ser administrado %1$.2f U</string>
+    <string name="waitingforpump">À espera da bomba</string>
+    <string name="androidaps_start">AAPS iniciada</string>
+    <string name="formatsignedinsulinunits">%1$+.2f U</string>
+    <string name="format_carbs">%1$d g</string>
+    <string name="format_hours">%1$.2f h</string>
+    <string name="format_mins">%1$d mins</string>
+    <string name="objectives">Objectivos</string>
+    <string name="please_wait">Por favor aguarde…</string>
+    <string name="stop">Parar</string>
+    <string name="carbs">Hidratos</string>
+    <string name="invalid_profile">Perfil inválido!</string>
+    <string name="no_profile_set">SEM PERFIL DEFINIDO</string>
+    <string name="active"><![CDATA[<Activo>]]></string>
+    <string name="date">Data</string>
+    <string name="units_label">Unidades</string>
+    <string name="dia_label">DIA</string>
+    <string name="ic_label">IC</string>
+    <string name="isf_label">FSI</string>
+    <string name="basal_label">Basal</string>
+    <string name="target_label">Alvo</string>
+    <string name="dia_long_label">Duração da ação da Insulina</string>
+    <string name="ic_long_label">Rácio Insulina Hidratos de Carbono</string>
+    <string name="isf_long_label">Factor Sensibilidade à Insulina (FSI)</string>
+    <string name="basal_long_label">Taxa da Basal</string>
+    <string name="target_long_label">Alvo da Glicemia</string>
+    <string name="shortgram">g</string>
+    <string name="shortpercent">%</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="btwatchdog_title">Watchdog BT</string>
+    <string name="btwatchdog_summary">Desliga o bluetooth do telefone durante um segundo se nenhuma ligação com bomba for possível. Este parâmetro pode ser útil em alguns telefones, onde o bluetooth congela.</string>
+    <string name="virtualpump_resultok">OK</string>
+    <string name="pump_time_updated">Hora da bomba atualizada</string>
+    <string name="exit">Sair</string>
+    <string name="removerecord">Remover registo</string>
+    <string name="loopisdisabled">Loop está desactivado</string>
+    <string name="alarm">Alarme</string>
+    <string name="disableloop">Desactivar Loop</string>
+    <string name="enableloop">Activar Loop</string>
+    <string name="resumeloop">Retomar loop</string>
+    <string name="suspendloop">Suspender loop</string>
+    <string name="duration_min_label">Duração [min]</string>
+    <string name="notification">Notificação</string>
+    <string name="noprofile">Sem perfil carregado do NS</string>
+    <string name="exists">existe</string>
+    <string name="notexists">não existe</string>
+    <string name="glucose">Glicose</string>
+    <string name="iob">IA</string>
+    <string name="cob">HCA</string>
+    <string name="name_short">Nome:</string>
+    <string name="time">Hora</string>
+    <string name="ns_wifi_ssids">SSID WiFi</string>
+    <string name="loading">A carregar …</string>
+    <string name="notes_label">Notas</string>
+    <string name="remove_button">Remover</string>
+    <string name="add_new">Adicionar novo</string>
+    <string name="addnew_above">Adicionar novo acima</string>
+    <string name="wrong_pump_data">Os dados vêm de uma bomba diferente. Altera o driver da bomba para redefinir o seu estado.</string>
+    <string name="bg_label">GLIC</string>
+    <string name="calibration">Calibração</string>
+    <string name="alarminxmin">Executar alarme em %1$d min</string>
+    <string name="treatmentdeliveryerror">Ocorreu um erro de bólus. Verifique manualmente a quantidade administrada</string>
+    <string name="bolus_reminder">Lembrete de bólus</string>
+    <string name="duration_label">Duração</string>
+    <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Bomba suspensa</string>
+    <string name="notconfigured">Não configurado</string>
+    <string name="loopsuspended">Loop suspenso</string>
+    <string name="trend_arrow">Seta de tendência</string>
+    <string name="a11y_autosens_label">Auto sensibilidade</string>
+    <string name="required">req</string>
+    <string name="a11y_arrow_double_down">a descer rapidamente</string>
+    <string name="a11y_arrow_single_down">a descer</string>
+    <string name="a11y_arrow_forty_five_down">a descer lentamente</string>
+    <string name="a11y_arrow_flat">estável</string>
+    <string name="a11y_arrow_forty_five_up">a subir lentamente</string>
+    <string name="a11y_arrow_single_up">a subir</string>
+    <string name="a11y_arrow_double_up">a subir rapidamente</string>
+    <string name="a11y_arrow_none">nenhuma</string>
+    <string name="a11y_arrow_unknown">desconhecido</string>
+    <string name="a11y_high">hiper</string>
+    <string name="a11y_inrange">no alvo</string>
+    <string name="a11y_low">hipo</string>
+    <string name="average">Média</string>
+    <string name="tir">TNA</string>
+    <string name="none"><![CDATA[<nenhum>]]></string>
+    <string name="remove_label">REMOVER</string>
+    <string name="activate_profile">Activar perfil</string>
+    <string name="reset">repor</string>
+    <string name="profileswitch_ismissing">Troca de Perfil em falta. Por favor faça uma troca de perfil ou pressione \"Activar Perfil\" em Perfil Local.</string>
+    <string name="profile">Perfil</string>
+    <string name="select_for_removal">Selecione para remover</string>
+    <string name="confirm_remove_multiple_items">Tem a certeza que deseja remover %1$d items</string>
+    <string name="overview_treatment_label">Tratamento</string>
+    <string name="copytolocalprofile">Criar novo perfil local a partir deste perfil?</string>
+    <string name="wear_wizard_settings">Definições do Assistente Rápido</string>
+    <string name="bg_trend_label">Tendência 15 min</string>
+    <string name="treatments_wizard_cob_label">HCA</string>
+    <string name="bolus_iob_label">Bólus - IA</string>
+    <string name="treatments_wizard_basaliob_label">Basal IA</string>
+    <string name="invalid">INVÁLIDO</string>
+    <string name="login">Login</string>
+    <string name="prime_fill">Purgar/Preencher</string>
+    <string name="overview_insulin_label">Bólus</string>
+    <string name="stoptemptarget">Parar Alvo Temp</string>
+    <string name="closedloop">Loop Fechado</string>
+    <string name="openloop">Loop Aberto</string>
+    <string name="lowglucosesuspend">Suspensão Glicose Baixa</string>
+    <string name="dia">DIA</string>
+    <string name="ic_short">IHC</string>
+    <string name="isf_short">FSI</string>
+    <string name="canceling_tbr_failed">Não foi possível cancelar a basal temporária</string>
+    <string name="canceling_eb_failed">Não foi possível cancelar o bólus prolongado</string>
+    <string name="virtualpump_uploadstatus_title">Enviar o estado da bomba para NS ou Tidepool</string>
+    <string name="suspendloop_label">Loop Desactivado/Suspenso</string>
+    <string name="iob_label">Insulina ativa (IA )</string>
+    <!--    Protection-->
+    <string name="wrongpassword">Palavra-passe incorreta</string>
+    <string name="wrongpin">PIN incorreto</string>
+    <string name="passwords_dont_match">Palavras-passe não correspondem</string>
+    <string name="pin_dont_match">Os PINs não correspondem</string>
+    <!--    Profile-->
+    <string name="basalprofilenotaligned">Valores das basais não definidos por horas: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Valor da basal alterado para o valor mínimo suportado: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Valor da basal alterado para o valor máximo suportado: %1$s</string>
+    <string name="profile_per_unit">/U</string>
+    <string name="profile_ins_units_per_hour">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+    <!--    ProfileFunction-->
+    <string name="startprofile">Iniciar perfil %1$d%% para %2$d min</string>
+    <!--    APSResult-->
+    <string name="cancel_temp">Cancelar Basal Temporária</string>
+    <string name="let_temp_basal_run">Permitir Basal Temp Correr</string>
+    <string name="rate">Rácio</string>
+    <string name="duration">Duração</string>
+    <string name="reason">Motivo</string>
+    <string name="nochangerequested">Nenhuma alteração solicitada</string>
+    <!--    ProfileSwitch-->
+    <string name="zerovalueinprofile">Perfil inválido: %1$s</string>
+    <!--    Temptarget-->
+    <string name="mins">%1$d min</string>
+    <!--    Translator-->
+    <string name="careportal">Careportal</string>
+    <string name="careportal_bgcheck">Verificar Glicose</string>
+    <string name="careportal_mbg">Glicose Manual or Calibração</string>
+    <string name="careportal_announcement">Anúncio</string>
+    <string name="careportal_note">Nota</string>
+    <string name="careportal_question">Questão</string>
+    <string name="careportal_exercise">Exercício</string>
+    <string name="careportal_announcement_message">Anúncio: %1$s</string>
+    <string name="careportal_note_message">Notas: %1$s</string>
+    <string name="careportal_question_message">Questão : %1$s</string>
+    <string name="careportal_exercise_message">Exercício : %1$s</string>
+    <string name="careportal_pump_site_change">Mudança de Cateter</string>
+    <string name="cgm_sensor_insert">Colocação Sensor CGM</string>
+    <string name="careportal_cgmsensorstart">Início do Sensor CGM</string>
+    <string name="careportal_cgm_sensor_stop">Parar Sensor CGM</string>
+    <string name="careportal_dad_alert">Alertar D.A.D. (Alerta cão apoio a pesso)</string>
+    <string name="careportal_insulin_cartridge_change">Mudança de Cartucho de Insulina</string>
+    <string name="careportal_profileswitch">Troca de Perfil</string>
+    <string name="careportal_snackbolus">Bólus Lanche</string>
+    <string name="careportal_mealbolus">Bólus Refeição</string>
+    <string name="careportal_correctionbolus">Bólus Correcção</string>
+    <string name="careportal_combobolus">Bólus Combo</string>
+    <string name="careportal_tempbasalstart">Início Basal Temp</string>
+    <string name="careportal_tempbasalend">Fim Basal Temp</string>
+    <string name="careportal_carbscorrection">Correção Hidratos</string>
+    <string name="careportal_openapsoffline">OpenAPS Offline</string>
+    <string name="pump_battery_change">Troca Bateria Bomba</string>
+    <string name="temporary_target">Alvo Temporário</string>
+    <string name="careportal_temporarytargetvalue">Valor Alvo Temporário</string>
+    <string name="careportal_temporarytargetcancel">Cancelar Alvo Temporário</string>
+    <string name="boluswizard">Assistente de Bólus</string>
+    <string name="glucosetype_finger">Dedo</string>
+    <string name="glucosetype_sensor">Sensor</string>
+    <string name="manual">Manual</string>
+    <string name="unknown">desconhecido</string>
+    <string name="eatingsoon">Comer Brevemente</string>
+    <string name="hypo">Hipo</string>
+    <string name="activity">Atividade</string>
+    <string name="wear">Android Wear</string>
+    <string name="automation">Automatização</string>
+    <string name="custom">Personalizado</string>
+    <string name="loop">Loop</string>
+    <string name="ns">NS</string>
+    <string name="record">Registo</string>
+    <!--    Command-->
+    <string name="connectiontimedout">Ligação expirou</string>
+    <!--    PumpEnactResult-->
+    <string name="enacted">Realizado</string>
+    <string name="comment">Comentário</string>
+    <string name="percent">Percentagem</string>
+    <string name="absolute">Absoluto</string>
+    <string name="waitingforpumpresult">À espera de resultado</string>
+    <string name="smb_shortname">SMB</string>
+    <!--    CarbsReq-->
+    <string name="carbsreq">%1$d g Hidratos Adicionais Necessários Dentro de %2$d Minutos</string>
+    <!--    TDDStatsActivity-->
+    <string name="cumulative_tdd">Total de Insulina Diária</string>
+    <string name="expweight">TID exponencialmente ponderada</string>
+    <string name="basalrate">Basal</string>
+    <string name="bolus">Bólus</string>
+    <string name="tdd">TID</string>
+    <string name="ratio">Rácio</string>
+    <string name="amount_days"># Dias</string>
+    <string name="weight">Peso</string>
+    <string name="warning_Message">Possivelmente impreciso se foram usados bólus para purgar/preencher!</string>
+    <string name="olddata_Message">Dados antigos, pressione \"Recarregar\"</string>
+    <string name="tbb">Basal Diária Total</string>
+    <string name="tbb2">Basal diária * 2</string>
+    <!--    Ntp-->
+    <string name="timedetection">Detecção de tempo</string>
+    <!-- User Entry -->
+    <string name="uel_bolus">BÓLUS</string>
+    <string name="uel_bolus_calculator">CALCULADOR DE BÓLUS</string>
+    <string name="uel_bolus_advisor">ASSISTENTE DE BÓLUS</string>
+    <string name="uel_extended_bolus">BÓLUS PROLONGADO</string>
+    <string name="uel_superbolus_tbr">DBT SUPERBÓLUS</string>
+    <string name="uel_carbs">HC</string>
+    <string name="uel_extended_carbs">HC LENTOS</string>
+    <string name="uel_temp_basal">BASAL TEMPORÁRIA</string>
+    <string name="uel_tt">ALVO TEMPORÁRIO</string>
+    <string name="uel_new_profile">NOVO PERFIL</string>
+    <string name="uel_clone_profile">CLONAR PERFIL</string>
+    <string name="uel_store_profile">GUARDAR PERFIL</string>
+    <string name="uel_profile_switch">TROCAR PERFIL</string>
+    <string name="uel_profile_switch_cloned">TROCA DE PERFIL CLONADA</string>
+    <string name="uel_closed_loop_mode">MODO DE LOOP FECHADO</string>
+    <string name="uel_lgs_loop_mode">MODO DE LOOP DE SGB</string>
+    <string name="uel_open_loop_mode">MODO DE LOOP ABERTO</string>
+    <string name="uel_loop_disabled">LOOP DESATIVADO</string>
+    <string name="uel_loop_enabled">LOOP ATIVADO</string>
+    <string name="uel_reconnect">RECONETAR</string>
+    <string name="uel_disconnect">DESCONETAR</string>
+    <string name="uel_resume">RESUMO</string>
+    <string name="uel_suspend">SUSPENDER</string>
+    <string name="uel_hw_pump_allowed">HW BOMBA PERMITIDA</string>
+    <string name="uel_clear_pairing_keys">LIMPAR CHAVES DE EMPARELHAMENTO</string>
+    <string name="uel_accepts_temp_basal">ACEITAR BASAL TEMPORÁRIA</string>
+    <string name="uel_cancel_temp_basal">CANCELAR BASAL TEMPORÁRIA</string>
+    <string name="uel_cancel_bolus">CANCELAR BÓLUS</string>
+    <string name="uel_cancel_extended_bolus">CANCELAR BÓLUS PROLONGADO</string>
+    <string name="uel_cancel_tt">CANCELAR ALVO TEMPORÁRIO</string>
+    <string name="uel_careportal">CAREPORTAL</string>
+    <string name="uel_site_change">ALTERAÇÃO DO LOCAL DO CATETER</string>
+    <string name="uel_reservoir_change">ALTERAÇÃO DO RESERVATÓRIO</string>
+    <string name="uel_calibration">CALIBRAÇÃO</string>
+    <string name="uel_prime_bolus">BÓLUS DE PREENCHIMENTO</string>
+    <string name="uel_treatment">TRATAMENTO</string>
+    <string name="uel_careportal_ns_refresh">ATUALIZAÇÃO DO CAREPORTAL DO NS</string>
+    <string name="uel_profile_switch_ns_refresh">ATUALIZAR MUDANÇA DE PERFIL DO NS</string>
+    <string name="uel_treatments_ns_refresh">ATUALIZAR TRATAMENTOS DO NS </string>
+    <string name="uel_tt_ns_refresh">ATUALIZAR ALVO TEMPORÁRIO NO NS</string>
+    <string name="uel_automation_removed">AUTOMATIZAÇÃO REMOVIDA</string>
+    <string name="uel_bg_removed">GLIC REMOVIDA</string>
+    <string name="uel_careportal_removed">CAREPORTAL REMOVIDO</string>
+    <string name="uel_bolus_removed">REGISTO DE BÓLUS REMOVIDO</string>
+    <string name="uel_carbs_removed">REGISTO DE HCS REMOVIDOS</string>
+    <string name="uel_temp_basal_removed">BASAL TEMPORÁRIA REMOVIDA</string>
+    <string name="uel_extended_bolus_removed">BÓLUS PROLONGADO REMOVIDO</string>
+    <string name="uel_food">COMIDA</string>
+    <string name="uel_food_removed">HC REMOVIDOS</string>
+    <string name="uel_profile_removed">PERFIL REMOVIDO</string>
+    <string name="uel_profile_switch_removed">TROCA DE PERFIL REMOVIDA</string>
+    <string name="uel_restart_events_removed">REINICIAR EVENTOS REMOVIDOS</string>
+    <string name="uel_treatment_removed">TRATAMENTO REMOVIDO</string>
+    <string name="uel_tt_removed">ALVO TEMPORÁRIO REMOVIDO</string>
+    <string name="uel_ns_paused">NS PAUSADO</string>
+    <string name="uel_ns_resume">RETOMAR NS</string>
+    <string name="uel_ns_queue_cleared">FILA DO NS LIMPA</string>
+    <string name="uel_ns_settings_copied">CONFIGURAÇÕES DO NS COPIADAS</string>
+    <string name="uel_error_dialog_ok">CAIXA DE DIÁLOGO OK</string>
+    <string name="uel_error_dialog_mute">CAIXA DE DIÁLOGO SILENCIAR </string>
+    <string name="uel_error_dialog_mute_5min">CAIXA DE DIÁLOGO SILENCIAR 5MIN</string>
+    <string name="uel_objective_started">OBJETIVO INICIADO</string>
+    <string name="uel_objective_unstarted">OBJETIVO NÃO INICIADO</string>
+    <string name="uel_objectives_skipped">OBJETIVOS IGNORADOS</string>
+    <string name="uel_stat_reset">REINICIAR ESTADO</string>
+    <string name="uel_delete_logs">APAGAR REGISTOS</string>
+    <string name="uel_delete_future_treatments">APAGAR TRATAMENTOS FUTUROS</string>
+    <string name="delete_future_treatments">Apagar tratamentos futuros</string>
+    <string name="uel_export_settings">EXPORTAR CONFIGURAÇÕES</string>
+    <string name="uel_import_settings">IMPORTAR CONFIGURAÇÕES</string>
+    <string name="uel_reset_databases">REINICIAR BASES DE DADOS</string>
+    <string name="uel_cleanup_databases">LIMPAR BASES DE DADOS</string>
+    <string name="uel_export_databases">EXPORTAR BASES DE DADOS</string>
+    <string name="uel_import_databases">IMPORTAR BASES DE DADOS</string>
+    <string name="uel_otp_export">EXPORTAR OTP</string>
+    <string name="uel_otp_reset">REINICIAR OTP</string>
+    <string name="uel_stop_sms">PARAR SMS</string>
+    <string name="uel_export_csv">EXPORTAR ENTRADAS DO UTILIZADOR</string>
+    <string name="uel_start_aaps">COMEÇAR A AAPS</string>
+    <string name="uel_exit_aaps">SAIR DA AAPS</string>
+    <string name="uel_plugin_enabled">PLUGIN ATIVADO</string>
+    <string name="uel_plugin_disabled">PLUGIN DESATIVADO</string>
+    <string name="uel_unknown">DESCONHECIDO</string>
+    <string name="ue_string">Cadeia de caracteres</string>
+    <string name="ue_source">Fonte</string>
+    <string name="ue_utc_offset">Diferença horária UTC</string>
+    <string name="ue_action">Acção</string>
+    <string name="ue_timestamp">Registo de data e hora</string>
+    <string name="ue_none">Nenhuma Unidade</string>
+    <string name="uel_loop_change">LOOP ALTERADO</string>
+    <string name="uel_loop_removed">LOOP REMOVIDO</string>
+    <string name="uel_other">OUTROS</string>
+    <!-- HardLimits -->
+    <string name="profile_low_target">Valor mínimo alvo do perfil</string>
+    <string name="profile_high_target">Valor máximo alvo do perfil</string>
+    <string name="temp_target_low_target">Valor inferior do alvo temporário</string>
+    <string name="temp_target_high_target">Valor superior do alvo temporário</string>
+    <string name="temp_target_value">Valor Alvo Temporário</string>
+    <string name="profile_dia">Valor Perfil DIA</string>
+    <string name="profile_sensitivity_value">Valor Perfil Sensibilidade</string>
+    <string name="profile_max_daily_basal_value">Valor Perfil Basal Máxima</string>
+    <string name="current_basal_value">Valor Actual Basal</string>
+    <string name="profile_carbs_ratio_value">Valor Perfil Rácio Hidratos</string>
+    <string name="valuelimitedto">%1$.2f limitado a %2$.2f</string>
+    <string name="valueoutofrange">»%1$s« está fora dos limites máximos</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f está fora dos limites permitidos</string>
+    <string name="basal_value">Valor da Basal</string>
+    <!-- Command Queue + readStatus reasons -->
+    <string name="bolus_u_min">BOLUS %1$.2f U</string>
+    <string name="carbs_g">Hidratos de Carbono %1$d g</string>
+    <string name="extended_bolus_u_min">BOLUS EXTENDIDO %1$.2f U %2$d min</string>
+    <string name="load_events">CARREGAR EVENTOS</string>
+    <string name="clear_alarms">LIMPAR ALARMES</string>
+    <string name="deactivate">DESATIVAR</string>
+    <string name="update_time">ATUALIZAR TEMPO</string>
+    <string name="load_history">CARREGAR HISTÓRICO %1$d</string>
+    <string name="load_tdds">CARREGAR TIDs</string>
+    <string name="set_profile">DEFINIR PERFIL</string>
+    <string name="set_user_settings">DEFINIR CONFIGURAÇÕES DO UTILIZADOR</string>
+    <string name="smb_bolus_u">SMB BOLUS %1$.2f U</string>
+    <string name="start_pump">INICIAR BOMBA</string>
+    <string name="stop_pump">PARAR BOMBA</string>
+    <string name="temp_basal_absolute">TEMP BASAL %1$.2f U/h %2$d minuto</string>
+    <string name="sms" comment="26 characters max for translation">SMS</string>
+    <string name="formatPercent">%1$.0f%%</string>
+    <string name="basal">Basal</string>
+    <string name="basalpct">Basal %</string>
+    <string name="a11y_user">utilizador</string>
+    <!-- Autotune -->
+    <string name="autotune_missing">Em falta</string>
+    <string name="autotune_compare_profile">Comparar Perfis</string>
+    <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">Utilizar as notificações do sistema para alertas e notificações</string>
+    <string name="urgent_alarm">Alarme Urgente</string>
+    <string name="info">INFO</string>
+    <!-- BolusWizard -->
+    <string name="cobvsiob">HCA vs IA</string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Absorção lenta de hidratos detetada: %2$d%% do tempo. Verifique o seu cálculo. HCA podem estar sobrestimados, assim mais insulina pode ser dada !!!</font>]]></string>
+    <string name="partialboluswizard">Administrar esta parte do resultado do assistente de bólus [%]</string>
+    <string name="advisoralarm">Executar alarme quando for tempo de comer</string>
+    <string name="no_action_selected">Nenhuma ação seleccionada, nada irá acontecer</string>
+    <string name="wizard_explain_iob">IOB: %1$.2fU</string>
+    <string name="quickwizard">Assistente Rápido</string>
+    <!--    Preferences-->
+    <string name="teenage">Adolescente</string>
+    <string name="adult">Adulto</string>
+    <string name="pregnant">Gravidez</string>
+    <!--    Protection-->
+    <string name="unlock_settings">Definições Desbloqueio</string>
+    <!--    Pumps -->
+    <string name="battery_label">Bateria</string>
+    <string name="reservoir_label">Reservatório</string>
+    <string name="last_connection_label">Última ligação</string>
+    <string name="last_bolus_label">Último bólus</string>
+    <string name="base_basal_rate_label">Taxa Basal de base</string>
+    <string name="tempbasal_label">Basal temp</string>
+    <string name="extended_bolus_label">Bólus Prolongado</string>
+    <string name="serial_number">Número de Série</string>
+    <string name="disconnected">Desconectada</string>
+    <string name="connecting">A ligar</string>
+    <string name="reservoir_value">%1$.0f / %2$d U</string>
+    <string name="daily_units">Unidades diárias</string>
+    <string name="pump_icon">Ícone da bomba</string>
+    <string name="view_profile">Ver perfil</string>
+    <string name="pump_history">Histórico da Bomba</string>
+    <string name="stats">Estatísticas</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bólus OK</string>
+    <string name="temp_basal_delivery_error">Erro na administração da Basal Temp</string>
+    <string name="not_set_short">Não definido</string>
+    <string name="pump_busy">A bomba está ocupada</string>
+    <string name="connection_error">Erro de ligação da bomba</string>
+    <string name="reading_pump_history">A ler histórico da bomba</string>
+    <string name="password_cleared">Senha limpa!</string>
+    <string name="pairing">A Emparelhar</string>
+    <string name="initializing">A inicializar ...</string>
+    <!--    Constraints-->
+    <string name="limitingbasalratio">A basal máx está limitada a %1$.2f U/h por %2$s</string>
+    <string name="pumplimit">limite bomba</string>
+    <string name="limitingpercentrate">A limitar rácio percentagem máx para %1$d%% porque %2$s</string>
+    <string name="itmustbepositivevalue">deve ser valor positivo</string>
+    <string name="limitingbolus">A limitar bólus para %1$.1f U porque %2$s</string>
+    <!-- Locale -->
+    <!--    Dialogs-->
+    <string name="confirmation">Confirmação</string>
+    <string name="message">Mensagem</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancelar</string>
+    <string name="dismiss">DISPENSAR</string>
+    <string name="yes">Sim</string>
+    <string name="no">Não</string>
+    <string name="close">Fechar</string>
+    <!-- TwoMessagesDialog -->
+    <string name="password_preferences_decrypt_prompt">Ser-lhe-á pedida a senha mestra, que será necessária para desencriptar preferências importadas.</string>
+    <!-- NumberPicker -->
+    <string name="format_hour_minute">%1$dh %2$dm</string>
+    <!-- datetime layout -->
+    <string name="event_time_label">Tempo do evento</string>
+    <!-- BluetoothDevicePreference -->
+    <string name="need_connect_permission">Aplicação precisa de permissão Bluetooth</string>
+    <!--    Combo-->
+    <string name="user_request" comment="26 characters max for translation">Pedido do Utilizador</string>
+    <string name="pump_paired" comment="26 characters max for translation">Bomba Emparelhada</string>
+    <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth Low Energy não suportado.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy não suportado ou dispositivo não emparalhado.</string>
+    <string name="ble_not_enabled">Bluetooth não está activado.</string>
+    <string name="location_not_found_title">Localização Não Está Activa</string>
+    <string name="location_not_found_message">Para a Pesquisa Bluetooth funcionar em dispositivos mais recentes, a localização deve ser activada. AAPS não acompanha a sua localização e pode ser desactivada após o emparelhamento bem-sucedido.</string>
+    <!--    Preferences -->
+    <string name="nav_plugin_preferences">Preferências plugin</string>
+    <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">Falta de permissão SMS</string>
+    <!-- About -->
+    <string name="fabric_upload_disabled">Envio de registos de erro desativado!</string>
+    <plurals name="days">
+        <item quantity="one">%1$d dia</item>
+        <item quantity="other">%1$d dias</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d hora</item>
+        <item quantity="other">%1$d horas</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d minuto</item>
+        <item quantity="other">%1$d minutos</item>
+    </plurals>
+    <!--    Maintenance-->
+    <!--    Weekday-->
+    <string name="weekday_saturday_short">Sáb</string>
+    <string name="weekday_friday_short">Sex</string>
+    <string name="weekday_thursday_short">Qui</string>
+    <string name="weekday_wednesday_short">Qua</string>
+    <string name="weekday_tuesday_short">Ter</string>
+    <string name="weekday_monday_short">Seg</string>
+    <!-- WeekdayPicker -->
+    <string name="monday_short">S</string>
+    <string name="tuesday_short">T</string>
+    <string name="wednesday_short">Qa</string>
+    <string name="thursday_short">Qi</string>
+    <string name="friday_short">Se</string>
+    <string name="saturday_short">Sa</string>
+    <string name="sunday_short">D</string>
+    <!--    DecimalFormatterImpl -->
+    <string name="format_insulin_units1">%1$.1f U</string>
+    <string name="format_insulin_units">%1$.2f U</string>
+</resources>

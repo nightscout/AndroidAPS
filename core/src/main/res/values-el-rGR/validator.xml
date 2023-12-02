@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="error_only_numeric_digits_allowed">Μόνο αριθμητικά ψηφία επιτρέπονται.</string>
-    <string name="error_only_numeric_digits_range_allowed">Μόνο αριθμητικά ψηφία μέσα στο εύρος %1$s - %2$s επιτρέπονται. </string>
-    <string name="error_field_must_not_be_empty">Το πεδίο αυτό δεν πρέπει να είναι κενό</string>
-    <string name="error_phone_not_valid">Μη έγκυρος αριθμός τηλεφώνου</string>
-</resources>

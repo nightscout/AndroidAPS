@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="combov2_plugin_name">Accu-Chek Combo</string>
+    <string name="combov2_suspended">Ar fionraí</string>
+    <string name="combov2_setting_basal_profile_cmddesc">Socrú próifíl bunaidh</string>
+    <string name="combov2_current_tbr">%1$d%% (%2$d nóim fágtha)</string>
+    <string name="combov2_battery_low_warning">Is ceallraí Caidéil íseal</string>
+    <string name="combov2_short_status_battery_state_empty">folamh</string>
+    <string name="combov2_short_status_battery_state_low">íseal</string>
+</resources>

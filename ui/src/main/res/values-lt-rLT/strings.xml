@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bolus_constraint_applied">Pritaikytas boluso apribojimas</string>
+    <string name="carbs_constraint_applied">Pritaikytas AV apribojimas</string>
+    <string name="temp_target_short">LT</string>
+    <string name="dialog_canceled">Ryšys nutrauktas</string>
+    <string name="start_activity_tt">Pradėti Aktyvumo LT</string>
+    <string name="start_eating_soon_tt">Pradėti Netrukus valgysiu LT</string>
+    <string name="start_hypo_tt">Pradėti \"Hipo\" LT</string>
+    <string name="time_offset">Laiko poslinkis</string>
+    <string name="unit_minute_short">min.</string>
+    <string name="remind_to_bolus_later">Priminti apie bolusą vėliau</string>
+    <string name="a11y_carb_reminder">nustatyti priminimą</string>
+    <!--    Widget-->
+    <string name="configure">Derinti skaidrumą</string>
+    <string name="widget_description">AAPS valdiklis</string>
+    <!--     Activities-->
+    <string name="activity_monitor">Aktyvumo stebėjimas</string>
+    <string name="do_you_want_reset_stats">Ar norite iš naujo nustatyti aktyvumo statistiką?</string>
+    <string name="do_you_want_reset_tdd_stats">Ar norite iš naujo nustatyti BPD statistiką?</string>
+    <string name="statistics">Statistika</string>
+    <string name="calculation_in_progress">Skaičiuojama</string>
+    <string name="invalid_age">Neteisingas amžiaus įrašas</string>
+    <string name="invalid_weight">Neteisingas svorio įrašas</string>
+    <string name="id">ID:</string>
+    <string name="submit">Pateikti</string>
+    <string name="age">Amžius</string>
+    <string name="weight_label">Svoris</string>
+    <string name="most_common_profile">Dažniausiai naudojamas profilis:</string>
+    <string name="survey_comment">Pastaba: anonimiškai bus įkelti tik tie duomenys, kurie matomi šiame ekrane. Šiai AndroidAPS instaliacijai priskirtas ID. Galite pateikti duomenis dar kartą, jei pasikeitė jūsų pagrindinis profilis. Vis dėlto leiskite jam veikti bent savaitę, kad rezultatas atsispindėtų laike normos ribose. Ačiū už palaikymą.</string>
+    <string name="glucose_type">Glikemijos tipas</string>
+    <string name="bg_other">Kiti</string>
+    <string name="bg_meter">Matuoklis</string>
+    <string name="bg_sensor">Iš sensoriaus</string>
+    <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s JIF: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IA: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IA: %2$.1f</string>
+    <string name="treatments_wizard_total_label">Viso</string>
+    <!-- FillDialog -->
+    <string name="fill_warning">Įsitikinkite, kad nurodytas kiekis atitinka Jūsų infuzijos rinkinio specifikaciją!</string>
+    <string name="record_pump_site_change">Įrašas apie infuzijos rinkinio keitimą</string>
+    <string name="record_insulin_cartridge_change">Įrašas apie rezervuaro keitimą</string>
+    <!-- InsulinDialog -->
+    <string name="do_not_bolus_record_only">Boluso nesuleisti, tik įrašyti</string>
+    <!-- ProfileSwitchDialog -->
+    <string name="reuse_profile_pct_hours">Pakartotinai naudoti %1$d%% %2$dh</string>
+    <string name="timeshift_label">Laiko perstūmimas</string>
+    <string name="percentage_label">Procentais</string>
+    <!-- LoopDialog -->
+    <string name="suspendloopfor1h">Sustabdyti ciklą 1 val</string>
+    <string name="suspendloopfor2h">Sustabdyti ciklą 2 val</string>
+    <string name="suspendloopfor3h">Sustabdyti ciklą 3 val</string>
+    <string name="suspendloopfor10h">Sustabdyti ciklą 10 val</string>
+    <string name="disconnectpump">Atjungti pompą</string>
+    <string name="disconnectpumpfor15m">Atjungti pompą 15 min</string>
+    <string name="disconnectpumpfor30m">Atjungti pompą 30 min</string>
+    <string name="disconnectpumpfor1h">Atjungti pompą 1 val</string>
+    <string name="disconnectpumpfor2h">Atjungti pompą 2 val</string>
+    <string name="disconnectpumpfor3h">Atjungti pompą 3 val</string>
+    <string name="resume">Atnaujinti</string>
+    <string name="reconnect">Prijungti pompą</string>
+    <string name="duration15m">15 min</string>
+    <string name="duration30m">30 min</string>
+    <string name="duration1h">1 val.</string>
+    <string name="duration2h">2 val.</string>
+    <string name="duration3h">3 val.</string>
+    <string name="duration10h">10 val.</string>
+    <!-- WizardDialog -->
+    <string name="a11_correction_percentage">pakeisti rezultatą %</string>
+    <string name="a11_correction_units">pakeisti rezultatą vienetais</string>
+    <string name="two_hours">2 val</string>
+    <string name="result_insulin_carbs">Rezultatas: %1$s %2$s</string>
+    <string name="missing_carbs">Trūksta %1$d g</string>
+    <string name="a11y_current_bg">dabartinė glikemija</string>
+    <string name="carb_time_label">AV laikas</string>
+    <string name="a11y_set_carb_timer">nustatyti AV laiko perspėjimą</string>
+    <string name="show_calculation">Rodyti skaičiavimą</string>
+    <!-- Treatments -->
+    <string name="no_records_available">Nėra įrašų</string>
+    <string name="calculation_short">Skaič.</string>
+    <string name="treatments_iob_label_string">AIO:</string>
+    <string name="treatments_insulin_label_string">Insulinas:</string>
+    <string name="treatments_carbs_label_string">AV:</string>
+    <string name="treatments_iobtotal_label_string">Visas AIO:</string>
+    <string name="treatments_iob_activity_total_label_string">Bendro AIO aktyvumas:</string>
+    <string name="tempbasals_realduration_label_string">Trukmė:</string>
+    <string name="tempbasals_netratio_label_string">Santykis:</string>
+    <string name="tempbasals_netinsulin_label_string">Ins:</string>
+    <string name="tempbasals_iob_label_string">AIO:</string>
+    <string name="treatments_wizard_correction_label">Korekcija</string>
+    <string name="meal_bolus">Maistas</string>
+    <string name="prime">Užpildyti sistemą</string>
+    <string name="profile_changes">Profilio keitimai</string>
+    <string name="tempt_targets">Laikini tikslai</string>
+    <string name="carbs_and_bolus">AV ir bolusai</string>
+    <string name="show_invalidated_records">Rodyti negaliojančius / ištrintus įrašus</string>
+    <string name="hide_invalidated_records">Slėpti negaliojančius / ištrintus įrašus</string>
+    <string name="refresh_from_nightscout">Atnaujinti iš Nightscout</string>
+    <string name="refresheventsfromnightscout">Atnaujinti iš NS</string>
+    <string name="show_invalidated">Rodyti negaliojančius</string>
+    <string name="hide_invalidated">Slėpti negaliojančius</string>
+    <string name="careportal_remove_started_events">Ištrinti AAPS paleidimo žymas</string>
+    <string name="hide_loop">Slėpti ciklą</string>
+    <string name="show_loop">Rodyti ciklą</string>
+    <string name="user_entry">Naudotojo įrašas</string>
+    <string name="clone_label">Klonuoti</string>
+    <string name="show_loop_records">Rodyti ciklo įrašus</string>
+    <string name="show_hide_records">Slėpti ciklo įrašus</string>
+    <!-- ProfileHelperActivity -->
+    <string name="profile1">Profilis 1</string>
+    <string name="profile2">Profilis 2</string>
+    <string name="profile_type">Profilio tipas</string>
+    <string name="basal_pct_from_tdd_label">% bazės</string>
+    <string name="selected_profile">Parinkta:</string>
+    <string name="compare_profile">Palyginti profilius</string>
+    <string name="nav_profile_helper">Profilio pagalbininkas</string>
+    <string name="motol_default_profile">Numatytasis profilis</string>
+    <string name="current_profile">Dabartinis profilis</string>
+    <string name="available_profile">Galimas profilis</string>
+    <string name="format_with_tdd">Amžius: %1$d BPD: %2$.0f U</string>
+    <string name="format_with_tdd_and_pct">Amžius: %1$d BPD: %2$.0f U %3$d%%</string>
+    <string name="format_with_weight">Amžius: %1$d Svoris: %2$.0f kg</string>
+    <string name="dpv_default_profile">Numatytasis profilis</string>
+    <string name="invalid_pct">Netinkamas % įrašas</string>
+    <!-- Other dialogs -->
+    <string name="basal_rate">Valandinė bazė</string>
+    <!--    BolusProgressDialog-->
+    <string name="stop_pressed">Paspausta STOP</string>
+    <!--QuickWizard-->
+    <string name="a11y_only_on_watch">tik laikrodyje</string>
+    <string name="a11y_only_on_phone">tik telefone</string>
+    <string name="quickwizard_settings">Greitojo patarėjo nustatymai</string>
+    <string name="overview_edit_quickwizard_button_text">Mygtuko tekstas:</string>
+    <string name="overview_edit_quickwizard_carbs">AV:</string>
+    <string name="overview_edit_quickwizard_valid">Galioja:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">Pridėti</string>
+    <string name="overview_quickwizard_item_edit_button">Redaguoti</string>
+    <string name="overview_edit_quickwizard_show_on_device">Rodyti įrašą įrenginyje:</string>
+    <string name="overview_edit_quickwizard_use_bg">Glikemija</string>
+    <string name="overview_edit_quickwizard_use_bolus_iob">Bolusų AIO apskaičiavimas</string>
+    <string name="overview_edit_quickwizard_use_basal_iob">Bazės AIO apskaičiavimas</string>
+    <string name="overview_edit_quickwizard_use_trend">Tendencijos apskaičiavimas</string>
+    <string name="overview_edit_quickwizard_use_superbolus">Superboluso apskaičiavimas</string>
+    <string name="overview_edit_quickwizard_percentage">Procentai</string>
+    <string name="device_all">Visi</string>
+    <string name="device_phone">Telefonas</string>
+    <string name="device_watch">Laikrodis</string>
+    <string name="positive_only">Tik teigiamas</string>
+    <string name="negative_only">Tik neigiamas</string>
+    <string name="overview_editquickwizard_usecob">AAO apskaičiavimas</string>
+    <string name="overview_editquickwizard_usetemptarget">Laikino tikslo apskaičiavimas</string>
+    <string name="overview_editquickwizard_usepercentage">Procentų apskaičiavimas</string>
+    <string name="app_default">Programos numatytieji</string>
+    <string name="a11y_drag_and_drop_handle">nutempti ir padėti</string>
+</resources>

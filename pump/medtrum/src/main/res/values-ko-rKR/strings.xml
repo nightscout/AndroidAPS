@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MedtrumPump -->
+    <string name="medtrum">Medtrum</string>
+    <string name="medtrum_pump_shortname">MT</string>
+    <string name="medtrum_pump_setting">Medtrum 펌프 설정</string>
+    <string name="pump_error">펌프 오류: %1$s !! </string>
+    <string name="pump_is_suspended">펌프 중지됨</string>
+    <string name="pump_is_suspended_hour_max">시간 당 최대 인슐린을 초과하여 펌프가 중지됨</string>
+    <string name="pump_is_suspended_day_max">일일 최대 인슐린을 초과하여 펌프가 중지됨</string>
+    <string name="patch_not_active">Patch가 활성화되지 않음</string>
+    <string name="pump_setting_failed">펌프에 사용자 설정 실패함!</string>
+    <!-- overview fragment -->
+    <string name="ble_status_label">블루투스 상태</string>
+    <string name="last_connection_label">마지막 연결</string>
+    <string name="active_bolus_label">활성 bolus</string>
+    <string name="pump_state_label">펌프 상태</string>
+    <string name="active_alarms_label">알람 활성화</string>
+    <string name="reservoir_level"> %.2f U</string>
+    <string name="battery_voltage"> %.2f V</string>
+    <string name="basal_type_label">Basal 종류</string>
+    <string name="basal_rate_label">Basal 양</string>
+    <string name="current_basal_rate"> %.2f U/h</string>
+    <string name="pump_type_label">펌프 종류</string>
+    <string name="fw_version_label">펌웨어 버전</string>
+    <string name="patch_no_label">Patch 번호</string>
+    <string name="patch_expiry_label">Patch 만료</string>
+    <string name="refresh_label">새로 고침</string>
+    <string name="reset_alarms_label">알람 재설정</string>
+    <string name="change_patch_label">Patch 교체</string>
+    <string name="requested_by_user" comment="26 characters max for translation">사용자에 의해 요청됨</string>
+    <string name="expiry_not_enabled">활성화 안 됨</string>
+    <!-- Alarm strings -->
+    <string name="alarm_none">없음</string>
+    <string name="alarm_pump_low_battery">펌프 배터리 낮음</string>
+    <string name="alarm_pump_low_reservoir">펌프 레저버 인슐린 적음</string>
+    <string name="alarm_pump_expires_soon">펌프 곧 만료됨</string>
+    <string name="alarm_low_bg_suspended">저혈당 중지</string>
+    <string name="alarm_low_bg_suspended2">저혈당 중지 2</string>
+    <string name="alarm_auto_suspended">자동 중지됨</string>
+    <string name="alarm_hourly_max_suspended">시간 당 최대치 중지됨</string>
+    <string name="alarm_daily_max_suspended">일일 최대치 중지됨</string>
+    <string name="alarm_suspended">중지됨</string>
+    <string name="alarm_paused">일시 정지됨</string>
+    <string name="alarm_occlusion">주입 막힘</string>
+    <string name="alarm_expired">만료됨</string>
+    <string name="alarm_reservoir_empty">인슐린 없음</string>
+    <string name="alarm_patch_fault">Patch 결함</string>
+    <string name="alarm_patch_fault2">Patch 결함 2</string>
+    <string name="alarm_base_fault">베이스 결함</string>
+    <string name="alarm_battery_out">배터리 방전</string>
+    <string name="alarm_no_calibration">보정 안됨</string>
+    <string name="pump_time_update_failed">펌프 시간대 업데이트가 실패함, 메시지를 스누즈하고 수동으로 새로 고침하세요.</string>
+    <!-- wizard-->
+    <string name="retry">재시도</string>
+    <string name="next">다음</string>
+    <string name="discard">폐기</string>
+    <string name="step_prepare_patch">Patch 활성화</string>
+    <string name="step_prepare_patch_connect">연결과 채우기</string>
+    <string name="step_prime">프라임</string>
+    <string name="step_priming">프라이밍</string>
+    <string name="step_priming_complete">프라이밍 완료</string>
+    <string name="step_attach">Patch 부착</string>
+    <string name="step_activate">활성화 중...</string>
+    <string name="step_activate_complete">활성화 완료</string>
+    <string name="step_deactivate">Patch 비활성화</string>
+    <string name="step_deactivating">비활성화 중...</string>
+    <string name="step_deactivate_complete">Patch 비활성화됨</string>
+    <string name="step_retry_activation">활성화 진행 중</string>
+    <string name="unexpected_state">예상치 못한 상태: %1$s</string>
+    <string name="no_profile_selected">프로파일이 선택되지 않았습니다. 프로파일을 선택하고 다시 시도하세요.</string>
+    <string name="base_serial">펌프 베이스 시리얼: %1$X</string>
+    <string name="patch_begin_activation">활성화된 patch가 없습니다. 활성화 과정을 시작하려면 <b>다음</b>을 누르세요.</string>
+    <string name="patch_not_active_note">다음 단계까지 펌프 베이스를 patch에 연결하면 안됩니다!</string>
+    <string name="connect_pump_base">새로운 patch에 펌프 베이스를 연결한 뒤, 잔여 공기를 제거하고 인슐린을 채웁니다. 이후 <b>다음</b>을 누르세요.</string>
+    <string name="note_min_70_units">참고: 사용을 위해 최소 70 U이 필요합니다.</string>
+    <string name="do_not_attach_to_body">아직 몸에 patch를 부착하지 마십시오.</string>
+    <string name="half_press_needle">바늘 버튼을 반쯤 누르세요. 그리고나서 <b>다음</b>을 눌러 프라임을 시작하세요.</string>
+    <string name="wait_for_priming">프라이밍이 완료될 때까지 기다리십시오.</string>
+    <string name="priming_error">프라임에 실패함, <b>재시도</b>를 눌러 다시 시도하세요.</string>
+    <string name="press_next">계속하려면 <b>다음</b>을 누르세요.</string>
+    <string name="press_next_to_start_activation">활성화를 시작하려면 <b>다음</b>을 누르세요.</string>
+    <string name="remove_safety_lock">안전 잠금 장치를 제거하세요. 몸에 펌프를 부착하세요. 바늘 버튼을 누르세요.</string>
+    <string name="activating_pump">펌프를 활성화하고 초기 basal 양을 설정함. 기다리세요.</string>
+    <string name="activating_error">활성화에 실패함, <b>재시도</b>를 눌러 다시 시도하세요.</string>
+    <string name="activating_complete">새 patch가 활성화됨. %.2f U남아있음.</string>
+    <string name="press_OK_to_return">메인 화면으로 돌아가려면 <b>OK</b>를 누르세요.</string>
+    <string name="deactivate_sure">현재 patch를 비활성화하는 것이 맞습니까?</string>
+    <string name="cancel_sure">활성화를 취소하는 것이 맞습니까?</string>
+    <string name="medtrum_deactivate_pump_confirm">확실합니까? 이 작업은 되돌릴 수 없습니다!!</string>
+    <string name="press_next_or_cancel">비활성화하기 위해 <b>다음</b>을 누르거나 메인 화면으로 돌아가기 위해 <b>취소</b>를 누르세요.</string>
+    <string name="deactivating_pump">Patch 비활성화 중. 기다리세요.</string>
+    <string name="deactivating_error">비활성화 실패함, patch를 삭제하려면 <b>폐기</b>를 누르세요.</string>
+    <string name="retract_needle">바늘을 뒤로 당기기. 몸에서 patch를 제거하세요.</string>
+    <string name="remove_base_discard_patch">펌프 베이스를 제거하고 사용한 patch를 적절하게 폐기하세요.</string>
+    <string name="press_next_or_OK">메인 화면으로 돌아가려면 <b>OK</b>를 누르세요. 새로운 patch의 활성화를 시작하려면 <b>다음</b>을 누르세요.</string>
+    <string name="activation_in_progress">이런! 문제 발생, 활성화가 이미 진행 중인 것으로 보입니다.</string>
+    <string name="press_retry_or_discard">활성화를 재시작하려면 <b>다음</b>을 누르거나, 활성화 상태를 재설정하려면 <b>폐기</b>를 누르세요.</string>
+    <string name="reading_activation_status">펌프에서 활성화 상태를 읽어오는 중이므로 기다려주세요.</string>
+    <!-- settings-->
+    <string name="sn_input_title">시리얼 넘버</string>
+    <string name="sn_input_summary">펌프 베이스의 시리얼 넘버를 입력하세요.</string>
+    <string name="sn_input_invalid">유효하지 않은 시리얼 넘버!</string>
+    <string name="pump_unsupported">펌프가 테스트되지 않음: %1$d! 지원을 위해 discord 또는 github으로 연락하세요.</string>
+    <string name="alarm_setting_title">알람 설정</string>
+    <string name="alarm_setting_summary">선호하는 펌프 알람 설정을 선택하세요.</string>
+    <string name="patch_expiration_title">Patch 만료</string>
+    <string name="patch_expiration_summary">활성화되면, patch는 3일 후에 만료되며, 이후 8시간의 유예 기간이 적용됩니다.</string>
+    <string name="hourly_max_insulin_summary">시간당 허용되는 인슐린 최대 unit을 정합니다. 이를 초과하면, 펌프는 중지됩니다.</string>
+    <string name="daily_max_insulin_summary">하루에 허용되는 인슐린 최대 unit을 정합니다. 이를 초과하면, 펌프는 중지됩니다.</string>
+    <!-- treatment state-->
+    <string name="getting_pump_status">펌프 상태 가져오기</string>
+    <string name="getting_bolus_status">Bolus 상태 가져오기</string>
+    <string name="getting_temp_basal_status">임시 basal 상태 가져오기</string>
+    <string name="setting_pump_settings">사용자 옵션 설정</string>
+</resources>

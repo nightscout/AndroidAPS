@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- VirtualPump -->
+    <string name="virtual_pump_type">Tipo de Bomba Virtual</string>
+    <string name="virtual_pump_definition">Definição da Bomba</string>
+    <string name="virtual_pump_pump_def">Bólus: Passo=%1$s\nBólus Prolongado: [Passo=%2$s, Duração=%3$smin -%4$sh] \nBasal: Passo=%5$s\ nDBT: %6$s (por %7$s), Duração=%8$smin-%9$sh\n%10$s</string>
+    <string name="virtual_pump_shortname">VPUMP</string>
+    <string name="description_pump_virtual">Integração para as bombas que não têm qualquer driver ainda (Open Loop)</string>
+    <string name="virtual_pump_label">VIRTUAL PUMP</string>
+    <string name="virtualpump_settings">Definições da bomba virtual</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* Somente valores discretos nos intervalos são suportados como granularidade para basal/bolus na bomba virtual.</string>
+</resources>

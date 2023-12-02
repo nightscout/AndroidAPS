@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="biometric_title">Изисква се удостоверяване</string>
+    <string name="biometric_description">Поставете пръста си върху четеца на пръстови отпечатъци, за да потвърдите самоличността си</string>
+    <string name="settings_protection">Защита на настройките</string>
+    <string name="application_protection">Защита на приложението</string>
+    <string name="bolus_protection">Защита от болус</string>
+    <string name="settings_password">Парола за настройки</string>
+    <string name="settings_pin">PIN за настройки</string>
+    <string name="application_password">Парола за приложението</string>
+    <string name="application_pin">PIN за приложението</string>
+    <string name="bolus_password">Парола за болус</string>
+    <string name="bolus_pin">PIN за болус</string>
+    <string name="protection_timeout_title">Време между опити за PIN [сек]</string>
+    <string name="protection_timeout_summary">Времето, за което паролата или PIN трябва да бъдат въведени</string>
+    <string name="biometric">Биометрични данни</string>
+    <string name="custom_password">Допълнителна парола</string>
+    <string name="custom_pin">Персонален PIN</string>
+    <string name="noprotection">Няма защита</string>
+    <string name="unsecure_fallback_biometric">Грешка при биометрични данни!</string>
+    <string name="unsecure_fallback_descriotion_biometric">За да бъде ефективна, биометричната защита се нуждае от главна парола.\n\nМоля, въведете главна парола!</string>
+    <string name="password_set">Паролата е зададена!</string>
+    <string name="pin_set">PIN кодът е зададен!</string>
+    <string name="password_not_set">Паролата не е зададена</string>
+    <string name="pin_not_set">PIN кодът не е зададен</string>
+    <string name="password_not_changed">Паролата не е променена</string>
+    <string name="pin_not_changed">PIN кодът не е променен</string>
+    <string name="pin_cleared">PIN кодът е изтрит!</string>
+    <string name="password_hint">Въведете парола</string>
+    <string name="pin_hint">Въведи PIN</string>
+</resources>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumoCommon - Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">Operasjonen støttes ikke av pumpen og/eller driveren.</string>
+    <string name="pump_operation_not_yet_supported_by_pump">Operasjonen støttes ikke av pumpen ennå.</string>
+    <string name="common_resultok">OK</string>
+    <string name="pump_serial_number">Pumpens serienummer</string>
+    <string name="bolus_delivered_so_far">%1$.2f E / %2$.2f E levert</string>
+    <!-- PumpCommon - Pump Status -->
+    <string name="pump_status_not_initialized">Pumpen er ikke startet</string>
+    <string name="pump_status_initialized">Pumpen er startet</string>
+    <string name="pump_status_encrypt">Krypterer kommunikasjon</string>
+    <string name="pump_status_ready">Klar</string>
+    <string name="pump_status_busy">Opptatt</string>
+    <string name="pump_status_suspended">Pauset</string>
+    <string name="pump_status_executing_command">Utfører kommando</string>
+    <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">Basaldoser</string>
+    <string name="history_group_configuration">Konfigurasjoner</string>
+    <string name="history_group_notification">Varsler</string>
+    <string name="history_group_statistic">Statistikk</string>
+    <string name="history_group_unknown">Ukjente</string>
+    <string name="history_group_all">Alle</string>
+    <string name="history_group_bolus">Boluser</string>
+    <string name="history_group_prime">Prime</string>
+    <string name="history_group_alarm">Alarmer</string>
+    <string name="history_group_glucose">Blodsukker</string>
+    <string name="history_group_base">Utgangspunkt</string>
+    <string name="history_group_other">Annet</string>
+    <string name="history_group_events">Alle hendelser</string>
+    <string name="history_group_events_no_stat">Hendelser (ingen stat.)</string>
+    <!-- Time -->
+    <string name="time_today">I dag</string>
+    <string name="time_last_hour">Siste time</string>
+    <string name="time_last_3_hours">Siste 3 timer</string>
+    <string name="time_last_6_hours">Siste 6 timer</string>
+    <string name="time_last_12_hours">Siste 12 timer</string>
+    <string name="time_last_2_days">Siste 2 dager</string>
+    <string name="time_last_4_days">Siste 4 dager</string>
+    <string name="time_last_week">Siste uke</string>
+    <string name="time_last_month">Siste måned</string>
+    <!-- BLE Config -->
+    <string name="ble_config_button_scan_start">Søk</string>
+    <string name="ble_config_scan_stop">Stopp</string>
+    <string name="ble_config_scan_selected">Valgt</string>
+    <string name="ble_config_scan_scanning">Søker</string>
+    <string name="ble_config_scan_finished">Søk fullført</string>
+    <string name="ble_config_scan_error">Søk feilet: %1$d</string>
+    <string name="ble_config_connected_never">Aldri</string>
+    <string name="ble_config_remove">Fjern</string>
+    <!-- BLE Errors -->
+    <string name="ble_error_bt_disabled">Bluetooth deaktivert</string>
+    <string name="ble_error_no_bt_adapter">Ingen Bluetooth adapter</string>
+    <string name="ble_error_configured_pump_not_found">Konfigurert pumpe ikke funnet</string>
+    <string name="ble_error_pump_unreachable">Pumpe utilgjengelig</string>
+    <string name="ble_error_failed_to_conn_to_ble_device">Kunne ikke koble til Bluetooth-enhet</string>
+    <string name="ble_error_encryption_failed">Kryptering feilet</string>
+    <string name="ble_error_pump_found_unbonded">Fant pumpe som ikke er tilkoblet</string>
+    <!-- Pump Error -->
+    <string name="pump_settings_error_basal_profiles_not_enabled">Basal-profil/program er ikke aktivert på pumpen. Aktiver det på pumpen.</string>
+    <string name="pump_settings_error_incorrect_basal_profile_selected">Basal-profil som er satt på pumpen er feil (må være %s).</string>
+    <string name="pump_settings_error_wrong_tbr_type_set">Feil TBR-type er valgt på pumpen (må være %s).</string>
+    <string name="pump_settings_error_wrong_max_bolus_set">Feil maks-bolus er satt på pumpen (må være %1$.2f).</string>
+    <string name="pump_settings_error_wrong_max_basal_set">Feil maks-basal er satt på pumpen (må være %1$.2f).</string>
+    <!-- Pump History -->
+    <string name="pump_history_type">Type:</string>
+    <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Aldri tilkoblet</string>
+    <string name="pump_status_sleeping">Hvilemodus</string>
+    <string name="pump_status_waking_up">Våkner opp</string>
+    <string name="pump_status_active">Aktiv</string>
+    <string name="pump_status_error_comm">Feil med kommunikasjon</string>
+    <string name="pump_status_timeout_comm">Tidsavbrudd ved kommunikasjon</string>
+    <string name="pump_status_pump_unreachable">Pumpe er utilgjengelig</string>
+    <string name="pump_status_invalid_config">Ugyldig konfigurasjon</string>
+    <plurals name="duration_days">
+        <item quantity="one">%1$d dag</item>
+        <item quantity="other">%1$d dager</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d time</item>
+        <item quantity="other">%1$d timer</item>
+    </plurals>
+    <plurals name="hoursago">
+        <item quantity="one">%1$d time siden</item>
+        <item quantity="other">%1$d timer siden</item>
+    </plurals>
+    <plurals name="daysago">
+        <item quantity="one">%1$d dag siden</item>
+        <item quantity="other">%1$d dager siden</item>
+    </plurals>
+</resources>

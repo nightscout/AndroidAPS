@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bolus_constraint_applied">Bolusspärr aktiverad</string>
+    <string name="carbs_constraint_applied">Kolhydratsspärr aktiverad</string>
+    <string name="temp_target_short">TT</string>
+    <string name="dialog_canceled">Dialogrutan stängd</string>
+    <string name="start_activity_tt">Starta \"Träning\"</string>
+    <string name="start_eating_soon_tt">Starta \"Äta snart\"</string>
+    <string name="start_hypo_tt">Starta \"Hypo\"</string>
+    <string name="time_offset">KH-tid</string>
+    <string name="unit_minute_short">min</string>
+    <string name="remind_to_bolus_later">Påminn om bolus senare</string>
+    <string name="a11y_carb_reminder">ställ in påminnelse</string>
+    <!--    Widget-->
+    <string name="configure">Konfigurera opacitet</string>
+    <string name="widget_description">AAPS-widget</string>
+    <!--     Activities-->
+    <string name="activity_monitor">Aktivitetsövervakare</string>
+    <string name="do_you_want_reset_stats">Vill du återställa aktivitetsstatistiken?</string>
+    <string name="do_you_want_reset_tdd_stats">Vill du återställa TDD-statistiken?</string>
+    <string name="statistics">Statistik</string>
+    <string name="calculation_in_progress">Beräkning pågår</string>
+    <string name="invalid_age">Ogiltig inmatning (ålder)</string>
+    <string name="invalid_weight">Ogiltig inmatning (vikt)</string>
+    <string name="id">ID:</string>
+    <string name="submit">Spara</string>
+    <string name="age">Ålder</string>
+    <string name="weight_label">Vikt</string>
+    <string name="most_common_profile">Den vanligaste profilen:</string>
+    <string name="survey_comment">Observera att endast data som visas på den här skärmen kommer att överföras anonymt. ID tilldelas till den här installationen av AAPS. Du kan ladda upp data igen om din huvudprofil ändras men låt den köra minst en vecka för att göra resultatet synligt i tid inom intervallet. Din hjälp är uppskattad.</string>
+    <string name="glucose_type">Glukostyp</string>
+    <string name="bg_other">Annat</string>
+    <string name="bg_meter">Mätare</string>
+    <string name="bg_sensor">Sensor</string>
+    <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="treatments_wizard_total_label">Total</string>
+    <!-- FillDialog -->
+    <string name="fill_warning">Försäkra dig om att mängden motsvarar det som är specificerat för just ditt infusionsset.</string>
+    <string name="record_pump_site_change">Logga byte av kanyl</string>
+    <string name="record_insulin_cartridge_change">Logga byte av insulinreservoar</string>
+    <!-- InsulinDialog -->
+    <string name="do_not_bolus_record_only">Ge ingen bolus, logga bara</string>
+    <!-- ProfileSwitchDialog -->
+    <string name="reuse_profile_pct_hours">Återanvänd %1$d%% %2$dtim</string>
+    <string name="timeshift_label">Tidsförskjutning</string>
+    <string name="percentage_label">Procent</string>
+    <!-- LoopDialog -->
+    <string name="suspendloopfor1h">Pausa loop i 1 timme</string>
+    <string name="suspendloopfor2h">Pausa loop i 2 timmar</string>
+    <string name="suspendloopfor3h">Pausa loop i 3 timmar</string>
+    <string name="suspendloopfor10h">Pausa loop i 10 timmar</string>
+    <string name="disconnectpump">Koppla ifrån pump</string>
+    <string name="disconnectpumpfor15m">Koppla loss pump i 15 min</string>
+    <string name="disconnectpumpfor30m">Koppla loss pump i 30 min</string>
+    <string name="disconnectpumpfor1h">Koppla loss pump i 1 timme</string>
+    <string name="disconnectpumpfor2h">Koppla loss pump i 2 timmar</string>
+    <string name="disconnectpumpfor3h">Koppla loss pump i 3 timmar</string>
+    <string name="resume">Återuppta</string>
+    <string name="reconnect">Återanslut Pump</string>
+    <string name="duration15m">15 min</string>
+    <string name="duration30m">30 min</string>
+    <string name="duration1h">1 tim</string>
+    <string name="duration2h">2 tim</string>
+    <string name="duration3h">3 tim</string>
+    <string name="duration10h">10 tim</string>
+    <!-- WizardDialog -->
+    <string name="a11_correction_percentage">korrigera med %</string>
+    <string name="a11_correction_units">korrigera med enheter</string>
+    <string name="two_hours">2 tim</string>
+    <string name="result_insulin_carbs">Resultat: %1$s %2$s</string>
+    <string name="missing_carbs">Saknar %1$dg</string>
+    <string name="a11y_current_bg">nuvarande BG</string>
+    <string name="carb_time_label">KH-tid</string>
+    <string name="a11y_set_carb_timer">ange larm för KH-timer</string>
+    <string name="show_calculation">Visa beräkning</string>
+    <!-- Treatments -->
+    <string name="no_records_available">Inga poster tillgängliga</string>
+    <string name="calculation_short">Kalkyl</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="treatments_insulin_label_string">Insulin:</string>
+    <string name="treatments_carbs_label_string">KH:</string>
+    <string name="treatments_iobtotal_label_string">IOB fr bolus:</string>
+    <string name="treatments_iob_activity_total_label_string">Insulinaktivitet (5m):</string>
+    <string name="tempbasals_realduration_label_string">Dur:</string>
+    <string name="tempbasals_netratio_label_string">Tot:</string>
+    <string name="tempbasals_netinsulin_label_string">Ins:</string>
+    <string name="tempbasals_iob_label_string">IOB:</string>
+    <string name="treatments_wizard_correction_label">Korrektion</string>
+    <string name="meal_bolus">Måltid</string>
+    <string name="prime">Förfyllning</string>
+    <string name="profile_changes">Profiländringar</string>
+    <string name="tempt_targets">Tillfälliga målvärden</string>
+    <string name="carbs_and_bolus">Kolhydrater och bolus</string>
+    <string name="show_invalidated_records">Visa ogiltiga / borttagna poster</string>
+    <string name="hide_invalidated_records">Dölj ogiltiga / borttagna poster</string>
+    <string name="refresh_from_nightscout">Uppdatera från Nightscout</string>
+    <string name="refresheventsfromnightscout">Uppdatera från NS</string>
+    <string name="show_invalidated">Visa ogiltiga</string>
+    <string name="hide_invalidated">Dölj ogiltiga</string>
+    <string name="careportal_remove_started_events">Ta bort \"AAPS startade\"</string>
+    <string name="hide_loop">Dölj loop</string>
+    <string name="show_loop">Visa loop</string>
+    <string name="user_entry">Angivet av användare</string>
+    <string name="clone_label">Kopiera</string>
+    <string name="show_loop_records">Visa loop-poster</string>
+    <string name="show_hide_records">Dölj loop-poster</string>
+    <!-- ProfileHelperActivity -->
+    <string name="profile1">Profil 1</string>
+    <string name="profile2">Profil 2</string>
+    <string name="profile_type">Profiltyp</string>
+    <string name="basal_pct_from_tdd_label">% av basal</string>
+    <string name="selected_profile">Valt:</string>
+    <string name="compare_profile">Jämför profiler</string>
+    <string name="nav_profile_helper">Profilguide</string>
+    <string name="motol_default_profile">Standardprofil</string>
+    <string name="current_profile">Nuvarande profil</string>
+    <string name="available_profile">Tillgänglig profil</string>
+    <string name="format_with_tdd">Ålder: %1$d TDD: %2$.0f U</string>
+    <string name="format_with_tdd_and_pct">Ålder: %1$d TDD: %2$.0f U %3$d%%</string>
+    <string name="format_with_weight">Ålder: %1$d Vikt: %2$.0f kg</string>
+    <string name="dpv_default_profile">DPV-standardprofil</string>
+    <string name="invalid_pct">Ogiltig %-inmatning</string>
+    <!-- Other dialogs -->
+    <string name="basal_rate">Basaldos</string>
+    <!--    BolusProgressDialog-->
+    <string name="stop_pressed">Stopp nedtryckt</string>
+    <!--QuickWizard-->
+    <string name="a11y_only_on_watch">endast på klockan</string>
+    <string name="a11y_only_on_phone">endast på telefonen</string>
+    <string name="quickwizard_settings">Inställningar för snabbknappar</string>
+    <string name="overview_edit_quickwizard_button_text">Knapptext:</string>
+    <string name="overview_edit_quickwizard_carbs">Kolhydrater:</string>
+    <string name="overview_edit_quickwizard_valid">Giltig:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">Lägg till</string>
+    <string name="overview_quickwizard_item_edit_button">Ändra</string>
+    <string name="overview_edit_quickwizard_show_on_device">Visa snabbknappar på:</string>
+    <string name="overview_edit_quickwizard_use_bg">BG-beräkning</string>
+    <string name="overview_edit_quickwizard_use_bolus_iob">Bolus IOB-beräkning</string>
+    <string name="overview_edit_quickwizard_use_basal_iob">Basal IOB-beräkning</string>
+    <string name="overview_edit_quickwizard_use_trend">Trendberäkning</string>
+    <string name="overview_edit_quickwizard_use_superbolus">Superbolusberäkning</string>
+    <string name="overview_edit_quickwizard_percentage">Procent</string>
+    <string name="device_all">Alla</string>
+    <string name="device_phone">Telefon</string>
+    <string name="device_watch">Klocka</string>
+    <string name="positive_only">Endast positiva</string>
+    <string name="negative_only">Endast negativa</string>
+    <string name="overview_editquickwizard_usecob">COB-beräkning</string>
+    <string name="overview_editquickwizard_usetemptarget">Beräkning av temporärt målvärde</string>
+    <string name="overview_editquickwizard_usepercentage">Procentuell beräkning</string>
+    <string name="app_default">Appens standardinställning</string>
+    <string name="a11y_drag_and_drop_handle">dra och släpp-handtag</string>
+</resources>

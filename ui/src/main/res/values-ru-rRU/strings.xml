@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bolus_constraint_applied">применено ограничение болюса</string>
+    <string name="carbs_constraint_applied">применено ограничение углеводов</string>
+    <string name="temp_target_short">ВЦ</string>
+    <string name="dialog_canceled">Диалог отменен</string>
+    <string name="start_activity_tt">Включить временную цель TT Нагрузка</string>
+    <string name="start_eating_soon_tt">Включить временную цель TT Ожидаемый прием пищи</string>
+    <string name="start_hypo_tt">Начать временную цель ТТ Гипо</string>
+    <string name="time_offset">Смещение по времени</string>
+    <string name="unit_minute_short">мин</string>
+    <string name="remind_to_bolus_later">Напомнить о болюсе позже</string>
+    <string name="a11y_carb_reminder">установить напоминание</string>
+    <!--    Widget-->
+    <string name="configure">Настроить прозрачность</string>
+    <string name="widget_description">Виджет AAPS</string>
+    <!--     Activities-->
+    <string name="activity_monitor">Монитор активности</string>
+    <string name="do_you_want_reset_stats">Хотите сбросить статистику активности?</string>
+    <string name="do_you_want_reset_tdd_stats">Хотите сбросить статистику суточной дозировки TDD?</string>
+    <string name="statistics">Статистика</string>
+    <string name="calculation_in_progress">Идет подсчет</string>
+    <string name="invalid_age">Некорректное значение возраст</string>
+    <string name="invalid_weight">Некорректное значение вес</string>
+    <string name="id">Идентификатор:</string>
+    <string name="submit">Отправить</string>
+    <string name="age">Возраст</string>
+    <string name="weight_label">Вес</string>
+    <string name="most_common_profile">Наиболее часто применяемый профиль:</string>
+    <string name="survey_comment">Примечание: Данные, видимые на этом экране, будут загружены анонимно. Для этой установки AAPS назначен идентификатор. Вы можете снова передать данные, если ваш основной профиль будет изменен, но пусть он работает по крайней мере в течение недели, чтобы результат был виден в динамике. Ваша помощь ценна.</string>
+    <string name="glucose_type">Тип глюкозы</string>
+    <string name="bg_other">Другое</string>
+    <string name="bg_meter">Глюкометр</string>
+    <string name="bg_sensor">Сенсор</string>
+    <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fг IC: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fг IC: %2$.1f</string>
+    <string name="treatments_wizard_total_label">Всего</string>
+    <!-- FillDialog -->
+    <string name="fill_warning">Убедитесь что количество соответствует характеристикам инфузионной системы!</string>
+    <string name="record_pump_site_change">Внести запись о смене места катетера помпы</string>
+    <string name="record_insulin_cartridge_change">Внести запись о замене картриджа инсулина</string>
+    <!-- InsulinDialog -->
+    <string name="do_not_bolus_record_only">Не подавать болюс, только внести запись</string>
+    <!-- ProfileSwitchDialog -->
+    <string name="reuse_profile_pct_hours">Повторно использовать %1$d%%%2$dч</string>
+    <string name="timeshift_label">Сдвиг по времени</string>
+    <string name="percentage_label">В процентах</string>
+    <!-- LoopDialog -->
+    <string name="suspendloopfor1h">Приостановить цикл на 1 час</string>
+    <string name="suspendloopfor2h">Приостановить цикл на 2 часа</string>
+    <string name="suspendloopfor3h">Приостановить цикл на 3 часа</string>
+    <string name="suspendloopfor10h">Приостановить цикл на 10 часов</string>
+    <string name="disconnectpump">Отсоединить помпу</string>
+    <string name="disconnectpumpfor15m">Отсоединить помпу на 15 мин</string>
+    <string name="disconnectpumpfor30m">Отсоединить помпу на 30 мин</string>
+    <string name="disconnectpumpfor1h">Отсоединить помпу на 1 час</string>
+    <string name="disconnectpumpfor2h">Отсоединить помпу на 2 час</string>
+    <string name="disconnectpumpfor3h">Отсоединить помпу на 3 часа</string>
+    <string name="resume">Возобновить</string>
+    <string name="reconnect">Возобновить соединение с помпой</string>
+    <string name="duration15m">15 мин</string>
+    <string name="duration30m">30 мин</string>
+    <string name="duration1h">1 час</string>
+    <string name="duration2h">2 часа</string>
+    <string name="duration3h">3 часа</string>
+    <string name="duration10h">10 часов</string>
+    <!-- WizardDialog -->
+    <string name="a11_correction_percentage">изменить результат на %</string>
+    <string name="a11_correction_units">изменить результат на ед</string>
+    <string name="two_hours">2ч</string>
+    <string name="result_insulin_carbs">Результат: %1$s %2$s</string>
+    <string name="missing_carbs">Не хватает %1$d г</string>
+    <string name="a11y_current_bg">текущий уровень глюкозы крови</string>
+    <string name="carb_time_label">Время приема углеводов</string>
+    <string name="a11y_set_carb_timer">установить будильник приема углеводов</string>
+    <string name="show_calculation">Показать расчет</string>
+    <!-- Treatments -->
+    <string name="no_records_available">Нет доступных записей</string>
+    <string name="calculation_short">Кальк</string>
+    <string name="treatments_iob_label_string">IOB акт инс:</string>
+    <string name="treatments_insulin_label_string">Инсулин:</string>
+    <string name="treatments_carbs_label_string">Углеводы:</string>
+    <string name="treatments_iobtotal_label_string">Общий IOB:</string>
+    <string name="treatments_iob_activity_total_label_string">Общая активность IOB:</string>
+    <string name="tempbasals_realduration_label_string">Длит:</string>
+    <string name="tempbasals_netratio_label_string">Процент:</string>
+    <string name="tempbasals_netinsulin_label_string">Инсулин:</string>
+    <string name="tempbasals_iob_label_string">IOB акт инс:</string>
+    <string name="treatments_wizard_correction_label">Коррекция</string>
+    <string name="meal_bolus">На еду</string>
+    <string name="prime">Заполн инфуз системы</string>
+    <string name="profile_changes">Изменения профиля</string>
+    <string name="tempt_targets">Врем цели</string>
+    <string name="carbs_and_bolus">Углеводы и болюс</string>
+    <string name="show_invalidated_records">Показать недействительные / удаленные записи</string>
+    <string name="hide_invalidated_records">Скрыть недействительные / удаленные записи</string>
+    <string name="refresh_from_nightscout">Обновить из Nightscout</string>
+    <string name="refresheventsfromnightscout">Обновить из NS</string>
+    <string name="show_invalidated">Показать недействительные</string>
+    <string name="hide_invalidated">Скрыть недействительные</string>
+    <string name="careportal_remove_started_events">Удалить записи о начале работы AAPS</string>
+    <string name="hide_loop">Скрыть цикл</string>
+    <string name="show_loop">Показать цикл</string>
+    <string name="user_entry">Запись пользователя</string>
+    <string name="clone_label">Клонировать</string>
+    <string name="show_loop_records">Показать записи цикла</string>
+    <string name="show_hide_records">Скрыть записи цикла</string>
+    <!-- ProfileHelperActivity -->
+    <string name="profile1">Профиль 1</string>
+    <string name="profile2">Профиль 2</string>
+    <string name="profile_type">Тип профиля</string>
+    <string name="basal_pct_from_tdd_label">% базального</string>
+    <string name="selected_profile">Выбрано:</string>
+    <string name="compare_profile">Сравнить профили</string>
+    <string name="nav_profile_helper">Помощник профиля</string>
+    <string name="motol_default_profile">Профиль по умолчанию</string>
+    <string name="current_profile">Текущий профиль</string>
+    <string name="available_profile">Доступный профиль</string>
+    <string name="format_with_tdd">Возраст: %1$d Суточная Потребность: %2$.0f ед</string>
+    <string name="format_with_tdd_and_pct">Возраст: %1$d Суточная Потребность: %2$.0f ед %3$d%%</string>
+    <string name="format_with_weight">Возраст: %1$d Вес: %2$.0f кг</string>
+    <string name="dpv_default_profile">Значение для профиля по умолчанию</string>
+    <string name="invalid_pct">Некорректное значение</string>
+    <!-- Other dialogs -->
+    <string name="basal_rate">Базальная скорость</string>
+    <!--    BolusProgressDialog-->
+    <string name="stop_pressed">НАЖАТ СТОП</string>
+    <!--QuickWizard-->
+    <string name="a11y_only_on_watch">только на часах</string>
+    <string name="a11y_only_on_phone">только на телефоне</string>
+    <string name="quickwizard_settings">Мастер быстрой настройки</string>
+    <string name="overview_edit_quickwizard_button_text">Текст на кнопке:</string>
+    <string name="overview_edit_quickwizard_carbs">Углеводы:</string>
+    <string name="overview_edit_quickwizard_valid">Верно:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">Добавить</string>
+    <string name="overview_quickwizard_item_edit_button">Редактировать</string>
+    <string name="overview_edit_quickwizard_show_on_device">Показать запись на устройстве:</string>
+    <string name="overview_edit_quickwizard_use_bg">Вычисление ГК</string>
+    <string name="overview_edit_quickwizard_use_bolus_iob">Расчет активного инсулина IOB для болюса</string>
+    <string name="overview_edit_quickwizard_use_basal_iob">Расчет активного инсулина IOB для базала</string>
+    <string name="overview_edit_quickwizard_use_trend">Расчет тренда</string>
+    <string name="overview_edit_quickwizard_use_superbolus">Расчет суперболюса</string>
+    <string name="overview_edit_quickwizard_percentage">Процент</string>
+    <string name="device_all">Все</string>
+    <string name="device_phone">Телефон</string>
+    <string name="device_watch">Смарт-часы</string>
+    <string name="positive_only">Только положительные</string>
+    <string name="negative_only">Только отрицательные</string>
+    <string name="overview_editquickwizard_usecob">Вычисление активных углеводов COB</string>
+    <string name="overview_editquickwizard_usetemptarget">Расчет временного целевого значения</string>
+    <string name="overview_editquickwizard_usepercentage">Расчет процента</string>
+    <string name="app_default">Из настроек приложения</string>
+    <string name="a11y_drag_and_drop_handle">перетаскиватель</string>
+</resources>

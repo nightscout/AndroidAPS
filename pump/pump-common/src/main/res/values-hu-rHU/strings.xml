@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumoCommon - Pump Abstract -->
+    <string name="common_resultok">OK</string>
+    <string name="pump_serial_number">Pumpa sorozatszáma</string>
+    <!-- PumpCommon - Pump Status -->
+    <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">Bázis</string>
+    <string name="history_group_statistic">Statisztikák</string>
+    <string name="history_group_glucose">Glükóz</string>
+    <string name="history_group_other">Egyéb</string>
+    <!-- Time -->
+    <!-- BLE Config -->
+    <string name="ble_config_button_scan_start">Keresés</string>
+    <string name="ble_config_scan_stop">Leállít</string>
+    <string name="ble_config_scan_selected">Kiválasztott</string>
+    <string name="ble_config_scan_scanning">Keresés</string>
+    <string name="ble_config_scan_finished">Keresés befejezve</string>
+    <string name="ble_config_scan_error">Hiba kereséskor: %1$d</string>
+    <string name="ble_config_connected_never">Soha</string>
+    <string name="ble_config_remove">Eltávolít</string>
+    <!-- BLE Errors -->
+    <string name="ble_error_bt_disabled">Bluetooth kikapcsolva</string>
+    <string name="ble_error_no_bt_adapter">Nincs Bluetooth adapter</string>
+    <string name="ble_error_pump_unreachable">Pumpa nem elérhető</string>
+    <!-- Pump Error -->
+    <string name="pump_settings_error_basal_profiles_not_enabled">Bázis profilok/sémák beállítás nincs engedélyezve a pumpán. Engedélyezze a pumpán.</string>
+    <string name="pump_settings_error_wrong_max_bolus_set">Hibás a pumpán beállított Max. Bólus (%1$.2f kell legyen).</string>
+    <string name="pump_settings_error_wrong_max_basal_set">Hibás a pumpán beállított Max. Bázis (%1$.2f kell legyen).</string>
+    <!-- Pump History -->
+    <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Soha nem kapcsolódott</string>
+    <string name="pump_status_sleeping">Alszik</string>
+    <string name="pump_status_waking_up">Felébred</string>
+    <string name="pump_status_active">Aktív</string>
+    <string name="pump_status_error_comm">Kapcsolati hiba</string>
+    <string name="pump_status_timeout_comm">Kapcsolati időtúllépés</string>
+    <string name="pump_status_pump_unreachable">Pumpa nem elérhető</string>
+    <string name="pump_status_invalid_config">Érvénytelen konfiguráció</string>
+    <plurals name="duration_days">
+        <item quantity="one">%1$d nap</item>
+        <item quantity="other">%1$d nap</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d óra</item>
+        <item quantity="other">%1$d óra</item>
+    </plurals>
+</resources>

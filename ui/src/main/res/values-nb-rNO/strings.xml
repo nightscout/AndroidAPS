@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bolus_constraint_applied">Bolus-begrensning utført</string>
+    <string name="carbs_constraint_applied">Karbohydrat-begrensning utført</string>
+    <string name="temp_target_short">TT</string>
+    <string name="dialog_canceled">Dialog avbrutt</string>
+    <string name="start_activity_tt">Start midlertidig mål for Aktivitet</string>
+    <string name="start_eating_soon_tt">Start midlertidig mål for Spise snart</string>
+    <string name="start_hypo_tt">Start midlertidig mål for Hypo</string>
+    <string name="time_offset">Tidsforskyvning</string>
+    <string name="unit_minute_short">min</string>
+    <string name="remind_to_bolus_later">Påminnelse om å gi bolus senere</string>
+    <string name="a11y_carb_reminder">angi påminnelse</string>
+    <!--    Widget-->
+    <string name="configure">Konfigurer gjennomsiktighet</string>
+    <string name="widget_description">AAPS widget</string>
+    <!--     Activities-->
+    <string name="activity_monitor">Aktivitetsmonitor</string>
+    <string name="do_you_want_reset_stats">Vil du tilbakestille aktivitetsstatistikken?</string>
+    <string name="do_you_want_reset_tdd_stats">Vil du tilbakestille TDD statistikken?</string>
+    <string name="statistics">Statistikk</string>
+    <string name="calculation_in_progress">Beregning pågår</string>
+    <string name="invalid_age">Ugyldig alder</string>
+    <string name="invalid_weight">Ugyldig vekt</string>
+    <string name="id">ID:</string>
+    <string name="submit">Lagre</string>
+    <string name="age">Alder</string>
+    <string name="weight_label">Vekt</string>
+    <string name="most_common_profile">Mest vanlig profil:</string>
+    <string name="survey_comment">Merk: Kun data synlig på denne skjermen vil bli anonymt lastet opp. ID er tilordnet denne installasjonen av AndroidAPS. Du kan sende inn data igjen hvis hovedprofilen din blir endret, men la den kjøre i minst en uke for å se effekten av resultatet i tidsperioden. Din hjelp blir verdsatt.</string>
+    <string name="glucose_type">Glukosetype</string>
+    <string name="bg_other">Annet</string>
+    <string name="bg_meter">Måler</string>
+    <string name="bg_sensor">Sensor</string>
+    <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="treatments_wizard_total_label">Total</string>
+    <!-- FillDialog -->
+    <string name="fill_warning">Kontroller at mengden samsvarer med spesifikasjonen for slangesettet ditt!</string>
+    <string name="record_pump_site_change">Logg bytte av slangesett</string>
+    <string name="record_insulin_cartridge_change">Logg bytte av insulinampull</string>
+    <!-- InsulinDialog -->
+    <string name="do_not_bolus_record_only">Ikke gi bolus, bare loggfør hendelse</string>
+    <!-- ProfileSwitchDialog -->
+    <string name="reuse_profile_pct_hours">Gjenbruk %1$d%% %2$dt</string>
+    <string name="timeshift_label">Tidsforskyving</string>
+    <string name="percentage_label">Prosent</string>
+    <!-- LoopDialog -->
+    <string name="suspendloopfor1h">Pause loop i 1t</string>
+    <string name="suspendloopfor2h">Pause loop i 2t</string>
+    <string name="suspendloopfor3h">Pause loop i 3t</string>
+    <string name="suspendloopfor10h">Pause loop i 10t</string>
+    <string name="disconnectpump">Koble fra pumpen</string>
+    <string name="disconnectpumpfor15m">Koble fra pumpen i 15 min</string>
+    <string name="disconnectpumpfor30m">Koble fra pumpen i 30 min</string>
+    <string name="disconnectpumpfor1h">Koble fra pumpen i 1t</string>
+    <string name="disconnectpumpfor2h">Koble fra pumpen i 2t</string>
+    <string name="disconnectpumpfor3h">Koble fra pumpen i 3t</string>
+    <string name="resume">Gjenoppta</string>
+    <string name="reconnect">Koble til pumpen</string>
+    <string name="duration15m">15 min</string>
+    <string name="duration30m">30 min</string>
+    <string name="duration1h">1 time</string>
+    <string name="duration2h">2 timer</string>
+    <string name="duration3h">3 timer</string>
+    <string name="duration10h">10 timer</string>
+    <!-- WizardDialog -->
+    <string name="a11_correction_percentage">korriger resultatet med %</string>
+    <string name="a11_correction_units">korriger resultatet med enheter</string>
+    <string name="two_hours">2t</string>
+    <string name="result_insulin_carbs">Resultat: %1$s %2$s</string>
+    <string name="missing_carbs">Mangler %1$d g</string>
+    <string name="a11y_current_bg">nåværende blodsukker</string>
+    <string name="carb_time_label">Karbo-tid</string>
+    <string name="a11y_set_carb_timer">angi nedtellingsalarm for karbo</string>
+    <string name="show_calculation">Vis beregning</string>
+    <!-- Treatments -->
+    <string name="no_records_available">Ingen registreringer tilgjengelig</string>
+    <string name="calculation_short">Kalk</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="treatments_insulin_label_string">Insulin:</string>
+    <string name="treatments_carbs_label_string">Karbo:</string>
+    <string name="treatments_iobtotal_label_string">Total IOB:</string>
+    <string name="treatments_iob_activity_total_label_string">Total IOB aktivitet:</string>
+    <string name="tempbasals_realduration_label_string">Varighet:</string>
+    <string name="tempbasals_netratio_label_string">Ratio:</string>
+    <string name="tempbasals_netinsulin_label_string">Ins:</string>
+    <string name="tempbasals_iob_label_string">IOB:</string>
+    <string name="treatments_wizard_correction_label">Korr</string>
+    <string name="meal_bolus">Måltid</string>
+    <string name="prime">Prime</string>
+    <string name="profile_changes">Profilendringer</string>
+    <string name="tempt_targets">Midlertidig mål</string>
+    <string name="carbs_and_bolus">Karbo og bolus</string>
+    <string name="show_invalidated_records">Vis ugyldige / slettede registreringer</string>
+    <string name="hide_invalidated_records">Skjul ugyldige / slettede registreringer</string>
+    <string name="refresh_from_nightscout">Oppdater fra Nightscout</string>
+    <string name="refresheventsfromnightscout">Oppdater fra NS</string>
+    <string name="show_invalidated">Vis ugyldige</string>
+    <string name="hide_invalidated">Skjul ugyldige</string>
+    <string name="careportal_remove_started_events">Fjern oppføringer startet av AAPS</string>
+    <string name="hide_loop">Skjul loop</string>
+    <string name="show_loop">Vis loop</string>
+    <string name="user_entry">Brukeroppføring</string>
+    <string name="clone_label">Dupliser</string>
+    <string name="show_loop_records">Vis loop-registreringer</string>
+    <string name="show_hide_records">Skjul loop-registreringer</string>
+    <!-- ProfileHelperActivity -->
+    <string name="profile1">Profil 1</string>
+    <string name="profile2">Profil 2</string>
+    <string name="profile_type">Profiltype</string>
+    <string name="basal_pct_from_tdd_label">% av basal</string>
+    <string name="selected_profile">Valgt:</string>
+    <string name="compare_profile">Sammenlign profiler</string>
+    <string name="nav_profile_helper">Profilhjelper</string>
+    <string name="motol_default_profile">Standard profil</string>
+    <string name="current_profile">Gjeldende profil</string>
+    <string name="available_profile">Tilgjengelige profiler</string>
+    <string name="format_with_tdd">Alder: %1$d TDD: %2$.0f E</string>
+    <string name="format_with_tdd_and_pct">Alder: %1$d TDD: %2$.0f E %3$d%%</string>
+    <string name="format_with_weight">Alder: %1$d Vekt: %2$.0f kg</string>
+    <string name="dpv_default_profile">DPV standardprofil</string>
+    <string name="invalid_pct">Ugyldig % verdi</string>
+    <!-- Other dialogs -->
+    <string name="basal_rate">Basaldose</string>
+    <!--    BolusProgressDialog-->
+    <string name="stop_pressed">STOPP er trykket</string>
+    <!--QuickWizard-->
+    <string name="a11y_only_on_watch">kun på klokke</string>
+    <string name="a11y_only_on_phone">kun på telefon</string>
+    <string name="quickwizard_settings">Innstillinger for hurtigknapp</string>
+    <string name="overview_edit_quickwizard_button_text">Knappetekst:</string>
+    <string name="overview_edit_quickwizard_carbs">Karbo:</string>
+    <string name="overview_edit_quickwizard_valid">Gyldig:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">Legg til</string>
+    <string name="overview_quickwizard_item_edit_button">Rediger</string>
+    <string name="overview_edit_quickwizard_show_on_device">Vis oppføring på enhet:</string>
+    <string name="overview_edit_quickwizard_use_bg">BS-beregning</string>
+    <string name="overview_edit_quickwizard_use_bolus_iob">Bolus IOB-beregning</string>
+    <string name="overview_edit_quickwizard_use_basal_iob">Basal IOB-beregning</string>
+    <string name="overview_edit_quickwizard_use_trend">Trend-beregning</string>
+    <string name="overview_edit_quickwizard_use_superbolus">Superbolus-beregning</string>
+    <string name="overview_edit_quickwizard_percentage">Prosent</string>
+    <string name="device_all">Alt</string>
+    <string name="device_phone">Telefon</string>
+    <string name="device_watch">Klokke</string>
+    <string name="positive_only">Bare positive</string>
+    <string name="negative_only">Bare negative</string>
+    <string name="overview_editquickwizard_usecob">COB-beregning</string>
+    <string name="overview_editquickwizard_usetemptarget">Beregning av midlertidig mål</string>
+    <string name="overview_editquickwizard_usepercentage">Prosent-beregning</string>
+    <string name="app_default">Standardverdi</string>
+    <string name="a11y_drag_and_drop_handle">håndtering av dra-og-slipp</string>
+</resources>

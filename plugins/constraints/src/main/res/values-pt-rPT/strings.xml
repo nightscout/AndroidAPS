@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PhoneChecker -->
+    <!-- DST Helper -->
+    <!-- Storage constraint -->
+    <!-- Version Checker -->
+    <string name="new_version_warning">A nova versão não foi verificada por pelo menos %1$d dias! Voltar ao SGB após %2$d dias, o loop será desativado após %3$d dias. Restaure a conectividade da internet!</string>
+    <!-- Signature verifier -->
+    <!-- BG Quality -->
+    <!-- Safety -->
+    <string name="limitingcarbs">A limitar hidratos para %1$d g porque %2$s</string>
+    <string name="pumpisnottempbasalcapable">A bomba não é capaz de basais temporárias</string>
+    <string name="closedmodedisabledinpreferences">Loop fechado desativado nas preferências</string>
+    <string name="closed_loop_disabled_on_dev_branch">A correr a versão dev. O Loop fechado está desativado.</string>
+    <string name="closed_loop_disabled_with_eb">Loop Fechado desativado por causa da execução do Bólus Prolongado</string>
+    <string name="smbalwaysdisabled">SMB sempre e depois dos hidratos desactivado por fonte da Glicose activa não suportar filtro avançado</string>
+    <string name="smbnotallowedinopenloopmode">SMB não permitido no modo open loop</string>
+    <string name="maxvalueinpreferences">valor máx nas preferências</string>
+    <string name="hardlimit">limite rígido</string>
+    <string name="treatmentssafety_title">Segurança de Tratamentos</string>
+    <!-- Objectives -->
+    <string name="not_completed_yet">Não concluído ainda</string>
+    <string name="time_elapsed">Tempo decorrido</string>
+    <string name="maxiobset">IA máxima definida corretamente</string>
+    <string name="hasbgdata">Glicose disponível da fonte seleccionada</string>
+    <string name="loopenabled">Loop activado</string>
+    <string name="apsselected">APS seleccionado</string>
+    <string name="closedmodeenabled">Modo fechado ativado</string>
+    <string name="objectives_shortname">OBJ</string>
+    <string name="description_objectives">Programa de aprendizagem</string>
+    <string name="doyouwantresetstart">Deseja reiniciar o objectivo? Pode perder seu progresso.</string>
+    <string name="objectives_button_unfinish">Reiniciar estado finalizado</string>
+    <string name="objectives_button_unstart">Reiniciar estado iniciado</string>
+</resources>

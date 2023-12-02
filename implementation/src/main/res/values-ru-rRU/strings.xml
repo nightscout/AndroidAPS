@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bg_label">ГК</string>
+    <string name="executing_right_now">Команда выполняется</string>
+    <string name="basal_value_below_minimum">значение базала ниже минимума. профиль не создан!</string>
+    <string name="permission">Права доступа</string>
+    <string name="need_whitelisting">для корректной работы %1$s необходимо включить в белый список оптимизации батареи</string>
+    <string name="need_location_permission">Приложению требуется разрешение на доступ к местоположению для сканирования BT и идентификации WiFi</string>
+    <string name="need_storage_permission">Приложение требует разрешения на доступ к записи в память, чтобы хранить файлы журналов и настройки экспорта</string>
+    <!--       Stats -->
+    <string name="veryLow" comment="below 3.1">Очень низкий</string>
+    <string name="low" comment="3.1-3.9">Низкий</string>
+    <string name="high" comment="10.0-13.9">Высокий</string>
+    <string name="veryHigh" comment="above 13.9">Очень высокий</string>
+    <string name="below" comment="below &quot;in range&quot;">Ниже целевых</string>
+    <string name="in_range">В целевом диапазоне</string>
+    <string name="above" comment="above &quot;in range&quot;">Выше целевых</string>
+    <string name="hba1c">HbA1c: </string>
+    <string name="std_deviation">СтандОткл: %1$s</string>
+    <string name="detailed_14_days">Подробно 14 дней</string>
+    <string name="day_tir">Время в целевом диапазоне днем</string>
+    <string name="night_tir">Время в целевом диапазоне ночью</string>
+    <string name="carbs_short" comment="max 6 characters">Угли</string>
+</resources>

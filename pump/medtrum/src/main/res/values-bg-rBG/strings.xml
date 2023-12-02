@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MedtrumPump -->
+    <string name="medtrum">Medtrum</string>
+    <string name="medtrum_pump_shortname">MT</string>
+    <string name="medtrum_pump_setting">Настройки за помпа Medtrum</string>
+    <string name="pump_error">Грешка в помпа: %1$s !! </string>
+    <string name="pump_is_suspended">Помпата е спряна</string>
+    <string name="pump_is_suspended_hour_max">Помпата е спряна поради превишено максимално количество инсулин за час</string>
+    <string name="pump_is_suspended_day_max">Помпата е спряна поради превишено максимално количество инсулин за ден</string>
+    <string name="patch_not_active">Пач помпата не е активирана</string>
+    <string name="pump_setting_failed">Неуспешно зареждане на потребителските настройки в помпата!</string>
+    <!-- overview fragment -->
+    <string name="ble_status_label">Състояние на BLE</string>
+    <string name="last_connection_label">Последно свързване</string>
+    <string name="pump_state_label">Състояние на помпата</string>
+    <string name="active_alarms_label">Активни аларми</string>
+    <string name="reservoir_level"> %.2f Ед.</string>
+    <string name="battery_voltage"> %.2f V</string>
+    <string name="basal_type_label">Тип базал</string>
+    <string name="basal_rate_label">Базал</string>
+    <string name="current_basal_rate"> %.2f Ед/ч</string>
+    <string name="pump_type_label">Тип помпа</string>
+    <string name="fw_version_label">Версия на FW</string>
+    <string name="patch_no_label">Номер на пач помпа</string>
+    <string name="patch_expiry_label">Срок на пач помпа</string>
+    <string name="refresh_label">Обнови</string>
+    <string name="reset_alarms_label">Нулирай аларми</string>
+    <string name="change_patch_label">Сменете пач помпата</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Заявено от потребителя</string>
+    <string name="expiry_not_enabled">Не е разрешено</string>
+    <!-- Alarm strings -->
+    <string name="alarm_none">Няма</string>
+    <string name="alarm_pump_low_battery">Изтощена батерия на помпата</string>
+    <string name="alarm_pump_low_reservoir">Минимален инсулин в резервоара на помпата</string>
+    <string name="alarm_pump_expires_soon">Помпата изтича скоро</string>
+    <string name="alarm_low_bg_suspended">Ниска КЗ изключена</string>
+    <string name="alarm_low_bg_suspended2">Ниска КЗ изключена 2</string>
+    <string name="alarm_auto_suspended">Автоматична изключена</string>
+    <string name="alarm_hourly_max_suspended">макс за час изключено</string>
+    <string name="alarm_daily_max_suspended">макс за ден изключена</string>
+    <string name="alarm_suspended">Изключена</string>
+    <string name="alarm_paused">На пауза</string>
+    <string name="alarm_occlusion">Запушване</string>
+    <string name="alarm_expired">Изтекъл срок</string>
+    <string name="alarm_reservoir_empty">Резервоар празен</string>
+    <string name="alarm_patch_fault">Дефект в пач помпата</string>
+    <string name="alarm_patch_fault2">Дефект в пач помпата 2</string>
+    <string name="alarm_base_fault">Дефект в основата</string>
+    <string name="alarm_battery_out">Няма батерия</string>
+    <string name="alarm_no_calibration">Няма калибрация</string>
+    <string name="pump_time_update_failed">Неуспешно актуализиране на часова зона на помпата, отложете съобщението и актуализирайте ръчно.</string>
+    <!-- wizard-->
+    <string name="retry">Повтори</string>
+    <string name="next">Следващ</string>
+    <string name="discard">Откажи</string>
+    <string name="step_prepare_patch">Активирай пач помпа</string>
+    <string name="step_prepare_patch_connect">Свържи и Напълни</string>
+    <string name="step_prime">Пълнене</string>
+    <string name="step_priming">Пълнене</string>
+    <string name="step_priming_complete">Напълването завършено</string>
+    <string name="step_attach">Прикрепи пач помпа</string>
+    <string name="step_activate">Активиране...</string>
+    <string name="step_activate_complete">Активирането Завършено</string>
+    <string name="step_deactivate">Деактивирай пач помпа</string>
+    <string name="step_deactivating">Деактивиране...</string>
+    <string name="step_deactivate_complete">Пач помпата деактивирана</string>
+    <string name="step_retry_activation">Активация в ход</string>
+    <string name="unexpected_state">Неочаквано състояние: %1$s</string>
+    <string name="no_profile_selected">Няма избран профил. Моля, изберете профил и опитайте отново.</string>
+    <string name="base_serial">Сериен номер на основа на помпа: %1$X</string>
+    <string name="patch_begin_activation">Няма активна пач помпа. Натиснете <b>Следващ</b>, за да започнете процеса по активация.</string>
+    <string name="patch_not_active_note">Основата на помпата не трябва да се свързва с пач помпата преди следващата стъпка!</string>
+    <string name="connect_pump_base">Сържете основата към нова пач помпа, отстранете остатъчния въздух и напълнете с инсулин, след което натиснете <b>Следващ</b>.</string>
+    <string name="note_min_70_units">Забележка: За активация са необходими най-малко 70 единици.</string>
+    <string name="do_not_attach_to_body">Все още не прикрепяйте пач помпата към тялото.</string>
+    <string name="half_press_needle">Натиснете бутона на иглата до средата. След това натиснете <b>Следващ</b>, за да започнете пълнене.</string>
+    <string name="wait_for_priming">Моля изчакайте напълването да приключи.</string>
+    <string name="priming_error">Неуспешно напълване, натиснете <b>Повтори</b>, за да опитате отново.</string>
+    <string name="press_next">Натиснете <b>Следващ</b>, за да продължите.</string>
+    <string name="press_next_to_start_activation">Натиснете <b>Следващ</b>, за да започнете активацията.</string>
+    <string name="remove_safety_lock">Отстранете предпазителя. Прикрепете помпата към тялото. Натиснете бутона на иглата.</string>
+    <string name="activating_pump">Активиране на помпата и настройване на първоначален базал. Моля, изчакайте.</string>
+    <string name="activating_error">Неуспешна активация, натиснете <b>Повтори</b>, за да опитате отново.</string>
+    <string name="activating_complete">Активирана нова пач помпа. Остават %.2f Ед.</string>
+    <string name="press_OK_to_return">Натиснете <b>OK</b>, за да се върнете на главния екран.</string>
+    <string name="deactivate_sure">Сигурни ли сте, че искате да деактивирате текущата пач помпа?</string>
+    <string name="cancel_sure">Сигурни ли сте, че искате да прекратите активацията?</string>
+    <string name="medtrum_deactivate_pump_confirm">Сигурни ли сте? Това действие не може да бъде отменено!!</string>
+    <string name="press_next_or_cancel">Натиснете <b>Следващ</b>, за да деактивирате или <b>Отказ</b>, за да се върнете на главния екран.</string>
+    <string name="deactivating_pump">Деактивиране на пач помпа. Моля, изчакайте.</string>
+    <string name="deactivating_error">Неуспешна деактивация, натиснете <b>Премахни</b>, за да премахнете пач помпата.</string>
+    <string name="retract_needle">Приберете иглата. Премахнете пач помпата от тялото.</string>
+    <string name="remove_base_discard_patch">Премахнете основата на помпата и изхвърлете използваната пач помпа на подходящо място.</string>
+    <string name="press_next_or_OK">Натиснете <b>OK</b>, за да се върнете на главния екран. Натиснете <b>Следващ</b>, за да стартирате активация на нова пач помпа.</string>
+    <string name="activation_in_progress">Опа! Нещо се обърка, изглежда, че активация е вече в ход.</string>
+    <string name="press_retry_or_discard">Натиснете <b>Следващ</b>, за да продължите активацията или <b>Премахни</b>, за да нулирате статуса на активация.</string>
+    <string name="reading_activation_status">Моля изчакайте, прочитане на статуса на активация от помпата.</string>
+    <!-- settings-->
+    <string name="sn_input_title">Сериен номер</string>
+    <string name="sn_input_summary">Въведете серийния номер на вашата основа на помпа.</string>
+    <string name="sn_input_invalid">Невалиден сериен номер!</string>
+    <string name="pump_unsupported">Помпата не е тествана: %1$d! Моля свържете се с нас в discord или github за поддръжка</string>
+    <string name="alarm_setting_title">Настройки на аларма</string>
+    <string name="alarm_setting_summary">Изберете предпочитани настройки за аларми на помпата.</string>
+    <string name="patch_expiration_title">Срок на пач помпата</string>
+    <string name="patch_expiration_summary">След активация, пач помпата има срок от 3 дни с допълнителен период от 8 часа след това.</string>
+    <string name="hourly_max_insulin_summary">Посочете максималните единици инсулин за час. Ако бъдат превишени, помпата ще бъде изключена.</string>
+    <string name="daily_max_insulin_summary">Посочете максималните единици инсулин за ден. Ако бъдат превишени, помпата ще бъде изключена.</string>
+    <!-- treatment state-->
+    <string name="getting_pump_status">Получава статус на помпата</string>
+    <string name="getting_bolus_status">Получава болус статус</string>
+    <string name="getting_temp_basal_status">Получава статус на временен базал</string>
+    <string name="setting_pump_settings">Задава потребителски настройки</string>
+</resources>

@@ -1,26 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string-array name="aps_modeArray">
-        <item>@string/closedloop</item>
-        <item>@string/openloop</item>
-        <item>@string/lowglucosesuspend</item>
-    </string-array>
-    <string-array name="aps_modeValues" translatable="false">
-        <item>closed</item>
-        <item>open</item>
-        <item>lgs</item>
-    </string-array>
-
-    <string-array name="unitsArray">
-        <item>mg/dL</item>
-        <item>mmol/L</item>
-    </string-array>
-    <string-array name="unitsValues" translatable="false">
-        <item>mg/dl</item>
-        <item>mmol</item>
-    </string-array>
-
     <string-array name="languagesArray">
         <item>@string/default_lang</item>
         <item>@string/en_lang</item>
@@ -28,6 +8,7 @@
         <item>@string/bg_lang</item>
         <item>@string/cs_lang</item>
         <item>@string/de_lang</item>
+        <item>@string/dk_lang</item>
         <item>@string/fr_lang</item>
         <item>@string/nl_lang</item>
         <item>@string/es_lang</item>
@@ -55,6 +36,7 @@
         <item>bg</item>
         <item>cs</item>
         <item>de</item>
+        <item>dk</item>
         <item>fr</item>
         <item>nl</item>
         <item>es</item>
@@ -63,7 +45,7 @@
         <item>it</item>
         <item>ko</item>
         <item>lt</item>
-        <item>no</item>
+        <item>nb_NO</item>
         <item>pt</item>
         <item>pt_BR</item>
         <item>ro</item>
@@ -73,52 +55,6 @@
         <item>pl</item>
         <item>tr</item>
         <item>zh</item>
-    </string-array>
-
-    <string-array name="ageArray">
-        <item>@string/child</item>
-        <item>@string/teenage</item>
-        <item>@string/adult</item>
-        <item>@string/resistantadult</item>
-        <item>@string/pregnant</item>
-    </string-array>
-    <string-array name="ageValues" translatable="false">
-        <item>@string/key_child</item>
-        <item>@string/key_teenage</item>
-        <item>@string/key_adult</item>
-        <item>@string/key_resistantadult</item>
-        <item>@string/key_pregnant</item>
-    </string-array>
-
-    <string-array name="virtualPumpTypes">
-        <item>Generic AAPS</item>
-        <item>MDI</item>
-        <item>Accu-Chek Combo</item>
-        <item>Accu-Chek Spirit</item>
-        <item>Accu-Chek Insight</item>
-        <item>Accu-Chek Solo</item>
-        <item>Animas Ping</item>
-        <item>Animas Vibe</item>
-        <item>Cellnovo</item>
-        <item>DanaR</item>
-        <item>DanaR Korean</item>
-        <item>DanaRS</item>
-        <item>DanaRv2</item>
-        <item>DanaI</item>
-        <item>Diaconn G8</item>
-        <item>Medtronic 512/712</item>
-        <item>Medtronic 515/715</item>
-        <item>Medtronic 522/722</item>
-        <item>Medtronic 523/723 (Revel)</item>
-        <item>Medtronic 554/754 (Veo)</item>
-        <item>Medtronic 640G</item>
-        <item>Omnipod Dash</item>
-        <item>Omnipod Eros</item>
-        <item>Tandem t:slim</item>
-        <item>Tandem t:flex</item>
-        <item>Tandem t:slim G4</item>
-        <item>Tandem t:slim X2</item>
-        <item>YpsoPump</item>
     </string-array>
 
     <string-array name="smbMaxMinutes">
@@ -146,18 +82,6 @@
         <item>2</item>
         <item>3</item>
         <item>4</item>
-    </string-array>
-
-    <string-array name="darkMode">
-        <item>@string/dark_theme</item>
-        <item>@string/light_theme</item>
-        <item>@string/follow_system_theme</item>
-    </string-array>
-
-    <string-array name="darkModeValues">
-        <item>@string/value_dark_theme</item>
-        <item>@string/value_light_theme</item>
-        <item>@string/value_system_theme</item>
     </string-array>
 
 </resources>

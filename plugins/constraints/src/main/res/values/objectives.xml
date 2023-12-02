@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="key_objectives_request_code" translatable="false">objectives_request_code</string>
+
+    <string name="objectives_button_start">Start</string>
+    <string name="objectives_button_verify">Verify</string>
+    <string name="nth_objective">%1$d. Objective</string>
+    <string name="objectivenotstarted">Objective %1$d not started</string>
+    <string name="objectivenotfinished">Objective %1$d not finished</string>
+    <string name="objectives_0_objective">Setting up visualization and monitoring, and analyzing basals and ratios</string>
+    <string name="objectives_0_gate">Verify that BG is available in Nightscout, and pump insulin data is being uploaded</string>
+    <string name="objectives_0_learned">You made basic setup of AAPS ecosystem. Nightscout is not necessary for AAPS to run but it\'s very useful for reporting or monitoring of other patients. It\'s not necessary to be connected to NS all the time if you use NS only for yourself. You can setup to upload for example only on home wifi and save battery.</string>
+    <string name="objectives_openloop_objective">Starting on an open loop</string>
+    <string name="objectives_openloop_gate">Run in Open Loop mode for a few days and manually enact lots of temp basals. Set up and use temporary and default temporary targets (e.g. for activity or hypo treatment carbs)</string>
+    <string name="objectives_openloop_learned">Open loop can be used for recommendations if you don\'t have compatible pump or you are not ready to close the loop.</string>
+    <string name="objectives_maxbasal_objective">Understanding your open loop, including its temp basal recommendations</string>
+    <string name="objectives_maxbasal_gate">Based on that experience, decide what max basal should be, and set it on the pump and preferences</string>
+    <string name="objectives_maxbasal_learned">Take care about safety features and adjust safety parameters when necessary.</string>
+    <string name="objectives_maxiobzero_objective">Starting to close the loop with Low Glucose Suspend</string>
+    <string name="objectives_maxiobzero_gate">Run in closed loop with max IOB = 0 for a few days without too many LGS events</string>
+    <string name="objectives_maxiobzero_learned">Setting MaxIOB to zero prevents you from hypo and will not add more insulin above basal rate (except situation with negative IOB)</string>
+    <string name="objectives_maxiob_objective">Tuning the closed loop, raising max IOB above 0 and gradually lowering BG targets</string>
+    <string name="objectives_maxiob_gate">Run for a few days, and at least one night with no low BG alarms, before dropping BG</string>
+    <string name="objectives_maxiob_learned">Update MaxIOB as a child grows. Do not allow to the system give you more insulin than you can cover by food = really high value is a bad idea.</string>
+    <string name="objectives_autosens_objective">Adjust basals and ratios if needed, and then enable auto-sens</string>
+    <string name="objectives_autosens_gate">1 week successful daytime looping with regular carb entry</string>
+    <string name="objectives_autosens_learned">If your autosens result is not oscillating around 100% your profile probably wrong.</string>
+    <string name="objectives_smb_objective">Enabling additional features for daytime use, such as SMB</string>
+    <string name="objectives_smb_gate">You must read the wiki and raise maxIOB to get SMBs working fine! A good start is maxIOB=average mealbolus + 3 x max daily basal</string>
+    <string name="objectives_smb_learned">Using SMB is your goal. Oref1 algorithm was designed to help you with your boluses as well. You should not give full bolus for your food but only part of it and let AAPS give you the rest if needed. This way you have more space for miscalculated carbs. Did you know that you can set a percentage of bolus calculator result to reduce the size of bolus?</string>
+    <string name="objectives_dyn_isf_objective">Enabling additional features for daytime use, such as Dynamic sensitivity plugin</string>
+    <string name="objectives_dyn_isf_gate">Ensure that SMB is functioning properly. Enable the DynamicISF plugin and identify the appropriate calibration for your body\'s uniqueness. It\'s advisable to begin with a value lower than 100% for safety.</string>
+    <string name="objectives_dyn_isf_learned">The Dynamic Sensitivity plugin is based on the idea that the total insulin intake and current glycemia levels affect the actual sensitivity. The DynamicISF plugin can adjust the Insulin Sensitivity Factor (ISF) used by the algorithm for you.</string>
+    <string name="objectives_auto_objective">Enabling automation</string>
+    <string name="objectives_auto_gate">Read the docs on how automation works. Set up your first simple rules. Instead of action let AAPS display only notification. When you are sure automation is triggered at the right time replace notification by real action. (https://wiki.aaps.app/en/latest/Usage/Automation.html)</string>
+    <string name="objectives_auto_learned">Automation can be a good servant but a bad master. Don\'t overuse it. Do not try to replace underlying algorithm. Test the rule with message only before use. It depends on order.</string>
+    <string name="objectives_bgavailableinns">BG available in NS or Tidepool</string>
+    <string name="objectives_pumpstatusavailableinns">Pump status available in NS or Tidepool</string>
+    <string name="objectives_manualenacts">Manual enacts</string>
+    <string name="accomplished">Accomplished: %1$s</string>
+    <string name="objectives_usage_objective">Learn how to control AAPS</string>
+    <string name="objectives_usage_gate">Perform different actions in AAPS</string>
+    <string name="objectives_usage_learned">You learned how to handle basics of AAPS. Main controls are on Overview screen accessible on click or long click, more controls is on Action screen. You should know how to put a screen of plugin to top scrollable menu or let it show in top-left list of enabled plugins.</string>
+    <string name="objectives_useprofileswitch">Set profile 90% for 10 min (Long-press profile name on Overview)</string>
+    <string name="objectives_usedisconnectpump">Simulate shower. Disconnect pump for 1h (Long-press on Open Loop)</string>
+    <string name="objectives_usereconnectpump">... and reconnect back the same way</string>
+    <string name="objectives_usetemptarget">Create custom temporary target with 10 min duration (Long-press on your current target)</string>
+    <string name="objectives_useactions">In Config Builder enable Actions plugin, make it visible and display its content from top menu</string>
+    <string name="objectives_useloop">Display content of Loop plugin</string>
+    <string name="objectives_usescale">Use scale function by long-pressing BG chart</string>
+    <string name="objectives_exam_objective">Prove your knowledge</string>
+    <string name="objectives_exam_gate">Study the questions.  You are given four possible answers for each question. There may be more than one correct answer. Please check all those that are correct and select VERIFY.</string>
+    <string name="objectives_exam_learned_prerequisites">You don\'t need to be a developer but you need NS to pass Objectives, compatible pump and computer to build AAPS for the first time and for every update.</string>
+    <string name="objectives_exam_learned_prerequisites2">AAPS can be run offline.</string>
+    <string name="objectives_exam_learned_basaltest">Profile should be reviewed and updated. Better profile = better results.</string>
+    <string name="objectives_exam_learned_dia">DIA in looping has different meaning (time until all insulin is absorbed) than in classic pump therapy (time until most insulin is absorbed).</string>
+    <string name="objectives_exam_learned_isf">You learned meaning of ISF value and how it affects amount of insulin used for BG correction.</string>
+    <string name="objectives_exam_learned_ic">You learned meaning of IC value and how it affects amount of insulin needed to cover carbs.</string>
+    <string name="objectives_exam_learned_hypott">Hypo temp target is used only to prevent overcorrection after hypo, when there is usually stacked negative IOB. Additional actions should be evaluated to prevent this situation again in the future.</string>
+    <string name="objectives_exam_learned_profileswitch">Using percentage doesn\'t affect targets BGs but basal, ISF and IC are adjusted to give more insulin (above 100%%) or less insulin (under 100%%).</string>
+    <string name="objectives_exam_learned_profileswitchtime">By using timeshift in profile switch you can adapt circadian profile to irregularities like late wake up.</string>
+    <string name="objectives_exam_learned_profileswitch4">Editing profile itself is not sufficient to make a change. You still need to do a profile switch to activate changes.</string>
+    <string name="objectives_exam_learned_exercise">You should reduce amount of insulin in the body at least 1 hour before starting exercise by selecting profile under 100%.</string>
+    <string name="objectives_exam_learned_exercise2">Setting of higher temp target at least 1 hour before exercise helps with reducing of amount of insulin in the body as well.</string>
+    <string name="objectives_exam_learned_noisycgm">When you cannot trust CGM values you should not use loop unattended.</string>
+    <string name="objectives_exam_learned_pumpdisconnect">AAPS must know that pump is not connected to count IOB correctly.</string>
+    <string name="objectives_exam_learned_insulin">Letting know which insulin is in pump is necessary because it does affect IOB calculation.</string>
+    <string name="objectives_exam_learned_sensitivity">Sensitivity detection is part of the algorithm which allows adapt insulin dosage to different situations.</string>
+    <string name="objectives_exam_learned_objectives">Your progress in Objectives is stored along with other settings and it should be backed up.</string>
+    <string name="objectives_exam_learned_objectives2">Always keep exported settings and generated APK also outside phone. Phone can be lost, damaged etc. Good place can be any cloud accessible from phone. In this case you can restore AAPS on another device in a few minutes. Good practice is store used master password on a safe place too. Without it is your backup useless. The same is valid for signing keys (.jks file) and passwords used to build AAPS. The rest is not important - it can be anytime downloaded from internet again.</string>
+    <string name="objectives_exam_learned_wrongcarbs">If you made wrong input to AAPS or it doesn\'t match reality, resolve it asap. It could lead to overdosing. AAPS should be always informed the best possible way about carbs, insulin etc.</string>
+    <string name="objectives_exam_learned_iob">If you analyze if AAPS is working well for you watching IOB graph can give you a lof of useful information.</string>
+    <string name="objectives_exam_learned_cob">COB calculation depends on relation between ISF a IC. Increasing ISF or decreasing IC will lead to longer absorption times. But profile switch with percentage change both values at the same time and absorption time is not affected.</string>
+    <string name="objectives_exam_learned_breadgrams">Only grams are allowed for entry of carbohydrates.</string>
+    <string name="objectives_exam_learned_ecarbs">E-carbs is a replacement for extended bolus in pump world.</string>
+    <string name="objectives_exam_learned_nsclient">Remote monitoring and control is possible but not all features must be available remotely.</string>
+    <string name="answerdisabledto">Answering disabled until: %1$s</string>
+    <string name="wronganswer">Wrong answer!</string>
+    <string name="unfinshed_button">Next unfinished</string>
+    <string name="requestcode">Request code: %1$s</string>
+    <string name="objectives_hint">(check all correct answers)</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="notconnected">Not connected to the internet</string>
+    <string name="failedretrievetime">Failed retrieve time</string>
+    <string name="requirementnotmet">Objective requirements not met</string>
+    <string name="what_i_ve_learned">What I\'ve learned:</string>
+
+</resources>

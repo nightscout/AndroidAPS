@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+    <string name="string_a002">Tom reservoar\nPodden har inaktiverats och insulinleveransen har stoppats. Byt pod nu.</string>
+    <string name="string_a003">Podden har gått ut\nDen har inaktiverats och insulinleveransen har stoppats. Byt pod nu.</string>
+    <string name="string_a004">Ocklusion upptäckt\nPodden har inaktiverats och insulinleveransen har stoppats. Byt pod nu.</string>
+    <string name="string_a005">Fel i uppstartstest\nPodden har inaktiverats. Byt pod nu.</string>
+    <string name="string_a007">Olämplig temperatur\nInsulinleverans eller processen för att aktivera ny pod avbryts. Undvik extrem temperatur nu.</string>
+    <string name="string_a016">Fel vid insättning av kanyl\nKotrollera vredets position och tryck \'Försök igen\'.</string>
+    <string name="string_a018">Batterifel\nPodden har inaktiverats och insulinleveransen har stoppats. Byt pod nu.</string>
+    <string name="string_a019">Batterifel\nPodden har inaktiverats och insulinleveransen har stoppats. Byt pod nu.</string>
+    <string name="string_a020">Aktiveringsfel\n\'Aktivera pod\'-processen har löpt ut. Tryck på \'Bekräfta\' för att inaktivera nuvarande pod. Byt pod nu.</string>
+    <string name="string_a022">Pod-fel\nDen har inaktiverats och insulinleveransen har stoppats. Byt pod nu.</string>
+    <string name="string_a023">Pod-fel\nPodden har inaktiverats och \ninsulinleveransen har stoppats. Byt pod nu.</string>
+    <string name="string_a034">Pod-fel\nPodden har inaktiverats och \ninsulinleveransen har stoppats. Byt pod nu.</string>
+    <string name="string_a041">Pod-fel\nPodden har inaktiverats och \ninsulinleveransen har stoppats. Byt pod nu.</string>
+    <string name="string_a042">Pod-fel\nPodden har inaktiverats och \ninsulinleveransen har stoppats. Byt pod nu.</string>
+    <string name="string_a043">Pod-fel\nPodden har inaktiverats och \ninsulinleveransen har stoppats. Byt pod nu.</string>
+    <string name="string_a044">Pod-fel\nPodden har inaktiverats och \ninsulinleveransen har stoppats. Byt pod nu.</string>
+    <string name="string_a106">Pod-fel\nPodden har inaktiverats och \ninsulinleveransen har stoppats. Byt pod nu.</string>
+    <string name="string_a107">Pod-fel\nPodden har inaktiverats och \ninsulinleveransen har stoppats. Byt pod nu.</string>
+    <string name="string_a108">Pod-fel\nPodden har inaktiverats och \ninsulinleveransen har stoppats. Byt pod nu.</string>
+    <string name="string_a116">Pod-fel\nPodden har inaktiverats och \ninsulinleveransen har stoppats. Byt pod nu.</string>
+    <string name="string_a117">Pod-fel\nPodden har inaktiverats och \ninsulinleveransen har stoppats. Byt pod nu.</string>
+    <string name="string_a118">Pod-fel\nPodden har inaktiverats och \ninsulinleveransen har stoppats. Byt pod nu.</string>
+    <string name="string_b000">Podden löper ut %s. Var redo att byta pod.</string>
+    <string name="string_b001">Dags att återuppta insulinleveransen\nTryck på \'Återuppta\'.</string>
+    <string name="string_b003">Låg reservoar\nByt pod snart.</string>
+    <string name="string_b005">Poddens livslängd har löpt ut\nByt pod nu.</string>
+    <string name="string_b006">Podden löper ut snart\nByt pod nu.</string>
+    <string name="string_b012">Ofullständig pod-aktivering\nSlutför \'Aktivera Pod\'-processen.</string>
+    <string name="string_b018">Pod-batteri lågt\nVar redo att byta pod.</string>
+</resources>

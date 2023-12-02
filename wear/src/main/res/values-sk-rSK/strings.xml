@@ -2,15 +2,12 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_watchface">AAPS</string>
     <string name="label_watchface_large">AAPS(Veľký)</string>
     <string name="label_watchface_big_chart">AAPS(VeľkýGraf)</string>
     <string name="label_watchface_no_chart">AAPS(ŽiadnyGraf)</string>
     <string name="label_watchface_circle">AAPS(Kruhový)</string>
-    <string name="label_watchface_v2">AAPS(v2)</string>
-    <string name="label_watchface_cockpit">AAPS(Kokpit)</string>
-    <string name="label_watchface_steampunk">AAPS (Steampunk)</string>
     <string name="label_watchface_digital_style">AAPS (DigitalStyle)</string>
+    <string name="label_watchface_custom">AAPS (vlastný)</string>
     <string name="label_actions_tile">AAPS (Akcie)</string>
     <string name="label_temp_target_tile">AAPS(Dočasný cieľ)</string>
     <string name="label_quick_wizard_tile">AAPS(Rýchly bolus)</string>
@@ -22,20 +19,33 @@
     <string name="msg_warning_old">AAPS dáta sú %1$s staré! Skontroluj tvoj senzor, xDrip+, NS, AAPS nastavenia atď.!</string>
     <string name="pref_vibrate_on_bolus">Zavibrovať pri boluse</string>
     <string name="pref_units_for_actions">Jednotky (mmol/l alebo mg/dl)</string>
+    <string name="units_short">J</string>
+    <string name="pref_display_settings">Displej</string>
+    <string name="pref_graph_settings">Graf</string>
+    <string name="pref_interface_settings">Rozhranie</string>
+    <string name="pref_others_settings">Ostatné</string>
+    <string name="pref_complication_settings">Komplikácia</string>
     <string name="pref_show_date">Zobraziť dátum</string>
     <string name="pref_show_iob">Zobraziť IOB</string>
+    <string name="pref_show_detailed_iob">Zobraziť detailný IOB</string>
     <string name="pref_show_cob">Zobraziť COB</string>
     <string name="pref_show_delta">Zobraziť odchýlku</string>
+    <string name="pref_show_detailed_delta">Zobraziť detailnú odchylku</string>
     <string name="pref_show_avgdelta">Zobraziť priemernú odchýlku</string>
     <string name="pref_show_phone_battery">Zobraziť stav batérie telefónu</string>
     <string name="pref_show_rig_battery">Zobrazovať kruhový graf batérie</string>
     <string name="pref_show_basal_rate">Zobraziť bazál</string>
     <string name="pref_show_loop_status">Zobrazovať stav uzavretého okruhu</string>
     <string name="pref_show_bg">Zobrazovať glykémiu</string>
+    <string name="pref_show_bgi">Zobraziť BGI</string>
     <string name="pref_show_direction_arrow">Zobrazovať trendovú šípku</string>
     <string name="pref_show_ago">Zobraziť aktualizované pred</string>
+    <string name="pref_show_temp_basal">Zobraziť dočasný bazál</string>
+    <string name="pref_show_bolus">Zobraziť Bolus &amp; SMB</string>
+    <string name="pref_show_grid">Zobraziť mriežku</string>
     <string name="pref_dark" comment="Enables dark visual theme">Tmavý </string>
     <string name="pref_highlight_basals">Zvýrazniť bazály</string>
+    <string name="pref_prediction_lines">Zobraziť predikcie</string>
     <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Zodpovedajúci oddeľovač</string>
     <string name="pref_chart_timeframe">Časové okno grafu</string>
     <string name="pref_1_hour">1 hodina</string>
@@ -48,7 +58,6 @@
     <string name="pref_quick_righty">Rýchlo vpravo</string>
     <string name="pref_quick_lefty">Rýchlo vľavo</string>
     <string name="pref_modern_sparse">Modern Sparse</string>
-    <string name="pref_delta_granularity">Presnosť (Steampunk)</string>
     <string name="pref_low">Nízka</string>
     <string name="pref_medium">Stredná</string>
     <string name="pref_high">Vysoká</string>
@@ -103,7 +112,7 @@
     <string name="action_preset_1">Predvoľba 1</string>
     <string name="action_preset_2">Predvoľba 2</string>
     <string name="action_preset_3">Predvoľba 3</string>
-    <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Ľubovoľné množstvo</string>
+    <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Ľubovoľné množstvo</string>
     <string name="action_confirm">POTVRDIŤ</string>
     <string name="action_timeshift">časový posun</string>
     <string name="action_bolus">Bolus</string>
@@ -114,7 +123,7 @@
     <string name="status_loop">Uzavretý okruh</string>
     <string name="status_profile_switch">Prepnutie profilu</string>
     <string name="status_tdd">TDD</string>
-    <string name="activity_carb">Sacharidy</string>
+    <string name="activity_carb">Sach</string>
     <string name="activity_IOB">IOB</string>
     <string name="activity_no_status">žiadny stav</string>
     <string name="color_name_red">červená</string>
@@ -143,6 +152,7 @@
     <string name="pref_simplify_ui_sum">Zobraziť iba čas a glykémiu</string>
     <string name="pref_vibrate_hourly">Vibrovať každú hodinu</string>
     <string name="pref_show_weeknumber">Zobraziť číslo týždňa</string>
+    <string name="custom_pref_show_seconds">Zobrazovať sekundy</string>
     <string name="digitalstyle_pref_your_style">Váš štýl:</string>
     <string name="digitalstyle_style_none">žiadny štýl</string>
     <string name="digitalstyle_style_minimal">minimálny štýl</string>
@@ -170,15 +180,13 @@
     <string name="wear_control_no_data">Žiadne údaje nie sú k dispozícii</string>
     <string name="increment">prírastok</string>
     <string name="decrement">zníženie</string>
-    <string name="first_char_high">H</string>
-    <string name="first_char_low">L</string>
     <string name="abbreviation_average">priemer</string>
     <string name="no_iob_u">--JI</string>
     <string name="no_cob_g">--g</string>
     <string name="no_tmp_basal_u_h">-.--JI/h</string>
-    <string name="uploader_na">Uploader: ---%</string>
-    <string name="no_status">S: žiadny stav</string>
-    <string name="time_stamp_na_min_ago">Pred -- minútami</string>
+    <string name="uploader_na">U: --%</string>
+    <string name="no_status">S: --</string>
+    <string name="time_stamp_na_min_ago">-- Pred min.</string>
     <string name="delta_na">--- mg/dl</string>
     <string name="no_loop_status">Žiadny stav uzavretého okruhu</string>
     <string name="cob_000g">000g</string>
@@ -186,4 +194,14 @@
     <string name="iob_0_00u">0,00JI</string>
     <string name="snooze_alert">AAPS Potvrdenie výstrahy</string>
     <string name="sending_snooze">Odosielanie potvrdení do AAPS</string>
+    <string name="short_hour">h</string>
+    <string name="week_short">t</string>
+    <string name="day_short">d</string>
+    <string name="hour_short">h</string>
+    <string name="hour_minute">%1$s: %2$s</string>
+    <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
+    <string name="old">starý</string>
+    <string name="old_warning">!starý!</string>
+    <string name="error">!chyba!</string>
+    <string name="pref_heartRateSampling">Tepová frekvencia</string>
 </resources>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="openapsma_no_glucose_data">Nema dostupnih podataka o glukozi</string>
+    <string name="description_ama">Stanje algoritma iz 2017.</string>
+    <string name="description_smb">Najnoviji algoritam za napredne korisnike</string>
+    <string name="description_smb_dynamic_isf">Najnoviji algoritam za napredne korisnike s dinamičkim/automatskim ISF-om</string>
+    <string name="openapsma_run">Pokreni sada</string>
+    <string name="openapsma_last_run_label">Zadnje pokretanje</string>
+    <string name="openapsma_input_parameters_label">Ulazni parametri</string>
+    <string name="openapsma_glucose_status_label">Stanje glukoze</string>
+    <string name="openapsma_iob_data_label">IOB podaci</string>
+    <string name="openapsma_profile_label">Profil</string>
+    <string name="openapsma_meal_data_label">Podaci o obroku</string>
+    <string name="openapsma_request_label">Zahtjev</string>
+    <string name="lgs_threshold_title">Razina glukoze ispod koje dolazi do suspenzije niske glukoze</string>
+    <!--    Verify if needed in safety-->
+    <!--    Autotune   -->
+    <string name="insulin_peak">Peak</string>
+    <!--    Loop -->
+    <string name="description_loop">Aktiviraj ili deaktiviraj implementaciju koja pokreće loop.</string>
+</resources>

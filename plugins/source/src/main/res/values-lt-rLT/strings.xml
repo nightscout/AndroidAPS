@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="ns_client_bg">NSClient</string>
+    <string name="ns_client_bg_short">NS Glik</string>
+    <string name="description_source_ns_client">Gauti glikemijos duomenis iš Nightscout</string>
+    <string name="source_xdrip">xDrip+</string>
+    <string name="description_source_xdrip">Gauti glikemijos duomenis iš xDrip+</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Gauti glikemijos duomenis iš \'Build Your Own Dexcom App\'</string>
+    <string name="eversense">Eversense programėlė (modifikuota)</string>
+    <string name="description_source_eversense">Gauti glikemijos duomenis iš modifikuotos Eversense programėlės</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">Gauti glikemijos duomenis iš Glimp</string>
+    <string name="mm640g">MM640g</string>
+    <string name="description_source_mm640g">Gauti glikemijos duomenis iš 600SeriesAndroidUploader</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Gauti glikemijos duomenis iš Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Gauti glikemijos duomenis iš Glunovo</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Gauti glikemijos duomenis iš Intelligo</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Gauti glikemijos duomenis iš Tomato (MiaoMiao)</string>
+    <string name="aidex">GlucoRx Aidex</string>
+    <string name="aidex_short">Aidex</string>
+    <string name="description_source_aidex">Gauti glikemijos duomenis iš GlucoRx Aidex CGMS</string>
+    <string name="random_bg">Atsitiktinė glikemija</string>
+    <string name="description_source_random_bg">Generuoti atsitiktinę glikemiją (tik demo režime)</string>
+    <string name="random_bg_short">AG</string>
+    <string name="do_xdrip_upload_title">Siųsti glikemijos duomenis į xDrip+</string>
+    <string name="do_xdrip_upload_summary">Xdrip+ pasirinkite 640g/Eversense kaip duomenų šaltinį</string>
+    <string name="bgsource_upload">Glikemijos perdavimo nustatymai</string>
+    <string name="dexcom_log_ns_sensor_change_title">Registruoti sensoriaus keitimą NS</string>
+    <string name="dexcom_log_ns_sensor_change_summary">Sukurti įvykį \"Sensoriaus keitimas\" NS automatiškai, startavus sensorių</string>
+    <string name="direction">kryptis</string>
+</resources>

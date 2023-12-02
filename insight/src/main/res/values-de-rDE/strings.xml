@@ -11,13 +11,11 @@
     <string name="stop_pump">Pumpe stoppen</string>
     <string name="started">Gestartet</string>
     <string name="stopped">Gestoppt</string>
-    <string name="paused">Pausiert</string>
     <string name="operating_mode">Betriebsmodus</string>
     <string name="description_pump_insight_local">Pumpen-Integration für Accu-Chek Insight Pumpen</string>
     <string name="not_inserted">Nicht eingesetzt</string>
     <string name="tdd_bolus">TDD Bolus</string>
     <string name="tdd_basal">TDD Basal</string>
-    <string name="tdd_total">TDD Gesamt</string>
     <string name="tbr_formatter">%1$d%% für %2$d / %3$d min</string>
     <string name="multiwave_bolus">Multiwave-Bolus</string>
     <string name="eb_formatter">%1$.2f / %2$.2f IE für %3$d min</string>
@@ -38,7 +36,6 @@
     <string name="timeout_during_handshake">Zeitüberschreitung während des Handshakes - Bluetooth zurücksetzen</string>
     <string name="pump_stopped">Pumpe gestoppt</string>
     <string name="pump_started">Pumpe gestartet</string>
-    <string name="pump_paused">Pumpe pausiert</string>
     <string name="short_status_last_connected">Letzte Verb.: vor %1$d min</string>
     <string name="short_status_tbr">TBR: %1$d%% für %2$d / %3$d min</string>
     <string name="short_status_extended">Verzögert: %1$.2f / %2$.2f IE für %3$d min.</string>
@@ -46,8 +43,6 @@
     <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_reservoir">Reser.: %1$.2f IE</string>
     <string name="short_status_battery">Batt.: %1$d%%</string>
-    <string name="confirm">Bestätigen</string>
-    <string name="mute_alert">Stumm</string>
     <string name="release_software_version">Release-Softwareversion</string>
     <string name="ui_processor_software_version">UI-Prozessor-Softwareversion</string>
     <string name="pc_processor_software_version">PC-Prozessor-Softwareversion</string>
@@ -71,4 +66,5 @@
     <string name="min_recovery_duration">Min. Erholungsdauer [s]</string>
     <string name="pump_alert">Pumpenalarm</string>
     <string name="pairing_information">Kopplungsinformation</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Insight Refresh Button</string>
 </resources>

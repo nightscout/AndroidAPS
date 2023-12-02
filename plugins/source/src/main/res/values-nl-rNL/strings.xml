@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="ns_client_bg">NSClient BG</string>
+    <string name="ns_client_bg_short">NS BG</string>
+    <string name="description_source_ns_client">Download BG waardes van Nightscout</string>
+    <string name="source_xdrip">xDrip+ BG</string>
+    <string name="description_source_xdrip">Ontvang BG waardes van xDrip+.</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Ontvang BG waarden van de \'Build Your Own Dexcom App\' (BYODA).</string>
+    <string name="eversense">Eversense App (aangepast)</string>
+    <string name="description_source_eversense">Ontvang BG waardes van de aangepaste Eversense app.</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">Ontvang BG waardes van Glimp.</string>
+    <string name="mm640g">MM640g</string>
+    <string name="description_source_mm640g">Ontvang BG waardes van 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Ontvang BG waardes van Poctech app</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Ontvang waardes van Glunovo app</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Ontvang waarden van de Intelligo app</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Ontvang BG waardes van Tomato app (MiaoMiao apparaatje)</string>
+    <string name="aidex">GlucoRx Aidex</string>
+    <string name="aidex_short">Aidex</string>
+    <string name="description_source_aidex">Ontvang BG waarden van GlucoRx Aidex CGMS.</string>
+    <string name="random_bg">Willekeurige BG</string>
+    <string name="description_source_random_bg">Willekeurige BG data genereren (alleen Demo modus)</string>
+    <string name="random_bg_short">BG</string>
+    <string name="do_xdrip_upload_title">Verstuur BG data naar xDrip+</string>
+    <string name="do_xdrip_upload_summary">In xDrip+ selecteer 640g/Eversense data bron</string>
+    <string name="bgsource_upload">BG upload instellingen</string>
+    <string name="dexcom_log_ns_sensor_change_title">Sensorwijziging in NS registreren</string>
+    <string name="dexcom_log_ns_sensor_change_summary">Maak automatisch een gebeurtenis \"Sensor Change\" in NS wanneer de sensor start</string>
+    <string name="direction">richting</string>
+</resources>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PhoneChecker -->
+    <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Смяна на времето след по-малко от 24ч</string>
+    <string name="dst_loop_disabled_warning">Смяна на времето след по-малко от 3 часа - минавам в отворен режим</string>
+    <!-- Storage constraint -->
+    <string name="disk_full">Освободете поне %1$d MB в паметта на телефона! Цикъл изключен!</string>
+    <!-- Version Checker -->
+    <string name="old_version">стара версия</string>
+    <string name="very_old_version">много стара версия</string>
+    <string name="application_expired">Приложението е твърде старо!</string>
+    <string name="new_version_warning">Не е проверявано за нова версия от %1$d дни! Връщане към LGS след %2$d дни, loop ще бъде изключен след %3$d дни. Възстановете интернет връзката!</string>
+    <string name="running_invalid_version">Използвате грешна версия. APS е изключен!</string>
+    <string name="versionavailable">Има налично обновяване до версия %1$s </string>
+    <string name="version_expire">Версия %1$s изтича на %2$s</string>
+    <!-- Signature verifier -->
+    <!-- BG Quality -->
+    <string name="recalculated_data_used">Рекалкулирани използвани данни</string>
+    <string name="bg_too_close">КЗ близо до:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">преизчислено</string>
+    <string name="a11y_bg_quality_doubles">двойни записи</string>
+    <string name="a11y_bg_quality_flat">Равни данни. Смята се за грешно</string>
+    <!-- Safety -->
+    <string name="limitingextendedbolus">Ограничаване на удължения болус до %1$.1f Е, поради %2$s</string>
+    <string name="limitingcarbs">Ограничаване на въглехидрати до %1$d гр. поради %2$s</string>
+    <string name="pumpisnottempbasalcapable">Помпата не поддържа временен базал</string>
+    <string name="closedmodedisabledinpreferences">Затворения кръг е забранен в настройките</string>
+    <string name="closed_loop_disabled_on_dev_branch">Използвате dev версия. Затворения кръг е недостъпен за Вас.</string>
+    <string name="closed_loop_disabled_with_eb">Затворен цикъл е недостъпен поради стартиран Удължен болус</string>
+    <string name="smbalwaysdisabled">SMB \"винаги включен\" и \"след въглехидрати\" е забранен, защото е активен източник на КЗ, който не поддържа необходимата филтрация</string>
+    <string name="smbnotallowedinopenloopmode">SMB не е позволен в режим Отворен кръг</string>
+    <string name="maxvalueinpreferences">макс. стойност в настройките</string>
+    <string name="hardlimit">твърд лимит</string>
+    <string name="treatmentssafety_title">Настройки на сигурността</string>
+    <!-- Objectives -->
+    <string name="completed_well_done">Приключихме, Браво!</string>
+    <string name="not_completed_yet">Все още не сме неприключили</string>
+    <string name="time_elapsed">Изминало време</string>
+    <string name="maxiobset">Максимален IOB е зададен правилно</string>
+    <string name="hasbgdata">Има данни за КЗ от избрания източник</string>
+    <string name="synchaswritepermission">Услугата за синхронизация има разрешение за запис</string>
+    <string name="loopenabled">APS разрешен</string>
+    <string name="apsselected">Избран APS</string>
+    <string name="closedmodeenabled">APS - Затворен кръг е позволен</string>
+    <string name="objectives_shortname">Цел</string>
+    <string name="description_objectives">Разучаване на програмата</string>
+    <string name="doyouwantresetstart">Искате ли да нулирате прогреса си?</string>
+    <string name="objectives_next_button">Следващ</string>
+    <string name="objectives_previous_button">Предишен</string>
+    <string name="objectives_button_unfinish">Изчисти завършените</string>
+    <string name="objectives_button_unstart">Изчисти стартираните</string>
+</resources>

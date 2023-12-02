@@ -10,11 +10,11 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
-import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
+import dagger.android.support.DaggerAppCompatActivity;
 import info.nightscout.androidaps.insight.R;
 import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService;
 
-public class InsightPairingInformationActivity extends NoSplashAppCompatActivity {
+public class InsightPairingInformationActivity extends DaggerAppCompatActivity {
 
     private InsightConnectionService connectionService;
 
@@ -31,16 +31,17 @@ public class InsightPairingInformationActivity extends NoSplashAppCompatActivity
 
     private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
+        @SuppressWarnings({"deprecation"})
         public void onServiceConnected(ComponentName name, IBinder binder) {
             connectionService = ((InsightConnectionService.LocalBinder) binder).getService();
             if (!connectionService.isPaired()) {
                 overridePendingTransition(0, 0);
                 finish();
-                startActivity(new Intent(InsightPairingInformationActivity.this, InsightPairingActivity.class));
+                startActivity(new Intent(InsightPairingInformationActivity.this, InsightPairingActivity.class).setAction("app.apps.InsightPairingInformationActivity"));
             } else {
                 serialNumber.setText(connectionService.getPumpSystemIdentification().getSerialNumber());
                 manufacturingDate.setText(connectionService.getPumpSystemIdentification().getManufacturingDate());
-                systemIdAppendix.setText(connectionService.getPumpSystemIdentification().getSystemIdAppendix() + "");
+                systemIdAppendix.setText(String.valueOf(connectionService.getPumpSystemIdentification().getSystemIdAppendix()));
                 releaseSWVersion.setText(connectionService.getPumpFirmwareVersions().getReleaseSWVersion());
                 uiProcSWVersion.setText(connectionService.getPumpFirmwareVersions().getUiProcSWVersion());
                 pcProcSWVersion.setText(connectionService.getPumpFirmwareVersions().getPcProcSWVersion());

@@ -1,0 +1,289 @@
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:stretchColumns="0,2,4"
+    tools:context=".general.actions.ActionsFragment">
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true">
+
+        <TextView
+            android:id="@+id/sensor_label"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:gravity="center_vertical"
+            android:paddingStart="15dp"
+            android:paddingEnd="2dp"
+            android:text="@string/sensor_label"
+            android:textSize="14sp"
+            app:drawableStartCompat="@drawable/ic_cp_age_sensor" />
+
+        <TextView
+            android:id="@+id/sensor_age_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingStart="0dp"
+            android:paddingEnd="0dp"
+            android:text="@string/age_label"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/sensor_age"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingStart="2dp"
+            android:paddingEnd="2dp"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/sensor_level_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingStart="0dp"
+            android:paddingEnd="0dp"
+            android:text="@string/level_label"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/sensor_level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:gravity="center_vertical"
+            android:paddingStart="4dp"
+            android:paddingEnd="0dp"
+            android:textSize="14sp" />
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dip"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="2dp"
+            android:layout_span="5"
+            android:background="?android:attr/dividerHorizontal" />
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true">
+
+        <TextView
+            android:id="@+id/insulin_label"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:gravity="center_vertical"
+            android:paddingStart="15dp"
+            android:paddingEnd="2dp"
+            android:text="@string/insulin_label"
+            android:textSize="14sp"
+            app:drawableStartCompat="@drawable/ic_cp_age_insulin" />
+
+        <TextView
+            android:id="@+id/insulin_age_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingStart="0dp"
+            android:paddingEnd="0dp"
+            android:text="@string/age_label"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/insulin_age"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingStart="2dp"
+            android:paddingEnd="2dp"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/insulin_level_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingStart="0dp"
+            android:paddingEnd="0dp"
+            android:text="@string/level_label"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/reservoir_level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:gravity="center_vertical"
+            android:paddingStart="4dp"
+            android:paddingEnd="0dp"
+            android:textSize="14sp"
+            tools:text="15U" />
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dip"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="2dp"
+            android:layout_span="5"
+            android:background="?android:attr/dividerHorizontal" />
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true">
+
+        <TextView
+            android:id="@+id/cannula_or_patch"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:gravity="center_vertical"
+            android:paddingStart="15dp"
+            android:paddingEnd="2dp"
+            android:text="@string/cannula"
+            android:textSize="14sp"
+            app:drawableStartCompat="@drawable/ic_cp_age_cannula" />
+
+        <TextView
+            android:id="@+id/cannula_age_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingStart="0dp"
+            android:paddingEnd="0dp"
+            android:text="@string/age_label"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/cannula_age"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingStart="2dp"
+            android:paddingEnd="2dp"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/cannula_usage_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingStart="0dp"
+            android:paddingEnd="0dp"
+            android:text="@string/cannula_usage"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/cannula_usage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:gravity="center_vertical"
+            android:paddingStart="4dp"
+            android:paddingEnd="0dp"
+            android:textSize="14sp"
+            tools:text="..." />
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dip"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="2dp"
+            android:layout_span="5"
+            android:background="?android:attr/dividerHorizontal" />
+
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/battery_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true">
+
+        <TextView
+            android:id="@+id/pb_label"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:gravity="center_vertical"
+            android:paddingStart="15dp"
+            android:paddingEnd="2dp"
+            android:text="@string/pb_label"
+            android:textSize="14sp"
+            app:drawableStartCompat="@drawable/ic_cp_age_battery" />
+
+        <TextView
+            android:id="@+id/pb_age_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingStart="0dp"
+            android:paddingEnd="0dp"
+            android:text="@string/age_label"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/pb_age"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingStart="2dp"
+            android:paddingEnd="2dp"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/pb_level_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingStart="0dp"
+            android:paddingEnd="0dp"
+            android:text="@string/level_label"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/pb_level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:gravity="center_vertical"
+            android:paddingStart="4dp"
+            android:paddingEnd="0dp"
+            android:textSize="14sp"
+            tools:text="70%" />
+
+    </TableRow>
+
+</TableLayout>

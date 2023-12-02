@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:validate="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:key="@string/key_danar_pump_settings"
+        android:title="@string/danar_pump_settings"
+        app:initialExpandedChildrenCount="0">
+
+        <app.aaps.core.ui.elements.BluetoothDevicePreference
+            android:dialogTitle="@string/danar_bt_name_title"
+            android:key="@string/key_danar_bt_name"
+            android:title="@string/danar_bt_name_title" />
+
+        <app.aaps.core.validators.ValidatingEditTextPreference
+            android:inputType="numberPassword"
+            android:key="@string/key_danar_password"
+            android:title="@string/danar_password_title"
+            validate:customRegexp="@string/fourdigitnumber"
+            validate:testErrorString="@string/error_mustbe4digitnumber"
+            validate:testType="regexp" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_danar_useextended"
+            android:title="@string/danar_useextended_title" />
+
+    </PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>

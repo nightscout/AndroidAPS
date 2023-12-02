@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Medtronic (MDT) - Base -->
+    <string name="description_pump_medtronic">חיבור משאבת Medtronic, נדרש התקן ריילילינק ודגמי משאבה ספציפיים</string>
+    <!-- MDT Configuration -->
+    <string name="medtronic_serial_number">מספר סידורי של המשאבה</string>
+    <string name="medtronic_pump_type">סוג המשאבה</string>
+    <string name="medtronic_pump_frequency">תדר המשאבה</string>
+    <string name="medtronic_pump_bolus_delay">המתנה לפני מתן בולוס (שניות)</string>
+    <string name="medtronic_pump_max_bolus">מקסימום בולוס במשאבה (יח\')</string>
+    <string name="medtronic_pump_max_basal">מקסימום בזאלי במשאבה (יח\' לשעה)</string>
+    <string name="medtronic_pump_encoding">קידוד מדטרוניק</string>
+    <string name="medtronic_pump_frequency_us_ca">ארצות הברית &amp; קנדה (916 MHz)</string>
+    <string name="medtronic_pump_frequency_worldwide">ברחבי העולם (868 Mhz)</string>
+    <string name="medtronic_pump_encoding_4b6b_local">קידוד תוכנה 4B6b</string>
+    <string name="medtronic_pump_encoding_4b6b_rileylink">קידוד חומרה 4B6b</string>
+    <string name="medtronic_custom_action_wake_and_tune">התעוררות וכוונון</string>
+    <string name="medtronic_custom_action_clear_bolus_block">ביטול חסימת בולוס</string>
+    <string name="medtronic_custom_action_reset_rileylink">איפוס תצורת ריילילינק</string>
+    <string name="medtronic_pump_battery_select">סוג סוללה (תצוגת חשמל)</string>
+    <string name="medtronic_pump_battery_no">לא נבחר (תצוגה פשוטה)</string>
+    <string name="medtronic_pump_battery_alkaline">אלקליין (תצוגה מורחבת)</string>
+    <string name="medtronic_pump_battery_lithium">ליתיום (תצוגה מורחבת)</string>
+    <string name="medtronic_pump_battery_nizn">NiZn (תצוגה מורחבת)</string>
+    <string name="medtronic_pump_battery_nimh">NiMH (תצוגה מורחבת)</string>
+    <string name="medtronic_bolus_debugging">איתור באגים בבולוס או טיפולים</string>
+    <!-- MDT Fragment -->
+    <string name="rl_battery_label">סוללת ריילילינק</string>
+    <!-- MDT Errors -->
+    <string name="medtronic_errors">שגיאות</string>
+    <string name="medtronic_error_serial_not_set">מס\' סידורי לא הוגדר.</string>
+    <string name="medtronic_error_serial_invalid">מס\' סידורי לא חוקי.</string>
+    <string name="medtronic_error_pump_type_not_set">סוג המשאבה לא הוגדר.</string>
+    <string name="medtronic_error_pump_type_invalid">סוג המשאבה לא נתמך.</string>
+    <string name="medtronic_error_pump_frequency_not_set">תדר המשאבה לא הוגדר.</string>
+    <string name="medtronic_error_pump_frequency_invalid">תדר המשאבה לא חוקי.</string>
+    <string name="medtronic_error_rileylink_address_invalid">כתובת ריילילינק לא חוקית.</string>
+    <string name="medtronic_error_pump_type_set_differs_from_detected">סוג המשאבה מזוהה אך אינו זהה לסוג מוגדר.</string>
+    <string name="medtronic_error_pump_basal_profiles_not_enabled">הגדרת פרופילי הבזאלי/תבניות אינה מאופשרת במשאבה. הפעילו אותם בגוף המשאבה.</string>
+    <string name="medtronic_error_pump_incorrect_basal_profile_selected">פרופיל הבזאלי שהוגדר על המשאבה שגוי (חייב להיות סטנדרטי).</string>
+    <string name="medtronic_error_pump_wrong_tbr_type_set">סוג הבזאלי הזמני שהוגדר במשאבה שגוי (חייב להיות מוחלט).</string>
+    <string name="medtronic_error_pump_wrong_max_bolus_set">בולוס מרבי המוגדר במשאבה אינו נכון (חייב להיות %1$.2f).</string>
+    <string name="medtronic_error_pump_wrong_max_basal_set">בזאלי מרבי המוגדר במשאבה אינו נכון (חייב להיות %1$.2f).</string>
+    <string name="medtronic_error_operation_not_possible_no_configuration">הפעולה אינה אפשרית.\n\n יש להגדיר קודם את המשאבה על מנת לבצע פעולה זו.</string>
+    <string name="medtronic_error_pump_24h_time_change_requested">התבקש שינוי זמן העולה על 24 שעות.</string>
+    <!-- MDT History -->
+    <!--    <string name="medtronic_history_group_basal">Basals</string>-->
+    <!--    <string name="medtronic_history_group_configuration">Configurations</string>-->
+    <!--    <string name="medtronic_history_group_notification">Notifications</string>-->
+    <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
+    <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
+    <!--    <string name="medtronic_history_group_all">All</string>-->
+    <string name="medtronic_pump_history">היסטוריית משאבת Medtronic</string>
+    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
+    <string name="medtronic_cmd_cancel_bolus_not_supported">ביטלתם את הבולוס אחרי שכבר נקבע במשאבה. מאחר שמשאבות Medtronic אינן תומכות בביטול, תצטרכו לבטלו ידנית. הכניסו את המשאבה למצב השהיה ולאחר מכן צאו ממצב ההשהיה (אם אתם עדיין רוצים לבטל). היישום יאסוף שינויים בעדכון הבא (תוך פחות מ-5 דקות).</string>
+    <string name="medtronic_cmd_cant_read_tbr">לא ניתן לקרוא את הבזאלי הזמני הנוכחי.</string>
+    <string name="medtronic_cmd_cant_cancel_tbr_stop_op">לא ניתן לבטל את הבזאלי הזמני הנוכחי. עוצר את הפעולה.</string>
+    <string name="medtronic_cmd_set_profile_pattern_overflow">הגדרת הפרופיל נכשלה מאחר שהתבניות העוקבות כוללות מינון בזאלי גבוה מדי: %1$s</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered">לא ניתן היה לספק את הבולוס.</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">לא ניתן לספק את הבולוס משום שכמות האינסולין הזמין (%1$.2f) נמוך מהדרוש (%2$.2f).</string>
+    <string name="medtronic_cmd_tbr_could_not_be_delivered">לא היה ניתן להגדיר את הבזאלי הזמני.</string>
+    <string name="medtronic_cmd_cant_cancel_tbr">לא ניתן לבטל את הבזאלי הזמני הנוכחי.</string>
+    <string name="medtronic_cmd_basal_profile_could_not_be_set">לא ניתן להגדיר את הפרופיל הבזאלי.</string>
+    <string name="medtronic_cmd_basal_profile_not_set_is_same">הפרופיל הנוכחי זהה ולכן לא יוגדר מחדש.</string>
+    <string name="medtronic_cmd_desc_get_history">קבלת היסטוריה-עמוד %1$d (%2$d/16)</string>
+    <string name="medtronic_cmd_desc_get_history_request">קבלת היסטוריה-עמוד %1$d</string>
+    <string name="medtronic_cmd_desc_get_time">אחזר זמן המשאבה</string>
+    <string name="medtronic_cmd_desc_set_time">הגדרת שעון המשאבה</string>
+    <string name="medtronic_cmd_desc_get_battery_status">מצב הסוללה</string>
+    <string name="medtronic_cmd_desc_get_settings">אחזר הגדרות</string>
+    <string name="medtronic_cmd_desc_get_model">אחזר דגם המשאבה</string>
+    <string name="medtronic_cmd_desc_get_basal_profile">אחזר פרופיל בזאלי</string>
+    <string name="medtronic_cmd_desc_set_basal_profile">הגדרת פרופיל בזאלי</string>
+    <string name="medtronic_cmd_desc_get_tbr">קבלת בזאלי זמני</string>
+    <string name="medtronic_cmd_desc_set_tbr">הגדרת בזאלי זמני</string>
+    <string name="medtronic_cmd_desc_cancel_tbr">ביטול בזאלי זמני</string>
+    <string name="medtronic_cmd_desc_set_bolus">הגדרת בולוס</string>
+    <string name="medtronic_cmd_desc_get_remaining_insulin">אחזור אינסולין שנותר</string>
+    <string name="medtronic_pump_status_pump_unreachable">המשאבה אינה זמינה</string>
+    <string name="medtronic_warning">אזהרה</string>
+    <!-- medtronic_warning -->
+    <string name="medtronic_pump_connected_now">עכשיו</string>
+    <!-- combo_pump_connected_now -->
+    <string name="ago">לפני</string>
+    <string name="medtronic_notification_check_time_date">דרוש עדכון שעון המשאבה</string>
+    <!-- combo_notification_check_time_date -->
+    <string name="common_on">מופעל</string>
+    <string name="common_off">כבוי</string>
+    <string name="pump_time_updated">שעון המשאבה עודכן</string>
+    <string name="set_neutral_temps_title">הגדרת מינון בזאלי ניטרלי</string>
+    <string name="set_neutral_temps_summary">אם תופעל, היא תבטל בזאלי זמני לפני תום כל שעה. שיטה זו יכולה לעזור לבטל ציפצופים ורטט רבים בחלק מהמשאבות.</string>
+    <string name="mdt_tbr_remaining">%1$.1f יחידות\\שעה (נותרו %2$d דקות) </string>
+    <string name="invalid_history_data">זוהתה היסטוריית משאבה פסולה. נא לפתוח תלונה ולספק רישומים (לוג).</string>
+    <string name="riley_statistics">סטטיסטיקות ריילילינק</string>
+    <string name="medtronic_history_type">סוג:</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">נלחץ ריענון</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">רענון סטטוס מתוכנן</string>
+</resources>

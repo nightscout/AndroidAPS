@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="path_rx_bridge" translatable="false">/rx_bridge</string>
+    <string name="path_rx_data_bridge" translatable="false">/rx_data_bridge</string>
+</resources>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Medtronic (MDT) - Base -->
+    <string name="description_pump_medtronic">Интеграция с помпой Medtronic требует устройства RileyLink и специфическую модель помпы</string>
+    <!-- MDT Configuration -->
+    <string name="medtronic_serial_number">Серийный номер помы</string>
+    <string name="medtronic_pump_type">Тип помпы</string>
+    <string name="medtronic_pump_frequency">Частота помпы</string>
+    <string name="medtronic_pump_bolus_delay">Задержка перед подачей болюса (сек)</string>
+    <string name="medtronic_pump_max_bolus">Макс. болюс на помпе (ед)</string>
+    <string name="medtronic_pump_max_basal">Макс. базал на помпе (ед/ч)</string>
+    <string name="medtronic_pump_encoding">Кодировка Medtronic</string>
+    <string name="medtronic_pump_frequency_us_ca">US &amp; Canada (916 MHz)</string>
+    <string name="medtronic_pump_frequency_worldwide">Глобальн (868 Мгц)</string>
+    <string name="medtronic_pump_encoding_4b6b_local">Программное 4b6b кодирование</string>
+    <string name="medtronic_pump_encoding_4b6b_rileylink">Аппаратное кодирование 4b6b</string>
+    <string name="medtronic_custom_action_wake_and_tune">Пробуждение и настройка</string>
+    <string name="medtronic_custom_action_clear_bolus_block">Очистить блок болюса</string>
+    <string name="medtronic_custom_action_reset_rileylink">Сбросить конфигурацию RileyLink</string>
+    <string name="medtronic_pump_battery_select">Тип батареи (по мощности)</string>
+    <string name="medtronic_pump_battery_no">Не выбрано (Простой вид)</string>
+    <string name="medtronic_pump_battery_alkaline">Щелочная (Подробный вид)</string>
+    <string name="medtronic_pump_battery_lithium">Литиевая (Подробный вид)</string>
+    <string name="medtronic_pump_battery_nizn">NiZn (Подробный вид)</string>
+    <string name="medtronic_pump_battery_nimh">Никель-металлогидридная (подробно)</string>
+    <string name="medtronic_bolus_debugging">Отладка Болюс/Назначения</string>
+    <!-- MDT Fragment -->
+    <string name="rl_battery_label">Батарея RileyLink</string>
+    <!-- MDT Errors -->
+    <string name="medtronic_errors">Ошибки</string>
+    <string name="medtronic_error_serial_not_set">Серийный # не задан.</string>
+    <string name="medtronic_error_serial_invalid">Серийный # неверный.</string>
+    <string name="medtronic_error_pump_type_not_set">Тип помпы не задан.</string>
+    <string name="medtronic_error_pump_type_invalid">Тип помпы не поддерживается.</string>
+    <string name="medtronic_error_pump_frequency_not_set">Частота помпы не задана.</string>
+    <string name="medtronic_error_pump_frequency_invalid">Частота помпы не поддерживается.</string>
+    <string name="medtronic_error_rileylink_address_invalid">Недопустимый адрес RileyLink.</string>
+    <string name="medtronic_error_pump_type_set_differs_from_detected">Обнаруженный тип помпы не соответствует настроенному.</string>
+    <string name="medtronic_error_pump_basal_profiles_not_enabled">Базальные профили/настройки шаблонов не включены в помпе. Включите их на помпе.</string>
+    <string name="medtronic_error_pump_incorrect_basal_profile_selected">Базовый профиль на помпе неверный (должен быть STD).</string>
+    <string name="medtronic_error_pump_wrong_tbr_type_set">Неверный тип временной скорости базала TBR на помпе (должен быть Absolute).</string>
+    <string name="medtronic_error_pump_wrong_max_bolus_set">На помпе задан неверный макс болюс (должен быть %1$.2f).</string>
+    <string name="medtronic_error_pump_wrong_max_basal_set">На помпе задан неверный макс базал (должен быть %1$.2f).</string>
+    <string name="medtronic_error_operation_not_possible_no_configuration">Операция невозможна.\n\n Сначала нужно настроить помпу Medtronic.</string>
+    <string name="medtronic_error_pump_24h_time_change_requested">Запрошено изменение времени свыше 24 часов.</string>
+    <!-- MDT History -->
+    <!--    <string name="medtronic_history_group_basal">Basals</string>-->
+    <!--    <string name="medtronic_history_group_configuration">Configurations</string>-->
+    <!--    <string name="medtronic_history_group_notification">Notifications</string>-->
+    <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
+    <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
+    <!--    <string name="medtronic_history_group_all">All</string>-->
+    <string name="medtronic_pump_history">Журнал событий помпы Medtronic</string>
+    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
+    <string name="medtronic_cmd_cancel_bolus_not_supported">Вы отменили болюс после того как он был задан на помпе. Поскольку помпа Medtronic не поддерживает отмену, нужно отменить его вручную. Переведите помпу в режим приостановки и затем сделайте Resume (если все еще хотите отменить). Приложение примет изменения при следующем обновлении (менее чем через 5 минут).</string>
+    <string name="medtronic_cmd_cant_read_tbr">Не удалось прочитать текущий врем. базал TBR.</string>
+    <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Не удалось отменить текущий врем базал TBR. Остановка операции.</string>
+    <string name="medtronic_cmd_set_profile_pattern_overflow">Не удалось установить профиль потому что следующие шаблоны имеют слишком большой базал %1$s</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered">Болюс не подан.</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">Болюс не подан т.к. доступное количество инсулина (%1$.2f) меньше, чем требуемый болюс (%2$.2f).</string>
+    <string name="medtronic_cmd_tbr_could_not_be_delivered">Врем базал TBR не задан.</string>
+    <string name="medtronic_cmd_cant_cancel_tbr">Не удалось отменить текущий врем базал TBR.</string>
+    <string name="medtronic_cmd_basal_profile_could_not_be_set">Профиль базала не установлен.</string>
+    <string name="medtronic_cmd_basal_profile_not_set_is_same">Базовый профиль идентичен, он не будет задан повторно.</string>
+    <string name="medtronic_cmd_desc_get_history">Получить историю - страница %1$d (%2$d/16)</string>
+    <string name="medtronic_cmd_desc_get_history_request">Получить историю - страница %1$d</string>
+    <string name="medtronic_cmd_desc_get_time">Получить время с помпы</string>
+    <string name="medtronic_cmd_desc_set_time">Установить время помпы</string>
+    <string name="medtronic_cmd_desc_get_battery_status">Получить состояние батареи</string>
+    <string name="medtronic_cmd_desc_get_settings">Получить настройки</string>
+    <string name="medtronic_cmd_desc_get_model">Получить модель помпы</string>
+    <string name="medtronic_cmd_desc_get_basal_profile">Получить профиль базала</string>
+    <string name="medtronic_cmd_desc_set_basal_profile">Установить профиль базала</string>
+    <string name="medtronic_cmd_desc_get_tbr">Получить временный базал</string>
+    <string name="medtronic_cmd_desc_set_tbr">Установить временный базал</string>
+    <string name="medtronic_cmd_desc_cancel_tbr">Отменить временный базал</string>
+    <string name="medtronic_cmd_desc_set_bolus">Настроить болюс</string>
+    <string name="medtronic_cmd_desc_get_remaining_insulin">Получить данные об оставшемся инсулине</string>
+    <string name="medtronic_pump_status_pump_unreachable">Помпа недоступна</string>
+    <string name="medtronic_warning">Внимание</string>
+    <!-- medtronic_warning -->
+    <string name="medtronic_pump_connected_now">Сейчас</string>
+    <!-- combo_pump_connected_now -->
+    <string name="ago">тому назад</string>
+    <string name="medtronic_notification_check_time_date">Необходимо обновить часы помпы</string>
+    <!-- combo_notification_check_time_date -->
+    <string name="common_on">Вкл.</string>
+    <string name="common_off">Выкл.</string>
+    <string name="pump_time_updated">Время на помпе обновлено</string>
+    <string name="set_neutral_temps_title">Установить нейтральные временные базалы</string>
+    <string name="set_neutral_temps_summary">Если эта опция включена, то она отменяет временный базал до конца каждого часа. Такой метод помогает прекратить почасовую вибрацию некоторых помп.</string>
+    <string name="mdt_tbr_remaining">%1$.1fед/ч(%2$d мин осталось)</string>
+    <string name="invalid_history_data">Обнаружены недопустимые данные истории помпы. Создайте запись о новой проблеме и предоставьте журналы.</string>
+    <string name="riley_statistics">Статистика RL</string>
+    <string name="medtronic_history_type">Тип:</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Нажато обновление</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Запланированное обновление статуса</string>
+</resources>

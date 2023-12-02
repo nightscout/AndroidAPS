@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- NSClient -->
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="unsupported_ns_version">Nem támogatott Nightscout verzió</string>
+    <string name="openaps_short">OAPS</string>
+    <string name="uploader_short">FELT</string>
+    <!-- NSClient -->
+    <string name="ns_client">NSClient</string>
+    <string name="ns_client_url">URL:</string>
+    <string name="ns_client_internal_title">NSClient</string>
+    <string name="ns_client_url_title">Nightscout URL</string>
+    <string name="status">Állapot:</string>
+    <string name="clear_log">Napló törlése</string>
+    <string name="ns_receive_cgm">CGM adatok fogad/visszatölt</string>
+    <!-- Tidepool -->
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="upload_now">Feltöltés most</string>
+    <!-- xDrip status line -->
+    <!-- Xdrip StatusLine -->
+    <!--    DataBroadcast-->
+    <!-- GarminPlugin -->
+    <!--    Wear-->
+    <string name="pump_status">Pumpa állapot</string>
+    <string name="wear_settings">Wear beállítások</string>
+    <string name="wear_general_settings">Általános beállítások</string>
+    <string name="units_short">E</string>
+    <string name="grams_short">g</string>
+    <string name="hour_short">ó</string>
+    <string name="target_only_aps_mode">A célértékek csak APS módra vonatkoznak!</string>
+    <string name="no_history">Nincs előzményadat!</string>
+    <string name="temp_target">Átmeneti célérték</string>
+    <string name="default_range">ALAPÉRTELMEZETT TARTOMÁNY</string>
+    <string name="target">célérték</string>
+    <string name="rate_duration">Ráta: %1$.2fU/ó (%2$.2f%%) \nIdőtartam %3$d perc</string>
+    <string name="aps">APS</string>
+    <string name="last_run">Legutóbbi futás</string>
+    <string name="tdd_line">%1$.2fE %1$.0f%%</string>
+    <string name="today">Ma</string>
+    <string name="weighted">súlyozott</string>
+</resources>

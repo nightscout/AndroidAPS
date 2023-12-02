@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Medtronic (MDT) - Base -->
+    <string name="description_pump_medtronic">Integracja pompy Medtronic wymaga urządzenia RileyLink i odpowiedniego modelu pompy</string>
+    <!-- MDT Configuration -->
+    <string name="medtronic_serial_number">Numer seryjny pompy</string>
+    <string name="medtronic_pump_type">Typ pompy</string>
+    <string name="medtronic_pump_frequency">Częstotliwość pompy</string>
+    <string name="medtronic_pump_bolus_delay">Opóźnienie przed rozpoczęciem bolusa(s)</string>
+    <string name="medtronic_pump_max_bolus">Max bolus w pompie (U)</string>
+    <string name="medtronic_pump_max_basal">Max dawka bazowa w pompie (U/h)</string>
+    <string name="medtronic_pump_encoding">Kodowanie Medtronic</string>
+    <string name="medtronic_pump_frequency_us_ca">US &amp; Kanada (916 MHz)</string>
+    <string name="medtronic_pump_frequency_worldwide">Reszta świata (868 Mhz)</string>
+    <string name="medtronic_pump_encoding_4b6b_local">Kodowanie oprogramowania 4b6b</string>
+    <string name="medtronic_pump_encoding_4b6b_rileylink">Kodowanie urządzenia 4b6b</string>
+    <string name="medtronic_custom_action_wake_and_tune">Wzbudź i dostrój</string>
+    <string name="medtronic_custom_action_clear_bolus_block">Wyczyść blok bolusa</string>
+    <string name="medtronic_custom_action_reset_rileylink">Przywróć konfigurację RileyLink</string>
+    <string name="medtronic_pump_battery_select">Typ baterii (podgląd mocy)</string>
+    <string name="medtronic_pump_battery_no">Nie wybrany (widok prosty)</string>
+    <string name="medtronic_pump_battery_alkaline">Alkaliczne (widok rozszerzony)</string>
+    <string name="medtronic_pump_battery_lithium">Litowe (widok rozszerzony)</string>
+    <string name="medtronic_pump_battery_nizn">NiZn (widok rozszerzony)</string>
+    <string name="medtronic_pump_battery_nimh">NiMH (widok rozszerzony)</string>
+    <string name="medtronic_bolus_debugging">Bolus/Leczenie - debugowanie</string>
+    <!-- MDT Fragment -->
+    <string name="rl_battery_label">Bateria RileyLink</string>
+    <!-- MDT Errors -->
+    <string name="medtronic_errors">Błędy</string>
+    <string name="medtronic_error_serial_not_set">Numer seryjny # nie ustawiony.</string>
+    <string name="medtronic_error_serial_invalid">Numer seryjny # nieprawidłowy.</string>
+    <string name="medtronic_error_pump_type_not_set">Tyo pompy nie ustawiony.</string>
+    <string name="medtronic_error_pump_type_invalid">Typ pompy nie obsługiwany.</string>
+    <string name="medtronic_error_pump_frequency_not_set">Częstotliwość pompy nie ustawiona.</string>
+    <string name="medtronic_error_pump_frequency_invalid">Częstotliwość pompy nie wspierana.</string>
+    <string name="medtronic_error_rileylink_address_invalid">Adres RileyLink niewłaściwy.</string>
+    <string name="medtronic_error_pump_type_set_differs_from_detected">Wykryty typ pompy jest inny niż ustawiony.</string>
+    <string name="medtronic_error_pump_basal_profiles_not_enabled">Ustawienia bazy/ wzorców nie są włączone w pompie. Włącz je na pompie.</string>
+    <string name="medtronic_error_pump_incorrect_basal_profile_selected">Profil bazowy ustawiony na pompie nie jest właściwy (musi być STD).</string>
+    <string name="medtronic_error_pump_wrong_tbr_type_set">Ustawiony na pompie typ dawki tymczasowej jest niewłaściwy (musi być całkowity - Absolute).</string>
+    <string name="medtronic_error_pump_wrong_max_bolus_set">Ustawiony na pompie typ Bolus Maksymalny jest niewłaściwy (musi być %1$.2f).</string>
+    <string name="medtronic_error_pump_wrong_max_basal_set">Ustawiony na pompie typ Bolus Maksymalny jest niewłaściwy (musi być %1$.2f).</string>
+    <string name="medtronic_error_operation_not_possible_no_configuration">To działanie nie jest możliwe.\n\n Musisz skonfigurować pompę Medtronic Pump, przed uruchomieniem tego działania.</string>
+    <string name="medtronic_error_pump_24h_time_change_requested">Wymagana jest zmiana ustawień czasu na 24h.</string>
+    <!-- MDT History -->
+    <!--    <string name="medtronic_history_group_basal">Basals</string>-->
+    <!--    <string name="medtronic_history_group_configuration">Configurations</string>-->
+    <!--    <string name="medtronic_history_group_notification">Notifications</string>-->
+    <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
+    <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
+    <!--    <string name="medtronic_history_group_all">All</string>-->
+    <string name="medtronic_pump_history">Historia pompy Medtronic</string>
+    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
+    <string name="medtronic_cmd_cancel_bolus_not_supported">Anulowałeś bolus po jego ustawieniu na pompie. Ponieważ pompa Medtronic nie wspiera polecenia anuluj, musisz wprowadzić zmianę ręcznie. Wprowadź pompę w stan zawieszenia, a następnie przywróć jej działanie (jeżeli wciąż chcesz anulować). Aplikacja pobierze zmiany przy następnym uaktualnieniu (poniżej 5 minut).</string>
+    <string name="medtronic_cmd_cant_read_tbr">Nie udało się odczytać aktualnej dawki tymczasowej (TBR).</string>
+    <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Nie udało się anulować aktualnej dawki tymczasowej (TBR). Operacja zatrzymania.</string>
+    <string name="medtronic_cmd_set_profile_pattern_overflow">Ustawienia Profilu nie powiodły się ponieważ następująca wartość jest za duża: %1$s</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered">Nie udało się dostarczyć bolusa.</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">Bolus nie mógł być dostarczony ponieważ Ilość dostępnej insuliny (%1$.2f) jest mniejsza niż wymagany bolus (%2$.2f).</string>
+    <string name="medtronic_cmd_tbr_could_not_be_delivered">Nie udało się ustawić dawki tymczasowej (TBR).</string>
+    <string name="medtronic_cmd_cant_cancel_tbr">Nie udało się anulować bazy tymczasowej (TBR).</string>
+    <string name="medtronic_cmd_basal_profile_could_not_be_set">Profil bazy nie został ustawiony.</string>
+    <string name="medtronic_cmd_basal_profile_not_set_is_same">Profil bazy jest taki sam, więc nie ustawiono ponownie.</string>
+    <string name="medtronic_cmd_desc_get_history">Pobierz historię - strona %1$d (%2$d/16)</string>
+    <string name="medtronic_cmd_desc_get_history_request">Pobierz historię - strona %1$d</string>
+    <string name="medtronic_cmd_desc_get_time">Pobierz czas pompy</string>
+    <string name="medtronic_cmd_desc_set_time">Ustaw czas pompy</string>
+    <string name="medtronic_cmd_desc_get_battery_status">Pobierz status baterii</string>
+    <string name="medtronic_cmd_desc_get_settings">Pobierz ustawienia</string>
+    <string name="medtronic_cmd_desc_get_model">Pobierz model pompy</string>
+    <string name="medtronic_cmd_desc_get_basal_profile">Pobierz profil dawki bazowej</string>
+    <string name="medtronic_cmd_desc_set_basal_profile">Ustaw profil dawki bazowej</string>
+    <string name="medtronic_cmd_desc_get_tbr">Pobierz tymczasową dawkę bazową</string>
+    <string name="medtronic_cmd_desc_set_tbr">Ustaw tymczasową dawkę bazową</string>
+    <string name="medtronic_cmd_desc_cancel_tbr">Anuluj tymczasową dawkę bazową</string>
+    <string name="medtronic_cmd_desc_set_bolus">Ustaw bolus</string>
+    <string name="medtronic_cmd_desc_get_remaining_insulin">Pobierz ile pozostało insuliny</string>
+    <string name="medtronic_pump_status_pump_unreachable">Pompa nieosiągalna</string>
+    <string name="medtronic_warning">Ostrzeżenie</string>
+    <!-- medtronic_warning -->
+    <string name="medtronic_pump_connected_now">Teraz</string>
+    <!-- combo_pump_connected_now -->
+    <string name="ago">temu</string>
+    <string name="medtronic_notification_check_time_date">Potrzebna aktualizacja zegara pompy</string>
+    <!-- combo_notification_check_time_date -->
+    <string name="common_on">Włącz</string>
+    <string name="common_off">Wyłącz</string>
+    <string name="pump_time_updated">Czas pompy uaktualniony</string>
+    <string name="set_neutral_temps_title">Ustawiaj neutralne bazy tymczasowe</string>
+    <string name="set_neutral_temps_summary">Jeśli ta opcja jest włączona, anuluje tymczasową wartość bazową przed końcem każdej godziny. Może to pomóc wyciszyć alarmy/wibracje związane z TBR występujące co godzinę w niektórych pompach.</string>
+    <string name="mdt_tbr_remaining">%1$.1f U/h (pozostało %2$d min)</string>
+    <string name="invalid_history_data">Wykryto nieprawidłowe dane historii pompy. Otwórz nowy problem (\"Issue\") na GitHub i dodaj logi.</string>
+    <string name="riley_statistics">Statystyki RL</string>
+    <string name="medtronic_history_type">Typ:</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Naciśnięto odśwież</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Planowe odświeżenie statusu</string>
+</resources>

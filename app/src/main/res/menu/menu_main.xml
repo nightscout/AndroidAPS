@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".MainActivity">
+    tools:context="app.aaps.MainActivity">
 
     <item
         android:id="@+id/nav_preferences"
@@ -22,7 +22,7 @@
         android:id="@+id/nav_historybrowser"
         android:orderInCategory="1"
         app:showAsAction="never"
-        android:title="@string/nav_historybrowser" />
+        android:title="@string/nav_history_browser" />
     <item
         android:id="@+id/nav_setupwizard"
         android:orderInCategory="1"
@@ -33,27 +33,27 @@
         android:orderInCategory="1"
         app:showAsAction="never"
         android:title="@string/statistics" />
-<!--    <item
-        android:id="@+id/nav_survey"
-        android:orderInCategory="1"
-        app:showAsAction="never"
-        android:title="@string/nav_survey" />
--->
+    <!--    <item
+            android:id="@+id/nav_survey"
+            android:orderInCategory="1"
+            app:showAsAction="never"
+            android:title="@string/nav_survey" />
+    -->
     <item
         android:id="@+id/nav_defaultprofile"
         android:orderInCategory="1"
         app:showAsAction="never"
-        android:title="@string/nav_profilehelper" />
+        android:title="@string/nav_profile_helper" />
     <group android:id="@+id/about_exit">
-    <item
-        android:id="@+id/nav_about"
-        android:orderInCategory="1"
-        app:showAsAction="never"
-        android:title="@string/nav_about" />
-    <item
-        android:id="@+id/nav_exit"
-        android:orderInCategory="1"
-        app:showAsAction="never"
-        android:title="@string/nav_exit" />
+        <item
+            android:id="@+id/nav_about"
+            android:orderInCategory="1"
+            app:showAsAction="never"
+            android:title="@string/nav_about" />
+        <item
+            android:id="@+id/nav_exit"
+            android:orderInCategory="1"
+            app:showAsAction="never"
+            android:title="@string/nav_exit" />
     </group>
 </menu>

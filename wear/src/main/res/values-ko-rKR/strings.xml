@@ -2,6 +2,15 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
+    <string name="label_watchface_large">AAPS(대)</string>
+    <string name="label_watchface_big_chart">AAPS(큰차트)</string>
+    <string name="label_watchface_no_chart">AAPS(차트없음)</string>
+    <string name="label_watchface_circle">AAPS(원형)</string>
+    <string name="label_watchface_digital_style">AAPS(디지털방식)</string>
+    <string name="label_watchface_custom">AAPS(Custom)</string>
+    <string name="label_actions_tile">AAPS(Actions)</string>
+    <string name="label_temp_target_tile">AAPS(Temp Target)</string>
+    <string name="label_quick_wizard_tile">AAPS(Quick Wizard)</string>
     <string name="label_warning_sync">데이터없음!</string>
     <string name="label_warning_old">오래된 데이터!</string>
     <string name="label_warning_since">%1$s 이후</string>
@@ -10,20 +19,33 @@
     <string name="msg_warning_old">AAPS 데이터가 %1$s 오래되었습니다! 센서, xDrip+, NS, AAPS 설정 또는 기타사항을 확인하세요!</string>
     <string name="pref_vibrate_on_bolus">Bolus 주입시 진동</string>
     <string name="pref_units_for_actions">단위</string>
+    <string name="units_short">U</string>
+    <string name="pref_display_settings">화면</string>
+    <string name="pref_graph_settings">그래프</string>
+    <string name="pref_interface_settings">인터페이스</string>
+    <string name="pref_others_settings">기타</string>
+    <string name="pref_complication_settings">Complication</string>
     <string name="pref_show_date">날짜 표시</string>
     <string name="pref_show_iob">IOB 표시</string>
+    <string name="pref_show_detailed_iob">IOB 자세히 표시하기</string>
     <string name="pref_show_cob">COB 표시</string>
     <string name="pref_show_delta">증분 표시</string>
+    <string name="pref_show_detailed_delta">Delta 자세히 표시하기</string>
     <string name="pref_show_avgdelta">평균증분 표시</string>
     <string name="pref_show_phone_battery">폰배터리 표시</string>
     <string name="pref_show_rig_battery">종합 배터리 표시</string>
     <string name="pref_show_basal_rate">Basal 값 표시</string>
     <string name="pref_show_loop_status">Loog 상태 표시</string>
     <string name="pref_show_bg">혈당 표시</string>
+    <string name="pref_show_bgi">BGI 표시하기</string>
     <string name="pref_show_direction_arrow">화살표 표시</string>
     <string name="pref_show_ago">\'분전\' 표시</string>
+    <string name="pref_show_temp_basal">TBR 표시하기</string>
+    <string name="pref_show_bolus">Bolus &amp; SMB 표시하기</string>
+    <string name="pref_show_grid">격자 표시하기</string>
     <string name="pref_dark" comment="Enables dark visual theme">어두움</string>
     <string name="pref_highlight_basals">Basal 강조</string>
+    <string name="pref_prediction_lines">예측 표시하기</string>
     <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">경계선 색상매칭</string>
     <string name="pref_chart_timeframe">차트 기간</string>
     <string name="pref_1_hour">1시간</string>
@@ -36,7 +58,6 @@
     <string name="pref_quick_righty">오른손잡이</string>
     <string name="pref_quick_lefty">왼손잡이</string>
     <string name="pref_modern_sparse">모던스타일</string>
-    <string name="pref_delta_granularity">증분 밀도(스팀펑크)</string>
     <string name="pref_low">저</string>
     <string name="pref_medium">중</string>
     <string name="pref_high">고</string>
@@ -45,14 +66,23 @@
     <string name="pref_ring_history">원형 이력</string>
     <string name="pref_light_ring_history">연한 원형 이력</string>
     <string name="pref_animations">애니메이션</string>
+    <string name="pref_wizard_in_menu">메뉴의 계산기</string>
     <string name="pref_prime_in_menu">메뉴에서 교체</string>
     <string name="pref_single_target">단일 목표</string>
+    <string name="pref_wizard_percentage">계산기의 퍼센트</string>
     <string name="pref_complication_tap_action">컴플리케이션 탭 동작</string>
     <string name="pref_unicode_in_complications">컴플리케이션에서 유니코드 사용</string>
     <string name="pref_version">버전:</string>
+    <string name="pref_moreWatchfaceSettings">더 다양한 워치페이스 설정</string>
     <string name="pref_lookInYourWatchfaceConfiguration">워치페이스 설정을 확인하십시오.</string>
     <string name="menu_tempt">임시목표</string>
+    <string name="menu_wizard">계산기</string>
+    <string name="menu_wizard_short">Calc</string>
+    <string name="menu_treatment">관리</string>
+    <string name="menu_treatment_short">처치</string>
     <string name="menu_bolus">Bolus</string>
+    <string name="menu_carb">탄수화물</string>
+    <string name="menu_ecarb">eCarbs</string>
     <string name="menu_settings">설정</string>
     <string name="menu_status">상태</string>
     <string name="menu_resync">재동기화</string>
@@ -60,17 +90,38 @@
     <string name="menu_none">없음</string>
     <string name="menu_default">기본</string>
     <string name="menu_menu">메뉴</string>
+    <string name="quick_wizard_short">XL</string>
+    <string name="action_duration">기간</string>
+    <string name="action_tempt_confirmation">임시 목표 요청됨</string>
+    <string name="action_quick_wizard_confirmation">Quick Wizard 요청됨</string>
+    <string name="action_treatment_confirmation">처치 요청됨</string>
+    <string name="action_bolus_confirmation">Bolus 요청됨</string>
+    <string name="action_wizard_confirmation">계산기 요청됨</string>
+    <string name="action_fill_confirmation">채우기 요청됨</string>
+    <string name="action_ecarb_confirmation">탄수화물 요청됨</string>
+    <string name="action_profile_switch_confirmation">프로파일 변경 요청됨</string>
+    <string name="action_target" comment="In temp target menu, single target value">목표:</string>
+    <string name="action_low" comment="In temp target menu, lower value from range">저혈당</string>
+    <string name="action_high" comment="In temp target menu, higher value from range">고혈당</string>
+    <string name="action_carbs">탄수화물</string>
+    <string name="action_ecarbs">eCarbs</string>
+    <string name="action_percentage">퍼센트</string>
+    <string name="action_start_min">시작 [min]</string>
+    <string name="action_duration_h">기간 [h]</string>
+    <string name="action_insulin">인슐린</string>
     <string name="action_preset_1">프리셋 1</string>
     <string name="action_preset_2">프리셋 2</string>
     <string name="action_preset_3">프리셋 3</string>
-    <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">양 제한없음</string>
+    <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">양 제한없음</string>
     <string name="action_confirm">확인</string>
     <string name="action_timeshift">시간이동</string>
+    <string name="action_bolus">Bolus</string>
     <string name="bolus_progress">Bolus 주입 중</string>
     <string name="press_to_cancel">눌러서 취소하기</string>
     <string name="cancel_bolus">BOLUS 취소</string>
     <string name="status_pump">펌프</string>
     <string name="status_loop">Loop</string>
+    <string name="status_profile_switch">프로파일 변경</string>
     <string name="status_tdd">TDD</string>
     <string name="activity_carb">Carb</string>
     <string name="activity_IOB">IOB</string>
@@ -97,8 +148,11 @@
     <string name="color_name_white">흰색</string>
     <string name="color_name_black">검정</string>
     <string name="color_name_multicolor">다양한 색상</string>
+    <string name="pref_simplify_ui">UI 단순화</string>
+    <string name="pref_simplify_ui_sum">시간과 BG만 보여주기</string>
     <string name="pref_vibrate_hourly">시간마다 진동</string>
     <string name="pref_show_weeknumber">몇 번째 주인지 표시</string>
+    <string name="custom_pref_show_seconds">초 표시하기</string>
     <string name="digitalstyle_pref_your_style">사용자 형식:</string>
     <string name="digitalstyle_style_none">형식 없음</string>
     <string name="digitalstyle_style_minimal">단순한 형태</string>
@@ -111,4 +165,43 @@
     <string name="bolus_progress_silent_channel_name">AAPS Bolus 주입 무음화</string>
     <string name="bolus_progress_channel_description">Bolus 진행과 취소</string>
     <string name="bolus_progress_silent_channel_description">Bolus 주입과 취소 시 진동 적게 함</string>
+    <string name="simple_ui_off">꺼짐</string>
+    <string name="simple_ui_charging">충전 중</string>
+    <string name="simple_ui_always_on">Always On 모드</string>
+    <string name="simple_ui_always_on_charging">Always On과 충전 중</string>
+    <string name="temp_target_eating_soon">식사</string>
+    <string name="temp_target_hypo">저혈당</string>
+    <string name="temp_target_activity">활동</string>
+    <string name="temp_target_manual">수동</string>
+    <string name="temp_target_cancel">취소</string>
+    <string name="tile_none">없음</string>
+    <string name="tile_no_config">가능한 환경설정 없음</string>
+    <string name="wear_control_not_enabled">Wear 조작 불가능함</string>
+    <string name="wear_control_no_data">사용할 수 있는 데이터 없음</string>
+    <string name="increment">증가</string>
+    <string name="decrement">감소</string>
+    <string name="abbreviation_average">평균</string>
+    <string name="no_iob_u">--U</string>
+    <string name="no_cob_g">--g</string>
+    <string name="no_tmp_basal_u_h">-.--U/h</string>
+    <string name="uploader_na">U: --%</string>
+    <string name="no_status">S: --</string>
+    <string name="time_stamp_na_min_ago">-- 분전</string>
+    <string name="delta_na">--- mg/dl</string>
+    <string name="no_loop_status">Loop 상태 없음</string>
+    <string name="cob_000g">000g</string>
+    <string name="svg_00_0" comment="use , or . only">00,0</string>
+    <string name="iob_0_00u">0,00U</string>
+    <string name="snooze_alert">AAPS Snooze 경고</string>
+    <string name="sending_snooze">AAPS에 snooze 보내기</string>
+    <string name="short_hour">h</string>
+    <string name="week_short">w</string>
+    <string name="day_short">d</string>
+    <string name="hour_short">h</string>
+    <string name="hour_minute">%1$s:%2$s</string>
+    <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
+    <string name="old">old</string>
+    <string name="old_warning">!old!</string>
+    <string name="error">!err!</string>
+    <string name="pref_heartRateSampling">심박수</string>
 </resources>

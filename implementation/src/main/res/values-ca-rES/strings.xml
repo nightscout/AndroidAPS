@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bg_label">Glucèmia</string>
+    <string name="executing_right_now">Ordre executant-se ara mateix</string>
+    <string name="basal_value_below_minimum">Valor de basal per sota del mínim. Perfil no definit!</string>
+    <string name="permission">Permís</string>
+    <string name="need_location_permission">L\'aplicació necessita permisos de localització per poder utilitzar Bluetooth i identificació WiFi</string>
+    <string name="need_storage_permission">L\'aplicació necessita permisos d\'emmagatzematge per poder desar fitxers de registres i exportar la configuració</string>
+    <!--       Stats -->
+    <string name="low" comment="3.1-3.9">Baix</string>
+    <string name="high" comment="10.0-13.9">Alt</string>
+</resources>

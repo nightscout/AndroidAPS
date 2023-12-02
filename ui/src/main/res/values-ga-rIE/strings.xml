@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="temp_target_short">TT</string>
+    <string name="unit_minute_short">nóim</string>
+    <!--    Widget-->
+    <!--     Activities-->
+    <string name="age">Aois</string>
+    <string name="glucose_type">Glúcóis cineál</string>
+    <string name="bg_other">Eile</string>
+    <string name="bg_sensor">Braiteoir</string>
+    <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="treatments_wizard_total_label">Lomlán</string>
+    <!-- FillDialog -->
+    <!-- InsulinDialog -->
+    <!-- ProfileSwitchDialog -->
+    <string name="percentage_label">Céatadán</string>
+    <!-- LoopDialog -->
+    <string name="suspendloopfor1h">Fionraí lúb do 1 u</string>
+    <string name="suspendloopfor2h">Fionraí lúb do 2 u</string>
+    <string name="suspendloopfor3h">Fionraí lúb do 3 u</string>
+    <string name="suspendloopfor10h">Fionraí lúb do 10 u</string>
+    <string name="disconnectpump">Dhícheangal Caidéil</string>
+    <string name="disconnectpumpfor15m">Dhícheangal Caidéil do 15 nóim</string>
+    <string name="disconnectpumpfor30m">Dhícheangal Caidéil do 30 nóim</string>
+    <string name="disconnectpumpfor1h">Dhícheangal Caidéil do 1 u</string>
+    <string name="disconnectpumpfor2h">Dhícheangal Caidéil do 2 u</string>
+    <string name="disconnectpumpfor3h">Dhícheangal Caidéil do 3 u</string>
+    <string name="resume">Atosú</string>
+    <string name="duration15m">15 nóim</string>
+    <string name="duration30m">30 nóim</string>
+    <string name="duration1h">1 uair</string>
+    <string name="duration2h">2 uair</string>
+    <string name="duration3h">3 uair</string>
+    <string name="duration10h">10 uair</string>
+    <!-- WizardDialog -->
+    <string name="two_hours">2u</string>
+    <string name="result_insulin_carbs">Toradh: %1$s %2$s</string>
+    <!-- Treatments -->
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="treatments_insulin_label_string">Inslin:</string>
+    <string name="treatments_carbs_label_string">Carbí:</string>
+    <string name="treatments_iobtotal_label_string">Lomlán IOB:</string>
+    <string name="tempbasals_realduration_label_string">Fad:</string>
+    <string name="tempbasals_netratio_label_string">Cóimheas:</string>
+    <string name="tempbasals_netinsulin_label_string">Ins:</string>
+    <string name="tempbasals_iob_label_string">IOB:</string>
+    <string name="treatments_wizard_correction_label">Cear</string>
+    <!-- ProfileHelperActivity -->
+    <!-- Other dialogs -->
+    <string name="basal_rate">Bunaidh ráta</string>
+    <!--    BolusProgressDialog-->
+    <!--QuickWizard-->
+</resources>

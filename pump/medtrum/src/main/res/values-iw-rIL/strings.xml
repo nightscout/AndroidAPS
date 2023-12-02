@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MedtrumPump -->
+    <string name="medtrum_pump_description">תמיכה במשאבת Medtrum Nano ו-Medtrum 300U</string>
+    <string name="pump_sync_error">חלה שגיאה בזמן סינכרון ההיסטוריה מהמשאבה, רשומה דולגה. בדקו ב-\"טיפולים\" האם הבולוסים סונכרנו כיאות. אשרו את ההתראה ואם השגיאה חוזרת על עצמה, החליפו את המשאבה.</string>
+    <!-- overview fragment -->
+    <string name="active_bolus_label">בולוס פעיל</string>
+    <!-- Alarm strings -->
+    <!-- wizard-->
+    <!-- settings-->
+    <!-- treatment state-->
+</resources>

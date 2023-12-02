@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- NSClient -->
+    <string name="key_ns_temporary_target_last_synced_id" translatable="false">ns_temporary_target_last_sync</string>
+    <string name="key_ns_glucose_value_last_synced_id" translatable="false">ns_glucose_value_last_sync</string>
+    <string name="key_ns_food_last_synced_id" translatable="false">ns_food_last_sync</string>
+    <string name="key_ns_therapy_event_last_synced_id" translatable="false">ns_therapy_event_last_sync</string>
+    <string name="key_ns_bolus_calculator_result_last_synced_id" translatable="false">ns_bolus_calculator_result_last_synced_id</string>
+    <string name="key_ns_carbs_last_synced_id" translatable="false">ns_carbs_last_synced_id</string>
+    <string name="key_ns_bolus_last_synced_id" translatable="false">ns_bolus_last_synced_id</string>
+    <string name="key_ns_device_status_last_synced_id" translatable="false">ns_device_status_last_synced_id</string>
+    <string name="key_ns_temporary_basal_last_synced_id" translatable="false">ns_temporary_basal_last_synced_id</string>
+    <string name="key_ns_extended_bolus_last_synced_id" translatable="false">ns_extended_bolus_last_synced_id</string>
+    <string name="key_ns_profile_switch_last_synced_id" translatable="false">ns_profile_switch_last_synced_id</string>
+    <string name="key_ns_effective_profile_switch_last_synced_id" translatable="false">ns_effective_profile_switch_last_synced_id</string>
+    <string name="key_ns_offline_event_last_synced_id" translatable="false">ns_offline_event_last_synced_id</string>
+    <string name="key_ns_profile_store_last_synced_timestamp" translatable="false">ns_profile_store_last_synced_timestamp</string>
+    <string name="key_ns_sync_slow" translatable="false">ns_sync_slow</string>
+    <string name="key_ns_client_token" translatable="false">nsclient_token</string>
+    <string name="key_ns_client_v3_last_modified" translatable="false">key_ns_client_v3_last_modified</string>
+    <string name="key_ns_cellular" translatable="false">ns_cellular</string>
+    <string name="key_ns_wifi" translatable="false">ns_wifi</string>
+    <string name="key_ns_wifi_ssids" translatable="false">ns_wifi_ssids</string>
+    <string name="key_ns_allow_roaming" translatable="false">ns_allow_roaming</string>
+    <string name="key_ns_battery" translatable="false">ns_battery</string>
+    <string name="key_ns_charging" translatable="false">ns_charging</string>
+
+    <string name="ns_cellular">Use Cellular connection</string>
+    <string name="ns_wifi">Use WiFi connection</string>
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="ns_charging">During charging</string>
+    <string name="ns_battery">On battery</string>
+    <string name="connection_settings_title">Connection settings</string>
+    <string name="ns_wifi_allowed_ssids">Allowed SSIDs (semicolon separated)</string>
+    <string name="ns_allow_roaming">Allow connection in roaming</string>
+    <string name="ns_create_announcements_from_errors_title">Create announcements from errors</string>
+    <string name="ns_create_announcements_from_carbs_req_title">Create announcements from carbs required alerts</string>
+    <string name="ns_create_announcements_from_errors_summary">Create Nightscout announcement for error dialogs and local alerts (also viewable in Careportal under Treatments)</string>
+    <string name="ns_create_announcements_from_carbs_req_summary">Create Nightscout announcements for carbs required alerts</string>
+    <string name="description_ns_client">Synchronizes your data with Nightscout</string>
+    <string name="description_ns_client_v3">Synchronizes your data with Nightscout using v3 API</string>
+    <string name="blocked_by_charging">Blocked by charging options</string>
+    <string name="blocked_by_connectivity">Blocked by connectivity options</string>
+    <string name="no_connectivity">No connectivity</string>
+    <string name="unsupported_ns_version">Unsupported version of Nightscout</string>
+    <string name="openaps_short">OAPS</string>
+    <string name="uploader_short">UPLD</string>
+    <string name="ns_malfunction">NSClient malfunction. Consider NS and NSClient restart.</string>
+
+    <!-- NSClient -->
+    <string name="key_ns_paused" translatable="false">ns_client_paused</string>
+    <string name="key_ns_log_app_started_event" translatable="false">ns_log_app_started_event</string>
+
+    <string name="no_write_permission">NSCLIENT has no write permission. Wrong API secret?</string>
+    <string name="ns_client_v3">NSClientV3</string>
+    <string name="ns_client_v3_short_name">NSV3</string>
+    <string name="ns_client">NSClient</string>
+    <string name="ns_client_short_name">NSCI</string>
+    <string name="ns_client_url">URL:</string>
+    <string name="restart">Restart</string>
+    <string name="ns_client_internal_title">NSClient</string>
+    <string name="ns_client_url_title">Nightscout URL</string>
+    <string name="ns_client_url_dialog_message">Enter Your Nightscout URL</string>
+    <string name="ns_client_secret_title">NS API secret</string>
+    <string name="ns_client_secret_dialog_title">NS API secret</string>
+    <string name="ns_client_secret_dialog_message">Enter NS API secret (min 12 chars)</string>
+    <string name="nsclient_token_title">NS access token</string>
+    <string name="nsclient_token_dialog_title">NS access token</string>
+    <string name="nsclient_token_dialog_message">Access token generated on NS admin page (min 17 chars)</string>
+    <string name="deliver_now">Deliver now</string>
+    <string name="clear_queue">Clear queue</string>
+    <string name="show_queue">Show queue</string>
+    <string name="queue">Queue:</string>
+    <string name="status">Status:</string>
+    <string name="clear_log">Clear log</string>
+    <string name="full_sync">Full synchronization</string>
+    <string name="full_sync_comment">Full synchronization? It may take many hours and until finish you\'ll not see new data in NS.</string>
+    <string name="ns_sync_options">Synchronization</string>
+    <string name="key_ns_upload" translatable="false">ns_upload</string>
+    <string name="ns_upload_summary">Profiles, boluses, carbs, temporary basals are uploaded to NS</string>
+    <string name="ns_upload">Upload data to NS</string>
+    <string name="ns_receive_profile_store">Receive profile store</string>
+    <string name="ns_receive_profile_store_summary">Synchronize profiles from NS profile editor</string>
+    <string name="ns_receive_temp_target">Receive temporary targets</string>
+    <string name="ns_receive_temp_target_summary">Accept temporary targets entered through NS or NSClient</string>
+    <string name="ns_receive_profile_switch">Receive profile switches</string>
+    <string name="ns_receive_profile_switch_summary">Accept profile switches entered through NS or NSClient</string>
+    <string name="ns_receive_offline_event">Receive APS offline events</string>
+    <string name="ns_receive_offline_event_summary">Accept APS Offline events entered through NS or NSClient</string>
+    <string name="ns_receive_tbr_eb">Receive TBR and EB</string>
+    <string name="ns_receive_tbr_eb_summary">Accept TBR and EB entered through another instance</string>
+    <string name="ns_receive_insulin">Receive insulin</string>
+    <string name="ns_receive_insulin_summary">Accept insulin entered through NS or NSClient (it\'s not delivered, only calculated towards IOB)</string>
+    <string name="ns_receive_carbs">Receive carbs</string>
+    <string name="ns_receive_carbs_summary">Accept carbs entered through NS or NSClient</string>
+    <string name="key_ns_receive_tbr_eb" translatable="false">ns_receive_tbr_eb</string>
+    <string name="ns_receive_therapy_events">Receive therapy events</string>
+    <string name="ns_receive_therapy_events_summary">Accept therapy events (cannula, insulin, battery change etc) entered through NS or NSClient</string>
+    <string name="ns_receive_cgm">Receive/backfill CGM data</string>
+    <string name="ns_receive_cgm_summary">Accept CGM data from NS</string>
+    <string name="ns_sync_slow">Slow down uploads</string>
+    <string name="ns_alarm_options">Alarm options</string>
+    <string name="ns_alarms">Create notifications from NS alarms</string>
+    <string name="ns_announcements">Create notifications from NS announcements</string>
+    <string name="ns_alarm_stale_data_value_label">Stale data threshold [min]</string>
+    <string name="ns_alarm_urgent_stale_data_value_label">Urgent stale data threshold [min]</string>
+    <string name="ns_log_app_started_event">Log app start to NS</string>
+    <string name="copy_existing_values">Copy NS settings (if exists)?</string>
+    <string name="ns_use_ws_title">Connect to websockets</string>
+    <string name="ns_use_ws_summary">Enabling means: faster updates, receiving alarms and announcements and higher battery consumption similar to v1. All other uploaders to NS must use v3 protocol.</string>
+
+    <!-- Tidepool -->
+    <string name="key_tidepool_username" translatable="false">tidepool_username</string>
+    <string name="key_tidepool_password" translatable="false">tidepool_password</string>
+    <string name="key_tidepool_dev_servers" translatable="false">tidepool_dev_servers</string>
+    <string name="key_tidepool_test_login" translatable="false">tidepool_test_login</string>
+    <string name="key_tidepool_last_end" translatable="false">tidepool_last_end</string>
+
+    <string name="summary_tidepool_username">Your Tidepool login user name, normally your email address</string>
+    <string name="title_tidepool_username">Login User Name</string>
+    <string name="summary_tidepool_password">Your Tidepool login password</string>
+    <string name="title_tidepool_password">Login Password</string>
+    <string name="title_tidepool_test_login">Test Tidepool Login</string>
+    <string name="summary_tidepool_dev_servers">If enabled, uploads will go to https://int-app.tidepool.org instead of the regular https://app.tidepool.org/</string>
+    <string name="title_tidepool_dev_servers">Use Integration (test) servers</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="description_tidepool">Uploads data to Tidepool</string>
+    <string name="tidepool_upload_cgm">Upload CGM data</string>
+    <string name="tidepool_upload_bolus">Upload treatments (insulin, carbs)</string>
+    <string name="tidepool_upload_tbr">Upload temporary basals</string>
+    <string name="tidepool_upload_profile">Upload profile switches, temp targets</string>
+    <string name="tidepool_upload_bg">Upload BG tests</string>
+    <string name="remove_all">Remove all</string>
+    <string name="reset_start">Reset start</string>
+    <string name="upload_now">Upload now</string>
+
+    <string name="not_connected">Not connected</string>
+    <string name="read_only">Read only</string>
+    <string name="working">Working</string>
+
+    <!-- xDrip status line -->
+    <string name="key_xdrip_status_detailed_iob" translatable="false">xdripstatus_detailediob</string>
+    <string name="key_xdrip_status_show_bgi" translatable="false">xdripstatus_showbgi</string>
+    <string name="key_xdrip_status_settings" translatable="false">xdripstatus_settings</string>
+    <string name="key_xdrip_send_status" translatable="false">xdrip_send_status</string>
+
+    <!-- Xdrip StatusLine -->
+    <string name="xdrip">xDrip+</string>
+    <string name="xdrip_shortname">XD</string>
+    <string name="description_xdrip">Send data to xDrip+</string>
+    <string name="xdrip_status_detailed_iob_title">Show detailed IOB</string>
+    <string name="xdrip_status_detailed_iob_summary">Break down IOB into bolus and basal IOB on the watchface</string>
+    <string name="xdrip_status_show_bgi_title">Show BGI</string>
+    <string name="xdrip_status_show_bgi_summary">Add BGI to status line</string>
+    <string name="xdrip_status_settings">xDrip+ Status Line Advanced</string>
+    <string name="disabled_loop">Loop Disabled</string>
+    <string name="xdrip_send_status_title">Send Status line to xDrip+</string>
+
+    <string name="xdrip_not_installed">xDrip+ not installed</string>
+    <string name="calibration_sent">Calibration sent to xDrip+</string>
+
+    <string name="key_xdrip_temporary_target_last_synced_id" translatable="false">xdrip_temporary_target_last_sync</string>
+    <string name="key_xdrip_glucose_value_last_synced_id" translatable="false">xdrip_glucose_value_last_sync</string>
+    <string name="key_xdrip_food_last_synced_id" translatable="false">xdrip_food_last_sync</string>
+    <string name="key_xdrip_therapy_event_last_synced_id" translatable="false">xdrip_therapy_event_last_sync</string>
+    <string name="key_xdrip_bolus_calculator_result_last_synced_id" translatable="false">xdrip_bolus_calculator_result_last_synced_id</string>
+    <string name="key_xdrip_carbs_last_synced_id" translatable="false">xdrip_carbs_last_synced_id</string>
+    <string name="key_xdrip_bolus_last_synced_id" translatable="false">xdrip_bolus_last_synced_id</string>
+    <string name="key_xdrip_device_status_last_synced_id" translatable="false">xdrip_device_status_last_synced_id</string>
+    <string name="key_xdrip_temporary_basal_last_synced_id" translatable="false">xdrip_temporary_basal_last_synced_id</string>
+    <string name="key_xdrip_extended_bolus_last_synced_id" translatable="false">xdrip_extended_bolus_last_synced_id</string>
+    <string name="key_xdrip_profile_switch_last_synced_id" translatable="false">profile_switch_last_synced_id</string>
+    <string name="key_xdrip_effective_profile_switch_last_synced_id" translatable="false">xdrip_effective_profile_switch_last_synced_id</string>
+    <string name="key_xdrip_offline_event_last_synced_id" translatable="false">xdrip_offline_event_last_synced_id</string>
+    <string name="key_xdrip_profile_store_last_synced_timestamp" translatable="false">xdrip_profile_store_last_synced_timestamp</string>
+
+    <string name="xdrip_local_broadcasts_summary">Send glucose and treatments data to xDrip+. Data Source \"xDrip+ Sync Follower\" must be selected and accepting of data must be enabled in Settings - Inter-app settings - Accept Glucose/Treatments</string>
+    <string name="xdrip_local_broadcasts_title">Enable broadcasts to xDrip+.</string>
+
+
+    <!--    DataBroadcast-->
+    <string name="data_broadcaster">Data Broadcaster</string>
+    <string name="data_broadcaster_short">DBRO</string>
+    <string name="data_broadcaster_description">Broadcast data to Garmin\'s G-Watch Wear App</string>
+
+    <!-- GarminPlugin -->
+    <string name="garmin">Garmin</string>
+    <string name="garmin_description">Connection to Garmin device (Fenix, Edge, …)</string>
+    <string name="key_garmin_settings">Garmin settings</string>
+
+    <!--    Wear-->
+    <string name="wear_shortname">WEAR</string>
+    <string name="description_wear">Monitor and control AAPS using your WearOS watch.</string>
+    <string name="no_watch_connected">(No Watch Connected)</string>
+    <string name="pump_status">Pump status</string>
+    <string name="loop_status">Loop status</string>
+    <string name="wizard_result">Calc. Wizard:\nInsulin: %1$.2fU\nCarbs: %2$dg</string>
+    <string name="quick_wizard_not_available">Selected quickwizard no longer available, please refresh your tile</string>
+    <string name="quick_wizard_message">QuickWizard: %1$s\nInsulin: %2$.2fU\nCarbs: %3$dg</string>
+    <string name="wear_action_tempt_preset_error">Temptarget unknown preset: %1$s</string>
+    <string name="wear_action_tempt_cancel_message">Cancelling running Temp-Targets?</string>
+    <string name="wear_action_tempt_unit_error">Different units used on watch and phone!</string>
+    <string name="wear_action_tempt_zero_message">Zero-Temp-Target - cancelling running Temp-Targets?</string>
+    <string name="wear_action_tempt_min_bg_error">Min-BG out of range!</string>
+    <string name="wear_action_tempt_max_bg_error">Max-BG out of range!</string>
+    <string name="wear_action_tempt_manual_range_message">Temptarget:\nMin: %1$s\nMax: %2$s\nDuration: %3$s</string>
+    <string name="wear_action_tempt_manual_message">Temptarget:\nTarget: %1$s\nDuration: %2$s</string>
+    <string name="wear_action_tempt_preset_message">Temptarget:\nReason: %1$s\nTarget: %2$s\nDuration: %3$s</string>
+    <string name="no_success">not successful - please check phone</string>
+    <string name="wear_settings">Wear settings</string>
+    <string name="wearcontrol_title">Controls from Watch</string>
+    <string name="wearcontrol_summary">Set Temp-Targets and enter Treatments from the watch.</string>
+    <string name="wear_wizard_settings_summary">Calculations included in the Wizard result:</string>
+    <string name="wear_general_settings">General Settings</string>
+    <string name="wear_notifysmb_title">Notify on SMB</string>
+    <string name="wear_notifysmb_summary">Show SMB on the watch like a standard bolus.</string>
+    <string name="wear_custom_watchface_settings">Custom Watchface Settings</string>
+    <string name="wear_custom_watchface_authorization_title">Custom Watchface Authorization</string>
+    <string name="wear_custom_watchface_authorization_summary">Authorize loaded custom watchface to change and lock some watch display settings to suit watchface design</string>
+    <string name="wear_custom_watchface">Custom Watchface: %1$s</string>
+    <string name="wear_load_watchface">Load Watchface</string>
+    <string name="wear_infos_watchface">Infos Watchface</string>
+    <string name="wear_export_watchface">Export template</string>
+    <string name="wear_new_custom_watchface_exported">Custom watchface template exported</string>
+    <string name="resend_all_data">Resend All Data</string>
+    <string name="open_settings_on_wear">Open Settings on Wear</string>
+    <string name="cwf_infos_pref_locked">List of prefs locked by the Watchface</string>
+    <string name="cwf_infos_pref_required">List of prefs required for the Watchface</string>
+    <string name="cwf_infos_view_title">List of fields included into the Watchface</string>
+    <string name="pump_fetching_data">trying to fetch data from pump.</string>
+    <string name="pump_old_data">TDD: Still old data! Cannot load from pump.</string>
+    <string name="units_short">U</string>
+    <string name="grams_short">g</string>
+    <string name="hour_short">h</string>
+    <string name="no_active_profile">No active profile switch!</string>
+    <string name="profile_message">Profile:\n\nTimeshift: %1$d\nPercentage: %2$d%%\"</string>
+    <string name="target_only_aps_mode">Targets only apply in APS mode!</string>
+    <string name="no_history">No history data!</string>
+    <string name="temp_target">Temp Target</string>
+    <string name="until">until</string>
+    <string name="default_range">DEFAULT RANGE</string>
+    <string name="target">target</string>
+    <string name="rate_duration">Rate: %1$.2fU/h (%2$.2f%%) \nDuration %3$d min</string>
+    <string name="no_profile">No profile loaded</string>
+    <string name="aps_only">Only apply in APS mode!</string>
+    <string name="last_aps_result_na">Last result not available!</string>
+    <string name="loop_status_closed">CLOSED LOOP</string>
+    <string name="loop_status_open">OPEN LOOP</string>
+    <string name="loop_status_disabled">LOOP DISABLED</string>
+    <string name="aps">APS</string>
+    <string name="last_run">Last run</string>
+    <string name="last_enact">Last Enact</string>
+    <string name="tdd_line">%1$.2fU %1$.0f%%</string>
+    <string name="today">Today</string>
+    <string name="weighted">weighted</string>
+
+</resources>

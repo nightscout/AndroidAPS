@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- VirtualPump -->
+    <string name="virtual_pump_type">Virtualios pompos tipas</string>
+    <string name="virtual_pump_definition">Pompos apibrėžimas</string>
+    <string name="virtual_pump_pump_def">Bolusas: Žingsnis=%1$s\nIštęstas bolusas: [Žingsnis=%2$s, Trukmė=%3$smin-%4$sval]\nBazė: Žingsnis=%5$s\nLaikina bazė: %6$s (į %7$s), Trukmė=%8$smin-%9$sval\n%10$s</string>
+    <string name="virtual_pump_shortname">VPompa</string>
+    <string name="description_pump_virtual">Integracija pompoms, kurios dar neturi reikalingo valdiklio (Atviras Ciklas)</string>
+    <string name="virtual_pump_label">VIRTUALI POMPA</string>
+    <string name="virtualpump_settings">Virtualios pompos nustatymai</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* Virtualioje pompoje palaikomos tik atskiros vertės, o ne diapazonas detalumui užtikrinti.</string>
+</resources>

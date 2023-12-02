@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="combov2_plugin_name">Accu-Chek Combo</string>
+    <string name="combov2_error_2">电池耗尽</string>
+    <string name="combov2_error_4">堵管</string>
+    <string name="combov2_error_6">机械错误</string>
+    <string name="bluetooth_address">蓝牙地址</string>
+    <string name="combov2_not_initialized">尚未初始化</string>
+    <string name="combov2_ready">就绪</string>
+    <string name="combov2_suspended">挂起</string>
+    <string name="combov2_setting_basal_profile_cmddesc">设置基础率配置文件</string>
+    <string name="combov2_bolus_cancelled">大剂量已经取消</string>
+    <string name="combov2_bolus_delivery_failed">大剂量输注失败，看起来好像没有大剂量被输注。安全起见，请检查泵，避免重复输注大剂量。软件考虑安全因素，不会再自动重试大剂量输注.</string>
+    <string name="combov2_current_tbr">%1$d%% (%2$d 分钟剩余)</string>
+    <string name="combov2_battery_low_warning">泵电池电量不足</string>
+    <string name="combov2_short_status_last_connection">上次连接: %1$d 分钟以前</string>
+    <string name="combov2_short_status_temp_basal">临时: %s</string>
+    <string name="combov2_short_status_reservoir">储药器v: %dU</string>
+    <string name="combov2_short_status_battery_state_empty">空的</string>
+    <string name="combov2_short_status_battery_state_low">低</string>
+</resources>

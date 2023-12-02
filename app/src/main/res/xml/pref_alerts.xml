@@ -13,12 +13,12 @@
             android:key="@string/key_enable_missed_bg_readings_alert"
             android:title="@string/enable_missed_bg_readings_alert" />
 
-        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+        <app.aaps.core.validators.ValidatingEditTextPreference
             android:defaultValue="30"
             android:dependency="@string/key_enable_missed_bg_readings_alert"
             android:inputType="number"
             android:key="@string/key_missed_bg_readings_threshold_minutes"
-            android:title="@string/nsalarm_staledatavalue_label"
+            android:title="@string/ns_alarm_stale_data_value_label"
             validate:maxNumber="10000"
             validate:minNumber="15"
             validate:testType="numericRange" />
@@ -28,7 +28,7 @@
             android:key="@string/key_enable_pump_unreachable_alert"
             android:title="@string/enable_pump_unreachable_alert" />
 
-        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+        <app.aaps.core.validators.ValidatingEditTextPreference
             android:defaultValue="30"
             android:dependency="@string/key_enable_pump_unreachable_alert"
             android:inputType="number"

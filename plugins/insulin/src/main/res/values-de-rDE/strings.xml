@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Insulin -->
+    <string name="lyumjev">Lyumjev</string>
+    <string name="description_insulin_rapid">Insulinprofil für Humalog und NovoRapid / NovoLog</string>
+    <string name="description_insulin_ultra_rapid">Insulinprofil für Fiasp</string>
+    <string name="description_insulin_lyumjev">Insulin-Voreinstellung für Lyumjev</string>
+    <string name="description_insulin_free_peak">Erlaubt dir, das Wirkmaximum der Insulinaktivität zu definieren, und sollte nur von erfahrenen Anwendern genutzt werden</string>
+    <string name="insulin_shortname">INS</string>
+    <string name="insulin_oref_peak">Wirkungshoch der IOB-Kurve</string>
+    <string name="insulin_peak_time">Wirkungshoch [min]</string>
+    <string name="free_peak_oref">Free-Peak Oref</string>
+    <string name="rapid_acting_oref">Rapid-Acting Oref</string>
+    <string name="ultra_rapid_oref">Ultra-Rapid Oref</string>
+    <string name="dia_too_short">DIA von %1$f ist zu kurz - AAPS nutzt stattdessen %2$f!</string>
+    <string name="fast_acting_insulin_comment">NovoRapid, NovoLog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
+</resources>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_MMS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application>
+        <activity
+            android:name=".general.smsCommunicator.activities.SmsCommunicatorOtpActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="app.aaps.plugins.main.general.smsCommunicator.activities.SmsCommunicatorOtpActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="app.aaps.plugins.sync.wear.activities.CwfInfosActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme" />
+
+        <service android:name=".general.persistentNotification.DummyService" />
+
+        <service
+            android:name=".general.overview.notifications.DismissNotificationService"
+            android:exported="false" />
+
+        <service
+            android:name="app.aaps.plugins.sync.wear.wearintegration.DataLayerListenerServiceMobile"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.CHANNEL_EVENT" />
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.CAPABILITY_CHANGED" />
+                <data
+                    android:host="*"
+                    android:scheme="wear" />
+            </intent-filter>
+            <intent-filter>
+                <!-- listeners receive events that match the action and data filters -->
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+
+                <data
+                    android:host="*"
+                    android:pathPrefix="@string/path_rx_bridge"
+                    android:scheme="wear" />
+            </intent-filter>
+            <intent-filter>
+                <!-- listeners receive events that match the action and data filters -->
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+
+                <data
+                    android:host="*"
+                    android:pathPrefix="@string/path_rx_data_bridge"
+                    android:scheme="wear" />
+            </intent-filter>
+        </service>
+
+    </application>
+
+</manifest>

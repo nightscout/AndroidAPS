@@ -1,2 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="app_name">AAPS</string>
+    <string name="label_actions_activity">AAPS</string>
+    <string name="label_watchface_large">AAPS(Veliki)</string>
+    <string name="label_watchface_big_chart">AAPS(Veliki Graf)</string>
+    <string name="label_watchface_no_chart">AAPS(Bez grafa)</string>
+    <string name="label_watchface_circle">AAPS(Kružni)</string>
+    <string name="pref_low">Nisko</string>
+    <string name="pref_high">Visoko</string>
+    <string name="menu_wizard">Kalkulator</string>
+    <string name="menu_wizard_short">Izračun</string>
+    <string name="menu_treatment">Tretman</string>
+    <string name="menu_bolus">Bolus</string>
+    <string name="menu_carb">UH</string>
+    <string name="menu_settings">Postavke</string>
+    <string name="action_duration">Trajanje</string>
+    <string name="action_target" comment="In temp target menu, single target value">Cilj</string>
+    <string name="action_low" comment="In temp target menu, lower value from range">Nisko</string>
+    <string name="action_high" comment="In temp target menu, higher value from range">Visoko</string>
+    <string name="action_carbs">UH</string>
+    <string name="action_insulin">Inzulin</string>
+    <string name="action_bolus">Bolus</string>
+    <string name="status_pump">Pumpa</string>
+    <string name="status_profile_switch">Zamjena profila</string>
+    <string name="status_tdd">TDD</string>
+    <string name="activity_IOB">Aktivni inzulin</string>
+    <string name="temp_target_cancel">Otkaži</string>
+    <string name="increment">povećanje</string>
+    <string name="decrement">smanjenje</string>
+    <string name="abbreviation_average">prosječno</string>
+    <string name="no_iob_u">U</string>
+    <string name="no_cob_g">--g</string>
+    <string name="no_tmp_basal_u_h">-.--U/h</string>
+    <string name="delta_na">--- mg/dl</string>
+    <string name="no_loop_status">Nema status petlje</string>
+    <string name="cob_000g">000g</string>
+    <string name="svg_00_0" comment="use , or . only">00,0</string>
+    <string name="iob_0_00u">0,00U</string>
+    <string name="snooze_alert">AAPS odgoda upozorenja</string>
+    <string name="sending_snooze">Slanje odgode na AAPS</string>
+</resources>
