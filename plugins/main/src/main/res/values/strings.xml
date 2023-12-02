@@ -149,7 +149,7 @@
     <string name="a11y_add_new_to_list">add new to list</string>
     <string name="do_you_want_switch_profile">Do you want to switch profile and discard changes made to current profile?</string>
     <string name="save_or_reset_changes_first">Save or reset current changes first</string>
-    <string name="delete_current_profile">Delete current profile?</string>
+    <string name="delete_current_profile">Delete profile \"%1$s\"?</string>
     <string name="units_colon">Units:</string>
     <string name="missing_profile_name">Missing profile name</string>
     <string name="error_in_ic_values">Error in IC values</string>
