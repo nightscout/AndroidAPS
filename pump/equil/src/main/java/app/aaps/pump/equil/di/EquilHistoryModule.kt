@@ -17,7 +17,6 @@ class EquilHistoryModule {
 
     @Provides
     @Singleton
-    internal fun provideHistoryRecordDao(danaHistoryDatabase: EquilHistoryDatabase): EquilHistoryRecordDao =
-        danaHistoryDatabase.historyRecordDao()
-
+    internal fun provideHistoryRecordDao(equilHistoryDatabase: EquilHistoryDatabase): EquilHistoryRecordDao =
+        equilHistoryDatabase.historyRecordDao()
 }
