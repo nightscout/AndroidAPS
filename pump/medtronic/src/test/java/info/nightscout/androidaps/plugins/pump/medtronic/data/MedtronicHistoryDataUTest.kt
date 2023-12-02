@@ -32,7 +32,7 @@ class MedtronicHistoryDataUTest : MedtronicTestBase() {
 
         val unitToTest = MedtronicHistoryData(
             packetInjector, aapsLogger, sp, rh, rxBus, activePlugin,
-            medtronicUtil, decoder, medtronicPumpStatus, pumpSync, pumpSyncStorage, uiInteraction
+            medtronicUtil, decoder, medtronicPumpStatus, pumpSync, pumpSyncStorage, uiInteraction, profileUtil
         )
 
         val gson = Gson()
@@ -75,7 +75,7 @@ class MedtronicHistoryDataUTest : MedtronicTestBase() {
             medtronicUtil, decoder,
             medtronicPumpStatus,
             pumpSync,
-            pumpSyncStorage, uiInteraction
+            pumpSyncStorage, uiInteraction, profileUtil
         )
 
         val gson = Gson()

@@ -36,7 +36,7 @@ import org.mockito.invocation.InvocationOnMock
 @Suppress("SpellCheckingInspection")
 open class TestBaseWithProfile : TestBase() {
 
-    @Mock lateinit var activePlugin: ActivePlugin
+    @Mock open lateinit var activePlugin: ActivePlugin
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var iobCobCalculator: IobCobCalculator
     @Mock lateinit var fabricPrivacy: FabricPrivacy
