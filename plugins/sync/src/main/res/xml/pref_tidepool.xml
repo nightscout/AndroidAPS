@@ -12,7 +12,7 @@
             android:key="@string/key_tidepool_username"
             android:summary="@string/summary_tidepool_username"
             android:title="@string/title_tidepool_username"
-            validate:testType="email"/>
+            validate:testType="email" />
 
         <EditTextPreference
             android:inputType="textPassword"
@@ -25,7 +25,7 @@
             android:title="@string/title_tidepool_test_login" />
 
         <androidx.preference.PreferenceScreen
-            android:key="@string/connection_settings_title"
+            android:key="tidepool_connection_settings"
             android:title="@string/connection_settings_title">
 
             <SwitchPreference
@@ -64,7 +64,7 @@
         </androidx.preference.PreferenceScreen>
 
         <androidx.preference.PreferenceScreen
-            android:key="nsclient_advanced"
+            android:key="tidepool_advanced"
             android:title="@string/advanced_settings_title">
 
             <CheckBoxPreference

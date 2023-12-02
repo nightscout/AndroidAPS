@@ -1,54 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:validate="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
         android:key="@string/key_openapsma_settings"
         android:title="@string/openapsama"
         app:initialExpandedChildrenCount="0">
 
-        <app.aaps.core.validators.ValidatingEditTextPreference
-            android:defaultValue="1"
+        <app.aaps.core.validators.AdaptiveDoublePreference
             android:dialogMessage="@string/openapsma_max_basal_summary"
-            android:inputType="numberDecimal"
-            android:key="@string/key_openapsma_max_basal"
-            android:title="@string/openapsma_max_basal_title"
-            validate:floatmaxNumber="25.0"
-            validate:floatminNumber="0.1"
-            validate:testType="floatNumericRange" />
+            android:key="@string/key_openaps_max_basal"
+            android:title="@string/openapsma_max_basal_title" />
 
-        <app.aaps.core.validators.ValidatingEditTextPreference
-            android:defaultValue="1.5"
+        <app.aaps.core.validators.AdaptiveDoublePreference
             android:dialogMessage="@string/openapsma_max_iob_summary"
-            android:inputType="numberDecimal"
-            android:key="@string/key_openapsma_max_iob"
-            android:title="@string/openapsma_max_iob_title"
-            validate:floatmaxNumber="25.0"
-            validate:floatminNumber="0"
-            validate:testType="floatNumericRange" />
+            android:key="@string/key_openaps_ama_max_iob"
+            android:title="@string/openapsma_max_iob_title" />
 
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/key_use_autosens"
+        <app.aaps.core.keys.AdaptiveSwitchPreference
+            android:key="@string/key_openaps_use_autosens"
             android:title="@string/openapsama_use_autosens" />
 
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="@string/key_openapsama_autosens_adjusttargets"
+        <app.aaps.core.keys.AdaptiveSwitchPreference
+            android:key="@string/key_openaps_ama_autosens_adjust_targets"
             android:summary="@string/openapsama_autosens_adjust_targets_summary"
             android:title="@string/openapsama_autosens_adjust_targets" />
 
-        <app.aaps.core.validators.ValidatingEditTextPreference
-            android:defaultValue="3.0"
+        <app.aaps.core.validators.AdaptiveDoublePreference
             android:dialogMessage="@string/openapsama_min_5m_carb_impact_summary"
-            android:inputType="numberDecimal"
-            android:key="@string/key_openapsama_min_5m_carbimpact"
-            android:selectAllOnFocus="true"
-            android:title="@string/openapsama_min_5m_carb_impact"
-            validate:floatmaxNumber="12.0"
-            validate:floatminNumber="1"
-            validate:testType="floatNumericRange" />
+            android:key="@string/key_openaps_ama_min_5m_carbs_impact"
+            android:title="@string/openapsama_min_5m_carb_impact" />
 
         <androidx.preference.PreferenceScreen
             android:key="absorption_ama_advanced"
@@ -60,52 +41,25 @@
                     android:data="@string/openapsama_link_to_preference_json_doc" />
             </Preference>
 
-            <SwitchPreference
-                android:defaultValue="false"
-                android:key="@string/key_always_use_shortavg"
+            <app.aaps.core.keys.AdaptiveSwitchPreference
+                android:key="@string/key_openaps_always_use_short_deltas"
                 android:summary="@string/always_use_short_avg_summary"
                 android:title="@string/always_use_short_avg" />
 
-            <app.aaps.core.validators.ValidatingEditTextPreference
-                android:defaultValue="3"
+            <app.aaps.core.validators.AdaptiveDoublePreference
                 android:dialogMessage="@string/openapsama_max_daily_safety_multiplier_summary"
-                android:digits="0123456789.,"
-                android:inputType="number"
-                android:key="@string/key_openapsama_max_daily_safety_multiplier"
-                android:maxLines="20"
-                android:selectAllOnFocus="true"
-                android:title="@string/openapsama_max_daily_safety_multiplier"
-                validate:maxNumber="10"
-                validate:minNumber="1"
-                validate:testType="numericRange" />
+                android:key="@string/key_openaps_max_daily_safety_multiplier"
+                android:title="@string/openapsama_max_daily_safety_multiplier" />
 
-            <app.aaps.core.validators.ValidatingEditTextPreference
-                android:defaultValue="4"
+            <app.aaps.core.validators.AdaptiveDoublePreference
                 android:dialogMessage="@string/openapsama_current_basal_safety_multiplier_summary"
-                android:digits="0123456789.,"
-                android:inputType="number"
-                android:key="@string/key_openapsama_current_basal_safety_multiplier"
-                android:maxLines="20"
-                android:selectAllOnFocus="true"
-                android:singleLine="true"
-                android:title="@string/openapsama_current_basal_safety_multiplier"
-                validate:floatmaxNumber="10"
-                validate:floatminNumber="1"
-                validate:testType="floatNumericRange" />
+                android:key="@string/key_openaps_current_basal_safety_multiplier"
+                android:title="@string/openapsama_current_basal_safety_multiplier" />
 
-            <app.aaps.core.validators.ValidatingEditTextPreference
-                android:defaultValue="2"
+            <app.aaps.core.validators.AdaptiveDoublePreference
                 android:dialogMessage="@string/openapsama_bolus_snooze_dia_divisor_summary"
-                android:digits="0123456789.,"
-                android:inputType="numberDecimal"
-                android:key="@string/key_openapsama_bolus_snooze_dia_divisor"
-                android:maxLines="20"
-                android:selectAllOnFocus="true"
-                android:singleLine="true"
-                android:title="@string/openapsama_bolus_snooze_dia_divisor"
-                validate:maxNumber="10"
-                validate:minNumber="1"
-                validate:testType="floatNumericRange" />
+                android:key="@string/key_openaps_ama_bolus_snooze_dia_divisor"
+                android:title="@string/openapsama_bolus_snooze_dia_divisor" />
 
         </androidx.preference.PreferenceScreen>
 

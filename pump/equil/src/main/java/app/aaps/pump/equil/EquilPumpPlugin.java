@@ -21,11 +21,16 @@ import java.util.Objects;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.aaps.core.data.plugin.PluginDescription;
+import app.aaps.core.data.plugin.PluginType;
+import app.aaps.core.data.pump.defs.ManufacturerType;
+import app.aaps.core.data.pump.defs.PumpDescription;
+import app.aaps.core.data.pump.defs.PumpType;
+import app.aaps.core.data.pump.defs.TimeChangeType;
 import app.aaps.core.interfaces.logging.AAPSLogger;
 import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.core.interfaces.notifications.Notification;
-import app.aaps.core.interfaces.plugin.PluginDescription;
-import app.aaps.core.interfaces.plugin.PluginType;
+import app.aaps.core.interfaces.objects.Instantiator;
 import app.aaps.core.interfaces.profile.Profile;
 import app.aaps.core.interfaces.profile.ProfileFunction;
 import app.aaps.core.interfaces.pump.DetailedBolusInfo;
@@ -34,9 +39,8 @@ import app.aaps.core.interfaces.pump.PumpEnactResult;
 import app.aaps.core.interfaces.pump.PumpPluginBase;
 import app.aaps.core.interfaces.pump.PumpSync;
 import app.aaps.core.interfaces.pump.actions.CustomActionType;
-import app.aaps.core.interfaces.pump.defs.ManufacturerType;
-import app.aaps.core.interfaces.pump.defs.PumpDescription;
-import app.aaps.core.interfaces.pump.defs.PumpType;
+import app.aaps.core.interfaces.pump.defs.PumpDescriptionExtensionKt;
+import app.aaps.core.interfaces.pump.defs.PumpTypeExtensionKt;
 import app.aaps.core.interfaces.queue.CommandQueue;
 import app.aaps.core.interfaces.queue.CustomCommand;
 import app.aaps.core.interfaces.resources.ResourceHelper;
@@ -46,7 +50,6 @@ import app.aaps.core.interfaces.rx.events.EventAppInitialized;
 import app.aaps.core.interfaces.sharedPreferences.SP;
 import app.aaps.core.interfaces.utils.DateUtil;
 import app.aaps.core.interfaces.utils.DecimalFormatter;
-import app.aaps.core.interfaces.utils.TimeChangeType;
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy;
 import app.aaps.pump.equil.data.BolusProfile;
 import app.aaps.pump.equil.data.RunMode;
@@ -90,6 +93,7 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
     private final DecimalFormatter decimalFormatter;
 
     public final PumpSync pumpSync;
+    public final Instantiator instantiator;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
@@ -121,7 +125,9 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
             ProfileFunction profileFunction,
             PumpSync pumpSync,
             EquilManager equilManager,
-            EquilHistoryRecordDao equilHistoryRecordDao, DecimalFormatter decimalFormatter
+            EquilHistoryRecordDao equilHistoryRecordDao,
+            DecimalFormatter decimalFormatter,
+            Instantiator instantiator
     ) {
         super(new PluginDescription() //
                         .mainType(PluginType.PUMP) //
@@ -131,7 +137,7 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
                         .shortName(R.string.equil_name) //
                         .preferencesId(R.xml.pref_equil) //
                         .description(R.string.equil_pump_description), //
-                injector, aapsLogger, rh, commandQueue);
+                aapsLogger, rh, commandQueue);
         this.aapsLogger = aapsLogger;
         this.aapsSchedulers = aapsSchedulers;
         this.rxBus = rxBus;
@@ -146,7 +152,8 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
         this.bolusProfile = new BolusProfile();
         this.decimalFormatter = decimalFormatter;
         this.equilHistoryRecordDao = equilHistoryRecordDao;
-        pumpDescription = new PumpDescription(pumpType);
+        this.instantiator = instantiator;
+        pumpDescription = PumpDescriptionExtensionKt.fillFor(new PumpDescription(), pumpType);
         statusChecker = new Runnable() {
             @Override public void run() {
                 if (commandQueue.size() == 0 &&
@@ -262,7 +269,7 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
         if (mode == RunMode.RUN || mode == RunMode.SUSPEND) {
             BasalSchedule basalSchedule = BasalSchedule.mapProfileToBasalSchedule(profile);
             if (basalSchedule.getEntries() == null || basalSchedule.getEntries().size() < 24) {
-                return new PumpEnactResult(getInjector()).enacted(false).success(false).comment("No profile active");
+                return instantiator.providePumpEnactResult().enacted(false).success(false).comment("No profile active");
             }
             PumpEnactResult pumpEnactResult =
                     equilManager.executeCmd(new CmdBasalSet(basalSchedule, profile));
@@ -271,7 +278,7 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
             }
             return pumpEnactResult;
         }
-        return new PumpEnactResult(getInjector()).enacted(false).success(false).comment(rh.gs(R.string.equil_pump_not_run));
+        return instantiator.providePumpEnactResult().enacted(false).success(false).comment(rh.gs(R.string.equil_pump_not_run));
     }
 
     @Override
@@ -328,17 +335,17 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
         if (detailedBolusInfo.insulin == 0 && detailedBolusInfo.carbs == 0) {
             // neither carbs nor bolus requested
             aapsLogger.error("deliverTreatment: Invalid input: neither carbs nor insulin are set in treatment");
-            return new PumpEnactResult(getInjector()).success(false).enacted(false)
+            return instantiator.providePumpEnactResult().success(false).enacted(false)
                     .bolusDelivered(0d).comment("Invalid input");
         }
         RunMode mode = equilManager.getRunMode();
         if (mode != RunMode.RUN) {
-            return new PumpEnactResult(getInjector()).enacted(false).success(false)
+            return instantiator.providePumpEnactResult().enacted(false).success(false)
                     .bolusDelivered(0d).comment(rh.gs(R.string.equil_pump_not_run));
         }
         int lastInsulin = equilManager.getCurrentInsulin();
         if (detailedBolusInfo.insulin > lastInsulin) {
-            return new PumpEnactResult(getInjector())
+            return instantiator.providePumpEnactResult()
                     .success(false)
                     .enacted(false)
                     .bolusDelivered(0d)
@@ -348,7 +355,7 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
     }
 
     public PumpEnactResult loadHistory() {
-        PumpEnactResult pumpEnactResult = new PumpEnactResult(getInjector());
+        PumpEnactResult pumpEnactResult = instantiator.providePumpEnactResult();
         EquilHistoryPump equilHistoryLast = equilHistoryRecordDao.last(serialNumber());
         int startIndex;
         startIndex = equilHistoryLast.getEventIndex();
@@ -384,13 +391,13 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
                 "setTempBasalAbsolute=====" + absoluteRate
                         + "====" + durationInMinutes + "===" + enforceNew);
         if (durationInMinutes <= 0 || durationInMinutes % BASAL_STEP_DURATION.getStandardMinutes() != 0) {
-            return new PumpEnactResult(getInjector()).success(false).comment(rh.gs(R.string.equil_error_set_temp_basal_failed_validation, BASAL_STEP_DURATION.getStandardMinutes()));
+            return instantiator.providePumpEnactResult().success(false).comment(rh.gs(R.string.equil_error_set_temp_basal_failed_validation, BASAL_STEP_DURATION.getStandardMinutes()));
         }
         RunMode mode = equilManager.getRunMode();
         if (mode != RunMode.RUN) {
-            return new PumpEnactResult(getInjector()).enacted(false).success(false).comment(rh.gs(R.string.equil_pump_not_run));
+            return instantiator.providePumpEnactResult().enacted(false).success(false).comment(rh.gs(R.string.equil_pump_not_run));
         }
-        PumpEnactResult pumpEnactResult = new PumpEnactResult(getInjector());
+        PumpEnactResult pumpEnactResult = instantiator.providePumpEnactResult();
         pumpEnactResult.success(false);
         pumpEnactResult = equilManager.getTempBasalPump();
         if (pumpEnactResult.getSuccess()) {
@@ -611,7 +618,7 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
             return setTempBasalAbsolute(0.0d, durationInMinutes, profile, enforceNew, tbrType);
         } else {
             double absoluteValue = profile.getBasal() * (percent / 100.0d);
-            absoluteValue = pumpDescription.getPumpType().determineCorrectBasalSize(absoluteValue);
+            absoluteValue = PumpTypeExtensionKt.determineCorrectBasalSize(pumpDescription.getPumpType(), absoluteValue);
             return setTempBasalAbsolute(absoluteValue, durationInMinutes, profile, enforceNew, tbrType);
         }
     }
@@ -639,7 +646,7 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
 
     @NonNull @Override public PumpEnactResult loadTDDs() {
         aapsLogger.debug(LTag.PUMPCOMM, "loadTDDs [OmnipodPumpPlugin] - Not implemented.");
-        return new PumpEnactResult(getInjector()).success(false).enacted(false);
+        return instantiator.providePumpEnactResult().success(false).enacted(false);
     }
 
 

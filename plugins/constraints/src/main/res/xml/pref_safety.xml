@@ -1,38 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:validate="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
         android:key="@string/key_treatmentssafety_settings"
         android:title="@string/treatmentssafety_title"
         app:initialExpandedChildrenCount="0">
 
-        <ListPreference
-            android:defaultValue="adult"
+        <app.aaps.core.keys.AdaptiveListPreference
             android:entries="@array/ageArray"
             android:entryValues="@array/ageValues"
-            android:key="@string/key_age"
+            android:key="@string/key_safety_age"
             android:summary="@string/patient_age_summary"
             android:title="@string/patient_type" />
 
-        <app.aaps.core.validators.ValidatingEditTextPreference
-            android:defaultValue="3"
-            android:inputType="numberDecimal"
-            android:key="@string/key_treatmentssafety_maxbolus"
-            android:title="@string/max_bolus_title"
-            validate:floatmaxNumber="25.0"
-            validate:floatminNumber="0.1"
-            validate:testType="floatNumericRange" />
+        <app.aaps.core.validators.AdaptiveDoublePreference
+            android:key="@string/key_safety_max_bolus"
+            android:title="@string/max_bolus_title" />
 
-        <app.aaps.core.validators.ValidatingEditTextPreference
-            android:defaultValue="48"
-            android:inputType="number"
-            android:key="@string/key_treatmentssafety_maxcarbs"
-            android:title="@string/max_carbs_title"
-            validate:floatmaxNumber="200"
-            validate:floatminNumber="1"
-            validate:testType="numericRange" />
+        <app.aaps.core.validators.AdaptiveIntPreference
+            android:key="@string/key_safety_max_carbs"
+            android:title="@string/max_carbs_title" />
 
     </PreferenceCategory>
 

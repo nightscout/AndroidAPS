@@ -3,7 +3,6 @@ package app.aaps.plugins.automation.triggers
 import android.widget.LinearLayout
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.utils.JsonHelper
-import app.aaps.database.ValueWrapper
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.ComparatorExists
 import app.aaps.plugins.automation.elements.LayoutBuilder
@@ -30,12 +29,12 @@ class TriggerTempTarget(injector: HasAndroidInjector) : Trigger(injector) {
     }
 
     override fun shouldRun(): Boolean {
-        val tt = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
-        if (tt is ValueWrapper.Absent && comparator.value == ComparatorExists.Compare.NOT_EXISTS) {
+        val tt = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
+        if (tt == null && comparator.value == ComparatorExists.Compare.NOT_EXISTS) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true
         }
-        if (tt is ValueWrapper.Existing && comparator.value == ComparatorExists.Compare.EXISTS) {
+        if (tt != null && comparator.value == ComparatorExists.Compare.EXISTS) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true
         }

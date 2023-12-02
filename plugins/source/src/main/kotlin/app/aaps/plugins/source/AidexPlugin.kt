@@ -1,32 +1,32 @@
 package app.aaps.plugins.source
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.SourceSensor
+import app.aaps.core.data.model.TrendArrow
+import app.aaps.core.data.plugin.PluginDescription
+import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.configuration.Constants
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.receivers.Intents
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
-import app.aaps.core.main.utils.worker.LoggingWorker
+import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
-import app.aaps.database.entities.GlucoseValue
-import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.CgmSourceTransaction
-import app.aaps.database.transactions.TransactionGlucoseValue
-import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class AidexPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     private val config: Config
@@ -34,12 +34,13 @@ class AidexPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
-        .pluginIcon((app.aaps.core.main.R.drawable.ic_blooddrop_48))
+        .pluginIcon((app.aaps.core.objects.R.drawable.ic_blooddrop_48))
         .preferencesId(R.xml.pref_bgsource)
         .pluginName(R.string.aidex)
         .shortName(R.string.aidex_short)
+        .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_source_aidex),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), BgSource {
 
     // Allow only for pumpcontrol or dev & engineering_mode
@@ -54,9 +55,10 @@ class AidexPlugin @Inject constructor(
     ) : LoggingWorker(context, params, Dispatchers.IO) {
 
         @Inject lateinit var aidexPlugin: AidexPlugin
-        @Inject lateinit var repository: AppRepository
+        @Inject lateinit var persistenceLayer: PersistenceLayer
         @Inject lateinit var dataWorkerStorage: DataWorkerStorage
 
+        @SuppressLint("CheckResult")
         override suspend fun doWorkAndLog(): Result {
             var ret = Result.success()
 
@@ -69,7 +71,7 @@ class AidexPlugin @Inject constructor(
             if (bundle.containsKey(Intents.AIDEX_TRANSMITTER_SN)) aapsLogger.debug(LTag.BGSOURCE, "transmitterSerialNumber: " + bundle.getString(Intents.AIDEX_TRANSMITTER_SN))
             if (bundle.containsKey(Intents.AIDEX_SENSOR_ID)) aapsLogger.debug(LTag.BGSOURCE, "sensorId: " + bundle.getString(Intents.AIDEX_SENSOR_ID))
 
-            val glucoseValues = mutableListOf<TransactionGlucoseValue>()
+            val glucoseValues = mutableListOf<GV>()
 
             val timestamp = bundle.getLong(Intents.AIDEX_TIMESTAMP, 0)
             val bgType = bundle.getString(Intents.AIDEX_BG_TYPE, "mg/dl")
@@ -79,25 +81,17 @@ class AidexPlugin @Inject constructor(
 
             aapsLogger.debug(LTag.BGSOURCE, "Received Aidex broadcast [time=$timestamp, bgType=$bgType, value=$bgValue, targetValue=$bgValueTarget")
 
-            glucoseValues += TransactionGlucoseValue(
+            glucoseValues += GV(
                 timestamp = timestamp,
                 value = bgValueTarget,
                 raw = null,
                 noise = null,
-                trendArrow = GlucoseValue.TrendArrow.fromString(bundle.getString(Intents.AIDEX_BG_SLOPE_NAME)),
-                sourceSensor = GlucoseValue.SourceSensor.AIDEX
+                trendArrow = TrendArrow.fromString(bundle.getString(Intents.AIDEX_BG_SLOPE_NAME)),
+                sourceSensor = SourceSensor.AIDEX
             )
-            repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
-                .doOnError {
-                    aapsLogger.error(LTag.DATABASE, "Error while saving values from Aidex", it)
-                    ret = Result.failure(workDataOf("Error" to it.toString()))
-                }
+            persistenceLayer.insertCgmSourceData(Sources.Aidex, glucoseValues, emptyList(), null)
+                .doOnError { ret = Result.failure(workDataOf("Error" to it.toString())) }
                 .blockingGet()
-                .also { savedValues ->
-                    savedValues.all().forEach {
-                        aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
-                    }
-                }
             return ret
         }
     }

@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.os.SystemClock
 import android.view.View
 import android.widget.Button
+import app.aaps.core.data.model.TE
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.pump.DetailedBolusInfo
-import app.aaps.core.interfaces.pump.defs.PumpType
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.pump.equil.EquilConst
 import app.aaps.pump.equil.R
@@ -37,13 +37,13 @@ class EquilPairConfirmFragment : EquilPairFragmentBase() {
                 equilPumpPlugin.pumpSync.connectNewPump()
                 equilPumpPlugin.pumpSync.insertTherapyEventIfNewWithTimestamp(
                     timestamp = System.currentTimeMillis(),
-                    type = DetailedBolusInfo.EventType.CANNULA_CHANGE,
+                    type = TE.Type.CANNULA_CHANGE,
                     pumpType = PumpType.EQUIL,
                     pumpSerial = equilPumpPlugin.serialNumber()
                 )
                 equilPumpPlugin.pumpSync.insertTherapyEventIfNewWithTimestamp(
                     timestamp = System.currentTimeMillis(),
-                    type = DetailedBolusInfo.EventType.INSULIN_CHANGE,
+                    type = TE.Type.INSULIN_CHANGE,
                     pumpType = PumpType.EQUIL,
                     pumpSerial = equilPumpPlugin.serialNumber()
                 )
@@ -66,7 +66,7 @@ class EquilPairConfirmFragment : EquilPairFragmentBase() {
             equilPumpPlugin.equilManager.lastDataTime = System.currentTimeMillis()
             equilPumpPlugin.pumpSync.insertTherapyEventIfNewWithTimestamp(
                 System.currentTimeMillis(),
-                DetailedBolusInfo.EventType.CANNULA_CHANGE, null, null, PumpType.EQUIL,
+                TE.Type.CANNULA_CHANGE, null, null, PumpType.EQUIL,
                 equilPumpPlugin.serialNumber()
             )
             equilPumpPlugin.equilManager.activationProgress = ActivationProgress.COMPLETED

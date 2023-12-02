@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.response.podinfo
 
+import app.aaps.core.utils.pump.ByteUtil
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PodInfoType
-import info.nightscout.pump.common.utils.ByteUtil
-import kotlin.test.assertIsNot
 import org.junit.jupiter.api.Test
+import kotlin.test.assertIsNot
 
 internal class PodInfoResponseTest {
 

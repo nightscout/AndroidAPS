@@ -5,10 +5,10 @@ import android.os.SystemClock
 import android.view.View
 import android.widget.Button
 import androidx.navigation.fragment.findNavController
-import app.aaps.core.interfaces.extensions.runOnUiThread
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.pump.equil.EquilConst
 import app.aaps.pump.equil.R
 import app.aaps.pump.equil.data.AlarmMode

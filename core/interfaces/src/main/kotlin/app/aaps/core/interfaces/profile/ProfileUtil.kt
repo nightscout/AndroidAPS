@@ -1,7 +1,7 @@
 package app.aaps.core.interfaces.profile
 
-import app.aaps.core.interfaces.db.GlucoseUnit
-import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.pump.defs.PumpType
 
 interface ProfileUtil {
 

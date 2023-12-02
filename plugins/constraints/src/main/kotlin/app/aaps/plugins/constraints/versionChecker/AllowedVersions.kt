@@ -1,9 +1,13 @@
 package app.aaps.plugins.constraints.versionChecker
 
-import org.joda.time.LocalDate
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 class AllowedVersions {
 
@@ -17,6 +21,7 @@ class AllowedVersions {
                     if (api in record.getInt("minAndroid")..record.getInt("maxAndroid")) return record
             }
         } catch (e: JSONException) {
+            return null
         }
         return null
     }
@@ -31,16 +36,16 @@ class AllowedVersions {
                     if (version == record.getString("version")) return record
             }
         } catch (e: JSONException) {
+            return null
         }
         return null
     }
 
-    fun endDateToMilliseconds(endDate: String): Long? {
+    fun endDateToMilliseconds(endDate: String): Long? =
         try {
-            val dateTime = LocalDate.parse(endDate)
-            return dateTime.toDate().time
+            val date = LocalDate.parse(endDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+            LocalDateTime.of(date, LocalTime.of(0, 0)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
         } catch (ignored: Exception) {
+            null
         }
-        return null
-    }
 }

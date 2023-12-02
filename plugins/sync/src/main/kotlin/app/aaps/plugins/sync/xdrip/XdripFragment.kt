@@ -20,6 +20,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.plugins.sync.R
@@ -37,7 +38,7 @@ class XdripFragment : DaggerFragment(), MenuProvider, PluginFragment {
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var dataSyncSelector: DataSyncSelectorXdripImpl
+    @Inject lateinit var dataSyncSelector: DataSyncSelectorXdrip
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var xdripPlugin: XdripPlugin
     @Inject lateinit var config: Config

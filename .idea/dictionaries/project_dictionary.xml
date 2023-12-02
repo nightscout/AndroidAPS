@@ -42,6 +42,7 @@
       <w>datasets</w>
       <w>dbadd</w>
       <w>dbupdate</w>
+      <w>defs</w>
       <w>devicestatus</w>
       <w>devicestatuses</w>
       <w>devslope</w>
@@ -74,6 +75,7 @@
       <w>instantiator</w>
       <w>insulet</w>
       <w>intelligo</w>
+      <w>iobs</w>
       <w>iobtotal</w>
       <w>joda</w>
       <w>joul</w>
@@ -86,6 +88,7 @@
       <w>medtrum</w>
       <w>mgdl</w>
       <w>miao</w>
+      <w>milenage</w>
       <w>misformatted</w>
       <w>mmol</w>
       <w>motol</w>
@@ -124,6 +127,7 @@
       <w>roboelectric</w>
       <w>rozman</w>
       <w>sbat</w>
+      <w>scripter</w>
       <w>setupwizard</w>
       <w>sgvs</w>
       <w>shortgramm</w>
@@ -160,10 +164,6 @@
       <w>ypso</w>
       <w>ypsomed</w>
       <w>ypsopump</w>
-      <w>defs</w>
-      <w>iobs</w>
-      <w>milenage</w>
-      <w>scripter</w>
-	</words>
+    </words>
   </dictionary>
 </component>

@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.preference.PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:validate="http://schemas.android.com/apk/res-auto"
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
@@ -9,63 +7,29 @@
         android:title="@string/absorption_settings_title"
         app:initialExpandedChildrenCount="0">
 
-        <app.aaps.core.validators.ValidatingEditTextPreference
-            android:defaultValue="6"
+        <app.aaps.core.validators.AdaptiveDoublePreference
             android:dialogMessage="@string/absorption_max_time_summary"
-            android:digits="0123456789.,"
-            android:inputType="number"
             android:key="@string/key_absorption_maxtime"
-            android:maxLines="20"
-            android:selectAllOnFocus="true"
-            android:title="@string/absorption_max_time_title"
-            validate:maxNumber="10"
-            validate:minNumber="4"
-            validate:testType="numericRange" />
+            android:title="@string/absorption_max_time_title" />
 
-        <app.aaps.core.validators.ValidatingEditTextPreference
-            android:defaultValue="24"
+        <app.aaps.core.validators.AdaptiveIntPreference
             android:dialogMessage="@string/openapsama_autosens_period_summary"
-            android:digits="0123456789"
-            android:inputType="number"
             android:key="@string/key_openapsama_autosens_period"
-            android:maxLines="20"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="@string/openapsama_autosens_period"
-            validate:maxNumber="24"
-            validate:minNumber="4"
-            validate:testType="numericRange" />
+            android:title="@string/openapsama_autosens_period" />
 
         <androidx.preference.PreferenceScreen
             android:key="absorption_aaps_advanced"
             android:title="@string/advanced_settings_title">
 
-            <app.aaps.core.validators.ValidatingEditTextPreference
-                android:defaultValue="1.2"
+            <app.aaps.core.validators.AdaptiveDoublePreference
                 android:dialogMessage="@string/openapsama_autosens_max_summary"
-                android:digits="0123456789.,"
-                android:inputType="numberDecimal"
-                android:key="@string/key_openapsama_autosens_max"
-                android:maxLines="20"
-                android:selectAllOnFocus="true"
-                android:singleLine="true"
-                android:title="@string/openapsama_autosens_max"
-                validate:floatmaxNumber="3"
-                validate:floatminNumber="0.5"
-                validate:testType="floatNumericRange" />
+                android:key="@string/key_openaps_autosens_max"
+                android:title="@string/openapsama_autosens_max" />
 
-            <app.aaps.core.validators.ValidatingEditTextPreference
-                android:defaultValue="0.7"
+            <app.aaps.core.validators.AdaptiveDoublePreference
                 android:dialogMessage="@string/openapsama_autosens_min_summary"
-                android:inputType="numberDecimal"
-                android:key="@string/key_openapsama_autosens_min"
-                android:maxLines="20"
-                android:selectAllOnFocus="true"
-                android:singleLine="true"
-                android:title="@string/openapsama_autosens_min"
-                validate:floatmaxNumber="1.0"
-                validate:floatminNumber="0.1"
-                validate:testType="floatNumericRange" />
+                android:key="@string/key_openaps_autosens_min"
+                android:title="@string/openapsama_autosens_min" />
 
         </androidx.preference.PreferenceScreen>
 

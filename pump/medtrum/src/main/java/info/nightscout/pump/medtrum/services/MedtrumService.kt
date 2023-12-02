@@ -6,6 +6,8 @@ import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import android.os.SystemClock
+import app.aaps.core.data.model.BS
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -30,7 +32,6 @@ import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import dagger.android.DaggerService
 import dagger.android.HasAndroidInjector
@@ -258,8 +259,8 @@ class MedtrumService : DaggerService(), BLECommCallback {
             if (detailedBolusInfo != null) {
                 detailedBolusInfoStorage.add(detailedBolusInfo) // Reinsert
             }
-            medtrumPump.bolusingTreatment = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo?.bolusType == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo?.id ?: 0)
-            if (detailedBolusInfo?.bolusType == DetailedBolusInfo.BolusType.SMB) {
+            medtrumPump.bolusingTreatment = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo?.bolusType == BS.Type.SMB, detailedBolusInfo?.id ?: 0)
+            if (detailedBolusInfo?.bolusType == BS.Type.SMB) {
                 rxBus.send(EventPumpStatusChanged(rh.gs(app.aaps.core.ui.R.string.smb_bolus_u, detailedBolusInfo.insulin)))
             } else {
                 rxBus.send(EventPumpStatusChanged(rh.gs(app.aaps.core.ui.R.string.bolus_u_min, detailedBolusInfo?.insulin ?: 0.0)))
@@ -476,7 +477,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
             SystemClock.sleep(1000)
         }
 
-        // Allow time for notification packet with new sequnce number to arrive
+        // Allow time for notification packet with new sequence number to arrive
         SystemClock.sleep(2000)
 
         bolusingEvent.t = medtrumPump.bolusingTreatment

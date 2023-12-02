@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data.dto
 
-import info.nightscout.pump.common.utils.StringUtil
+import app.aaps.core.utils.StringUtil
 
 /**
  * Created by andy on 6/2/18.
  */
-open class PumpTimeStampedRecord constructor(var atechDateTime: Long = 0) {
+open class PumpTimeStampedRecord(var atechDateTime: Long = 0) {
 
     var decimalPrecission = 2
     // var atechDateTime: Long = 0

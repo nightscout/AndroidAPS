@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 import org.joda.time.Duration;
 
-import info.nightscout.pump.common.utils.ByteUtil;
+import app.aaps.core.utils.pump.ByteUtil;
 
 public class AlertConfiguration {
     private final AlertType alertType;

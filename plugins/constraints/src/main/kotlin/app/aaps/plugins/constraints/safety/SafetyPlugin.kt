@@ -1,20 +1,22 @@
 package app.aaps.plugins.constraints.safety
 
-import app.aaps.core.interfaces.aps.ApsMode
+import app.aaps.core.data.aps.ApsMode
+import app.aaps.core.data.plugin.PluginDescription
+import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.constraints.Safety
-import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.core.interfaces.pump.defs.PumpDescription
+import app.aaps.core.interfaces.pump.defs.determineCorrectBolusSize
+import app.aaps.core.interfaces.pump.defs.determineCorrectExtendedBolusSize
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -22,30 +24,29 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.Round
-import app.aaps.core.main.constraints.ConstraintObject
-import app.aaps.core.main.utils.extensions.putDouble
-import app.aaps.core.main.utils.extensions.putInt
-import app.aaps.core.main.utils.extensions.putString
-import app.aaps.core.main.utils.extensions.storeDouble
-import app.aaps.core.main.utils.extensions.storeInt
-import app.aaps.core.main.utils.extensions.storeString
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
+import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.core.objects.extensions.put
+import app.aaps.core.objects.extensions.store
 import app.aaps.plugins.constraints.R
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class SafetyPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     private val sp: SP,
+    private val preferences: Preferences,
     private val constraintChecker: ConstraintsChecker,
     private val activePlugin: ActivePlugin,
     private val hardLimits: HardLimits,
     private val config: Config,
-    private val iobCobCalculator: IobCobCalculator,
+    private val persistenceLayer: PersistenceLayer,
     private val dateUtil: DateUtil,
     private val uiInteraction: UiInteraction,
     private val decimalFormatter: DecimalFormatter
@@ -57,7 +58,7 @@ class SafetyPlugin @Inject constructor(
         .showInList(false)
         .pluginName(R.string.safety)
         .preferencesId(R.xml.pref_safety),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), PluginConstraints, Safety {
 
     /**
@@ -69,7 +70,7 @@ class SafetyPlugin @Inject constructor(
     }
 
     override fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
-        val mode = ApsMode.fromString(sp.getString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name))
+        val mode = ApsMode.fromString(preferences.get(StringKey.LoopApsMode))
         if (mode == ApsMode.OPEN) value.set(false, rh.gs(R.string.closedmodedisabledinpreferences), this)
         if (!config.isEngineeringModeOrRelease()) {
             if (value.value()) {
@@ -78,7 +79,7 @@ class SafetyPlugin @Inject constructor(
             value.set(false, rh.gs(R.string.closed_loop_disabled_on_dev_branch), this)
         }
         val pump = activePlugin.activePump
-        if (!pump.isFakingTempsByExtendedBoluses && iobCobCalculator.getExtendedBolus(dateUtil.now()) != null) {
+        if (!pump.isFakingTempsByExtendedBoluses && persistenceLayer.getExtendedBolusActiveAt(dateUtil.now()) != null) {
             value.set(false, rh.gs(R.string.closed_loop_disabled_with_eb), this)
         }
         return value
@@ -139,7 +140,7 @@ class SafetyPlugin @Inject constructor(
 
     override fun applyBolusConstraints(insulin: Constraint<Double>): Constraint<Double> {
         insulin.setIfGreater(0.0, rh.gs(app.aaps.core.ui.R.string.limitingbolus, 0.0, rh.gs(app.aaps.core.ui.R.string.itmustbepositivevalue)), this)
-        val maxBolus = sp.getDouble(app.aaps.core.utils.R.string.key_treatmentssafety_maxbolus, 3.0)
+        val maxBolus = preferences.get(DoubleKey.SafetyMaxBolus)
         insulin.setIfSmaller(maxBolus, rh.gs(app.aaps.core.ui.R.string.limitingbolus, maxBolus, rh.gs(R.string.maxvalueinpreferences)), this)
         insulin.setIfSmaller(hardLimits.maxBolus(), rh.gs(app.aaps.core.ui.R.string.limitingbolus, hardLimits.maxBolus(), rh.gs(R.string.hardlimit)), this)
         val pump = activePlugin.activePump
@@ -150,7 +151,7 @@ class SafetyPlugin @Inject constructor(
 
     override fun applyExtendedBolusConstraints(insulin: Constraint<Double>): Constraint<Double> {
         insulin.setIfGreater(0.0, rh.gs(R.string.limitingextendedbolus, 0.0, rh.gs(app.aaps.core.ui.R.string.itmustbepositivevalue)), this)
-        val maxBolus = sp.getDouble(app.aaps.core.utils.R.string.key_treatmentssafety_maxbolus, 3.0)
+        val maxBolus = preferences.get(DoubleKey.SafetyMaxBolus)
         insulin.setIfSmaller(maxBolus, rh.gs(R.string.limitingextendedbolus, maxBolus, rh.gs(R.string.maxvalueinpreferences)), this)
         insulin.setIfSmaller(hardLimits.maxBolus(), rh.gs(R.string.limitingextendedbolus, hardLimits.maxBolus(), rh.gs(R.string.hardlimit)), this)
         val pump = activePlugin.activePump
@@ -161,13 +162,13 @@ class SafetyPlugin @Inject constructor(
 
     override fun applyCarbsConstraints(carbs: Constraint<Int>): Constraint<Int> {
         carbs.setIfGreater(0, rh.gs(R.string.limitingcarbs, 0, rh.gs(app.aaps.core.ui.R.string.itmustbepositivevalue)), this)
-        val maxCarbs = sp.getInt(app.aaps.core.utils.R.string.key_treatmentssafety_maxcarbs, 48)
+        val maxCarbs = preferences.get(IntKey.SafetyMaxCarbs)
         carbs.setIfSmaller(maxCarbs, rh.gs(R.string.limitingcarbs, maxCarbs, rh.gs(R.string.maxvalueinpreferences)), this)
         return carbs
     }
 
     override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
-        val apsMode = ApsMode.fromString(sp.getString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name))
+        val apsMode = ApsMode.fromString(preferences.get(StringKey.LoopApsMode))
         if (apsMode == ApsMode.LGS) maxIob.setIfSmaller(
             HardLimits.MAX_IOB_LGS,
             rh.gs(app.aaps.core.ui.R.string.limiting_iob, HardLimits.MAX_IOB_LGS, rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend)),
@@ -178,13 +179,14 @@ class SafetyPlugin @Inject constructor(
 
     override fun configuration(): JSONObject =
         JSONObject()
-            .putString(app.aaps.core.utils.R.string.key_age, sp, rh)
-            .putDouble(app.aaps.core.utils.R.string.key_treatmentssafety_maxbolus, sp, rh)
-            .putInt(app.aaps.core.utils.R.string.key_treatmentssafety_maxcarbs, sp, rh)
+            .put(StringKey.SafetyAge, preferences, rh)
+            .put(DoubleKey.SafetyMaxBolus, preferences, rh)
+            .put(IntKey.SafetyMaxCarbs, preferences, rh)
 
     override fun applyConfiguration(configuration: JSONObject) {
-        configuration.storeString(app.aaps.core.utils.R.string.key_age, sp, rh)
-        configuration.storeDouble(app.aaps.core.utils.R.string.key_treatmentssafety_maxbolus, sp, rh)
-        configuration.storeInt(app.aaps.core.utils.R.string.key_treatmentssafety_maxcarbs, sp, rh)
+        configuration
+            .store(StringKey.SafetyAge, preferences, rh)
+            .store(DoubleKey.SafetyMaxBolus, preferences, rh)
+            .store(IntKey.SafetyMaxCarbs, preferences, rh)
     }
 }

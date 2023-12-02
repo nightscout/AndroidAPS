@@ -13,10 +13,14 @@ import androidx.work.Data
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.TE
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
-import app.aaps.core.interfaces.extensions.runOnUiThread
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -27,14 +31,15 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.UnitDoubleKey
+import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.core.ui.locale.LocaleHelper
-import app.aaps.database.entities.TherapyEvent
-import app.aaps.database.entities.UserEntry
-import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
-import app.aaps.database.impl.transactions.VersionChangeTransaction
+import app.aaps.database.persistence.CompatDBHelper
 import app.aaps.di.DaggerAppComponent
-import app.aaps.implementation.db.CompatDBHelper
 import app.aaps.implementation.lifecycle.ProcessLifecycleListener
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.implementation.receivers.NetworkChangeReceiver
@@ -72,11 +77,12 @@ class MainApp : DaggerApplication() {
     @Inject lateinit var activityMonitor: ActivityMonitor
     @Inject lateinit var versionCheckersUtils: VersionCheckerUtils
     @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var config: Config
     @Inject lateinit var configBuilder: ConfigBuilder
     @Inject lateinit var plugins: List<@JvmSuppressWildcards PluginBase>
     @Inject lateinit var compatDBHelper: CompatDBHelper
-    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var dateUtil: DateUtil
     @Suppress("unused") @Inject lateinit var staticInjector: StaticInjector// better avoid, here fake only to initialize
     @Inject lateinit var uel: UserEntryLogger
@@ -125,22 +131,22 @@ class MainApp : DaggerApplication() {
             handler.postDelayed(
                 {
                     // check if identification is set
-                    if (config.isDev() && sp.getStringOrNull(app.aaps.core.utils.R.string.key_email_for_crash_report, null).isNullOrBlank())
+                    if (config.isDev() && preferences.get(StringKey.MaintenanceIdentification).isBlank())
                         notificationStore.add(Notification(Notification.IDENTIFICATION_NOT_SET, rh.get().gs(R.string.identification_not_set), Notification.INFO))
                     // log version
-                    disposable += repository.runTransaction(VersionChangeTransaction(config.VERSION_NAME, BuildConfig.VERSION_CODE, gitRemote, commitHash)).subscribe()
+                    disposable += persistenceLayer.insertVersionChangeIfChanged(config.VERSION_NAME, BuildConfig.VERSION_CODE, gitRemote, commitHash).subscribe()
                     // log app start
                     if (sp.getBoolean(app.aaps.plugins.sync.R.string.key_ns_log_app_started_event, config.APS))
-                        disposable += repository
-                            .runTransaction(
-                                InsertIfNewByTimestampTherapyEventTransaction(
-                                    timestamp = dateUtil.now(),
-                                    type = TherapyEvent.Type.NOTE,
-                                    note = rh.get().gs(app.aaps.core.ui.R.string.androidaps_start) + " - " + Build.MANUFACTURER + " " + Build.MODEL,
-                                    glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
-                                )
-                            )
-                            .subscribe()
+                        disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
+                            therapyEvent = TE(
+                                timestamp = dateUtil.now(),
+                                type = TE.Type.NOTE,
+                                note = rh.get().gs(app.aaps.core.ui.R.string.androidaps_start) + " - " + Build.MANUFACTURER + " " + Build.MODEL,
+                                glucoseUnit = GlucoseUnit.MGDL
+                            ),
+                            action = Action.START_AAPS,
+                            source = Sources.Aaps, note = "", listValues = listOf()
+                        ).subscribe()
                 }, 10000
             )
             WorkManager.getInstance(this@MainApp).enqueueUniquePeriodicWork(
@@ -154,7 +160,6 @@ class MainApp : DaggerApplication() {
             localAlertUtils.shortenSnoozeInterval()
             localAlertUtils.preSnoozeAlarms()
             doMigrations()
-            uel.log(UserEntry.Action.START_AAPS, UserEntry.Sources.Aaps)
 
             //  schedule widget update
             refreshWidget = Runnable {
@@ -199,7 +204,6 @@ class MainApp : DaggerApplication() {
         // set values for different builds
         if (!sp.contains(R.string.key_ns_alarms)) sp.putBoolean(R.string.key_ns_alarms, config.NSCLIENT)
         if (!sp.contains(R.string.key_ns_announcements)) sp.putBoolean(R.string.key_ns_announcements, config.NSCLIENT)
-        if (!sp.contains(app.aaps.core.ui.R.string.key_language)) sp.putString(app.aaps.core.ui.R.string.key_language, "default")
         // 3.1.0
         if (sp.contains("ns_wifionly")) {
             if (sp.getBoolean("ns_wifionly", false)) {
@@ -223,13 +227,23 @@ class MainApp : DaggerApplication() {
         }
         if (!sp.contains(app.aaps.plugins.sync.R.string.key_ns_log_app_started_event))
             sp.putBoolean(app.aaps.plugins.sync.R.string.key_ns_log_app_started_event, config.APS)
-        if (sp.getString(app.aaps.plugins.configuration.R.string.key_maintenance_logs_email, "") == "logs@androidaps.org")
-            sp.putString(app.aaps.plugins.configuration.R.string.key_maintenance_logs_email, "logs@aaps.app")
+        if (preferences.getIfExists(StringKey.MaintenanceEmail) == "logs@androidaps.org")
+            preferences.put(StringKey.MaintenanceEmail, "logs@aaps.app")
         // fix values for theme switching
         sp.putString(app.aaps.plugins.main.R.string.value_dark_theme, "dark")
         sp.putString(app.aaps.plugins.main.R.string.value_light_theme, "light")
         sp.putString(app.aaps.plugins.main.R.string.value_system_theme, "system")
-
+        // 3.3
+        if (preferences.get(IntKey.OverviewEatingSoonDuration) == 0) preferences.remove(IntKey.OverviewEatingSoonDuration)
+        if (preferences.get(UnitDoubleKey.OverviewEatingSoonTarget) == 0.0) preferences.remove(UnitDoubleKey.OverviewEatingSoonTarget)
+        if (preferences.get(IntKey.OverviewActivityDuration) == 0) preferences.remove(IntKey.OverviewActivityDuration)
+        if (preferences.get(UnitDoubleKey.OverviewActivityTarget) == 0.0) preferences.remove(UnitDoubleKey.OverviewActivityTarget)
+        if (preferences.get(IntKey.OverviewHypoDuration) == 0) preferences.remove(IntKey.OverviewHypoDuration)
+        if (preferences.get(UnitDoubleKey.OverviewHypoTarget) == 0.0) preferences.remove(UnitDoubleKey.OverviewHypoTarget)
+        if (preferences.get(UnitDoubleKey.OverviewLowMark) == 0.0) preferences.remove(UnitDoubleKey.OverviewLowMark)
+        if (preferences.get(UnitDoubleKey.OverviewHighMark) == 0.0) preferences.remove(UnitDoubleKey.OverviewHighMark)
+        if (preferences.getIfExists(BooleanKey.GeneralSimpleMode) == null)
+            preferences.put(BooleanKey.GeneralSimpleMode, !preferences.get(BooleanKey.GeneralSetupWizardProcessed))
     }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {

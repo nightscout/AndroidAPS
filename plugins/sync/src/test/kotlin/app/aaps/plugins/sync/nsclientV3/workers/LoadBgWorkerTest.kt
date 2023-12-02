@@ -6,6 +6,10 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkContinuation
 import androidx.work.WorkManager
 import androidx.work.testing.TestListenableWorkerBuilder
+import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.IDs
+import app.aaps.core.data.model.SourceSensor
+import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
@@ -19,8 +23,6 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.remotemodel.LastModified
 import app.aaps.core.utils.receivers.DataWorkerStorage
-import app.aaps.database.entities.GlucoseValue
-import app.aaps.database.entities.embedments.InterfaceIDs
 import app.aaps.implementation.utils.DecimalFormatterImpl
 import app.aaps.plugins.sync.nsclient.ReceiverDelegate
 import app.aaps.plugins.sync.nsclientV3.DataSyncSelectorV3
@@ -94,7 +96,7 @@ internal class LoadBgWorkerTest : TestBase() {
         dataWorkerStorage = DataWorkerStorage(context)
         receiverDelegate = ReceiverDelegate(rxBus, rh, sp, receiverStatusStore, aapsSchedulers, fabricPrivacy)
         nsClientV3Plugin = NSClientV3Plugin(
-            injector, aapsLogger, aapsSchedulers, rxBus, rh, context, fabricPrivacy,
+            aapsLogger, aapsSchedulers, rxBus, rh, context, fabricPrivacy,
             sp, receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
             nsClientSource, storeDataForDb, decimalFormatter
         )
@@ -138,15 +140,15 @@ internal class LoadBgWorkerTest : TestBase() {
     @Test
     fun testThereAreNewerDataFirstLoadListReturn() = runTest {
 
-        val glucoseValue = GlucoseValue(
+        val glucoseValue = GV(
             timestamp = 10000,
             isValid = true,
             raw = 101.0,
             value = 99.0,
-            trendArrow = GlucoseValue.TrendArrow.DOUBLE_UP,
+            trendArrow = TrendArrow.DOUBLE_UP,
             noise = 1.0,
-            sourceSensor = GlucoseValue.SourceSensor.DEXCOM_G4_WIXEL,
-            interfaceIDs_backing = InterfaceIDs(
+            sourceSensor = SourceSensor.DEXCOM_G4_WIXEL,
+            ids = IDs(
                 nightscoutId = "nightscoutId"
             )
         )

@@ -8,23 +8,16 @@
         android:title="@string/maintenance_settings"
         app:initialExpandedChildrenCount="0">
 
-        <app.aaps.core.validators.ValidatingEditTextPreference
-            android:defaultValue="logs@aaps.app"
+        <app.aaps.core.validators.AdaptiveStringPreference
             android:dialogMessage="@string/maintenance_email"
             android:inputType="textEmailAddress"
             android:key="@string/key_maintenance_logs_email"
-            android:selectAllOnFocus="true"
             android:title="@string/maintenance_email"
-            validate:testType="email"/>
+            validate:testType="email" />
 
-        <app.aaps.core.validators.ValidatingEditTextPreference
-            android:defaultValue="2"
-            android:inputType="number"
+        <app.aaps.core.validators.AdaptiveIntPreference
             android:key="@string/key_maintenance_logs_amount"
-            android:title="@string/maintenance_amount"
-            validate:maxNumber="10"
-            validate:minNumber="1"
-            validate:testType="numericRange"/>
+            android:title="@string/maintenance_amount" />
 
     </PreferenceCategory>
 

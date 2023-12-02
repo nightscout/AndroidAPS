@@ -2,11 +2,11 @@ package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communicatio
 
 import androidx.annotation.NonNull;
 
+import app.aaps.core.utils.pump.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.MessageBlock;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.FaultEventCode;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.MessageBlockType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PodProgressStatus;
-import info.nightscout.pump.common.utils.ByteUtil;
 
 public class ErrorResponse extends MessageBlock {
     public static final byte ERROR_RESPONSE_CODE_BAD_NONCE = (byte) 0x14;

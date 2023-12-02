@@ -17,6 +17,9 @@ import app.aaps.core.interfaces.resources.ResourceHelper;
 import app.aaps.core.interfaces.rx.bus.RxBus;
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview;
 import app.aaps.core.interfaces.sharedPreferences.SP;
+import app.aaps.core.utils.StringUtil;
+import app.aaps.core.utils.pump.ByteUtil;
+import app.aaps.core.utils.pump.ThreadUtil;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.R;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
@@ -37,9 +40,6 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.Rile
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkTargetFrequency;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.operations.BLECommOperationResult;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
-import info.nightscout.pump.common.utils.ByteUtil;
-import info.nightscout.pump.common.utils.StringUtil;
-import info.nightscout.pump.common.utils.ThreadUtil;
 
 /**
  * Created by geoff on 5/26/16.

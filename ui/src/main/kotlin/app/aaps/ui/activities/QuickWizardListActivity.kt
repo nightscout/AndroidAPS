@@ -16,21 +16,21 @@ import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.main.utils.ActionModeHelper
-import app.aaps.core.main.wizard.QuickWizard
-import app.aaps.core.main.wizard.QuickWizardEntry
+import app.aaps.core.objects.ui.ActionModeHelper
+import app.aaps.core.objects.wizard.QuickWizard
+import app.aaps.core.objects.wizard.QuickWizardEntry
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.dragHelpers.ItemTouchHelperAdapter
 import app.aaps.core.ui.dragHelpers.OnStartDragListener
 import app.aaps.core.ui.dragHelpers.SimpleItemTouchHelperCallback
+import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.ui.R
 import app.aaps.ui.databinding.ActivityQuickwizardListBinding
 import app.aaps.ui.databinding.QuickwizardListItemBinding
@@ -74,15 +74,15 @@ class QuickWizardListActivity : TranslatedDaggerAppCompatActivity(), OnStartDrag
             holder.binding.from.text = dateUtil.timeString(entry.validFromDate())
             holder.binding.to.text = dateUtil.timeString(entry.validToDate())
             holder.binding.buttonText.text = entry.buttonText()
-            holder.binding.carbs.text = rh.gs(app.aaps.core.main.R.string.format_carbs, entry.carbs())
+            holder.binding.carbs.text = rh.gs(app.aaps.core.objects.R.string.format_carbs, entry.carbs())
             if (entry.device() == QuickWizardEntry.DEVICE_ALL) {
                 holder.binding.device.visibility = View.GONE
             } else {
                 holder.binding.device.visibility = View.VISIBLE
                 holder.binding.device.setImageResource(
                     when (quickWizard[position].device()) {
-                        QuickWizardEntry.DEVICE_WATCH -> app.aaps.core.main.R.drawable.ic_watch
-                        else                          -> app.aaps.core.main.R.drawable.ic_smartphone
+                        QuickWizardEntry.DEVICE_WATCH -> app.aaps.core.objects.R.drawable.ic_watch
+                        else                          -> app.aaps.core.objects.R.drawable.ic_smartphone
                     }
                 )
                 holder.binding.device.contentDescription = when (quickWizard[position].device()) {
@@ -156,7 +156,7 @@ class QuickWizardListActivity : TranslatedDaggerAppCompatActivity(), OnStartDrag
         }
         addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(app.aaps.core.main.R.menu.menu_actions, menu)
+                menuInflater.inflate(app.aaps.core.objects.R.menu.menu_actions, menu)
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
@@ -194,7 +194,7 @@ class QuickWizardListActivity : TranslatedDaggerAppCompatActivity(), OnStartDrag
     private fun getConfirmationText(selectedItems: SparseArray<QuickWizardEntry>): String {
         if (selectedItems.size() == 1) {
             val entry = selectedItems.valueAt(0)
-            return "${rh.gs(app.aaps.core.ui.R.string.remove_button)} ${entry.buttonText()} ${rh.gs(app.aaps.core.main.R.string.format_carbs, entry.carbs())}\n" +
+            return "${rh.gs(app.aaps.core.ui.R.string.remove_button)} ${entry.buttonText()} ${rh.gs(app.aaps.core.objects.R.string.format_carbs, entry.carbs())}\n" +
                 "${dateUtil.timeString(entry.validFromDate())} - ${dateUtil.timeString(entry.validToDate())}"
         }
         return rh.gs(app.aaps.core.ui.R.string.confirm_remove_multiple_items, selectedItems.size())

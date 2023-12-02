@@ -1,9 +1,10 @@
 package app.aaps.core.interfaces.aps
 
-import app.aaps.core.interfaces.iob.GlucoseStatus
-import app.aaps.core.interfaces.iob.IobTotal
-import app.aaps.core.interfaces.iob.MealData
+import app.aaps.core.data.iob.GlucoseStatus
+import app.aaps.core.data.iob.IobTotal
+import app.aaps.core.data.iob.MealData
 import app.aaps.core.interfaces.profile.Profile
+import org.json.JSONObject
 
 interface DetermineBasalAdapter {
 
@@ -37,6 +38,8 @@ interface DetermineBasalAdapter {
         tddLast4H: Double?,
         tddLast8to4H: Double?
     )
+
+    fun json(): JSONObject
 
     operator fun invoke(): APSResult?
 }

@@ -11,6 +11,7 @@ import org.mockito.Mockito
 import org.mockito.Mockito.anyInt
 import org.mockito.Mockito.anyString
 import org.mockito.Mockito.`when`
+import org.mockito.kotlin.any
 import org.skyscreamer.jsonassert.JSONAssert
 
 private const val STRING_JSON = """{"data":{"profileToSwitchTo":"Test"},"type":"ActionProfileSwitch"}"""
@@ -22,10 +23,10 @@ class ActionProfileSwitchTest : ActionsTestBase() {
     @BeforeEach fun setUp() {
         `when`(rh.gs(R.string.profilename)).thenReturn("Change profile to")
         `when`(rh.gs(R.string.changengetoprofilename)).thenReturn("Change profile to %s")
-        `when`(context.getString(R.string.alreadyset)).thenReturn("Already set")
-        `when`(context.getString(app.aaps.core.ui.R.string.notexists)).thenReturn("not exists")
-        `when`(context.getString(app.aaps.core.validators.R.string.error_field_must_not_be_empty)).thenReturn("The field must not be empty")
-        `when`(context.getString(app.aaps.core.ui.R.string.noprofile)).thenReturn("No profile loaded from NS yet")
+        `when`(rh.gs(R.string.alreadyset)).thenReturn("Already set")
+        `when`(rh.gs(app.aaps.core.ui.R.string.notexists)).thenReturn("not exists")
+        `when`(rh.gs(app.aaps.core.validators.R.string.error_field_must_not_be_empty)).thenReturn("The field must not be empty")
+        `when`(rh.gs(app.aaps.core.ui.R.string.noprofile)).thenReturn("No profile loaded from NS yet")
 
         sut = ActionProfileSwitch(injector)
     }
@@ -80,7 +81,7 @@ class ActionProfileSwitchTest : ActionsTestBase() {
 
         // do profile switch
         `when`(profileFunction.getProfileName()).thenReturn("Test")
-        `when`(profileFunction.createProfileSwitch(anyObject(), anyString(), anyInt(), anyInt(), anyInt(), anyLong())).thenReturn(true)
+        `when`(profileFunction.createProfileSwitch(anyObject(), anyString(), anyInt(), anyInt(), anyInt(), anyLong(), any(), any(), any(), any())).thenReturn(true)
         sut.inputProfileName = InputProfileName(rh, activePlugin, TESTPROFILENAME)
         sut.doAction(object : Callback() {
             override fun run() {
@@ -88,7 +89,7 @@ class ActionProfileSwitchTest : ActionsTestBase() {
                 assertThat(result.comment).isEqualTo("OK")
             }
         })
-        Mockito.verify(profileFunction, Mockito.times(1)).createProfileSwitch(anyObject(), anyString(), anyInt(), anyInt(), anyInt(), anyLong())
+        Mockito.verify(profileFunction, Mockito.times(1)).createProfileSwitch(anyObject(), anyString(), anyInt(), anyInt(), anyInt(), anyLong(), any(), any(), any(), any())
     }
 
     @Test fun hasDialogTest() {

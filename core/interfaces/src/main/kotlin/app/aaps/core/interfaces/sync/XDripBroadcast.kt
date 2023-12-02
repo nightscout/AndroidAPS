@@ -5,6 +5,8 @@ package app.aaps.core.interfaces.sync
  */
 interface XDripBroadcast {
 
+    fun isEnabled(): Boolean
+
     /**
      *  Send calibration to xDrip+
      *  Accepting must be enabled in Inter-app settings - Accept Calibrations

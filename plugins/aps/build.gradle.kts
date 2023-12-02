@@ -12,11 +12,11 @@ android {
 }
 
 dependencies {
-    implementation(project(":database:entities"))
-    implementation(project(":database:impl"))
-    implementation(project(":core:main"))
+    implementation(project(":core:data"))
     implementation(project(":core:interfaces"))
+    implementation(project(":core:keys"))
     implementation(project(":core:nssdk"))
+    implementation(project(":core:objects"))
     implementation(project(":core:utils"))
     implementation(project(":core:ui"))
     implementation(project(":core:validators"))
@@ -30,6 +30,9 @@ dependencies {
 
     // APS
     api(Libs.Mozilla.rhino)
+
+    //Logger
+    api(Libs.Logging.slf4jApi)
 
     kapt(Libs.Dagger.androidProcessor)
 }

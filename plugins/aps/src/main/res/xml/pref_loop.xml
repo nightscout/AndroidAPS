@@ -1,33 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:validate="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
         android:key="@string/key_loop_settings"
-        app:initialExpandedChildrenCount="0"
-        android:title="@string/loop">
+        android:title="@string/loop"
+        app:initialExpandedChildrenCount="0">
 
-        <ListPreference
-            android:defaultValue="open"
+        <app.aaps.core.keys.AdaptiveListPreference
             android:entries="@array/aps_modeArray"
             android:entryValues="@array/aps_modeValues"
             android:key="@string/key_aps_mode"
             android:title="@string/aps_mode_title" />
 
-        <app.aaps.core.validators.ValidatingEditTextPreference
-            android:defaultValue="20"
+        <app.aaps.core.validators.AdaptiveIntPreference
             android:dialogMessage="@string/loop_open_mode_min_change_summary"
-            android:digits="0123456789"
-            android:inputType="number"
-            android:key="@string/key_loop_openmode_min_change"
-            android:maxLines="1"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="@string/loop_open_mode_min_change"
-            validate:maxNumber="50"
-            validate:minNumber="0"
-            validate:testType="numericRange" />
+            android:key="@string/key_loop_open_mode_min_change"
+            android:title="@string/loop_open_mode_min_change" />
 
     </PreferenceCategory>
 

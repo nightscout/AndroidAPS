@@ -1,7 +1,7 @@
 package app.aaps.pump.equil.data.database
 
+import app.aaps.core.data.model.BS
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.core.interfaces.pump.DetailedBolusInfo
 
 sealed class EquilRecord
 
@@ -18,19 +18,19 @@ enum class ResolvedResult {
 enum class BolusType {
     DEFAULT, SMB;
 
-    fun toBolusInfoBolusType(): DetailedBolusInfo.BolusType {
+    fun toBolusInfoBolusType(): BS.Type {
         return when (this) {
-            DEFAULT -> DetailedBolusInfo.BolusType.NORMAL
-            SMB     -> DetailedBolusInfo.BolusType.SMB
+            DEFAULT -> BS.Type.NORMAL
+            SMB     -> BS.Type.SMB
         }
     }
 
     companion object {
 
-        fun fromBolusInfoBolusType(type: DetailedBolusInfo.BolusType): BolusType {
+        fun fromBolusInfoBolusType(type: BS.Type): BolusType {
             return when (type) {
-                DetailedBolusInfo.BolusType.SMB -> SMB
-                else                            -> DEFAULT
+                BS.Type.SMB -> SMB
+                else        -> DEFAULT
             }
         }
     }

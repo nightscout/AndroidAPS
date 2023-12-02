@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition;
 
-import info.nightscout.pump.common.utils.ByteUtil;
+import app.aaps.core.utils.pump.ByteUtil;
 
 public final class ErrorEventInfo {
     private final boolean insulinStateTableCorruption;

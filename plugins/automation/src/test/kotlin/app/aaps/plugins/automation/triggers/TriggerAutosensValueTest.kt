@@ -1,21 +1,20 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.core.keys.DoubleKey
+import app.aaps.implementation.iob.AutosensDataObject
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
-import app.aaps.plugins.main.iob.iobCobCalculator.data.AutosensDataObject
 import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers
-import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.skyscreamer.jsonassert.JSONAssert
 
 class TriggerAutosensValueTest : TriggerTestBase() {
 
     @Test fun shouldRunTest() {
-        `when`(sp.getDouble(Mockito.eq(app.aaps.core.utils.R.string.key_openapsama_autosens_max), ArgumentMatchers.anyDouble())).thenReturn(1.2)
-        `when`(sp.getDouble(Mockito.eq(app.aaps.core.utils.R.string.key_openapsama_autosens_min), ArgumentMatchers.anyDouble())).thenReturn(0.7)
+        `when`(preferences.get(DoubleKey.AutosensMax)).thenReturn(1.2)
+        `when`(preferences.get(DoubleKey.AutosensMin)).thenReturn(0.7)
         `when`(autosensDataStore.getLastAutosensData(anyObject(), anyObject(), anyObject())).thenReturn(generateAutosensData())
         var t = TriggerAutosensValue(injector)
         t.autosens.value = 110.0
@@ -56,7 +55,7 @@ class TriggerAutosensValueTest : TriggerTestBase() {
         t.autosens.value = 390.0
         t.comparator.value = Comparator.Compare.IS_EQUAL_OR_LESSER
         assertThat(t.shouldRun()).isTrue()
-        `when`(autosensDataStore.getLastAutosensData(anyObject(), anyObject(), anyObject())).thenReturn(AutosensDataObject(injector))
+        `when`(autosensDataStore.getLastAutosensData(anyObject(), anyObject(), anyObject())).thenReturn(AutosensDataObject(aapsLogger, preferences, dateUtil))
         t = TriggerAutosensValue(injector)
         t.autosens.value = 80.0
         t.comparator.value = Comparator.Compare.IS_EQUAL_OR_LESSER
@@ -103,5 +102,5 @@ class TriggerAutosensValueTest : TriggerTestBase() {
         assertThat(TriggerAutosensValue(injector).icon().get()).isEqualTo(R.drawable.ic_as)
     }
 
-    private fun generateAutosensData() = AutosensDataObject(injector)
+    private fun generateAutosensData() = AutosensDataObject(aapsLogger, preferences, dateUtil)
 }

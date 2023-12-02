@@ -13,7 +13,9 @@ android {
 
 
 dependencies {
+    implementation(project(":core:data"))
     implementation(project(":core:interfaces"))
+    implementation(project(":core:keys"))
 
     api(Libs.Dagger.android)
     api(Libs.Dagger.androidSupport)

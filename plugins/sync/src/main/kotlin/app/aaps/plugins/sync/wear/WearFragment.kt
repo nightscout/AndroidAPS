@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -16,14 +15,16 @@ import app.aaps.core.interfaces.rx.events.EventWearUpdateGui
 import app.aaps.core.interfaces.rx.weardata.CwfData
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
 import app.aaps.core.interfaces.rx.weardata.EventData
-import app.aaps.core.interfaces.rx.weardata.ResFileMap
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.databinding.WearFragmentBinding
 import app.aaps.plugins.sync.wear.activities.CwfInfosActivity
+import app.aaps.shared.impl.weardata.ResFileMap
+import app.aaps.shared.impl.weardata.toDrawable
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -87,7 +88,7 @@ class WearFragment : DaggerFragment() {
                            if (it.exportFile)
                                ToastUtils.okToast(activity, rh.gs(R.string.wear_new_custom_watchface_exported))
                            else {
-                               it.customWatchfaceData?.let { loadCustom(it) }
+                               it.customWatchfaceData?.let { cwfData -> loadCustom(cwfData) }
                                updateGui()
                            }
                        }, fabricPrivacy::logException)
@@ -112,7 +113,7 @@ class WearFragment : DaggerFragment() {
         wearPlugin.savedCustomWatchface?.let {
             wearPlugin.checkCustomWatchfacePreferences()
             binding.customName.text = rh.gs(R.string.wear_custom_watchface, it.metadata[CwfMetadataKey.CWF_NAME])
-            binding.coverChart.setImageDrawable(it.resDatas[ResFileMap.CUSTOM_WATCHFACE.fileName]?.toDrawable(resources))
+            binding.coverChart.setImageDrawable(it.resData[ResFileMap.CUSTOM_WATCHFACE.fileName]?.toDrawable(resources))
             binding.infosCustom.visibility = View.VISIBLE
         } ?: apply {
             binding.customName.text = rh.gs(R.string.wear_custom_watchface, "")

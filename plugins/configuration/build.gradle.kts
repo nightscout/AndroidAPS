@@ -14,13 +14,15 @@ android {
 
 
 dependencies {
-    implementation(project(":database:entities"))
+    implementation(project(":core:data"))
     implementation(project(":core:interfaces"))
-    implementation(project(":core:main"))
+    implementation(project(":core:keys"))
+    implementation(project(":core:objects"))
     implementation(project(":core:nssdk"))
     implementation(project(":core:utils"))
     implementation(project(":core:ui"))
     implementation(project(":core:validators"))
+    implementation(project(":shared:impl"))
 
     testImplementation(project(":shared:tests"))
 

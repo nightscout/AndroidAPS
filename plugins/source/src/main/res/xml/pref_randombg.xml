@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
@@ -8,9 +7,8 @@
         app:initialExpandedChildrenCount="0"
         android:title="Random BG">
 
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/key_do_ns_upload"
+        <app.aaps.core.keys.AdaptiveSwitchPreference
+            android:key="@string/key_do_bg_ns_upload"
             android:title="@string/do_ns_upload_title" />
 
         <EditTextPreference
@@ -19,5 +17,7 @@
             android:inputType="numberDecimal"
             android:key="randombg_interval_min"
             android:title="BG generation interval minutes" />
+
     </PreferenceCategory>
+
 </PreferenceScreen>

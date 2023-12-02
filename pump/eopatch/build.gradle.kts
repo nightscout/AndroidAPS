@@ -15,17 +15,17 @@ android {
 }
 
 dependencies {
-    implementation(project(":pump:eopatch-core"))
-    implementation(project(":core:libraries"))
+    implementation(project(":core:data"))
     implementation(project(":core:interfaces"))
-    implementation(project(":core:main"))
+    implementation(project(":core:libraries"))
     implementation(project(":core:utils"))
     implementation(project(":core:ui"))
-    implementation(project(":database:entities"))
+    implementation(project(":pump:eopatch-core"))
 
     api(Libs.Google.guava)
 
     //RxAndroidBle
+    api(Libs.Rx.rxAndroid)
     api(Libs.rxandroidBle)
     api(Libs.rx3ReplayingShare)
 

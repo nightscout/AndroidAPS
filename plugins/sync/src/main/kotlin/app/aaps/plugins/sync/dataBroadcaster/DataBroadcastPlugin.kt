@@ -4,8 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ResolveInfo
 import android.os.Bundle
+import app.aaps.core.data.plugin.PluginDescription
+import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -13,10 +16,8 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.plugin.PluginType
-import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.receivers.Intents
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -29,12 +30,13 @@ import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.main.extensions.durationInMinutes
-import app.aaps.core.main.extensions.toStringFull
-import app.aaps.core.main.iob.round
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.UnitDoubleKey
+import app.aaps.core.objects.extensions.durationInMinutes
+import app.aaps.core.objects.extensions.round
+import app.aaps.core.objects.extensions.toStringFull
 import app.aaps.plugins.sync.R
 import app.aaps.shared.impl.extensions.safeQueryBroadcastReceivers
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -42,7 +44,6 @@ import javax.inject.Singleton
 
 @Singleton
 class DataBroadcastPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     private val aapsSchedulers: AapsSchedulers,
@@ -51,8 +52,10 @@ class DataBroadcastPlugin @Inject constructor(
     private val fabricPrivacy: FabricPrivacy,
     private val rxBus: RxBus,
     private val iobCobCalculator: IobCobCalculator,
+    private val processedTbrEbData: ProcessedTbrEbData,
     private val profileFunction: ProfileFunction,
-    private val defaultValueHelper: DefaultValueHelper,
+    private val profileUtil: ProfileUtil,
+    private val preferences: Preferences,
     private val processedDeviceStatusData: ProcessedDeviceStatusData,
     private val loop: Loop,
     private val activePlugin: ActivePlugin,
@@ -63,11 +66,11 @@ class DataBroadcastPlugin @Inject constructor(
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
-        .pluginIcon(app.aaps.core.main.R.drawable.ic_watch)
+        .pluginIcon(app.aaps.core.objects.R.drawable.ic_watch)
         .pluginName(R.string.data_broadcaster)
         .shortName(R.string.data_broadcaster_short)
         .description(R.string.data_broadcaster_description),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ) {
 
     private val disposable = CompositeDisposable()
@@ -126,8 +129,8 @@ class DataBroadcastPlugin @Inject constructor(
         bundle.putString("slopeArrow", lastBG.trendArrow.text) // direction arrow as string
         bundle.putDouble("deltaMgdl", glucoseStatus.delta) // bg delta in mgdl
         bundle.putDouble("avgDeltaMgdl", glucoseStatus.shortAvgDelta) // average bg delta
-        bundle.putDouble("high", defaultValueHelper.determineHighLine()) // predefined top value of in range (green area)
-        bundle.putDouble("low", defaultValueHelper.determineLowLine()) // predefined bottom  value of in range
+        bundle.putDouble("high", preferences.get(UnitDoubleKey.OverviewHighMark)) // predefined top value of in range (green area)
+        bundle.putDouble("low", preferences.get(UnitDoubleKey.OverviewLowMark)) // predefined bottom  value of in range
     }
 
     private fun iobCob(bundle: Bundle) {
@@ -174,7 +177,7 @@ class DataBroadcastPlugin @Inject constructor(
         bundle.putLong("basalTimeStamp", now)
         bundle.putDouble("baseBasal", profile.getBasal())
         bundle.putString("profile", profileFunction.getProfileName())
-        iobCobCalculator.getTempBasalIncludingConvertedExtended(now)?.let {
+        processedTbrEbData.getTempBasalIncludingConvertedExtended(now)?.let {
             bundle.putLong("tempBasalStart", it.timestamp)
             bundle.putLong("tempBasalDurationInMinutes", it.durationInMinutes)
             if (it.isAbsolute) bundle.putDouble("tempBasalAbsolute", it.rate) // U/h for absolute TBR

@@ -2,7 +2,6 @@ package app.aaps.plugins.configuration.maintenance
 
 import android.content.Context
 import android.os.Environment
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.maintenance.PrefFileListProvider
 import app.aaps.core.interfaces.maintenance.PrefMetadata
@@ -12,7 +11,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.weardata.CwfFile
 import app.aaps.core.interfaces.rx.weardata.EventData
-import app.aaps.core.interfaces.rx.weardata.ZipWatchfaceFormat
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.storage.Storage
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
@@ -20,6 +18,7 @@ import app.aaps.plugins.configuration.R
 import app.aaps.plugins.configuration.maintenance.data.PrefMetadataMap
 import app.aaps.plugins.configuration.maintenance.data.PrefsStatusImpl
 import app.aaps.plugins.configuration.maintenance.formats.EncryptedPrefsFormat
+import app.aaps.shared.impl.weardata.ZipWatchfaceFormat
 import dagger.Lazy
 import dagger.Reusable
 import org.joda.time.DateTime
@@ -32,7 +31,6 @@ import javax.inject.Inject
 import kotlin.math.abs
 
 @Suppress("SpellCheckingInspection")
-@OpenForTesting
 @Reusable
 class PrefFileListProviderImpl @Inject constructor(
     private val rh: ResourceHelper,
@@ -50,6 +48,7 @@ class PrefFileListProviderImpl @Inject constructor(
     private val exportsPath = File(path, "AAPS" + File.separator + "exports")
     private val tempPath = File(path, "AAPS" + File.separator + "temp")
     private val extraPath = File(path, "AAPS" + File.separator + "extra")
+    override val resultPath = File(path, "AAPS" + File.separator + "results")
     override val logsPath: String = File(path, "AAPS" + File.separator + "logs" + File.separator + context.packageName).absolutePath
 
     companion object {
@@ -86,7 +85,7 @@ class PrefFileListProviderImpl @Inject constructor(
     override fun listCustomWatchfaceFiles(): MutableList<CwfFile> {
         val customWatchfaceFiles = mutableListOf<CwfFile>()
         val customWatchfaceAuthorization = sp.getBoolean(app.aaps.core.utils.R.string.key_wear_custom_watchface_autorization, false)
-        exportsPath.walk().filter { it.isFile && it.name.endsWith(ZipWatchfaceFormat.CWF_EXTENTION) }.forEach { file ->
+        exportsPath.walk().filter { it.isFile && it.name.endsWith(ZipWatchfaceFormat.CWF_EXTENSION) }.forEach { file ->
             ZipWatchfaceFormat.loadCustomWatchface(file.readBytes(), file.name, customWatchfaceAuthorization)?.also { customWatchface ->
                 customWatchfaceFiles.add(customWatchface)
             }
@@ -95,7 +94,7 @@ class PrefFileListProviderImpl @Inject constructor(
             try {
                 val assetFiles = context.assets.list("") ?: arrayOf()
                 for (assetFileName in assetFiles) {
-                    if (assetFileName.endsWith(ZipWatchfaceFormat.CWF_EXTENTION)) {
+                    if (assetFileName.endsWith(ZipWatchfaceFormat.CWF_EXTENSION)) {
                         val assetByteArray = context.assets.open(assetFileName).readBytes()
                         ZipWatchfaceFormat.loadCustomWatchface(assetByteArray, assetFileName, customWatchfaceAuthorization)?.also { customWatchface ->
                             customWatchfaceFiles.add(customWatchface)
@@ -138,6 +137,13 @@ class PrefFileListProviderImpl @Inject constructor(
         return extraPath
     }
 
+    override fun ensureResultDirExists(): File {
+        if (!resultPath.exists()) {
+            resultPath.mkdirs()
+        }
+        return resultPath
+    }
+
     override fun newExportFile(): File {
         val timeLocal = LocalDateTime.now().toString(DateTimeFormat.forPattern("yyyy-MM-dd'_'HHmmss"))
         return File(aapsPath, timeLocal + "_" + config.get().FLAVOR + ".json")
@@ -148,9 +154,14 @@ class PrefFileListProviderImpl @Inject constructor(
         return File(exportsPath, timeLocal + "_UserEntry.csv")
     }
 
+    override fun newResultFile(): File {
+        val timeLocal = LocalDateTime.now().toString(DateTimeFormat.forPattern("yyyy-MM-dd'_'HHmmss"))
+        return File(resultPath, "$timeLocal.json")
+    }
+
     override fun newCwfFile(filename: String, withDate: Boolean): File {
         val timeLocal = LocalDateTime.now().toString(DateTimeFormat.forPattern("yyyy-MM-dd'_'HHmmss"))
-        return if (withDate) File(exportsPath, "${filename}_$timeLocal${ZipWatchfaceFormat.CWF_EXTENTION}") else File(exportsPath, "${filename}${ZipWatchfaceFormat.CWF_EXTENTION}")
+        return if (withDate) File(exportsPath, "${filename}_$timeLocal${ZipWatchfaceFormat.CWF_EXTENSION}") else File(exportsPath, "${filename}${ZipWatchfaceFormat.CWF_EXTENSION}")
     }
 
     // check metadata for known issues, change their status and add info with explanations

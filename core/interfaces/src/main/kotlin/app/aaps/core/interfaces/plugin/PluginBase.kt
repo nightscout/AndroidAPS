@@ -2,10 +2,11 @@ package app.aaps.core.interfaces.plugin
 
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import app.aaps.core.data.plugin.PluginDescription
+import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.resources.ResourceHelper
-import dagger.android.HasAndroidInjector
 
 /**
  * Created by mike on 09.06.2016.
@@ -13,8 +14,7 @@ import dagger.android.HasAndroidInjector
 abstract class PluginBase(
     val pluginDescription: PluginDescription,
     val aapsLogger: AAPSLogger,
-    val rh: ResourceHelper,
-    val injector: HasAndroidInjector
+    val rh: ResourceHelper
 ) {
 
     enum class State {

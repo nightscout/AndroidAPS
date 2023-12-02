@@ -1,25 +1,21 @@
 package app.aaps.plugins.sync.dataBroadcaster
 
+import app.aaps.core.data.iob.CobInfo
+import app.aaps.core.data.iob.GlucoseStatus
+import app.aaps.core.data.iob.InMemoryGlucoseValue
+import app.aaps.core.data.iob.IobTotal
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.SourceSensor
+import app.aaps.core.data.model.TB
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.Loop
-import app.aaps.core.interfaces.db.GlucoseUnit
-import app.aaps.core.interfaces.iob.CobInfo
-import app.aaps.core.interfaces.iob.GlucoseStatus
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
-import app.aaps.core.interfaces.iob.InMemoryGlucoseValue
-import app.aaps.core.interfaces.iob.IobTotal
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
-import app.aaps.core.interfaces.profile.DefaultValueHelper
-import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
-import app.aaps.database.entities.GlucoseValue
-import app.aaps.database.entities.TemporaryBasal
 import app.aaps.shared.tests.BundleMock
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -29,7 +25,6 @@ import org.mockito.Mockito
 
 internal class DataBroadcastPluginTest : TestBaseWithProfile() {
 
-    @Mock lateinit var defaultValueHelper: DefaultValueHelper
     @Mock lateinit var loop: Loop
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
     @Mock lateinit var glucoseStatusProvider: GlucoseStatusProvider
@@ -38,28 +33,26 @@ internal class DataBroadcastPluginTest : TestBaseWithProfile() {
 
     private lateinit var sut: DataBroadcastPlugin
 
-    private val injector = HasAndroidInjector { AndroidInjector { } }
-
     @BeforeEach
     fun setUp() {
         sut = DataBroadcastPlugin(
-            injector, aapsLogger, rh, aapsSchedulers, context, dateUtil, fabricPrivacy, rxBus, iobCobCalculator, profileFunction, defaultValueHelper, processedDeviceStatusData,
-            loop, activePlugin, receiverStatusStore, config, glucoseStatusProvider, decimalFormatter
+            aapsLogger, rh, aapsSchedulers, context, dateUtil, fabricPrivacy, rxBus, iobCobCalculator, processedTbrEbData, profileFunction, profileUtil, preferences,
+            processedDeviceStatusData, loop, activePlugin, receiverStatusStore, config, glucoseStatusProvider, decimalFormatter
         )
         Mockito.`when`(iobCobCalculator.ads).thenReturn(autosensDataStore)
-        Mockito.`when`(autosensDataStore.lastBg()).thenReturn(InMemoryGlucoseValue(1000, 100.0, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN))
+        Mockito.`when`(autosensDataStore.lastBg()).thenReturn(InMemoryGlucoseValue(1000, 100.0, sourceSensor = SourceSensor.UNKNOWN))
         Mockito.`when`(profileFunction.getProfile()).thenReturn(validProfile)
         Mockito.`when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         Mockito.`when`(profileFunction.getProfileName()).thenReturn("TestProfile")
         Mockito.`when`(iobCobCalculator.calculateIobFromBolus()).thenReturn(IobTotal(System.currentTimeMillis()))
         Mockito.`when`(iobCobCalculator.getCobInfo("broadcast")).thenReturn(CobInfo(1000, 100.0, 10.0))
         Mockito.`when`(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(IobTotal(System.currentTimeMillis()))
-        Mockito.`when`(iobCobCalculator.getTempBasalIncludingConvertedExtended(anyLong()))
-            .thenReturn(TemporaryBasal(timestamp = 1000, duration = 60000, isAbsolute = true, rate = 1.0, type = TemporaryBasal.Type.NORMAL))
+        Mockito.`when`(processedTbrEbData.getTempBasalIncludingConvertedExtended(anyLong()))
+            .thenReturn(TB(timestamp = 1000, duration = 60000, isAbsolute = true, rate = 1.0, type = TB.Type.NORMAL))
         Mockito.`when`(processedDeviceStatusData.uploaderStatus).thenReturn("100%")
         Mockito.`when`(loop.lastRun).thenReturn(Loop.LastRun().also {
             it.lastTBREnact = 1000
-            it.tbrSetByPump = PumpEnactResult(injector).success(true).enacted(true)
+            it.tbrSetByPump = instantiator.providePumpEnactResult().success(true).enacted(true)
         }
         )
         Mockito.`when`(activePlugin.activePump).thenReturn(testPumpPlugin)

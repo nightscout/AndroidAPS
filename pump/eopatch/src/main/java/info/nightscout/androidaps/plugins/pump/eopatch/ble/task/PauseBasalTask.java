@@ -3,12 +3,15 @@ package info.nightscout.androidaps.plugins.pump.eopatch.ble.task;
 
 import android.os.SystemClock;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.aaps.core.data.ue.Action;
+import app.aaps.core.data.ue.Sources;
 import app.aaps.core.interfaces.logging.AAPSLogger;
 import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.core.interfaces.logging.UserEntryLogger;
@@ -16,7 +19,6 @@ import app.aaps.core.interfaces.pump.PumpSync;
 import app.aaps.core.interfaces.queue.Callback;
 import app.aaps.core.interfaces.queue.Command;
 import app.aaps.core.interfaces.queue.CommandQueue;
-import app.aaps.core.interfaces.userEntry.UserEntryMapper;
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode;
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.IAlarmRegistry;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager;
@@ -70,14 +72,14 @@ public class PauseBasalTask extends BolusTask {
         enqueue(TaskFunc.UPDATE_CONNECTION);
 
         if (commandQueue.isRunning(Command.CommandType.BOLUS)) {
-            uel.log(UserEntryMapper.Action.CANCEL_BOLUS, UserEntryMapper.Sources.EOPatch2);
+            uel.log(Action.CANCEL_BOLUS, Sources.EOPatch2, "", new ArrayList<>());
             commandQueue.cancelAllBoluses(null);
             SystemClock.sleep(650);
         }
         bolusCheckSubject.onNext(true);
 
         if (pumpSync.expectedPumpState().getExtendedBolus() != null) {
-            uel.log(UserEntryMapper.Action.CANCEL_EXTENDED_BOLUS, UserEntryMapper.Sources.EOPatch2);
+            uel.log(Action.CANCEL_EXTENDED_BOLUS, Sources.EOPatch2, "", new ArrayList<>());
             commandQueue.cancelExtended(new Callback() {
                 @Override
                 public void run() {
@@ -89,7 +91,7 @@ public class PauseBasalTask extends BolusTask {
         }
 
         if (pumpSync.expectedPumpState().getTemporaryBasal() != null) {
-            uel.log(UserEntryMapper.Action.CANCEL_TEMP_BASAL, UserEntryMapper.Sources.EOPatch2);
+            uel.log(Action.CANCEL_TEMP_BASAL, Sources.EOPatch2, "", new ArrayList<>());
             commandQueue.cancelTempBasal(true, new Callback() {
                 @Override
                 public void run() {

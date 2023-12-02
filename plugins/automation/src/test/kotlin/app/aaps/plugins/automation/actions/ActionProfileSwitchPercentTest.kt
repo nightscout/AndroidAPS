@@ -9,6 +9,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
+import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
 import org.skyscreamer.jsonassert.JSONAssert
 
 class ActionProfileSwitchPercentTest : ActionsTestBase() {
@@ -39,7 +41,7 @@ class ActionProfileSwitchPercentTest : ActionsTestBase() {
     }
 
     @Test fun doActionTest() {
-        `when`(profileFunction.createProfileSwitch(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt())).thenReturn(true)
+        `when`(profileFunction.createProfileSwitch(any(), any(), any(), any(), any(), any(), any())).thenReturn(true)
         sut.pct = InputPercent(110.0)
         sut.duration = InputDuration(30, InputDuration.TimeUnit.MINUTES)
         sut.doAction(object : Callback() {
@@ -47,7 +49,7 @@ class ActionProfileSwitchPercentTest : ActionsTestBase() {
                 assertThat(result.success).isTrue()
             }
         })
-        Mockito.verify(profileFunction, Mockito.times(1)).createProfileSwitch(30, 110, 0)
+        Mockito.verify(profileFunction, Mockito.times(1)).createProfileSwitch(eq(30), eq(110), eq(0), any(), any(), any(), any())
     }
 
     @Test fun hasDialogTest() {

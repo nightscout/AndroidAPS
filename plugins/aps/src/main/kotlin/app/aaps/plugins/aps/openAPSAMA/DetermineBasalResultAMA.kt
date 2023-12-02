@@ -1,13 +1,17 @@
 package app.aaps.plugins.aps.openAPSAMA
 
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.plugins.aps.APSResultObject
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.objects.aps.APSResultObject
 import dagger.android.HasAndroidInjector
 import org.json.JSONException
 import org.json.JSONObject
 import org.mozilla.javascript.NativeObject
+import javax.inject.Inject
 
-class DetermineBasalResultAMA private constructor(injector: HasAndroidInjector) : APSResultObject(injector) {
+class DetermineBasalResultAMA @Inject constructor(injector: HasAndroidInjector) : APSResultObject(injector) {
+
+    @Inject lateinit var dateUtil: DateUtil
 
     private var eventualBG = 0.0
     private var snoozeBG = 0.0
@@ -42,7 +46,7 @@ class DetermineBasalResultAMA private constructor(injector: HasAndroidInjector) 
         }
     }
 
-    override fun newAndClone(injector: HasAndroidInjector): DetermineBasalResultAMA {
+    override fun newAndClone(): DetermineBasalResultAMA {
         val newResult = DetermineBasalResultAMA(injector)
         doClone(newResult)
         newResult.eventualBG = eventualBG

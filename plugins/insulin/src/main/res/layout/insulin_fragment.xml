@@ -30,7 +30,7 @@
             android:layout_margin="10dp"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <app.aaps.core.main.graph.ActivityGraph
+        <app.aaps.core.graph.ActivityGraph
             android:id="@+id/graph"
             android:layout_width="match_parent"
             android:layout_height="200dip"

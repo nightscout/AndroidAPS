@@ -22,11 +22,11 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.main.constraints.ConstraintObject
-import app.aaps.core.main.pump.toHtml
+import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.databinding.LoopFragmentBinding
+import app.aaps.plugins.aps.extensions.toHtml
 import app.aaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment

@@ -2,9 +2,9 @@ package info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.activatio
 
 import androidx.annotation.StringRes
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.rx.AapsSchedulers
-import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.action.InitializePodViewModel
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.R
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.ActivationProgress
@@ -16,10 +16,10 @@ import javax.inject.Inject
 class ErosInitializePodViewModel @Inject constructor(
     private val aapsOmnipodManager: AapsOmnipodErosManager,
     private val podStateManager: AapsErosPodStateManager,
-    injector: HasAndroidInjector,
+    instantiator: Instantiator,
     logger: AAPSLogger,
     aapsSchedulers: AapsSchedulers
-) : InitializePodViewModel(injector, logger, aapsSchedulers) {
+) : InitializePodViewModel(instantiator, logger, aapsSchedulers) {
 
     override fun isPodInAlarm(): Boolean = podStateManager.isPodFaulted
 

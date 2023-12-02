@@ -11,7 +11,11 @@ import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import app.aaps.core.interfaces.extensions.toVisibility
+import app.aaps.core.data.model.UE
+import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -21,14 +25,10 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.database.entities.UserEntry
-import app.aaps.database.entities.UserEntry.Action
-import app.aaps.database.entities.UserEntry.Sources
-import app.aaps.database.impl.AppRepository
 import app.aaps.ui.R
 import app.aaps.ui.databinding.TreatmentsUserEntryFragmentBinding
 import app.aaps.ui.databinding.TreatmentsUserEntryItemBinding
@@ -39,7 +39,7 @@ import javax.inject.Inject
 
 class TreatmentsUserEntryFragment : DaggerFragment(), MenuProvider {
 
-    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var dateUtil: DateUtil
@@ -86,12 +86,12 @@ class TreatmentsUserEntryFragment : DaggerFragment(), MenuProvider {
         binding.recyclerview.isLoading = true
         disposable +=
             if (showLoop)
-                repository
+                persistenceLayer
                     .getUserEntryDataFromTime(now - millsToThePastUnFiltered)
                     .observeOn(aapsSchedulers.main)
                     .subscribe { list -> binding.recyclerview.swapAdapter(UserEntryAdapter(list), true) }
             else
-                repository
+                persistenceLayer
                     .getUserEntryFilteredDataFromTime(now - millsToThePastFiltered)
                     .observeOn(aapsSchedulers.main)
                     .subscribe { list -> binding.recyclerview.swapAdapter(UserEntryAdapter(list), true) }
@@ -120,7 +120,7 @@ class TreatmentsUserEntryFragment : DaggerFragment(), MenuProvider {
         _binding = null
     }
 
-    inner class UserEntryAdapter internal constructor(private var entries: List<UserEntry>) : RecyclerView.Adapter<UserEntryAdapter.UserEntryViewHolder>() {
+    inner class UserEntryAdapter internal constructor(private var entries: List<UE>) : RecyclerView.Adapter<UserEntryAdapter.UserEntryViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserEntryViewHolder {
             val view: View = LayoutInflater.from(parent.context).inflate(R.layout.treatments_user_entry_item, parent, false)

@@ -14,10 +14,13 @@ import android.widget.EditText
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
+import app.aaps.core.data.model.TDD
+import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.pump.defs.PumpType
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -27,11 +30,8 @@ import app.aaps.core.interfaces.rx.events.EventDanaRSyncStatus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.SafeParse
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
-import app.aaps.database.entities.TotalDailyDose
-import app.aaps.database.impl.AppRepository
 import app.aaps.ui.databinding.ActivityTddStatsBinding
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import java.text.DateFormat
@@ -49,7 +49,7 @@ class TDDStatsActivity : TranslatedDaggerAppCompatActivity() {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var commandQueue: CommandQueue
-    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var rh: ResourceHelper
@@ -62,8 +62,8 @@ class TDDStatsActivity : TranslatedDaggerAppCompatActivity() {
     private lateinit var tbb: String
     private var magicNumber = 0.0
     private var decimalFormat: DecimalFormat = DecimalFormat("0.000")
-    private var historyList: MutableList<TotalDailyDose> = mutableListOf()
-    private var dummies: MutableList<TotalDailyDose> = mutableListOf()
+    private var historyList: MutableList<TDD> = mutableListOf()
+    private var dummies: MutableList<TDD> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -236,14 +236,14 @@ class TDDStatsActivity : TranslatedDaggerAppCompatActivity() {
         return super.dispatchTouchEvent(event)
     }
 
-    private val TotalDailyDose.total
+    private val TDD.total
         get() = if (totalAmount > 0) totalAmount else basalAmount + bolusAmount
 
     @SuppressLint("SetTextI18n")
     private fun loadDataFromDB() {
         historyList.clear()
         // timestamp DESC sorting!
-        historyList.addAll(repository.getLastTotalDailyDoses(10, true).blockingGet())
+        historyList.addAll(persistenceLayer.getLastTotalDailyDoses(10, true))
 
         //only use newest 10
         historyList = historyList.subList(0, min(10, historyList.size))
@@ -257,7 +257,7 @@ class TDDStatsActivity : TranslatedDaggerAppCompatActivity() {
             val elem1 = historyList[i]
             val elem2 = historyList[i + 1]
             if (df.format(Date(elem1.timestamp)) != df.format(Date(elem2.timestamp + 25 * 60 * 60 * 1000))) {
-                val dummy = TotalDailyDose(
+                val dummy = TDD(
                     timestamp = elem1.timestamp - T.hours(24).msecs(),
                     basalAmount = elem1.basalAmount / 2.0,
                     bolusAmount = elem1.bolusAmount / 2.0
@@ -268,7 +268,7 @@ class TDDStatsActivity : TranslatedDaggerAppCompatActivity() {
             }
         }
         historyList.addAll(dummies)
-        historyList.sortWith { lhs: TotalDailyDose, rhs: TotalDailyDose -> (rhs.timestamp - lhs.timestamp).toInt() }
+        historyList.sortWith { lhs: TDD, rhs: TDD -> (rhs.timestamp - lhs.timestamp).toInt() }
         runOnUiThread {
             cleanTable(binding.mainTable)
             cleanTable(binding.cumulativeTable)
@@ -439,7 +439,7 @@ class TDDStatsActivity : TranslatedDaggerAppCompatActivity() {
         if (childCount > 1) table.removeViews(1, childCount - 1)
     }
 
-    private fun isOldData(historyList: List<TotalDailyDose>): Boolean {
+    private fun isOldData(historyList: List<TDD>): Boolean {
         val type = activePlugin.activePump.pumpDescription.pumpType
         val startsYesterday =
             type == PumpType.DANA_R || type == PumpType.DANA_RS || type == PumpType.DANA_RV2 || type == PumpType.DANA_R_KOREAN || type == PumpType.ACCU_CHEK_INSIGHT_VIRTUAL || type == PumpType.DIACONN_G8

@@ -7,9 +7,7 @@
         android:title="@string/xdrip"
         app:initialExpandedChildrenCount="0">
 
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/key_xdrip_local_broadcasts"
+        <Preference
             android:summary="@string/xdrip_local_broadcasts_summary"
             android:title="@string/xdrip_local_broadcasts_title" />
 
