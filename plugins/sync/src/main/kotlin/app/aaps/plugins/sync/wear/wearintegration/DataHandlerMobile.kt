@@ -306,13 +306,14 @@ class DataHandlerMobile @Inject constructor(
 
                            var carbTime: Long? = null
                            var useAlarm = false
+                           val currentTime = Calendar.getInstance().timeInMillis
 
                            lastQuickWizardEntry?.let { lastQuickWizardEntry ->
-                               carbTime = lastQuickWizardEntry.carbTime().toLong()
+                               carbTime = currentTime + (lastQuickWizardEntry.carbTime().toLong() * 60000)
                                useAlarm = lastQuickWizardEntry.useAlarm() == QuickWizardEntry.YES
 
                                if (lastQuickWizardEntry.useEcarbs() == QuickWizardEntry.YES) {
-                                   val currentTime = Calendar.getInstance().timeInMillis
+
                                    val timeOffset = lastQuickWizardEntry.time()
                                    val eventTime: Long = currentTime + (timeOffset * 60000)
                                    doECarbs(lastQuickWizardEntry.carbs2(), eventTime, lastQuickWizardEntry.duration())
