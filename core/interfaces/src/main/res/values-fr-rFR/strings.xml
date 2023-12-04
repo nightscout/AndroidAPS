@@ -58,6 +58,7 @@
     <string name="pref_show_direction_arrow">Afficher Flèche</string>
     <string name="pref_show_ago">Afficher Min Passées</string>
     <string name="pref_show_week_number">Afficher numéro semaine</string>
+    <string name="pref_show_date">Afficher la date</string>
     <string name="default_custom_watchface_comment">Cadran par défaut, vous pouvez cliquer sur le bouton EXPORTER WATCHFACE pour générer un modèle</string>
     <string name="wear_default_watchface">Cadran par défaut</string>
     <string name="cwf_comment_background">Image d\'arrière-plan</string>

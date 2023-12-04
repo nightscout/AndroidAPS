@@ -9,7 +9,7 @@
     <!-- PumpCommon - Pump Status -->
     <string name="pump_status_not_initialized">Non inizializzato</string>
     <string name="pump_status_initialized">Inizializzato</string>
-    <string name="pump_status_encrypt">Comunicazione crittata</string>
+    <string name="pump_status_encrypt">Comunicazione criptata</string>
     <string name="pump_status_ready">Pronto</string>
     <string name="pump_status_busy">Occupato</string>
     <string name="pump_status_suspended">Sospeso</string>

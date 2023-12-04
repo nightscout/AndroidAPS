@@ -297,7 +297,9 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
     }
 
     private fun decodeBatteryActivity(entry: PumpHistoryEntry) {
-        entry.displayableValue = if (entry.head[0] == 0.toByte()) "Battery Removed" else "Battery Replaced"
+        val isRemoved = entry.head[0] == 0.toByte()
+        entry.addDecodedData("isRemoved", isRemoved)
+        entry.displayableValue = if (isRemoved) "Battery Removed" else "Battery Replaced"
     }
 
     private fun decodeBasalProfileStart(entry: PumpHistoryEntry): RecordDecodeStatus {

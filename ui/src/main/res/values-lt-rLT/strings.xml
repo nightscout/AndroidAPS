@@ -137,7 +137,7 @@
     <string name="overview_edit_quickwizard_list_activity_add">Pridėti</string>
     <string name="overview_quickwizard_item_edit_button">Redaguoti</string>
     <string name="overview_edit_quickwizard_show_on_device">Rodyti įrašą įrenginyje:</string>
-    <string name="overview_edit_quickwizard_use_bg">KG apskaičiavimas</string>
+    <string name="overview_edit_quickwizard_use_bg">Glikemija</string>
     <string name="overview_edit_quickwizard_use_bolus_iob">Bolusų AIO apskaičiavimas</string>
     <string name="overview_edit_quickwizard_use_basal_iob">Bazės AIO apskaičiavimas</string>
     <string name="overview_edit_quickwizard_use_trend">Tendencijos apskaičiavimas</string>

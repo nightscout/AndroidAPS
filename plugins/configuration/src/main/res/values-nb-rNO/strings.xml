@@ -46,7 +46,7 @@
     <string name="setupwizard_pump_riley_link_status">RileyLink status:</string>
     <string name="readstatus">Lesestatus</string>
     <string name="data_choices">Datavalg</string>
-    <string name="fabric_upload">Innlesing av fabrikkinnstillinger</string>
+    <string name="fabric_upload">Send krasjrapporter automatisk</string>
     <string name="allow_automated_crash_reporting">Tillat automatisk rapportering av appkrasj og bruksdata til utviklerne via fabrioc.io-tjenesten.</string>
     <string name="summary_email_for_crash_report">Denne e-postadressen vedlegges krasjrapporter slik at vi kan kontakte deg i akutte tilfeller. Det er valgfritt.</string>
     <string name="identification">Identifikasjon (e-post, Facebook eller Discord-nick osv.)</string>
@@ -153,7 +153,7 @@
     <string name="prefdecrypt_issue_wrong_format">Mangler krypteringsinformasjon, formatet på innstillinger er ugyldig!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Ugyldig eller ikke spesifisert krypteringsalgoritme!</string>
     <!-- Custom Watchface -->
-    <string name="wear_import_custom_watchface_title">Velg tilpasset klokkebakgrunn</string>
+    <string name="wear_import_custom_watchface_title">Velg tilpasset urskive</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Vennligst start mobilen på nytt eller restart AAPS fra Innstillinger \nellers vil ikke AAPS ha aktivert loggføring (viktig for å spore og kontrollere at algoritmene fungerer riktig)!</string>
     <!-- Maintenance -->

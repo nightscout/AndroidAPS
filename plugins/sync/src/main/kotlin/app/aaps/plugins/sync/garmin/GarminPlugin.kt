@@ -14,10 +14,14 @@ import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.plugins.sync.R
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import java.math.BigDecimal
+import java.math.MathContext
+import java.math.RoundingMode
 import java.net.SocketAddress
 import java.net.URI
 import java.time.Clock
@@ -94,6 +98,9 @@ class GarminPlugin @Inject constructor(
             server?.close()
             server = HttpServer(aapsLogger, port).apply {
                 registerEndpoint("/get", ::onGetBloodGlucose)
+                registerEndpoint("/carbs", ::onPostCarbs)
+                registerEndpoint("/connect", ::onConnectPump)
+                registerEndpoint("/sgv.json", ::onSgv)
             }
         } else if (server != null) {
             aapsLogger.info(LTag.GARMIN, "stopping HTTP server")
@@ -242,5 +249,95 @@ class GarminPlugin @Inject constructor(
         } else {
             aapsLogger.warn(LTag.GARMIN, "Skip saving invalid HR $avg $samplingStart..$samplingEnd")
         }
+    }
+
+    /** Handles carb notification from the device. */
+    @VisibleForTesting
+    @Suppress("UNUSED_PARAMETER")
+    fun onPostCarbs(caller: SocketAddress, uri: URI, requestBody: String?): CharSequence {
+        aapsLogger.info(LTag.GARMIN, "carbs from $caller, req: $uri")
+        postCarbs(getQueryParameter(uri, "carbs", 0L).toInt())
+        return ""
+    }
+
+    private fun postCarbs(carbs: Int) {
+        if (carbs > 0) {
+            loopHub.postCarbs(carbs)
+        }
+    }
+
+    /** Handles pump connected notification that the user entered on the Garmin device. */
+    @VisibleForTesting
+    @Suppress("UNUSED_PARAMETER")
+    fun onConnectPump(caller: SocketAddress, uri: URI, requestBody: String?): CharSequence {
+        aapsLogger.info(LTag.GARMIN, "connect from $caller, req: $uri")
+        val minutes = getQueryParameter(uri, "disconnectMinutes", 0L).toInt()
+        if (minutes > 0) {
+            loopHub.disconnectPump(minutes)
+        } else {
+            loopHub.connectPump()
+        }
+
+        val jo = JsonObject()
+        jo.addProperty("connected", loopHub.isConnected)
+        return jo.toString()
+    }
+
+    private fun glucoseSlopeMgDlPerMilli(glucose1: GlucoseValue, glucose2: GlucoseValue): Double {
+        return (glucose2.value - glucose1.value) / (glucose2.timestamp - glucose1.timestamp)
+    }
+
+    /** Returns glucose values in Nightscout/Xdrip format. */
+    @VisibleForTesting
+    @Suppress("UNUSED_PARAMETER")
+    fun onSgv(call: SocketAddress, uri: URI, requestBody: String?): CharSequence {
+        val count = getQueryParameter(uri,"count", 24L)
+            .toInt().coerceAtMost(1000).coerceAtLeast(1)
+        val briefMode = getQueryParameter(uri, "brief_mode", false)
+
+        // Guess a start time to get [count+1] readings. This is a heuristic that only works if we get readings
+        // every 5 minutes and we're not missing readings. We truncate in case we get more readings but we'll
+        // get less, e.g., in case we're missing readings for the last half hour. We get one extra reading,
+        // to compute the glucose delta.
+        val from = clock.instant().minus(Duration.ofMinutes(5L * (count + 1)))
+        val glucoseValues = loopHub.getGlucoseValues(from, false)
+        val joa = JsonArray()
+        for (i in 0 until count.coerceAtMost(glucoseValues.size)) {
+            val jo = JsonObject()
+            val glucose = glucoseValues[i]
+            if (!briefMode) {
+                jo.addProperty("_id", glucose.id.toString())
+                jo.addProperty("device", glucose.sourceSensor.toString())
+                val timestamp = Instant.ofEpochMilli(glucose.timestamp)
+                jo.addProperty("deviceString", timestamp.toString())
+                jo.addProperty("sysTime", timestamp.toString())
+                glucose.raw?.let { raw -> jo.addProperty("unfiltered", raw) }
+            }
+            jo.addProperty("date", glucose.timestamp)
+            jo.addProperty("sgv", glucose.value.roundToInt())
+            if (i + 1 < glucoseValues.size) {
+                // Compute the 5 minute delta.
+                val delta = 300_000.0 * glucoseSlopeMgDlPerMilli(glucoseValues[i + 1], glucose)
+                jo.addProperty("delta", BigDecimal(delta, MathContext(3, RoundingMode.HALF_UP)))
+            }
+            jo.addProperty("direction", glucose.trendArrow.text)
+            glucose.noise?.let { n -> jo.addProperty("noise", n) }
+            if (i == 0) {
+                when (loopHub.glucoseUnit) {
+                    GlucoseUnit.MGDL -> jo.addProperty("units_hint", "mgdl")
+                    GlucoseUnit.MMOL -> jo.addProperty("units_hint", "mmol")
+                }
+                jo.addProperty("iob", loopHub.insulinOnboard + loopHub.insulinBasalOnboard)
+                loopHub.temporaryBasal.also {
+                    if (!it.isNaN()) {
+                        val temporaryBasalRateInPercent = (it * 100.0).toInt()
+                        jo.addProperty("tbr", temporaryBasalRateInPercent)
+                    }
+                }
+                jo.addProperty("cob", loopHub.carbsOnboard)
+            }
+            joa.add(jo)
+        }
+        return joa.toString()
     }
 }

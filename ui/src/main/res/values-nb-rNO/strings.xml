@@ -92,7 +92,7 @@
     <string name="meal_bolus">Måltid</string>
     <string name="prime">Prime</string>
     <string name="profile_changes">Profilendringer</string>
-    <string name="tempt_targets">Midl. Mål</string>
+    <string name="tempt_targets">Midlertidig mål</string>
     <string name="carbs_and_bolus">Karbo og bolus</string>
     <string name="show_invalidated_records">Vis ugyldige / slettede registreringer</string>
     <string name="hide_invalidated_records">Skjul ugyldige / slettede registreringer</string>

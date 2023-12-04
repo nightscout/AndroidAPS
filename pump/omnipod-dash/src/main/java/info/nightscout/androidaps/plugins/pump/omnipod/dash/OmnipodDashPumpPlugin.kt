@@ -183,7 +183,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             if (!podStateManager.isPodRunning) {
                 uiInteraction.addNotification(
                     Notification.OMNIPOD_POD_NOT_ATTACHED,
-                    "Pod not activated",
+                    rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_pod_status_no_active_pod),
                     Notification.NORMAL
                 )
             } else {
@@ -554,19 +554,13 @@ class OmnipodDashPumpPlugin @Inject constructor(
         get() = 0
 
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
+        // Insulin value must be greater than 0
+        require(detailedBolusInfo.carbs == 0.0) { detailedBolusInfo.toString() }
+        require(detailedBolusInfo.insulin > 0) { detailedBolusInfo.toString() }
+
         try {
             bolusDeliveryInProgress = true
             aapsLogger.info(LTag.PUMP, "Delivering treatment: $detailedBolusInfo $bolusCanceled")
-            if (detailedBolusInfo.carbs > 0 ||
-                detailedBolusInfo.insulin == 0.0
-            ) {
-                // Accept only valid insulin requests
-                return PumpEnactResult(injector)
-                    .success(false)
-                    .enacted(false)
-                    .bolusDelivered(0.0)
-                    .comment("Invalid input")
-            }
             val requestedBolusAmount = detailedBolusInfo.insulin
             if (requestedBolusAmount > reservoirLevel) {
                 return PumpEnactResult(injector)
@@ -997,9 +991,9 @@ class OmnipodDashPumpPlugin @Inject constructor(
         val extended = JSONObject()
         try {
             val podStatus = when {
-                podStateManager.isPodRunning && podStateManager.isSuspended -> "suspended"
-                podStateManager.isPodRunning                                -> "normal"
-                else                                                        -> "no active Pod"
+                podStateManager.isPodRunning && podStateManager.isSuspended -> rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_pod_status_suspended).lowercase()
+                podStateManager.isPodRunning                                -> rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_pod_status_normal).lowercase()
+                else                                                        -> rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_pod_status_no_active_pod).lowercase()
             }
             status.put("status", podStatus)
             status.put("timestamp", dateUtil.toISOString(podStateManager.lastUpdatedSystem))

@@ -81,10 +81,15 @@ class NsIncomingDataProcessor @Inject constructor(
         )
     }
 
+    /**
+     * Preprocess list of SGVs
+     *
+     * @return true if there was an accepted SGV
+     */
     @Suppress("SpellCheckingInspection")
-    fun processSgvs(sgvs: Any) {
+    fun processSgvs(sgvs: Any): Boolean {
 
-        if (!nsClientSource.isEnabled() && !sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_cgm, false)) return
+        if (!nsClientSource.isEnabled() && !sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_cgm, false)) return false
 
         var latestDateInReceivedData: Long = 0
         aapsLogger.debug(LTag.NSCLIENT, "Received NS Data: $sgvs")
@@ -93,27 +98,41 @@ class NsIncomingDataProcessor @Inject constructor(
         if (sgvs is JSONArray) { // V1 client
             for (i in 0 until sgvs.length()) {
                 val sgv = toGv(sgvs.getJSONObject(i)) ?: continue
-                if (sgv.timestamp < dateUtil.now() && sgv.timestamp > latestDateInReceivedData) latestDateInReceivedData = sgv.timestamp
-                glucoseValues += sgv
+                // allow 1 min in the future
+                if (sgv.timestamp < dateUtil.now() + T.mins(1).msecs() && sgv.timestamp > latestDateInReceivedData) {
+                    latestDateInReceivedData = sgv.timestamp
+                    glucoseValues += sgv
+                }
             }
         } else if (sgvs is List<*>) { // V3 client
 
             for (i in 0 until sgvs.size) {
                 val sgv = (sgvs[i] as NSSgvV3).toTransactionGlucoseValue()
-                if (sgv.timestamp < dateUtil.now() && sgv.timestamp > latestDateInReceivedData) latestDateInReceivedData = sgv.timestamp
-                glucoseValues += sgv
+                // allow 1 min in the future
+                if (sgv.timestamp < dateUtil.now() + T.mins(1).msecs() && sgv.timestamp > latestDateInReceivedData) {
+                    latestDateInReceivedData = sgv.timestamp
+                    glucoseValues += sgv
+                }
             }
         }
-        activePlugin.activeNsClient?.updateLatestBgReceivedIfNewer(latestDateInReceivedData)
-        // Was that sgv more less 5 mins ago ?
-        if (T.msecs(dateUtil.now() - latestDateInReceivedData).mins() < 5L) {
-            rxBus.send(EventDismissNotification(Notification.NS_ALARM))
-            rxBus.send(EventDismissNotification(Notification.NS_URGENT_ALARM))
+        if (glucoseValues.isNotEmpty()) {
+            activePlugin.activeNsClient?.updateLatestBgReceivedIfNewer(latestDateInReceivedData)
+            // Was that sgv more less 5 mins ago ?
+            if (T.msecs(dateUtil.now() - latestDateInReceivedData).mins() < 5L) {
+                rxBus.send(EventDismissNotification(Notification.NS_ALARM))
+                rxBus.send(EventDismissNotification(Notification.NS_URGENT_ALARM))
+            }
+            storeDataForDb.glucoseValues.addAll(glucoseValues)
         }
-        storeDataForDb.glucoseValues.addAll(glucoseValues)
+        return glucoseValues.isNotEmpty()
     }
 
-    fun processTreatments(treatments: List<NSTreatment>) {
+    /**
+     * Preprocess list of treatments
+     *
+     * @return true if there was an accepted treatment
+     */
+    fun processTreatments(treatments: List<NSTreatment>): Boolean {
         try {
             var latestDateInReceivedData: Long = 0
             for (treatment in treatments) {
@@ -189,11 +208,14 @@ class NsIncomingDataProcessor @Inject constructor(
                             }
                 }
             }
-            activePlugin.activeNsClient?.updateLatestTreatmentReceivedIfNewer(latestDateInReceivedData)
+            if (latestDateInReceivedData > 0)
+                activePlugin.activeNsClient?.updateLatestTreatmentReceivedIfNewer(latestDateInReceivedData)
+            return latestDateInReceivedData > 0
         } catch (error: Exception) {
             aapsLogger.error("Error: ", error)
             rxBus.send(EventNSClientNewLog("◄ ERROR", error.localizedMessage))
         }
+        return false
     }
 
     fun processFood(data: Any) {

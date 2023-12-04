@@ -18,6 +18,7 @@ import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -60,6 +61,7 @@ class TreatmentsCareportalFragment : DaggerFragment(), MenuProvider {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var profileUtil: ProfileUtil
 
     private var _binding: TreatmentsCareportalFragmentBinding? = null
 
@@ -157,6 +159,8 @@ class TreatmentsCareportalFragment : DaggerFragment(), MenuProvider {
             holder.binding.time.text = dateUtil.timeString(therapyEvent.timestamp)
             holder.binding.duration.text = if (therapyEvent.duration == 0L) "" else dateUtil.niceTimeScalar(therapyEvent.duration, rh)
             holder.binding.note.text = therapyEvent.note
+            if (therapyEvent.type == TherapyEvent.Type.FINGER_STICK_BG_VALUE)
+                therapyEvent.glucose?.let { holder.binding.bg.text = profileUtil.stringInCurrentUnitsDetect(it) }
             holder.binding.type.text = translator.translate(therapyEvent.type)
             holder.binding.cbRemove.visibility = (therapyEvent.isValid && actionHelper.isRemoving).toVisibility()
             holder.binding.cbRemove.setOnCheckedChangeListener { _, value ->

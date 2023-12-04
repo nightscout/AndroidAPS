@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="dynisf_adjust_sensitivity">Duyarlılığı ve KŞ\'ni ayarlayın</string>
+    <string name="dynisf_adjust_sensitivity">Bazal ve glikoz hedefi değişikliği için TGD bazlı duyarlılık oranını etkinleştirin</string>
+    <string name="dynisf_adjust_sensitivity_summary">Bazal oranı artırmak veya azaltmak için kullanılan duyarlılık oranını hesaplamak için son 24 saatlik TGD/7Gün TGD\'yi kullanır ve aynı zamanda bu seçenek etkinse Otoduyarlılığın yaptığı gibi glikoz hedefini ayarlar. Bu seçenek kapalıyken başlamanız önerilir</string>
     <string name="DynISFAdjust_title" formatted="false">DinamikİDF Ayar Faktörü %</string>
     <string name="DynISFAdjust_summary" formatted="false">DinamikİDF için ayarlama faktörü. Daha agresif düzeltme dozları için %100\'den fazla ve daha az agresif düzeltmeler için %100\'den az ayarlayın.</string>
     <string name="high_temptarget_raises_sensitivity_title">Yüksek geçici hedefler duyarlılığı artırır</string>

@@ -331,18 +331,21 @@ class AutotunePlugin @Inject constructor(
             jsonSettings.put("tune_insulin_curve", false)
 
             val peakTime: Int = insulinInterface.peak
-            if (insulinInterface.id === Insulin.InsulinType.OREF_ULTRA_RAPID_ACTING)
-                jsonSettings.put("curve", "ultra-rapid")
-            else if (insulinInterface.id === Insulin.InsulinType.OREF_RAPID_ACTING)
-                jsonSettings.put("curve", "rapid-acting")
-            else if (insulinInterface.id === Insulin.InsulinType.OREF_LYUMJEV) {
-                jsonSettings.put("curve", "ultra-rapid")
-                jsonSettings.put("useCustomPeakTime", true)
-                jsonSettings.put("insulinPeakTime", peakTime)
-            } else if (insulinInterface.id === Insulin.InsulinType.OREF_FREE_PEAK) {
-                jsonSettings.put("curve", if (peakTime > 55) "rapid-acting" else "ultra-rapid")
-                jsonSettings.put("useCustomPeakTime", true)
-                jsonSettings.put("insulinPeakTime", peakTime)
+            when {
+                insulinInterface.id === Insulin.InsulinType.OREF_ULTRA_RAPID_ACTING -> jsonSettings.put("curve", "ultra-rapid")
+                insulinInterface.id === Insulin.InsulinType.OREF_RAPID_ACTING       -> jsonSettings.put("curve", "rapid-acting")
+
+                insulinInterface.id === Insulin.InsulinType.OREF_LYUMJEV            -> {
+                    jsonSettings.put("curve", "ultra-rapid")
+                    jsonSettings.put("useCustomPeakTime", true)
+                    jsonSettings.put("insulinPeakTime", peakTime)
+                }
+
+                insulinInterface.id === Insulin.InsulinType.OREF_FREE_PEAK          -> {
+                    jsonSettings.put("curve", if (peakTime > 55) "rapid-acting" else "ultra-rapid")
+                    jsonSettings.put("useCustomPeakTime", true)
+                    jsonSettings.put("insulinPeakTime", peakTime)
+                }
             }
             jsonString = jsonSettings.toString(4).replace("\\/", "/")
         } catch (e: JSONException) {
@@ -392,7 +395,7 @@ class AutotunePlugin @Inject constructor(
             }
         }
         for (i in days.weekdays.indices) {
-            json.put(WeekDay.DayOfWeek.values()[i].name, days.weekdays[i])
+            json.put(WeekDay.DayOfWeek.entries[i].name, days.weekdays[i])
         }
         json.put("result", result)
         json.put("updateButtonVisibility", updateButtonVisibility)
@@ -429,7 +432,7 @@ class AutotunePlugin @Inject constructor(
                 }
             }
             for (i in days.weekdays.indices)
-                days.weekdays[i] = JsonHelper.safeGetBoolean(json, WeekDay.DayOfWeek.values()[i].name, true)
+                days.weekdays[i] = JsonHelper.safeGetBoolean(json, WeekDay.DayOfWeek.entries[i].name, true)
             result = JsonHelper.safeGetString(json, "result", "")
             updateButtonVisibility = JsonHelper.safeGetInt(json, "updateButtonVisibility")
             lastRunSuccess = true
@@ -440,8 +443,8 @@ class AutotunePlugin @Inject constructor(
 
     fun calcDays(daysBack: Int): Int {
         var endTime = MidnightTime.calc(dateUtil.now()) + autotuneStartHour * 60 * 60 * 1000L
-        if (endTime > dateUtil.now()) endTime -= T.days(1).msecs()      // Check if 4 AM is before now
-        val startTime = endTime - daysBack * T.days(1).msecs()
+        if (endTime > dateUtil.now()) endTime = MidnightTime.calcDaysBack(1)      // Check if 4 AM is before now
+        val startTime = MidnightTime.calcDaysBack(endTime, daysBack.toLong())
         var result = 0
         for (i in 0 until daysBack) {
             if (days.isSet(startTime + i * T.days(1).msecs()))

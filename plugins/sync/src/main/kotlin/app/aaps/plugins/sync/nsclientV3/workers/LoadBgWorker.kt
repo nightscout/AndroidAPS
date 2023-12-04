@@ -64,8 +64,7 @@ class LoadBgWorker(
                         // Objective0
                         sp.putBoolean(app.aaps.core.utils.R.string.key_objectives_bg_is_available_in_ns, true)
                         // Schedule processing of fetched data and continue of loading
-                        continueLoading = response.code != 304
-                        nsIncomingDataProcessor.processSgvs(sgvs)
+                        continueLoading = response.code != 304 && nsIncomingDataProcessor.processSgvs(sgvs)
                     } else {
                         // End first load
                         if (isFirstLoad) {

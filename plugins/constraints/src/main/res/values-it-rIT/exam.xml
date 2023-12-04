@@ -95,7 +95,7 @@
     <string name="whatistrue">Seleziona tutte le risposte corrette.</string>
     <string name="update_git">Devi avere Git installato e configurato sul tuo computer.</string>
     <string name="update_asap">Quando vengono rilasciate versioni aggiornate di AAPS, le precedenti potrebbero essere limitate da remoto dopo un determinato periodo di tempo.</string>
-    <string name="update_keys">Dovresti salvare e annotare la posizione del tuo archivio chiavi e usare per gli aggiornamenti la stessa chiave di firma della tua installazione precedente.</string>
+    <string name="update_keys">Dovresti salvare e annotare la posizione delle tue chiavi di firma e usare per gli aggiornamenti la stessa chiave di firma della tua installazione precedente.</string>
     <string name="update_neverupdate">Non aggiornare mai se il sistema funziona bene.</string>
     <string name="update_askfriend">Se hai difficoltà a costruire l\'apk, puoi installare un apk che è stato costruito da un amico.</string>
     <string name="update_hint1">https://wiki.aaps.app/en/latest/Installing-AndroidAPS/Update-to-new-version.html#update-to-a-new-version-or-branch</string>
@@ -132,7 +132,7 @@
     <string name="wronginsulin_label">Errori erogazione/inserimento insulina</string>
     <string name="wronginsulin_whattodo">Cosa dovresti fare se hai ricevuto meno insulina di quanto lo storico del micro suggerisce? Ad esempio a causa di un\'occlusione, una cannula difettosa o l\'aver dimenticato di riattaccare il micro dopo una doccia?</string>
     <string name="wronginsulin_careportal">Eliminare dal portale Nightscout i dati relativi all\'insulina per rimuoverli dallo storico del micro.</string>
-    <string name="wronginsulin_compare">Compara i valori in AAPS con lo storico micro (se supportato).</string>
+    <string name="wronginsulin_compare">Comparare i valori in AAPS con lo storico micro (se supportato).</string>
     <string name="wronginsulin_prime">Erogare un bolo con parte della tua insulina calcolata \"mancante\" usando una siringa/penna o la funzione caricamento.</string>
     <string name="wronginsulin_donothing">Non fare nulla e permettere ad AAPS di correggere eventuali glicemie alte.</string>
     <string name="cob_label">CHO attivi (COB)</string>
@@ -148,10 +148,11 @@
     <string name="cob3_longer">Impostare il profilo al 150% renderà più lungo il tempo dell\'assorbimento calcolato dei CHO</string>
     <string name="cob3_shorter">Impostare il profilo al 150% renderà più breve il tempo dell\'assorbimento calcolato dei CHO</string>
     <string name="cob3_no_effect">Impostare il profilo al 150% non influirà sull\'assorbimento calcolato dei CHO</string>
+    <string name="cob_hint1">https://wiki.aaps.app/en/latest/Usage/COB-calculation.html#how-does-aaps-calculate-the-cob-value</string>
     <string name="iob_value">Il valore IOB è influenzato dalle basali temporanee emesse.</string>
     <string name="iob_hightemp">Non verrà emessa una basale temporanea alta quando la tua glicemia è al di sotto del target.</string>
-    <string name="iob_negiob">IOB negativo per un periodo considerevole in assenza di esercizio fisico suggerisce che il tuo profilo è troppo incisivo e che è necessaria meno insulina nelle tue impostazioni.</string>
-    <string name="iob_posiob">IOB positivo per un periodo considerevole suggerisce resistenza all\'insulina o pasti non annunciati.</string>
+    <string name="iob_negiob">L\'IOB negativo per un periodo considerevole in assenza di esercizio fisico suggerisce che il tuo profilo è troppo incisivo e che è necessaria meno insulina nelle tue impostazioni.</string>
+    <string name="iob_posiob">L\'IOB positivo per un periodo considerevole suggerisce resistenza all\'insulina o pasti non annunciati.</string>
     <string name="breadgrams_label">Inserimento CHO e boli</string>
     <string name="breadgrams_grams">Solo i grammi dovrebbero essere utilizzati per stimare e registrare i carboidrati consumati.</string>
     <string name="breadgrams_exchange">I carboidrati consumati possono essere registrati utilizzando un sistema di scambio appropriato (ad esempio: gli scambi CHO \"DAFNE\" o le unità di pane europee \"Bread Units\").</string>

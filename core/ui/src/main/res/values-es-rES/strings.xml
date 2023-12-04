@@ -17,7 +17,7 @@
     <string name="bolus_delivered_successfully">Bolo %1$.2fU entregado correctamente</string>
     <string name="no_valid_basal_rate">Tasa basal no válida leída en la bomba</string>
     <string name="limiting_iob">Limitando IOB a %1$.1f U debido a %2$s</string>
-    <string name="loop_disabled">BUCLE DESACTIVADO POR RESTRICCIONES</string>
+    <string name="loop_disabled">LAZO DESACTIVADO POR RESTRICCIONES</string>
     <string name="event_type">Tipo de evento</string>
     <string name="reload">Recargar</string>
     <string name="mgdl">mg/dl</string>
@@ -51,6 +51,7 @@
     <string name="extended_bolus">Bolo extendido</string>
     <string name="paused">Pausado</string>
     <string name="tdd_total">Total TDD</string>
+    <string name="tdd_old_data">Datos antiguos</string>
     <string name="goingtodeliver">Entregando %1$.2f U</string>
     <string name="waitingforpump">Esperando bomba</string>
     <string name="androidaps_start">AAPS iniciado</string>
@@ -88,9 +89,9 @@
     <string name="removerecord">Eliminar registro</string>
     <string name="loopisdisabled">Bucle desactivado</string>
     <string name="alarm">Alarma</string>
-    <string name="disableloop">Desactivar bucle</string>
-    <string name="enableloop">Activar bucle</string>
-    <string name="resumeloop">Reanudar el bucle</string>
+    <string name="disableloop">Desactivar lazo</string>
+    <string name="enableloop">Activar lazo</string>
+    <string name="resumeloop">Reanudar el lazo</string>
     <string name="suspendloop">Suspender lazo</string>
     <string name="duration_min_label">Duración [min]</string>
     <string name="notification">Notificación</string>
@@ -118,7 +119,7 @@
     <string name="shortgramm">g</string>
     <string name="pumpsuspended">Bomba parada</string>
     <string name="notconfigured">Sin configurar</string>
-    <string name="loopsuspended">Bucle suspendido</string>
+    <string name="loopsuspended">Lazo suspendido</string>
     <string name="trend_arrow">Flecha de tendencia</string>
     <string name="a11y_autosens_label">Auto sens</string>
     <string name="required">req</string>
@@ -156,8 +157,8 @@
     <string name="prime_fill">Cebar/Llenar</string>
     <string name="overview_insulin_label">Insulina</string>
     <string name="stoptemptarget">Detener objetivo temporal</string>
-    <string name="closedloop">Bucle cerrado</string>
-    <string name="openloop">Bucle abierto</string>
+    <string name="closedloop">Lazo cerrado</string>
+    <string name="openloop">Lazo abierto</string>
     <string name="lowglucosesuspend">Suspensión por glucosa baja (LGS)</string>
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
@@ -165,8 +166,10 @@
     <string name="canceling_tbr_failed">Error cancelando la basal temporal</string>
     <string name="canceling_eb_failed">Error cancelando el bolo extendido</string>
     <string name="virtualpump_uploadstatus_title">Subir estado de la bomba a NS o Tidepool</string>
-    <string name="suspendloop_label">Desactiva/suspende el bucle</string>
+    <string name="suspendloop_label">Desactiva/suspende el lazo</string>
     <string name="iob_label">Insulina a bordo (IOB)</string>
+    <string name="loopstatus_targets">OBJETIVOS:</string>
+    <string name="loopstatus_OAPS_result">RESULTADO OAPS:</string>
     <!--    Protection-->
     <string name="wrongpassword">Contraseña incorrecta</string>
     <string name="wrongpin">Pin erróneo</string>
@@ -234,7 +237,7 @@
     <string name="wear">Reloj</string>
     <string name="automation">Automatización</string>
     <string name="custom">Personalizado</string>
-    <string name="loop">Bucle</string>
+    <string name="loop">Lazo</string>
     <string name="ns">NS</string>
     <string name="record">Registro</string>
     <!--    Command-->
@@ -278,11 +281,11 @@
     <string name="uel_store_profile">GUARDAR PERFIL</string>
     <string name="uel_profile_switch">CAMBIO DE PERFIL</string>
     <string name="uel_profile_switch_cloned">CAMBIO DE PERFIL CLONADO</string>
-    <string name="uel_closed_loop_mode">MODO BUCLE CERRADO</string>
-    <string name="uel_lgs_loop_mode">MODO BUCLE LGS</string>
-    <string name="uel_open_loop_mode">MODO BUCLE ABIERTO</string>
-    <string name="uel_loop_disabled">BUCLE DESACTIVADO</string>
-    <string name="uel_loop_enabled">BUCLE ACTIVADO</string>
+    <string name="uel_closed_loop_mode">MODO LAZO CERRADO</string>
+    <string name="uel_lgs_loop_mode">MODO LAZO LGS</string>
+    <string name="uel_open_loop_mode">MODO LAZO ABIERTO</string>
+    <string name="uel_loop_disabled">LAZO DESACTIVADO</string>
+    <string name="uel_loop_enabled">LAZO ACTIVADO</string>
     <string name="uel_reconnect">RECONECTAR</string>
     <string name="uel_disconnect">DESCONECTAR</string>
     <string name="uel_resume">REANUDAR</string>
@@ -353,8 +356,8 @@
     <string name="ue_action">Acción</string>
     <string name="ue_timestamp">Fecha y hora</string>
     <string name="ue_none">Sin Unidad</string>
-    <string name="uel_loop_change">BUCLE CAMBIADO</string>
-    <string name="uel_loop_removed">BUCLE ELIMINADO</string>
+    <string name="uel_loop_change">LAZO CAMBIADO</string>
+    <string name="uel_loop_removed">LAZO ELIMINADO</string>
     <string name="uel_other">OTROS</string>
     <!-- HardLimits -->
     <string name="profile_low_target">Perfil de objetivo bajo</string>
@@ -462,6 +465,8 @@
     <string name="bolus_recorded_only">El bolo sólo se anotará (no será entregado por la bomba)</string>
     <string name="advisoralarm">Ejecutar alarma cuando sea hora de comer</string>
     <string name="no_action_selected">No se ha seleccionado ninguna opción, por lo que no se realizará ningún cambio</string>
+    <string name="carb_equal_zero_no_action">Carbs = 0. ¡No se toma ningua acción!</string>
+    <string name="wizard_no_insulin_required">¡No se requiere insulina!</string>
     <string name="wizard_no_actual_bg">¡No hay valor de glucosa reciente en el que basar el cálculo!</string>
     <string name="wizard_no_active_profile">¡No hay perfil activo!</string>
     <string name="wizard_no_cob">COB desconocido! ¿Valor de glucosa ausente o reincio reciente de la aplicación?</string>

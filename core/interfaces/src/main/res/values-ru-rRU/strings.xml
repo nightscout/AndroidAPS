@@ -58,6 +58,7 @@
     <string name="pref_show_direction_arrow">Отображать стрелку тренда</string>
     <string name="pref_show_ago">Отображать историю</string>
     <string name="pref_show_week_number">Показывать номер недели</string>
+    <string name="pref_show_date">Показать дату</string>
     <string name="default_custom_watchface_comment">Циферблат по умолчанию, вы можете нажать на EXPORT WATCHFACE чтобы создать шаблон</string>
     <string name="wear_default_watchface">Циферблат по умолчанию</string>
     <string name="cwf_comment_background">Фоновое изображение</string>
