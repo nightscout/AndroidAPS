@@ -308,23 +308,26 @@ class DataHandlerMobile @Inject constructor(
                            var carbTime: Long? = null
                            var useAlarm = false
                            val currentTime = Calendar.getInstance().timeInMillis
-
-                           lastQuickWizardEntry?.let { lastQuickWizardEntry ->
-                               carbTime = currentTime + (lastQuickWizardEntry.carbTime().toLong() * 60000)
-                               useAlarm = lastQuickWizardEntry.useAlarm() == QuickWizardEntry.YES
-
-                               if (lastQuickWizardEntry.useEcarbs() == QuickWizardEntry.YES) {
-
-                                   val timeOffset = lastQuickWizardEntry.time()
-                                   val eventTime: Long = currentTime + (timeOffset * 60000)
-                                   doECarbs(lastQuickWizardEntry.carbs2(), eventTime, lastQuickWizardEntry.duration())
-                               }
-                           }
-                           lastQuickWizardEntry = null
+                           var eventTime = currentTime
+                           var carbs2 = 0
+                           var duration = 0
 
                            lastBolusWizard?.let { lastBolusWizard ->
                                if (lastBolusWizard.timeStamp == it.timeStamp) { //use last calculation as confirmed string matches
+                                   lastQuickWizardEntry?.let { lastQuickWizardEntry ->
+                                       carbTime = currentTime + (lastQuickWizardEntry.carbTime().toLong() * 60000)
+                                       useAlarm = lastQuickWizardEntry.useAlarm() == QuickWizardEntry.YES
+
+                                       if (lastQuickWizardEntry.useEcarbs() == QuickWizardEntry.YES) {
+
+                                           val timeOffset = lastQuickWizardEntry.time()
+                                           eventTime += (timeOffset * 60000)
+                                           carbs2 = lastQuickWizardEntry.carbs2()
+                                           duration = lastQuickWizardEntry.duration()
+                                       }
+                                   }
                                    doBolus(lastBolusWizard.calculatedTotalInsulin, lastBolusWizard.carbs, carbTime, 0, lastBolusWizard.createBolusCalculatorResult())
+                                   doECarbs(carbs2, eventTime, duration)
 
                                    if (useAlarm && lastBolusWizard.carbs > 0 && carbTime!! > 0) {
                                        automation.scheduleTimeToEatReminder(T.mins(carbTime!!.toLong()).secs().toInt())
@@ -332,6 +335,7 @@ class DataHandlerMobile @Inject constructor(
                                }
                            }
                            lastBolusWizard = null
+                           lastQuickWizardEntry = null
                        }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventData.SnoozeAlert::class.java)
