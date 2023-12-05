@@ -51,6 +51,24 @@ open class MedtronicTestBase : TestBaseWithProfile() {
 
     }
 
+    fun getPumpHistoryEntryFromData(vararg elements: Int): PumpHistoryEntry {
+        val data: MutableList<Byte> = ArrayList()
+        for (item in elements) {
+            var b = if (item > 128) item - 256 else item
+            data.add(b.toByte());
+        }
+
+        val entryType = PumpHistoryEntryType.getByCode(data[0])
+
+        val phe = PumpHistoryEntry()
+        phe.setEntryType(medtronicUtil.medtronicPumpModel, entryType)
+        phe.setData(data, false)
+
+        decoder.decodeRecord(phe)
+
+        return phe
+    }
+
     private fun preProcessTBRs(tbrsInput: MutableList<PumpHistoryEntry>): MutableList<PumpHistoryEntry> {
         val tbrs: MutableList<PumpHistoryEntry> = mutableListOf()
         val map: MutableMap<String?, PumpHistoryEntry?> = HashMap()

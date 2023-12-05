@@ -432,7 +432,7 @@ class MedtronicHistoryData @Inject constructor(
         }
     }
 
-    private fun processBgReceived(bgRecords: List<PumpHistoryEntry>) {
+    fun processBgReceived(bgRecords: List<PumpHistoryEntry>) {
         for (bgRecord in bgRecords) {
             val glucoseMgdl = bgRecord.getDecodedDataEntry("GlucoseMgdl")
             if (glucoseMgdl == null || glucoseMgdl as Int == 0) {
