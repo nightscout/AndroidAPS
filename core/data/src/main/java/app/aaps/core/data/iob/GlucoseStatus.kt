@@ -1,9 +1,5 @@
 package app.aaps.core.data.iob
 
-/**
- * added information about recent glucose pattern properties
- */
-
 data class GlucoseStatus(
     val glucose: Double,
     val noise: Double = 0.0,
