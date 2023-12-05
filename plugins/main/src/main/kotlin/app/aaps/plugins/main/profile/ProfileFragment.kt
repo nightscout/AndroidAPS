@@ -299,7 +299,7 @@ class ProfileFragment : DaggerFragment() {
 
         binding.profileRemove.setOnClickListener {
             activity?.let { activity ->
-                OKDialog.showConfirmation(activity, rh.gs(R.string.delete_current_profile), {
+                OKDialog.showConfirmation(activity, rh.gs(R.string.delete_current_profile, profilePlugin.currentProfile()?.name), {
                     uel.log(
                         action = Action.PROFILE_REMOVED, source = Sources.LocalProfile,
                         value = ValueWithUnit.SimpleString(profilePlugin.currentProfile()?.name ?: "")

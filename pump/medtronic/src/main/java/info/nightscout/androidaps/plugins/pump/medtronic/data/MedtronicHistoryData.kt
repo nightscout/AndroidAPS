@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -67,7 +68,8 @@ class MedtronicHistoryData @Inject constructor(
     val medtronicPumpStatus: MedtronicPumpStatus,
     private val pumpSync: PumpSync,
     private val pumpSyncStorage: PumpSyncStorage,
-    private val uiInteraction: UiInteraction
+    private val uiInteraction: UiInteraction,
+    private val profileUtil: ProfileUtil
 ) {
 
     val allHistory: MutableList<PumpHistoryEntry> = mutableListOf()
@@ -321,6 +323,17 @@ class MedtronicHistoryData @Inject constructor(
      * Process History Data: Boluses(Treatments), TDD, TBRs, Suspend-Resume (or other pump stops: battery, prime)
      */
     fun processNewHistoryData() {
+        // Finger BG (for adding entry to careportal)
+        val bgRecords: MutableList<PumpHistoryEntry> = getFilteredItems(setOf(PumpHistoryEntryType.BGReceived, PumpHistoryEntryType.BGReceived512))
+        aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "ProcessHistoryData: BGReceived [count=%d, items=%s]", bgRecords.size, gson.toJson(bgRecords)))
+        if (isCollectionNotEmpty(bgRecords)) {
+            try {
+                processBgReceived(bgRecords)
+            } catch (ex: Exception) {
+                aapsLogger.error(LTag.PUMP, "ProcessHistoryData: Error processing BGReceived entries: " + ex.message, ex)
+                throw ex
+            }
+        }
 
         // Prime (for resetting autosense)
         val primeRecords: MutableList<PumpHistoryEntry> = getFilteredItems(PumpHistoryEntryType.Prime)
@@ -342,6 +355,18 @@ class MedtronicHistoryData @Inject constructor(
                 processRewind(rewindRecords)
             } catch (ex: Exception) {
                 aapsLogger.error(LTag.PUMP, "ProcessHistoryData: Error processing Rewind entries: " + ex.message, ex)
+                throw ex
+            }
+        }
+
+        // BatteryChange
+        val batteryChangeRecords: MutableList<PumpHistoryEntry> = getFilteredItems(PumpHistoryEntryType.BatteryChange)
+        aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "ProcessHistoryData: BatteryChange [count=%d, items=%s]", batteryChangeRecords.size, gson.toJson(batteryChangeRecords)))
+        if (isCollectionNotEmpty(batteryChangeRecords)) {
+            try {
+                processBatteryChange(batteryChangeRecords)
+            } catch (ex: Exception) {
+                aapsLogger.error(LTag.PUMP, "ProcessHistoryData: Error processing BatteryChange entries: " + ex.message, ex)
                 throw ex
             }
         }
@@ -406,6 +431,34 @@ class MedtronicHistoryData @Inject constructor(
         }
     }
 
+    fun processBgReceived(bgRecords: List<PumpHistoryEntry>) {
+        for (bgRecord in bgRecords) {
+            val glucoseMgdl = bgRecord.getDecodedDataEntry("GlucoseMgdl")
+            if (glucoseMgdl == null || glucoseMgdl as Int == 0) {
+                continue
+            }
+
+            val glucose = profileUtil.fromMgdlToUnits(glucoseMgdl.toDouble())
+            val glucoseUnit = profileUtil.units
+
+            val result = pumpSync.insertFingerBgIfNewWithTimestamp(
+                DateTimeUtil.toMillisFromATD(bgRecord.atechDateTime),
+                glucose, glucoseUnit, null,
+                bgRecord.pumpId,
+                medtronicPumpStatus.pumpType,
+                medtronicPumpStatus.serialNumber
+            )
+
+            aapsLogger.debug(
+                LTag.PUMP, String.format(
+                    Locale.ROOT, "insertFingerBgIfNewWithTimestamp [date=%d, glucose=%f, glucoseUnit=%s, pumpId=%d, pumpSerial=%s] - Result: %b",
+                    bgRecord.atechDateTime, glucose, glucoseUnit, bgRecord.pumpId,
+                    medtronicPumpStatus.serialNumber, result
+                )
+            )
+        }
+    }
+
     private fun processPrime(primeRecords: List<PumpHistoryEntry>) {
         val maxAllowedTimeInPast = DateTimeUtil.getATDWithAddedMinutes(GregorianCalendar(), -30)
         var lastPrimeRecordTime = 0L
@@ -455,7 +508,36 @@ class MedtronicHistoryData @Inject constructor(
         }
     }
 
-    private fun uploadCareportalEventIfFoundInHistory(historyRecord: PumpHistoryEntry, eventSP: String, eventType: TE.Type) {
+    private fun processBatteryChange(batteryChangeRecords: List<PumpHistoryEntry>) {
+        val maxAllowedTimeInPast = DateTimeUtil.getATDWithAddedMinutes(GregorianCalendar(), -120)
+        var lastBatteryChangeRecordTime = 0L
+        var lastBatteryChangeRecord: PumpHistoryEntry? = null
+        for (batteryChangeRecord in batteryChangeRecords) {
+            val isRemoved = batteryChangeRecord.getDecodedDataEntry("isRemoved")
+
+            if (isRemoved != null && isRemoved as Boolean)
+            {
+                // we're interested in battery replacements, not battery removals
+                continue
+            }
+
+            if (batteryChangeRecord.atechDateTime > maxAllowedTimeInPast) {
+                if (lastBatteryChangeRecordTime < batteryChangeRecord.atechDateTime) {
+                    lastBatteryChangeRecordTime = batteryChangeRecord.atechDateTime
+                    lastBatteryChangeRecord = batteryChangeRecord
+                }
+            }
+        }
+        if (lastBatteryChangeRecord != null) {
+            uploadCareportalEventIfFoundInHistory(
+                lastBatteryChangeRecord,
+                MedtronicConst.Statistics.LastBatteryChange,
+                TE.Type.PUMP_BATTERY_CHANGE
+            )
+        }
+    }
+
+        private fun uploadCareportalEventIfFoundInHistory(historyRecord: PumpHistoryEntry, eventSP: String, eventType: TE.Type) {
         val lastPrimeFromAAPS = sp.getLong(eventSP, 0L)
         if (historyRecord.atechDateTime != lastPrimeFromAAPS) {
             val result = pumpSync.insertTherapyEventIfNewWithTimestamp(
