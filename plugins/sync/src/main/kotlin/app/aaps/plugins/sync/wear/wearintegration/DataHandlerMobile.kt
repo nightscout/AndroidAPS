@@ -306,6 +306,7 @@ class DataHandlerMobile @Inject constructor(
                            aapsLogger.debug(LTag.WEAR, "ActionWizardConfirmed received $it from ${it.sourceNodeId}")
 
                            var carbTime: Long? = null
+                           var carbTimeOffset: Long = 0
                            var useAlarm = false
                            val currentTime = Calendar.getInstance().timeInMillis
                            var eventTime = currentTime
@@ -315,7 +316,8 @@ class DataHandlerMobile @Inject constructor(
                            lastBolusWizard?.let { lastBolusWizard ->
                                if (lastBolusWizard.timeStamp == it.timeStamp) { //use last calculation as confirmed string matches
                                    lastQuickWizardEntry?.let { lastQuickWizardEntry ->
-                                       carbTime = currentTime + (lastQuickWizardEntry.carbTime().toLong() * 60000)
+                                       carbTimeOffset = lastQuickWizardEntry.carbTime().toLong()
+                                       carbTime = currentTime + (carbTimeOffset * 60000)
                                        useAlarm = lastQuickWizardEntry.useAlarm() == QuickWizardEntry.YES
 
                                        if (lastQuickWizardEntry.useEcarbs() == QuickWizardEntry.YES) {
@@ -329,8 +331,8 @@ class DataHandlerMobile @Inject constructor(
                                    doBolus(lastBolusWizard.calculatedTotalInsulin, lastBolusWizard.carbs, carbTime, 0, lastBolusWizard.createBolusCalculatorResult())
                                    doECarbs(carbs2, eventTime, duration)
 
-                                   if (useAlarm && lastBolusWizard.carbs > 0 && carbTime!! > 0) {
-                                       automation.scheduleTimeToEatReminder(T.mins(carbTime!!.toLong()).secs().toInt())
+                                   if (useAlarm && lastBolusWizard.carbs > 0 && carbTimeOffset > 0) {
+                                       automation.scheduleTimeToEatReminder(T.mins(carbTimeOffset).secs().toInt())
                                    }
                                }
                            }
