@@ -1,6 +1,7 @@
 package app.aaps.plugins.source
 
 import android.content.Context
+import android.os.Bundle
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -77,6 +78,20 @@ class XdripSourcePlugin @Inject constructor(
         @Inject lateinit var dataWorkerStorage: DataWorkerStorage
         @Inject lateinit var uel: UserEntryLogger
 
+        fun getSensorStartTime(bundle: Bundle): Long? {
+            val now = dateUtil.now()
+            var sensorStartTime: Long? = if (sp.getBoolean(R.string.key_xdrip_log_ns_sensor_change, false)) {
+                bundle.getLong(Intents.EXTRA_SENSOR_STARTED_AT, 0)
+            } else {
+                null
+            }
+            // check start time validity
+            sensorStartTime?.let {
+                if (abs(it - now) > T.months(1).msecs() || it > now) sensorStartTime = null
+            }
+            return sensorStartTime
+        }
+
         override suspend fun doWorkAndLog(): Result {
             var ret = Result.success()
 
@@ -97,16 +112,7 @@ class XdripSourcePlugin @Inject constructor(
                         ?: ""
                 )
             )
-            val now = dateUtil.now()
-            var sensorStartTime: Long? = if (sp.getBoolean(R.string.key_xdrip_log_ns_sensor_change, false)) {
-                bundle.getLong(Intents.EXTRA_SENSOR_STARTED_AT, 0)
-            } else {
-                null
-            }
-            // check start time validity
-            sensorStartTime?.let {
-                if (abs(it - now) > T.months(1).msecs() || it > now) sensorStartTime = null
-            }
+            val sensorStartTime = getSensorStartTime(bundle)
             repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), sensorStartTime))
                 .doOnError {
                     aapsLogger.error(LTag.DATABASE, "Error while saving values from Xdrip", it)
