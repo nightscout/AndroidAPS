@@ -152,8 +152,11 @@ object Libs {
     }
 
     object Mockito {
+        private const val mockitoVersion = "5.6.0"
 
-        const val jupiter = "org.mockito:mockito-junit-jupiter:5.6.0"
+        const val android = "org.mockito:mockito-android:$mockitoVersion"
+        const val core = "org.mockito:mockito-core:$mockitoVersion"
+        const val jupiter = "org.mockito:mockito-junit-jupiter:$mockitoVersion"
         const val kotlin = "org.mockito.kotlin:mockito-kotlin:5.1.0"
     }
 
