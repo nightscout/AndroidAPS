@@ -142,7 +142,7 @@ class GarminPlugin @Inject constructor(
                 registerEndpoint("/get", requestHandler(::onGetBloodGlucose))
                 registerEndpoint("/carbs", requestHandler(::onPostCarbs))
                 registerEndpoint("/connect", requestHandler(::onConnectPump))
-                registerEndpoint("/connect", requestHandler(::onSgv))
+                registerEndpoint("/sgv.json", requestHandler(::onSgv))
                 awaitReady(wait)
             }
         } else if (server != null) {
