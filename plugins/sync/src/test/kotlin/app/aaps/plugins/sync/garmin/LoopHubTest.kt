@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.garmin
 
+import app.aaps.core.data.iob.CobInfo
 import app.aaps.core.data.iob.IobTotal
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.GV
@@ -34,6 +35,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.ArgumentMatchers.argThat
 import org.mockito.ArgumentMatchers.isNull
 import org.mockito.Mock
@@ -80,7 +82,7 @@ class LoopHubTest : TestBase() {
         verifyNoMoreInteractions(userEntryLogger)
     }
 
-    @Test
+@Test
     fun testCurrentProfile() {
         val profile = mock(Profile::class.java)
         `when`(profileFunction.getProfile()).thenReturn(profile)
@@ -109,6 +111,22 @@ class LoopHubTest : TestBase() {
         `when`(iobCobCalculator.calculateIobFromBolus()).thenReturn(iobTotal)
         assertEquals(23.9, loopHub.insulinOnboard, 1e-10)
         verify(iobCobCalculator, times(1)).calculateIobFromBolus()
+    }
+
+    @Test
+    fun testBasalOnBoard() {
+        val iobBasal = IobTotal(time = 0).apply { basaliob = 23.9 }
+        `when`(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(iobBasal)
+        assertEquals(23.9, loopHub.insulinBasalOnboard, 1e-10)
+        verify(iobCobCalculator, times(1)).calculateIobFromTempBasalsIncludingConvertedExtended()
+    }
+
+    @Test
+    fun testCarbsOnBoard() {
+        val cobInfo = CobInfo(0, 12.0, 0.0)
+        `when`(iobCobCalculator.getCobInfo(anyString())).thenReturn(cobInfo)
+        assertEquals(12.0, loopHub.carbsOnboard)
+        verify(iobCobCalculator, times(1)).getCobInfo(anyString())
     }
 
     @Test

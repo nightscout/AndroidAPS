@@ -153,7 +153,6 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
             PumpHistoryEntryType.ClearAlarm,
             PumpHistoryEntryType.ChangeAlarmNotifyMode,
             PumpHistoryEntryType.EnableDisableRemote,
-            PumpHistoryEntryType.BGReceived,
             PumpHistoryEntryType.SensorAlert,
             PumpHistoryEntryType.ChangeTimeFormat,
             PumpHistoryEntryType.ChangeReservoirWarningTime,
@@ -188,7 +187,6 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
             PumpHistoryEntryType.ChangeWatchdogEnable,
             PumpHistoryEntryType.ChangeOtherDeviceID,
             PumpHistoryEntryType.ReadOtherDevicesIDs,
-            PumpHistoryEntryType.BGReceived512,
             PumpHistoryEntryType.SensorStatus,
             PumpHistoryEntryType.ReadCaptureEventEnabled,
             PumpHistoryEntryType.ChangeCaptureEventEnable,
@@ -205,6 +203,12 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
 
             PumpHistoryEntryType.UnabsorbedInsulin,
             PumpHistoryEntryType.UnabsorbedInsulin512                         -> RecordDecodeStatus.Ignored
+
+            PumpHistoryEntryType.BGReceived,
+            PumpHistoryEntryType.BGReceived512                                -> {
+                decodeBgReceived(entry)
+                RecordDecodeStatus.OK
+            }
 
             PumpHistoryEntryType.DailyTotals522,
             PumpHistoryEntryType.DailyTotals523,
@@ -297,7 +301,9 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
     }
 
     private fun decodeBatteryActivity(entry: PumpHistoryEntry) {
-        entry.displayableValue = if (entry.head[0] == 0.toByte()) "Battery Removed" else "Battery Replaced"
+        val isRemoved = entry.head[0] == 0.toByte()
+        entry.addDecodedData("isRemoved", isRemoved)
+        entry.displayableValue = if (isRemoved) "Battery Removed" else "Battery Replaced"
     }
 
     private fun decodeBasalProfileStart(entry: PumpHistoryEntry): RecordDecodeStatus {
@@ -407,8 +413,11 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
     }
 
     private fun decodeBgReceived(entry: PumpHistoryEntry) {
-        entry.addDecodedData("amount", (ByteUtil.asUINT8(entry.getRawDataByIndex(0)) shl 3) + (ByteUtil.asUINT8(entry.getRawDataByIndex(3)) shr 5))
-        entry.addDecodedData("meter", ByteUtil.substring(entry.rawData, 6, 3)) // index moved from 1 -> 0
+        val glucoseMgdl = (ByteUtil.asUINT8(entry.head[0]) shl 3) + (ByteUtil.asUINT8(entry.datetime[2]) shr 5)
+        val meterSerial = ByteUtil.shortHexStringWithoutSpaces(entry.body)
+        entry.addDecodedData("GlucoseMgdl", glucoseMgdl)
+        entry.addDecodedData("MeterSerial", meterSerial)
+        entry.displayableValue = String.format("Glucose: %d mg/dl, Meter Serial: %s", glucoseMgdl, meterSerial)
     }
 
     private fun decodeCalBGForPH(entry: PumpHistoryEntry) {
