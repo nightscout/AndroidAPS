@@ -284,31 +284,6 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/done_background"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_gravity="center_vertical"
-            android:background="@android:color/transparent"
-            android:orientation="horizontal"
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp">
-
-            <CheckBox
-                android:id="@+id/calculation_checkbox"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:layout_gravity="center_vertical"
-                android:checked="false"
-                android:contentDescription="@string/show_calculation"
-                android:drawableEnd="@drawable/ic_visibility" />
-
-            <include
-                android:id="@+id/okcancel"
-                layout="@layout/okcancel" />
-
-        </LinearLayout>
-
         <View
             android:id="@+id/delimiter"
             android:layout_width="fill_parent"
@@ -680,6 +655,31 @@
                 </TableRow>
 
             </TableLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/done_background"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:background="@android:color/transparent"
+            android:orientation="horizontal"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp">
+
+            <CheckBox
+                android:id="@+id/calculation_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center_vertical"
+                android:checked="false"
+                android:contentDescription="@string/show_calculation"
+                android:drawableEnd="@drawable/ic_visibility" />
+
+            <include
+                android:id="@+id/okcancel"
+                layout="@layout/okcancel" />
 
         </LinearLayout>
 
