@@ -43,7 +43,7 @@ class XdripSourcePlugin @Inject constructor(
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
         .pluginIcon((app.aaps.core.main.R.drawable.ic_blooddrop_48))
-        .preferencesId(R.xml.pref_xdrip)
+        .preferencesId(R.xml.pref_dexcom)
         .pluginName(R.string.source_xdrip)
         .description(R.string.description_source_xdrip),
     aapsLogger, rh, injector
@@ -80,7 +80,7 @@ class XdripSourcePlugin @Inject constructor(
 
         fun getSensorStartTime(bundle: Bundle): Long? {
             val now = dateUtil.now()
-            var sensorStartTime: Long? = if (sp.getBoolean(R.string.key_xdrip_log_ns_sensor_change, false)) {
+            var sensorStartTime: Long? = if (sp.getBoolean(R.string.key_dexcom_log_ns_sensor_change, false)) {
                 bundle.getLong(Intents.EXTRA_SENSOR_STARTED_AT, 0)
             } else {
                 null

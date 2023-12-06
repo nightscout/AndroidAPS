@@ -59,7 +59,7 @@ class XdripSourcePluginTest : TestBase() {
     ): Pair<Bundle, XdripSourcePlugin.XdripSourceWorker> {
         val bundle = BundleMock.mock()
         sensorStartTime?.let { bundle.putLong(Intents.EXTRA_SENSOR_STARTED_AT, sensorStartTime) }
-        `when`(sp.getBoolean(R.string.key_xdrip_log_ns_sensor_change, false)).thenReturn(logNsSensorChange)
+        `when`(sp.getBoolean(R.string.key_dexcom_log_ns_sensor_change, false)).thenReturn(logNsSensorChange)
 
         lateinit var worker: XdripSourcePlugin.XdripSourceWorker
         TestListenableWorkerBuilder<XdripSourcePlugin.XdripSourceWorker>(context)
