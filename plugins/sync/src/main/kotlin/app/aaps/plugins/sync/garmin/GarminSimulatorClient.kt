@@ -13,6 +13,7 @@ import java.net.ServerSocket
 import java.net.Socket
 import java.net.SocketException
 import java.time.Duration
+import java.time.Instant
 import java.util.Collections
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -142,10 +143,10 @@ class GarminSimulatorClient(
 
     /** Wait for the server to start listing to requests. */
     fun awaitReady(wait: Duration): Boolean {
-        var waitNanos = wait.toNanos()
+        val waitUntil = Instant.now() + wait
         readyLock.withLock {
-            while (!serverSocket.isBound && waitNanos > 0L) {
-                waitNanos = readyCond.awaitNanos(waitNanos)
+            while (!serverSocket.isBound && Instant.now() < waitUntil) {
+                readyCond.await(20, TimeUnit.MILLISECONDS)
             }
         }
         return serverSocket.isBound

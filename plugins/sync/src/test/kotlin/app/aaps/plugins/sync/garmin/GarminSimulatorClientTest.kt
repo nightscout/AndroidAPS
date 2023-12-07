@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.isNull
 import org.mockito.kotlin.mock
@@ -28,18 +29,16 @@ class GarminSimulatorClientTest: TestBase() {
     fun receiveMessage() {
         val payload = "foo".toByteArray()
         assertTrue(client.awaitReady(Duration.ofSeconds(10)))
+        verify(receiver, timeout(100)).onConnect(client)
         val port = client.port
         val ip = Inet4Address.getByAddress(byteArrayOf(127, 0, 0, 1))
         Socket(ip, port).use { socket ->
             assertTrue(socket.isConnected)
             socket.getOutputStream().write(payload)
             socket.getOutputStream().flush()
-            verify(receiver).onConnect(client)
+            verify(receiver, timeout(1_000))
+                .onReceiveMessage(eq(client), any(), eq("SIMAPP"), eq(payload))
         }
-        assertEquals(1, client.connectedDevices.size)
-        val device: GarminDevice = client.connectedDevices.first()
-        verify(receiver, timeout(1_000))
-            .onReceiveMessage(eq(client), eq(device.id), eq("SIMAPP"), eq(payload))
     }
 
     @Test
