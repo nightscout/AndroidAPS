@@ -22,6 +22,8 @@ dependencies {
     implementation(project(":core:utils"))
     implementation(project(":shared:impl"))
 
+    testImplementation(Libs.AndroidX.Work.testing)
+
     testImplementation(project(":shared:tests"))
 
     kapt(Libs.Dagger.compiler)
