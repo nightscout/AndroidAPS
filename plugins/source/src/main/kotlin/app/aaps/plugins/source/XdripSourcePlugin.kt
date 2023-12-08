@@ -78,7 +78,7 @@ class XdripSourcePlugin @Inject constructor(
 
         fun getSensorStartTime(bundle: Bundle): Long? {
             val now = dateUtil.now()
-            var sensorStartTime: Long? = if (sp.getBoolean(R.string.key_dexcom_log_ns_sensor_change, false)) {
+            var sensorStartTime: Long? = if (sp.getBoolean(app.aaps.core.keys.R.string.key_dexcom_log_ns_sensor_change, false)) {
                 bundle.getLong(Intents.EXTRA_SENSOR_STARTED_AT, 0)
             } else {
                 null
