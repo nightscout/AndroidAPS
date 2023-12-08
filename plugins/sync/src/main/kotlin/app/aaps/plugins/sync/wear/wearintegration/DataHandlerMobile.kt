@@ -312,6 +312,7 @@ class DataHandlerMobile @Inject constructor(
                            var eventTime = currentTime
                            var carbs2 = 0
                            var duration = 0
+                           var notes : String? = null
 
                            lastBolusWizard?.let { lastBolusWizard ->
                                if (lastBolusWizard.timeStamp == it.timeStamp) { //use last calculation as confirmed string matches
@@ -319,6 +320,7 @@ class DataHandlerMobile @Inject constructor(
                                        carbTimeOffset = lastQuickWizardEntry.carbTime().toLong()
                                        carbTime = currentTime + (carbTimeOffset * 60000)
                                        useAlarm = lastQuickWizardEntry.useAlarm() == QuickWizardEntry.YES
+                                       notes = lastQuickWizardEntry.buttonText()
 
                                        if (lastQuickWizardEntry.useEcarbs() == QuickWizardEntry.YES) {
 
@@ -328,8 +330,8 @@ class DataHandlerMobile @Inject constructor(
                                            duration = lastQuickWizardEntry.duration()
                                        }
                                    }
-                                   doBolus(lastBolusWizard.calculatedTotalInsulin, lastBolusWizard.carbs, carbTime, 0, lastBolusWizard.createBolusCalculatorResult())
-                                   doECarbs(carbs2, eventTime, duration)
+                                   doBolus(lastBolusWizard.calculatedTotalInsulin, lastBolusWizard.carbs, carbTime, 0, lastBolusWizard.createBolusCalculatorResult(), notes)
+                                   doECarbs(carbs2, eventTime, duration, notes)
 
                                    if (useAlarm && lastBolusWizard.carbs > 0 && carbTimeOffset > 0) {
                                        automation.scheduleTimeToEatReminder(T.mins(carbTimeOffset).secs().toInt())
@@ -1239,13 +1241,14 @@ class DataHandlerMobile @Inject constructor(
         }
     }
 
-    private fun doBolus(amount: Double, carbs: Int, carbsTime: Long?, carbsDuration: Int, bolusCalculatorResult: BolusCalculatorResult?) {
+    private fun doBolus(amount: Double, carbs: Int, carbsTime: Long?, carbsDuration: Int, bolusCalculatorResult: BolusCalculatorResult?, notes: String? = null) {
         val detailedBolusInfo = DetailedBolusInfo()
         detailedBolusInfo.insulin = amount
         detailedBolusInfo.carbs = carbs.toDouble()
         detailedBolusInfo.bolusType = DetailedBolusInfo.BolusType.NORMAL
         detailedBolusInfo.carbsTimestamp = carbsTime
         detailedBolusInfo.carbsDuration = T.hours(carbsDuration.toLong()).msecs()
+        detailedBolusInfo.notes = notes
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
 
             val action = when {
@@ -1313,12 +1316,12 @@ class DataHandlerMobile @Inject constructor(
         })
     }
 
-    private fun doECarbs(carbs: Int, carbsTime: Long, duration: Int) {
+    private fun doECarbs(carbs: Int, carbsTime: Long, duration: Int, notes: String? = null) {
         uel.log(if (duration == 0) UserEntry.Action.CARBS else UserEntry.Action.EXTENDED_CARBS, UserEntry.Sources.Wear,
                 ValueWithUnit.Timestamp(carbsTime),
                 ValueWithUnit.Gram(carbs),
                 ValueWithUnit.Hour(duration).takeIf { duration != 0 })
-        doBolus(0.0, carbs, carbsTime, duration, null)
+        doBolus(0.0, carbs, carbsTime, duration, null, notes)
     }
 
     private fun doProfileSwitch(command: EventData.ActionProfileSwitchConfirmed) {
