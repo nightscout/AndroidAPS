@@ -98,9 +98,8 @@ public class EquilBLE {
 
         if (transmitterMAC == null) return;
         try {
-            final BluetoothAdapter mBluetoothAdapter = ((BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
             final Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
-            if (pairedDevices.size() > 0) {
+            if (!pairedDevices.isEmpty()) {
                 for (BluetoothDevice device : pairedDevices) {
                     if (device.getAddress() != null) {
                         if (device.getAddress().equals(transmitterMAC)) {
@@ -130,6 +129,7 @@ public class EquilBLE {
         }
     }
 
+    @SuppressWarnings({"deprecation"})
     public void init(EquilManager equilManager) {
         macAddrss = equilManager.getAddress();
         this.equilManager = equilManager;
@@ -176,10 +176,6 @@ public class EquilBLE {
 
             }
 
-            @Override public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {
-                super.onReadRemoteRssi(gatt, rssi, status);
-            }
-
             @Override public synchronized void onServicesDiscovered(BluetoothGatt gatt, int status) {
                 if (status != BluetoothGatt.GATT_SUCCESS) {
                     aapsLogger.debug(LTag.PUMPCOMM, "onServicesDiscovered received: " + status);
@@ -205,13 +201,13 @@ public class EquilBLE {
                 }
             }
 
-            @Override public void onCharacteristicRead(@NonNull BluetoothGatt gatt, @NonNull BluetoothGattCharacteristic characteristic, @NonNull byte[] value, int status) {
-                onCharacteristicChanged(gatt, characteristic, value);
+            @Override public void onCharacteristicRead(@NonNull BluetoothGatt gatt, @NonNull BluetoothGattCharacteristic characteristic, int status) {
+                onCharacteristicChanged(gatt, characteristic);
             }
 
-            @Override public void onCharacteristicChanged(@NonNull BluetoothGatt gatt, @NonNull final BluetoothGattCharacteristic characteristic, @NonNull byte[] value) {
+            @Override public void onCharacteristicChanged(@NonNull BluetoothGatt gatt, @NonNull final BluetoothGattCharacteristic characteristic) {
                 requestHighPriority();
-                decode(value);
+                decode(characteristic.getValue());
             }
 
             @Override public synchronized void onDescriptorWrite(BluetoothGatt gatt, final BluetoothGattDescriptor descriptor, int status) {
@@ -247,7 +243,6 @@ public class EquilBLE {
         aapsLogger.debug(LTag.PUMPCOMM, "ready: " + "===" + baseCmd);
         runNext = false;
         dataList = new ArrayList<>();
-        flag = true;
         writeConf = false;
         if (baseCmd != null) {
             equilResponse = baseCmd.getEquilResponse();
@@ -259,7 +254,6 @@ public class EquilBLE {
 
     public void nextCmd2() {
         dataList = new ArrayList<>();
-        flag = true;
         writeConf = false;
         aapsLogger.debug(LTag.PUMPCOMM,
                 "nextCmd===== " + baseCmd.isEnd + "====");
@@ -339,13 +333,13 @@ public class EquilBLE {
     public void writeCmd(BaseCmd baseCmd) {
         aapsLogger.debug(LTag.PUMPCOMM, "writeCmd {}", baseCmd);
         this.baseCmd = baseCmd;
-        String macAddrss;
+        String macAddress;
         if (baseCmd instanceof CmdPair) {
-            macAddrss = ((CmdPair) baseCmd).getAddress();
+            macAddress = ((CmdPair) baseCmd).getAddress();
         } else if (baseCmd instanceof CmdDevicesOldGet) {
-            macAddrss = ((CmdDevicesOldGet) baseCmd).getAddress();
+            macAddress = ((CmdDevicesOldGet) baseCmd).getAddress();
         } else {
-            macAddrss = equilManager.getAddress();
+            macAddress = equilManager.getAddress();
         }
         autoScan = baseCmd instanceof CmdModelGet || baseCmd instanceof CmdInsulinGet;
         if (connected && baseCmd.isPairStep()) {
@@ -355,7 +349,7 @@ public class EquilBLE {
             baseCmd.setRunPwd(preCmd.getRunPwd());
             nextCmd2();
         } else {
-            findEquil(macAddrss);
+            findEquil(macAddress);
             handler.sendEmptyMessageDelayed(TIME_OUT_CONNECT_WHAT, baseCmd.getConnectTimeOut());
         }
         preCmd = baseCmd;
@@ -414,20 +408,17 @@ public class EquilBLE {
     }
 
     List<String> dataList = new ArrayList<>();
-    boolean flag = true;
     boolean runNext = false;
 
     public synchronized void decode(byte[] buffer) {
         String str = Utils.bytesToHex(buffer);
         aapsLogger.debug(LTag.PUMPCOMM, "decode=====" + str);
-        if (flag) {
-            EquilResponse equilResponse = baseCmd.decodeEquilPacket(buffer);
-            if (equilResponse != null) {
-                if (!writeConf) {
-                    writeConf(equilResponse);
-                }
-                dataList = new ArrayList<>();
+        EquilResponse response = baseCmd.decodeEquilPacket(buffer);
+        if (response != null) {
+            if (!writeConf) {
+                writeConf(response);
             }
+            dataList = new ArrayList<>();
         }
     }
 
@@ -436,7 +427,6 @@ public class EquilBLE {
     public void writeConf(EquilResponse equilResponse) {
         try {
             dataList = new ArrayList<>();
-            flag = true;
             this.equilResponse = equilResponse;
             indexData = 0;
             writeData();
