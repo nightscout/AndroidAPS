@@ -3,7 +3,7 @@ package app.aaps.configuration.maintenance
 import android.content.Context
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.LoggerUtils
-import app.aaps.core.interfaces.maintenance.PrefFileListProvider
+import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.Preferences
@@ -24,7 +24,7 @@ class MaintenancePluginTest : TestBase() {
     @Mock lateinit var nsSettingsStatus: NSSettingsStatus
     @Mock lateinit var config: Config
     @Mock lateinit var loggerUtils: LoggerUtils
-    @Mock lateinit var fileListProvider: PrefFileListProvider
+    @Mock lateinit var fileListProvider: FileListProvider
 
     private lateinit var sut: MaintenancePlugin
 

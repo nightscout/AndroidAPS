@@ -6,7 +6,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.maintenance.PrefFileListProvider
+import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.storage.Storage
 import app.aaps.core.utils.JsonHelper
 import app.aaps.di.TestApplication
@@ -29,7 +29,7 @@ import javax.inject.Inject
 
 class ReplayApsResultsTest @Inject constructor() {
 
-    @Inject lateinit var prefFileListProvider: PrefFileListProvider
+    @Inject lateinit var fileListProvider: FileListProvider
     @Inject lateinit var storage: Storage
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var injector: HasAndroidInjector
@@ -144,7 +144,7 @@ class ReplayApsResultsTest @Inject constructor() {
         val apsResults = mutableListOf<JSONObject>()
 
         // look for results in filesystem
-        prefFileListProvider.resultPath.walk().maxDepth(1)
+        fileListProvider.resultPath.walk().maxDepth(1)
             .filter { it.isFile && it.name.endsWith(".json") }
             .forEach {
                 val contents = storage.getFileContents(it)

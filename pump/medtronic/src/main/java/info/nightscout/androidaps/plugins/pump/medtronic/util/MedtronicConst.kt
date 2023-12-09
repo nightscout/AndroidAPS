@@ -30,5 +30,6 @@ object MedtronicConst {
         const val LastPumpHistoryEntry = StatsPrefix + "pump_history_entry"
         const val LastPrime = StatsPrefix + "last_sent_prime"
         const val LastRewind = StatsPrefix + "last_sent_rewind"
+        const val LastBatteryChange = StatsPrefix + "last_sent_battery_change"
     }
 }

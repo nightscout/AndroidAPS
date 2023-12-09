@@ -4,7 +4,7 @@ import android.os.Build
 import app.aaps.BuildConfig
 import app.aaps.R
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.maintenance.PrefFileListProvider
+import app.aaps.core.interfaces.maintenance.FileListProvider
 import dagger.Reusable
 import java.io.File
 import javax.inject.Inject
@@ -12,7 +12,7 @@ import javax.inject.Inject
 @Suppress("KotlinConstantConditions")
 @Reusable
 class ConfigImpl @Inject constructor(
-    fileListProvider: PrefFileListProvider
+    fileListProvider: FileListProvider
 ) : Config {
 
     override val SUPPORTED_NS_VERSION = 150000 // 15.0.0

@@ -23,8 +23,12 @@ dependencies {
     testImplementation(project(":shared:tests"))
     testImplementation(project(":plugins:aps"))
     testImplementation(project(":pump:virtual"))
+
     // Protection
     api(Libs.AndroidX.biometric)
+    //Logger
+    api(Libs.Logging.slf4jApi)
+    api(Libs.Logging.logbackAndroid)
 
     kapt(Libs.Dagger.compiler)
     kapt(Libs.Dagger.androidProcessor)

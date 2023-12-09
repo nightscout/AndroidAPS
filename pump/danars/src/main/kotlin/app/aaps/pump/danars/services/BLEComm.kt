@@ -19,6 +19,7 @@ import android.os.SystemClock
 import android.util.Base64
 import androidx.core.app.ActivityCompat
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.androidPermissions.AndroidPermission
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
@@ -64,7 +65,8 @@ class BLEComm @Inject internal constructor(
     private val bleEncryption: BleEncryption,
     private val pumpSync: PumpSync,
     private val dateUtil: DateUtil,
-    private val uiInteraction: UiInteraction
+    private val uiInteraction: UiInteraction,
+    private val androidPermission: AndroidPermission
 ) {
 
     companion object {
@@ -113,18 +115,18 @@ class BLEComm @Inject internal constructor(
         }
         aapsLogger.debug(LTag.PUMPBTCOMM, "Initializing BLEComm.")
         if (bluetoothAdapter == null) {
-            aapsLogger.error("Unable to obtain a BluetoothAdapter.")
+            aapsLogger.error(LTag.PUMPBTCOMM, "Unable to obtain a BluetoothAdapter.")
             return false
         }
 
         if (address == null) {
-            aapsLogger.error("unspecified address.")
+            aapsLogger.error(LTag.PUMPBTCOMM, "unspecified address.")
             return false
         }
 
         val device = bluetoothAdapter?.getRemoteDevice(address)
         if (device == null) {
-            aapsLogger.error("Device not found.  Unable to connect from: $from")
+            aapsLogger.error(LTag.PUMPBTCOMM, "Device not found.  Unable to connect from: $from")
             return false
         }
         if (device.bondState == BluetoothDevice.BOND_NONE) {
@@ -171,7 +173,7 @@ class BLEComm @Inject internal constructor(
                 danaRSPlugin.changePump()
                 removeBond()
             } else if (lastClearRequest == 0L) {
-                aapsLogger.error("Clearing pairing keys postponed")
+                aapsLogger.error(LTag.PUMPBTCOMM, "Clearing pairing keys postponed")
                 sp.putLong(R.string.key_rs_last_clear_key_request, dateUtil.now())
             }
         }
@@ -180,14 +182,14 @@ class BLEComm @Inject internal constructor(
             // assume pairing keys are invalid
             val lastClearRequest = sp.getLong(R.string.key_rs_last_clear_key_request, 0)
             if (lastClearRequest != 0L && dateUtil.isOlderThan(lastClearRequest, 5)) {
-                aapsLogger.error("Clearing pairing keys !!!")
+                aapsLogger.error(LTag.PUMPBTCOMM, "Clearing pairing keys !!!")
                 sp.remove(rh.gs(R.string.key_danars_v3_randompairingkey) + danaRSPlugin.mDeviceName)
                 sp.remove(rh.gs(R.string.key_danars_v3_pairingkey) + danaRSPlugin.mDeviceName)
                 sp.remove(rh.gs(R.string.key_danars_v3_randomsynckey) + danaRSPlugin.mDeviceName)
                 ToastUtils.errorToast(context, R.string.invalidpairing)
                 danaRSPlugin.changePump()
             } else if (lastClearRequest == 0L) {
-                aapsLogger.error("Clearing pairing keys postponed")
+                aapsLogger.error(LTag.PUMPBTCOMM, "Clearing pairing keys postponed")
                 sp.putLong(R.string.key_rs_last_clear_key_request, dateUtil.now())
             }
         }
@@ -196,8 +198,8 @@ class BLEComm @Inject internal constructor(
         scheduledDisconnection = null
 
         if (bluetoothAdapter == null || bluetoothGatt == null) {
-            aapsLogger.error("disconnect not possible: (mBluetoothAdapter == null) " + (bluetoothAdapter == null))
-            aapsLogger.error("disconnect not possible: (mBluetoothGatt == null) " + (bluetoothGatt == null))
+            aapsLogger.error(LTag.PUMPBTCOMM, "disconnect not possible: (mBluetoothAdapter == null) " + (bluetoothAdapter == null))
+            aapsLogger.error(LTag.PUMPBTCOMM, "disconnect not possible: (mBluetoothGatt == null) " + (bluetoothGatt == null))
             return
         }
         setCharacteristicNotification(uartReadBTGattChar, false)
@@ -214,7 +216,7 @@ class BLEComm @Inject internal constructor(
                 try {
                     device::class.java.getMethod("removeBond").invoke(device)
                 } catch (e: Exception) {
-                    aapsLogger.error("Removing bond has been failed. ${e.message}")
+                    aapsLogger.error(LTag.PUMPBTCOMM, "Removing bond has been failed. ${e.message}")
                 }
             }
         }
@@ -281,7 +283,7 @@ class BLEComm @Inject internal constructor(
     private fun setCharacteristicNotification(characteristic: BluetoothGattCharacteristic?, enabled: Boolean) {
         aapsLogger.debug(LTag.PUMPBTCOMM, "setCharacteristicNotification")
         if (bluetoothAdapter == null || bluetoothGatt == null) {
-            aapsLogger.error("BluetoothAdapter not initialized_ERROR")
+            aapsLogger.error(LTag.PUMPBTCOMM, "BluetoothAdapter not initialized_ERROR")
             isConnecting = false
             isConnected = false
             encryptedDataRead = false
@@ -303,7 +305,7 @@ class BLEComm @Inject internal constructor(
         Thread(Runnable {
             SystemClock.sleep(WRITE_DELAY_MILLIS)
             if (bluetoothAdapter == null || bluetoothGatt == null) {
-                aapsLogger.error("BluetoothAdapter not initialized_ERROR")
+                aapsLogger.error(LTag.PUMPBTCOMM, "BluetoothAdapter not initialized_ERROR")
                 isConnecting = false
                 isConnected = false
                 encryptedDataRead = false
@@ -329,7 +331,7 @@ class BLEComm @Inject internal constructor(
     private fun getSupportedGattServices(): List<BluetoothGattService>? {
         aapsLogger.debug(LTag.PUMPBTCOMM, "getSupportedGattServices")
         if (bluetoothAdapter == null || bluetoothGatt == null) {
-            aapsLogger.error("BluetoothAdapter not initialized_ERROR")
+            aapsLogger.error(LTag.PUMPBTCOMM, "BluetoothAdapter not initialized_ERROR")
             isConnecting = false
             isConnected = false
             encryptedDataRead = false
@@ -454,7 +456,7 @@ class BLEComm @Inject internal constructor(
                 try {
                     System.arraycopy(readBuffer, length + 7, readBuffer, 0, bufferLength - (length + 7))
                 } catch (e: Exception) {
-                    aapsLogger.error("length: " + length + "bufferLength: " + bufferLength)
+                    aapsLogger.error(LTag.PUMPBTCOMM, "length: " + length + "bufferLength: " + bufferLength)
                     throw e
                 }
                 bufferLength -= length + 7
@@ -831,7 +833,7 @@ class BLEComm @Inject internal constructor(
             try {
                 message.waitMillis(5000)
             } catch (e: InterruptedException) {
-                aapsLogger.error("sendMessage InterruptedException", e)
+                aapsLogger.error(LTag.PUMPBTCOMM, "sendMessage InterruptedException", e)
             }
         }
 
@@ -866,7 +868,7 @@ class BLEComm @Inject internal constructor(
                 // notify to sendMessage
                 message.notifyAll()
             }
-        } else aapsLogger.error("Unknown message received " + DanaRSPacket.toHexString(decryptedBuffer))
+        } else aapsLogger.error(LTag.PUMPBTCOMM, "Unknown message received " + DanaRSPacket.toHexString(decryptedBuffer))
     }
 
 }
