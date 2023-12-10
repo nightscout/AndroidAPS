@@ -184,7 +184,7 @@ public class EquilBLE {
                 final BluetoothGattService service = gatt.getService(UUID.fromString(GattAttributes.SERVICE_RADIO));
                 if (service != null) {
                     notifyChara = service.getCharacteristic(UUID.fromString(GattAttributes.NRF_UART_NOTIFY));
-                    wirteChara = service.getCharacteristic(UUID.fromString(GattAttributes.NRF_UART_WIRTE));
+                    wirteChara = service.getCharacteristic(UUID.fromString(GattAttributes.NRF_UART_WRITE));
 //                    rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED));
                     openNotification();
                     requestHighPriority();
@@ -225,7 +225,7 @@ public class EquilBLE {
         aapsLogger.debug(LTag.PUMPCOMM, "openNotification: " + isConnected());
         boolean r0 = mBluetoothGatt.setCharacteristicNotification(notifyChara, true);
         if (r0) {
-            BluetoothGattDescriptor descriptor = notifyChara.getDescriptor(GattAttributes.mCharacteristicConfigDescriptor);
+            BluetoothGattDescriptor descriptor = notifyChara.getDescriptor(GattAttributes.INSTANCE.getCharacteristicConfigDescriptor());
             byte[] v = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE;
             descriptor.setValue(v);
             boolean flag = mBluetoothGatt.writeDescriptor(descriptor);
