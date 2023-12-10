@@ -12,7 +12,7 @@
         style="@style/pairTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/equil_fill_title" />
+        android:text="@string/equil_fill" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_hint2"
@@ -20,14 +20,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:text="@string/equil_innsert" />
+        android:text="@string/equil_insert" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_hint3"
         style="@style/pairText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/equil_innsert2" />
+        android:text="@string/equil_insert2" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_fill"

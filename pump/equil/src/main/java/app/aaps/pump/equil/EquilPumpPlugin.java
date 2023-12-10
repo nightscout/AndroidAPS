@@ -15,7 +15,6 @@ import org.joda.time.Duration;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.time.Instant;
 import java.util.Objects;
 
 import javax.inject.Inject;
@@ -65,7 +64,6 @@ import app.aaps.pump.equil.manager.command.CmdHistoryGet;
 import app.aaps.pump.equil.manager.command.CmdStatusGet;
 import app.aaps.pump.equil.manager.command.CmdTimeSet;
 import app.aaps.pump.equil.manager.command.PumpEvent;
-import dagger.android.HasAndroidInjector;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import kotlin.jvm.internal.Intrinsics;
 
@@ -75,8 +73,6 @@ import kotlin.jvm.internal.Intrinsics;
  */
 @Singleton
 public class EquilPumpPlugin extends PumpPluginBase implements Pump {
-    public static final String VERSION = "2023_09_20_01";
-    private static final long RILEY_LINK_CONNECT_TIMEOUT_MILLIS = 3 * 60 * 1_000L; // 3 minutes
     private static final long STATUS_CHECK_INTERVAL_MILLIS = 60 * 3_000L; // 1 minute
     public static final Duration BASAL_STEP_DURATION = Duration.standardMinutes(30);
     private final ProfileFunction profileFunction;
@@ -97,11 +93,6 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
-    // variables for handling statuses and history
-    private boolean hasTimeDateOrTimeZoneChanged = false;
-    private Instant lastTimeDateOrTimeZoneUpdate = Instant.ofEpochSecond(0L);
-    private final boolean displayConnectionMessages = false;
-    private final boolean busy = false;
     private HandlerThread handlerThread;
     public Handler loopHandler;
 
@@ -112,7 +103,6 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
 
     @Inject
     public EquilPumpPlugin(
-            HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             AapsSchedulers aapsSchedulers,
             RxBus rxBus,
@@ -129,14 +119,14 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
             DecimalFormatter decimalFormatter,
             Instantiator instantiator
     ) {
-        super(new PluginDescription() //
-                        .mainType(PluginType.PUMP) //
-                        .fragmentClass(EquilFragment.class.getName()) //
+        super(new PluginDescription()
+                        .mainType(PluginType.PUMP)
+                        .fragmentClass(EquilFragment.class.getName())
                         .pluginIcon(R.drawable.ic_pod_128)
-                        .pluginName(R.string.equil_name) //
-                        .shortName(R.string.equil_name) //
-                        .preferencesId(R.xml.pref_equil) //
-                        .description(R.string.equil_pump_description), //
+                        .pluginName(R.string.equil_name)
+                        .shortName(R.string.equil_name_short)
+                        .preferencesId(R.xml.pref_equil)
+                        .description(R.string.equil_pump_description),
                 aapsLogger, rh, commandQueue);
         this.aapsLogger = aapsLogger;
         this.aapsSchedulers = aapsSchedulers;
@@ -159,7 +149,6 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
                 if (commandQueue.size() == 0 &&
                         commandQueue.performing() == null) {
                     if (equilManager.isActivationCompleted()) {
-//                        getCommandQueue().customCommand(new CmdHistoryGet(), null);
                         getCommandQueue().customCommand(new CmdStatusGet(), null);
                     }
 
@@ -215,8 +204,6 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
 
     @Override
     public boolean isInitialized() {
-        //boolean flag = equilManager.isActivationInitialized();
-//        return flag;
         return true;
     }
 
@@ -241,7 +228,6 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
 
     @Override
     public boolean isHandshakeInProgress() {
-//        return  equilManager.getBluetoothConnectionState() == BluetoothConnectionState.CONNECTED;
         return false;
     }
 
@@ -296,7 +282,6 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
     public long lastDataTime() {
         aapsLogger.debug(LTag.PUMPCOMM,
                 "lastDataTime==" +
-                        "====" + VERSION + "===" +
                         android.text.format.DateFormat.format("yyyy-MM-dd HH:mm:ss",
                                 equilManager.getLastDataTime()));
         return equilManager.getLastDataTime();
@@ -569,11 +554,7 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
 
     @Override
     public void timezoneOrDSTChanged(@NonNull TimeChangeType timeChangeType) {
-
-        Instant now = Instant.now();
         aapsLogger.debug(LTag.PUMP, "DST and/or TimeZone changed event will be consumed by driver");
-        lastTimeDateOrTimeZoneUpdate = now;
-        hasTimeDateOrTimeZoneChanged = true;
         getCommandQueue().customCommand(new CmdTimeSet(), null);
     }
 
@@ -594,9 +575,7 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
 
     @Override
     public void finishHandshaking() {
-//        if (displayConnectionMessages)
-        aapsLogger.debug(LTag.PUMPCOMM, "finishHandshaking [OmnipodPumpPlugin] - default (empty) " +
-                "implementation.");
+        aapsLogger.debug(LTag.PUMPCOMM, "finishHandshaking [OmnipodPumpPlugin] - default (empty) implementation.");
     }
 
     @Override public void connect(@NonNull String reason) {
@@ -640,7 +619,6 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
 
     @NonNull @Override public PumpEnactResult cancelExtendedBolus() {
         aapsLogger.debug(LTag.PUMPCOMM, "cancelExtendedBolus [OmnipodPumpPlugin] - Not implemented.");
-//        return getOperationNotSupportedWithCustomText(info.nightscout.androidaps.plugins.pump.common.R.string.pump_operation_not_supported_by_pump_driver);
         return equilManager.setExtendedBolus(0, 0, true);
     }
 
@@ -699,13 +677,13 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
                     sp.getBoolean(EquilConst.Prefs.Equil_ALARM_BATTERY_10, false);
             if (!alarmBattery10) {
                 equilManager.showNotification(Notification.FAILED_UPDATE_PROFILE,
-                        rh.gs(R.string.equil_lowbattery) + battery + "%",
+                        rh.gs(R.string.equil_low_battery) + battery + "%",
                         Notification.NORMAL, app.aaps.core.ui.R.raw.alarm);
                 sp.putBoolean(EquilConst.Prefs.Equil_ALARM_BATTERY_10, true);
             } else {
                 if (battery < 5) {
                     equilManager.showNotification(Notification.FAILED_UPDATE_PROFILE,
-                            rh.gs(R.string.equil_lowbattery) + battery + "%",
+                            rh.gs(R.string.equil_low_battery) + battery + "%",
                             Notification.URGENT, app.aaps.core.ui.R.raw.alarm);
                 }
             }

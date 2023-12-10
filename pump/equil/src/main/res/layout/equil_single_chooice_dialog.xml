@@ -20,7 +20,7 @@
             android:layout_gravity="center"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:text="@string/equil_title_chooice"
+            android:text="@string/equil_title_choice"
             android:textAlignment="center"
             android:textAppearance="?android:attr/textAppearanceLarge" />
     </RelativeLayout>

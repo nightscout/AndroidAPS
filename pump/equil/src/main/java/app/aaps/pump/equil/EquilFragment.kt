@@ -242,7 +242,7 @@ class EquilFragment : DaggerFragment() {
                     intent.putExtra(EquilPairActivity.KEY_TYPE, EquilPairActivity.Type.PAIR)
                     startActivity(intent)
                 } else {
-                    equilPumpPlugin.showToast(rh.gs(R.string.equil_noprofileset))
+                    equilPumpPlugin.showToast(rh.gs(app.aaps.core.ui.R.string.no_profile_set))
                 }
             }
         }
@@ -384,7 +384,7 @@ class EquilFragment : DaggerFragment() {
                             intent.putExtra(EquilPairActivity.KEY_TYPE, EquilPairActivity.Type.CHANGE_INSULIN)
                             startActivity(intent)
                         } else {
-                            equilPumpPlugin.showToast(rh.gs(R.string.equil_noprofileset))
+                            equilPumpPlugin.showToast(rh.gs(app.aaps.core.ui.R.string.no_profile_set))
                         }
 
                     }

@@ -337,7 +337,7 @@ class EquilHistoryRecordActivity : TranslatedDaggerAppCompatActivity() {
                 }
 
                 EquilHistoryRecord.EventType.INSERT_CANNULA      -> {
-                    rh.gs(R.string.history_mannual_confirm)
+                    rh.gs(R.string.history_manual_confirm)
                 }
 
                 EquilHistoryRecord.EventType.EQUIL_ALARM         -> {

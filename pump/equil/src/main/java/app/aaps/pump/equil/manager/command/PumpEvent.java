@@ -18,24 +18,24 @@ public class PumpEvent {
     public static void init(ResourceHelper rh) {
         lists = new ArrayList<>();
         lists.add(new PumpEvent(4, 0, 0, "--"));
-        lists.add(new PumpEvent(4, 1, 1, rh.gs(R.string.equil_histroy_item1)));
-        lists.add(new PumpEvent(4, 1, 2, rh.gs(R.string.equil_histroy_item2)));
-        lists.add(new PumpEvent(4, 2, 2, rh.gs(R.string.equil_histroy_item3)));
-        lists.add(new PumpEvent(4, 3, 0, rh.gs(R.string.equil_histroy_item4)));
-        lists.add(new PumpEvent(4, 3, 2, rh.gs(R.string.equil_histroy_item5)));
-        lists.add(new PumpEvent(4, 5, 0, rh.gs(R.string.equil_histroy_item6)));
-        lists.add(new PumpEvent(4, 5, 1, rh.gs(R.string.equil_histroy_item7)));
-        lists.add(new PumpEvent(4, 6, 1, rh.gs(R.string.equil_histroy_item8)));
-        lists.add(new PumpEvent(4, 6, 2, rh.gs(R.string.equil_histroy_item9)));
-        lists.add(new PumpEvent(4, 7, 0, rh.gs(R.string.equil_histroy_item10)));
-        lists.add(new PumpEvent(4, 8, 0, rh.gs(R.string.equil_histroy_item11)));
-        lists.add(new PumpEvent(4, 9, 0, rh.gs(R.string.equil_histroy_item12)));
-        lists.add(new PumpEvent(4, 10, 0, rh.gs(R.string.equil_histroy_item13)));
-        lists.add(new PumpEvent(4, 11, 0, rh.gs(R.string.equil_histroy_item14)));
-        lists.add(new PumpEvent(5, 0, 1, rh.gs(R.string.equil_histroy_item15)));
-        lists.add(new PumpEvent(5, 0, 2, rh.gs(R.string.equil_histroy_item16)));
-        lists.add(new PumpEvent(5, 1, 0, rh.gs(R.string.equil_histroy_item17)));
-        lists.add(new PumpEvent(5, 1, 2, rh.gs(R.string.equil_histroy_item18)));
+        lists.add(new PumpEvent(4, 1, 1, rh.gs(R.string.equil_history_item1)));
+        lists.add(new PumpEvent(4, 1, 2, rh.gs(R.string.equil_history_item2)));
+        lists.add(new PumpEvent(4, 2, 2, rh.gs(R.string.equil_history_item3)));
+        lists.add(new PumpEvent(4, 3, 0, rh.gs(R.string.equil_history_item4)));
+        lists.add(new PumpEvent(4, 3, 2, rh.gs(R.string.equil_history_item5)));
+        lists.add(new PumpEvent(4, 5, 0, rh.gs(R.string.equil_history_item6)));
+        lists.add(new PumpEvent(4, 5, 1, rh.gs(R.string.equil_history_item7)));
+        lists.add(new PumpEvent(4, 6, 1, rh.gs(R.string.equil_history_item8)));
+        lists.add(new PumpEvent(4, 6, 2, rh.gs(R.string.equil_history_item9)));
+        lists.add(new PumpEvent(4, 7, 0, rh.gs(R.string.equil_history_item10)));
+        lists.add(new PumpEvent(4, 8, 0, rh.gs(R.string.equil_history_item11)));
+        lists.add(new PumpEvent(4, 9, 0, rh.gs(R.string.equil_history_item12)));
+        lists.add(new PumpEvent(4, 10, 0, rh.gs(R.string.equil_history_item13)));
+        lists.add(new PumpEvent(4, 11, 0, rh.gs(R.string.equil_history_item14)));
+        lists.add(new PumpEvent(5, 0, 1, rh.gs(R.string.equil_history_item15)));
+        lists.add(new PumpEvent(5, 0, 2, rh.gs(R.string.equil_history_item16)));
+        lists.add(new PumpEvent(5, 1, 0, rh.gs(R.string.equil_history_item17)));
+        lists.add(new PumpEvent(5, 1, 2, rh.gs(R.string.equil_history_item18)));
     }
 
     public PumpEvent(int port, int type, int level, String conent) {
