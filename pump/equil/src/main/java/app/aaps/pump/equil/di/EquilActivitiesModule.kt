@@ -1,9 +1,25 @@
 package app.aaps.pump.equil.di
 
 import app.aaps.pump.equil.EquilFragment
-import app.aaps.pump.equil.ui.*
-import app.aaps.pump.equil.ui.dlg.*
-import app.aaps.pump.equil.ui.pair.*
+import app.aaps.pump.equil.ui.EquilHistoryRecordActivity
+import app.aaps.pump.equil.ui.EquilUnPairActivity
+import app.aaps.pump.equil.ui.EquilUnPairDetachActivity
+import app.aaps.pump.equil.ui.dlg.EquilAutoDressingDlg
+import app.aaps.pump.equil.ui.dlg.EquilChangeInsulinDlg
+import app.aaps.pump.equil.ui.dlg.EquilPairConfigDlg
+import app.aaps.pump.equil.ui.dlg.EquilUnPairDlg
+import app.aaps.pump.equil.ui.dlg.LoadingDlg
+import app.aaps.pump.equil.ui.dlg.NumberChooseDlg
+import app.aaps.pump.equil.ui.dlg.SingleChooseDlg
+import app.aaps.pump.equil.ui.pair.EquilChangeInsulinFragment
+import app.aaps.pump.equil.ui.pair.EquilPairActivity
+import app.aaps.pump.equil.ui.pair.EquilPairAirFragment
+import app.aaps.pump.equil.ui.pair.EquilPairAssembleFragment
+import app.aaps.pump.equil.ui.pair.EquilPairAttachFragment
+import app.aaps.pump.equil.ui.pair.EquilPairConfirmFragment
+import app.aaps.pump.equil.ui.pair.EquilPairFillFragment
+import app.aaps.pump.equil.ui.pair.EquilPairFragmentBase
+import app.aaps.pump.equil.ui.pair.EquilPairSerialNumberFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -33,7 +49,4 @@ abstract class EquilActivitiesModule {
     @ContributesAndroidInjector abstract fun contributesEquilChangeInsulinFragment(): EquilChangeInsulinFragment
 
     @ContributesAndroidInjector abstract fun contributesEquilHistoryRecordActivity(): EquilHistoryRecordActivity
-
-    // @ContributesAndroidInjector abstract fun contributesEquilChangeActivity(): EquilChangeActivity
-
 }

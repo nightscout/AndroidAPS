@@ -149,7 +149,7 @@ class EquilPairAirFragment : EquilPairFragmentBase() {
             return
         }
         val basalSchedule = BasalSchedule.mapProfileToBasalSchedule(profile)
-        if (basalSchedule == null || basalSchedule.entries == null || basalSchedule.entries.size < 24) {
+        if (basalSchedule.getEntries().size < 24) {
             setTime()
             return
         }

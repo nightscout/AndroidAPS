@@ -78,7 +78,7 @@ public class CmdBasalSet extends BaseSetting {
         synchronized (this) {
             sp.putBoolean(EquilConst.Prefs.EQUIL_BASAL_SET, true);
             setCmdStatus(true);
-            notify();
+            notifyAll();
         }
     }
 

@@ -21,7 +21,6 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpPluginBase
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpSync.TemporaryBasalType
-import app.aaps.core.interfaces.pump.actions.CustomActionType
 import app.aaps.core.interfaces.pump.defs.determineCorrectBasalSize
 import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -144,9 +143,6 @@ import javax.inject.Singleton
         val mode = equilManager.runMode
         if (mode === RunMode.RUN || mode === RunMode.SUSPEND) {
             val basalSchedule = BasalSchedule.mapProfileToBasalSchedule(profile)
-            if (basalSchedule.entries == null || basalSchedule.entries.size < 24) {
-                return instantiator.providePumpEnactResult().enacted(false).success(false).comment("No profile active")
-            }
             val pumpEnactResult = equilManager.executeCmd(CmdBasalSet(basalSchedule, profile))
             if (pumpEnactResult.success) {
                 equilManager.basalSchedule = basalSchedule
@@ -177,8 +173,8 @@ import javax.inject.Singleton
         get() = equilManager.battery
 
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
-        if (detailedBolusInfo.insulin == 0.0 && detailedBolusInfo.carbs == 0.0) {
-            // neither carbs nor bolus requested
+        if (detailedBolusInfo.insulin == 0.0) {
+            // bolus requested
             aapsLogger.error("deliverTreatment: Invalid input: neither carbs nor insulin are set in treatment")
             return instantiator.providePumpEnactResult().success(false).enacted(false).bolusDelivered(0.0).comment("Invalid input")
         }
@@ -328,10 +324,6 @@ import javax.inject.Singleton
         }
         ret += rh.gs(R.string.equil_common_short_status_reservoir, reservoirLevel)
         return ret.trim { it <= ' ' }
-    }
-
-    override fun executeCustomAction(customActionType: CustomActionType) {
-        aapsLogger.debug(LTag.PUMPCOMM, "Unknown custom action: $customActionType")
     }
 
     override fun executeCustomCommand(customCommand: CustomCommand): PumpEnactResult? {
