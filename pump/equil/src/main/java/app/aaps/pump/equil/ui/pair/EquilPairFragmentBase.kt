@@ -11,13 +11,16 @@ import androidx.navigation.fragment.findNavController
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.BlePreCheck
+import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.pump.equil.EquilPumpPlugin
 import app.aaps.pump.equil.R
+import app.aaps.pump.equil.data.database.EquilHistoryRecordDao
 import app.aaps.pump.equil.databinding.EquilPairBaseFragmentBinding
 import app.aaps.pump.equil.databinding.EquilPairProgressBinding
+import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.equil.ui.dlg.LoadingDlg
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
@@ -32,6 +35,9 @@ abstract class EquilPairFragmentBase : DaggerFragment() {
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var equilPumpPlugin: EquilPumpPlugin
+    @Inject lateinit var equilManager: EquilManager
+    @Inject lateinit var pumpSync: PumpSync
+    @Inject lateinit var equilHistoryRecordDao: EquilHistoryRecordDao
 
     private var _binding: EquilPairBaseFragmentBinding? = null
     var _progressIndicationBinding: EquilPairProgressBinding? = null

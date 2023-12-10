@@ -68,8 +68,8 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
                 )
                 equilHistoryRecord.resolvedAt = System.currentTimeMillis()
                 equilHistoryRecord.resolvedStatus = ResolvedResult.SUCCESS
-                equilPumpPlugin.loopHandler.post {
-                    equilPumpPlugin.equilHistoryRecordDao.insert(equilHistoryRecord)
+                equilPumpPlugin.handler.post {
+                    equilHistoryRecordDao.insert(equilHistoryRecord)
                 }
                 val nextPage = getNextPageActionId()
                 findNavController().navigate(nextPage)
@@ -105,13 +105,8 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
 
                 aapsLogger.debug(LTag.PUMPCOMM, "result====" + result.success)
                 if (result.success) {
-                    if (auto) {
                         SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
                         readStatus()
-                    } else {
-                        SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
-                        readStatus()
-                    }
                 } else {
                     if (auto) {
                         dismissAutoDlg()

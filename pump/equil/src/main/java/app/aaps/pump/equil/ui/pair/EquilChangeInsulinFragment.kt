@@ -33,7 +33,7 @@ class EquilChangeInsulinFragment : EquilPairFragmentBase() {
                         dismissLoading()
                         if (result.success) {
                             equilPumpPlugin.resetData()
-                            equilPumpPlugin.equilManager.runMode = RunMode.STOP
+                            equilManager.runMode = RunMode.STOP
                             // equilPumpPlugin.equilManager.activationProgress = ActivationProgress.CANNULA_CHANGE
                             runOnUiThread {
                                 val nextPage = getNextPageActionId()

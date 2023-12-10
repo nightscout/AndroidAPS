@@ -495,8 +495,6 @@ public class EquilManager {
             }
             if (command.isCmdStatus()) {
                 command.setResolvedResult(ResolvedResult.SUCCESS);
-            }
-            if (command.isCmdStatus()) {
                 SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD);
                 return loadEquilHistory();
             }

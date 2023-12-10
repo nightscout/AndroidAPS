@@ -128,8 +128,8 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
                 buttonPair.text = rh.gs(R.string.equil_pair)
                 serialNumber = view.findViewById<TextView>(R.id.devicesName).text.toString().trim()
                 aapsLogger.error(LTag.PUMPBTCOMM, "serialNumber ====" + serialNumber)
-                equilPumpPlugin.equilManager.address = ""
-                equilPumpPlugin.equilManager.serialNumber = ""
+                equilManager.address = ""
+                equilManager.serialNumber = ""
                 password = equilPasswordText.text.toString()
                 if (!TextUtils.isEmpty(serialNumber) && validate(password)) {
                     sp.putString(rh.gs(R.string.key_equil_pair_password), password)
@@ -194,7 +194,7 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
                 scanRecord.scanRecord?.bytes.let {
                     if (it != null) {
                         val historyIndex = Utils.bytesToInt(it[24], it[23])
-                        equilPumpPlugin.equilManager.startHistoryIndex = historyIndex
+                        equilManager.startHistoryIndex = historyIndex
                         aapsLogger.debug(LTag.PUMPCOMM, "historyIndex  $historyIndex")
                     }
                 }
@@ -237,7 +237,7 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
                         SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
                         pair(scanResult)
                     } else {
-                        equilPumpPlugin.equilManager.closeBle()
+                        equilManager.closeBle()
                         dismissLoading()
                         runOnUiThread {
                             progressPair.visibility = View.INVISIBLE
@@ -258,16 +258,16 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
                         textTips.text = rh.gs(R.string.equil_pair_error)
                         buttonPair.alpha = 1f
                     }
-                    equilPumpPlugin.equilManager.address = ""
-                    equilPumpPlugin.equilManager.serialNumber = ""
+                    equilManager.address = ""
+                    equilManager.serialNumber = ""
                 }
             }
         })
     }
 
     private fun pair(scanResult: BluetoothDevice) {
-        equilPumpPlugin.equilManager.activationProgress = ActivationProgress.PRIMING
-        equilPumpPlugin.equilManager.bluetoothConnectionState = BluetoothConnectionState.CONNECTED
+        equilManager.activationProgress = ActivationProgress.PRIMING
+        equilManager.bluetoothConnectionState = BluetoothConnectionState.CONNECTED
         aapsLogger.debug(LTag.PUMPCOMM, "result====${scanResult.name}===${scanResult.address}")
         commandQueue.customCommand(CmdPair(scanResult.name.toString(), scanResult.address.toString(), password), object : Callback() {
             override fun run() {
@@ -279,7 +279,7 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
                         SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
                         pumpSettings(scanResult.address.toString(), scanResult.name.toString())
                     } else {
-                        equilPumpPlugin.equilManager.closeBle()
+                        equilManager.closeBle()
                         dismissLoading()
                         runOnUiThread {
                             progressPair.visibility = View.INVISIBLE
@@ -302,8 +302,8 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
                         buttonPair.alpha = 1f
                     }
 
-                    equilPumpPlugin.equilManager.address = ""
-                    equilPumpPlugin.equilManager.serialNumber = ""
+                    equilManager.address = ""
+                    equilManager.serialNumber = ""
                 }
             }
         })
@@ -315,12 +315,12 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
                 if (activity == null) return
                 if (result.success) {
                     dismissLoading()
-                    equilPumpPlugin.equilManager.address = address
-                    equilPumpPlugin.equilManager.serialNumber = serialNumber
+                    equilManager.address = address
+                    equilManager.serialNumber = serialNumber
                     equilPumpPlugin.showToast(rh.gs(R.string.equil_success))
                     runOnUiThread {
                         val nextPage = getNextPageActionId()
-                        equilPumpPlugin.equilManager.activationProgress = ActivationProgress.CANNULA_CHANGE
+                        equilManager.activationProgress = ActivationProgress.CANNULA_CHANGE
                         findNavController().navigate(nextPage)
                     }
                 } else {
@@ -332,8 +332,8 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
                         buttonPair.text = rh.gs(R.string.equil_retry)
                         buttonPair.alpha = 1f
                     }
-                    equilPumpPlugin.equilManager.address = ""
-                    equilPumpPlugin.equilManager.serialNumber = ""
+                    equilManager.address = ""
+                    equilManager.serialNumber = ""
                 }
             }
         })

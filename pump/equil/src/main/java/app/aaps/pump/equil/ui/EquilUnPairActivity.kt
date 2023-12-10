@@ -21,6 +21,7 @@ import app.aaps.pump.equil.EquilPumpPlugin
 import app.aaps.pump.equil.R
 import app.aaps.pump.equil.databinding.EquilUnpairActivityBinding
 import app.aaps.pump.equil.events.EventEquilUnPairChanged
+import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.equil.manager.command.CmdUnPair
 import app.aaps.pump.equil.ui.dlg.LoadingDlg
 import javax.inject.Inject
@@ -37,6 +38,7 @@ class EquilUnPairActivity : TranslatedDaggerAppCompatActivity() {
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var equilPumpPlugin: EquilPumpPlugin
     @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var equilManager: EquilManager
 
     private lateinit var binding: EquilUnpairActivityBinding
     @Inject lateinit var profileFunction: ProfileFunction
@@ -49,7 +51,7 @@ class EquilUnPairActivity : TranslatedDaggerAppCompatActivity() {
         title = rh.gs(R.string.equil_change)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        val name = equilPumpPlugin.equilManager.serialNumber
+        val name = equilManager.serialNumber
         binding.tvHint2.text = String.format(rh.gs(R.string.equil_unpair), name)
         binding.btnNext.setOnClickListener {
             showUnPairConfig()
@@ -64,7 +66,7 @@ class EquilUnPairActivity : TranslatedDaggerAppCompatActivity() {
     }
 
     private fun showUnPairConfig() {
-        val name = equilPumpPlugin.equilManager.serialNumber
+        val name = equilManager.serialNumber
         val content = String.format(rh.gs(R.string.equil_unpair_alert), name)
         val alertDialog = AlertDialog.Builder(this)
             .setTitle(rh.gs(R.string.equil_title_tips))
@@ -86,8 +88,8 @@ class EquilUnPairActivity : TranslatedDaggerAppCompatActivity() {
             override fun run() {
                 dismissLoading()
                 if (result.success) {
-                    equilPumpPlugin.equilManager.serialNumber = ""
-                    equilPumpPlugin.equilManager.address = ""
+                    equilManager.serialNumber = ""
+                    equilManager.address = ""
                     equilPumpPlugin.showToast(rh.gs(R.string.equil_unbind))
                     rxBus.send(EventEquilUnPairChanged())
                     equilPumpPlugin.clearData()

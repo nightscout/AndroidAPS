@@ -319,7 +319,6 @@ public class EquilBLE {
             if (device != null) {
                 aapsLogger.debug(LTag.PUMPCOMM, "connectEquil======");
                 mBluetoothGatt = device.connectGatt(context, false, mGattCallback, BluetoothDevice.TRANSPORT_LE);
-//                    rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING));
                 connecting = true;
             }
         }, 500);

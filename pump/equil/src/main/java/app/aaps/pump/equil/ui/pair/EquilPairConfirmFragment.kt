@@ -34,14 +34,14 @@ class EquilPairConfirmFragment : EquilPairFragmentBase() {
     fun toSave() {
         context?.let {
             if ((activity as? EquilPairActivity)?.pair == true) {
-                equilPumpPlugin.pumpSync.connectNewPump()
-                equilPumpPlugin.pumpSync.insertTherapyEventIfNewWithTimestamp(
+                pumpSync.connectNewPump()
+                pumpSync.insertTherapyEventIfNewWithTimestamp(
                     timestamp = System.currentTimeMillis(),
                     type = TE.Type.CANNULA_CHANGE,
                     pumpType = PumpType.EQUIL,
                     pumpSerial = equilPumpPlugin.serialNumber()
                 )
-                equilPumpPlugin.pumpSync.insertTherapyEventIfNewWithTimestamp(
+                pumpSync.insertTherapyEventIfNewWithTimestamp(
                     timestamp = System.currentTimeMillis(),
                     type = TE.Type.INSULIN_CHANGE,
                     pumpType = PumpType.EQUIL,
@@ -60,16 +60,16 @@ class EquilPairConfirmFragment : EquilPairFragmentBase() {
             )
             equilHistoryRecord.resolvedAt = System.currentTimeMillis()
             equilHistoryRecord.resolvedStatus = ResolvedResult.SUCCESS
-            equilPumpPlugin.loopHandler.post {
-                equilPumpPlugin.equilHistoryRecordDao.insert(equilHistoryRecord)
+            equilPumpPlugin.handler.post {
+                equilHistoryRecordDao.insert(equilHistoryRecord)
             }
-            equilPumpPlugin.equilManager.lastDataTime = System.currentTimeMillis()
-            equilPumpPlugin.pumpSync.insertTherapyEventIfNewWithTimestamp(
+            equilManager.lastDataTime = System.currentTimeMillis()
+            pumpSync.insertTherapyEventIfNewWithTimestamp(
                 System.currentTimeMillis(),
                 TE.Type.CANNULA_CHANGE, null, null, PumpType.EQUIL,
                 equilPumpPlugin.serialNumber()
             )
-            equilPumpPlugin.equilManager.activationProgress = ActivationProgress.COMPLETED
+            equilManager.activationProgress = ActivationProgress.COMPLETED
             activity?.finish()
         }
     }
@@ -90,7 +90,7 @@ class EquilPairConfirmFragment : EquilPairFragmentBase() {
                 aapsLogger.debug(LTag.PUMPCOMM, "setModel result====" + result.success + "====")
                 if (result.success) {
                     dismissLoading()
-                    equilPumpPlugin.equilManager.runMode = RunMode.RUN
+                    equilManager.runMode = RunMode.RUN
                     toSave()
                 } else {
                     dismissLoading()

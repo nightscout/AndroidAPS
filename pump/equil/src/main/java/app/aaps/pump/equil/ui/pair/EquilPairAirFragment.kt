@@ -61,7 +61,7 @@ class EquilPairAirFragment : EquilPairFragmentBase() {
                 if ((activity as? EquilPairActivity)?.pair == true) {
                     setAlarmMode()
                 } else {
-                    if (equilPumpPlugin.equilManager.basalSchedule == null) {
+                    if (equilManager.basalSchedule == null) {
                         setProfile()
                     } else {
                         setTime()
@@ -126,7 +126,7 @@ class EquilPairAirFragment : EquilPairFragmentBase() {
                 if (activity == null) return
                 aapsLogger.debug(LTag.PUMPCOMM, "CmdGetDevices result====" + result.success)
                 if (result.success) {
-                    equilPumpPlugin.equilManager.closeBle()
+                    equilManager.closeBle()
                     SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
                     dismissLoading()
                     runOnUiThread {
@@ -159,7 +159,7 @@ class EquilPairAirFragment : EquilPairFragmentBase() {
                 if (activity == null) return
                 aapsLogger.debug(LTag.PUMPCOMM, "CmdTimeSet result====" + result.success)
                 if (result.success) {
-                    equilPumpPlugin.equilManager.basalSchedule = basalSchedule
+                    equilManager.basalSchedule = basalSchedule
                     SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
                     dismissLoading()
                     setTime()

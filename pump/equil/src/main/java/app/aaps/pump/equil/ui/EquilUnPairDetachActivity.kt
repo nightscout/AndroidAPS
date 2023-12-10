@@ -25,6 +25,7 @@ import app.aaps.pump.equil.data.RunMode
 import app.aaps.pump.equil.databinding.EquilUnpairDetachActivityBinding
 import app.aaps.pump.equil.driver.definition.ActivationProgress
 import app.aaps.pump.equil.events.EventEquilUnPairChanged
+import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.equil.manager.command.CmdInsulinChange
 import app.aaps.pump.equil.ui.dlg.LoadingDlg
 import com.bumptech.glide.Glide
@@ -46,6 +47,8 @@ class EquilUnPairDetachActivity : TranslatedDaggerAppCompatActivity() {
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var fabricPrivacy: FabricPrivacy
+    @Inject lateinit var equilManager: EquilManager
+
     private val disposable = CompositeDisposable()
 
     private lateinit var binding: EquilUnpairDetachActivityBinding
@@ -94,11 +97,11 @@ class EquilUnPairDetachActivity : TranslatedDaggerAppCompatActivity() {
         commandQueue.customCommand(CmdInsulinChange(), object : Callback() {
             override fun run() {
                 if (result.success) {
-                    equilPumpPlugin.equilManager.runMode = RunMode.STOP
-                    equilPumpPlugin.equilManager.closeBle()
+                    equilManager.runMode = RunMode.STOP
+                    equilManager.closeBle()
                     equilPumpPlugin.resetData()
                     SystemClock.sleep(500)
-                    equilPumpPlugin.equilManager.activationProgress = ActivationProgress.CANNULA_CHANGE
+                    equilManager.activationProgress = ActivationProgress.CANNULA_CHANGE
                     dismissLoading()
                     startActivity(Intent(context, EquilUnPairActivity::class.java))
                 } else {

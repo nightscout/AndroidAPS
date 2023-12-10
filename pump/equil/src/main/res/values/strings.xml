@@ -45,8 +45,7 @@
     <string name="equil_mode_stop">Stop</string>
     <string name="equil_mode_suspend">suspending</string>
     <string name="equil_pump">Equil Patch Pump</string>
-    <string name="equil_pump_description">Equil Patch Pump</string>
-    <string name="equil_pump_shortname">Equil Patch Pump</string>
+    <string name="equil_pump_description">Equil 5.3 or newer Patch Pump </string>
     <string name="equil_serialnumber">Device number</string>
     <string name="equil_stop">Stop</string>
     <string name="equil_success">Success</string>
