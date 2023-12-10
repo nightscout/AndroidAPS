@@ -36,7 +36,7 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.pump.equil.data.BolusProfile
 import app.aaps.pump.equil.data.RunMode
-import app.aaps.pump.equil.data.database.EquilHistoryRecordDao
+import app.aaps.pump.equil.database.EquilHistoryPumpDao
 import app.aaps.pump.equil.driver.definition.ActivationProgress
 import app.aaps.pump.equil.driver.definition.BasalSchedule
 import app.aaps.pump.equil.events.EventEquilDataChanged
@@ -71,7 +71,7 @@ import javax.inject.Singleton
     private val dateUtil: DateUtil,
     private val pumpSync: PumpSync,
     private val equilManager: EquilManager,
-    private val equilHistoryRecordDao: EquilHistoryRecordDao,
+    private val equilHistoryPumpDao: EquilHistoryPumpDao,
     private val decimalFormatter: DecimalFormatter,
     private val instantiator: Instantiator
 ) : PumpPluginBase(
@@ -192,9 +192,9 @@ import javax.inject.Singleton
         } else deliverBolus(detailedBolusInfo)
     }
 
-    fun loadHistory(): PumpEnactResult {
+    private fun loadHistory(): PumpEnactResult {
         val pumpEnactResult = instantiator.providePumpEnactResult()
-        val equilHistoryLast = equilHistoryRecordDao.last(serialNumber())
+        val equilHistoryLast = equilHistoryPumpDao.last(serialNumber())
         var startIndex: Int
         startIndex = equilHistoryLast.eventIndex
         val index = equilManager.historyIndex
@@ -221,9 +221,7 @@ import javax.inject.Singleton
     override fun setTempBasalAbsolute(
         absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: TemporaryBasalType
     ): PumpEnactResult {
-        aapsLogger.debug(
-            LTag.PUMPCOMM, "setTempBasalAbsolute=====" + absoluteRate + "====" + durationInMinutes + "===" + enforceNew
-        )
+        aapsLogger.debug(LTag.PUMPCOMM, "setTempBasalAbsolute=====$absoluteRate====$durationInMinutes===$enforceNew")
         if (durationInMinutes <= 0 || durationInMinutes % BASAL_STEP_DURATION.standardMinutes != 0L) {
             return instantiator.providePumpEnactResult().success(false).comment(rh.gs(R.string.equil_error_set_temp_basal_failed_validation, BASAL_STEP_DURATION.standardMinutes))
         }
@@ -262,7 +260,6 @@ import javax.inject.Singleton
         return pumpEnactResult
     }
 
-    // TODO improve (i8n and more)
     override fun getJSONStatus(profile: Profile, profileName: String, version: String): JSONObject {
         if (!isConnected()) return JSONObject().put("status", JSONObject().put("status", "no active Pod"))
 
@@ -317,7 +314,7 @@ import javax.inject.Singleton
         }
         if (equilManager.bolusRecord != null) {
             ret += rh.gs(
-                R.string.equil_common_short_status_last_bolus, decimalFormatter.to2Decimal(equilManager.bolusRecord.amout), DateFormat.format(
+                R.string.equil_common_short_status_last_bolus, decimalFormatter.to2Decimal(equilManager.bolusRecord.amount), DateFormat.format(
                     "HH:mm", equilManager.bolusRecord.startTime
                 )
             ) + "\n"
@@ -423,7 +420,7 @@ import javax.inject.Singleton
         sp.putString(EquilConst.Prefs.EQUIL_PASSWORD, "")
     }
 
-    fun playAlarm() {
+    private fun playAlarm() {
         val battery = equilManager.battery
         val insulin = equilManager.currentInsulin
         val alarmBattery = sp.getBoolean(EquilConst.Prefs.EQUIL_ALARM_BATTERY, true)
@@ -471,7 +468,7 @@ import javax.inject.Singleton
     companion object {
 
         private const val STATUS_CHECK_INTERVAL_MILLIS = 60 * 3000L // 1 minute
-        val BASAL_STEP_DURATION = Duration.standardMinutes(30)
+        private val BASAL_STEP_DURATION: Duration = Duration.standardMinutes(30)
         fun toDuration(dateTime: DateTime?): Duration {
             requireNotNull(dateTime) { "dateTime can not be null" }
             return Duration(dateTime.toLocalTime().millisOfDay.toLong())

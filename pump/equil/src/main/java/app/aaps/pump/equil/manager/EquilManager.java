@@ -50,14 +50,15 @@ import app.aaps.pump.equil.ble.EquilBLE;
 import app.aaps.pump.equil.data.AlarmMode;
 import app.aaps.pump.equil.data.BolusProfile;
 import app.aaps.pump.equil.data.RunMode;
-import app.aaps.pump.equil.data.database.BolusType;
-import app.aaps.pump.equil.data.database.EquilBasalValuesRecord;
-import app.aaps.pump.equil.data.database.EquilBolusRecord;
-import app.aaps.pump.equil.data.database.EquilHistoryPump;
-import app.aaps.pump.equil.data.database.EquilHistoryRecord;
-import app.aaps.pump.equil.data.database.EquilHistoryRecordDao;
-import app.aaps.pump.equil.data.database.EquilTempBasalRecord;
-import app.aaps.pump.equil.data.database.ResolvedResult;
+import app.aaps.pump.equil.database.BolusType;
+import app.aaps.pump.equil.database.EquilBasalValuesRecord;
+import app.aaps.pump.equil.database.EquilBolusRecord;
+import app.aaps.pump.equil.database.EquilHistoryPump;
+import app.aaps.pump.equil.database.EquilHistoryPumpDao;
+import app.aaps.pump.equil.database.EquilHistoryRecord;
+import app.aaps.pump.equil.database.EquilHistoryRecordDao;
+import app.aaps.pump.equil.database.EquilTempBasalRecord;
+import app.aaps.pump.equil.database.ResolvedResult;
 import app.aaps.pump.equil.driver.definition.ActivationProgress;
 import app.aaps.pump.equil.driver.definition.BasalSchedule;
 import app.aaps.pump.equil.driver.definition.BluetoothConnectionState;
@@ -88,6 +89,7 @@ public class EquilManager {
     private final Instantiator instantiator;
     EquilBLE equilBLE;
     EquilHistoryRecordDao equilHistoryRecordDao;
+    EquilHistoryPumpDao equilHistoryPumpDao;
 
     //    SettingProfile settingProfile;
     public AAPSLogger getAapsLogger() {
@@ -109,6 +111,7 @@ public class EquilManager {
             PumpSync pumpSync,
             EquilBLE equilBLE,
             EquilHistoryRecordDao equilHistoryRecordDao,
+            EquilHistoryPumpDao equilHistoryPumpDao,
             Instantiator instantiator
     ) {
         this.aapsLogger = aapsLogger;
@@ -119,8 +122,8 @@ public class EquilManager {
         this.pumpSync = pumpSync;
         this.equilBLE = equilBLE;
         this.equilHistoryRecordDao = equilHistoryRecordDao;
+        this.equilHistoryPumpDao = equilHistoryPumpDao;
         this.instantiator = instantiator;
-//        danaHistoryRecordDao.createOrUpdate(new DanaHistoryRecord(0,0x01));
 
         this.gsonInstance = createGson();
         loadPodState();
@@ -424,8 +427,7 @@ public class EquilManager {
     }
 
     public EquilHistoryRecord addHistory(BaseCmd command) {
-        EquilHistoryRecord equilHistoryRecord = new EquilHistoryRecord(System.currentTimeMillis()
-                , getSerialNumber());
+        EquilHistoryRecord equilHistoryRecord = new EquilHistoryRecord(System.currentTimeMillis(), getSerialNumber());
         if (command.getEventType() != null) {
             equilHistoryRecord.setType(command.getEventType());
         }
@@ -1102,7 +1104,7 @@ public class EquilManager {
         equilHistoryPump.setParm(parm);
         equilHistoryPump.setEventIndex(index);
         equilHistoryPump.setSerialNumber(getSerialNumber());
-        long id = equilHistoryRecordDao.insert(equilHistoryPump);
+        long id = equilHistoryPumpDao.insert(equilHistoryPump);
         aapsLogger.debug(LTag.PUMPCOMM, "decodeHistory insert id {}", id);
         rxBus.send(new EventEquilDataChanged());
     }

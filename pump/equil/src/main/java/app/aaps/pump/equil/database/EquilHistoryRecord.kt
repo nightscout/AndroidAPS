@@ -1,4 +1,4 @@
-package app.aaps.pump.equil.data.database
+package app.aaps.pump.equil.database
 
 import androidx.room.Embedded
 import androidx.room.Entity
@@ -13,43 +13,27 @@ import app.aaps.pump.equil.R
 data class EquilHistoryRecord(
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0,
-    @Embedded(prefix = "tempBasalRecord_") var tempBasalRecord: EquilTempBasalRecord?,
-    @Embedded(prefix = "bolusRecord_") var bolusRecord: EquilBolusRecord?,
-    @Embedded(prefix = "basalprofile_") var basalValuesRecord: EquilBasalValuesRecord?,
-    var type: EventType?,
+    @Embedded(prefix = "tempBasalRecord_") var tempBasalRecord: EquilTempBasalRecord? = null,
+    @Embedded(prefix = "bolusRecord_") var bolusRecord: EquilBolusRecord? = null,
+    @Embedded(prefix = "basalprofile_") var basalValuesRecord: EquilBasalValuesRecord? = null,
+    var type: EventType? = null,
     var timestamp: Long = 0,
     var serialNumber: String,
-    var resolvedStatus: ResolvedResult?,
-    var resolvedAt: Long?,
-    var note: String?
+    var resolvedStatus: ResolvedResult? = null,
+    var resolvedAt: Long? = null,
+    var note: String? = null
 
 ) {
 
     constructor(
-        timestamp: Long, tempBasalRecord: EquilTempBasalRecord?, bolusRecord: EquilBolusRecord?,
         type: EventType, eventTimestamp: Long, serialNumber: String
-    ) : this(
-        timestamp, tempBasalRecord, bolusRecord, null, type, eventTimestamp, serialNumber,
-        null, null, null
-    )
-
-    constructor(
-        type: EventType, eventTimestamp: Long, serialNumber: String
-    ) : this(
-        0, null, null, null, type, eventTimestamp, serialNumber,
-        null, null, null
-    )
+    ) : this(0, null, null, null, type, eventTimestamp, serialNumber, null, null, null)
 
     constructor(
         eventTimestamp: Long, serialNumber: String
-    ) : this(
-        0, null, null, null, null, eventTimestamp, serialNumber,
-        null, null, null
-    )
+    ) : this(0, null, null, null, null, eventTimestamp, serialNumber, null, null, null)
 
-    fun isSuccess(): Boolean {
-        return resolvedStatus == ResolvedResult.SUCCESS
-    }
+    fun isSuccess(): Boolean = resolvedStatus == ResolvedResult.SUCCESS
 
     enum class EventType(val resourceId: Int) {
         INITIALIZE_EQUIL(R.string.equil_common_cmd_pair),  // First step of Pod activation

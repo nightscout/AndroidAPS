@@ -1,4 +1,4 @@
-package app.aaps.pump.equil.data.database
+package app.aaps.pump.equil.database
 
 import androidx.room.TypeConverter
 import app.aaps.core.interfaces.profile.Profile

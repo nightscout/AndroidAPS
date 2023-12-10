@@ -39,9 +39,7 @@ class BlePreCheckImpl @Inject constructor(
             // you can selectively disable BLE-related features.
             if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // your code that requires permission
-                ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION
-                                                                    ,Manifest.permission.ACCESS_FINE_LOCATION
-                                                                    ,Manifest.permission.ACCESS_BACKGROUND_LOCATION), PERMISSION_REQUEST_COARSE_LOCATION)
+                ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION), PERMISSION_REQUEST_COARSE_LOCATION)
             }
             // change after SDK = 31+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {

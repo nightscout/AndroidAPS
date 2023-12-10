@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.core.interfaces.profile.Profile;
-import app.aaps.pump.equil.data.database.EquilHistoryRecord;
+import app.aaps.pump.equil.database.EquilHistoryRecord;
 import app.aaps.pump.equil.manager.Utils;
 
 

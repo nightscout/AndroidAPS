@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 10,
-    "identityHash": "263ba2c283a3a1fc20add9573923de67",
+    "version": 11,
+    "identityHash": "f31b53d9fb1aa34b993fc11767a645d5",
     "entities": [
       {
         "tableName": "equilHistoryPump",
@@ -117,7 +117,7 @@
       },
       {
         "tableName": "equilHistoryRecord",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `type` TEXT, `timestamp` INTEGER NOT NULL, `serialNumber` TEXT NOT NULL, `resolvedStatus` TEXT, `resolvedAt` INTEGER, `note` TEXT, `tempBasalRecord_duration` INTEGER, `tempBasalRecord_rate` REAL, `tempBasalRecord_startTime` INTEGER, `bolusRecord_amout` REAL, `bolusRecord_bolusType` TEXT, `bolusRecord_startTime` INTEGER, `basalprofile_segments` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `type` TEXT, `timestamp` INTEGER NOT NULL, `serialNumber` TEXT NOT NULL, `resolvedStatus` TEXT, `resolvedAt` INTEGER, `note` TEXT, `tempBasalRecord_duration` INTEGER, `tempBasalRecord_rate` REAL, `tempBasalRecord_startTime` INTEGER, `bolusRecord_amount` REAL, `bolusRecord_bolusType` TEXT, `bolusRecord_startTime` INTEGER, `basalprofile_segments` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -180,8 +180,8 @@
             "notNull": false
           },
           {
-            "fieldPath": "bolusRecord.amout",
-            "columnName": "bolusRecord_amout",
+            "fieldPath": "bolusRecord.amount",
+            "columnName": "bolusRecord_amount",
             "affinity": "REAL",
             "notNull": false
           },
@@ -228,7 +228,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '263ba2c283a3a1fc20add9573923de67')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f31b53d9fb1aa34b993fc11767a645d5')"
     ]
   }
 }

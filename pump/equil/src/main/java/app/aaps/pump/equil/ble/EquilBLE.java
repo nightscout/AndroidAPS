@@ -38,7 +38,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus;
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged;
 import app.aaps.core.interfaces.sharedPreferences.SP;
 import app.aaps.pump.equil.EquilConst;
-import app.aaps.pump.equil.data.database.ResolvedResult;
+import app.aaps.pump.equil.database.ResolvedResult;
 import app.aaps.pump.equil.driver.definition.BluetoothConnectionState;
 import app.aaps.pump.equil.manager.EquilManager;
 import app.aaps.pump.equil.manager.EquilResponse;

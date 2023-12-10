@@ -11,8 +11,8 @@ import app.aaps.core.interfaces.queue.Callback
 import app.aaps.pump.equil.EquilConst
 import app.aaps.pump.equil.R
 import app.aaps.pump.equil.data.RunMode
-import app.aaps.pump.equil.data.database.EquilHistoryRecord
-import app.aaps.pump.equil.data.database.ResolvedResult
+import app.aaps.pump.equil.database.EquilHistoryRecord
+import app.aaps.pump.equil.database.ResolvedResult
 import app.aaps.pump.equil.driver.definition.ActivationProgress
 import app.aaps.pump.equil.manager.command.CmdInsulinGet
 import app.aaps.pump.equil.manager.command.CmdModelSet
@@ -51,15 +51,13 @@ class EquilPairConfirmFragment : EquilPairFragmentBase() {
             }
             val time = System.currentTimeMillis()
             val equilHistoryRecord = EquilHistoryRecord(
-                time,
-                null,
-                null,
-                EquilHistoryRecord.EventType.INSERT_CANNULA,
-                time,
-                equilPumpPlugin.serialNumber()
+                id = time,
+                type = EquilHistoryRecord.EventType.INSERT_CANNULA,
+                timestamp = time,
+                serialNumber = equilPumpPlugin.serialNumber(),
+                resolvedAt = System.currentTimeMillis(),
+                resolvedStatus = ResolvedResult.SUCCESS
             )
-            equilHistoryRecord.resolvedAt = System.currentTimeMillis()
-            equilHistoryRecord.resolvedStatus = ResolvedResult.SUCCESS
             equilPumpPlugin.handler.post {
                 equilHistoryRecordDao.insert(equilHistoryRecord)
             }

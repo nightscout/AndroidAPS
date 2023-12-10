@@ -7,7 +7,7 @@ import java.util.List;
 
 import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.pump.equil.EquilConst;
-import app.aaps.pump.equil.data.database.EquilHistoryRecord;
+import app.aaps.pump.equil.database.EquilHistoryRecord;
 import app.aaps.pump.equil.manager.EquilCmdModel;
 import app.aaps.pump.equil.manager.EquilResponse;
 import app.aaps.pump.equil.manager.Utils;

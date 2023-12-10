@@ -186,12 +186,13 @@ class EquilFragment : DaggerFragment() {
                     if (it == null) {
                         binding.lastBolus.text = "-"
                     } else {
-                        val text = rh.gs(
-                            R.string.equil_common_overview_last_bolus_value,
-                            it.amout,
-                            rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname),
-                            readableDuration(Duration.ofMillis(System.currentTimeMillis() - it.startTime))
-                        )
+                        val text =
+                            rh.gs(
+                                R.string.equil_common_overview_last_bolus_value,
+                                it.amount,
+                                rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname),
+                                readableDuration(Duration.ofMillis(System.currentTimeMillis() - it.startTime))
+                            )
                         binding.lastBolus.text = text
                     }
 

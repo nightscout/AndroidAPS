@@ -12,8 +12,8 @@ import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.pump.equil.EquilConst
 import app.aaps.pump.equil.R
-import app.aaps.pump.equil.data.database.EquilHistoryRecord
-import app.aaps.pump.equil.data.database.ResolvedResult
+import app.aaps.pump.equil.database.EquilHistoryRecord
+import app.aaps.pump.equil.database.ResolvedResult
 import app.aaps.pump.equil.manager.command.CmdResistanceGet
 import app.aaps.pump.equil.manager.command.CmdStepSet
 import app.aaps.pump.equil.ui.dlg.EquilAutoDressingDlg
@@ -59,15 +59,13 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
             context?.let {
                 val time = System.currentTimeMillis()
                 val equilHistoryRecord = EquilHistoryRecord(
-                    time,
-                    null,
-                    null,
-                    EquilHistoryRecord.EventType.FILL,
-                    time,
-                    equilPumpPlugin.serialNumber()
+                    id = time,
+                    type = EquilHistoryRecord.EventType.FILL,
+                    timestamp = time,
+                    serialNumber = equilPumpPlugin.serialNumber(),
+                    resolvedAt = System.currentTimeMillis(),
+                    resolvedStatus = ResolvedResult.SUCCESS
                 )
-                equilHistoryRecord.resolvedAt = System.currentTimeMillis()
-                equilHistoryRecord.resolvedStatus = ResolvedResult.SUCCESS
                 equilPumpPlugin.handler.post {
                     equilHistoryRecordDao.insert(equilHistoryRecord)
                 }
@@ -105,8 +103,8 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
 
                 aapsLogger.debug(LTag.PUMPCOMM, "result====" + result.success)
                 if (result.success) {
-                        SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
-                        readStatus()
+                    SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
+                    readStatus()
                 } else {
                     if (auto) {
                         dismissAutoDlg()

@@ -1,4 +1,4 @@
-package app.aaps.pump.equil.data.database
+package app.aaps.pump.equil.database
 
 import android.content.Context
 import androidx.room.Database
@@ -8,7 +8,6 @@ import androidx.room.TypeConverters
 
 const val TABLE_EQUIL_HISTORY_PUMP = "equilHistoryPump"
 const val TABLE_EQUIL_HISTORY_RECORD = "equilHistoryRecord"
-const val TABLE_EQUIL_LOGS = "EquilLogs"
 
 @Database(
     entities = [EquilHistoryPump::class, EquilHistoryRecord::class],
@@ -19,16 +18,13 @@ const val TABLE_EQUIL_LOGS = "EquilLogs"
 abstract class EquilHistoryDatabase : RoomDatabase() {
 
     abstract fun historyRecordDao(): EquilHistoryRecordDao
+    abstract fun historyPumpDao(): EquilHistoryPumpDao
 
     companion object {
 
-        const val VERSION = 10
+        const val VERSION = 11
         fun build(context: Context) =
-            Room.databaseBuilder(
-                context.applicationContext,
-                EquilHistoryDatabase::class.java,
-                "equil_database.db"
-            )
+            Room.databaseBuilder(context.applicationContext, EquilHistoryDatabase::class.java, "equil_database.db")
                 .fallbackToDestructiveMigration()
                 .build()
     }

@@ -17,7 +17,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.pump.equil.EquilPumpPlugin
 import app.aaps.pump.equil.R
-import app.aaps.pump.equil.data.database.EquilHistoryRecordDao
+import app.aaps.pump.equil.database.EquilHistoryRecordDao
 import app.aaps.pump.equil.databinding.EquilPairBaseFragmentBinding
 import app.aaps.pump.equil.databinding.EquilPairProgressBinding
 import app.aaps.pump.equil.manager.EquilManager

@@ -1,5 +1,6 @@
 package app.aaps.pump.equil.ui
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -22,16 +23,17 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.pump.equil.EquilPumpPlugin
 import app.aaps.pump.equil.R
-import app.aaps.pump.equil.data.database.EquilBasalValuesRecord
-import app.aaps.pump.equil.data.database.EquilHistoryPump
-import app.aaps.pump.equil.data.database.EquilHistoryRecord
-import app.aaps.pump.equil.data.database.EquilHistoryRecordDao
-import app.aaps.pump.equil.data.database.ResolvedResult
+import app.aaps.pump.equil.database.EquilHistoryPump
+import app.aaps.pump.equil.database.EquilHistoryPumpDao
+import app.aaps.pump.equil.database.EquilHistoryRecord
+import app.aaps.pump.equil.database.EquilHistoryRecordDao
+import app.aaps.pump.equil.database.ResolvedResult
 import app.aaps.pump.equil.databinding.EquilHistoryRecordActivityBinding
 import app.aaps.pump.equil.driver.definition.EquilHistoryEntryGroup
 import app.aaps.pump.equil.events.EventEquilDataChanged
@@ -44,6 +46,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import javax.inject.Inject
+import kotlin.math.abs
 
 // IMPORTANT: This activity needs to be called from RileyLinkSelectPreference (see pref_medtronic.xml as example)
 class EquilHistoryRecordActivity : TranslatedDaggerAppCompatActivity() {
@@ -55,22 +58,23 @@ class EquilHistoryRecordActivity : TranslatedDaggerAppCompatActivity() {
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var equilHistoryRecordDao: EquilHistoryRecordDao
+    @Inject lateinit var equilHistoryPumpDao: EquilHistoryPumpDao
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var equilPumpPlugin: EquilPumpPlugin
     @Inject lateinit var profileUtil: ProfileUtil
+    @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var dateUtil: DateUtil
 
     private lateinit var binding: EquilHistoryRecordActivityBinding
     private lateinit var llm: LinearLayoutManager
-    lateinit var recyclerViewAdapter: RecyclerViewAdapter
+    private lateinit var recyclerViewAdapter: RecyclerViewAdapter
 
     private val disposable = CompositeDisposable()
-    var filteredHistoryList: MutableList<EquilHistoryRecord> = java.util.ArrayList<EquilHistoryRecord>()
+    private var filteredHistoryList: MutableList<EquilHistoryRecord> = java.util.ArrayList<EquilHistoryRecord>()
     private val fullHistoryList: MutableList<EquilHistoryRecord> = java.util.ArrayList<EquilHistoryRecord>()
-    @Inject lateinit var rxBus: RxBus
-    val calendar: Calendar = Calendar.getInstance()
-    val dateformat2 = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+    private val calendar: Calendar = Calendar.getInstance()
 
     //private var typeListFull: List<TypeList>? = null
     private var manualChange = false
@@ -137,11 +141,12 @@ class EquilHistoryRecordActivity : TranslatedDaggerAppCompatActivity() {
 
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun filterHistory(group: EquilHistoryEntryGroup) {
         filteredHistoryList.clear()
         aapsLogger.debug(LTag.PUMPCOMM, "Items on full list: {}", fullHistoryList.size)
         if (group === EquilHistoryEntryGroup.All) {
-            aapsLogger.debug(LTag.PUMPCOMM, "alll===")
+            aapsLogger.debug(LTag.PUMPCOMM, "all===")
             filteredHistoryList.addAll(fullHistoryList)
         } else {
             filteredHistoryList.addAll(fullHistoryList.filter { it.type?.let { it1 -> groupForCommandType(it1) } == group })
@@ -221,64 +226,47 @@ class EquilHistoryRecordActivity : TranslatedDaggerAppCompatActivity() {
         }
     }
 
-    // private fun getTypeList(list: List<EquilHistoryEntry>): List<TypeList> {
-    //     val typeList = java.util.ArrayList<TypeList>()
-    //     for (pumpHistoryEntryGroup in list) {
-    //         typeList.add(TypeList(pumpHistoryEntryGroup))
-    //     }
-    //     return typeList
-    // }
-
-    // internal class TypeList(val entryGroup: EquilHistoryEntry) {
-    //
-    //     val name: String = entryGroup.translated ?: "XXX TODO"
-    //
-    //     override fun toString(): String {
-    //         return name
-    //     }
-    // }
-    //
-    fun loadData() {
-        calendar.set(Calendar.HOUR_OF_DAY, 0)
-        calendar.set(Calendar.MINUTE, 0)
-        calendar.set(Calendar.SECOND, 0)
-        calendar.set(Calendar.MILLISECOND, 0)
-        calendar.add(Calendar.DAY_OF_MONTH, -5)
+    private fun loadData() {
+        calendar.apply {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+            add(Calendar.DAY_OF_MONTH, -5)
+        }
         val startTime = calendar.timeInMillis
 
-        aapsLogger.debug(LTag.PUMPCOMM, "loadData===" + dateformat2.format(startTime) + "====")
+        aapsLogger.debug(LTag.PUMPCOMM, "loadData===" + dateUtil.dateAndTimeAndSecondsString(startTime) + "====")
         disposable += equilHistoryRecordDao
-            .allSince(startTime, System.currentTimeMillis())
+            .allSince(startTime, dateUtil.now())
             .subscribeOn(aapsSchedulers.io)
             .observeOn(aapsSchedulers.main)
             .subscribe({ historyList ->
                            aapsLogger.debug(LTag.PUMPCOMM, "historyList===" + historyList.size)
                            fullHistoryList.clear()
                            fullHistoryList.addAll(historyList)
-                           // }
-                       }) {
-                aapsLogger.debug(LTag.PUMPCOMM, "historyListerror===" + it)
-            }
+                       }, fabricPrivacy::logException)
     }
 
-    fun loadDataEquil() {
-        calendar.set(Calendar.HOUR_OF_DAY, 0)
-        calendar.set(Calendar.MINUTE, 0)
-        calendar.set(Calendar.SECOND, 0)
-        calendar.set(Calendar.MILLISECOND, 0)
-        calendar.add(Calendar.DAY_OF_MONTH, -5)
+    private fun loadDataEquil() {
+        calendar.apply {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+            add(Calendar.DAY_OF_MONTH, -5)
+        }
         val startTime = calendar.timeInMillis
-        val endTime = System.currentTimeMillis()
-        aapsLogger.debug(LTag.PUMPCOMM, "loadData===" + dateformat2.format(startTime) + "====" + dateformat2.format(endTime))
-        disposable += equilHistoryRecordDao
+        val endTime = dateUtil.now()
+        aapsLogger.debug(LTag.PUMPCOMM, "loadData===" + dateUtil.dateAndTimeAndSecondsString(startTime) + "====" + dateUtil.dateAndTimeAndSecondsString(endTime))
+        disposable += equilHistoryPumpDao
             .allFromByType(startTime, endTime, equilPumpPlugin.serialNumber())
             .subscribeOn(aapsSchedulers.io)
             .observeOn(aapsSchedulers.main)
             .subscribe({ historyList ->
                            aapsLogger.debug(LTag.PUMPCOMM, "loadDataEquil===" + historyList.size)
                            binding.recyclerviewEquil.swapAdapter(RecyclerViewAdapterEquil(toModels(historyList), rh), false)
-                       }) {
-            }
+                       }, fabricPrivacy::logException)
     }
 
     class RecyclerViewAdapter internal constructor(
@@ -329,58 +317,29 @@ class EquilHistoryRecordActivity : TranslatedDaggerAppCompatActivity() {
                     }
                 }
 
-                EquilHistoryRecord.EventType.SET_BOLUS           -> {
-                    val bolus = item.bolusRecord
-                    bolus.let {
-                        rh.gs(R.string.equil_common_history_bolus_value, it?.amout)
-                    }
-                }
+                EquilHistoryRecord.EventType.SET_BOLUS           -> item.bolusRecord.let { rh.gs(R.string.equil_common_history_bolus_value, it?.amount) }
 
-                EquilHistoryRecord.EventType.INSERT_CANNULA      -> {
-                    rh.gs(R.string.history_manual_confirm)
-                }
+                EquilHistoryRecord.EventType.INSERT_CANNULA      -> rh.gs(R.string.history_manual_confirm)
 
-                EquilHistoryRecord.EventType.EQUIL_ALARM         -> {
-                    item.note
-                }
+                EquilHistoryRecord.EventType.EQUIL_ALARM         -> item.note
 
-                EquilHistoryRecord.EventType.SET_BASAL_PROFILE   -> {
-                    val basal = item.basalValuesRecord as EquilBasalValuesRecord
-                    profileUtil.getBasalProfilesDisplayable(basal.segments.toTypedArray(), PumpType.EQUIL)
-                }
+                EquilHistoryRecord.EventType.SET_BASAL_PROFILE   -> profileUtil.getBasalProfilesDisplayable(item.basalValuesRecord!!.segments.toTypedArray(), PumpType.EQUIL)
 
-                else                                             ->
-                    rh.gs(R.string.equil_success)
-            }
-
-            // holder.typeView.setTextColor(textColor)
-        }
-
-        private fun translatedFailure(historyEntry: EquilHistoryRecord): Int {
-            return when {
-                historyEntry.resolvedStatus == ResolvedResult.NOT_FOUNT     ->
-                    R.string.equil_command_not_found
-
-                historyEntry.resolvedStatus == ResolvedResult.CONNECT_ERROR ->
-                    R.string.equil_command_connect_error
-
-                historyEntry.resolvedStatus == ResolvedResult.FAILURE       ->
-                    R.string.equil_command_connect_no_response
-
-                historyEntry.resolvedStatus == ResolvedResult.SUCCESS       ->
-                    R.string.equil_success
-
-                historyEntry.resolvedStatus == ResolvedResult.NONE          ->
-                    R.string.equil_none
-
-                else                                                        ->
-                    R.string.equil_command__unknown
+                else                                             -> rh.gs(R.string.equil_success)
             }
         }
 
-        override fun getItemCount(): Int {
-            return historyList.size
-        }
+        private fun translatedFailure(historyEntry: EquilHistoryRecord): Int =
+            when (historyEntry.resolvedStatus) {
+                ResolvedResult.NOT_FOUNT     -> R.string.equil_command_not_found
+                ResolvedResult.CONNECT_ERROR -> R.string.equil_command_connect_error
+                ResolvedResult.FAILURE       -> R.string.equil_command_connect_no_response
+                ResolvedResult.SUCCESS       -> R.string.equil_success
+                ResolvedResult.NONE          -> R.string.equil_none
+                else                         -> R.string.equil_command__unknown
+            }
+
+        override fun getItemCount(): Int = historyList.size
 
         class HistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -398,7 +357,7 @@ class EquilHistoryRecordActivity : TranslatedDaggerAppCompatActivity() {
 
     }
 
-    fun toModels(list: List<EquilHistoryPump>): List<ItemModel> {
+    private fun toModels(list: List<EquilHistoryPump>): List<ItemModel> {
         val arrayList = ArrayList<ItemModel>()
         var record: EquilHistoryPump? = null
         var record2: EquilHistoryPump? = null
@@ -430,11 +389,11 @@ class EquilHistoryRecordActivity : TranslatedDaggerAppCompatActivity() {
 
                 val format2 = dateFormat.format(time2)
                 val format3 = "%.3f".format(
-                    (Math.abs(time - time2) / 1000.0)
+                    (abs(time - time2) / 1000.0)
                     // * _root_ide_package_.app.aaps.pump.equil.manager.Utils.decodeSpeedToUS(record.largeRate)
                 )
-                val t = (Math.abs(time - time2) / 1000.0)
-                aapsLogger.debug(LTag.PUMPCOMM, "time===" + t + "===" + format3)
+                val t = (abs(time - time2) / 1000.0)
+                aapsLogger.debug(LTag.PUMPCOMM, "time===$t===$format3")
                 arrayList.add(ItemModel(format2, format3, ItemModel.TYPE_BOLUS, time2))
                 record = null
             }
@@ -445,7 +404,7 @@ class EquilHistoryRecordActivity : TranslatedDaggerAppCompatActivity() {
             // Process event
             val string = PumpEvent.getTips(next.port, next.type, next.level)
 
-            if (!"--".equals(string)) {
+            if ("--" != string) {
                 val format4 = dateFormat.format(next.eventTimestamp)
                 arrayList.add(ItemModel(format4, string, ItemModel.TYPE_TEXT, next.eventTimestamp))
             }
@@ -458,8 +417,7 @@ class EquilHistoryRecordActivity : TranslatedDaggerAppCompatActivity() {
         //     arrayList.add(ItemModel(format5, "正在开始 $decodeSpeedToUH U/H", 4, it.eventTimestamp))
         // }
 
-        val reversedList = arrayList.reversed()
-        return reversedList
+        return arrayList.reversed()
     }
 
     data class ItemModel(val time: String, val text: String, val type: Int, var eventTime: Long) {
@@ -474,22 +432,17 @@ class EquilHistoryRecordActivity : TranslatedDaggerAppCompatActivity() {
         }
     }
 
-    class RecyclerViewAdapterEquil internal constructor(
-        var historyList: List<ItemModel>,
-        var rh: ResourceHelper
-    ) : RecyclerView.Adapter<RecyclerViewAdapterEquil.EquilHistoryViewHolder>() {
+    class RecyclerViewAdapterEquil internal constructor(private val historyList: List<ItemModel>, private val rh: ResourceHelper) :
+        RecyclerView.Adapter<RecyclerViewAdapterEquil.EquilHistoryViewHolder>() {
 
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): EquilHistoryViewHolder {
-            val v = LayoutInflater.from(viewGroup.context).inflate(
-                R.layout.equil_item_record,  //
-                viewGroup, false
-            )
+            val v = LayoutInflater.from(viewGroup.context).inflate(R.layout.equil_item_record, viewGroup, false)
             return EquilHistoryViewHolder(v)
         }
 
         override fun onBindViewHolder(holder: EquilHistoryViewHolder, position: Int) {
             val item = historyList[position]
-            Log.e(LTag.PUMPCOMM.tag, "onBindViewHolder  ${position}")
+            Log.e(LTag.PUMPCOMM.tag, "onBindViewHolder  $position")
             holder.timeView.text = item.time
             holder.typeView.text = item.text
             val type = item.type
@@ -511,15 +464,13 @@ class EquilHistoryRecordActivity : TranslatedDaggerAppCompatActivity() {
             holder.typeView.setTextColor(textColor)
         }
 
-        override fun getItemCount(): Int {
-            return historyList.size
-        }
+        override fun getItemCount(): Int = historyList.size
 
         class EquilHistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
             var timeView: TextView
             var typeView: TextView
-            var descriptionView: TextView
+            private var descriptionView: TextView
 
             init {
                 timeView = itemView.findViewById(R.id.equil_history_time)
@@ -529,6 +480,5 @@ class EquilHistoryRecordActivity : TranslatedDaggerAppCompatActivity() {
 
             }
         }
-
     }
 }

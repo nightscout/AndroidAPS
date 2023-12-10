@@ -2,7 +2,7 @@ package app.aaps.pump.equil.manager.command;
 
 
 import app.aaps.pump.equil.data.RunMode;
-import app.aaps.pump.equil.data.database.EquilHistoryRecord;
+import app.aaps.pump.equil.database.EquilHistoryRecord;
 import app.aaps.pump.equil.manager.Utils;
 
 public class CmdModelSet extends BaseSetting {

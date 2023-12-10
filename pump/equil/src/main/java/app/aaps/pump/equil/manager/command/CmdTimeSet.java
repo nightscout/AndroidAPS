@@ -1,7 +1,7 @@
 package app.aaps.pump.equil.manager.command;
 
 
-import app.aaps.pump.equil.data.database.EquilHistoryRecord;
+import app.aaps.pump.equil.database.EquilHistoryRecord;
 import app.aaps.pump.equil.manager.Utils;
 
 import java.util.Calendar;

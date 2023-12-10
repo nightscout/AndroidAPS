@@ -7,7 +7,7 @@ import java.util.List;
 import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.core.interfaces.profile.Profile;
 import app.aaps.pump.equil.EquilConst;
-import app.aaps.pump.equil.data.database.EquilHistoryRecord;
+import app.aaps.pump.equil.database.EquilHistoryRecord;
 import app.aaps.pump.equil.driver.definition.BasalSchedule;
 import app.aaps.pump.equil.driver.definition.BasalScheduleEntry;
 import app.aaps.pump.equil.manager.Utils;
