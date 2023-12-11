@@ -42,8 +42,8 @@
     <string name="equil_insulin_reservoir">Insulin reservoir</string>
 
     <string name="equil_mode">Running mode</string>
-    <string name="equil_mode_deliver">Running</string>
-    <string name="equil_mode_stop">Stop</string>
+    <string name="equil_mode_running">Running</string>
+    <string name="equil_mode_stopped">Stopped</string>
     <string name="equil_mode_suspended">Suspended</string>
     <string name="equil_pump">Equil Patch Pump</string>
     <string name="equil_pump_description">Equil 5.3 or newer Patch Pump </string>

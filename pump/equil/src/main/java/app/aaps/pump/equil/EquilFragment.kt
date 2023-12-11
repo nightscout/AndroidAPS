@@ -147,13 +147,13 @@ class EquilFragment : DaggerFragment() {
             if (equilManager.isActivationCompleted) {
                 when (runMode) {
                     RunMode.RUN     -> {
-                        binding.mode.text = rh.gs(R.string.equil_mode_deliver)
+                        binding.mode.text = rh.gs(R.string.equil_mode_running)
                         binding.btnResumeDelivery.visibility = View.GONE
                         binding.btnSuspendDelivery.visibility = View.VISIBLE
                     }
 
                     RunMode.STOP    -> {
-                        binding.mode.text = rh.gs(R.string.equil_mode_stop)
+                        binding.mode.text = rh.gs(R.string.equil_mode_stopped)
                         binding.btnResumeDelivery.visibility = View.GONE
                         binding.btnSuspendDelivery.visibility = View.GONE
                     }
