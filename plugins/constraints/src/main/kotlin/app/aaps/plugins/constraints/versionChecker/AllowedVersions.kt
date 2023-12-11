@@ -1,9 +1,11 @@
 package app.aaps.plugins.constraints.versionChecker
 
-import org.joda.time.LocalDate
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.ZoneId
 
 class AllowedVersions {
 
@@ -38,7 +40,8 @@ class AllowedVersions {
     fun endDateToMilliseconds(endDate: String): Long? {
         try {
             val dateTime = LocalDate.parse(endDate)
-            return dateTime.toDate().time
+            val instant = dateTime.atTime(LocalTime.MIDNIGHT).atZone(ZoneId.systemDefault()).toInstant()
+            return instant.toEpochMilli()
         } catch (ignored: Exception) {
         }
         return null

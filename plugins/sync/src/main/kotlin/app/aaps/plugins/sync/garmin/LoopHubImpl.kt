@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.main.graph.OverviewData
 import app.aaps.database.ValueWrapper
 import app.aaps.database.entities.EffectiveProfileSwitch
 import app.aaps.database.entities.GlucoseValue
@@ -42,6 +43,7 @@ class LoopHubImpl @Inject constructor(
     private val repo: AppRepository,
     private val userEntryLogger: UserEntryLogger,
     private val sp: SP,
+    private val overviewData: OverviewData,
 ) : LoopHub {
 
     @VisibleForTesting
@@ -63,6 +65,14 @@ class LoopHubImpl @Inject constructor(
     /** Returns the remaining bolus insulin on board. */
     override val insulinOnboard: Double
         get() = iobCobCalculator.calculateIobFromBolus().iob
+
+    /** Returns the remaining bolus and basal insulin on board. */
+    override val insulinBasalOnboard :Double
+        get() = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().basaliob
+
+    /** Returns the remaining carbs on board. */
+    override val carbsOnboard: Double?
+       get() = overviewData.cobInfo(iobCobCalculator).displayCob
 
     /** Returns true if the pump is connected. */
     override val isConnected: Boolean get() = !loop.isDisconnected

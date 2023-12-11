@@ -1,11 +1,12 @@
 package app.aaps.plugins.constraints.versionChecker
 
 import com.google.common.truth.Truth.assertThat
-import app.aaps.plugins.constraints.versionChecker.AllowedVersions
-import org.joda.time.LocalDate
 import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
 
 class AllowedVersionsTest {
 
@@ -71,10 +72,10 @@ class AllowedVersionsTest {
     @Test
     fun endDateToMilliseconds() {
         val definition = generateSupportedVersions()
-        val endDate = AllowedVersions().endDateToMilliseconds(AllowedVersions().findByVersion(definition, "2.9.0-beta1")?.getString("endDate") ?: "1000/01/01")
-        val dateTime = LocalDate(endDate)
+        val endDate = AllowedVersions().endDateToMilliseconds(AllowedVersions().findByVersion(definition, "2.9.0-beta1")?.getString("endDate") ?: "1000/01/01") ?: 0L
+        val dateTime = LocalDate.ofInstant(Instant.ofEpochMilli(endDate), ZoneId.systemDefault())
         assertThat(dateTime.year).isEqualTo(2021)
-        assertThat(dateTime.monthOfYear).isEqualTo(11)
+        assertThat(dateTime.monthValue).isEqualTo(11)
         assertThat(dateTime.dayOfMonth).isEqualTo(7)
 
         assertThat(AllowedVersions().endDateToMilliseconds("abdef")).isNull()

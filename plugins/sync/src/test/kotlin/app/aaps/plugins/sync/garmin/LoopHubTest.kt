@@ -5,6 +5,7 @@ import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.interfaces.iob.CobInfo
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.iob.IobTotal
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -13,6 +14,7 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.main.graph.OverviewData
 import app.aaps.database.ValueWrapper
 import app.aaps.database.entities.EffectiveProfileSwitch
 import app.aaps.database.entities.GlucoseValue
@@ -54,6 +56,7 @@ class LoopHubTest: TestBase() {
     @Mock lateinit var repo: AppRepository
     @Mock lateinit var userEntryLogger: UserEntryLogger
     @Mock lateinit var sp: SP
+    @Mock lateinit var overviewData: OverviewData
 
     private lateinit var loopHub: LoopHubImpl
     private val clock = Clock.fixed(Instant.ofEpochMilli(10_000), ZoneId.of("UTC"))
@@ -62,7 +65,7 @@ class LoopHubTest: TestBase() {
     fun setup() {
         loopHub = LoopHubImpl(
             aapsLogger, commandQueue, constraints, iobCobCalculator, loop,
-            profileFunction, repo, userEntryLogger, sp
+            profileFunction, repo, userEntryLogger, sp, overviewData
         )
         loopHub.clock = clock
     }
@@ -76,9 +79,10 @@ class LoopHubTest: TestBase() {
         verifyNoMoreInteractions(profileFunction)
         verifyNoMoreInteractions(repo)
         verifyNoMoreInteractions(userEntryLogger)
+        verifyNoMoreInteractions(overviewData)
     }
 
-    @Test
+@Test
     fun testCurrentProfile() {
         val profile = mock(Profile::class.java)
         `when`(profileFunction.getProfile()).thenReturn(profile)
@@ -107,6 +111,22 @@ class LoopHubTest: TestBase() {
         `when`(iobCobCalculator.calculateIobFromBolus()).thenReturn(iobTotal)
         assertEquals(23.9, loopHub.insulinOnboard, 1e-10)
         verify(iobCobCalculator, times(1)).calculateIobFromBolus()
+    }
+
+    @Test
+    fun testBasalOnBoard() {
+        val iobBasal = IobTotal(time = 0).apply { basaliob = 23.9 }
+        `when`(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(iobBasal)
+        assertEquals(23.9, loopHub.insulinBasalOnboard, 1e-10)
+        verify(iobCobCalculator, times(1)).calculateIobFromTempBasalsIncludingConvertedExtended()
+    }
+
+    @Test
+    fun testCarbsOnBoard() {
+        val cobInfo = CobInfo(0, 12.0, 0.0)
+        `when`(overviewData.cobInfo(iobCobCalculator)).thenReturn(cobInfo)
+        assertEquals(12.0, loopHub.carbsOnboard)
+        verify(overviewData, times(1)).cobInfo(iobCobCalculator)
     }
 
     @Test
