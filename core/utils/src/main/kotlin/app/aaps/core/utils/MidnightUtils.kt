@@ -19,8 +19,8 @@ object MidnightUtils {
     fun secondsFromMidnight(): Int {
         val nowZoned = ZonedDateTime.now()
         val localTime = nowZoned.toLocalTime()
-        val midnight: Instant = nowZoned.toLocalDate().atStartOfDay(nowZoned.zone).toInstant()
-        val duration: Duration = Duration.between(midnight, localTime)
+        val midnight = nowZoned.toLocalDate().atStartOfDay(nowZoned.zone).toLocalTime()
+        val duration = Duration.between(midnight, localTime)
         return duration.seconds.toInt()
     }
 
@@ -50,7 +50,7 @@ object MidnightUtils {
         val timeZoned = ZonedDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault())
         val localTime = timeZoned.toLocalTime()
         val midnight = timeZoned.toLocalDate().atStartOfDay(timeZoned.zone).toLocalTime()
-        val duration: Duration = Duration.between(midnight, localTime)
+        val duration = Duration.between(midnight, localTime)
         return duration.toMillis()
     }
 }
