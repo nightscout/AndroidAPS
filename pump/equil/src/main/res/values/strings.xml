@@ -12,6 +12,7 @@
     <string name="key_equil_pair_password" translatable="false">key_equil_pair_password</string>
     <string name="key_equil_alarm_battery" translatable="false">key_equil_alarm_battery</string>
     <string name="key_equil_alarm_insulin" translatable="false">key_equil_alarm_insulin</string>
+    <string name="key_equil_tone" translatable="false">equil_tone</string>
 
 
     <!--  start  -->
@@ -43,7 +44,7 @@
     <string name="equil_mode">Running mode</string>
     <string name="equil_mode_deliver">Running</string>
     <string name="equil_mode_stop">Stop</string>
-    <string name="equil_mode_suspend">suspending</string>
+    <string name="equil_mode_suspended">Suspended</string>
     <string name="equil_pump">Equil Patch Pump</string>
     <string name="equil_pump_description">Equil 5.3 or newer Patch Pump </string>
     <string name="equil_serialnumber">Device number</string>
@@ -96,7 +97,7 @@
     <string name="equil_total_delivered">Total delivered</string>
     <string name="equil_last_bolus">Last bolus</string>
     <string name="equil_firmware_version">Firmware version</string>
-    <string name="equil_battery_useup">Out of power</string>
+    <string name="equil_battery_useup">Low battery</string>
     <string name="equil_occlusion">Pump occlusion</string>
     <string name="equil_motor_fault">Motor error</string>
     <string name="equil_shutdown_be">Equil will be off automatically</string>
@@ -229,4 +230,5 @@ Password rule: It must be 4 characters long, chosen from ABCDEF0123456789.</stri
     <string name="equil_hint2">Prime Cannula</string>
     <string name="equil_hint_dressing2">Please remove the pump from the base</string>
     <string name="equil_unpair">Deactivate old pump %1$s?</string>
+    <string name="equil_pump_updated">Pump updated</string>
 </resources>

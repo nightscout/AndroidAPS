@@ -23,16 +23,19 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.PumpSync.TemporaryBasalType
 import app.aaps.core.interfaces.pump.defs.determineCorrectBasalSize
 import app.aaps.core.interfaces.pump.defs.fillFor
+import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.toast.ToastUtils
+import app.aaps.pump.equil.data.AlarmMode
 import app.aaps.pump.equil.data.BolusProfile
 import app.aaps.pump.equil.data.RunMode
 import app.aaps.pump.equil.database.EquilHistoryPumpDao
@@ -41,6 +44,7 @@ import app.aaps.pump.equil.driver.definition.BasalSchedule
 import app.aaps.pump.equil.events.EventEquilDataChanged
 import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.equil.manager.command.BaseCmd
+import app.aaps.pump.equil.manager.command.CmdAlarmSet
 import app.aaps.pump.equil.manager.command.CmdBasalSet
 import app.aaps.pump.equil.manager.command.CmdHistoryGet
 import app.aaps.pump.equil.manager.command.CmdStatusGet
@@ -98,6 +102,20 @@ import javax.inject.Singleton
             .toObservable(EventEquilDataChanged::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ playAlarm() }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventPreferenceChange::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ event ->
+                           if (event.isChanged(rh.gs(R.string.key_equil_tone))) {
+                               val mode = AlarmMode.fromInt(sp.getString(R.string.key_equil_tone, "3").toInt())
+                               commandQueue.customCommand(CmdAlarmSet(mode.command), object : Callback() {
+                                   override fun run() {
+                                       if (result.success) ToastUtils.infoToast(context, rh.gs(R.string.equil_pump_updated))
+                                       else ToastUtils.infoToast(context, rh.gs(R.string.equil_error))
+                                   }
+                               })
+                           }
+                       }, fabricPrivacy::logException)
     }
 
     var tempActivationProgress = ActivationProgress.NONE

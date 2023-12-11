@@ -11,7 +11,6 @@ import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.pump.equil.databinding.EquilPairConfigDialogBinding
 import dagger.android.support.DaggerDialogFragment
-import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 
 class EquilPairConfigDlg : DaggerDialogFragment() {
@@ -24,7 +23,6 @@ class EquilPairConfigDlg : DaggerDialogFragment() {
     private var _binding: EquilPairConfigDialogBinding? = null
 
     val binding get() = _binding!!
-    val disposable = CompositeDisposable()
 
     override fun onStart() {
         super.onStart()
@@ -58,10 +56,7 @@ class EquilPairConfigDlg : DaggerDialogFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        disposable.clear()
     }
-
-    var task: Runnable? = null
 
     override fun show(manager: FragmentManager, tag: String?) {
         try {

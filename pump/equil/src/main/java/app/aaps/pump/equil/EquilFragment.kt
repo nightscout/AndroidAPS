@@ -30,7 +30,6 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.UIRunnable
 import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.pump.equil.data.AlarmMode
 import app.aaps.pump.equil.data.RunMode
 import app.aaps.pump.equil.databinding.EquilFraBinding
 import app.aaps.pump.equil.events.EventEquilDataChanged
@@ -39,7 +38,6 @@ import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.equil.manager.command.*
 import app.aaps.pump.equil.ui.*
 import app.aaps.pump.equil.ui.dlg.LoadingDlg
-import app.aaps.pump.equil.ui.dlg.SingleChooseDlg
 import app.aaps.pump.equil.ui.pair.EquilPairActivity
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -161,7 +159,7 @@ class EquilFragment : DaggerFragment() {
                     }
 
                     RunMode.SUSPEND -> {
-                        binding.mode.text = rh.gs(R.string.equil_mode_suspend)
+                        binding.mode.text = rh.gs(R.string.equil_mode_suspended)
                         binding.btnResumeDelivery.visibility = View.VISIBLE
                         binding.btnSuspendDelivery.visibility = View.GONE
                     }
@@ -180,7 +178,6 @@ class EquilFragment : DaggerFragment() {
             }
             binding.serialNumber.text = devName
             updateTempBasal()
-            updateAlarm()
             runOnUiThread {
                 equilManager.bolusRecord.let {
                     if (it == null) {
@@ -198,9 +195,6 @@ class EquilFragment : DaggerFragment() {
 
                 }
             }
-            binding.tvTone.setOnClickListener {
-                showSingleChooseDlg()
-            }
 
             binding.btnBind.visibility = View.GONE
             binding.btnOpDressing.visibility = View.VISIBLE
@@ -217,10 +211,7 @@ class EquilFragment : DaggerFragment() {
             binding.serialNumber.text = "-"
             binding.firmwareVersion.text = "-"
             binding.insulinReservoir.text = "-"
-            binding.tvTone.text = "-"
             binding.totalDelivered.text = "-"
-            binding.tvTone.setOnClickListener {
-            }
             binding.btnBind.visibility = View.VISIBLE
             binding.btnOpDressing.visibility = View.GONE
             binding.btnUnbind.visibility = View.GONE
@@ -267,25 +258,6 @@ class EquilFragment : DaggerFragment() {
         }
     }
 
-    private fun showSingleChooseDlg() {
-        val dialogFragment = SingleChooseDlg(equilManager.alarmMode)
-        dialogFragment.setDialogResultListener { data ->
-            showLoading()
-            commandQueue.customCommand(CmdAlarmSet(data.data.command), object : Callback() {
-                override fun run() {
-                    dismissLoading()
-                    aapsLogger.debug(LTag.PUMPCOMM, "result====" + result.success)
-                    if (result.success) {
-                        equilManager.alarmMode = data.data
-                        runOnUiThread { updateGUI() }
-                    }
-                }
-            })
-
-        }
-        dialogFragment.show(childFragmentManager, "SingleChooseDlg")
-    }
-
     private fun showSetModeDialog() {
         val runMode = equilManager.runMode
         var tempMode = RunMode.RUN
@@ -324,15 +296,6 @@ class EquilFragment : DaggerFragment() {
             )
         } else {
             binding.tempBasal.text = "-"
-        }
-    }
-
-    private fun updateAlarm() {
-        when (equilManager.alarmMode) {
-            AlarmMode.MUTE           -> binding.tvTone.text = rh.gs(R.string.equil_tone_mode_mute)
-            AlarmMode.TONE           -> binding.tvTone.text = rh.gs(R.string.equil_tone_mode_tone)
-            AlarmMode.SHAKE          -> binding.tvTone.text = rh.gs(R.string.equil_tone_mode_shake)
-            AlarmMode.TONE_AND_SHAKE -> binding.tvTone.text = rh.gs(R.string.equil_tone_mode_tone_and_shake)
         }
     }
 

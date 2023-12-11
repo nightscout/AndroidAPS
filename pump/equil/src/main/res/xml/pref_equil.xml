@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    >
     <PreferenceCategory
-        android:key="@string/key_absorption_cutoff"
+        android:key="equil"
         android:title="@string/equil_settings"
         app:initialExpandedChildrenCount="1">
 
@@ -17,6 +16,13 @@
             android:defaultValue="true"
             android:key="@string/key_equil_alarm_insulin"
             android:title="@string/equil_settings_alarm_insulin" />
+
+        <ListPreference
+            android:defaultValue="3"
+            android:entries="@array/toneArray"
+            android:entryValues="@array/toneValues"
+            android:key="@string/key_equil_tone"
+            android:title="@string/equil_tone" />
 
     </PreferenceCategory>
 

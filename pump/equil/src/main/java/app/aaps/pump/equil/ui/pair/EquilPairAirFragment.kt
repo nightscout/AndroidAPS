@@ -105,7 +105,8 @@ class EquilPairAirFragment : EquilPairFragmentBase() {
 
     private fun setAlarmMode() {
         showLoading()
-        commandQueue.customCommand(CmdAlarmSet(AlarmMode.TONE_AND_SHAKE.command), object : Callback() {
+        val mode = AlarmMode.fromInt(sp.getString(R.string.key_equil_tone, "3").toInt())
+        commandQueue.customCommand(CmdAlarmSet(mode.command), object : Callback() {
             override fun run() {
                 if (activity == null) return
                 if (result.success) {

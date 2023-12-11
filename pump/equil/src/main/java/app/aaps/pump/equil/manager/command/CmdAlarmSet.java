@@ -34,7 +34,7 @@ public class CmdAlarmSet extends BaseSetting {
     public void decodeConfirmData(byte[] data) {
         synchronized (this) {
             setCmdStatus(true);
-            notify();
+            notifyAll();
         }
     }
 

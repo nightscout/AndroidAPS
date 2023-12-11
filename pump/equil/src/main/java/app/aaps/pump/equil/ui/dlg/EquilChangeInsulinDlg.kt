@@ -13,7 +13,6 @@ import app.aaps.pump.equil.R
 import app.aaps.pump.equil.databinding.EquilDialogAlertDressingBinding
 import com.bumptech.glide.Glide
 import dagger.android.support.DaggerDialogFragment
-import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 
 class EquilChangeInsulinDlg : DaggerDialogFragment() {
@@ -26,8 +25,6 @@ class EquilChangeInsulinDlg : DaggerDialogFragment() {
     private var _binding: EquilDialogAlertDressingBinding? = null
 
     val binding get() = _binding!!
-    val disposable = CompositeDisposable()
-
     override fun onStart() {
         super.onStart()
         dialog?.window?.setLayout(
@@ -62,10 +59,7 @@ class EquilChangeInsulinDlg : DaggerDialogFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        disposable.clear()
     }
-
-    var task: Runnable? = null
 
     override fun show(manager: FragmentManager, tag: String?) {
         try {

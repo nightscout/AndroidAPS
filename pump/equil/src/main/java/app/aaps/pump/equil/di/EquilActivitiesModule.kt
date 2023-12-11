@@ -10,7 +10,6 @@ import app.aaps.pump.equil.ui.dlg.EquilPairConfigDlg
 import app.aaps.pump.equil.ui.dlg.EquilUnPairDlg
 import app.aaps.pump.equil.ui.dlg.LoadingDlg
 import app.aaps.pump.equil.ui.dlg.NumberChooseDlg
-import app.aaps.pump.equil.ui.dlg.SingleChooseDlg
 import app.aaps.pump.equil.ui.pair.EquilChangeInsulinFragment
 import app.aaps.pump.equil.ui.pair.EquilPairActivity
 import app.aaps.pump.equil.ui.pair.EquilPairAirFragment
@@ -30,7 +29,6 @@ abstract class EquilActivitiesModule {
     @ContributesAndroidInjector abstract fun contributesEquilFragment(): EquilFragment
     @ContributesAndroidInjector abstract fun contributesEquilChangeInsulinDlg(): EquilChangeInsulinDlg
     @ContributesAndroidInjector abstract fun contributesLoadingDlg(): LoadingDlg
-    @ContributesAndroidInjector abstract fun contributesSingleChooseDlg(): SingleChooseDlg
     @ContributesAndroidInjector abstract fun contributesNumberChooseDlg(): NumberChooseDlg
     @ContributesAndroidInjector abstract fun contributesEquilUnPairDlg(): EquilUnPairDlg
     @ContributesAndroidInjector abstract fun contributesEquilPairConfigDlg(): EquilPairConfigDlg

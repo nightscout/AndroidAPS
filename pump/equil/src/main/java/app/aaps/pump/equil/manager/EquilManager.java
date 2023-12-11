@@ -79,11 +79,9 @@ import dagger.android.HasAndroidInjector;
 
 @Singleton
 public class EquilManager {
-    public static boolean is_debug = false;
     private final AAPSLogger aapsLogger;
     private final RxBus rxBus;
     private final ResourceHelper rh;
-    private final HasAndroidInjector injector;
     private final SP sp;
     private final PumpSync pumpSync;
     private final Instantiator instantiator;
@@ -91,7 +89,6 @@ public class EquilManager {
     EquilHistoryRecordDao equilHistoryRecordDao;
     EquilHistoryPumpDao equilHistoryPumpDao;
 
-    //    SettingProfile settingProfile;
     public AAPSLogger getAapsLogger() {
         return aapsLogger;
     }
@@ -107,7 +104,6 @@ public class EquilManager {
             RxBus rxBus,
             SP sp,
             ResourceHelper rh,
-            HasAndroidInjector injector,
             PumpSync pumpSync,
             EquilBLE equilBLE,
             EquilHistoryRecordDao equilHistoryRecordDao,
@@ -118,7 +114,6 @@ public class EquilManager {
         this.rxBus = rxBus;
         this.sp = sp;
         this.rh = rh;
-        this.injector = injector;
         this.pumpSync = pumpSync;
         this.equilBLE = equilBLE;
         this.equilHistoryRecordDao = equilHistoryRecordDao;
@@ -778,16 +773,6 @@ public class EquilManager {
 
     public void setRunMode(RunMode runMode) {
         setAndStore(() -> equilState.setRunMode(runMode));
-    }
-
-    @NonNull public AlarmMode getAlarmMode() {
-        return getSafe(() -> equilState.getAlarmMode());
-
-    }
-
-    public void setAlarmMode(AlarmMode alarmMode) {
-        setAndStore(() -> equilState.setAlarmMode(alarmMode));
-
     }
 
     public String getFirmwareVersion() {
