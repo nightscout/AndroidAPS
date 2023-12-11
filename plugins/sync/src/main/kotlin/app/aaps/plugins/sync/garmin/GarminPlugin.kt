@@ -199,6 +199,7 @@ class GarminPlugin @Inject constructor(
         "profile" to loopHub.currentProfileName.first().toString(),
         "encodedGlucose" to encodedGlucose(getGlucoseValues()),
         "remainingInsulin" to loopHub.insulinOnboard,
+        "remainingBasalInsulin" to loopHub.insulinBasalOnboard,
         "glucoseUnit" to glucoseUnitStr,
         "temporaryBasalRate" to
             (loopHub.temporaryBasal.takeIf(java.lang.Double::isFinite) ?: 1.0),
@@ -273,6 +274,7 @@ class GarminPlugin @Inject constructor(
         val jo = JsonObject()
         jo.addProperty("encodedGlucose", encodedGlucose(glucoseValues))
         jo.addProperty("remainingInsulin", loopHub.insulinOnboard)
+        jo.addProperty("remainingBasalInsulin", loopHub.insulinBasalOnboard)
         jo.addProperty("glucoseUnit", glucoseUnitStr)
         loopHub.temporaryBasal.also {
             if (!it.isNaN()) jo.addProperty("temporaryBasalRate", it)

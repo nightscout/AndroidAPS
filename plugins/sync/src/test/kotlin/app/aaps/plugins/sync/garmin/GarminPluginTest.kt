@@ -144,11 +144,11 @@ class GarminPluginTest: TestBase() {
     @Test
     fun testGetGlucoseValues_NoNewLast() {
         val from = getGlucoseValuesFrom
-        val lastTimesteamp = clock.instant()
+        val lastTimestamp = clock.instant()
         val prev = createGlucoseValue(clock.instant())
         gp.newValue = mock(Condition::class.java)
         `when`(loopHub.getGlucoseValues(from, true)).thenReturn(listOf(prev))
-        gp.onNewBloodGlucose(EventNewBG(lastTimesteamp.toEpochMilli()))
+        gp.onNewBloodGlucose(EventNewBG(lastTimestamp.toEpochMilli()))
         assertArrayEquals(arrayOf(prev), gp.getGlucoseValues().toTypedArray())
 
         verify(gp.newValue).signalAll()
@@ -285,6 +285,7 @@ class GarminPluginTest: TestBase() {
     fun testOnGetBloodGlucose() {
         `when`(loopHub.isConnected).thenReturn(true)
         `when`(loopHub.insulinOnboard).thenReturn(3.14)
+        `when`(loopHub.insulinBasalOnboard).thenReturn(2.71)
         `when`(loopHub.temporaryBasal).thenReturn(0.8)
         val from = getGlucoseValuesFrom
         `when`(loopHub.getGlucoseValues(from, true)).thenReturn(
@@ -294,7 +295,7 @@ class GarminPluginTest: TestBase() {
         val result = gp.onGetBloodGlucose(uri)
         assertEquals(
             "{\"encodedGlucose\":\"0A+6AQ==\"," +
-                "\"remainingInsulin\":3.14," +
+                "\"remainingInsulin\":3.14,\"remainingBasalInsulin\":2.71," +
                 "\"glucoseUnit\":\"mmoll\",\"temporaryBasalRate\":0.8," +
                 "\"profile\":\"D\",\"connected\":true}",
             result.toString())
@@ -326,7 +327,7 @@ class GarminPluginTest: TestBase() {
         val result = gp.onGetBloodGlucose(uri)
         assertEquals(
             "{\"encodedGlucose\":\"/wS6AQ==\"," +
-                "\"remainingInsulin\":3.14," +
+                "\"remainingInsulin\":3.14,\"remainingBasalInsulin\":0.0," +
                 "\"glucoseUnit\":\"mmoll\",\"temporaryBasalRate\":0.8," +
                 "\"profile\":\"D\",\"connected\":true}",
             result.toString())
