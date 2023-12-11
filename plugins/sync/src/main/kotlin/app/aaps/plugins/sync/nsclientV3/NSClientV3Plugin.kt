@@ -23,6 +23,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.nsclient.NSAlarm
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
@@ -106,7 +107,8 @@ class NSClientV3Plugin @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     private val nsClientSource: NSClientSource,
     private val storeDataForDb: StoreDataForDb,
-    private val decimalFormatter: DecimalFormatter
+    private val decimalFormatter: DecimalFormatter,
+    private val l: L
 ) : NsClient, Sync, PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -338,7 +340,7 @@ class NSClientV3Plugin @Inject constructor(
                 baseUrl = sp.getString(app.aaps.core.utils.R.string.key_nsclientinternal_url, "").lowercase().replace("https://", "").replace(Regex("/$"), ""),
                 accessToken = sp.getString(R.string.key_ns_client_token, ""),
                 context = context,
-                logging = config.isEngineeringMode() || config.isDev(),
+                logging = l.findByName(LTag.NSCLIENT.tag).enabled && (config.isEngineeringMode() || config.isDev()),
                 logger = { msg -> aapsLogger.debug(LTag.HTTP, msg) }
             )
         SystemClock.sleep(2000)
