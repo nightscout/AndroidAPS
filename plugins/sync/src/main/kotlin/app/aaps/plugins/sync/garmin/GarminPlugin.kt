@@ -275,6 +275,10 @@ class GarminPlugin @Inject constructor(
         jo.addProperty("encodedGlucose", encodedGlucose(glucoseValues))
         jo.addProperty("remainingInsulin", loopHub.insulinOnboard)
         jo.addProperty("remainingBasalInsulin", loopHub.insulinBasalOnboard)
+        loopHub.targetGlucoseLow?.takeIf { it > 0.0 }?.let {
+            jo.addProperty("targetGlucoseLow", it.roundToInt()) }
+        loopHub.targetGlucoseHigh?.takeIf { it > 0.0 }?.let {
+            jo.addProperty("targetGlucoseHigh", it.roundToInt()) }
         jo.addProperty("glucoseUnit", glucoseUnitStr)
         loopHub.temporaryBasal.also {
             if (!it.isNaN()) jo.addProperty("temporaryBasalRate", it)

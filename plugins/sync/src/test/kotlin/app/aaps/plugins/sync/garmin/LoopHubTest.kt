@@ -38,11 +38,11 @@ import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.argThat
 import org.mockito.ArgumentMatchers.isNull
 import org.mockito.Mock
-import org.mockito.Mockito.mock
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.verifyNoMoreInteractions
-import org.mockito.Mockito.`when`
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import java.time.Clock
 import java.time.Instant
 import java.time.ZoneId
@@ -84,31 +84,43 @@ class LoopHubTest: TestBase() {
 
 @Test
     fun testCurrentProfile() {
-        val profile = mock(Profile::class.java)
-        `when`(profileFunction.getProfile()).thenReturn(profile)
+        val profile = mock<Profile>()
+        whenever(profileFunction.getProfile()).thenReturn(profile)
         assertEquals(profile, loopHub.currentProfile)
         verify(profileFunction, times(1)).getProfile()
     }
 
     @Test
     fun testCurrentProfileName() {
-        `when`(profileFunction.getProfileName()).thenReturn("pro")
+        whenever(profileFunction.getProfileName()).thenReturn("pro")
         assertEquals("pro", loopHub.currentProfileName)
         verify(profileFunction, times(1)).getProfileName()
+    }
+    
+    @Test
+    fun testTargetGlucoseRange() {
+        val profile = mock<Profile>() {
+            on { getTargetLowMgdl() }.thenReturn(76.0)
+            on { getTargetHighMgdl() }.thenReturn(125.0)
+        }
+        whenever(profileFunction.getProfile()).thenReturn(profile)
+        assertEquals(76.0, loopHub.targetGlucoseLow!!, 1e-6)
+        assertEquals(125.0, loopHub.targetGlucoseHigh!!, 1e-6)
+        verify(profileFunction, times(2)).getProfile()
     }
 
     @Test
     fun testGlucoseUnit() {
-        `when`(sp.getString(app.aaps.core.utils.R.string.key_units, GlucoseUnit.MGDL.asText)).thenReturn("mg/dl")
+        whenever(sp.getString(app.aaps.core.utils.R.string.key_units, GlucoseUnit.MGDL.asText)).thenReturn("mg/dl")
         assertEquals(GlucoseUnit.MGDL, loopHub.glucoseUnit)
-        `when`(sp.getString(app.aaps.core.utils.R.string.key_units, GlucoseUnit.MGDL.asText)).thenReturn("mmol")
+        whenever(sp.getString(app.aaps.core.utils.R.string.key_units, GlucoseUnit.MGDL.asText)).thenReturn("mmol")
         assertEquals(GlucoseUnit.MMOL, loopHub.glucoseUnit)
     }
 
     @Test
     fun testInsulinOnBoard() {
         val iobTotal = IobTotal(time = 0).apply { iob = 23.9 }
-        `when`(iobCobCalculator.calculateIobFromBolus()).thenReturn(iobTotal)
+        whenever(iobCobCalculator.calculateIobFromBolus()).thenReturn(iobTotal)
         assertEquals(23.9, loopHub.insulinOnboard, 1e-10)
         verify(iobCobCalculator, times(1)).calculateIobFromBolus()
     }
@@ -116,7 +128,7 @@ class LoopHubTest: TestBase() {
     @Test
     fun testBasalOnBoard() {
         val iobBasal = IobTotal(time = 0).apply { basaliob = 23.9 }
-        `when`(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(iobBasal)
+        whenever(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(iobBasal)
         assertEquals(23.9, loopHub.insulinBasalOnboard, 1e-10)
         verify(iobCobCalculator, times(1)).calculateIobFromTempBasalsIncludingConvertedExtended()
     }
@@ -124,14 +136,14 @@ class LoopHubTest: TestBase() {
     @Test
     fun testCarbsOnBoard() {
         val cobInfo = CobInfo(0, 12.0, 0.0)
-        `when`(overviewData.cobInfo(iobCobCalculator)).thenReturn(cobInfo)
+        whenever(overviewData.cobInfo(iobCobCalculator)).thenReturn(cobInfo)
         assertEquals(12.0, loopHub.carbsOnboard)
         verify(overviewData, times(1)).cobInfo(iobCobCalculator)
     }
 
     @Test
     fun testIsConnected() {
-        `when`(loop.isDisconnected).thenReturn(false)
+        whenever(loop.isDisconnected).thenReturn(false)
         assertEquals(true, loopHub.isConnected)
         verify(loop, times(1)).isDisconnected
     }
@@ -157,7 +169,7 @@ class LoopHubTest: TestBase() {
     @Test
     fun testIsTemporaryProfileTrue() {
         val eps = effectiveProfileSwitch(10)
-        `when`(repo.getEffectiveProfileSwitchActiveAt(clock.millis())).thenReturn(
+        whenever(repo.getEffectiveProfileSwitchActiveAt(clock.millis())).thenReturn(
             Single.just(ValueWrapper.Existing(eps)))
         assertEquals(true, loopHub.isTemporaryProfile)
         verify(repo, times(1)).getEffectiveProfileSwitchActiveAt(clock.millis())
@@ -166,7 +178,7 @@ class LoopHubTest: TestBase() {
     @Test
     fun testIsTemporaryProfileFalse() {
         val eps = effectiveProfileSwitch(0)
-        `when`(repo.getEffectiveProfileSwitchActiveAt(clock.millis())).thenReturn(
+        whenever(repo.getEffectiveProfileSwitchActiveAt(clock.millis())).thenReturn(
             Single.just(ValueWrapper.Existing(eps)))
         assertEquals(false, loopHub.isTemporaryProfile)
         verify(repo).getEffectiveProfileSwitchActiveAt(clock.millis())
@@ -174,28 +186,28 @@ class LoopHubTest: TestBase() {
 
     @Test
     fun testTemporaryBasal() {
-        val apsResult = mock(APSResult::class.java)
-        `when`(apsResult.percent).thenReturn(45)
+        val apsResult = mock<APSResult>()
+        whenever(apsResult.percent).thenReturn(45)
         val lastRun = Loop.LastRun().apply { constraintsProcessed = apsResult }
-        `when`(loop.lastRun).thenReturn(lastRun)
+        whenever(loop.lastRun).thenReturn(lastRun)
         assertEquals(0.45, loopHub.temporaryBasal, 1e-6)
         verify(loop).lastRun
     }
 
     @Test
     fun testTemporaryBasalNoRun() {
-        `when`(loop.lastRun).thenReturn(null)
+        whenever(loop.lastRun).thenReturn(null)
         assertTrue(loopHub.temporaryBasal.isNaN())
         verify(loop, times(1)).lastRun
     }
 
     @Test
     fun testConnectPump() {
-        val c = mock(Completable::class.java)
+        val c = mock<Completable>()
         val dummy = CancelCurrentOfflineEventIfAnyTransaction(0)
         val matcher = {
             argThat<CancelCurrentOfflineEventIfAnyTransaction> { t -> t.timestamp == clock.millis() }}
-        `when`(repo.runTransaction(matcher() ?: dummy)).thenReturn(c)
+        whenever(repo.runTransaction(matcher() ?: dummy)).thenReturn(c)
         loopHub.connectPump()
         verify(repo).runTransaction(matcher() ?: dummy)
         verify(commandQueue).cancelTempBasal(true, null)
@@ -204,8 +216,8 @@ class LoopHubTest: TestBase() {
 
     @Test
     fun testDisconnectPump() {
-        val profile = mock(Profile::class.java)
-        `when`(profileFunction.getProfile()).thenReturn(profile)
+        val profile = mock<Profile>()
+        whenever(profileFunction.getProfile()).thenReturn(profile)
         loopHub.disconnectPump(23)
         verify(profileFunction).getProfile()
         verify(loop).goToZeroTemp(23, profile, OfflineEvent.Reason.DISCONNECT_PUMP)
@@ -222,7 +234,7 @@ class LoopHubTest: TestBase() {
                 timestamp = 1_000_000L, raw = 90.0, value = 93.0,
                 trendArrow = GlucoseValue.TrendArrow.FLAT, noise = null,
                 sourceSensor = GlucoseValue.SourceSensor.DEXCOM_G5_XDRIP))
-        `when`(repo.compatGetBgReadingsDataFromTime(1001_000, false))
+        whenever(repo.compatGetBgReadingsDataFromTime(1001_000, false))
             .thenReturn(Single.just(glucoseValues))
         assertArrayEquals(
             glucoseValues.toTypedArray(),
@@ -232,10 +244,10 @@ class LoopHubTest: TestBase() {
 
     @Test
     fun testPostCarbs() {
-        @Suppress("unchecked_cast")
-        val constraint = mock(Constraint::class.java) as Constraint<Int>
-        `when`(constraint.value()).thenReturn(99)
-        `when`(constraints.getMaxCarbsAllowed()).thenReturn(constraint)
+        val constraint = mock<Constraint<Int>>() {
+            on { value() }.thenReturn(99)
+        }
+        whenever(constraints.getMaxCarbsAllowed()).thenReturn(constraint)
         loopHub.postCarbs(100)
         verify(constraints).getMaxCarbsAllowed()
         verify(userEntryLogger).log(
@@ -259,7 +271,7 @@ class LoopHubTest: TestBase() {
             dateCreated = clock.millis(),
             beatsPerMinute = 101.0,
             device = "Test Device")
-        `when`(repo.runTransaction(InsertOrUpdateHeartRateTransaction(hr))).thenReturn(
+        whenever(repo.runTransaction(InsertOrUpdateHeartRateTransaction(hr))).thenReturn(
             Completable.fromCallable {
                 InsertOrUpdateHeartRateTransaction.TransactionResult(
                     emptyList(), emptyList())})
