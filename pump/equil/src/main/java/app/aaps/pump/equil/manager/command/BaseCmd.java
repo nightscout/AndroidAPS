@@ -1,6 +1,7 @@
 package app.aaps.pump.equil.manager.command;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -53,7 +54,7 @@ public abstract class BaseCmd implements CustomCommand {
 
     public abstract EquilResponse getNextEquilResponse();
 
-    public abstract EquilResponse decodeEquilPacket(byte[] data);
+    @Nullable public abstract EquilResponse decodeEquilPacket(byte[] data);
 
     public abstract EquilResponse decode() throws Exception;
 
