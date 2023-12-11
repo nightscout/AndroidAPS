@@ -36,10 +36,6 @@ public class CmdPair extends BaseCmd {
         return address;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     byte[] randomPassword;
 
     @Override
@@ -132,24 +128,22 @@ public class CmdPair extends BaseCmd {
         String content = AESUtil.decrypt(equilCmdModel, keyBytes);
         String pwd1 = content.substring(0, 64);
         String pwd2 = content.substring(64);
-//        List<String> list = AESUtil.test21(reqModel);
         aapsLogger.debug(LTag.PUMPCOMM, "decrypted====" + pwd1);
         aapsLogger.debug(LTag.PUMPCOMM, "decrypted====" + pwd2);
         if (ERROR_PWD.equals(pwd1) && ERROR_PWD.equals(pwd2)) {
             synchronized (this) {
                 setCmdStatus(true);
                 setEnacted(false);
-                notify();
+                notifyAll();
             }
             return null;
         }
 
-        sp.putString(EquilConst.Prefs.EQUIL_PASSWORD, pwd2);
-        sp.putString(EquilConst.Prefs.EQUIL_DEVICES, pwd1);
+        sp.putString(EquilConst.Prefs.INSTANCE.getEQUIL_PASSWORD(), pwd2);
+        sp.putString(EquilConst.Prefs.INSTANCE.getEQUIL_DEVICES(), pwd1);
         runPwd = pwd2;
         byte[] data1 = Utils.hexStringToBytes(pwd1);
         byte[] data = Utils.concat(data1, keyBytes);
-//        Crc.ReqModel reqModel2 = AESUtil.aesEncrypt(Crc.hexStringToBytes(runPwd), data);
         EquilCmdModel equilCmdModel2 = AESUtil.aesEncrypt(Utils.hexStringToBytes(runPwd), data);
 
         return responseCmd(equilCmdModel2, port + equilCmdModel2.getCode());
@@ -158,12 +152,9 @@ public class CmdPair extends BaseCmd {
 
     @Override
     public EquilResponse decodeConfirm() {
-        //EquilCmdModel equilCmdModel = decodeModel();
-
-        //String content = AESUtil.decrypt(equilCmdModel, Utils.hexStringToBytes(runPwd));
         synchronized (this) {
             setCmdStatus(true);
-            notify();
+            notifyAll();
         }
         return null;
     }

@@ -76,7 +76,7 @@ public class CmdBasalSet extends BaseSetting {
 
     public void decodeConfirmData(byte[] data) {
         synchronized (this) {
-            sp.putBoolean(EquilConst.Prefs.EQUIL_BASAL_SET, true);
+            sp.putBoolean(EquilConst.Prefs.INSTANCE.getEQUIL_BASAL_SET(), true);
             setCmdStatus(true);
             notifyAll();
         }

@@ -609,7 +609,7 @@ public class EquilManager {
     }
 
     protected String readPodState() {
-        return sp.getString(EquilConst.Prefs.EQUIL_STATE, "");
+        return sp.getString(EquilConst.Prefs.INSTANCE.getEQUIL_STATE(), "");
     }
 
     public final void loadPodState() {
@@ -669,7 +669,7 @@ public class EquilManager {
     }
 
     protected void storePodState(String podState) {
-        sp.putString(EquilConst.Prefs.EQUIL_STATE, podState);
+        sp.putString(EquilConst.Prefs.INSTANCE.getEQUIL_STATE(), podState);
     }
 
     public String getSerialNumber() {

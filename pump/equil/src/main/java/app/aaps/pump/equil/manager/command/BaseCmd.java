@@ -151,11 +151,11 @@ public abstract class BaseCmd implements CustomCommand {
     }
 
     public String getEquilDevices() {
-        return sp.getString(EquilConst.Prefs.EQUIL_DEVICES, "");
+        return sp.getString(EquilConst.Prefs.INSTANCE.getEQUIL_DEVICES(), "");
     }
 
     public String getEquilPassWord() {
-        return sp.getString(EquilConst.Prefs.EQUIL_PASSWORD, "");
+        return sp.getString(EquilConst.Prefs.INSTANCE.getEQUIL_PASSWORD(), "");
     }
 
     public static int up1(double value) {
