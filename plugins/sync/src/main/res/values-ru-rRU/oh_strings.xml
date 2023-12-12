@@ -22,7 +22,7 @@
     <string name="terms_of_use">Условия пользования</string>
     <string name="please_read__information">Внимательно ознакомьтесь со следующей информацией и примите условия использования.</string>
     <string name="info_openhumans">Это проект с открытым исходным кодом, который будет копировать ваши данные на Open Humans. Мы не будем обмениваться вашими данными с третьими лицами без вашего явного разрешения. Данные, отправляемые на проект и приложение, идентифицируются с помощью случайного идентификатора и будут безопасно передаваться на учетную запись Open Humans при вашем одобрении этого процесса. Вы можете остановить загрузку и удалить загруженные данные в любое время здесь: www.openhumans.org.</string>
-    <string name="data_uploaded">Данные загружены</string>
+    <string name="data_uploaded">Загружаемые данные</string>
     <string name="glucose_values">Гликемия</string>
     <string name="boluses">Болюсы</string>
     <string name="extended_boluses">Пролонгированные болюсы</string>
@@ -37,7 +37,7 @@
     <string name="device_model">Модель устройства</string>
     <string name="screen_dimensions">Размеры экрана</string>
     <string name="algorithm_debug_data">Данные отладки алгоритма</string>
-    <string name="data_not_uploaded">Данные НЕ загружены</string>
+    <string name="data_not_uploaded">НЕзагружаемые данные</string>
     <string name="passwords">Пароли</string>
     <string name="nightscout_url">URL-адрес Nightscout</string>
     <string name="nightscout_api_secret">Секретный ключ Nightscout API</string>
