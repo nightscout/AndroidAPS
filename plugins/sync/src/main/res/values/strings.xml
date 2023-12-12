@@ -182,7 +182,7 @@
     <!--    DataBroadcast-->
     <string name="data_broadcaster">Data Broadcaster</string>
     <string name="data_broadcaster_short">DBRO</string>
-    <string name="data_broadcaster_description">Broadcast data to Samsung\'s G-Watch Wear App (Tizen OS)</string>
+    <string name="data_broadcaster_description">Broadcast data to Garmin\'s G-Watch Wear App</string>
 
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
