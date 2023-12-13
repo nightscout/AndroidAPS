@@ -17,7 +17,6 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.main.R
 import app.aaps.core.main.extensions.convertedToPercent
@@ -54,7 +53,6 @@ class OverviewDataImpl @Inject constructor(
     private val defaultValueHelper: DefaultValueHelper,
     private val profileFunction: ProfileFunction,
     private val repository: AppRepository,
-    private val decimalFormatter: DecimalFormatter
 ) : OverviewData {
 
     override var rangeToDisplay = 6 // for graph
@@ -184,7 +182,7 @@ class OverviewDataImpl @Inject constructor(
         profileFunction.getProfile()?.let { profile ->
             var temporaryBasal = iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now())
             if (temporaryBasal?.isInProgress == false) temporaryBasal = null
-            temporaryBasal?.let { "T:" + it.toStringShort(decimalFormatter) }
+            temporaryBasal?.let { rh.gs(app.aaps.core.ui.R.string.temporary_basal_overview_short_name) + it.toStringShort(rh) }
                 ?: rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, profile.getBasal())
         } ?: rh.gs(app.aaps.core.ui.R.string.value_unavailable_short)
 
@@ -192,7 +190,7 @@ class OverviewDataImpl @Inject constructor(
         profileFunction.getProfile()?.let { profile ->
             iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now())?.let { temporaryBasal ->
                 "${rh.gs(app.aaps.core.ui.R.string.base_basal_rate_label)}: ${rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, profile.getBasal())}" +
-                    "\n" + rh.gs(app.aaps.core.ui.R.string.tempbasal_label) + ": " + temporaryBasal.toStringFull(profile, dateUtil, decimalFormatter)
+                    "\n" + rh.gs(app.aaps.core.ui.R.string.tempbasal_label) + ": " + temporaryBasal.toStringFull(profile, dateUtil, rh)
             }
                 ?: "${rh.gs(app.aaps.core.ui.R.string.base_basal_rate_label)}: ${rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, profile.getBasal())}"
         } ?: rh.gs(app.aaps.core.ui.R.string.value_unavailable_short)
@@ -229,7 +227,7 @@ class OverviewDataImpl @Inject constructor(
         } ?: ""
 
     override fun extendedBolusDialogText(iobCobCalculator: IobCobCalculator): String =
-        iobCobCalculator.getExtendedBolus(dateUtil.now())?.toStringFull(dateUtil, decimalFormatter) ?: ""
+        iobCobCalculator.getExtendedBolus(dateUtil.now())?.toStringFull(dateUtil, rh) ?: ""
 
     /*
      * IOB, COB

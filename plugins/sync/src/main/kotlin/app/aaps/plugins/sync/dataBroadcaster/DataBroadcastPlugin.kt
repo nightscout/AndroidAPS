@@ -27,7 +27,6 @@ import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.extensions.durationInMinutes
 import app.aaps.core.main.extensions.toStringFull
@@ -59,7 +58,6 @@ class DataBroadcastPlugin @Inject constructor(
     private var receiverStatusStore: ReceiverStatusStore,
     private val config: Config,
     private val glucoseStatusProvider: GlucoseStatusProvider,
-    private val decimalFormatter: DecimalFormatter
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -179,7 +177,7 @@ class DataBroadcastPlugin @Inject constructor(
             bundle.putLong("tempBasalDurationInMinutes", it.durationInMinutes)
             if (it.isAbsolute) bundle.putDouble("tempBasalAbsolute", it.rate) // U/h for absolute TBR
             else bundle.putInt("tempBasalPercent", it.rate.toInt()) // % for percent type TBR
-            bundle.putString("tempBasalString", it.toStringFull(profile, dateUtil, decimalFormatter)) // user friendly string
+            bundle.putString("tempBasalString", it.toStringFull(profile, dateUtil, rh)) // user friendly string
         }
     }
 

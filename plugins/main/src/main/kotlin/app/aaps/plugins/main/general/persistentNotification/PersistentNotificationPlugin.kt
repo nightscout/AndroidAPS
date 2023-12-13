@@ -142,8 +142,8 @@ class PersistentNotificationPlugin @Inject constructor(
             }
             val activeTemp = iobCobCalculator.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())
             if (activeTemp != null) {
-                line1 += "  " + activeTemp.toStringShort(decimalFormatter)
-                line1aa += "  " + activeTemp.toStringShort(decimalFormatter) + "."
+                line1 += "  " + activeTemp.toStringShort(rh)
+                line1aa += "  " + activeTemp.toStringShort(rh) + "."
             }
             //IOB
             val bolusIob = iobCobCalculator.calculateIobFromBolus().round()

@@ -240,7 +240,7 @@ class XdripPlugin @Inject constructor(
 
         //Temp basal
         iobCobCalculator.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())?.let {
-            status.append(it.toStringShort(decimalFormatter)).append(" ")
+            status.append(it.toStringShort(rh)).append(" ")
         }
         //IOB
         val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
