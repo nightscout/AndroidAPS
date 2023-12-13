@@ -171,6 +171,12 @@
     <string name="iob_label">Insulin on Board (IOB)</string>
     <string name="loopstatus_targets">TARGETS:</string>
     <string name="loopstatus_OAPS_result">OAPS RESULT:</string>
+    <string name="extended_bolus_data_point_graph">%1$.2f U ( %2$.2f U/h )</string>
+    <string name="extended_bolus_tostringfull">E %1$.2f U/h @%2$s %3$s/%4$s min</string>
+    <string name="extended_bolus_tostringmedium">%1$.2f U/h %2$s/%3$s\'</string>
+    <string name="temporary_basal_fake_extended">%1$.2f U/h (%2$.2fE) @%3$s</string>
+    <string name="temporary_basal_absolute">%1$.2f U/h @%2$s</string>
+    <string name="temporary_basal_overview_short_name">T:</string>
 
     <!--    Protection-->
     <string name="wrongpassword">Wrong password</string>

@@ -53,7 +53,6 @@ class HistoryBrowserData @Inject constructor(
                 defaultValueHelper,
                 profileFunction,
                 repository,
-                decimalFormatter
             )
         iobCobCalculator =
             IobCobCalculatorPlugin(
