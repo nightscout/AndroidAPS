@@ -47,7 +47,7 @@ import app.aaps.plugins.source.PoctechPlugin
 import app.aaps.plugins.source.RandomBgPlugin
 import app.aaps.plugins.source.TomatoPlugin
 import app.aaps.plugins.source.XdripSourcePlugin
-import app.aaps.plugins.sync.dataBroadcaster.DataBroadcastPlugin
+import app.aaps.plugins.sync.tizen.TizenPlugin
 import app.aaps.plugins.sync.nsclient.NSClientPlugin
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.openhumans.OpenHumansUploaderPlugin
@@ -350,7 +350,7 @@ abstract class PluginsListModule {
     @AllConfigs
     @IntoMap
     @IntKey(368)
-    abstract fun bindDataBroadcastPlugin(plugin: DataBroadcastPlugin): PluginBase
+    abstract fun bindDataBroadcastPlugin(plugin: TizenPlugin): PluginBase
 
     @Binds
     @AllConfigs
