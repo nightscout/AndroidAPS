@@ -117,8 +117,6 @@
     <string name="xdrip_local_broadcasts_summary">Wyślij dane dotyczące glikemii i leczenia do xDrip+. W ustawieniach xDrip+ należy ustawić \"Sprzętowe źródło danych\" na \"xDrip+ Sync Follower\" oraz włączyć akceptowanie danych: \"Ustawienia innych aplikacji\" - \"Akceptuj Glukozę/Akceptuj zabiegi\"</string>
     <string name="xdrip_local_broadcasts_title">Włącz nadawanie do xDrip+.</string>
     <!--    DataBroadcast-->
-    <string name="data_broadcaster_short">DBRO</string>
-    <string name="data_broadcaster_description">Transmisja danych do aplikacji G-Watch Garmin</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Połączenie z urządzeniem Garmin (Fenix, Edge, …)</string>

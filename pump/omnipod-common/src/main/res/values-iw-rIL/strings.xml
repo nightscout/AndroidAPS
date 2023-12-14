@@ -124,6 +124,7 @@
     <string name="omnipod_common_pod_status_waiting_for_activation">התקנה בביצוע (ממתין להפעלת הפוד)</string>
     <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">התקנה בביצוע (ממתין להכנסת הפרפרית)</string>
     <string name="omnipod_common_pod_status_running">פועל</string>
+    <string name="omnipod_common_pod_status_normal">נורמלי</string>
     <string name="omnipod_common_pod_status_suspended">מושהה</string>
     <string name="omnipod_common_pod_status_pod_fault">תקלה בפוד</string>
     <string name="omnipod_common_pod_status_activation_time_exceeded">חריגת זמן הפעלה</string>
