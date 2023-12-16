@@ -1,4 +1,4 @@
-package app.aaps.plugins.sync.dataBroadcaster
+package app.aaps.plugins.sync.tizen
 
 import app.aaps.core.data.iob.CobInfo
 import app.aaps.core.data.iob.GlucoseStatus
@@ -23,7 +23,7 @@ import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
 import org.mockito.Mockito
 
-internal class DataBroadcastPluginTest : TestBaseWithProfile() {
+internal class TizenPluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var loop: Loop
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
@@ -31,13 +31,13 @@ internal class DataBroadcastPluginTest : TestBaseWithProfile() {
     @Mock lateinit var autosensDataStore: AutosensDataStore
     @Mock lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
 
-    private lateinit var sut: DataBroadcastPlugin
+    private lateinit var sut: TizenPlugin
 
     @BeforeEach
     fun setUp() {
-        sut = DataBroadcastPlugin(
-            aapsLogger, rh, aapsSchedulers, context, dateUtil, fabricPrivacy, rxBus, iobCobCalculator, processedTbrEbData, profileFunction, profileUtil, preferences,
-            processedDeviceStatusData, loop, activePlugin, receiverStatusStore, config, glucoseStatusProvider, decimalFormatter
+        sut = TizenPlugin(
+            aapsLogger, rh, aapsSchedulers, context, dateUtil, fabricPrivacy, rxBus, iobCobCalculator, processedTbrEbData, profileFunction, preferences, processedDeviceStatusData,
+            loop, activePlugin, receiverStatusStore, config, glucoseStatusProvider, decimalFormatter
         )
         Mockito.`when`(iobCobCalculator.ads).thenReturn(autosensDataStore)
         Mockito.`when`(autosensDataStore.lastBg()).thenReturn(InMemoryGlucoseValue(1000, 100.0, sourceSensor = SourceSensor.UNKNOWN))

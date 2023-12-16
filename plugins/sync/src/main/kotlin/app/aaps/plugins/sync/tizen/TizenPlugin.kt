@@ -1,4 +1,4 @@
-package app.aaps.plugins.sync.dataBroadcaster
+package app.aaps.plugins.sync.tizen
 
 import android.content.Context
 import android.content.Intent
@@ -43,7 +43,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class DataBroadcastPlugin @Inject constructor(
+class TizenPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     private val aapsSchedulers: AapsSchedulers,
@@ -54,7 +54,6 @@ class DataBroadcastPlugin @Inject constructor(
     private val iobCobCalculator: IobCobCalculator,
     private val processedTbrEbData: ProcessedTbrEbData,
     private val profileFunction: ProfileFunction,
-    private val profileUtil: ProfileUtil,
     private val preferences: Preferences,
     private val processedDeviceStatusData: ProcessedDeviceStatusData,
     private val loop: Loop,
@@ -66,10 +65,10 @@ class DataBroadcastPlugin @Inject constructor(
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
-        .pluginIcon(app.aaps.core.objects.R.drawable.ic_watch)
-        .pluginName(R.string.data_broadcaster)
-        .shortName(R.string.data_broadcaster_short)
-        .description(R.string.data_broadcaster_description),
+        .pluginIcon(app.aaps.core.main.R.drawable.ic_watch)
+        .pluginName(R.string.tizen)
+        .shortName(R.string.tizen_short)
+        .description(R.string.tizen_description),
     aapsLogger, rh
 ) {
 
