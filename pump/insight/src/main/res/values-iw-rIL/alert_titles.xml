@@ -14,7 +14,7 @@
     <string name="alert_w39_title">אזהרת זמן השאלה</string>
     <string name="alert_m20_title">המכל לא הוכנס</string>
     <string name="alert_m21_title">מכל ריק</string>
-    <string name="alert_m22_title">סוללה ריקה</string>
+    <string name="alert_m22_title">הסוללה ריקה</string>
     <string name="alert_m23_title">כיבוי אוטומטי - המשאבה נעצרה</string>
     <string name="alert_m24_title">חסימה</string>
     <string name="alert_m25_title">נגמרה תקופת ההשאלה - סיום פעילות</string>
