@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="connection_failed">连接失败了</string>
+    <string name="connection_lost">连接已丢失</string>
+    <string name="pairing_rejected">配对失败</string>
+    <string name="socket_creation_failed">创建 Socket 失败了</string>
+    <string name="timeout">超时</string>
+    <string name="maximum_number_of_bolus_type_already_running">已运行的大剂量类型的最大数量</string>
+    <string name="no_active_tbr_to_cancel">没有活动的 TBR 需要取消</string>
+    <string name="no_active_tbr_to_change">没有活动的 TBR 需要改变</string>
+    <string name="no_such_bolus_to_cancel">没有大剂量需要取消</string>
+    <string name="pump_already_in_that_state_exception">泵已经处于这种状态了</string>
+    <string name="run_mode_not_allowed">不允许运行模式</string>
+</resources>
