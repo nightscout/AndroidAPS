@@ -204,4 +204,5 @@
     <string name="old_warning">!starý!</string>
     <string name="error">!chyba!</string>
     <string name="pref_heartRateSampling">Tepová frekvence</string>
+    <string name="pref_stepsSampling">Povolit počet kroků</string>
 </resources>
