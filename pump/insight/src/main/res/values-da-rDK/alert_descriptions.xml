@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="alert_r7_description"><![CDATA[Mængde: <b>%1$d%%</b>\nVarighed: <b>%2$s h</b>]]></string>
+    <string name="alert_w31_description"><![CDATA[Ampulindhold: <b>%1$s IE</b>]]></string>
+    <string name="alert_w32_description">Skift batteri.</string>
+    <string name="alert_w33_description">Indstil tid/dato.</string>
+    <string name="alert_w34_description">Kontakt Accu-Chek support.</string>
+    <string name="alert_w36_description"><![CDATA[Mængde: <b>%1$d%%</b><br/>Varighed: <b>%2$s t</b>]]></string>
+    <string name="alert_w38_description"><![CDATA[Programmeret: <b>%1$s IE</b><br/>Tilført: <b>%2$s IE</b>]]></string>
+    <string name="alert_m20_description">Isæt ampul.</string>
+    <string name="alert_m21_description">Skift ampul.</string>
+    <string name="alert_m22_description">Skift batteri.</string>
+    <string name="alert_m23_description">Kontrollér pumpestatus.</string>
+    <string name="alert_m24_description">Skift infusionssæt.</string>
+    <string name="alert_m25_description">Kontakt Accu-Chek support.</string>
+    <string name="alert_m26_description">Skift ampul.</string>
+    <string name="alert_m27_description">Genstart datadownload.</string>
+    <string name="alert_m28_description">Kontrollér pumpestatus.</string>
+    <string name="alert_m29_description">Indstil batteritype.</string>
+    <string name="alert_m30_description">Indstil ampultype.</string>
+    <string name="alert_e6_description">Skift batteri og ampul.</string>
+    <string name="alert_e10_description">Skift ampul.</string>
+    <string name="alert_e13_description">Skift sprog.</string>
+</resources>
