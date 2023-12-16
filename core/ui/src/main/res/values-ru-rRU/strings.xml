@@ -531,7 +531,6 @@
     <string name="limitingpercentrate">Макс процент базала ограничен до %1$d%% ед/ч вследствие %2$s</string>
     <string name="itmustbepositivevalue">величина должна быть положительной</string>
     <string name="limitingbolus">Макс уровень болюса ограничен до %1$.1f ед вследствие %2$s</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Подтверждение</string>
     <string name="message">Сообщение</string>
