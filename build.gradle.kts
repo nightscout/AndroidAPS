@@ -8,7 +8,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:8.1.3")
+        classpath("com.android.tools.build:gradle:8.2.0")
         classpath("com.google.gms:google-services:4.4.0")
         classpath("com.google.firebase:firebase-crashlytics-gradle:2.9.9")
 
@@ -22,7 +22,7 @@ buildscript {
 }
 
 plugins {
-    id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
+    id("org.jlleitschuh.gradle.ktlint") version "12.0.3"
 }
 
 allprojects {

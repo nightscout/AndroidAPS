@@ -117,8 +117,9 @@
     <string name="xdrip_local_broadcasts_summary">KŞ ve tedavi verilerini xDrip+\'a gönderin. Veri Kaynağı \"xDrip+ Sync Follower\" seçilmeli ve Ayarlar - Uygulamalar arası ayarlar - KŞ/Tedavileri Kabul Et bölümünde verilerin kabul edilmesi etkinleştirilmelidir.</string>
     <string name="xdrip_local_broadcasts_title">xDrip+ \'a yayınları etkinleştirin.</string>
     <!--    DataBroadcast-->
-    <string name="data_broadcaster_short">DBRO</string>
-    <string name="data_broadcaster_description">Verileri Garmin\'in G-Watch Wear Uygulamasına yayınlayın</string>
+    <string name="tizen">Samsung Tizen</string>
+    <string name="tizen_short">TIZ</string>
+    <string name="tizen_description">Verileri Samsung\'un G-Watch Wear Uygulamasına (Tizen OS) yayınlayın</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Garmin cihazına bağlantı (Fenix, Edge,…)</string>

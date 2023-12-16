@@ -117,7 +117,6 @@
     <string name="xdrip_local_broadcasts_summary">Siųsti glikemijos ir terapijos duomenis į xDrip+. Turi būti pasirinktas duomenų šaltinis „xDrip+ Sync Follower“, o duomenų priėmimas turi būti įjungtas skiltyje Nustatymai – Programų sąveikos nustatymai – Priimti glikemiją/terapiją</string>
     <string name="xdrip_local_broadcasts_title">Įjungti duomenų perdavimą į xDrip+.</string>
     <!--    DataBroadcast-->
-    <string name="data_broadcaster">Data Broadcaster</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Susiejimas su Garmin (Fenix, Edge, …)</string>

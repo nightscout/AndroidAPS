@@ -1,5 +1,6 @@
 package app.aaps.implementation.pump
 
+import app.aaps.core.interfaces.db.GlucoseUnit
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -16,6 +17,7 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.main.events.EventNewNotification
+import app.aaps.core.main.extensions.fromConstant
 import app.aaps.core.main.pump.fromDbPumpType
 import app.aaps.core.main.pump.toDbPumpType
 import app.aaps.core.main.pump.toDbSource
@@ -279,6 +281,42 @@ class PumpSyncImplementation @Inject constructor(
             note = note,
             timestamp = timestamp,
             ValueWithUnit.Timestamp(timestamp), ValueWithUnit.TherapyEventType(type.toDBbEventType())
+        )
+        repository.runTransactionForResult(InsertIfNewByTimestampTherapyEventTransaction(therapyEvent))
+            .doOnError {
+                aapsLogger.error(LTag.DATABASE, "Error while saving TherapyEvent", it)
+            }
+            .blockingGet()
+            .also { result ->
+                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted TherapyEvent $it") }
+                return result.inserted.size > 0
+            }
+    }
+
+    override fun insertFingerBgIfNewWithTimestamp(timestamp: Long, glucose: Double, glucoseUnit: GlucoseUnit, note: String?, pumpId: Long?, pumpType: PumpType, pumpSerial: String): Boolean {
+        if (!confirmActivePump(timestamp, pumpType, pumpSerial)) return false
+        var type = TherapyEvent.Type.FINGER_STICK_BG_VALUE
+        val therapyEvent = TherapyEvent(
+            timestamp = timestamp,
+            type = type,
+            duration = 0,
+            note = note,
+            enteredBy = "AndroidAPS",
+            glucose = glucose,
+            glucoseType = TherapyEvent.MeterType.FINGER,
+            glucoseUnit = TherapyEvent.GlucoseUnit.fromConstant(glucoseUnit),
+            interfaceIDs_backing = InterfaceIDs(
+                pumpId = pumpId,
+                pumpType = pumpType.toDbPumpType(),
+                pumpSerial = pumpSerial
+            )
+        )
+        uel.log(
+            action = UserEntry.Action.CAREPORTAL,
+            source = pumpType.source.toDbSource(),
+            note = note,
+            timestamp = timestamp,
+            ValueWithUnit.Timestamp(timestamp), ValueWithUnit.TherapyEventType(type)
         )
         repository.runTransactionForResult(InsertIfNewByTimestampTherapyEventTransaction(therapyEvent))
             .doOnError {

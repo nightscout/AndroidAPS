@@ -167,7 +167,8 @@ class NSClientV3Service : DaggerService() {
                     rxBus.send(EventNSClientNewLog("◄ WS", "Subscribed for: ${response.optString("collections")}"))
                     // during disconnection updated data is not received
                     // thus run non WS load to get missing data
-                    nsClientV3Plugin.executeLoop("WS_CONNECT", forceNew = false)
+                    nsClientV3Plugin.initialLoadFinished = false
+                    nsClientV3Plugin.executeLoop("WS_CONNECT", forceNew = true)
                     true
                 } else {
                     rxBus.send(EventNSClientNewLog("◄ WS", "Auth failed"))

@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.garmin
 
+import android.content.Context
 import androidx.annotation.VisibleForTesting
 import app.aaps.core.interfaces.db.GlucoseUnit
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -14,10 +15,15 @@ import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.plugins.sync.R
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import java.math.BigDecimal
+import java.math.MathContext
+import java.math.RoundingMode
+import java.net.HttpURLConnection
 import java.net.SocketAddress
 import java.net.URI
 import java.time.Clock
@@ -42,6 +48,7 @@ class GarminPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,
+    private val context: Context,
     private val loopHub: LoopHub,
     private val rxBus: RxBus,
     private val sp: SP,
@@ -57,7 +64,19 @@ class GarminPlugin @Inject constructor(
 ) {
     /** HTTP Server for local HTTP server communication (device app requests values) .*/
     private var server: HttpServer? = null
+    var garminMessenger: GarminMessenger? = null
 
+    /** Garmin ConnectIQ application id for native communication. Phone pushes values. */
+    private val glucoseAppIds = mapOf(
+       "C9E90EE7E6924829A8B45E7DAFFF5CB4" to "GlucoseWatch_Dev",
+       "1107CA6C2D5644B998D4BCB3793F2B7C" to "GlucoseDataField_Dev",
+       "928FE19A4D3A4259B50CB6F9DDAF0F4A" to "GlucoseWidget_Dev",
+       "662DFCF7F5A147DE8BD37F09574ADB11" to "GlucoseWatch",
+       "815C7328C21248C493AD9AC4682FE6B3" to "GlucoseDataField",
+       "4BDDCC1740084A1FAB83A3B2E2FCF55B" to "GlucoseWidget",
+    )
+
+    @VisibleForTesting
     private val disposable = CompositeDisposable()
 
     @VisibleForTesting
@@ -68,10 +87,24 @@ class GarminPlugin @Inject constructor(
     var newValue: Condition = valueLock.newCondition()
     private var lastGlucoseValueTimestamp: Long? = null
     private val glucoseUnitStr get() = if (loopHub.glucoseUnit == GlucoseUnit.MGDL) "mgdl" else "mmoll"
+    private val garminAapsKey get() = sp.getString("garmin_aaps_key", "")
 
     private fun onPreferenceChange(event: EventPreferenceChange) {
-        aapsLogger.info(LTag.GARMIN, "preferences change ${event.changedKey}")
-        setupHttpServer()
+        when (event.changedKey) {
+            "communication_debug_mode" -> setupGarminMessenger()
+            "communication_http", "communication_http_port" -> setupHttpServer()
+            "garmin_aaps_key" -> sendPhoneAppMessage()
+        }
+    }
+
+    private fun setupGarminMessenger() {
+        val enableDebug = sp.getBoolean("communication_ciq_debug_mode", false)
+        garminMessenger?.dispose()
+        garminMessenger = null
+        aapsLogger.info(LTag.GARMIN, "initialize IQ messenger in debug=$enableDebug")
+        garminMessenger = GarminMessenger(
+            aapsLogger, context, glucoseAppIds, {_, _ -> },
+            true, enableDebug).also { disposable.add(it) }
     }
 
     override fun onStart() {
@@ -83,19 +116,34 @@ class GarminPlugin @Inject constructor(
                 .observeOn(Schedulers.io())
                 .subscribe(::onPreferenceChange)
         )
+        disposable.add(
+            rxBus
+                .toObservable(EventNewBG::class.java)
+                .observeOn(Schedulers.io())
+                .subscribe(::onNewBloodGlucose)
+        )
         setupHttpServer()
+        if (garminAapsKey.isNotEmpty())
+            setupGarminMessenger()
     }
 
     private fun setupHttpServer() {
+      setupHttpServer(Duration.ZERO)
+    }
+
+    @VisibleForTesting
+    fun setupHttpServer(wait: Duration) {
         if (sp.getBoolean("communication_http", false)) {
             val port = sp.getInt("communication_http_port", 28891)
             if (server != null && server?.port == port) return
             aapsLogger.info(LTag.GARMIN, "starting HTTP server on $port")
             server?.close()
             server = HttpServer(aapsLogger, port).apply {
-                registerEndpoint("/get", ::onGetBloodGlucose)
-                registerEndpoint("/carbs", ::onPostCarbs)
-                registerEndpoint("/connect", ::onConnectPump)
+                registerEndpoint("/get", requestHandler(::onGetBloodGlucose))
+                registerEndpoint("/carbs", requestHandler(::onPostCarbs))
+                registerEndpoint("/connect", requestHandler(::onConnectPump))
+                registerEndpoint("/sgv.json", requestHandler(::onSgv))
+                awaitReady(wait)
             }
         } else if (server != null) {
             aapsLogger.info(LTag.GARMIN, "stopping HTTP server")
@@ -104,7 +152,7 @@ class GarminPlugin @Inject constructor(
         }
     }
 
-    override fun onStop() {
+    public override fun onStop() {
         disposable.clear()
         aapsLogger.info(LTag.GARMIN, "Stop")
         server?.close()
@@ -127,6 +175,36 @@ class GarminPlugin @Inject constructor(
             newValue.signalAll()
         }
     }
+
+    @VisibleForTesting
+    fun onConnectDevice(device: GarminDevice) {
+        if (garminAapsKey.isNotEmpty()) {
+            aapsLogger.info(LTag.GARMIN, "onConnectDevice $device sending glucose")
+            sendPhoneAppMessage(device)
+        }
+    }
+
+    private fun sendPhoneAppMessage(device: GarminDevice) {
+        garminMessenger?.sendMessage(device, getGlucoseMessage())
+    }
+
+    private fun sendPhoneAppMessage() {
+        garminMessenger?.sendMessage(getGlucoseMessage())
+    }
+
+    @VisibleForTesting
+    fun getGlucoseMessage() = mapOf<String, Any>(
+        "key" to garminAapsKey,
+        "command" to "glucose",
+        "profile" to loopHub.currentProfileName.first().toString(),
+        "encodedGlucose" to encodedGlucose(getGlucoseValues()),
+        "remainingInsulin" to loopHub.insulinOnboard,
+        "glucoseUnit" to glucoseUnitStr,
+        "temporaryBasalRate" to
+            (loopHub.temporaryBasal.takeIf(java.lang.Double::isFinite) ?: 1.0),
+        "connected" to loopHub.isConnected,
+        "timestamp" to clock.instant().epochSecond
+    )
 
     /** Gets the last 2+ hours of glucose values. */
     @VisibleForTesting
@@ -161,11 +239,25 @@ class GarminPlugin @Inject constructor(
             val glucoseMgDl: Int = glucose.value.roundToInt()
             encodedGlucose.add(timeSec, glucoseMgDl)
         }
-        aapsLogger.info(
-            LTag.GARMIN,
-            "retrieved ${glucoseValues.size} last ${Date(glucoseValues.lastOrNull()?.timestamp ?: 0L)} ${encodedGlucose.size}"
-        )
         return encodedGlucose.encodedBase64()
+    }
+
+    @VisibleForTesting
+    fun requestHandler(action: (URI) -> CharSequence) = {
+            caller: SocketAddress, uri: URI, _: String? ->
+        val key = garminAapsKey
+        val deviceKey = getQueryParameter(uri, "key")
+        if (key.isNotEmpty() && key != deviceKey) {
+            aapsLogger.warn(LTag.GARMIN, "Invalid AAPS Key from $caller, got '$deviceKey' want '$key' $uri")
+            sendPhoneAppMessage()
+            Thread.sleep(1000L)
+            HttpURLConnection.HTTP_UNAUTHORIZED to "{}"
+        } else {
+            aapsLogger.info(LTag.GARMIN, "get from $caller resp , req: $uri")
+            HttpURLConnection.HTTP_OK to action(uri).also {
+                aapsLogger.info(LTag.GARMIN, "get from $caller resp , req: $uri, result: $it")
+            }
+        }
     }
 
     /** Responses to get glucose value request by the device.
@@ -173,9 +265,7 @@ class GarminPlugin @Inject constructor(
      * Also, gets the heart rate readings from the device.
      */
     @VisibleForTesting
-    @Suppress("UNUSED_PARAMETER")
-    fun onGetBloodGlucose(caller: SocketAddress, uri: URI, requestBody: String?): CharSequence {
-        aapsLogger.info(LTag.GARMIN, "get from $caller resp , req: $uri")
+    fun onGetBloodGlucose(uri: URI): CharSequence {
         receiveHeartRate(uri)
         val profileName = loopHub.currentProfileName
         val waitSec = getQueryParameter(uri, "wait", 0L)
@@ -189,9 +279,7 @@ class GarminPlugin @Inject constructor(
         }
         jo.addProperty("profile", profileName.first().toString())
         jo.addProperty("connected", loopHub.isConnected)
-        return jo.toString().also {
-            aapsLogger.info(LTag.GARMIN, "get from $caller resp , req: $uri, result: $it")
-        }
+        return jo.toString()
     }
 
     private fun getQueryParameter(uri: URI, name: String) = (uri.query ?: "")
@@ -223,6 +311,19 @@ class GarminPlugin @Inject constructor(
         }
     }
 
+    private fun toLong(v: Any?) = (v as? Number?)?.toLong() ?: 0L
+
+    @VisibleForTesting
+    fun receiveHeartRate(msg: Map<String, Any>, test: Boolean) {
+        val avg: Int = msg.getOrDefault("hr", 0) as Int
+        val samplingStartSec: Long = toLong(msg["hrStart"])
+        val samplingEndSec: Long = toLong(msg["hrEnd"])
+        val device: String? = msg["device"] as String?
+        receiveHeartRate(
+            Instant.ofEpochSecond(samplingStartSec), Instant.ofEpochSecond(samplingEndSec),
+            avg, device, test)
+    }
+
     @VisibleForTesting
     fun receiveHeartRate(uri: URI) {
         val avg: Int = getQueryParameter(uri, "hr", 0L).toInt()
@@ -237,20 +338,18 @@ class GarminPlugin @Inject constructor(
     private fun receiveHeartRate(
         samplingStart: Instant, samplingEnd: Instant,
         avg: Int, device: String?, test: Boolean) {
-        aapsLogger.info(LTag.GARMIN, "average heart rate $avg BPM test=$test")
+        aapsLogger.info(LTag.GARMIN, "average heart rate $avg BPM $samplingStart to $samplingEnd")
         if (test) return
         if (avg > 10 && samplingStart > Instant.ofEpochMilli(0L) && samplingEnd > samplingStart) {
             loopHub.storeHeartRate(samplingStart, samplingEnd, avg, device)
-        } else {
+        } else if (avg > 0) {
             aapsLogger.warn(LTag.GARMIN, "Skip saving invalid HR $avg $samplingStart..$samplingEnd")
         }
     }
 
     /** Handles carb notification from the device. */
     @VisibleForTesting
-    @Suppress("UNUSED_PARAMETER")
-    fun onPostCarbs(caller: SocketAddress, uri: URI, requestBody: String?): CharSequence {
-        aapsLogger.info(LTag.GARMIN, "carbs from $caller, req: $uri")
+    fun onPostCarbs(uri: URI): CharSequence {
         postCarbs(getQueryParameter(uri, "carbs", 0L).toInt())
         return ""
     }
@@ -263,9 +362,7 @@ class GarminPlugin @Inject constructor(
 
     /** Handles pump connected notification that the user entered on the Garmin device. */
     @VisibleForTesting
-    @Suppress("UNUSED_PARAMETER")
-    fun onConnectPump(caller: SocketAddress, uri: URI, requestBody: String?): CharSequence {
-        aapsLogger.info(LTag.GARMIN, "connect from $caller, req: $uri")
+    fun onConnectPump(uri: URI): CharSequence {
         val minutes = getQueryParameter(uri, "disconnectMinutes", 0L).toInt()
         if (minutes > 0) {
             loopHub.disconnectPump(minutes)
@@ -276,5 +373,62 @@ class GarminPlugin @Inject constructor(
         val jo = JsonObject()
         jo.addProperty("connected", loopHub.isConnected)
         return jo.toString()
+    }
+
+    private fun glucoseSlopeMgDlPerMilli(glucose1: GlucoseValue, glucose2: GlucoseValue): Double {
+        return (glucose2.value - glucose1.value) / (glucose2.timestamp - glucose1.timestamp)
+    }
+
+    /** Returns glucose values in Nightscout/Xdrip format. */
+    @VisibleForTesting
+    fun onSgv(uri: URI): CharSequence {
+        val count = getQueryParameter(uri,"count", 24L)
+            .toInt().coerceAtMost(1000).coerceAtLeast(1)
+        val briefMode = getQueryParameter(uri, "brief_mode", false)
+
+        // Guess a start time to get [count+1] readings. This is a heuristic that only works if we get readings
+        // every 5 minutes and we're not missing readings. We truncate in case we get more readings but we'll
+        // get less, e.g., in case we're missing readings for the last half hour. We get one extra reading,
+        // to compute the glucose delta.
+        val from = clock.instant().minus(Duration.ofMinutes(5L * (count + 1)))
+        val glucoseValues = loopHub.getGlucoseValues(from, false)
+        val joa = JsonArray()
+        for (i in 0 until count.coerceAtMost(glucoseValues.size)) {
+            val jo = JsonObject()
+            val glucose = glucoseValues[i]
+            if (!briefMode) {
+                jo.addProperty("_id", glucose.id.toString())
+                jo.addProperty("device", glucose.sourceSensor.toString())
+                val timestamp = Instant.ofEpochMilli(glucose.timestamp)
+                jo.addProperty("deviceString", timestamp.toString())
+                jo.addProperty("sysTime", timestamp.toString())
+                glucose.raw?.let { raw -> jo.addProperty("unfiltered", raw) }
+            }
+            jo.addProperty("date", glucose.timestamp)
+            jo.addProperty("sgv", glucose.value.roundToInt())
+            if (i + 1 < glucoseValues.size) {
+                // Compute the 5 minute delta.
+                val delta = 300_000.0 * glucoseSlopeMgDlPerMilli(glucoseValues[i + 1], glucose)
+                jo.addProperty("delta", BigDecimal(delta, MathContext(3, RoundingMode.HALF_UP)))
+            }
+            jo.addProperty("direction", glucose.trendArrow.text)
+            glucose.noise?.let { n -> jo.addProperty("noise", n) }
+            if (i == 0) {
+                when (loopHub.glucoseUnit) {
+                    GlucoseUnit.MGDL -> jo.addProperty("units_hint", "mgdl")
+                    GlucoseUnit.MMOL -> jo.addProperty("units_hint", "mmol")
+                }
+                jo.addProperty("iob", loopHub.insulinOnboard + loopHub.insulinBasalOnboard)
+                loopHub.temporaryBasal.also {
+                    if (!it.isNaN()) {
+                        val temporaryBasalRateInPercent = (it * 100.0).toInt()
+                        jo.addProperty("tbr", temporaryBasalRateInPercent)
+                    }
+                }
+                jo.addProperty("cob", loopHub.carbsOnboard)
+            }
+            joa.add(jo)
+        }
+        return joa.toString()
     }
 }
