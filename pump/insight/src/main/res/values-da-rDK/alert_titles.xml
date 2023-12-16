@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="alert_r1_title">Tilfør bolus</string>
+    <string name="alert_r2_title">Mistet bolus</string>
+    <string name="alert_r3_title">Vækkeur</string>
+    <string name="alert_r4_title">Skift infusionssæt</string>
+    <string name="alert_r7_title">MBR fuldført</string>
+    <string name="alert_w31_title">Lav ampulvolumen</string>
+    <string name="alert_w32_title">Lav batteristand</string>
+    <string name="alert_w33_title">Ugyldig tid/dato</string>
+    <string name="alert_w34_title">Garanti udløbet</string>
+    <string name="alert_w36_title">MBR annulleret</string>
+    <string name="alert_w38_title">Bolus annulleret</string>
+    <string name="alert_w39_title">Lånetid advarsel</string>
+    <string name="alert_m20_title">Ampul ikke isat</string>
+    <string name="alert_m21_title">Ampul tom</string>
+    <string name="alert_m22_title">Batteri afladet</string>
+    <string name="alert_m23_title">Automatisk sluk, pumpe stoppet</string>
+    <string name="alert_m24_title">Tilstopning</string>
+    <string name="alert_m25_title">Lånetid ovre</string>
+    <string name="alert_m26_title">Skift af ampul ikke fuldført</string>
+    <string name="alert_m27_title">Datadownload mislykkedes</string>
+    <string name="alert_m28_title">Timeout for pausetilstand</string>
+    <string name="alert_m29_title">Batteritype ikke indstillet</string>
+    <string name="alert_m30_title">Ampultype ikke indstillet</string>
+    <string name="alert_e6_title">Mekanisk fejl</string>
+    <string name="alert_e10_title">Tilbagekørselsfejl</string>
+    <string name="alert_e13_title">Sprogfejl</string>
+</resources>
