@@ -531,7 +531,6 @@
     <string name="limitingpercentrate">Limitazione max tasso percentuale a %1$d%% a causa di: %2$s</string>
     <string name="itmustbepositivevalue">deve essere un valore positivo</string>
     <string name="limitingbolus">Limitazione bolo a %1$.1f U a causa di: %2$s</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Conferma</string>
     <string name="message">Messaggio</string>
