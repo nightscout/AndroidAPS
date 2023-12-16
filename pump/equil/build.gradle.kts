@@ -29,6 +29,7 @@ dependencies {
     implementation(project(":core:utils"))
     implementation(project(":core:ui"))
     implementation(project(":core:validators"))
+    implementation(project(":core:keys"))
 
     api(Libs.AndroidX.fragment)
     api(Libs.AndroidX.navigationFragment)

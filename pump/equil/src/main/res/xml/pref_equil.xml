@@ -24,6 +24,9 @@
             android:key="@string/key_equil_tone"
             android:title="@string/equil_tone" />
 
+        <app.aaps.core.validators.AdaptiveDoublePreference
+            android:key="@string/key_equil_maxbolus"
+            android:title="@string/max_bolus_title" />
     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

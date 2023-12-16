@@ -25,6 +25,7 @@ public class CmdHistoryGet extends BaseSetting {
     private int level;
     private int parm;
     private int currentIndex = 0;
+    private int resultIndex;
 
     public CmdHistoryGet() {
         super(System.currentTimeMillis());
@@ -79,7 +80,7 @@ public class CmdHistoryGet extends BaseSetting {
         if (currentIndex != 0) {
             equilManager.decodeHistory(data);
         }
-        currentIndex = index;
+        resultIndex = index;
         aapsLogger.debug(LTag.PUMPCOMM, "history index==" + index + "===" + Utils.bytesToHex(data) +
                 "===" + rate + "====" + largeRate + "===" + Utils.bytesToHex(new byte[]{data[16],
                 data[17]}));
@@ -111,7 +112,7 @@ public class CmdHistoryGet extends BaseSetting {
     }
 
     public int getCurrentIndex() {
-        return currentIndex;
+        return resultIndex;
     }
 
     public void setCurrentIndex(int currentIndex) {

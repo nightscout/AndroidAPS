@@ -2,6 +2,7 @@ package app.aaps.pump.equil.manager.command;
 
 
 import app.aaps.core.interfaces.logging.LTag;
+import app.aaps.pump.equil.EquilConst;
 import app.aaps.pump.equil.database.EquilHistoryRecord;
 import app.aaps.pump.equil.manager.Utils;
 
@@ -9,8 +10,15 @@ import app.aaps.pump.equil.manager.Utils;
 public class CmdSettingSet extends BaseSetting {
     double lowAlarm;
 
+    int bolusThresholdStep = EquilConst.EQUIL_BLOUS_THRESHOLD_STEP;
+
     public CmdSettingSet() {
         super(System.currentTimeMillis());
+    }
+
+    public CmdSettingSet(double maxBolus) {
+        super(System.currentTimeMillis());
+        bolusThresholdStep = Utils.decodeSpeedToUH(maxBolus);
     }
 
     @Override
@@ -19,7 +27,7 @@ public class CmdSettingSet extends BaseSetting {
         byte[] equilCmd = new byte[]{0x01, 0x05};
         byte[] useTime = Utils.intToBytes(0);
         byte[] autoCloseTime = Utils.intToBytes(0);
-        byte[] lowAlarmByte = Utils.intToTwoBytes(1600);
+        byte[] lowAlarmByte = Utils.intToTwoBytes(bolusThresholdStep);
         byte[] fastBolus = Utils.intToTwoBytes(0);
         byte[] occlusion = Utils.intToTwoBytes(2800);
         byte[] insulinUnit = Utils.intToTwoBytes(8);
