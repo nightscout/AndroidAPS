@@ -531,7 +531,6 @@
     <string name="limitingpercentrate">Limiter le pourcentage max à %1$d%% à cause de %2$s</string>
     <string name="itmustbepositivevalue">la valeur doit être positive</string>
     <string name="limitingbolus">Bolus limité à %1$.1f U à cause de %2$s</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Confirmation</string>
     <string name="message">Message</string>
