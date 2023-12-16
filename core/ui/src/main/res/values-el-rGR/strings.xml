@@ -526,7 +526,6 @@
     <string name="limitingpercentrate">Περιορίζεται το μέγιστο επί τοις εκατό ποσοστό σε %1$d%% λόγω %2$s</string>
     <string name="itmustbepositivevalue">πρέπει να είναι θετική τιμή</string>
     <string name="limitingbolus">Περιορίζεται το bolus σε %1$.1f U λόγω %2$s</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Επιβεβαίωση</string>
     <string name="message">Μήνυμα</string>
