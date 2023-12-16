@@ -1,7 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.util
 
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.pump.defs.determineCorrectBasalSize
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BasalProgram
 import kotlin.math.roundToInt
 

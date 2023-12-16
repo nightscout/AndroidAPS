@@ -1,7 +1,7 @@
 package app.aaps.plugins.aps.autotune.data
 
-import app.aaps.core.interfaces.iob.Iob
-import app.aaps.database.entities.Bolus
+import app.aaps.core.data.iob.Iob
+import app.aaps.core.data.model.BS
 import kotlin.math.exp
 import kotlin.math.pow
 
@@ -20,7 +20,7 @@ class LocalInsulin(val name: String?, val peak: Int = DEFAULT_PEAK, private val 
     val duration
         get() = (60 * 60 * 1000L * dia).toLong()
 
-    fun iobCalcForTreatment(bolus: Bolus, time: Long): Iob {
+    fun iobCalcForTreatment(bolus: BS, time: Long): Iob {
         val result = Iob()
         if (bolus.amount != 0.0) {
             val bolusTime = bolus.timestamp

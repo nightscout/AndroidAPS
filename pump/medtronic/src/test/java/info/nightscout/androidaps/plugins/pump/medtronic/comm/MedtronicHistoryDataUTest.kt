@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.medtronic.comm
 
 import android.util.Log
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.database.impl.serialisation.SealedClassHelper
+import app.aaps.core.utils.pump.ByteUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicTestBase
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RawHistoryPage
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.MedtronicPumpHistoryDecoder
@@ -13,7 +13,6 @@ import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.TempBasalProce
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
-import info.nightscout.pump.common.utils.ByteUtil
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -115,7 +114,7 @@ import org.mockito.Mock
         val pumpHistoryEntries: MutableList<PumpHistoryEntry> = decoder.processPageAndCreateRecords(historyPage)
         println("PumpHistoryEntries: " + pumpHistoryEntries.size)
 
-        val rewindRecords: MutableList<PumpHistoryEntry> = medtronicHistoryData.getFilteredItems(pumpHistoryEntries, PumpHistoryEntryType.Rewind)
+        //val rewindRecords: MutableList<PumpHistoryEntry> = medtronicHistoryData.getFilteredItems(pumpHistoryEntries, PumpHistoryEntryType.Rewind)
 
         preProcessListTBR(pumpHistoryEntries)
 
@@ -135,7 +134,7 @@ import org.mockito.Mock
 
         println("PumpHistoryEntries: getFilteredItems: " + tbrs.size)
 
-        println("PumpHistoryEntries: getRewindItems: $rewindRecords.size : " + SealedClassHelper.gson.toJson(rewindRecords))
+        //println("PumpHistoryEntries: getRewindItems: $rewindRecords.size : " + SealedClassHelper.gson.toJson(rewindRecords))
 
         val processList: MutableList<TempBasalProcessDTO> = medtronicHistoryData.createTBRProcessList(tbrs)
 

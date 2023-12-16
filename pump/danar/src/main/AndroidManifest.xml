@@ -4,18 +4,17 @@
 
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
 
-    <application
-        android:supportsRtl="true">
+    <application android:supportsRtl="true">
         <service
-            android:name="info.nightscout.androidaps.danar.services.DanaRExecutionService"
+            android:name="app.aaps.pump.danar.services.DanaRExecutionService"
             android:enabled="true"
             android:exported="false" />
         <service
-            android:name="info.nightscout.androidaps.danaRKorean.services.DanaRKoreanExecutionService"
+            android:name="app.aaps.pump.danarkorean.services.DanaRKoreanExecutionService"
             android:enabled="true"
             android:exported="false" />
         <service
-            android:name="info.nightscout.androidaps.danaRv2.services.DanaRv2ExecutionService"
+            android:name="app.aaps.pump.danarv2.services.DanaRv2ExecutionService"
             android:enabled="true"
             android:exported="false" />
     </application>

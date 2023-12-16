@@ -14,6 +14,7 @@ import android.os.Binder
 import android.os.Bundle
 import android.os.IBinder
 import androidx.core.app.ActivityCompat
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationHolder
@@ -21,7 +22,6 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.events.EventLocationChange

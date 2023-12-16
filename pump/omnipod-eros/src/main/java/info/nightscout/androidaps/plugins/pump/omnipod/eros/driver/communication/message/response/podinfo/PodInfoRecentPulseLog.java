@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import app.aaps.core.utils.pump.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PodInfoType;
-import info.nightscout.pump.common.utils.ByteUtil;
 
 public class PodInfoRecentPulseLog extends PodInfo {
     private static final int MINIMUM_MESSAGE_LENGTH = 3;

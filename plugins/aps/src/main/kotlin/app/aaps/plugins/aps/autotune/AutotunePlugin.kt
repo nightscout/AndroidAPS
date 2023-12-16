@@ -3,6 +3,12 @@
 package app.aaps.plugins.aps.autotune
 
 import android.view.View
+import app.aaps.core.data.plugin.PluginDescription
+import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.insulin.Insulin
@@ -12,8 +18,6 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -22,13 +26,10 @@ import app.aaps.core.interfaces.rx.events.EventLocalProfileChanged
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
-import app.aaps.core.interfaces.utils.T
-import app.aaps.core.main.extensions.pureProfileFromJson
-import app.aaps.core.main.profile.ProfileSealed
+import app.aaps.core.objects.extensions.pureProfileFromJson
+import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.elements.WeekDay
 import app.aaps.core.utils.JsonHelper
-import app.aaps.database.entities.UserEntry
-import app.aaps.database.entities.ValueWithUnit
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.autotune.data.ATProfile
 import app.aaps.plugins.aps.autotune.data.LocalInsulin
@@ -49,7 +50,7 @@ import javax.inject.Singleton
 
 @Singleton
 class AutotunePlugin @Inject constructor(
-    injector: HasAndroidInjector,
+    private val injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
     private val sp: SP,
     private val rxBus: RxBus,
@@ -68,13 +69,13 @@ class AutotunePlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.GENERAL)
         .fragmentClass(AutotuneFragment::class.qualifiedName)
-        .pluginIcon(app.aaps.core.main.R.drawable.ic_autotune)
+        .pluginIcon(app.aaps.core.objects.R.drawable.ic_autotune)
         .pluginName(app.aaps.core.ui.R.string.autotune)
         .shortName(app.aaps.core.ui.R.string.autotune_shortname)
         .preferencesId(R.xml.pref_autotune)
         .showInList(config.isEngineeringMode() && config.isDev())
         .description(app.aaps.core.ui.R.string.autotune_description),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, resourceHelper
 ), Autotune {
 
     @Volatile override var lastRunSuccess: Boolean = false
@@ -228,30 +229,26 @@ class AutotunePlugin @Inject constructor(
                 tunedP.profileName = pumpProfile.profileName
                 updateProfile(tunedP)
                 uel.log(
-                    UserEntry.Action.STORE_PROFILE,
-                    UserEntry.Sources.Automation,
-                    rh.gs(app.aaps.core.ui.R.string.autotune),
-                    ValueWithUnit.SimpleString(tunedP.profileName)
+                    action = Action.STORE_PROFILE,
+                    source = Sources.Automation,
+                    note = rh.gs(app.aaps.core.ui.R.string.autotune),
+                    value = ValueWithUnit.SimpleString(tunedP.profileName)
                 )
                 updateButtonVisibility = View.GONE
                 tunedP.profileStore(circadian)?.let { profileStore ->
                     if (profileFunction.createProfileSwitch(
-                            profileStore,
+                            profileStore = profileStore,
                             profileName = tunedP.profileName,
                             durationInMinutes = 0,
                             percentage = 100,
                             timeShiftInHours = 0,
-                            timestamp = dateUtil.now()
+                            timestamp = dateUtil.now(),
+                            action = Action.PROFILE_SWITCH,
+                            source = Sources.Automation,
+                            note = rh.gs(app.aaps.core.ui.R.string.autotune),
+                            listValues = listOf(ValueWithUnit.SimpleString(tunedP.profileName))
                         )
-                    ) {
-                        log("Profile Switch succeed ${tunedP.profileName}")
-                        uel.log(
-                            UserEntry.Action.PROFILE_SWITCH,
-                            UserEntry.Sources.Automation,
-                            rh.gs(app.aaps.core.ui.R.string.autotune),
-                            ValueWithUnit.SimpleString(tunedP.profileName)
-                        )
-                    }
+                    ) log("Profile Switch succeed ${tunedP.profileName}")
                     rxBus.send(EventLocalProfileChanged())
                 }
             }

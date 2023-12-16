@@ -1,14 +1,14 @@
 package app.aaps.plugins.sync.garmin
 
+import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.SourceSensor
+import app.aaps.core.data.model.TrendArrow
 import android.content.Context
-import app.aaps.core.interfaces.db.GlucoseUnit
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.events.EventNewBG
 import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.database.entities.GlucoseValue
 import app.aaps.shared.tests.TestBase
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -52,14 +52,9 @@ class GarminPluginTest: TestBase() {
     @Mock private lateinit var loopHub: LoopHub
     private val clock = Clock.fixed(Instant.ofEpochMilli(10_000), ZoneId.of("UTC"))
 
-    private var injector: HasAndroidInjector = HasAndroidInjector {
-        AndroidInjector {
-        }
-    }
-
     @BeforeEach
     fun setup() {
-        gp = GarminPlugin(injector, aapsLogger, rh, context, loopHub, rxBus, sp)
+        gp = GarminPlugin(aapsLogger, rh, context, loopHub, rxBus, sp)
         gp.clock = clock
         `when`(loopHub.currentProfileName).thenReturn("Default")
         `when`(sp.getBoolean(anyString(), anyBoolean())).thenAnswer { i -> i.arguments[1] }
@@ -94,11 +89,11 @@ class GarminPluginTest: TestBase() {
         "hrEnd" to 2001L,
         "device" to "Test_Device")
 
-    private fun createGlucoseValue(timestamp: Instant, value: Double = 93.0) = GlucoseValue(
+    private fun createGlucoseValue(timestamp: Instant, value: Double = 93.0) = GV(
         id = 10 * timestamp.toEpochMilli(),
         timestamp = timestamp.toEpochMilli(), raw = 90.0, value = value,
-        trendArrow = GlucoseValue.TrendArrow.FLAT, noise = 4.5,
-        sourceSensor = GlucoseValue.SourceSensor.RANDOM
+        trendArrow = TrendArrow.FLAT, noise = 4.5,
+        sourceSensor = SourceSensor.RANDOM
     )
 
     @Test

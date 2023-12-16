@@ -2,22 +2,21 @@ package app.aaps.plugins.sync.garmin
 
 import android.content.Context
 import androidx.annotation.VisibleForTesting
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.plugin.PluginDescription
+import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventNewBG
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.database.entities.GlucoseValue
 import app.aaps.plugins.sync.R
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.math.BigDecimal
@@ -29,7 +28,7 @@ import java.net.URI
 import java.time.Clock
 import java.time.Duration
 import java.time.Instant
-import java.util.*
+import java.util.Date
 import java.util.concurrent.locks.Condition
 import java.util.concurrent.locks.ReentrantLock
 import javax.inject.Inject
@@ -45,7 +44,6 @@ import kotlin.math.roundToInt
  */
 @Singleton
 class GarminPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,
     private val context: Context,
@@ -55,13 +53,14 @@ class GarminPlugin @Inject constructor(
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
-        .pluginIcon(app.aaps.core.main.R.drawable.ic_watch)
+        .pluginIcon(app.aaps.core.objects.R.drawable.ic_watch)
         .pluginName(R.string.garmin)
         .shortName(R.string.garmin)
         .description(R.string.garmin_description)
         .preferencesId(R.xml.pref_garmin),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, resourceHelper
 ) {
+
     /** HTTP Server for local HTTP server communication (device app requests values) .*/
     private var server: HttpServer? = null
     var garminMessenger: GarminMessenger? = null
@@ -83,6 +82,7 @@ class GarminPlugin @Inject constructor(
     var clock: Clock = Clock.systemUTC()
 
     private val valueLock = ReentrantLock()
+
     @VisibleForTesting
     var newValue: Condition = valueLock.newCondition()
     private var lastGlucoseValueTimestamp: Long? = null
@@ -170,7 +170,7 @@ class GarminPlugin @Inject constructor(
         val timestamp = event.glucoseValueTimestamp ?: return
         aapsLogger.info(LTag.GARMIN, "onNewBloodGlucose ${Date(timestamp)}")
         valueLock.withLock {
-            if ((lastGlucoseValueTimestamp?: 0) >= timestamp) return
+            if ((lastGlucoseValueTimestamp ?: 0) >= timestamp) return
             lastGlucoseValueTimestamp = timestamp
             newValue.signalAll()
         }
@@ -208,20 +208,21 @@ class GarminPlugin @Inject constructor(
 
     /** Gets the last 2+ hours of glucose values. */
     @VisibleForTesting
-    fun getGlucoseValues(): List<GlucoseValue> {
+    fun getGlucoseValues(): List<GV> {
         val from = clock.instant().minus(Duration.ofHours(2).plusMinutes(9))
         return loopHub.getGlucoseValues(from, true)
     }
 
     /** Get the last 2+ hours of glucose values and waits in case a new value should arrive soon. */
-    private fun getGlucoseValues(maxWait: Duration): List<GlucoseValue> {
+    private fun getGlucoseValues(maxWait: Duration): List<GV> {
         val glucoseFrequency = Duration.ofMinutes(5)
         val glucoseValues = getGlucoseValues()
         val last = glucoseValues.lastOrNull() ?: return emptyList()
         val delay = Duration.ofMillis(clock.millis() - last.timestamp)
         return if (!maxWait.isZero
             && delay > glucoseFrequency
-            && delay < glucoseFrequency.plusMinutes(1)) {
+            && delay < glucoseFrequency.plusMinutes(1)
+        ) {
             valueLock.withLock {
                 aapsLogger.debug(LTag.GARMIN, "waiting for new glucose (delay=$delay)")
                 newValue.awaitNanos(maxWait.toNanos())
@@ -232,9 +233,9 @@ class GarminPlugin @Inject constructor(
         }
     }
 
-    private fun encodedGlucose(glucoseValues: List<GlucoseValue>): String {
+    private fun encodedGlucose(glucoseValues: List<GV>): String {
         val encodedGlucose = DeltaVarEncodedList(glucoseValues.size * 16, 2)
-        for (glucose: GlucoseValue in glucoseValues) {
+        for (glucose: GV in glucoseValues) {
             val timeSec: Int = (glucose.timestamp / 1000).toInt()
             val glucoseMgDl: Int = glucose.value.roundToInt()
             encodedGlucose.add(timeSec, glucoseMgDl)
@@ -290,11 +291,12 @@ class GarminPlugin @Inject constructor(
     private fun getQueryParameter(
         uri: URI,
         @Suppress("SameParameterValue") name: String,
-        @Suppress("SameParameterValue") defaultValue: Boolean): Boolean {
+        @Suppress("SameParameterValue") defaultValue: Boolean
+    ): Boolean {
         return when (getQueryParameter(uri, name)?.lowercase()) {
-            "true" -> true
+            "true"  -> true
             "false" -> false
-            else -> defaultValue
+            else    -> defaultValue
         }
     }
 
@@ -332,7 +334,8 @@ class GarminPlugin @Inject constructor(
         val device: String? = getQueryParameter(uri, "device")
         receiveHeartRate(
             Instant.ofEpochSecond(samplingStartSec), Instant.ofEpochSecond(samplingEndSec),
-            avg, device, getQueryParameter(uri, "test", false))
+            avg, device, getQueryParameter(uri, "test", false)
+        )
     }
 
     private fun receiveHeartRate(
@@ -375,7 +378,7 @@ class GarminPlugin @Inject constructor(
         return jo.toString()
     }
 
-    private fun glucoseSlopeMgDlPerMilli(glucose1: GlucoseValue, glucose2: GlucoseValue): Double {
+    private fun glucoseSlopeMgDlPerMilli(glucose1: GV, glucose2: GV): Double {
         return (glucose2.value - glucose1.value) / (glucose2.timestamp - glucose1.timestamp)
     }
 

@@ -2,7 +2,7 @@ package app.aaps.plugins.automation.elements
 
 import android.view.Gravity
 import android.widget.LinearLayout
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.ui.elements.NumberPicker
 import java.text.DecimalFormat

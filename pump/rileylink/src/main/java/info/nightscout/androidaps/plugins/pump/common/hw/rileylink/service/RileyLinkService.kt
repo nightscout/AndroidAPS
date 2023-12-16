@@ -7,6 +7,7 @@ import android.content.Intent
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.pump.defs.PumpDeviceState
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
@@ -20,7 +21,6 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLink
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
-import info.nightscout.pump.common.defs.PumpDeviceState
 import java.util.Locale
 import javax.inject.Inject
 

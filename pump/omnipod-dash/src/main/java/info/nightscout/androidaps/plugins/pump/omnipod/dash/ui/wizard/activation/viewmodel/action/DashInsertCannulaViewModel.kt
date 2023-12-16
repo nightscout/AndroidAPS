@@ -1,21 +1,21 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.wizard.activation.viewmodel.action
 
 import androidx.annotation.StringRes
+import app.aaps.core.data.model.TE
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.pump.defs.PumpType
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventDismissNotification
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.action.InsertCannulaViewModel
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.OmnipodDashManager
@@ -42,11 +42,10 @@ class DashInsertCannulaViewModel @Inject constructor(
     private val rh: ResourceHelper,
     private val fabricPrivacy: FabricPrivacy,
     private val history: DashHistory,
-
-    injector: HasAndroidInjector,
+    instantiator: Instantiator,
     logger: AAPSLogger,
     aapsSchedulers: AapsSchedulers
-) : InsertCannulaViewModel(injector, logger, aapsSchedulers) {
+) : InsertCannulaViewModel(instantiator, logger, aapsSchedulers) {
 
     override fun isPodInAlarm(): Boolean = false // TODO
 
@@ -97,7 +96,7 @@ class DashInsertCannulaViewModel @Inject constructor(
                 .subscribeBy(
                     onError = { throwable ->
                         logger.error(LTag.PUMP, "Error in Pod activation part 2", throwable)
-                        source.onSuccess(PumpEnactResult(injector).success(false).comment(I8n.textFromException(throwable, rh)))
+                        source.onSuccess(instantiator.providePumpEnactResult().success(false).comment(I8n.textFromException(throwable, rh)))
                     },
                     onComplete = {
                         logger.debug("Pod activation part 2 completed")
@@ -115,19 +114,19 @@ class DashInsertCannulaViewModel @Inject constructor(
 
                         pumpSync.insertTherapyEventIfNewWithTimestamp(
                             timestamp = System.currentTimeMillis(),
-                            type = DetailedBolusInfo.EventType.CANNULA_CHANGE,
+                            type = TE.Type.CANNULA_CHANGE,
                             pumpType = PumpType.OMNIPOD_DASH,
                             pumpSerial = podStateManager.uniqueId?.toString() ?: "n/a"
                         )
                         pumpSync.insertTherapyEventIfNewWithTimestamp(
                             timestamp = System.currentTimeMillis(),
-                            type = DetailedBolusInfo.EventType.INSULIN_CHANGE,
+                            type = TE.Type.INSULIN_CHANGE,
                             pumpType = PumpType.OMNIPOD_DASH,
                             pumpSerial = podStateManager.uniqueId?.toString() ?: "n/a"
                         )
                         rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED))
                         fabricPrivacy.logCustom("OmnipodDashPodActivated")
-                        source.onSuccess(PumpEnactResult(injector).success(true))
+                        source.onSuccess(instantiator.providePumpEnactResult().success(true))
                     }
                 )
         }

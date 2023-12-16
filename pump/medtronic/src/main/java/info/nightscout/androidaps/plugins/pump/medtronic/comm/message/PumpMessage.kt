@@ -2,9 +2,9 @@ package info.nightscout.androidaps.plugins.pump.medtronic.comm.message
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.utils.pump.ByteUtil
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RLMessage
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandType
-import info.nightscout.pump.common.utils.ByteUtil
 import kotlin.math.min
 
 /**

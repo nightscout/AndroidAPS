@@ -2,11 +2,12 @@ package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data;
 
 import org.joda.time.LocalDateTime;
 
+import app.aaps.core.interfaces.pump.defs.PumpDeviceState;
 import app.aaps.core.interfaces.resources.ResourceHelper;
+import info.nightscout.androidaps.plugins.pump.common.extensions.PumpDeviceStateExtensionKt;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
-import info.nightscout.pump.common.defs.PumpDeviceState;
 
 
 /**
@@ -63,7 +64,7 @@ public class RLHistoryItem {
                 return "State: " + rh.gs(serviceState.getResourceId())
                         + (this.errorCode == null ? "" : ", Error Code: " + errorCode);
             case MedtronicPump:
-                return rh.gs(pumpDeviceState.getResourceId());
+                return rh.gs(PumpDeviceStateExtensionKt.stringResource(pumpDeviceState));
             default:
                 return "Unknown Description";
         }

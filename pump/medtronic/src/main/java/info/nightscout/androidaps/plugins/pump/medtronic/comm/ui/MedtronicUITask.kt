@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.pump.medtronic.comm.ui
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.pump.defs.PumpDeviceState
 import app.aaps.core.interfaces.rx.bus.RxBus
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
@@ -14,7 +15,6 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicUIRespons
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
-import info.nightscout.pump.common.defs.PumpDeviceState
 import org.joda.time.LocalDateTime
 import java.util.Locale
 import javax.inject.Inject

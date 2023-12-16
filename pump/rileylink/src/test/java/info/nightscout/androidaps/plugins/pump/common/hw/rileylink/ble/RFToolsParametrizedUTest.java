@@ -9,8 +9,8 @@ import org.junit.runners.Parameterized;
 import java.util.Arrays;
 import java.util.Collection;
 
+import app.aaps.core.utils.pump.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.encoding.Encoding4b6bGeoff;
-import info.nightscout.pump.common.utils.ByteUtil;
 
 /**
  * Created by andy on 11/21/18.

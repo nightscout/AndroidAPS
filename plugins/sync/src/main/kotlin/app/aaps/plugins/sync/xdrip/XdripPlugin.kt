@@ -10,15 +10,16 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.plugin.PluginDescription
+import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.Loop
-import app.aaps.core.interfaces.configuration.Constants
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -40,9 +41,9 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.main.extensions.toStringShort
-import app.aaps.core.main.iob.generateCOBString
-import app.aaps.core.main.iob.round
+import app.aaps.core.objects.extensions.generateCOBString
+import app.aaps.core.objects.extensions.round
+import app.aaps.core.objects.extensions.toStringShort
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.plugins.sync.R
@@ -51,7 +52,6 @@ import app.aaps.plugins.sync.xdrip.events.EventXdripUpdateGUI
 import app.aaps.plugins.sync.xdrip.extensions.toXdripJson
 import app.aaps.plugins.sync.xdrip.workers.XdripDataSyncWorker
 import app.aaps.shared.impl.extensions.safeQueryBroadcastReceivers
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
@@ -67,7 +67,6 @@ import javax.inject.Singleton
 
 @Singleton
 class XdripPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     private val sp: SP,
     private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,
@@ -77,6 +76,7 @@ class XdripPlugin @Inject constructor(
     private val fabricPrivacy: FabricPrivacy,
     private val loop: Loop,
     private val iobCobCalculator: IobCobCalculator,
+    private val processedTbrEbData: ProcessedTbrEbData,
     private val rxBus: RxBus,
     private val uiInteraction: UiInteraction,
     private val dateUtil: DateUtil,
@@ -86,12 +86,12 @@ class XdripPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.SYNC)
         .fragmentClass(XdripFragment::class.java.name)
-        .pluginIcon((app.aaps.core.main.R.drawable.ic_blooddrop_48))
+        .pluginIcon((app.aaps.core.objects.R.drawable.ic_blooddrop_48))
         .pluginName(R.string.xdrip)
         .shortName(R.string.xdrip_shortname)
         .preferencesId(R.xml.pref_xdrip)
         .description(R.string.description_xdrip),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ) {
 
     @Suppress("PrivatePropertyName")
@@ -239,7 +239,7 @@ class XdripPlugin @Inject constructor(
         } else lastLoopStatus = true
 
         //Temp basal
-        iobCobCalculator.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())?.let {
+        processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())?.let {
             status.append(it.toStringShort(decimalFormatter)).append(" ")
         }
         //IOB
@@ -284,49 +284,12 @@ class XdripPlugin @Inject constructor(
         }
     }
 
-    /*
-        // sent in 640G mode
-        // com.eveningoutpost.dexdrip.NSEmulatorReceiver
-        override fun sendIn640gMode(glucoseValue: GlucoseValue) {
-            if (sp.getBoolean(app.aaps.core.utils.R.string.key_dexcomg5_xdripupload, false)) {
-                val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.US)
-                try {
-                    val entriesBody = JSONArray()
-                    val json = JSONObject()
-                    json.put("sgv", glucoseValue.value)
-                    json.put("direction", glucoseValue.trendArrow.text)
-                    json.put("device", "G5")
-                    json.put("type", "sgv")
-                    json.put("date", glucoseValue.timestamp)
-                    json.put("dateString", format.format(glucoseValue.timestamp))
-                    entriesBody.put(json)
-                    val bundle = Bundle()
-                    bundle.putString("action", "add")
-                    bundle.putString("collection", "entries")
-                    bundle.putString("data", entriesBody.toString())
-                    val intent = Intent(Intents.XDRIP_PLUS_NS_EMULATOR)
-                    intent.putExtras(bundle).addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
-                    context.sendBroadcast(intent)
-                    val receivers = context.packageManager.safeQueryBroadcastReceivers(intent, 0)
-                    if (receivers.isEmpty()) {
-                        //NSUpload.log.debug("No xDrip receivers found. ")
-                        aapsLogger.debug(LTag.BGSOURCE, "No xDrip receivers found.")
-                    } else {
-                        aapsLogger.debug(LTag.BGSOURCE, "${receivers.size} xDrip receivers")
-                    }
-                } catch (e: JSONException) {
-                    aapsLogger.error(LTag.BGSOURCE, "Unhandled exception", e)
-                }
-            }
-        }
-    */
-
     override fun sendToXdrip(collection: String, dataPair: DataSyncSelector.DataPair, progress: String) {
         scope.launch {
             when (collection) {
                 "profile"      -> sendProfileStore(dataPair = dataPair, progress = progress)
                 "devicestatus" -> sendDeviceStatus(dataPair = dataPair, progress = progress)
-                else           -> throw IllegalStateException()
+                else           -> error("Invalid collection")
             }
         }
     }
@@ -337,7 +300,7 @@ class XdripPlugin @Inject constructor(
                 "entries"    -> sendEntries(dataPairs = dataPairs, progress = progress)
                 "food"       -> sendFood(dataPairs = dataPairs, progress = progress)
                 "treatments" -> sendTreatments(dataPairs = dataPairs, progress = progress)
-                else         -> throw IllegalStateException()
+                else         -> error("Invalid collection")
             }
         }
     }

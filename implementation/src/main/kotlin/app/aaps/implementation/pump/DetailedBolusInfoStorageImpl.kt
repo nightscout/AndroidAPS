@@ -1,13 +1,12 @@
 package app.aaps.implementation.pump
 
-import app.aaps.annotations.OpenForTesting
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.core.interfaces.utils.T
 import app.aaps.implementation.R
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -15,7 +14,6 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
 
-@OpenForTesting
 @Singleton
 class DetailedBolusInfoStorageImpl @Inject constructor(
     val aapsLogger: AAPSLogger,

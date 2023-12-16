@@ -4,12 +4,13 @@ import android.content.Context
 import android.text.Spanned
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import app.aaps.core.interfaces.configuration.Constants
+import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.plugin.PluginDescription
+import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -21,7 +22,6 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.interfaces.sync.Tidepool
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.plugins.sync.R
@@ -34,7 +34,6 @@ import app.aaps.plugins.sync.tidepool.events.EventTidepoolResetData
 import app.aaps.plugins.sync.tidepool.events.EventTidepoolStatus
 import app.aaps.plugins.sync.tidepool.events.EventTidepoolUpdateGUI
 import app.aaps.plugins.sync.tidepool.utils.RateLimit
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -42,7 +41,6 @@ import javax.inject.Singleton
 
 @Singleton
 class TidepoolPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     private val aapsSchedulers: AapsSchedulers,
@@ -63,7 +61,7 @@ class TidepoolPlugin @Inject constructor(
         .fragmentClass(TidepoolFragment::class.qualifiedName)
         .preferencesId(R.xml.pref_tidepool)
         .description(R.string.description_tidepool),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ) {
 
     private var disposable: CompositeDisposable = CompositeDisposable()

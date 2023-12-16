@@ -11,11 +11,11 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.StringRes
-import app.aaps.core.interfaces.extensions.runOnUiThread
 import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.core.main.R
-import app.aaps.core.main.utils.CryptoUtil
+import app.aaps.core.objects.R
+import app.aaps.core.objects.crypto.CryptoUtil
+import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.core.ui.toast.ToastUtils
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.Reusable

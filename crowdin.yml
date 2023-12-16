@@ -79,16 +79,16 @@ files:
     translation: /pump/rileylink/src/main/res/values-%android_code%/strings.xml
   - source: /pump/virtual/src/main/res/values/strings.xml
     translation: /pump/virtual/src/main/res/values-%android_code%/strings.xml
-  - source: /insight/src/main/res/values/strings.xml
-    translation: /insight/src/main/res/values-%android_code%/strings.xml
-  - source: /insight/src/main/res/values/alert_codes.xml
-    translation: /insight/src/main/res/values-%android_code%/alert_codes.xml
-  - source: /insight/src/main/res/values/alert_descriptions.xml
-    translation: /insight/src/main/res/values-%android_code%/alert_descriptions.xml
-  - source: /insight/src/main/res/values/alert_titles.xml
-    translation: /insight/src/main/res/values-%android_code%/alert_titles.xml
-  - source: /insight/src/main/res/values/exceptions.xml
-    translation: /insight/src/main/res/values-%android_code%/exceptions.xml
+  - source: /pump/insight/src/main/res/values/strings.xml
+    translation: /pump/insight/src/main/res/values-%android_code%/strings.xml
+  - source: /pump/insight/src/main/res/values/alert_codes.xml
+    translation: /pump/insight/src/main/res/values-%android_code%/alert_codes.xml
+  - source: /pump/insight/src/main/res/values/alert_descriptions.xml
+    translation: /pump/insight/src/main/res/values-%android_code%/alert_descriptions.xml
+  - source: /pump/insight/src/main/res/values/alert_titles.xml
+    translation: /pump/insight/src/main/res/values-%android_code%/alert_titles.xml
+  - source: /pump/insight/src/main/res/values/exceptions.xml
+    translation: /pump/insight/src/main/res/values-%android_code%/exceptions.xml
   - source: /implementation/src/main/res/values/strings.xml
     translation: /implementation/src/main/res/values-%android_code%/strings.xml
   - source: /ui/src/main/res/values/strings.xml

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="info.nightscout.pump.dana.DanaFragment">
+    tools:context=".DanaFragment">
 
     <ScrollView
         android:id="@+id/scrollview"

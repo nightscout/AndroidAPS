@@ -8,6 +8,7 @@ import android.os.HandlerThread
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -25,7 +26,6 @@ import app.aaps.core.interfaces.rx.events.EventTempBasalChange
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import dagger.android.support.DaggerFragment
 import info.nightscout.pump.diaconn.activities.DiaconnG8HistoryActivity
@@ -188,9 +188,9 @@ class DiaconnG8Fragment : DaggerFragment() {
         binding.tempbasal.text = diaconnG8Pump.temporaryBasalToString()
         binding.extendedbolus.text = diaconnG8Pump.extendedBolusToString()
         binding.reservoir.text = rh.gs(app.aaps.core.ui.R.string.reservoir_value, pump.systemRemainInsulin, 307)
-        warnColors.setColorInverse(binding.reservoir, pump.systemRemainInsulin, 50.0, 20.0)
+        warnColors.setColorInverse(binding.reservoir, pump.systemRemainInsulin, 50, 20)
         binding.battery.text = "{fa-battery-" + pump.systemRemainBattery / 25 + "}" + " (" + pump.systemRemainBattery + " %)"
-        warnColors.setColorInverse(binding.battery, pump.systemRemainBattery.toDouble(), 51.0, 26.0)
+        warnColors.setColorInverse(binding.battery, pump.systemRemainBattery.toDouble(), 51, 26)
         binding.firmware.text =
             rh.gs(R.string.diaconn_g8_pump) + "\nVersion: " + pump.majorVersion.toString() + "." + pump.minorVersion.toString() + "\nCountry: " + pump.country.toString() + "\nProductType: " + pump.productType.toString() + "\nManufacture: " + pump.makeYear + "." + pump.makeMonth + "." + pump.makeDay
         binding.basalstep.text = pump.basalStep.toString()

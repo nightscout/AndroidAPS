@@ -1,12 +1,12 @@
 package app.aaps.core.interfaces.pump
 
 import android.content.Context
-import app.aaps.core.interfaces.pump.defs.PumpType
-import app.aaps.database.entities.Bolus
-import app.aaps.database.entities.BolusCalculatorResult
-import app.aaps.database.entities.Carbs
-import app.aaps.database.entities.TherapyEvent
-import app.aaps.database.entities.embedments.InterfaceIDs
+import app.aaps.core.data.model.BCR
+import app.aaps.core.data.model.BS
+import app.aaps.core.data.model.CA
+import app.aaps.core.data.model.IDs
+import app.aaps.core.data.model.TE
+import app.aaps.core.data.pump.defs.PumpType
 
 class DetailedBolusInfo {
 
@@ -23,12 +23,12 @@ class DetailedBolusInfo {
     @Transient var context: Context? = null // context for progress dialog
 
     // Prefilled info for storing to db
-    var bolusCalculatorResult: BolusCalculatorResult? = null
-    var eventType = EventType.MEAL_BOLUS
+    var bolusCalculatorResult: BCR? = null
+    var eventType = TE.Type.MEAL_BOLUS
     var notes: String? = null
     var mgdlGlucose: Double? = null // Bg value in mgdl
-    var glucoseType: MeterType? = null // NS values: Manual, Finger, Sensor
-    var bolusType = BolusType.NORMAL
+    var glucoseType: TE.MeterType? = null // NS values: Manual, Finger, Sensor
+    var bolusType = BS.Type.NORMAL
     var carbsDuration = 0L // in milliseconds
 
     // Collected info from driver
@@ -36,91 +36,31 @@ class DetailedBolusInfo {
     var pumpSerial: String? = null
     var bolusPumpId: Long? = null
     var bolusTimestamp: Long? = null
-    var carbsPumpId: Long? = null
     var carbsTimestamp: Long? = null
-
-    enum class MeterType(val text: String) {
-        FINGER("Finger"),
-        SENSOR("Sensor"),
-        MANUAL("Manual");
-
-        fun toDbMeterType(): TherapyEvent.MeterType =
-            when (this) {
-                FINGER -> TherapyEvent.MeterType.FINGER
-                SENSOR -> TherapyEvent.MeterType.SENSOR
-                MANUAL -> TherapyEvent.MeterType.MANUAL
-            }
-    }
-
-    enum class BolusType {
-        NORMAL,
-        SMB,
-        PRIMING;
-
-        fun toDBbBolusType(): Bolus.Type =
-            when (this) {
-                NORMAL  -> Bolus.Type.NORMAL
-                SMB     -> Bolus.Type.SMB
-                PRIMING -> Bolus.Type.PRIMING
-            }
-    }
-
-    enum class EventType {
-        MEAL_BOLUS,
-        BOLUS_WIZARD,
-        CORRECTION_BOLUS,
-        CARBS_CORRECTION,
-        CANNULA_CHANGE,
-        INSULIN_CHANGE,
-        PUMP_BATTERY_CHANGE,
-        NOTE;
-
-        fun toDBbEventType(): TherapyEvent.Type =
-            when (this) {
-                MEAL_BOLUS          -> TherapyEvent.Type.MEAL_BOLUS
-                BOLUS_WIZARD        -> TherapyEvent.Type.BOLUS_WIZARD
-                CORRECTION_BOLUS    -> TherapyEvent.Type.CORRECTION_BOLUS
-                CARBS_CORRECTION    -> TherapyEvent.Type.CARBS_CORRECTION
-                CANNULA_CHANGE      -> TherapyEvent.Type.CANNULA_CHANGE
-                INSULIN_CHANGE      -> TherapyEvent.Type.INSULIN_CHANGE
-                PUMP_BATTERY_CHANGE -> TherapyEvent.Type.PUMP_BATTERY_CHANGE
-                NOTE                -> TherapyEvent.Type.NOTE
-            }
-    }
-
-    fun createTherapyEvent(): TherapyEvent =
-        TherapyEvent(
-            timestamp = timestamp,
-            type = eventType.toDBbEventType(),
-            glucoseUnit = TherapyEvent.GlucoseUnit.MGDL,
-            note = notes,
-            glucose = mgdlGlucose,
-            glucoseType = glucoseType?.toDbMeterType()
-        )
 
     /**
      * Used for create record going directly to db (record only)
      */
-    fun createBolus(): Bolus =
+    fun createBolus(): BS =
         if (insulin != 0.0)
-            Bolus(
+            BS(
                 timestamp = bolusTimestamp ?: timestamp,
                 amount = insulin,
-                type = bolusType.toDBbBolusType(),
+                type = bolusType,
                 notes = notes,
-                interfaceIDs_backing = InterfaceIDs(pumpId = timestamp)
+                ids = IDs(pumpId = timestamp)
             )
-        else throw IllegalStateException("insulin == 0.0")
+        else error("insulin == 0.0")
 
-    fun createCarbs(): Carbs =
+    fun createCarbs(): CA =
         if (carbs != 0.0)
-            Carbs(
+            CA(
                 timestamp = carbsTimestamp ?: timestamp,
                 amount = carbs,
                 duration = carbsDuration,
                 notes = notes
             )
-        else throw IllegalStateException("carbs == 0.0")
+        else error("carbs == 0.0")
 
     fun copy(): DetailedBolusInfo {
         val n = DetailedBolusInfo()
@@ -143,7 +83,6 @@ class DetailedBolusInfo {
         n.pumpType = pumpType
         n.pumpSerial = pumpSerial
         n.bolusPumpId = bolusPumpId
-        n.carbsPumpId = carbsPumpId
         n.carbsTimestamp = carbsTimestamp
         return n
     }

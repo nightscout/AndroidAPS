@@ -18,14 +18,18 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.data.model.UE
+import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.androidPermissions.AndroidPermission
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
-import app.aaps.core.interfaces.maintenance.PrefFileListProvider
 import app.aaps.core.interfaces.maintenance.PrefMetadata
 import app.aaps.core.interfaces.maintenance.PrefsFile
 import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
@@ -36,22 +40,20 @@ import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventDiaconnG8PumpLogReset
 import app.aaps.core.interfaces.rx.weardata.CwfData
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
-import app.aaps.core.interfaces.rx.weardata.ZipWatchfaceFormat
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.storage.Storage
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
-import app.aaps.core.interfaces.utils.T
-import app.aaps.core.main.utils.worker.LoggingWorker
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.Preferences
+import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.dialogs.TwoMessagesAlertDialog
 import app.aaps.core.ui.dialogs.WarningDialog
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.database.entities.UserEntry
-import app.aaps.database.entities.UserEntry.Action
-import app.aaps.database.entities.UserEntry.Sources
+import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.plugins.configuration.R
 import app.aaps.plugins.configuration.activities.DaggerAppCompatActivityWithResult
 import app.aaps.plugins.configuration.maintenance.data.PrefFileNotFoundError
@@ -61,33 +63,38 @@ import app.aaps.plugins.configuration.maintenance.data.PrefsFormat
 import app.aaps.plugins.configuration.maintenance.data.PrefsStatusImpl
 import app.aaps.plugins.configuration.maintenance.dialogs.PrefImportSummaryDialog
 import app.aaps.plugins.configuration.maintenance.formats.EncryptedPrefsFormat
+import app.aaps.shared.impl.weardata.ZipWatchfaceFormat
+import dagger.Reusable
 import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Dispatchers
+import org.json.JSONObject
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
 import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.system.exitProcess
 
 /**
  * Created by mike on 03.07.2016.
  */
 
-@Singleton
+@Reusable
 class ImportExportPrefsImpl @Inject constructor(
     private var log: AAPSLogger,
     private val rh: ResourceHelper,
     private val sp: SP,
+    private val preferences: Preferences,
     private val config: Config,
     private val rxBus: RxBus,
     private val passwordCheck: PasswordCheck,
     private val androidPermission: AndroidPermission,
     private val encryptedPrefsFormat: EncryptedPrefsFormat,
-    private val prefFileList: PrefFileListProvider,
+    private val prefFileList: FileListProvider,
     private val uel: UserEntryLogger,
     private val dateUtil: DateUtil,
-    private val uiInteraction: UiInteraction
+    private val uiInteraction: UiInteraction,
+    private val context: Context,
+    private val dataWorkerStorage: DataWorkerStorage
 ) : ImportExportPrefs {
 
     override fun prefsFileExists(): Boolean {
@@ -383,7 +390,7 @@ class ImportExportPrefsImpl @Inject constructor(
 
     private fun restartAppAfterImport(context: Context) {
         rxBus.send(EventDiaconnG8PumpLogReset())
-        sp.putBoolean(R.string.key_setupwizard_processed, true)
+        preferences.put(BooleanKey.GeneralSetupWizardProcessed, true)
         OKDialog.show(context, rh.gs(R.string.setting_imported), rh.gs(R.string.restartingapp)) {
             uel.log(Action.IMPORT_SETTINGS, Sources.Maintenance)
             log.debug(LTag.CORE, "Exiting")
@@ -411,7 +418,7 @@ class ImportExportPrefsImpl @Inject constructor(
 
         @Inject lateinit var injector: HasAndroidInjector
         @Inject lateinit var rh: ResourceHelper
-        @Inject lateinit var prefFileList: PrefFileListProvider
+        @Inject lateinit var prefFileList: FileListProvider
         @Inject lateinit var context: Context
         @Inject lateinit var userEntryPresentationHelper: UserEntryPresentationHelper
         @Inject lateinit var storage: Storage
@@ -437,7 +444,7 @@ class ImportExportPrefsImpl @Inject constructor(
             return ret
         }
 
-        private fun saveCsv(file: File, userEntries: List<UserEntry>) {
+        private fun saveCsv(file: File, userEntries: List<UE>) {
             try {
                 val contents = userEntryPresentationHelper.userEntriesToCsv(userEntries)
                 storage.putFileContents(file, contents)
@@ -447,6 +454,53 @@ class ImportExportPrefsImpl @Inject constructor(
                 throw PrefIOError(file.absolutePath)
             }
         }
+    }
 
+    override fun exportApsResult(algorithm: String?, input: JSONObject, output: JSONObject?) {
+        WorkManager.getInstance(context).enqueueUniqueWork(
+            "export",
+            ExistingWorkPolicy.APPEND,
+            OneTimeWorkRequest.Builder(ApsResultExportWorker::class.java)
+                .setInputData(dataWorkerStorage.storeInputData(ApsResultExportWorker.ApsResultData(algorithm, input, output)))
+                .build()
+        )
+    }
+
+    class ApsResultExportWorker(
+        context: Context,
+        params: WorkerParameters
+    ) : LoggingWorker(context, params, Dispatchers.IO) {
+
+        @Inject lateinit var prefFileList: FileListProvider
+        @Inject lateinit var storage: Storage
+        @Inject lateinit var config: Config
+        @Inject lateinit var dataWorkerStorage: DataWorkerStorage
+
+        data class ApsResultData(val algorithm: String?, val input: JSONObject, val output: JSONObject?)
+
+        override suspend fun doWorkAndLog(): Result {
+            if (!config.isEngineeringMode()) return Result.success(workDataOf("Result" to "Export not enabled"))
+            val apsResultData = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as ApsResultData?
+                ?: return Result.failure(workDataOf("Error" to "missing input data"))
+
+            prefFileList.ensureResultDirExists()
+            val newFile = prefFileList.newResultFile()
+            var ret = Result.success()
+            try {
+                val jsonObject = JSONObject().apply {
+                    put("algorithm", apsResultData.algorithm)
+                    put("input", apsResultData.input)
+                    put("output", apsResultData.output)
+                }
+                storage.putFileContents(newFile, jsonObject.toString())
+            } catch (e: FileNotFoundException) {
+                aapsLogger.error(LTag.CORE, "Unhandled exception", e)
+                ret = Result.failure(workDataOf("Error" to "Error FileNotFoundException"))
+            } catch (e: IOException) {
+                aapsLogger.error(LTag.CORE, "Unhandled exception", e)
+                ret = Result.failure(workDataOf("Error" to "Error IOException"))
+            }
+            return ret
+        }
     }
 }

@@ -10,9 +10,11 @@ import androidx.work.WorkQuery
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.R
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -24,10 +26,8 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventProfileSwitchChanged
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.T
-import app.aaps.core.main.profile.ProfileSealed
-import app.aaps.core.main.utils.worker.LoggingWorker
-import app.aaps.database.impl.AppRepository
+import app.aaps.core.objects.profile.ProfileSealed
+import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.plugins.configuration.maintenance.MaintenancePlugin
 import com.google.common.util.concurrent.ListenableFuture
 import kotlinx.coroutines.Dispatchers
@@ -41,7 +41,7 @@ class KeepAliveWorker(
 ) : LoggingWorker(context, params, Dispatchers.Default) {
 
     @Inject lateinit var localAlertUtils: LocalAlertUtils
-    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var config: Config
     @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var loop: Loop
@@ -118,7 +118,7 @@ class KeepAliveWorker(
     private fun databaseCleanup() {
         val lastRun = sp.getLong(R.string.key_last_cleanup_run, 0L)
         if (lastRun < dateUtil.now() - T.days(1).msecs()) {
-            val result = repository.cleanupDatabase(6 * 31, deleteTrackedChanges = false)
+            val result = persistenceLayer.cleanupDatabase(6 * 31, deleteTrackedChanges = false)
             aapsLogger.debug(LTag.CORE, "Cleanup result: $result")
             sp.putLong(R.string.key_last_cleanup_run, dateUtil.now())
         }

@@ -2,16 +2,14 @@ package app.aaps.plugins.automation.actions
 
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.utils.JsonHelper
-import app.aaps.database.entities.UserEntry
-import app.aaps.database.entities.UserEntry.Sources
-import app.aaps.database.entities.ValueWithUnit
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputDuration
 import app.aaps.plugins.automation.elements.LabelWithElement
@@ -34,15 +32,17 @@ class ActionLoopSuspend(injector: HasAndroidInjector) : Action(injector) {
 
     override fun doAction(callback: Callback) {
         if (!loop.isSuspended) {
-            loop.suspendLoop(minutes.getMinutes())
-            rxBus.send(EventRefreshOverview("ActionLoopSuspend"))
-            uel.log(
-                UserEntry.Action.SUSPEND, Sources.Automation, title + ": " + rh.gs(R.string.suspendloopforXmin, minutes.getMinutes()),
-                ValueWithUnit.Minute(minutes.getMinutes())
+            loop.suspendLoop(
+                durationInMinutes = minutes.getMinutes(),
+                action = app.aaps.core.data.ue.Action.SUSPEND,
+                source = Sources.Automation,
+                note = title + ": " + rh.gs(R.string.suspendloopforXmin, minutes.getMinutes()),
+                listValues = listOf(ValueWithUnit.Minute(minutes.getMinutes()))
             )
-            callback.result(PumpEnactResult(injector).success(true).comment(app.aaps.core.ui.R.string.ok)).run()
+            rxBus.send(EventRefreshOverview("ActionLoopSuspend"))
+            callback.result(instantiator.providePumpEnactResult().success(true).comment(app.aaps.core.ui.R.string.ok)).run()
         } else {
-            callback.result(PumpEnactResult(injector).success(true).comment(R.string.alreadysuspended)).run()
+            callback.result(instantiator.providePumpEnactResult().success(true).comment(R.string.alreadysuspended)).run()
         }
     }
 

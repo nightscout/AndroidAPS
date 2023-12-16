@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data.dto
 
 //import info.nightscout.androidaps.db.TDD
+import app.aaps.core.utils.StringUtil
+import app.aaps.core.utils.pump.ByteUtil
 import com.google.gson.annotations.Expose
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntryType
-import info.nightscout.pump.common.utils.ByteUtil
-import info.nightscout.pump.common.utils.StringUtil
 import org.apache.commons.lang3.builder.ToStringBuilder
 import java.util.Locale
 

@@ -1,17 +1,15 @@
 package app.aaps.plugins.automation.actions
 
 import androidx.annotation.DrawableRes
+import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.interfaces.plugin.PluginType
-import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
-import app.aaps.database.entities.UserEntry
-import app.aaps.database.entities.UserEntry.Sources
 import app.aaps.plugins.automation.R
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
@@ -32,10 +30,10 @@ class ActionLoopEnable(injector: HasAndroidInjector) : Action(injector) {
             (loopPlugin as PluginBase).setPluginEnabled(PluginType.LOOP, true)
             configBuilder.storeSettings("ActionLoopEnable")
             rxBus.send(EventRefreshOverview("ActionLoopEnable"))
-            uel.log(UserEntry.Action.LOOP_ENABLED, Sources.Automation, title)
-            callback.result(PumpEnactResult(injector).success(true).comment(app.aaps.core.ui.R.string.ok)).run()
+            uel.log(app.aaps.core.data.ue.Action.LOOP_ENABLED, Sources.Automation, title)
+            callback.result(instantiator.providePumpEnactResult().success(true).comment(app.aaps.core.ui.R.string.ok)).run()
         } else {
-            callback.result(PumpEnactResult(injector).success(true).comment(R.string.alreadyenabled)).run()
+            callback.result(instantiator.providePumpEnactResult().success(true).comment(R.string.alreadyenabled)).run()
         }
     }
 

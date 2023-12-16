@@ -1,8 +1,7 @@
 package app.aaps.plugins.main.general.smsCommunicator.otp
 
 import android.util.Base64
-import app.aaps.annotations.OpenForTesting
-import app.aaps.core.interfaces.configuration.Constants
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
@@ -16,7 +15,6 @@ import javax.crypto.spec.SecretKeySpec
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@OpenForTesting
 @Singleton
 class OneTimePassword @Inject constructor(
     private val sp: SP,

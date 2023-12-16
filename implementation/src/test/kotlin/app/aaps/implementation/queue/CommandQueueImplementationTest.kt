@@ -3,15 +3,16 @@ package app.aaps.implementation.queue
 import android.content.Context
 import android.os.Handler
 import android.os.PowerManager
+import app.aaps.core.data.model.BS
 import app.aaps.core.interfaces.androidPermissions.AndroidPermission
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
-import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
@@ -24,21 +25,23 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.main.constraints.ConstraintObject
-import app.aaps.database.ValueWrapper
-import app.aaps.database.entities.Bolus
-import app.aaps.database.impl.AppRepository
+import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.implementation.queue.commands.CommandBolus
+import app.aaps.implementation.queue.commands.CommandCancelExtendedBolus
+import app.aaps.implementation.queue.commands.CommandCancelTempBasal
+import app.aaps.implementation.queue.commands.CommandClearAlarms
 import app.aaps.implementation.queue.commands.CommandCustomCommand
+import app.aaps.implementation.queue.commands.CommandDeactivate
 import app.aaps.implementation.queue.commands.CommandExtendedBolus
+import app.aaps.implementation.queue.commands.CommandLoadEvents
 import app.aaps.implementation.queue.commands.CommandLoadHistory
+import app.aaps.implementation.queue.commands.CommandReadStatus
+import app.aaps.implementation.queue.commands.CommandSMBBolus
 import app.aaps.implementation.queue.commands.CommandTempBasalPercent
+import app.aaps.implementation.queue.commands.CommandUpdateTime
 import app.aaps.shared.tests.TestBaseWithProfile
-import app.aaps.shared.tests.TestPumpPlugin
 import com.google.common.truth.Truth.assertThat
-import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import io.reactivex.rxjava3.core.Single
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -52,7 +55,6 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
 
     @Mock lateinit var constraintChecker: ConstraintsChecker
     @Mock lateinit var powerManager: PowerManager
-    @Mock lateinit var repository: AppRepository
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var androidPermission: AndroidPermission
     @Mock lateinit var persistenceLayer: PersistenceLayer
@@ -70,46 +72,89 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         sp: SP,
         config: Config,
         dateUtil: DateUtil,
-        repository: AppRepository,
         fabricPrivacy: FabricPrivacy,
         androidPermission: AndroidPermission,
         uiInteraction: UiInteraction,
         persistenceLayer: PersistenceLayer,
-        decimalFormatter: DecimalFormatter
+        decimalFormatter: DecimalFormatter,
+        instantiator: Instantiator
     ) : CommandQueueImplementation(
         injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker, profileFunction,
-        activePlugin, context, sp, config, dateUtil, repository, fabricPrivacy,
-        androidPermission, uiInteraction, persistenceLayer, decimalFormatter
+        activePlugin, context, sp, config, dateUtil, fabricPrivacy, androidPermission,
+        uiInteraction, persistenceLayer, decimalFormatter, instantiator
     ) {
 
         override fun notifyAboutNewCommand(): Boolean = true
 
     }
 
-    private val injector = HasAndroidInjector {
-        AndroidInjector {
-            if (it is Command) {
+    init {
+        addInjector {
+            if (it is CommandCancelExtendedBolus) {
                 it.aapsLogger = aapsLogger
                 it.rh = rh
+                it.activePlugin = activePlugin
             }
             if (it is CommandTempBasalPercent) {
+                it.aapsLogger = aapsLogger
+                it.rh = rh
+                it.activePlugin = activePlugin
+            }
+            if (it is CommandCancelTempBasal) {
+                it.aapsLogger = aapsLogger
+                it.rh = rh
                 it.activePlugin = activePlugin
             }
             if (it is CommandBolus) {
+                it.aapsLogger = aapsLogger
+                it.rh = rh
                 it.activePlugin = activePlugin
                 it.rxBus = rxBus
             }
+            if (it is CommandSMBBolus) {
+                it.aapsLogger = aapsLogger
+                it.rh = rh
+                it.activePlugin = activePlugin
+            }
             if (it is CommandCustomCommand) {
+                it.aapsLogger = aapsLogger
+                it.rh = rh
                 it.activePlugin = activePlugin
             }
             if (it is CommandExtendedBolus) {
+                it.aapsLogger = aapsLogger
+                it.rh = rh
                 it.activePlugin = activePlugin
             }
             if (it is CommandLoadHistory) {
+                it.aapsLogger = aapsLogger
+                it.rh = rh
                 it.activePlugin = activePlugin
             }
-            if (it is PumpEnactResult) {
-                it.context = context
+            if (it is CommandLoadEvents) {
+                it.aapsLogger = aapsLogger
+                it.rh = rh
+                it.activePlugin = activePlugin
+            }
+            if (it is CommandReadStatus) {
+                it.aapsLogger = aapsLogger
+                it.rh = rh
+                it.activePlugin = activePlugin
+            }
+            if (it is CommandClearAlarms) {
+                it.aapsLogger = aapsLogger
+                it.rh = rh
+                it.activePlugin = activePlugin
+            }
+            if (it is CommandDeactivate) {
+                it.aapsLogger = aapsLogger
+                it.rh = rh
+                it.activePlugin = activePlugin
+            }
+            if (it is CommandUpdateTime) {
+                it.aapsLogger = aapsLogger
+                it.rh = rh
+                it.activePlugin = activePlugin
             }
         }
     }
@@ -119,22 +164,18 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     @BeforeEach
     fun prepare() {
         commandQueue = CommandQueueMocked(
-            injector, aapsLogger, rxBus, aapsSchedulers, rh,
-            constraintChecker, profileFunction, activePlugin, context, sp,
-            config, dateUtil, repository,
-            fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter
+            injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker, profileFunction, activePlugin, context,
+            sp, config, dateUtil, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter, instantiator
         )
-        testPumpPlugin = TestPumpPlugin(injector)
-
         testPumpPlugin.pumpDescription.basalMinimumRate = 0.1
 
         `when`(context.getSystemService(Context.POWER_SERVICE)).thenReturn(powerManager)
         `when`(activePlugin.activePump).thenReturn(testPumpPlugin)
-        `when`(repository.getEffectiveProfileSwitchActiveAt(anyLong())).thenReturn(Single.just(ValueWrapper.Existing(effectiveProfileSwitch)))
-        `when`(repository.getLastBolusRecord()).thenReturn(
-            Bolus(
+        `when`(persistenceLayer.getEffectiveProfileSwitchActiveAt(anyLong())).thenReturn(effectiveProfileSwitch)
+        `when`(persistenceLayer.getNewestBolus()).thenReturn(
+            BS(
                 timestamp = Calendar.getInstance().also { it.set(2000, 0, 1) }.timeInMillis,
-                type = Bolus.Type.NORMAL,
+                type = BS.Type.NORMAL,
                 amount = 0.0
             )
         )
@@ -159,7 +200,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         val commandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh,
             constraintChecker, profileFunction, activePlugin, context, sp,
-            config, dateUtil, repository, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter
+            config, dateUtil, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter, instantiator
         )
         val handler = mock(Handler::class.java)
         `when`(handler.post(anyObject())).thenAnswer { invocation: InvocationOnMock ->
@@ -268,7 +309,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         assertThat(commandQueue.size()).isEqualTo(0)
         val smb = DetailedBolusInfo()
         smb.lastKnownBolusTime = System.currentTimeMillis()
-        smb.bolusType = DetailedBolusInfo.BolusType.SMB
+        smb.bolusType = BS.Type.SMB
         commandQueue.bolus(smb, null)
         commandQueue.bolus(DetailedBolusInfo(), null)
         assertThat(commandQueue.size()).isEqualTo(2)
@@ -288,7 +329,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         // when
         commandQueue.bolus(DetailedBolusInfo(), null)
         val smb = DetailedBolusInfo()
-        smb.bolusType = DetailedBolusInfo.BolusType.SMB
+        smb.bolusType = BS.Type.SMB
         val queued: Boolean = commandQueue.bolus(smb, null)
 
         // then
@@ -303,7 +344,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
 
         // when
         val bolus = DetailedBolusInfo()
-        bolus.bolusType = DetailedBolusInfo.BolusType.SMB
+        bolus.bolusType = BS.Type.SMB
         bolus.lastKnownBolusTime = 0
         val queued: Boolean = commandQueue.bolus(bolus, null)
 

@@ -2,9 +2,9 @@ package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communicatio
 
 import org.joda.time.DateTime;
 
+import app.aaps.core.utils.pump.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.MessageBlock;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.MessageBlockType;
-import info.nightscout.pump.common.utils.ByteUtil;
 
 public class SetupPodCommand extends MessageBlock {
 

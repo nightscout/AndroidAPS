@@ -9,8 +9,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
-import app.aaps.core.interfaces.extensions.toVisibility
-import app.aaps.core.main.utils.CryptoUtil
+import app.aaps.core.objects.crypto.CryptoUtil
+import app.aaps.core.ui.extensions.toVisibility
 import dagger.android.HasAndroidInjector
 
 class SWEditEncryptedPassword(injector: HasAndroidInjector, private val cryptoUtil: CryptoUtil) : SWItem(injector, Type.STRING) {

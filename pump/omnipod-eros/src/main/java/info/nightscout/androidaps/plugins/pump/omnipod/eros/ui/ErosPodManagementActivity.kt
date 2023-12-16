@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -17,6 +16,7 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.extensions.toVisibility
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity

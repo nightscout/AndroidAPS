@@ -1,9 +1,9 @@
 package app.aaps.plugins.automation
 
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.automation.AutomationEvent
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.T
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.actions.ActionDummy
 import app.aaps.plugins.automation.actions.ActionStopProcessing

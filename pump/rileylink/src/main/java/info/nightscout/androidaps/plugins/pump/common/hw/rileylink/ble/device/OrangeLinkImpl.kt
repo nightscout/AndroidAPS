@@ -12,12 +12,12 @@ import android.os.Message
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.utils.pump.ByteUtil
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkBLE
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.GattAttributes
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.operations.BLECommOperationResult
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData
-import info.nightscout.pump.common.utils.ByteUtil
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton

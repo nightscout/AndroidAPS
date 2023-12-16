@@ -1,9 +1,11 @@
 package app.aaps.plugins.sync.nsclientV3.extensions
 
+import app.aaps.core.data.model.IDs
+import app.aaps.core.data.model.TB
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryBasal
 import app.aaps.core.nssdk.mapper.convertToRemoteAndBack
-import app.aaps.database.entities.TemporaryBasal
-import app.aaps.database.entities.embedments.InterfaceIDs
+import app.aaps.plugins.sync.extensions.contentEqualsTo
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
@@ -13,42 +15,42 @@ internal class TemporaryBasalExtensionKtTest : TestBaseWithProfile() {
 
     @Test
     fun toTemporaryBasal() {
-        var temporaryBasal = TemporaryBasal(
+        var temporaryBasal = TB(
             timestamp = 10000,
             isValid = true,
-            type = TemporaryBasal.Type.NORMAL,
+            type = TB.Type.NORMAL,
             rate = 2.0,
             isAbsolute = true,
             duration = 3600000,
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 nightscoutId = "nightscoutId",
                 pumpId = 11000,
-                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpType = PumpType.DANA_I,
                 pumpSerial = "bbbb"
             )
         )
 
         var temporaryBasal2 = (temporaryBasal.toNSTemporaryBasal(validProfile).convertToRemoteAndBack() as NSTemporaryBasal).toTemporaryBasal()
         assertThat(temporaryBasal.contentEqualsTo(temporaryBasal2)).isTrue()
-        assertThat(temporaryBasal.interfaceIdsEqualsTo(temporaryBasal2)).isTrue()
+        assertThat(temporaryBasal.ids.contentEqualsTo(temporaryBasal2.ids)).isTrue()
 
-        temporaryBasal = TemporaryBasal(
+        temporaryBasal = TB(
             timestamp = 10000,
             isValid = true,
-            type = TemporaryBasal.Type.PUMP_SUSPEND,
+            type = TB.Type.PUMP_SUSPEND,
             rate = 120.0,
             isAbsolute = false,
             duration = 30000,
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 nightscoutId = "nightscoutId",
                 pumpId = 11000,
-                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpType = PumpType.DANA_I,
                 pumpSerial = "bbbb"
             )
         )
 
         temporaryBasal2 = (temporaryBasal.toNSTemporaryBasal(validProfile).convertToRemoteAndBack() as NSTemporaryBasal).toTemporaryBasal()
         assertThat(temporaryBasal.contentEqualsTo(temporaryBasal2)).isTrue()
-        assertThat(temporaryBasal.interfaceIdsEqualsTo(temporaryBasal2)).isTrue()
+        assertThat(temporaryBasal.ids.contentEqualsTo(temporaryBasal2.ids)).isTrue()
     }
 }

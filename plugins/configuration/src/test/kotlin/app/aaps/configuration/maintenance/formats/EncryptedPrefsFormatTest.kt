@@ -2,7 +2,7 @@ package app.aaps.plugins.configuration.maintenance.formats
 
 import app.aaps.core.interfaces.maintenance.PrefMetadata
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.main.utils.CryptoUtil
+import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.plugins.configuration.maintenance.PrefsMetadataKeyImpl
 import app.aaps.plugins.configuration.maintenance.data.PrefFormatError
 import app.aaps.plugins.configuration.maintenance.data.Prefs

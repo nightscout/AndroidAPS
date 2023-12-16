@@ -1,7 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data
 
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.keys.StringKey
 import app.aaps.core.utils.DateTimeUtil
 import com.google.gson.Gson
 import com.google.gson.internal.LinkedTreeMap
@@ -130,7 +131,7 @@ class MedtronicHistoryDataUTest : MedtronicTestBase() {
 
         val glucoseMgdl = 175
 
-        `when`(sp.getString(app.aaps.core.utils.R.string.key_units, GlucoseUnit.MGDL.asText)).thenReturn(GlucoseUnit.MGDL.asText)
+        `when`(preferences.get(StringKey.GeneralUnits)).thenReturn(GlucoseUnit.MGDL.asText)
 
         val bgRecord = PumpHistoryEntry()
         bgRecord.setEntryType(medtronicUtil.medtronicPumpModel, PumpHistoryEntryType.BGReceived)
@@ -163,7 +164,7 @@ class MedtronicHistoryDataUTest : MedtronicTestBase() {
         val glucoseMgdl = 180
         val glucoseMmol = 10.0
 
-        `when`(sp.getString(app.aaps.core.utils.R.string.key_units, GlucoseUnit.MGDL.asText)).thenReturn(GlucoseUnit.MMOL.asText)
+        `when`(preferences.get(StringKey.GeneralUnits)).thenReturn(GlucoseUnit.MMOL.asText)
 
         val bgRecord = PumpHistoryEntry()
         bgRecord.setEntryType(medtronicUtil.medtronicPumpModel, PumpHistoryEntryType.BGReceived)

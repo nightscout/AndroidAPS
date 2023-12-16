@@ -15,8 +15,8 @@ import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.nsclient.NSAlarm
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventDismissNotification
+import app.aaps.core.interfaces.rx.events.EventNewNotification
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.main.events.EventNewNotification
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.plugins.configuration.activities.SingleFragmentActivity
 import app.aaps.plugins.main.general.overview.notifications.NotificationWithAction
@@ -41,9 +41,11 @@ import app.aaps.ui.dialogs.WizardDialog
 import app.aaps.ui.services.AlarmSoundService
 import app.aaps.ui.services.AlarmSoundServiceHelper
 import app.aaps.ui.widget.Widget
+import dagger.Reusable
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
+@Reusable
 class UiInteractionImpl @Inject constructor(
     private val context: Context,
     private val rxBus: RxBus,

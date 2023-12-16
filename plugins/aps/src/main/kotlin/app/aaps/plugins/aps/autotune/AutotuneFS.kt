@@ -1,6 +1,5 @@
 package app.aaps.plugins.aps.autotune
 
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.interfaces.logging.LoggerUtils
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.plugins.aps.autotune.data.ATProfile
@@ -23,7 +22,6 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-@OpenForTesting
 class AutotuneFS @Inject constructor(
     private val rh: ResourceHelper,
     private val loggerUtils: LoggerUtils

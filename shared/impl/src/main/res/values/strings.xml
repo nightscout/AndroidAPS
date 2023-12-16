@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cwf_comment_background">Background image</string>
+    <string name="cwf_comment_chart">Graphs (BG, basal, prediction lines...)</string>
+    <string name="cwf_comment_cover_chart">Image in front of graph and behind text fields</string>
+    <string name="cwf_comment_freetext1">Free text 1</string>
+    <string name="cwf_comment_freetext2">Free text 2</string>
+    <string name="cwf_comment_freetext3">Free text 3</string>
+    <string name="cwf_comment_freetext4">Free text 4</string>
+    <string name="cwf_comment_iob1">IOB label or IOB Sum if detailed</string>
+    <string name="cwf_comment_iob2">IOB Sum or (Bolus_IOB|Basal_IOB) if detailed</string>
+    <string name="cwf_comment_cob1">COB label</string>
+    <string name="cwf_comment_cob2">COB value</string>
+    <string name="cwf_comment_delta">Short BG delta</string>
+    <string name="cwf_comment_avg_delta">Average BG delta (15min)</string>
+    <string name="cwf_comment_uploader_battery">Phone battery (%)</string>
+    <string name="cwf_comment_rig_battery">Global loop battery (%)</string>
+    <string name="cwf_comment_basalRate">Basal Rate</string>
+    <string name="cwf_comment_bgi">BGI value</string>
+    <string name="cwf_comment_time">Time (HH:MM or HH:MM:SS)</string>
+    <string name="cwf_comment_hour">Hour (HH)</string>
+    <string name="cwf_comment_minute">Minute (MM)</string>
+    <string name="cwf_comment_second">Second (SS)</string>
+    <string name="cwf_comment_timePeriod">AM or PM</string>
+    <string name="cwf_comment_day_name">Name of day of the week</string>
+    <string name="cwf_comment_day">Day (DD)</string>
+    <string name="cwf_comment_week_number">Week number (ww)</string>
+    <string name="cwf_comment_month">Month name (short)</string>
+    <string name="cwf_comment_loop">Loop status and ago</string>
+    <string name="cwf_comment_direction">Direction arrow</string>
+    <string name="cwf_comment_timestamp">Mintutes ago for last received BG</string>
+    <string name="cwf_comment_sgv">BG value</string>
+    <string name="cwf_comment_cover_plate">Cover image in front of text (dials…)</string>
+    <string name="cwf_comment_hour_hand">Image of hour hand (Analog Watch)</string>
+    <string name="cwf_comment_minute_hand">Image of minute hand (Analog Watch)</string>
+    <string name="cwf_comment_second_hand">Image of second hand (Analog Watch)</string>
+
+</resources>

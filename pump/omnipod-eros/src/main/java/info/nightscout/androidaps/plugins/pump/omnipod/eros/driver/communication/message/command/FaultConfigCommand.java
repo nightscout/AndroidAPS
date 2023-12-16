@@ -2,9 +2,9 @@ package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communicatio
 
 import androidx.annotation.NonNull;
 
+import app.aaps.core.utils.pump.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.NonceResyncableMessageBlock;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.MessageBlockType;
-import info.nightscout.pump.common.utils.ByteUtil;
 
 public class FaultConfigCommand extends NonceResyncableMessageBlock {
     private final byte tab5sub16;

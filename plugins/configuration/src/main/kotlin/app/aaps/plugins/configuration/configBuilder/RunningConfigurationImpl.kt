@@ -1,5 +1,7 @@
 package app.aaps.plugins.configuration.configBuilder
 
+import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.aps.Sensitivity
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
@@ -8,9 +10,8 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
@@ -20,12 +21,12 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.core.nssdk.localmodel.devicestatus.NSDeviceStatus
 import app.aaps.plugins.configuration.R
+import dagger.Reusable
 import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@Reusable
 class RunningConfigurationImpl @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val configBuilder: ConfigBuilder,

@@ -1,8 +1,9 @@
 package app.aaps.plugins.constraints.objectives.objectives
 
-import app.aaps.core.interfaces.aps.ApsMode
+import app.aaps.core.data.aps.ApsMode
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.utils.T
+import app.aaps.core.keys.StringKey
 import app.aaps.plugins.constraints.R
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
@@ -16,7 +17,7 @@ class Objective6(injector: HasAndroidInjector) : Objective(injector, "maxiob", R
         tasks.add(MinimumDurationTask(this, T.days(1).msecs()))
         tasks.add(
             object : Task(this, R.string.closedmodeenabled) {
-                override fun isCompleted(): Boolean = ApsMode.fromString(sp.getString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)) == ApsMode.CLOSED
+                override fun isCompleted(): Boolean = ApsMode.fromString(preferences.get(StringKey.LoopApsMode)) == ApsMode.CLOSED
             })
         tasks.add(
             object : Task(this, R.string.maxiobset) {

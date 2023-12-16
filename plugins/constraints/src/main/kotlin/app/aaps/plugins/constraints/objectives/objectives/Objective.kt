@@ -6,10 +6,11 @@ import android.widget.CheckBox
 import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.fragment.app.FragmentActivity
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.T
+import app.aaps.core.keys.Preferences
 import app.aaps.plugins.constraints.R
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
@@ -18,6 +19,7 @@ import kotlin.math.floor
 abstract class Objective(injector: HasAndroidInjector, spName: String, @StringRes objective: Int, @StringRes gate: Int) {
 
     @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var dateUtil: DateUtil
 

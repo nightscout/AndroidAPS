@@ -21,12 +21,13 @@ android {
 }
 
 dependencies {
-    implementation(project(":shared:impl"))
-    implementation(project(":core:libraries"))
+    implementation(project(":core:data"))
     implementation(project(":core:interfaces"))
-    implementation(project(":core:main"))
+    implementation(project(":core:libraries"))
+    implementation(project(":core:objects"))
     implementation(project(":core:utils"))
     implementation(project(":core:ui"))
+    implementation(project(":shared:impl"))
 
     api(Libs.AndroidX.Room.room)
     api(Libs.AndroidX.Room.runtime)

@@ -1,29 +1,29 @@
 package app.aaps.implementation.alerts
 
+import app.aaps.core.data.model.TE
+import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.configuration.Constants
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventDismissNotification
+import app.aaps.core.interfaces.rx.events.EventNewNotification
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.T
-import app.aaps.core.main.events.EventNewNotification
-import app.aaps.database.ValueWrapper
-import app.aaps.database.entities.TherapyEvent
-import app.aaps.database.entities.UserEntry.Action
-import app.aaps.database.entities.UserEntry.Sources
-import app.aaps.database.entities.ValueWithUnit
-import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.Preferences
+import app.aaps.core.objects.extensions.asAnnouncement
+import app.aaps.core.ui.R
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -37,25 +37,25 @@ import kotlin.math.min
 class LocalAlertUtilsImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val sp: SP,
+    private val preferences: Preferences,
     private val rxBus: RxBus,
     private val rh: ResourceHelper,
     private val activePlugin: ActivePlugin,
     private val profileFunction: ProfileFunction,
     private val smsCommunicator: SmsCommunicator,
     private val config: Config,
-    private val repository: AppRepository,
-    private val dateUtil: DateUtil,
-    private val uel: UserEntryLogger
+    private val persistenceLayer: PersistenceLayer,
+    private val dateUtil: DateUtil
 ) : LocalAlertUtils {
 
     private val disposable = CompositeDisposable()
 
     private fun missedReadingsThreshold(): Long {
-        return T.mins(sp.getInt(app.aaps.core.utils.R.string.key_missed_bg_readings_threshold_minutes, Constants.DEFAULT_MISSED_BG_READINGS_THRESHOLD_MINUTES).toLong()).msecs()
+        return T.mins(preferences.get(IntKey.AlertsStaleDataThreshold).toLong()).msecs()
     }
 
     private fun pumpUnreachableThreshold(): Long {
-        return T.mins(sp.getInt(app.aaps.core.utils.R.string.key_pump_unreachable_threshold_minutes, Constants.DEFAULT_PUMP_UNREACHABLE_THRESHOLD_MINUTES).toLong()).msecs()
+        return T.mins(preferences.get(IntKey.AlertsPumpUnreachableThreshold).toLong()).msecs()
     }
 
     override fun checkPumpUnreachableAlarm(lastConnection: Long, isStatusOutdated: Boolean, isDisconnected: Boolean) {
@@ -65,16 +65,22 @@ class LocalAlertUtilsImpl @Inject constructor(
             if (sp.getBoolean(app.aaps.core.utils.R.string.key_enable_pump_unreachable_alert, true)) {
                 aapsLogger.debug(LTag.CORE, "Generating pump unreachable alarm. lastConnection: " + dateUtil.dateAndTimeString(lastConnection) + " isStatusOutdated: " + isStatusOutdated)
                 sp.putLong("nextPumpDisconnectedAlarm", System.currentTimeMillis() + pumpUnreachableThreshold())
-                rxBus.send(EventNewNotification(Notification(Notification.PUMP_UNREACHABLE, rh.gs(app.aaps.core.ui.R.string.pump_unreachable), Notification.URGENT).also {
+                rxBus.send(EventNewNotification(Notification(Notification.PUMP_UNREACHABLE, rh.gs(R.string.pump_unreachable), Notification.URGENT).also {
                     it.soundId =
-                        app.aaps.core.ui.R.raw.alarm
+                        R.raw.alarm
                 }))
-                uel.log(Action.CAREPORTAL, Sources.Aaps, rh.gs(app.aaps.core.ui.R.string.pump_unreachable), ValueWithUnit.TherapyEventType(TherapyEvent.Type.ANNOUNCEMENT))
                 if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_create_announcements_from_errors, true))
-                    disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(rh.gs(app.aaps.core.ui.R.string.pump_unreachable))).subscribe()
+                    disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
+                        therapyEvent = TE.asAnnouncement(rh.gs(R.string.pump_unreachable)),
+                        timestamp = dateUtil.now(),
+                        action = Action.CAREPORTAL,
+                        source = Sources.Aaps,
+                        note = rh.gs(R.string.pump_unreachable),
+                        listValues = listOf(ValueWithUnit.TEType(TE.Type.ANNOUNCEMENT))
+                    ).subscribe()
             }
             if (sp.getBoolean(app.aaps.core.utils.R.string.key_smscommunicator_report_pump_unreachable, true))
-                smsCommunicator.sendNotificationToAllNumbers(rh.gs(app.aaps.core.ui.R.string.pump_unreachable))
+                smsCommunicator.sendNotificationToAllNumbers(rh.gs(R.string.pump_unreachable))
         }
         if (!isStatusOutdated && !alarmTimeoutExpired) rxBus.send(EventDismissNotification(Notification.PUMP_UNREACHABLE))
     }
@@ -121,19 +127,24 @@ class LocalAlertUtilsImpl @Inject constructor(
     }
 
     override fun checkStaleBGAlert() {
-        val bgReadingWrapped = repository.getLastGlucoseValueWrapped().blockingGet()
-        val bgReading = if (bgReadingWrapped is ValueWrapper.Existing) bgReadingWrapped.value else return
+        val bgReading = persistenceLayer.getLastGlucoseValue() ?: return
         if (sp.getBoolean(app.aaps.core.utils.R.string.key_enable_missed_bg_readings_alert, false)
             && bgReading.timestamp + missedReadingsThreshold() < System.currentTimeMillis()
             && sp.getLong("nextMissedReadingsAlarm", 0L) < System.currentTimeMillis()
         ) {
-            val n = Notification(Notification.BG_READINGS_MISSED, rh.gs(app.aaps.core.ui.R.string.missed_bg_readings), Notification.URGENT)
-            n.soundId = app.aaps.core.ui.R.raw.alarm
+            val n = Notification(Notification.BG_READINGS_MISSED, rh.gs(R.string.missed_bg_readings), Notification.URGENT)
+            n.soundId = R.raw.alarm
             sp.putLong("nextMissedReadingsAlarm", System.currentTimeMillis() + missedReadingsThreshold())
             rxBus.send(EventNewNotification(n))
-            uel.log(Action.CAREPORTAL, Sources.Aaps, rh.gs(app.aaps.core.ui.R.string.missed_bg_readings), ValueWithUnit.TherapyEventType(TherapyEvent.Type.ANNOUNCEMENT))
             if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_create_announcements_from_errors, true)) {
-                disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(n.text)).subscribe()
+                disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
+                    therapyEvent = TE.asAnnouncement(n.text),
+                    timestamp = dateUtil.now(),
+                    action = Action.CAREPORTAL,
+                    source = Sources.Aaps,
+                    note = rh.gs(R.string.missed_bg_readings),
+                    listValues = listOf(ValueWithUnit.TEType(TE.Type.ANNOUNCEMENT))
+                ).subscribe()
             }
         } else if (dateUtil.isOlderThan(bgReading.timestamp, 5).not()) {
             rxBus.send(EventDismissNotification(Notification.BG_READINGS_MISSED))

@@ -7,8 +7,10 @@ import javax.inject.Inject;
 import app.aaps.core.interfaces.logging.AAPSLogger;
 import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.core.interfaces.plugin.ActivePlugin;
+import app.aaps.core.interfaces.pump.defs.PumpDeviceState;
 import app.aaps.core.interfaces.sharedPreferences.SP;
 import app.aaps.core.interfaces.utils.Round;
+import app.aaps.core.utils.pump.ByteUtil;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RFSpy;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkCommunicationException;
@@ -24,8 +26,6 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.WakeAndTuneTask;
-import info.nightscout.pump.common.defs.PumpDeviceState;
-import info.nightscout.pump.common.utils.ByteUtil;
 
 /**
  * This is abstract class for RileyLink Communication, this one needs to be extended by specific "Pump" class.

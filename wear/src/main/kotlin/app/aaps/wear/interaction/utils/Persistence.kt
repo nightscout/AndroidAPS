@@ -1,17 +1,17 @@
 package app.aaps.wear.interaction.utils
 
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.rx.events.EventMobileToWear
 import app.aaps.core.interfaces.rx.weardata.CwfData
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
+import app.aaps.core.interfaces.rx.weardata.CwfResDataMap
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.rx.weardata.EventData.Companion.deserialize
 import app.aaps.core.interfaces.rx.weardata.EventData.SingleBg
 import app.aaps.core.interfaces.rx.weardata.EventData.TreatmentData
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.shared.impl.weardata.ResFileMap
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -20,7 +20,6 @@ import javax.inject.Singleton
  * Refactored by MilosKozak 25/04/2022
  */
 @Singleton
-@OpenForTesting
 open class Persistence @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil,
@@ -152,12 +151,18 @@ open class Persistence @Inject constructor(
         return null
     }
 
+    private fun CwfData.simplify(): CwfData? = resData[ResFileMap.CUSTOM_WATCHFACE.fileName]?.let {
+        val simplifiedData: CwfResDataMap = mutableMapOf()
+        simplifiedData[ResFileMap.CUSTOM_WATCHFACE.fileName] = it
+        CwfData(json, metadata, simplifiedData)
+    }
+
     fun readSimplifiedCwf(isDefault: Boolean = false): EventData.ActionSetCustomWatchface? {
         try {
             var s = sp.getStringOrNull(if (isDefault) CUSTOM_DEFAULT_WATCHFACE else CUSTOM_WATCHFACE, null)
             if (s != null) {
                 return (deserialize(s) as EventData.ActionSetCustomWatchface).let {
-                    EventData.ActionSetCustomWatchface(it.customWatchfaceData.simplify() ?:it.customWatchfaceData)
+                    EventData.ActionSetCustomWatchface(it.customWatchfaceData.simplify() ?: it.customWatchfaceData)
                 }
 
             } else {
@@ -193,9 +198,9 @@ open class Persistence @Inject constructor(
         aapsLogger.debug(LTag.WEAR, "Stored Status data: $status")
     }
 
-    fun store(customWatchface: EventData.ActionSetCustomWatchface, isdefault: Boolean = false) {
-        putString(if (isdefault) CUSTOM_DEFAULT_WATCHFACE else CUSTOM_WATCHFACE, customWatchface.serialize())
-        aapsLogger.debug(LTag.WEAR, "Stored Custom Watchface ${customWatchface.customWatchfaceData} ${isdefault}: $customWatchface")
+    fun store(customWatchface: EventData.ActionSetCustomWatchface, isDefault: Boolean = false) {
+        putString(if (isDefault) CUSTOM_DEFAULT_WATCHFACE else CUSTOM_WATCHFACE, customWatchface.serialize())
+        aapsLogger.debug(LTag.WEAR, "Stored Custom Watchface ${customWatchface.customWatchfaceData} ${isDefault}: $customWatchface")
     }
 
     fun store(customWatchface: EventData.ActionUpdateCustomWatchface) {
@@ -204,14 +209,14 @@ open class Persistence @Inject constructor(
                 customWatchface.customWatchfaceData.metadata[CwfMetadataKey.CWF_AUTHOR_VERSION] == savedCwData.customWatchfaceData.metadata[CwfMetadataKey.CWF_AUTHOR_VERSION]
             ) {
                 // if same name and author version, then resync metadata to watch to update filename and authorization
-                val newCwfData = CwfData(savedCwData.customWatchfaceData.json, customWatchface.customWatchfaceData.metadata, savedCwData.customWatchfaceData.resDatas)
+                val newCwfData = CwfData(savedCwData.customWatchfaceData.json, customWatchface.customWatchfaceData.metadata, savedCwData.customWatchfaceData.resData)
                 EventData.ActionSetCustomWatchface(newCwfData).also {
                     putString(CUSTOM_WATCHFACE, it.serialize())
                     aapsLogger.debug(LTag.WEAR, "Update Custom Watchface ${it.customWatchfaceData} : $customWatchface")
+                }
             }
         }
     }
-}
 
     fun setDefaultWatchface() {
         readCustomWatchface(true)?.let { store(it) }

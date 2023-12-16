@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Locale;
 
 import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.utils.pump.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkCommunicationException;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkBLEError;
-import info.nightscout.pump.common.utils.ByteUtil;
 
 /**
  * Created by andy on 11/24/18.

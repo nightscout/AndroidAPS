@@ -9,13 +9,21 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import app.aaps.annotations.OpenForTesting
-import app.aaps.core.interfaces.aps.ApsMode
+import app.aaps.core.data.aps.ApsMode
+import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.OE
+import app.aaps.core.data.model.TT
+import app.aaps.core.data.plugin.PluginDescription
+import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.configuration.Constants
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -24,8 +32,6 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
@@ -36,6 +42,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventNSClientRestart
+import app.aaps.core.interfaces.rx.events.EventNewNotification
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.sharedPreferences.SP
@@ -45,25 +52,17 @@ import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.SafeParse
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.main.constraints.ConstraintObject
-import app.aaps.core.main.events.EventNewNotification
-import app.aaps.core.main.iob.generateCOBString
-import app.aaps.core.main.iob.round
-import app.aaps.core.main.utils.worker.LoggingWorker
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.UnitDoubleKey
+import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.core.objects.extensions.generateCOBString
+import app.aaps.core.objects.extensions.round
+import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.core.validators.ValidatingEditTextPreference
-import app.aaps.database.entities.OfflineEvent
-import app.aaps.database.entities.TemporaryTarget
-import app.aaps.database.entities.UserEntry.Action
-import app.aaps.database.entities.UserEntry.Sources
-import app.aaps.database.entities.ValueWithUnit
-import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.CancelCurrentOfflineEventIfAnyTransaction
-import app.aaps.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
-import app.aaps.database.impl.transactions.InsertAndCancelCurrentOfflineEventTransaction
-import app.aaps.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.general.smsCommunicator.events.EventSmsCommunicatorUpdateGui
 import app.aaps.plugins.main.general.smsCommunicator.otp.OneTimePassword
@@ -82,15 +81,15 @@ import javax.inject.Singleton
 import kotlin.math.max
 import kotlin.math.min
 
-@OpenForTesting
 @Singleton
 class SmsCommunicatorPlugin @Inject constructor(
-    injector: HasAndroidInjector,
+    private val injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     private val smsManager: SmsManager?,
     private val aapsSchedulers: AapsSchedulers,
     private val sp: SP,
+    private val preferences: Preferences,
     private val constraintChecker: ConstraintsChecker,
     private val rxBus: RxBus,
     private val profileFunction: ProfileFunction,
@@ -106,18 +105,18 @@ class SmsCommunicatorPlugin @Inject constructor(
     private val dateUtil: DateUtil,
     private val uel: UserEntryLogger,
     private val glucoseStatusProvider: GlucoseStatusProvider,
-    private val repository: AppRepository,
+    private val persistenceLayer: PersistenceLayer,
     private val decimalFormatter: DecimalFormatter
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
         .fragmentClass(SmsCommunicatorFragment::class.java.name)
-        .pluginIcon(app.aaps.core.main.R.drawable.ic_sms)
+        .pluginIcon(app.aaps.core.objects.R.drawable.ic_sms)
         .pluginName(R.string.smscommunicator)
         .shortName(R.string.smscommunicator_shortname)
         .preferencesId(R.xml.pref_smscommunicator)
         .description(R.string.description_sms_communicator),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), SmsCommunicator {
 
     private val disposable = CompositeDisposable()
@@ -435,13 +434,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 receivedSms.processed = true
                 messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = true) {
                     override fun run() {
-                        uel.log(Action.RESUME, Sources.SMS)
-                        disposable += repository.runTransactionForResult(CancelCurrentOfflineEventIfAnyTransaction(dateUtil.now()))
-                            .subscribe({ result ->
-                                           result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $it") }
-                                       }, {
-                                           aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
-                                       })
+                        disposable += persistenceLayer.cancelCurrentOfflineEvent(dateUtil.now(), Action.RESUME, Sources.SMS).subscribe()
                         rxBus.send(EventRefreshOverview("SMS_LOOP_RESUME"))
                         commandQueue.cancelTempBasal(true, object : Callback() {
                             override fun run() {
@@ -472,23 +465,14 @@ class SmsCommunicatorPlugin @Inject constructor(
                     receivedSms.processed = true
                     messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = true, duration) {
                         override fun run() {
-                            uel.log(Action.SUSPEND, Sources.SMS)
                             commandQueue.cancelTempBasal(true, object : Callback() {
                                 override fun run() {
                                     if (result.success) {
-                                        disposable += repository.runTransactionForResult(
-                                            InsertAndCancelCurrentOfflineEventTransaction(
-                                                dateUtil.now(),
-                                                T.mins(anInteger().toLong()).msecs(),
-                                                OfflineEvent.Reason.SUSPEND
-                                            )
-                                        )
-                                            .subscribe({ result ->
-                                                           result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $it") }
-                                                           result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted OfflineEvent $it") }
-                                                       }, {
-                                                           aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
-                                                       })
+                                        disposable += persistenceLayer.insertAndCancelCurrentOfflineEvent(
+                                            offlineEvent = OE(timestamp = dateUtil.now(), duration = T.mins(anInteger().toLong()).msecs(), reason = OE.Reason.SUSPEND),
+                                            action = Action.SUSPEND,
+                                            source = Sources.SMS
+                                        ).subscribe()
                                         rxBus.send(EventRefreshOverview("SMS_LOOP_SUSPENDED"))
                                         val replyText = rh.gs(R.string.smscommunicator_loop_suspended) + " " +
                                             rh.gs(if (result.success) R.string.smscommunicator_tempbasal_canceled else R.string.smscommunicator_tempbasal_cancel_failed)
@@ -512,7 +496,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = false) {
                     override fun run() {
                         uel.log(Action.LGS_LOOP_MODE, Sources.SMS)
-                        sp.putString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.LGS.name)
+                        preferences.put(StringKey.LoopApsMode, ApsMode.LGS.name)
                         rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend)))
                         val replyText = rh.gs(R.string.smscommunicator_current_loop_mode, getApsModeText())
                         sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
@@ -527,7 +511,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = false) {
                     override fun run() {
                         uel.log(Action.CLOSED_LOOP_MODE, Sources.SMS)
-                        sp.putString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.CLOSED.name)
+                        preferences.put(StringKey.LoopApsMode, ApsMode.CLOSED.name)
                         rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.ui.R.string.closedloop)))
                         val replyText = rh.gs(R.string.smscommunicator_current_loop_mode, getApsModeText())
                         sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
@@ -587,18 +571,12 @@ class SmsCommunicatorPlugin @Inject constructor(
             receivedSms.processed = true
             messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = true) {
                 override fun run() {
-                    uel.log(Action.RECONNECT, Sources.SMS)
                     commandQueue.cancelTempBasal(true, object : Callback() {
                         override fun run() {
                             if (!result.success) {
                                 sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.smscommunicator_pump_connect_fail)))
                             } else {
-                                disposable += repository.runTransactionForResult(CancelCurrentOfflineEventIfAnyTransaction(dateUtil.now()))
-                                    .subscribe({ result ->
-                                                   result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $it") }
-                                               }, {
-                                                   aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
-                                               })
+                                disposable += persistenceLayer.cancelCurrentOfflineEvent(dateUtil.now(), Action.RECONNECT, Sources.SMS).subscribe()
                                 sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.smscommunicator_reconnect)))
                                 rxBus.send(EventRefreshOverview("SMS_PUMP_START"))
                             }
@@ -620,9 +598,8 @@ class SmsCommunicatorPlugin @Inject constructor(
                 receivedSms.processed = true
                 messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = true) {
                     override fun run() {
-                        uel.log(Action.DISCONNECT, Sources.SMS)
                         val profile = profileFunction.getProfile() ?: return
-                        loop.goToZeroTemp(duration, profile, OfflineEvent.Reason.DISCONNECT_PUMP)
+                        loop.goToZeroTemp(durationInMinutes = duration, profile = profile, reason = OE.Reason.DISCONNECT_PUMP, action = Action.DISCONNECT, source = Sources.SMS)
                         rxBus.send(EventRefreshOverview("SMS_PUMP_DISCONNECT"))
                         sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.smscommunicator_pump_disconnected)))
                     }
@@ -674,13 +651,21 @@ class SmsCommunicatorPlugin @Inject constructor(
                     val finalPercentage = percentage
                     messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = true, list[pIndex - 1] as String, finalPercentage) {
                         override fun run() {
-                            if (profileFunction.createProfileSwitch(store, list[pIndex - 1] as String, 0, finalPercentage, 0, dateUtil.now())) {
+                            if (profileFunction.createProfileSwitch(
+                                    profileStore = store,
+                                    profileName = list[pIndex - 1] as String,
+                                    durationInMinutes = 0,
+                                    percentage = finalPercentage,
+                                    timeShiftInHours = 0,
+                                    timestamp = dateUtil.now(),
+                                    action = Action.PROFILE_SWITCH,
+                                    source = Sources.SMS,
+                                    note = rh.gs(R.string.sms_profile_switch_created),
+                                    listValues = listOf(ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.sms_profile_switch_created)))
+                                )
+                            ) {
                                 val replyText = rh.gs(R.string.sms_profile_switch_created)
                                 sendSMS(Sms(receivedSms.phoneNumber, replyText))
-                                uel.log(
-                                    Action.PROFILE_SWITCH, Sources.SMS, rh.gs(R.string.sms_profile_switch_created),
-                                    ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.sms_profile_switch_created))
-                                )
                             } else {
                                 sendSMS(Sms(receivedSms.phoneNumber, rh.gs(app.aaps.core.ui.R.string.invalid_profile)))
                             }
@@ -751,17 +736,23 @@ class SmsCommunicatorPlugin @Inject constructor(
                                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                                     if (result.isPercent)
                                         uel.log(
-                                            Action.TEMP_BASAL, Sources.SMS,
-                                            activePlugin.activePump.shortStatus(true) + "\n" + rh.gs(R.string.smscommunicator_tempbasal_set_percent, result.percent, result.duration),
-                                            ValueWithUnit.Percent(result.percent),
-                                            ValueWithUnit.Minute(result.duration)
+                                            action = Action.TEMP_BASAL, source = Sources.SMS,
+                                            note = activePlugin.activePump.shortStatus(true) + "\n" + rh.gs(R.string.smscommunicator_tempbasal_set_percent, result.percent, result.duration),
+                                            listValues = listOf(
+                                                ValueWithUnit.Percent(result.percent),
+                                                ValueWithUnit.Minute(result.duration)
+                                            )
+
                                         )
                                     else
                                         uel.log(
-                                            Action.TEMP_BASAL, Sources.SMS,
-                                            activePlugin.activePump.shortStatus(true) + "\n" + rh.gs(R.string.smscommunicator_tempbasal_set, result.absolute, result.duration),
-                                            ValueWithUnit.UnitPerHour(result.absolute),
-                                            ValueWithUnit.Minute(result.duration)
+                                            action = Action.TEMP_BASAL,
+                                            source = Sources.SMS,
+                                            note = activePlugin.activePump.shortStatus(true) + "\n" + rh.gs(R.string.smscommunicator_tempbasal_set, result.absolute, result.duration),
+                                            listValues = listOf(
+                                                ValueWithUnit.UnitPerHour(result.absolute),
+                                                ValueWithUnit.Minute(result.duration)
+                                            )
                                         )
                                 } else {
                                     var replyText = rh.gs(R.string.smscommunicator_tempbasal_failed)
@@ -802,19 +793,23 @@ class SmsCommunicatorPlugin @Inject constructor(
                                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                                     if (result.isPercent)
                                         uel.log(
-                                            Action.TEMP_BASAL,
-                                            Sources.SMS,
-                                            activePlugin.activePump.shortStatus(true) + "\n" + rh.gs(R.string.smscommunicator_tempbasal_set_percent, result.percent, result.duration),
-                                            ValueWithUnit.Percent(result.percent),
-                                            ValueWithUnit.Minute(result.duration)
+                                            action = Action.TEMP_BASAL,
+                                            source = Sources.SMS,
+                                            note = activePlugin.activePump.shortStatus(true) + "\n" + rh.gs(R.string.smscommunicator_tempbasal_set_percent, result.percent, result.duration),
+                                            listValues = listOf(
+                                                ValueWithUnit.Percent(result.percent),
+                                                ValueWithUnit.Minute(result.duration)
+                                            )
                                         )
                                     else
                                         uel.log(
-                                            Action.TEMP_BASAL,
-                                            Sources.SMS,
-                                            activePlugin.activePump.shortStatus(true) + "\n" + rh.gs(R.string.smscommunicator_tempbasal_set, result.absolute, result.duration),
-                                            ValueWithUnit.UnitPerHour(result.absolute),
-                                            ValueWithUnit.Minute(result.duration)
+                                            action = Action.TEMP_BASAL,
+                                            source = Sources.SMS,
+                                            note = activePlugin.activePump.shortStatus(true) + "\n" + rh.gs(R.string.smscommunicator_tempbasal_set, result.absolute, result.duration),
+                                            listValues = listOf(
+                                                ValueWithUnit.UnitPerHour(result.absolute),
+                                                ValueWithUnit.Minute(result.duration)
+                                            )
                                         )
                                 } else {
                                     var replyText = rh.gs(R.string.smscommunicator_tempbasal_failed)
@@ -881,22 +876,28 @@ class SmsCommunicatorPlugin @Inject constructor(
                                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                                     if (config.APS)
                                         uel.log(
-                                            Action.EXTENDED_BOLUS,
-                                            Sources.SMS,
-                                            activePlugin.activePump.shortStatus(true) + "\n" + rh.gs(
+                                            action = Action.EXTENDED_BOLUS,
+                                            source = Sources.SMS,
+                                            note = activePlugin.activePump.shortStatus(true) + "\n" + rh.gs(
                                                 R.string.smscommunicator_extended_set,
                                                 aDouble,
                                                 duration
                                             ) + " / " + rh.gs(app.aaps.core.ui.R.string.loopsuspended),
-                                            ValueWithUnit.Insulin(aDouble ?: 0.0),
-                                            ValueWithUnit.Minute(duration),
-                                            ValueWithUnit.SimpleString(rh.gsNotLocalised(app.aaps.core.ui.R.string.loopsuspended))
+                                            listValues = listOf(
+                                                ValueWithUnit.Insulin(aDouble ?: 0.0),
+                                                ValueWithUnit.Minute(duration),
+                                                ValueWithUnit.SimpleString(rh.gsNotLocalised(app.aaps.core.ui.R.string.loopsuspended))
+                                            )
                                         )
                                     else
                                         uel.log(
-                                            Action.EXTENDED_BOLUS, Sources.SMS, activePlugin.activePump.shortStatus(true) + "\n" + rh.gs(R.string.smscommunicator_extended_set, aDouble, duration),
-                                            ValueWithUnit.Insulin(aDouble ?: 0.0),
-                                            ValueWithUnit.Minute(duration)
+                                            action = Action.EXTENDED_BOLUS,
+                                            source = Sources.SMS,
+                                            note = activePlugin.activePump.shortStatus(true) + "\n" + rh.gs(R.string.smscommunicator_extended_set, aDouble, duration),
+                                            listValues = listOf(
+                                                ValueWithUnit.Insulin(aDouble ?: 0.0),
+                                                ValueWithUnit.Minute(duration)
+                                            )
                                         )
                                 } else {
                                     var replyText = rh.gs(R.string.smscommunicator_extended_failed)
@@ -947,35 +948,25 @@ class SmsCommunicatorPlugin @Inject constructor(
                                         lastRemoteBolusTime = dateUtil.now()
                                         if (isMeal) {
                                             profileFunction.getProfile()?.let { currentProfile ->
-                                                var eatingSoonTTDuration = sp.getInt(app.aaps.core.utils.R.string.key_eatingsoon_duration, Constants.defaultEatingSoonTTDuration)
-                                                eatingSoonTTDuration =
-                                                    if (eatingSoonTTDuration > 0) eatingSoonTTDuration
-                                                    else Constants.defaultEatingSoonTTDuration
-                                                var eatingSoonTT =
-                                                    sp.getDouble(
-                                                        app.aaps.core.utils.R.string.key_eatingsoon_target,
-                                                        if (currentProfile.units == GlucoseUnit.MMOL) Constants.defaultEatingSoonTTmmol else Constants.defaultEatingSoonTTmgdl
-                                                    )
-                                                eatingSoonTT =
-                                                    when {
-                                                        eatingSoonTT > 0                         -> eatingSoonTT
-                                                        currentProfile.units == GlucoseUnit.MMOL -> Constants.defaultEatingSoonTTmmol
-                                                        else                                     -> Constants.defaultEatingSoonTTmgdl
-                                                    }
-                                                disposable += repository.runTransactionForResult(
-                                                    InsertAndCancelCurrentTemporaryTargetTransaction(
+                                                val eatingSoonTTDuration = preferences.get(IntKey.OverviewEatingSoonDuration)
+                                                val eatingSoonTT = preferences.get(UnitDoubleKey.OverviewEatingSoonTarget)
+                                                disposable += persistenceLayer.insertAndCancelCurrentTemporaryTarget(
+                                                    temporaryTarget = TT(
                                                         timestamp = dateUtil.now(),
                                                         duration = TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
-                                                        reason = TemporaryTarget.Reason.EATING_SOON,
+                                                        reason = TT.Reason.EATING_SOON,
                                                         lowTarget = profileUtil.convertToMgdl(eatingSoonTT, profileUtil.units),
                                                         highTarget = profileUtil.convertToMgdl(eatingSoonTT, profileUtil.units)
+                                                    ),
+                                                    action = Action.TT,
+                                                    source = Sources.SMS,
+                                                    note = null,
+                                                    listValues = listOf(
+                                                        ValueWithUnit.TETTReason(TT.Reason.EATING_SOON),
+                                                        ValueWithUnit.Mgdl(profileUtil.convertToMgdl(eatingSoonTT, profileUtil.units)),
+                                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong())).toInt())
                                                     )
-                                                ).subscribe({ result ->
-                                                                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
-                                                                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
-                                                            }, {
-                                                                aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
-                                                            })
+                                                ).subscribe()
                                                 val tt = if (currentProfile.units == GlucoseUnit.MMOL) {
                                                     decimalFormatter.to1Decimal(eatingSoonTT)
                                                 } else decimalFormatter.to0Decimal(eatingSoonTT)
@@ -1002,9 +993,9 @@ class SmsCommunicatorPlugin @Inject constructor(
         } else sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
     }
 
-    private fun toTodayTime(hh_colon_mm: String): Long {
+    private fun toTodayTime(hhColonMm: String): Long {
         val p = Pattern.compile("(\\d+):(\\d+)( a.m.| p.m.| AM| PM|AM|PM|)")
-        val m = p.matcher(hh_colon_mm)
+        val m = p.matcher(hhColonMm)
         var retVal: Long = 0
         if (m.find()) {
             var hours = SafeParse.stringToInt(m.group(1))
@@ -1080,67 +1071,47 @@ class SmsCommunicatorPlugin @Inject constructor(
             messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = false) {
                 override fun run() {
                     val units = profileUtil.units
-                    var keyDuration = 0
-                    var defaultTargetDuration = 0
-                    var keyTarget = 0
-                    var defaultTargetMMOL = 0.0
-                    var defaultTargetMGDL = 0.0
-                    var reason = TemporaryTarget.Reason.EATING_SOON
+                    var reason = TT.Reason.EATING_SOON
+                    var ttDuration = 0
+                    var tt = 0.0
                     when {
                         isMeal     -> {
-                            keyDuration = app.aaps.core.utils.R.string.key_eatingsoon_duration
-                            defaultTargetDuration = Constants.defaultEatingSoonTTDuration
-                            keyTarget = app.aaps.core.utils.R.string.key_eatingsoon_target
-                            defaultTargetMMOL = Constants.defaultEatingSoonTTmmol
-                            defaultTargetMGDL = Constants.defaultEatingSoonTTmgdl
-                            reason = TemporaryTarget.Reason.EATING_SOON
+                            ttDuration = preferences.get(IntKey.OverviewEatingSoonDuration)
+                            tt = preferences.get(UnitDoubleKey.OverviewEatingSoonTarget)
+                            reason = TT.Reason.EATING_SOON
                         }
 
                         isActivity -> {
-                            keyDuration = app.aaps.core.utils.R.string.key_activity_duration
-                            defaultTargetDuration = Constants.defaultActivityTTDuration
-                            keyTarget = app.aaps.core.utils.R.string.key_activity_target
-                            defaultTargetMMOL = Constants.defaultActivityTTmmol
-                            defaultTargetMGDL = Constants.defaultActivityTTmgdl
-                            reason = TemporaryTarget.Reason.ACTIVITY
+                            ttDuration = preferences.get(IntKey.OverviewActivityDuration)
+                            tt = preferences.get(UnitDoubleKey.OverviewActivityTarget)
+                            reason = TT.Reason.ACTIVITY
                         }
 
                         isHypo     -> {
-                            keyDuration = app.aaps.core.utils.R.string.key_hypo_duration
-                            defaultTargetDuration = Constants.defaultHypoTTDuration
-                            keyTarget = app.aaps.core.utils.R.string.key_hypo_target
-                            defaultTargetMMOL = Constants.defaultHypoTTmmol
-                            defaultTargetMGDL = Constants.defaultHypoTTmgdl
-                            reason = TemporaryTarget.Reason.HYPOGLYCEMIA
+                            ttDuration = preferences.get(IntKey.OverviewHypoDuration)
+                            tt = preferences.get(UnitDoubleKey.OverviewHypoTarget)
+                            reason = TT.Reason.HYPOGLYCEMIA
                         }
                     }
-                    var ttDuration = sp.getInt(keyDuration, defaultTargetDuration)
-                    ttDuration = if (ttDuration > 0) ttDuration else defaultTargetDuration
-                    var tt = sp.getDouble(keyTarget, if (units == GlucoseUnit.MMOL) defaultTargetMMOL else defaultTargetMGDL)
-                    tt = profileUtil.valueInCurrentUnitsDetect(tt)
-                    tt = if (tt > 0) tt else if (units == GlucoseUnit.MMOL) defaultTargetMMOL else defaultTargetMGDL
-                    disposable += repository.runTransactionForResult(
-                        InsertAndCancelCurrentTemporaryTargetTransaction(
+                    disposable += persistenceLayer.insertAndCancelCurrentTemporaryTarget(
+                        temporaryTarget = TT(
                             timestamp = dateUtil.now(),
                             duration = TimeUnit.MINUTES.toMillis(ttDuration.toLong()),
                             reason = reason,
                             lowTarget = profileUtil.convertToMgdl(tt, profileUtil.units),
                             highTarget = profileUtil.convertToMgdl(tt, profileUtil.units)
+                        ),
+                        action = Action.TT,
+                        source = Sources.SMS,
+                        note = null,
+                        listValues = listOf(
+                            ValueWithUnit.fromGlucoseUnit(tt, units),
+                            ValueWithUnit.Minute(ttDuration)
                         )
-                    ).subscribe({ result ->
-                                    result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
-                                    result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
-                                }, {
-                                    aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
-                                })
+                    ).subscribe()
                     val ttString = if (units == GlucoseUnit.MMOL) decimalFormatter.to1Decimal(tt) else decimalFormatter.to0Decimal(tt)
                     val replyText = rh.gs(R.string.smscommunicator_tt_set, ttString, ttDuration)
                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
-                    uel.log(
-                        Action.TT, Sources.SMS,
-                        ValueWithUnit.fromGlucoseUnit(tt, units.asText),
-                        ValueWithUnit.Minute(ttDuration)
-                    )
                 }
             })
         } else if (isStop) {
@@ -1149,12 +1120,13 @@ class SmsCommunicatorPlugin @Inject constructor(
             receivedSms.processed = true
             messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = false) {
                 override fun run() {
-                    disposable += repository.runTransactionForResult(CancelCurrentTemporaryTargetIfAnyTransaction(dateUtil.now()))
-                        .subscribe({ result ->
-                                       result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
-                                   }, {
-                                       aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
-                                   })
+                    disposable += persistenceLayer.cancelCurrentTemporaryTargetIfAny(
+                        timestamp = dateUtil.now(),
+                        action = Action.CANCEL_TT,
+                        source = Sources.SMS,
+                        note = rh.gs(R.string.smscommunicator_tt_canceled),
+                        listValues = listOf(ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.smscommunicator_tt_canceled)))
+                    ).subscribe()
                     val replyText = rh.gs(R.string.smscommunicator_tt_canceled)
                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                     uel.log(
@@ -1291,7 +1263,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     }
 
     private fun getApsModeText(): String =
-        when (ApsMode.fromString(sp.getString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name))) {
+        when (ApsMode.fromString(preferences.get(StringKey.LoopApsMode))) {
             ApsMode.OPEN   -> rh.gs(app.aaps.core.ui.R.string.openloop)
             ApsMode.CLOSED -> rh.gs(app.aaps.core.ui.R.string.closedloop)
             ApsMode.LGS    -> rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend)

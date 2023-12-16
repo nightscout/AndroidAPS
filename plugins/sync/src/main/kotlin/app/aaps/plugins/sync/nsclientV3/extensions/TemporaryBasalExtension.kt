@@ -1,16 +1,17 @@
 package app.aaps.plugins.sync.nsclientV3.extensions
 
+import app.aaps.core.data.model.IDs
+import app.aaps.core.data.model.TB
+import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.core.interfaces.utils.T
-import app.aaps.core.main.extensions.convertedToAbsolute
 import app.aaps.core.nssdk.localmodel.treatment.EventType
 import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryBasal
-import app.aaps.database.entities.TemporaryBasal
-import app.aaps.database.entities.embedments.InterfaceIDs
+import app.aaps.core.objects.extensions.convertedToAbsolute
 import java.security.InvalidParameterException
 
-fun NSTemporaryBasal.toTemporaryBasal(): TemporaryBasal =
-    TemporaryBasal(
+fun NSTemporaryBasal.toTemporaryBasal(): TB =
+    TB(
         isValid = isValid,
         timestamp = date ?: throw InvalidParameterException(),
         utcOffset = T.mins(utcOffset ?: 0L).msecs(),
@@ -18,13 +19,13 @@ fun NSTemporaryBasal.toTemporaryBasal(): TemporaryBasal =
         rate = rate,
         isAbsolute = isAbsolute,
         duration = duration,
-        interfaceIDs_backing = InterfaceIDs(nightscoutId = identifier, pumpId = pumpId, pumpType = InterfaceIDs.PumpType.fromString(pumpType), pumpSerial = pumpSerial, endId = endId)
+        ids = IDs(nightscoutId = identifier, pumpId = pumpId, pumpType = PumpType.fromString(pumpType), pumpSerial = pumpSerial, endId = endId)
     )
 
-fun NSTemporaryBasal.Type?.toType(): TemporaryBasal.Type =
-    TemporaryBasal.Type.fromString(this?.name)
+fun NSTemporaryBasal.Type?.toType(): TB.Type =
+    TB.Type.fromString(this?.name)
 
-fun TemporaryBasal.toNSTemporaryBasal(profile: Profile): NSTemporaryBasal =
+fun TB.toNSTemporaryBasal(profile: Profile): NSTemporaryBasal =
     NSTemporaryBasal(
         eventType = EventType.TEMPORARY_BASAL,
         isValid = isValid,
@@ -36,12 +37,12 @@ fun TemporaryBasal.toNSTemporaryBasal(profile: Profile): NSTemporaryBasal =
         absolute = if (isAbsolute) rate else null,
         percent = if (!isAbsolute) rate - 100 else null,
         duration = duration,
-        identifier = interfaceIDs.nightscoutId,
-        pumpId = interfaceIDs.pumpId,
-        pumpType = interfaceIDs.pumpType?.name,
-        pumpSerial = interfaceIDs.pumpSerial,
-        endId = interfaceIDs.endId
+        identifier = ids.nightscoutId,
+        pumpId = ids.pumpId,
+        pumpType = ids.pumpType?.name,
+        pumpSerial = ids.pumpSerial,
+        endId = ids.endId
     )
 
-fun TemporaryBasal.Type?.toType(): NSTemporaryBasal.Type =
+fun TB.Type?.toType(): NSTemporaryBasal.Type =
     NSTemporaryBasal.Type.fromString(this?.name)

@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data.dto
 
+import app.aaps.core.utils.StringUtil
 import com.google.gson.annotations.Expose
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpBolusType
-import info.nightscout.pump.common.utils.StringUtil
 
 /**
  * Application: GGC - GNU Gluco Control
@@ -30,7 +30,7 @@ import info.nightscout.pump.common.utils.StringUtil
  *
  * Author: Andy {andy@atech-software.com}
  */
-class BolusDTO constructor(
+class BolusDTO(
     atechDateTime: Long,
     @Expose var requestedAmount: Double,
     @Expose var deliveredAmount: Double,

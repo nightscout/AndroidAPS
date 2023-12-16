@@ -1,26 +1,27 @@
 package app.aaps.plugins.sync.nsclientV3.extensions
 
-import app.aaps.core.interfaces.utils.T
+import app.aaps.core.data.model.IDs
+import app.aaps.core.data.model.OE
+import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.data.time.T
 import app.aaps.core.nssdk.localmodel.treatment.EventType
 import app.aaps.core.nssdk.localmodel.treatment.NSOfflineEvent
-import app.aaps.database.entities.OfflineEvent
-import app.aaps.database.entities.embedments.InterfaceIDs
 import java.security.InvalidParameterException
 
-fun NSOfflineEvent.toOfflineEvent(): OfflineEvent =
-    OfflineEvent(
+fun NSOfflineEvent.toOfflineEvent(): OE =
+    OE(
         isValid = isValid,
         timestamp = date ?: throw InvalidParameterException(),
         utcOffset = T.mins(utcOffset ?: 0L).msecs(),
         duration = duration,
         reason = reason.toReason(),
-        interfaceIDs_backing = InterfaceIDs(nightscoutId = identifier, pumpId = pumpId, pumpType = InterfaceIDs.PumpType.fromString(pumpType), pumpSerial = pumpSerial, endId = endId)
+        ids = IDs(nightscoutId = identifier, pumpId = pumpId, pumpType = PumpType.fromString(pumpType), pumpSerial = pumpSerial, endId = endId)
     )
 
-fun NSOfflineEvent.Reason?.toReason(): OfflineEvent.Reason =
-    OfflineEvent.Reason.fromString(this?.name)
+fun NSOfflineEvent.Reason?.toReason(): OE.Reason =
+    OE.Reason.fromString(this?.name)
 
-fun OfflineEvent.toNSOfflineEvent(): NSOfflineEvent =
+fun OE.toNSOfflineEvent(): NSOfflineEvent =
     NSOfflineEvent(
         eventType = EventType.APS_OFFLINE,
         isValid = isValid,
@@ -28,12 +29,12 @@ fun OfflineEvent.toNSOfflineEvent(): NSOfflineEvent =
         utcOffset = T.msecs(utcOffset).mins(),
         duration = duration,
         reason = reason.toReason(),
-        identifier = interfaceIDs.nightscoutId,
-        pumpId = interfaceIDs.pumpId,
-        pumpType = interfaceIDs.pumpType?.name,
-        pumpSerial = interfaceIDs.pumpSerial,
-        endId = interfaceIDs.endId
+        identifier = ids.nightscoutId,
+        pumpId = ids.pumpId,
+        pumpType = ids.pumpType?.name,
+        pumpSerial = ids.pumpSerial,
+        endId = ids.endId
     )
 
-fun OfflineEvent.Reason?.toReason(): NSOfflineEvent.Reason =
+fun OE.Reason?.toReason(): NSOfflineEvent.Reason =
     NSOfflineEvent.Reason.fromString(this?.name)

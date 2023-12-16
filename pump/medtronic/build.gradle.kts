@@ -12,17 +12,17 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:libraries"))
+    implementation(project(":core:data"))
     implementation(project(":core:interfaces"))
-    implementation(project(":core:main"))
+    implementation(project(":core:libraries"))
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
     implementation(project(":core:validators"))
     implementation(project(":pump:pump-common"))
     implementation(project(":pump:rileylink"))
 
+    testImplementation(project(":core:keys"))
     testImplementation(project(":shared:tests"))
-    testImplementation(project(":database:impl"))
 
     kapt(Libs.Dagger.compiler)
     kapt(Libs.Dagger.androidProcessor)

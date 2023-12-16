@@ -8,8 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import app.aaps.core.interfaces.db.GlucoseUnit
-import app.aaps.core.interfaces.extensions.toVisibility
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -27,10 +29,9 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.main.profile.ProfileSealed
+import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.dialogs.OKDialog
-import app.aaps.database.entities.UserEntry
-import app.aaps.database.entities.ValueWithUnit
+import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.databinding.ProfileFragmentBinding
 import app.aaps.plugins.main.profile.ui.TimeListEdit
@@ -277,7 +278,7 @@ class ProfileFragment : DaggerFragment() {
             if (profilePlugin.isEdited) {
                 activity?.let { OKDialog.show(it, "", rh.gs(R.string.save_or_reset_changes_first)) }
             } else {
-                uel.log(UserEntry.Action.NEW_PROFILE, UserEntry.Sources.LocalProfile)
+                uel.log(Action.NEW_PROFILE, Sources.LocalProfile)
                 profilePlugin.addNewProfile()
                 build()
             }
@@ -288,10 +289,8 @@ class ProfileFragment : DaggerFragment() {
                 activity?.let { OKDialog.show(it, "", rh.gs(R.string.save_or_reset_changes_first)) }
             } else {
                 uel.log(
-                    UserEntry.Action.CLONE_PROFILE, UserEntry.Sources.LocalProfile, ValueWithUnit.SimpleString(
-                        profilePlugin.currentProfile()?.name
-                            ?: ""
-                    )
+                    action = Action.CLONE_PROFILE, source = Sources.LocalProfile,
+                    value = ValueWithUnit.SimpleString(profilePlugin.currentProfile()?.name ?: "")
                 )
                 profilePlugin.cloneProfile()
                 build()
@@ -302,10 +301,8 @@ class ProfileFragment : DaggerFragment() {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, rh.gs(R.string.delete_current_profile, profilePlugin.currentProfile()?.name), {
                     uel.log(
-                        UserEntry.Action.PROFILE_REMOVED, UserEntry.Sources.LocalProfile, ValueWithUnit.SimpleString(
-                            profilePlugin.currentProfile()?.name
-                                ?: ""
-                        )
+                        action = Action.PROFILE_REMOVED, source = Sources.LocalProfile,
+                        value = ValueWithUnit.SimpleString(profilePlugin.currentProfile()?.name ?: "")
                     )
                     profilePlugin.removeCurrentProfile()
                     build()
@@ -333,10 +330,8 @@ class ProfileFragment : DaggerFragment() {
                 return@setOnClickListener  //Should not happen as saveButton should not be visible if not valid
             }
             uel.log(
-                UserEntry.Action.STORE_PROFILE, UserEntry.Sources.LocalProfile, ValueWithUnit.SimpleString(
-                    profilePlugin.currentProfile()?.name
-                        ?: ""
-                )
+                action = Action.STORE_PROFILE, source = Sources.LocalProfile,
+                value = ValueWithUnit.SimpleString(profilePlugin.currentProfile()?.name ?: "")
             )
             profilePlugin.storeSettings(activity, dateUtil.now())
             build()

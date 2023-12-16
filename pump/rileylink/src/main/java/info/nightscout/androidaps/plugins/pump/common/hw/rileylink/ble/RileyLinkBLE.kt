@@ -19,6 +19,8 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.utils.pump.ByteUtil
+import app.aaps.core.utils.pump.ThreadUtil
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.GattAttributes
@@ -31,8 +33,6 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.operation
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData
-import info.nightscout.pump.common.utils.ByteUtil
-import info.nightscout.pump.common.utils.ThreadUtil
 import org.apache.commons.lang3.StringUtils
 import java.util.Locale
 import java.util.UUID

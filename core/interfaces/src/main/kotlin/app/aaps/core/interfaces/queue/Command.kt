@@ -1,18 +1,9 @@
 package app.aaps.core.interfaces.queue
 
-import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.resources.ResourceHelper
-import dagger.android.HasAndroidInjector
-import javax.inject.Inject
+interface Command {
 
-abstract class Command(
-    val injector: HasAndroidInjector,
-    val commandType: CommandType,
-    val callback: Callback? = null
-) {
-
-    @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var rh: ResourceHelper
+    val commandType: CommandType
+    val callback: Callback?
 
     enum class CommandType {
         BOLUS,
@@ -35,13 +26,8 @@ abstract class Command(
         CUSTOM_COMMAND
     }
 
-    init {
-        @Suppress("LeakingThis")
-        injector.androidInjector().inject(this)
-    }
-
-    abstract fun execute()
-    abstract fun status(): String
-    abstract fun log(): String
-    abstract fun cancel()
+    fun execute()
+    fun status(): String
+    fun log(): String
+    fun cancel()
 }

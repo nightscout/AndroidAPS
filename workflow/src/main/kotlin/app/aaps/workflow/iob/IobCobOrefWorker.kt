@@ -4,10 +4,11 @@ import android.content.Context
 import android.os.SystemClock
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import app.aaps.core.interfaces.aps.AutosensData
-import app.aaps.core.interfaces.aps.SMBDefaults
+import app.aaps.core.data.aps.AutosensData
+import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.configuration.Constants
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.objects.Instantiator
@@ -18,15 +19,14 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.Event
 import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.rx.events.EventIobCalculationProgress
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.interfaces.utils.T
-import app.aaps.core.main.events.EventIobCalculationProgress
-import app.aaps.core.main.utils.worker.LoggingWorker
-import app.aaps.core.main.workflow.CalculationWorkflow
+import app.aaps.core.interfaces.workflow.CalculationWorkflow
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.Preferences
+import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
-import app.aaps.database.impl.AppRepository
 import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
@@ -40,7 +40,7 @@ class IobCobOrefWorker @Inject internal constructor(
     params: WorkerParameters
 ) : LoggingWorker(context, params, Dispatchers.Default) {
 
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
@@ -49,7 +49,7 @@ class IobCobOrefWorker @Inject internal constructor(
     @Inject lateinit var config: Config
     @Inject lateinit var profiler: Profiler
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var instantiator: Instantiator
     @Inject lateinit var decimalFormatter: DecimalFormatter
@@ -182,11 +182,11 @@ class IobCobOrefWorker @Inject internal constructor(
                         aapsLogger.debug(LTag.AUTOSENS) { ">>>>> bucketed_data.size()=${bucketedData.size} i=$i hourAgoData=null" }
                     }
                 }
-                val recentCarbTreatments = repository.getCarbsDataFromTimeToTimeExpanded(bgTime - T.mins(5).msecs(), bgTime, true).blockingGet()
+                val recentCarbTreatments = persistenceLayer.getCarbsFromTimeToTimeExpanded(bgTime - T.mins(5).msecs(), bgTime, true)
                 for (recentCarbTreatment in recentCarbTreatments) {
                     autosensData.carbsFromBolus += recentCarbTreatment.amount
                     val isAAPSOrWeighted = activePlugin.activeSensitivity.isMinCarbsAbsorptionDynamic
-                    autosensData.activeCarbsList.add(fromCarbs(recentCarbTreatment, isAAPSOrWeighted, profileFunction, aapsLogger, dateUtil, sp))
+                    autosensData.activeCarbsList.add(fromCarbs(recentCarbTreatment, isAAPSOrWeighted, profileFunction, aapsLogger, dateUtil, preferences))
                     autosensData.pastSensitivity += "[" + decimalFormatter.to0Decimal(recentCarbTreatment.amount) + "g]"
                 }
 
@@ -202,7 +202,7 @@ class IobCobOrefWorker @Inject internal constructor(
                         }
                     } else {
                         //Oref sensitivity
-                        totalMinCarbsImpact = sp.getDouble(app.aaps.core.utils.R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact)
+                        totalMinCarbsImpact = preferences.get(DoubleKey.ApsAmaMin5MinCarbsImpact)
                     }
 
                     // figure out how many carbs that represents

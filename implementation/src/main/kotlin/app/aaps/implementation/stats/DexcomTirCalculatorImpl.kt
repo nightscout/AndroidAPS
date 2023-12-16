@@ -4,20 +4,20 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.view.ViewGroup
 import android.widget.TableLayout
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.stats.DexcomTIR
 import app.aaps.core.interfaces.stats.DexcomTirCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
-import app.aaps.database.impl.AppRepository
+import dagger.Reusable
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@Reusable
 class DexcomTirCalculatorImpl @Inject constructor(
     private val profileUtil: ProfileUtil,
     private val dateUtil: DateUtil,
-    private val repository: AppRepository
+    private val persistenceLayer: PersistenceLayer
 ) : DexcomTirCalculator {
 
     val days = 14L
@@ -26,7 +26,7 @@ class DexcomTirCalculatorImpl @Inject constructor(
         val startTime = MidnightTime.calcDaysBack(days)
         val endTime = MidnightTime.calc(dateUtil.now())
 
-        val bgReadings = repository.compatGetBgReadingsDataFromTime(startTime, endTime, true).blockingGet()
+        val bgReadings = persistenceLayer.getBgReadingsDataFromTimeToTime(startTime, endTime, true)
         val result = DexcomTirImpl()
         for (bg in bgReadings) result.add(bg.timestamp, bg.value)
         return result

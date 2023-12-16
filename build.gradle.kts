@@ -23,6 +23,7 @@ buildscript {
 
 plugins {
     id("org.jlleitschuh.gradle.ktlint") version "12.0.3"
+    id("com.savvasdalkitsis.module-dependency-graph") version "0.10"
 }
 
 allprojects {

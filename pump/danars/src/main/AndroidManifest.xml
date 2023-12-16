@@ -7,7 +7,7 @@
 
     <application>
         <activity
-            android:name=".activities.BLEScanActivity"
+            android:name="app.aaps.pump.danars.activities.BLEScanActivity"
             android:exported="false"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -16,18 +16,18 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.PairingHelperActivity"
+            android:name="app.aaps.pump.danars.activities.PairingHelperActivity"
             android:exported="false"
             android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleTask" />
         <activity
-            android:name=".activities.EnterPinActivity"
+            android:name="app.aaps.pump.danars.activities.EnterPinActivity"
             android:exported="false"
             android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleTask" />
 
         <service
-            android:name=".services.DanaRSService"
+            android:name="app.aaps.pump.danars.services.DanaRSService"
             android:enabled="true"
             android:exported="false" />
     </application>

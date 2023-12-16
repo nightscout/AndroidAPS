@@ -4,19 +4,19 @@ import android.content.Context
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.SystemClock
-import app.aaps.annotations.OpenForTesting
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.plugin.PluginDescription
+import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.automation.AutomationEvent
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.db.GlucoseUnit
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -27,7 +27,6 @@ import app.aaps.core.interfaces.rx.events.EventNetworkChange
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.actions.ActionAlarm
@@ -77,10 +76,9 @@ import java.util.Collections
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@OpenForTesting
 @Singleton
 class AutomationPlugin @Inject constructor(
-    injector: HasAndroidInjector,
+    private val injector: HasAndroidInjector,
     rh: ResourceHelper,
     private val context: Context,
     private val sp: SP,
@@ -99,14 +97,14 @@ class AutomationPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.GENERAL)
         .fragmentClass(AutomationFragment::class.qualifiedName)
-        .pluginIcon(app.aaps.core.main.R.drawable.ic_automation)
+        .pluginIcon(app.aaps.core.objects.R.drawable.ic_automation)
         .pluginName(R.string.automation)
         .shortName(R.string.automation_short)
         .showInList(config.APS)
         .neverVisible(!config.APS)
         .preferencesId(R.xml.pref_automation)
         .description(R.string.automation_description),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), Automation {
 
     private var disposable: CompositeDisposable = CompositeDisposable()

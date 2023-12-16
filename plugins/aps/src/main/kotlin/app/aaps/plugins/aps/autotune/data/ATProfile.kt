@@ -1,7 +1,9 @@
 package app.aaps.plugins.aps.autotune.data
 
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.data.Block
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.db.GlucoseUnit
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -16,13 +18,12 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
-import app.aaps.core.interfaces.utils.SafeParse
-import app.aaps.core.interfaces.utils.T
-import app.aaps.core.main.extensions.blockValueBySeconds
-import app.aaps.core.main.extensions.pureProfileFromJson
-import app.aaps.core.main.profile.ProfileSealed
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.Preferences
+import app.aaps.core.objects.extensions.blockValueBySeconds
+import app.aaps.core.objects.extensions.pureProfileFromJson
+import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.utils.MidnightUtils
-import app.aaps.database.entities.data.Block
 import dagger.android.HasAndroidInjector
 import org.json.JSONArray
 import org.json.JSONException
@@ -36,6 +37,7 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
 
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var config: Config
@@ -142,8 +144,8 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
                 )
             )
             json.put("carb_ratio", avgIC)
-            json.put("autosens_max", SafeParse.stringToDouble(sp.getString(app.aaps.core.utils.R.string.key_openapsama_autosens_max, "1.2")))
-            json.put("autosens_min", SafeParse.stringToDouble(sp.getString(app.aaps.core.utils.R.string.key_openapsama_autosens_min, "0.7")))
+            json.put("autosens_max", preferences.get(DoubleKey.AutosensMax))
+            json.put("autosens_min", preferences.get(DoubleKey.AutosensMin))
             json.put("units", GlucoseUnit.MGDL.asText)
             json.put("timezone", TimeZone.getDefault().id)
             jsonString = json.toString(2).replace("\\/", "/")

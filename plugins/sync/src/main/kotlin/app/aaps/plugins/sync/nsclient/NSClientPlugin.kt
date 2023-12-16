@@ -8,15 +8,15 @@ import android.os.IBinder
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceScreen
 import androidx.preference.SwitchPreference
+import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.plugin.PluginDescription
+import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.configuration.Constants
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.nsclient.NSAlarm
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -33,7 +33,7 @@ import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.main.extensions.toJson
+import app.aaps.core.objects.extensions.toJson
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsShared.NSClientFragment
 import app.aaps.plugins.sync.nsShared.events.EventNSClientStatus
@@ -42,7 +42,6 @@ import app.aaps.plugins.sync.nsShared.events.EventNSClientUpdateGuiStatus
 import app.aaps.plugins.sync.nsclient.data.AlarmAck
 import app.aaps.plugins.sync.nsclient.extensions.toJson
 import app.aaps.plugins.sync.nsclient.services.NSClientService
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -50,7 +49,6 @@ import javax.inject.Singleton
 
 @Singleton
 class NSClientPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
@@ -74,7 +72,7 @@ class NSClientPlugin @Inject constructor(
         .shortName(R.string.ns_client_short_name)
         .preferencesId(R.xml.pref_ns_client)
         .description(R.string.description_ns_client),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ) {
 
     private val disposable = CompositeDisposable()
@@ -221,19 +219,19 @@ class NSClientPlugin @Inject constructor(
 
     override suspend fun nsUpdate(collection: String, dataPair: DataSyncSelector.DataPair, progress: String, profile: Profile?): Boolean {
         val id = when (dataPair) {
-            is DataSyncSelector.PairBolus                  -> dataPair.value.interfaceIDs.nightscoutId
-            is DataSyncSelector.PairCarbs                  -> dataPair.value.interfaceIDs.nightscoutId
-            is DataSyncSelector.PairBolusCalculatorResult  -> dataPair.value.interfaceIDs.nightscoutId
-            is DataSyncSelector.PairTemporaryTarget        -> dataPair.value.interfaceIDs.nightscoutId
-            is DataSyncSelector.PairFood                   -> dataPair.value.interfaceIDs.nightscoutId
-            is DataSyncSelector.PairGlucoseValue           -> dataPair.value.interfaceIDs.nightscoutId
-            is DataSyncSelector.PairTherapyEvent           -> dataPair.value.interfaceIDs.nightscoutId
-            is DataSyncSelector.PairTemporaryBasal         -> dataPair.value.interfaceIDs.nightscoutId
-            is DataSyncSelector.PairExtendedBolus          -> dataPair.value.interfaceIDs.nightscoutId
-            is DataSyncSelector.PairProfileSwitch          -> dataPair.value.interfaceIDs.nightscoutId
-            is DataSyncSelector.PairEffectiveProfileSwitch -> dataPair.value.interfaceIDs.nightscoutId
-            is DataSyncSelector.PairOfflineEvent           -> dataPair.value.interfaceIDs.nightscoutId
-            else                                           -> error("Unsupported type")
+            is DataSyncSelector.PairBolus                  -> dataPair.value.ids.nightscoutId
+            is DataSyncSelector.PairCarbs                  -> dataPair.value.ids.nightscoutId
+            is DataSyncSelector.PairBolusCalculatorResult  -> dataPair.value.ids.nightscoutId
+            is DataSyncSelector.PairTemporaryTarget        -> dataPair.value.ids.nightscoutId
+            is DataSyncSelector.PairFood                   -> dataPair.value.ids.nightscoutId
+            is DataSyncSelector.PairGlucoseValue           -> dataPair.value.ids.nightscoutId
+            is DataSyncSelector.PairTherapyEvent           -> dataPair.value.ids.nightscoutId
+            is DataSyncSelector.PairTemporaryBasal         -> dataPair.value.ids.nightscoutId
+            is DataSyncSelector.PairExtendedBolus          -> dataPair.value.ids.nightscoutId
+            is DataSyncSelector.PairProfileSwitch          -> dataPair.value.ids.nightscoutId
+            is DataSyncSelector.PairEffectiveProfileSwitch -> dataPair.value.ids.nightscoutId
+            is DataSyncSelector.PairOfflineEvent           -> dataPair.value.ids.nightscoutId
+            else                                           -> error("Unsupported data type")
         }
         when (dataPair) {
             is DataSyncSelector.PairBolus                  -> dataPair.value.toJson(false, dateUtil)

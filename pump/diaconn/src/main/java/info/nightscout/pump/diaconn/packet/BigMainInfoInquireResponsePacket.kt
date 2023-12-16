@@ -1,8 +1,6 @@
 package info.nightscout.pump.diaconn.packet
 
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.pump.defs.PumpDescription
-import app.aaps.core.interfaces.pump.defs.PumpType
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import dagger.android.HasAndroidInjector
@@ -23,7 +21,6 @@ class BigMainInfoInquireResponsePacket(
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
     @Inject lateinit var sp: SP
     @Inject lateinit var rh: ResourceHelper
-    private var pumpDesc = PumpDescription(PumpType.DIACONN_G8)
 
     init {
         msgType = 0xb3.toByte()

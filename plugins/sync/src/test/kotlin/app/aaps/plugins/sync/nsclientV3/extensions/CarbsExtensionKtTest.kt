@@ -1,9 +1,11 @@
 package app.aaps.plugins.sync.nsclientV3.extensions
 
+import app.aaps.core.data.model.CA
+import app.aaps.core.data.model.IDs
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.nssdk.localmodel.treatment.NSCarbs
 import app.aaps.core.nssdk.mapper.convertToRemoteAndBack
-import app.aaps.database.entities.Carbs
-import app.aaps.database.entities.embedments.InterfaceIDs
+import app.aaps.plugins.sync.extensions.contentEqualsTo
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
@@ -12,40 +14,40 @@ internal class CarbsExtensionKtTest {
 
     @Test
     fun toCarbs() {
-        var carbs = Carbs(
+        var carbs = CA(
             timestamp = 10000,
             isValid = true,
             amount = 1.0,
             duration = 0,
             notes = "aaaa",
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 nightscoutId = "nightscoutId",
                 pumpId = 11000,
-                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpType = PumpType.DANA_I,
                 pumpSerial = "bbbb"
             )
         )
 
         var carbs2 = (carbs.toNSCarbs().convertToRemoteAndBack() as NSCarbs).toCarbs()
         assertThat(carbs.contentEqualsTo(carbs2)).isTrue()
-        assertThat(carbs.interfaceIdsEqualsTo(carbs2)).isTrue()
+        assertThat(carbs.ids.contentEqualsTo(carbs2.ids)).isTrue()
 
-        carbs = Carbs(
+        carbs = CA(
             timestamp = 10000,
             isValid = false,
             amount = 1.0,
             duration = 60000,
             notes = null,
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 nightscoutId = "nightscoutId",
                 pumpId = 11000,
-                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpType = PumpType.DANA_I,
                 pumpSerial = "bbbb"
             )
         )
 
         carbs2 = (carbs.toNSCarbs().convertToRemoteAndBack() as NSCarbs).toCarbs()
         assertThat(carbs.contentEqualsTo(carbs2)).isTrue()
-        assertThat(carbs.interfaceIdsEqualsTo(carbs2)).isTrue()
+        assertThat(carbs.ids.contentEqualsTo(carbs2.ids)).isTrue()
     }
 }

@@ -1,7 +1,6 @@
 package app.aaps.plugins.automation.actions
 
 import androidx.annotation.DrawableRes
-import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.plugins.automation.R
 import com.google.gson.JsonObject
@@ -17,7 +16,7 @@ class ActionStopProcessing(injector: HasAndroidInjector) : Action(injector) {
     override fun isValid(): Boolean = true
 
     override fun doAction(callback: Callback) {
-        callback.result(PumpEnactResult(injector).success(true).comment(app.aaps.core.ui.R.string.ok)).run()
+        callback.result(instantiator.providePumpEnactResult().success(true).comment(app.aaps.core.ui.R.string.ok)).run()
     }
 
     override fun toJSON(): String {

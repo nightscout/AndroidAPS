@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.Collections;
 
+import app.aaps.core.utils.pump.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertConfiguration;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertSlot;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertType;
@@ -14,7 +15,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.Be
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.BeepType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.TimerAlertTrigger;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.UnitsRemainingAlertTrigger;
-import info.nightscout.pump.common.utils.ByteUtil;
 
 class ConfigureAlertsCommandTest {
     @Test
