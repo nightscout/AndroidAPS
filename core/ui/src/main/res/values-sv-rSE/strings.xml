@@ -526,7 +526,6 @@
     <string name="limitingpercentrate">Begränsar max procent hastighet till %1$d%% pga %2$s</string>
     <string name="itmustbepositivevalue">det måste vara ett positivt värde</string>
     <string name="limitingbolus">Max bolus: %1$.1f U pga %2$s</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Bekräftelse</string>
     <string name="message">Meddelande</string>
