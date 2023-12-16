@@ -176,6 +176,7 @@ class EquilFragment : DaggerFragment() {
                 binding.mode.text = rh.gs(R.string.equil_init_insulin_error)
                 binding.mode.setTextColor(Color.RED)
             }
+
             binding.serialNumber.text = devName
             updateTempBasal()
             runOnUiThread {
@@ -258,13 +259,12 @@ class EquilFragment : DaggerFragment() {
         }
     }
 
+
     private fun showSetModeDialog() {
         val runMode = equilManager.runMode
         var tempMode = RunMode.RUN
-        // var msg = "是否开始输注?"
         if (runMode == RunMode.RUN) {
             tempMode = RunMode.SUSPEND
-            // msg = "是否暂停输注？"
         }
         showLoading()
         commandQueue.customCommand(CmdModelSet(tempMode.command), object : Callback() {
@@ -298,6 +298,8 @@ class EquilFragment : DaggerFragment() {
             binding.tempBasal.text = "-"
         }
     }
+
+
 
     @SuppressLint("SetTextI18n")
     @Synchronized

@@ -231,4 +231,9 @@ Password rule: It must be 4 characters long, chosen from ABCDEF0123456789.</stri
     <string name="equil_hint_dressing2">Please remove the pump from the base</string>
     <string name="equil_unpair">Deactivate old pump %1$s?</string>
     <string name="equil_pump_updated">Pump updated</string>
+
+    <string name="equil_maxbolus_title">Max allowed bolus [U]</string>
+    <string name="equil_maxbolus_tips">Max allowed bolus in Pump [%1$sU]</string>
+    <string name="equil_title_chooice">Choose</string>
+
 </resources>

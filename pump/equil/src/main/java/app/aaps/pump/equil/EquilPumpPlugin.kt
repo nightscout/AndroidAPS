@@ -34,6 +34,8 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.Preferences
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.pump.equil.data.AlarmMode
 import app.aaps.pump.equil.data.BolusProfile
@@ -47,6 +49,7 @@ import app.aaps.pump.equil.manager.command.BaseCmd
 import app.aaps.pump.equil.manager.command.CmdAlarmSet
 import app.aaps.pump.equil.manager.command.CmdBasalSet
 import app.aaps.pump.equil.manager.command.CmdHistoryGet
+import app.aaps.pump.equil.manager.command.CmdSettingSet
 import app.aaps.pump.equil.manager.command.CmdStatusGet
 import app.aaps.pump.equil.manager.command.CmdTimeSet
 import app.aaps.pump.equil.manager.command.PumpEvent
@@ -76,7 +79,8 @@ import javax.inject.Singleton
     private val equilManager: EquilManager,
     private val equilHistoryPumpDao: EquilHistoryPumpDao,
     private val decimalFormatter: DecimalFormatter,
-    private val instantiator: Instantiator
+    private val instantiator: Instantiator,
+    private val preferences: Preferences
 ) : PumpPluginBase(
     PluginDescription()
         .mainType(PluginType.PUMP)
@@ -109,6 +113,14 @@ import javax.inject.Singleton
                            if (event.isChanged(rh.gs(R.string.key_equil_tone))) {
                                val mode = AlarmMode.fromInt(sp.getString(R.string.key_equil_tone, "3").toInt())
                                commandQueue.customCommand(CmdAlarmSet(mode.command), object : Callback() {
+                                   override fun run() {
+                                       if (result.success) ToastUtils.infoToast(context, rh.gs(R.string.equil_pump_updated))
+                                       else ToastUtils.infoToast(context, rh.gs(R.string.equil_error))
+                                   }
+                               })
+                           } else if (event.isChanged(rh.gs(app.aaps.core.keys.R.string.key_equil_maxbolus))) {
+                               var data = preferences.get(DoubleKey.EquilMaxBolus)
+                               commandQueue.customCommand(CmdSettingSet(data), object : Callback() {
                                    override fun run() {
                                        if (result.success) ToastUtils.infoToast(context, rh.gs(R.string.equil_pump_updated))
                                        else ToastUtils.infoToast(context, rh.gs(R.string.equil_error))
@@ -195,6 +207,13 @@ import javax.inject.Singleton
             // bolus requested
             aapsLogger.error("deliverTreatment: Invalid input: neither carbs nor insulin are set in treatment")
             return instantiator.providePumpEnactResult().success(false).enacted(false).bolusDelivered(0.0).comment("Invalid input")
+        }
+        var maxBolus=preferences.get(DoubleKey.EquilMaxBolus);
+        if(detailedBolusInfo.insulin >preferences.get(DoubleKey.EquilMaxBolus)){
+            val formattedValue = "%.2f".format(maxBolus)
+            val comment = rh.gs(R.string.equil_maxbolus_tips, formattedValue)
+            return instantiator.providePumpEnactResult().success(false).enacted(false).bolusDelivered(0.0).comment(comment)
+
         }
         val mode = equilManager.runMode
         if (mode !== RunMode.RUN) {

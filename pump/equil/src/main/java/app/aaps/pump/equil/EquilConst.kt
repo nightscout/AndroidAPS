@@ -6,6 +6,7 @@ object EquilConst {
     const val EQUIL_BLE_WRITE_TIME_OUT: Long = 20
     const val EQUIL_BLE_NEXT_CMD: Long = 150
     const val EQUIL_SUPPORT_LEVEL = 5.3f
+    const val EQUIL_BLOUS_THRESHOLD_STEP = 1600
 
     object Prefs {
 
