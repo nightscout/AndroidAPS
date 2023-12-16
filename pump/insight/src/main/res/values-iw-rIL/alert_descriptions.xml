@@ -4,7 +4,7 @@
     <string name="alert_w31_description"><![CDATA[תכולת מכל: <b>%1$s יח\'</b>]]></string>
     <string name="alert_w32_description">החליפו סוללה.</string>
     <string name="alert_w33_description">הגדרת זמן\\תאריך.</string>
-    <string name="alert_w34_description">צור קשר עם תמיכת Accu-Chek.</string>
+    <string name="alert_w34_description">צרו קשר עם תמיכת Accu-Chek.</string>
     <string name="alert_w36_description"><![CDATA[כמות: <b>%1$d%%</b><br/>משך: <b>%2$s ש\'</b>]]></string>
     <string name="alert_w38_description"><![CDATA[כמות מתוכננת: <b>%1$s יח\'</b><br/>כמות שניתנה: <b>%2$s יח\'</b>]]></string>
     <string name="alert_m20_description">הכניסו מכל.</string>
