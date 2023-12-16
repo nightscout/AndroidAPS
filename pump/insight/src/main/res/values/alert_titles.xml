@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="alert_r1_title">Deliver Bolus</string>
+    <string name="alert_r2_title">Missed Bolus</string>
+    <string name="alert_r3_title">Alarm clock</string>
+    <string name="alert_r4_title">Change infusion set</string>
+    <string name="alert_r7_title">TBR completed</string>
+
+    <string name="alert_w31_title">Cartridge low</string>
+    <string name="alert_w32_title">Battery low</string>
+    <string name="alert_w33_title">Invalid time/date</string>
+    <string name="alert_w34_title">End of warranty</string>
+    <string name="alert_w36_title">TBR cancelled</string>
+    <string name="alert_w38_title">Bolus cancelled</string>
+    <string name="alert_w39_title">Loantime warning</string>
+
+    <string name="alert_m20_title">Cartridge not inserted</string>
+    <string name="alert_m21_title">Cartridge empty</string>
+    <string name="alert_m22_title">Battery empty</string>
+    <string name="alert_m23_title">Automatic off - pump stopped</string>
+    <string name="alert_m24_title">Occlusion</string>
+    <string name="alert_m25_title">Loantime over - end of operation</string>
+    <string name="alert_m26_title">Cartridge change not completed</string>
+    <string name="alert_m27_title">Data download failed</string>
+    <string name="alert_m28_title">Pause mode timeout</string>
+    <string name="alert_m29_title">Battery type not set</string>
+    <string name="alert_m30_title">Cartridge type not set</string>
+
+    <string name="alert_e6_title">Mechanical error</string>
+    <string name="alert_e10_title">Rewind error</string>
+    <string name="alert_e13_title">Language error</string>
+</resources>
