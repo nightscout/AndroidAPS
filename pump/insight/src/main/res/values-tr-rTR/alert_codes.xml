@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="alert_r1_code">Hatırlatma R1</string>
+    <string name="alert_r2_code">Hatırlatma R2</string>
+    <string name="alert_r3_code">Hatırlatma R3</string>
+    <string name="alert_r4_code">Hatırlatma R4</string>
+    <string name="alert_r7_code">Hatırlatma R7</string>
+    <string name="alert_w31_code">Uyarı W31</string>
+    <string name="alert_w32_code">Uyarı W32</string>
+    <string name="alert_w33_code">Uyarı W33</string>
+    <string name="alert_w34_code">Uyarı W34</string>
+    <string name="alert_w36_code">Uyarı W36</string>
+    <string name="alert_w38_code">Uyarı W38</string>
+    <string name="alert_w39_code">Uyarı W39</string>
+    <string name="alert_m20_code">Bakım M20</string>
+    <string name="alert_m21_code">Bakım M21</string>
+    <string name="alert_m22_code">Bakım M22</string>
+    <string name="alert_m23_code">Bakım M23</string>
+    <string name="alert_m24_code">Bakım M24</string>
+    <string name="alert_m25_code">Bakım M25</string>
+    <string name="alert_m26_code">Bakım M26</string>
+    <string name="alert_m27_code">Bakım M27</string>
+    <string name="alert_m28_code">Bakım M28</string>
+    <string name="alert_m29_code">Bakım M29</string>
+    <string name="alert_m30_code">Bakım M30</string>
+    <string name="alert_e6_code">Hata E6</string>
+    <string name="alert_e10_code">Hata E10</string>
+    <string name="alert_e13_code">Hata E13</string>
+</resources>
