@@ -13,6 +13,7 @@
     <string name="objectives_openloop_learned">El bucle abierto se puede utilizar para recomendaciones si no tiene una bomba compatible o si no está listo para cerrar el bucle.</string>
     <string name="objectives_maxbasal_objective">Entender el bucle abierto, incluidas las recomendaciones de basales temporales</string>
     <string name="objectives_maxbasal_gate">Sobre la base de esa experiencia, decidir valores de máximo basal, y ajustar la bomba y preferencias</string>
+    <string name="objectives_maxbasal">Realizar la acción para cumplir la recomendación</string>
     <string name="objectives_maxbasal_learned">Tenga cuidado con las características de seguridad y ajuste los parámetros de seguridad cuando sea necesario.</string>
     <string name="objectives_maxiobzero_objective">Iniciando el bucle cerrado con suspensión con baja glucosa</string>
     <string name="objectives_maxiobzero_gate">Ejecutar en bucle cerrado con max IOB=0 durante unos días sin demasiados valores bajos de glucosa</string>
