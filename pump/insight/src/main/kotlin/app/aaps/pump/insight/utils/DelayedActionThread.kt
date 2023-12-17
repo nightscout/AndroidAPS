@@ -6,7 +6,8 @@ class DelayedActionThread private constructor(name: String, private val duration
         try {
             sleep(duration)
             runnable.run()
-        } catch (e: InterruptedException) { }
+        } catch (e: InterruptedException) {
+        }
     }
 
     companion object {

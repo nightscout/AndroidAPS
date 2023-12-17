@@ -20,6 +20,7 @@ import app.aaps.pump.dana.di.DanaHistoryModule
 import app.aaps.pump.dana.di.DanaModule
 import app.aaps.pump.danar.di.DanaRModule
 import app.aaps.pump.danars.di.DanaRSModule
+import app.aaps.pump.equil.di.EquilModule
 import app.aaps.pump.insight.di.InsightDatabaseModule
 import app.aaps.pump.insight.di.InsightModule
 import app.aaps.pump.virtual.di.VirtualPumpModule
@@ -88,6 +89,7 @@ import javax.inject.Singleton
         PumpCommonModule::class,
         RileyLinkModule::class,
         MedtrumModule::class,
+        EquilModule::class,
         VirtualPumpModule::class
     ]
 )

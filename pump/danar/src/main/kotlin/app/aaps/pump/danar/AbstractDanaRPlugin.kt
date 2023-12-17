@@ -383,7 +383,7 @@ abstract class AbstractDanaRPlugin protected constructor(
      * DanaR interface
      */
     override fun loadHistory(type: Byte): PumpEnactResult =
-         executionService?.loadHistory(type) ?: instantiator.providePumpEnactResult()
+        executionService?.loadHistory(type) ?: instantiator.providePumpEnactResult()
 
     /**
      * Constraint interface

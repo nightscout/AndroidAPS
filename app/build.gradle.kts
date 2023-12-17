@@ -204,6 +204,7 @@ dependencies {
     implementation(project(":pump:diaconn"))
     implementation(project(":pump:eopatch"))
     implementation(project(":pump:medtrum"))
+    implementation(project(":pump:equil"))
     implementation(project(":pump:insight"))
     implementation(project(":pump:medtronic"))
     implementation(project(":pump:pump-common"))

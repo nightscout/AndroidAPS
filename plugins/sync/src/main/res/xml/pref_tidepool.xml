@@ -12,7 +12,7 @@
             android:key="@string/key_tidepool_username"
             android:summary="@string/summary_tidepool_username"
             android:title="@string/title_tidepool_username"
-            validate:testType="email"/>
+            validate:testType="email" />
 
         <EditTextPreference
             android:inputType="textPassword"

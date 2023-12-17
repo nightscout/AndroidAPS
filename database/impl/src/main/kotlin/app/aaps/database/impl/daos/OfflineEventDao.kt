@@ -28,8 +28,10 @@ internal interface OfflineEventDao : TraceableDao<OfflineEvent> {
     @Query("SELECT * FROM $TABLE_OFFLINE_EVENTS WHERE unlikely(nightscoutId = :nsId) AND likely(referenceId IS NULL)")
     fun findByNSId(nsId: String): OfflineEvent?
 
-    @Query("SELECT * FROM $TABLE_OFFLINE_EVENTS WHERE unlikely(timestamp <= :timestamp) AND unlikely((timestamp + duration) > :timestamp) AND likely(referenceId IS NULL) AND likely(isValid = 1) " +
-               "ORDER BY timestamp DESC LIMIT 1")
+    @Query(
+        "SELECT * FROM $TABLE_OFFLINE_EVENTS WHERE unlikely(timestamp <= :timestamp) AND unlikely((timestamp + duration) > :timestamp) AND likely(referenceId IS NULL) AND likely(isValid = 1) " +
+            "ORDER BY timestamp DESC LIMIT 1"
+    )
     fun getOfflineEventActiveAt(timestamp: Long): Maybe<OfflineEvent>
 
     @Query("SELECT * FROM $TABLE_OFFLINE_EVENTS WHERE unlikely(timestamp BETWEEN :start AND :end) AND likely(isValid = 1) AND likely(referenceId IS NULL) ORDER BY timestamp ASC")

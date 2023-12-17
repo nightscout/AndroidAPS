@@ -4,7 +4,7 @@ import app.aaps.pump.insight.descriptors.BasalProfile
 import app.aaps.pump.insight.descriptors.BasalProfile.Companion.fromId
 import app.aaps.pump.insight.utils.ByteBuf
 
-class ActiveBRProfileBlock : app.aaps.pump.insight.app_layer.parameter_blocks.ParameterBlock() {
+class ActiveBRProfileBlock : ParameterBlock() {
 
     internal var activeBasalProfile: BasalProfile? = null
     override fun parse(byteBuf: ByteBuf) {

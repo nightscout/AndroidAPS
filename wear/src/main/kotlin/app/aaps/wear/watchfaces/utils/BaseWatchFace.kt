@@ -176,11 +176,13 @@ abstract class BaseWatchFace : WatchFace() {
             }
         }
     }
+
     private fun updatestepsCountListener() {
         if (sp.getBoolean(R.string.key_steps_sampling, false)) {
             if (stepCountListener == null) {
                 stepCountListener = StepCountListener(
-                    this, aapsLogger, aapsSchedulers).also { scl -> disposable += scl }
+                    this, aapsLogger, aapsSchedulers
+                ).also { scl -> disposable += scl }
             }
         } else {
             stepCountListener?.let { scl ->
@@ -189,6 +191,7 @@ abstract class BaseWatchFace : WatchFace() {
             }
         }
     }
+
     override fun onTapCommand(tapType: Int, x: Int, y: Int, eventTime: Long) {
         binding.chart?.let { chart ->
             if (tapType == TAP_TYPE_TAP && x >= chart.left && x <= chart.right && y >= chart.top && y <= chart.bottom) {

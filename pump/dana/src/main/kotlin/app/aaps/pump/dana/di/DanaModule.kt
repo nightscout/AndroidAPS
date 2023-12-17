@@ -1,10 +1,10 @@
 package app.aaps.pump.dana.di
 
-import dagger.Module
-import dagger.android.ContributesAndroidInjector
 import app.aaps.pump.dana.DanaFragment
 import app.aaps.pump.dana.activities.DanaHistoryActivity
 import app.aaps.pump.dana.activities.DanaUserOptionsActivity
+import dagger.Module
+import dagger.android.ContributesAndroidInjector
 
 @Module
 @Suppress("unused")

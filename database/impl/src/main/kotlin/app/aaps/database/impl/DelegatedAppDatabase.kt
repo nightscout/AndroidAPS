@@ -16,6 +16,7 @@ import app.aaps.database.impl.daos.MultiwaveBolusLinkDao
 import app.aaps.database.impl.daos.OfflineEventDao
 import app.aaps.database.impl.daos.PreferenceChangeDao
 import app.aaps.database.impl.daos.ProfileSwitchDao
+import app.aaps.database.impl.daos.StepsCountDao
 import app.aaps.database.impl.daos.TemporaryBasalDao
 import app.aaps.database.impl.daos.TemporaryTargetDao
 import app.aaps.database.impl.daos.TherapyEventDao
@@ -44,7 +45,6 @@ import app.aaps.database.impl.daos.delegated.DelegatedTherapyEventDao
 import app.aaps.database.impl.daos.delegated.DelegatedTotalDailyDoseDao
 import app.aaps.database.impl.daos.delegated.DelegatedUserEntryDao
 import app.aaps.database.impl.daos.delegated.DelegatedVersionChangeDao
-import app.aaps.database.impl.daos.StepsCountDao
 
 internal class DelegatedAppDatabase(val changes: MutableList<DBEntry>, val database: AppDatabase) {
 

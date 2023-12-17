@@ -16,5 +16,7 @@ class SystemIdentificationBlock : ParameterBlock() {
     }
 
     override val data: ByteBuf?
-        get() { return null }
+        get() {
+            return null
+        }
 }

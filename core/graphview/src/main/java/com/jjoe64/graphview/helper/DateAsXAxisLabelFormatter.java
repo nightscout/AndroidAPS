@@ -32,7 +32,7 @@ import java.util.Calendar;
  * the Android default date format to convert
  * the x-values (that has to be millis from
  * 01-01-1970) into a formatted date string.
- *
+ * <p>
  * See the DateAsXAxis example in the GraphView-Demos project
  * to see a working example.
  *
@@ -65,7 +65,7 @@ public class DateAsXAxisLabelFormatter extends DefaultLabelFormatter {
      * create the formatter with your own custom
      * date format to convert the x-values.
      *
-     * @param context the application context
+     * @param context    the application context
      * @param dateFormat custom date format
      */
     public DateAsXAxisLabelFormatter(Context context, DateFormat dateFormat) {
@@ -76,7 +76,7 @@ public class DateAsXAxisLabelFormatter extends DefaultLabelFormatter {
     /**
      * formats the x-values as date string.
      *
-     * @param value raw value
+     * @param value    raw value
      * @param isValueX true if it's a x value, otherwise false
      * @return value converted to string
      */

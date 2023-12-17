@@ -264,12 +264,11 @@
         <item name="android:titleTextStyle">@style/Theme.Aaps.ActionBar.TitleTextStyle</item>
     </style>
 
-    <style name="Theme.Aaps.ActionBar.TitleTextStyle"
-        parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+    <style name="Theme.Aaps.ActionBar.TitleTextStyle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textColor">?attr/defaultTextColor</item>
     </style>
 
-    <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>
+    <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge" />
 
     <style name="AppTheme.NoActionBar" parent="AppTheme">
         <item name="windowActionModeOverlay">true</item>
@@ -407,8 +406,7 @@
     </style>
 
     <!-- The launcher theme. It sets the main window background to the launch_screen drawable -->
-    <style name="AppTheme.Launcher"  parent="AppTheme.NoActionBar">
-    </style>
+    <style name="AppTheme.Launcher" parent="AppTheme.NoActionBar"></style>
 
     <style name="section_header_label">
         <item name="android:layout_width">match_parent</item>

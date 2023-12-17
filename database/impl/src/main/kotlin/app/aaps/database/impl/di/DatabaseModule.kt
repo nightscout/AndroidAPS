@@ -130,11 +130,6 @@ open class DatabaseModule {
         }
     }
 
-
-
-
-
-
     /** List of all migrations for easy reply in tests. */
     @VisibleForTesting
     internal val migrations = arrayOf(migration20to21, migration21to22, migration22to23, migration23to24, migration24to25)

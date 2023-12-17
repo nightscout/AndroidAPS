@@ -109,8 +109,8 @@ class ByteBuf(length: Int) {
 
     fun getUInt16LE(position: Int): Int {
         var p = position
-        return  (_bytes[p++].toShort() and 0xFF) +
-                (_bytes[p].toShort() and 0xFF) * 256 // Convert to short and replace "or" by "+" and "shl 8" by "* 256" to fix convertion compared to java
+        return (_bytes[p++].toShort() and 0xFF) +
+            (_bytes[p].toShort() and 0xFF) * 256 // Convert to short and replace "or" by "+" and "shl 8" by "* 256" to fix convertion compared to java
     }
 
     //private int getUInt16LE() { return getUInt16LE(0); }
@@ -139,10 +139,12 @@ class ByteBuf(length: Int) {
     }
 
     fun putUInt16Decimal(d: Double) {
-        putUInt16LE(BigDecimal(d)
-            .multiply(BigDecimal(100))
-            .setScale(0, RoundingMode.HALF_UP)
-            .toInt())
+        putUInt16LE(
+            BigDecimal(d)
+                .multiply(BigDecimal(100))
+                .setScale(0, RoundingMode.HALF_UP)
+                .toInt()
+        )
     }
 
     private fun getUInt32Decimal100(position: Int): Double {
@@ -182,7 +184,7 @@ class ByteBuf(length: Int) {
     private fun getShort(position: Int): Short {
         var p = position
         return (
-                (_bytes[p++].toLong() and 0xFF) shl 8 or
+            (_bytes[p++].toLong() and 0xFF) shl 8 or
                 (_bytes[p].toLong() and 0xFF)
             ).toShort()  // Convert to Long and keep "or", "and" & "shl" to fix convertion compared to java
     }

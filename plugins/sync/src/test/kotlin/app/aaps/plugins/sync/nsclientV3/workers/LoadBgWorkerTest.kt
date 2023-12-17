@@ -12,6 +12,7 @@ import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -61,6 +62,7 @@ internal class LoadBgWorkerTest : TestBase() {
     @Mock lateinit var workContinuation: WorkContinuation
     @Mock lateinit var storeDataForDb: StoreDataForDb
     @Mock lateinit var context: ContextWithInjector
+    @Mock lateinit var l: L
 
     private lateinit var nsClientV3Plugin: NSClientV3Plugin
     private lateinit var receiverDelegate: ReceiverDelegate
@@ -98,7 +100,7 @@ internal class LoadBgWorkerTest : TestBase() {
         nsClientV3Plugin = NSClientV3Plugin(
             aapsLogger, aapsSchedulers, rxBus, rh, context, fabricPrivacy,
             sp, receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
-            nsClientSource, storeDataForDb, decimalFormatter
+            nsClientSource, storeDataForDb, decimalFormatter, l
         )
         nsClientV3Plugin.newestDataOnServer = LastModified(LastModified.Collections())
     }

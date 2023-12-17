@@ -70,6 +70,7 @@ import app.aaps.pump.danar.DanaRPlugin
 import app.aaps.pump.danarkorean.DanaRKoreanPlugin
 import app.aaps.pump.danars.DanaRSPlugin
 import app.aaps.pump.danarv2.DanaRv2Plugin
+import app.aaps.pump.equil.EquilPumpPlugin
 import app.aaps.pump.insight.InsightPlugin
 import app.aaps.pump.virtual.VirtualPumpPlugin
 import dagger.android.support.AndroidSupportInjection
@@ -138,6 +139,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var openHumansUploaderPlugin: OpenHumansUploaderPlugin
     @Inject lateinit var diaconnG8Plugin: DiaconnG8Plugin
     @Inject lateinit var garminPlugin: GarminPlugin
+    @Inject lateinit var equilPumpPlugin: EquilPumpPlugin
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
@@ -226,6 +228,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreferencesFromResourceIfEnabled(diaconnG8Plugin, rootKey, config.PUMPDRIVERS)
             addPreferencesFromResourceIfEnabled(eopatchPumpPlugin, rootKey, config.PUMPDRIVERS)
             addPreferencesFromResourceIfEnabled(medtrumPlugin, rootKey, config.PUMPDRIVERS)
+            addPreferencesFromResourceIfEnabled(equilPumpPlugin, rootKey, config.PUMPDRIVERS)
             addPreferencesFromResource(R.xml.pref_pump, rootKey, config.PUMPDRIVERS)
             addPreferencesFromResourceIfEnabled(virtualPumpPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(insulinOrefFreePeakPlugin, rootKey)

@@ -67,7 +67,17 @@ abstract class SatlMessage {
 
         private const val PREAMBLE = 4293840008L
         private const val VERSION: Byte = 0x20
-        @JvmStatic @Throws(InvalidMacTrailerException::class, InvalidSatlCRCException::class, InvalidNonceException::class, InvalidPreambleException::class, InvalidPacketLengthsException::class, IncompatibleSatlVersionException::class, InvalidSatlCommandException::class)
+
+        @JvmStatic
+        @Throws(
+            InvalidMacTrailerException::class,
+            InvalidSatlCRCException::class,
+            InvalidNonceException::class,
+            InvalidPreambleException::class,
+            InvalidPacketLengthsException::class,
+            IncompatibleSatlVersionException::class,
+            InvalidSatlCommandException::class
+        )
         fun deserialize(data: ByteBuf, lastNonce: Nonce?, key: ByteArray?): SatlMessage? {
             val satlContent = data.getBytes(8, data.filledSize - 16)
             val satlMessage: SatlMessage? = if (key == null) deserializeCRC(data) else lastNonce?.let { deserializeCTR(data, it, key) }
@@ -75,7 +85,14 @@ abstract class SatlMessage {
             return satlMessage
         }
 
-        @Throws(InvalidMacTrailerException::class, InvalidNonceException::class, InvalidPreambleException::class, InvalidPacketLengthsException::class, IncompatibleSatlVersionException::class, InvalidSatlCommandException::class)
+        @Throws(
+            InvalidMacTrailerException::class,
+            InvalidNonceException::class,
+            InvalidPreambleException::class,
+            InvalidPacketLengthsException::class,
+            IncompatibleSatlVersionException::class,
+            InvalidSatlCommandException::class
+        )
         private fun deserializeCTR(data: ByteBuf, lastNonce: Nonce, key: ByteArray): SatlMessage {
             val preamble = data.readUInt32LE()
             val packetLength = data.readUInt16LE()

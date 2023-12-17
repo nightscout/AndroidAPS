@@ -121,5 +121,6 @@
     <!--    Alerts-->
     <string name="key_missed_bg_readings_threshold_minutes" translatable="false">missed_bg_readings_threshold</string>
     <string name="key_pump_unreachable_threshold_minutes" translatable="false">pump_unreachable_threshold</string>
-
+    <!--    Equil-->
+    <string name="key_equil_maxbolus" translatable="false">equil_maxbolus</string>
 </resources>

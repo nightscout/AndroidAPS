@@ -96,7 +96,6 @@ internal interface NightscoutRemoteService {
     @GET("v3/profile/history/{from}")
     suspend fun getProfileModifiedSince(@Path("from") from: Long, @Query("limit") limit: Int = 10): Response<NSResponse<List<JSONObject>>>
 
-
     @GET("v3/profile?sort\$desc=date&limit=1")
     suspend fun getLastProfile(): Response<NSResponse<List<JSONObject>>>
 

@@ -61,6 +61,7 @@ class ObjectivesPlugin @Inject constructor(
     init {
         setupObjectives()
     }
+
     override fun specialEnableCondition(): Boolean =
         activePlugin.activePump.pumpDescription.isTempBasalCapable
 

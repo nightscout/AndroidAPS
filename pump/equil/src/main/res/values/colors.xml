@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="equil_basal">#67b4ef</color>
+    <color name="equil_bolus">#e37575</color>
+    <color name="equil_bolus_ing">#95ea68</color>
+    <color name="equil_normal">#ffffff</color>
+    <color name="equilWizardFinishButtonColor">#ff669900</color>
+</resources>

@@ -78,30 +78,30 @@ class AppCommands(val id: Int, val type: Class<out AppLayerMessage?>) {
         }
 
         fun fromType(type: AppLayerMessage?): Int = when (type) {
-            is ConnectMessage          -> CONNECTMESSAGE
-            is BindMessage             -> BINDMESSAGE
-            is DisconnectMessage       -> DISCONNECTMESSAGE
-            is ActivateServiceMessage  -> ACTIVATESERVICEMESSAGE
-            is ServiceChallengeMessage -> SERVICECHALLENGEMESSAGE
-            is GetActiveAlertMessage   -> GETACTIVEALERTMESSAGE
-            is GetActiveBolusesMessage               -> GETACTIVEBOLUSESMESSAGE
+            is ConnectMessage                                                   -> CONNECTMESSAGE
+            is BindMessage                                                      -> BINDMESSAGE
+            is DisconnectMessage                                                -> DISCONNECTMESSAGE
+            is ActivateServiceMessage                                           -> ACTIVATESERVICEMESSAGE
+            is ServiceChallengeMessage                                          -> SERVICECHALLENGEMESSAGE
+            is GetActiveAlertMessage                                            -> GETACTIVEALERTMESSAGE
+            is GetActiveBolusesMessage                                          -> GETACTIVEBOLUSESMESSAGE
             is GetActiveTBRMessage                                              -> GETACTIVETBRMESSAGE
             is GetAvailableBolusTypesMessage                                    -> GETAVAILABLEBOLUSTYPESMESSAGE
             is GetBatteryStatusMessage                                          -> GETBATTERYSTATUSMESSAGE
-            is GetCartridgeStatusMessage             -> GETCARTRIDGESTATUSMESSAGE
-            is GetDateTimeMessage                    -> GETDATETIMEMESSAGE
-            is GetFirmwareVersionsMessage            -> GETFIRMWAREVERSIONSMESSAGE
-            is GetOperatingModeMessage               -> GETOPERATINGMODEMESSAGE
-            is GetPumpStatusRegisterMessage          -> GETPUMPSTATUSREGISTERMESSAGE
-            is ResetPumpStatusRegisterMessage        -> RESETPUMPSTATUSREGISTERMESSAGE
-            is GetActiveBasalRateMessage             -> GETACTIVEBASALRATEMESSAGE
+            is GetCartridgeStatusMessage                                        -> GETCARTRIDGESTATUSMESSAGE
+            is GetDateTimeMessage                                               -> GETDATETIMEMESSAGE
+            is GetFirmwareVersionsMessage                                       -> GETFIRMWAREVERSIONSMESSAGE
+            is GetOperatingModeMessage                                          -> GETOPERATINGMODEMESSAGE
+            is GetPumpStatusRegisterMessage                                     -> GETPUMPSTATUSREGISTERMESSAGE
+            is ResetPumpStatusRegisterMessage                                   -> RESETPUMPSTATUSREGISTERMESSAGE
+            is GetActiveBasalRateMessage                                        -> GETACTIVEBASALRATEMESSAGE
             is GetTotalDailyDoseMessage                                         -> GETTOTALDAILYDOSEMESSAGE
             is CancelTBRMessage                                                 -> CANCELTBRMESSAGE
             is CancelBolusMessage                                               -> CANCELBOLUSMESSAGE
-            is SetOperatingModeMessage        -> SETOPERATINGMODEMESSAGE
-            is ReadParameterBlockMessage      -> READPARAMETERBLOCKMESSAGE
-            is WriteConfigurationBlockMessage -> WRITECONFIGURATIONBLOCKMESSAGE
-            is CloseConfigurationWriteSessionMessage -> CLOSECONFIGURATIONWRITESESSIONMESSAGE
+            is SetOperatingModeMessage                                          -> SETOPERATINGMODEMESSAGE
+            is ReadParameterBlockMessage                                        -> READPARAMETERBLOCKMESSAGE
+            is WriteConfigurationBlockMessage                                   -> WRITECONFIGURATIONBLOCKMESSAGE
+            is CloseConfigurationWriteSessionMessage                            -> CLOSECONFIGURATIONWRITESESSIONMESSAGE
             is OpenConfigurationWriteSessionMessage                             -> OPENCONFIGURATIONWRITESESSIONMESSAGE
             is DeliverBolusMessage                                              -> DELIVERBOLUSMESSAGE
             is SetTBRMessage                                                    -> SETTBRMESSAGE

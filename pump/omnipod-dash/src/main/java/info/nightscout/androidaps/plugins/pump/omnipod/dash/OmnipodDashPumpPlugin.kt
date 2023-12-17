@@ -995,7 +995,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
             val podStatus = when {
                 podStateManager.isPodRunning && podStateManager.isSuspended -> rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_pod_status_suspended).lowercase()
                 podStateManager.isPodRunning                                -> rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_pod_status_normal).lowercase()
-                else                                                        -> rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_pod_status_no_active_pod).lowercase()
+                else                                                        -> rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_pod_status_no_active_pod)
+                    .lowercase()
             }
             status.put("status", podStatus)
             status.put("timestamp", dateUtil.toISOString(podStateManager.lastUpdatedSystem))

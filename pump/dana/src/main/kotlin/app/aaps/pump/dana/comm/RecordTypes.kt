@@ -1,6 +1,7 @@
 package app.aaps.pump.dana.comm
 
 object RecordTypes {
+
     const val RECORD_TYPE_BOLUS = 0x01.toByte()
     const val RECORD_TYPE_DAILY = 0x02.toByte()
     const val RECORD_TYPE_PRIME = 0x03.toByte()

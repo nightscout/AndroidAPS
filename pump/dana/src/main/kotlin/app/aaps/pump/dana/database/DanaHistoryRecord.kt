@@ -4,8 +4,10 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = TABLE_DANA_HISTORY,
-        indices = [Index("code", "timestamp")])
+@Entity(
+    tableName = TABLE_DANA_HISTORY,
+    indices = [Index("code", "timestamp")]
+)
 data class DanaHistoryRecord(
     @PrimaryKey var timestamp: Long,
     var code: Byte = 0x0F,

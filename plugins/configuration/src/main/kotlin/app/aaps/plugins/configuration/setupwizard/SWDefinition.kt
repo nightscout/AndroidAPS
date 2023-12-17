@@ -83,9 +83,9 @@ class SWDefinition @Inject constructor(
     fun getScreens(): List<SWScreen> {
         if (screens.isEmpty()) {
             when {
-                config.APS         -> swDefinitionFull()
+                config.APS -> swDefinitionFull()
                 config.PUMPCONTROL -> swDefinitionPumpControl()
-                config.NSCLIENT    -> swDefinitionNSClient()
+                config.NSCLIENT -> swDefinitionNSClient()
             }
         }
         return screens

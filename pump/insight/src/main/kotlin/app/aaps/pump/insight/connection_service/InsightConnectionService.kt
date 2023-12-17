@@ -74,6 +74,7 @@ import app.aaps.pump.insight.satl.VerifyConfirmResponse
 import app.aaps.pump.insight.satl.VerifyDisplayRequest
 import app.aaps.pump.insight.satl.VerifyDisplayResponse
 import app.aaps.pump.insight.utils.ByteBuf
+import app.aaps.pump.insight.utils.ConnectionEstablisher
 import app.aaps.pump.insight.utils.DelayedActionThread
 import app.aaps.pump.insight.utils.DelayedActionThread.Companion.runDelayed
 import app.aaps.pump.insight.utils.InputStreamReader
@@ -88,7 +89,6 @@ import app.aaps.pump.insight.utils.crypto.Cryptograph.getServicePasswordHash
 import app.aaps.pump.insight.utils.crypto.KeyPair
 import dagger.android.DaggerService
 import info.nightscout.androidaps.insight.R
-import app.aaps.pump.insight.utils.ConnectionEstablisher
 import org.spongycastle.crypto.InvalidCipherTextException
 import java.io.IOException
 import java.security.SecureRandom
@@ -531,6 +531,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
                 //Redirect interrupt flag
                 Thread.currentThread().interrupt()
             }
+
             PairingStatus.REJECTED  -> handleException(SatlPairingRejectedException())
         }
     }
@@ -571,6 +572,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
             InsightState.APP_ACTIVATE_STATUS_SERVICE,
             InsightState.APP_FIRMWARE_VERSIONS,
             InsightState.APP_SYSTEM_IDENTIFICATION -> Unit
+
             else                                   -> handleException(ReceivedPacketInInvalidStateException())
         }
         try {
@@ -649,7 +651,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
                 activatedServices.add(it.request.service)
                 sendAppLayerMessage(it.request)
             }
-                ?:handleException(TooChattyPumpException())
+                ?: handleException(TooChattyPumpException())
         }
     }
 
@@ -678,7 +680,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
 
             sendAppLayerMessage(activateServiceMessage)
         }
-            ?:handleException(TooChattyPumpException())
+            ?: handleException(TooChattyPumpException())
     }
 
     private fun processGenericAppLayerMessage(appLayerMessage: AppLayerMessage) {

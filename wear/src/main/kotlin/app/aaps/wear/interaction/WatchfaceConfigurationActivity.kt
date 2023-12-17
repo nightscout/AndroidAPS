@@ -18,6 +18,7 @@ import javax.inject.Inject
 class WatchfaceConfigurationActivity : WearPreferenceActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     @Inject lateinit var aapsLogger: AAPSLogger
+
     @Suppress("PrivatePropertyName")
     private val PHYSICAL_ACTIVITY = 1
 

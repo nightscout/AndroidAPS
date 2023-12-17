@@ -45,9 +45,9 @@ import java.util.List;
  * where there is a horizontal x-axis and a
  * vertical y-axis.
  * This viewport is compatible with
- *  - {@link com.jjoe64.graphview.series.BarGraphSeries}
- *  - {@link com.jjoe64.graphview.series.LineGraphSeries}
- *  - {@link com.jjoe64.graphview.series.PointsGraphSeries}
+ * - {@link com.jjoe64.graphview.series.BarGraphSeries}
+ * - {@link com.jjoe64.graphview.series.LineGraphSeries}
+ * - {@link com.jjoe64.graphview.series.PointsGraphSeries}
  *
  * @author jjoe64
  */
@@ -608,8 +608,8 @@ public class Viewport {
     }
 
     /**
-     * @param completeRange     if true => minX of the complete range of all series
-     *                          if false => minX of the current visible viewport
+     * @param completeRange if true => minX of the complete range of all series
+     *                      if false => minX of the current visible viewport
      * @return the min x value
      */
     public double getMinX(boolean completeRange) {
@@ -621,8 +621,8 @@ public class Viewport {
     }
 
     /**
-     * @param completeRange     if true => maxX of the complete range of all series
-     *                          if false => maxX of the current visible viewport
+     * @param completeRange if true => maxX of the complete range of all series
+     *                      if false => maxX of the current visible viewport
      * @return the max x value
      */
     public double getMaxX(boolean completeRange) {
@@ -634,8 +634,8 @@ public class Viewport {
     }
 
     /**
-     * @param completeRange     if true => minY of the complete range of all series
-     *                          if false => minY of the current visible viewport
+     * @param completeRange if true => minY of the complete range of all series
+     *                      if false => minY of the current visible viewport
      * @return the min y value
      */
     public double getMinY(boolean completeRange) {
@@ -647,8 +647,8 @@ public class Viewport {
     }
 
     /**
-     * @param completeRange     if true => maxY of the complete range of all series
-     *                          if false => maxY of the current visible viewport
+     * @param completeRange if true => maxY of the complete range of all series
+     *                      if false => maxY of the current visible viewport
      * @return the max y value
      */
     public double getMaxY(boolean completeRange) {
@@ -663,6 +663,7 @@ public class Viewport {
      * set the maximal y value for the current viewport.
      * Make sure to set the y bounds to manual via
      * {@link #setYAxisBoundsManual(boolean)}
+     *
      * @param y max / highest value
      */
     public void setMaxY(double y) {
@@ -673,6 +674,7 @@ public class Viewport {
      * set the minimal y value for the current viewport.
      * Make sure to set the y bounds to manual via
      * {@link #setYAxisBoundsManual(boolean)}
+     *
      * @param y min / lowest value
      */
     public void setMinY(double y) {
@@ -683,6 +685,7 @@ public class Viewport {
      * set the maximal x value for the current viewport.
      * Make sure to set the x bounds to manual via
      * {@link #setXAxisBoundsManual(boolean)}
+     *
      * @param x max / highest value
      */
     public void setMaxX(double x) {
@@ -693,6 +696,7 @@ public class Viewport {
      * set the minimal x value for the current viewport.
      * Make sure to set the x bounds to manual via
      * {@link #setXAxisBoundsManual(boolean)}
+     *
      * @param x min / lowest value
      */
     public void setMinX(double x) {
@@ -911,8 +915,8 @@ public class Viewport {
     }
 
     /**
-     * @param mBackgroundColor  background of the viewport area
-     *                          use transparent to have no background
+     * @param mBackgroundColor background of the viewport area
+     *                         use transparent to have no background
      */
     public void setBackgroundColor(int mBackgroundColor) {
         this.mBackgroundColor = mBackgroundColor;
@@ -985,7 +989,7 @@ public class Viewport {
     /**
      * forces the viewport to scroll to the end
      * of the range by keeping the current viewport size.
-     *
+     * <p>
      * Important: Only takes effect if x axis bounds are manual.
      *
      * @see #setXAxisBoundsManual(boolean)
