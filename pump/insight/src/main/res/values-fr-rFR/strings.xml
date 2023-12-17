@@ -24,7 +24,6 @@
     <string name="pairing_completed">Appairage terminé</string>
     <string name="code_compare">Les codes affichés sur cet appareil et sur la pompe sont-ils identiques ?</string>
     <string name="insight_pairing">Appairage de Insight</string>
-    <string name="insight_local">Accu-Chek Insight</string>
     <string name="insight_alert_formatter">%1$s : %2$s</string>
     <string name="tube_changed">Tubulure changée</string>
     <string name="insightpump_shortname">AC-I</string>
@@ -42,7 +41,6 @@
     <string name="short_status_multiwave">Mixte : %1$.2f / %2$.2f U pour %3$d min</string>
     <string name="short_status_tdd">DTQ : %1$.2f</string>
     <string name="short_status_reservoir">Réserv.: %1$.2f U</string>
-    <string name="short_status_battery">Batt.: %1$d%%</string>
     <string name="release_software_version">Version du logiciel</string>
     <string name="ui_processor_software_version">Version du logiciel de processeur UI</string>
     <string name="pc_processor_software_version">Version du logiciel du processeur PC</string>
