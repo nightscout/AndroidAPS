@@ -531,7 +531,6 @@
     <string name="limitingpercentrate">%2$s\'den dolayı max yüzde oranı %1$d%% ile sınırlandırılıyor</string>
     <string name="itmustbepositivevalue">pozitif bir değer olmalıdır</string>
     <string name="limitingbolus">%2$s\'den dolayı bolus %1$.1f Ü ile sınırlandırılıyor</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Onay</string>
     <string name="message">İleti</string>
