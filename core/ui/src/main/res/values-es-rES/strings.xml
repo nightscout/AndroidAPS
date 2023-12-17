@@ -531,7 +531,6 @@
     <string name="limitingpercentrate">Limitando el porcentaje máximo de la dosis a %1$d%% debido a %2$s</string>
     <string name="itmustbepositivevalue">tiene que ser un valor positivo</string>
     <string name="limitingbolus">Limitando el bolo a %1$.1f U debido a %2$s</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Confirmación</string>
     <string name="message">Mensaje</string>
