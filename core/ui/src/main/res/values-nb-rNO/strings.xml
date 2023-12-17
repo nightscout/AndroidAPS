@@ -525,6 +525,7 @@
     <string name="password_cleared">Passordet er fjernet!</string>
     <string name="pairing">Kobler sammen</string>
     <string name="initializing">Initialiserer...</string>
+    <string name="secs" comment="second short">%1$d s</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Begrenser maks basaldose til %1$.2f E/t på grunn av %2$s</string>
     <string name="pumplimit">pumpebegrensning</string>
