@@ -520,13 +520,13 @@
     <string name="password_cleared">סיסמה נמחקה!</string>
     <string name="pairing">מצמד</string>
     <string name="initializing">מאתחל...</string>
+    <string name="secs" comment="second short">%1$d שניות</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">מגביל את הקצב הבזאלי המרבי ל-%1$.2f יח\' לשעה בגלל %2$s</string>
     <string name="pumplimit">מגבלת משאבה</string>
     <string name="limitingpercentrate">מגביל את אחוז הקצב הבזאלי המרבי ל-%1$d%% בגלל %2$s</string>
     <string name="itmustbepositivevalue">זה חייב להיות ערך חיובי</string>
     <string name="limitingbolus">מגביל בולוס ל-%1$.1f יח\' בגלל %2$s</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">אישור</string>
     <string name="message">הודעה</string>
