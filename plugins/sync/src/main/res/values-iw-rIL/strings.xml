@@ -117,6 +117,7 @@
     <string name="xdrip_local_broadcasts_summary">שולח נתוני גלוקוז וטיפולים ל-xDrip+. יש לבחור את מקור הנתונים \"xDrip+ Sync Follower\" וקבלת נתונים חייבת להיות מופעלת בהגדרות &gt; הגדרות לשיתוף פעולה בין אפליקציות &gt; קבל גלוקוז\\טיפולים</string>
     <string name="xdrip_local_broadcasts_title">אפשר שידור ל-xDrip+</string>
     <!--    DataBroadcast-->
+    <string name="tizen_short">TIZ</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">חיבור למכשיר Garmin</string>
