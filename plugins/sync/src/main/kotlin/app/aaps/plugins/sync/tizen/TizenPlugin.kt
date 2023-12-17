@@ -65,7 +65,7 @@ class TizenPlugin @Inject constructor(
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
-        .pluginIcon(app.aaps.core.main.R.drawable.ic_watch)
+        .pluginIcon(app.aaps.core.objects.R.drawable.ic_watch)
         .pluginName(R.string.tizen)
         .shortName(R.string.tizen_short)
         .description(R.string.tizen_description),
