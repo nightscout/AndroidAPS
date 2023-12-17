@@ -14,8 +14,6 @@
     <string name="operating_mode">Mode de funcionament</string>
     <string name="description_pump_insight_local">Integració de bomba per models Accu-Chek Insight</string>
     <string name="not_inserted">No inserit</string>
-    <string name="tdd_bolus">TDD Bolus</string>
-    <string name="tdd_basal">TDD Basal</string>
     <string name="tbr_formatter">%1$d%% durant %2$d / %3$d min</string>
     <string name="multiwave_bolus">Bolus multiona</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U durant %3$d min</string>
@@ -24,8 +22,6 @@
     <string name="pairing_completed">Sincronització completada</string>
     <string name="code_compare">Coincideixen els codis que es mostren en aquest dispositiu i la bomba?</string>
     <string name="insight_pairing">Sincronització Insight</string>
-    <string name="insight_local">Accu-Chek Insight</string>
-    <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Tub canviat</string>
     <string name="insightpump_shortname">Insight</string>
     <string name="insight_alert_notification_channel">Alertes Insight</string>
@@ -40,7 +36,6 @@
     <string name="short_status_tbr">TBR: %1$d%% durant %2$d / %3$d min</string>
     <string name="short_status_extended">Estès: %1$.2f / %2$.2f U durant %3$d min</string>
     <string name="short_status_multiwave">Multiona: %1$.2f / %2$.2f U durant %3$d min</string>
-    <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_reservoir">Reservori.: %1$.2f U</string>
     <string name="short_status_battery">Bateria.: %1$d%%</string>
     <string name="release_software_version">Versió de software</string>
