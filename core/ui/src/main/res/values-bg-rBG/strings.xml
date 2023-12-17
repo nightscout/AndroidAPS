@@ -526,7 +526,6 @@
     <string name="limitingpercentrate">Ограничаване на максималната процентна стойност до %1$d%% поради %2$s</string>
     <string name="itmustbepositivevalue">трябва да бъде положително число</string>
     <string name="limitingbolus">Ограничаване на болус до %1$.1f Е поради %2$s</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Потвърждение</string>
     <string name="message">Съобщение</string>
