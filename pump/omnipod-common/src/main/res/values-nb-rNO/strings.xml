@@ -124,6 +124,7 @@
     <string name="omnipod_common_pod_status_waiting_for_activation">Oppsett pågår (venter på Pod-aktivering)</string>
     <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">Oppsett pågår (venter på innsetting av kanyle)</string>
     <string name="omnipod_common_pod_status_running">Kjører</string>
+    <string name="omnipod_common_pod_status_normal">Normal</string>
     <string name="omnipod_common_pod_status_suspended">Pauset</string>
     <string name="omnipod_common_pod_status_pod_fault">Pod-feil</string>
     <string name="omnipod_common_pod_status_activation_time_exceeded">Aktiveringstiden er overskredet</string>

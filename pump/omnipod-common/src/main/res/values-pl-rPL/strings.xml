@@ -124,6 +124,7 @@
     <string name="omnipod_common_pod_status_waiting_for_activation">Konfiguracja w toku (oczekiwanie na aktywację Poda)</string>
     <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">Konfiguracja w toku (oczekiwanie na wprowadzenie kaniuli)</string>
     <string name="omnipod_common_pod_status_running">W działaniu</string>
+    <string name="omnipod_common_pod_status_normal">Normalny</string>
     <string name="omnipod_common_pod_status_suspended">Wstrzymany</string>
     <string name="omnipod_common_pod_status_pod_fault">Błąd Poda</string>
     <string name="omnipod_common_pod_status_activation_time_exceeded">Przekroczono czas aktywacji</string>
