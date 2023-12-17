@@ -24,10 +24,8 @@
     <string name="pairing_completed">Сдвояване завършено</string>
     <string name="code_compare">Съвпадат ли кодовете, показани на това устройство и на Вашата помпа?</string>
     <string name="insight_pairing">Insight свързване</string>
-    <string name="insight_local">Accu-Chek Insight</string>
     <string name="insight_alert_formatter">%1$s:%2$s</string>
     <string name="tube_changed">Тръба сменена</string>
-    <string name="insightpump_shortname">Sight</string>
     <string name="insight_alert_notification_channel">Аларми за Insight Pump</string>
     <string name="disable_vibration">Изключи вибрациите при ръчно подаване на болус</string>
     <string name="disable_vibration_summary">За болус и удължен болус (налично само с Insight фърмуер 3.x)</string>
