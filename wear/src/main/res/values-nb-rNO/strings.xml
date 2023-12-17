@@ -204,4 +204,5 @@
     <string name="old_warning">!gammel!</string>
     <string name="error">!feil!</string>
     <string name="pref_heartRateSampling">Puls</string>
+    <string name="pref_stepsSampling">Aktiver antall skritt</string>
 </resources>
