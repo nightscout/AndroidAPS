@@ -24,6 +24,8 @@
     <string name="pairing_completed">Сопряжение выполнено</string>
     <string name="code_compare">Коды на этом устройстве и на вашей помпе совпадают?</string>
     <string name="insight_pairing">Сопряжение с Insight</string>
+    <string name="insight_local">Accu-Chek Insight</string>
+    <string name="insight_alert_formatter">%1$s%2$s</string>
     <string name="tube_changed">Трубка заменена</string>
     <string name="insightpump_shortname">Поле обзора</string>
     <string name="insight_alert_notification_channel">Оповещения помпы Insight</string>
@@ -65,4 +67,5 @@
     <string name="pump_alert">Оповещение помпы</string>
     <string name="pairing_information">Информация о сопряжении</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Кнопка \"Обновить Insight\"</string>
+    <string name="last_connection">%1$s (%2$s)</string>
 </resources>
