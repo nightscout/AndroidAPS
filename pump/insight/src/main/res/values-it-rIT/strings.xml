@@ -24,7 +24,10 @@
     <string name="pairing_completed">Associazione completata</string>
     <string name="code_compare">I codici mostrati su questo dispositivo e sul micro combaciano?</string>
     <string name="insight_pairing">Associazione Insight</string>
+    <string name="insight_local">Accu-Chek Insight</string>
+    <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Catetere sostituito</string>
+    <string name="insightpump_shortname">Sight</string>
     <string name="insight_alert_notification_channel">Avvisi micro Insight</string>
     <string name="disable_vibration">Erogazione bolo manuale: disabilita vibrazioni</string>
     <string name="disable_vibration_summary">Per bolo e bolo esteso (disponibile solo con firmware Insight 3.x)</string>
@@ -37,6 +40,7 @@
     <string name="short_status_tbr">TBR: %1$d%% per %2$d / %3$d min</string>
     <string name="short_status_extended">Esteso: %1$.2f / %2$.2f U per %3$d min</string>
     <string name="short_status_multiwave">Multiwave: %1$.2f / %2$.2f U per %3$d min</string>
+    <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_reservoir">Serb.: %1$.2f U</string>
     <string name="short_status_battery">Batt: %1$d%%</string>
     <string name="release_software_version">Versione Release software</string>
@@ -63,4 +67,5 @@
     <string name="pump_alert">Avviso micro</string>
     <string name="pairing_information">Informazioni associazione</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Tasto aggiornamento Insight</string>
+    <string name="last_connection">%1$s (%2$s)</string>
 </resources>
