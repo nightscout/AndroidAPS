@@ -525,6 +525,7 @@
     <string name="password_cleared">Contraseña borrada</string>
     <string name="pairing">Emparejando</string>
     <string name="initializing">Iniciando...</string>
+    <string name="secs" comment="second short">%1$d s</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limitando la basal máxima a %1$.2f U/h debido a %2$s</string>
     <string name="pumplimit">límite de la bomba</string>
