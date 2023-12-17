@@ -16,9 +16,9 @@
     <string name="not_inserted">Není vloženo</string>
     <string name="tdd_bolus">CDD bolusů</string>
     <string name="tdd_basal">CDD bazálů</string>
-    <string name="tbr_formatter">%1$d%% for %2$d / %3$d min</string>
+    <string name="tbr_formatter">%1$d%% na %2$d / %3$d min</string>
     <string name="multiwave_bolus">Duální bolus</string>
-    <string name="eb_formatter">%1$.2f / %2$.2f U for %3$d min</string>
+    <string name="eb_formatter">%1$.2f / %2$.2f U na %3$d min</string>
     <string name="insight_last_bolus">Poslední bolus</string>
     <string name="searching_for_devices">Vyhledávání zařízení…</string>
     <string name="pairing_completed">Párování dokončeno</string>
@@ -67,4 +67,5 @@
     <string name="pump_alert">Výstraha pumpy</string>
     <string name="pairing_information">Informace o párování</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight Tlačítko Obnovit</string>
+    <string name="last_connection">%1$s (%2$s)</string>
 </resources>
