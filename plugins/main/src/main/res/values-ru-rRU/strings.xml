@@ -288,4 +288,7 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Показывает текущие уведомления и краткий обзор событий цикла</string>
     <string name="old_data">старые данные</string>
+    <string name="overview_show_steps">шаги</string>
+    <string name="steps_shortname">ШАГИ</string>
+    <string name="simple_mode_enabled">Простой режим включен</string>
 </resources>
