@@ -13,6 +13,7 @@
     <string name="objectives_openloop_learned">לולאה פתוחה יכולה להמליץ על הטיפול אם אין ברשתכם משאבה תואמת או אם אתם עוד לא מוכנים ללולאה סגורה.</string>
     <string name="objectives_maxbasal_objective">הבנה של הלולאה הפתוחה שלך, לרבות הבזאלים הזמניים וההמלצות</string>
     <string name="objectives_maxbasal_gate">בהתבסס על ניסיון זה, קבעו את הערך הבזאלי המקסימלי והגדירו אותו במשאבה</string>
+    <string name="objectives_maxbasal">בצע את הפעולה כמומלץ</string>
     <string name="objectives_maxbasal_learned">קחו בחשבון את אמצעי הבטיחות והתאימו את ערכי משתני הבטיחות במקרה הצורך.</string>
     <string name="objectives_maxiobzero_objective">מתחילים לסגור את הלולאה עם השהיה עקב רמת גלוקוז נמוכה</string>
     <string name="objectives_maxiobzero_gate">השתמשו בלולאה סגורה עם ערך IOB מקסימלי = 0 למשך מספר ימים, עם כמה שפחות ארועי השהיה עקב גלוקוז נמוך (LGS)</string>
