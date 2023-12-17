@@ -236,7 +236,7 @@
     <string name="button1">כפתור 1</string>
     <string name="button2">כפתור 2</string>
     <string name="button3">כפתור 3</string>
-    <string name="prefs_range_title">טווח הצגה</string>
+    <string name="prefs_range_title">טווח להצגה</string>
     <string name="prefs_range_summary">סימוני גבוה ונמוך בתרשים סקירה כללית ובשעון חכם</string>
     <string name="low_mark">סימון נמוך</string>
     <string name="high_mark">סימון גבוה</string>
@@ -289,4 +289,7 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">מציג הודעה קבועה עם סקירה קצרה של מה שהלולאה שלכם עושה</string>
     <string name="old_data">נתונים ישנים</string>
+    <string name="overview_show_steps">צעדים</string>
+    <string name="steps_shortname">צעדים</string>
+    <string name="simple_mode_enabled">נבחר המצב הפשוט</string>
 </resources>
