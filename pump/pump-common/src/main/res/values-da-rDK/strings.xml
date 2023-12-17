@@ -64,15 +64,6 @@
     <string name="pump_settings_error_wrong_max_basal_set">Forkert Max Basal sat på Pump (skal være %1$.2f).</string>
     <!-- Pump History -->
     <string name="pump_history_type">Type:</string>
-    <!-- PumpDeviceState -->
-    <string name="pump_status_never_contacted">Aldrig kontaktet</string>
-    <string name="pump_status_sleeping">Sovende</string>
-    <string name="pump_status_waking_up">Vågner</string>
-    <string name="pump_status_active">Aktiv</string>
-    <string name="pump_status_error_comm">Fejl i kommunikation</string>
-    <string name="pump_status_timeout_comm">Timeout ved kommunikation</string>
-    <string name="pump_status_pump_unreachable">Pumpe utilgængelig</string>
-    <string name="pump_status_invalid_config">Ugyldig konfiguration</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dage</item>
