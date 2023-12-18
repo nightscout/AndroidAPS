@@ -24,7 +24,10 @@
     <string name="pairing_completed">Eşleştirme tamamlandı</string>
     <string name="code_compare">Bu cihazda ve pompanızda görüntülenen kodlar uyuşuyor mu?</string>
     <string name="insight_pairing">Insight eşleştirme</string>
+    <string name="insight_local">Accu-Chek Insight</string>
+    <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Hortum değişti</string>
+    <string name="insightpump_shortname">Sight</string>
     <string name="insight_alert_notification_channel">Insight Pump Uyarıları</string>
     <string name="disable_vibration">Manuel bolus iletiminde titreşimleri devre dışı bırakın</string>
     <string name="disable_vibration_summary">Bolus ve yayma bolus için (yalnızca Insight üretici yazılımı 3.x ile kullanılabilir)</string>
@@ -64,4 +67,5 @@
     <string name="pump_alert">Pompa alarmı</string>
     <string name="pairing_information">Eşleşme bilgisi</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight Yenileme Düğmesi</string>
+    <string name="last_connection">%1$s (%2$s)</string>
 </resources>
