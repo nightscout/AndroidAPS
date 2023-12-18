@@ -13,6 +13,7 @@
     <string name="objectives_openloop_learned">La boucle ouverte peut être utilisée pour les recommandations si vous n\'avez pas de pompe compatible ou si vous n\'êtes pas prêt à fermer la boucle.</string>
     <string name="objectives_maxbasal_objective">Compréhension de la Boucle Ouverte, y compris les propositions de débits Basal temporaires</string>
     <string name="objectives_maxbasal_gate">Partant de ce constat, décidez quel doit être le débit de base maximum, et entrez le dans la pompe et les préférences</string>
+    <string name="objectives_maxbasal">Effectuer une action pour remplir la recommandation</string>
     <string name="objectives_maxbasal_learned">Faites attention aux dispositifs de sécurité et réglez les paramètres de sécurité si nécessaire.</string>
     <string name="objectives_maxiobzero_objective">Démarrage de la boucle fermée avec le système AGB ( Arrêt pour Glycémie Basse )</string>
     <string name="objectives_maxiobzero_gate">Activez la boucle fermée avec le paramètre max IOB = 0 pendant plusieurs jours sans avoir un trop grand nombre d\'AGB (Arrêt pour Glycémie Basse)</string>
