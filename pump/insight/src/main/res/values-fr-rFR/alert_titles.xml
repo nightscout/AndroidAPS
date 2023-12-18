@@ -16,6 +16,7 @@
     <string name="alert_m21_title">Réservoir vide</string>
     <string name="alert_m22_title">Pile déchargée</string>
     <string name="alert_m23_title">Arrêt automatique - Pompe arrêtée</string>
+    <string name="alert_m24_title">Occlusion</string>
     <string name="alert_m25_title">Fin du prêt - fin de fonctionnement</string>
     <string name="alert_m26_title">Changement de réservoir non terminé</string>
     <string name="alert_m27_title">Échec du transfert des données</string>
