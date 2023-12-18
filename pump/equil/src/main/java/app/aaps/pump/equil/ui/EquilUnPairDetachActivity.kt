@@ -98,9 +98,8 @@ class EquilUnPairDetachActivity : TranslatedDaggerAppCompatActivity() {
             override fun run() {
                 if (result.success) {
                     equilManager.runMode = RunMode.STOP
-                    equilManager.closeBle()
+                    equilManager.closeBleAuto()
                     equilPumpPlugin.resetData()
-                    SystemClock.sleep(500)
                     equilManager.activationProgress = ActivationProgress.CANNULA_CHANGE
                     dismissLoading()
                     startActivity(Intent(context, EquilUnPairActivity::class.java))

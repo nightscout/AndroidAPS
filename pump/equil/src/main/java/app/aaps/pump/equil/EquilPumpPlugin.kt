@@ -116,6 +116,7 @@ import javax.inject.Singleton
                                    override fun run() {
                                        if (result.success) ToastUtils.infoToast(context, rh.gs(R.string.equil_pump_updated))
                                        else ToastUtils.infoToast(context, rh.gs(R.string.equil_error))
+                                       equilManager.closeBleAuto()
                                    }
                                })
                            } else if (event.isChanged(rh.gs(app.aaps.core.keys.R.string.key_equil_maxbolus))) {
@@ -124,6 +125,7 @@ import javax.inject.Singleton
                                    override fun run() {
                                        if (result.success) ToastUtils.infoToast(context, rh.gs(R.string.equil_pump_updated))
                                        else ToastUtils.infoToast(context, rh.gs(R.string.equil_error))
+                                       equilManager.closeBleAuto()
                                    }
                                })
                            }
@@ -177,6 +179,7 @@ import javax.inject.Singleton
             if (pumpEnactResult.success) {
                 equilManager.basalSchedule = basalSchedule
             }
+            equilManager.closeBleAuto()
             return pumpEnactResult
         }
         return instantiator.providePumpEnactResult().enacted(false).success(false).comment(rh.gs(R.string.equil_pump_not_run))
@@ -225,29 +228,11 @@ import javax.inject.Singleton
         } else deliverBolus(detailedBolusInfo)
     }
 
-    private fun loadHistory(): PumpEnactResult {
-        val pumpEnactResult = instantiator.providePumpEnactResult()
-        val equilHistoryLast = equilHistoryPumpDao.last(serialNumber())
-        var startIndex: Int
-        startIndex = equilHistoryLast.eventIndex
-        val index = equilManager.historyIndex
-        aapsLogger.debug(LTag.PUMPCOMM, "return ===$index====$startIndex")
-        if (index == -1) {
-            return pumpEnactResult.success(false)
-        }
-        while (startIndex != index) {
-            startIndex++
-            if (startIndex > 2000) {
-                startIndex = 1
-            }
-            aapsLogger.debug(LTag.PUMPCOMM, "while index===$startIndex===$index")
-            equilManager.loadHistory(startIndex)
-        }
-        return pumpEnactResult.success(true)
-    }
 
     override fun stopBolusDelivering() {
         equilManager.stopBolus(bolusProfile)
+        equilManager.closeBleAuto()
+
         aapsLogger.debug(LTag.PUMPCOMM, "stopBolusDelivering=====")
     }
 
@@ -281,6 +266,7 @@ import javax.inject.Singleton
                 }
             }
         }
+        equilManager.closeBleAuto()
         return pumpEnactResult
     }
 
@@ -366,14 +352,13 @@ import javax.inject.Singleton
     override fun executeCustomCommand(customCommand: CustomCommand): PumpEnactResult? {
         aapsLogger.debug(LTag.PUMPCOMM, "executeCustomCommand $customCommand")
         var pumpEnactResult: PumpEnactResult? = null
-        if (customCommand is CmdHistoryGet) {
-            pumpEnactResult = loadHistory()
-        }
+
         if (customCommand is BaseCmd) {
             pumpEnactResult = equilManager.executeCmd(customCommand)
         }
         if (customCommand is CmdStatusGet) {
             pumpEnactResult = equilManager.readEquilStatus()
+            equilManager.closeBleAuto();
         }
         return pumpEnactResult
     }
@@ -409,12 +394,16 @@ import javax.inject.Singleton
             pumpEnactResult.isPercent = false
             pumpEnactResult.absolute = insulin
         }
+        equilManager.closeBleAuto()
+
         return pumpEnactResult
     }
 
     override fun cancelExtendedBolus(): PumpEnactResult {
         aapsLogger.debug(LTag.PUMPCOMM, "cancelExtendedBolus")
-        return equilManager.setExtendedBolus(0.0, 0, true)
+        var pumpEnactResult= equilManager.setExtendedBolus(0.0, 0, true)
+        equilManager.closeBleAuto()
+        return pumpEnactResult
     }
 
     override fun loadTDDs(): PumpEnactResult {

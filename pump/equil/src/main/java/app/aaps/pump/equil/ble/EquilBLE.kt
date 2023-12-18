@@ -226,7 +226,11 @@ class EquilBLE @Inject constructor(
         preCmd = null
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
     }
-
+    fun closeBleAuto(){
+        handler.postDelayed({
+                             disconnect()
+                            }, EquilConst.EQUIL_BLE_NEXT_CMD)
+    }
     var autoScan = false
     private fun findEquil(mac: String) {
         if (mac.isEmpty()) return

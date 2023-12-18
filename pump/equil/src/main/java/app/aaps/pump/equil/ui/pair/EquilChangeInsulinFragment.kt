@@ -31,6 +31,7 @@ class EquilChangeInsulinFragment : EquilPairFragmentBase() {
                 commandQueue.customCommand(CmdInsulinChange(), object : Callback() {
                     override fun run() {
                         dismissLoading()
+                        equilManager.closeBleAuto()
                         if (result.success) {
                             equilPumpPlugin.resetData()
                             equilManager.runMode = RunMode.STOP

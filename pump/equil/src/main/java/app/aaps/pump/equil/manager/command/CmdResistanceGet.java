@@ -2,6 +2,9 @@ package app.aaps.pump.equil.manager.command;
 
 
 import app.aaps.pump.equil.database.EquilHistoryRecord;
+import app.aaps.pump.equil.manager.AESUtil;
+import app.aaps.pump.equil.manager.EquilCmdModel;
+import app.aaps.pump.equil.manager.EquilResponse;
 import app.aaps.pump.equil.manager.Utils;
 
 public class CmdResistanceGet extends BaseSetting {
@@ -39,6 +42,17 @@ public class CmdResistanceGet extends BaseSetting {
         synchronized (this) {
             notify();
         }
+    }
+
+    public EquilResponse decodeConfirm() throws Exception {
+        EquilCmdModel equilCmdModel = decodeModel();
+        runCode = equilCmdModel.getCode();
+        String content = AESUtil.decrypt(equilCmdModel, Utils.hexStringToBytes(runPwd));
+        decodeConfirmData(Utils.hexStringToBytes(content));
+        byte[] data = getNextData();
+        EquilCmdModel equilCmdModel2 = AESUtil.aesEncrypt(Utils.hexStringToBytes(runPwd), data);
+//        return responseCmd(equilCmdModel2, port + runCode,true);
+        return null;
     }
 
     @Override public EquilHistoryRecord.EventType getEventType() {

@@ -237,7 +237,7 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
                         SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
                         pair(scanResult)
                     } else {
-                        equilManager.closeBle()
+                        equilManager.closeBleAuto()
                         dismissLoading()
                         runOnUiThread {
                             progressPair.visibility = View.INVISIBLE
@@ -249,6 +249,8 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
                         }
                     }
                 } else {
+                    equilManager.closeBleAuto()
+
                     dismissLoading()
                     runOnUiThread {
                         progressPair.visibility = View.INVISIBLE
@@ -279,7 +281,7 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
                         SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
                         pumpSettings(scanResult.address.toString(), scanResult.name.toString())
                     } else {
-                        equilManager.closeBle()
+                        equilManager.closeBleAuto()
                         dismissLoading()
                         runOnUiThread {
                             progressPair.visibility = View.INVISIBLE
@@ -313,6 +315,7 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
         commandQueue.customCommand(CmdSettingSet(), object : Callback() {
             override fun run() {
                 if (activity == null) return
+                equilManager.closeBleAuto()
                 if (result.success) {
                     dismissLoading()
                     equilManager.address = address
