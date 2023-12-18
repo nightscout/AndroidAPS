@@ -57,4 +57,6 @@
     <string name="count_selected">%1$d seçildi</string>
     <string name="sort_label">Sırala</string>
     <string name="search">Ara</string>
+    <string name="simple_mode">Basit mod</string>
+    <string name="master_password_not_set">Ana parola ayarlanmadı</string>
 </resources>
