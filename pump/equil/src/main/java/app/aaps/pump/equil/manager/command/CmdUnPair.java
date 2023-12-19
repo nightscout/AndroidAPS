@@ -123,7 +123,8 @@ public class CmdUnPair extends BaseCmd {
         byte[] data = Utils.concat(data1, data2);
 
         EquilCmdModel equilCmdModel2 = AESUtil.aesEncrypt(Utils.hexStringToBytes(runPwd), data);
-        return responseCmd(equilCmdModel2, port + equilCmdModel2.getCode());
+        runCode = equilCmdModel.getCode();
+        return responseCmd(equilCmdModel2, port + runCode);
     }
 
 

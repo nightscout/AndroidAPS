@@ -72,7 +72,7 @@ class EquilPairAirFragment : EquilPairFragmentBase() {
     }
 
     private fun setStep() {
-        commandQueue.customCommand(CmdStepSet(), object : Callback() {
+        commandQueue.customCommand(CmdStepSet(false, EquilConst.EQUIL_STEP_AIR), object : Callback() {
             override fun run() {
                 if (activity == null) return
                 aapsLogger.debug(LTag.PUMPCOMM, "result====" + result.success)
@@ -127,8 +127,6 @@ class EquilPairAirFragment : EquilPairFragmentBase() {
                 if (activity == null) return
                 aapsLogger.debug(LTag.PUMPCOMM, "CmdGetDevices result====" + result.success)
                 if (result.success) {
-                    equilManager.closeBle()
-                    SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
                     dismissLoading()
                     runOnUiThread {
                         // binding.navButtonsLayout.buttonNext.performClick()

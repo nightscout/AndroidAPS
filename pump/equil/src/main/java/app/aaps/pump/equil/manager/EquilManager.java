@@ -150,6 +150,10 @@ public class EquilManager {
         return listEvent.get(index).getConent();
     }
 
+    public void closeBleAuto() {
+        equilBLE.closeBleAuto();
+
+    }
 
     public PumpEnactResult closeBle() {
         PumpEnactResult result = instantiator.providePumpEnactResult();
@@ -524,8 +528,10 @@ public class EquilManager {
             aapsLogger.debug(LTag.PUMPCOMM, "while index===" + startIndex + "===" + index + "===" + currentIndex);
             if (currentIndex > 1) {
                 setStartHistoryIndex(currentIndex);
+                allCount++;
+            } else {
+                break;
             }
-            allCount++;
         }
         return pumpEnactResult.success(true);
     }

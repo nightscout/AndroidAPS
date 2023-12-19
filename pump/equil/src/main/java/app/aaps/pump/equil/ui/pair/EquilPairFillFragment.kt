@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.ui.extensions.runOnUiThread
+import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.pump.equil.EquilConst
 import app.aaps.pump.equil.R
 import app.aaps.pump.equil.database.EquilHistoryRecord
@@ -40,6 +41,7 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
     private lateinit var buttonNext: Button
     lateinit var buttonFill: Button
     lateinit var lytAction: View
+    var intStep = 0
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -97,13 +99,14 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
     }
 
     private fun setStep() {
-        commandQueue.customCommand(CmdStepSet(), object : Callback() {
+        commandQueue.customCommand(CmdStepSet(false, EquilConst.EQUIL_STEP_FILL), object : Callback() {
             override fun run() {
                 if (activity == null) return
 
                 aapsLogger.debug(LTag.PUMPCOMM, "result====" + result.success)
                 if (result.success) {
-                    SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
+                    // SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
+                    intStep += EquilConst.EQUIL_STEP_FILL
                     readStatus()
                 } else {
                     if (auto) {
@@ -127,7 +130,12 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
                     if (result.success) {
                         if (!result.enacted) {
                             if (auto) {
-                                SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
+                                if (intStep > EquilConst.EQUIL_STEP_MAX) {
+                                    ToastUtils.infoToast(context, rh.gs(R.string.equil_replace_reservoir))
+                                    dismissLoading()
+                                    activity?.finish()
+                                    return
+                                }
                                 setStep()
                             } else {
                                 dismissLoading()

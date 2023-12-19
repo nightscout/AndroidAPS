@@ -225,26 +225,6 @@ import javax.inject.Singleton
         } else deliverBolus(detailedBolusInfo)
     }
 
-    private fun loadHistory(): PumpEnactResult {
-        val pumpEnactResult = instantiator.providePumpEnactResult()
-        val equilHistoryLast = equilHistoryPumpDao.last(serialNumber())
-        var startIndex: Int
-        startIndex = equilHistoryLast.eventIndex
-        val index = equilManager.historyIndex
-        aapsLogger.debug(LTag.PUMPCOMM, "return ===$index====$startIndex")
-        if (index == -1) {
-            return pumpEnactResult.success(false)
-        }
-        while (startIndex != index) {
-            startIndex++
-            if (startIndex > 2000) {
-                startIndex = 1
-            }
-            aapsLogger.debug(LTag.PUMPCOMM, "while index===$startIndex===$index")
-            equilManager.loadHistory(startIndex)
-        }
-        return pumpEnactResult.success(true)
-    }
 
     override fun stopBolusDelivering() {
         equilManager.stopBolus(bolusProfile)
@@ -366,9 +346,7 @@ import javax.inject.Singleton
     override fun executeCustomCommand(customCommand: CustomCommand): PumpEnactResult? {
         aapsLogger.debug(LTag.PUMPCOMM, "executeCustomCommand $customCommand")
         var pumpEnactResult: PumpEnactResult? = null
-        if (customCommand is CmdHistoryGet) {
-            pumpEnactResult = loadHistory()
-        }
+
         if (customCommand is BaseCmd) {
             pumpEnactResult = equilManager.executeCmd(customCommand)
         }
@@ -386,7 +364,10 @@ import javax.inject.Singleton
     override fun isUnreachableAlertTimeoutExceeded(alertTimeoutMilliseconds: Long): Boolean = false
     override val isFakingTempsByExtendedBoluses: Boolean = false
     override fun canHandleDST(): Boolean = false
-    override fun disconnect(reason: String) {}
+    override fun disconnect(reason: String) {
+        aapsLogger.info(LTag.PUMPCOMM, "disconnect reason=$reason")
+        equilManager.closeBleAuto()
+    }
     override fun stopConnecting() {}
 
     override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
@@ -414,7 +395,8 @@ import javax.inject.Singleton
 
     override fun cancelExtendedBolus(): PumpEnactResult {
         aapsLogger.debug(LTag.PUMPCOMM, "cancelExtendedBolus")
-        return equilManager.setExtendedBolus(0.0, 0, true)
+        var pumpEnactResult= equilManager.setExtendedBolus(0.0, 0, true)
+        return pumpEnactResult
     }
 
     override fun loadTDDs(): PumpEnactResult {
