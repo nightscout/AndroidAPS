@@ -4,6 +4,7 @@ import android.content.Context
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.DetermineBasalAdapter
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.constraints.Objectives
@@ -55,6 +56,7 @@ class OpenAPSSMBDynamicISFPlugin @Inject constructor(
     bgQualityCheck: BgQualityCheck,
     tddCalculator: TddCalculator,
     importExportPrefs: ImportExportPrefs,
+    config: Config,
     private val uiInteraction: UiInteraction,
     private val objectives: Objectives
 ) : OpenAPSSMBPlugin(
@@ -70,14 +72,14 @@ class OpenAPSSMBDynamicISFPlugin @Inject constructor(
     processedTbrEbData,
     hardLimits,
     profiler,
-    sp,
     preferences,
     dateUtil,
     persistenceLayer,
     glucoseStatusProvider,
     bgQualityCheck,
     tddCalculator,
-    importExportPrefs
+    importExportPrefs,
+    config
 ) {
 
     init {

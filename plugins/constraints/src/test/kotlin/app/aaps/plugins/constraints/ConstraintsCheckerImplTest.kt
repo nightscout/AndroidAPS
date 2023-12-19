@@ -148,18 +148,18 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         openAPSSMBPlugin =
             OpenAPSSMBPlugin(
                 injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, context, activePlugin, iobCobCalculator,
-                processedTbrEbData, hardLimits, profiler, sp, preferences, dateUtil, persistenceLayer, glucoseStatusProvider, bgQualityCheck, tddCalculator, importExportPrefs
+                processedTbrEbData, hardLimits, profiler, preferences, dateUtil, persistenceLayer, glucoseStatusProvider, bgQualityCheck, tddCalculator, importExportPrefs, config
             )
         openAPSSMBDynamicISFPlugin =
             OpenAPSSMBDynamicISFPlugin(
                 injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, context, activePlugin, iobCobCalculator,
                 processedTbrEbData, hardLimits, profiler, sp, preferences, dateUtil, persistenceLayer, glucoseStatusProvider, bgQualityCheck, tddCalculator, importExportPrefs,
-                uiInteraction, objectivesPlugin
+                config, uiInteraction, objectivesPlugin
             )
         openAPSAMAPlugin =
             OpenAPSAMAPlugin(
                 injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, context, activePlugin, iobCobCalculator,
-                processedTbrEbData, hardLimits, profiler, fabricPrivacy, dateUtil, persistenceLayer, glucoseStatusProvider, sp, preferences, importExportPrefs
+                processedTbrEbData, hardLimits, profiler, fabricPrivacy, dateUtil, persistenceLayer, glucoseStatusProvider, preferences, importExportPrefs, config
             )
         safetyPlugin =
             SafetyPlugin(
