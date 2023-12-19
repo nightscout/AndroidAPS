@@ -1,6 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--  start  -->
+    <string name="equil_basal_speed">Основная скорость базала</string>
+    <string name="equil_bluetooth_connecting">Bluetooth</string>
+    <string name="equil_bolus_delivered">Введено %1$.3f ед / %2$.3f ед</string>
+    <string name="equil_bolus_speed">Скорость ввода болюса</string>
+    <string name="equil_btn_cancel">Отмена</string>
+    <string name="equil_btn_i_know">Я знаю</string>
+    <string name="equil_btn_need">Нужно</string>
+    <string name="equil_btn_ok">OK</string>
+    <string name="equil_btn_request_authentication">Разрешить выполнение</string>
+    <string name="equil_btn_skip">Пропустить</string>
+    <string name="equil_btn_sync">Синхронизировать</string>
+    <string name="equil_cancel">Отмена</string>
+    <string name="equil_connection_connected">Соединение установлено</string>
+    <string name="equil_connection_connecting">Соединение устанавливается</string>
+    <string name="equil_connection_unconnected">Не подключено</string>
+    <string name="equil_date_device">Прошлое соединение</string>
+    <string name="equil_dressing">Заменить резервуар</string>
+    <string name="equil_dressing_onkey_msg">Плунжер автоматически перемещается в нижнюю часть резервуара. По достижении нижней части он остановится автоматически. Нажмите \'Остановить\', чтобы прервать при необходимости.</string>
+    <string name="equil_finish">Завершено</string>
+    <string name="equil_next">Далее</string>
+    <string name="equil_hint_dressing">Эта операция прекратит инфузию инсулина и переместит плунжер помпы на дно!</string>
+    <string name="equil_history">Журнал</string>
+    <string name="equil_insulin_reservoir">Резервуар инсулина</string>
+    <string name="equil_mode">Рабочий режим</string>
+    <string name="equil_mode_running">Выполняется</string>
+    <string name="equil_mode_stopped">Остановлено</string>
+    <string name="equil_mode_suspended">Приостановлено</string>
+    <string name="equil_pump">Помпа Equil Patch</string>
+    <string name="equil_pump_description">Помпа Equil Patch 5.3 или новее </string>
+    <string name="equil_serialnumber">№ устройства</string>
+    <string name="equil_stop">Прервать</string>
+    <string name="equil_success">Успешно</string>
+    <string name="equil_table_column_battery">Уровень заряда батареи</string>
+    <string name="equil_table_column_device_time">Время устройства</string>
+    <string name="equil_title_choice">Выбрать</string>
     <!-- equil - Commands -->
     <!--    推杆回退-->
 </resources>
