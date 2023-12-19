@@ -266,9 +266,9 @@ class ReplayApsResultsTest @Inject constructor() {
         // Pass to DetermineBasalSMBDynamicISF
 
         if (determineBasalResult.profile.getString("out_units") == "mmol/L")
-            sp.putString(app.aaps.core.utils.R.string.key_units, GlucoseUnit.MMOL.asText)
+            sp.putString(app.aaps.core.keys.R.string.key_units, GlucoseUnit.MMOL.asText)
         else
-            sp.putString(app.aaps.core.utils.R.string.key_units, GlucoseUnit.MGDL.asText)
+            sp.putString(app.aaps.core.keys.R.string.key_units, GlucoseUnit.MGDL.asText)
         val glucoseStatus = GlucoseStatus(
             glucose = determineBasalResult.glucoseStatus.getDouble("glucose"),
             noise = determineBasalResult.glucoseStatus.getInt("noise"),
@@ -415,9 +415,9 @@ class ReplayApsResultsTest @Inject constructor() {
         // Pass to DetermineBasalSMBDynamicISF
 
         if (determineBasalResult.profile.getString("out_units") == "mmol/L")
-            sp.putString(app.aaps.core.utils.R.string.key_units, GlucoseUnit.MMOL.asText)
+            sp.putString(app.aaps.core.keys.R.string.key_units, GlucoseUnit.MMOL.asText)
         else
-            sp.putString(app.aaps.core.utils.R.string.key_units, GlucoseUnit.MGDL.asText)
+            sp.putString(app.aaps.core.keys.R.string.key_units, GlucoseUnit.MGDL.asText)
         val glucoseStatus = GlucoseStatus(
             glucose = determineBasalResult.glucoseStatus.getDouble("glucose"),
             noise = 0,
