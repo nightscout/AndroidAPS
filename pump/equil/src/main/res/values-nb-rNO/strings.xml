@@ -1,6 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--  start  -->
+    <string name="equil_basal_speed">Profilens basaldose</string>
+    <string name="equil_bluetooth_connecting">Bluetooth</string>
+    <string name="equil_bolus_delivered">%1$.3f E / %2$.3f E Levert</string>
+    <string name="equil_bolus_speed">Bolushastighet</string>
+    <string name="equil_btn_cancel">Avbryt</string>
+    <string name="equil_btn_i_know">Jeg vet</string>
+    <string name="equil_btn_need">Behov</string>
+    <string name="equil_btn_ok">OK</string>
+    <string name="equil_btn_request_authentication">Autoriser kjøring</string>
+    <string name="equil_btn_skip">Hopp over</string>
+    <string name="equil_btn_sync">Synkroniser</string>
+    <string name="equil_cancel">Avbryt</string>
+    <string name="equil_connection_connected">Tilkoblet</string>
+    <string name="equil_connection_connecting">Tilkobler</string>
+    <string name="equil_connection_unconnected">Frakoblet</string>
+    <string name="equil_date_device">Siste tilkobling</string>
+    <string name="equil_dressing">Bytt reservoar</string>
+    <string name="equil_finish">Fullført</string>
+    <string name="equil_next">Neste</string>
+    <string name="equil_history">Historikk</string>
+    <string name="equil_insulin_reservoir">Insulinreservoar</string>
+    <string name="equil_mode_running">Kjører</string>
+    <string name="equil_mode_stopped">Stoppet</string>
+    <string name="equil_mode_suspended">Pauset</string>
+    <string name="equil_pump">Equil patchpumpe</string>
+    <string name="equil_pump_description">Equil 5.3 eller nyere patchpumpe </string>
+    <string name="equil_serialnumber">Enhetsnummer</string>
+    <string name="equil_stop">Stopp</string>
+    <string name="equil_success">Suksess</string>
+    <string name="equil_table_column_battery">Batterinivå</string>
     <!-- equil - Commands -->
     <!--    推杆回退-->
 </resources>
