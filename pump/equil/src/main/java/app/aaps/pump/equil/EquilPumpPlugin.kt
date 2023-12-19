@@ -116,7 +116,7 @@ import javax.inject.Singleton
                                    override fun run() {
                                        if (result.success) ToastUtils.infoToast(context, rh.gs(R.string.equil_pump_updated))
                                        else ToastUtils.infoToast(context, rh.gs(R.string.equil_error))
-                                       equilManager.closeBleAuto()
+                                       disconnect("auto")
                                    }
                                })
                            } else if (event.isChanged(rh.gs(app.aaps.core.keys.R.string.key_equil_maxbolus))) {
@@ -125,7 +125,7 @@ import javax.inject.Singleton
                                    override fun run() {
                                        if (result.success) ToastUtils.infoToast(context, rh.gs(R.string.equil_pump_updated))
                                        else ToastUtils.infoToast(context, rh.gs(R.string.equil_error))
-                                       equilManager.closeBleAuto()
+                                       disconnect("auto")
                                    }
                                })
                            }
@@ -179,7 +179,7 @@ import javax.inject.Singleton
             if (pumpEnactResult.success) {
                 equilManager.basalSchedule = basalSchedule
             }
-            equilManager.closeBleAuto()
+            disconnect("auto")
             return pumpEnactResult
         }
         return instantiator.providePumpEnactResult().enacted(false).success(false).comment(rh.gs(R.string.equil_pump_not_run))
@@ -231,8 +231,7 @@ import javax.inject.Singleton
 
     override fun stopBolusDelivering() {
         equilManager.stopBolus(bolusProfile)
-        equilManager.closeBleAuto()
-
+        disconnect("auto")
         aapsLogger.debug(LTag.PUMPCOMM, "stopBolusDelivering=====")
     }
 
@@ -266,7 +265,7 @@ import javax.inject.Singleton
                 }
             }
         }
-        equilManager.closeBleAuto()
+        disconnect("auto")
         return pumpEnactResult
     }
 
@@ -358,7 +357,7 @@ import javax.inject.Singleton
         }
         if (customCommand is CmdStatusGet) {
             pumpEnactResult = equilManager.readEquilStatus()
-            equilManager.closeBleAuto();
+            disconnect("auto")
         }
         return pumpEnactResult
     }
@@ -371,7 +370,10 @@ import javax.inject.Singleton
     override fun isUnreachableAlertTimeoutExceeded(alertTimeoutMilliseconds: Long): Boolean = false
     override val isFakingTempsByExtendedBoluses: Boolean = false
     override fun canHandleDST(): Boolean = false
-    override fun disconnect(reason: String) {}
+    override fun disconnect(reason: String) {
+        aapsLogger.info(LTag.PUMPCOMM, "disconnect reason=$reason")
+        equilManager.closeBleAuto()
+    }
     override fun stopConnecting() {}
 
     override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
@@ -394,15 +396,14 @@ import javax.inject.Singleton
             pumpEnactResult.isPercent = false
             pumpEnactResult.absolute = insulin
         }
-        equilManager.closeBleAuto()
-
+        disconnect("auto")
         return pumpEnactResult
     }
 
     override fun cancelExtendedBolus(): PumpEnactResult {
         aapsLogger.debug(LTag.PUMPCOMM, "cancelExtendedBolus")
         var pumpEnactResult= equilManager.setExtendedBolus(0.0, 0, true)
-        equilManager.closeBleAuto()
+        disconnect("auto")
         return pumpEnactResult
     }
 

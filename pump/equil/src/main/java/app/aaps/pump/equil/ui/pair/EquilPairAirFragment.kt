@@ -126,7 +126,7 @@ class EquilPairAirFragment : EquilPairFragmentBase() {
             override fun run() {
                 if (activity == null) return
                 aapsLogger.debug(LTag.PUMPCOMM, "CmdGetDevices result====" + result.success)
-                equilManager.closeBleAuto()
+                equilPumpPlugin.disconnect("auto")
                 if (result.success) {
                     dismissLoading()
                     runOnUiThread {

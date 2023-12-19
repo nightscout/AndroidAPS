@@ -105,7 +105,7 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
 
                 aapsLogger.debug(LTag.PUMPCOMM, "result====" + result.success)
                 if (result.success) {
-                    SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
+                    // SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
                     intStep += EquilConst.EQUIL_STEP_FILL
                     readStatus()
                 } else {
@@ -132,7 +132,7 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
                             if (auto) {
                                 if (intStep > EquilConst.EQUIL_STEP_MAX) {
                                     ToastUtils.infoToast(context, rh.gs(R.string.equil_replace_reservoir))
-                                    equilManager.closeBleAuto()
+                                    equilPumpPlugin.disconnect("auto")
                                     dismissLoading()
                                     activity?.finish()
                                     return
@@ -143,7 +143,7 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
                             }
                         } else {
                             if (auto) {
-                                equilManager.closeBleAuto()
+                                equilPumpPlugin.disconnect("auto")
                                 runOnUiThread {
                                     buttonFill.visibility = View.GONE
                                     lytAction.visibility = View.VISIBLE
