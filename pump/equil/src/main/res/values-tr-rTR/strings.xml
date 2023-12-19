@@ -3,4 +3,7 @@
     <!--  start  -->
     <!-- equil - Commands -->
     <!--    推杆回退-->
+    <string name="equil_common_wizard_exit_confirmation_title">Çıkış</string>
+    <string name="equil_common_yes">Evet</string>
+    <string name="equil_common_no">Hayır</string>
 </resources>
