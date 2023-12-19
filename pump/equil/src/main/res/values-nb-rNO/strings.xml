@@ -49,6 +49,7 @@
     <string name="equil_ble_config_confirmation_title">Par Equil patchpumpe</string>
     <string name="equil_error">Tilkoblingsfeil</string>
     <string name="equil_change">Bytt pumpe</string>
+    <string name="equil_unpair_alert">Er du sikker på at du vil gi fra kontroll over %1$s?</string>
     <string name="equil_devices_number_hint">Enhetsnummer</string>
     <string name="equil_record_basal">Basaldose %1$s E/t</string>
     <string name="equil_record_basal_temp">Midlertidig basaldose %1$s E/t</string>
@@ -83,6 +84,7 @@
     <string name="equil_common_cmd_suspend_delivery">Pause levering</string>
     <string name="equil_common_cmd_resume_delivery">Gjenoppta levering</string>
     <string name="equil_common_cmd_insert_cannula">Sett inn kanyle</string>
+    <string name="equil_common_cmd_unpair">Koble fra Equil</string>
     <string name="equil_common_cmd_alarm">Alarm</string>
     <string name="equil_common_cmd_set_extended_bolus">Angi forlenget bolus</string>
     <string name="equil_common_cmd_cancel_extended_bolus">Avbryt forlenget bolus</string>
@@ -112,15 +114,35 @@
     <string name="equil_history_item1">Reservoar-Lavt insulinnivå</string>
     <string name="equil_history_item2">Reservoar-Tomt insulinnivå</string>
     <string name="equil_history_item9">Auto av!</string>
+    <string name="equil_common_short_status_no_active_pod">Ingen aktiv Pod</string>
     <string name="equil_common_overview_button_suspend_delivery">Pause</string>
     <string name="equil_common_overview_button_resume_delivery">Gjenoppta levering</string>
+    <string name="equil_common_overview_temp_basal_value">%1$.2fE/t @%2$s (%3$d/%4$d min)</string>
+    <string name="equil_common_moments_ago">For litt siden</string>
+    <string name="equil_common_less_than_a_minute_ago">Mindre enn ett minutt siden</string>
     <string name="equil_common_time_ago">%1$s siden</string>
     <string name="equil_common_composite_time">%1$s og %2$s</string>
     <string name="equil_common_wizard_button_cancel">Avbryt</string>
     <string name="equil_common_wizard_button_finish">Fullfør</string>
     <string name="equil_common_wizard_button_next">Neste</string>
+    <string name="equil_common_wizard_exit_confirmation_text">Du har ikke fullført alle trinn ennå. Er du sikker på at du vil avslutte?</string>
+    <string name="equil_common_wizard_exit_confirmation_title">Avslutt</string>
     <string name="equil_common_yes">Ja</string>
     <string name="equil_common_no">Nei</string>
+    <plurals name="equil_common_minutes">
+        <item quantity="one">%1$d minutt</item>
+        <item quantity="other">%1$d minutter</item>
+    </plurals>
+    <plurals name="equil_common_hours">
+        <item quantity="one">%1$d time</item>
+        <item quantity="other">%1$d timer</item>
+    </plurals>
+    <plurals name="equil_common_days">
+        <item quantity="one">%1$d dag</item>
+        <item quantity="other">%1$d dager</item>
+    </plurals>
+    <string name="equil_support_error">Versjon over Lav, ikke støttet</string>
+    <string name="delete">Slett</string>
     <string name="equil_set_pair_password">Sett tilkoblingspassord</string>
     <string name="equil_hint1">Etter at du har installert pumpen på baseplaten, velg om du vil fjerne luften fra den innlagte kanylen.</string>
     <string name="equil_unbind">Koble fra enhet</string>
@@ -136,4 +158,5 @@
     <string name="equil_maxbolus_title">Maks tillatt bolus [E]</string>
     <string name="equil_maxbolus_tips">Maksimal tillatt bolus i pumpe [%1$sE]</string>
     <string name="equil_title_chooice">Velg</string>
+    <string name="equil_replace_reservoir">Reservoaret er tomt. Vennligst bytt ut reservoaret</string>
 </resources>
