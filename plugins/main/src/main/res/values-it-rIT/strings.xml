@@ -288,4 +288,7 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Mostra una notifica persistente con una breve panoramica di ciò che sta facendo il tuo loop</string>
     <string name="old_data">DATI VECCHI</string>
+    <string name="overview_show_steps">passi</string>
+    <string name="steps_shortname">PASSI</string>
+    <string name="simple_mode_enabled">Modalità semplice abilitata</string>
 </resources>

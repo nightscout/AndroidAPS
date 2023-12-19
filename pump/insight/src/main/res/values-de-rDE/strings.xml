@@ -4,7 +4,6 @@
     <string name="disable_tbr_over_notification">TBR-Vorrüber-Benachrichtigung deaktivieren\n(Pumpeneinstellung)</string>
     <string name="not_paired">Nicht gekoppelt</string>
     <string name="recovering">Erholen</string>
-    <string name="insight_status">Status</string>
     <string name="recovery_duration">Erholungsdauer</string>
     <string name="last_connected">Zuletzt verbunden</string>
     <string name="start_pump">Pumpe starten</string>
@@ -14,8 +13,6 @@
     <string name="operating_mode">Betriebsmodus</string>
     <string name="description_pump_insight_local">Pumpen-Integration für Accu-Chek Insight Pumpen</string>
     <string name="not_inserted">Nicht eingesetzt</string>
-    <string name="tdd_bolus">TDD Bolus</string>
-    <string name="tdd_basal">TDD Basal</string>
     <string name="tbr_formatter">%1$d%% für %2$d / %3$d min</string>
     <string name="multiwave_bolus">Multiwave-Bolus</string>
     <string name="eb_formatter">%1$.2f / %2$.2f IE für %3$d min</string>
@@ -24,10 +21,7 @@
     <string name="pairing_completed">Kopplung abgeschlossen</string>
     <string name="code_compare">Stimmen die Codes auf diesem Gerät und auf deiner Pumpe überein?</string>
     <string name="insight_pairing">Insight Kopplung</string>
-    <string name="insight_local">Accu-Chek Insight</string>
-    <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Schlauch gewechselt</string>
-    <string name="insightpump_shortname">Sight</string>
     <string name="insight_alert_notification_channel">Insight Pumpenalarme</string>
     <string name="disable_vibration">Vibrationen bei manueller Bolus-Abgabe deaktivieren</string>
     <string name="disable_vibration_summary">Für Boli und verlängerte Boli (nur mit Insight Firmware 3.x verfügbar)</string>
@@ -40,9 +34,7 @@
     <string name="short_status_tbr">TBR: %1$d%% für %2$d / %3$d min</string>
     <string name="short_status_extended">Verzögert: %1$.2f / %2$.2f IE für %3$d min.</string>
     <string name="short_status_multiwave">Multiwave: %1$.2f / %2$.2f IE für %3$d min.</string>
-    <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_reservoir">Reser.: %1$.2f IE</string>
-    <string name="short_status_battery">Batt.: %1$d%%</string>
     <string name="release_software_version">Release-Softwareversion</string>
     <string name="ui_processor_software_version">UI-Prozessor-Softwareversion</string>
     <string name="pc_processor_software_version">PC-Prozessor-Softwareversion</string>
@@ -66,5 +58,4 @@
     <string name="min_recovery_duration">Min. Erholungsdauer [s]</string>
     <string name="pump_alert">Pumpenalarm</string>
     <string name="pairing_information">Kopplungsinformation</string>
-    <string name="insight_refresh_button" comment="26 characters max for translation">Insight Refresh Button</string>
 </resources>

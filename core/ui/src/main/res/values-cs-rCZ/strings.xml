@@ -525,13 +525,13 @@
     <string name="password_cleared">Heslo vymazáno!</string>
     <string name="pairing">Párování</string>
     <string name="initializing">Inicializuji ...</string>
+    <string name="secs" comment="second short">%1$d s</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max bazál omezen na %1$.2f U/h: %2$s</string>
     <string name="pumplimit">limit pumpy</string>
     <string name="limitingpercentrate">Bazál omezen na %1$d%%: %2$s</string>
     <string name="itmustbepositivevalue">požadována kladná hodnota</string>
     <string name="limitingbolus">Bolus omezen na %1$.1f U: %2$s</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Potvrzení</string>
     <string name="message">Zpráva</string>

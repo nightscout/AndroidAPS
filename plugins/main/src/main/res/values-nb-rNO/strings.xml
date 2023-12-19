@@ -288,4 +288,7 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Viser en konstant melding med en kort oppsummering av hva loop gjør</string>
     <string name="old_data">GAMLE DATA</string>
+    <string name="overview_show_steps">steg</string>
+    <string name="steps_shortname">STEG</string>
+    <string name="simple_mode_enabled">Enkel modus aktivert</string>
 </resources>

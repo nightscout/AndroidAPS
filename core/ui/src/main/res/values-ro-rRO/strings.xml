@@ -531,7 +531,6 @@
     <string name="limitingpercentrate">Se limitează procentul ratei maxime la %1$d%% datorită %2$s</string>
     <string name="itmustbepositivevalue">trebuie să fie o valoare pozitivă</string>
     <string name="limitingbolus">Se limitează bolusul la %1$.1f U datorită %2$s</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Confirmare</string>
     <string name="message">Mesaj</string>

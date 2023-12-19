@@ -288,7 +288,6 @@
     <string name="limitingpercentrate">Ograničavanje maksimalne postotne stope na %1$d%% zbog %2$s</string>
     <string name="itmustbepositivevalue">mora biti pozitivna vrijednost</string>
     <string name="limitingbolus">Ograničavanje bolusa na %1$.1f U zbog %2$s</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Potvrda</string>
     <string name="message">Poruka</string>

@@ -13,6 +13,7 @@
     <string name="objectives_openloop_learned">Åpen loop kan brukes til anbefalinger hvis du ikke har en kompatibel pumpe eller hvis du ikke er klar til å kjøre i lukket loop.</string>
     <string name="objectives_maxbasal_objective">Forstå din åpen loop, inkludert den temp basal anbefalingen</string>
     <string name="objectives_maxbasal_gate">Ut ifra hva du har erfart og lært, avgjør hva din max basal skal være og still den inn i både pumpen og AAPS innstillinger</string>
+    <string name="objectives_maxbasal">Utfør handling for å oppfylle anbefalingen</string>
     <string name="objectives_maxbasal_learned">Gjør deg kjent med sikkerhetsfunksjoner og juster sikkerhetsparametrene om nødvendig.</string>
     <string name="objectives_maxiobzero_objective">Begynn å bruk lukket loop med aktivert funksjon for stopping av insulin ved lavt BS</string>
     <string name="objectives_maxiobzero_gate">Aktiver closed loop med max IOB = 0 i noen dager uten for mange episoder hvor systemet stopper insulintilførsel på grunn av lavt BS</string>

@@ -484,7 +484,6 @@
     <string name="limitingpercentrate">由于 %2$s, 将最大百分比限制为 %1$d%%</string>
     <string name="itmustbepositivevalue">它必须是正数</string>
     <string name="limitingbolus">由于 %2$s, 将大剂量限制为 %1$.1f U</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">确认</string>
     <string name="message">消息</string>

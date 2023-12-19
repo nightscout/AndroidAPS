@@ -4,7 +4,6 @@
     <string name="disable_tbr_over_notification">Inaktivera meddelanden om avslutade tempbasaler\n(pumpinställning)</string>
     <string name="not_paired">Inte parkopplad</string>
     <string name="recovering">Återställs</string>
-    <string name="insight_status">Status</string>
     <string name="recovery_duration">Återanslutningsförsök</string>
     <string name="last_connected">Senast ansluten</string>
     <string name="start_pump">Starta pumpen</string>
@@ -14,7 +13,6 @@
     <string name="operating_mode">Driftläge</string>
     <string name="description_pump_insight_local">Integration för Accu-Chek Insight pumpar</string>
     <string name="not_inserted">Inte isatt</string>
-    <string name="tdd_bolus">TDD Bolus</string>
     <string name="tdd_basal">TDD basal</string>
     <string name="tbr_formatter">%1$d%% i %2$d / %3$d min</string>
     <string name="multiwave_bolus">Kombi-bolus</string>
@@ -24,10 +22,7 @@
     <string name="pairing_completed">Parkoppling lyckades</string>
     <string name="code_compare">Stämmer koderna överens mellan denna enhet och din pump?</string>
     <string name="insight_pairing">Parkoppling av Insight</string>
-    <string name="insight_local">Accu-Chek Insight</string>
-    <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Slang bytt</string>
-    <string name="insightpump_shortname">Sight</string>
     <string name="insight_alert_notification_channel">Pumpvarningar Insight</string>
     <string name="disable_vibration">Inaktivera vibration för manuell bolus</string>
     <string name="disable_vibration_summary">För bolus och förlängd bolus (endast tillgängligt med Insight firmware 3.x)</string>
@@ -40,9 +35,7 @@
     <string name="short_status_tbr">TBR: %1$d%% i %2$d / %3$d min</string>
     <string name="short_status_extended">Förl: %1$.2f / %2$.2f U i %3$d min</string>
     <string name="short_status_multiwave">Kombi: %1$.2f / %2$.2f U i %3$d min</string>
-    <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_reservoir">Res: %1$.2fU</string>
-    <string name="short_status_battery">Batt.: %1$d%%</string>
     <string name="release_software_version">Mjukvaruversion Release</string>
     <string name="ui_processor_software_version">UI-processorversion</string>
     <string name="pc_processor_software_version">Mjukvaruversion PC processor</string>

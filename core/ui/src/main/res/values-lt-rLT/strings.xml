@@ -527,7 +527,6 @@
     <string name="limitingpercentrate">Ribojamas maks procentų skaičius %1$d%%, nes %2$s</string>
     <string name="itmustbepositivevalue">reikšmė turi būti teigiama</string>
     <string name="limitingbolus">Bolusas ribojamas iki %1$.1f vv dėl %2$s</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Patvirtinimas</string>
     <string name="message">Pranešimas</string>
