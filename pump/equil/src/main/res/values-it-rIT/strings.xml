@@ -1,6 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--  start  -->
+    <string name="equil_basal_speed">Velocità basale originale</string>
+    <string name="equil_bolus_delivered">%1$.3f U / %2$.3f U erogate</string>
+    <string name="equil_bolus_speed">Velocità del bolo</string>
+    <string name="equil_btn_cancel">Annulla</string>
+    <string name="equil_btn_i_know">Ho capito</string>
+    <string name="equil_btn_need">Bisogno</string>
+    <string name="equil_btn_ok">OK</string>
+    <string name="equil_btn_request_authentication">Autorizza esecuzione</string>
+    <string name="equil_btn_skip">Salta</string>
+    <string name="equil_btn_sync">Sincronizza</string>
+    <string name="equil_cancel">Annulla</string>
+    <string name="equil_connection_connected">Connesso</string>
+    <string name="equil_connection_connecting">Connessione in corso</string>
+    <string name="equil_connection_unconnected">Non connesso</string>
+    <string name="equil_pump_description">Pompa Patch Equil 5.3 o più recente </string>
+    <string name="equil_serialnumber">Numero del dispositivo</string>
+    <string name="equil_stop">Stop</string>
+    <string name="equil_success">Successo</string>
+    <string name="equil_table_column_battery">Livello batteria</string>
+    <string name="equil_table_column_device_time">Orario del dispositivo</string>
+    <string name="equil_title_choice">Scegli</string>
+    <string name="equil_title_dressing">Cambia cartuccia</string>
+    <string name="equil_title_history_events">Storico eventi</string>
+    <string name="equil_title_tips">Suggerimenti</string>
+    <string name="equil_tone">Tono di allerta</string>
+    <string name="equil_tone_mode_mute">Muto</string>
+    <string name="equil_tone_mode_shake">Solo vibrazione</string>
+    <string name="equil_tone_mode_tone">Solo suoneria</string>
+    <string name="equil_tone_mode_tone_and_shake">Vibrazione e suoneria</string>
+    <string name="equil_error_set_temp_basal_failed_validation">La durata del TBR deve essere maggiore di zero e un multiplo di %1$s minuti.</string>
+    <string name="equil_not_enough_insulin">Insulina nel serbatoio insufficiente</string>
+    <string name="equil_low_battery">Batteria bassa</string>
     <!-- equil - Commands -->
     <!--    推杆回退-->
 </resources>
