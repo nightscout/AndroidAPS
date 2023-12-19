@@ -196,4 +196,5 @@ Regola password: deve contenere 4 caratteri, scelti tra ABCDEF0123456789.</strin
     <string name="equil_maxbolus_title">Max bolo consentito [U]</string>
     <string name="equil_maxbolus_tips">Bolo massimo consentito dal micro [%1$sU]</string>
     <string name="equil_title_chooice">Scegli</string>
+    <string name="equil_replace_reservoir">Il serbatoio è vuoto. Sostituire il serbatoio</string>
 </resources>
