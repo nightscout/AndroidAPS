@@ -420,7 +420,7 @@
     <string name="autotune_default_tune_days_summary">Количество дней обработки данных Autotune по умолчанию (до 30)</string>
     <string name="autotune_tunedprofile_name">Настроено</string>
     <string name="autotune_profile">Профиль:</string>
-    <string name="autotune_tune_days">Настроено дней:</string>
+    <string name="autotune_tune_days">Дней для анализа:</string>
     <string name="autotune_last_run">Последнее выполнение:</string>
     <string name="autotune_warning">Внимание:</string>
     <string name="autotune_select_profile">Выберите профиль для изменения</string>
