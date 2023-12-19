@@ -98,7 +98,6 @@ class EquilUnPairDetachActivity : TranslatedDaggerAppCompatActivity() {
             override fun run() {
                 if (result.success) {
                     equilManager.runMode = RunMode.STOP
-                    equilPumpPlugin.   disconnect("auto")
                     equilPumpPlugin.resetData()
                     equilManager.activationProgress = ActivationProgress.CANNULA_CHANGE
                     dismissLoading()

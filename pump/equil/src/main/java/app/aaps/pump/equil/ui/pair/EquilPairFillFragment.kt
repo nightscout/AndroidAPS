@@ -132,7 +132,6 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
                             if (auto) {
                                 if (intStep > EquilConst.EQUIL_STEP_MAX) {
                                     ToastUtils.infoToast(context, rh.gs(R.string.equil_replace_reservoir))
-                                    equilPumpPlugin.disconnect("auto")
                                     dismissLoading()
                                     activity?.finish()
                                     return
@@ -143,7 +142,6 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
                             }
                         } else {
                             if (auto) {
-                                equilPumpPlugin.disconnect("auto")
                                 runOnUiThread {
                                     buttonFill.visibility = View.GONE
                                     lytAction.visibility = View.VISIBLE

@@ -89,7 +89,6 @@ class EquilPairConfirmFragment : EquilPairFragmentBase() {
                 if (result.success) {
                     dismissLoading()
                     equilManager.runMode = RunMode.RUN
-                    equilPumpPlugin.disconnect("auto")
                     toSave()
                 } else {
                     dismissLoading()
