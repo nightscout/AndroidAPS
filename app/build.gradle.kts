@@ -156,6 +156,7 @@ android {
     //Deleting it causes a binding error
     buildFeatures {
         dataBinding = true
+        buildConfig = true
     }
 }
 
@@ -176,6 +177,7 @@ dependencies {
     implementation(project(":core:graph"))
     implementation(project(":core:graphview"))
     implementation(project(":core:interfaces"))
+    implementation(project(":core:keys"))
     implementation(project(":core:libraries"))
     implementation(project(":core:nssdk"))
     implementation(project(":core:utils"))
@@ -202,6 +204,7 @@ dependencies {
     implementation(project(":pump:diaconn"))
     implementation(project(":pump:eopatch"))
     implementation(project(":pump:medtrum"))
+    implementation(project(":pump:equil"))
     implementation(project(":pump:insight"))
     implementation(project(":pump:medtronic"))
     implementation(project(":pump:pump-common"))

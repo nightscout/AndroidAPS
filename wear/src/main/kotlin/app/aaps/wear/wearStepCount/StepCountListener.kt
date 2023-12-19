@@ -48,10 +48,11 @@ class StepCountListener(
             }
         }
         schedule = aapsSchedulers.io.schedulePeriodicallyDirect(
-            ::send, samplingIntervalMillis, samplingIntervalMillis, TimeUnit.MILLISECONDS)
+            ::send, samplingIntervalMillis, samplingIntervalMillis, TimeUnit.MILLISECONDS
+        )
     }
 
-    var sendStepsRate: (List<EventData.ActionStepsRate>)->Unit = { stepsList ->
+    var sendStepsRate: (List<EventData.ActionStepsRate>) -> Unit = { stepsList ->
         aapsLogger.info(LTag.WEAR, "sendStepsRate called")
         stepsList.forEach { steps ->
             ctx.startService(IntentWearToMobile(ctx, steps))
@@ -81,28 +82,30 @@ class StepCountListener(
                     movementDetected = true
                 }
             }
+
             Sensor.TYPE_ACCELEROMETER -> {
                 val limit = 1.0f
                 if (event.values.any { kotlin.math.abs(it) > limit }) {
                     movementDetected = true
                 }
             }
-            Sensor.TYPE_STEP_COUNTER -> {
+
+            Sensor.TYPE_STEP_COUNTER  -> {
                 if (movementDetected && event.values.isNotEmpty()) {
                     val now = currentTimeIn5Min()
                     val stepCount = event.values[0].toInt()
-                    if(previousStepCount >= 0) {
+                    if (previousStepCount >= 0) {
                         var recentStepCount = stepCount - previousStepCount
-                        if(stepsMap.contains(now)) {
+                        if (stepsMap.contains(now)) {
                             recentStepCount += stepsMap.getValue(now)
                         }
                         stepsMap[now] = recentStepCount
                     }
                     previousStepCount = stepCount
 
-                    if(stepsMap.size > numOf5MinBlocksToKeep) {
+                    if (stepsMap.size > numOf5MinBlocksToKeep) {
                         val removeBefore = now - numOf5MinBlocksToKeep
-                        stepsMap.entries.removeIf { it.key < removeBefore}
+                        stepsMap.entries.removeIf { it.key < removeBefore }
                     }
                 }
             }
@@ -112,19 +115,20 @@ class StepCountListener(
     private fun send() {
         send(System.currentTimeMillis())
     }
+
     private fun getStepsInLast5Min(): Int {
         val now = currentTimeIn5Min() - 1
-        return if(stepsMap.contains(now)) stepsMap.getValue(now) else 0
-    }
-    private fun getStepsInLast10Min(): Int {
-        val tenMinAgo = currentTimeIn5Min() - 2
-        return if(stepsMap.contains(tenMinAgo)) stepsMap.getValue(tenMinAgo) else 0
+        return if (stepsMap.contains(now)) stepsMap.getValue(now) else 0
     }
 
+    private fun getStepsInLast10Min(): Int {
+        val tenMinAgo = currentTimeIn5Min() - 2
+        return if (stepsMap.contains(tenMinAgo)) stepsMap.getValue(tenMinAgo) else 0
+    }
 
     private fun getStepsInLast15Min(): Int {
         val fifteenMinAgo = currentTimeIn5Min() - 3
-        return if(stepsMap.contains(fifteenMinAgo)) stepsMap.getValue(fifteenMinAgo) else 0
+        return if (stepsMap.contains(fifteenMinAgo)) stepsMap.getValue(fifteenMinAgo) else 0
     }
 
     private fun getStepsInLast30Min(): Int {
@@ -134,11 +138,10 @@ class StepCountListener(
     private fun getStepsInLast60Min(): Int {
         return getStepsInLastXMin(12)
     }
+
     private fun getStepsInLast180Min(): Int {
         return getStepsInLastXMin(36)
     }
-
-
 
     @VisibleForTesting
     fun send(timestampMillis: Long) {
@@ -224,7 +227,7 @@ class StepCountListener(
                 steps60min = stepsInLast60Minutes,
                 steps180min = stepsInLast180Minutes,
                 device = device
-        )
+            )
         )
         sendStepsRate(stepsList)
     }

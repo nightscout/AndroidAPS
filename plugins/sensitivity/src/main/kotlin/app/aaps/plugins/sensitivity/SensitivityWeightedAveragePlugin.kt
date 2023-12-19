@@ -2,7 +2,6 @@ package app.aaps.plugins.sensitivity
 
 import androidx.collection.LongSparseArray
 import app.aaps.core.data.aps.AutosensResult
-import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
@@ -15,10 +14,14 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.Preferences
+import app.aaps.core.objects.extensions.put
+import app.aaps.core.objects.extensions.store
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.plugins.sensitivity.extensions.isPSEvent5minBack
 import app.aaps.plugins.sensitivity.extensions.isTherapyEventEvent5minBack
-import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -29,6 +32,7 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     sp: SP,
+    preferences: Preferences,
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
     private val persistenceLayer: PersistenceLayer
@@ -40,16 +44,11 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
         .shortName(R.string.sensitivity_shortname)
         .preferencesId(R.xml.pref_absorption_aaps)
         .description(R.string.description_sensitivity_weighted_average),
-    aapsLogger, rh, sp
+    aapsLogger, rh, sp, preferences
 ) {
 
     override fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult {
-        val age = sp.getString(app.aaps.core.utils.R.string.key_age, "")
-        var defaultHours = 24
-        if (age == rh.gs(app.aaps.core.utils.R.string.key_adult)) defaultHours = 24
-        if (age == rh.gs(app.aaps.core.utils.R.string.key_teenage)) defaultHours = 4
-        if (age == rh.gs(app.aaps.core.utils.R.string.key_child)) defaultHours = 4
-        val hoursForDetection = sp.getInt(app.aaps.core.utils.R.string.key_openapsama_autosens_period, defaultHours)
+        val hoursForDetection = preferences.get(IntKey.AutosensPeriod)
         if (ads.autosensDataTable.size() < 4) {
             aapsLogger.debug(LTag.AUTOSENS, "No autosens data available. lastDataTime=" + ads.lastDataTime(dateUtil))
             return AutosensResult()
@@ -155,49 +154,25 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
         return output
     }
 
-    override fun maxAbsorptionHours(): Double = sp.getDouble(app.aaps.core.utils.R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME)
+    override fun maxAbsorptionHours(): Double = preferences.get(DoubleKey.AbsorptionMaxTime)
     override val isMinCarbsAbsorptionDynamic: Boolean = true
     override val isOref1: Boolean = false
 
     override val id: SensitivityType
         get() = SensitivityType.SENSITIVITY_WEIGHTED
 
-    override fun configuration(): JSONObject {
-        val c = JSONObject()
-        try {
-            c.put(rh.gs(app.aaps.core.utils.R.string.key_absorption_maxtime), sp.getDouble(app.aaps.core.utils.R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME))
-            c.put(rh.gs(app.aaps.core.utils.R.string.key_openapsama_autosens_period), sp.getInt(app.aaps.core.utils.R.string.key_openapsama_autosens_period, 24))
-            c.put(rh.gs(app.aaps.core.utils.R.string.key_openapsama_autosens_max), sp.getDouble(app.aaps.core.utils.R.string.key_openapsama_autosens_max, 1.2))
-            c.put(rh.gs(app.aaps.core.utils.R.string.key_openapsama_autosens_min), sp.getDouble(app.aaps.core.utils.R.string.key_openapsama_autosens_min, 0.7))
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        }
-        return c
-    }
+    override fun configuration(): JSONObject =
+        JSONObject()
+            .put(DoubleKey.AutosensMin, preferences, rh)
+            .put(DoubleKey.AutosensMax, preferences, rh)
+            .put(DoubleKey.AbsorptionMaxTime, preferences, rh)
+            .put(IntKey.AutosensPeriod, preferences, rh)
 
     override fun applyConfiguration(configuration: JSONObject) {
-        try {
-            if (configuration.has(rh.gs(app.aaps.core.utils.R.string.key_absorption_maxtime))) sp.putDouble(
-                app.aaps.core.utils.R.string.key_absorption_maxtime, configuration.getDouble(
-                    rh.gs(app.aaps.core.utils.R.string.key_absorption_maxtime)
-                )
-            )
-            if (configuration.has(rh.gs(app.aaps.core.utils.R.string.key_openapsama_autosens_period))) sp.putDouble(
-                app.aaps.core.utils.R.string.key_openapsama_autosens_period,
-                configuration.getDouble(rh.gs(app.aaps.core.utils.R.string.key_openapsama_autosens_period))
-            )
-            if (configuration.has(rh.gs(app.aaps.core.utils.R.string.key_openapsama_autosens_max))) sp.getDouble(
-                app.aaps.core.utils.R.string.key_openapsama_autosens_max, configuration.getDouble(
-                    rh.gs(app.aaps.core.utils.R.string.key_openapsama_autosens_max)
-                )
-            )
-            if (configuration.has(rh.gs(app.aaps.core.utils.R.string.key_openapsama_autosens_min))) sp.getDouble(
-                app.aaps.core.utils.R.string.key_openapsama_autosens_min, configuration.getDouble(
-                    rh.gs(app.aaps.core.utils.R.string.key_openapsama_autosens_min)
-                )
-            )
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        }
+        configuration
+            .store(DoubleKey.AutosensMin, preferences, rh)
+            .store(DoubleKey.AutosensMax, preferences, rh)
+            .store(DoubleKey.AbsorptionMaxTime, preferences, rh)
+            .store(IntKey.AutosensPeriod, preferences, rh)
     }
 }

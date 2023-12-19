@@ -24,15 +24,6 @@ object Constants {
     const val dailyLimitWarning = 0.95
 
     // Temp targets
-    const val defaultActivityTTDuration = 90 // min
-    const val defaultActivityTTmgdl = 140.0
-    const val defaultActivityTTmmol = 8.0
-    const val defaultEatingSoonTTDuration = 45 // min
-    const val defaultEatingSoonTTmgdl = 90.0
-    const val defaultEatingSoonTTmmol = 5.0
-    const val defaultHypoTTDuration = 60 // min
-    const val defaultHypoTTmgdl = 160.0
-    const val defaultHypoTTmmol = 8.0
     const val MIN_TT_MGDL = 72.0
     const val MAX_TT_MGDL = 180.0
     const val MIN_TT_MMOL = 4.0
@@ -47,7 +38,6 @@ object Constants {
 
     //Autosens
     const val DEVIATION_TO_BE_EQUAL = 2.0
-    const val DEFAULT_MAX_ABSORPTION_TIME = 6.0
 
     // Pump
     const val PUMP_MAX_CONNECTION_TIME_IN_SECONDS = 120 - 1
@@ -58,10 +48,6 @@ object Constants {
 
     //Storage [MB]
     const val MINIMUM_FREE_SPACE: Long = 200
-
-    // Overview
-    const val LOW_MARK = 76.0
-    const val HIGH_MARK = 180.0
 
     // STATISTICS
     const val STATS_TARGET_LOW_MMOL = 3.9
@@ -75,9 +61,6 @@ object Constants {
     // Local profile
     const val LOCAL_PROFILE = "LocalProfile"
 
-    // Local Alerts
-    const val DEFAULT_PUMP_UNREACHABLE_THRESHOLD_MINUTES = 30
-    const val DEFAULT_MISSED_BG_READINGS_THRESHOLD_MINUTES = 30
     // One Time Password
     /**
      * Size of generated key for TOTP Authenticator token, in bits
@@ -93,15 +76,4 @@ object Constants {
      * so we add leeway to still accept given amount of older tokens
      */
     const val OTP_ACCEPT_OLD_TOKENS_COUNT = 1
-
-    /**
-     * Button increments
-     */
-    const val INSULIN_PLUS1_DEFAULT = 0.5
-    const val INSULIN_PLUS2_DEFAULT = 1.0
-    const val INSULIN_PLUS3_DEFAULT = 2.0
-    const val CARBS_FAV1_DEFAULT = 5
-    const val CARBS_FAV2_DEFAULT = 10
-    const val CARBS_FAV3_DEFAULT = 20
-
 }

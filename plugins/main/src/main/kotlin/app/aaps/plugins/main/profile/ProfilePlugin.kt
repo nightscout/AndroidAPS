@@ -59,6 +59,7 @@ class ProfilePlugin @Inject constructor(
         .mainType(PluginType.PROFILE)
         .fragmentClass(ProfileFragment::class.java.name)
         .enableByDefault(true)
+        .simpleModePosition(PluginDescription.Position.TAB)
         .pluginIcon(app.aaps.core.objects.R.drawable.ic_local_profile)
         .pluginName(R.string.localprofile)
         .shortName(R.string.localprofile_shortname)

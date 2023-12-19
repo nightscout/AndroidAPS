@@ -43,7 +43,7 @@ public class OmnipodMessage {
             throw new NotEnoughDataException(data);
         }
 
-        int address = ByteUtil.INSTANCE.toInt((int) data[0], (int) data[1], (int) data[2],
+        int address = ByteUtil.INSTANCE.toInt(data[0], (int) data[1], (int) data[2],
                 (int) data[3], ByteUtil.BitConversion.BIG_ENDIAN);
         byte b9 = data[4];
         int bodyLength = ByteUtil.INSTANCE.convertUnsignedByteToInt(data[5]);

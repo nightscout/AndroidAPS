@@ -48,7 +48,6 @@ import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.OverviewMenus
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ProtectionCheck
@@ -82,6 +81,9 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.directionToIcon
 import app.aaps.core.objects.extensions.displayText
@@ -120,9 +122,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var constraintChecker: ConstraintsChecker
@@ -220,6 +222,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         }
         prepareGraphsIfNeeded(overviewMenus.setting.size)
         context?.let { overviewMenus.setupChartMenu(it, binding.graphsLayout.chartMenuButton) }
+        binding.graphsLayout.chartMenuButton.visibility = preferences.simpleMode.not().toVisibility()
 
         binding.activeProfile.setOnClickListener(this)
         binding.activeProfile.setOnLongClickListener(this)
@@ -577,19 +580,18 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
             // **** Various treatment buttons ****
             binding.buttonsLayout.carbsButton.visibility =
-                (/*(!activePlugin.activePump.pumpDescription.storesCarbInfo || pump.isInitialized() && !pump.isSuspended()) &&*/ profile != null
-                    && sp.getBoolean(R.string.key_show_carbs_button, true)).toVisibility()
+                (profile != null && preferences.get(BooleanKey.OverviewShowCarbsButton)).toVisibility()
             binding.buttonsLayout.treatmentButton.visibility = (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null
-                && sp.getBoolean(R.string.key_show_treatment_button, false)).toVisibility()
+                && preferences.get(BooleanKey.OverviewShowTreatmentButton)).toVisibility()
             binding.buttonsLayout.wizardButton.visibility = (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null
-                && sp.getBoolean(R.string.key_show_wizard_button, true)).toVisibility()
+                && preferences.get(BooleanKey.OverviewShowWizardButton)).toVisibility()
             binding.buttonsLayout.insulinButton.visibility = (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null
-                && sp.getBoolean(R.string.key_show_insulin_button, true)).toVisibility()
+                && preferences.get(BooleanKey.OverviewShowInsulinButton)).toVisibility()
 
             // **** Calibration & CGM buttons ****
             val xDripIsBgSource = xDripSource.isEnabled()
             val dexcomIsSource = dexcomBoyda.isEnabled()
-            binding.buttonsLayout.calibrationButton.visibility = (xDripIsBgSource && actualBG != null && sp.getBoolean(R.string.key_show_calibration_button, true)).toVisibility()
+            binding.buttonsLayout.calibrationButton.visibility = (xDripIsBgSource && actualBG != null && preferences.get(BooleanKey.OverviewShowCalibrationButton)).toVisibility()
             if (dexcomIsSource) {
                 binding.buttonsLayout.cgmButton.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(R.drawable.ic_byoda), null, null)
                 for (drawable in binding.buttonsLayout.cgmButton.compoundDrawables) {
@@ -605,7 +607,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 }
                 binding.buttonsLayout.cgmButton.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.cgmXdripColor))
             }
-            binding.buttonsLayout.cgmButton.visibility = (sp.getBoolean(R.string.key_show_cgm_button, false) && (xDripIsBgSource || dexcomIsSource)).toVisibility()
+            binding.buttonsLayout.cgmButton.visibility = (preferences.get(BooleanKey.OverviewShowCgmButton) && (xDripIsBgSource || dexcomIsSource)).toVisibility()
 
             // Automation buttons
             binding.buttonsLayout.userButtonsLayout.removeAllViews()
@@ -839,6 +841,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             } else {
                 binding.infoLayout.bgQuality.visibility = View.GONE
             }
+            binding.infoLayout.simpleMode.visibility = preferences.simpleMode.toVisibility()
         }
     }
 
@@ -907,7 +910,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             val useBatteryLevel = (pump.model() == PumpType.OMNIPOD_EROS)
                 || (pump.model() != PumpType.ACCU_CHEK_COMBO && pump.model() != PumpType.OMNIPOD_DASH)
             pbLevel.visibility = useBatteryLevel.toVisibility()
-            statusLightsLayout.visibility = (sp.getBoolean(R.string.key_show_statuslights, true) || config.NSCLIENT).toVisibility()
+            statusLightsLayout.visibility = (preferences.get(BooleanKey.OverviewShowStatusLights) || config.NSCLIENT).toVisibility()
         }
         statusLightHandler.updateStatusLights(
             binding.statusLightsLayout.cannulaAge,
@@ -1019,7 +1022,11 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val graphData = GraphData(injector, binding.graphsLayout.bgGraph, overviewData)
         val menuChartSettings = overviewMenus.setting
         if (menuChartSettings.isEmpty()) return
-        graphData.addInRangeArea(overviewData.fromTime, overviewData.endTime, defaultValueHelper.determineLowLine(), defaultValueHelper.determineHighLine())
+        graphData.addInRangeArea(
+            overviewData.fromTime, overviewData.endTime,
+            preferences.get(UnitDoubleKey.OverviewLowMark),
+            preferences.get(UnitDoubleKey.OverviewHighMark)
+        )
         graphData.addBgReadings(menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal], context)
         graphData.addBucketedData()
         graphData.addTreatments(context)
@@ -1044,7 +1051,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val secondaryGraphsData: ArrayList<GraphData> = ArrayList()
 
         val now = System.currentTimeMillis()
-        for (g in 0 until min(secondaryGraphs.size, menuChartSettings.size + 1)) {
+        for (g in 0 until min(secondaryGraphs.size, menuChartSettings.size - 1)) {
             val secondGraphData = GraphData(injector, secondaryGraphs[g], overviewData)
             var useABSForScale = false
             var useIobForScale = false
@@ -1087,7 +1094,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             secondGraphData.addNowLine(now)
             secondaryGraphsData.add(secondGraphData)
         }
-        for (g in 0 until min(secondaryGraphs.size, menuChartSettings.size + 1)) {
+        for (g in 0 until min(secondaryGraphs.size, menuChartSettings.size - 1)) {
             secondaryGraphsLabel[g].text = overviewMenus.enabledTypes(g + 1)
             secondaryGraphs[g].visibility = (
                 menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal] ||

@@ -13,6 +13,7 @@
     <string name="objectives_openloop_learned">Otevřená smyčka může být použita pro doporučení, pokud nemáte kompatibilní pumpu nebo nejste připraveni uzavřít smyčku.</string>
     <string name="objectives_maxbasal_objective">Porozumět otevřené smyčce, včetně jejích doporučení ohledně dočasných bazálů</string>
     <string name="objectives_maxbasal_gate">Na základě předchozích zkušeností rozhodnout, jaký je třeba maximální bazál a nastavit ho v pumpě a v aplikaci</string>
+    <string name="objectives_maxbasal">Proveďte akci pro splnění doporučení</string>
     <string name="objectives_maxbasal_learned">Dejte pozor na bezpečnostní nastavení a v případě potřeby upravte bezpečnostní parametry.</string>
     <string name="objectives_maxiobzero_objective">Spustit uzavřenou smyčku pouze se zastavováním při nízké glykémii</string>
     <string name="objectives_maxiobzero_gate">Spustit uzavřenou smyčku s max IOB = 0 na několik dní s minimem nutných korekcí na nízkou glykémii</string>

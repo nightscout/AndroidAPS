@@ -1,0 +1,234 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 11,
+    "identityHash": "f31b53d9fb1aa34b993fc11767a645d5",
+    "entities": [
+      {
+        "tableName": "equilHistoryPump",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `code` INTEGER NOT NULL, `battery` INTEGER NOT NULL, `insulin` INTEGER NOT NULL, `rate` INTEGER NOT NULL, `largeRate` INTEGER NOT NULL, `type` INTEGER NOT NULL, `eventIndex` INTEGER NOT NULL, `level` INTEGER NOT NULL, `parm` INTEGER NOT NULL, `port` INTEGER NOT NULL, `eventTimestamp` INTEGER NOT NULL, `serialNumber` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "code",
+            "columnName": "code",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "battery",
+            "columnName": "battery",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "insulin",
+            "columnName": "insulin",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "rate",
+            "columnName": "rate",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "largeRate",
+            "columnName": "largeRate",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "eventIndex",
+            "columnName": "eventIndex",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "level",
+            "columnName": "level",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "parm",
+            "columnName": "parm",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "port",
+            "columnName": "port",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "eventTimestamp",
+            "columnName": "eventTimestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "serialNumber",
+            "columnName": "serialNumber",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_equilHistoryPump_code_timestamp_eventTimestamp_eventIndex",
+            "unique": false,
+            "columnNames": [
+              "code",
+              "timestamp",
+              "eventTimestamp",
+              "eventIndex"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_equilHistoryPump_code_timestamp_eventTimestamp_eventIndex` ON `${TABLE_NAME}` (`code`, `timestamp`, `eventTimestamp`, `eventIndex`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "equilHistoryRecord",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `type` TEXT, `timestamp` INTEGER NOT NULL, `serialNumber` TEXT NOT NULL, `resolvedStatus` TEXT, `resolvedAt` INTEGER, `note` TEXT, `tempBasalRecord_duration` INTEGER, `tempBasalRecord_rate` REAL, `tempBasalRecord_startTime` INTEGER, `bolusRecord_amount` REAL, `bolusRecord_bolusType` TEXT, `bolusRecord_startTime` INTEGER, `basalprofile_segments` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "serialNumber",
+            "columnName": "serialNumber",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "resolvedStatus",
+            "columnName": "resolvedStatus",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "resolvedAt",
+            "columnName": "resolvedAt",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "note",
+            "columnName": "note",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "tempBasalRecord.duration",
+            "columnName": "tempBasalRecord_duration",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "tempBasalRecord.rate",
+            "columnName": "tempBasalRecord_rate",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "tempBasalRecord.startTime",
+            "columnName": "tempBasalRecord_startTime",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "bolusRecord.amount",
+            "columnName": "bolusRecord_amount",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "bolusRecord.bolusType",
+            "columnName": "bolusRecord_bolusType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "bolusRecord.startTime",
+            "columnName": "bolusRecord_startTime",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "basalValuesRecord.segments",
+            "columnName": "basalprofile_segments",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_equilHistoryRecord_type_timestamp",
+            "unique": false,
+            "columnNames": [
+              "type",
+              "timestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_equilHistoryRecord_type_timestamp` ON `${TABLE_NAME}` (`type`, `timestamp`)"
+          }
+        ],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f31b53d9fb1aa34b993fc11767a645d5')"
+    ]
+  }
+}

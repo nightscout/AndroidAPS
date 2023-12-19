@@ -67,4 +67,5 @@
     <string name="pump_alert">Alerta de infusor</string>
     <string name="pairing_information">Información de emparejamiento</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Botón de refresco de Insight</string>
+    <string name="last_connection">%1$s (%2$s)</string>
 </resources>

@@ -53,6 +53,10 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.generateCOBString
 import app.aaps.core.objects.extensions.round
@@ -85,6 +89,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     private val smsManager: SmsManager?,
     private val aapsSchedulers: AapsSchedulers,
     private val sp: SP,
+    private val preferences: Preferences,
     private val constraintChecker: ConstraintsChecker,
     private val rxBus: RxBus,
     private val profileFunction: ProfileFunction,
@@ -350,11 +355,11 @@ class SmsCommunicatorPlugin @Inject constructor(
         var reply = ""
         val units = profileUtil.units
         if (actualBG != null) {
-            reply = rh.gs(R.string.sms_actual_bg) + " " + profileUtil.fromMgdlToStringInUnits(actualBG.value) + ", "
+            reply = rh.gs(R.string.sms_actual_bg) + " " + profileUtil.fromMgdlToStringInUnits(actualBG.recalculated) + ", "
         } else if (lastBG != null) {
             val agoMilliseconds = dateUtil.now() - lastBG.timestamp
             val agoMin = (agoMilliseconds / 60.0 / 1000.0).toInt()
-            reply = rh.gs(R.string.sms_last_bg) + " " + profileUtil.valueInCurrentUnitsDetect(lastBG.value) + " " + rh.gs(R.string.sms_min_ago, agoMin) + ", "
+            reply = rh.gs(R.string.sms_last_bg) + " " + profileUtil.valueInCurrentUnitsDetect(lastBG.recalculated) + " " + rh.gs(R.string.sms_min_ago, agoMin) + ", "
         }
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
         if (glucoseStatus != null) reply += rh.gs(R.string.sms_delta) + " " + profileUtil.fromMgdlToUnits(glucoseStatus.delta) + " " + units + ", "
@@ -491,7 +496,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = false) {
                     override fun run() {
                         uel.log(Action.LGS_LOOP_MODE, Sources.SMS)
-                        sp.putString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.LGS.name)
+                        preferences.put(StringKey.LoopApsMode, ApsMode.LGS.name)
                         rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend)))
                         val replyText = rh.gs(R.string.smscommunicator_current_loop_mode, getApsModeText())
                         sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
@@ -506,7 +511,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = false) {
                     override fun run() {
                         uel.log(Action.CLOSED_LOOP_MODE, Sources.SMS)
-                        sp.putString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.CLOSED.name)
+                        preferences.put(StringKey.LoopApsMode, ApsMode.CLOSED.name)
                         rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.ui.R.string.closedloop)))
                         val replyText = rh.gs(R.string.smscommunicator_current_loop_mode, getApsModeText())
                         sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
@@ -943,21 +948,8 @@ class SmsCommunicatorPlugin @Inject constructor(
                                         lastRemoteBolusTime = dateUtil.now()
                                         if (isMeal) {
                                             profileFunction.getProfile()?.let { currentProfile ->
-                                                var eatingSoonTTDuration = sp.getInt(app.aaps.core.utils.R.string.key_eatingsoon_duration, Constants.defaultEatingSoonTTDuration)
-                                                eatingSoonTTDuration =
-                                                    if (eatingSoonTTDuration > 0) eatingSoonTTDuration
-                                                    else Constants.defaultEatingSoonTTDuration
-                                                var eatingSoonTT =
-                                                    sp.getDouble(
-                                                        app.aaps.core.utils.R.string.key_eatingsoon_target,
-                                                        if (currentProfile.units == GlucoseUnit.MMOL) Constants.defaultEatingSoonTTmmol else Constants.defaultEatingSoonTTmgdl
-                                                    )
-                                                eatingSoonTT =
-                                                    when {
-                                                        eatingSoonTT > 0                         -> eatingSoonTT
-                                                        currentProfile.units == GlucoseUnit.MMOL -> Constants.defaultEatingSoonTTmmol
-                                                        else                                     -> Constants.defaultEatingSoonTTmgdl
-                                                    }
+                                                val eatingSoonTTDuration = preferences.get(IntKey.OverviewEatingSoonDuration)
+                                                val eatingSoonTT = preferences.get(UnitDoubleKey.OverviewEatingSoonTarget)
                                                 disposable += persistenceLayer.insertAndCancelCurrentTemporaryTarget(
                                                     temporaryTarget = TT(
                                                         timestamp = dateUtil.now(),
@@ -1079,45 +1071,28 @@ class SmsCommunicatorPlugin @Inject constructor(
             messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = false) {
                 override fun run() {
                     val units = profileUtil.units
-                    var keyDuration = 0
-                    var defaultTargetDuration = 0
-                    var keyTarget = 0
-                    var defaultTargetMMOL = 0.0
-                    var defaultTargetMGDL = 0.0
                     var reason = TT.Reason.EATING_SOON
+                    var ttDuration = 0
+                    var tt = 0.0
                     when {
                         isMeal     -> {
-                            keyDuration = app.aaps.core.utils.R.string.key_eatingsoon_duration
-                            defaultTargetDuration = Constants.defaultEatingSoonTTDuration
-                            keyTarget = app.aaps.core.utils.R.string.key_eatingsoon_target
-                            defaultTargetMMOL = Constants.defaultEatingSoonTTmmol
-                            defaultTargetMGDL = Constants.defaultEatingSoonTTmgdl
+                            ttDuration = preferences.get(IntKey.OverviewEatingSoonDuration)
+                            tt = preferences.get(UnitDoubleKey.OverviewEatingSoonTarget)
                             reason = TT.Reason.EATING_SOON
                         }
 
                         isActivity -> {
-                            keyDuration = app.aaps.core.utils.R.string.key_activity_duration
-                            defaultTargetDuration = Constants.defaultActivityTTDuration
-                            keyTarget = app.aaps.core.utils.R.string.key_activity_target
-                            defaultTargetMMOL = Constants.defaultActivityTTmmol
-                            defaultTargetMGDL = Constants.defaultActivityTTmgdl
+                            ttDuration = preferences.get(IntKey.OverviewActivityDuration)
+                            tt = preferences.get(UnitDoubleKey.OverviewActivityTarget)
                             reason = TT.Reason.ACTIVITY
                         }
 
                         isHypo     -> {
-                            keyDuration = app.aaps.core.utils.R.string.key_hypo_duration
-                            defaultTargetDuration = Constants.defaultHypoTTDuration
-                            keyTarget = app.aaps.core.utils.R.string.key_hypo_target
-                            defaultTargetMMOL = Constants.defaultHypoTTmmol
-                            defaultTargetMGDL = Constants.defaultHypoTTmgdl
+                            ttDuration = preferences.get(IntKey.OverviewHypoDuration)
+                            tt = preferences.get(UnitDoubleKey.OverviewHypoTarget)
                             reason = TT.Reason.HYPOGLYCEMIA
                         }
                     }
-                    var ttDuration = sp.getInt(keyDuration, defaultTargetDuration)
-                    ttDuration = if (ttDuration > 0) ttDuration else defaultTargetDuration
-                    var tt = sp.getDouble(keyTarget, if (units == GlucoseUnit.MMOL) defaultTargetMMOL else defaultTargetMGDL)
-                    tt = profileUtil.valueInCurrentUnitsDetect(tt)
-                    tt = if (tt > 0) tt else if (units == GlucoseUnit.MMOL) defaultTargetMMOL else defaultTargetMGDL
                     disposable += persistenceLayer.insertAndCancelCurrentTemporaryTarget(
                         temporaryTarget = TT(
                             timestamp = dateUtil.now(),
@@ -1288,7 +1263,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     }
 
     private fun getApsModeText(): String =
-        when (ApsMode.fromString(sp.getString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name))) {
+        when (ApsMode.fromString(preferences.get(StringKey.LoopApsMode))) {
             ApsMode.OPEN   -> rh.gs(app.aaps.core.ui.R.string.openloop)
             ApsMode.CLOSED -> rh.gs(app.aaps.core.ui.R.string.closedloop)
             ApsMode.LGS    -> rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend)

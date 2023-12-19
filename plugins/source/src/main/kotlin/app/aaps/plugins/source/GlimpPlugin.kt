@@ -33,6 +33,7 @@ class GlimpPlugin @Inject constructor(
         .pluginIcon(app.aaps.core.objects.R.drawable.ic_glimp)
         .preferencesId(R.xml.pref_bgsource)
         .pluginName(R.string.glimp)
+        .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_source_glimp),
     aapsLogger, rh
 ), BgSource {

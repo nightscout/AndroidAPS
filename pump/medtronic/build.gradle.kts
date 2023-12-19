@@ -21,6 +21,7 @@ dependencies {
     implementation(project(":pump:pump-common"))
     implementation(project(":pump:rileylink"))
 
+    testImplementation(project(":core:keys"))
     testImplementation(project(":shared:tests"))
 
     kapt(Libs.Dagger.compiler)

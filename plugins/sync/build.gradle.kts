@@ -14,6 +14,7 @@ android {
 dependencies {
     implementation(project(":core:data"))
     implementation(project(":core:interfaces"))
+    implementation(project(":core:keys"))
     implementation(project(":core:objects"))
     implementation(project(":core:nssdk"))
     implementation(project(":core:ui"))
@@ -28,6 +29,7 @@ dependencies {
     testImplementation(project(":shared:tests"))
     testImplementation(project(":implementation"))
     testImplementation(project(":plugins:aps"))
+    androidTestImplementation(project(":shared:tests"))
 
     // OpenHuman
     api(Libs.Squareup.Okhttp3.okhttp)
@@ -46,6 +48,10 @@ dependencies {
 
     // DataLayerListenerService
     api(Libs.Google.Android.PlayServices.wearable)
+
+    // Garmin
+    api(Libs.connectiqSdk)
+    androidTestImplementation(Libs.connectiqSdk)
 
     kapt(Libs.Dagger.compiler)
     kapt(Libs.Dagger.androidProcessor)

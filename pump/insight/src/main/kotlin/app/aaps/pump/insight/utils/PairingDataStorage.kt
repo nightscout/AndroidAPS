@@ -20,50 +20,66 @@ class PairingDataStorage(context: Context) {
     private var _systemIdentification: SystemIdentification? = null
 
     var paired: Boolean
-        get() { return _paired }
+        get() {
+            return _paired
+        }
         set(paired) {
             _paired = paired
             preferences.edit().putBoolean("paired", paired).apply()
         }
     var macAddress: String?
-        get() { return _macAddress }
+        get() {
+            return _macAddress
+        }
         set(macAddress) {
             _macAddress = macAddress
             preferences.edit().putString("macAddress", macAddress).apply()
         }
     var lastNonceSent: Nonce?
-        get() { return _lastNonceSent }
+        get() {
+            return _lastNonceSent
+        }
         set(lastNonceSent) {
             _lastNonceSent = lastNonceSent
             preferences.edit().putString("lastNonceSent", if (lastNonceSent == null) null else Hex.toHexString(lastNonceSent.storageValue)).apply()
         }
     var lastNonceReceived: Nonce?
-        get() { return _lastNonceReceived }
+        get() {
+            return _lastNonceReceived
+        }
         set(lastNonceReceived) {
             _lastNonceReceived = lastNonceReceived
             preferences.edit().putString("lastNonceReceived", if (lastNonceReceived == null) null else Hex.toHexString(lastNonceReceived.storageValue)).apply()
         }
     var commId: Long
-        get() { return _commId }
+        get() {
+            return _commId
+        }
         set(commId) {
             _commId = commId
             preferences.edit().putLong("commId", commId).apply()
         }
     var incomingKey: ByteArray?
-        get() { return _incomingKey }
-        set (incomingKey) {
+        get() {
+            return _incomingKey
+        }
+        set(incomingKey) {
             _incomingKey = incomingKey
             preferences.edit().putString("incomingKey", if (incomingKey == null) null else Hex.toHexString(incomingKey)).apply()
         }
     var outgoingKey: ByteArray?
-        get() { return _outgoingKey }
+        get() {
+            return _outgoingKey
+        }
         set(outgoingKey) {
             _outgoingKey = outgoingKey
             preferences.edit().putString("outgoingKey", if (outgoingKey == null) null else Hex.toHexString(outgoingKey)).apply()
         }
     var firmwareVersions: FirmwareVersions?
-        get() { return _firmwareVersions }
-        set (firmwareVersions) {
+        get() {
+            return _firmwareVersions
+        }
+        set(firmwareVersions) {
             _firmwareVersions = firmwareVersions
             if (firmwareVersions == null) {
                 preferences.edit()
@@ -94,7 +110,9 @@ class PairingDataStorage(context: Context) {
             }
         }
     var systemIdentification: SystemIdentification?
-        get() { return _systemIdentification }
+        get() {
+            return _systemIdentification
+        }
         set(systemIdentification) {
             _systemIdentification = systemIdentification
             if (systemIdentification == null) {

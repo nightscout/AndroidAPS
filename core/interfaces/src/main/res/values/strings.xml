@@ -3,10 +3,6 @@
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Pump driver changed.</string>
 
-    <string name="key_insulin_button_increment_1" translatable="false">insulin_button_increment_1</string>
-    <string name="key_insulin_button_increment_2" translatable="false">insulin_button_increment_2</string>
-    <string name="key_insulin_button_increment_3" translatable="false">insulin_button_increment_3</string>
-
     <!--    DateUtil-->
     <string name="minago">%1$d m ago</string>
     <string name="minago_long">%1$d minutes ago</string>

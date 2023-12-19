@@ -5,8 +5,8 @@ import androidx.work.WorkerParameters
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventXdripNewLog
+import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.objects.workflow.LoggingWorker
-import app.aaps.plugins.sync.xdrip.DataSyncSelectorXdripImpl
 import app.aaps.plugins.sync.xdrip.events.EventXdripUpdateGUI
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
@@ -15,7 +15,7 @@ class XdripDataSyncWorker(
     context: Context, params: WorkerParameters
 ) : LoggingWorker(context, params, Dispatchers.IO) {
 
-    @Inject lateinit var dataSyncSelector: DataSyncSelectorXdripImpl
+    @Inject lateinit var dataSyncSelector: DataSyncSelectorXdrip
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var rxBus: RxBus
 

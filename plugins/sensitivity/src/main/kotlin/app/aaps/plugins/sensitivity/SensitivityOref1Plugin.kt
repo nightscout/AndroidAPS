@@ -1,8 +1,6 @@
 package app.aaps.plugins.sensitivity
 
 import app.aaps.core.data.aps.AutosensResult
-import app.aaps.core.data.aps.SMBDefaults
-import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
@@ -17,11 +15,14 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.Preferences
+import app.aaps.core.objects.extensions.put
+import app.aaps.core.objects.extensions.store
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.core.utils.Percentile
 import app.aaps.plugins.sensitivity.extensions.isPSEvent5minBack
 import app.aaps.plugins.sensitivity.extensions.isTherapyEventEvent5minBack
-import org.json.JSONException
 import org.json.JSONObject
 import java.util.Arrays
 import javax.inject.Inject
@@ -33,6 +34,7 @@ class SensitivityOref1Plugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     sp: SP,
+    preferences: Preferences,
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
     private val persistenceLayer: PersistenceLayer
@@ -46,7 +48,7 @@ class SensitivityOref1Plugin @Inject constructor(
         .preferencesId(R.xml.pref_absorption_oref1)
         .description(R.string.description_sensitivity_oref1)
         .setDefault(),
-    aapsLogger, rh, sp
+    aapsLogger, rh, sp, preferences
 ), PluginConstraints {
 
     override fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult {
@@ -200,56 +202,23 @@ class SensitivityOref1Plugin @Inject constructor(
         return output
     }
 
-    override fun maxAbsorptionHours(): Double = sp.getDouble(app.aaps.core.utils.R.string.key_absorption_cutoff, Constants.DEFAULT_MAX_ABSORPTION_TIME)
+    override fun maxAbsorptionHours(): Double = preferences.get(DoubleKey.AbsorptionCutOff)
     override val isMinCarbsAbsorptionDynamic: Boolean = false
     override val isOref1: Boolean = true
 
-    override fun configuration(): JSONObject {
-        val c = JSONObject()
-        try {
-            c.put(
-                rh.gs(app.aaps.core.utils.R.string.key_openapsama_min_5m_carbimpact),
-                sp.getDouble(app.aaps.core.utils.R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact)
-            )
-            c.put(rh.gs(app.aaps.core.utils.R.string.key_absorption_cutoff), sp.getDouble(app.aaps.core.utils.R.string.key_absorption_cutoff, Constants.DEFAULT_MAX_ABSORPTION_TIME))
-            c.put(rh.gs(app.aaps.core.utils.R.string.key_openapsama_autosens_max), sp.getDouble(app.aaps.core.utils.R.string.key_openapsama_autosens_max, 1.2))
-            c.put(rh.gs(app.aaps.core.utils.R.string.key_openapsama_autosens_min), sp.getDouble(app.aaps.core.utils.R.string.key_openapsama_autosens_min, 0.7))
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        }
-        return c
-    }
+    override fun configuration(): JSONObject =
+        JSONObject()
+            .put(DoubleKey.ApsSmbMin5MinCarbsImpact, preferences, rh)
+            .put(DoubleKey.AbsorptionCutOff, preferences, rh)
+            .put(DoubleKey.AutosensMin, preferences, rh)
+            .put(DoubleKey.AutosensMax, preferences, rh)
 
     override fun applyConfiguration(configuration: JSONObject) {
-        try {
-            if (configuration.has(rh.gs(app.aaps.core.utils.R.string.key_openapsama_min_5m_carbimpact))) sp.putDouble(
-                app.aaps.core.utils.R.string.key_openapsama_min_5m_carbimpact,
-                configuration.getDouble(rh.gs(app.aaps.core.utils.R.string.key_openapsama_min_5m_carbimpact))
-            )
-            if (configuration.has(rh.gs(app.aaps.core.utils.R.string.key_absorption_cutoff))) sp.putDouble(
-                app.aaps.core.utils.R.string.key_absorption_cutoff, configuration.getDouble(
-                    rh.gs(
-                        app.aaps.core.utils.R.string.key_absorption_cutoff
-                    )
-                )
-            )
-            if (configuration.has(rh.gs(app.aaps.core.utils.R.string.key_openapsama_autosens_max))) sp.getDouble(
-                app.aaps.core.utils.R.string.key_openapsama_autosens_max, configuration.getDouble(
-                    rh.gs(
-                        app.aaps.core.utils.R.string.key_openapsama_autosens_max
-                    )
-                )
-            )
-            if (configuration.has(rh.gs(app.aaps.core.utils.R.string.key_openapsama_autosens_min))) sp.getDouble(
-                app.aaps.core.utils.R.string.key_openapsama_autosens_min, configuration.getDouble(
-                    rh.gs(
-                        app.aaps.core.utils.R.string.key_openapsama_autosens_min
-                    )
-                )
-            )
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        }
+        configuration
+            .store(DoubleKey.ApsSmbMin5MinCarbsImpact, preferences, rh)
+            .store(DoubleKey.AbsorptionCutOff, preferences, rh)
+            .store(DoubleKey.AutosensMin, preferences, rh)
+            .store(DoubleKey.AutosensMax, preferences, rh)
     }
 
     override val id: SensitivityType

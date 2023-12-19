@@ -47,6 +47,7 @@ class IntelligoPlugin @Inject constructor(
         .preferencesId(R.xml.pref_bgsource)
         .pluginName(R.string.intelligo)
         .shortName(R.string.intelligo)
+        .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_source_intelligo),
     aapsLogger, resourceHelper
 ), BgSource {

@@ -19,7 +19,6 @@ import app.aaps.core.graph.data.TherapyEventDataPoint
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -28,6 +27,7 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
+import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import kotlinx.coroutines.Dispatchers
@@ -45,8 +45,8 @@ class PrepareTreatmentsDataWorker(
     @Inject lateinit var translator: Translator
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var persistenceLayer: PersistenceLayer
-    @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var decimalFormatter: DecimalFormatter
+    @Inject lateinit var preferences: Preferences
 
     class PrepareTreatmentsData(
         val overviewData: OverviewData
@@ -67,7 +67,7 @@ class PrepareTreatmentsDataWorker(
         val filteredEps: MutableList<DataPointWithLabelInterface> = ArrayList()
 
         persistenceLayer.getBolusesFromTimeToTime(fromTime, endTime, true)
-            .map { BolusDataPoint(it, rh, activePlugin.activePump.pumpDescription.bolusStep, defaultValueHelper, decimalFormatter) }
+            .map { BolusDataPoint(it, rh, activePlugin.activePump.pumpDescription.bolusStep, profileUtil, preferences, decimalFormatter) }
             .filter { it.data.type == BS.Type.NORMAL || it.data.type == BS.Type.SMB }
             .forEach {
                 it.y = getNearestBg(data.overviewData, it.x.toLong())

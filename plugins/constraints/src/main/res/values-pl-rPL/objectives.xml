@@ -2,7 +2,7 @@
 <resources>
     <string name="objectives_button_start">Start</string>
     <string name="objectives_button_verify">Zweryfikuj</string>
-    <string name="nth_objective">%1$d. Cel</string>
+    <string name="nth_objective">Zadanie %1$d.</string>
     <string name="objectivenotstarted">Zadanie %1$d nierozpoczęte</string>
     <string name="objectivenotfinished">Zadanie %1$d nieukończone</string>
     <string name="objectives_0_objective">Konfiguracja wizualizacji i monitorowania, analiza dawek bazowych i współczynników</string>

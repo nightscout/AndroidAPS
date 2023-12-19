@@ -39,7 +39,7 @@ import org.mockito.Mock
         decoder = MedtronicPumpHistoryDecoder(aapsLogger, medtronicUtil)
         medtronicHistoryData = MedtronicHistoryData(
             packetInjector, aapsLogger, sp, rh, rxBus, activePlugin,
-            medtronicUtil, decoder, medtronicPumpStatus, pumpSync, pumpSyncStorage, uiInteraction
+            medtronicUtil, decoder, medtronicPumpStatus, pumpSync, pumpSyncStorage, uiInteraction, profileUtil
         )
 
 

@@ -26,6 +26,8 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
@@ -50,6 +52,7 @@ class DexcomPlugin @Inject constructor(
         .preferencesId(R.xml.pref_dexcom)
         .pluginName(R.string.dexcom_app_patched)
         .shortName(R.string.dexcom_short)
+        .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_source_dexcom),
     aapsLogger, rh
 ), BgSource, DexcomBoyda {
@@ -76,6 +79,7 @@ class DexcomPlugin @Inject constructor(
         @Inject lateinit var injector: HasAndroidInjector
         @Inject lateinit var dexcomPlugin: DexcomPlugin
         @Inject lateinit var sp: SP
+        @Inject lateinit var preferences: Preferences
         @Inject lateinit var dateUtil: DateUtil
         @Inject lateinit var dataWorkerStorage: DataWorkerStorage
         @Inject lateinit var persistenceLayer: PersistenceLayer
@@ -138,7 +142,7 @@ class DexcomPlugin @Inject constructor(
                             sourceSensor = sourceSensor
                         )
                 }
-                var sensorStartTime = if (sp.getBoolean(R.string.key_dexcom_log_ns_sensor_change, false) && bundle.containsKey("sensorInsertionTime")) {
+                var sensorStartTime = if (preferences.get(BooleanKey.DexcomCreateSensorChange) && bundle.containsKey("sensorInsertionTime")) {
                     bundle.getLong("sensorInsertionTime", 0) * 1000
                 } else {
                     null

@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
+import app.aaps.core.keys.Preferences
 import app.aaps.plugins.main.general.overview.OverviewDataImpl
 import app.aaps.plugins.main.iob.iobCobCalculator.IobCobCalculatorPlugin
 import javax.inject.Inject
@@ -26,6 +27,7 @@ class HistoryBrowserData @Inject constructor(
     rh: ResourceHelper,
     dateUtil: DateUtil,
     sp: SP,
+    preferences: Preferences,
     activePlugin: ActivePlugin,
     profileFunction: ProfileFunction,
     persistenceLayer: PersistenceLayer,
@@ -37,31 +39,10 @@ class HistoryBrowserData @Inject constructor(
 
     // We don't want to use injected singletons but own instance working on top of different data
     val overviewData =
-        OverviewDataImpl(
-            rh,
-            dateUtil,
-            sp,
-            activePlugin,
-            profileFunction,
-            persistenceLayer,
-            decimalFormatter,
-            processedTbrEbData
-        )
+        OverviewDataImpl(rh, dateUtil, sp, activePlugin, profileFunction, persistenceLayer, decimalFormatter, processedTbrEbData)
     val iobCobCalculator =
         IobCobCalculatorPlugin(
-            aapsLogger,
-            aapsSchedulers,
-            rxBus,
-            sp,
-            rh,
-            profileFunction,
-            activePlugin,
-            fabricPrivacy,
-            dateUtil,
-            persistenceLayer,
-            overviewData,
-            calculationWorkflow,
-            decimalFormatter,
-            processedTbrEbData
+            aapsLogger, aapsSchedulers, rxBus, preferences, rh, profileFunction, activePlugin,
+            fabricPrivacy, dateUtil, persistenceLayer, overviewData, calculationWorkflow, decimalFormatter, processedTbrEbData
         )
 }

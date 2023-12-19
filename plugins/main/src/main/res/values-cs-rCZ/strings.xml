@@ -288,4 +288,7 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Zobrazení průběžného oznámení v Androidu s krátkým přehledem, co smyčka právě dělá</string>
     <string name="old_data">ZASTARALÉ</string>
+    <string name="overview_show_steps">kroky</string>
+    <string name="steps_shortname">KROKY</string>
+    <string name="simple_mode_enabled">Jednoduchý režim povolen</string>
 </resources>

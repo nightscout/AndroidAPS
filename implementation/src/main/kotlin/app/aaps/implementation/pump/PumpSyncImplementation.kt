@@ -246,6 +246,35 @@ class PumpSyncImplementation @Inject constructor(
             .blockingGet()
     }
 
+    override fun insertFingerBgIfNewWithTimestamp(timestamp: Long, glucose: Double, glucoseUnit: GlucoseUnit, note: String?, pumpId: Long?, pumpType: PumpType, pumpSerial: String): Boolean {
+        if (!confirmActivePump(timestamp, pumpType, pumpSerial)) return false
+        val therapyEvent = TE(
+            timestamp = timestamp,
+            type = TE.Type.FINGER_STICK_BG_VALUE,
+            duration = 0,
+            note = note,
+            enteredBy = "AndroidAPS",
+            glucose = glucose,
+            glucoseType = TE.MeterType.FINGER,
+            glucoseUnit = glucoseUnit,
+            ids = IDs(
+                pumpId = pumpId,
+                pumpType = pumpType,
+                pumpSerial = pumpSerial
+            )
+        )
+        return persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
+            therapyEvent = therapyEvent,
+            timestamp = timestamp,
+            action = app.aaps.core.data.ue.Action.CAREPORTAL,
+            source = Sources.Pump,
+            note = note,
+            listValues = listOf(ValueWithUnit.Timestamp(timestamp), ValueWithUnit.TEType(TE.Type.FINGER_STICK_BG_VALUE))
+        )
+            .map { result -> result.inserted.size > 0 }
+            .blockingGet()
+    }
+
     override fun insertAnnouncement(error: String, pumpId: Long?, pumpType: PumpType, pumpSerial: String) {
         if (!confirmActivePump(dateUtil.now(), pumpType, pumpSerial)) return
         disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(

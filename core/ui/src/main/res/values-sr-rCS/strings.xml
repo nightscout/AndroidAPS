@@ -60,7 +60,6 @@
     <!--    Protection-->
     <!--    Pumps -->
     <!--    Constraints-->
-    <!-- Locale -->
     <!--    Dialogs-->
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Bit ćete upitani za glavnu lozinku, koja će se koristiti za dešifriranje uvezenih postavki.</string>

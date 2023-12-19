@@ -11,6 +11,8 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.sync.DataSyncSelector
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.Preferences
 import app.aaps.core.utils.JsonHelper
 import app.aaps.core.utils.waitMillis
 import app.aaps.plugins.sync.R
@@ -27,6 +29,7 @@ import javax.inject.Singleton
 @Singleton
 class DataSyncSelectorV1 @Inject constructor(
     private val sp: SP,
+    private val preferences: Preferences,
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil,
     private val profileFunction: ProfileFunction,
@@ -77,7 +80,7 @@ class DataSyncSelectorV1 @Inject constructor(
     private var running = false
     private val sync = Any()
 
-    private val bgUploadEnabled get() = sp.getBoolean(app.aaps.core.utils.R.string.key_do_ns_upload, false) && activePlugin.activeBgSource !is NSClientSource
+    private val bgUploadEnabled get() = preferences.get(BooleanKey.BgSourceUploadToNs) && activePlugin.activeBgSource !is NSClientSource
 
     override suspend fun doUpload() {
         synchronized(sync) {
@@ -654,7 +657,7 @@ class DataSyncSelectorV1 @Inject constructor(
                     ps.first.id == ps.second.id && ps.first.ids.nightscoutId != null ->
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring ProfileSwitch. Loaded from NS: ${ps.second.id} ")
                     // only NsId changed, no need to upload
-                    ps.first.onlyNsIdAdded(ps.second)                                         ->
+                    ps.first.onlyNsIdAdded(ps.second)                                ->
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring ProfileSwitch. Only NS id changed ID: ${ps.second.id} ")
                     // without nsId = create new
                     ps.first.ids.nightscoutId == null                                -> {
@@ -702,7 +705,7 @@ class DataSyncSelectorV1 @Inject constructor(
                     ps.first.id == ps.second.id && ps.first.ids.nightscoutId != null ->
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring EffectiveProfileSwitch. Loaded from NS: ${ps.second.id} ")
                     // only NsId changed, no need to upload
-                    ps.first.onlyNsIdAdded(ps.second)                                         ->
+                    ps.first.onlyNsIdAdded(ps.second)                                ->
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring EffectiveProfileSwitch. Only NS id changed ID: ${ps.second.id} ")
                     // without nsId = create new
                     ps.first.ids.nightscoutId == null                                -> {

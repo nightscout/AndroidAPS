@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.aps.Sensitivity
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.Preferences
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
@@ -18,9 +19,10 @@ class AbstractSensitivityPluginTest : TestBase() {
     @Mock lateinit var pluginDescription: PluginDescription
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var sp: SP
+    @Mock lateinit var preferences: Preferences
 
     private inner class SensitivityTestClass(pluginDescription: PluginDescription, aapsLogger: AAPSLogger, rh: ResourceHelper, sp: SP) :
-        AbstractSensitivityPlugin(pluginDescription, aapsLogger, rh, sp) {
+        AbstractSensitivityPlugin(pluginDescription, aapsLogger, rh, sp, preferences) {
 
         override fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult {
             return AutosensResult()

@@ -45,23 +45,25 @@ import app.aaps.plugins.source.PoctechPlugin
 import app.aaps.plugins.source.RandomBgPlugin
 import app.aaps.plugins.source.TomatoPlugin
 import app.aaps.plugins.source.XdripSourcePlugin
-import app.aaps.plugins.sync.dataBroadcaster.DataBroadcastPlugin
 import app.aaps.plugins.sync.garmin.GarminPlugin
+import app.aaps.plugins.sync.tizen.TizenPlugin
 import app.aaps.plugins.sync.nsclient.NSClientPlugin
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.openhumans.OpenHumansUploaderPlugin
 import app.aaps.plugins.sync.tidepool.TidepoolPlugin
 import app.aaps.plugins.sync.wear.WearPlugin
 import app.aaps.plugins.sync.xdrip.XdripPlugin
+import app.aaps.pump.danar.DanaRPlugin
+import app.aaps.pump.danarkorean.DanaRKoreanPlugin
+import app.aaps.pump.danars.DanaRSPlugin
+import app.aaps.pump.danarv2.DanaRv2Plugin
+import app.aaps.pump.equil.EquilPumpPlugin
 import app.aaps.pump.insight.InsightPlugin
 import app.aaps.pump.virtual.VirtualPumpPlugin
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntKey
 import dagger.multibindings.IntoMap
-import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
-import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
-import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.plugins.pump.eopatch.EopatchPumpPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.OmnipodDashPumpPlugin
@@ -163,7 +165,7 @@ abstract class PluginsListModule {
     @PumpDriver
     @IntoMap
     @IntKey(120)
-    abstract fun bindDanaRSPlugin(plugin: info.nightscout.pump.danars.DanaRSPlugin): PluginBase
+    abstract fun bindDanaRSPlugin(plugin: DanaRSPlugin): PluginBase
 
     @Binds
     @PumpDriver
@@ -218,6 +220,12 @@ abstract class PluginsListModule {
     @IntoMap
     @IntKey(170)
     abstract fun bindVirtualPumpPlugin(plugin: VirtualPumpPlugin): PluginBase
+
+    @Binds
+    @AllConfigs
+    @IntoMap
+    @IntKey(180)
+    abstract fun bindEquilPumpPlugin(plugin: EquilPumpPlugin): PluginBase
 
     @Binds
     @APS
@@ -343,7 +351,7 @@ abstract class PluginsListModule {
     @AllConfigs
     @IntoMap
     @IntKey(368)
-    abstract fun bindDataBroadcastPlugin(plugin: DataBroadcastPlugin): PluginBase
+    abstract fun bindDataBroadcastPlugin(plugin: TizenPlugin): PluginBase
 
     @Binds
     @AllConfigs

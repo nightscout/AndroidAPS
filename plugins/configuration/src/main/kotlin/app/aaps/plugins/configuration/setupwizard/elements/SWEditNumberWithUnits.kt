@@ -10,6 +10,7 @@ import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.SafeParse
+import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.ui.elements.NumberPicker
 import dagger.android.HasAndroidInjector
 import java.text.DecimalFormat
@@ -58,8 +59,8 @@ class SWEditNumberWithUnits(injector: HasAndroidInjector, private val init: Doub
         super.generateDialog(layout)
     }
 
-    fun preferenceId(preferenceId: Int): SWEditNumberWithUnits {
-        this.preferenceId = preferenceId
+    fun preferenceId(preference: UnitDoubleKey): SWEditNumberWithUnits {
+        this.preferenceId = preference.key
         return this
     }
 

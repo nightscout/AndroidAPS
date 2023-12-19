@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "info.nightscout.androidaps.danar"
+    namespace = "app.aaps.pump.danar"
 }
 
 dependencies {

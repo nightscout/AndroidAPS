@@ -10,9 +10,9 @@ import app.aaps.database.entities.ExtendedBolus
 import app.aaps.database.entities.Food
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.HeartRate
-import app.aaps.database.entities.StepsCount
 import app.aaps.database.entities.OfflineEvent
 import app.aaps.database.entities.ProfileSwitch
+import app.aaps.database.entities.StepsCount
 import app.aaps.database.entities.TemporaryBasal
 import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.entities.TherapyEvent

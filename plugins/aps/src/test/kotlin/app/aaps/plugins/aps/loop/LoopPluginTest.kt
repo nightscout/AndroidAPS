@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.keys.StringKey
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.pump.virtual.VirtualPumpPlugin
 import app.aaps.shared.tests.TestBaseWithProfile
@@ -37,7 +38,7 @@ class LoopPluginTest : TestBaseWithProfile() {
     @BeforeEach fun prepare() {
 
         loopPlugin = LoopPlugin(
-            aapsLogger, aapsSchedulers, rxBus, sp, config,
+            aapsLogger, aapsSchedulers, rxBus, sp, preferences, config,
             constraintChecker, rh, profileFunction, context, commandQueue, activePlugin, virtualPumpPlugin, iobCobCalculator, processedTbrEbData, receiverStatusStore, fabricPrivacy, dateUtil, uel,
             persistenceLayer, runningConfiguration, uiInteraction, instantiator
         )
@@ -49,7 +50,7 @@ class LoopPluginTest : TestBaseWithProfile() {
     fun testPluginInterface() {
         `when`(rh.gs(app.aaps.core.ui.R.string.loop)).thenReturn("Loop")
         `when`(rh.gs(app.aaps.plugins.aps.R.string.loop_shortname)).thenReturn("LOOP")
-        `when`(sp.getString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.CLOSED.name)
+        `when`(preferences.get(StringKey.LoopApsMode)).thenReturn(ApsMode.CLOSED.name)
         val pumpDescription = PumpDescription()
         `when`(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
         assertThat(loopPlugin.pluginDescription.fragmentClass).isEqualTo(LoopFragment::class.java.name)

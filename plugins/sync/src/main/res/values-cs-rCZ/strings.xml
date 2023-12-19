@@ -117,8 +117,9 @@
     <string name="xdrip_local_broadcasts_summary">Poslat data o glykémii a ošetření do xDrip+. Musí být vybrán zdroj dat \"xDrip+ Sync Follower\" a přijímání dat musí být povoleno v Nastavení - Nastavení komunikace mezi aplikacemi - Přijímat Glykémie/Ošetření</string>
     <string name="xdrip_local_broadcasts_title">Povolit odesílání do xDrip+.</string>
     <!--    DataBroadcast-->
-    <string name="data_broadcaster_short">DBRO</string>
-    <string name="data_broadcaster_description">Odesílání dat do Garmin aplikace G-Watch Wear App</string>
+    <string name="tizen">Samsung Tizen</string>
+    <string name="tizen_short">TIZ</string>
+    <string name="tizen_description">Odesílání dat do Samsung aplikace G-Watch Wear App (Tizen OS)</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Připojení k zařízení Garmin (Fenix, Edge, …)</string>

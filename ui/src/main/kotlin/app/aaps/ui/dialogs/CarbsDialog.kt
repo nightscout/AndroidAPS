@@ -7,9 +7,6 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import app.aaps.core.data.configuration.Constants.CARBS_FAV1_DEFAULT
-import app.aaps.core.data.configuration.Constants.CARBS_FAV2_DEFAULT
-import app.aaps.core.data.configuration.Constants.CARBS_FAV3_DEFAULT
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
@@ -24,7 +21,6 @@ import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.protection.ProtectionCheck.Protection.BOLUS
@@ -34,6 +30,9 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.formatColor
 import app.aaps.core.ui.dialogs.OKDialog
@@ -56,7 +55,6 @@ class CarbsDialog : DialogFragmentWithDate() {
     @Inject lateinit var ctx: Context
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var constraintChecker: ConstraintsChecker
-    @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
@@ -130,7 +128,7 @@ class CarbsDialog : DialogFragmentWithDate() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (sp.getBoolean(app.aaps.core.utils.R.string.key_usebolusreminder, false)) {
+        if (preferences.get(BooleanKey.OverviewUseBolusReminder)) {
             glucoseStatusProvider.glucoseStatusData?.let { glucoseStatus ->
                 if (glucoseStatus.glucose + 3 * glucoseStatus.delta < 70.0)
                     binding.bolusReminder.visibility = View.VISIBLE
@@ -151,37 +149,28 @@ class CarbsDialog : DialogFragmentWithDate() {
             savedInstanceState?.getDouble("carbs")
                 ?: 0.0, 0.0, maxCarbs, 1.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher
         )
-        val plus1text = toSignedString(sp.getInt(app.aaps.core.utils.R.string.key_carbs_button_increment_1, CARBS_FAV1_DEFAULT))
+        val plus1text = toSignedString(preferences.get(IntKey.OverviewCarbsButtonIncrement1))
         binding.plus1.text = plus1text
         binding.plus1.contentDescription = rh.gs(app.aaps.core.ui.R.string.carbs) + " " + plus1text
         binding.plus1.setOnClickListener {
-            binding.carbs.value = max(
-                0.0, binding.carbs.value
-                    + sp.getInt(app.aaps.core.utils.R.string.key_carbs_button_increment_1, CARBS_FAV1_DEFAULT)
-            )
+            binding.carbs.value = max(0.0, binding.carbs.value + preferences.get(IntKey.OverviewCarbsButtonIncrement1))
             validateInputs()
             binding.carbs.announceValue()
         }
 
-        val plus2text = toSignedString(sp.getInt(app.aaps.core.utils.R.string.key_carbs_button_increment_2, CARBS_FAV2_DEFAULT))
+        val plus2text = toSignedString(preferences.get(IntKey.OverviewCarbsButtonIncrement2))
         binding.plus2.text = plus2text
         binding.plus2.contentDescription = rh.gs(app.aaps.core.ui.R.string.carbs) + " " + plus2text
         binding.plus2.setOnClickListener {
-            binding.carbs.value = max(
-                0.0, binding.carbs.value
-                    + sp.getInt(app.aaps.core.utils.R.string.key_carbs_button_increment_2, CARBS_FAV2_DEFAULT)
-            )
+            binding.carbs.value = max(0.0, binding.carbs.value + preferences.get(IntKey.OverviewCarbsButtonIncrement2))
             validateInputs()
             binding.carbs.announceValue()
         }
-        val plus3text = toSignedString(sp.getInt(app.aaps.core.utils.R.string.key_carbs_button_increment_3, CARBS_FAV3_DEFAULT))
+        val plus3text = toSignedString(preferences.get(IntKey.OverviewCarbsButtonIncrement3))
         binding.plus3.text = plus3text
         binding.plus2.contentDescription = rh.gs(app.aaps.core.ui.R.string.carbs) + " " + plus3text
         binding.plus3.setOnClickListener {
-            binding.carbs.value = max(
-                0.0, binding.carbs.value
-                    + sp.getInt(app.aaps.core.utils.R.string.key_carbs_button_increment_3, CARBS_FAV3_DEFAULT)
-            )
+            binding.carbs.value = max(0.0, binding.carbs.value + preferences.get(IntKey.OverviewCarbsButtonIncrement3))
             validateInputs()
             binding.carbs.announceValue()
         }
@@ -229,12 +218,12 @@ class CarbsDialog : DialogFragmentWithDate() {
         val carbs = binding.carbs.value.toInt()
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(carbs, aapsLogger)).value()
         val units = profileUtil.units
-        val activityTTDuration = defaultValueHelper.determineActivityTTDuration()
-        val activityTT = defaultValueHelper.determineActivityTT()
-        val eatingSoonTTDuration = defaultValueHelper.determineEatingSoonTTDuration()
-        val eatingSoonTT = defaultValueHelper.determineEatingSoonTT()
-        val hypoTTDuration = defaultValueHelper.determineHypoTTDuration()
-        val hypoTT = defaultValueHelper.determineHypoTT()
+        val activityTTDuration = preferences.get(IntKey.OverviewActivityDuration)
+        val activityTT = preferences.get(UnitDoubleKey.OverviewActivityTarget)
+        val eatingSoonTTDuration = preferences.get(IntKey.OverviewEatingSoonDuration)
+        val eatingSoonTT = preferences.get(UnitDoubleKey.OverviewEatingSoonTarget)
+        val hypoTTDuration = preferences.get(IntKey.OverviewHypoDuration)
+        val hypoTT = preferences.get(UnitDoubleKey.OverviewHypoTarget)
         val actions: LinkedList<String?> = LinkedList()
         val unitLabel = if (units == GlucoseUnit.MMOL) rh.gs(app.aaps.core.ui.R.string.mmol) else rh.gs(app.aaps.core.ui.R.string.mgdl)
         val useAlarm = binding.alarmCheckBox.isChecked
@@ -346,7 +335,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                                 automation.removeAutomationEventEatReminder()
                                 if (!result.success) {
                                     uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
-                                } else if (sp.getBoolean(app.aaps.core.utils.R.string.key_usebolusreminder, false) && remindBolus)
+                                } else if (preferences.get(BooleanKey.OverviewUseBolusReminder) && remindBolus)
                                     automation.scheduleAutomationEventBolusReminder()
                             }
                         })

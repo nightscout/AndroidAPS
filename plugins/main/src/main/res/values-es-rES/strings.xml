@@ -289,4 +289,7 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Muestra una notificación en curso con un breve resumen de lo que está haciendo tu lazo</string>
     <string name="old_data">DATOS CADUCADOS</string>
+    <string name="overview_show_steps">pasos</string>
+    <string name="steps_shortname">PASOS</string>
+    <string name="simple_mode_enabled">Modo simple habilitado</string>
 </resources>

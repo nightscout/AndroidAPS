@@ -124,6 +124,7 @@
     <string name="omnipod_common_pod_status_waiting_for_activation">Kurulum devam ediyor (Pod aktivasyonu bekleniyor)</string>
     <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">Kurulum devam ediyor (kanül yerleştirme bekleniyor)</string>
     <string name="omnipod_common_pod_status_running">Çalışıyor</string>
+    <string name="omnipod_common_pod_status_normal">Normal</string>
     <string name="omnipod_common_pod_status_suspended">Askıya Alındı</string>
     <string name="omnipod_common_pod_status_pod_fault">Pod Hatası</string>
     <string name="omnipod_common_pod_status_activation_time_exceeded">Aktivasyon süresi aşıldı</string>

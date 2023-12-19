@@ -8,7 +8,7 @@ import app.aaps.pump.insight.utils.ByteBuf
 class StartReadingHistoryMessage : AppLayerMessage(MessagePriority.NORMAL, false, true, Service.HISTORY) {
 
     internal var offset: Long = 0
-    internal var direction: app.aaps.pump.insight.app_layer.history.HistoryReadingDirection? = null
+    internal var direction: HistoryReadingDirection? = null
     override val data: ByteBuf
         get() {
             val byteBuf = ByteBuf(8).apply {

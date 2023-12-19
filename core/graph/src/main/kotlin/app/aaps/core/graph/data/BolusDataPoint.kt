@@ -3,22 +3,25 @@ package app.aaps.core.graph.data
 import android.content.Context
 import android.graphics.Paint
 import app.aaps.core.data.model.BS
-import app.aaps.core.interfaces.profile.DefaultValueHelper
+import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.UnitDoubleKey
 
 class BolusDataPoint(
     val data: BS,
     private val rh: ResourceHelper,
     private val bolusStep: Double,
-    private val defaultValueHelper: DefaultValueHelper,
+    private val profileUtil: ProfileUtil,
+    private val preferences: Preferences,
     private val decimalFormatter: DecimalFormatter
 ) : DataPointWithLabelInterface {
 
     private var yValue = 0.0
 
     override fun getX(): Double = data.timestamp.toDouble()
-    override fun getY(): Double = if (data.type == BS.Type.SMB) defaultValueHelper.determineLowLine() else yValue
+    override fun getY(): Double = if (data.type == BS.Type.SMB) preferences.get(UnitDoubleKey.OverviewLowMark) else yValue
     override val label
         get() = decimalFormatter.toPumpSupportedBolus(data.amount, bolusStep)
     override val duration = 0L

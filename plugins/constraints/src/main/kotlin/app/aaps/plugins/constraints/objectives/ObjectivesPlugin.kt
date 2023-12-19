@@ -58,8 +58,7 @@ class ObjectivesPlugin @Inject constructor(
 
     var objectives: MutableList<Objective> = ArrayList()
 
-    public override fun onStart() {
-        super.onStart()
+    init {
         setupObjectives()
     }
 

@@ -38,12 +38,12 @@ import app.aaps.database.impl.transactions.CutCarbsTransaction
 import app.aaps.database.impl.transactions.InsertAndCancelCurrentOfflineEventTransaction
 import app.aaps.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import app.aaps.database.impl.transactions.InsertBolusWithTempIdTransaction
+import app.aaps.database.impl.transactions.InsertEffectiveProfileSwitch
 import app.aaps.database.impl.transactions.InsertIfNewByTimestampCarbsTransaction
 import app.aaps.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import app.aaps.database.impl.transactions.InsertOrUpdateBolusCalculatorResultTransaction
 import app.aaps.database.impl.transactions.InsertOrUpdateBolusTransaction
 import app.aaps.database.impl.transactions.InsertOrUpdateCarbsTransaction
-import app.aaps.database.impl.transactions.InsertEffectiveProfileSwitch
 import app.aaps.database.impl.transactions.InsertOrUpdateHeartRateTransaction
 import app.aaps.database.impl.transactions.InsertOrUpdateProfileSwitch
 import app.aaps.database.impl.transactions.InsertOrUpdateStepsCountTransaction

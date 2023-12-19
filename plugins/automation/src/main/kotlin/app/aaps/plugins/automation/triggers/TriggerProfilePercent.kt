@@ -13,6 +13,7 @@ import app.aaps.plugins.automation.elements.StaticLabel
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import java.util.Optional
+import kotlin.math.roundToInt
 
 class TriggerProfilePercent(injector: HasAndroidInjector) : Trigger(injector) {
 
@@ -54,13 +55,13 @@ class TriggerProfilePercent(injector: HasAndroidInjector) : Trigger(injector) {
             return false
         }
         if (profile is ProfileSealed.EPS) {
-            if (comparator.value.check(profile.value.originalPercentage.toDouble(), pct.value)) {
+            if (comparator.value.check(profile.value.originalPercentage, pct.value.roundToInt())) {
                 aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
                 return true
             }
         }
         if (profile is ProfileSealed.Pure) {
-            if (comparator.value.check(100.0, pct.value)) {
+            if (comparator.value.check(100, pct.value.roundToInt())) {
                 aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
                 return true
             }

@@ -267,7 +267,8 @@ class InsightPlugin @Inject constructor(
 
     @Throws(Exception::class) private fun fetchBasalProfile() {
         connectionService?.let { service ->
-            activeBasalProfile = ParameterBlockUtil.readParameterBlock(service, Service.CONFIGURATION, app.aaps.pump.insight.app_layer.parameter_blocks.ActiveBRProfileBlock::class.java)?.activeBasalProfile
+            activeBasalProfile =
+                ParameterBlockUtil.readParameterBlock(service, Service.CONFIGURATION, ActiveBRProfileBlock::class.java)?.activeBasalProfile
             profileBlocks = ParameterBlockUtil.readParameterBlock(service, Service.CONFIGURATION, BRProfile1Block::class.java)?.profileBlocks
         }
     }
@@ -364,7 +365,7 @@ class InsightPlugin @Inject constructor(
         }
         connectionService?.let { service ->
             try {
-                val activeBRProfileBlock = app.aaps.pump.insight.app_layer.parameter_blocks.ActiveBRProfileBlock()
+                val activeBRProfileBlock = ActiveBRProfileBlock()
                 activeBRProfileBlock.activeBasalProfile = BasalProfile.PROFILE_1
                 ParameterBlockUtil.writeConfigurationBlock(service, activeBRProfileBlock)
                 activeBasalProfile = BasalProfile.PROFILE_1

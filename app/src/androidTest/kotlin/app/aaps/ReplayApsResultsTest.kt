@@ -7,8 +7,8 @@ import androidx.test.rule.GrantPermissionRule
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.maintenance.PrefFileListProvider
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.storage.Storage
 import app.aaps.core.utils.JsonHelper
 import app.aaps.di.TestApplication
@@ -41,7 +41,7 @@ import kotlin.math.floor
 
 class ReplayApsResultsTest @Inject constructor() {
 
-    @Inject lateinit var prefFileListProvider: PrefFileListProvider
+    @Inject lateinit var fileListProvider: FileListProvider
     @Inject lateinit var storage: Storage
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var injector: HasAndroidInjector
@@ -110,9 +110,9 @@ class ReplayApsResultsTest @Inject constructor() {
         // Pass to DetermineBasalSMB
 
         if (determineBasalResult.profile.getString("out_units") == "mmol/L")
-            sp.putString(app.aaps.core.utils.R.string.key_units, GlucoseUnit.MMOL.asText)
+            sp.putString(app.aaps.core.keys.R.string.key_units, GlucoseUnit.MMOL.asText)
         else
-            sp.putString(app.aaps.core.utils.R.string.key_units, GlucoseUnit.MGDL.asText)
+            sp.putString(app.aaps.core.keys.R.string.key_units, GlucoseUnit.MGDL.asText)
         val glucoseStatus = GlucoseStatus(
             glucose = determineBasalResult.glucoseStatus.getDouble("glucose"),
             noise = determineBasalResult.glucoseStatus.getInt("noise"),
@@ -537,7 +537,7 @@ class ReplayApsResultsTest @Inject constructor() {
         val apsResults = mutableListOf<JSONObject>()
 
         // look for results in filesystem
-        prefFileListProvider.resultPath.walk().maxDepth(1)
+        fileListProvider.resultPath.walk().maxDepth(1)
             .filter { it.isFile && it.name.endsWith(".json") }
             .forEach {
                 val contents = storage.getFileContents(it)

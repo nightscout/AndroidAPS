@@ -24,8 +24,6 @@
     <string name="pairing_completed">Emparelhamento concluído</string>
     <string name="code_compare">Os códigos exibidos neste dispositivo e na sua bomba correspondem?</string>
     <string name="insight_pairing">Emparelhamento Insight</string>
-    <string name="insight_local">Accu-Chek Insight</string>
-    <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Tubo mudado</string>
     <string name="insightpump_shortname">Visão</string>
     <string name="insight_alert_notification_channel">Alertas Bomba Insight</string>
@@ -40,7 +38,6 @@
     <string name="short_status_tbr">Basal temporária: %1$d%% para %2$d / %3$d minutos</string>
     <string name="short_status_extended">Estendido: %1$.2f / %2$.2f U por %3$d min</string>
     <string name="short_status_multiwave">Multionda: %1$.2f / %2$.2f U por %3$d min</string>
-    <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_reservoir">Reservatório: %1$.2f U</string>
     <string name="short_status_battery">Bat.: %1$d%%</string>
     <string name="release_software_version">Lançar versão de software</string>

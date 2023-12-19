@@ -9,7 +9,7 @@ plugins {
 
 android {
 
-    namespace = "info.nightscout.pump.dana"
+    namespace = "app.aaps.pump.dana"
     defaultConfig {
         kapt {
             arguments {

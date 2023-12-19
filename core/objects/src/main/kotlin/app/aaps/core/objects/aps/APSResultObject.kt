@@ -15,8 +15,9 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.convertedToPercent
 import app.aaps.core.ui.R
@@ -35,7 +36,7 @@ open class APSResultObject(protected val injector: HasAndroidInjector) : APSResu
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var constraintChecker: ConstraintsChecker
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var processedTbrEbData: ProcessedTbrEbData
     @Inject lateinit var profileFunction: ProfileFunction
@@ -302,7 +303,7 @@ open class APSResultObject(protected val injector: HasAndroidInjector) : APSResu
                     }
                 }
                 // report change bigger than 30%
-                var percentMinChangeChange = sp.getDouble(app.aaps.core.utils.R.string.key_loop_openmode_min_change, 30.0)
+                var percentMinChangeChange = preferences.get(IntKey.LoopOpenModeMinChange).toDouble()
                 percentMinChangeChange /= 100.0
                 val lowThreshold = 1 - percentMinChangeChange
                 val highThreshold = 1 + percentMinChangeChange
@@ -338,7 +339,7 @@ open class APSResultObject(protected val injector: HasAndroidInjector) : APSResu
                     }
                 }
                 // report change bigger than 30%
-                var percentMinChangeChange = sp.getDouble(app.aaps.core.utils.R.string.key_loop_openmode_min_change, 30.0)
+                var percentMinChangeChange = preferences.get(IntKey.LoopOpenModeMinChange).toDouble()
                 percentMinChangeChange /= 100.0
                 val lowThreshold = 1 - percentMinChangeChange
                 val highThreshold = 1 + percentMinChangeChange

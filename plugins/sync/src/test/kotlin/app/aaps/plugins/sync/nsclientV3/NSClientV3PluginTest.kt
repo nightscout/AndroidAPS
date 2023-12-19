@@ -21,6 +21,7 @@ import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.Insulin
+import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -54,6 +55,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Mock lateinit var mockedProfileFunction: ProfileFunction
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var insulin: Insulin
+    @Mock lateinit var l: L
 
     private lateinit var storeDataForDb: StoreDataForDb
     private lateinit var sut: NSClientV3Plugin
@@ -73,7 +75,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
             NSClientV3Plugin(
                 aapsLogger, aapsSchedulers, rxBus, rh, context, fabricPrivacy,
                 sp, receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
-                nsClientSource, storeDataForDb, decimalFormatter
+                nsClientSource, storeDataForDb, decimalFormatter, l
             )
         sut.nsAndroidClient = nsAndroidClient
         Mockito.`when`(mockedProfileFunction.getProfile(anyLong())).thenReturn(validProfile)

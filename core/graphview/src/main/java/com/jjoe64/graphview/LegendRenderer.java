@@ -304,7 +304,7 @@ public class LegendRenderer {
      * the width of the box exclusive padding
      *
      * @return the width of the box
-     *          0 => auto
+     * 0 => auto
      */
     public int getWidth() {
         return mStyles.width;
@@ -312,8 +312,9 @@ public class LegendRenderer {
 
     /**
      * the width of the box exclusive padding
-     * @param width     the width of the box exclusive padding
-     *                  0 => auto
+     *
+     * @param width the width of the box exclusive padding
+     *              0 => auto
      */
     public void setWidth(int width) {
         mStyles.width = width;
@@ -321,17 +322,17 @@ public class LegendRenderer {
 
     /**
      * @return background color of the box
-     *          it is recommended to use semi-transparent
-     *          color.
+     * it is recommended to use semi-transparent
+     * color.
      */
     public int getBackgroundColor() {
         return mStyles.backgroundColor;
     }
 
     /**
-     * @param backgroundColor   background color of the box
-     *                          it is recommended to use semi-transparent
-     *                          color.
+     * @param backgroundColor background color of the box
+     *                        it is recommended to use semi-transparent
+     *                        color.
      */
     public void setBackgroundColor(int backgroundColor) {
         mStyles.backgroundColor = backgroundColor;
@@ -339,15 +340,15 @@ public class LegendRenderer {
 
     /**
      * @return margin from the edge of the box
-     *          to the corner of the graphview
+     * to the corner of the graphview
      */
     public int getMargin() {
         return mStyles.margin;
     }
 
     /**
-     * @param margin    margin from the edge of the box
-     *                  to the corner of the graphview
+     * @param margin margin from the edge of the box
+     *               to the corner of the graphview
      */
     public void setMargin(int margin) {
         mStyles.margin = margin;

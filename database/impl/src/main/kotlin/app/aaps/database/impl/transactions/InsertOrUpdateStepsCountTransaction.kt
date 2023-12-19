@@ -2,7 +2,7 @@ package app.aaps.database.impl.transactions
 
 import app.aaps.database.entities.StepsCount
 
-class InsertOrUpdateStepsCountTransaction(private val stepsCount: StepsCount):
+class InsertOrUpdateStepsCountTransaction(private val stepsCount: StepsCount) :
     Transaction<InsertOrUpdateStepsCountTransaction.TransactionResult>() {
 
     override fun run(): TransactionResult {
@@ -16,5 +16,6 @@ class InsertOrUpdateStepsCountTransaction(private val stepsCount: StepsCount):
             TransactionResult(emptyList(), listOf(stepsCount))
         }
     }
+
     data class TransactionResult(val inserted: List<StepsCount>, val updated: List<StepsCount>)
 }

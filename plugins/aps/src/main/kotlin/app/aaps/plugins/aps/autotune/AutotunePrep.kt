@@ -8,6 +8,8 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.interfaces.utils.Round
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.Preferences
 import app.aaps.plugins.aps.autotune.data.ATProfile
 import app.aaps.plugins.aps.autotune.data.BGDatum
 import app.aaps.plugins.aps.autotune.data.CRDatum
@@ -25,6 +27,7 @@ import kotlin.math.roundToInt
 @Singleton
 class AutotunePrep @Inject constructor(
     private val sp: SP,
+    private val preferences: Preferences,
     private val dateUtil: DateUtil,
     private val autotuneFS: AutotuneFS,
     private val autotuneIob: AutotuneIob
@@ -312,7 +315,7 @@ class AutotunePrep @Inject constructor(
 
             // Then, calculate carb absorption for that 5m interval using the deviation.
             if (mealCOB > 0) {
-                val ci = max(deviation, sp.getDouble(app.aaps.core.utils.R.string.key_openapsama_min_5m_carbimpact, 3.0))
+                val ci = max(deviation, preferences.get(DoubleKey.ApsSmbMin5MinCarbsImpact))
                 val absorbed = ci * tunedProfile.ic / sens
                 // Store the COB, and use it as the starting point for the next data point.
                 mealCOB = max(0.0, mealCOB - absorbed)

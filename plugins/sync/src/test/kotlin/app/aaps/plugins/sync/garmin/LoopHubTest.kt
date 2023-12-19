@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.garmin
 
+import app.aaps.core.data.iob.CobInfo
 import app.aaps.core.data.iob.IobTotal
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.GV
@@ -24,7 +25,8 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
 import app.aaps.shared.tests.TestBase
 import io.reactivex.rxjava3.core.Single
 import org.junit.jupiter.api.AfterEach
@@ -33,6 +35,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.ArgumentMatchers.argThat
 import org.mockito.ArgumentMatchers.isNull
 import org.mockito.Mock
@@ -54,7 +57,7 @@ class LoopHubTest : TestBase() {
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var userEntryLogger: UserEntryLogger
-    @Mock lateinit var sp: SP
+    @Mock lateinit var preferences: Preferences
 
     private lateinit var loopHub: LoopHubImpl
     private val clock = Clock.fixed(Instant.ofEpochMilli(10_000), ZoneId.of("UTC"))
@@ -63,7 +66,7 @@ class LoopHubTest : TestBase() {
     fun setup() {
         loopHub = LoopHubImpl(
             aapsLogger, commandQueue, constraints, iobCobCalculator, loop,
-            profileFunction, persistenceLayer, userEntryLogger, sp
+            profileFunction, persistenceLayer, userEntryLogger, preferences
         )
         loopHub.clock = clock
     }
@@ -79,7 +82,7 @@ class LoopHubTest : TestBase() {
         verifyNoMoreInteractions(userEntryLogger)
     }
 
-    @Test
+@Test
     fun testCurrentProfile() {
         val profile = mock(Profile::class.java)
         `when`(profileFunction.getProfile()).thenReturn(profile)
@@ -96,9 +99,9 @@ class LoopHubTest : TestBase() {
 
     @Test
     fun testGlucoseUnit() {
-        `when`(sp.getString(app.aaps.core.utils.R.string.key_units, GlucoseUnit.MGDL.asText)).thenReturn("mg/dl")
+        `when`(preferences.get(StringKey.GeneralUnits)).thenReturn("mg/dl")
         assertEquals(GlucoseUnit.MGDL, loopHub.glucoseUnit)
-        `when`(sp.getString(app.aaps.core.utils.R.string.key_units, GlucoseUnit.MGDL.asText)).thenReturn("mmol")
+        `when`(preferences.get(StringKey.GeneralUnits)).thenReturn("mmol")
         assertEquals(GlucoseUnit.MMOL, loopHub.glucoseUnit)
     }
 
@@ -108,6 +111,22 @@ class LoopHubTest : TestBase() {
         `when`(iobCobCalculator.calculateIobFromBolus()).thenReturn(iobTotal)
         assertEquals(23.9, loopHub.insulinOnboard, 1e-10)
         verify(iobCobCalculator, times(1)).calculateIobFromBolus()
+    }
+
+    @Test
+    fun testBasalOnBoard() {
+        val iobBasal = IobTotal(time = 0).apply { basaliob = 23.9 }
+        `when`(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(iobBasal)
+        assertEquals(23.9, loopHub.insulinBasalOnboard, 1e-10)
+        verify(iobCobCalculator, times(1)).calculateIobFromTempBasalsIncludingConvertedExtended()
+    }
+
+    @Test
+    fun testCarbsOnBoard() {
+        val cobInfo = CobInfo(0, 12.0, 0.0)
+        `when`(iobCobCalculator.getCobInfo(anyString())).thenReturn(cobInfo)
+        assertEquals(12.0, loopHub.carbsOnboard)
+        verify(iobCobCalculator, times(1)).getCobInfo(anyString())
     }
 
     @Test

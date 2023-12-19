@@ -17,6 +17,7 @@
     <string name="description_ns_client_v3">Synchronizuje vaše dáta s Nightscoutom pomocou v3 API</string>
     <string name="blocked_by_charging">Zablokované možnosti nabíjania</string>
     <string name="blocked_by_connectivity">Zablokované možnosti pripojenia</string>
+    <string name="no_connectivity">Žiadne pripojenie</string>
     <string name="unsupported_ns_version">Nepodporovaná verzia Nighscoutu</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
@@ -116,8 +117,9 @@
     <string name="xdrip_local_broadcasts_summary">Poslať dáta o glykémii a ošetrení do xDrip+. Musí byť vybraný zdroj dát \"xDrip+ Sync Follower\" a prijímanie dát musí byť povolené v Nastavenia - Nastavenie komunikácie medzi aplikáciami - Prijímať Glykémie/Ošetrenia</string>
     <string name="xdrip_local_broadcasts_title">Povoliť odosielanie do xDrip+.</string>
     <!--    DataBroadcast-->
-    <string name="data_broadcaster_short">DBRO</string>
-    <string name="data_broadcaster_description">Odosielanie dát do Garmin aplikácie G-Watch Wear</string>
+    <string name="tizen">Samsung Tizen</string>
+    <string name="tizen_short">TIZ</string>
+    <string name="tizen_description">Odosielanie dát do Samsung aplikácie G-Watch Wear App (Tizen OS)</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Pripájanie k zariadeniu Garmin (Fénix, Edge, ...)</string>

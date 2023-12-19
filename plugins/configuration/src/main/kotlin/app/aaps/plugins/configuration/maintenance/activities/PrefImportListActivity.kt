@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import app.aaps.core.interfaces.maintenance.PrefFileListProvider
+import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.maintenance.PrefsFile
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
@@ -23,7 +23,7 @@ import javax.inject.Inject
 class PrefImportListActivity : TranslatedDaggerAppCompatActivity() {
 
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var prefFileListProvider: PrefFileListProvider
+    @Inject lateinit var fileListProvider: FileListProvider
 
     private lateinit var binding: MaintenanceImportListActivityBinding
 
@@ -39,7 +39,7 @@ class PrefImportListActivity : TranslatedDaggerAppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(true)
 
         binding.recyclerview.layoutManager = LinearLayoutManager(this)
-        binding.recyclerview.adapter = RecyclerViewAdapter(prefFileListProvider.listPreferenceFiles())
+        binding.recyclerview.adapter = RecyclerViewAdapter(fileListProvider.listPreferenceFiles())
     }
 
     inner class RecyclerViewAdapter internal constructor(private var prefFileList: List<PrefsFile>) : RecyclerView.Adapter<RecyclerViewAdapter.PrefFileViewHolder>() {
@@ -89,7 +89,7 @@ class PrefImportListActivity : TranslatedDaggerAppCompatActivity() {
                 }
 
                 prefFile.metadata[PrefsMetadataKeyImpl.CREATED_AT]?.let {
-                    metaDateTime.text = prefFileListProvider.formatExportedAgo(it.value)
+                    metaDateTime.text = fileListProvider.formatExportedAgo(it.value)
                 }
 
                 prefFile.metadata[PrefsMetadataKeyImpl.AAPS_VERSION]?.let {

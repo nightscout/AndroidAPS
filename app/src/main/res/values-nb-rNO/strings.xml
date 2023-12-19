@@ -57,4 +57,6 @@
     <string name="count_selected">%1$d valgt</string>
     <string name="sort_label">Sorter</string>
     <string name="search">Søk</string>
+    <string name="simple_mode">Enkelmodus</string>
+    <string name="master_password_not_set">Hovedpassord ikke satt</string>
 </resources>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="SimpleFullModeSelector">
+        <attr name="simpleMode" format="boolean" />
+        <attr name="apsMode" format="boolean" />
+        <attr name="nsclientMode" format="boolean" />
+        <attr name="pumpControlMode" format="boolean" />
+        <attr name="hideParentScreenIfHidden" format="boolean" />
+    </declare-styleable>
+
+</resources>

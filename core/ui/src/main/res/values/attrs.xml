@@ -220,5 +220,5 @@
     <attr name="profileColor" format="reference|color" />
     <attr name="crossTargetColor" format="reference|color" />
     <!---Custom button -->
-    <attr name="customBtnStyle" format="reference"/>
+    <attr name="customBtnStyle" format="reference" />
 </resources>

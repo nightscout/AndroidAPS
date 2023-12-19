@@ -7,8 +7,8 @@ import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.time.T
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.Preferences
 import app.aaps.implementation.iob.AutosensDataObject
 import app.aaps.plugins.main.iob.iobCobCalculator.data.AutosensDataStoreObject
 import app.aaps.shared.impl.utils.DateUtilImpl
@@ -22,7 +22,7 @@ import org.mockito.Mockito
 class AutosensDataStoreTest : TestBase() {
 
     @Mock lateinit var context: Context
-    @Mock lateinit var sp: SP
+    @Mock lateinit var preferences: Preferences
     @Mock lateinit var dateUtilMocked: DateUtil
 
     private lateinit var dateUtil: DateUtil
@@ -1508,21 +1508,21 @@ class AutosensDataStoreTest : TestBase() {
         val now = 10000000L
         Mockito.`when`(dateUtilMocked.now()).thenReturn(now)
         val ads = AutosensDataStoreObject()
-        ads.storedLastAutosensResult = AutosensDataObject(aapsLogger, sp, dateUtil).apply { time = now - 10 }
+        ads.storedLastAutosensResult = AutosensDataObject(aapsLogger, preferences, dateUtil).apply { time = now - 10 }
         // empty array, return last stored
         ads.autosensDataTable = LongSparseArray<AutosensData>()
         assertThat(ads.getLastAutosensData("test", aapsLogger, dateUtilMocked)?.time).isEqualTo(now - 10)
 
         // data is there, return it
-        ads.autosensDataTable.append(now - 1, AutosensDataObject(aapsLogger, sp, dateUtil).apply { time = now - 1 })
+        ads.autosensDataTable.append(now - 1, AutosensDataObject(aapsLogger, preferences, dateUtil).apply { time = now - 1 })
         assertThat(ads.getLastAutosensData("test", aapsLogger, dateUtilMocked)?.time).isEqualTo(now - 1)
         // and latest value should be saved
         assertThat(ads.storedLastAutosensResult?.time).isEqualTo(now - 1)
 
         // data is old, return last stored
-        ads.storedLastAutosensResult = AutosensDataObject(aapsLogger, sp, dateUtil).apply { time = now - 1 }
+        ads.storedLastAutosensResult = AutosensDataObject(aapsLogger, preferences, dateUtil).apply { time = now - 1 }
         ads.autosensDataTable = LongSparseArray<AutosensData>()
-        ads.autosensDataTable.append(now - T.mins(20).msecs(), AutosensDataObject(aapsLogger, sp, dateUtil).apply { time = now - T.mins(20).msecs() })
+        ads.autosensDataTable.append(now - T.mins(20).msecs(), AutosensDataObject(aapsLogger, preferences, dateUtil).apply { time = now - T.mins(20).msecs() })
         assertThat(ads.getLastAutosensData("test", aapsLogger, dateUtilMocked)?.time).isEqualTo(now - 1)
     }
 }

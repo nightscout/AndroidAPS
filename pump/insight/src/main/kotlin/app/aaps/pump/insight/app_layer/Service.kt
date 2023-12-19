@@ -9,6 +9,7 @@ enum class Service(val version: Short, var servicePassword: String?, val id: Byt
     REMOTE_CONTROL(0x0100.toShort(), "MAbcV2X6PVjxuz+R", 102.toByte());
 
     companion object {
+
         fun fromId(id: Byte) = values().firstOrNull { it.id == id }
     }
 }

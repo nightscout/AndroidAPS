@@ -5,10 +5,16 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import app.aaps.core.utils.extensions.safeEnable
 import java.io.IOException
-import java.util.*
+import java.util.UUID
 
 // Todo I cannot pair with this file (cannot establish connection with pump during pairing process)
-class ConnectionEstablisherXX(private val callback: Callback, private val forPairing: Boolean, private val bluetoothAdapter: BluetoothAdapter, private val bluetoothDevice: BluetoothDevice, private var socket: BluetoothSocket?) : Thread() {
+class ConnectionEstablisherXX(
+    private val callback: Callback,
+    private val forPairing: Boolean,
+    private val bluetoothAdapter: BluetoothAdapter,
+    private val bluetoothDevice: BluetoothDevice,
+    private var socket: BluetoothSocket?
+) : Thread() {
 
     override fun run() {
         try {

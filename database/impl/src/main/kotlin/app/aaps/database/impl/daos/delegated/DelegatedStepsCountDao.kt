@@ -7,7 +7,7 @@ import app.aaps.database.impl.daos.StepsCountDao
 internal class DelegatedStepsCountDao(
     changes: MutableList<DBEntry>,
     private val dao: StepsCountDao
-): DelegatedDao(changes), StepsCountDao by dao {
+) : DelegatedDao(changes), StepsCountDao by dao {
 
     override fun insertNewEntry(entry: StepsCount): Long {
         changes.add(entry)
