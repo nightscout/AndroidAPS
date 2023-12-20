@@ -219,13 +219,13 @@ abstract class PluginsListModule {
     @AllConfigs
     @IntoMap
     @IntKey(170)
-    abstract fun bindVirtualPumpPlugin(plugin: VirtualPumpPlugin): PluginBase
+    abstract fun bindEquilPumpPlugin(plugin: EquilPumpPlugin): PluginBase
 
     @Binds
     @AllConfigs
     @IntoMap
     @IntKey(180)
-    abstract fun bindEquilPumpPlugin(plugin: EquilPumpPlugin): PluginBase
+    abstract fun bindVirtualPumpPlugin(plugin: VirtualPumpPlugin): PluginBase
 
     @Binds
     @APS
