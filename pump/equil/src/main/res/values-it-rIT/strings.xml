@@ -2,20 +2,10 @@
 <resources>
     <!--  start  -->
     <string name="equil_basal_speed">Velocità basale originale</string>
-    <string name="equil_bluetooth_connecting">Bluetooth</string>
     <string name="equil_bolus_delivered">%1$.3f U / %2$.3f U erogate</string>
-    <string name="equil_bolus_speed">Velocità del bolo</string>
     <string name="equil_btn_cancel">Annulla</string>
-    <string name="equil_btn_i_know">Ho capito</string>
     <string name="equil_btn_need">Bisogno</string>
-    <string name="equil_btn_ok">OK</string>
-    <string name="equil_btn_request_authentication">Autorizza esecuzione</string>
     <string name="equil_btn_skip">Salta</string>
-    <string name="equil_btn_sync">Sincronizza</string>
-    <string name="equil_cancel">Annulla</string>
-    <string name="equil_connection_connected">Connesso</string>
-    <string name="equil_connection_connecting">Connessione in corso</string>
-    <string name="equil_connection_unconnected">Non connesso</string>
     <string name="equil_date_device">Ultima connessione</string>
     <string name="equil_dressing">Cambia Serbatoio</string>
     <string name="equil_dressing_onkey_msg">Spostare automaticamente lo stantuffo verso il fondo del serbatoio. Si fermerà automaticamente al raggiungimento del fondo. Fare clic su \'Ferma\' per interrompere se necessario.</string>
@@ -28,14 +18,10 @@
     <string name="equil_mode_running">In esecuzione</string>
     <string name="equil_mode_stopped">Fermato</string>
     <string name="equil_mode_suspended">Sospeso</string>
-    <string name="equil_pump">Pompa Patch Equil</string>
     <string name="equil_pump_description">Pompa Patch Equil 5.3 o più recente </string>
     <string name="equil_serialnumber">Numero del dispositivo</string>
     <string name="equil_stop">Stop</string>
     <string name="equil_success">Successo</string>
-    <string name="equil_table_column_battery">Livello batteria</string>
-    <string name="equil_table_column_device_time">Orario del dispositivo</string>
-    <string name="equil_title_choice">Scegli</string>
     <string name="equil_title_dressing">Cambia cartuccia</string>
     <string name="equil_title_history_events">Storico eventi</string>
     <string name="equil_title_tips">Suggerimenti</string>
@@ -46,8 +32,6 @@
     <string name="equil_tone_mode_tone_and_shake">Vibrazione e suoneria</string>
     <string name="equil_unit_u">%1$s U</string>
     <string name="equil_unit_u_hours">%1$s U/H</string>
-    <string name="equil_unit_u_minute">%1$s U/M</string>
-    <string name="equil_unit_u_second">%1$s U/S</string>
     <string name="equil_unbind_content">Questa operazione interromperà l\'infusione di insulina e ritrarrà lo stantuffo della pompa verso il basso! Inoltre, eliminerà lo stato!</string>
     <string name="equil_error_no_devices">Nessun Dispositivo</string>
     <string name="equil_ble_config_confirmation_title">Accoppiamento Micro Equil Patch</string>
@@ -73,9 +57,6 @@
     <string name="equil_total_delivered">Totale erogato</string>
     <string name="equil_last_bolus">Ultimo bolo</string>
     <string name="equil_firmware_version">Versione del firmware</string>
-    <string name="equil_battery_useup">Batteria bassa</string>
-    <string name="equil_occlusion">Occlusione del micro</string>
-    <string name="equil_motor_fault">Errore del motore</string>
     <string name="equil_shutdown_be">Equil sarà spento automaticamente</string>
     <string name="equil_shutdown">Equil auto off</string>
     <string name="equil_common_history_tbr_value">Equil auto OFF</string>
@@ -112,7 +93,6 @@
     <string name="equil_command__unknown">Stato sconosciuto per il comando</string>
     <string name="equil_install">Apporre il micro sul corpo</string>
     <string name="equil_password_title">Password Del Micro</string>
-    <string name="equil_common_preferences_category_confirmation_beeps">Tono di conferma</string>
     <string name="equil_settings">Impostazioni</string>
     <string name="equil_settings_alarm_battery">Allarme batteria bassa</string>
     <string name="equil_settings_alarm_insulin">Allarme livello basso insulina</string>
@@ -145,7 +125,6 @@
     <string name="equil_history_item16">Batteria esaurita!</string>
     <string name="equil_history_item17">Reset Power-on</string>
     <string name="equil_history_item18">Infusione Anomalie Fermata</string>
-    <string name="equil_common_short_status_no_active_pod">Nessun Pod Attivo</string>
     <string name="equil_common_short_status_last_connection">Ultima conn: %1$d min fa</string>
     <string name="equil_common_short_status_last_bolus">Ultimo bolo: %1$s @ %2$s</string>
     <string name="equil_common_short_status_temp_basal">Temp: %1$s</string>
@@ -158,13 +137,10 @@
     <string name="equil_common_less_than_a_minute_ago">Meno di 1 minuto fa</string>
     <string name="equil_common_time_ago">%1$sm fa</string>
     <string name="equil_common_composite_time">%1$s e %2$s</string>
-    <string name="equil_common_wizard_button_cancel">Annulla</string>
     <string name="equil_common_wizard_button_finish">Termina</string>
     <string name="equil_common_wizard_button_next">Successivo</string>
     <string name="equil_common_wizard_exit_confirmation_text">Non hai ancora completato tutti i passaggi. Sei sicuro di voler uscire?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Esci</string>
-    <string name="equil_common_yes">Sì</string>
-    <string name="equil_common_no">No</string>
     <plurals name="equil_common_minutes">
         <item quantity="one">%1$d minuto</item>
         <item quantity="other">%1$d minuti</item>
@@ -193,8 +169,6 @@ Regola password: deve contenere 4 caratteri, scelti tra ABCDEF0123456789.</strin
     <string name="equil_hint_dressing2">Si prega di rimuovere il micro dalla base</string>
     <string name="equil_unpair">Disattivare il vecchio micro %1$s?</string>
     <string name="equil_pump_updated">Micro aggiornato</string>
-    <string name="equil_maxbolus_title">Max bolo consentito [U]</string>
     <string name="equil_maxbolus_tips">Bolo massimo consentito dal micro [%1$sU]</string>
-    <string name="equil_title_chooice">Scegli</string>
     <string name="equil_replace_reservoir">Il serbatoio è vuoto. Sostituire il serbatoio</string>
 </resources>
