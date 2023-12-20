@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--  start  -->
+    <!-- equil - Commands -->
+    <!--    推杆回退-->
+    <string name="equil_replace_reservoir">המכל ריק. נא להחליפו</string>
+</resources>
