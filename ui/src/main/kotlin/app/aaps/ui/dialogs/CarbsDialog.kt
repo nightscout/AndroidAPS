@@ -294,23 +294,24 @@ class CarbsDialog : DialogFragmentWithDate() {
                         hypoSelected -> TT.Reason.HYPOGLYCEMIA
                         else -> TT.Reason.CUSTOM
                     }
-                    disposable += persistenceLayer.insertAndCancelCurrentTemporaryTarget(
-                        temporaryTarget = TT(
-                            timestamp = System.currentTimeMillis(),
-                            duration = TimeUnit.MINUTES.toMillis(hypoTTDuration.toLong()),
-                            reason = reason,
-                            lowTarget = profileUtil.convertToMgdl(hypoTT, profileUtil.units),
-                            highTarget = profileUtil.convertToMgdl(hypoTT, profileUtil.units)
-                        ),
-                        action = Action.TT,
-                        source = Sources.CarbDialog,
-                        note = null,
-                        listValues = listOf(
-                            ValueWithUnit.TETTReason(reason),
-                            ValueWithUnit.fromGlucoseUnit(hypoTT, units),
-                            ValueWithUnit.Minute(hypoTTDuration)
-                        )
-                    ).subscribe()
+                    if (reason != TT.Reason.CUSTOM)
+                        disposable += persistenceLayer.insertAndCancelCurrentTemporaryTarget(
+                            temporaryTarget = TT(
+                                timestamp = System.currentTimeMillis(),
+                                duration = TimeUnit.MINUTES.toMillis(hypoTTDuration.toLong()),
+                                reason = reason,
+                                lowTarget = profileUtil.convertToMgdl(hypoTT, profileUtil.units),
+                                highTarget = profileUtil.convertToMgdl(hypoTT, profileUtil.units)
+                            ),
+                            action = Action.TT,
+                            source = Sources.CarbDialog,
+                            note = null,
+                            listValues = listOf(
+                                ValueWithUnit.TETTReason(reason),
+                                ValueWithUnit.fromGlucoseUnit(hypoTT, units),
+                                ValueWithUnit.Minute(hypoTTDuration)
+                            )
+                        ).subscribe()
                     if (carbsAfterConstraints > 0) {
                         val detailedBolusInfo = DetailedBolusInfo().also {
                             it.eventType = TE.Type.CORRECTION_BOLUS
