@@ -955,7 +955,7 @@ class DetermineBasalSMB @Inject constructor(
 
             // insulinReq is the additional insulin required to get minPredBG down to target_bg
             //console.error(minPredBG,eventualBG);
-            var insulinReq = round((Math.min(minPredBG, eventualBG) - target_bg) / sens, 2)
+            var insulinReq = round((min(minPredBG, eventualBG) - target_bg) / sens, 2)
             // if that would put us over max_iob, then reduce accordingly
             if (insulinReq > max_iob - iob_data.iob) {
                 rT.reason.append("max_iob $max_iob, ")

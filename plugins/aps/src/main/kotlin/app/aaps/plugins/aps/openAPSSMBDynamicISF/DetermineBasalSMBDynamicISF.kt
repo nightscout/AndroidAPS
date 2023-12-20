@@ -283,8 +283,8 @@ class DetermineBasalSMBDynamicISF @Inject constructor(
         } else {
             round(glucose_status.delta).toString()
         }
-        val minDelta = Math.min(glucose_status.delta, glucose_status.short_avgdelta)
-        val minAvgDelta = Math.min(glucose_status.short_avgdelta, glucose_status.long_avgdelta)
+        val minDelta = min(glucose_status.delta, glucose_status.short_avgdelta)
+        val minAvgDelta = min(glucose_status.short_avgdelta, glucose_status.long_avgdelta)
         val maxDelta = max(glucose_status.delta, max(glucose_status.short_avgdelta, glucose_status.long_avgdelta))
 
         var sens = variable_sens
@@ -524,25 +524,22 @@ class DetermineBasalSMBDynamicISF @Inject constructor(
             remainingCIs.add(round(remainingCI))
             predCIs.add(round(predCI))
             //console.log(round(predCI,1)+"+"+round(remainingCI,1)+" ");
-            COBpredBG = COBpredBGs[COBpredBGs.size - 1] + predBGI + Math.min(0.0, predDev) + predCI + remainingCI
-            aCOBpredBG = aCOBpredBGs[aCOBpredBGs.size - 1] + predBGI + Math.min(0.0, predDev) + predACI
+            COBpredBG = COBpredBGs[COBpredBGs.size - 1] + predBGI + min(0.0, predDev) + predCI + remainingCI
+            aCOBpredBG = aCOBpredBGs[aCOBpredBGs.size - 1] + predBGI + min(0.0, predDev) + predACI
             // for UAMpredBGs, predicted carb impact drops at slopeFromDeviations
             // calculate predicted CI from UAM based on slopeFromDeviations
-            val predUCIslope = Math.max(0.0, uci + (UAMpredBGs.size * slopeFromDeviations))
+            val predUCIslope = max(0.0, uci + (UAMpredBGs.size * slopeFromDeviations))
             // if slopeFromDeviations is too flat, predicted deviation impact drops linearly from
             // current deviation down to zero over 3h (data points every 5m)
-            val predUCImax = Math.max(0.0, uci * (1 - UAMpredBGs.size / Math.max(3 * 60 / 5, 1)))
+            val predUCImax = max(0.0, uci * (1 - UAMpredBGs.size / max(3 * 60 / 5, 1)))
             //console.error(predUCIslope, predUCImax);
             // predicted CI from UAM is the lesser of CI based on deviationSlope or DIA
-            val predUCI = Math.min(predUCIslope, predUCImax)
+            val predUCI = min(predUCIslope, predUCImax)
             if (predUCI > 0) {
                 //console.error(UAMpredBGs.length,slopeFromDeviations, predUCI);
                 UAMduration = round((UAMpredBGs.size + 1) * 5 / 60.0, 1)
             }
-            UAMpredBG = UAMpredBGs[UAMpredBGs.size - 1] + (round((-iobTick.activity * (1800 / (TDD * (ln((max(UAMpredBGs[UAMpredBGs.size - 1], 39.0) / insulinDivisor) + 1)))) * 5), 2)) + min(
-                0.0,
-                predDev
-            ) + predUCI
+            UAMpredBG = UAMpredBGs[UAMpredBGs.size - 1] + (round((-iobTick.activity * (1800 / (TDD * (ln((max(UAMpredBGs[UAMpredBGs.size - 1], 39.0) / insulinDivisor) + 1)))) * 5), 2)) + min(0.0, predDev) + predUCI
             //console.error(predBGI, predCI, predUCI);
             // truncate all BG predictions at 4 hours
             if (IOBpredBGs.size < 48) IOBpredBGs.add(IOBpredBG)
@@ -583,40 +580,30 @@ class DetermineBasalSMBDynamicISF @Inject constructor(
         rT.predBGs = RT.Predictions()
         IOBpredBGs = IOBpredBGs.map { min(401.0, max(39.0, it)) }.toMutableList()
         for (i in IOBpredBGs.size - 1 downTo 13) {
-            if (IOBpredBGs[i - 1] != IOBpredBGs[i]) {
-                break
-            } else {
-                IOBpredBGs.removeAt(IOBpredBGs.size - 1)
-            }
+            if (IOBpredBGs[i - 1] != IOBpredBGs[i]) break
+            else IOBpredBGs.removeLast()
         }
         rT.predBGs?.IOB = IOBpredBGs.map { it.toInt() }
         lastIOBpredBG = round(IOBpredBGs[IOBpredBGs.size - 1]).toDouble()
         ZTpredBGs = ZTpredBGs.map { min(401.0, max(39.0, it)) }.toMutableList()
         for (i in ZTpredBGs.size - 1 downTo 7) {
             // stop displaying ZTpredBGs once they're rising and above target
-            if (ZTpredBGs[i - 1] >= ZTpredBGs[i] || ZTpredBGs[i] <= target_bg) {
-                break
-            } else {
-                ZTpredBGs.removeAt(ZTpredBGs.size - 1)
-            }
+            if (ZTpredBGs[i - 1] >= ZTpredBGs[i] || ZTpredBGs[i] <= target_bg) break
+            else ZTpredBGs.removeLast()
         }
         rT.predBGs?.ZT = ZTpredBGs.map { it.toInt() }
         if (meal_data.mealCOB > 0) {
             aCOBpredBGs = aCOBpredBGs.map { min(401.0, max(39.0, it)) }.toMutableList()
             for (i in aCOBpredBGs.size - 1 downTo 13) {
-                if (aCOBpredBGs[i - 1] != aCOBpredBGs[i]) {
-                    break; } else {
-                    aCOBpredBGs.removeLast()
-                }
+                if (aCOBpredBGs[i - 1] != aCOBpredBGs[i]) break
+                else aCOBpredBGs.removeLast()
             }
         }
         if (meal_data.mealCOB > 0 && (ci > 0 || remainingCIpeak > 0)) {
             COBpredBGs = COBpredBGs.map { min(401.0, max(39.0, it)) }.toMutableList()
             for (i in COBpredBGs.size - 1 downTo 13) {
-                if (COBpredBGs[i - 1] != COBpredBGs[i]) {
-                    break; } else {
-                    COBpredBGs.removeLast()
-                }
+                if (COBpredBGs[i - 1] != COBpredBGs[i]) break
+                else COBpredBGs.removeLast()
             }
             rT.predBGs?.COB = COBpredBGs.map { it.toInt() }
             lastCOBpredBG = COBpredBGs[COBpredBGs.size - 1]
