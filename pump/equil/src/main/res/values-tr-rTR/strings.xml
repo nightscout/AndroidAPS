@@ -2,20 +2,10 @@
 <resources>
     <!--  start  -->
     <string name="equil_basal_speed">Temel Bazal Oranı</string>
-    <string name="equil_bluetooth_connecting">Bluetooth</string>
     <string name="equil_bolus_delivered">%1$.3f Ü / %2$.3f Ü Gönderildi</string>
-    <string name="equil_bolus_speed">Bolus hızı</string>
     <string name="equil_btn_cancel">İptal</string>
-    <string name="equil_btn_i_know">Biliyorum</string>
     <string name="equil_btn_need">İhtiyaç</string>
-    <string name="equil_btn_ok">Tamam</string>
-    <string name="equil_btn_request_authentication">Yürütmeyi yetkilendir</string>
     <string name="equil_btn_skip">Atla</string>
-    <string name="equil_btn_sync">Senk.</string>
-    <string name="equil_cancel">İptal</string>
-    <string name="equil_connection_connected">Bağlandı</string>
-    <string name="equil_connection_connecting">Bağlanıyor</string>
-    <string name="equil_connection_unconnected">Bağlantı yok</string>
     <string name="equil_date_device">Son bağlantı</string>
     <string name="equil_dressing">Rezervuarı Değiştir</string>
     <string name="equil_dressing_onkey_msg">Pistonu otomatik olarak rezervuar tabanına hareket ettirin. Dibe ulaştığında otomatik olarak duracaktır. Gerekirse kesintiye uğratmak için \'Durdur\'a tıklayın.</string>
@@ -28,14 +18,10 @@
     <string name="equil_mode_running">Çalışıyor</string>
     <string name="equil_mode_stopped">Durdu</string>
     <string name="equil_mode_suspended">Askıya Alındı</string>
-    <string name="equil_pump">Equil Patch Pompası</string>
     <string name="equil_pump_description">Equil 5.3 veya daha yeni Patch Pompa </string>
     <string name="equil_serialnumber">Cihaz numarası</string>
     <string name="equil_stop">Dur</string>
     <string name="equil_success">Başarılı</string>
-    <string name="equil_table_column_battery">Pil seviyesi</string>
-    <string name="equil_table_column_device_time">Cihaz zamanı</string>
-    <string name="equil_title_choice">Seçin</string>
     <string name="equil_title_dressing">Kartuşu değiştir</string>
     <string name="equil_title_history_events">Olay Geçmişi</string>
     <string name="equil_title_tips">İpuçları</string>
@@ -46,8 +32,6 @@
     <string name="equil_tone_mode_tone_and_shake">Titreşim ve ses</string>
     <string name="equil_unit_u">%1$s Ü</string>
     <string name="equil_unit_u_hours">%1$s Ü/Sa</string>
-    <string name="equil_unit_u_minute">%1$s Ü/Dk</string>
-    <string name="equil_unit_u_second">%1$s Ü/Sn</string>
     <string name="equil_unbind_content">Bu işlem insülin infüzyonunu durduracak ve pompa pistonunu aşağıya doğru çekecektir! Ayrıca bağlanma durumunu da silecektir.！</string>
     <string name="equil_error_no_devices">Cihaz yok</string>
     <string name="equil_ble_config_confirmation_title">Equil Patch Pompasını eşleştirin</string>
@@ -62,7 +46,6 @@
     <string name="equil_command__unknown">Bilinmeyen komut durumu</string>
     <string name="equil_install">Pompayı vücuda yerleştirin\"</string>
     <string name="equil_password_title">Pompa Şifresi</string>
-    <string name="equil_common_preferences_category_confirmation_beeps">Onay sesi</string>
     <string name="equil_settings">Ayarlar</string>
     <string name="equil_settings_alarm_battery">Düşük pil uyarısı</string>
     <string name="equil_settings_alarm_insulin">Düşük rezervuar uyarısı</string>
@@ -74,8 +57,6 @@
     <string name="equil_history_group_prime">Dolumlar</string>
     <string name="equil_history_group_configuration">Konfigürasyon</string>
     <string name="equil_common_wizard_exit_confirmation_title">Çıkış</string>
-    <string name="equil_common_yes">Evet</string>
-    <string name="equil_common_no">Hayır</string>
     <plurals name="equil_common_minutes">
         <item quantity="one">%1$d dakika</item>
         <item quantity="other">%1$d dakika</item>
@@ -86,8 +67,6 @@
     <string name="equil_hint_dressing2">Lütfen pompayı tabandan çıkarın</string>
     <string name="equil_unpair">Eski pompa %1$s devre dışı bırakılsın mı?</string>
     <string name="equil_pump_updated">Pompa güncellendi</string>
-    <string name="equil_maxbolus_title">İzin verilen max bolus [U]</string>
     <string name="equil_maxbolus_tips">Pompada izin verilen maksimum bolus [%1$sU]</string>
-    <string name="equil_title_chooice">Seçin</string>
     <string name="equil_replace_reservoir">Rezervuar boş. Lütfen rezervuarı değiştirin</string>
 </resources>
