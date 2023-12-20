@@ -6,6 +6,7 @@ import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.DetermineBasalAdapter
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.constraints.PluginConstraints
@@ -64,9 +65,9 @@ class OpenAPSAMAPlugin @Inject constructor(
     private val dateUtil: DateUtil,
     private val persistenceLayer: PersistenceLayer,
     private val glucoseStatusProvider: GlucoseStatusProvider,
-    private val sp: SP,
     private val preferences: Preferences,
-    private val importExportPrefs: ImportExportPrefs
+    private val importExportPrefs: ImportExportPrefs,
+    private val config: Config
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.APS)
@@ -238,7 +239,8 @@ class OpenAPSAMAPlugin @Inject constructor(
             lastDetermineBasalAdapter = determineBasalAdapterAMAJS
             lastAPSResult = determineBasalResultAMA as DetermineBasalResultAMA
             lastAPSRun = now
-            importExportPrefs.exportApsResult(this::class.simpleName, determineBasalAdapterAMAJS.json(), determineBasalResultAMA.json())
+            if (config.isUnfinishedMode())
+                importExportPrefs.exportApsResult(this::class.simpleName, determineBasalAdapterAMAJS.json(), determineBasalResultAMA.json())
             rxBus.send(EventAPSCalculationFinished())
         }
         rxBus.send(EventOpenAPSUpdateGui())

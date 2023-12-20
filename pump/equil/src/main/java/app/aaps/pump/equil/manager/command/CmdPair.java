@@ -145,8 +145,8 @@ public class CmdPair extends BaseCmd {
         byte[] data1 = Utils.hexStringToBytes(pwd1);
         byte[] data = Utils.concat(data1, keyBytes);
         EquilCmdModel equilCmdModel2 = AESUtil.aesEncrypt(Utils.hexStringToBytes(runPwd), data);
-
-        return responseCmd(equilCmdModel2, port + equilCmdModel2.getCode());
+        runCode = equilCmdModel.getCode();
+        return responseCmd(equilCmdModel2, port + runCode);
     }
 
 

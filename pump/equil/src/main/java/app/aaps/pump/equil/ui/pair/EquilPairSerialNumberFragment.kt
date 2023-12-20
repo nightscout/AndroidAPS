@@ -237,7 +237,6 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
                         SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
                         pair(scanResult)
                     } else {
-                        equilManager.closeBle()
                         dismissLoading()
                         runOnUiThread {
                             progressPair.visibility = View.INVISIBLE
@@ -279,7 +278,6 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
                         SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
                         pumpSettings(scanResult.address.toString(), scanResult.name.toString())
                     } else {
-                        equilManager.closeBle()
                         dismissLoading()
                         runOnUiThread {
                             progressPair.visibility = View.INVISIBLE
