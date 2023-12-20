@@ -40,7 +40,6 @@ import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.pump.equil.data.AlarmMode
 import app.aaps.pump.equil.data.BolusProfile
 import app.aaps.pump.equil.data.RunMode
-import app.aaps.pump.equil.database.EquilHistoryPumpDao
 import app.aaps.pump.equil.driver.definition.ActivationProgress
 import app.aaps.pump.equil.driver.definition.BasalSchedule
 import app.aaps.pump.equil.events.EventEquilDataChanged
@@ -48,7 +47,6 @@ import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.equil.manager.command.BaseCmd
 import app.aaps.pump.equil.manager.command.CmdAlarmSet
 import app.aaps.pump.equil.manager.command.CmdBasalSet
-import app.aaps.pump.equil.manager.command.CmdHistoryGet
 import app.aaps.pump.equil.manager.command.CmdSettingSet
 import app.aaps.pump.equil.manager.command.CmdStatusGet
 import app.aaps.pump.equil.manager.command.CmdTimeSet
@@ -74,7 +72,6 @@ import javax.inject.Singleton
     private val dateUtil: DateUtil,
     private val pumpSync: PumpSync,
     private val equilManager: EquilManager,
-    private val equilHistoryPumpDao: EquilHistoryPumpDao,
     private val decimalFormatter: DecimalFormatter,
     private val instantiator: Instantiator,
     private val preferences: Preferences
@@ -116,7 +113,7 @@ import javax.inject.Singleton
                                    }
                                })
                            } else if (event.isChanged(rh.gs(app.aaps.core.keys.R.string.key_equil_maxbolus))) {
-                               var data = preferences.get(DoubleKey.EquilMaxBolus)
+                               val data = preferences.get(DoubleKey.EquilMaxBolus)
                                commandQueue.customCommand(CmdSettingSet(data), object : Callback() {
                                    override fun run() {
                                        if (result.success) ToastUtils.infoToast(context, rh.gs(R.string.equil_pump_updated))
@@ -205,7 +202,7 @@ import javax.inject.Singleton
             aapsLogger.error("deliverTreatment: Invalid input: neither carbs nor insulin are set in treatment")
             return instantiator.providePumpEnactResult().success(false).enacted(false).bolusDelivered(0.0).comment("Invalid input")
         }
-        var maxBolus=preferences.get(DoubleKey.EquilMaxBolus);
+        val maxBolus=preferences.get(DoubleKey.EquilMaxBolus)
         if(detailedBolusInfo.insulin >preferences.get(DoubleKey.EquilMaxBolus)){
             val formattedValue = "%.2f".format(maxBolus)
             val comment = rh.gs(R.string.equil_maxbolus_tips, formattedValue)
@@ -392,8 +389,7 @@ import javax.inject.Singleton
 
     override fun cancelExtendedBolus(): PumpEnactResult {
         aapsLogger.debug(LTag.PUMPCOMM, "cancelExtendedBolus")
-        var pumpEnactResult= equilManager.setExtendedBolus(0.0, 0, true)
-        return pumpEnactResult
+        return equilManager.setExtendedBolus(0.0, 0, true)
     }
 
     override fun loadTDDs(): PumpEnactResult {
