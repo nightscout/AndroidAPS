@@ -89,8 +89,8 @@ class EquilPairActivity : TranslatedDaggerAppCompatActivity() {
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle(getString(R.string.equil_common_wizard_exit_confirmation_title))
                 .setMessage(getString(R.string.equil_common_wizard_exit_confirmation_text))
-                .setPositiveButton(getString(R.string.equil_common_yes)) { _, _ -> finish() }
-                .setNegativeButton(getString(R.string.equil_common_no), null)
+                .setPositiveButton(getString(app.aaps.core.ui.R.string.yes)) { _, _ -> finish() }
+                .setNegativeButton(getString(app.aaps.core.ui.R.string.no), null)
                 .show()
         }
     }

@@ -30,7 +30,7 @@
         style="@style/OkCancelButton.Text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/equil_btn_ok" />
+        android:text="@string/ok" />
 
     <Button
         android:id="@+id/btn_cancel"

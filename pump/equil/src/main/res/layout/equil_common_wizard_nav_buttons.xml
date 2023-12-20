@@ -11,7 +11,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="@string/equil_common_wizard_button_cancel" />
+        android:text="@string/cancel" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_next"

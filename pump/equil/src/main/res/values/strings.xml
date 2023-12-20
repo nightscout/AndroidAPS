@@ -1,6 +1,4 @@
 <resources>
-    <string name="equil_name" translatable="false">Equil 5.3</string>
-    <string name="equil_name_short" translatable="false">EQ</string>
     <string name="key_equil_mac_address" translatable="false">pref_equil_mac_address</string>
     <string name="key_equil_devices" translatable="false">key_equil_devices</string>
     <string name="key_equil_password" translatable="false">key_equil_password</string>
@@ -15,22 +13,15 @@
     <string name="key_equil_tone" translatable="false">equil_tone</string>
 
 
+    <string name="equil_name">Equil 5.3</string>
+    <string name="equil_name_short">EQ</string>
+
     <!--  start  -->
     <string name="equil_basal_speed">Base Basal Rate</string>
-    <string name="equil_bluetooth_connecting">Bluetooth</string>
     <string name="equil_bolus_delivered">%1$.3f U / %2$.3f U Delivered</string>
-    <string name="equil_bolus_speed">Bolus speed</string>
     <string name="equil_btn_cancel">Cancel</string>
-    <string name="equil_btn_i_know">I Know</string>
     <string name="equil_btn_need">Need</string>
-    <string name="equil_btn_ok">OK</string>
-    <string name="equil_btn_request_authentication">Authorize execution</string>
     <string name="equil_btn_skip">Skip</string>
-    <string name="equil_btn_sync">Sync</string>
-    <string name="equil_cancel">Cancel</string>
-    <string name="equil_connection_connected">Connected</string>
-    <string name="equil_connection_connecting">Connecting</string>
-    <string name="equil_connection_unconnected">Unconnected</string>
     <string name="equil_date_device">Last connection</string>
     <string name="equil_dressing">Change Reservoir</string>
     <string name="equil_dressing_onkey_msg">Automatically moving the plunger to the reservoir bottom. It will stop automatically upon reaching the bottom. Click \'Stop\' to interrupt if needed.</string>
@@ -45,14 +36,10 @@
     <string name="equil_mode_running">Running</string>
     <string name="equil_mode_stopped">Stopped</string>
     <string name="equil_mode_suspended">Suspended</string>
-    <string name="equil_pump">Equil Patch Pump</string>
     <string name="equil_pump_description">Equil 5.3 or newer Patch Pump </string>
     <string name="equil_serialnumber">Device number</string>
     <string name="equil_stop">Stop</string>
     <string name="equil_success">Success</string>
-    <string name="equil_table_column_battery">Battery level</string>
-    <string name="equil_table_column_device_time">Device time</string>
-    <string name="equil_title_choice">Choose</string>
 
     <string name="equil_title_dressing">Change cartridge</string>
     <string name="equil_title_history_events">History events</string>
@@ -64,8 +51,6 @@
     <string name="equil_tone_mode_tone_and_shake">Vibrate and tone</string>
     <string name="equil_unit_u">%1$s U</string>
     <string name="equil_unit_u_hours">%1$s U/H</string>
-    <string name="equil_unit_u_minute">%1$s U/M</string>
-    <string name="equil_unit_u_second">%1$s U/S</string>
     <string name="equil_unbind_content">This operation will stop insulin infusion and retract the pump plunger to the bottom! Also, it will delete the binding status.！</string>
 
     <string name="equil_error_no_devices">No device</string>
@@ -97,9 +82,6 @@
     <string name="equil_total_delivered">Total delivered</string>
     <string name="equil_last_bolus">Last bolus</string>
     <string name="equil_firmware_version">Firmware version</string>
-    <string name="equil_battery_useup">Low battery</string>
-    <string name="equil_occlusion">Pump occlusion</string>
-    <string name="equil_motor_fault">Motor error</string>
     <string name="equil_shutdown_be">Equil will be off automatically</string>
     <string name="equil_shutdown">Equil auto off</string>
 
@@ -142,7 +124,6 @@
     <string name="equil_command__unknown">The unknown status of the command</string>
     <string name="equil_install">Implant the pump into the body"</string>
     <string name="equil_password_title">Pump Password</string>
-    <string name="equil_common_preferences_category_confirmation_beeps">Confirmation tone</string>
     <string name="equil_settings">Settings</string>
     <string name="equil_settings_alarm_battery">Low battery alarm</string>
     <string name="equil_settings_alarm_insulin">Low drug storage alarm</string>
@@ -179,12 +160,11 @@
     <string name="equil_history_item18">Abnormal Infusion Stopped</string>
 
 
-    <string name="equil_common_short_status_no_active_pod">No Active Pod</string>
     <string name="equil_common_short_status_last_connection">LastConn: %1$d min ago</string>
     <string name="equil_common_short_status_last_bolus">LastBolus: %1$s @ %2$s</string>
     <string name="equil_common_short_status_temp_basal">Temp: %1$s</string>
     <string name="equil_common_short_status_extended_bolus">Extended: %1$s</string>
-    <string name="equil_common_short_status_reservoir">Reserv: %1$sU</string>
+    <string name="equil_common_short_status_reservoir">Reservoir: %1$sU</string>
     <string name="equil_common_overview_button_suspend_delivery">Suspend</string>
     <string name="equil_common_overview_button_resume_delivery">Resume Delivery</string>
     <string name="equil_common_overview_temp_basal_value">%1$.2fU/h @%2$s (%3$d/%4$d min)</string>
@@ -193,13 +173,10 @@
     <string name="equil_common_time_ago">%1$s ago</string>
     <string name="equil_common_composite_time">%1$s and %2$s</string>
     <string name="equil_common_overview_last_bolus_value" translatable="false">%1$.2f %2$s (%3$s)</string>
-    <string name="equil_common_wizard_button_cancel">Cancel</string>
     <string name="equil_common_wizard_button_finish">Finish</string>
     <string name="equil_common_wizard_button_next">Next</string>
     <string name="equil_common_wizard_exit_confirmation_text">You haven\'t completed all steps yet. Are you sure you want to exit?</string>
     <string name="equil_common_wizard_exit_confirmation_title">Exit</string>
-    <string name="equil_common_yes">Yes</string>
-    <string name="equil_common_no">No</string>
     <plurals name="equil_common_minutes">
         <item quantity="one">%1$d minute</item>
         <item quantity="other">%1$d minutes</item>
@@ -232,9 +209,7 @@ Password rule: It must be 4 characters long, chosen from ABCDEF0123456789.</stri
     <string name="equil_unpair">Deactivate old pump %1$s?</string>
     <string name="equil_pump_updated">Pump updated</string>
 
-    <string name="equil_maxbolus_title">Max allowed bolus [U]</string>
     <string name="equil_maxbolus_tips">Max allowed bolus in Pump [%1$sU]</string>
-    <string name="equil_title_chooice">Choose</string>
     <string name="equil_replace_reservoir">The reservoir is empty. Please replace the reservoir</string>
 
 </resources>
