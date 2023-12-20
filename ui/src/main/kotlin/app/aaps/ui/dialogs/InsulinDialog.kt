@@ -248,12 +248,12 @@ class InsulinDialog : DialogFragmentWithDate() {
                         detailedBolusInfo.notes = notes
                         detailedBolusInfo.timestamp = time
                         if (recordOnlyChecked) {
-                            persistenceLayer.insertOrUpdateBolus(
+                            disposable += persistenceLayer.insertOrUpdateBolus(
                                 bolus = detailedBolusInfo.createBolus(),
                                 action = Action.BOLUS,
                                 source = Sources.InsulinDialog,
                                 note = rh.gs(app.aaps.core.ui.R.string.record) + if (notes.isNotEmpty()) ": $notes" else ""
-                            )
+                            ).subscribe()
                             if (timeOffset == 0)
                                 automation.removeAutomationEventBolusReminder()
                         } else {
