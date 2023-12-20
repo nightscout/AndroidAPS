@@ -2,11 +2,13 @@
 <resources>
     <string name="equil_pump_description">Помпа Equil Patch 5.3 или новее </string>
     <!--  start  -->
+    <string name="equil_basal_speed">Базовая скорость базала</string>
     <string name="equil_bolus_delivered">Введено %1$.3f ед / %2$.3f ед</string>
     <string name="equil_btn_cancel">Отмена</string>
     <string name="equil_btn_need">Нужно</string>
     <string name="equil_btn_skip">Пропустить</string>
     <string name="equil_date_device">Прошлое соединение</string>
+    <string name="equil_dressing">Замена резервуара</string>
     <string name="equil_dressing_onkey_msg">Плунжер автоматически перемещается в нижнюю часть резервуара. По достижении нижней части он остановится автоматически. Нажмите \'Остановить\', чтобы прервать при необходимости.</string>
     <string name="equil_finish">Завершено</string>
     <string name="equil_next">Далее</string>
@@ -32,7 +34,9 @@
     <string name="equil_unit_u_hours">%1$s ед/ч</string>
     <string name="equil_unbind_content">Эта операция прекратит инфузию инсулина и опустит плунджер помпы! Она также удалит статус привязки</string>
     <string name="equil_error_no_devices">Нет устройства</string>
+    <string name="equil_ble_config_confirmation_title">Выполнить сопряжение с помпой Equil Patch</string>
     <string name="equil_error">Ошибка соединения</string>
+    <string name="equil_change">Заменить помпу</string>
     <string name="equil_change_content">Отсоедините помпу от базы.</string>
     <string name="equil_unpair_alert">Вы уверены, что вы хотите отказаться от контроля над %1$s?</string>
     <string name="equil_devices_number_hint">№ устройства</string>
@@ -49,6 +53,7 @@
     <string name="equil_retry">Повторить</string>
     <string name="equil_fill">Прайм / Заполнение</string>
     <string name="equil_air">Выгнать воздух</string>
+    <string name="equil_temp_basal_rate">Временный базал</string>
     <string name="equil_total_delivered">Всего введено</string>
     <string name="equil_last_bolus">Предыдущий болюс</string>
     <string name="equil_firmware_version">Версия прошивки</string>
@@ -58,10 +63,21 @@
     <string name="equil_common_history_bolus_value">%1$.2f ед</string>
     <string name="equil_history_type">Тип：</string>
     <!-- equil - Commands -->
+    <string name="equil_common_cmd_set_bolus">Настроить болюс</string>
+    <string name="equil_common_cmd_cancel_bolus">Отменить болюс</string>
+    <string name="equil_common_cmd_set_tbr">Установить временный базал</string>
+    <string name="equil_common_cmd_cancel_tbr">Отменить временный базал</string>
+    <string name="equil_common_cmd_set_basal_schedule">Задать расписание базала</string>
+    <string name="equil_common_cmd_get_status">Получить статус Equil</string>
     <string name="equil_common_cmd_set_time">Установить время</string>
+    <string name="equil_common_cmd_suspend_delivery">Приостановить ввод</string>
+    <string name="equil_common_cmd_resume_delivery">Возобновить ввод</string>
     <string name="equil_common_cmd_pair">Выполнить сопряжение с Equil</string>
+    <string name="equil_common_cmd_insert_cannula">Вставить катетер</string>
     <string name="equil_common_cmd_unpair">Выполнить разъединение с Equil</string>
     <string name="equil_common_cmd_alarm">Оповещение</string>
+    <string name="equil_common_cmd_set_extended_bolus">Настроить пролонгированный болюс</string>
+    <string name="equil_common_cmd_cancel_extended_bolus">Отменить пролонгированный болюс</string>
     <!--    推杆回退-->
     <string name="equil_common_change_insulin">Начать втягивание стержни</string>
     <string name="equil_common_set_alarm_tone">Настроить только звук уведомления</string>
