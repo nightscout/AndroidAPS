@@ -618,11 +618,14 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                                 }
                                 it.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(app.aaps.core.ui.R.drawable.ic_user_options), null, null)
                                 it.text = event.title
-
                                 it.setOnClickListener {
                                     OKDialog.showConfirmation(context, rh.gs(R.string.run_question, event.title), { handler.post { automation.processEvent(event) } })
                                 }
                                 binding.buttonsLayout.userButtonsLayout.addView(it)
+                                for (drawable in it.compoundDrawables ) {
+                                    drawable?.mutate()
+                                    drawable?.colorFilter = PorterDuffColorFilter(rh.gac(context, app.aaps.core.ui.R.attr.userOptionColor), PorterDuff.Mode.SRC_IN)
+                                }
                             }
                         }
             binding.buttonsLayout.userButtonsLayout.visibility = events.isNotEmpty().toVisibility()
