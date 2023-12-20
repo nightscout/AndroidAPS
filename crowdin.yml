@@ -39,6 +39,10 @@ files:
     translation: /core/interfaces/src/main/res/values-%android_code%/strings.xml
   - source: /core/ui/src/main/res/values/protection.xml
     translation: /core/ui/src/main/res/values-%android_code%/protection.xml
+  - source: /core/ui/src/main/res/values/protection.xml
+    translation: /core/ui/src/main/res/values-%android_code%/protection.xml
+  - source: /core/core-main/src/main/res/values/protection.xml
+    translation: /core/core-main/src/main/res/values-%android_code%/protection.xml
   - source: /core/validators/src/main/res/values/validator.xml
     translation: /core/validators/src/main/res/values-%android_code%/validator.xml
   - source: /core/ui/src/main/res/values/strings.xml
