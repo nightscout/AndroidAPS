@@ -305,17 +305,12 @@ class CommandQueueImplementation @Inject constructor(
             }
             removeAll(CommandType.SMB_BOLUS)
         }
-        if (type == CommandType.BOLUS && detailedBolusInfo.carbs > 0 && detailedBolusInfo.insulin == 0.0) {
-            type = CommandType.CARBS_ONLY_TREATMENT
-            //Carbs only can be added in parallel as they can be "in the future".
-        } else {
-            if (isRunning(type)) {
-                callback?.result(executingNowError())?.run()
-                return false
-            }
-            // remove all unfinished boluses
-            removeAll(type)
+        if (isRunning(type)) {
+            callback?.result(executingNowError())?.run()
+            return false
         }
+        // remove all unfinished boluses
+        removeAll(type)
         // apply constraints
         detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger)).value()
         detailedBolusInfo.carbs =
@@ -329,14 +324,7 @@ class CommandQueueImplementation @Inject constructor(
                 // not when the Bolus command is starting. The command closes the dialog upon completion).
                 showBolusProgressDialog(detailedBolusInfo)
                 // Notify Wear about upcoming bolus
-                rxBus.send(
-                    EventMobileToWear(
-                        EventData.BolusProgress(
-                            percent = 0,
-                            status = rh.gs(app.aaps.core.ui.R.string.goingtodeliver, detailedBolusInfo.insulin)
-                        )
-                    )
-                )
+                rxBus.send(EventMobileToWear(EventData.BolusProgress(percent = 0, status = rh.gs(app.aaps.core.ui.R.string.goingtodeliver, detailedBolusInfo.insulin))))
             }
         }
         notifyAboutNewCommand()
