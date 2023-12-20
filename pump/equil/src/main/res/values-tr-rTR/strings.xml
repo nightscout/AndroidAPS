@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="equil_pump_description">Equil 5.3 veya daha yeni Patch Pompa </string>
+    <!--  start  -->
+    <string name="equil_bolus_delivered">%1$.3f Ü / %2$.3f Ü Gönderildi</string>
+    <string name="equil_btn_cancel">İptal</string>
+    <string name="equil_btn_need">İhtiyaç</string>
+    <string name="equil_btn_skip">Atla</string>
+    <string name="equil_date_device">Son bağlantı</string>
+    <string name="equil_dressing_onkey_msg">Pistonu otomatik olarak rezervuar tabanına hareket ettirin. Dibe ulaştığında otomatik olarak duracaktır. Gerekirse kesintiye uğratmak için \'Durdur\'a tıklayın.</string>
+    <string name="equil_finish">Tamamlandı</string>
+    <string name="equil_next">İleri</string>
+    <string name="equil_hint_dressing">Bu işlem insülin infüzyonunu durduracak ve pompa pistonunun aşağıya doğru çekilmesine neden olacaktır!</string>
+    <string name="equil_history">Geçmiş</string>
+    <string name="equil_insulin_reservoir">İnsülin rezervuarı</string>
+    <string name="equil_mode">Çalışma modu</string>
+    <string name="equil_mode_running">Çalışıyor</string>
+    <string name="equil_mode_stopped">Durdu</string>
+    <string name="equil_mode_suspended">Askıya Alındı</string>
+    <string name="equil_serialnumber">Cihaz numarası</string>
+    <string name="equil_stop">Dur</string>
+    <string name="equil_success">Başarılı</string>
+    <string name="equil_title_dressing">Kartuşu değiştir</string>
+    <string name="equil_title_history_events">Olay Geçmişi</string>
+    <string name="equil_title_tips">İpuçları</string>
+    <string name="equil_tone">Uyarı tonu</string>
+    <string name="equil_tone_mode_mute">Sessiz</string>
+    <string name="equil_tone_mode_shake">Sadece titreşim</string>
+    <string name="equil_tone_mode_tone">Sadece ses</string>
+    <string name="equil_tone_mode_tone_and_shake">Titreşim ve ses</string>
+    <string name="equil_unit_u">%1$s Ü</string>
+    <string name="equil_unit_u_hours">%1$s Ü/Sa</string>
+    <string name="equil_unbind_content">Bu işlem insülin infüzyonunu durduracak ve pompa pistonunu aşağıya doğru çekecektir! Ayrıca bağlanma durumunu da silecektir.！</string>
+    <string name="equil_error_no_devices">Cihaz yok</string>
+    <!-- equil - Commands -->
+    <!--    推杆回退-->
+    <string name="equil_common_read_devices">Cihaz bilgilerini oku</string>
+    <string name="equil_common_cmd_fill">Doldur</string>
+    <string name="history_manual_confirm">Manuel onayla</string>
+    <string name="equil_command_not_found">Cihaz bulunamadı</string>
+    <string name="equil_command_connect_error">Pompa bağlantı hatası</string>
+    <string name="equil_command__unknown">Bilinmeyen komut durumu</string>
+    <string name="equil_install">Pompayı vücuda yerleştirin\"</string>
+    <string name="equil_settings">Ayarlar</string>
+    <string name="equil_settings_alarm_battery">Düşük pil uyarısı</string>
+    <string name="equil_settings_alarm_insulin">Düşük rezervuar uyarısı</string>
+    <string name="equil_init_insulin_error">Rezervuarın başlatılması tamamlanmadı</string>
+    <string name="equil_history_group_all">Tümü</string>
+    <string name="equil_history_group_pair">Eşleştir</string>
+    <string name="equil_history_group_bolus">Boluslar</string>
+    <string name="equil_history_group_basal">Bazallar</string>
+    <string name="equil_history_group_prime">Dolumlar</string>
+    <string name="equil_history_group_configuration">Konfigürasyon</string>
+    <string name="equil_common_wizard_exit_confirmation_title">Çıkış</string>
+    <plurals name="equil_common_minutes">
+        <item quantity="one">%1$d dakika</item>
+        <item quantity="other">%1$d dakika</item>
+    </plurals>
+    <string name="equil_insert2">Pompa, pompa tabanı üzerinde olmamalıdır.</string>
+    <string name="equil_attach">Lütfen pompayı tabana takın</string>
+    <string name="equil_hint_dressing2">Lütfen pompayı tabandan çıkarın</string>
+    <string name="equil_unpair">Eski pompa %1$s devre dışı bırakılsın mı?</string>
+    <string name="equil_pump_updated">Pompa güncellendi</string>
+    <string name="equil_replace_reservoir">Rezervuar boş. Lütfen rezervuarı değiştirin</string>
+</resources>
