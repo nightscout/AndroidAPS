@@ -121,7 +121,7 @@
     <string name="string_suspend_time_insulin_delivery_title">Basal utsettelsestid</string>
     <string name="string_resume_insulin_delivery_title">Gjenoppta insulintilførselen</string>
     <string name="string_resume_insulin_delivery_message">Slutten av insulinpausen.\nTrykk på \"Bekreft\" for å gjenoppta insulintilførselen.\n\n[Caution]\nInsulintilførsel vil ikke gjenopptas før du trykker \"Bekreft\".\nHvis du ikke trykker på \"Bekreft\", kan du utvikle hyperglykemi.</string>
-    <string name="string_suspended_insulin_delivery_message">Insulintilførsel er suspendert.</string>
+    <string name="string_suspended_insulin_delivery_message">Insulintilførsel er pauset.</string>
     <string name="string_resumed_insulin_delivery_message">Insulintilførselen er gjenopptatt.</string>
     <string name="finish">Fullfør</string>
     <string name="string_temp_basal_remained_hhmm">gjenstående tid: %1$s:%2$s</string>
