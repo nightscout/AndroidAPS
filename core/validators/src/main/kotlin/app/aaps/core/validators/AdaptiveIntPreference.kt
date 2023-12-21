@@ -7,6 +7,7 @@ import androidx.preference.EditTextPreference
 import androidx.preference.PreferenceViewHolder
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
 import dagger.android.HasAndroidInjector
@@ -100,5 +101,9 @@ class AdaptiveIntPreference(ctx: Context, attrs: AttributeSet?) : EditTextPrefer
     }
 
     override fun persistString(value: String?): Boolean =
-        super.persistString(value)
+        try {
+            super.persistString(SafeParse.stringToInt(value, 0).toString())
+        } catch (ignored: Exception) {
+            false
+        }
 }

@@ -89,7 +89,7 @@ class ValidatingEditTextPreference(ctx: Context, attrs: AttributeSet?) : EditTex
     override fun onSetInitialValue(defaultValue: Any?) {
         text =
             if (validatorParameters.testType == EditTextValidator.TEST_BG_RANGE)
-                profileUtil.fromMgdlToUnits(SafeParse.stringToDouble(getPersistedString(defaultValue as String?)), profileUtil.units).toString()
+                profileUtil.valueInCurrentUnitsDetect(SafeParse.stringToDouble(getPersistedString(defaultValue as String?))).toString()
             else
                 getPersistedString(defaultValue as String?)
     }

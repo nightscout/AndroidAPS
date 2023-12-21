@@ -95,5 +95,9 @@ class AdaptiveDoublePreference(ctx: Context, attrs: AttributeSet?) : EditTextPre
     }
 
     override fun persistString(value: String?): Boolean =
-        super.persistString(SafeParse.stringToDouble(value, 0.0).toString())
+        try {
+            super.persistString(SafeParse.stringToDouble(value, 0.0).toString())
+        } catch (ignored: Exception) {
+            false
+        }
 }

@@ -85,5 +85,9 @@ class AdaptiveUnitPreference(ctx: Context, attrs: AttributeSet?) : EditTextPrefe
     }
 
     override fun persistString(value: String?): Boolean =
-        super.persistString(profileUtil.convertToMgdl(SafeParse.stringToDouble(value, preferenceKey.defaultValue), profileUtil.units).toString())
+        try {
+            super.persistString(profileUtil.convertToMgdl(SafeParse.stringToDouble(value, preferenceKey.defaultValue), profileUtil.units).toString())
+        } catch (ignored: Exception) {
+            false
+        }
 }
