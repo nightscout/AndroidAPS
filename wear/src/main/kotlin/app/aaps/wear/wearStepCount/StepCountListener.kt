@@ -55,7 +55,7 @@ class StepCountListener(
     var sendStepsRate: (List<EventData.ActionStepsRate>) -> Unit = { stepsList ->
         aapsLogger.info(LTag.WEAR, "sendStepsRate called")
         stepsList.forEach { steps ->
-            ctx.startService(IntentWearToMobile(ctx, steps))
+            ctx.startForegroundService(IntentWearToMobile(ctx, steps))
         }
     }
 

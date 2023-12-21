@@ -256,7 +256,7 @@ class DataHandlerWear @Inject constructor(
         }
     }
 
-    @TargetApi(value = 26) private fun createBolusProgressChannels() {
+     private fun createBolusProgressChannels() {
         createNotificationChannel(
             longArrayOf(0, 50, 1000),
             DataLayerListenerServiceWear.AAPS_NOTIFY_CHANNEL_ID_BOLUS_PROGRESS,
@@ -273,7 +273,7 @@ class DataHandlerWear @Inject constructor(
         )
     }
 
-    @TargetApi(value = 26) private fun createNotificationChannel(vibratePattern: LongArray, channelID: String, name: CharSequence, description: String, importance: Int) {
+     private fun createNotificationChannel(vibratePattern: LongArray, channelID: String, name: CharSequence, description: String, importance: Int) {
         val channel = NotificationChannel(channelID, name, importance)
         channel.description = description
         channel.enableVibration(true)
