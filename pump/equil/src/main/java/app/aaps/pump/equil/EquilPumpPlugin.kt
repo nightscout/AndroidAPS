@@ -275,6 +275,9 @@ import javax.inject.Singleton
         val status = JSONObject()
         val extended = JSONObject()
         return try {
+            battery.put("percent", batteryLevel)
+            status.put("status", if (isSuspended()) "suspended" else "normal")
+            status.put("timestamp", dateUtil.toISOString(lastDataTime()))
             extended.put("Version", version)
             pumpSync.expectedPumpState().bolus?.let { bolus ->
                 extended.put("LastBolus", dateUtil.dateAndTimeString(bolus.timestamp))
