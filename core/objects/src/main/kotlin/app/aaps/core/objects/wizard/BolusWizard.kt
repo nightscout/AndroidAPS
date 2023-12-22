@@ -376,13 +376,13 @@ class BolusWizard @Inject constructor(
             actions.add(rh.gs(app.aaps.core.ui.R.string.advisoralarm).formatColor(context, rh, app.aaps.core.ui.R.attr.infoColor))
 
         if (quickWizardEntry != null) {
-            val eCarbsYesNo = quickWizardEntry . storage . get ("useEcarbs")
+            val eCarbsYesNo = quickWizardEntry.storage.get("useEcarbs")
             if (eCarbsYesNo == QuickWizardEntry.YES) {
                 val timeOffset = SafeParse.stringToInt(quickWizardEntry.storage.get("time").toString())
                 val duration = SafeParse.stringToInt(quickWizardEntry.storage.get("duration").toString())
                 val carbs2 = SafeParse.stringToInt(quickWizardEntry.storage.get("carbs2").toString())
 
-                if (carbs2>0) {
+                if (carbs2 > 0) {
                     val ecarbsMessage = rh.gs(app.aaps.core.ui.R.string.format_carbs, carbs2) + "/" + duration + "h (+" + timeOffset + "min)"
 
                     actions.add(
@@ -567,26 +567,30 @@ class BolusWizard @Inject constructor(
 
             if (carbs2 > 0) {
                 val detailedBolusInfo = DetailedBolusInfo()
-                detailedBolusInfo.eventType = DetailedBolusInfo.EventType.CORRECTION_BOLUS
+                detailedBolusInfo.eventType = TE.Type.CORRECTION_BOLUS
                 detailedBolusInfo.carbs = carbs2.toDouble()
                 detailedBolusInfo.context = ctx
                 detailedBolusInfo.notes = quickWizardEntry.storage.get("buttonText").toString()
                 detailedBolusInfo.carbsDuration = T.hours(duration.toLong()).msecs()
                 detailedBolusInfo.carbsTimestamp = eventTime
-                uel.log(UserEntry.Action.EXTENDED_CARBS, UserEntry.Sources.QuickWizard,
-                        quickWizardEntry.storage.get("buttonText").toString(),
+                uel.log(
+                    action = Action.EXTENDED_CARBS,
+                    source = Sources.QuickWizard,
+                    note = quickWizardEntry.storage.get("buttonText").toString(),
+                    listValues = listOf(
                         ValueWithUnit.Timestamp(eventTime),
                         ValueWithUnit.Gram(carbs2),
                         ValueWithUnit.Minute(timeOffset).takeIf { timeOffset != 0 },
                         ValueWithUnit.Hour(duration).takeIf { duration != 0 })
+                )
                 commandQueue.bolus(detailedBolusInfo, object : Callback() {
                     override fun run() {
                         if (!result.success) {
                             uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
-                       /* } else {
-                            val messageECarbs =
-                                rh.gs(app.aaps.core.ui.R.string.uel_extended_carbs) + "\n" + "@" + dateUtil.timeString(eventTime) + " " + carbs2 + "g/" + duration + "h"
-                            ToastUtils.Long.infoToast(result.context, messageECarbs)*/
+                            /* } else {
+                                 val messageECarbs =
+                                     rh.gs(app.aaps.core.ui.R.string.uel_extended_carbs) + "\n" + "@" + dateUtil.timeString(eventTime) + " " + carbs2 + "g/" + duration + "h"
+                                 ToastUtils.Long.infoToast(result.context, messageECarbs)*/
                         }
                     }
                 })

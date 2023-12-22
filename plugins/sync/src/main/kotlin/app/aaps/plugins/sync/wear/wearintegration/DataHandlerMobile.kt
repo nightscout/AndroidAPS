@@ -8,11 +8,13 @@ import app.aaps.core.data.model.BCR
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.HR
+import app.aaps.core.data.model.OE
 import app.aaps.core.data.model.SC
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TDD
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.TrendArrow
+import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
@@ -37,6 +39,7 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -308,7 +311,7 @@ class DataHandlerMobile @Inject constructor(
                            var eventTime = currentTime
                            var carbs2 = 0
                            var duration = 0
-                           var notes : String? = null
+                           var notes: String? = null
 
                            lastBolusWizard?.let { lastBolusWizard ->
                                if (lastBolusWizard.timeStamp == it.timeStamp) { //use last calculation as confirmed string matches
@@ -1265,9 +1268,9 @@ class DataHandlerMobile @Inject constructor(
                 val profile = profileFunction.getProfile() ?: return
                 val pump = activePlugin.activePump
 
-                uel.log(UserEntry.Action.SUPERBOLUS_TBR, UserEntry.Sources.WizardDialog)
+                //uel.log(Action.SUPERBOLUS_TBR, Sources.WizardDialog)
                 if (loop.isEnabled()) {
-                    loop.goToZeroTemp(2 * 60, profile, OfflineEvent.Reason.SUPER_BOLUS)
+                    loop.goToZeroTemp(2 * 60, profile, OE.Reason.SUPER_BOLUS, Action.SUPERBOLUS_TBR, Sources.WizardDialog, listOf())
                     rxBus.send(EventRefreshOverview("WizardDialog"))
                 }
 

@@ -85,7 +85,7 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
             binding.deviceWatchImage.visibility = View.GONE
         }
 
-        if (sp.getBoolean(app.aaps.core.utils.R.string.key_usesuperbolus, false)) {
+        if (sp.getBoolean(app.aaps.core.keys.R.string.key_use_superbolus, false)) {
             binding.useSuperBolus.visibility = View.VISIBLE
         } else {
             binding.useSuperBolus.visibility = View.GONE
@@ -96,7 +96,7 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
             val carbs2 = SafeParse.stringToInt(binding.carbs2.text)
             val useECarbs = binding.useEcarbs.isChecked
 
-            if (carbs > 0 || (useECarbs && carbs2  > 0)) {
+            if (carbs > 0 || (useECarbs && carbs2 > 0)) {
                 try {
                     entry.storage.put("buttonText", binding.buttonEdit.text.toString())
                     entry.storage.put("carbs", carbs)
@@ -130,7 +130,7 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
                 quickWizard.addOrUpdate(entry)
                 rxBus.send(EventQuickWizardChange())
                 dismiss()
-            }else{
+            } else {
                 ToastUtils.warnToast(context, R.string.change_your_input)
             }
         }

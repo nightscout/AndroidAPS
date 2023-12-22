@@ -18,12 +18,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -32,7 +32,7 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.ui.ActionModeHelper
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
@@ -95,7 +95,7 @@ class QuickWizardListActivity : TranslatedDaggerAppCompatActivity(), OnStartDrag
             holder.binding.from.text = dateUtil.timeString(entry.validFromDate())
             holder.binding.to.text = dateUtil.timeString(entry.validToDate())
             holder.binding.buttonText.text = entry.buttonText()
-            var bindingCarbsTextFull = rh.gs(app.aaps.core.main.R.string.format_carbs, entry.carbs())
+            var bindingCarbsTextFull = rh.gs(app.aaps.core.objects.R.string.format_carbs, entry.carbs())
             if (entry.useEcarbs() == QuickWizardEntry.YES) {
                 bindingCarbsTextFull += " +" + rh.gs(app.aaps.core.objects.R.string.format_carbs, entry.carbs2())
                 bindingCarbsTextFull += "/" + entry.duration() + "h->" + entry.time() + "min"
