@@ -1,11 +1,12 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data.dto
 
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.pump.defs.determineCorrectBasalSize
+import app.aaps.core.utils.pump.ByteUtil
 import com.google.gson.annotations.Expose
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
-import info.nightscout.pump.common.utils.ByteUtil
 import org.joda.time.Instant
 import java.util.Locale
 
@@ -54,10 +55,6 @@ class BasalProfile {
 
     private fun setRawData(data: ByteArray): Boolean {
         var dataInternal: ByteArray = data
-        // if (dataInternal == null) {
-        //     aapsLogger.error(LTag.PUMPCOMM, "setRawData: buffer is null!")
-        //     return false
-        // }
 
         // if we have just one entry through all day it looks like just length 1
         if (dataInternal.size == 1) {

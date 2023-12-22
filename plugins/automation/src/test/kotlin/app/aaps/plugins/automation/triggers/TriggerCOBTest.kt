@@ -1,6 +1,6 @@
 package app.aaps.plugins.automation.triggers
 
-import app.aaps.core.interfaces.iob.CobInfo
+import app.aaps.core.data.iob.CobInfo
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
@@ -58,6 +58,6 @@ class TriggerCOBTest : TriggerTestBase() {
     }
 
     @Test fun iconTest() {
-        assertThat(TriggerCOB(injector).icon().get()).isEqualTo(app.aaps.core.main.R.drawable.ic_cp_bolus_carbs)
+        assertThat(TriggerCOB(injector).icon().get()).isEqualTo(app.aaps.core.objects.R.drawable.ic_cp_bolus_carbs)
     }
 }

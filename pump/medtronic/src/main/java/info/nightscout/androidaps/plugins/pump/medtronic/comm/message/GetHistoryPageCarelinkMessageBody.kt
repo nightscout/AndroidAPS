@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.message
 
-import info.nightscout.pump.common.utils.ByteUtil
+import app.aaps.core.utils.pump.ByteUtil
 import kotlin.experimental.and
 
 /**

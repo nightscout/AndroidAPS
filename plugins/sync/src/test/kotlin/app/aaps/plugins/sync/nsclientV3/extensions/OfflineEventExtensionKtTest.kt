@@ -1,9 +1,11 @@
 package app.aaps.plugins.sync.nsclientV3.extensions
 
+import app.aaps.core.data.model.IDs
+import app.aaps.core.data.model.OE
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.nssdk.localmodel.treatment.NSOfflineEvent
 import app.aaps.core.nssdk.mapper.convertToRemoteAndBack
-import app.aaps.database.entities.OfflineEvent
-import app.aaps.database.entities.embedments.InterfaceIDs
+import app.aaps.plugins.sync.extensions.contentEqualsTo
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
@@ -12,55 +14,55 @@ internal class OfflineEventExtensionKtTest {
 
     @Test
     fun toOfflineEvent() {
-        var offlineEvent = OfflineEvent(
+        var offlineEvent = OE(
             timestamp = 10000,
             isValid = true,
-            reason = OfflineEvent.Reason.DISCONNECT_PUMP,
+            reason = OE.Reason.DISCONNECT_PUMP,
             duration = 30000,
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 nightscoutId = "nightscoutId",
                 pumpId = 11000,
-                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpType = PumpType.DANA_I,
                 pumpSerial = "bbbb"
             )
         )
 
         var offlineEvent2 = (offlineEvent.toNSOfflineEvent().convertToRemoteAndBack() as NSOfflineEvent).toOfflineEvent()
         assertThat(offlineEvent.contentEqualsTo(offlineEvent2)).isTrue()
-        assertThat(offlineEvent.interfaceIdsEqualsTo(offlineEvent2)).isTrue()
+        assertThat(offlineEvent.ids.contentEqualsTo(offlineEvent2.ids)).isTrue()
 
-        offlineEvent = OfflineEvent(
+        offlineEvent = OE(
             timestamp = 10000,
             isValid = true,
-            reason = OfflineEvent.Reason.SUSPEND,
+            reason = OE.Reason.SUSPEND,
             duration = 3600000,
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 nightscoutId = "nightscoutId",
                 pumpId = 11000,
-                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpType = PumpType.DANA_I,
                 pumpSerial = "bbbb"
             )
         )
 
         offlineEvent2 = (offlineEvent.toNSOfflineEvent().convertToRemoteAndBack() as NSOfflineEvent).toOfflineEvent()
         assertThat(offlineEvent.contentEqualsTo(offlineEvent2)).isTrue()
-        assertThat(offlineEvent.interfaceIdsEqualsTo(offlineEvent2)).isTrue()
+        assertThat(offlineEvent.ids.contentEqualsTo(offlineEvent2.ids)).isTrue()
 
-        offlineEvent = OfflineEvent(
+        offlineEvent = OE(
             timestamp = 10000,
             isValid = true,
-            reason = OfflineEvent.Reason.DISABLE_LOOP,
+            reason = OE.Reason.DISABLE_LOOP,
             duration = 0,
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 nightscoutId = "nightscoutId",
                 pumpId = 11000,
-                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpType = PumpType.DANA_I,
                 pumpSerial = "bbbb"
             )
         )
 
         offlineEvent2 = (offlineEvent.toNSOfflineEvent().convertToRemoteAndBack() as NSOfflineEvent).toOfflineEvent()
         assertThat(offlineEvent.contentEqualsTo(offlineEvent2)).isTrue()
-        assertThat(offlineEvent.interfaceIdsEqualsTo(offlineEvent2)).isTrue()
+        assertThat(offlineEvent.ids.contentEqualsTo(offlineEvent2.ids)).isTrue()
     }
 }

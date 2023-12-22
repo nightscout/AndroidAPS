@@ -1,24 +1,25 @@
 package app.aaps.plugins.source
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.SourceSensor
+import app.aaps.core.data.model.TrendArrow
+import app.aaps.core.data.plugin.PluginDescription
+import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.main.utils.worker.LoggingWorker
+import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
-import app.aaps.database.entities.GlucoseValue
-import app.aaps.database.entities.TherapyEvent
-import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.CgmSourceTransaction
-import app.aaps.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
-import app.aaps.database.transactions.TransactionGlucoseValue
 import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Dispatchers
 import java.util.Arrays
@@ -27,19 +28,18 @@ import javax.inject.Singleton
 
 @Singleton
 class EversensePlugin @Inject constructor(
-    injector: HasAndroidInjector,
     rh: ResourceHelper,
     aapsLogger: AAPSLogger
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
-        .pluginIcon(app.aaps.core.main.R.drawable.ic_eversense)
+        .pluginIcon(app.aaps.core.objects.R.drawable.ic_eversense)
         .preferencesId(R.xml.pref_bgsource)
         .pluginName(R.string.eversense)
         .shortName(R.string.eversense_shortname)
         .description(R.string.description_source_eversense),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), BgSource {
 
     override var sensorBatteryLevel = -1
@@ -54,8 +54,9 @@ class EversensePlugin @Inject constructor(
         @Inject lateinit var eversensePlugin: EversensePlugin
         @Inject lateinit var dateUtil: DateUtil
         @Inject lateinit var dataWorkerStorage: DataWorkerStorage
-        @Inject lateinit var repository: AppRepository
+        @Inject lateinit var persistenceLayer: PersistenceLayer
 
+        @SuppressLint("CheckResult")
         override suspend fun doWorkAndLog(): Result {
             var ret = Result.success()
 
@@ -81,8 +82,8 @@ class EversensePlugin @Inject constructor(
             if (bundle.containsKey("sensorInsertionTimestamp")) aapsLogger.debug(LTag.BGSOURCE, "sensorInsertionTimestamp: " + dateUtil.dateAndTimeString(bundle.getLong("sensorInsertionTimestamp")))
             if (bundle.containsKey("transmitterVersionNumber")) aapsLogger.debug(LTag.BGSOURCE, "transmitterVersionNumber: " + bundle.getString("transmitterVersionNumber"))
             if (bundle.containsKey("transmitterConnectionState")) aapsLogger.debug(LTag.BGSOURCE, "transmitterConnectionState: " + bundle.getString("transmitterConnectionState"))
+            val glucoseValues = mutableListOf<GV>()
             if (bundle.containsKey("glucoseLevels")) {
-                val glucoseValues = mutableListOf<TransactionGlucoseValue>()
                 val glucoseLevels = bundle.getIntArray("glucoseLevels")
                 val glucoseRecordNumbers = bundle.getIntArray("glucoseRecordNumbers")
                 val glucoseTimestamps = bundle.getLongArray("glucoseTimestamps")
@@ -91,27 +92,17 @@ class EversensePlugin @Inject constructor(
                     aapsLogger.debug(LTag.BGSOURCE, "glucoseRecordNumbers" + Arrays.toString(glucoseRecordNumbers))
                     aapsLogger.debug(LTag.BGSOURCE, "glucoseTimestamps" + Arrays.toString(glucoseTimestamps))
                     for (i in glucoseLevels.indices)
-                        glucoseValues += TransactionGlucoseValue(
+                        glucoseValues += GV(
                             timestamp = glucoseTimestamps[i],
                             value = glucoseLevels[i].toDouble(),
                             raw = glucoseLevels[i].toDouble(),
                             noise = null,
-                            trendArrow = GlucoseValue.TrendArrow.NONE,
-                            sourceSensor = GlucoseValue.SourceSensor.EVERSENSE
+                            trendArrow = TrendArrow.NONE,
+                            sourceSensor = SourceSensor.EVERSENSE
                         )
-                    repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
-                        .doOnError {
-                            aapsLogger.error(LTag.DATABASE, "Error while saving values from Eversense App", it)
-                            ret = Result.failure(workDataOf("Error" to it.toString()))
-                        }
-                        .blockingGet()
-                        .also { savedValues ->
-                            savedValues.inserted.forEach {
-                                aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
-                            }
-                        }
                 }
             }
+            val calibrations = mutableListOf<PersistenceLayer.Calibration>()
             if (bundle.containsKey("calibrationGlucoseLevels")) {
                 val calibrationGlucoseLevels = bundle.getIntArray("calibrationGlucoseLevels")
                 val calibrationTimestamps = bundle.getLongArray("calibrationTimestamps")
@@ -121,26 +112,18 @@ class EversensePlugin @Inject constructor(
                     aapsLogger.debug(LTag.BGSOURCE, "calibrationTimestamps" + Arrays.toString(calibrationTimestamps))
                     aapsLogger.debug(LTag.BGSOURCE, "calibrationRecordNumbers" + Arrays.toString(calibrationRecordNumbers))
                     for (i in calibrationGlucoseLevels.indices) {
-                        repository.runTransactionForResult(
-                            InsertIfNewByTimestampTherapyEventTransaction(
+                        calibrations.add(
+                            PersistenceLayer.Calibration(
                                 timestamp = calibrationTimestamps[i],
-                                type = TherapyEvent.Type.FINGER_STICK_BG_VALUE,
-                                glucose = calibrationGlucoseLevels[i].toDouble(),
-                                glucoseType = TherapyEvent.MeterType.FINGER,
-                                glucoseUnit = TherapyEvent.GlucoseUnit.MGDL,
-                                enteredBy = "AndroidAPS-Eversense"
+                                value = calibrationGlucoseLevels[i].toDouble(),
+                                glucoseUnit = GlucoseUnit.MGDL
                             )
                         )
-                            .doOnError {
-                                aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it)
-                                ret = Result.failure(workDataOf("Error" to it.toString()))
-                            }
-                            .blockingGet()
-                            .also { result ->
-                                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted therapy event $it") }
-                            }
                     }
                 }
+                persistenceLayer.insertCgmSourceData(Sources.Eversense, glucoseValues, emptyList(), null)
+                    .doOnError { ret = Result.failure(workDataOf("Error" to it.toString())) }
+                    .blockingGet()
             }
             return ret
         }

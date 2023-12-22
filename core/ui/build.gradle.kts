@@ -6,6 +6,9 @@ plugins {
 
 android {
     namespace = "app.aaps.core.ui"
+    defaultConfig {
+        minSdk = Versions.wearMinSdk
+    }
 }
 
 dependencies {

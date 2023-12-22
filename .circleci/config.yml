@@ -5,7 +5,7 @@ version: 2.1
 # Orbs are reusable packages of CircleCI configuration that you may share across projects, enabling you to create encapsulated, parameterized commands, jobs, and executors that can be used across multiple projects.
 orbs:
   android: circleci/android@2.3.0
-  codecov: codecov/codecov@3.2.4
+  codecov: codecov/codecov@3.3.0
 
 jobs:
   # Below is the definition of your job to build and test your app, you can rename and customize it as you want.
@@ -14,7 +14,7 @@ jobs:
     executor:
       name: android/android-machine
       resource-class: large
-      tag: 2023.07.1
+      tag: 2023.11.1
 
     steps:
       - checkout
@@ -34,11 +34,19 @@ jobs:
       - android/run-tests:
           test-command: ./gradlew --stacktrace jacocoAllDebugReport
 
-      # And finally run the release build
-      #      - run:
-      #          name: Assemble release build
-      #          command: |
-      #            ./gradlew assembleRelease
+      - run:
+          name: Save test results
+          command: |
+            mkdir -p ~/test-results/junit/
+            find . -type f -regex ".*/build/outputs/androidTest-results/.*xml" -exec cp {} ~/test-results/junit/ \;
+          when: always
+
+      - store_test_results:
+          path: ~/test-results
+
+      - store_artifacts:
+          path: ~/test-results/junit
+
       - codecov/upload:
           file: './build/reports/jacoco/jacocoAllDebugReport/jacocoAllDebugReport.xml'
 

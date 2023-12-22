@@ -24,7 +24,7 @@
             android:key="@string/key_nsclientinternal_api_secret"
             android:title="@string/ns_client_secret_title"
             validate:minLength="12"
-            validate:testType="minLength"/>
+            validate:testType="minLength" />
 
         <androidx.preference.PreferenceScreen
             android:key="@string/ns_sync_options"
@@ -36,9 +36,8 @@
                 android:summary="@string/ns_upload_summary"
                 android:title="@string/ns_upload" />
 
-            <SwitchPreference
-                android:defaultValue="false"
-                android:key="@string/key_do_ns_upload"
+            <app.aaps.core.keys.AdaptiveSwitchPreference
+                android:key="@string/key_do_bg_ns_upload"
                 android:title="@string/do_ns_upload_title" />
 
             <SwitchPreference
@@ -95,7 +94,8 @@
                 android:summary="@string/ns_receive_tbr_eb_summary"
                 android:title="@string/ns_receive_tbr_eb" />
 
-        </androidx.preference.PreferenceScreen>>
+        </androidx.preference.PreferenceScreen>
+        >
 
         <androidx.preference.PreferenceScreen
             android:key="@string/ns_alarm_options"

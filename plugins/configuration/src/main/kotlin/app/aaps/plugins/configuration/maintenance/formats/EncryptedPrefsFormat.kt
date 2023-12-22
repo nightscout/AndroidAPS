@@ -5,7 +5,7 @@ import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
 import app.aaps.core.interfaces.maintenance.PrefsStatus
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.storage.Storage
-import app.aaps.core.main.utils.CryptoUtil
+import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.utils.hexStringToByteArray
 import app.aaps.core.utils.toHex
 import app.aaps.plugins.configuration.R

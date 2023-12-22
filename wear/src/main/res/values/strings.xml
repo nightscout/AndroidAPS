@@ -226,8 +226,6 @@
     <string name="key_dark" translatable="false">dark</string>
     <string name="key_input_design" translatable="false">input_design</string>
     <string name="key_complication_tap_action" translatable="false">complication_tap_action</string>
-    <string name="key_carbs_button_increment_1" translatable="false">carbs_button_increment_1</string>
-    <string name="key_carbs_button_increment_2" translatable="false">carbs_button_increment_2</string>
     <string name="key_enable_custom_setting" translatable="false">enable_custom_setting</string>
     <string name="key_digital_watchface" translatable="false">digital_watchface</string>
     <string name="key_digital_timing" translatable="false">digital_timing</string>
@@ -263,4 +261,6 @@
     <string name="error">!err!</string>
     <string name="key_heart_rate_sampling" translatable="false">heart_rate_sampling</string>
     <string name="pref_heartRateSampling">Heart Rate</string>
+    <string name="key_steps_sampling" translatable="false">key_steps_sampling</string>
+    <string name="pref_stepsSampling">Enable Steps Count</string>
 </resources>

@@ -8,29 +8,29 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.model.TT
+import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.configuration.Constants
-import app.aaps.core.interfaces.extensions.toVisibility
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.core.interfaces.utils.T
-import app.aaps.core.main.profile.ProfileSealed
+import app.aaps.core.keys.UnitDoubleKey
+import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.HtmlHelper
-import app.aaps.database.entities.TemporaryTarget
-import app.aaps.database.entities.UserEntry
-import app.aaps.database.entities.ValueWithUnit
-import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import app.aaps.ui.R
 import app.aaps.ui.databinding.DialogProfileswitchBinding
 import com.google.common.base.Joiner
@@ -47,12 +47,11 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var config: Config
     @Inject lateinit var hardLimits: HardLimits
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var ctx: Context
     @Inject lateinit var protectionCheck: ProtectionCheck
 
@@ -187,7 +186,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
             actions.add(rh.gs(app.aaps.core.ui.R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
 
         val isTT = binding.duration.value > 0 && binding.percentage.value < 100 && binding.tt.isChecked
-        val target = defaultValueHelper.determineActivityTT()
+        val target = preferences.get(UnitDoubleKey.OverviewActivityTarget)
         val units = profileFunction.getUnits()
         if (isTT)
             actions.add(rh.gs(app.aaps.core.ui.R.string.temporary_target) + ": " + rh.gs(app.aaps.core.ui.R.string.activity))
@@ -198,43 +197,44 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
             if (validity.isValid)
                 OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.careportal_profileswitch), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     if (profileFunction.createProfileSwitch(
-                            profileStore,
+                            profileStore = profileStore,
                             profileName = profileName,
                             durationInMinutes = duration,
                             percentage = percent,
                             timeShiftInHours = timeShift,
-                            timestamp = eventTime
-                        )
-                    ) {
-                        uel.log(UserEntry.Action.PROFILE_SWITCH,
-                                UserEntry.Sources.ProfileSwitchDialog,
-                                notes,
+                            timestamp = eventTime,
+                            action = Action.PROFILE_SWITCH,
+                            source = Sources.ProfileSwitchDialog,
+                            note = notes,
+                            listValues = listOf(
                                 ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
                                 ValueWithUnit.SimpleString(profileName),
                                 ValueWithUnit.Percent(percent),
                                 ValueWithUnit.Hour(timeShift).takeIf { timeShift != 0 },
-                                ValueWithUnit.Minute(duration).takeIf { duration != 0 })
+                                ValueWithUnit.Minute(duration).takeIf { duration != 0 }
+                            )
+                        )
+                    ) {
                         if (percent == 90 && duration == 10) sp.putBoolean(app.aaps.core.utils.R.string.key_objectiveuseprofileswitch, true)
                         if (isTT) {
-                            disposable += repository.runTransactionForResult(
-                                InsertAndCancelCurrentTemporaryTargetTransaction(
+                            disposable += persistenceLayer.insertAndCancelCurrentTemporaryTarget(
+                                TT(
                                     timestamp = eventTime,
                                     duration = TimeUnit.MINUTES.toMillis(duration.toLong()),
-                                    reason = TemporaryTarget.Reason.ACTIVITY,
+                                    reason = TT.Reason.ACTIVITY,
                                     lowTarget = profileUtil.convertToMgdl(target, profileFunction.getUnits()),
                                     highTarget = profileUtil.convertToMgdl(target, profileFunction.getUnits())
+                                ),
+                                action = Action.TT,
+                                source = Sources.TTDialog,
+                                note = null,
+                                listValues = listOf(
+                                    ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
+                                    ValueWithUnit.TETTReason(TT.Reason.ACTIVITY),
+                                    ValueWithUnit.fromGlucoseUnit(target, units),
+                                    ValueWithUnit.Minute(duration)
                                 )
-                            ).subscribe({ result ->
-                                            result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
-                                            result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
-                                        }, {
-                                            aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
-                                        })
-                            uel.log(
-                                UserEntry.Action.TT, UserEntry.Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(
-                                    TemporaryTarget.Reason.ACTIVITY
-                                ), ValueWithUnit.fromGlucoseUnit(target, units.asText), ValueWithUnit.Minute(duration)
-                            )
+                            ).subscribe()
                         }
                     }
                 })

@@ -13,6 +13,7 @@
     <string name="objectives_openloop_learned">Il loop aperto può essere usato per ricevere consigli se non hai un micro compatibile o non sei pronto a usare il loop chiuso.</string>
     <string name="objectives_maxbasal_objective">Comprensione del tuo loop aperto, incluse le relative raccomandazioni sulle basali temporanee</string>
     <string name="objectives_maxbasal_gate">Sulla base di tale esperienza, decidi quale dovrebbe essere il valore di \'max basale\' e impostalo sul microinfusore e nelle preferenze</string>
+    <string name="objectives_maxbasal">Eseguire azioni per soddisfare le raccomandazioni</string>
     <string name="objectives_maxbasal_learned">Presta attenzione alle funzionalità di sicurezza e regola i parametri di sicurezza quando necessario.</string>
     <string name="objectives_maxiobzero_objective">Avvio della chiusura del loop con Low Glucose Suspend</string>
     <string name="objectives_maxiobzero_gate">Esegui l\'applicazione in loop chiuso con max IOB = 0 per pochi giorni senza troppi eventi LGS</string>

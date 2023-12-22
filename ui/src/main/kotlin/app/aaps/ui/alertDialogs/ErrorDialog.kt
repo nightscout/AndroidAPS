@@ -9,15 +9,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
-import app.aaps.database.entities.UserEntry.Action
-import app.aaps.database.entities.UserEntry.Sources
-import dagger.android.support.DaggerDialogFragment
 import app.aaps.ui.databinding.DialogErrorBinding
+import dagger.android.support.DaggerDialogFragment
 import javax.inject.Inject
 
 class ErrorDialog : DaggerDialogFragment() {

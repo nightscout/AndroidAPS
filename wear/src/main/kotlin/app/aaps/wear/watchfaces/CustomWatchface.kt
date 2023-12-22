@@ -28,7 +28,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.forEach
 import androidx.viewbinding.ViewBinding
-import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.weardata.CUSTOM_VERSION
 import app.aaps.core.interfaces.rx.weardata.CwfData
@@ -36,15 +35,17 @@ import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataMap
 import app.aaps.core.interfaces.rx.weardata.CwfResDataMap
 import app.aaps.core.interfaces.rx.weardata.EventData
-import app.aaps.core.interfaces.rx.weardata.JsonKeyValues
-import app.aaps.core.interfaces.rx.weardata.JsonKeys
-import app.aaps.core.interfaces.rx.weardata.JsonKeys.*
 import app.aaps.core.interfaces.rx.weardata.ResData
-import app.aaps.core.interfaces.rx.weardata.ResFileMap
 import app.aaps.core.interfaces.rx.weardata.ResFormat
-import app.aaps.core.interfaces.rx.weardata.ViewKeys
-import app.aaps.core.interfaces.rx.weardata.ZipWatchfaceFormat
 import app.aaps.core.interfaces.rx.weardata.isEquals
+import app.aaps.core.ui.extensions.toVisibility
+import app.aaps.shared.impl.weardata.JsonKeyValues
+import app.aaps.shared.impl.weardata.JsonKeys
+import app.aaps.shared.impl.weardata.ResFileMap
+import app.aaps.shared.impl.weardata.ViewKeys
+import app.aaps.shared.impl.weardata.ZipWatchfaceFormat
+import app.aaps.shared.impl.weardata.toDrawable
+import app.aaps.shared.impl.weardata.toTypeface
 import app.aaps.wear.R
 import app.aaps.wear.databinding.ActivityCustomBinding
 import app.aaps.wear.watchfaces.utils.BaseWatchFace
@@ -153,8 +154,8 @@ class CustomWatchface : BaseWatchFace() {
             updatePref(it.customWatchfaceData.metadata)
             try {
                 json = JSONObject(it.customWatchfaceData.json)
-                if (!resDataMap.isEquals(it.customWatchfaceData.resDatas) || jsonString != it.customWatchfaceData.json) {
-                    resDataMap = it.customWatchfaceData.resDatas
+                if (!resDataMap.isEquals(it.customWatchfaceData.resData) || jsonString != it.customWatchfaceData.json) {
+                    resDataMap = it.customWatchfaceData.resData
                     jsonString = it.customWatchfaceData.json
                     DynProvider.init(this, json)
                     FontMap.init(this)
@@ -169,21 +170,21 @@ class CustomWatchface : BaseWatchFace() {
                     DynProvider.init(this, json)
                 }
 
-                enableSecond = json.optBoolean(ENABLESECOND.key) && sp.getBoolean(R.string.key_show_seconds, true)
-                pointSize = json.optInt(POINTSIZE.key, 2)
-                dayNameFormat = json.optString(DAYNAMEFORMAT.key, "E").takeIf { it.matches(Regex("E{1,4}")) } ?: "E"
-                monthFormat = json.optString(MONTHFORMAT.key, "MMM").takeIf { it.matches(Regex("M{1,4}")) } ?: "MMM"
+                enableSecond = json.optBoolean(JsonKeys.ENABLESECOND.key) && sp.getBoolean(R.string.key_show_seconds, true)
+                pointSize = json.optInt(JsonKeys.POINTSIZE.key, 2)
+                dayNameFormat = json.optString(JsonKeys.DAYNAMEFORMAT.key, "E").takeIf { it.matches(Regex("E{1,4}")) } ?: "E"
+                monthFormat = json.optString(JsonKeys.MONTHFORMAT.key, "MMM").takeIf { it.matches(Regex("M{1,4}")) } ?: "MMM"
                 binding.dayName.text = dateUtil.dayNameString(dayNameFormat).substringBeforeLast(".") // Update dayName and month according to format on cwf loading
                 binding.month.text = dateUtil.monthString(monthFormat).substringBeforeLast(".")
-                val jsonColor = dynPref[json.optString(DYNPREFCOLOR.key)] ?: json
-                highColor = getColor(jsonColor.optString(HIGHCOLOR.key), ContextCompat.getColor(this, R.color.dark_highColor))
-                midColor = getColor(jsonColor.optString(MIDCOLOR.key), ContextCompat.getColor(this, R.color.inrange))
-                lowColor = getColor(jsonColor.optString(LOWCOLOR.key), ContextCompat.getColor(this, R.color.low))
-                lowBatColor = getColor(jsonColor.optString(LOWBATCOLOR.key), ContextCompat.getColor(this, R.color.dark_uploaderBatteryEmpty))
-                carbColor = getColor(jsonColor.optString(CARBCOLOR.key), ContextCompat.getColor(this, R.color.carbs))
-                basalBackgroundColor = getColor(jsonColor.optString(BASALBACKGROUNDCOLOR.key), ContextCompat.getColor(this, R.color.basal_dark))
-                basalCenterColor = getColor(jsonColor.optString(BASALCENTERCOLOR.key), ContextCompat.getColor(this, R.color.basal_light))
-                gridColor = getColor(jsonColor.optString(GRIDCOLOR.key), Color.WHITE)
+                val jsonColor = dynPref[json.optString(JsonKeys.DYNPREFCOLOR.key)] ?: json
+                highColor = getColor(jsonColor.optString(JsonKeys.HIGHCOLOR.key), ContextCompat.getColor(this, R.color.dark_highColor))
+                midColor = getColor(jsonColor.optString(JsonKeys.MIDCOLOR.key), ContextCompat.getColor(this, R.color.inrange))
+                lowColor = getColor(jsonColor.optString(JsonKeys.LOWCOLOR.key), ContextCompat.getColor(this, R.color.low))
+                lowBatColor = getColor(jsonColor.optString(JsonKeys.LOWBATCOLOR.key), ContextCompat.getColor(this, R.color.dark_uploaderBatteryEmpty))
+                carbColor = getColor(jsonColor.optString(JsonKeys.CARBCOLOR.key), ContextCompat.getColor(this, R.color.carbs))
+                basalBackgroundColor = getColor(jsonColor.optString(JsonKeys.BASALBACKGROUNDCOLOR.key), ContextCompat.getColor(this, R.color.basal_dark))
+                basalCenterColor = getColor(jsonColor.optString(JsonKeys.BASALCENTERCOLOR.key), ContextCompat.getColor(this, R.color.basal_light))
+                gridColor = getColor(jsonColor.optString(JsonKeys.GRIDCOLOR.key), Color.WHITE)
 
                 binding.mainLayout.forEach { view ->
                     ViewMap.fromId(view.id)?.let { viewMap ->
@@ -207,7 +208,7 @@ class CustomWatchface : BaseWatchFace() {
         val cwfAuthorization = metadata[CwfMetadataKey.CWF_AUTHORIZATION]?.toBooleanStrictOrNull()
         cwfAuthorization?.let { authorization ->
             if (authorization) {
-                PrefMap.values().forEach { pref ->
+                PrefMap.entries.forEach { pref ->
                     metadata[CwfMetadataKey.fromKey(pref.key)]?.toBooleanStrictOrNull()?.let { sp.putBoolean(pref.prefKey, it) }
                 }
             }
@@ -224,17 +225,17 @@ class CustomWatchface : BaseWatchFace() {
             .put(CwfMetadataKey.CWF_VERSION.key, CUSTOM_VERSION)
             .put(CwfMetadataKey.CWF_COMMENT.key, getString(app.aaps.core.interfaces.R.string.default_custom_watchface_comment))
         val json = JSONObject()
-            .put(METADATA.key, metadata)
-            .put(HIGHCOLOR.key, String.format("#%06X", 0xFFFFFF and highColor))
-            .put(MIDCOLOR.key, String.format("#%06X", 0xFFFFFF and midColor))
-            .put(LOWCOLOR.key, String.format("#%06X", 0xFFFFFF and lowColor))
-            .put(LOWBATCOLOR.key, String.format("#%06X", 0xFFFFFF and lowBatColor))
-            .put(CARBCOLOR.key, String.format("#%06X", 0xFFFFFF and carbColor))
-            .put(BASALBACKGROUNDCOLOR.key, String.format("#%06X", 0xFFFFFF and basalBackgroundColor))
-            .put(BASALCENTERCOLOR.key, String.format("#%06X", 0xFFFFFF and basalCenterColor))
-            .put(GRIDCOLOR.key, String.format("#%06X", 0xFFFFFF and Color.WHITE))
-            .put(POINTSIZE.key, 2)
-            .put(ENABLESECOND.key, true)
+            .put(JsonKeys.METADATA.key, metadata)
+            .put(JsonKeys.HIGHCOLOR.key, String.format("#%06X", 0xFFFFFF and highColor))
+            .put(JsonKeys.MIDCOLOR.key, String.format("#%06X", 0xFFFFFF and midColor))
+            .put(JsonKeys.LOWCOLOR.key, String.format("#%06X", 0xFFFFFF and lowColor))
+            .put(JsonKeys.LOWBATCOLOR.key, String.format("#%06X", 0xFFFFFF and lowBatColor))
+            .put(JsonKeys.CARBCOLOR.key, String.format("#%06X", 0xFFFFFF and carbColor))
+            .put(JsonKeys.BASALBACKGROUNDCOLOR.key, String.format("#%06X", 0xFFFFFF and basalBackgroundColor))
+            .put(JsonKeys.BASALCENTERCOLOR.key, String.format("#%06X", 0xFFFFFF and basalCenterColor))
+            .put(JsonKeys.GRIDCOLOR.key, String.format("#%06X", 0xFFFFFF and Color.WHITE))
+            .put(JsonKeys.POINTSIZE.key, 2)
+            .put(JsonKeys.ENABLESECOND.key, true)
 
         binding.mainLayout.forEach { view ->
             val params = view.layoutParams as FrameLayout.LayoutParams
@@ -243,28 +244,28 @@ class CustomWatchface : BaseWatchFace() {
                     json.put(
                         it.key,
                         JSONObject()
-                            .put(WIDTH.key, (params.width / zoomFactor).toInt())
-                            .put(HEIGHT.key, (params.height / zoomFactor).toInt())
-                            .put(TOPMARGIN.key, (params.topMargin / zoomFactor).toInt())
-                            .put(LEFTMARGIN.key, (params.leftMargin / zoomFactor).toInt())
-                            .put(ROTATION.key, view.rotation.toInt())
-                            .put(VISIBILITY.key, getVisibility(view.visibility))
-                            .put(TEXTSIZE.key, view.textSize.toInt())
-                            .put(GRAVITY.key, GravityMap.key(view.gravity))
-                            .put(FONT.key, FontMap.key())
-                            .put(FONTSTYLE.key, StyleMap.key(view.typeface.style))
-                            .put(FONTCOLOR.key, String.format("#%06X", 0xFFFFFF and view.currentTextColor))
+                            .put(JsonKeys.WIDTH.key, (params.width / zoomFactor).toInt())
+                            .put(JsonKeys.HEIGHT.key, (params.height / zoomFactor).toInt())
+                            .put(JsonKeys.TOPMARGIN.key, (params.topMargin / zoomFactor).toInt())
+                            .put(JsonKeys.LEFTMARGIN.key, (params.leftMargin / zoomFactor).toInt())
+                            .put(JsonKeys.ROTATION.key, view.rotation.toInt())
+                            .put(JsonKeys.VISIBILITY.key, getVisibility(view.visibility))
+                            .put(JsonKeys.TEXTSIZE.key, view.textSize.toInt())
+                            .put(JsonKeys.GRAVITY.key, GravityMap.key(view.gravity))
+                            .put(JsonKeys.FONT.key, FontMap.key())
+                            .put(JsonKeys.FONTSTYLE.key, StyleMap.key(view.typeface.style))
+                            .put(JsonKeys.FONTCOLOR.key, String.format("#%06X", 0xFFFFFF and view.currentTextColor))
                     )
                 }
                 if (view is ImageView || view is lecho.lib.hellocharts.view.LineChartView) {
                     json.put(
                         it.key,
                         JSONObject()
-                            .put(WIDTH.key, (params.width / zoomFactor).toInt())
-                            .put(HEIGHT.key, (params.height / zoomFactor).toInt())
-                            .put(TOPMARGIN.key, (params.topMargin / zoomFactor).toInt())
-                            .put(LEFTMARGIN.key, (params.leftMargin / zoomFactor).toInt())
-                            .put(VISIBILITY.key, getVisibility(view.visibility))
+                            .put(JsonKeys.WIDTH.key, (params.width / zoomFactor).toInt())
+                            .put(JsonKeys.HEIGHT.key, (params.height / zoomFactor).toInt())
+                            .put(JsonKeys.TOPMARGIN.key, (params.topMargin / zoomFactor).toInt())
+                            .put(JsonKeys.LEFTMARGIN.key, (params.leftMargin / zoomFactor).toInt())
+                            .put(JsonKeys.VISIBILITY.key, getVisibility(view.visibility))
                     )
                 }
             }
@@ -442,7 +443,7 @@ class CustomWatchface : BaseWatchFace() {
         companion object {
 
             const val TRANSPARENT = "#00000000"
-            fun init(cwf: CustomWatchface) = values().forEach {
+            fun init(cwf: CustomWatchface) = entries.forEach {
                 it.cwf = cwf
                 // reset all customized drawable when new watchface is loaded
                 it.rangeCustom = null
@@ -453,8 +454,8 @@ class CustomWatchface : BaseWatchFace() {
                 it.twinView = null
             }
 
-            fun fromId(id: Int): ViewMap? = values().firstOrNull { it.id == id }
-            fun fromKey(key: String?): ViewMap? = values().firstOrNull { it.key == key }
+            fun fromId(id: Int): ViewMap? = entries.firstOrNull { it.id == id }
+            fun fromKey(key: String?): ViewMap? = entries.firstOrNull { it.key == key }
         }
 
         lateinit var cwf: CustomWatchface
@@ -465,7 +466,7 @@ class CustomWatchface : BaseWatchFace() {
         var viewJson: JSONObject? = null
             get() = field ?: cwf.json.optJSONObject(key)?.also { viewJson = it }
         val visibility: Int
-            get() = viewJson?.let { cwf.setVisibility(it.optString(VISIBILITY.key, JsonKeyValues.GONE.key), visibility()) } ?: View.GONE
+            get() = viewJson?.let { cwf.setVisibility(it.optString(JsonKeys.VISIBILITY.key, JsonKeyValues.GONE.key), visibility()) } ?: View.GONE
         var dynData: DynProvider? = null
         var rangeCustom: Drawable? = null
             get() = field ?: customDrawable?.let { cd -> cwf.resDataMap[cd.fileName]?.toDrawable(cwf.resources).also { rangeCustom = it } }
@@ -482,7 +483,7 @@ class CustomWatchface : BaseWatchFace() {
                 else -> rangeCustom
             }
         var twinView: ViewMap? = null
-            get() = field ?: viewJson?.let { viewJson -> ViewMap.fromKey(viewJson.optString(TWINVIEW.key)).also { twinView = it } }
+            get() = field ?: viewJson?.let { viewJson -> ViewMap.fromKey(viewJson.optString(JsonKeys.TWINVIEW.key)).also { twinView = it } }
 
         fun visibility(): Boolean = this.pref?.let { cwf.sp.getBoolean(it, true) }
             ?: true
@@ -493,48 +494,48 @@ class CustomWatchface : BaseWatchFace() {
         fun customizeViewCommon(view: View) {
             view.visibility = visibility
             viewJson?.let { viewJson ->
-                width = (viewJson.optInt(WIDTH.key) * cwf.zoomFactor).toInt()
-                height = (viewJson.optInt(HEIGHT.key) * cwf.zoomFactor).toInt()
-                left = (viewJson.optInt(LEFTMARGIN.key) * cwf.zoomFactor).toInt()
-                top = (viewJson.optInt(TOPMARGIN.key) * cwf.zoomFactor).toInt()
+                width = (viewJson.optInt(JsonKeys.WIDTH.key) * cwf.zoomFactor).toInt()
+                height = (viewJson.optInt(JsonKeys.HEIGHT.key) * cwf.zoomFactor).toInt()
+                left = (viewJson.optInt(JsonKeys.LEFTMARGIN.key) * cwf.zoomFactor).toInt()
+                top = (viewJson.optInt(JsonKeys.TOPMARGIN.key) * cwf.zoomFactor).toInt()
                 val params = FrameLayout.LayoutParams(width, height)
-                dynData = DynProvider.getDyn(cwf, viewJson.optString(DYNPREF.key), viewJson.optString(DYNDATA.key), width, height, key)
-                val topOffset = ((if (viewJson.optBoolean(TOPOFFSET.key, false)) dynData?.getTopOffset() ?: 0 else 0) * cwf.zoomFactor).toInt()
-                val topOffsetTwin = ((twinView?.let { if (it.visibility != View.VISIBLE) viewJson.optInt(TOPOFFSETTWINHIDDEN.key, 0) else 0 } ?: 0) * cwf.zoomFactor).toInt()
-                val topOffsetStep = ((dynData?.getTopOffsetStep() ?:0)  * cwf.zoomFactor).toInt()
+                dynData = DynProvider.getDyn(cwf, viewJson.optString(JsonKeys.DYNPREF.key), viewJson.optString(JsonKeys.DYNDATA.key), width, height, key)
+                val topOffset = ((if (viewJson.optBoolean(JsonKeys.TOPOFFSET.key, false)) dynData?.getTopOffset() ?: 0 else 0) * cwf.zoomFactor).toInt()
+                val topOffsetTwin = ((twinView?.let { if (it.visibility != View.VISIBLE) viewJson.optInt(JsonKeys.TOPOFFSETTWINHIDDEN.key, 0) else 0 } ?: 0) * cwf.zoomFactor).toInt()
+                val topOffsetStep = ((dynData?.getTopOffsetStep() ?: 0) * cwf.zoomFactor).toInt()
                 params.topMargin = top + topOffset + topOffsetTwin + topOffsetStep
-                val leftOffset = ((if (viewJson.optBoolean(LEFTOFFSET.key, false)) dynData?.getLeftOffset() ?: 0 else 0) * cwf.zoomFactor).toInt()
-                val leftOffsetTwin = ((twinView?.let { if (it.visibility != View.VISIBLE) viewJson.optInt(LEFTOFFSETTWINHIDDEN.key, 0) else 0 } ?: 0) * cwf.zoomFactor).toInt()
-                val leftOffsetStep = ((dynData?.getLeftOffsetStep() ?:0)  * cwf.zoomFactor).toInt()
+                val leftOffset = ((if (viewJson.optBoolean(JsonKeys.LEFTOFFSET.key, false)) dynData?.getLeftOffset() ?: 0 else 0) * cwf.zoomFactor).toInt()
+                val leftOffsetTwin = ((twinView?.let { if (it.visibility != View.VISIBLE) viewJson.optInt(JsonKeys.LEFTOFFSETTWINHIDDEN.key, 0) else 0 } ?: 0) * cwf.zoomFactor).toInt()
+                val leftOffsetStep = ((dynData?.getLeftOffsetStep() ?: 0) * cwf.zoomFactor).toInt()
                 params.leftMargin = left + leftOffset + leftOffsetTwin + leftOffsetStep
                 view.layoutParams = params
-                val rotationOffset = if (viewJson.optBoolean(ROTATIONOFFSET.key, false)) dynData?.getRotationOffset()?.toFloat() ?: 0F else 0F
-                val rotationOffsetStep = (dynData?.getRotationOffsetStep() ?:0).toFloat()
-                view.rotation = viewJson.optInt(ROTATION.key).toFloat() + rotationOffset + rotationOffsetStep
+                val rotationOffset = if (viewJson.optBoolean(JsonKeys.ROTATIONOFFSET.key, false)) dynData?.getRotationOffset()?.toFloat() ?: 0F else 0F
+                val rotationOffsetStep = (dynData?.getRotationOffsetStep() ?: 0).toFloat()
+                view.rotation = viewJson.optInt(JsonKeys.ROTATION.key).toFloat() + rotationOffset + rotationOffsetStep
             }
         }
 
         fun customizeTextView(view: TextView) {
             customizeViewCommon(view)
             viewJson?.let { viewJson ->
-                view.setTextSize(TypedValue.COMPLEX_UNIT_PX, ((dynData?.getTextSizeStep() ?: viewJson.optInt(TEXTSIZE.key, 22)) * cwf.zoomFactor).toFloat())
-                view.gravity = GravityMap.gravity(viewJson.optString(GRAVITY.key, GravityMap.CENTER.key))
+                view.setTextSize(TypedValue.COMPLEX_UNIT_PX, ((dynData?.getTextSizeStep() ?: viewJson.optInt(JsonKeys.TEXTSIZE.key, 22)) * cwf.zoomFactor).toFloat())
+                view.gravity = GravityMap.gravity(viewJson.optString(JsonKeys.GRAVITY.key, GravityMap.CENTER.key))
                 view.setTypeface(
-                    FontMap.font(viewJson.optString(FONT.key, FontMap.DEFAULT.key)),
-                    StyleMap.style(viewJson.optString(FONTSTYLE.key, StyleMap.NORMAL.key))
+                    FontMap.font(viewJson.optString(JsonKeys.FONT.key, FontMap.DEFAULT.key)),
+                    StyleMap.style(viewJson.optString(JsonKeys.FONTSTYLE.key, StyleMap.NORMAL.key))
                 )
-                view.setTextColor(dynData?.getFontColorStep() ?: cwf.getColor(viewJson.optString(FONTCOLOR.key)))
-                view.isAllCaps = viewJson.optBoolean(ALLCAPS.key)
-                if (viewJson.has(TEXTVALUE.key))
-                    view.text = viewJson.optString(TEXTVALUE.key)
+                view.setTextColor(dynData?.getFontColorStep() ?: cwf.getColor(viewJson.optString(JsonKeys.FONTCOLOR.key)))
+                view.isAllCaps = viewJson.optBoolean(JsonKeys.ALLCAPS.key)
+                if (viewJson.has(JsonKeys.TEXTVALUE.key))
+                    view.text = viewJson.optString(JsonKeys.TEXTVALUE.key)
                 (dynData?.getDrawable() ?: textDrawable())?.let {
-                    if (viewJson.has(COLOR.key) || (dynData?.stepColor ?: 0) > 0)           // Note only works on bitmap (png or jpg)  not for svg files
-                        it.colorFilter = cwf.changeDrawableColor(dynData?.getColorStep() ?: cwf.getColor(viewJson.optString(COLOR.key)))
+                    if (viewJson.has(JsonKeys.COLOR.key) || (dynData?.stepColor ?: 0) > 0)           // Note only works on bitmap (png or jpg)  not for svg files
+                        it.colorFilter = cwf.changeDrawableColor(dynData?.getColorStep() ?: cwf.getColor(viewJson.optString(JsonKeys.COLOR.key)))
                     else
                         it.clearColorFilter()
                     view.background = it
                 } ?: apply {                                                    // if no drawable loaded either background key or dynData, then apply color to text background
-                    view.setBackgroundColor(dynData?.getColorStep() ?: cwf.getColor(viewJson.optString(COLOR.key, TRANSPARENT), Color.TRANSPARENT))
+                    view.setBackgroundColor(dynData?.getColorStep() ?: cwf.getColor(viewJson.optString(JsonKeys.COLOR.key, TRANSPARENT), Color.TRANSPARENT))
                 }
             } ?: apply { view.text = "" }
         }
@@ -544,20 +545,20 @@ class CustomWatchface : BaseWatchFace() {
             view.clearColorFilter()
             viewJson?.let { viewJson ->
                 drawable?.let {
-                    if (viewJson.has(COLOR.key) || (dynData?.stepColor ?: 0) > 0)        // Note only works on bitmap (png or jpg) not for svg files
-                        it.colorFilter = cwf.changeDrawableColor(dynData?.getColorStep() ?: cwf.getColor(viewJson.optString(COLOR.key)))
+                    if (viewJson.has(JsonKeys.COLOR.key) || (dynData?.stepColor ?: 0) > 0)        // Note only works on bitmap (png or jpg) not for svg files
+                        it.colorFilter = cwf.changeDrawableColor(dynData?.getColorStep() ?: cwf.getColor(viewJson.optString(JsonKeys.COLOR.key)))
                     else
                         it.clearColorFilter()
                     view.setImageDrawable(it)
                 } ?: apply {
                     view.setImageDrawable(defaultDrawable?.let { cwf.resources.getDrawable(it) })
-                    if (viewJson.has(COLOR.key) || (dynData?.stepColor ?: 0) > 0)       // works on xml included into res files
-                        view.setColorFilter(dynData?.getColorStep() ?: cwf.getColor(viewJson.optString(COLOR.key)))
+                    if (viewJson.has(JsonKeys.COLOR.key) || (dynData?.stepColor ?: 0) > 0)       // works on xml included into res files
+                        view.setColorFilter(dynData?.getColorStep() ?: cwf.getColor(viewJson.optString(JsonKeys.COLOR.key)))
                     else
                         view.clearColorFilter()
                 }
                 if (view.drawable == null)                                              // if no drowable (either default, hardcoded or dynData, then apply color to background
-                    view.setBackgroundColor(dynData?.getColorStep() ?: cwf.getColor(viewJson.optString(COLOR.key, TRANSPARENT), Color.TRANSPARENT))
+                    view.setBackgroundColor(dynData?.getColorStep() ?: cwf.getColor(viewJson.optString(JsonKeys.COLOR.key, TRANSPARENT), Color.TRANSPARENT))
             }
         }
 
@@ -565,13 +566,13 @@ class CustomWatchface : BaseWatchFace() {
             customizeViewCommon(view)
             viewJson?.let { viewJson ->
                 (dynData?.getDrawable() ?: textDrawable())?.let {
-                    if (viewJson.has(COLOR.key) || (dynData?.stepColor ?: 0) > 0)        // Note only works on bitmap (png or jpg) not for svg files
-                        it.colorFilter = cwf.changeDrawableColor(dynData?.getColorStep() ?: cwf.getColor(viewJson.optString(COLOR.key)))
+                    if (viewJson.has(JsonKeys.COLOR.key) || (dynData?.stepColor ?: 0) > 0)        // Note only works on bitmap (png or jpg) not for svg files
+                        it.colorFilter = cwf.changeDrawableColor(dynData?.getColorStep() ?: cwf.getColor(viewJson.optString(JsonKeys.COLOR.key)))
                     else
                         it.clearColorFilter()
                     view.background = it
                 } ?: apply {                                                // if no drowable loaded, then apply color to background
-                    view.setBackgroundColor(dynData?.getColorStep() ?: cwf.getColor(viewJson.optString(COLOR.key, TRANSPARENT), Color.TRANSPARENT))
+                    view.setBackgroundColor(dynData?.getColorStep() ?: cwf.getColor(viewJson.optString(JsonKeys.COLOR.key, TRANSPARENT), Color.TRANSPARENT))
                 }
             }
         }
@@ -591,14 +592,14 @@ class CustomWatchface : BaseWatchFace() {
 
         companion object {
 
-            fun init(cwf: CustomWatchface) = values().forEach {
+            fun init(cwf: CustomWatchface) = entries.forEach {
                 it.cwf = cwf
                 it.arrowCustom = null
 
             }
 
-            fun drawable() = values().firstOrNull { it.symbol == it.cwf.singleBg.slopeArrow }?.arrowCustom ?: NONE.arrowCustom
-            fun value() = values().firstOrNull { it.symbol == it.cwf.singleBg.slopeArrow }?.dynValue ?: NONE.dynValue
+            fun drawable() = entries.firstOrNull { it.symbol == it.cwf.singleBg.slopeArrow }?.arrowCustom ?: NONE.arrowCustom
+            fun value() = entries.firstOrNull { it.symbol == it.cwf.singleBg.slopeArrow }?.dynValue ?: NONE.dynValue
         }
 
         lateinit var cwf: CustomWatchface
@@ -615,8 +616,8 @@ class CustomWatchface : BaseWatchFace() {
 
         companion object {
 
-            fun gravity(key: String?) = values().firstOrNull { it.key == key }?.gravity ?: CENTER.gravity
-            fun key(gravity: Int) = values().firstOrNull { it.gravity == gravity }?.key ?: CENTER.key
+            fun gravity(key: String?) = entries.firstOrNull { it.key == key }?.gravity ?: CENTER.gravity
+            fun key(gravity: Int) = entries.firstOrNull { it.gravity == gravity }?.key ?: CENTER.key
         }
     }
 
@@ -636,7 +637,7 @@ class CustomWatchface : BaseWatchFace() {
             private val customFonts = mutableMapOf<String, Typeface>()
             fun init(cwf: CustomWatchface) {
                 customFonts.clear()
-                values().forEach { fontMap ->
+                entries.forEach { fontMap ->
                     customFonts[fontMap.key.lowercase()] = fontMap.fontRessources?.let { fontResource ->
                         ResourcesCompat.getFont(cwf.context, fontResource)
                     } ?: fontMap.font
@@ -661,8 +662,8 @@ class CustomWatchface : BaseWatchFace() {
 
         companion object {
 
-            fun style(key: String?) = values().firstOrNull { it.key == key }?.style ?: NORMAL.style
-            fun key(style: Int) = values().firstOrNull { it.style == style }?.key ?: NORMAL.key
+            fun style(key: String?) = entries.firstOrNull { it.key == key }?.style ?: NORMAL.style
+            fun key(style: Int) = entries.firstOrNull { it.style == style }?.key ?: NORMAL.key
         }
     }
 
@@ -809,19 +810,19 @@ class CustomWatchface : BaseWatchFace() {
             if (step > 0) dataRange?.let { dataRange -> dataValue?.let { dynMap[valueMap.stepValue(it, dataRange, step)] } ?: dynMap[0] ?: dynMap[1] } else null
 
         private fun load() {
-            DataRange(dataJson.optDouble(MINDATA.key, valueMap.min), dataJson.optDouble(MAXDATA.key, valueMap.max)).let { defaultRange ->
+            DataRange(dataJson.optDouble(JsonKeys.MINDATA.key, valueMap.min), dataJson.optDouble(JsonKeys.MAXDATA.key, valueMap.max)).let { defaultRange ->
                 dataRange = defaultRange
-                topRange = parseDataRange(dataJson.optJSONObject(TOPOFFSET.key), defaultRange)
-                leftRange = parseDataRange(dataJson.optJSONObject(LEFTOFFSET.key), defaultRange)
-                rotationRange = parseDataRange(dataJson.optJSONObject(ROTATIONOFFSET.key), defaultRange)
+                topRange = parseDataRange(dataJson.optJSONObject(JsonKeys.TOPOFFSET.key), defaultRange)
+                leftRange = parseDataRange(dataJson.optJSONObject(JsonKeys.LEFTOFFSET.key), defaultRange)
+                rotationRange = parseDataRange(dataJson.optJSONObject(JsonKeys.ROTATIONOFFSET.key), defaultRange)
             }
-            getDrawableSteps(dynDrawable, IMAGE.key, INVALIDIMAGE.key)
-            getColorSteps(dynColor, COLOR.key, INVALIDCOLOR.key)
-            getColorSteps(dynFontColor, FONTCOLOR.key, INVALIDFONTCOLOR.key)
-            getIntSteps(dynTextSize, TEXTSIZE.key, INVALIDTEXTSIZE.key)
-            getIntSteps(dynLeftOffset, LEFTOFFSET.key, INVALIDLEFTOFFSET.key)
-            getIntSteps(dynTopOffset, TOPOFFSET.key, INVALIDTOPOFFSET.key)
-            getIntSteps(dynRotationOffset, ROTATIONOFFSET.key, INVALIDROTATIONOFFSET.key)
+            getDrawableSteps(dynDrawable, JsonKeys.IMAGE.key, JsonKeys.INVALIDIMAGE.key)
+            getColorSteps(dynColor, JsonKeys.COLOR.key, JsonKeys.INVALIDCOLOR.key)
+            getColorSteps(dynFontColor, JsonKeys.FONTCOLOR.key, JsonKeys.INVALIDFONTCOLOR.key)
+            getIntSteps(dynTextSize, JsonKeys.TEXTSIZE.key, JsonKeys.INVALIDTEXTSIZE.key)
+            getIntSteps(dynLeftOffset, JsonKeys.LEFTOFFSET.key, JsonKeys.INVALIDLEFTOFFSET.key)
+            getIntSteps(dynTopOffset, JsonKeys.TOPOFFSET.key, JsonKeys.INVALIDTOPOFFSET.key)
+            getIntSteps(dynRotationOffset, JsonKeys.ROTATIONOFFSET.key, JsonKeys.INVALIDROTATIONOFFSET.key)
         }
 
         private fun getDrawableSteps(dynMap: MutableMap<Int, Drawable?>, key: String, invalidKey: String) {
@@ -857,9 +858,9 @@ class CustomWatchface : BaseWatchFace() {
         private fun parseDataRange(json: JSONObject?, defaultData: DataRange) =
             json?.let {
                 DataRange(
-                    minData = it.optDouble(MINVALUE.key, defaultData.minData),
-                    maxData = it.optDouble(MAXVALUE.key, defaultData.maxData),
-                    invalidData = it.optInt(INVALIDVALUE.key, defaultData.invalidData)
+                    minData = it.optDouble(JsonKeys.MINVALUE.key, defaultData.minData),
+                    maxData = it.optDouble(JsonKeys.MAXVALUE.key, defaultData.maxData),
+                    invalidData = it.optInt(JsonKeys.INVALIDVALUE.key, defaultData.invalidData)
                 )
             } ?: defaultData
 
@@ -868,8 +869,8 @@ class CustomWatchface : BaseWatchFace() {
             val dynData = mutableMapOf<String, DynProvider>()
             var dynJson: JSONObject? = null
             fun init(cwf: CustomWatchface, json: JSONObject?) {
-                cwf.dynPref(json?.optJSONObject((DYNPREF.key)))
-                this.dynJson = json?.optJSONObject((DYNDATA.key))
+                cwf.dynPref(json?.optJSONObject((JsonKeys.DYNPREF.key)))
+                this.dynJson = json?.optJSONObject((JsonKeys.DYNDATA.key))
                 dynData.clear()
             }
 
@@ -878,7 +879,7 @@ class CustomWatchface : BaseWatchFace() {
                     return dynData[defaultViewKey]
 
                 cwf.dynPref[keyPref]?.let { dynPref ->
-                    ValueMap.fromKey(dynPref.optString(VALUEKEY.key, defaultViewKey)).let { valueMap ->
+                    ValueMap.fromKey(dynPref.optString(JsonKeys.VALUEKEY.key, defaultViewKey)).let { valueMap ->
                         DynProvider(cwf, dynPref, valueMap, width, height).also { it.load() }
                     }
                 }?.also { dynData[defaultViewKey] = it }
@@ -887,7 +888,7 @@ class CustomWatchface : BaseWatchFace() {
                     return dynData[defaultViewKey]
 
                 dynJson?.optJSONObject(key)?.let { dynJson ->
-                    ValueMap.fromKey(dynJson.optString(VALUEKEY.key, defaultViewKey)).let { valueMap ->
+                    ValueMap.fromKey(dynJson.optString(JsonKeys.VALUEKEY.key, defaultViewKey)).let { valueMap ->
                         DynProvider(cwf, dynJson, valueMap, width, height).also { it.load() }
                     }
                 }?.also { dynData[defaultViewKey] = it }
@@ -912,19 +913,19 @@ class CustomWatchface : BaseWatchFace() {
     }
 
     private fun buildDynPrefs(dynJson: JSONObject, targetJson: JSONObject, json: JSONObject, key: String, visitedKeys: MutableSet<String>) {
-        val prefKey = json.optString(PREFKEY.key)
+        val prefKey = json.optString(JsonKeys.PREFKEY.key)
         PrefMap.fromKey(prefKey)?.let { prefMap ->
             val value = valPref[prefMap.key]
                 ?: (if (prefMap.typeBool) sp.getBoolean(prefMap.prefKey, false).toString() else sp.getString(prefMap.prefKey, "")).also {
                     valPref[prefMap.key] = it
                 }
             json.optJSONObject(value)?.let { nextJson ->
-                if (nextJson.has(DYNPREF.key)) {
+                if (nextJson.has(JsonKeys.DYNPREF.key)) {
                     nextJson.keys().forEach { key ->
-                        if (key != DYNPREF.key)
+                        if (key != JsonKeys.DYNPREF.key)
                             targetJson.putOpt(key, nextJson.opt(key))
                     }
-                    val nextKey = nextJson.optString(DYNPREF.key)
+                    val nextKey = nextJson.optString(JsonKeys.DYNPREF.key)
                     if (nextKey.isNotEmpty() && nextKey !in visitedKeys) {
                         visitedKeys += nextKey
                         dynJson.optJSONObject(nextKey)?.let {
@@ -933,7 +934,7 @@ class CustomWatchface : BaseWatchFace() {
                     }
                 } else {
                     nextJson.keys().forEach { key ->
-                        if (key != DYNPREF.key)
+                        if (key != JsonKeys.DYNPREF.key)
                             targetJson.putOpt(key, nextJson.opt(key))
                     }
                     dynPref[key] = targetJson

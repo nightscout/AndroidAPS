@@ -22,7 +22,7 @@
     <string name="omnipod_common_error_failed_to_refresh_status">Kunne ikke oppdatere status</string>
     <string name="omnipod_common_error_failed_to_refresh_status_on_startup">Kunne ikke oppdatere status ved oppstart</string>
     <string name="omnipod_common_error_failed_to_silence_alerts">Kunne ikke bekrefte varsler</string>
-    <string name="omnipod_common_error_failed_to_suspend_delivery">Kunne ikke stoppe insulinleveranser</string>
+    <string name="omnipod_common_error_failed_to_suspend_delivery">Kunne ikke pause tilførselen</string>
     <string name="omnipod_common_error_failed_to_set_time">Kunne ikke angi tid</string>
     <string name="omnipod_common_error_failed_to_resume_delivery">Kunne ikke gjenoppta leveransen</string>
     <string name="omnipod_common_error_failed_to_initialize_pod">Kunne ikke initialisere Pod</string>
@@ -101,7 +101,7 @@
     <string name="omnipod_common_preferences_basal_beeps_enabled">Basal-lyd aktivert</string>
     <string name="omnipod_common_preferences_smb_beeps_enabled">SMB-lyd aktivert</string>
     <string name="omnipod_common_preferences_tbr_beeps_enabled">TBR-lyd aktivert</string>
-    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Vis knapp for å Pause insulintilførsel i Omnipod-fanen</string>
+    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Vis knapp for å pause insulintilførsel i Omnipod-fanen</string>
     <string name="omnipod_common_preferences_time_change_enabled">DST/Tidssone-deteksjon aktivert</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Utløpspåminnelse aktivert</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Når aktivert, vil Pod\'en pipe når tidspunktet er nådd</string>
@@ -124,6 +124,7 @@
     <string name="omnipod_common_pod_status_waiting_for_activation">Oppsett pågår (venter på Pod-aktivering)</string>
     <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">Oppsett pågår (venter på innsetting av kanyle)</string>
     <string name="omnipod_common_pod_status_running">Kjører</string>
+    <string name="omnipod_common_pod_status_normal">Normal</string>
     <string name="omnipod_common_pod_status_suspended">Pauset</string>
     <string name="omnipod_common_pod_status_pod_fault">Pod-feil</string>
     <string name="omnipod_common_pod_status_activation_time_exceeded">Aktiveringstiden er overskredet</string>
@@ -143,7 +144,7 @@
     <string name="omnipod_common_cmd_set_time">Angi tid</string>
     <string name="omnipod_common_cmd_configure_alerts">Konfigurer varsler</string>
     <string name="omnipod_common_cmd_silence_alerts">Demp varsler</string>
-    <string name="omnipod_common_cmd_suspend_delivery">Pause levering</string>
+    <string name="omnipod_common_cmd_suspend_delivery">Pause tilførselen</string>
     <string name="omnipod_common_cmd_resume_delivery">Gjenoppta levering</string>
     <string name="omnipod_common_cmd_unknown_entry">Ukjent inntasting</string>
     <string name="omnipod_common_cmd_initialize_pod">Initialiser Pod</string>

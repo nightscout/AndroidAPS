@@ -12,9 +12,9 @@ android {
 }
 
 dependencies {
-    implementation(project(":database:entities"))
+    implementation(project(":core:data"))
     implementation(project(":core:interfaces"))
-    implementation(project(":core:main"))
+    implementation(project(":core:objects"))
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
 

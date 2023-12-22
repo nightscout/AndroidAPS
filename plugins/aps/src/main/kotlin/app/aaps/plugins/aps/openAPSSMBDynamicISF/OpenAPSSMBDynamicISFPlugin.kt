@@ -1,15 +1,19 @@
 package app.aaps.plugins.aps.openAPSSMBDynamicISF
 
 import android.content.Context
-import app.aaps.annotations.OpenForTesting
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.DetermineBasalAdapter
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.constraints.Objectives
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -21,8 +25,7 @@ import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.core.interfaces.utils.T
-import app.aaps.database.impl.AppRepository
+import app.aaps.core.keys.Preferences
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.openAPSSMB.DetermineBasalAdapterSMBJS
 import app.aaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
@@ -31,10 +34,9 @@ import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@OpenForTesting
 @Singleton
 class OpenAPSSMBDynamicISFPlugin @Inject constructor(
-    injector: HasAndroidInjector,
+    private val injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rxBus: RxBus,
     constraintChecker: ConstraintsChecker,
@@ -43,14 +45,18 @@ class OpenAPSSMBDynamicISFPlugin @Inject constructor(
     context: Context,
     activePlugin: ActivePlugin,
     iobCobCalculator: IobCobCalculator,
+    processedTbrEbData: ProcessedTbrEbData,
     hardLimits: HardLimits,
     profiler: Profiler,
     sp: SP,
+    preferences: Preferences,
     dateUtil: DateUtil,
-    repository: AppRepository,
+    persistenceLayer: PersistenceLayer,
     glucoseStatusProvider: GlucoseStatusProvider,
     bgQualityCheck: BgQualityCheck,
     tddCalculator: TddCalculator,
+    importExportPrefs: ImportExportPrefs,
+    config: Config,
     private val uiInteraction: UiInteraction,
     private val objectives: Objectives
 ) : OpenAPSSMBPlugin(
@@ -63,14 +69,17 @@ class OpenAPSSMBDynamicISFPlugin @Inject constructor(
     context,
     activePlugin,
     iobCobCalculator,
+    processedTbrEbData,
     hardLimits,
     profiler,
-    sp,
+    preferences,
     dateUtil,
-    repository,
+    persistenceLayer,
     glucoseStatusProvider,
     bgQualityCheck,
-    tddCalculator
+    tddCalculator,
+    importExportPrefs,
+    config
 ) {
 
     init {
@@ -79,6 +88,7 @@ class OpenAPSSMBDynamicISFPlugin @Inject constructor(
             .description(R.string.description_smb_dynamic_isf)
             .shortName(R.string.dynisf_shortname)
             .preferencesId(R.xml.pref_openapssmbdynamicisf)
+            .preferencesVisibleInSimpleMode(true)
             .setDefault(false)
     }
 

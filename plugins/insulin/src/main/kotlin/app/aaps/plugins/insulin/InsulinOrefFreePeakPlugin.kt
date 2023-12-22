@@ -9,9 +9,8 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.core.main.utils.extensions.putInt
-import app.aaps.core.main.utils.extensions.storeInt
-import dagger.android.HasAndroidInjector
+import app.aaps.core.objects.extensions.putInt
+import app.aaps.core.objects.extensions.storeInt
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,7 +20,6 @@ import javax.inject.Singleton
  */
 @Singleton
 class InsulinOrefFreePeakPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     private val sp: SP,
     rh: ResourceHelper,
     profileFunction: ProfileFunction,
@@ -30,7 +28,7 @@ class InsulinOrefFreePeakPlugin @Inject constructor(
     config: Config,
     hardLimits: HardLimits,
     uiInteraction: UiInteraction
-) : InsulinOrefBasePlugin(injector, rh, profileFunction, rxBus, aapsLogger, config, hardLimits, uiInteraction) {
+) : InsulinOrefBasePlugin(rh, profileFunction, rxBus, aapsLogger, config, hardLimits, uiInteraction) {
 
     override val id get(): Insulin.InsulinType = Insulin.InsulinType.OREF_FREE_PEAK
 

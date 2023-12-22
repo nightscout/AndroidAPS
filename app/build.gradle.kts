@@ -109,6 +109,9 @@ android {
         buildConfigField("String", "REMOTE", "\"${generateGitRemote()}\"")
         buildConfigField("String", "HEAD", "\"${generateGitBuild()}\"")
         buildConfigField("String", "COMMITTED", "\"${allCommitted()}\"")
+
+        // For Dagger injected instrumentation tests in app module
+        testInstrumentationRunner = "app.aaps.runners.InjectedTestRunner"
     }
 
     flavorDimensions.add("standard")
@@ -169,9 +172,12 @@ dependencies {
     // https://github.com/nightscout/graphview.git
     // https://github.com/nightscout/iconify.git
     implementation(project(":shared:impl"))
-    implementation(project(":core:main"))
+    implementation(project(":core:data"))
+    implementation(project(":core:objects"))
+    implementation(project(":core:graph"))
     implementation(project(":core:graphview"))
     implementation(project(":core:interfaces"))
+    implementation(project(":core:keys"))
     implementation(project(":core:libraries"))
     implementation(project(":core:nssdk"))
     implementation(project(":core:utils"))
@@ -189,9 +195,8 @@ dependencies {
     implementation(project(":plugins:source"))
     implementation(project(":plugins:sync"))
     implementation(project(":implementation"))
-    implementation(project(":database:entities"))
     implementation(project(":database:impl"))
-    implementation(project(":pump:combo"))
+    implementation(project(":database:persistence"))
     implementation(project(":pump:combov2"))
     implementation(project(":pump:dana"))
     implementation(project(":pump:danars"))
@@ -199,7 +204,8 @@ dependencies {
     implementation(project(":pump:diaconn"))
     implementation(project(":pump:eopatch"))
     implementation(project(":pump:medtrum"))
-    implementation(project(":insight"))
+    implementation(project(":pump:equil"))
+    implementation(project(":pump:insight"))
     implementation(project(":pump:medtronic"))
     implementation(project(":pump:pump-common"))
     implementation(project(":pump:omnipod-common"))
@@ -210,6 +216,12 @@ dependencies {
     implementation(project(":workflow"))
 
     testImplementation(project(":shared:tests"))
+    androidTestImplementation(project(":shared:tests"))
+    androidTestImplementation(Libs.AndroidX.Test.rules)
+    androidTestImplementation(Libs.jsonAssert)
+
+
+    kaptAndroidTest(Libs.Dagger.androidProcessor)
 
     /* Dagger2 - We are going to use dagger.android which includes
      * support for Activity and fragment injection so we need to include

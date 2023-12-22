@@ -24,46 +24,63 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-                <LinearLayout
-                    android:id="@+id/loop_layout"
-                    android:layout_width="match_parent"
+            <LinearLayout
+                android:id="@+id/loop_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal" >
+                    android:layout_weight="1"
+                    android:layout_marginEnd="4dp"
+                    app:cardCornerRadius="4dp"
+                    app:cardElevation="0dp">
 
                     <TextView
                         android:id="@+id/active_profile"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
-                        android:layout_marginEnd="5dp"
-                        android:layout_weight="1"
                         android:gravity="center_vertical|center_horizontal"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp"
                         android:hint="active profile"
                         android:text="Profile"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:foreground="?attr/selectableItemBackgroundBorderless"
                         app:drawableStartCompat="@drawable/ic_ribbon_profile"
                         tools:ignore="HardcodedText" />
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:cardCornerRadius="4dp"
+                    app:cardElevation="0dp">
 
                     <TextView
                         android:id="@+id/temp_target"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
-                        android:layout_weight="1"
                         android:gravity="center_vertical|center_horizontal"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp"
                         android:hint="temp target"
                         android:text="@string/value_unavailable_short"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:foreground="?attr/selectableItemBackgroundBorderless"
                         app:drawableStartCompat="@drawable/ic_crosstarget"
                         tools:ignore="HardcodedText" />
+                </androidx.cardview.widget.CardView>
 
-                </LinearLayout>
+            </LinearLayout>
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/infoCard"

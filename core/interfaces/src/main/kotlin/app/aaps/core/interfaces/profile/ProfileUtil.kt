@@ -1,6 +1,7 @@
 package app.aaps.core.interfaces.profile
 
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.pump.defs.PumpType
 
 interface ProfileUtil {
 
@@ -143,4 +144,12 @@ interface ProfileUtil {
      */
     //
     fun toTargetRangeString(low: Double, high: Double, sourceUnits: GlucoseUnit, targetUnits: GlucoseUnit = units): String
+
+    /**
+     * Get basal profile list as displayable string
+     *
+     * @param profiles list of basals
+     * @param pumpType
+     */
+    fun getBasalProfilesDisplayable(profiles: Array<Profile.ProfileValue>, pumpType: PumpType): String
 }

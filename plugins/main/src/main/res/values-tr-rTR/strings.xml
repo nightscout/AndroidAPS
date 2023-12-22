@@ -289,4 +289,7 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Döngü\'ün ne yaptığını kısa bir genel bakışla devam eden bir bildirimi gösterir</string>
     <string name="old_data">ESKİ VERİ</string>
+    <string name="overview_show_steps">adımlar</string>
+    <string name="steps_shortname">ADMLR</string>
+    <string name="simple_mode_enabled">Basit Modu Etkinleştir</string>
 </resources>

@@ -57,4 +57,6 @@
     <string name="count_selected">%1$d выбрано</string>
     <string name="sort_label">Сортировать</string>
     <string name="search">Поиск</string>
+    <string name="simple_mode">Простой режим</string>
+    <string name="master_password_not_set">Главный пароль не задан</string>
 </resources>

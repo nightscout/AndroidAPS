@@ -1,7 +1,7 @@
 package app.aaps.plugins.automation.triggers
 
 import android.widget.LinearLayout
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
@@ -86,7 +86,7 @@ class TriggerBg(injector: HasAndroidInjector) : Trigger(injector) {
             rh.gs(if (bg.units == GlucoseUnit.MGDL) R.string.glucosecomparedmgdl else R.string.glucosecomparedmmol, rh.gs(comparator.value.stringRes), bg.value, bg.units)
     }
 
-    override fun icon(): Optional<Int> = Optional.of(app.aaps.core.main.R.drawable.ic_cp_bgcheck)
+    override fun icon(): Optional<Int> = Optional.of(app.aaps.core.objects.R.drawable.ic_cp_bgcheck)
 
     override fun duplicate(): Trigger = TriggerBg(injector, this)
 

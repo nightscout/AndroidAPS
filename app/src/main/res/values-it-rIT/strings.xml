@@ -57,4 +57,6 @@
     <string name="count_selected">%1$d selezionati</string>
     <string name="sort_label">Ordina</string>
     <string name="search">Cerca</string>
+    <string name="simple_mode">Modalità semplice</string>
+    <string name="master_password_not_set">Password principale non impostata</string>
 </resources>

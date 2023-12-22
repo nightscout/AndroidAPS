@@ -531,7 +531,6 @@
     <string name="limitingpercentrate">%2$s로 인해 최대 비율이 %1$d%%로 제한됩니다.</string>
     <string name="itmustbepositivevalue">양의 값이어야 합니다.</string>
     <string name="limitingbolus">%2$s로 인해 Bolus가 %1$.1f U로 제한됩니다.</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">확인</string>
     <string name="message">메시지</string>

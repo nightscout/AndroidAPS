@@ -12,21 +12,21 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.Profile.ProfileValue
-import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.R
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.definition.PodHistoryEntryType
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.ErosHistory
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database.ErosHistoryRecordEntity
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil
-import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.pump.common.defs.PumpHistoryEntryGroup
 import info.nightscout.pump.common.defs.PumpHistoryEntryGroup.Companion.getTranslatedList
 import info.nightscout.pump.common.defs.TempBasalPair
-import info.nightscout.pump.common.utils.ProfileUtil.getBasalProfilesDisplayable
 import java.util.Calendar
 import java.util.GregorianCalendar
 import javax.inject.Inject
@@ -37,6 +37,7 @@ class ErosPodHistoryActivity : TranslatedDaggerAppCompatActivity() {
     @Inject lateinit var aapsOmnipodUtil: AapsOmnipodUtil
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var erosHistory: ErosHistory
+    @Inject lateinit var profileUtil: ProfileUtil
 
     private var historyTypeSpinner: Spinner? = null
     private var statusView: TextView? = null
@@ -206,7 +207,7 @@ class ErosPodHistoryActivity : TranslatedDaggerAppCompatActivity() {
             aapsLogger.debug(LTag.PUMP, "Profile json:\n$data")
             try {
                 val profileValuesArray = aapsOmnipodUtil.gsonInstance.fromJson(data, Array<ProfileValue>::class.java)
-                valueView.text = getBasalProfilesDisplayable(profileValuesArray, PumpType.OMNIPOD_EROS)
+                valueView.text = profileUtil.getBasalProfilesDisplayable(profileValuesArray, PumpType.OMNIPOD_EROS)
             } catch (e: Exception) {
                 aapsLogger.error(LTag.PUMP, "Problem parsing Profile json. Ex: {}, Data:\n{}", e.message, data)
                 valueView.text = ""

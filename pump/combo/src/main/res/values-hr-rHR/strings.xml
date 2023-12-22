@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="description_pump_combo">Integracija za pumpu Accu-Check Combo, zahtjeva instalaciju ruffy aplikacije</string>
-    <string name="combo_reservoir_low">Nisko</string>
-    <string name="combo_error_display_never">Nikada</string>
-</resources>

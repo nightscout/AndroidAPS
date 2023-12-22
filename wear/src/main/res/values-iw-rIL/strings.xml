@@ -18,6 +18,7 @@
     <string name="msg_warning_old">נתוני AAPS מלפני %1$s! בדקו את החיישן, הגדרות xDrip, NS, AAPS או אחר!</string>
     <string name="pref_vibrate_on_bolus">רטט במתן בולוס</string>
     <string name="pref_units_for_actions">יחידות עבור פעולות</string>
+    <string name="units_short">יח\'</string>
     <string name="pref_display_settings">תצוגה</string>
     <string name="pref_graph_settings">גרף</string>
     <string name="pref_interface_settings">ממשק</string>
@@ -144,6 +145,7 @@
     <string name="pref_simplify_ui_sum">מציג רק את השעה ואת רמת הסוכר</string>
     <string name="pref_vibrate_hourly">רטט אחת לשעה</string>
     <string name="pref_show_weeknumber">הצג מס\' שבוע</string>
+    <string name="custom_pref_show_seconds">הצג שניות</string>
     <string name="digitalstyle_pref_your_style">הסגנון שלכם:</string>
     <string name="digitalstyle_style_none">ללא סגנון</string>
     <string name="digitalstyle_style_minimal">סגנון מינימלי</string>
@@ -189,8 +191,11 @@
     <string name="week_short">ש\'</string>
     <string name="day_short">י\'</string>
     <string name="hour_short">ש\'</string>
+    <string name="hour_minute">%1$s:%2$s</string>
+    <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">ישן</string>
     <string name="old_warning">!ישן!</string>
     <string name="error">!שגיאה!</string>
     <string name="pref_heartRateSampling">דופק</string>
+    <string name="pref_stepsSampling">הפעלת ספירת צעדים</string>
 </resources>

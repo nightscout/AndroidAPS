@@ -1,23 +1,27 @@
 package app.aaps.plugins.aps.openAPSAMA
 
+import androidx.annotation.VisibleForTesting
+import app.aaps.core.data.iob.GlucoseStatus
+import app.aaps.core.data.iob.IobTotal
+import app.aaps.core.data.iob.MealData
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.DetermineBasalAdapter
-import app.aaps.core.interfaces.aps.SMBDefaults
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.db.GlucoseUnit
-import app.aaps.core.interfaces.iob.GlucoseStatus
-import app.aaps.core.interfaces.iob.IobCobCalculator
-import app.aaps.core.interfaces.iob.IobTotal
-import app.aaps.core.interfaces.iob.MealData
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.core.main.extensions.convertedToAbsolute
-import app.aaps.core.main.extensions.getPassedDurationToTimeInMinutes
-import app.aaps.core.main.extensions.plannedRemainingMinutes
-import app.aaps.plugins.aps.APSResultObject
-import app.aaps.plugins.aps.R
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.Preferences
+import app.aaps.core.objects.extensions.convertToJSONArray
+import app.aaps.core.objects.extensions.convertedToAbsolute
+import app.aaps.core.objects.extensions.getPassedDurationToTimeInMinutes
+import app.aaps.core.objects.extensions.plannedRemainingMinutes
 import app.aaps.plugins.aps.logger.LoggerCallback
 import app.aaps.plugins.aps.utils.ScriptReader
 import dagger.android.HasAndroidInjector
@@ -38,23 +42,22 @@ import java.nio.charset.StandardCharsets
 import javax.inject.Inject
 import kotlin.math.min
 
-class DetermineBasalAdapterAMAJS internal constructor(scriptReader: ScriptReader, injector: HasAndroidInjector) : DetermineBasalAdapter {
-
-    private val injector: HasAndroidInjector
+class DetermineBasalAdapterAMAJS(private val scriptReader: ScriptReader, private val injector: HasAndroidInjector) : DetermineBasalAdapter {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var iobCobCalculator: IobCobCalculator
+    @Inject lateinit var processedTbrEbData: ProcessedTbrEbData
+    @Inject lateinit var dateUtil: DateUtil
 
-    private val mScriptReader: ScriptReader
-    private var profile = JSONObject()
-    private var glucoseStatus = JSONObject()
-    private var iobData: JSONArray? = null
-    private var mealData = JSONObject()
-    private var currentTemp = JSONObject()
-    private var autosensData = JSONObject()
+    @VisibleForTesting var profile = JSONObject()
+    @VisibleForTesting var glucoseStatus = JSONObject()
+    @VisibleForTesting var iobData: JSONArray? = null
+    @VisibleForTesting var mealData = JSONObject()
+    @VisibleForTesting var currentTemp = JSONObject()
+    @VisibleForTesting var autosensData = JSONObject()
 
     override var currentTempParam: String? = null
     override var iobDataParam: String? = null
@@ -64,7 +67,17 @@ class DetermineBasalAdapterAMAJS internal constructor(scriptReader: ScriptReader
     override var scriptDebug = ""
 
     @Suppress("SpellCheckingInspection")
-    override operator fun invoke(): APSResultObject? {
+    override fun json(): JSONObject = JSONObject().apply {
+        put("glucoseStatus", glucoseStatus)
+        put("currenttemp", currentTemp)
+        put("iob_data", iobData)
+        put("profile", profile)
+        put("autosens_data", autosensData)
+        put("meal_data", mealData)
+    }
+
+    @Suppress("SpellCheckingInspection")
+    override operator fun invoke(): APSResult? {
         aapsLogger.debug(LTag.APS, ">>> Invoking determine_basal <<<")
         aapsLogger.debug(LTag.APS, "Glucose status: " + glucoseStatus.toString().also { glucoseStatusParam = it })
         aapsLogger.debug(LTag.APS, "IOB data:       " + iobData.toString().also { iobDataParam = it })
@@ -181,23 +194,23 @@ class DetermineBasalAdapterAMAJS internal constructor(scriptReader: ScriptReader
         this.profile.put("target_bg", targetBg)
         this.profile.put("carb_ratio", profile.getIc())
         this.profile.put("sens", profile.getIsfMgdl())
-        this.profile.put("max_daily_safety_multiplier", sp.getInt(R.string.key_openapsama_max_daily_safety_multiplier, 3))
-        this.profile.put("current_basal_safety_multiplier", sp.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4.0))
+        this.profile.put("max_daily_safety_multiplier", preferences.get(DoubleKey.ApsMaxDailyMultiplier))
+        this.profile.put("current_basal_safety_multiplier", preferences.get(DoubleKey.ApsMaxCurrentBasalMultiplier))
         this.profile.put("skip_neutral_temps", true)
         this.profile.put("current_basal", basalRate)
         this.profile.put("temptargetSet", tempTargetSet)
-        this.profile.put("autosens_adjust_targets", sp.getBoolean(R.string.key_openapsama_autosens_adjusttargets, true))
+        this.profile.put("autosens_adjust_targets", preferences.get(BooleanKey.ApsAmaAutosensAdjustTargets))
         //align with max-absorption model in AMA sensitivity
         if (mealData.usedMinCarbsImpact > 0) {
             this.profile.put("min_5m_carbimpact", mealData.usedMinCarbsImpact)
         } else {
-            this.profile.put("min_5m_carbimpact", sp.getDouble(app.aaps.core.utils.R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact))
+            this.profile.put("min_5m_carbimpact", preferences.get(DoubleKey.ApsAmaMin5MinCarbsImpact))
         }
         if (profileFunction.getUnits() == GlucoseUnit.MMOL) {
             this.profile.put("out_units", "mmol/L")
         }
         val now = System.currentTimeMillis()
-        val tb = iobCobCalculator.getTempBasalIncludingConvertedExtended(now)
+        val tb = processedTbrEbData.getTempBasalIncludingConvertedExtended(now)
         currentTemp = JSONObject()
         currentTemp.put("temp", "absolute")
         currentTemp.put("duration", tb?.plannedRemainingMinutes ?: 0)
@@ -205,10 +218,10 @@ class DetermineBasalAdapterAMAJS internal constructor(scriptReader: ScriptReader
         // as we have non default temps longer than 30 minutes
         if (tb != null) currentTemp.put("minutesrunning", tb.getPassedDurationToTimeInMinutes(now))
 
-        iobData = iobCobCalculator.convertToJSONArray(iobArray)
+        iobData = iobArray.convertToJSONArray(dateUtil)
         this.glucoseStatus = JSONObject()
         this.glucoseStatus.put("glucose", glucoseStatus.glucose)
-        if (sp.getBoolean(R.string.key_always_use_shortavg, false)) {
+        if (preferences.get(BooleanKey.ApsAlwaysUseShortDeltas)) {
             this.glucoseStatus.put("delta", glucoseStatus.shortAvgDelta)
         } else {
             this.glucoseStatus.put("delta", glucoseStatus.delta)
@@ -234,7 +247,7 @@ class DetermineBasalAdapterAMAJS internal constructor(scriptReader: ScriptReader
     }
 
     @Throws(IOException::class) private fun readFile(filename: String): String {
-        val bytes = mScriptReader.readFile(filename)
+        val bytes = scriptReader.readFile(filename)
         var string = String(bytes, StandardCharsets.UTF_8)
         if (string.startsWith("#!/usr/bin/env node")) {
             string = string.substring(20)
@@ -244,7 +257,5 @@ class DetermineBasalAdapterAMAJS internal constructor(scriptReader: ScriptReader
 
     init {
         injector.androidInjector().inject(this)
-        mScriptReader = scriptReader
-        this.injector = injector
     }
 }

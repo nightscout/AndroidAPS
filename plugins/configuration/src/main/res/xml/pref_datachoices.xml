@@ -7,17 +7,15 @@
         android:title="@string/data_choices"
         app:initialExpandedChildrenCount="0">
 
-        <SwitchPreference
-            android:defaultValue="true"
+        <app.aaps.core.keys.AdaptiveSwitchPreference
             android:key="@string/key_enable_fabric"
             android:summary="@string/allow_automated_crash_reporting"
             android:title="@string/fabric_upload" />
 
-        <app.aaps.core.validators.ValidatingEditTextPreference
+        <app.aaps.core.validators.AdaptiveStringPreference
             android:dialogMessage="@string/summary_email_for_crash_report"
             android:inputType="text"
             android:key="@string/key_email_for_crash_report"
-            android:selectAllOnFocus="true"
             android:summary="@string/summary_email_for_crash_report"
             android:title="@string/identification" />
 

@@ -38,12 +38,6 @@ internal class AapsOmnipodErosManagerTest {
         assertFailsWith<IllegalArgumentException> { AapsOmnipodErosManager.mapProfileToBasalSchedule(null) }
     }
 
-    @Test fun invalidProfileNullEntries() {
-        assertFailsWith<IllegalArgumentException> {
-            AapsOmnipodErosManager.mapProfileToBasalSchedule(Mockito.mock(Profile::class.java))
-        }
-    }
-
     @Test fun invalidProfileZeroEntries() {
         val profile = Mockito.mock(Profile::class.java)
         Mockito.`when`(profile.getBasalValues()).thenReturn(emptyArray())

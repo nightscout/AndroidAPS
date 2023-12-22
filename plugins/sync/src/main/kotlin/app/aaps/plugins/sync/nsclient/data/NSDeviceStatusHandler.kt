@@ -1,19 +1,13 @@
 package app.aaps.plugins.sync.nsclient.data
 
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.core.nssdk.localmodel.devicestatus.NSDeviceStatus
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.core.utils.JsonHelper
-import app.aaps.plugins.sync.R
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -71,15 +65,12 @@ import javax.inject.Singleton
  */
 @Suppress("SpellCheckingInspection")
 @Singleton
-@OpenForTesting
 class NSDeviceStatusHandler @Inject constructor(
     private val sp: SP,
     private val config: Config,
     private val dateUtil: DateUtil,
     private val runningConfiguration: RunningConfiguration,
-    private val processedDeviceStatusData: ProcessedDeviceStatusData,
-    private val uiInteraction: UiInteraction,
-    private val rh: ResourceHelper
+    private val processedDeviceStatusData: ProcessedDeviceStatusData
 ) {
 
     fun handleNewData(deviceStatuses: Array<NSDeviceStatus>) {

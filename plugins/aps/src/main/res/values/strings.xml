@@ -1,28 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="key_openapsama_max_daily_safety_multiplier" translatable="false">openapsama_max_daily_safety_multiplier</string>
-    <string name="key_openapsama_current_basal_safety_multiplier" translatable="false">openapsama_current_basal_safety_multiplier</string>
-    <string name="key_openapsama_autosens_adjusttargets" translatable="false">autosens_adjust_targets</string>
-    <string name="key_always_use_shortavg" translatable="false">always_use_shortavg</string>
-    <string name="key_openapsma_max_iob" translatable="false">openapsma_max_iob</string>
-    <string name="key_sensitivity_raises_target" translatable="false">sensitivity_raises_target</string>
-    <string name="key_resistance_lowers_target" translatable="false">resistance_lowers_target</string>
-    <string name="key_use_smb" translatable="false">use_smb</string>
-    <string name="key_use_uam" translatable="false">use_uam</string>
-    <string name="key_smb_interval" translatable="false">smbinterval</string>
-    <string name="key_enableSMB_always" translatable="false">enableSMB_always</string>
-    <string name="key_enableSMB_with_COB" translatable="false">enableSMB_with_COB</string>
-    <string name="key_enableSMB_with_temptarget" translatable="false">enableSMB_with_temptarget</string>
-    <string name="key_enableSMB_after_carbs" translatable="false">enableSMB_after_carbs</string>
-    <string name="key_allowSMB_with_high_temptarget" translatable="false">enableSMB_with_high_temptarget</string>
-    <string name="key_smb_max_minutes" translatable="false">smbmaxminutes</string>
-    <string name="key_uam_smb_max_minutes" translatable="false">uamsmbmaxminutes</string>
-    <string name="key_carbsReqThreshold" translatable="false">carbsReqThreshold</string>
-    <string name="key_openapssmb_max_iob" translatable="false">openapsmb_max_iob</string>
-    <string name="key_lgs_threshold" translatable="false">lgsThreshold</string>
-    <string name="key_DynISFAdjust" translatable="false">DynISFAdjust</string>
-    <string name="key_adjust_sensitivity" translatable="false">dynisf_adjust_sensitivity</string>
-
     <string name="dynisf_adjust_sensitivity">Enable TDD based sensitivity ratio for basal and glucose target modification</string>
     <string name="dynisf_adjust_sensitivity_summary">Uses the last 24h TDD/7D TDD to calculate sensitivity ratio used for increasing or decreasing basal rate, and also adjust glucose target if these options are enabled, in the same way Autosens does. It is recommended to start with this option turned off</string>
     <string name="DynISFAdjust_title" formatted="false">DynamicISF Adjustment Factor %</string>
@@ -149,7 +126,6 @@
     <string name="loop_open_mode_min_change">Minimal request change [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Open Loop will popup new change request only if change is bigger than this value in %. Default value is 20%</string>
     <string name="fallback_smb_no_tdd">Fallback to SMB. Not enough TDD data.</string>
-
 
 
 </resources>

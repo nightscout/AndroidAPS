@@ -1,8 +1,13 @@
 package app.aaps.plugins.sync.nsShared
 
-import app.aaps.annotations.OpenForTesting
+import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.model.FD
+import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.IDs
+import app.aaps.core.data.model.SourceSensor
+import app.aaps.core.data.model.TrendArrow
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.configuration.Constants
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
@@ -16,7 +21,6 @@ import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.nssdk.localmodel.entry.NSSgvV3
 import app.aaps.core.nssdk.localmodel.food.NSFood
 import app.aaps.core.nssdk.localmodel.treatment.NSBolus
@@ -31,9 +35,6 @@ import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryTarget
 import app.aaps.core.nssdk.localmodel.treatment.NSTherapyEvent
 import app.aaps.core.nssdk.localmodel.treatment.NSTreatment
 import app.aaps.core.utils.JsonHelper
-import app.aaps.database.entities.Food
-import app.aaps.database.entities.GlucoseValue
-import app.aaps.database.transactions.TransactionGlucoseValue
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsclient.extensions.fromJson
 import app.aaps.plugins.sync.nsclientV3.extensions.toBolus
@@ -42,18 +43,17 @@ import app.aaps.plugins.sync.nsclientV3.extensions.toCarbs
 import app.aaps.plugins.sync.nsclientV3.extensions.toEffectiveProfileSwitch
 import app.aaps.plugins.sync.nsclientV3.extensions.toExtendedBolus
 import app.aaps.plugins.sync.nsclientV3.extensions.toFood
+import app.aaps.plugins.sync.nsclientV3.extensions.toGV
 import app.aaps.plugins.sync.nsclientV3.extensions.toOfflineEvent
 import app.aaps.plugins.sync.nsclientV3.extensions.toProfileSwitch
 import app.aaps.plugins.sync.nsclientV3.extensions.toTemporaryBasal
 import app.aaps.plugins.sync.nsclientV3.extensions.toTemporaryTarget
 import app.aaps.plugins.sync.nsclientV3.extensions.toTherapyEvent
-import app.aaps.plugins.sync.nsclientV3.extensions.toTransactionGlucoseValue
 import org.json.JSONArray
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@OpenForTesting
 @Singleton
 class NsIncomingDataProcessor @Inject constructor(
     private val aapsLogger: AAPSLogger,
@@ -68,16 +68,16 @@ class NsIncomingDataProcessor @Inject constructor(
     private val profileSource: ProfileSource
 ) {
 
-    private fun toGv(jsonObject: JSONObject): TransactionGlucoseValue? {
+    private fun toGv(jsonObject: JSONObject): GV? {
         val sgv = NSSgvObject(jsonObject)
-        return TransactionGlucoseValue(
+        return GV(
             timestamp = sgv.mills ?: return null,
             value = sgv.mgdl?.toDouble() ?: return null,
             noise = null,
             raw = sgv.filtered?.toDouble(),
-            trendArrow = GlucoseValue.TrendArrow.fromString(sgv.direction),
-            nightscoutId = sgv.id,
-            sourceSensor = GlucoseValue.SourceSensor.fromString(sgv.device)
+            trendArrow = TrendArrow.fromString(sgv.direction),
+            ids = IDs(nightscoutId = sgv.id),
+            sourceSensor = SourceSensor.fromString(sgv.device)
         )
     }
 
@@ -93,7 +93,7 @@ class NsIncomingDataProcessor @Inject constructor(
 
         var latestDateInReceivedData: Long = 0
         aapsLogger.debug(LTag.NSCLIENT, "Received NS Data: $sgvs")
-        val glucoseValues = mutableListOf<TransactionGlucoseValue>()
+        val glucoseValues = mutableListOf<GV>()
 
         if (sgvs is JSONArray) { // V1 client
             for (i in 0 until sgvs.length()) {
@@ -107,9 +107,8 @@ class NsIncomingDataProcessor @Inject constructor(
         } else if (sgvs is List<*>) { // V3 client
 
             for (i in 0 until sgvs.size) {
-                val sgv = (sgvs[i] as NSSgvV3).toTransactionGlucoseValue()
-                // allow 1 min in the future
-                if (sgv.timestamp < dateUtil.now() + T.mins(1).msecs() && sgv.timestamp > latestDateInReceivedData) {
+                val sgv = (sgvs[i] as NSSgvV3).toGV()
+                if (sgv.timestamp < dateUtil.now() && sgv.timestamp > latestDateInReceivedData) {
                     latestDateInReceivedData = sgv.timestamp
                     glucoseValues += sgv
                 }
@@ -222,7 +221,7 @@ class NsIncomingDataProcessor @Inject constructor(
         aapsLogger.debug(LTag.DATABASE, "Received Food Data: $data")
 
         try {
-            val foods = mutableListOf<Food>()
+            val foods = mutableListOf<FD>()
             if (data is JSONArray) {
                 for (index in 0 until data.length()) {
                     val jsonFood: JSONObject = data.getJSONObject(index)
@@ -231,17 +230,17 @@ class NsIncomingDataProcessor @Inject constructor(
 
                     when (JsonHelper.safeGetString(jsonFood, "action")) {
                         "remove" -> {
-                            val delFood = Food(
+                            val delFood = FD(
                                 name = "",
                                 portion = 0.0,
                                 carbs = 0,
                                 isValid = false
-                            ).also { it.interfaceIDs.nightscoutId = JsonHelper.safeGetString(jsonFood, "_id") }
+                            ).also { it.ids.nightscoutId = JsonHelper.safeGetString(jsonFood, "_id") }
                             foods += delFood
                         }
 
                         else     -> {
-                            val food = Food.fromJson(jsonFood)
+                            val food = FD.fromJson(jsonFood)
                             if (food != null) foods += food
                             else aapsLogger.error(LTag.DATABASE, "Error parsing food", jsonFood.toString())
                         }

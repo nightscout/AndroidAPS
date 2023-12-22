@@ -1,18 +1,19 @@
 package app.aaps.core.interfaces.utils
 
-import app.aaps.database.entities.OfflineEvent
-import app.aaps.database.entities.TemporaryTarget
-import app.aaps.database.entities.TherapyEvent
-import app.aaps.database.entities.UserEntry
-import app.aaps.database.entities.ValueWithUnit
+import app.aaps.core.data.model.OE
+import app.aaps.core.data.model.TE
+import app.aaps.core.data.model.TT
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 
 interface Translator {
 
-    fun translate(action: UserEntry.Action): String
+    fun translate(action: Action): String
     fun translate(units: ValueWithUnit?): String
-    fun translate(meterType: TherapyEvent.MeterType?): String
-    fun translate(type: TherapyEvent.Type?): String
-    fun translate(reason: TemporaryTarget.Reason?): String
-    fun translate(reason: OfflineEvent.Reason?): String
-    fun translate(source: UserEntry.Sources): String
+    fun translate(meterType: TE.MeterType?): String
+    fun translate(type: TE.Type?): String
+    fun translate(reason: TT.Reason?): String
+    fun translate(reason: OE.Reason?): String
+    fun translate(source: Sources): String
 }

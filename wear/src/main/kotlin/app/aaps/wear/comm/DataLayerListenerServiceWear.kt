@@ -12,10 +12,9 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventWearDataToMobile
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData
-import app.aaps.core.interfaces.rx.weardata.ZipWatchfaceFormat
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.shared.impl.weardata.ZipWatchfaceFormat
 import app.aaps.wear.interaction.utils.Persistence
-import app.aaps.wear.interaction.utils.WearUtil
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.CapabilityClient
 import com.google.android.gms.wearable.CapabilityInfo
@@ -43,7 +42,6 @@ import javax.inject.Inject
 class DataLayerListenerServiceWear : WearableListenerService() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var wearUtil: WearUtil
     @Inject lateinit var persistence: Persistence
     @Inject lateinit var sp: SP
     @Inject lateinit var rxBus: RxBus
@@ -205,7 +203,6 @@ class DataLayerListenerServiceWear : WearableListenerService() {
                 }
         } ?: aapsLogger.debug(LTag.WEAR, "sendMessage: Ignoring message. No node selected.")
     }
-
 
     private fun sendMessage(path: String, data: ByteArray) {
         aapsLogger.debug(LTag.WEAR, "sendMessage: $path ${data.size}")

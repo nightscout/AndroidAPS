@@ -1,28 +1,28 @@
 package app.aaps.plugins.sync.nsclient.extensions
 
+import app.aaps.core.data.model.CA
+import app.aaps.core.data.model.TE
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.utils.JsonHelper
-import app.aaps.database.entities.Carbs
-import app.aaps.database.entities.TherapyEvent
-import app.aaps.database.entities.embedments.InterfaceIDs
 import org.json.JSONObject
 
-fun Carbs.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
+fun CA.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
     JSONObject()
-        .put("eventType", if (amount < 12) TherapyEvent.Type.CARBS_CORRECTION.text else TherapyEvent.Type.MEAL_BOLUS.text)
+        .put("eventType", if (amount < 12) TE.Type.CARBS_CORRECTION.text else TE.Type.MEAL_BOLUS.text)
         .put("carbs", amount)
         .put("notes", notes)
         .put("created_at", dateUtil.toISOString(timestamp))
         .put("isValid", isValid)
         .put("date", timestamp).also {
             if (duration != 0L) it.put("duration", duration)
-            if (interfaceIDs.pumpId != null) it.put("pumpId", interfaceIDs.pumpId)
-            if (interfaceIDs.pumpType != null) it.put("pumpType", interfaceIDs.pumpType!!.name)
-            if (interfaceIDs.pumpSerial != null) it.put("pumpSerial", interfaceIDs.pumpSerial)
-            if (isAdd && interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId)
+            if (ids.pumpId != null) it.put("pumpId", ids.pumpId)
+            if (ids.pumpType != null) it.put("pumpType", ids.pumpType!!.name)
+            if (ids.pumpSerial != null) it.put("pumpSerial", ids.pumpSerial)
+            if (isAdd && ids.nightscoutId != null) it.put("_id", ids.nightscoutId)
         }
 
-fun Carbs.Companion.fromJson(jsonObject: JSONObject): Carbs? {
+fun CA.Companion.fromJson(jsonObject: JSONObject): CA? {
     val timestamp =
         JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null)
             ?: JsonHelper.safeGetLongAllowNull(jsonObject, "date", null)
@@ -35,23 +35,23 @@ fun Carbs.Companion.fromJson(jsonObject: JSONObject): Carbs? {
         ?: JsonHelper.safeGetStringAllowNull(jsonObject, "_id", null)
         ?: return null
     val pumpId = JsonHelper.safeGetLongAllowNull(jsonObject, "pumpId", null)
-    val pumpType = InterfaceIDs.PumpType.fromString(JsonHelper.safeGetStringAllowNull(jsonObject, "pumpType", null))
+    val pumpType = PumpType.fromString(JsonHelper.safeGetStringAllowNull(jsonObject, "pumpType", null))
     val pumpSerial = JsonHelper.safeGetStringAllowNull(jsonObject, "pumpSerial", null)
 
     if (timestamp == 0L) return null
     if (amount == 0.0) return null
 
-    return Carbs(
+    return CA(
         timestamp = timestamp,
         duration = duration,
         amount = amount,
         notes = notes,
         isValid = isValid
     ).also {
-        it.interfaceIDs.nightscoutId = id
-        it.interfaceIDs.pumpId = pumpId
-        it.interfaceIDs.pumpType = pumpType
-        it.interfaceIDs.pumpSerial = pumpSerial
+        it.ids.nightscoutId = id
+        it.ids.pumpId = pumpId
+        it.ids.pumpType = pumpType
+        it.ids.pumpSerial = pumpSerial
     }
 }
 

@@ -17,9 +17,9 @@ import androidx.biometric.BiometricPrompt.ERROR_USER_CANCELED
 import androidx.biometric.BiometricPrompt.ERROR_VENDOR
 import androidx.biometric.BiometricPrompt.PromptInfo
 import androidx.fragment.app.FragmentActivity
-import app.aaps.core.interfaces.extensions.runOnUiThread
 import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.ui.R
+import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.core.ui.toast.ToastUtils
 import java.util.concurrent.Executors
 
