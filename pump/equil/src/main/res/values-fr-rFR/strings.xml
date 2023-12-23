@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--  start  -->
+    <string name="equil_bolus_delivered">%1$.3fU / %2$.3fU injectés</string>
+    <string name="equil_btn_cancel">Annuler</string>
     <!-- equil - Commands -->
     <!--    推杆回退-->
 </resources>
