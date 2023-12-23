@@ -27,7 +27,22 @@
     <string name="equil_history_item3">Detectado bloqueo de infusión</string>
     <string name="equil_history_item4">Inversión del motor detectada</string>
     <string name="equil_history_item5">Detectado un fallo en el motor</string>
+    <string name="equil_history_item6">Iniciando pausa de inyección</string>
+    <string name="equil_history_item7">La inyección ya está pausada</string>
     <string name="equil_history_item8">Apagado automático inminente</string>
     <string name="equil_history_item12">Bolo rápido iniciado</string>
+    <string name="equil_history_item13">Basal temporal iniciada</string>
+    <string name="equil_history_item14">Basal temporal finalizada</string>
+    <string name="equil_history_item15">Nivel bajo de la batería </string>
+    <string name="equil_history_item17">Restablecimiento de encendido</string>
+    <string name="equil_history_item18">Infusión anormal detenida</string>
     <string name="equil_common_short_status_reservoir">Reservorio: %1$sU</string>
+    <string name="equil_common_overview_button_resume_delivery">Reanudar la entrega</string>
+    <string name="equil_support_error">Versión del firmware demasiado baja. No compatible</string>
+    <string name="equil_password_tips">Establezca una nueva contraseña para el emparejamiento con la bomba Equil v5.3. Esta contraseña también se utilizará para el desemparejamiento con la bomba actual en el futuro, así que asegúrese de recordarla. Regla de la contraseña: Debe tener 4 caracteres, elegidos entre ABCDEF0123456789.</string>
+    <string name="equil_set_pair_password">Establecer la contraseña de emparejamiento</string>
+    <string name="equil_unbind">Desemparejar dispositivo</string>
+    <string name="equil_devices_number">Introducir nuevo ID de la bomba</string>
+    <string name="equil_hint2">Cebado de cánula</string>
+    <string name="equil_maxbolus_tips">Bolo máximo permitido en la bomba [%1$sU]</string>
 </resources>
