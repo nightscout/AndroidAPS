@@ -1,6 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--  start  -->
+    <string name="equil_basal_speed">Basal base</string>
+    <string name="equil_dressing">Cambiar reservorio</string>
+    <string name="equil_ble_config_confirmation_title">Emparejar bomba parche Equil</string>
+    <string name="equil_change">Cambiar bomba</string>
+    <string name="equil_temp_basal_rate">Basal temporal</string>
     <!-- equil - Commands -->
+    <string name="equil_common_cmd_set_bolus">Establecer bolo</string>
+    <string name="equil_common_cmd_cancel_bolus">Cancelar bolo</string>
+    <string name="equil_common_cmd_set_tbr">Establecer basal temporal</string>
+    <string name="equil_common_cmd_cancel_tbr">Cancelar basal temporal</string>
+    <string name="equil_common_cmd_set_basal_schedule">Establecer programación basal</string>
+    <string name="equil_common_cmd_get_status">Obtener estado Equil</string>
+    <string name="equil_common_cmd_suspend_delivery">Suspender la entrega</string>
+    <string name="equil_common_cmd_resume_delivery">Reanudar la entrega</string>
+    <string name="equil_common_cmd_insert_cannula">Insertar cánula</string>
+    <string name="equil_common_cmd_set_extended_bolus">Establecer bolo extendido</string>
+    <string name="equil_common_cmd_cancel_extended_bolus">Cancelar bolo extendido</string>
     <!--    推杆回退-->
+    <string name="equil_command_connect_no_response">Sin respuesta de la bomba</string>
+    <string name="equil_password_title">Contraseña de la bomba</string>
+    <string name="equil_tab_equil">Historial de Equil</string>
+    <string name="equil_history_item1">Nivel de insulina del reservorio bajo</string>
+    <string name="equil_history_item2">Nivel de insulina del reservorio vacío</string>
+    <string name="equil_history_item3">Detectado bloqueo de infusión</string>
+    <string name="equil_history_item4">Inversión del motor detectada</string>
+    <string name="equil_history_item5">Detectado un fallo en el motor</string>
+    <string name="equil_history_item8">Apagado automático inminente</string>
+    <string name="equil_history_item12">Bolo rápido iniciado</string>
+    <string name="equil_common_short_status_reservoir">Reservorio: %1$sU</string>
 </resources>
