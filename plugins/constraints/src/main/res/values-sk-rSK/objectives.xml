@@ -13,6 +13,7 @@
     <string name="objectives_openloop_learned">Otvorený okruh môže byť použitý na odporúčania, pokiaľ nemáte kompatibilnú pumpu, alebo nie ste pripravený na uzavretý okruh.</string>
     <string name="objectives_maxbasal_objective">Porozumieť otvorenému okruhu, vrátane jeho doporučení ohľadne dočasných bazálov</string>
     <string name="objectives_maxbasal_gate">Na základe predchádzajúcich skúseností rozhodnúť, aký je potrebný maximálny bazál a nastaviť ho v pumpe a v aplikácii</string>
+    <string name="objectives_maxbasal">Vykonajte akciu pre splnenie doporučenia</string>
     <string name="objectives_maxbasal_learned">Dávajte pozor na bezpečnostné prvky a nastavte bezpečnotné parametre, pokiaľ je to potrebné.</string>
     <string name="objectives_maxiobzero_objective">Spustiť uzavretý okruh iba zo zastavovaním pri nízkej glykémii</string>
     <string name="objectives_maxiobzero_gate">Spustiť uzavretý okruh s max IOB = 0 na niekoľko dní s minimom nutných korekcií na nízku glykémiu</string>
