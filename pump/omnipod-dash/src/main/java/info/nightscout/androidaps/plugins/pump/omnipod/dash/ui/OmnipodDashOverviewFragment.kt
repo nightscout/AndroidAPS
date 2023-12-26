@@ -566,7 +566,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                     rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname),
                     readableDuration(Duration.ofMillis(SystemClock.elapsedRealtime() - it.createdRealtime))
                 )
-                text += " (uncertain) "
+                text += " (" + rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_uncertain) + ")"
                 textColorAttr = app.aaps.core.ui.R.attr.warningColor
                 podInfoBinding.lastBolus.text = text
                 podInfoBinding.lastBolus.setTextColor(rh.gac(context, textColorAttr))
