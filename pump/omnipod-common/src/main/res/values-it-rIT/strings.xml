@@ -66,6 +66,7 @@
     <string name="omnipod_common_overview_reservoir_value">%1$.2f U rimanenti</string>
     <string name="omnipod_common_overview_reservoir_value_over50">Oltre 50 U rimanenti</string>
     <string name="omnipod_common_overview_errors">Errori</string>
+    <string name="omnipod_common_uncertain">incerto</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_cancel">Annulla</string>
     <string name="omnipod_common_wizard_button_finish">Fine</string>
