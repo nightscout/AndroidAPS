@@ -67,6 +67,4 @@
     <!-- Omnipod Eros - Pod Activation Wizard -->
     <string name="omnipod_eros_pod_activation_wizard_start_pod_activation_text">3일 동안 사용할 수 있는 충분한 인슐린으로 새로운 Pod를 채우십시오. \n\n인슐린을 채우는 동안 Pod에서 나는 두 번의 신호음을 듣습니다. 이는 최소 용량인 80U이 채워졌음을 의미합니다. 두 번의 신호음을 들은 후에도 인슐린 충전용 시린지가 완전히 비워졌는지 확인하십시오. \n\nPod를 채운 후, <b>다음</b>을 누르십시오. \n\n<b>참고:</b>이 때 Pod의 바늘 캡을 제거하지 마십시오. \n<b>참고:</b>RileyLink를 반듯하게 세워놓고 Pod를 가까이 두십시오.</string>
     <string name="omnipod_eros_pod_activation_wizard_initialize_pod_text">새로운 Pod를 연결하고 prime을 시도하십시오. \n\n 시작 과정이 성공적으로 완료되면, <b>다음</b>을 누를 수 있습니다. \n\n<b>참고:</b>RileyLink를 반듯하게 세워놓고 Pod를 가까이 두십시오.</string>
-    <!-- Omnipod Eros - Other -->
-    <string name="omnipod_eros_uncertain">불확실함</string>
 </resources>
