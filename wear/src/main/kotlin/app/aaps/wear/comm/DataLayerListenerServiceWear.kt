@@ -153,7 +153,7 @@ class DataLayerListenerServiceWear : WearableListenerService() {
             .setSmallIcon(R.drawable.ic_icon)
             .setContentIntent(pendingIntent)
             .build()
-        startForeground(1, notification)
+        startForeground(FOREGROUND_NOTIF_ID, notification)
 
         when (intent?.action) {
 
@@ -259,6 +259,7 @@ class DataLayerListenerServiceWear : WearableListenerService() {
 
         const val BOLUS_PROGRESS_NOTIF_ID = 1
         const val CONFIRM_NOTIF_ID = 2
+        const val FOREGROUND_NOTIF_ID = 3
         const val CHANGE_NOTIF_ID = 556677
 
         const val AAPS_NOTIFY_CHANNEL_ID_OPEN_LOOP = "AndroidAPS-OpenLoop"
