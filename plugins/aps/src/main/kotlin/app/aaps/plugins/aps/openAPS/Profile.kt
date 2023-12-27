@@ -2,14 +2,14 @@ package app.aaps.plugins.aps.openAPS
 
 data class Profile(
     var dia: Int, // AMA only
-    var min_5m_carbimpact: Int, // AMA only
+    var min_5m_carbimpact: Double, // AMA only
     var max_iob: Double,
     var type: String,
     var max_daily_basal: Double,
     var max_basal: Double,
-    var min_bg: Int,
-    var max_bg: Int,
-    var target_bg: Int,
+    var min_bg: Double,
+    var max_bg: Double,
+    var target_bg: Double,
     var carb_ratio: Double,
     var sens: Double,
     var autosens_adjust_targets: Boolean, // AMA only

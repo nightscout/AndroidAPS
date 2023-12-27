@@ -5,7 +5,7 @@ data class RT(
     var bg: Double? = null,
     var tick: String? = null,
     var eventualBG: Int? = null,
-    var targetBG: Int? = null,
+    var targetBG: Double? = null,
     var snoozeBG: Int? = null, // AMA only
     var insulinReq: Double? = null,
     var carbsReq: Int? = null,

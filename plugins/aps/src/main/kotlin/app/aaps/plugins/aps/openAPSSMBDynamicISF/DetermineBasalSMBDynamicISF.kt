@@ -19,6 +19,7 @@ import javax.inject.Singleton
 import kotlin.math.ln
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.pow
 import kotlin.math.roundToInt
 
 @Singleton
@@ -35,14 +36,18 @@ class DetermineBasalSMBDynamicISF @Inject constructor(
     fun round_basal(value: Double): Double = value
 
     // Rounds value to 'digits' decimal places
-    fun round(value: Double, digits: Int): Double = BigDecimal(value).setScale(digits, RoundingMode.HALF_EVEN).toDouble()
+    // different for negative numbers fun round(value: Double, digits: Int): Double = BigDecimal(value).setScale(digits, RoundingMode.HALF_EVEN).toDouble()
+    fun round(value: Double, digits: Int): Double    {
+        val scale = 10.0.pow(digits.toDouble())
+        return round(value * scale) / scale
+    }
     fun Double.withoutZeros(): String = DecimalFormat("0.##").format(this)
     fun round(value: Double): Int = value.roundToInt()
 
     // we expect BG to rise or fall at the rate of BGI,
     // adjusted by the rate at which BG would need to rise /
     // fall to get eventualBG to target over 2 hours
-    fun calculate_expected_delta(targetBg: Int, eventualBg: Int, bgi: Double): Double {
+    fun calculate_expected_delta(targetBg: Double, eventualBg: Int, bgi: Double): Double {
         // (hours * mins_per_hour) / 5 = how many 5 minute periods in 2h = 24
         val fiveMinBlocks = (2 * 60) / 5
         val targetDelta = targetBg - eventualBg
@@ -58,7 +63,7 @@ class DetermineBasalSMBDynamicISF @Inject constructor(
     //if (profile.out_units === "mmol/L") round(value / 18, 1).toFixed(1);
     //else Math.round(value);
 
-    fun enable_smb(profile: Profile, microBolusAllowed: Boolean, meal_data: MealData, target_bg: Int): Boolean {
+    fun enable_smb(profile: Profile, microBolusAllowed: Boolean, meal_data: MealData, target_bg: Double): Boolean {
         // disable SMB when a high temptarget is set
         if (!microBolusAllowed) {
             consoleError.add("SMB disabled (!microBolusAllowed)")
@@ -259,11 +264,11 @@ class DetermineBasalSMBDynamicISF @Inject constructor(
         } else {
             if (profile.sensitivity_raises_target && autosens_data.ratio < 1 || profile.resistance_lowers_target && autosens_data.ratio > 1) {
                 // with a target of 100, default 0.7-1.2 autosens min/max range would allow a 93-117 target range
-                min_bg = (Math.round((min_bg - 60) / autosens_data.ratio) + 60).toInt()
-                max_bg = (Math.round((max_bg - 60) / autosens_data.ratio) + 60).toInt()
-                var new_target_bg = (Math.round((target_bg - 60) / autosens_data.ratio) + 60).toInt()
+                min_bg = round((min_bg - 60) / autosens_data.ratio, 0) + 60
+                max_bg = round((max_bg - 60) / autosens_data.ratio, 0) + 60
+                var new_target_bg = round((target_bg - 60) / autosens_data.ratio, 0) + 60
                 // don't allow target_bg below 80
-                new_target_bg = max(80, new_target_bg)
+                new_target_bg = max(80.0, new_target_bg)
                 if (target_bg == new_target_bg)
                     consoleLog.add("target_bg unchanged: $new_target_bg; ")
                 else
@@ -310,9 +315,9 @@ class DetermineBasalSMBDynamicISF @Inject constructor(
         // raise target for noisy / raw CGM data
         if (bg > max_bg && profile.adv_target_adjustments && !profile.temptargetSet) {
             // with target=100, as BG rises from 100 to 160, adjustedTarget drops from 100 to 80
-            val adjustedMinBG = round(max(80.0, min_bg - (bg - min_bg) / 3.0))
-            val adjustedTargetBG = round(max(80.0, target_bg - (bg - target_bg) / 3.0))
-            val adjustedMaxBG = round(max(80.0, max_bg - (bg - max_bg) / 3.0))
+            val adjustedMinBG = round(max(80.0, min_bg - (bg - min_bg) / 3.0), 0)
+            val adjustedTargetBG = round(max(80.0, target_bg - (bg - target_bg) / 3.0), 0)
+            val adjustedMaxBG = round(max(80.0, max_bg - (bg - max_bg) / 3.0), 0)
             // if eventualBG, naive_eventualBG, and target_bg aren't all above adjustedMinBG, don’t use it
             //console.error("naive_eventualBG:",naive_eventualBG+", eventualBG:",eventualBG);
             if (eventualBG > adjustedMinBG && naive_eventualBG > adjustedMinBG && min_bg > adjustedMinBG) {
@@ -501,11 +506,11 @@ class DetermineBasalSMBDynamicISF @Inject constructor(
         var aCOBpredBG: Double?
         iobArray.forEach { iobTick ->
             //console.error(iobTick);
-            val predBGI = round((-iobTick.activity * sens * 5), 2)
+            val predBGI: Double = round((-iobTick.activity * sens * 5), 2)
             val predZTBGI = round((-iobTick.iobWithZeroTemp!!.activity * sens * 5), 2)
             // for IOBpredBGs, predicted deviation impact drops linearly from current deviation down to zero
             // over 60 minutes (data points every 5m)
-            val predDev = ci * (1 - min(1.0, IOBpredBGs.size / (60.0 / 5.0)))
+            val predDev: Double = ci * (1 - min(1.0, IOBpredBGs.size / (60.0 / 5.0)))
             IOBpredBG = IOBpredBGs[IOBpredBGs.size - 1] + (round((-iobTick.activity * (1800 / (TDD * (ln((max(IOBpredBGs[IOBpredBGs.size - 1], 39.0) / insulinDivisor) + 1)))) * 5), 2)) + predDev
             // calculate predBGs with long zero temp without deviations
             iobTick.iobWithZeroTemp ?: error("iobTick.iobWithZeroTemp missing")
@@ -513,7 +518,7 @@ class DetermineBasalSMBDynamicISF @Inject constructor(
                 ZTpredBGs[ZTpredBGs.size - 1] + (round((-iobTick.iobWithZeroTemp!!.activity * (1800 / (TDD * (ln((max(ZTpredBGs[ZTpredBGs.size - 1], 39.0) / insulinDivisor) + 1)))) * 5), 2))
             // for COBpredBGs, predicted carb impact drops linearly from current carb impact down to zero
             // eventually accounting for all carbs (if they can be absorbed over DIA)
-            val predCI = max(0.0, max(0.0, ci) * (1 - COBpredBGs.size / max(cid * 2, 1.0)))
+            val predCI: Double = max(0.0, max(0.0, ci) * (1 - COBpredBGs.size / max(cid * 2, 1.0)))
             val predACI = max(0.0, max(0, aci) * (1 - COBpredBGs.size / max(acid * 2, 1.0)))
             // if any carbs aren't absorbed after remainingCATime hours, assume they'll absorb in a /\ shaped
             // bilinear curve peaking at remainingCIpeak at remainingCATime/2 hours (remainingCATime/2*12 * 5m)

@@ -5,7 +5,7 @@ typealias IobData = Array<Iob>
 data class Iob(
     var iob: Double,
     var basaliob: Double,
-    var bolussnooze: Int,
+    var bolussnooze: Double,
     var activity: Double,
     var lastBolusTime: Long,
     var time: String, // as ISO
