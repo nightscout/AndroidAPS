@@ -66,6 +66,7 @@
     <string name="omnipod_common_overview_reservoir_value">Zbývá %1$.2f U</string>
     <string name="omnipod_common_overview_reservoir_value_over50">Zbývá více než 50 U</string>
     <string name="omnipod_common_overview_errors">Chyby</string>
+    <string name="omnipod_common_uncertain">neznámé</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_cancel">Zrušit</string>
     <string name="omnipod_common_wizard_button_finish">Konec</string>
