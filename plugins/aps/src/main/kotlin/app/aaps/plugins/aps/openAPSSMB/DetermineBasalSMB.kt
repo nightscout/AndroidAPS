@@ -509,7 +509,7 @@ class DetermineBasalSMB @Inject constructor(
             // if any carbs aren't absorbed after remainingCATime hours, assume they'll absorb in a /\ shaped
             // bilinear curve peaking at remainingCIpeak at remainingCATime/2 hours (remainingCATime/2*12 * 5m)
             // and ending at remainingCATime h (remainingCATime*12 * 5m intervals)
-            val intervals = Math.min(COBpredBGs.size, ((remainingCATime * 12) - COBpredBGs.size).toInt())
+            val intervals = Math.min(COBpredBGs.size.toDouble(), ((remainingCATime * 12) - COBpredBGs.size))
             val remainingCI = Math.max(0.0, intervals / (remainingCATime / 2 * 12) * remainingCIpeak)
             remainingCItotal += predCI + remainingCI
             remainingCIs.add(round(remainingCI))
@@ -522,7 +522,7 @@ class DetermineBasalSMB @Inject constructor(
             val predUCIslope = max(0.0, uci + (UAMpredBGs.size * slopeFromDeviations))
             // if slopeFromDeviations is too flat, predicted deviation impact drops linearly from
             // current deviation down to zero over 3h (data points every 5m)
-            val predUCImax = max(0.0, uci * (1 - UAMpredBGs.size / max(3 * 60 / 5, 1)))
+            val predUCImax = max(0.0, uci * (1 - UAMpredBGs.size / max(3.0 * 60 / 5, 1.0)))
             //console.error(predUCIslope, predUCImax);
             // predicted CI from UAM is the lesser of CI based on deviationSlope or DIA
             val predUCI = min(predUCIslope, predUCImax)
@@ -569,14 +569,14 @@ class DetermineBasalSMB @Inject constructor(
             consoleError.add("remainingCIs:      " + remainingCIs.joinToString(separator = " "))
         }
         rT.predBGs = RT.Predictions()
-        IOBpredBGs = IOBpredBGs.map { min(401.0, max(39.0, it)) }.toMutableList()
+        IOBpredBGs = IOBpredBGs.map { round(min(401.0, max(39.0, it)), 0) }.toMutableList()
         for (i in IOBpredBGs.size - 1 downTo 13) {
             if (IOBpredBGs[i - 1] != IOBpredBGs[i]) break
             else IOBpredBGs.removeLast()
         }
         rT.predBGs?.IOB = IOBpredBGs.map { it.toInt() }
         lastIOBpredBG = round(IOBpredBGs[IOBpredBGs.size - 1]).toDouble()
-        ZTpredBGs = ZTpredBGs.map { min(401.0, max(39.0, it)) }.toMutableList()
+        ZTpredBGs = ZTpredBGs.map { round(min(401.0, max(39.0, it)), 0) }.toMutableList()
         for (i in ZTpredBGs.size - 1 downTo 7) {
             // stop displaying ZTpredBGs once they're rising and above target
             if (ZTpredBGs[i - 1] >= ZTpredBGs[i] || ZTpredBGs[i] <= target_bg) break
@@ -584,14 +584,14 @@ class DetermineBasalSMB @Inject constructor(
         }
         rT.predBGs?.ZT = ZTpredBGs.map { it.toInt() }
         if (meal_data.mealCOB > 0) {
-            aCOBpredBGs = aCOBpredBGs.map { min(401.0, max(39.0, it)) }.toMutableList()
+            aCOBpredBGs = aCOBpredBGs.map { round(min(401.0, max(39.0, it)), 0) }.toMutableList()
             for (i in aCOBpredBGs.size - 1 downTo 13) {
                 if (aCOBpredBGs[i - 1] != aCOBpredBGs[i]) break
                 else aCOBpredBGs.removeLast()
             }
         }
         if (meal_data.mealCOB > 0 && (ci > 0 || remainingCIpeak > 0)) {
-            COBpredBGs = COBpredBGs.map { min(401.0, max(39.0, it)) }.toMutableList()
+            COBpredBGs = COBpredBGs.map { round(min(401.0, max(39.0, it)), 0) }.toMutableList()
             for (i in COBpredBGs.size - 1 downTo 13) {
                 if (COBpredBGs[i - 1] != COBpredBGs[i]) break
                 else COBpredBGs.removeLast()
@@ -602,7 +602,7 @@ class DetermineBasalSMB @Inject constructor(
         }
         if (ci > 0 || remainingCIpeak > 0) {
             if (enableUAM) {
-                UAMpredBGs = UAMpredBGs.map { min(401.0, max(39.0, it)) }.toMutableList()
+                UAMpredBGs = UAMpredBGs.map { round(min(401.0, max(39.0, it)), 0) }.toMutableList()
                 for (i in UAMpredBGs.size - 1 downTo 13) {
                     if (UAMpredBGs[i - 1] != UAMpredBGs[i]) {
                         break; } else {
@@ -831,7 +831,7 @@ class DetermineBasalSMB @Inject constructor(
         if (eventualBG < min_bg) { // if eventual BG is below target:
             rT.reason.append("Eventual BG ${convert_bg(eventualBG.toDouble())} < ${convert_bg(min_bg.toDouble())}")
             // if 5m or 30m avg BG is rising faster than expected delta
-            if (minDelta > expectedDelta && minDelta > 0 && carbsReq != 0) {
+            if (minDelta > expectedDelta && minDelta > 0 && carbsReq == 0) {
                 // if naive_eventualBG < 40, set a 30m zero temp (oref0-pump-loop will let any longer SMB zero temp run)
                 if (naive_eventualBG < 40) {
                     rT.reason.append(", naive_eventualBG < 40. ")

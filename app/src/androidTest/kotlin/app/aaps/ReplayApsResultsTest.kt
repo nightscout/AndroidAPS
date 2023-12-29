@@ -7,8 +7,8 @@ import androidx.test.rule.GrantPermissionRule
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.maintenance.FileListProvider
+import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.storage.Storage
 import app.aaps.core.utils.JsonHelper
 import app.aaps.di.TestApplication
@@ -35,6 +35,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.skyscreamer.jsonassert.JSONAssert
+import java.io.File
 import java.nio.charset.StandardCharsets
 import javax.inject.Inject
 import kotlin.math.floor
@@ -62,21 +63,32 @@ class ReplayApsResultsTest @Inject constructor() {
 
     @Test
     fun replayTest() {
+        var amas = 0
+        var smbs = 0
+        var dynisfs = 0
         val results = readResultFiles()
         assertThat(results.size).isGreaterThan(0)
-        results.forEach { result ->
+        results.forEach { test ->
+            val result = test.readContent()
             val algorithm = JsonHelper.safeGetString(result, "algorithm")
             val inputString = JsonHelper.safeGetString(result, "input") ?: error("Missing input")
             val outputString = JsonHelper.safeGetString(result, "output") ?: error("Missing output")
             val filename = JsonHelper.safeGetString(result, "filename") ?: "Unknown filename"
             val input = JSONObject(inputString)
             val output = JSONObject(outputString)
+            aapsLogger.info(LTag.CORE,"***** File: $filename *****")
+            when (algorithm) {
+                OpenAPSSMBPlugin::class.simpleName           -> smbs++
+                OpenAPSSMBDynamicISFPlugin::class.simpleName -> dynisfs++
+                OpenAPSAMAPlugin::class.simpleName           -> amas++
+            }
             when (algorithm) {
                 OpenAPSSMBPlugin::class.simpleName           -> testOpenAPSSMB(filename, input, output, context, injector)
                 OpenAPSSMBDynamicISFPlugin::class.simpleName -> testOpenAPSSMBDynamicISF(filename, input, output, context, injector)
                 OpenAPSAMAPlugin::class.simpleName           -> testOpenAPSAMA(filename, input, output, context, injector)
             }
         }
+        aapsLogger.info(LTag.CORE, "\n**********\nAMA: $amas\nSMB: $smbs\nDynISFs: $dynisfs\n**********")
     }
 
     private fun testOpenAPSSMB(filename: String, input: JSONObject, output: JSONObject, context: Context, injector: HasAndroidInjector) {
@@ -109,7 +121,7 @@ class ReplayApsResultsTest @Inject constructor() {
         if (floor(delta) == delta) return
         // Pass to DetermineBasalSMB
 
-        if (determineBasalResult.profile.getString("out_units") == "mmol/L")
+        if (determineBasalResult.profile.optString("out_units") == "mmol/L")
             sp.putString(app.aaps.core.keys.R.string.key_units, GlucoseUnit.MMOL.asText)
         else
             sp.putString(app.aaps.core.keys.R.string.key_units, GlucoseUnit.MGDL.asText)
@@ -187,7 +199,7 @@ class ReplayApsResultsTest @Inject constructor() {
             temptargetSet = determineBasalResult.profile.getBoolean("temptargetSet"),
             autosens_max = determineBasalResult.profile.getDouble("autosens_max"),
             autosens_min = null,
-            out_units = determineBasalResult.profile.getString("out_units"),
+            out_units = determineBasalResult.profile.optString("out_units"),
             variable_sens = null,
             insulinDivisor = null,
             TDD = null
@@ -265,7 +277,7 @@ class ReplayApsResultsTest @Inject constructor() {
         if (floor(delta) == delta) return
         // Pass to DetermineBasalSMBDynamicISF
 
-        if (determineBasalResult.profile.getString("out_units") == "mmol/L")
+        if (determineBasalResult.profile.optString("out_units") == "mmol/L")
             sp.putString(app.aaps.core.keys.R.string.key_units, GlucoseUnit.MMOL.asText)
         else
             sp.putString(app.aaps.core.keys.R.string.key_units, GlucoseUnit.MGDL.asText)
@@ -343,7 +355,7 @@ class ReplayApsResultsTest @Inject constructor() {
             temptargetSet = determineBasalResult.profile.getBoolean("temptargetSet"),
             autosens_max = determineBasalResult.profile.getDouble("autosens_max"),
             autosens_min = null,
-            out_units = determineBasalResult.profile.getString("out_units"),
+            out_units = determineBasalResult.profile.optString("out_units"),
             variable_sens = determineBasalResult.profile.getDouble("variable_sens"),
             insulinDivisor = determineBasalResult.profile.getInt("insulinDivisor"),
             TDD = determineBasalResult.profile.getDouble("TDD")
@@ -414,7 +426,7 @@ class ReplayApsResultsTest @Inject constructor() {
         if (floor(delta) == delta) return
         // Pass to DetermineBasalSMBDynamicISF
 
-        if (determineBasalResult.profile.getString("out_units") == "mmol/L")
+        if (determineBasalResult.profile.optString("out_units") == "mmol/L")
             sp.putString(app.aaps.core.keys.R.string.key_units, GlucoseUnit.MMOL.asText)
         else
             sp.putString(app.aaps.core.keys.R.string.key_units, GlucoseUnit.MGDL.asText)
@@ -491,7 +503,7 @@ class ReplayApsResultsTest @Inject constructor() {
             temptargetSet = determineBasalResult.profile.getBoolean("temptargetSet"),
             autosens_max = 0.0,
             autosens_min = 0.0,
-            out_units = determineBasalResult.profile.getString("out_units"),
+            out_units = determineBasalResult.profile.optString("out_units"),
             variable_sens = 0.0,
             insulinDivisor = 0,
             TDD = 0.0
@@ -533,15 +545,18 @@ class ReplayApsResultsTest @Inject constructor() {
         assertThat(resultKt.variable_sens ?: Double.NaN).isEqualTo(result?.json?.optDouble("variable_sens"))
     }
 
-    private fun readResultFiles(): MutableList<JSONObject> {
-        val apsResults = mutableListOf<JSONObject>()
+    enum class TestSource { ASSET, FILE }
+    data class TestFile(val source: TestSource, val path: String, val name: String)
+    private fun readResultFiles(): MutableList<TestFile> {
+        val apsResults = mutableListOf<TestFile>()
 
         // look for results in filesystem
         fileListProvider.resultPath.walk().maxDepth(1)
             .filter { it.isFile && it.name.endsWith(".json") }
             .forEach {
-                val contents = storage.getFileContents(it)
-                apsResults.add(JSONObject(contents).apply { put("filename", it.name) })
+                // val contents = storage.getFileContents(it)
+                // apsResults.add(JSONObject(contents).apply { put("filename", it.name) })
+                apsResults.add(TestFile(TestSource.FILE, it.path, it.name))
             }
 
         // look for results in assets
@@ -549,10 +564,19 @@ class ReplayApsResultsTest @Inject constructor() {
         val assetFiles = assets.list("results") ?: arrayOf()
         for (assetFileName in assetFiles) {
             if (assetFileName.endsWith(".json")) {
-                val contents = assets.open("results/$assetFileName").readBytes().toString(StandardCharsets.UTF_8)
-                apsResults.add(JSONObject(contents).apply { put("filename", assetFileName) })
+                // val contents = assets.open("results/$assetFileName").readBytes().toString(StandardCharsets.UTF_8)
+                // apsResults.add(JSONObject(contents).apply { put("filename", assetFileName) })
+                apsResults.add(TestFile(TestSource.ASSET, assetFileName, assetFileName))
             }
         }
         return apsResults
+    }
+
+    fun TestFile.readContent() : JSONObject {
+        val assets = InstrumentationRegistry.getInstrumentation().context.assets
+        return when(source) {
+            TestSource.ASSET -> JSONObject(assets.open("results/$name").readBytes().toString(StandardCharsets.UTF_8)).apply { put("filename", name) }
+            TestSource.FILE  -> JSONObject(storage.getFileContents(File(path))).apply { put("filename", name) }
+        }
     }
 }
