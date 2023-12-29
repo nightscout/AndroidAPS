@@ -1,7 +1,6 @@
 package app.aaps.plugins.aps.openAPSSMBDynamicISF
 
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.plugins.aps.openAPS.AutosensData
 import app.aaps.plugins.aps.openAPS.CurrentTemp
@@ -93,7 +92,7 @@ class DetermineBasalSMBDynamicISF @Inject constructor(
 
         // enable SMB/UAM (if enabled in preferences) if a low temptarget is set
         if (profile.enableSMB_with_temptarget && (profile.temptargetSet && target_bg < 100)) {
-            consoleError.add("SMB enabled for temptarget of ${convert_bg(target_bg.toDouble())}")
+            consoleError.add("SMB enabled for temptarget of ${convert_bg(target_bg)}")
             return true
         }
 
@@ -226,9 +225,9 @@ class DetermineBasalSMBDynamicISF @Inject constructor(
         consoleError.add(" Dynamic ISF version Beta 2.0 ")
         consoleError.add("---------------------------------------------------------")
 
-        var variable_sens = profile.variable_sens ?: error("variable_sens not defined")
-        var TDD = profile.TDD ?: error("TDD missing")
-        var insulinDivisor = profile.insulinDivisor ?: error("insulinDivisor missing")
+        val variable_sens = profile.variable_sens ?: error("variable_sens not defined")
+        val TDD = profile.TDD ?: error("TDD missing")
+        val insulinDivisor = profile.insulinDivisor ?: error("insulinDivisor missing")
 
         //*********************************************************************************
         //**                   End of Dynamic ISF code for predictions                   **
@@ -291,7 +290,7 @@ class DetermineBasalSMBDynamicISF @Inject constructor(
         val minAvgDelta = min(glucose_status.short_avgdelta, glucose_status.long_avgdelta)
         val maxDelta = max(glucose_status.delta, max(glucose_status.short_avgdelta, glucose_status.long_avgdelta))
 
-        var sens = variable_sens
+        val sens = variable_sens
 
         //calculate BG impact: the amount BG "should" be rising or falling based on insulin activity alone
         val bgi = round((-iob_data.activity * sens * 5), 2)
@@ -479,7 +478,7 @@ class DetermineBasalSMBDynamicISF @Inject constructor(
         var minIOBPredBG = 999
         var minCOBPredBG = 999
         var minUAMPredBG = 999
-        var minGuardBG: Int
+        val minGuardBG: Int
         var minCOBGuardBG = 999.0
         var minUAMGuardBG = 999.0
         var minIOBGuardBG = 999.0
@@ -492,7 +491,7 @@ class DetermineBasalSMBDynamicISF @Inject constructor(
         var maxUAMPredBG = bg
         //var maxPredBG = bg;
         var eventualPredBG = bg
-        var lastIOBpredBG: Double
+        val lastIOBpredBG: Double
         var lastCOBpredBG: Double? = null
         var lastUAMpredBG: Double? = null
         var lastZTpredBG: Int

@@ -1,6 +1,7 @@
 package app.aaps.plugins.aps.openAPSSMB
 
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.plugins.aps.openAPS.AutosensData
 import app.aaps.plugins.aps.openAPS.CurrentTemp
@@ -9,8 +10,6 @@ import app.aaps.plugins.aps.openAPS.IobData
 import app.aaps.plugins.aps.openAPS.MealData
 import app.aaps.plugins.aps.openAPS.Profile
 import app.aaps.plugins.aps.openAPS.RT
-import java.math.BigDecimal
-import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.time.Instant
 import java.time.ZoneId
@@ -36,7 +35,7 @@ class DetermineBasalSMB @Inject constructor(
 
     // Rounds value to 'digits' decimal places
     // different for negative numbers fun round(value: Double, digits: Int): Double = BigDecimal(value).setScale(digits, RoundingMode.HALF_EVEN).toDouble()
-    fun round(value: Double, digits: Int): Double    {
+    fun round(value: Double, digits: Int): Double {
         val scale = 10.0.pow(digits.toDouble())
         return round(value * scale) / scale
     }
@@ -93,7 +92,7 @@ class DetermineBasalSMB @Inject constructor(
 
         // enable SMB/UAM (if enabled in preferences) if a low temptarget is set
         if (profile.enableSMB_with_temptarget && (profile.temptargetSet && target_bg < 100)) {
-            consoleError.add("SMB enabled for temptarget of ${convert_bg(target_bg.toDouble())}")
+            consoleError.add("SMB enabled for temptarget of ${convert_bg(target_bg)}")
             return true
         }
 
@@ -276,7 +275,7 @@ class DetermineBasalSMB @Inject constructor(
         val maxDelta = max(glucose_status.delta, max(glucose_status.short_avgdelta, glucose_status.long_avgdelta))
 
         val profile_sens = round(profile.sens, 1)
-        var sens = round(profile.sens / sensitivityRatio, 1)
+        val sens = round(profile.sens / sensitivityRatio, 1)
         if (sens != profile_sens) {
             consoleLog.add("ISF from $profile_sens to $sens")
         } else {
@@ -468,7 +467,7 @@ class DetermineBasalSMB @Inject constructor(
         var minIOBPredBG = 999
         var minCOBPredBG = 999
         var minUAMPredBG = 999
-        var minGuardBG: Int
+        val minGuardBG: Int
         var minCOBGuardBG = 999.0
         var minUAMGuardBG = 999.0
         var minIOBGuardBG = 999.0
@@ -604,10 +603,8 @@ class DetermineBasalSMB @Inject constructor(
             if (enableUAM) {
                 UAMpredBGs = UAMpredBGs.map { round(min(401.0, max(39.0, it)), 0) }.toMutableList()
                 for (i in UAMpredBGs.size - 1 downTo 13) {
-                    if (UAMpredBGs[i - 1] != UAMpredBGs[i]) {
-                        break; } else {
-                        UAMpredBGs.removeLast()
-                    }
+                    if (UAMpredBGs[i - 1] != UAMpredBGs[i]) break
+                    else UAMpredBGs.removeLast()
                 }
                 rT.predBGs?.UAM = UAMpredBGs.map { it.toInt() }
                 lastUAMpredBG = UAMpredBGs[UAMpredBGs.size - 1]
@@ -723,7 +720,7 @@ class DetermineBasalSMB @Inject constructor(
             "COB: ${round(meal_data.mealCOB, 1).withoutZeros()}, Dev: ${convert_bg(deviation.toDouble())}, BGI: ${convert_bg(bgi)}, ISF: ${convert_bg(sens)}, CR: ${
                 round(profile.carb_ratio, 2)
                     .withoutZeros()
-            }, Target: ${convert_bg(target_bg.toDouble())}, minPredBG ${convert_bg(minPredBG)}, minGuardBG ${convert_bg(minGuardBG)}, IOBpredBG ${convert_bg(lastIOBpredBG)}"
+            }, Target: ${convert_bg(target_bg)}, minPredBG ${convert_bg(minPredBG)}, minGuardBG ${convert_bg(minGuardBG)}, IOBpredBG ${convert_bg(lastIOBpredBG)}"
         )
         if (lastCOBpredBG != null) {
             rT.reason.append(", COBpredBG " + convert_bg(lastCOBpredBG.toDouble()))
@@ -774,7 +771,7 @@ class DetermineBasalSMB @Inject constructor(
         }
 
         if (enableSMB && minGuardBG < threshold) {
-            consoleError.add("minGuardBG ${convert_bg(minGuardBG.toDouble())} projected below ${convert_bg(threshold.toDouble())} - disabling SMB")
+            consoleError.add("minGuardBG ${convert_bg(minGuardBG.toDouble())} projected below ${convert_bg(threshold)} - disabling SMB")
             //rT.reason += "minGuardBG "+minGuardBG+"<"+threshold+": SMB disabled; ";
             enableSMB = false
         }
@@ -784,9 +781,9 @@ class DetermineBasalSMB @Inject constructor(
             enableSMB = false
         }
 
-        consoleError.add("BG projected to remain above ${convert_bg(min_bg.toDouble())} for $minutesAboveMinBG minutes")
+        consoleError.add("BG projected to remain above ${convert_bg(min_bg)} for $minutesAboveMinBG minutes")
         if (minutesAboveThreshold < 240 || minutesAboveMinBG < 60) {
-            consoleError.add("BG projected to remain above ${convert_bg(threshold.toDouble())} for $minutesAboveThreshold minutes")
+            consoleError.add("BG projected to remain above ${convert_bg(threshold)} for $minutesAboveThreshold minutes")
         }
         // include at least minutesAboveThreshold worth of zero temps in calculating carbsReq
         // always include at least 30m worth of zero temp (carbs to 80, low temp up to target)
@@ -810,8 +807,8 @@ class DetermineBasalSMB @Inject constructor(
             rT.reason.append(" and minDelta ${convert_bg(minDelta)} > expectedDelta ${convert_bg(expectedDelta)}; ")
             // predictive low glucose suspend mode: BG is / is projected to be < threshold
         } else if (bg < threshold || minGuardBG < threshold) {
-            rT.reason.append("minGuardBG " + convert_bg(minGuardBG.toDouble()) + "<" + convert_bg(threshold.toDouble()))
-            bgUndershoot = (target_bg - minGuardBG).toDouble()
+            rT.reason.append("minGuardBG " + convert_bg(minGuardBG.toDouble()) + "<" + convert_bg(threshold))
+            bgUndershoot = (target_bg - minGuardBG)
             val worstCaseInsulinReq = bgUndershoot / sens
             var durationReq = round(60 * worstCaseInsulinReq / profile.current_basal)
             durationReq = round(durationReq / 30.0) * 30
@@ -829,7 +826,7 @@ class DetermineBasalSMB @Inject constructor(
         }
 
         if (eventualBG < min_bg) { // if eventual BG is below target:
-            rT.reason.append("Eventual BG ${convert_bg(eventualBG.toDouble())} < ${convert_bg(min_bg.toDouble())}")
+            rT.reason.append("Eventual BG ${convert_bg(eventualBG.toDouble())} < ${convert_bg(min_bg)}")
             // if 5m or 30m avg BG is rising faster than expected delta
             if (minDelta > expectedDelta && minDelta > 0 && carbsReq == 0) {
                 // if naive_eventualBG < 40, set a 30m zero temp (oref0-pump-loop will let any longer SMB zero temp run)
@@ -883,7 +880,7 @@ class DetermineBasalSMB @Inject constructor(
             } else {
                 // calculate a long enough zero temp to eventually correct back up to target
                 if (rate <= 0) {
-                    bgUndershoot = (target_bg - naive_eventualBG).toDouble()
+                    bgUndershoot = (target_bg - naive_eventualBG)
                     val worstCaseInsulinReq = bgUndershoot / sens
                     var durationReq = round(60 * worstCaseInsulinReq / profile.current_basal)
                     if (durationReq < 0) {
@@ -911,12 +908,12 @@ class DetermineBasalSMB @Inject constructor(
             if (!(microBolusAllowed && enableSMB)) {
                 if (glucose_status.delta < minDelta) {
                     rT.reason.append(
-                        "Eventual BG ${convert_bg(eventualBG)} > ${convert_bg(min_bg.toDouble())} but Delta ${convert_bg(tick.toDouble())} < Exp. Delta ${
+                        "Eventual BG ${convert_bg(eventualBG)} > ${convert_bg(min_bg)} but Delta ${convert_bg(tick.toDouble())} < Exp. Delta ${
                             convert_bg(expectedDelta)
                         }"
                     )
                 } else {
-                    rT.reason.append("Eventual BG ${convert_bg(eventualBG)} > ${convert_bg(min_bg.toDouble())} but Min. Delta ${minDelta.toFixed2()} < Exp. Delta ${convert_bg(expectedDelta)}")
+                    rT.reason.append("Eventual BG ${convert_bg(eventualBG)} > ${convert_bg(min_bg)} but Min. Delta ${minDelta.toFixed2()} < Exp. Delta ${convert_bg(expectedDelta)}")
                 }
                 if (currenttemp.duration > 15 && (round_basal(basal) == round_basal(currenttemp.rate))) {
                     rT.reason.append(", temp " + currenttemp.rate + " ~ req " + round(basal, 2).withoutZeros() + "U/hr. ")
@@ -945,7 +942,7 @@ class DetermineBasalSMB @Inject constructor(
         // eventual BG is at/above target
         // if iob is over max, just cancel any temps
         if (eventualBG >= max_bg) {
-            rT.reason.append("Eventual BG " + convert_bg(eventualBG.toDouble()) + " >= " + convert_bg(max_bg.toDouble()) + ", ")
+            rT.reason.append("Eventual BG " + convert_bg(eventualBG.toDouble()) + " >= " + convert_bg(max_bg) + ", ")
         }
         if (iob_data.iob > max_iob) {
             rT.reason.append("IOB ${round(iob_data.iob, 2)} > max_iob $max_iob")
