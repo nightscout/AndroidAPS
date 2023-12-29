@@ -16,6 +16,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
@@ -29,17 +32,14 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.utils.HtmlHelper
-import app.aaps.database.entities.UserEntry.Action
-import app.aaps.database.entities.UserEntry.Sources
-import app.aaps.database.entities.ValueWithUnit
 import app.aaps.plugins.constraints.R
+import app.aaps.plugins.constraints.databinding.ObjectivesFragmentBinding
+import app.aaps.plugins.constraints.databinding.ObjectivesItemBinding
 import app.aaps.plugins.constraints.objectives.activities.ObjectivesExamDialog
 import app.aaps.plugins.constraints.objectives.dialogs.NtpProgressDialog
 import app.aaps.plugins.constraints.objectives.events.EventObjectivesUpdateGui
 import app.aaps.plugins.constraints.objectives.objectives.Objective.ExamTask
 import dagger.android.support.DaggerFragment
-import app.aaps.plugins.constraints.databinding.ObjectivesFragmentBinding
-import app.aaps.plugins.constraints.databinding.ObjectivesItemBinding
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -339,8 +339,9 @@ class ObjectivesFragment : DaggerFragment() {
                 activity?.let { activity ->
                     OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.objectives), rh.gs(R.string.doyouwantresetstart), Runnable {
                         uel.log(
-                            Action.OBJECTIVE_UNSTARTED, Sources.Objectives,
-                            ValueWithUnit.SimpleInt(position + 1)
+                            action = Action.OBJECTIVE_UNSTARTED,
+                            source = Sources.Objectives,
+                            value = ValueWithUnit.SimpleInt(position + 1)
                         )
                         objective.startedOn = 0
                         scrollToCurrentObjective()

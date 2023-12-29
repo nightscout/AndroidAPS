@@ -6,8 +6,8 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.implementation.instantiator.InstantiatorImpl
 import app.aaps.implementations.ConfigImpl
-import app.aaps.implementations.InstantiatorImpl
 import app.aaps.implementations.UiInteractionImpl
 import dagger.Binds
 import dagger.Lazy

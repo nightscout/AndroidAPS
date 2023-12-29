@@ -138,8 +138,8 @@ object Libs {
 
     object Logging {
 
-        const val slf4jApi = "org.slf4j:slf4j-api:1.7.36" // 2.0.x breaks logging. Code change needed
-        const val logbackAndroid = "com.github.tony19:logback-android:2.0.0"
+        const val slf4jApi = "org.slf4j:slf4j-api:2.0.7"
+        const val logbackAndroid = "com.github.tony19:logback-android:3.0.0"
     }
 
     object JUnit {

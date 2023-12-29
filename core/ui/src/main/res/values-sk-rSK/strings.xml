@@ -531,7 +531,6 @@
     <string name="limitingpercentrate">Bazál obmedzený na %1$d%%: %2$s</string>
     <string name="itmustbepositivevalue">požadovaná kladná hodnota</string>
     <string name="limitingbolus">Bolus obmedzený na %1$.1f JI: %2$s</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Potvrdenie</string>
     <string name="message">Správa</string>

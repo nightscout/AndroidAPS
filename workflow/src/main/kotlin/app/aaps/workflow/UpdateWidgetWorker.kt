@@ -3,7 +3,7 @@ package app.aaps.workflow
 import android.content.Context
 import androidx.work.WorkerParameters
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.main.utils.worker.LoggingWorker
+import app.aaps.core.objects.workflow.LoggingWorker
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 

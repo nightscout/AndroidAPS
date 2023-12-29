@@ -4,18 +4,17 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.HandlerThread
+import app.aaps.core.data.plugin.PluginDescription
+import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.plugins.constraints.R
-import dagger.android.HasAndroidInjector
 import org.spongycastle.util.encoders.Hex
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -40,7 +39,6 @@ import javax.inject.Singleton
  */
 @Singleton
 class SignatureVerifierPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     private val sp: SP,
@@ -53,7 +51,7 @@ class SignatureVerifierPlugin @Inject constructor(
         .alwaysEnabled(true)
         .showInList(false)
         .pluginName(R.string.signature_verifier),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), PluginConstraints {
 
     private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)

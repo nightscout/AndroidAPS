@@ -1,16 +1,15 @@
 package app.aaps.core.interfaces.rx.events
 
-import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
-import java.text.DateFormat
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 class EventNewHistoryData(val oldDataTimestamp: Long, var reloadBgData: Boolean, var newestGlucoseValueTimestamp: Long? = null) : Event() {
 
     override fun toString(): String {
         return super.toString() +
             " " +
-            DateFormat.getDateInstance(DateFormat.SHORT).format(oldDataTimestamp) +
-            " " +
-            DateTime(oldDataTimestamp).toString(DateTimeFormat.forPattern("HH:mm:ss"))
+            Instant.ofEpochMilli(oldDataTimestamp).atZone(ZoneId.systemDefault()).toLocalDateTime()
+                .format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"))
     }
 }

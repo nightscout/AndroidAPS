@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventDismissNotification
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.utils.pump.ByteUtil
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
@@ -18,7 +19,6 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandTy
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicNotificationType
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus
-import info.nightscout.pump.common.utils.ByteUtil
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.security.InvalidParameterException

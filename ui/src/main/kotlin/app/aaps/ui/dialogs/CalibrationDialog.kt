@@ -4,7 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -12,12 +15,9 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.utils.HtmlHelper
-import app.aaps.database.entities.UserEntry.Action
-import app.aaps.database.entities.UserEntry.Sources
-import app.aaps.database.entities.ValueWithUnit
+import app.aaps.ui.databinding.DialogCalibrationBinding
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
-import app.aaps.ui.databinding.DialogCalibrationBinding
 import java.text.DecimalFormat
 import java.util.LinkedList
 import javax.inject.Inject
@@ -85,7 +85,7 @@ class CalibrationDialog : DialogFragmentWithDate() {
         if (bg > 0) {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.calibration), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
-                    uel.log(Action.CALIBRATION, Sources.CalibrationDialog, ValueWithUnit.fromGlucoseUnit(bg, units.asText))
+                    uel.log(action = Action.CALIBRATION, source = Sources.CalibrationDialog, value = ValueWithUnit.fromGlucoseUnit(bg, units))
                     xDripBroadcast.sendCalibration(bg)
                 })
             }

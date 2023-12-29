@@ -22,6 +22,9 @@ import app.aaps.core.interfaces.rx.events.EventWearDataToMobile
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.Preferences
 import app.aaps.wear.R
 import app.aaps.wear.interaction.WatchfaceConfigurationActivity
 import app.aaps.wear.interaction.actions.AcceptActivity
@@ -42,6 +45,7 @@ class DataHandlerWear @Inject constructor(
     private val rxBus: RxBus,
     private val aapsSchedulers: AapsSchedulers,
     private val sp: SP,
+    private val preferences: Preferences,
     private val aapsLogger: AAPSLogger,
     private val persistence: Persistence
 ) {
@@ -153,20 +157,18 @@ class DataHandlerWear @Inject constructor(
                 aapsLogger.debug(LTag.WEAR, "Preferences received from ${it.sourceNodeId}")
                 if (it.wearControl != sp.getBoolean(R.string.key_wear_control, false)) {
                     sp.putBoolean(R.string.key_wear_control, it.wearControl)
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        TileService.getUpdater(context).requestUpdate(ActionsTileService::class.java)
-                        TileService.getUpdater(context).requestUpdate(TempTargetTileService::class.java)
-                        TileService.getUpdater(context).requestUpdate(QuickWizardTileService::class.java)
-                    }
+                    TileService.getUpdater(context).requestUpdate(ActionsTileService::class.java)
+                    TileService.getUpdater(context).requestUpdate(TempTargetTileService::class.java)
+                    TileService.getUpdater(context).requestUpdate(QuickWizardTileService::class.java)
                 }
                 sp.putBoolean(R.string.key_units_mgdl, it.unitsMgdl)
                 sp.putInt(R.string.key_bolus_wizard_percentage, it.bolusPercentage)
                 sp.putInt(R.string.key_treatments_safety_max_carbs, it.maxCarbs)
                 sp.putDouble(R.string.key_treatments_safety_max_bolus, it.maxBolus)
-                sp.putDouble(app.aaps.core.interfaces.R.string.key_insulin_button_increment_1, it.insulinButtonIncrement1)
-                sp.putDouble(app.aaps.core.interfaces.R.string.key_insulin_button_increment_2, it.insulinButtonIncrement2)
-                sp.putInt(R.string.key_carbs_button_increment_1, it.carbsButtonIncrement1)
-                sp.putInt(R.string.key_carbs_button_increment_2, it.carbsButtonIncrement2)
+                preferences.put(DoubleKey.OverviewInsulinButtonIncrement1, it.insulinButtonIncrement1)
+                preferences.put(DoubleKey.OverviewInsulinButtonIncrement2, it.insulinButtonIncrement2)
+                preferences.put(IntKey.OverviewCarbsButtonIncrement1, it.carbsButtonIncrement1)
+                preferences.put(IntKey.OverviewCarbsButtonIncrement2, it.carbsButtonIncrement2)
             }
         disposable += rxBus
             .toObservable(EventData.QuickWizard::class.java)
@@ -254,7 +256,7 @@ class DataHandlerWear @Inject constructor(
         }
     }
 
-    @TargetApi(value = 26) private fun createBolusProgressChannels() {
+     private fun createBolusProgressChannels() {
         createNotificationChannel(
             longArrayOf(0, 50, 1000),
             DataLayerListenerServiceWear.AAPS_NOTIFY_CHANNEL_ID_BOLUS_PROGRESS,
@@ -271,7 +273,7 @@ class DataHandlerWear @Inject constructor(
         )
     }
 
-    @TargetApi(value = 26) private fun createNotificationChannel(vibratePattern: LongArray, channelID: String, name: CharSequence, description: String, importance: Int) {
+     private fun createNotificationChannel(vibratePattern: LongArray, channelID: String, name: CharSequence, description: String, importance: Int) {
         val channel = NotificationChannel(channelID, name, importance)
         channel.description = description
         channel.enableVibration(true)

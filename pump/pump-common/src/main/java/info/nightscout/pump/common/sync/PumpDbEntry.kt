@@ -1,44 +1,9 @@
 package info.nightscout.pump.common.sync
 
+import app.aaps.core.data.model.BS
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.pump.defs.PumpType
-
-// data class PumpDbEntry constructor(var temporaryId: Long,
-//                                    var date: Long,
-//                                    var pumpType: PumpType,
-//                                    var serialNumber: String,
-//                                    var bolusData: PumpDbEntryBolus? = null,
-//                                    var tbrData: PumpDbEntryTBR? = null,
-//                                    var pumpId: Long? = null) {
-//
-//     constructor(temporaryId: Long,
-//                 date: Long,
-//                 pumpType: PumpType,
-//                 serialNumber: String,
-//                 detailedBolusInfo: DetailedBolusInfo) : this(temporaryId, date, pumpType, serialNumber) {
-//         this.bolusData = PumpDbEntryBolus(
-//             detailedBolusInfo.insulin,
-//             detailedBolusInfo.carbs,
-//             detailedBolusInfo.bolusType)
-//     }
-//
-//     constructor(temporaryId: Long,
-//                 date: Long,
-//                 pumpType: PumpType,
-//                 serialNumber: String,
-//                 rate: Double,
-//                 isAbsolute: Boolean,
-//                 durationInMinutes: Int,
-//                 tbrType: PumpSync.TemporaryBasalType) : this(temporaryId, date, pumpType, serialNumber) {
-//         this.tbrData = PumpDbEntryTBR(
-//             rate,
-//             isAbsolute,
-//             durationInMinutes,
-//             tbrType)
-//     }
-//
-// }
 
 interface PumpDbEntry {
 
@@ -57,7 +22,7 @@ data class PumpDbEntryBolus(
     override var pumpId: Long? = null,
     var insulin: Double,
     var carbs: Double,
-    var bolusType: DetailedBolusInfo.BolusType
+    var bolusType: BS.Type
 ) : PumpDbEntry {
 
     constructor(

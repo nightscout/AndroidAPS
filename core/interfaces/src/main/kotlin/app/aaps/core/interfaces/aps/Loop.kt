@@ -1,9 +1,12 @@
 package app.aaps.core.interfaces.aps
 
+import app.aaps.core.data.model.OE
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.PumpEnactResult
-import app.aaps.database.entities.OfflineEvent
 
 interface Loop {
 
@@ -37,8 +40,8 @@ interface Loop {
 
     fun acceptChangeRequest()
     fun minutesToEndOfSuspend(): Int
-    fun goToZeroTemp(durationInMinutes: Int, profile: Profile, reason: OfflineEvent.Reason)
-    fun suspendLoop(durationInMinutes: Int)
+    fun goToZeroTemp(durationInMinutes: Int, profile: Profile, reason: OE.Reason, action: Action, source: Sources, listValues: List<ValueWithUnit?> = listOf())
+    fun suspendLoop(durationInMinutes: Int, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit?>)
     fun disableCarbSuggestions(durationMinutes: Int)
     fun buildAndStoreDeviceStatus()
 }

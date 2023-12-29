@@ -1,6 +1,5 @@
 package app.aaps.core.nssdk.networking
 
-import com.google.gson.JsonObject
 import app.aaps.core.nssdk.remotemodel.LastModified
 import app.aaps.core.nssdk.remotemodel.NSResponse
 import app.aaps.core.nssdk.remotemodel.RemoteCreateUpdateResponse
@@ -9,6 +8,7 @@ import app.aaps.core.nssdk.remotemodel.RemoteEntry
 import app.aaps.core.nssdk.remotemodel.RemoteFood
 import app.aaps.core.nssdk.remotemodel.RemoteStatusResponse
 import app.aaps.core.nssdk.remotemodel.RemoteTreatment
+import com.google.gson.JsonObject
 import org.json.JSONObject
 import retrofit2.Response
 import retrofit2.http.Body
@@ -95,7 +95,6 @@ internal interface NightscoutRemoteService {
 
     @GET("v3/profile/history/{from}")
     suspend fun getProfileModifiedSince(@Path("from") from: Long, @Query("limit") limit: Int = 10): Response<NSResponse<List<JSONObject>>>
-
 
     @GET("v3/profile?sort\$desc=date&limit=1")
     suspend fun getLastProfile(): Response<NSResponse<List<JSONObject>>>

@@ -525,13 +525,13 @@
     <string name="password_cleared">Пароль сброшен!</string>
     <string name="pairing">Сопряжение</string>
     <string name="initializing">инициализация...</string>
+    <string name="secs" comment="second short">%1$d с</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Макс базальный уровень ограничен до %1$.2f ед/ч вследствие %2$s</string>
     <string name="pumplimit">лимит помпы</string>
     <string name="limitingpercentrate">Макс процент базала ограничен до %1$d%% ед/ч вследствие %2$s</string>
     <string name="itmustbepositivevalue">величина должна быть положительной</string>
     <string name="limitingbolus">Макс уровень болюса ограничен до %1$.1f ед вследствие %2$s</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Подтверждение</string>
     <string name="message">Сообщение</string>

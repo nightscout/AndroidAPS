@@ -11,9 +11,10 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
@@ -28,7 +29,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.Initial
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.ResolvedResult
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.TempBasalRecord
 import info.nightscout.pump.common.defs.PumpHistoryEntryGroup
-import info.nightscout.pump.common.utils.ProfileUtil
 import java.util.Calendar
 import java.util.GregorianCalendar
 import javax.inject.Inject
@@ -39,6 +39,7 @@ class DashPodHistoryActivity : TranslatedDaggerAppCompatActivity() {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rh: ResourceHelper
+    @Inject lateinit var profileUtil: ProfileUtil
 
     private var historyTypeSpinner: Spinner? = null
     private var statusView: TextView? = null
@@ -304,7 +305,7 @@ class DashPodHistoryActivity : TranslatedDaggerAppCompatActivity() {
                 OmnipodCommandType.INSERT_CANNULA,
                 OmnipodCommandType.RESUME_DELIVERY     -> {
                     val basal = historyEntry.record as BasalValuesRecord
-                    ProfileUtil.getBasalProfilesDisplayable(basal.segments.toTypedArray(), PumpType.OMNIPOD_DASH)
+                    profileUtil.getBasalProfilesDisplayable(basal.segments.toTypedArray(), PumpType.OMNIPOD_DASH)
                 }
 
                 else                                   ->

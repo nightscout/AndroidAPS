@@ -526,7 +526,6 @@
     <string name="limitingpercentrate">A limitar rácio percentagem máx para %1$d%% porque %2$s</string>
     <string name="itmustbepositivevalue">deve ser valor positivo</string>
     <string name="limitingbolus">Limitando bólus para %1$.1f U porque %2$s</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Confirmação</string>
     <string name="message">Mensagem</string>

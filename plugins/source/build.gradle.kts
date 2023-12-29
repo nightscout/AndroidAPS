@@ -13,14 +13,14 @@ android {
 
 
 dependencies {
-    implementation(project(":database:entities"))
-    implementation(project(":database:impl"))
-    implementation(project(":shared:impl"))
+    implementation(project(":core:data"))
     implementation(project(":core:interfaces"))
-    implementation(project(":core:main"))
+    implementation(project(":core:keys"))
+    implementation(project(":core:objects"))
     implementation(project(":core:nssdk"))
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
+    implementation(project(":shared:impl"))
 
     testImplementation(Libs.AndroidX.Work.testing)
 

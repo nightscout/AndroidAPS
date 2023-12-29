@@ -2,9 +2,9 @@ package app.aaps.plugins.configuration.setupwizard.elements
 
 import android.widget.LinearLayout
 import androidx.annotation.StringRes
+import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy

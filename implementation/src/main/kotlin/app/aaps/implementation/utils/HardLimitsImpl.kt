@@ -1,30 +1,35 @@
 package app.aaps.implementation.utils
 
 import android.content.Context
-import app.aaps.annotations.OpenForTesting
+import app.aaps.core.data.model.TE
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
+import app.aaps.core.objects.extensions.asAnnouncement
+import dagger.Reusable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.math.max
 import kotlin.math.min
 
-@OpenForTesting
-@Singleton
+@Reusable
 class HardLimitsImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val uiInteraction: UiInteraction,
-    private val sp: SP,
+    private val preferences: Preferences,
     private val rh: ResourceHelper,
     private val context: Context,
-    private val repository: AppRepository,
+    private val persistenceLayer: PersistenceLayer,
+    private val dateUtil: DateUtil
 ) : HardLimits {
 
     private val disposable = CompositeDisposable()
@@ -64,7 +69,7 @@ class HardLimitsImpl @Inject constructor(
 
     }
 
-    private fun loadAge(): Int = when (sp.getString(app.aaps.core.utils.R.string.key_age, "")) {
+    private fun loadAge(): Int = when (preferences.get(StringKey.SafetyAge)) {
         rh.gs(app.aaps.core.utils.R.string.key_child)          -> CHILD
         rh.gs(app.aaps.core.utils.R.string.key_teenage)        -> TEENAGE
         rh.gs(app.aaps.core.utils.R.string.key_adult)          -> ADULT
@@ -98,7 +103,14 @@ class HardLimitsImpl @Inject constructor(
             msg += ".\n"
             msg += rh.gs(app.aaps.core.ui.R.string.valuelimitedto, value, newValue)
             aapsLogger.error(msg)
-            disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(msg)).subscribe()
+            disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
+                therapyEvent = TE.asAnnouncement(msg),
+                timestamp = dateUtil.now(),
+                action = Action.CAREPORTAL,
+                source = Sources.Aaps,
+                note = msg,
+                listValues = listOf(ValueWithUnit.TEType(TE.Type.ANNOUNCEMENT))
+            ).subscribe()
             uiInteraction.showToastAndNotification(context, msg, app.aaps.core.ui.R.raw.error)
         }
         return newValue

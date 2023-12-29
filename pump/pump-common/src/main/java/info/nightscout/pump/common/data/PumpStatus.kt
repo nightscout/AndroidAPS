@@ -1,6 +1,6 @@
 package info.nightscout.pump.common.data
 
-import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.data.pump.defs.PumpType
 import info.nightscout.pump.common.defs.PumpRunningState
 import java.util.Date
 

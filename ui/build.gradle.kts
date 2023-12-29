@@ -12,12 +12,13 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:libraries"))
+    implementation(project(":core:data"))
+    implementation(project(":core:graph"))
     implementation(project(":core:graphview"))
-    implementation(project(":database:entities"))
-    implementation(project(":database:impl"))
     implementation(project(":core:interfaces"))
-    implementation(project(":core:main"))
+    implementation(project(":core:keys"))
+    implementation(project(":core:libraries"))
+    implementation(project(":core:objects"))
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
 

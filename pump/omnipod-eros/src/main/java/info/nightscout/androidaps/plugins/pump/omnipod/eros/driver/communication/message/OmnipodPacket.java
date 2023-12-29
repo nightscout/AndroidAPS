@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message;
 
+import app.aaps.core.utils.pump.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RLMessage;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodCrc;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PacketType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.CrcMismatchException;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.IllegalPacketTypeException;
-import info.nightscout.pump.common.utils.ByteUtil;
 
 /**
  * Created by andy on 6/1/18.

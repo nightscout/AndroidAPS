@@ -3,41 +3,49 @@ package app.aaps.plugins.aps.openAPSSMB
 import android.content.Context
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
+import app.aaps.core.data.aps.AutosensResult
+import app.aaps.core.data.aps.SMBDefaults
+import app.aaps.core.data.plugin.PluginDescription
+import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.APS
-import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.DetermineBasalAdapter
-import app.aaps.core.interfaces.aps.SMBDefaults
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.constraints.PluginConstraints
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profiling.Profiler
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventAPSCalculationFinished
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.Round
-import app.aaps.core.main.constraints.ConstraintObject
-import app.aaps.core.main.extensions.target
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.Preferences
+import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.core.objects.extensions.target
 import app.aaps.core.utils.MidnightUtils
-import app.aaps.database.ValueWrapper
-import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.aps.OpenAPSFragment
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.events.EventResetOpenAPSGui
+import app.aaps.plugins.aps.openAPSSMBDynamicISF.DetermineBasalAdapterSMBDynamicISFJS
+import app.aaps.plugins.aps.openAPSSMBDynamicISF.OpenAPSSMBDynamicISFPlugin
 import app.aaps.plugins.aps.utils.ScriptReader
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
@@ -46,7 +54,7 @@ import kotlin.math.floor
 
 @Singleton
 open class OpenAPSSMBPlugin @Inject constructor(
-    injector: HasAndroidInjector,
+    private val injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val constraintChecker: ConstraintsChecker,
@@ -55,14 +63,17 @@ open class OpenAPSSMBPlugin @Inject constructor(
     val context: Context,
     private val activePlugin: ActivePlugin,
     private val iobCobCalculator: IobCobCalculator,
+    private val processedTbrEbData: ProcessedTbrEbData,
     private val hardLimits: HardLimits,
     private val profiler: Profiler,
-    private val sp: SP,
+    private val preferences: Preferences,
     protected val dateUtil: DateUtil,
-    private val repository: AppRepository,
+    private val persistenceLayer: PersistenceLayer,
     private val glucoseStatusProvider: GlucoseStatusProvider,
     private val bgQualityCheck: BgQualityCheck,
-    private val tddCalculator: TddCalculator
+    private val tddCalculator: TddCalculator,
+    private val importExportPrefs: ImportExportPrefs,
+    private val config: Config
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.APS)
@@ -71,9 +82,10 @@ open class OpenAPSSMBPlugin @Inject constructor(
         .pluginName(R.string.openapssmb)
         .shortName(app.aaps.core.ui.R.string.smb_shortname)
         .preferencesId(R.xml.pref_openapssmb)
+        .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_smb)
         .setDefault(),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), APS, PluginConstraints {
 
     // DynamicISF specific
@@ -106,11 +118,11 @@ open class OpenAPSSMBPlugin @Inject constructor(
 
     override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
         super.preprocessPreferences(preferenceFragment)
-        val smbAlwaysEnabled = sp.getBoolean(R.string.key_enableSMB_always, false)
+        val smbAlwaysEnabled = preferences.get(BooleanKey.ApsUseSmbAlways)
         val advancedFiltering = activePlugin.activeBgSource.advancedFilteringSupported()
-        preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_enableSMB_with_COB))?.isVisible = !smbAlwaysEnabled || !advancedFiltering
-        preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_enableSMB_with_temptarget))?.isVisible = !smbAlwaysEnabled || !advancedFiltering
-        preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_enableSMB_after_carbs))?.isVisible = !smbAlwaysEnabled || !advancedFiltering
+        preferenceFragment.findPreference<SwitchPreference>(rh.gs(app.aaps.core.keys.R.string.key_openaps_allow_smb_with_COB))?.isVisible = !smbAlwaysEnabled || !advancedFiltering
+        preferenceFragment.findPreference<SwitchPreference>(rh.gs(app.aaps.core.keys.R.string.key_openaps_allow_smb_with_low_temp_target))?.isVisible = !smbAlwaysEnabled || !advancedFiltering
+        preferenceFragment.findPreference<SwitchPreference>(rh.gs(app.aaps.core.keys.R.string.key_openaps_enable_smb_after_carbs))?.isVisible = !smbAlwaysEnabled || !advancedFiltering
     }
 
     override fun invoke(initiator: String, tempBasalFallback: Boolean) {
@@ -163,26 +175,26 @@ open class OpenAPSSMBPlugin @Inject constructor(
         var targetBg =
             hardLimits.verifyHardLimits(profile.getTargetMgdl(), app.aaps.core.ui.R.string.temp_target_value, HardLimits.VERY_HARD_LIMIT_TARGET_BG[0], HardLimits.VERY_HARD_LIMIT_TARGET_BG[1])
         var isTempTarget = false
-        val tempTarget = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
-        if (tempTarget is ValueWrapper.Existing) {
+        val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
+        if (tempTarget != null) {
             isTempTarget = true
             minBg =
                 hardLimits.verifyHardLimits(
-                    tempTarget.value.lowTarget,
+                    tempTarget.lowTarget,
                     app.aaps.core.ui.R.string.temp_target_low_target,
                     HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[0].toDouble(),
                     HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[1].toDouble()
                 )
             maxBg =
                 hardLimits.verifyHardLimits(
-                    tempTarget.value.highTarget,
+                    tempTarget.highTarget,
                     app.aaps.core.ui.R.string.temp_target_high_target,
                     HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[0].toDouble(),
                     HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[1].toDouble()
                 )
             targetBg =
                 hardLimits.verifyHardLimits(
-                    tempTarget.value.target(),
+                    tempTarget.target(),
                     app.aaps.core.ui.R.string.temp_target_value,
                     HardLimits.VERY_HARD_LIMIT_TEMP_TARGET_BG[0].toDouble(),
                     HardLimits.VERY_HARD_LIMIT_TEMP_TARGET_BG[1].toDouble()
@@ -250,7 +262,8 @@ open class OpenAPSSMBPlugin @Inject constructor(
                 }
             )
             inputConstraints.copyReasons(
-                ConstraintObject(false, aapsLogger).apply { set(true, "tdd1D=$tdd1D tdd7D=$tdd7D tddLast4H=$tddLast4H tddLast8to4H=$tddLast8to4H tddLast24H=$tddLast24H", this) }
+                ConstraintObject(false, aapsLogger)
+                    .apply { set(true, "tdd1D=$tdd1D tdd7D=$tdd7D tddLast4H=$tddLast4H tddLast8to4H=$tddLast8to4H tddLast24H=$tddLast24H", this) }
             )
         }
 
@@ -285,7 +298,8 @@ open class OpenAPSSMBPlugin @Inject constructor(
             } else {
                 // TODO still needed with oref1?
                 // Fix bug determine basal
-                if (determineBasalResultSMB.rate == 0.0 && determineBasalResultSMB.duration == 0 && iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now()) == null) determineBasalResultSMB.isTempBasalRequested =
+                if (determineBasalResultSMB.rate == 0.0 && determineBasalResultSMB.duration == 0 && processedTbrEbData.getTempBasalIncludingConvertedExtended(dateUtil.now()) == null) determineBasalResultSMB
+                    .isTempBasalRequested =
                     false
                 determineBasalResultSMB.iob = iobArray[0]
                 determineBasalResultSMB.json?.put("timestamp", dateUtil.toISOString(now))
@@ -293,6 +307,15 @@ open class OpenAPSSMBPlugin @Inject constructor(
                 lastDetermineBasalAdapter = determineBasalAdapterSMBJS
                 lastAPSResult = determineBasalResultSMB as DetermineBasalResultSMB
                 lastAPSRun = now
+                if (config.isUnfinishedMode())
+                importExportPrefs.exportApsResult(
+                    when (determineBasalAdapterSMBJS) {
+                        is DetermineBasalAdapterSMBJS -> OpenAPSSMBPlugin::class.simpleName
+                        is DetermineBasalAdapterSMBDynamicISFJS -> OpenAPSSMBDynamicISFPlugin::class.simpleName
+                        else -> "Error"
+                    }, determineBasalAdapterSMBJS.json(), determineBasalResultSMB.json()
+                )
+                rxBus.send(EventAPSCalculationFinished())
             }
         }
         rxBus.send(EventOpenAPSUpdateGui())
@@ -305,7 +328,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
 
     override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
         if (isEnabled()) {
-            val maxIobPref: Double = sp.getDouble(R.string.key_openapssmb_max_iob, 3.0)
+            val maxIobPref = preferences.get(DoubleKey.ApsSmbMaxIob)
             maxIob.setIfSmaller(maxIobPref, rh.gs(R.string.limiting_iob, maxIobPref, rh.gs(R.string.maxvalueinpreferences)), this)
             maxIob.setIfSmaller(hardLimits.maxIobSMB(), rh.gs(R.string.limiting_iob, hardLimits.maxIobSMB(), rh.gs(R.string.hardlimit)), this)
         }
@@ -314,7 +337,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
 
     override fun applyBasalConstraints(absoluteRate: Constraint<Double>, profile: Profile): Constraint<Double> {
         if (isEnabled()) {
-            var maxBasal = sp.getDouble(app.aaps.core.utils.R.string.key_openapsma_max_basal, 1.0)
+            var maxBasal = preferences.get(DoubleKey.ApsMaxBasal)
             if (maxBasal < profile.getMaxDailyBasal()) {
                 maxBasal = profile.getMaxDailyBasal()
                 absoluteRate.addReason(rh.gs(R.string.increasing_max_basal), this)
@@ -322,14 +345,14 @@ open class OpenAPSSMBPlugin @Inject constructor(
             absoluteRate.setIfSmaller(maxBasal, rh.gs(app.aaps.core.ui.R.string.limitingbasalratio, maxBasal, rh.gs(R.string.maxvalueinpreferences)), this)
 
             // Check percentRate but absolute rate too, because we know real current basal in pump
-            val maxBasalMultiplier = sp.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4.0)
+            val maxBasalMultiplier = preferences.get(DoubleKey.ApsMaxCurrentBasalMultiplier)
             val maxFromBasalMultiplier = floor(maxBasalMultiplier * profile.getBasal() * 100) / 100
             absoluteRate.setIfSmaller(
                 maxFromBasalMultiplier,
                 rh.gs(app.aaps.core.ui.R.string.limitingbasalratio, maxFromBasalMultiplier, rh.gs(R.string.max_basal_multiplier)),
                 this
             )
-            val maxBasalFromDaily = sp.getDouble(R.string.key_openapsama_max_daily_safety_multiplier, 3.0)
+            val maxBasalFromDaily = preferences.get(DoubleKey.ApsMaxDailyMultiplier)
             val maxFromDaily = floor(profile.getMaxDailyBasal() * maxBasalFromDaily * 100) / 100
             absoluteRate.setIfSmaller(maxFromDaily, rh.gs(app.aaps.core.ui.R.string.limitingbasalratio, maxFromDaily, rh.gs(R.string.max_daily_basal_multiplier)), this)
         }
@@ -337,19 +360,19 @@ open class OpenAPSSMBPlugin @Inject constructor(
     }
 
     override fun isSMBModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
-        val enabled = sp.getBoolean(R.string.key_use_smb, false)
+        val enabled = preferences.get(BooleanKey.ApsUseSmb)
         if (!enabled) value.set(false, rh.gs(R.string.smb_disabled_in_preferences), this)
         return value
     }
 
     override fun isUAMEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
-        val enabled = sp.getBoolean(R.string.key_use_uam, false)
+        val enabled = preferences.get(BooleanKey.ApsUseUam)
         if (!enabled) value.set(false, rh.gs(R.string.uam_disabled_in_preferences), this)
         return value
     }
 
     override fun isAutosensModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
-        val enabled = sp.getBoolean(app.aaps.core.utils.R.string.key_use_autosens, false)
+        val enabled = preferences.get(BooleanKey.ApsUseAutosens)
         if (!enabled) value.set(false, rh.gs(R.string.autosens_disabled_in_preferences), this)
         return value
     }

@@ -1,14 +1,14 @@
 package app.aaps.plugins.sync.garmin
 
+import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.SourceSensor
+import app.aaps.core.data.model.TrendArrow
 import android.content.Context
-import app.aaps.core.interfaces.db.GlucoseUnit
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.events.EventNewBG
 import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.database.entities.GlucoseValue
 import app.aaps.shared.tests.TestBase
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -43,7 +43,8 @@ import java.time.temporal.ChronoUnit
 import java.util.concurrent.locks.Condition
 import kotlin.ranges.LongProgression.Companion.fromClosedRange
 
-class GarminPluginTest: TestBase() {
+class GarminPluginTest : TestBase() {
+
     private lateinit var gp: GarminPlugin
 
     @Mock private lateinit var rh: ResourceHelper
@@ -52,14 +53,9 @@ class GarminPluginTest: TestBase() {
     @Mock private lateinit var loopHub: LoopHub
     private val clock = Clock.fixed(Instant.ofEpochMilli(10_000), ZoneId.of("UTC"))
 
-    private var injector: HasAndroidInjector = HasAndroidInjector {
-        AndroidInjector {
-        }
-    }
-
     @BeforeEach
     fun setup() {
-        gp = GarminPlugin(injector, aapsLogger, rh, context, loopHub, rxBus, sp)
+        gp = GarminPlugin(aapsLogger, rh, context, loopHub, rxBus, sp)
         gp.clock = clock
         `when`(loopHub.currentProfileName).thenReturn("Default")
         `when`(sp.getBoolean(anyString(), anyBoolean())).thenAnswer { i -> i.arguments[1] }
@@ -85,20 +81,22 @@ class GarminPluginTest: TestBase() {
 
     private fun createUri(params: Map<String, Any>): URI {
         return URI("http://foo?" + params.entries.joinToString(separator = "&") { (k, v) ->
-            "$k=$v"})
+            "$k=$v"
+        })
     }
 
     private fun createHeartRate(@Suppress("SameParameterValue") heartRate: Int) = mapOf<String, Any>(
         "hr" to heartRate,
         "hrStart" to 1001L,
         "hrEnd" to 2001L,
-        "device" to "Test_Device")
+        "device" to "Test_Device"
+    )
 
-    private fun createGlucoseValue(timestamp: Instant, value: Double = 93.0) = GlucoseValue(
+    private fun createGlucoseValue(timestamp: Instant, value: Double = 93.0) = GV(
         id = 10 * timestamp.toEpochMilli(),
         timestamp = timestamp.toEpochMilli(), raw = 90.0, value = value,
-        trendArrow = GlucoseValue.TrendArrow.FLAT, noise = 4.5,
-        sourceSensor = GlucoseValue.SourceSensor.RANDOM
+        trendArrow = TrendArrow.FLAT, noise = 4.5,
+        sourceSensor = SourceSensor.RANDOM
     )
 
     @Test
@@ -121,7 +119,8 @@ class GarminPluginTest: TestBase() {
             Instant.ofEpochSecond(hr["hrStart"] as Long),
             Instant.ofEpochSecond(hr["hrEnd"] as Long),
             99,
-            hr["device"] as String)
+            hr["device"] as String
+        )
     }
 
     @Test
@@ -293,7 +292,8 @@ class GarminPluginTest: TestBase() {
         `when`(loopHub.targetGlucoseHigh).thenReturn(130.0)
         val from = getGlucoseValuesFrom
         `when`(loopHub.getGlucoseValues(from, true)).thenReturn(
-            listOf(createGlucoseValue(Instant.ofEpochSecond(1_000))))
+            listOf(createGlucoseValue(Instant.ofEpochSecond(1_000)))
+        )
         val hr = createHeartRate(99)
         val uri = createUri(hr)
         val result = gp.onGetBloodGlucose(uri)
@@ -315,7 +315,8 @@ class GarminPluginTest: TestBase() {
             Instant.ofEpochSecond(hr["hrStart"] as Long),
             Instant.ofEpochSecond(hr["hrEnd"] as Long),
             99,
-            hr["device"] as String)
+            hr["device"] as String
+        )
     }
 
     @Test
@@ -326,7 +327,8 @@ class GarminPluginTest: TestBase() {
         `when`(loopHub.glucoseUnit).thenReturn(GlucoseUnit.MMOL)
         val from = getGlucoseValuesFrom
         `when`(loopHub.getGlucoseValues(from, true)).thenReturn(
-            listOf(createGlucoseValue(clock.instant().minusSeconds(330))))
+            listOf(createGlucoseValue(clock.instant().minusSeconds(330)))
+        )
         val params = createHeartRate(99).toMutableMap()
         params["wait"] = 10
         val uri = createUri(params)
@@ -350,7 +352,8 @@ class GarminPluginTest: TestBase() {
             Instant.ofEpochSecond(params["hrStart"] as Long),
             Instant.ofEpochSecond(params["hrEnd"] as Long),
             99,
-            params["device"] as String)
+            params["device"] as String
+        )
     }
 
     @Test
@@ -394,8 +397,12 @@ fun onSgv_NoDelta() {
         whenever(loopHub.temporaryBasal).thenReturn(0.8)
         whenever(loopHub.carbsOnboard).thenReturn(10.7)
         whenever(loopHub.getGlucoseValues(any(), eq(false))).thenReturn(
-            listOf(createGlucoseValue(
-                clock.instant().minusSeconds(100L), 99.3)))
+            listOf(
+                createGlucoseValue(
+                    clock.instant().minusSeconds(100L), 99.3
+                )
+            )
+        )
         assertEquals(
             """[{"_id":"-900000","device":"RANDOM","deviceString":"1969-12-31T23:58:30Z","sysTime":"1969-12-31T23:58:30Z","unfiltered":90.0,"date":-90000,"sgv":99,"direction":"Flat","noise":4.5,"units_hint":"mmol","iob":5.2,"tbr":80,"cob":10.7}]""",
             gp.onSgv(createUri(mapOf())))
@@ -414,12 +421,14 @@ fun onSgv_NoDelta() {
             val from = i.getArgument<Instant>(0)
             fromClosedRange(from.toEpochMilli(), clock.instant().toEpochMilli(), 300_000L)
                 .map(Instant::ofEpochMilli)
-                .mapIndexed { idx, ts -> createGlucoseValue(ts, 100.0+(10 * idx)) }.reversed()}
+                .mapIndexed { idx, ts -> createGlucoseValue(ts, 100.0 + (10 * idx)) }.reversed()
+        }
         assertEquals(
             """[{"_id":"100000","device":"RANDOM","deviceString":"1970-01-01T00:00:10Z","sysTime":"1970-01-01T00:00:10Z","unfiltered":90.0,"date":10000,"sgv":120,"delta":10,"direction":"Flat","noise":4.5,"units_hint":"mmol","iob":5.2,"tbr":80,"cob":10.7}]""",
             gp.onSgv(createUri(mapOf("count" to "1"))))
         verify(loopHub).getGlucoseValues(
-            clock.instant().minusSeconds(600L), false)
+            clock.instant().minusSeconds(600L), false
+        )
 
 
         assertEquals(
@@ -427,14 +436,16 @@ fun onSgv_NoDelta() {
                 """{"_id":"-2900000","device":"RANDOM","deviceString":"1969-12-31T23:55:10Z","sysTime":"1969-12-31T23:55:10Z","unfiltered":90.0,"date":-290000,"sgv":120,"delta":10,"direction":"Flat","noise":4.5}]""",
             gp.onSgv(createUri(mapOf("count" to "2"))))
         verify(loopHub).getGlucoseValues(
-            clock.instant().minusSeconds(900L), false)
+            clock.instant().minusSeconds(900L), false
+        )
 
         assertEquals(
             """[{"date":10000,"sgv":130,"delta":10,"direction":"Flat","noise":4.5,"units_hint":"mmol","iob":5.2,"tbr":80,"cob":10.7},""" +
                 """{"date":-290000,"sgv":120,"delta":10,"direction":"Flat","noise":4.5}]""",
             gp.onSgv(createUri(mapOf("count" to "2", "brief_mode" to "true"))))
         verify(loopHub, times(2)).getGlucoseValues(
-            clock.instant().minusSeconds(900L), false)
+            clock.instant().minusSeconds(900L), false
+        )
 
         verify(loopHub, atLeastOnce()).glucoseUnit
     }

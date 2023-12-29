@@ -15,17 +15,19 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import app.aaps.annotations.OpenForTesting
+import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.model.HasIDs
+import app.aaps.core.data.plugin.PluginDescription
+import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.configuration.Constants
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.nsclient.NSAlarm
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -48,13 +50,10 @@ import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.nssdk.NSAndroidClientImpl
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.remotemodel.LastModified
-import app.aaps.database.ValueWrapper
-import app.aaps.database.entities.interfaces.TraceableDBEntry
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsShared.NSClientFragment
 import app.aaps.plugins.sync.nsShared.events.EventConnectivityOptionChanged
@@ -85,7 +84,6 @@ import app.aaps.plugins.sync.nsclientV3.workers.LoadStatusWorker
 import app.aaps.plugins.sync.nsclientV3.workers.LoadTreatmentsWorker
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.serialization.json.Json
@@ -93,10 +91,8 @@ import java.security.InvalidParameterException
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@OpenForTesting
 @Singleton
 class NSClientV3Plugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
@@ -111,7 +107,8 @@ class NSClientV3Plugin @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     private val nsClientSource: NSClientSource,
     private val storeDataForDb: StoreDataForDb,
-    private val decimalFormatter: DecimalFormatter
+    private val decimalFormatter: DecimalFormatter,
+    private val l: L
 ) : NsClient, Sync, PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -121,7 +118,7 @@ class NSClientV3Plugin @Inject constructor(
         .shortName(R.string.ns_client_v3_short_name)
         .preferencesId(R.xml.pref_ns_client_v3)
         .description(R.string.description_ns_client_v3),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ) {
 
     @Suppress("PropertyName")
@@ -272,12 +269,10 @@ class NSClientV3Plugin @Inject constructor(
         runLoop = Runnable {
             var refreshInterval = T.mins(5).msecs()
             if (nsClientSource.isEnabled())
-                persistenceLayer.getLastGlucoseValue().blockingGet().let {
+                persistenceLayer.getLastGlucoseValue()?.let {
                     // if last value is older than 5 min or there is no bg
-                    if (it is ValueWrapper.Existing) {
-                        if (it.value.timestamp < dateUtil.now() - T.mins(5).plus(T.secs(20)).msecs()) {
-                            refreshInterval = T.mins(1).msecs()
-                        }
+                    if (it.timestamp < dateUtil.now() - T.mins(5).plus(T.secs(20)).msecs()) {
+                        refreshInterval = T.mins(1).msecs()
                     }
                 }
             if (!sp.getBoolean(app.aaps.core.utils.R.string.key_ns_use_ws, true))
@@ -345,7 +340,7 @@ class NSClientV3Plugin @Inject constructor(
                 baseUrl = sp.getString(app.aaps.core.utils.R.string.key_nsclientinternal_url, "").lowercase().replace("https://", "").replace(Regex("/$"), ""),
                 accessToken = sp.getString(R.string.key_ns_client_token, ""),
                 context = context,
-                logging = config.isEngineeringMode() || config.isDev(),
+                logging = l.findByName(LTag.NSCLIENT.tag).enabled && (config.isEngineeringMode() || config.isDev()),
                 logger = { msg -> aapsLogger.debug(LTag.HTTP, msg) }
             )
         SystemClock.sleep(2000)
@@ -474,7 +469,7 @@ class NSClientV3Plugin @Inject constructor(
                     }
                 }
                 result.identifier?.let {
-                    dataPair.value.interfaceIDs.nightscoutId = it
+                    dataPair.value.ids.nightscoutId = it
                     storeDataForDb.nsIdDeviceStatuses.add(dataPair.value)
                     sp.putBoolean(app.aaps.core.utils.R.string.key_objectives_pump_status_is_available_in_ns, true)
                 }
@@ -493,7 +488,7 @@ class NSClientV3Plugin @Inject constructor(
         }
         try {
             val data = dataPair.value.toNSSvgV3()
-            val id = dataPair.value.interfaceIDs.nightscoutId
+            val id = dataPair.value.ids.nightscoutId
             rxBus.send(
                 EventNSClientNewLog(
                     when (operation) {
@@ -519,7 +514,7 @@ class NSClientV3Plugin @Inject constructor(
                     }
                 }
                 result.identifier?.let {
-                    dataPair.value.interfaceIDs.nightscoutId = it
+                    dataPair.value.ids.nightscoutId = it
                     storeDataForDb.nsIdGlucoseValues.add(dataPair.value)
                 }
                 slowDown()
@@ -538,7 +533,7 @@ class NSClientV3Plugin @Inject constructor(
         }
         try {
             val data = dataPair.value.toNSFood()
-            val id = dataPair.value.interfaceIDs.nightscoutId
+            val id = dataPair.value.ids.nightscoutId
             rxBus.send(
                 EventNSClientNewLog(
                     when (operation) {
@@ -564,7 +559,7 @@ class NSClientV3Plugin @Inject constructor(
                     }
                 }
                 result.identifier?.let {
-                    dataPair.value.interfaceIDs.nightscoutId = it
+                    dataPair.value.ids.nightscoutId = it
                     storeDataForDb.nsIdFoods.add(dataPair.value)
                 }
                 slowDown()
@@ -604,7 +599,7 @@ class NSClientV3Plugin @Inject constructor(
             else                                           -> null
         }?.let { data ->
             try {
-                val id = if (dataPair.value is TraceableDBEntry) (dataPair.value as TraceableDBEntry).interfaceIDs.nightscoutId else ""
+                val id = if (dataPair.value is HasIDs) (dataPair.value as HasIDs).ids.nightscoutId else ""
                 rxBus.send(
                     EventNSClientNewLog(
                         when (operation) {
@@ -632,52 +627,52 @@ class NSClientV3Plugin @Inject constructor(
                     result.identifier?.let {
                         when (dataPair) {
                             is DataSyncSelector.PairBolus                  -> {
-                                dataPair.value.interfaceIDs.nightscoutId = it
+                                dataPair.value.ids.nightscoutId = it
                                 storeDataForDb.nsIdBoluses.add(dataPair.value)
                             }
 
                             is DataSyncSelector.PairCarbs                  -> {
-                                dataPair.value.interfaceIDs.nightscoutId = it
+                                dataPair.value.ids.nightscoutId = it
                                 storeDataForDb.nsIdCarbs.add(dataPair.value)
                             }
 
                             is DataSyncSelector.PairBolusCalculatorResult  -> {
-                                dataPair.value.interfaceIDs.nightscoutId = it
+                                dataPair.value.ids.nightscoutId = it
                                 storeDataForDb.nsIdBolusCalculatorResults.add(dataPair.value)
                             }
 
                             is DataSyncSelector.PairTemporaryTarget        -> {
-                                dataPair.value.interfaceIDs.nightscoutId = it
+                                dataPair.value.ids.nightscoutId = it
                                 storeDataForDb.nsIdTemporaryTargets.add(dataPair.value)
                             }
 
                             is DataSyncSelector.PairTherapyEvent           -> {
-                                dataPair.value.interfaceIDs.nightscoutId = it
+                                dataPair.value.ids.nightscoutId = it
                                 storeDataForDb.nsIdTherapyEvents.add(dataPair.value)
                             }
 
                             is DataSyncSelector.PairTemporaryBasal         -> {
-                                dataPair.value.interfaceIDs.nightscoutId = it
+                                dataPair.value.ids.nightscoutId = it
                                 storeDataForDb.nsIdTemporaryBasals.add(dataPair.value)
                             }
 
                             is DataSyncSelector.PairExtendedBolus          -> {
-                                dataPair.value.interfaceIDs.nightscoutId = it
+                                dataPair.value.ids.nightscoutId = it
                                 storeDataForDb.nsIdExtendedBoluses.add(dataPair.value)
                             }
 
                             is DataSyncSelector.PairProfileSwitch          -> {
-                                dataPair.value.interfaceIDs.nightscoutId = it
+                                dataPair.value.ids.nightscoutId = it
                                 storeDataForDb.nsIdProfileSwitches.add(dataPair.value)
                             }
 
                             is DataSyncSelector.PairEffectiveProfileSwitch -> {
-                                dataPair.value.interfaceIDs.nightscoutId = it
+                                dataPair.value.ids.nightscoutId = it
                                 storeDataForDb.nsIdEffectiveProfileSwitches.add(dataPair.value)
                             }
 
                             is DataSyncSelector.PairOfflineEvent           -> {
-                                dataPair.value.interfaceIDs.nightscoutId = it
+                                dataPair.value.ids.nightscoutId = it
                                 storeDataForDb.nsIdOfflineEvents.add(dataPair.value)
                             }
 

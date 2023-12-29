@@ -9,11 +9,13 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.FragmentManager
-import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.Preferences
+import app.aaps.core.ui.extensions.toVisibility
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
@@ -26,6 +28,7 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var dateUtil: DateUtil
 
     fun interface OnValueChangedListener {
@@ -117,7 +120,7 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
         }
 
         (view.findViewById(app.aaps.core.ui.R.id.notes_layout) as View?)?.visibility =
-            sp.getBoolean(app.aaps.core.utils.R.string.key_show_notes_entry_dialogs, false).toVisibility()
+            preferences.get(BooleanKey.OverviewShowNotesInDialogs).toVisibility()
 
         (view.findViewById(app.aaps.core.ui.R.id.ok) as Button?)?.setOnClickListener {
             synchronized(okClicked) {

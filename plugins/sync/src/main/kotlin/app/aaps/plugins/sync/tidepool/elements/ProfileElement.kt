@@ -1,15 +1,15 @@
 package app.aaps.plugins.sync.tidepool.elements
 
+import app.aaps.core.data.model.EPS
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.main.profile.ProfileSealed
-import app.aaps.database.entities.EffectiveProfileSwitch
+import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
 import com.google.gson.annotations.Expose
 import java.util.UUID
 
-class ProfileElement(ps: EffectiveProfileSwitch, serialNumber: String, dateUtil: DateUtil, profileUtil: ProfileUtil) :
+class ProfileElement(ps: EPS, serialNumber: String, dateUtil: DateUtil, profileUtil: ProfileUtil) :
     BaseElement(ps.timestamp, UUID.nameUUIDFromBytes(("AAPS-profile" + ps.timestamp).toByteArray()).toString(), dateUtil) {
 
     @Expose

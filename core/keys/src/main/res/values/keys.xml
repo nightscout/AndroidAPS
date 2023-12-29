@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    Keys-->
+    <string name="key_simple_mode" translatable="false">simple_mode</string>
+    <string name="key_setupwizard_processed" translatable="false">startupwizard_processed</string>
+    <string name="key_units" translatable="false">units</string>
+
+    <!--    Overview-->
+    <string name="key_keep_screen_on" translatable="false">keep_screen_on</string>
+    <string name="key_show_treatment_button" translatable="false">show_treatment_button</string>
+    <string name="key_show_wizard_button" translatable="false">show_wizard_button</string>
+    <string name="key_show_insulin_button" translatable="false">show_insulin_button</string>
+    <string name="key_show_carbs_button" translatable="false">show_carbs_button</string>
+    <string name="key_show_calibration_button" translatable="false">show_calibration_button</string>
+    <string name="key_show_cgm_button" translatable="false">show_cgm_button</string>
+    <string name="key_insulin_button_increment_1" translatable="false">insulin_button_increment_1</string>
+    <string name="key_insulin_button_increment_2" translatable="false">insulin_button_increment_2</string>
+    <string name="key_insulin_button_increment_3" translatable="false">insulin_button_increment_3</string>
+    <string name="key_carbs_button_increment_1" translatable="false">carbs_button_increment_1</string>
+    <string name="key_carbs_button_increment_2" translatable="false">carbs_button_increment_2</string>
+    <string name="key_carbs_button_increment_3" translatable="false">carbs_button_increment_3</string>
+    <string name="key_eating_soon_duration" translatable="false">eatingsoon_duration</string>
+    <string name="key_eating_soon_target" translatable="false">eatingsoon_target</string>
+    <string name="key_activity_duration" translatable="false">activity_duration</string>
+    <string name="key_activity_target" translatable="false">activity_target</string>
+    <string name="key_hypo_duration" translatable="false">hypo_duration</string>
+    <string name="key_hypo_target" translatable="false">hypo_target</string>
+    <string name="key_low_mark" translatable="false">low_mark</string>
+    <string name="key_high_mark" translatable="false">high_mark</string>
+    <string name="key_short_tab_titles" translatable="false">short_tabtitles</string>
+    <string name="key_show_notes_entry_dialogs" translatable="false">show_notes_entry_dialogs</string>
+    <string name="key_show_statuslights" translatable="false">show_statuslights</string>
+    <string name="key_statuslights_cage_warning" translatable="false">statuslights_cage_warning</string>
+    <string name="key_statuslights_cage_critical" translatable="false">statuslights_cage_critical</string>
+    <string name="key_statuslights_iage_warning" translatable="false">statuslights_iage_warning</string>
+    <string name="key_statuslights_iage_critical" translatable="false">statuslights_iage_critical</string>
+    <string name="key_statuslights_sage_warning" translatable="false">statuslights_sage_warning</string>
+    <string name="key_statuslights_sage_critical" translatable="false">statuslights_sage_critical</string>
+    <string name="key_statuslights_bage_warning" translatable="false">statuslights_bage_warning</string>
+    <string name="key_statuslights_bage_critical" translatable="false">statuslights_bage_critical</string>
+    <string name="key_statuslights_sbat_warning" translatable="false">statuslights_sbat_warning</string>
+    <string name="key_statuslights_sbat_critical" translatable="false">statuslights_sbat_critical</string>
+    <string name="key_statuslights_res_warning" translatable="false">statuslights_res_warning</string>
+    <string name="key_statuslights_res_critical" translatable="false">statuslights_res_critical</string>
+    <string name="key_statuslights_bat_warning" translatable="false">statuslights_bat_warning</string>
+    <string name="key_statuslights_bat_critical" translatable="false">statuslights_bat_critical</string>
+    <string name="key_boluswizard_percentage" translatable="false">boluswizard_percentage</string>
+    <string name="key_reset_boluswizard_percentage_time" translatable="false">key_reset_boluswizard_percentage_time</string>
+    <string name="key_use_bolus_advisor" translatable="false">use_bolus_advisor</string>
+    <string name="key_use_bolus_reminder" translatable="false">use_bolus_reminder</string>
+    <string name="key_use_superbolus" translatable="false">key_usersuperbolus</string>
+
+    <!--    General-->
+    <string name="key_use_dark_mode" translatable="false">use_dark_mode</string>
+    <string name="key_skin" translatable="false">skin</string>
+    <string name="key_protection_timeout" translatable="false">protection_timeout</string>
+
+    <!--    Actions-->
+    <string name="key_fill_button_1" translatable="false">fill_button1</string>
+    <string name="key_fill_button_2" translatable="false">fill_button2</string>
+    <string name="key_fill_button_3" translatable="false">fill_button3</string>
+
+    <!-- Locale -->
+    <string name="key_language" translatable="false">language</string>
+
+    <!--    Safety-->
+    <string name="key_safety_age" translatable="false">age</string>
+    <string name="key_safety_max_bolus" translatable="false">treatmentssafety_maxbolus</string>
+    <string name="key_safety_max_carbs" translatable="false">treatmentssafety_maxcarbs</string>
+
+    <!--    BG source-->
+    <string name="key_do_bg_ns_upload" translatable="false">dexcomg5_nsupload</string>
+    <string name="key_dexcom_log_ns_sensor_change" translatable="false">dexcom_lognssensorchange</string>
+
+    <!--    Loop-->
+    <string name="key_loop_open_mode_min_change" translatable="false">loop_openmode_min_change</string>
+    <string name="key_aps_mode" translatable="false">aps_mode</string>
+
+    <!--    APS-->
+    <string name="key_openaps_max_basal" translatable="false">openapsma_max_basal</string>
+    <string name="key_openaps_smb_max_iob" translatable="false">openapsmb_max_iob</string>
+    <string name="key_openaps_ama_max_iob" translatable="false">openapsma_max_iob</string>
+    <string name="key_openaps_use_autosens" translatable="false">openapsama_useautosens</string>
+    <string name="key_openaps_use_smb" translatable="false">use_smb</string>
+    <string name="key_openaps_allow_smb_with_high_temp_target" translatable="false">enableSMB_with_high_temptarget</string>
+    <string name="key_openaps_enable_smb_always" translatable="false">enableSMB_always</string>
+    <string name="key_openaps_allow_smb_with_COB" translatable="false">enableSMB_with_COB</string>
+    <string name="key_openaps_allow_smb_with_low_temp_target" translatable="false">enableSMB_with_temptarget</string>
+    <string name="key_openaps_enable_smb_after_carbs" translatable="false">enableSMB_after_carbs</string>
+    <string name="key_openaps_smb_interval" translatable="false">smbinterval</string>
+    <string name="key_openaps_smb_max_minutes" translatable="false">smbmaxminutes</string>
+    <string name="key_openaps_uam_smb_max_minutes" translatable="false">uamsmbmaxminutes</string>
+    <string name="key_openaps_use_uam" translatable="false">use_uam</string>
+    <string name="key_openaps_sensitivity_raises_target" translatable="false">sensitivity_raises_target</string>
+    <string name="key_openaps_resistance_lowers_target" translatable="false">resistance_lowers_target</string>
+    <string name="key_openaps_carbs_required_threshold" translatable="false">carbsReqThreshold</string>
+    <string name="key_openaps_always_use_short_deltas" translatable="false">always_use_shortavg</string>
+    <string name="key_openaps_max_daily_safety_multiplier" translatable="false">openapsama_max_daily_safety_multiplier</string>
+    <string name="key_openaps_current_basal_safety_multiplier" translatable="false">openapsama_current_basal_safety_multiplier</string>
+    <string name="key_dynamic_isf_adjustment_factor" translatable="false">DynISFAdjust</string>
+    <string name="key_dynamic_isf_lgs_threshold" translatable="false">lgsThreshold</string>
+    <string name="key_dynamic_isf_adjust_sensitivity" translatable="false">dynisf_adjust_sensitivity</string>
+    <string name="key_openaps_ama_bolus_snooze_dia_divisor" translatable="false">bolussnooze_dia_divisor</string>
+    <string name="key_openaps_ama_autosens_adjust_targets" translatable="false">autosens_adjust_targets</string>
+    <string name="key_openaps_ama_min_5m_carbs_impact" translatable="false">openapsama_min_5m_carbimpact</string>
+    <string name="key_openaps_smb_min_5m_carbs_impact" translatable="false">openapsama_min_5m_carbimpact</string>
+
+    <!--    Sensitivity-->
+    <string name="key_absorption_cutoff" translatable="false">absorption_cutoff</string>
+    <string name="key_openaps_autosens_max" translatable="false">autosens_max</string>
+    <string name="key_openaps_autosens_min" translatable="false">autosens_min</string>
+    <string name="key_absorption_maxtime" translatable="false">absorption_maxtime</string>
+    <string name="key_openapsama_autosens_period" translatable="false">openapsama_autosens_period</string>
+
+    <!--    Maintenance-->
+    <string name="key_maintenance_logs_email" translatable="false">maintenance_logs_email</string>
+    <string name="key_maintenance_logs_amount" translatable="false">maintenance_logs_amount</string>
+    <string name="key_email_for_crash_report" translatable="false">email_for_crash_report</string>
+    <string name="key_enable_fabric" translatable="false">enable_fabric2</string>
+
+    <!--    Alerts-->
+    <string name="key_missed_bg_readings_threshold_minutes" translatable="false">missed_bg_readings_threshold</string>
+    <string name="key_pump_unreachable_threshold_minutes" translatable="false">pump_unreachable_threshold</string>
+    <!--    Equil-->
+    <string name="key_equil_maxbolus" translatable="false">equil_maxbolus</string>
+</resources>

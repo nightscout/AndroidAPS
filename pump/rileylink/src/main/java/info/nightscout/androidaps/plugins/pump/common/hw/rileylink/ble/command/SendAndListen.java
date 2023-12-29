@@ -5,12 +5,12 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
+import app.aaps.core.utils.pump.ByteUtil;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RadioPacket;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkCommandType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkFirmwareVersion;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
-import info.nightscout.pump.common.utils.ByteUtil;
 
 public class SendAndListen extends RileyLinkCommand {
 

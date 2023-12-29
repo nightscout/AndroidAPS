@@ -1,27 +1,27 @@
 package app.aaps.plugins.sync.nsclient.extensions
 
+import app.aaps.core.data.model.OE
+import app.aaps.core.data.model.TE
+import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.utils.JsonHelper
-import app.aaps.database.entities.OfflineEvent
-import app.aaps.database.entities.TherapyEvent
-import app.aaps.database.entities.embedments.InterfaceIDs
 import org.json.JSONObject
 
-fun OfflineEvent.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
+fun OE.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
     JSONObject()
         .put("created_at", dateUtil.toISOString(timestamp))
         .put("enteredBy", "openaps://" + "AndroidAPS")
-        .put("eventType", TherapyEvent.Type.APS_OFFLINE.text)
+        .put("eventType", TE.Type.APS_OFFLINE.text)
         .put("isValid", isValid)
         .put("duration", T.msecs(duration).mins())
         .put("durationInMilliseconds", duration)
         .put("reason", reason.name)
         .also {
-            if (interfaceIDs.pumpId != null) it.put("pumpId", interfaceIDs.pumpId)
-            if (interfaceIDs.pumpType != null) it.put("pumpType", interfaceIDs.pumpType!!.name)
-            if (interfaceIDs.pumpSerial != null) it.put("pumpSerial", interfaceIDs.pumpSerial)
-            if (isAdd && interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId)
+            if (ids.pumpId != null) it.put("pumpId", ids.pumpId)
+            if (ids.pumpType != null) it.put("pumpType", ids.pumpType!!.name)
+            if (ids.pumpSerial != null) it.put("pumpSerial", ids.pumpSerial)
+            if (isAdd && ids.nightscoutId != null) it.put("_id", ids.nightscoutId)
         }
 
 /* NS PS
@@ -37,7 +37,7 @@ fun OfflineEvent.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
     "insulin": null
 }
  */
-fun OfflineEvent.Companion.fromJson(jsonObject: JSONObject): OfflineEvent? {
+fun OE.Companion.fromJson(jsonObject: JSONObject): OE? {
     val timestamp =
         JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null)
             ?: JsonHelper.safeGetLongAllowNull(jsonObject, "date", null)
@@ -49,20 +49,20 @@ fun OfflineEvent.Companion.fromJson(jsonObject: JSONObject): OfflineEvent? {
         ?: JsonHelper.safeGetStringAllowNull(jsonObject, "_id", null)
         ?: return null
     val pumpId = JsonHelper.safeGetLongAllowNull(jsonObject, "pumpId", null)
-    val pumpType = InterfaceIDs.PumpType.fromString(JsonHelper.safeGetStringAllowNull(jsonObject, "pumpType", null))
+    val pumpType = PumpType.fromString(JsonHelper.safeGetStringAllowNull(jsonObject, "pumpType", null))
     val pumpSerial = JsonHelper.safeGetStringAllowNull(jsonObject, "pumpSerial", null)
-    val reason = OfflineEvent.Reason.fromString(JsonHelper.safeGetString(jsonObject, "reason", OfflineEvent.Reason.OTHER.name))
+    val reason = OE.Reason.fromString(JsonHelper.safeGetString(jsonObject, "reason", OE.Reason.OTHER.name))
 
 
-    return OfflineEvent(
+    return OE(
         timestamp = timestamp,
         duration = durationInMilliseconds ?: T.mins(duration).msecs(),
         isValid = isValid,
         reason = reason
     ).also {
-        it.interfaceIDs.nightscoutId = id
-        it.interfaceIDs.pumpId = pumpId
-        it.interfaceIDs.pumpType = pumpType
-        it.interfaceIDs.pumpSerial = pumpSerial
+        it.ids.nightscoutId = id
+        it.ids.pumpId = pumpId
+        it.ids.pumpType = pumpType
+        it.ids.pumpSerial = pumpSerial
     }
 }

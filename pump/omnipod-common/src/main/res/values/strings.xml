@@ -89,6 +89,7 @@
     <string name="omnipod_common_overview_reservoir_value_over50">Over 50 U left</string>
     <string name="omnipod_common_overview_errors">Errors</string>
     <string name="omnipod_common_overview_last_bolus_value" translatable="false">%1$.2f %2$s (%3$s)</string>
+    <string name="omnipod_common_uncertain">uncertain</string>
 
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_cancel">Cancel</string>
@@ -153,12 +154,12 @@
     <string name="omnipod_common_pod_status_waiting_for_activation">Setup in progress (waiting for Pod activation)</string>
     <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">Setup in progress (waiting for cannula insertion)</string>
     <string name="omnipod_common_pod_status_running">Running</string>
+    <string name="omnipod_common_pod_status_normal">Normal</string>
     <string name="omnipod_common_pod_status_suspended">Suspended</string>
     <string name="omnipod_common_pod_status_pod_fault">Pod Fault</string>
     <string name="omnipod_common_pod_status_activation_time_exceeded">Activation time exceeded</string>
     <string name="omnipod_common_pod_status_inactive">Inactive</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Pod Fault: %1$03d %2$s</string>
-    <string name="omnipod_common_pod_status_normal">Normal</string>
 
     <!-- Omnipod - Commands -->
     <string name="omnipod_common_cmd_deactivate_pod">Deactivate Pod</string>

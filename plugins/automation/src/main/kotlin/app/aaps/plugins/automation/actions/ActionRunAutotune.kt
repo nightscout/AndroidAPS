@@ -6,7 +6,6 @@ import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
@@ -50,11 +49,11 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
                     message = app.aaps.core.ui.R.string.autotune_run_with_error
                     aapsLogger.error(LTag.AUTOMATION, "Error during Autotune Run")
                 }
-                callback.result(PumpEnactResult(injector).success(autotunePlugin.lastRunSuccess).comment(message)).run()
+                callback.result(instantiator.providePumpEnactResult().success(autotunePlugin.lastRunSuccess).comment(message)).run()
             } else {
                 message = app.aaps.core.ui.R.string.autotune_run_cancelled
                 aapsLogger.debug(LTag.AUTOMATION, "Autotune run detected, Autotune Run Cancelled")
-                callback.result(PumpEnactResult(injector).success(false).comment(message)).run()
+                callback.result(instantiator.providePumpEnactResult().success(false).comment(message)).run()
             }
         }.start()
         return

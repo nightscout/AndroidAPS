@@ -13,18 +13,20 @@ import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import app.aaps.core.data.plugin.PluginDescription
+import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.Sensitivity
 import app.aaps.core.interfaces.configuration.ConfigBuilder
-import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.profile.ProfileSource
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.Pump
@@ -39,23 +41,21 @@ import app.aaps.core.interfaces.smoothing.Smoothing
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.keys.Preferences
 import app.aaps.core.ui.dialogs.OKDialog
-import app.aaps.database.entities.UserEntry.Action
-import app.aaps.database.entities.UserEntry.Sources
-import app.aaps.database.entities.ValueWithUnit
+import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.plugins.configuration.R
 import app.aaps.plugins.configuration.configBuilder.events.EventConfigBuilderUpdateGui
-import dagger.android.HasAndroidInjector
 import java.security.InvalidParameterException
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ConfigBuilderPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     private val sp: SP,
+    private val preferences: Preferences,
     private val rxBus: RxBus,
     private val activePlugin: ActivePlugin,
     private val uel: UserEntryLogger,
@@ -66,14 +66,12 @@ class ConfigBuilderPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.GENERAL)
         .fragmentClass(ConfigBuilderFragment::class.java.name)
-        .showInList(true)
         .alwaysEnabled(true)
-        .alwaysVisible(false)
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_cogs)
         .pluginName(R.string.config_builder)
         .shortName(R.string.config_builder_shortname)
         .description(R.string.description_config_builder),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), ConfigBuilder {
 
     override fun initialize() {
@@ -173,8 +171,10 @@ class ConfigBuilderPlugin @Inject constructor(
                 pumpSync.connectNewPump()
                 sp.putBoolean("allow_hardware_pump", true)
                 uel.log(
-                    Action.HW_PUMP_ALLOWED, Sources.ConfigBuilder, rh.gs(changedPlugin.pluginDescription.pluginName),
-                    ValueWithUnit.SimpleString(rh.gsNotLocalised(changedPlugin.pluginDescription.pluginName))
+                    action = Action.HW_PUMP_ALLOWED,
+                    source = Sources.ConfigBuilder,
+                    note = rh.gs(changedPlugin.pluginDescription.pluginName),
+                    value = ValueWithUnit.SimpleString(rh.gsNotLocalised(changedPlugin.pluginDescription.pluginName))
                 )
                 aapsLogger.debug(LTag.PUMP, "First time HW pump allowed!")
             }, {
@@ -256,11 +256,12 @@ class ConfigBuilderPlugin @Inject constructor(
 
         @Suppress("InflateParams")
         val holder = layoutInflater.inflate(R.layout.configbuilder_single_category, null) as LinearLayout
-        (holder.findViewById<View>(R.id.category_title) as TextView).let {
+        holder.findViewById<TextView>(R.id.category_title).let {
             if (title != null) it.text = rh.gs(title)
             else it.visibility = View.GONE
         }
-        (holder.findViewById<View>(R.id.category_description) as TextView).text = rh.gs(description)
+        if (preferences.simpleMode) holder.findViewById<View>(R.id.category_visibility).visibility = false.toVisibility()
+        holder.findViewById<TextView>(R.id.category_description).text = rh.gs(description)
         val pluginContainer = holder.findViewById<LinearLayout>(R.id.category_plugins)
         val appActivity = fragment?.activity ?: activity ?: throw InvalidParameterException()
         for (plugin in plugins) {
@@ -341,10 +342,16 @@ class ConfigBuilderPlugin @Inject constructor(
                 pluginDescription.visibility = View.VISIBLE
                 pluginDescription.text = plugin.description
             }
-            pluginPreferences.visibility = if (plugin.preferencesId == -1 || !plugin.isEnabled(pluginType)) View.INVISIBLE else View.VISIBLE
-            pluginVisibility.visibility = plugin.hasFragment().toVisibility()
-            pluginVisibility.isEnabled = !(plugin.pluginDescription.neverVisible || plugin.pluginDescription.alwaysVisible) && plugin.isEnabled(pluginType)
-            pluginVisibility.isChecked = plugin.isFragmentVisible()
+            if (preferences.simpleMode) {
+                pluginPreferences.visibility =
+                    if (plugin.preferencesId == -1 || !plugin.isEnabled(pluginType) || !plugin.pluginDescription.preferencesVisibleInSimpleMode) View.INVISIBLE else View.VISIBLE
+                pluginVisibility.visibility = false.toVisibility()
+            } else {
+                pluginPreferences.visibility = if (plugin.preferencesId == -1 || !plugin.isEnabled(pluginType)) View.INVISIBLE else View.VISIBLE
+                pluginVisibility.visibility = plugin.hasFragment().toVisibility()
+                pluginVisibility.isEnabled = !(plugin.pluginDescription.neverVisible || plugin.pluginDescription.alwaysVisible) && plugin.isEnabled(pluginType)
+                pluginVisibility.isChecked = plugin.isFragmentVisible()
+            }
         }
 
         private fun areMultipleSelectionsAllowed(type: PluginType): Boolean {

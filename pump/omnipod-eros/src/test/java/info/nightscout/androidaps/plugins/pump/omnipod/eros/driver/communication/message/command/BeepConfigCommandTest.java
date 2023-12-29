@@ -4,8 +4,8 @@ import org.joda.time.Duration;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import app.aaps.core.utils.pump.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.BeepConfigType;
-import info.nightscout.pump.common.utils.ByteUtil;
 
 class BeepConfigCommandTest {
     @Test

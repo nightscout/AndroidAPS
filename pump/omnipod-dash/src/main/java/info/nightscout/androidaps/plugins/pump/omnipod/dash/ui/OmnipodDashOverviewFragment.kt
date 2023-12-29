@@ -9,9 +9,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.configuration.Constants
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.protection.ProtectionCheck
+import app.aaps.core.interfaces.pump.defs.determineCorrectBasalSize
+import app.aaps.core.interfaces.pump.defs.determineCorrectBolusSize
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -25,6 +26,8 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.Preferences
 import app.aaps.core.ui.UIRunnable
 import app.aaps.core.ui.dialogs.OKDialog
 import dagger.android.support.DaggerFragment
@@ -63,6 +66,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     @Inject lateinit var omnipodDashPumpPlugin: OmnipodDashPumpPlugin
     @Inject lateinit var podStateManager: OmnipodDashPodStateManager
     @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
@@ -391,8 +395,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 if (podStateManager.basalProgram != null && !podStateManager.isSuspended) {
                     rh.gs(
                         app.aaps.core.ui.R.string.pump_base_basal_rate,
-                        omnipodDashPumpPlugin.model()
-                            .determineCorrectBasalSize(podStateManager.basalProgram!!.rateAt(System.currentTimeMillis()))
+                        omnipodDashPumpPlugin.model().determineCorrectBasalSize(podStateManager.basalProgram!!.rateAt(System.currentTimeMillis()))
                     )
                 } else {
                     PLACEHOLDER
@@ -563,7 +566,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                     rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname),
                     readableDuration(Duration.ofMillis(SystemClock.elapsedRealtime() - it.createdRealtime))
                 )
-                text += " (uncertain) "
+                text += " (" + rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_uncertain) + ")"
                 textColorAttr = app.aaps.core.ui.R.attr.warningColor
                 podInfoBinding.lastBolus.text = text
                 podInfoBinding.lastBolus.setTextColor(rh.gac(context, textColorAttr))
@@ -764,14 +767,8 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     }
 
     // FIXME ideally we should just have access to LocalAlertUtils here
-    private fun getPumpUnreachableTimeout(): Duration {
-        return Duration.ofMinutes(
-            sp.getInt(
-                app.aaps.core.utils.R.string.key_pump_unreachable_threshold_minutes,
-                Constants.DEFAULT_PUMP_UNREACHABLE_THRESHOLD_MINUTES
-            ).toLong()
-        )
-    }
+    private fun getPumpUnreachableTimeout(): Duration =
+        Duration.ofMinutes(preferences.get(IntKey.AlertsPumpUnreachableThreshold).toLong())
 
     inner class DisplayResultDialogCallback(
         private val errorMessagePrefix: String,

@@ -526,7 +526,6 @@
     <string name="limitingpercentrate">Begrænser maks. procent til %1$d%% på grund af %2$s</string>
     <string name="itmustbepositivevalue">det skal være en positiv værdi</string>
     <string name="limitingbolus">Begrænser bolus til %1$.1f IE på grund af %2$s</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Bekræftelse</string>
     <string name="message">Besked</string>

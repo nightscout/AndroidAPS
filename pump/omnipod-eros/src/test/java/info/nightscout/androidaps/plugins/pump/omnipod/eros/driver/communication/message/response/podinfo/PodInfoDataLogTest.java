@@ -5,8 +5,8 @@ import static com.google.common.truth.Truth.assertThat;
 import org.joda.time.Duration;
 import org.junit.jupiter.api.Test;
 
+import app.aaps.core.utils.pump.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.FaultEventCode;
-import info.nightscout.pump.common.utils.ByteUtil;
 
 class PodInfoDataLogTest {
     @Test

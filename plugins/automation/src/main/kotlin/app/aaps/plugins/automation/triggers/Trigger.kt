@@ -7,6 +7,7 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -18,7 +19,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.database.impl.AppRepository
+import app.aaps.core.keys.Preferences
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.dialogs.ChooseTriggerDialog
 import app.aaps.plugins.automation.events.EventTriggerChanged
@@ -38,8 +39,9 @@ abstract class Trigger(val injector: HasAndroidInjector) {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var locationDataContainer: LastLocationDataContainer
-    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
@@ -122,7 +124,7 @@ abstract class Trigger(val injector: HasAndroidInjector) {
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
                 gravity = Gravity.CENTER
             }
-            setImageResource(app.aaps.core.main.R.drawable.ic_add)
+            setImageResource(app.aaps.core.objects.R.drawable.ic_add)
             contentDescription = rh.gs(R.string.add_short)
             setOnClickListener {
                 scanForActivity(context)?.supportFragmentManager?.let {
@@ -144,7 +146,7 @@ abstract class Trigger(val injector: HasAndroidInjector) {
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
                 gravity = Gravity.CENTER
             }
-            setImageResource(app.aaps.core.main.R.drawable.ic_remove)
+            setImageResource(app.aaps.core.objects.R.drawable.ic_remove)
             contentDescription = rh.gs(R.string.delete_short)
             setOnClickListener {
                 rxBus.send(EventTriggerRemove(trigger))
@@ -158,7 +160,7 @@ abstract class Trigger(val injector: HasAndroidInjector) {
                 gravity = Gravity.CENTER
             }
             layoutParams = params
-            setImageResource(app.aaps.core.main.R.drawable.ic_clone)
+            setImageResource(app.aaps.core.objects.R.drawable.ic_clone)
             contentDescription = rh.gs(R.string.copy_short)
             setOnClickListener {
                 rxBus.send(EventTriggerClone(trigger))

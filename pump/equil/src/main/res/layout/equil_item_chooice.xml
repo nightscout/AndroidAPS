@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.AppCompatTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/tv_name"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    android:background="@drawable/equil_selector_radiobtn"
+    android:gravity="center"
+    android:padding="16dp"
+    android:text="adfasdfa"
+    app:layout_constraintBottom_toTopOf="@+id/btn_ok"
+    app:layout_constraintStart_toStartOf="@+id/tv_hint"
+    app:layout_constraintTop_toBottomOf="@+id/tv_hint"
+    app:layout_constraintWidth_percent="0.4" />

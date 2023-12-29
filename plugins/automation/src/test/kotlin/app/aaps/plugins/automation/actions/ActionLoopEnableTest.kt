@@ -1,6 +1,6 @@
 package app.aaps.plugins.automation.actions
 
-import app.aaps.core.interfaces.plugin.PluginType
+import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.plugins.automation.R
 import com.google.common.truth.Truth.assertThat
@@ -18,7 +18,7 @@ class ActionLoopEnableTest : ActionsTestBase() {
 
         testPumpPlugin.pumpDescription.isTempBasalCapable = true
         `when`(rh.gs(app.aaps.core.ui.R.string.enableloop)).thenReturn("Enable loop")
-        `when`(context.getString(R.string.alreadyenabled)).thenReturn("Already enabled")
+        `when`(rh.gs(R.string.alreadyenabled)).thenReturn("Already enabled")
 
         sut = ActionLoopEnable(injector)
     }

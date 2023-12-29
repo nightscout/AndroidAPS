@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communicatio
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import info.nightscout.pump.common.utils.ByteUtil;
+import app.aaps.core.utils.pump.ByteUtil;
 
 class PodInfoRecentPulseLogTest {
     @Test

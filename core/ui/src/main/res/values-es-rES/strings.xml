@@ -525,13 +525,13 @@
     <string name="password_cleared">Contraseña borrada</string>
     <string name="pairing">Emparejando</string>
     <string name="initializing">Iniciando...</string>
+    <string name="secs" comment="second short">%1$d s</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limitando la basal máxima a %1$.2f U/h debido a %2$s</string>
     <string name="pumplimit">límite de la bomba</string>
     <string name="limitingpercentrate">Limitando el porcentaje máximo de la dosis a %1$d%% debido a %2$s</string>
     <string name="itmustbepositivevalue">tiene que ser un valor positivo</string>
     <string name="limitingbolus">Limitando el bolo a %1$.1f U debido a %2$s</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Confirmación</string>
     <string name="message">Mensaje</string>

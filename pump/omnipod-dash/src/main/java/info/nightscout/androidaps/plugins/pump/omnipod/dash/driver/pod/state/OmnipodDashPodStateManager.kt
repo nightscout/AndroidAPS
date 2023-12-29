@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state
 
-import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.data.model.BS
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair.PairResult
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.ActivationProgress
@@ -110,7 +110,7 @@ interface OmnipodDashPodStateManager {
     fun observeNoActiveCommand(): Completable
     fun getCommandConfirmationFromState(): CommandConfirmationFromState
 
-    fun createLastBolus(requestedUnits: Double, historyId: Long, bolusType: DetailedBolusInfo.BolusType)
+    fun createLastBolus(requestedUnits: Double, historyId: Long, bolusType: BS.Type)
     fun markLastBolusComplete(): LastBolus?
     fun onStart()
 
@@ -158,7 +158,7 @@ interface OmnipodDashPodStateManager {
         var bolusUnitsRemaining: Double,
         var deliveryComplete: Boolean,
         val historyId: Long,
-        val bolusType: DetailedBolusInfo.BolusType
+        val bolusType: BS.Type
     ) {
 
         fun deliveredUnits(): Double? {

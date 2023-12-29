@@ -13,7 +13,7 @@ import android.view.ViewGroup
 import androidx.core.view.MenuCompat
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
-import app.aaps.core.interfaces.aps.AutosensResult
+import app.aaps.core.data.aps.AutosensResult
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin

@@ -149,7 +149,7 @@
     <string name="a11y_add_new_to_list">add new to list</string>
     <string name="do_you_want_switch_profile">Do you want to switch profile and discard changes made to current profile?</string>
     <string name="save_or_reset_changes_first">Save or reset current changes first</string>
-    <string name="delete_current_profile">Delete profile \"%1$s\"?</string>
+    <string name="delete_current_profile">Delete current profile?</string>
     <string name="units_colon">Units:</string>
     <string name="missing_profile_name">Missing profile name</string>
     <string name="error_in_ic_values">Error in IC values</string>
@@ -190,18 +190,9 @@
     <string name="patch_pump">Patch pump</string>
 
     <!-- Overview -->
-    <string name="key_show_calibration_button" translatable="false">show_calibration_button</string>
-    <string name="key_show_cgm_button" translatable="false">show_cgm_button</string>
-    <string name="key_show_carbs_button" translatable="false">show_carbs_button</string>
-    <string name="key_show_wizard_button" translatable="false">show_wizard_button</string>
-    <string name="key_show_insulin_button" translatable="false">show_insulin_button</string>
-    <string name="key_show_treatment_button" translatable="false">show_treatment_button</string>
     <string name="key_statuslights_copy_ns" translatable="false">statuslights_copy_ns</string>
     <string name="key_statuslights_overview_advanced" translatable="false">statuslights_overview_advanced</string>
-    <string name="key_keep_screen_on" translatable="false">keep_screen_on</string>
-    <string name="key_short_tabtitles" translatable="false">short_tabtitles</string>
 
-    <string name="key_show_statuslights" translatable="false">show_statuslights</string>
     <string name="show_statuslights">Show status lights on home screen</string>
     <string name="statuslights_cage_warning">Threshold warning cannula age [h]</string>
     <string name="statuslights_cage_critical">Threshold critical cannula age [h]</string>
@@ -209,19 +200,13 @@
     <string name="statuslights_iage_critical">Threshold critical insulin age [h]</string>
     <string name="statuslights_sage_warning">Threshold warning sensor age [h]</string>
     <string name="statuslights_sage_critical">Threshold critical sensor age [h]</string>
-    <string name="key_statuslights_sbat_warning" translatable="false">statuslights_sbat_warning</string>
     <string name="statuslights_sbat_warning">Threshold warning sensor battery level [%]</string>
-    <string name="key_statuslights_sbat_critical" translatable="false">statuslights_sbat_critical</string>
     <string name="statuslights_sbat_critical">Threshold critical sensor battery level [%]</string>
     <string name="statuslights_bage_warning">Threshold warning pump battery age [h]</string>
     <string name="statuslights_bage_critical">Threshold critical pump battery age [h]</string>
-    <string name="key_statuslights_res_warning" translatable="false">statuslights_res_warning</string>
     <string name="statuslights_res_warning">Threshold warning reservoir level [U]</string>
-    <string name="key_statuslights_res_critical" translatable="false">statuslights_res_critical</string>
     <string name="statuslights_res_critical">Threshold critical reservoir level [U]</string>
-    <string name="key_statuslights_bat_warning" translatable="false">statuslights_bat_warning</string>
     <string name="statuslights_bat_warning">Threshold warning pump battery level [%]</string>
-    <string name="key_statuslights_bat_critical" translatable="false">statuslights_bat_critical</string>
     <string name="statuslights_bat_critical">Threshold critical pump battery level [%]</string>
     <string name="statuslights_copy_ns">Copy settings from NS</string>
     <string name="a11y_graph">graph</string>
@@ -271,7 +256,7 @@
     <string name="button1">Button 1</string>
     <string name="button2">Button 2</string>
     <string name="button3">Button 3</string>
-    <string name="prefs_range_title">Range for Visualization</string>
+    <string name="prefs_range_title">Range for visualization</string>
     <string name="prefs_range_summary">High and low mark for the charts in Overview and Smartwatch</string>
     <string name="low_mark">LOW mark</string>
     <string name="high_mark">HIGH mark</string>
@@ -316,8 +301,6 @@
     <string name="graph_menu_divider_header">Graph</string>
 
     <!-- Skins -->
-    <string name="key_skin" translatable="false">skin</string>
-
     <string name="classic_description">Original skin</string>
     <string name="lowres_description">Low Resolution skin</string>
     <string name="buttonson_description">Buttons are always displayed on bottom of screen</string>
@@ -334,5 +317,8 @@
     <string name="ongoingnotificaction" translatable="false">Ongoing Notification</string>
     <string name="description_persistent_notification">Shows an ongoing notification with a short overview of what your loop is doing</string>
     <string name="old_data">OLD DATA</string>
+    <string name="overview_show_steps">steps</string>
+    <string name="steps_shortname">STEPS</string>
+    <string name="simple_mode_enabled">Simple mode enabled</string>
 
 </resources>

@@ -1,10 +1,11 @@
 package app.aaps.plugins.sync.nsclient.extensions
 
+import app.aaps.core.data.model.FD
 import app.aaps.core.utils.JsonHelper
-import app.aaps.database.entities.Food
+
 import org.json.JSONObject
 
-fun Food.Companion.fromJson(jsonObject: JSONObject): Food? {
+fun FD.Companion.fromJson(jsonObject: JSONObject): FD? {
     if ("food" == JsonHelper.safeGetString(jsonObject, "type")) {
         val name = JsonHelper.safeGetStringAllowNull(jsonObject, "name", null) ?: return null
         val category = JsonHelper.safeGetStringAllowNull(jsonObject, "category", null)
@@ -21,7 +22,7 @@ fun Food.Companion.fromJson(jsonObject: JSONObject): Food? {
             ?: return null
         val isValid = JsonHelper.safeGetBoolean(jsonObject, "isValid", true)
 
-        val food = Food(
+        val food = FD(
             name = name,
             category = category,
             subCategory = subCategory,
@@ -34,13 +35,13 @@ fun Food.Companion.fromJson(jsonObject: JSONObject): Food? {
             fat = fat,
             isValid = isValid
         )
-        food.interfaceIDs.nightscoutId = id
+        food.ids.nightscoutId = id
         return food
     }
     return null
 }
 
-fun Food.toJson(isAdd: Boolean): JSONObject =
+fun FD.toJson(isAdd: Boolean): JSONObject =
     JSONObject()
         .put("type", "food")
         .put("name", name)
@@ -54,5 +55,5 @@ fun Food.toJson(isAdd: Boolean): JSONObject =
         .put("protein", protein)
         .put("fat", fat)
         .put("isValid", isValid)
-        .also { if (isAdd && interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId) }
+        .also { if (isAdd && ids.nightscoutId != null) it.put("_id", ids.nightscoutId) }
 

@@ -8,15 +8,21 @@ import android.os.IBinder
 import android.text.format.DateFormat
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import app.aaps.core.data.model.BS
+import app.aaps.core.data.plugin.PluginDescription
+import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.pump.defs.ManufacturerType
+import app.aaps.core.data.pump.defs.PumpDescription
+import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
-import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
@@ -29,9 +35,8 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.pump.actions.CustomAction
 import app.aaps.core.interfaces.pump.actions.CustomActionType
-import app.aaps.core.interfaces.pump.defs.ManufacturerType
-import app.aaps.core.interfaces.pump.defs.PumpDescription
-import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.pump.defs.determineCorrectBasalSize
+import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -45,11 +50,9 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.toast.ToastUtils
-import dagger.android.HasAndroidInjector
 import info.nightscout.pump.diaconn.database.DiaconnHistoryDatabase
 import info.nightscout.pump.diaconn.events.EventDiaconnG8DeviceChange
 import info.nightscout.pump.diaconn.service.DiaconnG8Service
@@ -63,7 +66,6 @@ import kotlin.math.max
 
 @Singleton
 class DiaconnG8Plugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val context: Context,
@@ -81,7 +83,8 @@ class DiaconnG8Plugin @Inject constructor(
     private val aapsSchedulers: AapsSchedulers,
     private val uiInteraction: UiInteraction,
     private val diaconnHistoryDatabase: DiaconnHistoryDatabase,
-    private val decimalFormatter: DecimalFormatter
+    private val decimalFormatter: DecimalFormatter,
+    private val instantiator: Instantiator
 ) : PumpPluginBase(
     PluginDescription()
         .mainType(PluginType.PUMP)
@@ -91,14 +94,14 @@ class DiaconnG8Plugin @Inject constructor(
         .shortName(R.string.diaconn_g8_pump_shortname)
         .preferencesId(R.xml.pref_diaconn)
         .description(R.string.description_pump_diaconn_g8),
-    injector, aapsLogger, rh, commandQueue
+    aapsLogger, rh, commandQueue
 ), Pump, Diaconn, PluginConstraints, OwnDatabasePlugin {
 
     private val disposable = CompositeDisposable()
     private var diaconnG8Service: DiaconnG8Service? = null
     private var mDeviceAddress = ""
     var mDeviceName = ""
-    override val pumpDescription = PumpDescription(PumpType.DIACONN_G8)
+    override val pumpDescription = PumpDescription().fillFor(PumpType.DIACONN_G8)
 
     override fun onStart() {
         super.onStart()
@@ -178,11 +181,11 @@ class DiaconnG8Plugin @Inject constructor(
 
     // Diaconn Pump Interface
     override fun loadHistory(): PumpEnactResult {
-        return diaconnG8Service?.loadHistory() ?: PumpEnactResult(injector).success(false)
+        return diaconnG8Service?.loadHistory() ?: instantiator.providePumpEnactResult().success(false)
     }
 
     override fun setUserOptions(): PumpEnactResult {
-        return diaconnG8Service?.setUserSettings() ?: PumpEnactResult(injector).success(false)
+        return diaconnG8Service?.setUserSettings() ?: instantiator.providePumpEnactResult().success(false)
     }
 
     // Constraints interface
@@ -221,7 +224,7 @@ class DiaconnG8Plugin @Inject constructor(
         diaconnG8Service?.isConnected ?: false || diaconnG8Service?.isConnecting ?: false
 
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
-        val result = PumpEnactResult(injector)
+        val result = instantiator.providePumpEnactResult()
         if (!isInitialized()) {
             uiInteraction.addNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, rh.gs(app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set), Notification.URGENT)
             result.comment = rh.gs(app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set)
@@ -281,11 +284,11 @@ class DiaconnG8Plugin @Inject constructor(
         var carbTimeStamp = detailedBolusInfo.carbsTimestamp ?: detailedBolusInfo.timestamp
         if (carbTimeStamp == detailedBolusInfo.timestamp) carbTimeStamp -= T.mins(1).msecs() // better set 1 min back to prevents clash with insulin
         detailedBolusInfoStorage.add(detailedBolusInfo) // will be picked up on reading history
-        val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.id)
+        val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == BS.Type.SMB, detailedBolusInfo.id)
         var connectionOK = false
         if (detailedBolusInfo.insulin > 0 || carbs > 0) connectionOK = diaconnG8Service?.bolus(detailedBolusInfo.insulin, carbs.toInt(), carbTimeStamp, t)
             ?: false
-        val result = PumpEnactResult(injector)
+        val result = instantiator.providePumpEnactResult()
         result.success = connectionOK
         result.bolusDelivered = t.insulin
 
@@ -304,7 +307,7 @@ class DiaconnG8Plugin @Inject constructor(
     // This is called from APS
     @Synchronized
     override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
-        val result = PumpEnactResult(injector)
+        val result = instantiator.providePumpEnactResult()
         val absoluteAfterConstrain = constraintChecker.applyBasalConstraints(ConstraintObject(absoluteRate, aapsLogger), profile).value()
         val doTempOff = baseBasalRate - absoluteAfterConstrain == 0.0
         val doLowTemp = absoluteAfterConstrain < baseBasalRate
@@ -395,7 +398,7 @@ class DiaconnG8Plugin @Inject constructor(
         var insulinAfterConstraint = constraintChecker.applyExtendedBolusConstraints(ConstraintObject(insulin, aapsLogger)).value()
         // needs to be rounded
         insulinAfterConstraint = Round.roundTo(insulinAfterConstraint, pumpDescription.extendedBolusStep)
-        val result = PumpEnactResult(injector)
+        val result = instantiator.providePumpEnactResult()
 
         if (diaconnG8Pump.isExtendedInProgress && abs(diaconnG8Pump.extendedBolusAmount - insulinAfterConstraint) < pumpDescription.extendedBolusStep) {
             result.enacted = false
@@ -433,7 +436,7 @@ class DiaconnG8Plugin @Inject constructor(
 
     @Synchronized
     override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
-        val result = PumpEnactResult(injector)
+        val result = instantiator.providePumpEnactResult()
         if (diaconnG8Pump.isTempBasalInProgress) {
             diaconnG8Service?.tempBasalStop()
             result.success = !diaconnG8Pump.isTempBasalInProgress
@@ -451,7 +454,7 @@ class DiaconnG8Plugin @Inject constructor(
     }
 
     @Synchronized override fun cancelExtendedBolus(): PumpEnactResult {
-        val result = PumpEnactResult(injector)
+        val result = instantiator.providePumpEnactResult()
         if (diaconnG8Pump.isExtendedInProgress) {
             diaconnG8Service?.extendedBolusStop()
             result.success = !diaconnG8Pump.isExtendedInProgress

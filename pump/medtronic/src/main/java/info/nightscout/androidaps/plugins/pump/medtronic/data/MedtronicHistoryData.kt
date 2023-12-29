@@ -1,18 +1,19 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data
 
+import app.aaps.core.data.model.TE
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.pump.defs.PumpType
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.utils.DateTimeUtil
+import app.aaps.core.utils.StringUtil
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.android.HasAndroidInjector
@@ -38,7 +39,6 @@ import info.nightscout.pump.common.sync.PumpDbEntryBolus
 import info.nightscout.pump.common.sync.PumpDbEntryCarbs
 import info.nightscout.pump.common.sync.PumpDbEntryTBR
 import info.nightscout.pump.common.sync.PumpSyncStorage
-import info.nightscout.pump.common.utils.StringUtil
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.LocalDateTime
 import java.util.GregorianCalendar
@@ -133,7 +133,6 @@ class MedtronicHistoryData @Inject constructor(
         val bolusEstimates: MutableList<PumpHistoryEntry> = mutableListOf()
         val aTechDate = DateTimeUtil.toATechDate(GregorianCalendar())
 
-        //aapsLogger.debug(LTag.PUMP, "Filter new entries: Before {}", newHistory);
         if (!isCollectionEmpty(newHistory)) {
             for (pumpHistoryEntry in newHistory) {
                 if (!allPumpIds.contains(pumpHistoryEntry.pumpId)) {
@@ -483,7 +482,7 @@ class MedtronicHistoryData @Inject constructor(
             uploadCareportalEventIfFoundInHistory(
                 lastPrimeRecord,
                 MedtronicConst.Statistics.LastPrime,
-                DetailedBolusInfo.EventType.CANNULA_CHANGE
+                TE.Type.CANNULA_CHANGE
             )
         }
     }
@@ -504,7 +503,7 @@ class MedtronicHistoryData @Inject constructor(
             uploadCareportalEventIfFoundInHistory(
                 lastRewindRecord,
                 MedtronicConst.Statistics.LastRewind,
-                DetailedBolusInfo.EventType.INSULIN_CHANGE
+                TE.Type.INSULIN_CHANGE
             )
         }
     }
@@ -533,12 +532,12 @@ class MedtronicHistoryData @Inject constructor(
             uploadCareportalEventIfFoundInHistory(
                 lastBatteryChangeRecord,
                 MedtronicConst.Statistics.LastBatteryChange,
-                DetailedBolusInfo.EventType.PUMP_BATTERY_CHANGE
+                TE.Type.PUMP_BATTERY_CHANGE
             )
         }
     }
 
-    private fun uploadCareportalEventIfFoundInHistory(historyRecord: PumpHistoryEntry, eventSP: String, eventType: DetailedBolusInfo.EventType) {
+        private fun uploadCareportalEventIfFoundInHistory(historyRecord: PumpHistoryEntry, eventSP: String, eventType: TE.Type) {
         val lastPrimeFromAAPS = sp.getLong(eventSP, 0L)
         if (historyRecord.atechDateTime != lastPrimeFromAAPS) {
             val result = pumpSync.insertTherapyEventIfNewWithTimestamp(
@@ -601,7 +600,7 @@ class MedtronicHistoryData @Inject constructor(
         for (bolus in entryList) {
 
             val bolusDTO = bolus.decodedData["Object"] as BolusDTO
-            //var type: DetailedBolusInfo.BolusType = DetailedBolusInfo.BolusType.NORMAL
+            //var type: BS.Type = BS.Type.NORMAL
             var multiwave = false
 
             if (bolusDTO.bolusType == PumpBolusType.Extended) {
@@ -1366,9 +1365,6 @@ class MedtronicHistoryData @Inject constructor(
 
     // HELPER METHODS
     private fun sort(list: MutableList<PumpHistoryEntry>) {
-        // if (list != null && !list.isEmpty()) {
-        //     Collections.sort(list, PumpHistoryEntry.Comparator())
-        // }
         list.sortWith(PumpHistoryEntry.Comparator())
     }
 

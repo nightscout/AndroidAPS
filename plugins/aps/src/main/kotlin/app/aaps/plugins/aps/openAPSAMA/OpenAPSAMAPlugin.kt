@@ -1,36 +1,41 @@
 package app.aaps.plugins.aps.openAPSAMA
 
 import android.content.Context
-import app.aaps.annotations.OpenForTesting
+import app.aaps.core.data.aps.AutosensResult
+import app.aaps.core.data.plugin.PluginDescription
+import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.APS
-import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.DetermineBasalAdapter
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.constraints.PluginConstraints
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profiling.Profiler
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventAPSCalculationFinished
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.main.constraints.ConstraintObject
-import app.aaps.core.main.extensions.target
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.Preferences
+import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.core.objects.extensions.target
 import app.aaps.core.utils.MidnightUtils
-import app.aaps.database.ValueWrapper
-import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.aps.OpenAPSFragment
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
@@ -42,10 +47,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.floor
 
-@OpenForTesting
 @Singleton
 class OpenAPSAMAPlugin @Inject constructor(
-    injector: HasAndroidInjector,
+    private val injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val constraintChecker: ConstraintsChecker,
@@ -54,13 +58,16 @@ class OpenAPSAMAPlugin @Inject constructor(
     private val context: Context,
     private val activePlugin: ActivePlugin,
     private val iobCobCalculator: IobCobCalculator,
+    private val processedTbrEbData: ProcessedTbrEbData,
     private val hardLimits: HardLimits,
     private val profiler: Profiler,
     private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
-    private val repository: AppRepository,
+    private val persistenceLayer: PersistenceLayer,
     private val glucoseStatusProvider: GlucoseStatusProvider,
-    private val sp: SP
+    private val preferences: Preferences,
+    private val importExportPrefs: ImportExportPrefs,
+    private val config: Config
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.APS)
@@ -69,8 +76,9 @@ class OpenAPSAMAPlugin @Inject constructor(
         .pluginName(R.string.openapsama)
         .shortName(R.string.oaps_shortname)
         .preferencesId(R.xml.pref_openapsama)
+        .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_ama),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), APS, PluginConstraints {
 
     // last values
@@ -147,26 +155,26 @@ class OpenAPSAMAPlugin @Inject constructor(
         var targetBg =
             hardLimits.verifyHardLimits(profile.getTargetMgdl(), app.aaps.core.ui.R.string.temp_target_value, HardLimits.VERY_HARD_LIMIT_TARGET_BG[0], HardLimits.VERY_HARD_LIMIT_TARGET_BG[1])
         var isTempTarget = false
-        val tempTarget = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
-        if (tempTarget is ValueWrapper.Existing) {
+        val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
+        if (tempTarget != null) {
             isTempTarget = true
             minBg =
                 hardLimits.verifyHardLimits(
-                    tempTarget.value.lowTarget,
+                    tempTarget.lowTarget,
                     app.aaps.core.ui.R.string.temp_target_low_target,
                     HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[0].toDouble(),
                     HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[1].toDouble()
                 )
             maxBg =
                 hardLimits.verifyHardLimits(
-                    tempTarget.value.highTarget,
+                    tempTarget.highTarget,
                     app.aaps.core.ui.R.string.temp_target_high_target,
                     HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[0].toDouble(),
                     HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[1].toDouble()
                 )
             targetBg =
                 hardLimits.verifyHardLimits(
-                    tempTarget.value.target(),
+                    tempTarget.target(),
                     app.aaps.core.ui.R.string.temp_target_value,
                     HardLimits.VERY_HARD_LIMIT_TEMP_TARGET_BG[0].toDouble(),
                     HardLimits.VERY_HARD_LIMIT_TEMP_TARGET_BG[1].toDouble()
@@ -221,7 +229,8 @@ class OpenAPSAMAPlugin @Inject constructor(
             lastAPSResult = null
             lastAPSRun = 0
         } else {
-            if (determineBasalResultAMA.rate == 0.0 && determineBasalResultAMA.duration == 0 && iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now()) == null) determineBasalResultAMA.isTempBasalRequested =
+            if (determineBasalResultAMA.rate == 0.0 && determineBasalResultAMA.duration == 0 && processedTbrEbData.getTempBasalIncludingConvertedExtended(dateUtil.now()) == null) determineBasalResultAMA
+                .isTempBasalRequested =
                 false
             determineBasalResultAMA.iob = iobArray[0]
             val now = System.currentTimeMillis()
@@ -230,6 +239,9 @@ class OpenAPSAMAPlugin @Inject constructor(
             lastDetermineBasalAdapter = determineBasalAdapterAMAJS
             lastAPSResult = determineBasalResultAMA as DetermineBasalResultAMA
             lastAPSRun = now
+            if (config.isUnfinishedMode())
+                importExportPrefs.exportApsResult(this::class.simpleName, determineBasalAdapterAMAJS.json(), determineBasalResultAMA.json())
+            rxBus.send(EventAPSCalculationFinished())
         }
         rxBus.send(EventOpenAPSUpdateGui())
 
@@ -238,7 +250,7 @@ class OpenAPSAMAPlugin @Inject constructor(
 
     override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
         if (isEnabled()) {
-            val maxIobPref: Double = sp.getDouble(R.string.key_openapsma_max_iob, 1.5)
+            val maxIobPref: Double = preferences.get(DoubleKey.ApsAmaMaxIob)
             maxIob.setIfSmaller(maxIobPref, rh.gs(R.string.limiting_iob, maxIobPref, rh.gs(R.string.maxvalueinpreferences)), this)
             maxIob.setIfSmaller(hardLimits.maxIobAMA(), rh.gs(R.string.limiting_iob, hardLimits.maxIobAMA(), rh.gs(R.string.hardlimit)), this)
         }
@@ -247,7 +259,7 @@ class OpenAPSAMAPlugin @Inject constructor(
 
     override fun applyBasalConstraints(absoluteRate: Constraint<Double>, profile: Profile): Constraint<Double> {
         if (isEnabled()) {
-            var maxBasal = sp.getDouble(app.aaps.core.utils.R.string.key_openapsma_max_basal, 1.0)
+            var maxBasal = preferences.get(DoubleKey.ApsMaxBasal)
             if (maxBasal < profile.getMaxDailyBasal()) {
                 maxBasal = profile.getMaxDailyBasal()
                 absoluteRate.addReason(rh.gs(R.string.increasing_max_basal), this)
@@ -255,14 +267,14 @@ class OpenAPSAMAPlugin @Inject constructor(
             absoluteRate.setIfSmaller(maxBasal, rh.gs(app.aaps.core.ui.R.string.limitingbasalratio, maxBasal, rh.gs(R.string.maxvalueinpreferences)), this)
 
             // Check percentRate but absolute rate too, because we know real current basal in pump
-            val maxBasalMultiplier = sp.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4.0)
+            val maxBasalMultiplier = preferences.get(DoubleKey.ApsMaxCurrentBasalMultiplier)
             val maxFromBasalMultiplier = floor(maxBasalMultiplier * profile.getBasal() * 100) / 100
             absoluteRate.setIfSmaller(
                 maxFromBasalMultiplier,
                 rh.gs(app.aaps.core.ui.R.string.limitingbasalratio, maxFromBasalMultiplier, rh.gs(R.string.max_basal_multiplier)),
                 this
             )
-            val maxBasalFromDaily = sp.getDouble(R.string.key_openapsama_max_daily_safety_multiplier, 3.0)
+            val maxBasalFromDaily = preferences.get(DoubleKey.ApsMaxDailyMultiplier)
             val maxFromDaily = floor(profile.getMaxDailyBasal() * maxBasalFromDaily * 100) / 100
             absoluteRate.setIfSmaller(maxFromDaily, rh.gs(app.aaps.core.ui.R.string.limitingbasalratio, maxFromDaily, rh.gs(R.string.max_daily_basal_multiplier)), this)
         }
@@ -270,7 +282,7 @@ class OpenAPSAMAPlugin @Inject constructor(
     }
 
     override fun isAutosensModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
-        val enabled = sp.getBoolean(app.aaps.core.utils.R.string.key_use_autosens, false)
+        val enabled = preferences.get(BooleanKey.ApsUseAutosens)
         if (!enabled) value.set(false, rh.gs(R.string.autosens_disabled_in_preferences), this)
         return value
     }

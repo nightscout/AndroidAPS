@@ -1,15 +1,17 @@
 package app.aaps.plugins.sync.nsclientV3.extensions
 
-import app.aaps.core.interfaces.utils.T
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.IDs
+import app.aaps.core.data.model.TE
+import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.data.time.T
 import app.aaps.core.nssdk.localmodel.entry.NsUnits
 import app.aaps.core.nssdk.localmodel.treatment.EventType
 import app.aaps.core.nssdk.localmodel.treatment.NSTherapyEvent
-import app.aaps.database.entities.TherapyEvent
-import app.aaps.database.entities.embedments.InterfaceIDs
 import java.security.InvalidParameterException
 
-fun NSTherapyEvent.toTherapyEvent(): TherapyEvent =
-    TherapyEvent(
+fun NSTherapyEvent.toTherapyEvent(): TE =
+    TE(
         isValid = isValid,
         timestamp = date ?: throw InvalidParameterException(),
         utcOffset = T.mins(utcOffset ?: 0L).msecs(),
@@ -20,23 +22,23 @@ fun NSTherapyEvent.toTherapyEvent(): TherapyEvent =
         glucose = glucose,
         glucoseType = glucoseType.toMeterType(),
         duration = duration,
-        interfaceIDs_backing = InterfaceIDs(nightscoutId = identifier, pumpId = pumpId, pumpType = InterfaceIDs.PumpType.fromString(pumpType), pumpSerial = pumpSerial, endId = endId)
+        ids = IDs(nightscoutId = identifier, pumpId = pumpId, pumpType = PumpType.fromString(pumpType), pumpSerial = pumpSerial, endId = endId)
     )
 
-fun EventType.toType(): TherapyEvent.Type =
-    TherapyEvent.Type.fromString(this.text)
+fun EventType.toType(): TE.Type =
+    TE.Type.fromString(this.text)
 
-fun NSTherapyEvent.MeterType?.toMeterType(): TherapyEvent.MeterType? =
-    TherapyEvent.MeterType.fromString(this?.text)
+fun NSTherapyEvent.MeterType?.toMeterType(): TE.MeterType? =
+    TE.MeterType.fromString(this?.text)
 
-fun NsUnits?.toUnits(): TherapyEvent.GlucoseUnit =
+fun NsUnits?.toUnits(): GlucoseUnit =
     when (this) {
-        NsUnits.MG_DL  -> TherapyEvent.GlucoseUnit.MGDL
-        NsUnits.MMOL_L -> TherapyEvent.GlucoseUnit.MMOL
-        null           -> TherapyEvent.GlucoseUnit.MGDL
+        NsUnits.MG_DL  -> GlucoseUnit.MGDL
+        NsUnits.MMOL_L -> GlucoseUnit.MMOL
+        null           -> GlucoseUnit.MGDL
     }
 
-fun TherapyEvent.toNSTherapyEvent(): NSTherapyEvent =
+fun TE.toNSTherapyEvent(): NSTherapyEvent =
     NSTherapyEvent(
         isValid = isValid,
         date = timestamp,
@@ -48,22 +50,22 @@ fun TherapyEvent.toNSTherapyEvent(): NSTherapyEvent =
         glucose = glucose,
         glucoseType = glucoseType.toNSMeterType(),
         duration = duration,
-        identifier = interfaceIDs.nightscoutId,
-        pumpId = interfaceIDs.pumpId,
-        pumpType = interfaceIDs.pumpType?.name,
-        pumpSerial = interfaceIDs.pumpSerial,
-        endId = interfaceIDs.endId
+        identifier = ids.nightscoutId,
+        pumpId = ids.pumpId,
+        pumpType = ids.pumpType?.name,
+        pumpSerial = ids.pumpSerial,
+        endId = ids.endId
     )
 
-fun TherapyEvent.Type.toType(): EventType =
+fun TE.Type.toType(): EventType =
     EventType.fromString(this.text)
 
-fun TherapyEvent.MeterType?.toNSMeterType(): NSTherapyEvent.MeterType? =
+fun TE.MeterType?.toNSMeterType(): NSTherapyEvent.MeterType? =
     NSTherapyEvent.MeterType.fromString(this?.text)
 
-fun TherapyEvent.GlucoseUnit?.toUnits(): NsUnits =
+fun GlucoseUnit?.toUnits(): NsUnits =
     when (this) {
-        TherapyEvent.GlucoseUnit.MGDL -> NsUnits.MG_DL
-        TherapyEvent.GlucoseUnit.MMOL -> NsUnits.MMOL_L
-        null                          -> NsUnits.MG_DL
+        GlucoseUnit.MGDL -> NsUnits.MG_DL
+        GlucoseUnit.MMOL -> NsUnits.MMOL_L
+        null             -> NsUnits.MG_DL
     }

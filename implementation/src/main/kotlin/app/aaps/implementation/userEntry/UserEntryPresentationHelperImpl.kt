@@ -1,21 +1,20 @@
 package app.aaps.implementation.userEntry
 
 import android.text.Spanned
-import app.aaps.core.interfaces.configuration.Constants
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.UE
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Translator
-import app.aaps.core.main.R
+import app.aaps.core.objects.R
 import app.aaps.core.utils.HtmlHelper
-import app.aaps.database.entities.UserEntry
-import app.aaps.database.entities.UserEntry.Action
-import app.aaps.database.entities.UserEntry.ColorGroup
-import app.aaps.database.entities.UserEntry.Sources
-import app.aaps.database.entities.ValueWithUnit
 import dagger.Reusable
 import javax.inject.Inject
 
@@ -28,17 +27,17 @@ class UserEntryPresentationHelperImpl @Inject constructor(
     private val decimalFormatter: DecimalFormatter
 ) : UserEntryPresentationHelper {
 
-    override fun colorId(colorGroup: ColorGroup): Int = when (colorGroup) {
-        ColorGroup.InsulinTreatment -> app.aaps.core.ui.R.color.iob
-        ColorGroup.BasalTreatment   -> app.aaps.core.ui.R.color.basal
-        ColorGroup.CarbTreatment    -> app.aaps.core.ui.R.color.carbs
-        ColorGroup.TT               -> app.aaps.core.ui.R.color.tempTargetConfirmation
-        ColorGroup.Profile          -> app.aaps.core.ui.R.color.white
-        ColorGroup.Loop             -> app.aaps.core.ui.R.color.loopClosed
-        ColorGroup.Careportal       -> app.aaps.core.ui.R.color.high
-        ColorGroup.Pump             -> app.aaps.core.ui.R.color.loopDisconnected
-        ColorGroup.Aaps             -> app.aaps.core.ui.R.color.defaultText
-        else                        -> app.aaps.core.ui.R.color.defaultText
+    override fun colorId(colorGroup: Action.ColorGroup): Int = when (colorGroup) {
+        Action.ColorGroup.InsulinTreatment -> app.aaps.core.ui.R.color.iob
+        Action.ColorGroup.BasalTreatment   -> app.aaps.core.ui.R.color.basal
+        Action.ColorGroup.CarbTreatment    -> app.aaps.core.ui.R.color.carbs
+        Action.ColorGroup.TT               -> app.aaps.core.ui.R.color.tempTargetConfirmation
+        Action.ColorGroup.Profile          -> app.aaps.core.ui.R.color.white
+        Action.ColorGroup.Loop             -> app.aaps.core.ui.R.color.loopClosed
+        Action.ColorGroup.Careportal       -> app.aaps.core.ui.R.color.high
+        Action.ColorGroup.Pump             -> app.aaps.core.ui.R.color.loopDisconnected
+        Action.ColorGroup.Aaps             -> app.aaps.core.ui.R.color.defaultText
+        else                               -> app.aaps.core.ui.R.color.defaultText
     }
 
     override fun iconId(source: Sources): Int = when (source) {
@@ -108,8 +107,10 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         Sources.ConfigBuilder       -> app.aaps.core.ui.R.drawable.ic_cogs
         Sources.Overview            -> app.aaps.core.ui.R.drawable.ic_home
         Sources.Aaps                -> R.drawable.ic_aaps
-        Sources.GarminDevice        -> app.aaps.core.ui.R.drawable.ic_generic_icon
+        Sources.Garmin              -> app.aaps.core.ui.R.drawable.ic_generic_icon
         Sources.Unknown             -> app.aaps.core.ui.R.drawable.ic_generic_icon
+        Sources.Random              -> R.drawable.ic_aaps
+        Sources.BgFragment          -> R.drawable.ic_aaps
     }
 
     override fun actionToColoredString(action: Action): Spanned = when (action) {
@@ -123,35 +124,35 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         list.joinToString(separator = "  ", transform = this::toPresentationString)
 
     private fun toPresentationString(valueWithUnit: ValueWithUnit?): String = when (valueWithUnit) {
-        is ValueWithUnit.Gram                  -> "${valueWithUnit.value}${translator.translate(valueWithUnit)}"
-        is ValueWithUnit.Hour                  -> "${valueWithUnit.value}${translator.translate(valueWithUnit)}"
-        is ValueWithUnit.Minute                -> "${valueWithUnit.value}${translator.translate(valueWithUnit)}"
-        is ValueWithUnit.Percent               -> "${valueWithUnit.value}${translator.translate(valueWithUnit)}"
-        is ValueWithUnit.Insulin               -> decimalFormatter.to2Decimal(valueWithUnit.value) + translator.translate(valueWithUnit)
-        is ValueWithUnit.UnitPerHour           -> decimalFormatter.to2Decimal(valueWithUnit.value) + translator.translate(valueWithUnit)
-        is ValueWithUnit.SimpleInt             -> valueWithUnit.value.toString()
-        is ValueWithUnit.SimpleString          -> valueWithUnit.value
-        is ValueWithUnit.TherapyEventMeterType -> translator.translate(valueWithUnit.value)
-        is ValueWithUnit.TherapyEventTTReason  -> translator.translate(valueWithUnit.value)
-        is ValueWithUnit.OfflineEventReason    -> translator.translate(valueWithUnit.value)
-        is ValueWithUnit.TherapyEventType      -> translator.translate(valueWithUnit.value)
-        is ValueWithUnit.Timestamp             -> dateUtil.dateAndTimeAndSecondsString(valueWithUnit.value)
+        is ValueWithUnit.Gram         -> "${valueWithUnit.value}${translator.translate(valueWithUnit)}"
+        is ValueWithUnit.Hour         -> "${valueWithUnit.value}${translator.translate(valueWithUnit)}"
+        is ValueWithUnit.Minute       -> "${valueWithUnit.value}${translator.translate(valueWithUnit)}"
+        is ValueWithUnit.Percent      -> "${valueWithUnit.value}${translator.translate(valueWithUnit)}"
+        is ValueWithUnit.Insulin      -> decimalFormatter.to2Decimal(valueWithUnit.value) + translator.translate(valueWithUnit)
+        is ValueWithUnit.UnitPerHour  -> decimalFormatter.to2Decimal(valueWithUnit.value) + translator.translate(valueWithUnit)
+        is ValueWithUnit.SimpleInt    -> valueWithUnit.value.toString()
+        is ValueWithUnit.SimpleString -> valueWithUnit.value
+        is ValueWithUnit.TEMeterType  -> translator.translate(valueWithUnit.value)
+        is ValueWithUnit.TETTReason   -> translator.translate(valueWithUnit.value)
+        is ValueWithUnit.OEReason     -> translator.translate(valueWithUnit.value)
+        is ValueWithUnit.TEType       -> translator.translate(valueWithUnit.value)
+        is ValueWithUnit.Timestamp    -> dateUtil.dateAndTimeAndSecondsString(valueWithUnit.value)
 
-        is ValueWithUnit.Mgdl                  -> {
+        is ValueWithUnit.Mgdl         -> {
             if (profileUtil.units == GlucoseUnit.MGDL) decimalFormatter.to0Decimal(valueWithUnit.value) + rh.gs(app.aaps.core.ui.R.string.mgdl)
             else decimalFormatter.to1Decimal(valueWithUnit.value * Constants.MGDL_TO_MMOLL) + rh.gs(app.aaps.core.ui.R.string.mmol)
         }
 
-        is ValueWithUnit.Mmoll                 -> {
+        is ValueWithUnit.Mmoll        -> {
             if (profileUtil.units == GlucoseUnit.MMOL) decimalFormatter.to1Decimal(valueWithUnit.value) + rh.gs(app.aaps.core.ui.R.string.mmol)
             else decimalFormatter.to0Decimal(valueWithUnit.value * Constants.MMOLL_TO_MGDL) + rh.gs(app.aaps.core.ui.R.string.mgdl)
         }
 
-        ValueWithUnit.UNKNOWN                  -> ""
-        null                                   -> ""
+        ValueWithUnit.UNKNOWN         -> ""
+        null                          -> ""
     }
 
-    override fun userEntriesToCsv(userEntries: List<UserEntry>): String {
+    override fun userEntriesToCsv(userEntries: List<UE>): String {
         return getCsvHeader() + userEntries.joinToString("\n") { entry -> getCsvEntry(entry) }
     }
 
@@ -176,7 +177,7 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         csvString(app.aaps.core.ui.R.string.ue_none)
     ) + "\n"
 
-    private fun getCsvEntry(entry: UserEntry): String {
+    private fun getCsvEntry(entry: UE): String {
         val fullValueWithUnitList = ArrayList(entry.values)
         val timestampRec = entry.timestamp.toString()
         val dateTimestampRev = dateUtil.dateAndTimeAndSecondsString(entry.timestamp)
@@ -198,27 +199,27 @@ class UserEntryPresentationHelperImpl @Inject constructor(
 
         for (valueWithUnit in fullValueWithUnitList.filterNotNull()) {
             when (valueWithUnit) {
-                is ValueWithUnit.Gram                  -> gram = valueWithUnit.value.toString()
-                is ValueWithUnit.Hour                  -> hour = valueWithUnit.value.toString()
-                is ValueWithUnit.Minute                -> minute = valueWithUnit.value.toString()
-                is ValueWithUnit.Percent               -> percent = valueWithUnit.value.toString()
-                is ValueWithUnit.Insulin               -> insulin = decimalFormatter.to2Decimal(valueWithUnit.value)
-                is ValueWithUnit.UnitPerHour           -> unitPerHour = decimalFormatter.to2Decimal(valueWithUnit.value)
-                is ValueWithUnit.SimpleInt             -> noUnit = noUnit.addWithSeparator(valueWithUnit.value)
-                is ValueWithUnit.SimpleString          -> simpleString = simpleString.addWithSeparator(valueWithUnit.value)
-                is ValueWithUnit.TherapyEventMeterType -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
-                is ValueWithUnit.TherapyEventTTReason  -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
-                is ValueWithUnit.OfflineEventReason    -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
-                is ValueWithUnit.TherapyEventType      -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
-                is ValueWithUnit.Timestamp             -> timestamp = dateUtil.dateAndTimeAndSecondsString(valueWithUnit.value)
+                is ValueWithUnit.Gram         -> gram = valueWithUnit.value.toString()
+                is ValueWithUnit.Hour         -> hour = valueWithUnit.value.toString()
+                is ValueWithUnit.Minute       -> minute = valueWithUnit.value.toString()
+                is ValueWithUnit.Percent      -> percent = valueWithUnit.value.toString()
+                is ValueWithUnit.Insulin      -> insulin = decimalFormatter.to2Decimal(valueWithUnit.value)
+                is ValueWithUnit.UnitPerHour  -> unitPerHour = decimalFormatter.to2Decimal(valueWithUnit.value)
+                is ValueWithUnit.SimpleInt    -> noUnit = noUnit.addWithSeparator(valueWithUnit.value)
+                is ValueWithUnit.SimpleString -> simpleString = simpleString.addWithSeparator(valueWithUnit.value)
+                is ValueWithUnit.TEMeterType  -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
+                is ValueWithUnit.TETTReason   -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
+                is ValueWithUnit.OEReason     -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
+                is ValueWithUnit.TEType       -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
+                is ValueWithUnit.Timestamp    -> timestamp = dateUtil.dateAndTimeAndSecondsString(valueWithUnit.value)
 
-                is ValueWithUnit.Mgdl                  ->
+                is ValueWithUnit.Mgdl         ->
                     bg = profileUtil.fromMgdlToStringInUnits(valueWithUnit.value)
 
-                is ValueWithUnit.Mmoll                 ->
+                is ValueWithUnit.Mmoll        ->
                     bg = profileUtil.fromMgdlToStringInUnits(valueWithUnit.value * Constants.MMOLL_TO_MGDL)
 
-                ValueWithUnit.UNKNOWN                  -> Unit
+                ValueWithUnit.UNKNOWN         -> Unit
             }
         }
 

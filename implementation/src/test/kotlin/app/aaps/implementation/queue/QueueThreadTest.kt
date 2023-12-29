@@ -2,21 +2,16 @@ package app.aaps.implementation.queue
 
 import android.content.Context
 import android.os.PowerManager
+import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.androidPermissions.AndroidPermission
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.pump.defs.PumpDescription
-import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.main.constraints.ConstraintObject
-import app.aaps.database.impl.AppRepository
+import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.implementation.queue.commands.CommandTempBasalAbsolute
 import app.aaps.shared.tests.TestBaseWithProfile
-import app.aaps.shared.tests.TestPumpPlugin
 import com.google.common.truth.Truth.assertThat
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
@@ -27,35 +22,29 @@ class QueueThreadTest : TestBaseWithProfile() {
 
     @Mock lateinit var constraintChecker: ConstraintsChecker
     @Mock lateinit var powerManager: PowerManager
-    @Mock lateinit var repository: AppRepository
     @Mock lateinit var androidPermission: AndroidPermission
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var persistenceLayer: PersistenceLayer
 
-    private val injector = HasAndroidInjector {
-        AndroidInjector {
-            if (it is Command) {
-                it.aapsLogger = aapsLogger
-                it.rh = rh
-            }
+    init {
+        addInjector {
             if (it is CommandTempBasalAbsolute) {
+                it.aapsLogger = aapsLogger
                 it.activePlugin = activePlugin
                 it.rh = rh
             }
         }
     }
 
-    private lateinit var pumpPlugin: TestPumpPlugin
     private lateinit var commandQueue: CommandQueueImplementation
     private lateinit var sut: QueueThread
 
     @BeforeEach
     fun prepare() {
-        pumpPlugin = TestPumpPlugin(injector)
         commandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker,
-            profileFunction, activePlugin, context, sp,
-            config, dateUtil, repository, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter
+            profileFunction, activePlugin, context, sp, config, dateUtil, fabricPrivacy, androidPermission,
+            uiInteraction, persistenceLayer, decimalFormatter, instantiator
         )
 
         val pumpDescription = PumpDescription()

@@ -19,8 +19,6 @@ dependencies {
     api(Libs.Squareup.Okhttp3.loggingInterceptor)
     api(Libs.Google.gson)
     api(Libs.jodaTimeAndroid)
-    api(Libs.Rx.rxJava)
-    //api(Libs.Rx.rxAndroid)
     api(Libs.Rx.rxKotlin)
 
     api(Libs.AndroidX.core)
