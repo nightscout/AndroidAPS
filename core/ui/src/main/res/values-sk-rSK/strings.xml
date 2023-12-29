@@ -525,6 +525,7 @@
     <string name="password_cleared">Heslo vymazané!</string>
     <string name="pairing">Párovanie</string>
     <string name="initializing">Inicializácia ...</string>
+    <string name="secs" comment="second short">%1$d s</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max bazál obmedzený na %1$.2f JI/h: %2$s</string>
     <string name="pumplimit">limit pumpy</string>

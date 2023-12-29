@@ -24,7 +24,10 @@
     <string name="pairing_completed">Párovanie dokončené</string>
     <string name="code_compare">Zhodujú sa kódy zobrazené na tomto zariadení a na pumpe?</string>
     <string name="insight_pairing">Párovanie Insight</string>
+    <string name="insight_local">Accu-Chek Insight</string>
+    <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Hadička vymenená</string>
+    <string name="insightpump_shortname">Insight</string>
     <string name="insight_alert_notification_channel">Výstrahy pumpy Insight</string>
     <string name="disable_vibration">Zakázať vibrácie pri ručnom podaní bolusu</string>
     <string name="disable_vibration_summary">Pre bolus a predĺžený bolus (dostupné iba s Insight firmware 3.x)</string>
@@ -64,4 +67,5 @@
     <string name="pump_alert">Výstraha pumpy</string>
     <string name="pairing_information">Informácie o párovaní</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight Tlačítko Obnoviť</string>
+    <string name="last_connection">%1$s (%2$s)</string>
 </resources>
