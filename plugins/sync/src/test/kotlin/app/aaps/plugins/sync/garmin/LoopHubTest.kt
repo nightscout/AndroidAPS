@@ -27,6 +27,7 @@ import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.shared.tests.TestBase
 import io.reactivex.rxjava3.core.Single
 import org.junit.jupiter.api.AfterEach
@@ -42,6 +43,7 @@ import org.mockito.Mock
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.verifyNoMoreInteractions
+import org.mockito.kotlin.atLeast
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import java.time.Clock
@@ -98,15 +100,27 @@ class LoopHubTest : TestBase() {
     }
 
     @Test
-    fun testTargetGlucoseRange() {
-        val profile = mock<Profile>() {
-            on { getTargetLowMgdl() }.thenReturn(76.0)
-            on { getTargetHighMgdl() }.thenReturn(125.0)
-        }
-        whenever(profileFunction.getProfile()).thenReturn(profile)
-        assertEquals(76.0, loopHub.targetGlucoseLow!!, 1e-6)
-        assertEquals(125.0, loopHub.targetGlucoseHigh!!, 1e-6)
-        verify(profileFunction, times(2)).getProfile()
+    fun testGlucoseRangeMgDl() {
+        whenever(preferences.get(StringKey.GeneralUnits)).thenReturn("mg/dl")
+        whenever(preferences.get(UnitDoubleKey.OverviewLowMark)).thenReturn(76.0)
+        whenever(preferences.get(UnitDoubleKey.OverviewHighMark)).thenReturn(125.0)
+        assertEquals(76.0, loopHub.lowGlucoseMark, 1e-6)
+        assertEquals(125.0, loopHub.highGlucoseMark, 1e-6)
+        verify(preferences, atLeast(1)).get(StringKey.GeneralUnits)
+        verify(preferences).get(UnitDoubleKey.OverviewLowMark)
+        verify(preferences).get(UnitDoubleKey.OverviewHighMark)
+    }
+
+    @Test
+    fun testGlucoseRangeMmolL() {
+        whenever(preferences.get(StringKey.GeneralUnits)).thenReturn("mmol")
+        whenever(preferences.get(UnitDoubleKey.OverviewLowMark)).thenReturn(3.0)
+        whenever(preferences.get(UnitDoubleKey.OverviewHighMark)).thenReturn(8.0)
+        assertEquals(54.0, loopHub.lowGlucoseMark, 1e-6)
+        assertEquals(144.0, loopHub.highGlucoseMark, 1e-6)
+        verify(preferences, atLeast(1)).get(StringKey.GeneralUnits)
+        verify(preferences).get(UnitDoubleKey.OverviewLowMark)
+        verify(preferences).get(UnitDoubleKey.OverviewHighMark)
     }
 
     @Test

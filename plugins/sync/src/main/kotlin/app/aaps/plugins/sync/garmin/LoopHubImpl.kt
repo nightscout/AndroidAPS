@@ -22,6 +22,7 @@ import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.UnitDoubleKey
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.time.Clock
@@ -89,6 +90,12 @@ class LoopHubImpl @Inject constructor(
             val apsResult = loop.lastRun?.constraintsProcessed
             return if (apsResult == null) Double.NaN else apsResult.percent / 100.0
         }
+
+    private fun toMgDl(glucose: Double) =
+        if (glucoseUnit == GlucoseUnit.MGDL) glucose else glucose * 18.0
+
+    override val lowGlucoseMark get() = toMgDl(preferences.get(UnitDoubleKey.OverviewLowMark))
+    override val highGlucoseMark get() = toMgDl(preferences.get(UnitDoubleKey.OverviewHighMark))
 
     /** Tells the loop algorithm that the pump is physically connected. */
     override fun connectPump() {

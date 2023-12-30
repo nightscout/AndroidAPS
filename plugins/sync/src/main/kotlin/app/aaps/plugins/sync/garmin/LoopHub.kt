@@ -36,10 +36,10 @@ interface LoopHub {
     val temporaryBasal: Double
 
     /** Returns the lower bound of the target glucose range. */
-    val targetGlucoseLow get() = currentProfile?.getTargetLowMgdl()
+    val lowGlucoseMark: Double
 
     /** Returns the upper bound of the target glucose range. */
-    val targetGlucoseHigh get() = currentProfile?.getTargetHighMgdl()
+    val highGlucoseMark: Double
 
     /** Tells the loop algorithm that the pump is physically connected. */
     fun connectPump()
