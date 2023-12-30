@@ -44,6 +44,8 @@ import app.aaps.plugins.aps.OpenAPSFragment
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.events.EventResetOpenAPSGui
+import app.aaps.plugins.aps.openAPSSMBAutoISF.DetermineBasalAdapterSMBAutoISFJS
+import app.aaps.plugins.aps.openAPSSMBAutoISF.OpenAPSSMBAutoISFPlugin
 import app.aaps.plugins.aps.openAPSSMBDynamicISF.DetermineBasalAdapterSMBDynamicISFJS
 import app.aaps.plugins.aps.openAPSSMBDynamicISF.OpenAPSSMBDynamicISFPlugin
 import app.aaps.plugins.aps.utils.ScriptReader
@@ -312,7 +314,8 @@ open class OpenAPSSMBPlugin @Inject constructor(
                     when (determineBasalAdapterSMBJS) {
                         is DetermineBasalAdapterSMBJS -> OpenAPSSMBPlugin::class.simpleName
                         is DetermineBasalAdapterSMBDynamicISFJS -> OpenAPSSMBDynamicISFPlugin::class.simpleName
-                        else -> "Error"
+                        is DetermineBasalAdapterSMBAutoISFJS    -> OpenAPSSMBAutoISFPlugin::class.simpleName
+                        else                                    -> "Error"
                     }, determineBasalAdapterSMBJS.json(), determineBasalResultSMB.json()
                 )
                 rxBus.send(EventAPSCalculationFinished())
