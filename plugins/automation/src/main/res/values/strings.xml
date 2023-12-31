@@ -89,6 +89,7 @@
     <string name="triggerHeartRateDesc">HR %1$s %2$.0f</string>
     <string name="iob_u">IOB [U]:</string>
     <string name="distance_short">Dist [m]:</string>
+    <string name="day">Day</string>
     <string name="recurringTime">Recurring time</string>
     <string name="every">Every</string>
     <string name="never">Never</string>

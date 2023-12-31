@@ -44,6 +44,9 @@ open class TriggerTestBase : TestBaseWithProfile() {
             if (it is TriggerBg) {
                 it.profileFunction = profileFunction
             }
+            if (it is TriggerDay) {
+                it.dateUtil = dateUtil
+            }
             if (it is TriggerTime) {
                 it.dateUtil = dateUtil
             }
