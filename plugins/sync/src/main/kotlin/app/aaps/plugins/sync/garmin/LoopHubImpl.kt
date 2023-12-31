@@ -18,6 +18,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.keys.Preferences
@@ -41,6 +42,7 @@ class LoopHubImpl @Inject constructor(
     private val iobCobCalculator: IobCobCalculator,
     private val loop: Loop,
     private val profileFunction: ProfileFunction,
+    private val profileUtil: ProfileUtil,
     private val persistenceLayer: PersistenceLayer,
     private val userEntryLogger: UserEntryLogger,
     private val preferences: Preferences
@@ -91,11 +93,11 @@ class LoopHubImpl @Inject constructor(
             return if (apsResult == null) Double.NaN else apsResult.percent / 100.0
         }
 
-    private fun toMgDl(glucose: Double) =
-        if (glucoseUnit == GlucoseUnit.MGDL) glucose else glucose * 18.0
+    override val lowGlucoseMark get() = profileUtil.convertToMgdl(
+        preferences.get(UnitDoubleKey.OverviewLowMark), glucoseUnit)
 
-    override val lowGlucoseMark get() = toMgDl(preferences.get(UnitDoubleKey.OverviewLowMark))
-    override val highGlucoseMark get() = toMgDl(preferences.get(UnitDoubleKey.OverviewHighMark))
+    override val highGlucoseMark get() = profileUtil.convertToMgdl(
+        preferences.get(UnitDoubleKey.OverviewHighMark), glucoseUnit)
 
     /** Tells the loop algorithm that the pump is physically connected. */
     override fun connectPump() {
