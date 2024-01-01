@@ -4,9 +4,9 @@ data class RT(
     val temp: String = "absolute",
     var bg: Double? = null,
     var tick: String? = null,
-    var eventualBG: Int? = null,
+    var eventualBG: Double? = null,
     var targetBG: Double? = null,
-    var snoozeBG: Int? = null, // AMA only
+    var snoozeBG: Double? = null, // AMA only
     var insulinReq: Double? = null,
     var carbsReq: Int? = null,
     var carbsReqWithin: Int? = null,

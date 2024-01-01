@@ -45,7 +45,7 @@ class DetermineBasalAMA @Inject constructor(
     // we expect BG to rise or fall at the rate of BGI,
     // adjusted by the rate at which BG would need to rise /
     // fall to get eventualBG to target over 2 hours
-    fun calculate_expected_delta(dia: Int, targetBg: Double, eventualBg: Int, bgi: Double): Double {
+    fun calculate_expected_delta(dia: Int, targetBg: Double, eventualBg: Double, bgi: Double): Double {
         // (hours * mins_per_hour) / 5 = how many 5 minute periods in 2h = 24
         val dia_in_5min_blocks = (dia/2.0 * 60.0) / 5.0
         val target_delta = targetBg - eventualBg
@@ -184,23 +184,23 @@ class DetermineBasalAMA @Inject constructor(
 
         // calculate the naive (bolus calculator math) eventual BG based on net IOB and sensitivity
         var naive_eventualBG =
-            if (iob_data.iob > 0) round(bg - (iob_data.iob * sens))
+            if (iob_data.iob > 0) round(bg - (iob_data.iob * sens), 0)
             else  // if IOB is negative, be more conservative and use the lower of sens, profile.sens
-                round(bg - (iob_data.iob * min(sens, profile.sens)))
+                round(bg - (iob_data.iob * min(sens, profile.sens)), 0)
 
         // and adjust it for the deviation above
-        var eventualBG: Int = naive_eventualBG + deviation
+        var eventualBG = naive_eventualBG + deviation
         // calculate what portion of that is due to bolussnooze
-        var bolusContrib = iob_data.bolussnooze * sens
+        val bolusContrib = iob_data.bolussnooze * sens
         // and add it back in to get snoozeBG, plus another 50% to avoid low-temping at mealtime
-        var naive_snoozeBG = round(naive_eventualBG + 1.5 * bolusContrib)
+        val naive_snoozeBG = round(naive_eventualBG + 1.5 * bolusContrib, 0)
         // adjust that for deviation like we did eventualBG
         var snoozeBG = naive_snoozeBG + deviation
 
-        var expectedDelta = calculate_expected_delta(profile.dia, target_bg, eventualBG, bgi)
+        val expectedDelta = calculate_expected_delta(profile.dia, target_bg, eventualBG, bgi)
 
         // min_bg of 90 -> threshold of 70, 110 -> 80, and 130 -> 90
-        var threshold = min_bg - 0.5 * (min_bg - 50)
+        val threshold = min_bg - 0.5 * (min_bg - 50)
 
         rT = RT(
             bg = bg,
@@ -238,7 +238,7 @@ class DetermineBasalAMA @Inject constructor(
         var acid: Double = meal_data.mealCOB * (sens / profile.carb_ratio) / aci
         consoleError.add("Carb Impact: $ci mg/dL per 5m; CI Duration: ${Math.round(10 * cid / 6) / 10} hours")
         consoleError.add("Accel. Carb Impact: $aci mg/dL per 5m; ACI Duration: ${Math.round(10 * acid / 6) / 10} hours")
-        var minPredBG = 999
+        var minPredBG = 999.0
         var maxPredBG = bg
         var eventualPredBG = bg
         var IOBpredBG: Double
@@ -263,12 +263,8 @@ class DetermineBasalAMA @Inject constructor(
             COBpredBGs.add(COBpredBG)
             aCOBpredBGs.add(aCOBpredBG)
             // wait 45m before setting minPredBG
-            if (COBpredBGs.size > 9 && (COBpredBG < minPredBG)) {
-                minPredBG = round(COBpredBG)
-            }
-            if (COBpredBG > maxPredBG) {
-                maxPredBG = COBpredBG
-            }
+            if (COBpredBGs.size > 9 && (COBpredBG < minPredBG)) { minPredBG = COBpredBG }
+            if (COBpredBG > maxPredBG) { maxPredBG = COBpredBG }
         }
         // set eventualBG to include effect of carbs
         //console.error("PredBGs:",JSON.stringify(predBGs));
@@ -294,11 +290,11 @@ class DetermineBasalAMA @Inject constructor(
                 else COBpredBGs.removeLast()
             }
             rT.predBGs?.COB = COBpredBGs.map { it.toInt() }
-            eventualBG = max(eventualBG, round(COBpredBGs[COBpredBGs.size - 1]))
+            eventualBG = max(eventualBG, round(COBpredBGs[COBpredBGs.size - 1], 0))
             rT.eventualBG = eventualBG
             minPredBG = min(minPredBG, eventualBG)
             // set snoozeBG to minPredBG
-            snoozeBG = max(snoozeBG, minPredBG)
+            snoozeBG = round(max(snoozeBG, minPredBG), 0)
             rT.snoozeBG = snoozeBG
         }
 
