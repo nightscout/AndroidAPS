@@ -76,17 +76,17 @@ open class AutotuneIob @Inject constructor(
 
     @Synchronized
     private fun sortTempBasal() {
-        tempBasals = ArrayList(tempBasals.toList().sortedWith { o1: TB, o2: TB -> (o2.timestamp - o1.timestamp).toInt() })
+        tempBasals = ArrayList(tempBasals.toList().sortedWith { o1: TB, o2: TB -> if (o2.timestamp > o1.timestamp) 1 else -1 })
     }
 
     @Synchronized
     private fun sortNsTreatments() {
-        nsTreatments = ArrayList(nsTreatments.toList().sortedWith { o1: NsTreatment, o2: NsTreatment -> (o2.date - o1.date).toInt() })
+        nsTreatments = ArrayList(nsTreatments.toList().sortedWith { o1: NsTreatment, o2: NsTreatment -> if (o2.date > o1.date) 1 else -1 })
     }
 
     @Synchronized
     private fun sortBoluses() {
-        boluses = ArrayList(boluses.toList().sortedWith { o1: BS, o2: BS -> (o2.timestamp - o1.timestamp).toInt() })
+        boluses = ArrayList(boluses.toList().sortedWith { o1: BS, o2: BS -> if (o2.timestamp > o1.timestamp) 1 else -1 })
     }
 
     private fun initializeBgReadings(from: Long, to: Long) {
@@ -275,7 +275,7 @@ open class AutotuneIob @Inject constructor(
 
     private fun convertToBoluses(eb: EB): MutableList<BS> {
         val result: MutableList<BS> = ArrayList()
-        val aboutFiveMinIntervals = ceil(eb.duration / 5.0).toInt()
+        val aboutFiveMinIntervals = eb.duration / T.mins(5).msecs() + 1
         val spacing = eb.duration / aboutFiveMinIntervals.toDouble()
         for (j in 0L until aboutFiveMinIntervals) {
             // find middle of the interval
