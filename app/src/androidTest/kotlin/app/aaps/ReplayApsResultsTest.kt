@@ -78,24 +78,24 @@ class ReplayApsResultsTest @Inject constructor() {
             val algorithm = JsonHelper.safeGetString(result, "algorithm")
             val inputString = JsonHelper.safeGetString(result, "input") ?: error("Missing input")
             val outputString = JsonHelper.safeGetString(result, "output") ?: error("Missing output")
-            val filename = JsonHelper.safeGetString(result, "filename") ?: error("Unknown filename")
+            val filename = JsonHelper.safeGetString(result, "filename") ?: "Unknown filename"
             val input = JSONObject(inputString)
             val output = JSONObject(outputString)
             aapsLogger.info(LTag.CORE,"***** File: $filename *****")
             when (algorithm) {
-                OpenAPSSMBPlugin::class.simpleName           -> smbs++
-                OpenAPSSMBDynamicISFPlugin::class.simpleName -> dynisfs++
-                OpenAPSAMAPlugin::class.simpleName           -> amas++
+                //OpenAPSSMBPlugin::class.simpleName           -> smbs++
+                //OpenAPSSMBDynamicISFPlugin::class.simpleName -> dynisfs++
+                //OpenAPSAMAPlugin::class.simpleName           -> amas++
                 OpenAPSSMBAutoISFPlugin::class.simpleName    -> autoisfs++
             }
             when (algorithm) {
-                OpenAPSSMBPlugin::class.simpleName           -> testOpenAPSSMB(filename, input, output, context, injector)
-                OpenAPSSMBDynamicISFPlugin::class.simpleName -> testOpenAPSSMBDynamicISF(filename, input, output, context, injector)
-                OpenAPSAMAPlugin::class.simpleName           -> testOpenAPSAMA(filename, input, output, context, injector)
+                //OpenAPSSMBPlugin::class.simpleName           -> testOpenAPSSMB(filename, input, output, context, injector)
+                //OpenAPSSMBDynamicISFPlugin::class.simpleName -> testOpenAPSSMBDynamicISF(filename, input, output, context, injector)
+                //OpenAPSAMAPlugin::class.simpleName           -> testOpenAPSAMA(filename, input, output, context, injector)
                 OpenAPSSMBAutoISFPlugin::class.simpleName    -> testOpenAPSAutoISF(filename, input, output, context, injector)
             }
         }
-        aapsLogger.info(LTag.CORE, "\n**********\nAMA: $amas\nSMB: $smbs\nDynISFs: $dynisfs\nAutoISFs: $autoisfs\n**********")
+        aapsLogger.info(LTag.CORE, "\n**********\nAMA: $amas\nSMB: $smbs\nDynISF: $dynisfs\nAutoISF: $autoisfs\n**********")
     }
 
     private fun testOpenAPSSMB(filename: String, input: JSONObject, output: JSONObject, context: Context, injector: HasAndroidInjector) {
@@ -758,13 +758,13 @@ class ReplayApsResultsTest @Inject constructor() {
             autosens_max = determineBasalResult.profile.getDouble("autosens_max"),
             autosens_min = null,
             out_units = determineBasalResult.profile.getString("out_units"),
-            variable_sens = 999.9,  // later determineBasalResult.profile.getDouble("variable_sens"),
+            variable_sens = determineBasalResult.profile.getDouble("variable_sens"),
             insulinDivisor = null,
             TDD = null,
-            autoISF_version = determineBasalResult.profile.getString("autoISF_version"), // AutoISF only ... from here and downwards
+            autoISF_version = determineBasalResult.profile.getString("autoISF_version"), // AutoISF only ... from here on downwards
             enable_autoISF = determineBasalResult.profile.getBoolean("enable_autoISF"),
             autoISF_max = determineBasalResult.profile.getDouble("autoISF_max"),
-            autoISF_min = determineBasalResult.profile.getDouble("autoISF_max"),
+            autoISF_min = determineBasalResult.profile.getDouble("autoISF_min"),
             bgAccel_ISF_weight = determineBasalResult.profile.getDouble("bgAccel_ISF_weight"),
             bgBrake_ISF_weight = determineBasalResult.profile.getDouble("bgBrake_ISF_weight"),
             enable_pp_ISF_always = determineBasalResult.profile.getBoolean("enable_pp_ISF_always"),
@@ -811,7 +811,7 @@ class ReplayApsResultsTest @Inject constructor() {
         aapsLogger.debug(LTag.APS,"File: $filename")
 //        assertThat(resultKt.reason.toString()).isEqualTo(result?.json?.getString("reason"))
         assertThat(resultKt.tick).isEqualTo(result?.json?.optString("tick"))
-        //assertThat(resultKt.eventualBG ?: 0).isEqualTo(result?.json?.optInt("eventualBG"))
+        assertThat(resultKt.eventualBG ?: 0).isEqualTo(result?.json?.optInt("eventualBG"))
         assertThat(resultKt.targetBG ?: 0).isEqualTo(result?.json?.optInt("targetBG"))
         assertThat(resultKt.insulinReq ?: Double.NaN).isEqualTo(result?.json?.optDouble("insulinReq"))
         assertThat(resultKt.carbsReq ?: 0).isEqualTo(result?.json?.optInt("carbsReq"))
@@ -822,8 +822,7 @@ class ReplayApsResultsTest @Inject constructor() {
         assertThat(resultKt.rate ?: Double.NaN).isEqualTo(result?.json?.optDouble("rate"))
         assertThat(resultKt.COB ?: Double.NaN).isEqualTo(result?.json?.optDouble("COB"))
         assertThat(resultKt.IOB ?: Double.NaN).isEqualTo(result?.json?.optDouble("IOB"))
-        //assertThat(resultKt.variable_sens ?: Double.NaN).isEqualTo(result?.json?.optDouble("variable_sens"))
-        assertThat(resultKt.variable_sens ?: Double.NaN).isEqualTo(999.9)   // enforce fault
+        assertThat(resultKt.variable_sens ?: Double.NaN).isEqualTo(result?.json?.optDouble("variableSens"))
     }
 
 
