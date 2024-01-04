@@ -18,10 +18,12 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.UnitDoubleKey
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.time.Clock
@@ -40,6 +42,7 @@ class LoopHubImpl @Inject constructor(
     private val iobCobCalculator: IobCobCalculator,
     private val loop: Loop,
     private val profileFunction: ProfileFunction,
+    private val profileUtil: ProfileUtil,
     private val persistenceLayer: PersistenceLayer,
     private val userEntryLogger: UserEntryLogger,
     private val preferences: Preferences
@@ -89,6 +92,12 @@ class LoopHubImpl @Inject constructor(
             val apsResult = loop.lastRun?.constraintsProcessed
             return if (apsResult == null) Double.NaN else apsResult.percent / 100.0
         }
+
+    override val lowGlucoseMark get() = profileUtil.convertToMgdl(
+        preferences.get(UnitDoubleKey.OverviewLowMark), glucoseUnit)
+
+    override val highGlucoseMark get() = profileUtil.convertToMgdl(
+        preferences.get(UnitDoubleKey.OverviewHighMark), glucoseUnit)
 
     /** Tells the loop algorithm that the pump is physically connected. */
     override fun connectPump() {

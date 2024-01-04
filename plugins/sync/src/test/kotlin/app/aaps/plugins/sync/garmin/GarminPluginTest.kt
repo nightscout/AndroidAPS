@@ -72,6 +72,8 @@ class GarminPluginTest : TestBase() {
         verify(loopHub, atMost(3)).insulinBasalOnboard
         verify(loopHub, atMost(3)).temporaryBasal
         verify(loopHub, atMost(3)).carbsOnboard
+        verify(loopHub, atMost(3)).lowGlucoseMark
+        verify(loopHub, atMost(3)).highGlucoseMark
         verifyNoMoreInteractions(loopHub)
     }
 
@@ -143,11 +145,11 @@ class GarminPluginTest : TestBase() {
     @Test
     fun testGetGlucoseValues_NoNewLast() {
         val from = getGlucoseValuesFrom
-        val lastTimesteamp = clock.instant()
+        val lastTimestamp = clock.instant()
         val prev = createGlucoseValue(clock.instant())
         gp.newValue = mock(Condition::class.java)
         `when`(loopHub.getGlucoseValues(from, true)).thenReturn(listOf(prev))
-        gp.onNewBloodGlucose(EventNewBG(lastTimesteamp.toEpochMilli()))
+        gp.onNewBloodGlucose(EventNewBG(lastTimestamp.toEpochMilli()))
         assertArrayEquals(arrayOf(prev), gp.getGlucoseValues().toTypedArray())
 
         verify(gp.newValue).signalAll()
@@ -182,6 +184,8 @@ class GarminPluginTest : TestBase() {
         verify(loopHub, times(2)).temporaryBasal
         verify(loopHub, times(2)).isConnected
         verify(loopHub, times(2)).glucoseUnit
+        verify(loopHub, times(2)).lowGlucoseMark
+        verify(loopHub, times(2)).highGlucoseMark
     }
 
     @Test
@@ -284,7 +288,10 @@ class GarminPluginTest : TestBase() {
     fun testOnGetBloodGlucose() {
         `when`(loopHub.isConnected).thenReturn(true)
         `when`(loopHub.insulinOnboard).thenReturn(3.14)
+        `when`(loopHub.insulinBasalOnboard).thenReturn(2.71)
         `when`(loopHub.temporaryBasal).thenReturn(0.8)
+        `when`(loopHub.lowGlucoseMark).thenReturn(70.0)
+        `when`(loopHub.highGlucoseMark).thenReturn(130.0)
         val from = getGlucoseValuesFrom
         `when`(loopHub.getGlucoseValues(from, true)).thenReturn(
             listOf(createGlucoseValue(Instant.ofEpochSecond(1_000)))
@@ -293,17 +300,19 @@ class GarminPluginTest : TestBase() {
         val uri = createUri(hr)
         val result = gp.onGetBloodGlucose(uri)
         assertEquals(
-            "{\"encodedGlucose\":\"0A+6AQ==\"," +
-                "\"remainingInsulin\":3.14," +
-                "\"glucoseUnit\":\"mmoll\",\"temporaryBasalRate\":0.8," +
-                "\"profile\":\"D\",\"connected\":true}",
-            result.toString()
-        )
+            """{"encodedGlucose":"0A+6AQ==",""" +
+                """"remainingInsulin":3.14,"remainingBasalInsulin":2.71,""" +
+                """"lowGlucoseMark":70,"highGlucoseMark":130,""" +
+                """"glucoseUnit":"mmoll","temporaryBasalRate":0.8,""" +
+                """"profile":"D","connected":true}""",
+            result.toString())
         verify(loopHub).getGlucoseValues(from, true)
         verify(loopHub).insulinOnboard
         verify(loopHub).temporaryBasal
         verify(loopHub).isConnected
         verify(loopHub).glucoseUnit
+        verify(loopHub).lowGlucoseMark
+        verify(loopHub).highGlucoseMark
         verify(loopHub).storeHeartRate(
             Instant.ofEpochSecond(hr["hrStart"] as Long),
             Instant.ofEpochSecond(hr["hrEnd"] as Long),
@@ -328,18 +337,19 @@ class GarminPluginTest : TestBase() {
         gp.newValue = mock(Condition::class.java)
         val result = gp.onGetBloodGlucose(uri)
         assertEquals(
-            "{\"encodedGlucose\":\"/wS6AQ==\"," +
-                "\"remainingInsulin\":3.14," +
-                "\"glucoseUnit\":\"mmoll\",\"temporaryBasalRate\":0.8," +
-                "\"profile\":\"D\",\"connected\":true}",
-            result.toString()
-        )
+            """{"encodedGlucose":"/wS6AQ==",""" +
+                """"remainingInsulin":3.14,"remainingBasalInsulin":0.0,""" +
+                """"glucoseUnit":"mmoll","temporaryBasalRate":0.8,""" +
+                """"profile":"D","connected":true}""",
+            result.toString())
         verify(gp.newValue).awaitNanos(anyLong())
         verify(loopHub, times(2)).getGlucoseValues(from, true)
         verify(loopHub).insulinOnboard
         verify(loopHub).temporaryBasal
         verify(loopHub).isConnected
         verify(loopHub).glucoseUnit
+        verify(loopHub).lowGlucoseMark
+        verify(loopHub).highGlucoseMark
         verify(loopHub).storeHeartRate(
             Instant.ofEpochSecond(params["hrStart"] as Long),
             Instant.ofEpochSecond(params["hrEnd"] as Long),
