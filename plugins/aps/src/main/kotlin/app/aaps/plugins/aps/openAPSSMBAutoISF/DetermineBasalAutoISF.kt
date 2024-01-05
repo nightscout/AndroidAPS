@@ -230,10 +230,10 @@ class DetermineBasalAutoISF @Inject constructor(
 
         var newVal = 1.0
         var lowVal = 1.0
-        var topVal = 1.0
-        var lowX = 1.0
-        var topX = 1.0
-        var myX = 1.0
+        var topVal : Double
+        var lowX: Double
+        var topX: Double
+        var myX: Double
         var lowLabl = step
 
         if (step > xdata) {
@@ -292,7 +292,7 @@ class DetermineBasalAutoISF @Inject constructor(
             consoleLog.add("strongest autoISF factor ${round(liftISF,2)} limited by autoISF_max $maxISFReduction")
             liftISFlimited = maxISFReduction
         }
-        var finalISF = 1.0
+        var finalISF: Double
         var origin_sens_final = origin_sens
         if ( high_temptarget_raises_sensitivity && profile.temptargetSet && target_bg > normalTarget ) {
             finalISF = liftISFlimited * sensitivityRatio
@@ -311,13 +311,12 @@ class DetermineBasalAutoISF @Inject constructor(
 
     fun determine_varSMBratio(profile: Profile, bg: Int, target_bg: Double, loop_wanted_smb: String): Double
     {   // let SMB delivery ratio increase from min to max depending on how much bg exceeds target
-        val profTarget = profile.sensitivity_raises_target
         var smb_delivery_ratio_bg_range = profile.smb_delivery_ratio_bg_range!!
         if ( smb_delivery_ratio_bg_range<10 )   { smb_delivery_ratio_bg_range = smb_delivery_ratio_bg_range * 18 }  // was in mmol/l
         var fix_SMB: Double = profile.smb_delivery_ratio!!
         var lower_SMB = min(profile.smb_delivery_ratio_min!!, profile.smb_delivery_ratio_max!!)
         var higher_SMB = max(profile.smb_delivery_ratio_min!!, profile.smb_delivery_ratio_max!!)
-        var higher_bg = target_bg + smb_delivery_ratio_bg_range!!
+        var higher_bg = target_bg + smb_delivery_ratio_bg_range
         var new_SMB: Double = fix_SMB
         if ( smb_delivery_ratio_bg_range > 0 ) {
             new_SMB = lower_SMB + (higher_SMB-lower_SMB)*(bg-target_bg) / smb_delivery_ratio_bg_range
@@ -345,7 +344,7 @@ class DetermineBasalAutoISF @Inject constructor(
     }
 
     fun autoISF(sens: Double, origin_sens: String, target_bg: Double, profile: Profile, glucose_status: GlucoseStatus, meal_data: MealData, currentTime: Long,
-    autosens_data: AutosensData, sensitivityRatio: Double, loop_wanted_smb: String, high_temptarget_raises_sensitivity: Boolean, normalTarget: Int): Double
+    sensitivityRatio: Double, loop_wanted_smb: String, high_temptarget_raises_sensitivity: Boolean, normalTarget: Int): Double
     {   if ( !profile.enable_autoISF!!) {
         consoleLog.add("autoISF disabled in Preferences")
         consoleLog.add("----------------------------------")
@@ -407,7 +406,7 @@ class DetermineBasalAutoISF @Inject constructor(
             }
         }
 
-        var bg_ISF = 1 + interpolate(100-bg_off, profile, "bg")
+        val bg_ISF = 1 + interpolate(100-bg_off, profile, "bg")
         consoleLog.add("bg_ISF adaptation is ${round(bg_ISF,2)}")
         var liftISF = 1.0
         var final_ISF = 1.0
@@ -456,7 +455,7 @@ class DetermineBasalAutoISF @Inject constructor(
         }
 
         var dura_ISF: Double = 1.0
-        var weightISF: Double? = profile.dura_ISF_weight
+        val weightISF: Double? = profile.dura_ISF_weight
         if (meal_data.mealCOB>0 && !profile.enable_dura_ISF_with_COB!!) {
             consoleLog.add("dura_ISF by-passed; preferences disabled mealCOB of ${round(meal_data.mealCOB,1)}")
         } else if (dura05!!<10.0) {
@@ -465,9 +464,9 @@ class DetermineBasalAutoISF @Inject constructor(
             consoleLog.add("dura_ISF by-passed; avg. glucose $avg05 below target $target_bg")
         } else {
             // fight the resistance at high levels
-            var dura05Weight = dura05!! / 60
+            val dura05Weight = dura05 / 60
             var avg05Weight = weightISF!! / target_bg
-            dura_ISF += dura05Weight*avg05Weight*(avg05!!-target_bg)
+            dura_ISF += dura05Weight*avg05Weight*(avg05-target_bg)
             sens_modified = true
             consoleLog.add("dura_ISF adaptation is ${round(dura_ISF,2)} because ISF ${round(sens,1)} did not do it for ${round(dura05,1)}m")
         }
@@ -477,7 +476,7 @@ class DetermineBasalAutoISF @Inject constructor(
                 consoleLog.add("strongest autoISF factor ${round(liftISF,2)} weakened to ${round(liftISF*acce_ISF,2)} as bg decelerates already")
                 liftISF = liftISF * acce_ISF                                                               // brakes on for otherwise stronger or stable ISF
             }                                                                                               // brakes on for otherwise stronger or stable ISF
-            final_ISF = withinISFlimits(liftISF, profile.autoISF_min!!, maxISFReduction!!, sensitivityRatio, origin_sens, profile, high_temptarget_raises_sensitivity, target_bg, normalTarget)
+            final_ISF = withinISFlimits(liftISF, profile.autoISF_min!!, maxISFReduction, sensitivityRatio, origin_sens, profile, high_temptarget_raises_sensitivity, target_bg, normalTarget)
             return round(profile.sens / final_ISF, 1)
         }
         consoleLog.add("----------------------------------")
@@ -652,7 +651,7 @@ class DetermineBasalAutoISF @Inject constructor(
             )
         }
 
-        sens = autoISF(sens, origin_sens, target_bg, profile, glucose_status, meal_data, currentTime, autosens_data, sensitivityRatio, loop_wanted_smb, high_temptarget_raises_sensitivity, normalTarget);
+        sens = autoISF(sens, origin_sens, target_bg, profile, glucose_status, meal_data, currentTime, sensitivityRatio, loop_wanted_smb, high_temptarget_raises_sensitivity, normalTarget);
 
         // whole code block missing about lastTempAge, tempModulus, etc.
 
@@ -724,7 +723,8 @@ class DetermineBasalAutoISF @Inject constructor(
             deliverAt = deliverAt, // The time at which the microbolus should be delivered
             sensitivityRatio = sensitivityRatio, // autosens ratio (fraction of normal basal)
             consoleLog = consoleLog,
-            consoleError = consoleError
+            consoleError = consoleError,
+            variable_sens = sens
         )
 
         // generate predicted future BGs based on IOB, COB, and current absorption rate

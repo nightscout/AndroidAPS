@@ -7,11 +7,11 @@ data class GlucoseStatus(
     var short_avgdelta: Double,
     var long_avgdelta: Double,
     var date: Long,
-    var duraISFminutes: Double?,
-    var duraISFaverage: Double?,
-    var bgAcceleration: Double?,
-    var a0: Double?,
-    var a1: Double?,
-    var a2: Double?,
-    var corrSqu: Double?
+    var duraISFminutes: Double? = null,
+    var duraISFaverage: Double? = null,
+    var bgAcceleration: Double? = null,
+    var a0: Double? = null,
+    var a1: Double? = null,
+    var a2: Double? = null,
+    var corrSqu: Double? = null
 )
