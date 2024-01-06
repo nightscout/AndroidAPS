@@ -215,21 +215,11 @@ class DetermineBasalSMBDynamicISF @Inject constructor(
         // when temptarget is 160 mg/dL, run 50% basal (120 = 75%; 140 = 60%),  80 mg/dL with low_temptarget_lowers_sensitivity would give 1.5x basal, but is limited to autosens_max (1.2x by default)
         val halfBasalTarget = profile.half_basal_exercise_target
 
-        //*********************************************************************************
-        //**                   Start of Dynamic ISF code for predictions                 **
-        //*********************************************************************************
-
-        consoleError.add("---------------------------------------------------------")
-        consoleError.add(" Dynamic ISF version Beta 2.0 ")
-        consoleError.add("---------------------------------------------------------")
-
-        val variable_sens = profile.variable_sens ?: error("variable_sens not defined")
-        val TDD = profile.TDD ?: error("TDD missing")
-        val insulinDivisor = profile.insulinDivisor ?: error("insulinDivisor missing")
-
-        //*********************************************************************************
-        //**                   End of Dynamic ISF code for predictions                   **
-        //*********************************************************************************
+        if (profile.dynamicIsf) {
+            consoleError.add("---------------------------------------------------------")
+            consoleError.add(" Dynamic ISF version 2.0 ")
+            consoleError.add("---------------------------------------------------------")
+        }
 
         if (high_temptarget_raises_sensitivity && profile.temptargetSet && target_bg > normalTarget
             || profile.low_temptarget_lowers_sensitivity && profile.temptargetSet && target_bg < normalTarget
@@ -288,7 +278,20 @@ class DetermineBasalSMBDynamicISF @Inject constructor(
         val minAvgDelta = min(glucose_status.short_avgdelta, glucose_status.long_avgdelta)
         val maxDelta = max(glucose_status.delta, max(glucose_status.short_avgdelta, glucose_status.long_avgdelta))
 
-        val sens = variable_sens
+        val sens =
+            if (profile.dynamicIsf) profile.variable_sens
+            else {
+                val profile_sens = round(profile.sens, 1)
+                val adjusted_sens = round(profile.sens / sensitivityRatio, 1)
+                if (adjusted_sens != profile_sens) {
+                    consoleLog.add("ISF from $profile_sens to $adjusted_sens")
+                } else {
+                    consoleLog.add("ISF unchanged: $adjusted_sens")
+                }
+                adjusted_sens
+                //console.log(" (autosens ratio "+sensitivityRatio+")");
+            }
+        consoleError.add("CR:${profile.carb_ratio}")
 
         //calculate BG impact: the amount BG "should" be rising or falling based on insulin activity alone
         val bgi = round((-iob_data.activity * sens * 5), 2)
@@ -304,7 +307,14 @@ class DetermineBasalSMBDynamicISF @Inject constructor(
         }
 
         // calculate the naive (bolus calculator math) eventual BG based on net IOB and sensitivity
-        val naive_eventualBG = round(bg - (iob_data.iob * sens), 0)
+        val naive_eventualBG =
+            if (profile.dynamicIsf)
+                round(bg - (iob_data.iob * sens), 0)
+            else {
+                if (iob_data.iob > 0) round(bg - (iob_data.iob * sens), 0)
+                else  // if IOB is negative, be more conservative and use the lower of sens, profile.sens
+                    round(bg - (iob_data.iob * min(sens, profile.sens)), 0)
+            }
         // and adjust it for the deviation above
         var eventualBG = naive_eventualBG + deviation
 
@@ -341,13 +351,14 @@ class DetermineBasalSMBDynamicISF @Inject constructor(
         val expectedDelta = calculate_expected_delta(target_bg, eventualBG, bgi)
 
         // min_bg of 90 -> threshold of 65, 100 -> 70 110 -> 75, and 130 -> 85
-        val lgsThreshold = profile.lgsThreshold ?: error("lgsThreshold missing")
         var threshold = min_bg - 0.5 * (min_bg - 40)
-        val oldThreshold = threshold
-        if (lgsThreshold in 65..120 && lgsThreshold > threshold) {
-            threshold = lgsThreshold.toDouble()
+        if (profile.lgsThreshold != null) {
+            val lgsThreshold = profile.lgsThreshold ?: error("lgsThreshold missing")
+            if (lgsThreshold > threshold) {
+                consoleError.add("Threshold set from ${convert_bg(threshold)} to ${convert_bg(lgsThreshold.toDouble())}; ")
+                threshold = lgsThreshold.toDouble()
+            }
         }
-        consoleError.add("Threshold set from ${convert_bg(oldThreshold)} to ${convert_bg(threshold)}; ")
 
         //console.error(reservoir_data);
 
@@ -361,7 +372,7 @@ class DetermineBasalSMBDynamicISF @Inject constructor(
             sensitivityRatio = sensitivityRatio, // autosens ratio (fraction of normal basal)
             consoleLog = consoleLog,
             consoleError = consoleError,
-            variable_sens = variable_sens
+            variable_sens = profile.variable_sens
         )
 
         // generate predicted future BGs based on IOB, COB, and current absorption rate
@@ -488,11 +499,11 @@ class DetermineBasalSMBDynamicISF @Inject constructor(
         var maxCOBPredBG = bg
         var maxUAMPredBG = bg
         //var maxPredBG = bg;
-        var eventualPredBG = bg
+        //var eventualPredBG = bg
         val lastIOBpredBG: Double
         var lastCOBpredBG: Double? = null
         var lastUAMpredBG: Double? = null
-        var lastZTpredBG: Int
+        //var lastZTpredBG: Int
         var UAMduration = 0.0
         var remainingCItotal = 0.0
         val remainingCIs = mutableListOf<Int>()
@@ -503,15 +514,22 @@ class DetermineBasalSMBDynamicISF @Inject constructor(
         iobArray.forEach { iobTick ->
             //console.error(iobTick);
             val predBGI: Double = round((-iobTick.activity * sens * 5), 2)
-            val predZTBGI = round((-iobTick.iobWithZeroTemp!!.activity * sens * 5), 2)
+            val IOBpredBGI: Double =
+                if (profile.dynamicIsf) round((-iobTick.activity * (1800 / (profile.TDD * (ln((max(IOBpredBGs[IOBpredBGs.size - 1], 39.0) / profile.insulinDivisor) + 1)))) * 5), 2)
+                else predBGI
+            iobTick.iobWithZeroTemp ?: error("iobTick.iobWithZeroTemp missing")
+            val predZTBGI =
+                if (profile.dynamicIsf) round((-iobTick.iobWithZeroTemp!!.activity * (1800 / (profile.TDD * (ln((max(ZTpredBGs[ZTpredBGs.size - 1], 39.0) / profile.insulinDivisor) + 1)))) * 5), 2)
+                else round((-iobTick.iobWithZeroTemp!!.activity * sens * 5), 2)
+            val predUAMBGI =
+                if (profile.dynamicIsf) round((-iobTick.activity * (1800 / (profile.TDD * (ln((max(UAMpredBGs[UAMpredBGs.size - 1], 39.0) / profile.insulinDivisor) + 1)))) * 5), 2)
+                else predBGI
             // for IOBpredBGs, predicted deviation impact drops linearly from current deviation down to zero
             // over 60 minutes (data points every 5m)
             val predDev: Double = ci * (1 - min(1.0, IOBpredBGs.size / (60.0 / 5.0)))
-            IOBpredBG = IOBpredBGs[IOBpredBGs.size - 1] + (round((-iobTick.activity * (1800 / (TDD * (ln((max(IOBpredBGs[IOBpredBGs.size - 1], 39.0) / insulinDivisor) + 1)))) * 5), 2)) + predDev
+            IOBpredBG = IOBpredBGs[IOBpredBGs.size - 1] + IOBpredBGI + predDev
             // calculate predBGs with long zero temp without deviations
-            iobTick.iobWithZeroTemp ?: error("iobTick.iobWithZeroTemp missing")
-            val ZTpredBG =
-                ZTpredBGs[ZTpredBGs.size - 1] + (round((-iobTick.iobWithZeroTemp!!.activity * (1800 / (TDD * (ln((max(ZTpredBGs[ZTpredBGs.size - 1], 39.0) / insulinDivisor) + 1)))) * 5), 2))
+            val ZTpredBG = ZTpredBGs[ZTpredBGs.size - 1] + predZTBGI
             // for COBpredBGs, predicted carb impact drops linearly from current carb impact down to zero
             // eventually accounting for all carbs (if they can be absorbed over DIA)
             val predCI: Double = max(0.0, max(0.0, ci) * (1 - COBpredBGs.size / max(cid * 2, 1.0)))
@@ -540,7 +558,7 @@ class DetermineBasalSMBDynamicISF @Inject constructor(
                 //console.error(UAMpredBGs.length,slopeFromDeviations, predUCI);
                 UAMduration = round((UAMpredBGs.size + 1) * 5 / 60.0, 1)
             }
-            UAMpredBG = UAMpredBGs[UAMpredBGs.size - 1] + (round((-iobTick.activity * (1800 / (TDD * (ln((max(UAMpredBGs[UAMpredBGs.size - 1], 39.0) / insulinDivisor) + 1)))) * 5), 2)) + min(0.0, predDev) + predUCI
+            UAMpredBG = UAMpredBGs[UAMpredBGs.size - 1] + predUAMBGI + min(0.0, predDev) + predUCI
             //console.error(predBGI, predCI, predUCI);
             // truncate all BG predictions at 4 hours
             if (IOBpredBGs.size < 48) IOBpredBGs.add(IOBpredBG)
@@ -636,15 +654,15 @@ class DetermineBasalSMBDynamicISF @Inject constructor(
 
         var future_sens: Double
         if (bg > target_bg && glucose_status.delta < 3 && glucose_status.delta > -3 && glucose_status.short_avgdelta > -3 && glucose_status.short_avgdelta < 3 && eventualBG > target_bg && eventualBG < bg) {
-            future_sens = (1800 / (ln((((fSensBG * 0.5) + (bg * 0.5)) / insulinDivisor) + 1) * TDD))
+            future_sens = (1800 / (ln((((fSensBG * 0.5) + (bg * 0.5)) / profile.insulinDivisor) + 1) * profile.TDD))
             consoleLog.add("Future state sensitivity is $future_sens based on eventual and current bg due to flat glucose level above target")
             rT.reason.append("Dosing sensitivity: $future_sens using eventual BG;")
         } else if (glucose_status.delta > 0 && eventualBG > target_bg || eventualBG > bg) {
-            future_sens = (1800 / (ln((bg / insulinDivisor) + 1) * TDD))
+            future_sens = (1800 / (ln((bg / profile.insulinDivisor) + 1) * profile.TDD))
             consoleLog.add("Future state sensitivity is $future_sens using current bg due to small delta or variation")
             rT.reason.append("Dosing sensitivity: $future_sens using current BG;")
         } else {
-            future_sens = (1800 / (ln((fSensBG / insulinDivisor) + 1) * TDD))
+            future_sens = (1800 / (ln((fSensBG / profile.insulinDivisor) + 1) * profile.TDD))
             consoleLog.add("Future state sensitivity is $future_sens based on eventual bg due to -ve delta")
             rT.reason.append("Dosing sensitivity: $future_sens using eventual BG;")
         }
@@ -708,7 +726,7 @@ class DetermineBasalSMBDynamicISF @Inject constructor(
 
             // if UAM is disabled, use max of minIOBPredBG, minCOBPredBG
             if (!enableUAM && minCOBPredBG < 999) {
-                minPredBG = round(max(minIOBPredBG, minCOBPredBG),0)
+                minPredBG = round(max(minIOBPredBG, minCOBPredBG), 0)
                 // if we have COB, use minCOBPredBG, or blendedMinPredBG if it's higher
             } else if (minCOBPredBG < 999) {
                 // calculate blendedMinPredBG based on how many carbs remain as COB
@@ -878,7 +896,9 @@ class DetermineBasalSMBDynamicISF @Inject constructor(
 
             // calculate 30m low-temp required to get projected BG up to target
             // multiply by 2 to low-temp faster for increased hypo safety
-            var insulinReq = 2 * min(0.0, (eventualBG - target_bg) / future_sens)
+            var insulinReq =
+                if (profile.dynamicIsf) 2 * min(0.0, (eventualBG - target_bg) / future_sens)
+                else 2 * min(0.0, (eventualBG - target_bg) / sens)
             insulinReq = round(insulinReq, 2)
             // calculate naiveInsulinReq based on naive_eventualBG
             var naiveInsulinReq = min(0.0, (naive_eventualBG - target_bg) / sens)
@@ -984,7 +1004,9 @@ class DetermineBasalSMBDynamicISF @Inject constructor(
         } else { // otherwise, calculate 30m high-temp required to get projected BG down to target
             // insulinReq is the additional insulin required to get minPredBG down to target_bg
             //console.error(minPredBG,eventualBG);
-            var insulinReq = round((min(minPredBG, eventualBG) - target_bg) / future_sens, 2)
+            var insulinReq =
+                if (profile.dynamicIsf) round((min(minPredBG, eventualBG) - target_bg) / future_sens, 2)
+                else round((min(minPredBG, eventualBG) - target_bg) / sens, 2)
             // if that would put us over max_iob, then reduce accordingly
             if (insulinReq > max_iob - iob_data.iob) {
                 rT.reason.append("max_iob $max_iob, ")

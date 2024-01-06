@@ -15,7 +15,6 @@ data class Profile(
     var autosens_adjust_targets: Boolean, // AMA only
     var max_daily_safety_multiplier: Double,
     var current_basal_safety_multiplier: Double,
-    var lgsThreshold: Int?,
     var high_temptarget_raises_sensitivity: Boolean,
     var low_temptarget_lowers_sensitivity: Boolean,
     var sensitivity_raises_target: Boolean,
@@ -43,7 +42,10 @@ data class Profile(
     var autosens_max: Double,
     var autosens_min: Double?,
     var out_units: String,
-    var variable_sens: Double?, //DynISF only
-    var insulinDivisor: Int?, //DynISF only
-    var TDD: Double? //DynISF only
+    var lgsThreshold: Int?,
+    //DynISF only
+    var dynamicIsf: Boolean, // DynISF mode?
+    var variable_sens: Double,
+    var insulinDivisor: Int,
+    var TDD: Double
 )

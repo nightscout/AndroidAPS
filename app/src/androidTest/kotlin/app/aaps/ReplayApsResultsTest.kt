@@ -22,7 +22,6 @@ import app.aaps.plugins.aps.openAPSAMA.DetermineBasalAMA
 import app.aaps.plugins.aps.openAPSAMA.DetermineBasalAdapterAMAJS
 import app.aaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import app.aaps.plugins.aps.openAPSSMB.DetermineBasalAdapterSMBJS
-import app.aaps.plugins.aps.openAPSSMB.DetermineBasalSMB
 import app.aaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import app.aaps.plugins.aps.openAPSSMBDynamicISF.DetermineBasalAdapterSMBDynamicISFJS
 import app.aaps.plugins.aps.openAPSSMBDynamicISF.DetermineBasalSMBDynamicISF
@@ -47,7 +46,6 @@ class ReplayApsResultsTest @Inject constructor() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var determineBasalAMA: DetermineBasalAMA
-    @Inject lateinit var determineBasalSMB: DetermineBasalSMB
     @Inject lateinit var determineBasalSMBDynamicISF: DetermineBasalSMBDynamicISF
     @Inject lateinit var sp: SP
 
@@ -200,9 +198,10 @@ class ReplayApsResultsTest @Inject constructor() {
             autosens_max = determineBasalResult.profile.getDouble("autosens_max"),
             autosens_min = null,
             out_units = determineBasalResult.profile.optString("out_units"),
-            variable_sens = null,
-            insulinDivisor = null,
-            TDD = null
+            dynamicIsf = false,
+            variable_sens = 0.0,
+            insulinDivisor = 0,
+            TDD = 0.0
         )
         val meatData = MealData(
             carbs = determineBasalResult.mealData.getInt("carbs"),
@@ -212,7 +211,7 @@ class ReplayApsResultsTest @Inject constructor() {
             lastBolusTime = determineBasalResult.mealData.getLong("lastBolusTime"),
             lastCarbTime = determineBasalResult.mealData.getLong("lastCarbTime")
         )
-        val resultKt = determineBasalSMB.determine_basal(
+        val resultKt = determineBasalSMBDynamicISF.determine_basal(
             glucose_status = glucoseStatus,
             currenttemp = currenttemp,
             iob_data_array = iobData.toTypedArray(),
@@ -355,6 +354,7 @@ class ReplayApsResultsTest @Inject constructor() {
             temptargetSet = determineBasalResult.profile.getBoolean("temptargetSet"),
             autosens_max = determineBasalResult.profile.getDouble("autosens_max"),
             autosens_min = null,
+            dynamicIsf = true,
             out_units = determineBasalResult.profile.optString("out_units"),
             variable_sens = determineBasalResult.profile.getDouble("variable_sens"),
             insulinDivisor = determineBasalResult.profile.getInt("insulinDivisor"),
@@ -504,6 +504,7 @@ class ReplayApsResultsTest @Inject constructor() {
             autosens_max = 0.0,
             autosens_min = 0.0,
             out_units = determineBasalResult.profile.optString("out_units"),
+            dynamicIsf = false,
             variable_sens = 0.0,
             insulinDivisor = 0,
             TDD = 0.0
