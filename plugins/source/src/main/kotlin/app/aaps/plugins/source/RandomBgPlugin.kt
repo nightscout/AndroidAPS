@@ -6,12 +6,15 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.PowerManager
 import android.os.SystemClock
+import app.aaps.core.data.model.CA
 import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.IDs
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -127,5 +130,18 @@ class RandomBgPlugin @Inject constructor(
         )
         persistenceLayer.insertCgmSourceData(Sources.Random, glucoseValues, emptyList(), null)
             .blockingGet()
+
+        //  Generate carbs around once in 4 hours
+        if (SecureRandom().nextDouble() <= 0.02) {
+            val ca = CA(
+                timestamp = cal.timeInMillis + T.mins(1).msecs(),
+                isValid = true,
+                amount = SecureRandom().nextInt(50).toDouble(),
+                duration = 0,
+                notes = "Random carbs",
+                ids = IDs()
+            )
+            persistenceLayer.insertOrUpdateCarbs(ca, Action.TREATMENT, Sources.CarbDialog, ca.notes).blockingGet()
+        }
     }
 }
