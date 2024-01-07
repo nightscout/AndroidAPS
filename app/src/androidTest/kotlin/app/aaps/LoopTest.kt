@@ -83,6 +83,8 @@ class LoopTest @Inject constructor() {
         rxHelper.listen(EventAPSCalculationFinished::class.java)
         (loop as PluginBase).setPluginEnabled(PluginType.LOOP, true)
 
+        persistenceLayer.clearDatabases()
+
         // Enable event logging
         l.findByName(LTag.EVENTS.name).enabled = true
 

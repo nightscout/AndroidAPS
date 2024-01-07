@@ -54,6 +54,9 @@ class ReplayApsResultsTest @Inject constructor() {
     @get:Rule
     var runtimePermissionRule = GrantPermissionRule.grant(android.Manifest.permission.READ_EXTERNAL_STORAGE)!!
 
+    private var ktTime = 0L
+    private var jsTime = 0L
+
     @Before
     fun inject() {
         context.androidInjector().inject(this)
@@ -61,9 +64,9 @@ class ReplayApsResultsTest @Inject constructor() {
 
     @Test
     fun replayTest() {
-        var amas = 0
-        var smbs = 0
-        var dynisfs = 0
+        @Suppress("SpellCheckingInspection") var amas = 0
+        @Suppress("SpellCheckingInspection") var smbs = 0
+        @Suppress("SpellCheckingInspection") var dynisfs = 0
         val results = readResultFiles()
         assertThat(results.size).isGreaterThan(0)
         results.forEach { test ->
@@ -74,7 +77,7 @@ class ReplayApsResultsTest @Inject constructor() {
             val filename = JsonHelper.safeGetString(result, "filename") ?: "Unknown filename"
             val input = JSONObject(inputString)
             val output = JSONObject(outputString)
-            aapsLogger.info(LTag.CORE,"***** File: $filename *****")
+            aapsLogger.info(LTag.CORE, "***** File: $filename *****")
             when (algorithm) {
                 OpenAPSSMBPlugin::class.simpleName           -> smbs++
                 OpenAPSSMBDynamicISFPlugin::class.simpleName -> dynisfs++
@@ -86,10 +89,11 @@ class ReplayApsResultsTest @Inject constructor() {
                 OpenAPSAMAPlugin::class.simpleName           -> testOpenAPSAMA(filename, input, output, context, injector)
             }
         }
-        aapsLogger.info(LTag.CORE, "\n**********\nAMA: $amas\nSMB: $smbs\nDynISFs: $dynisfs\n**********")
+        aapsLogger.info(LTag.CORE, "\n**********\nAMA: $amas\nSMB: $smbs\nDynISFs: $dynisfs\nJS time: $jsTime\nKT time: $ktTime\n**********")
     }
 
     private fun testOpenAPSSMB(filename: String, input: JSONObject, output: JSONObject, context: Context, injector: HasAndroidInjector) {
+        val startJs = System.currentTimeMillis()
         val determineBasalResult = DetermineBasalAdapterSMBJS(ScriptReader(context), injector)
         determineBasalResult.profile = input.getJSONObject("profile")
         determineBasalResult.glucoseStatus = input.getJSONObject("glucoseStatus")
@@ -100,8 +104,10 @@ class ReplayApsResultsTest @Inject constructor() {
         determineBasalResult.microBolusAllowed = input.getBoolean("microBolusAllowed")
         determineBasalResult.currentTime = input.getLong("currentTime")
         determineBasalResult.flatBGsDetected = input.getBoolean("flatBGsDetected")
-
         val result = determineBasalResult.invoke()
+        val endJs = System.currentTimeMillis()
+        jsTime += (endJs - startJs)
+
         aapsLogger.info(LTag.APS, "Expected --> $output")
         assertThat(result).isNotNull()
         JSONAssert.assertEquals(
@@ -123,6 +129,8 @@ class ReplayApsResultsTest @Inject constructor() {
             sp.putString(app.aaps.core.keys.R.string.key_units, GlucoseUnit.MMOL.asText)
         else
             sp.putString(app.aaps.core.keys.R.string.key_units, GlucoseUnit.MGDL.asText)
+
+        val startKt = System.currentTimeMillis()
         val glucoseStatus = GlucoseStatus(
             glucose = determineBasalResult.glucoseStatus.getDouble("glucose"),
             noise = determineBasalResult.glucoseStatus.getInt("noise"),
@@ -131,7 +139,7 @@ class ReplayApsResultsTest @Inject constructor() {
             long_avgdelta = determineBasalResult.glucoseStatus.getDouble("long_avgdelta"),
             date = determineBasalResult.glucoseStatus.getLong("date")
         )
-        val currenttemp = CurrentTemp(
+        val currentTemp = CurrentTemp(
             duration = determineBasalResult.currentTemp.getInt("duration"),
             rate = determineBasalResult.currentTemp.getDouble("rate"),
             minutesrunning = null
@@ -213,7 +221,7 @@ class ReplayApsResultsTest @Inject constructor() {
         )
         val resultKt = determineBasalSMBDynamicISF.determine_basal(
             glucose_status = glucoseStatus,
-            currenttemp = currenttemp,
+            currenttemp = currentTemp,
             iob_data_array = iobData.toTypedArray(),
             profile = profile,
             autosens_data = autosensData,
@@ -222,11 +230,14 @@ class ReplayApsResultsTest @Inject constructor() {
             currentTime = currentTime,
             flatBGsDetected = determineBasalResult.flatBGsDetected
         )
+        val endKt = System.currentTimeMillis()
+        ktTime += (endKt - startKt)
+
         aapsLogger.info(LTag.APS, resultKt.toString())
 
-        aapsLogger.debug(LTag.APS,result?.json?.getString("reason") ?: "")
-        aapsLogger.debug(LTag.APS,resultKt.reason.toString())
-        aapsLogger.debug(LTag.APS,"File: $filename")
+        aapsLogger.debug(LTag.APS, result?.json?.getString("reason") ?: "")
+        aapsLogger.debug(LTag.APS, resultKt.reason.toString())
+        aapsLogger.debug(LTag.APS, "File: $filename")
 //        assertThat(resultKt.reason.toString()).isEqualTo(result?.json?.getString("reason"))
         assertThat(resultKt.tick ?: "").isEqualTo(result?.json?.optString("tick"))
         assertThat(resultKt.eventualBG ?: Double.NaN).isEqualTo(result?.json?.optDouble("eventualBG"))
@@ -243,6 +254,7 @@ class ReplayApsResultsTest @Inject constructor() {
     }
 
     private fun testOpenAPSSMBDynamicISF(filename: String, input: JSONObject, output: JSONObject, context: Context, injector: HasAndroidInjector) {
+        val startJs = System.currentTimeMillis()
         val determineBasalResult = DetermineBasalAdapterSMBDynamicISFJS(ScriptReader(context), injector)
         determineBasalResult.profile = input.getJSONObject("profile")
         determineBasalResult.glucoseStatus = input.getJSONObject("glucoseStatus")
@@ -258,8 +270,10 @@ class ReplayApsResultsTest @Inject constructor() {
         determineBasalResult.tddLast24H = input.getDouble("tddLast24H")
         determineBasalResult.tddLast4H = input.getDouble("tddLast4H")
         determineBasalResult.tddLast8to4H = input.getDouble("tddLast8to4H")
-
         val result = determineBasalResult.invoke()
+        val endJs = System.currentTimeMillis()
+        jsTime += (endJs - startJs)
+
         aapsLogger.info(LTag.APS, "Expected --> $output")
         assertThat(result).isNotNull()
         JSONAssert.assertEquals(
@@ -280,6 +294,8 @@ class ReplayApsResultsTest @Inject constructor() {
             sp.putString(app.aaps.core.keys.R.string.key_units, GlucoseUnit.MMOL.asText)
         else
             sp.putString(app.aaps.core.keys.R.string.key_units, GlucoseUnit.MGDL.asText)
+
+        val startKt = System.currentTimeMillis()
         val glucoseStatus = GlucoseStatus(
             glucose = determineBasalResult.glucoseStatus.getDouble("glucose"),
             noise = determineBasalResult.glucoseStatus.getInt("noise"),
@@ -288,7 +304,7 @@ class ReplayApsResultsTest @Inject constructor() {
             long_avgdelta = determineBasalResult.glucoseStatus.getDouble("long_avgdelta"),
             date = determineBasalResult.glucoseStatus.getLong("date")
         )
-        val currenttemp = CurrentTemp(
+        val currentTemp = CurrentTemp(
             duration = determineBasalResult.currentTemp.getInt("duration"),
             rate = determineBasalResult.currentTemp.getDouble("rate"),
             minutesrunning = null
@@ -368,9 +384,10 @@ class ReplayApsResultsTest @Inject constructor() {
             lastBolusTime = determineBasalResult.mealData.getLong("lastBolusTime"),
             lastCarbTime = determineBasalResult.mealData.getLong("lastCarbTime")
         )
+
         val resultKt = determineBasalSMBDynamicISF.determine_basal(
             glucose_status = glucoseStatus,
-            currenttemp = currenttemp,
+            currenttemp = currentTemp,
             iob_data_array = iobData.toTypedArray(),
             profile = profile,
             autosens_data = autosensData,
@@ -379,11 +396,14 @@ class ReplayApsResultsTest @Inject constructor() {
             currentTime = currentTime,
             flatBGsDetected = determineBasalResult.flatBGsDetected
         )
+        val endKt = System.currentTimeMillis()
+        ktTime += (endKt - startKt)
+
         aapsLogger.info(LTag.APS, resultKt.toString())
 
-        aapsLogger.debug(LTag.APS,result?.json?.getString("reason") ?: "")
-        aapsLogger.debug(LTag.APS,resultKt.reason.toString())
-        aapsLogger.debug(LTag.APS,"File: $filename")
+        aapsLogger.debug(LTag.APS, result?.json?.getString("reason") ?: "")
+        aapsLogger.debug(LTag.APS, resultKt.reason.toString())
+        aapsLogger.debug(LTag.APS, "File: $filename")
 //        assertThat(resultKt.reason.toString()).isEqualTo(result?.json?.getString("reason"))
         assertThat(resultKt.tick ?: "").isEqualTo(result?.json?.optString("tick"))
         assertThat(resultKt.eventualBG ?: Double.NaN).isEqualTo(result?.json?.optDouble("eventualBG"))
@@ -401,6 +421,8 @@ class ReplayApsResultsTest @Inject constructor() {
     }
 
     private fun testOpenAPSAMA(filename: String, input: JSONObject, output: JSONObject, context: Context, injector: HasAndroidInjector) {
+
+        val startJs = System.currentTimeMillis()
         val determineBasalResult = DetermineBasalAdapterAMAJS(ScriptReader(context), injector)
         determineBasalResult.profile = input.getJSONObject("profile")
         determineBasalResult.glucoseStatus = input.getJSONObject("glucoseStatus")
@@ -408,8 +430,10 @@ class ReplayApsResultsTest @Inject constructor() {
         determineBasalResult.mealData = input.getJSONObject("meal_data")
         determineBasalResult.currentTemp = input.getJSONObject("currenttemp")
         determineBasalResult.autosensData = input.getJSONObject("autosens_data")
-
         val result = determineBasalResult.invoke()
+        val endJs = System.currentTimeMillis()
+        jsTime += (endJs - startJs)
+
         aapsLogger.info(LTag.APS, "Expected --> $output")
         assertThat(result).isNotNull()
         JSONAssert.assertEquals(
@@ -430,6 +454,8 @@ class ReplayApsResultsTest @Inject constructor() {
             sp.putString(app.aaps.core.keys.R.string.key_units, GlucoseUnit.MMOL.asText)
         else
             sp.putString(app.aaps.core.keys.R.string.key_units, GlucoseUnit.MGDL.asText)
+
+        val startKt = System.currentTimeMillis()
         val glucoseStatus = GlucoseStatus(
             glucose = determineBasalResult.glucoseStatus.getDouble("glucose"),
             noise = 0,
@@ -438,7 +464,7 @@ class ReplayApsResultsTest @Inject constructor() {
             long_avgdelta = determineBasalResult.glucoseStatus.getDouble("long_avgdelta"),
             date = 0
         )
-        val currenttemp = CurrentTemp(
+        val currentTemp = CurrentTemp(
             duration = determineBasalResult.currentTemp.getInt("duration"),
             rate = determineBasalResult.currentTemp.getDouble("rate"),
             minutesrunning = null
@@ -519,17 +545,20 @@ class ReplayApsResultsTest @Inject constructor() {
         )
         val resultKt = determineBasalAMA.determine_basal(
             glucose_status = glucoseStatus,
-            currenttemp = currenttemp,
+            currenttemp = currentTemp,
             iob_data_array = iobData.toTypedArray(),
             profile = profile,
             autosens_data = autosensData,
             meal_data = meatData
         )
+        val endKt = System.currentTimeMillis()
+        ktTime += (endKt - startKt)
+
         aapsLogger.info(LTag.APS, resultKt.toString())
 
-        aapsLogger.debug(LTag.APS,result?.json?.getString("reason") ?: "")
-        aapsLogger.debug(LTag.APS,resultKt.reason.toString())
-        aapsLogger.debug(LTag.APS,"File: $filename")
+        aapsLogger.debug(LTag.APS, result?.json?.getString("reason") ?: "")
+        aapsLogger.debug(LTag.APS, resultKt.reason.toString())
+        aapsLogger.debug(LTag.APS, "File: $filename")
 //        assertThat(resultKt.reason.toString()).isEqualTo(result?.json?.getString("reason"))
         assertThat(resultKt.tick ?: "").isEqualTo(result?.json?.optString("tick"))
         assertThat(resultKt.eventualBG ?: Double.NaN).isEqualTo(result?.json?.optDouble("eventualBG"))
@@ -548,6 +577,7 @@ class ReplayApsResultsTest @Inject constructor() {
 
     enum class TestSource { ASSET, FILE }
     data class TestFile(val source: TestSource, val path: String, val name: String)
+
     private fun readResultFiles(): MutableList<TestFile> {
         val apsResults = mutableListOf<TestFile>()
 
@@ -573,9 +603,9 @@ class ReplayApsResultsTest @Inject constructor() {
         return apsResults
     }
 
-    fun TestFile.readContent() : JSONObject {
+    private fun TestFile.readContent(): JSONObject {
         val assets = InstrumentationRegistry.getInstrumentation().context.assets
-        return when(source) {
+        return when (source) {
             TestSource.ASSET -> JSONObject(assets.open("results/$name").readBytes().toString(StandardCharsets.UTF_8)).apply { put("filename", name) }
             TestSource.FILE  -> JSONObject(storage.getFileContents(File(path))).apply { put("filename", name) }
         }
