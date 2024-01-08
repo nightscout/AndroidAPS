@@ -59,7 +59,8 @@ class XdripSourcePlugin @Inject constructor(
             SourceSensor.DEXCOM_G5_NATIVE,
             SourceSensor.DEXCOM_G6_NATIVE_XDRIP,
             SourceSensor.DEXCOM_G5_NATIVE_XDRIP,
-            SourceSensor.DEXCOM_G6_G5_NATIVE_XDRIP
+            SourceSensor.DEXCOM_G6_G5_NATIVE_XDRIP,
+            SourceSensor.DEXCOM_G7_NATIVE_XDRIP
         ).any { it == glucoseValue.sourceSensor }
     }
 
