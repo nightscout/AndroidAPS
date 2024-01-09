@@ -222,6 +222,7 @@ class NSClientV3Service : DaggerService() {
         when (collection) {
             "devicestatus" -> docString.toNSDeviceStatus().let { nsDeviceStatusHandler.handleNewData(arrayOf(it)) }
             "entries"      -> docString.toNSSgvV3()?.let {
+                sp.putBoolean(app.aaps.core.utils.R.string.key_objectives_bg_is_available_in_ns, true)
                 nsIncomingDataProcessor.processSgvs(listOf(it))
                 storeDataForDb.storeGlucoseValuesToDb()
             }
