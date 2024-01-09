@@ -29,7 +29,6 @@ import app.aaps.core.interfaces.profiling.Profiler
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAPSCalculationFinished
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
@@ -98,7 +97,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
 
     // last values
     override var lastAPSRun: Long = 0
-    override var lastAPSResult: DetermineBasalResultSMB? = null
+    override var lastAPSResult: DetermineBasalResultSMBFromJS? = null
     override var lastDetermineBasalAdapter: DetermineBasalAdapter? = null
     override var lastAutosensResult = AutosensResult()
 
@@ -162,18 +161,18 @@ open class OpenAPSSMBPlugin @Inject constructor(
             hardLimits.verifyHardLimits(
                 Round.roundTo(profile.getTargetLowMgdl(), 0.1),
                 app.aaps.core.ui.R.string.profile_low_target,
-                HardLimits.VERY_HARD_LIMIT_MIN_BG[0],
-                HardLimits.VERY_HARD_LIMIT_MIN_BG[1]
+                HardLimits.LIMIT_MIN_BG[0],
+                HardLimits.LIMIT_MIN_BG[1]
             )
         var maxBg =
             hardLimits.verifyHardLimits(
                 Round.roundTo(profile.getTargetHighMgdl(), 0.1),
                 app.aaps.core.ui.R.string.profile_high_target,
-                HardLimits.VERY_HARD_LIMIT_MAX_BG[0],
-                HardLimits.VERY_HARD_LIMIT_MAX_BG[1]
+                HardLimits.LIMIT_MAX_BG[0],
+                HardLimits.LIMIT_MAX_BG[1]
             )
         var targetBg =
-            hardLimits.verifyHardLimits(profile.getTargetMgdl(), app.aaps.core.ui.R.string.temp_target_value, HardLimits.VERY_HARD_LIMIT_TARGET_BG[0], HardLimits.VERY_HARD_LIMIT_TARGET_BG[1])
+            hardLimits.verifyHardLimits(profile.getTargetMgdl(), app.aaps.core.ui.R.string.temp_target_value, HardLimits.LIMIT_TARGET_BG[0], HardLimits.LIMIT_TARGET_BG[1])
         var isTempTarget = false
         val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
         if (tempTarget != null) {
@@ -182,22 +181,22 @@ open class OpenAPSSMBPlugin @Inject constructor(
                 hardLimits.verifyHardLimits(
                     tempTarget.lowTarget,
                     app.aaps.core.ui.R.string.temp_target_low_target,
-                    HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[0].toDouble(),
-                    HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[1].toDouble()
+                    HardLimits.LIMIT_TEMP_MIN_BG[0],
+                    HardLimits.LIMIT_TEMP_MIN_BG[1]
                 )
             maxBg =
                 hardLimits.verifyHardLimits(
                     tempTarget.highTarget,
                     app.aaps.core.ui.R.string.temp_target_high_target,
-                    HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[0].toDouble(),
-                    HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[1].toDouble()
+                    HardLimits.LIMIT_TEMP_MAX_BG[0],
+                    HardLimits.LIMIT_TEMP_MAX_BG[1]
                 )
             targetBg =
                 hardLimits.verifyHardLimits(
                     tempTarget.target(),
                     app.aaps.core.ui.R.string.temp_target_value,
-                    HardLimits.VERY_HARD_LIMIT_TEMP_TARGET_BG[0].toDouble(),
-                    HardLimits.VERY_HARD_LIMIT_TEMP_TARGET_BG[1].toDouble()
+                    HardLimits.LIMIT_TEMP_TARGET_BG[0],
+                    HardLimits.LIMIT_TEMP_TARGET_BG[1]
                 )
         }
         if (!hardLimits.checkHardLimits(profile.dia, app.aaps.core.ui.R.string.profile_dia, hardLimits.minDia(), hardLimits.maxDia())) return
@@ -270,17 +269,17 @@ open class OpenAPSSMBPlugin @Inject constructor(
 
         provideDetermineBasalAdapter().also { determineBasalAdapterSMBJS ->
             determineBasalAdapterSMBJS.setData(
-                profile, maxIob, maxBasal, minBg, maxBg, targetBg,
-                activePlugin.activePump.baseBasalRate,
-                iobArray,
-                glucoseStatus,
-                iobCobCalculator.getMealDataWithWaitingForCalculationFinish(),
-                lastAutosensResult.ratio,
-                isTempTarget,
-                smbAllowed.value(),
-                uam.value(),
-                advancedFiltering.value(),
-                flatBGsDetected,
+                profile = profile, maxIob = maxIob, maxBasal = maxBasal, minBg = minBg, maxBg = maxBg, targetBg = targetBg,
+                basalRate = activePlugin.activePump.baseBasalRate,
+                iobArray = iobArray,
+                glucoseStatus = glucoseStatus,
+                mealData = iobCobCalculator.getMealDataWithWaitingForCalculationFinish(),
+                autosensDataRatio = lastAutosensResult.ratio,
+                tempTargetSet = isTempTarget,
+                microBolusAllowed = smbAllowed.value(),
+                uamAllowed = uam.value(),
+                advancedFiltering = advancedFiltering.value(),
+                flatBGsDetected = flatBGsDetected,
                 tdd1D = tdd1D,
                 tdd7D = tdd7D,
                 tddLast24H = tddLast24H,
@@ -298,23 +297,22 @@ open class OpenAPSSMBPlugin @Inject constructor(
             } else {
                 // TODO still needed with oref1?
                 // Fix bug determine basal
-                if (determineBasalResultSMB.rate == 0.0 && determineBasalResultSMB.duration == 0 && processedTbrEbData.getTempBasalIncludingConvertedExtended(dateUtil.now()) == null) determineBasalResultSMB
-                    .isTempBasalRequested =
-                    false
+                if (determineBasalResultSMB.rate == 0.0 && determineBasalResultSMB.duration == 0 && processedTbrEbData.getTempBasalIncludingConvertedExtended(dateUtil.now()) == null)
+                    determineBasalResultSMB.isTempBasalRequested = false
                 determineBasalResultSMB.iob = iobArray[0]
-                determineBasalResultSMB.json?.put("timestamp", dateUtil.toISOString(now))
+                determineBasalResultSMB.json()?.put("timestamp", dateUtil.toISOString(now))
                 determineBasalResultSMB.inputConstraints = inputConstraints
                 lastDetermineBasalAdapter = determineBasalAdapterSMBJS
-                lastAPSResult = determineBasalResultSMB as DetermineBasalResultSMB
+                lastAPSResult = determineBasalResultSMB as DetermineBasalResultSMBFromJS
                 lastAPSRun = now
                 if (config.isUnfinishedMode())
-                importExportPrefs.exportApsResult(
-                    when (determineBasalAdapterSMBJS) {
-                        is DetermineBasalAdapterSMBJS -> OpenAPSSMBPlugin::class.simpleName
-                        is DetermineBasalAdapterSMBDynamicISFJS -> OpenAPSSMBDynamicISFPlugin::class.simpleName
-                        else -> "Error"
-                    }, determineBasalAdapterSMBJS.json(), determineBasalResultSMB.json()
-                )
+                    importExportPrefs.exportApsResult(
+                        when (determineBasalAdapterSMBJS) {
+                            is DetermineBasalAdapterSMBJS -> OpenAPSSMBPlugin::class.simpleName
+                            is DetermineBasalAdapterSMBDynamicISFJS -> OpenAPSSMBDynamicISFPlugin::class.simpleName
+                            else -> "Error"
+                        }, determineBasalAdapterSMBJS.json(), determineBasalResultSMB.json()
+                    )
                 rxBus.send(EventAPSCalculationFinished())
             }
         }

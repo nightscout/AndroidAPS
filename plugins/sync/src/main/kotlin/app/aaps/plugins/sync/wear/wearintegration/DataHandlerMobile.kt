@@ -708,11 +708,11 @@ class DataHandlerMobile @Inject constructor(
                         low *= Constants.MMOLL_TO_MGDL
                         high *= Constants.MMOLL_TO_MGDL
                     }
-                    if (low < HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[0] || low > HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[1]) {
+                    if (low < HardLimits.LIMIT_TEMP_MIN_BG[0] || low > HardLimits.LIMIT_TEMP_MIN_BG[1]) {
                         sendError(rh.gs(R.string.wear_action_tempt_min_bg_error))
                         return
                     }
-                    if (high < HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[0] || high > HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[1]) {
+                    if (high < HardLimits.LIMIT_TEMP_MAX_BG[0] || high > HardLimits.LIMIT_TEMP_MAX_BG[1]) {
                         sendError(rh.gs(R.string.wear_action_tempt_max_bg_error))
                         return
                     }
@@ -880,7 +880,7 @@ class DataHandlerMobile @Inject constructor(
             .forEach { (_, _, _, isValid, _, _, timestamp, _, _, amount) -> boluses.add(EventData.TreatmentData.Treatment(timestamp, 0.0, amount, false, isValid)) }
         val finalLastRun = loop.lastRun
         if (finalLastRun?.request?.hasPredictions == true && finalLastRun.constraintsProcessed != null) {
-            val predArray = finalLastRun.constraintsProcessed!!.predictions
+            val predArray = finalLastRun.constraintsProcessed!!.predictionsAsGv
             if (predArray.isNotEmpty())
                 for (bg in predArray) if (bg.value > 39)
                     predictions.add(

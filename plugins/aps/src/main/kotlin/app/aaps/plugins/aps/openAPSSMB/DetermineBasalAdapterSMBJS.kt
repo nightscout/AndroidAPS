@@ -101,7 +101,7 @@ class DetermineBasalAdapterSMBJS(private val scriptReader: ScriptReader, private
         aapsLogger.debug(LTag.APS, "SMBAlwaysAllowed:  $smbAlwaysAllowed")
         aapsLogger.debug(LTag.APS, "CurrentTime: $currentTime")
         aapsLogger.debug(LTag.APS, "flatBGsDetected: $flatBGsDetected")
-        var determineBasalResultSMB: DetermineBasalResultSMB? = null
+        var determineBasalResultSMB: DetermineBasalResultSMBFromJS? = null
         val rhino = Context.enter()
         val scope: Scriptable = rhino.initStandardObjects()
         // Turn off optimization to make Rhino Android compatible
@@ -150,7 +150,7 @@ class DetermineBasalAdapterSMBJS(private val scriptReader: ScriptReader, private
                 aapsLogger.debug(LTag.APS, "Result: $result")
                 try {
                     val resultJson = JSONObject(result)
-                    determineBasalResultSMB = DetermineBasalResultSMB(injector, resultJson)
+                    determineBasalResultSMB = DetermineBasalResultSMBFromJS(injector, resultJson)
                 } catch (e: JSONException) {
                     aapsLogger.error(LTag.APS, "Unhandled exception", e)
                 }

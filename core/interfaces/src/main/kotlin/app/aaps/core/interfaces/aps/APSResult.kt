@@ -9,7 +9,6 @@ import org.json.JSONObject
 interface APSResult {
 
     var date: Long
-    var json: JSONObject?
     var reason: String
     var rate: Double
     var percent: Int
@@ -22,8 +21,9 @@ interface APSResult {
     var deliverAt: Long
     var targetBG: Double
     var hasPredictions: Boolean
+    var variableSens: Double?
 
-    val predictions: MutableList<GV>
+    val predictionsAsGv: MutableList<GV>
     val latestPredictionsTime: Long
     val isChangeRequested: Boolean
     var isTempBasalRequested: Boolean
@@ -48,7 +48,7 @@ interface APSResult {
         newResult.duration = duration
         newResult.isTempBasalRequested = isTempBasalRequested
         newResult.iob = iob
-        newResult.json = JSONObject(json.toString())
+        //newResult.json = JSONObject(json.toString())
         newResult.hasPredictions = hasPredictions
         newResult.smb = smb
         newResult.deliverAt = deliverAt
@@ -60,4 +60,6 @@ interface APSResult {
         newResult.carbsReqWithin = carbsReqWithin
         newResult.targetBG = targetBG
     }
+
+    fun predictions(): Predictions?
 }

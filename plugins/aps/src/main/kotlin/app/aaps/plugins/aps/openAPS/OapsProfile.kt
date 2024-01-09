@@ -1,10 +1,9 @@
 package app.aaps.plugins.aps.openAPS
 
-data class Profile(
+data class OapsProfile(
     var dia: Int, // AMA only
     var min_5m_carbimpact: Double, // AMA only
     var max_iob: Double,
-    var type: String,
     var max_daily_basal: Double,
     var max_basal: Double,
     var min_bg: Double,
@@ -40,11 +39,9 @@ data class Profile(
     var current_basal: Double,
     var temptargetSet: Boolean,
     var autosens_max: Double,
-    var autosens_min: Double?,
     var out_units: String,
     var lgsThreshold: Int?,
     //DynISF only
-    var dynamicIsf: Boolean, // DynISF mode?
     var variable_sens: Double,
     var insulinDivisor: Int,
     var TDD: Double

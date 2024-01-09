@@ -175,8 +175,8 @@ sealed class ProfileSealed(
         for (target in targetBlocks) {
             if (!hardLimits.isInRange(
                     toMgdl(target.lowTarget, units),
-                    HardLimits.VERY_HARD_LIMIT_MIN_BG[0],
-                    HardLimits.VERY_HARD_LIMIT_MIN_BG[1]
+                    HardLimits.LIMIT_MIN_BG[0],
+                    HardLimits.LIMIT_MIN_BG[1]
                 )
             ) {
                 validityCheck.isValid = false
@@ -185,8 +185,8 @@ sealed class ProfileSealed(
             }
             if (!hardLimits.isInRange(
                     toMgdl(target.highTarget, units),
-                    HardLimits.VERY_HARD_LIMIT_MAX_BG[0],
-                    HardLimits.VERY_HARD_LIMIT_MAX_BG[1]
+                    HardLimits.LIMIT_MAX_BG[0],
+                    HardLimits.LIMIT_MAX_BG[1]
                 )
             ) {
                 validityCheck.isValid = false

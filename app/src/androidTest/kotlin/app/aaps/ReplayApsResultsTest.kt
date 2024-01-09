@@ -4,20 +4,21 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
+import app.aaps.core.data.iob.GlucoseStatus
+import app.aaps.core.data.iob.IobTotal
+import app.aaps.core.data.iob.MealData
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.storage.Storage
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.utils.JsonHelper
 import app.aaps.di.TestApplication
-import app.aaps.plugins.aps.openAPS.AutosensData
 import app.aaps.plugins.aps.openAPS.CurrentTemp
-import app.aaps.plugins.aps.openAPS.GlucoseStatus
-import app.aaps.plugins.aps.openAPS.Iob
-import app.aaps.plugins.aps.openAPS.MealData
-import app.aaps.plugins.aps.openAPS.Profile
+import app.aaps.plugins.aps.openAPS.OapsAutosensData
+import app.aaps.plugins.aps.openAPS.OapsProfile
 import app.aaps.plugins.aps.openAPSAMA.DetermineBasalAMA
 import app.aaps.plugins.aps.openAPSAMA.DetermineBasalAdapterAMAJS
 import app.aaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
@@ -48,6 +49,7 @@ class ReplayApsResultsTest @Inject constructor() {
     @Inject lateinit var determineBasalAMA: DetermineBasalAMA
     @Inject lateinit var determineBasalSMBDynamicISF: DetermineBasalSMBDynamicISF
     @Inject lateinit var sp: SP
+    @Inject lateinit var dateUtil: DateUtil
 
     private val context = ApplicationProvider.getApplicationContext<TestApplication>()
 
@@ -133,10 +135,10 @@ class ReplayApsResultsTest @Inject constructor() {
         val startKt = System.currentTimeMillis()
         val glucoseStatus = GlucoseStatus(
             glucose = determineBasalResult.glucoseStatus.getDouble("glucose"),
-            noise = determineBasalResult.glucoseStatus.getInt("noise"),
+            noise = determineBasalResult.glucoseStatus.getDouble("noise"),
             delta = determineBasalResult.glucoseStatus.getDouble("delta"),
-            short_avgdelta = determineBasalResult.glucoseStatus.getDouble("short_avgdelta"),
-            long_avgdelta = determineBasalResult.glucoseStatus.getDouble("long_avgdelta"),
+            shortAvgDelta = determineBasalResult.glucoseStatus.getDouble("short_avgdelta"),
+            longAvgDelta = determineBasalResult.glucoseStatus.getDouble("long_avgdelta"),
             date = determineBasalResult.glucoseStatus.getLong("date")
         )
         val currentTemp = CurrentTemp(
@@ -144,30 +146,29 @@ class ReplayApsResultsTest @Inject constructor() {
             rate = determineBasalResult.currentTemp.getDouble("rate"),
             minutesrunning = null
         )
-        val autosensData = AutosensData(
+        val autosensData = OapsAutosensData(
             ratio = determineBasalResult.autosensData.getDouble("ratio")
         )
 
-        fun JSONObject.toIob(): Iob =
-            Iob(
+        fun JSONObject.toIob(): IobTotal =
+            IobTotal(
+                time = dateUtil.fromISODateString(this.getString("time")),
                 iob = this.getDouble("iob"),
                 basaliob = this.getDouble("basaliob"),
                 bolussnooze = this.getDouble("bolussnooze"),
                 activity = this.getDouble("activity"),
                 lastBolusTime = this.getLong("lastBolusTime"),
-                time = this.getString("time"),
                 iobWithZeroTemp = this.optJSONObject("iobWithZeroTemp")?.toIob()
             )
 
-        val iobData = arrayListOf<Iob>()
+        val iobData = arrayListOf<IobTotal>()
         for (i in 0 until determineBasalResult.iobData!!.length())
             iobData.add(determineBasalResult.iobData!!.getJSONObject(i).toIob())
         val currentTime = determineBasalResult.currentTime
-        val profile = Profile(
+        val profile = OapsProfile(
             dia = 0,
             min_5m_carbimpact = 0.0,
             max_iob = determineBasalResult.profile.getDouble("max_iob"),
-            type = determineBasalResult.profile.getString("type"),
             max_daily_basal = determineBasalResult.profile.getDouble("max_daily_basal"),
             max_basal = determineBasalResult.profile.getDouble("max_basal"),
             min_bg = determineBasalResult.profile.getDouble("min_bg"),
@@ -204,7 +205,6 @@ class ReplayApsResultsTest @Inject constructor() {
             current_basal = determineBasalResult.profile.getDouble("current_basal"),
             temptargetSet = determineBasalResult.profile.getBoolean("temptargetSet"),
             autosens_max = determineBasalResult.profile.getDouble("autosens_max"),
-            autosens_min = null,
             out_units = determineBasalResult.profile.optString("out_units"),
             dynamicIsf = false,
             variable_sens = 0.0,
@@ -212,7 +212,7 @@ class ReplayApsResultsTest @Inject constructor() {
             TDD = 0.0
         )
         val meatData = MealData(
-            carbs = determineBasalResult.mealData.getInt("carbs"),
+            carbs = determineBasalResult.mealData.getDouble("carbs"),
             mealCOB = determineBasalResult.mealData.getDouble("mealCOB"),
             slopeFromMaxDeviation = determineBasalResult.mealData.getDouble("slopeFromMaxDeviation"),
             slopeFromMinDeviation = determineBasalResult.mealData.getDouble("slopeFromMinDeviation"),
@@ -298,10 +298,10 @@ class ReplayApsResultsTest @Inject constructor() {
         val startKt = System.currentTimeMillis()
         val glucoseStatus = GlucoseStatus(
             glucose = determineBasalResult.glucoseStatus.getDouble("glucose"),
-            noise = determineBasalResult.glucoseStatus.getInt("noise"),
+            noise = determineBasalResult.glucoseStatus.getDouble("noise"),
             delta = determineBasalResult.glucoseStatus.getDouble("delta"),
-            short_avgdelta = determineBasalResult.glucoseStatus.getDouble("short_avgdelta"),
-            long_avgdelta = determineBasalResult.glucoseStatus.getDouble("long_avgdelta"),
+            shortAvgDelta = determineBasalResult.glucoseStatus.getDouble("short_avgdelta"),
+            longAvgDelta = determineBasalResult.glucoseStatus.getDouble("long_avgdelta"),
             date = determineBasalResult.glucoseStatus.getLong("date")
         )
         val currentTemp = CurrentTemp(
@@ -309,30 +309,29 @@ class ReplayApsResultsTest @Inject constructor() {
             rate = determineBasalResult.currentTemp.getDouble("rate"),
             minutesrunning = null
         )
-        val autosensData = AutosensData(
+        val autosensData = OapsAutosensData(
             ratio = determineBasalResult.autosensData.getDouble("ratio")
         )
 
-        fun JSONObject.toIob(): Iob =
-            Iob(
+        fun JSONObject.toIob(): IobTotal =
+            IobTotal(
+                time = dateUtil.fromISODateString(this.getString("time")),
                 iob = this.getDouble("iob"),
                 basaliob = this.getDouble("basaliob"),
                 bolussnooze = this.getDouble("bolussnooze"),
                 activity = this.getDouble("activity"),
                 lastBolusTime = this.getLong("lastBolusTime"),
-                time = this.getString("time"),
                 iobWithZeroTemp = this.optJSONObject("iobWithZeroTemp")?.toIob()
             )
 
-        val iobData = arrayListOf<Iob>()
+        val iobData = arrayListOf<IobTotal>()
         for (i in 0 until determineBasalResult.iobData!!.length())
             iobData.add(determineBasalResult.iobData!!.getJSONObject(i).toIob())
         val currentTime = determineBasalResult.currentTime
-        val profile = Profile(
+        val profile = OapsProfile(
             dia = 0,
             min_5m_carbimpact = 0.0,
             max_iob = determineBasalResult.profile.getDouble("max_iob"),
-            type = determineBasalResult.profile.getString("type"),
             max_daily_basal = determineBasalResult.profile.getDouble("max_daily_basal"),
             max_basal = determineBasalResult.profile.getDouble("max_basal"),
             min_bg = determineBasalResult.profile.getDouble("min_bg"),
@@ -369,7 +368,6 @@ class ReplayApsResultsTest @Inject constructor() {
             current_basal = determineBasalResult.profile.getDouble("current_basal"),
             temptargetSet = determineBasalResult.profile.getBoolean("temptargetSet"),
             autosens_max = determineBasalResult.profile.getDouble("autosens_max"),
-            autosens_min = null,
             dynamicIsf = true,
             out_units = determineBasalResult.profile.optString("out_units"),
             variable_sens = determineBasalResult.profile.getDouble("variable_sens"),
@@ -377,7 +375,7 @@ class ReplayApsResultsTest @Inject constructor() {
             TDD = determineBasalResult.profile.getDouble("TDD")
         )
         val meatData = MealData(
-            carbs = determineBasalResult.mealData.getInt("carbs"),
+            carbs = determineBasalResult.mealData.getDouble("carbs"),
             mealCOB = determineBasalResult.mealData.getDouble("mealCOB"),
             slopeFromMaxDeviation = determineBasalResult.mealData.getDouble("slopeFromMaxDeviation"),
             slopeFromMinDeviation = determineBasalResult.mealData.getDouble("slopeFromMinDeviation"),
@@ -458,10 +456,10 @@ class ReplayApsResultsTest @Inject constructor() {
         val startKt = System.currentTimeMillis()
         val glucoseStatus = GlucoseStatus(
             glucose = determineBasalResult.glucoseStatus.getDouble("glucose"),
-            noise = 0,
+            noise = 0.0,
             delta = determineBasalResult.glucoseStatus.getDouble("delta"),
-            short_avgdelta = determineBasalResult.glucoseStatus.getDouble("short_avgdelta"),
-            long_avgdelta = determineBasalResult.glucoseStatus.getDouble("long_avgdelta"),
+            shortAvgDelta = determineBasalResult.glucoseStatus.getDouble("short_avgdelta"),
+            longAvgDelta = determineBasalResult.glucoseStatus.getDouble("long_avgdelta"),
             date = 0
         )
         val currentTemp = CurrentTemp(
@@ -469,29 +467,28 @@ class ReplayApsResultsTest @Inject constructor() {
             rate = determineBasalResult.currentTemp.getDouble("rate"),
             minutesrunning = null
         )
-        val autosensData = AutosensData(
+        val autosensData = OapsAutosensData(
             ratio = determineBasalResult.autosensData.getDouble("ratio")
         )
 
-        fun JSONObject.toIob(): Iob =
-            Iob(
+        fun JSONObject.toIob(): IobTotal =
+            IobTotal(
+                time = dateUtil.fromISODateString(this.getString("time")),
                 iob = this.getDouble("iob"),
                 basaliob = this.getDouble("basaliob"),
                 bolussnooze = this.getDouble("bolussnooze"),
                 activity = this.getDouble("activity"),
                 lastBolusTime = this.getLong("lastBolusTime"),
-                time = this.getString("time"),
                 iobWithZeroTemp = this.optJSONObject("iobWithZeroTemp")?.toIob()
             )
 
-        val iobData = arrayListOf<Iob>()
+        val iobData = arrayListOf<IobTotal>()
         for (i in 0 until determineBasalResult.iobData!!.length())
             iobData.add(determineBasalResult.iobData!!.getJSONObject(i).toIob())
-        val profile = Profile(
+        val profile = OapsProfile(
             dia = determineBasalResult.profile.getInt("dia"),
             min_5m_carbimpact = determineBasalResult.profile.getDouble("min_5m_carbimpact"),
             max_iob = determineBasalResult.profile.getDouble("max_iob"),
-            type = determineBasalResult.profile.getString("type"),
             max_daily_basal = determineBasalResult.profile.getDouble("max_daily_basal"),
             max_basal = determineBasalResult.profile.getDouble("max_basal"),
             min_bg = determineBasalResult.profile.getDouble("min_bg"),
@@ -528,7 +525,6 @@ class ReplayApsResultsTest @Inject constructor() {
             current_basal = determineBasalResult.profile.getDouble("current_basal"),
             temptargetSet = determineBasalResult.profile.getBoolean("temptargetSet"),
             autosens_max = 0.0,
-            autosens_min = 0.0,
             out_units = determineBasalResult.profile.optString("out_units"),
             dynamicIsf = false,
             variable_sens = 0.0,
@@ -536,7 +532,7 @@ class ReplayApsResultsTest @Inject constructor() {
             TDD = 0.0
         )
         val meatData = MealData(
-            carbs = determineBasalResult.mealData.getInt("carbs"),
+            carbs = determineBasalResult.mealData.getDouble("carbs"),
             mealCOB = determineBasalResult.mealData.getDouble("mealCOB"),
             slopeFromMaxDeviation = 0.0,
             slopeFromMinDeviation = 0.0,

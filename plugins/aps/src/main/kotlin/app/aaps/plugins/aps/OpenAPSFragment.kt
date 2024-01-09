@@ -131,7 +131,7 @@ class OpenAPSFragment : DaggerFragment(), MenuProvider {
         if (_binding == null) return
         val openAPSPlugin = activePlugin.activeAPS
         openAPSPlugin.lastAPSResult?.let { lastAPSResult ->
-            binding.result.text = jsonFormatter.format(lastAPSResult.json)
+            binding.result.text = jsonFormatter.format(lastAPSResult.json())
             binding.request.text = lastAPSResult.toSpanned()
         }
         openAPSPlugin.lastDetermineBasalAdapter?.let { determineBasalAdapter ->

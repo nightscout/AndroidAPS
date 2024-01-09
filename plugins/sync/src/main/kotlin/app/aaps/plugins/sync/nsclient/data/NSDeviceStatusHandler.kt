@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.nsclient.data
 
+import app.aaps.core.interfaces.aps.RT
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.sharedPreferences.SP
@@ -143,7 +144,7 @@ class NSDeviceStatusHandler @Inject constructor(
                 val clock = dateUtil.fromISODateString(timestamp)
                 // check if this is new data
                 if (clock > processedDeviceStatusData.openAPSData.clockSuggested) {
-                    processedDeviceStatusData.openAPSData.suggested = it
+                    processedDeviceStatusData.openAPSData.suggested = RT.deserialize(it.toString()).apply { this.timestamp = clock }
                     processedDeviceStatusData.openAPSData.clockSuggested = clock
                 }
             }
@@ -153,7 +154,7 @@ class NSDeviceStatusHandler @Inject constructor(
                 val clock = dateUtil.fromISODateString(timestamp)
                 // check if this is new data
                 if (clock > processedDeviceStatusData.openAPSData.clockEnacted) {
-                    processedDeviceStatusData.openAPSData.enacted = it
+                    processedDeviceStatusData.openAPSData.enacted = RT.deserialize(it.toString()).apply { this.timestamp = clock }
                     processedDeviceStatusData.openAPSData.clockEnacted = clock
                 }
             }

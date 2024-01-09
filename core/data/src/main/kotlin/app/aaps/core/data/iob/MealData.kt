@@ -1,12 +1,12 @@
 package app.aaps.core.data.iob
 
-class MealData {
+data class MealData(
 
-    var carbs = 0.0
-    var mealCOB = 0.0
-    var slopeFromMaxDeviation = 0.0
-    var slopeFromMinDeviation = 999.0
-    var lastBolusTime: Long = 0
-    var lastCarbTime = 0L
-    var usedMinCarbsImpact = 0.0
-}
+    var carbs: Double = 0.0,
+    var mealCOB: Double = 0.0,
+    var slopeFromMaxDeviation: Double = 0.0,
+    var slopeFromMinDeviation: Double = 999.0,
+    var lastBolusTime: Long = 0,
+    var lastCarbTime: Long = 0L,
+    var usedMinCarbsImpact: Double = 0.0
+)

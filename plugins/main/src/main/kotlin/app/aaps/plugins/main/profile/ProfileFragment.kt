@@ -201,8 +201,8 @@ class ProfileFragment : DaggerFragment() {
                 rh.gs(app.aaps.core.ui.R.string.target_long_label),
                 currentProfile.targetLow,
                 currentProfile.targetHigh,
-                HardLimits.VERY_HARD_LIMIT_MIN_BG,
-                HardLimits.VERY_HARD_LIMIT_TARGET_BG,
+                HardLimits.LIMIT_MIN_BG,
+                HardLimits.LIMIT_TARGET_BG,
                 1.0,
                 DecimalFormat("0"),
                 save
@@ -218,12 +218,12 @@ class ProfileFragment : DaggerFragment() {
                     ("0.0"), save
             )
             val range1 = doubleArrayOf(
-                roundUp(profileUtil.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MIN_BG[0], GlucoseUnit.MMOL)),
-                roundDown(profileUtil.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MIN_BG[1], GlucoseUnit.MMOL))
+                roundUp(profileUtil.fromMgdlToUnits(HardLimits.LIMIT_MIN_BG[0], GlucoseUnit.MMOL)),
+                roundDown(profileUtil.fromMgdlToUnits(HardLimits.LIMIT_MIN_BG[1], GlucoseUnit.MMOL))
             )
             val range2 = doubleArrayOf(
-                roundUp(profileUtil.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MAX_BG[0], GlucoseUnit.MMOL)),
-                roundDown(profileUtil.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MAX_BG[1], GlucoseUnit.MMOL))
+                roundUp(profileUtil.fromMgdlToUnits(HardLimits.LIMIT_MAX_BG[0], GlucoseUnit.MMOL)),
+                roundDown(profileUtil.fromMgdlToUnits(HardLimits.LIMIT_MAX_BG[1], GlucoseUnit.MMOL))
             )
             aapsLogger.info(LTag.CORE, "TimeListEdit", "build: range1" + range1[0] + " " + range1[1] + " range2" + range2[0] + " " + range2[1])
             TimeListEdit(

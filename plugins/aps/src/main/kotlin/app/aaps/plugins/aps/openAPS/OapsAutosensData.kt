@@ -1,5 +1,5 @@
 package app.aaps.plugins.aps.openAPS
 
-data class AutosensData (
+data class OapsAutosensData(
     var ratio: Double
 )

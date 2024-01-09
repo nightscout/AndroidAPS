@@ -7,6 +7,7 @@ import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.aps.APSResult
+import app.aaps.core.interfaces.aps.Predictions
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
@@ -23,7 +24,6 @@ import app.aaps.core.objects.extensions.convertedToPercent
 import app.aaps.core.ui.R
 import app.aaps.core.utils.HtmlHelper
 import dagger.android.HasAndroidInjector
-import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
 import kotlin.math.abs
@@ -50,19 +50,21 @@ open class APSResultObject(protected val injector: HasAndroidInjector) : APSResu
 
     override var date: Long = 0
     override var reason: String = ""
-    override var rate = 0.0
+    override var rate = -1.0
     override var percent = 0
     override var usePercent = false
-    override var duration = 0
+    override var duration = -1
     override var isTempBasalRequested = false
     override var iob: IobTotal? = null
-    override var json: JSONObject? = JSONObject()
+
+    //override var json: JSONObject? = JSONObject()
     override var hasPredictions = false
     override var smb = 0.0 // super micro bolus in units
     override var deliverAt: Long = 0
     override var targetBG = 0.0
     override var carbsReq = 0
     override var carbsReqWithin = 0
+    override var variableSens: Double? = null
     override var inputConstraints: Constraint<Double>? = null
     override var rateConstraint: Constraint<Double>? = null
     override var percentConstraint: Constraint<Int>? = null
@@ -101,15 +103,12 @@ open class APSResultObject(protected val injector: HasAndroidInjector) : APSResu
         if (isChangeRequested) {
             // rate
             var ret: String =
-                if (rate == 0.0 && duration == 0) rh.gs(R.string.cancel_temp) + "<br>" else if (rate == -1.0) rh.gs(R.string.let_temp_basal_run) + "<br>" else if (usePercent) "<b>" + rh.gs(
-                    R.string.rate
-                ) + "</b>: " + decimalFormatter.to2Decimal(
-                    percent.toDouble()
-                ) + "% " +
+                if (rate == 0.0 && duration == 0) rh.gs(R.string.cancel_temp) + "<br>"
+                else if (rate == -1.0) rh.gs(R.string.let_temp_basal_run) + "<br>"
+                else if (usePercent) "<b>" + rh.gs(R.string.rate) + "</b>: " + decimalFormatter.to2Decimal(percent.toDouble()) + "% " +
                     "(" + decimalFormatter.to2Decimal(percent * pump.baseBasalRate / 100.0) + " U/h)<br>" +
-                    "<b>" + rh.gs(R.string.duration) + "</b>: " + decimalFormatter.to2Decimal(duration.toDouble()) + " min<br>" else "<b>" + rh.gs(R.string.rate) + "</b>: " + decimalFormatter.to2Decimal(
-                    rate
-                ) + " U/h " +
+                    "<b>" + rh.gs(R.string.duration) + "</b>: " + decimalFormatter.to2Decimal(duration.toDouble()) + " min<br>"
+                else "<b>" + rh.gs(R.string.rate) + "</b>: " + decimalFormatter.to2Decimal(rate) + " U/h " +
                     "(" + decimalFormatter.to2Decimal(rate / pump.baseBasalRate * 100.0) + "%) <br>" +
                     "<b>" + rh.gs(R.string.duration) + "</b>: " + decimalFormatter.to2Decimal(duration.toDouble()) + " min<br>"
 
@@ -144,83 +143,77 @@ open class APSResultObject(protected val injector: HasAndroidInjector) : APSResu
         return json
     }
 
-    override val predictions: MutableList<GV>
+    override fun predictions(): Predictions? = null
+
+    override val predictionsAsGv: MutableList<GV>
         get() {
             val array: MutableList<GV> = ArrayList()
             val startTime = date
-            json?.let { json ->
-                if (json.has("predBGs")) {
-                    val predBGs = json.getJSONObject("predBGs")
-                    if (predBGs.has("IOB")) {
-                        val iob = predBGs.getJSONArray("IOB")
-                        for (i in 1 until iob.length()) {
-                            val gv = GV(
-                                raw = 0.0,
-                                noise = 0.0,
-                                value = iob.getInt(i).toDouble(),
-                                timestamp = startTime + i * 5 * 60 * 1000L,
-                                sourceSensor = SourceSensor.IOB_PREDICTION,
-                                trendArrow = TrendArrow.NONE
-                            )
-                            array.add(gv)
-                        }
-                    }
-                    if (predBGs.has("aCOB")) {
-                        val iob = predBGs.getJSONArray("aCOB")
-                        for (i in 1 until iob.length()) {
-                            val gv = GV(
-                                raw = 0.0,
-                                noise = 0.0,
-                                value = iob.getInt(i).toDouble(),
-                                timestamp = startTime + i * 5 * 60 * 1000L,
-                                sourceSensor = SourceSensor.A_COB_PREDICTION,
-                                trendArrow = TrendArrow.NONE
-                            )
-                            array.add(gv)
-                        }
-                    }
-                    if (predBGs.has("COB")) {
-                        val iob = predBGs.getJSONArray("COB")
-                        for (i in 1 until iob.length()) {
-                            val gv = GV(
-                                raw = 0.0,
-                                noise = 0.0,
-                                value = iob.getInt(i).toDouble(),
-                                timestamp = startTime + i * 5 * 60 * 1000L,
-                                sourceSensor = SourceSensor.COB_PREDICTION,
-                                trendArrow = TrendArrow.NONE
-                            )
-                            array.add(gv)
-                        }
-                    }
-                    if (predBGs.has("UAM")) {
-                        val iob = predBGs.getJSONArray("UAM")
-                        for (i in 1 until iob.length()) {
-                            val gv = GV(
-                                raw = 0.0,
-                                noise = 0.0,
-                                value = iob.getInt(i).toDouble(),
-                                timestamp = startTime + i * 5 * 60 * 1000L,
-                                sourceSensor = SourceSensor.UAM_PREDICTION,
-                                trendArrow = TrendArrow.NONE
-                            )
-                            array.add(gv)
-                        }
-                    }
-                    if (predBGs.has("ZT")) {
-                        val iob = predBGs.getJSONArray("ZT")
-                        for (i in 1 until iob.length()) {
-                            val gv = GV(
-                                raw = 0.0,
-                                noise = 0.0,
-                                value = iob.getInt(i).toDouble(),
-                                timestamp = startTime + i * 5 * 60 * 1000L,
-                                sourceSensor = SourceSensor.ZT_PREDICTION,
-                                trendArrow = TrendArrow.NONE
-                            )
-                            array.add(gv)
-                        }
-                    }
+
+            val predictions = predictions()
+            predictions?.IOB?.let { iob ->
+                for (i in 1 until iob.size) {
+                    val gv = GV(
+                        raw = 0.0,
+                        noise = 0.0,
+                        value = iob[i].toDouble(),
+                        timestamp = startTime + i * 5 * 60 * 1000L,
+                        sourceSensor = SourceSensor.IOB_PREDICTION,
+                        trendArrow = TrendArrow.NONE
+                    )
+                    array.add(gv)
+                }
+            }
+            predictions?.aCOB?.let { iob ->
+                for (i in 1 until iob.size) {
+                    val gv = GV(
+                        raw = 0.0,
+                        noise = 0.0,
+                        value = iob[i].toDouble(),
+                        timestamp = startTime + i * 5 * 60 * 1000L,
+                        sourceSensor = SourceSensor.A_COB_PREDICTION,
+                        trendArrow = TrendArrow.NONE
+                    )
+                    array.add(gv)
+                }
+            }
+            predictions?.COB?.let { iob ->
+                for (i in 1 until iob.size) {
+                    val gv = GV(
+                        raw = 0.0,
+                        noise = 0.0,
+                        value = iob[i].toDouble(),
+                        timestamp = startTime + i * 5 * 60 * 1000L,
+                        sourceSensor = SourceSensor.COB_PREDICTION,
+                        trendArrow = TrendArrow.NONE
+                    )
+                    array.add(gv)
+                }
+            }
+            predictions?.UAM?.let { iob ->
+                for (i in 1 until iob.size) {
+                    val gv = GV(
+                        raw = 0.0,
+                        noise = 0.0,
+                        value = iob[i].toDouble(),
+                        timestamp = startTime + i * 5 * 60 * 1000L,
+                        sourceSensor = SourceSensor.UAM_PREDICTION,
+                        trendArrow = TrendArrow.NONE
+                    )
+                    array.add(gv)
+                }
+            }
+            predictions?.ZT?.let { iob ->
+                for (i in 1 until iob.size) {
+                    val gv = GV(
+                        raw = 0.0,
+                        noise = 0.0,
+                        value = iob[i].toDouble(),
+                        timestamp = startTime + i * 5 * 60 * 1000L,
+                        sourceSensor = SourceSensor.ZT_PREDICTION,
+                        trendArrow = TrendArrow.NONE
+                    )
+                    array.add(gv)
                 }
             }
             return array
@@ -228,34 +221,13 @@ open class APSResultObject(protected val injector: HasAndroidInjector) : APSResu
     override val latestPredictionsTime: Long
         get() {
             var latest: Long = 0
-            try {
-                val startTime = date
-                if (json != null && json!!.has("predBGs")) {
-                    val predBGs = json!!.getJSONObject("predBGs")
-                    if (predBGs.has("IOB")) {
-                        val iob = predBGs.getJSONArray("IOB")
-                        latest = max(latest, startTime + (iob.length() - 1) * 5 * 60 * 1000L)
-                    }
-                    if (predBGs.has("aCOB")) {
-                        val iob = predBGs.getJSONArray("aCOB")
-                        latest = max(latest, startTime + (iob.length() - 1) * 5 * 60 * 1000L)
-                    }
-                    if (predBGs.has("COB")) {
-                        val iob = predBGs.getJSONArray("COB")
-                        latest = max(latest, startTime + (iob.length() - 1) * 5 * 60 * 1000L)
-                    }
-                    if (predBGs.has("UAM")) {
-                        val iob = predBGs.getJSONArray("UAM")
-                        latest = max(latest, startTime + (iob.length() - 1) * 5 * 60 * 1000L)
-                    }
-                    if (predBGs.has("ZT")) {
-                        val iob = predBGs.getJSONArray("ZT")
-                        latest = max(latest, startTime + (iob.length() - 1) * 5 * 60 * 1000L)
-                    }
-                }
-            } catch (e: JSONException) {
-                aapsLogger.error("Unhandled exception", e)
-            }
+            val startTime = date
+            val predictions = predictions()
+            predictions?.IOB?.let { if (it.isNotEmpty()) latest = max(latest, startTime + (it.size - 1) * 5 * 60 * 1000L) }
+            predictions?.aCOB?.let { if (it.isNotEmpty()) latest = max(latest, startTime + (it.size - 1) * 5 * 60 * 1000L) }
+            predictions?.COB?.let { if (it.isNotEmpty()) latest = max(latest, startTime + (it.size - 1) * 5 * 60 * 1000L) }
+            predictions?.UAM?.let { if (it.isNotEmpty()) latest = max(latest, startTime + (it.size - 1) * 5 * 60 * 1000L) }
+            predictions?.ZT?.let { if (it.isNotEmpty()) latest = max(latest, startTime + (it.size - 1) * 5 * 60 * 1000L) }
             return latest
         }
     override val isChangeRequested: Boolean

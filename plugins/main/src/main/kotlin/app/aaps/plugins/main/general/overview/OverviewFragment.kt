@@ -31,7 +31,6 @@ import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.aps.Loop
-import app.aaps.core.interfaces.aps.VariableSensitivityResult
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.configuration.Config
@@ -84,6 +83,7 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.UnitDoubleKey
+import app.aaps.core.objects.aps.DetermineBasalResult
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.directionToIcon
 import app.aaps.core.objects.extensions.displayText
@@ -97,7 +97,6 @@ import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.core.ui.extensions.toVisibilityKeepSpace
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.databinding.OverviewFragmentBinding
 import app.aaps.plugins.main.general.overview.graphData.GraphData
@@ -628,7 +627,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                                     OKDialog.showConfirmation(context, rh.gs(R.string.run_question, event.title), { handler.post { automation.processEvent(event) } })
                                 }
                                 binding.buttonsLayout.userButtonsLayout.addView(it)
-                                for (drawable in it.compoundDrawables ) {
+                                for (drawable in it.compoundDrawables) {
                                     drawable?.mutate()
                                     drawable?.colorFilter = PorterDuffColorFilter(rh.gac(context, app.aaps.core.ui.R.attr.userOptionColor), PorterDuff.Mode.SRC_IN)
                                 }
@@ -986,7 +985,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     // If the target is not the same as set in the profile then oref has overridden it
                     val targetUsed =
                         if (config.APS) loop.lastRun?.constraintsProcessed?.targetBG ?: 0.0
-                        else if (config.NSCLIENT) JsonHelper.safeGetDouble(processedDeviceStatusData.getAPSResult().json, "targetBG")
+                        else if (config.NSCLIENT) processedDeviceStatusData.getAPSResult()?.targetBG ?: 0.0
                         else 0.0
 
                     if (targetUsed != 0.0 && abs(profile.getTargetMgdl() - targetUsed) > 0.01) {
@@ -1140,8 +1139,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val request = loop.lastRun?.request
         val isfMgdl = profile?.getIsfMgdl()
         val variableSens =
-            if (config.APS && request is VariableSensitivityResult) request.variableSens ?: 0.0
-            else if (config.NSCLIENT) JsonHelper.safeGetDouble(processedDeviceStatusData.getAPSResult().json, "variable_sens")
+            if (config.APS) request?.variableSens ?: 0.0
+            else if (config.NSCLIENT) (processedDeviceStatusData.getAPSResult() as DetermineBasalResult?)?.variableSens ?: 0.0
             else 0.0
 
         if (variableSens != isfMgdl && variableSens != 0.0 && isfMgdl != null) {

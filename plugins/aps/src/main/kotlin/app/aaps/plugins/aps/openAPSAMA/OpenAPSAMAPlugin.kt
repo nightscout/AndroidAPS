@@ -25,7 +25,6 @@ import app.aaps.core.interfaces.profiling.Profiler
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAPSCalculationFinished
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.Round
@@ -83,7 +82,7 @@ class OpenAPSAMAPlugin @Inject constructor(
 
     // last values
     override var lastAPSRun: Long = 0
-    override var lastAPSResult: DetermineBasalResultAMA? = null
+    override var lastAPSResult: DetermineBasalResultAMAFromJS? = null
     override var lastDetermineBasalAdapter: DetermineBasalAdapter? = null
     override var lastAutosensResult: AutosensResult = AutosensResult()
 
@@ -142,18 +141,18 @@ class OpenAPSAMAPlugin @Inject constructor(
             hardLimits.verifyHardLimits(
                 Round.roundTo(profile.getTargetLowMgdl(), 0.1),
                 app.aaps.core.ui.R.string.profile_low_target,
-                HardLimits.VERY_HARD_LIMIT_MIN_BG[0],
-                HardLimits.VERY_HARD_LIMIT_MIN_BG[1]
+                HardLimits.LIMIT_MIN_BG[0],
+                HardLimits.LIMIT_MIN_BG[1]
             )
         var maxBg =
             hardLimits.verifyHardLimits(
                 Round.roundTo(profile.getTargetHighMgdl(), 0.1),
                 app.aaps.core.ui.R.string.profile_high_target,
-                HardLimits.VERY_HARD_LIMIT_MAX_BG[0],
-                HardLimits.VERY_HARD_LIMIT_MAX_BG[1]
+                HardLimits.LIMIT_MAX_BG[0],
+                HardLimits.LIMIT_MAX_BG[1]
             )
         var targetBg =
-            hardLimits.verifyHardLimits(profile.getTargetMgdl(), app.aaps.core.ui.R.string.temp_target_value, HardLimits.VERY_HARD_LIMIT_TARGET_BG[0], HardLimits.VERY_HARD_LIMIT_TARGET_BG[1])
+            hardLimits.verifyHardLimits(profile.getTargetMgdl(), app.aaps.core.ui.R.string.temp_target_value, HardLimits.LIMIT_TARGET_BG[0], HardLimits.LIMIT_TARGET_BG[1])
         var isTempTarget = false
         val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
         if (tempTarget != null) {
@@ -162,22 +161,22 @@ class OpenAPSAMAPlugin @Inject constructor(
                 hardLimits.verifyHardLimits(
                     tempTarget.lowTarget,
                     app.aaps.core.ui.R.string.temp_target_low_target,
-                    HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[0].toDouble(),
-                    HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[1].toDouble()
+                    HardLimits.LIMIT_TEMP_MIN_BG[0].toDouble(),
+                    HardLimits.LIMIT_TEMP_MIN_BG[1].toDouble()
                 )
             maxBg =
                 hardLimits.verifyHardLimits(
                     tempTarget.highTarget,
                     app.aaps.core.ui.R.string.temp_target_high_target,
-                    HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[0].toDouble(),
-                    HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[1].toDouble()
+                    HardLimits.LIMIT_TEMP_MAX_BG[0].toDouble(),
+                    HardLimits.LIMIT_TEMP_MAX_BG[1].toDouble()
                 )
             targetBg =
                 hardLimits.verifyHardLimits(
                     tempTarget.target(),
                     app.aaps.core.ui.R.string.temp_target_value,
-                    HardLimits.VERY_HARD_LIMIT_TEMP_TARGET_BG[0].toDouble(),
-                    HardLimits.VERY_HARD_LIMIT_TEMP_TARGET_BG[1].toDouble()
+                    HardLimits.LIMIT_TEMP_TARGET_BG[0].toDouble(),
+                    HardLimits.LIMIT_TEMP_TARGET_BG[1].toDouble()
                 )
         }
         if (!hardLimits.checkHardLimits(profile.dia, app.aaps.core.ui.R.string.profile_dia, hardLimits.minDia(), hardLimits.maxDia())) return
@@ -234,10 +233,10 @@ class OpenAPSAMAPlugin @Inject constructor(
                 false
             determineBasalResultAMA.iob = iobArray[0]
             val now = System.currentTimeMillis()
-            determineBasalResultAMA.json?.put("timestamp", dateUtil.toISOString(now))
+            determineBasalResultAMA.json()?.put("timestamp", dateUtil.toISOString(now))
             determineBasalResultAMA.inputConstraints = inputConstraints
             lastDetermineBasalAdapter = determineBasalAdapterAMAJS
-            lastAPSResult = determineBasalResultAMA as DetermineBasalResultAMA
+            lastAPSResult = determineBasalResultAMA as DetermineBasalResultAMAFromJS
             lastAPSRun = now
             if (config.isUnfinishedMode())
                 importExportPrefs.exportApsResult(this::class.simpleName, determineBasalAdapterAMAJS.json(), determineBasalResultAMA.json())

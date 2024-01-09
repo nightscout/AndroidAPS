@@ -4,11 +4,8 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.plugins.aps.openAPS.AutosensData
 import app.aaps.plugins.aps.openAPS.CurrentTemp
-import app.aaps.plugins.aps.openAPS.GlucoseStatus
-import app.aaps.plugins.aps.openAPS.IobData
-import app.aaps.plugins.aps.openAPS.MealData
 import app.aaps.plugins.aps.openAPS.Profile
-import app.aaps.plugins.aps.openAPS.RT
+import app.aaps.core.interfaces.aps.RT
 import java.text.DecimalFormat
 import java.time.Instant
 import java.time.ZoneId
@@ -145,7 +142,7 @@ class DetermineBasalSMB @Inject constructor(
     }
 
     fun determine_basal(
-        glucose_status: GlucoseStatus, currenttemp: CurrentTemp, iob_data_array: IobData, profile: Profile, autosens_data: AutosensData, meal_data: MealData,
+        glucose_status: GlucoseStatus, currenttemp: CurrentTemp, iob_data_array: Array<IobTotal>, profile: Profile, autosens_data: AutosensData, meal_data: MealData,
         microBolusAllowed: Boolean, currentTime: Long, flatBGsDetected: Boolean
     ): RT {
         var rT = RT(

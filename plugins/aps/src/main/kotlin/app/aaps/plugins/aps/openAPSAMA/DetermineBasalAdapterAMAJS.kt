@@ -85,7 +85,7 @@ class DetermineBasalAdapterAMAJS(private val scriptReader: ScriptReader, private
         aapsLogger.debug(LTag.APS, "Profile:        " + profile.toString().also { profileParam = it })
         aapsLogger.debug(LTag.APS, "Meal data:      " + mealData.toString().also { mealDataParam = it })
         aapsLogger.debug(LTag.APS, "Autosens data:  $autosensData")
-        var determineBasalResultAMA: DetermineBasalResultAMA? = null
+        var determineBasalResultAMA: DetermineBasalResultAMAFromJS? = null
         val rhino = Context.enter()
         val scope: Scriptable = rhino.initStandardObjects()
         // Turn off optimization to make Rhino Android compatible
@@ -130,7 +130,7 @@ class DetermineBasalAdapterAMAJS(private val scriptReader: ScriptReader, private
                 aapsLogger.debug(LTag.APS, "Result: $result")
                 try {
                     val resultJson = JSONObject(result)
-                    determineBasalResultAMA = DetermineBasalResultAMA(injector, jsResult, resultJson)
+                    determineBasalResultAMA = DetermineBasalResultAMAFromJS(injector, jsResult, resultJson)
                 } catch (e: JSONException) {
                     aapsLogger.error(LTag.APS, "Unhandled exception", e)
                 }
