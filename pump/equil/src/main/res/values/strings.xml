@@ -236,5 +236,6 @@ Password rule: It must be 4 characters long, chosen from ABCDEF0123456789.</stri
     <string name="equil_maxbolus_tips">Max allowed bolus in Pump [%1$sU]</string>
     <string name="equil_title_chooice">Choose</string>
     <string name="equil_replace_reservoir">The reservoir is empty. Please replace the reservoir</string>
-
+    <string name="sixhexanumber" translatable="false">^[A-F0-9]{6}$</string>
+    <string name="error_mustbe6hexadidits">Must be 6 characters of ABCDEF0123456789</string>
 </resources>

@@ -22,9 +22,9 @@
         android:gravity="center"
         android:orientation="vertical">
 
-
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="250dp"
+            android:id="@+id/devicesNameLayout"
             android:layout_height="wrap_content"
             app:boxBackgroundMode="outline"
             app:boxStrokeColor="@color/white">
@@ -68,7 +68,6 @@
                 android:text=""
                 android:textSize="20sp" />
         </com.google.android.material.textfield.TextInputLayout>
-
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/pairText"
             android:layout_width="wrap_content"
