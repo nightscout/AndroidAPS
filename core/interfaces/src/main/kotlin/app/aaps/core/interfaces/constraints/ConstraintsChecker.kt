@@ -18,7 +18,6 @@ interface ConstraintsChecker : PluginConstraints {
     fun isLgsAllowed(): Constraint<Boolean>
     fun isAutosensModeEnabled(): Constraint<Boolean>
     fun isSMBModeEnabled(): Constraint<Boolean>
-    fun isDynIsfModeEnabled(): Constraint<Boolean>
     fun isUAMEnabled(): Constraint<Boolean>
     fun isAdvancedFilteringEnabled(): Constraint<Boolean>
     fun isSuperBolusEnabled(): Constraint<Boolean>

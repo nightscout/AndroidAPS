@@ -1,4 +1,4 @@
-package app.aaps.plugins.aps.di
+package app.aaps.di
 
 import app.aaps.plugins.aps.logger.LoggerCallback
 import app.aaps.plugins.aps.openAPSAMA.DetermineBasalAdapterAMAJS

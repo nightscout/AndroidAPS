@@ -2,7 +2,7 @@ package app.aaps.plugins.aps.openAPSAMA
 
 import app.aaps.core.interfaces.aps.Predictions
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.objects.aps.APSResultObject
+import app.aaps.plugins.aps.openAPS.APSResultObject
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import org.mozilla.javascript.NativeObject

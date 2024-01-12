@@ -1,6 +1,5 @@
 package app.aaps
 
-import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
@@ -8,6 +7,8 @@ import app.aaps.core.data.iob.GlucoseStatus
 import app.aaps.core.data.iob.IobTotal
 import app.aaps.core.data.iob.MealData
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.interfaces.aps.CurrentTemp
+import app.aaps.core.interfaces.aps.OapsProfile
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.FileListProvider
@@ -16,17 +17,14 @@ import app.aaps.core.interfaces.storage.Storage
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.utils.JsonHelper
 import app.aaps.di.TestApplication
-import app.aaps.plugins.aps.openAPS.CurrentTemp
 import app.aaps.plugins.aps.openAPS.OapsAutosensData
-import app.aaps.plugins.aps.openAPS.OapsProfile
 import app.aaps.plugins.aps.openAPSAMA.DetermineBasalAMA
 import app.aaps.plugins.aps.openAPSAMA.DetermineBasalAdapterAMAJS
 import app.aaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import app.aaps.plugins.aps.openAPSSMB.DetermineBasalAdapterSMBJS
+import app.aaps.plugins.aps.openAPSSMB.DetermineBasalSMB
 import app.aaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import app.aaps.plugins.aps.openAPSSMBDynamicISF.DetermineBasalAdapterSMBDynamicISFJS
-import app.aaps.plugins.aps.openAPSSMBDynamicISF.DetermineBasalSMBDynamicISF
-import app.aaps.plugins.aps.openAPSSMBDynamicISF.OpenAPSSMBDynamicISFPlugin
 import app.aaps.plugins.aps.utils.ScriptReader
 import com.google.common.truth.Truth.assertThat
 import dagger.android.HasAndroidInjector
@@ -34,7 +32,10 @@ import org.json.JSONObject
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.skyscreamer.jsonassert.Customization
 import org.skyscreamer.jsonassert.JSONAssert
+import org.skyscreamer.jsonassert.JSONCompareMode
+import org.skyscreamer.jsonassert.comparator.CustomComparator
 import java.io.File
 import java.nio.charset.StandardCharsets
 import javax.inject.Inject
@@ -47,7 +48,7 @@ class ReplayApsResultsTest @Inject constructor() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var determineBasalAMA: DetermineBasalAMA
-    @Inject lateinit var determineBasalSMBDynamicISF: DetermineBasalSMBDynamicISF
+    @Inject lateinit var determineBasalSMBDynamicISF: DetermineBasalSMB
     @Inject lateinit var sp: SP
     @Inject lateinit var dateUtil: DateUtil
 
@@ -81,22 +82,23 @@ class ReplayApsResultsTest @Inject constructor() {
             val output = JSONObject(outputString)
             aapsLogger.info(LTag.CORE, "***** File: $filename *****")
             when (algorithm) {
-                OpenAPSSMBPlugin::class.simpleName           -> smbs++
-                OpenAPSSMBDynamicISFPlugin::class.simpleName -> dynisfs++
-                OpenAPSAMAPlugin::class.simpleName           -> amas++
+                OpenAPSSMBPlugin::class.simpleName -> smbs++
+                "OpenAPSSMBDynamicISFPlugin"       -> dynisfs++
+                OpenAPSAMAPlugin::class.simpleName -> amas++
             }
             when (algorithm) {
-                OpenAPSSMBPlugin::class.simpleName           -> testOpenAPSSMB(filename, input, output, context, injector)
-                OpenAPSSMBDynamicISFPlugin::class.simpleName -> testOpenAPSSMBDynamicISF(filename, input, output, context, injector)
-                OpenAPSAMAPlugin::class.simpleName           -> testOpenAPSAMA(filename, input, output, context, injector)
+                OpenAPSSMBPlugin::class.simpleName -> testOpenAPSSMB(filename, input, output, injector)
+                "OpenAPSSMBDynamicISFPlugin"       -> testOpenAPSSMBDynamicISF(filename, input, output, injector)
+                OpenAPSAMAPlugin::class.simpleName -> testOpenAPSAMA(filename, input, output, injector)
+                else                               -> error("Unsupported")
             }
         }
         aapsLogger.info(LTag.CORE, "\n**********\nAMA: $amas\nSMB: $smbs\nDynISFs: $dynisfs\nJS time: $jsTime\nKT time: $ktTime\n**********")
     }
 
-    private fun testOpenAPSSMB(filename: String, input: JSONObject, output: JSONObject, context: Context, injector: HasAndroidInjector) {
+    private fun testOpenAPSSMB(filename: String, input: JSONObject, output: JSONObject, injector: HasAndroidInjector) {
         val startJs = System.currentTimeMillis()
-        val determineBasalResult = DetermineBasalAdapterSMBJS(ScriptReader(context), injector)
+        val determineBasalResult = DetermineBasalAdapterSMBJS(ScriptReader(), injector)
         determineBasalResult.profile = input.getJSONObject("profile")
         determineBasalResult.glucoseStatus = input.getJSONObject("glucoseStatus")
         determineBasalResult.iobData = input.getJSONArray("iob_data")
@@ -114,11 +116,12 @@ class ReplayApsResultsTest @Inject constructor() {
         assertThat(result).isNotNull()
         JSONAssert.assertEquals(
             "Error in file $filename",
-            output,
+            output.toString(),
             result?.json()?.apply {
                 // this is added afterwards to json. Copy from original
                 put("timestamp", output.getString("timestamp"))
-            }, false
+            }.toString(),
+            CustomComparator(JSONCompareMode.LENIENT, Customization("tick") { o1: Any?, o2: Any? -> o1.toString() == o2.toString() })
         )
 
         // Exclude these with whole number delta as the alg is producing different results
@@ -166,7 +169,7 @@ class ReplayApsResultsTest @Inject constructor() {
             iobData.add(determineBasalResult.iobData!!.getJSONObject(i).toIob())
         val currentTime = determineBasalResult.currentTime
         val profile = OapsProfile(
-            dia = 0,
+            dia = 0.0,
             min_5m_carbimpact = 0.0,
             max_iob = determineBasalResult.profile.getDouble("max_iob"),
             max_daily_basal = determineBasalResult.profile.getDouble("max_daily_basal"),
@@ -206,7 +209,6 @@ class ReplayApsResultsTest @Inject constructor() {
             temptargetSet = determineBasalResult.profile.getBoolean("temptargetSet"),
             autosens_max = determineBasalResult.profile.getDouble("autosens_max"),
             out_units = determineBasalResult.profile.optString("out_units"),
-            dynamicIsf = false,
             variable_sens = 0.0,
             insulinDivisor = 0,
             TDD = 0.0
@@ -228,34 +230,35 @@ class ReplayApsResultsTest @Inject constructor() {
             meal_data = meatData,
             microBolusAllowed = determineBasalResult.microBolusAllowed,
             currentTime = currentTime,
-            flatBGsDetected = determineBasalResult.flatBGsDetected
+            flatBGsDetected = determineBasalResult.flatBGsDetected,
+            dynIsfMode = false
         )
         val endKt = System.currentTimeMillis()
         ktTime += (endKt - startKt)
 
         aapsLogger.info(LTag.APS, resultKt.toString())
 
-        aapsLogger.debug(LTag.APS, result?.json?.getString("reason") ?: "")
+        aapsLogger.debug(LTag.APS, result?.json()?.getString("reason") ?: "")
         aapsLogger.debug(LTag.APS, resultKt.reason.toString())
         aapsLogger.debug(LTag.APS, "File: $filename")
 //        assertThat(resultKt.reason.toString()).isEqualTo(result?.json?.getString("reason"))
-        assertThat(resultKt.tick ?: "").isEqualTo(result?.json?.optString("tick"))
-        assertThat(resultKt.eventualBG ?: Double.NaN).isEqualTo(result?.json?.optDouble("eventualBG"))
-        assertThat(resultKt.targetBG ?: Double.NaN).isEqualTo(result?.json?.optDouble("targetBG"))
-        assertThat(resultKt.insulinReq ?: Double.NaN).isEqualTo(result?.json?.optDouble("insulinReq"))
-        assertThat(resultKt.carbsReq ?: 0).isEqualTo(result?.json?.optInt("carbsReq"))
-        assertThat(resultKt.carbsReqWithin ?: 0).isEqualTo(result?.json?.optInt("carbsReqWithin"))
-        assertThat(resultKt.units ?: Double.NaN).isEqualTo(result?.json?.optDouble("units"))
-        assertThat(resultKt.sensitivityRatio ?: Double.NaN).isEqualTo(result?.json?.optDouble("sensitivityRatio"))
-        assertThat(resultKt.duration ?: 0).isEqualTo(result?.json?.optInt("duration"))
-        assertThat(resultKt.rate ?: Double.NaN).isEqualTo(result?.json?.optDouble("rate"))
-        assertThat(resultKt.COB ?: Double.NaN).isEqualTo(result?.json?.optDouble("COB"))
-        assertThat(resultKt.IOB ?: Double.NaN).isEqualTo(result?.json?.optDouble("IOB"))
+        assertThat(resultKt.tick ?: "").isEqualTo(result?.json()?.optString("tick"))
+        assertThat(resultKt.eventualBG ?: Double.NaN).isEqualTo(result?.json()?.optDouble("eventualBG"))
+        assertThat(resultKt.targetBG ?: Double.NaN).isEqualTo(result?.json()?.optDouble("targetBG"))
+        assertThat(resultKt.insulinReq ?: Double.NaN).isEqualTo(result?.json()?.optDouble("insulinReq"))
+        assertThat(resultKt.carbsReq ?: 0).isEqualTo(result?.json()?.optInt("carbsReq"))
+        assertThat(resultKt.carbsReqWithin ?: 0).isEqualTo(result?.json()?.optInt("carbsReqWithin"))
+        assertThat(resultKt.units ?: Double.NaN).isEqualTo(result?.json()?.optDouble("units"))
+        assertThat(resultKt.sensitivityRatio ?: Double.NaN).isEqualTo(result?.json()?.optDouble("sensitivityRatio"))
+        assertThat(resultKt.duration ?: 0).isEqualTo(result?.json()?.optInt("duration"))
+        assertThat(resultKt.rate ?: Double.NaN).isEqualTo(result?.json()?.optDouble("rate"))
+        assertThat(resultKt.COB ?: Double.NaN).isEqualTo(result?.json()?.optDouble("COB"))
+        assertThat(resultKt.IOB ?: Double.NaN).isEqualTo(result?.json()?.optDouble("IOB"))
     }
 
-    private fun testOpenAPSSMBDynamicISF(filename: String, input: JSONObject, output: JSONObject, context: Context, injector: HasAndroidInjector) {
+    private fun testOpenAPSSMBDynamicISF(filename: String, input: JSONObject, output: JSONObject, injector: HasAndroidInjector) {
         val startJs = System.currentTimeMillis()
-        val determineBasalResult = DetermineBasalAdapterSMBDynamicISFJS(ScriptReader(context), injector)
+        val determineBasalResult = DetermineBasalAdapterSMBDynamicISFJS(ScriptReader(), injector)
         determineBasalResult.profile = input.getJSONObject("profile")
         determineBasalResult.glucoseStatus = input.getJSONObject("glucoseStatus")
         determineBasalResult.iobData = input.getJSONArray("iob_data")
@@ -278,11 +281,12 @@ class ReplayApsResultsTest @Inject constructor() {
         assertThat(result).isNotNull()
         JSONAssert.assertEquals(
             "Error in file $filename",
-            output,
+            output.toString(),
             result?.json()?.apply {
                 // this is added afterwards to json. Copy from original
                 put("timestamp", output.getString("timestamp"))
-            }, false
+            }.toString(),
+            CustomComparator(JSONCompareMode.LENIENT, Customization("tick") { o1: Any?, o2: Any? -> o1.toString() == o2.toString() })
         )
         // Exclude these with whole number delta as the alg is producing different results
         // on inputs like 2.0 which are evaluated as Int 2
@@ -329,7 +333,7 @@ class ReplayApsResultsTest @Inject constructor() {
             iobData.add(determineBasalResult.iobData!!.getJSONObject(i).toIob())
         val currentTime = determineBasalResult.currentTime
         val profile = OapsProfile(
-            dia = 0,
+            dia = 0.0,
             min_5m_carbimpact = 0.0,
             max_iob = determineBasalResult.profile.getDouble("max_iob"),
             max_daily_basal = determineBasalResult.profile.getDouble("max_daily_basal"),
@@ -368,7 +372,6 @@ class ReplayApsResultsTest @Inject constructor() {
             current_basal = determineBasalResult.profile.getDouble("current_basal"),
             temptargetSet = determineBasalResult.profile.getBoolean("temptargetSet"),
             autosens_max = determineBasalResult.profile.getDouble("autosens_max"),
-            dynamicIsf = true,
             out_units = determineBasalResult.profile.optString("out_units"),
             variable_sens = determineBasalResult.profile.getDouble("variable_sens"),
             insulinDivisor = determineBasalResult.profile.getInt("insulinDivisor"),
@@ -392,36 +395,37 @@ class ReplayApsResultsTest @Inject constructor() {
             meal_data = meatData,
             microBolusAllowed = determineBasalResult.microBolusAllowed,
             currentTime = currentTime,
-            flatBGsDetected = determineBasalResult.flatBGsDetected
+            flatBGsDetected = determineBasalResult.flatBGsDetected,
+            dynIsfMode = true
         )
         val endKt = System.currentTimeMillis()
         ktTime += (endKt - startKt)
 
         aapsLogger.info(LTag.APS, resultKt.toString())
 
-        aapsLogger.debug(LTag.APS, result?.json?.getString("reason") ?: "")
+        aapsLogger.debug(LTag.APS, result?.json()?.getString("reason") ?: "")
         aapsLogger.debug(LTag.APS, resultKt.reason.toString())
         aapsLogger.debug(LTag.APS, "File: $filename")
-//        assertThat(resultKt.reason.toString()).isEqualTo(result?.json?.getString("reason"))
-        assertThat(resultKt.tick ?: "").isEqualTo(result?.json?.optString("tick"))
-        assertThat(resultKt.eventualBG ?: Double.NaN).isEqualTo(result?.json?.optDouble("eventualBG"))
-        assertThat(resultKt.targetBG ?: Double.NaN).isEqualTo(result?.json?.optDouble("targetBG"))
-        assertThat(resultKt.insulinReq ?: Double.NaN).isEqualTo(result?.json?.optDouble("insulinReq"))
-        assertThat(resultKt.carbsReq ?: 0).isEqualTo(result?.json?.optInt("carbsReq"))
-        assertThat(resultKt.carbsReqWithin ?: 0).isEqualTo(result?.json?.optInt("carbsReqWithin"))
-        assertThat(resultKt.units ?: Double.NaN).isEqualTo(result?.json?.optDouble("units"))
-        assertThat(resultKt.sensitivityRatio ?: Double.NaN).isEqualTo(result?.json?.optDouble("sensitivityRatio"))
-        assertThat(resultKt.duration ?: 0).isEqualTo(result?.json?.optInt("duration"))
-        assertThat(resultKt.rate ?: Double.NaN).isEqualTo(result?.json?.optDouble("rate"))
-        assertThat(resultKt.COB ?: Double.NaN).isEqualTo(result?.json?.optDouble("COB"))
-        assertThat(resultKt.IOB ?: Double.NaN).isEqualTo(result?.json?.optDouble("IOB"))
-        assertThat(resultKt.variable_sens ?: Double.NaN).isEqualTo(result?.json?.optDouble("variable_sens"))
+//        assertThat(resultKt.reason.toString()).isEqualTo(result?.json()?.getString("reason"))
+        assertThat(resultKt.tick ?: "").isEqualTo(result?.json()?.optString("tick"))
+        assertThat(resultKt.eventualBG ?: Double.NaN).isEqualTo(result?.json()?.optDouble("eventualBG"))
+        assertThat(resultKt.targetBG ?: Double.NaN).isEqualTo(result?.json()?.optDouble("targetBG"))
+        assertThat(resultKt.insulinReq ?: Double.NaN).isEqualTo(result?.json()?.optDouble("insulinReq"))
+        assertThat(resultKt.carbsReq ?: 0).isEqualTo(result?.json()?.optInt("carbsReq"))
+        assertThat(resultKt.carbsReqWithin ?: 0).isEqualTo(result?.json()?.optInt("carbsReqWithin"))
+        assertThat(resultKt.units ?: Double.NaN).isEqualTo(result?.json()?.optDouble("units"))
+        assertThat(resultKt.sensitivityRatio ?: Double.NaN).isEqualTo(result?.json()?.optDouble("sensitivityRatio"))
+        assertThat(resultKt.duration ?: 0).isEqualTo(result?.json()?.optInt("duration"))
+        assertThat(resultKt.rate ?: Double.NaN).isEqualTo(result?.json()?.optDouble("rate"))
+        assertThat(resultKt.COB ?: Double.NaN).isEqualTo(result?.json()?.optDouble("COB"))
+        assertThat(resultKt.IOB ?: Double.NaN).isEqualTo(result?.json()?.optDouble("IOB"))
+        assertThat(resultKt.variable_sens ?: Double.NaN).isEqualTo(result?.json()?.optDouble("variable_sens"))
     }
 
-    private fun testOpenAPSAMA(filename: String, input: JSONObject, output: JSONObject, context: Context, injector: HasAndroidInjector) {
+    private fun testOpenAPSAMA(filename: String, input: JSONObject, output: JSONObject, injector: HasAndroidInjector) {
 
         val startJs = System.currentTimeMillis()
-        val determineBasalResult = DetermineBasalAdapterAMAJS(ScriptReader(context), injector)
+        val determineBasalResult = DetermineBasalAdapterAMAJS(ScriptReader(), injector)
         determineBasalResult.profile = input.getJSONObject("profile")
         determineBasalResult.glucoseStatus = input.getJSONObject("glucoseStatus")
         determineBasalResult.iobData = input.getJSONArray("iob_data")
@@ -436,11 +440,12 @@ class ReplayApsResultsTest @Inject constructor() {
         assertThat(result).isNotNull()
         JSONAssert.assertEquals(
             "Error in file $filename",
-            output,
+            output.toString(),
             result?.json()?.apply {
                 // this is added afterwards to json. Copy from original
                 put("timestamp", output.getString("timestamp"))
-            }, false
+            }.toString(),
+            CustomComparator(JSONCompareMode.LENIENT, Customization("tick") { o1: Any?, o2: Any? -> o1.toString() == o2.toString() })
         )
         // Exclude these with whole number delta as the alg is producing different results
         // on inputs like 2.0 which are evaluated as Int 2
@@ -486,7 +491,7 @@ class ReplayApsResultsTest @Inject constructor() {
         for (i in 0 until determineBasalResult.iobData!!.length())
             iobData.add(determineBasalResult.iobData!!.getJSONObject(i).toIob())
         val profile = OapsProfile(
-            dia = determineBasalResult.profile.getInt("dia"),
+            dia = determineBasalResult.profile.getDouble("dia"),
             min_5m_carbimpact = determineBasalResult.profile.getDouble("min_5m_carbimpact"),
             max_iob = determineBasalResult.profile.getDouble("max_iob"),
             max_daily_basal = determineBasalResult.profile.getDouble("max_daily_basal"),
@@ -526,12 +531,11 @@ class ReplayApsResultsTest @Inject constructor() {
             temptargetSet = determineBasalResult.profile.getBoolean("temptargetSet"),
             autosens_max = 0.0,
             out_units = determineBasalResult.profile.optString("out_units"),
-            dynamicIsf = false,
             variable_sens = 0.0,
             insulinDivisor = 0,
             TDD = 0.0
         )
-        val meatData = MealData(
+        val mealData = MealData(
             carbs = determineBasalResult.mealData.getDouble("carbs"),
             mealCOB = determineBasalResult.mealData.getDouble("mealCOB"),
             slopeFromMaxDeviation = 0.0,
@@ -545,30 +549,31 @@ class ReplayApsResultsTest @Inject constructor() {
             iob_data_array = iobData.toTypedArray(),
             profile = profile,
             autosens_data = autosensData,
-            meal_data = meatData
+            meal_data = mealData,
+            currentTime = 0
         )
         val endKt = System.currentTimeMillis()
         ktTime += (endKt - startKt)
 
         aapsLogger.info(LTag.APS, resultKt.toString())
 
-        aapsLogger.debug(LTag.APS, result?.json?.getString("reason") ?: "")
+        aapsLogger.debug(LTag.APS, result?.json()?.getString("reason") ?: "")
         aapsLogger.debug(LTag.APS, resultKt.reason.toString())
         aapsLogger.debug(LTag.APS, "File: $filename")
-//        assertThat(resultKt.reason.toString()).isEqualTo(result?.json?.getString("reason"))
-        assertThat(resultKt.tick ?: "").isEqualTo(result?.json?.optString("tick"))
-        assertThat(resultKt.eventualBG ?: Double.NaN).isEqualTo(result?.json?.optDouble("eventualBG"))
-        assertThat(resultKt.targetBG ?: Double.NaN).isEqualTo(result?.json?.optDouble("targetBG"))
-        assertThat(resultKt.insulinReq ?: Double.NaN).isEqualTo(result?.json?.optDouble("insulinReq"))
-        assertThat(resultKt.carbsReq ?: 0).isEqualTo(result?.json?.optInt("carbsReq"))
-        assertThat(resultKt.carbsReqWithin ?: 0).isEqualTo(result?.json?.optInt("carbsReqWithin"))
-        assertThat(resultKt.units ?: Double.NaN).isEqualTo(result?.json?.optDouble("units"))
-        assertThat(resultKt.sensitivityRatio ?: Double.NaN).isEqualTo(result?.json?.optDouble("sensitivityRatio"))
-        assertThat(resultKt.duration ?: 0).isEqualTo(result?.json?.optInt("duration"))
-        assertThat(resultKt.rate ?: Double.NaN).isEqualTo(result?.json?.optDouble("rate"))
-        assertThat(resultKt.COB ?: Double.NaN).isEqualTo(result?.json?.optDouble("COB"))
-        assertThat(resultKt.IOB ?: Double.NaN).isEqualTo(result?.json?.optDouble("IOB"))
-        assertThat(resultKt.variable_sens ?: Double.NaN).isEqualTo(result?.json?.optDouble("variable_sens"))
+//        assertThat(resultKt.reason.toString()).isEqualTo(result?.json()?.getString("reason"))
+        assertThat(resultKt.tick ?: "").isEqualTo(result?.json()?.optString("tick"))
+        assertThat(resultKt.eventualBG ?: Double.NaN).isEqualTo(result?.json()?.optDouble("eventualBG"))
+        assertThat(resultKt.targetBG ?: Double.NaN).isEqualTo(result?.json()?.optDouble("targetBG"))
+        assertThat(resultKt.insulinReq ?: Double.NaN).isEqualTo(result?.json()?.optDouble("insulinReq"))
+        assertThat(resultKt.carbsReq ?: 0).isEqualTo(result?.json()?.optInt("carbsReq"))
+        assertThat(resultKt.carbsReqWithin ?: 0).isEqualTo(result?.json()?.optInt("carbsReqWithin"))
+        assertThat(resultKt.units ?: Double.NaN).isEqualTo(result?.json()?.optDouble("units"))
+        assertThat(resultKt.sensitivityRatio ?: Double.NaN).isEqualTo(result?.json()?.optDouble("sensitivityRatio"))
+        assertThat(resultKt.duration ?: 0).isEqualTo(result?.json()?.optInt("duration"))
+        assertThat(resultKt.rate ?: Double.NaN).isEqualTo(result?.json()?.optDouble("rate"))
+        assertThat(resultKt.COB ?: Double.NaN).isEqualTo(result?.json()?.optDouble("COB"))
+        assertThat(resultKt.IOB ?: Double.NaN).isEqualTo(result?.json()?.optDouble("IOB"))
+        assertThat(resultKt.variable_sens ?: Double.NaN).isEqualTo(result?.json()?.optDouble("variable_sens"))
     }
 
     enum class TestSource { ASSET, FILE }

@@ -1,12 +1,16 @@
-package app.aaps.core.objects.aps
+package app.aaps.plugins.aps.openAPS
 
 import android.text.Spanned
+import app.aaps.core.data.iob.GlucoseStatus
 import app.aaps.core.data.iob.IobTotal
+import app.aaps.core.data.iob.MealData
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.aps.APSResult
+import app.aaps.core.interfaces.aps.CurrentTemp
+import app.aaps.core.interfaces.aps.OapsProfile
 import app.aaps.core.interfaces.aps.Predictions
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -70,10 +74,20 @@ open class APSResultObject(protected val injector: HasAndroidInjector) : APSResu
     override var percentConstraint: Constraint<Int>? = null
     override var smbConstraint: Constraint<Double>? = null
 
+    // Added only to compile
+    override var scriptDebug: List<String>? = null
+    override var iobData: Array<IobTotal>? = null
+    override var glucoseStatus: GlucoseStatus? = null
+    override var currentTemp: CurrentTemp? = null
+    override var profile: OapsProfile? = null
+    override var mealData: MealData? = null
+    override fun predictions(): Predictions? = null
+    override fun rawData(): Any = Object()
+
     override val carbsRequiredText: String
         get() = rh.gs(R.string.carbsreq, carbsReq, carbsReqWithin)
 
-    override fun toString(): String {
+    override fun resultAsString(): String {
         val pump = activePlugin.activePump
         if (isChangeRequested) {
             // rate
@@ -98,7 +112,7 @@ open class APSResultObject(protected val injector: HasAndroidInjector) : APSResu
         } else rh.gs(R.string.nochangerequested)
     }
 
-    override fun toSpanned(): Spanned {
+    override fun resultAsSpanned(): Spanned {
         val pump = activePlugin.activePump
         if (isChangeRequested) {
             // rate
@@ -133,6 +147,26 @@ open class APSResultObject(protected val injector: HasAndroidInjector) : APSResu
         return newResult
     }
 
+    fun doClone(newResult: APSResult) {
+        newResult.date = date
+        newResult.reason = reason
+        newResult.rate = rate
+        newResult.duration = duration
+        newResult.isTempBasalRequested = isTempBasalRequested
+        //newResult.iob = iob
+        //newResult.json = JSONObject(json.toString())
+        newResult.hasPredictions = hasPredictions
+        newResult.smb = smb
+        newResult.deliverAt = deliverAt
+        newResult.rateConstraint = rateConstraint
+        newResult.smbConstraint = smbConstraint
+        newResult.percent = percent
+        newResult.usePercent = usePercent
+        newResult.carbsReq = carbsReq
+        newResult.carbsReqWithin = carbsReqWithin
+        newResult.targetBG = targetBG
+    }
+
     override fun json(): JSONObject? {
         val json = JSONObject()
         if (isChangeRequested) {
@@ -142,8 +176,6 @@ open class APSResultObject(protected val injector: HasAndroidInjector) : APSResu
         }
         return json
     }
-
-    override fun predictions(): Predictions? = null
 
     override val predictionsAsGv: MutableList<GV>
         get() {

@@ -1,40 +1,14 @@
-package app.aaps.plugins.aps.openAPSSMBDynamicISF
+package app.aaps.plugins.aps.openAPSSMB
 
-import app.aaps.core.data.aps.AutosensResult
-import app.aaps.core.data.aps.SMBDefaults
 import app.aaps.core.data.iob.GlucoseStatus
 import app.aaps.core.data.iob.IobTotal
 import app.aaps.core.data.iob.MealData
-import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.interfaces.aps.CurrentTemp
+import app.aaps.core.interfaces.aps.OapsProfile
 import app.aaps.core.interfaces.aps.Predictions
 import app.aaps.core.interfaces.aps.RT
-import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
-import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.db.ProcessedTbrEbData
-import app.aaps.core.interfaces.iob.IobCobCalculator
-import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.Profile
-import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.core.interfaces.utils.Round
-import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.DoubleKey
-import app.aaps.core.keys.IntKey
-import app.aaps.core.keys.Preferences
-import app.aaps.core.keys.UnitDoubleKey
-import app.aaps.core.objects.constraints.ConstraintObject
-import app.aaps.core.objects.extensions.convertedToAbsolute
-import app.aaps.core.objects.extensions.getPassedDurationToTimeInMinutes
-import app.aaps.core.objects.extensions.plannedRemainingMinutes
-import app.aaps.core.objects.extensions.target
-import app.aaps.plugins.aps.openAPS.CurrentTemp
 import app.aaps.plugins.aps.openAPS.OapsAutosensData
-import app.aaps.plugins.aps.openAPS.OapsProfile
-import app.aaps.plugins.aps.openAPS.TddStatus
 import java.text.DecimalFormat
 import java.time.Instant
 import java.time.ZoneId
@@ -47,19 +21,8 @@ import kotlin.math.pow
 import kotlin.math.roundToInt
 
 @Singleton
-class DetermineBasalSMBDynamicISF @Inject constructor(
-    private val dateUtil: DateUtil,
-    private val profileUtil: ProfileUtil,
-    private val profileFunction: ProfileFunction,
-    private val processedTbrEbData: ProcessedTbrEbData,
-    private val constraintsChecker: ConstraintsChecker,
-    private val hardLimits: HardLimits,
-    private val preferences: Preferences,
-    private val persistenceLayer: PersistenceLayer,
-    private val activePlugin: ActivePlugin,
-    private val iobCobCalculator: IobCobCalculator,
-    private val bgQualityCheck: BgQualityCheck,
-    private val aapsLogger: AAPSLogger
+class DetermineBasalSMB @Inject constructor(
+    private val profileUtil: ProfileUtil
 ) {
 
     private val consoleError = mutableListOf<String>()
@@ -186,7 +149,10 @@ class DetermineBasalSMBDynamicISF @Inject constructor(
         glucose_status: GlucoseStatus, currenttemp: CurrentTemp, iob_data_array: Array<IobTotal>, profile: OapsProfile, autosens_data: OapsAutosensData, meal_data: MealData,
         microBolusAllowed: Boolean, currentTime: Long, flatBGsDetected: Boolean, dynIsfMode: Boolean
     ): RT {
+        consoleError.clear()
+        consoleLog.clear()
         var rT = RT(
+            runningDynamicIsf = dynIsfMode,
             timestamp = currentTime,
             consoleLog = consoleLog,
             consoleError = consoleError
@@ -401,6 +367,7 @@ class DetermineBasalSMBDynamicISF @Inject constructor(
         //console.error(reservoir_data);
 
         rT = RT(
+            runningDynamicIsf = dynIsfMode,
             timestamp = currentTime,
             bg = bg,
             tick = tick,
@@ -1163,120 +1130,5 @@ class DetermineBasalSMBDynamicISF @Inject constructor(
             rT.reason.append("temp ${currenttemp.rate.toFixed2()} < ${round(rate, 2).withoutZeros()}U/hr. ")
             return setTempBasal(rate, 30, profile, rT, currenttemp)
         }
-    }
-
-    fun invoke(
-        currentTime: Long,
-        inputConstraints: ConstraintObject<Double>,
-        profile: Profile,
-        glucoseStatus: GlucoseStatus,
-        iobData: Array<IobTotal>,
-        autosensResult: AutosensResult,
-        tddStatus: TddStatus,
-        __runningDynamicISF: Boolean,
-        tempBasalFallback: Boolean
-    ): RT {
-
-        val pump = activePlugin.activePump
-        val smbEnabled = preferences.get(BooleanKey.ApsUseSmb)
-        val advancedFiltering = constraintsChecker.isAdvancedFilteringEnabled().also { inputConstraints.copyReasons(it) }.value()
-
-        val now = System.currentTimeMillis()
-        val tb = processedTbrEbData.getTempBasalIncludingConvertedExtended(now)
-
-        val currentTemp = CurrentTemp(
-            duration = tb?.plannedRemainingMinutes ?: 0,
-            rate = tb?.convertedToAbsolute(now, profile) ?: 0.0,
-            minutesrunning = tb?.getPassedDurationToTimeInMinutes(now)
-        )
-
-        var minBg = hardLimits.verifyHardLimits(Round.roundTo(profile.getTargetLowMgdl(), 0.1), app.aaps.core.ui.R.string.profile_low_target, HardLimits.LIMIT_MIN_BG[0], HardLimits.LIMIT_MIN_BG[1])
-        var maxBg = hardLimits.verifyHardLimits(Round.roundTo(profile.getTargetHighMgdl(), 0.1), app.aaps.core.ui.R.string.profile_high_target, HardLimits.LIMIT_MAX_BG[0], HardLimits.LIMIT_MAX_BG[1])
-        var targetBg = hardLimits.verifyHardLimits(profile.getTargetMgdl(), app.aaps.core.ui.R.string.temp_target_value, HardLimits.LIMIT_TARGET_BG[0], HardLimits.LIMIT_TARGET_BG[1])
-        var isTempTarget = false
-        persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())?.let { tempTarget ->
-            isTempTarget = true
-            minBg = hardLimits.verifyHardLimits(tempTarget.lowTarget, app.aaps.core.ui.R.string.temp_target_low_target, HardLimits.LIMIT_TEMP_MIN_BG[0], HardLimits.LIMIT_TEMP_MIN_BG[1])
-            maxBg = hardLimits.verifyHardLimits(tempTarget.highTarget, app.aaps.core.ui.R.string.temp_target_high_target, HardLimits.LIMIT_TEMP_MAX_BG[0], HardLimits.LIMIT_TEMP_MAX_BG[1])
-            targetBg = hardLimits.verifyHardLimits(tempTarget.target(), app.aaps.core.ui.R.string.temp_target_value, HardLimits.LIMIT_TEMP_TARGET_BG[0], HardLimits.LIMIT_TEMP_TARGET_BG[1])
-        }
-
-        val insulin = activePlugin.activeInsulin
-        val insulinDivisor = when {
-            insulin.peak > 65 -> 55 // lyumjev peak: 45
-            insulin.peak > 50 -> 65 // ultra rapid peak: 55
-            else              -> 75 // rapid peak: 75
-        }
-
-        val tddWeightedFromLast8H = ((1.4 * tddStatus.tddLast4H) + (0.6 * tddStatus.tddLast8to4H)) * 3
-        val tdd = (tddWeightedFromLast8H * 0.33) + (tddStatus.tdd7D * 0.34) + (tddStatus.tdd1D * 0.33) * preferences.get(IntKey.ApsDynIsfAdjustmentFactor) / 100.0
-        val variableSensitivity = Round.roundTo(1800 / (tdd * (ln((glucoseStatus.glucose / insulinDivisor) + 1))), 0.1)
-
-        val autosensData =
-            if (__runningDynamicISF)
-                OapsAutosensData(ratio = if (preferences.get(BooleanKey.ApsDynIsfAdjustSensitivity)) tddStatus.tddLast24H / tddStatus.tdd7D else 1.0)
-            else
-                OapsAutosensData(ratio = if (constraintsChecker.isAutosensModeEnabled().value()) autosensResult.ratio else 1.0)
-
-        val mealData = iobCobCalculator.getMealDataWithWaitingForCalculationFinish()
-
-        val oapsProfile = OapsProfile(
-            dia = 0, // not used
-            min_5m_carbimpact = 0.0, // not used
-            max_iob = constraintsChecker.getMaxIOBAllowed().also { inputConstraints.copyReasons(it) }.value(),
-            max_daily_basal = profile.getMaxDailyBasal(),
-            max_basal = constraintsChecker.getMaxBasalAllowed(profile).also { inputConstraints.copyReasons(it) }.value(),
-            min_bg = minBg,
-            max_bg = maxBg,
-            target_bg = targetBg,
-            carb_ratio = profile.getIc(),
-            sens = profile.getIsfMgdl(),
-            autosens_adjust_targets = false, // not used
-            max_daily_safety_multiplier = preferences.get(DoubleKey.ApsMaxDailyMultiplier),
-            current_basal_safety_multiplier = preferences.get(DoubleKey.ApsMaxCurrentBasalMultiplier),
-            lgsThreshold = profileUtil.convertToMgdlDetect(preferences.get(UnitDoubleKey.ApsLgsThreshold)).toInt(),
-            high_temptarget_raises_sensitivity = false,
-            low_temptarget_lowers_sensitivity = false,
-            sensitivity_raises_target = preferences.get(BooleanKey.ApsSensitivityRaisesTarget),
-            resistance_lowers_target = preferences.get(BooleanKey.ApsResistanceLowersTarget),
-            adv_target_adjustments = SMBDefaults.adv_target_adjustments,
-            exercise_mode = SMBDefaults.exercise_mode,
-            half_basal_exercise_target = SMBDefaults.half_basal_exercise_target,
-            maxCOB = SMBDefaults.maxCOB,
-            skip_neutral_temps = pump.setNeutralTempAtFullHour(),
-            remainingCarbsCap = SMBDefaults.remainingCarbsCap,
-            enableUAM = constraintsChecker.isUAMEnabled().also { inputConstraints.copyReasons(it) }.value(),
-            A52_risk_enable = SMBDefaults.A52_risk_enable,
-            SMBInterval = preferences.get(IntKey.ApsMaxSmbFrequency),
-            enableSMB_with_COB = smbEnabled && preferences.get(BooleanKey.ApsUseSmbWithCob),
-            enableSMB_with_temptarget = smbEnabled && preferences.get(BooleanKey.ApsUseSmbWithLowTt),
-            allowSMB_with_high_temptarget = smbEnabled && preferences.get(BooleanKey.ApsUseSmbWithHighTt),
-            enableSMB_always = smbEnabled && preferences.get(BooleanKey.ApsUseSmbAlways) && advancedFiltering,
-            enableSMB_after_carbs = smbEnabled && preferences.get(BooleanKey.ApsUseSmbAfterCarbs) && advancedFiltering,
-            maxSMBBasalMinutes = preferences.get(IntKey.ApsMaxMinutesOfBasalToLimitSmb),
-            maxUAMSMBBasalMinutes = preferences.get(IntKey.ApsUamMaxMinutesOfBasalToLimitSmb),
-            bolus_increment = pump.pumpDescription.bolusStep,
-            carbsReqThreshold = preferences.get(IntKey.ApsCarbsRequestThreshold),
-            current_basal = activePlugin.activePump.baseBasalRate,
-            temptargetSet = isTempTarget,
-            autosens_max = preferences.get(DoubleKey.AutosensMax),
-            out_units = if (profileFunction.getUnits() == GlucoseUnit.MMOL) "mmol/L" else "mg/dl",
-            variable_sens = variableSensitivity,
-            insulinDivisor = insulinDivisor,
-            TDD = tdd
-        )
-
-        return determine_basal(
-            glucose_status = glucoseStatus,
-            currenttemp = currentTemp,
-            iob_data_array = iobData,
-            profile = oapsProfile,
-            autosens_data = autosensData,
-            meal_data = mealData,
-            microBolusAllowed = constraintsChecker.isSMBModeEnabled(ConstraintObject(tempBasalFallback.not(), aapsLogger)).also { inputConstraints.copyReasons(it) }.value(),
-            currentTime = currentTime,
-            flatBGsDetected = bgQualityCheck.state == BgQualityCheck.State.FLAT,
-            dynIsfMode = __runningDynamicISF,
-        )
     }
 }

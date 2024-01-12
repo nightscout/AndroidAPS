@@ -1,7 +1,5 @@
 package app.aaps.plugins.constraints.di
 
-import dagger.Module
-import dagger.android.ContributesAndroidInjector
 import app.aaps.plugins.constraints.objectives.ObjectivesFragment
 import app.aaps.plugins.constraints.objectives.activities.ObjectivesExamDialog
 import app.aaps.plugins.constraints.objectives.dialogs.NtpProgressDialog
@@ -9,7 +7,6 @@ import app.aaps.plugins.constraints.objectives.objectives.Objective
 import app.aaps.plugins.constraints.objectives.objectives.Objective0
 import app.aaps.plugins.constraints.objectives.objectives.Objective1
 import app.aaps.plugins.constraints.objectives.objectives.Objective10
-import app.aaps.plugins.constraints.objectives.objectives.Objective11
 import app.aaps.plugins.constraints.objectives.objectives.Objective2
 import app.aaps.plugins.constraints.objectives.objectives.Objective3
 import app.aaps.plugins.constraints.objectives.objectives.Objective4
@@ -17,6 +14,8 @@ import app.aaps.plugins.constraints.objectives.objectives.Objective5
 import app.aaps.plugins.constraints.objectives.objectives.Objective6
 import app.aaps.plugins.constraints.objectives.objectives.Objective7
 import app.aaps.plugins.constraints.objectives.objectives.Objective9
+import dagger.Module
+import dagger.android.ContributesAndroidInjector
 
 @Module
 @Suppress("unused")
@@ -37,5 +36,4 @@ abstract class ObjectivesModule {
     @ContributesAndroidInjector abstract fun objective7Injector(): Objective7
     @ContributesAndroidInjector abstract fun objective9Injector(): Objective9
     @ContributesAndroidInjector abstract fun objective10Injector(): Objective10
-    @ContributesAndroidInjector abstract fun objective11Injector(): Objective11
 }

@@ -3,7 +3,7 @@ package app.aaps.plugins.aps.openAPSSMB
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.plugins.aps.openAPS.AutosensData
-import app.aaps.plugins.aps.openAPS.CurrentTemp
+import app.aaps.core.interfaces.aps.CurrentTemp
 import app.aaps.plugins.aps.openAPS.Profile
 import app.aaps.core.interfaces.aps.RT
 import java.text.DecimalFormat

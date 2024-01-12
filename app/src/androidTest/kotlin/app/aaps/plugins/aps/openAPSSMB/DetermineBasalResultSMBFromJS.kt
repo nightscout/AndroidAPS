@@ -3,7 +3,7 @@ package app.aaps.plugins.aps.openAPSSMB
 import app.aaps.core.interfaces.aps.Predictions
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.objects.aps.APSResultObject
+import app.aaps.plugins.aps.openAPS.APSResultObject
 import dagger.android.HasAndroidInjector
 import org.json.JSONException
 import org.json.JSONObject

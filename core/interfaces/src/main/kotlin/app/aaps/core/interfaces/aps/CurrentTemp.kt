@@ -1,4 +1,4 @@
-package app.aaps.plugins.aps.openAPS
+package app.aaps.core.interfaces.aps
 
 data class CurrentTemp(
     var duration: Int,

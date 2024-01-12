@@ -284,7 +284,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
     if (glucose_status.delta > -0.5) {
         tick = "+" + round(glucose_status.delta,0);
     } else {
-        tick = "" + round(glucose_status.delta,0);
+        tick = round(glucose_status.delta,0);
     }
     //var minDelta = Math.min(glucose_status.delta, glucose_status.short_avgdelta, glucose_status.long_avgdelta);
     var minDelta = Math.min(glucose_status.delta, glucose_status.short_avgdelta);

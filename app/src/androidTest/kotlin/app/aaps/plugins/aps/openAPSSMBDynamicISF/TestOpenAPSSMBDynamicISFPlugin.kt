@@ -4,16 +4,13 @@ import android.content.Context
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.DetermineBasalAdapter
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -27,14 +24,14 @@ import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.Preferences
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.openAPSSMB.DetermineBasalAdapterSMBJS
-import app.aaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
+import app.aaps.plugins.aps.openAPSSMB.TestOpenAPSSMBPlugin
 import app.aaps.plugins.aps.utils.ScriptReader
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class OpenAPSSMBDynamicISFPlugin @Inject constructor(
+class TestOpenAPSSMBDynamicISFPlugin @Inject constructor(
     private val injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rxBus: RxBus,
@@ -53,11 +50,8 @@ class OpenAPSSMBDynamicISFPlugin @Inject constructor(
     glucoseStatusProvider: GlucoseStatusProvider,
     bgQualityCheck: BgQualityCheck,
     tddCalculator: TddCalculator,
-    importExportPrefs: ImportExportPrefs,
-    config: Config,
-    private val uiInteraction: UiInteraction,
-    private val objectives: Objectives
-) : OpenAPSSMBPlugin(
+    private val uiInteraction: UiInteraction
+) : TestOpenAPSSMBPlugin(
     injector,
     aapsLogger,
     rxBus,
@@ -75,9 +69,7 @@ class OpenAPSSMBDynamicISFPlugin @Inject constructor(
     persistenceLayer,
     glucoseStatusProvider,
     bgQualityCheck,
-    tddCalculator,
-    importExportPrefs,
-    config
+    tddCalculator
 ) {
 
     init {
@@ -90,8 +82,8 @@ class OpenAPSSMBDynamicISFPlugin @Inject constructor(
             .setDefault(false)
     }
 
-    override fun specialEnableCondition(): Boolean =
-        objectives.isStarted(Objectives.DYN_ISF_OBJECTIVE)
+    // override fun specialEnableCondition(): Boolean =
+    //     objectives.isStarted(Objectives.DYN_ISF_OBJECTIVE)
 
     // If there is no TDD data fallback to SMB as ISF calculation may be really off
     override fun provideDetermineBasalAdapter(): DetermineBasalAdapter =
@@ -100,10 +92,10 @@ class OpenAPSSMBDynamicISFPlugin @Inject constructor(
                 Notification.SMB_FALLBACK, dateUtil.now(),
                 rh.gs(R.string.fallback_smb_no_tdd), Notification.INFO, dateUtil.now() + T.mins(1).msecs()
             )
-            DetermineBasalAdapterSMBJS(ScriptReader(context), injector)
+            DetermineBasalAdapterSMBJS(ScriptReader(), injector)
         } else {
             uiInteraction.dismissNotification(Notification.SMB_FALLBACK)
-            DetermineBasalAdapterSMBDynamicISFJS(ScriptReader(context), injector)
+            DetermineBasalAdapterSMBDynamicISFJS(ScriptReader(), injector)
         }
 
     override fun isAutosensModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {

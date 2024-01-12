@@ -1,7 +1,7 @@
-package app.aaps.plugins.aps.openAPS
+package app.aaps.core.interfaces.aps
 
 data class OapsProfile(
-    var dia: Int, // AMA only
+    var dia: Double, // AMA only
     var min_5m_carbimpact: Double, // AMA only
     var max_iob: Double,
     var max_daily_basal: Double,

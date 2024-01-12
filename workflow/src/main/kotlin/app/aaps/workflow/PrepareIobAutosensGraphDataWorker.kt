@@ -64,24 +64,11 @@ class PrepareIobAutosensGraphDataWorker(
         val overviewData: OverviewData
     )
 
-    class IobTotalDataPoint(time: Long) : IobTotal(time), DataPointWithLabelInterface {
-
-        constructor(i: IobTotal) : this(i.time) {
-            iob = i.iob
-            activity = i.activity
-            bolussnooze = i.bolussnooze
-            basaliob = i.basaliob
-            netbasalinsulin = i.netbasalinsulin
-            hightempinsulin = i.hightempinsulin
-            lastBolusTime = i.lastBolusTime
-            iobWithZeroTemp = i.iobWithZeroTemp?.copy()
-            netInsulin = i.netInsulin
-            extendedBolusInsulin = i.extendedBolusInsulin
-        }
+    class IobTotalDataPoint(val i: IobTotal) : DataPointWithLabelInterface {
 
         private var color = 0
-        override fun getX(): Double = time.toDouble()
-        override fun getY(): Double = iob
+        override fun getX(): Double = i.time.toDouble()
+        override fun getY(): Double = i.iob
         override fun setY(y: Double) {}
         override val label = ""
         override val duration = 0L

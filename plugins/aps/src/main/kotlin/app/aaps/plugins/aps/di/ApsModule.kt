@@ -12,7 +12,6 @@ import dagger.android.ContributesAndroidInjector
 @Module(
     includes = [
         AutotuneModule::class,
-        AlgModule::class,
         LoopModule::class,
         ApsModule.Bindings::class
     ]

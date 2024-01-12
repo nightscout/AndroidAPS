@@ -77,6 +77,7 @@
     <string name="key_aps_mode" translatable="false">aps_mode</string>
 
     <!--    APS-->
+    <string name="key_use_dynamic_sensitivity">use_dynamic_sensitivity</string>
     <string name="key_openaps_max_basal" translatable="false">openapsma_max_basal</string>
     <string name="key_openaps_smb_max_iob" translatable="false">openapsmb_max_iob</string>
     <string name="key_openaps_ama_max_iob" translatable="false">openapsma_max_iob</string>

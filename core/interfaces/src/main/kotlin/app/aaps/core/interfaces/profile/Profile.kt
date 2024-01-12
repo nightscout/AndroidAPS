@@ -12,8 +12,16 @@ import org.json.JSONObject
 
 interface Profile {
 
+    /**
+     *
+     */
+    //val hasDynamicIsf: Boolean
+
     class ValidityCheck(var isValid: Boolean = true, val reasons: ArrayList<String> = arrayListOf())
 
+    /**
+     * Check validity of profile
+     */
     fun isValid(from: String, pump: Pump, config: Config, rh: ResourceHelper, rxBus: RxBus, hardLimits: HardLimits, sendNotifications: Boolean): ValidityCheck
 
     /**

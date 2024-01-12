@@ -1,14 +1,14 @@
 package app.aaps.plugins.aps.utils
 
-import android.content.Context
+import androidx.test.platform.app.InstrumentationRegistry
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 
-class ScriptReader(private val context: Context) {
+class ScriptReader {
 
     @Throws(IOException::class)
     fun readFile(fileName: String): ByteArray {
-        val assetManager = context.assets
+        val assetManager = InstrumentationRegistry.getInstrumentation().context.assets
         val `is` = assetManager.open(fileName)
         val buffer = ByteArrayOutputStream()
         var nRead: Int

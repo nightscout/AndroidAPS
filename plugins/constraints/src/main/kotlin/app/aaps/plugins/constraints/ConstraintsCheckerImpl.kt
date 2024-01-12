@@ -76,18 +76,6 @@ class ConstraintsCheckerImpl @Inject constructor(
         return value
     }
 
-    override fun isDynIsfModeEnabled(): Constraint<Boolean> = isDynIsfModeEnabled(ConstraintObject(true, aapsLogger))
-
-    override fun isDynIsfModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
-        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(PluginConstraints::class.java)
-        for (p in constraintsPlugins) {
-            val constraint = p as PluginConstraints
-            if (!p.isEnabled()) continue
-            constraint.isDynIsfModeEnabled(value)
-        }
-        return value
-    }
-
     override fun isUAMEnabled(): Constraint<Boolean> = isUAMEnabled(ConstraintObject(true, aapsLogger))
 
     override fun isUAMEnabled(value: Constraint<Boolean>): Constraint<Boolean> {

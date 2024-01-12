@@ -1,7 +1,7 @@
 package app.aaps.core.data.iob
 
 @Suppress("SpellCheckingInspection")
-open class IobTotal(
+data class IobTotal(
     val time: Long,
     var iob: Double = 0.0,
     var activity: Double = 0.0,
