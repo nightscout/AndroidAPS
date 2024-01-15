@@ -2,11 +2,11 @@ package app.aaps.plugins.aps.openAPSSMBDynamicISF
 
 import androidx.annotation.VisibleForTesting
 import app.aaps.core.data.aps.SMBDefaults
-import app.aaps.core.data.iob.GlucoseStatus
 import app.aaps.core.data.iob.IobTotal
-import app.aaps.core.data.iob.MealData
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.aps.DetermineBasalAdapter
+import app.aaps.core.interfaces.aps.GlucoseStatus
+import app.aaps.core.interfaces.aps.MealData
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag

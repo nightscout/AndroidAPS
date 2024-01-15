@@ -7,6 +7,7 @@ import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.CurrentTemp
+import app.aaps.core.interfaces.aps.OapsAutosensData
 import app.aaps.core.interfaces.aps.OapsProfile
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -41,7 +42,6 @@ import app.aaps.plugins.aps.OpenAPSFragment
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.events.EventResetOpenAPSGui
-import app.aaps.plugins.aps.openAPS.OapsAutosensData
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -82,7 +82,6 @@ class OpenAPSAMAPlugin @Inject constructor(
     // last values
     override var lastAPSRun: Long = 0
     override var lastAPSResult: DetermineBasalResult? = null
-    override var lastAutosensResult: AutosensResult = AutosensResult()
 
     override fun specialEnableCondition(): Boolean {
         return try {
@@ -131,7 +130,7 @@ class OpenAPSAMAPlugin @Inject constructor(
                 hardLimits.maxIC()
             )
         ) return
-        if (!hardLimits.checkHardLimits(profile.getIsfMgdl(), app.aaps.core.ui.R.string.profile_sensitivity_value, HardLimits.MIN_ISF, HardLimits.MAX_ISF)) return
+        if (!hardLimits.checkHardLimits(profile.getIsfMgdl("OpenAPSAMAPlugin"), app.aaps.core.ui.R.string.profile_sensitivity_value, HardLimits.MIN_ISF, HardLimits.MAX_ISF)) return
         if (!hardLimits.checkHardLimits(profile.getMaxDailyBasal(), app.aaps.core.ui.R.string.profile_max_daily_basal_value, 0.02, hardLimits.maxBasal())) return
         if (!hardLimits.checkHardLimits(pump.baseBasalRate, app.aaps.core.ui.R.string.current_basal_value, 0.01, hardLimits.maxBasal())) return
 
@@ -154,6 +153,7 @@ class OpenAPSAMAPlugin @Inject constructor(
             targetBg = hardLimits.verifyHardLimits(tempTarget.target(), app.aaps.core.ui.R.string.temp_target_value, HardLimits.LIMIT_TEMP_TARGET_BG[0], HardLimits.LIMIT_TEMP_TARGET_BG[1])
         }
 
+        var autosensResult = AutosensResult()
         val autosensData =
             if (constraintsChecker.isAutosensModeEnabled().value()) {
                 val autosensData = iobCobCalculator.getLastAutosensDataWithWaitForCalculationFinish("OpenAPSPlugin")
@@ -161,10 +161,10 @@ class OpenAPSAMAPlugin @Inject constructor(
                     rxBus.send(EventResetOpenAPSGui(rh.gs(R.string.openaps_no_as_data)))
                     return
                 }
-                lastAutosensResult = autosensData.autosensResult
-                OapsAutosensData(ratio = lastAutosensResult.ratio)
+                autosensResult = autosensData.autosensResult
+                OapsAutosensData(ratio = autosensResult.ratio)
             } else {
-                lastAutosensResult.sensResult = "autosens disabled"
+                autosensResult.sensResult = "autosens disabled"
                 OapsAutosensData(ratio = 1.0)
             }
 
@@ -181,7 +181,7 @@ class OpenAPSAMAPlugin @Inject constructor(
             max_bg = maxBg,
             target_bg = targetBg,
             carb_ratio = profile.getIc(),
-            sens = profile.getIsfMgdl(),
+            sens = profile.getIsfMgdl("OpenAPSAMAPlugin"),
             autosens_adjust_targets = preferences.get(BooleanKey.ApsAmaAutosensAdjustTargets),
             max_daily_safety_multiplier = preferences.get(DoubleKey.ApsMaxDailyMultiplier),
             current_basal_safety_multiplier = preferences.get(DoubleKey.ApsMaxCurrentBasalMultiplier),
@@ -237,10 +237,11 @@ class OpenAPSAMAPlugin @Inject constructor(
             val determineBasalResult = DetermineBasalResult(injector, it)
             // Preserve input data
             determineBasalResult.inputConstraints = inputConstraints
+            determineBasalResult.autosensResult = autosensResult
             determineBasalResult.iobData = iobArray
             determineBasalResult.glucoseStatus = glucoseStatus
             determineBasalResult.currentTemp = currentTemp
-            determineBasalResult.profile = oapsProfile
+            determineBasalResult.oapsProfile = oapsProfile
             determineBasalResult.mealData = mealData
             lastAPSResult = determineBasalResult
             lastAPSRun = now

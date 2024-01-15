@@ -24,6 +24,8 @@ import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
 import dagger.Reusable
+import java.time.Instant
+import java.time.ZoneId
 import javax.inject.Inject
 
 @Reusable
@@ -37,9 +39,14 @@ class TddCalculatorImpl @Inject constructor(
     private val persistenceLayer: PersistenceLayer
 ) : TddCalculator {
 
-    override fun calculate(days: Long, allowMissingDays: Boolean): LongSparseArray<TDD>? {
-        var startTime = MidnightTime.calcDaysBack(days)
-        val endTime = MidnightTime.calc(dateUtil.now())
+    override fun calculate(days: Long, allowMissingDays: Boolean): LongSparseArray<TDD>? =
+        calculate(dateUtil.now(), days, allowMissingDays)
+
+    override fun calculate(timestamp: Long, days: Long, allowMissingDays: Boolean): LongSparseArray<TDD>? {
+        var startTime = MidnightTime.calcDaysBack(timestamp, days)
+        val endTime = Instant.ofEpochMilli(startTime).atZone(ZoneId.systemDefault())
+            .plusDays(days)
+            .toInstant().toEpochMilli()
 
         val result = LongSparseArray<TDD>()
         // Try to load cached values
@@ -52,7 +59,7 @@ class TddCalculatorImpl @Inject constructor(
         if (endTime > startTime) {
             var midnight = startTime
             while (midnight < endTime) {
-                val tdd = calculate(midnight, midnight + T.hours(24).msecs(), allowMissingData = false)
+                val tdd = calculateInterval(midnight, midnight + T.hours(24).msecs(), allowMissingData = false)
                 if (tdd != null) result.put(midnight, tdd)
                 midnight = MidnightTime.calc(midnight + T.hours(27).msecs()) // be sure we find correct midnight
             }
@@ -72,16 +79,21 @@ class TddCalculatorImpl @Inject constructor(
     override fun calculateToday(): TDD? {
         val startTime = MidnightTime.calc(dateUtil.now())
         val endTime = dateUtil.now()
-        return calculate(startTime, endTime, allowMissingData = true)
+        return calculateInterval(startTime, endTime, allowMissingData = true)
     }
 
-    override fun calculateDaily(startHours: Long, endHours: Long): TDD? {
-        val startTime = dateUtil.now() + T.hours(hour = startHours).msecs()
-        val endTime = dateUtil.now() + T.hours(hour = endHours).msecs()
-        return calculate(startTime, endTime, allowMissingData = false)
+    override fun calculateDaily(startHours: Long, endHours: Long): TDD? =
+        calculateDaily(dateUtil.now(), startHours, endHours)
+
+    override fun calculateDaily(timestamp: Long, startHours: Long, endHours: Long): TDD? {
+        assert(startHours < 0)
+        assert(endHours <= 0)
+        val startTime = timestamp + T.hours(hour = startHours).msecs()
+        val endTime = timestamp + T.hours(hour = endHours).msecs()
+        return calculateInterval(startTime, endTime, allowMissingData = false)
     }
 
-    override fun calculate(startTime: Long, endTime: Long, allowMissingData: Boolean): TDD? {
+    override fun calculateInterval(startTime: Long, endTime: Long, allowMissingData: Boolean): TDD? {
         val startTimeAligned = startTime - startTime % (5 * 60 * 1000)
         val endTimeAligned = endTime - endTime % (5 * 60 * 1000)
         val tdd = TDD(timestamp = startTimeAligned)
@@ -110,7 +122,7 @@ class TddCalculatorImpl @Inject constructor(
             }
         }
         tdd.totalAmount = tdd.bolusAmount + tdd.basalAmount
-        aapsLogger.debug(LTag.CORE, tdd.toString())
+        //aapsLogger.debug(LTag.CORE, tdd.toString())
         if (tdd.bolusAmount > 0 || tdd.basalAmount > 0 || tbrFound) return tdd
         return null
     }

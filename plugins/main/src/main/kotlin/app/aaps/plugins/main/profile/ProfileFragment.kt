@@ -70,10 +70,10 @@ class ProfileFragment : DaggerFragment() {
         doEdit()
         basalView?.updateLabel(rh.gs(app.aaps.core.ui.R.string.basal_label) + ": " + sumLabel())
         profilePlugin.getEditedProfile()?.let {
-            binding.basalGraph.show(ProfileSealed.Pure(it))
-            binding.icGraph.show(ProfileSealed.Pure(it))
-            binding.isfGraph.show(ProfileSealed.Pure(it))
-            binding.targetGraph.show(ProfileSealed.Pure(it))
+            binding.basalGraph.show(ProfileSealed.Pure(it, null))
+            binding.icGraph.show(ProfileSealed.Pure(it, null))
+            binding.isfGraph.show(ProfileSealed.Pure(it, null))
+            binding.targetGraph.show(ProfileSealed.Pure(it, null))
             binding.insulinGraph.show(activePlugin.activeInsulin, SafeParse.stringToDouble(binding.dia.text))
         }
     }
@@ -90,7 +90,7 @@ class ProfileFragment : DaggerFragment() {
 
     private fun sumLabel(): String {
         val profile = profilePlugin.getEditedProfile()
-        val sum = profile?.let { ProfileSealed.Pure(profile).baseBasalSum() } ?: 0.0
+        val sum = profile?.let { ProfileSealed.Pure(profile, null).baseBasalSum() } ?: 0.0
         return " ∑" + decimalFormatter.to2Decimal(sum) + rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname)
     }
 
@@ -267,10 +267,10 @@ class ProfileFragment : DaggerFragment() {
             }
         }
         profilePlugin.getEditedProfile()?.let {
-            binding.basalGraph.show(ProfileSealed.Pure(it))
-            binding.icGraph.show(ProfileSealed.Pure(it))
-            binding.isfGraph.show(ProfileSealed.Pure(it))
-            binding.targetGraph.show(ProfileSealed.Pure(it))
+            binding.basalGraph.show(ProfileSealed.Pure(it, null))
+            binding.icGraph.show(ProfileSealed.Pure(it, null))
+            binding.isfGraph.show(ProfileSealed.Pure(it, null))
+            binding.targetGraph.show(ProfileSealed.Pure(it, null))
             binding.insulinGraph.show(activePlugin.activeInsulin, SafeParse.stringToDouble(binding.dia.text))
         }
 

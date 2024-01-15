@@ -1,8 +1,6 @@
 package app.aaps.core.interfaces.aps
 
-import app.aaps.core.data.iob.GlucoseStatus
 import app.aaps.core.data.iob.IobTotal
-import app.aaps.core.data.iob.MealData
 import app.aaps.core.interfaces.profile.Profile
 import org.json.JSONObject
 

@@ -78,7 +78,7 @@ class ProfilePlugin @Inject constructor(
     }
 
     var isEdited: Boolean = false
-    var profiles: ArrayList<ProfileSource.SingleProfile> = ArrayList()
+    private var profiles: ArrayList<ProfileSource.SingleProfile> = ArrayList()
 
     val numOfProfiles get() = profiles.size
     override var currentProfileIndex = 0
@@ -233,7 +233,7 @@ class ProfilePlugin @Inject constructor(
             val newProfiles: ArrayList<ProfileSource.SingleProfile> = ArrayList()
             for (p in store.getProfileList()) {
                 val profile = store.getSpecificProfile(p.toString())
-                val validityCheck = profile?.let { ProfileSealed.Pure(profile).isValid("NS", activePlugin.activePump, config, rh, rxBus, hardLimits, false) } ?: Profile.ValidityCheck()
+                val validityCheck = profile?.let { ProfileSealed.Pure(profile, activePlugin).isValid("NS", activePlugin.activePump, config, rh, rxBus, hardLimits, false) } ?: Profile.ValidityCheck()
                 if (profile != null && validityCheck.isValid) {
                     val sp = copyFrom(profile, p.toString())
                     sp.name = p.toString()
@@ -268,7 +268,7 @@ class ProfilePlugin @Inject constructor(
         if (rawProfile?.getSpecificProfile(newName) != null) {
             verifiedName += " " + dateUtil.now().toString()
         }
-        val profile = ProfileSealed.Pure(pureProfile)
+        val profile = ProfileSealed.Pure(pureProfile, activePlugin)
         val pureJson = pureProfile.jsonObject
         return ProfileSource.SingleProfile(
             name = verifiedName,
@@ -383,7 +383,7 @@ class ProfilePlugin @Inject constructor(
         isEdited = false
     }
 
-    fun createProfileStore(): ProfileStore {
+    private fun createProfileStore(): ProfileStore {
         val json = JSONObject()
         val store = JSONObject()
 
@@ -420,6 +420,6 @@ class ProfilePlugin @Inject constructor(
 
     override val profileName: String
         get() = rawProfile?.getDefaultProfile()?.let {
-            decimalFormatter.to2Decimal(ProfileSealed.Pure(it).percentageBasalSum()) + "U "
+            decimalFormatter.to2Decimal(ProfileSealed.Pure(it, activePlugin).percentageBasalSum()) + "U "
         } ?: "INVALID"
 }

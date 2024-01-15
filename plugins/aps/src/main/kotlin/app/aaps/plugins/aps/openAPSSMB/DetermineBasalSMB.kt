@@ -1,14 +1,14 @@
 package app.aaps.plugins.aps.openAPSSMB
 
-import app.aaps.core.data.iob.GlucoseStatus
 import app.aaps.core.data.iob.IobTotal
-import app.aaps.core.data.iob.MealData
 import app.aaps.core.interfaces.aps.CurrentTemp
+import app.aaps.core.interfaces.aps.GlucoseStatus
+import app.aaps.core.interfaces.aps.MealData
+import app.aaps.core.interfaces.aps.OapsAutosensData
 import app.aaps.core.interfaces.aps.OapsProfile
 import app.aaps.core.interfaces.aps.Predictions
 import app.aaps.core.interfaces.aps.RT
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.plugins.aps.openAPS.OapsAutosensData
 import java.text.DecimalFormat
 import java.time.Instant
 import java.time.ZoneId

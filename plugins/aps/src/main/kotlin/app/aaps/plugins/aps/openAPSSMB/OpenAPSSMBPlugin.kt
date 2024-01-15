@@ -1,6 +1,7 @@
 package app.aaps.plugins.aps.openAPSSMB
 
 import android.content.Context
+import android.util.LongSparseArray
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import app.aaps.core.data.aps.AutosensResult
@@ -11,6 +12,7 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.CurrentTemp
+import app.aaps.core.interfaces.aps.OapsAutosensData
 import app.aaps.core.interfaces.aps.OapsProfile
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.constraints.Constraint
@@ -28,6 +30,7 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.profiling.Profiler
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAPSCalculationFinished
@@ -52,7 +55,6 @@ import app.aaps.plugins.aps.OpenAPSFragment
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.events.EventResetOpenAPSGui
-import app.aaps.plugins.aps.openAPS.OapsAutosensData
 import app.aaps.plugins.aps.openAPS.TddStatus
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
@@ -81,7 +83,8 @@ open class OpenAPSSMBPlugin @Inject constructor(
     private val tddCalculator: TddCalculator,
     private val bgQualityCheck: BgQualityCheck,
     private val uiInteraction: UiInteraction,
-    private val determineBasalSMB: DetermineBasalSMB
+    private val determineBasalSMB: DetermineBasalSMB,
+    private val profiler: Profiler
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.APS)
@@ -99,7 +102,28 @@ open class OpenAPSSMBPlugin @Inject constructor(
     // last values
     override var lastAPSRun: Long = 0
     override var lastAPSResult: DetermineBasalResult? = null
-    override var lastAutosensResult = AutosensResult()
+    override fun supportsDynamicIsf(): Boolean = preferences.get(BooleanKey.ApsUseDynamicSensitivity)
+
+    override fun getIsfMgdl(multiplier: Double, timeShift: Int, caller: String): Double? {
+        val start = dateUtil.now()
+        val sensitivity = calculateVariableIsf(dateUtil.now(), caller)
+        if (sensitivity == null)
+            uiInteraction.addNotificationValidTo(
+                Notification.DYN_ISF_FALLBACK, dateUtil.now(),
+                rh.gs(R.string.fallback_to_isf_no_tdd), Notification.INFO, dateUtil.now() + T.mins(1).msecs()
+            )
+        else
+            uiInteraction.dismissNotification(Notification.DYN_ISF_FALLBACK)
+        profiler.log(LTag.APS, "getIsfMgdl() $caller", start)
+        return sensitivity
+    }
+
+    override fun getIsfMgdl(timestamp: Long, multiplier: Double, timeShift: Int, caller: String): Double? {
+        val start = dateUtil.now()
+        val sensitivity = calculateVariableIsf(timestamp, caller)
+        profiler.log(LTag.APS, "getIsfMgdl(timestamp) $caller", start)
+        return sensitivity
+    }
 
     override fun specialEnableCondition(): Boolean {
         return try {
@@ -122,6 +146,40 @@ open class OpenAPSSMBPlugin @Inject constructor(
         preferenceFragment.findPreference<SwitchPreference>(rh.gs(app.aaps.core.keys.R.string.key_openaps_allow_smb_with_COB))?.isVisible = !smbAlwaysEnabled || !advancedFiltering
         preferenceFragment.findPreference<SwitchPreference>(rh.gs(app.aaps.core.keys.R.string.key_openaps_allow_smb_with_low_temp_target))?.isVisible = !smbAlwaysEnabled || !advancedFiltering
         preferenceFragment.findPreference<SwitchPreference>(rh.gs(app.aaps.core.keys.R.string.key_openaps_enable_smb_after_carbs))?.isVisible = !smbAlwaysEnabled || !advancedFiltering
+    }
+
+    val dynIsfCache = LongSparseArray<Double>()
+    private fun calculateVariableIsf(timestamp: Long, caller: String): Double? {
+        // TODO: replace by reading from DB APSResults
+        // Round down to 30 min and use it as a key for caching
+        val key = timestamp - timestamp % T.mins(30).msecs()
+        val cached = dynIsfCache[key]
+        if (cached != null && timestamp < dateUtil.now()) {
+            aapsLogger.debug("calculateVariableIsf $caller HIT ${dateUtil.dateAndTimeAndSecondsString(timestamp)} $cached")
+            return cached
+        }
+
+        if (!preferences.get(BooleanKey.ApsUseDynamicSensitivity)) return null
+        val glucoseStatus = glucoseStatusProvider.glucoseStatusData ?: return null
+        val tdd1D = tddCalculator.averageTDD(tddCalculator.calculate(timestamp, 1, allowMissingDays = false))?.totalAmount ?: return null
+        val tdd7D = tddCalculator.averageTDD(tddCalculator.calculate(timestamp, 7, allowMissingDays = false))?.totalAmount ?: return null
+        val tddLast24H = tddCalculator.calculateDaily(-24, 0)?.totalAmount ?: return null
+        val tddLast4H = tddCalculator.calculateDaily(-4, 0)?.totalAmount ?: return null
+        val tddLast8to4H = tddCalculator.calculateDaily(-8, -4)?.totalAmount ?: return null
+        val insulinDivisor = when {
+            activePlugin.activeInsulin.peak > 65 -> 55 // lyumjev peak: 45
+            activePlugin.activeInsulin.peak > 50 -> 65 // ultra rapid peak: 55
+            else                                 -> 75 // rapid peak: 75
+        }
+        val tddStatus = TddStatus(tdd1D, tdd7D, tddLast24H, tddLast4H, tddLast8to4H)
+        val tddWeightedFromLast8H = ((1.4 * tddStatus.tddLast4H) + (0.6 * tddStatus.tddLast8to4H)) * 3
+        val tdd = (tddWeightedFromLast8H * 0.33) + (tddStatus.tdd7D * 0.34) + (tddStatus.tdd1D * 0.33) * preferences.get(IntKey.ApsDynIsfAdjustmentFactor) / 100.0
+
+        val sensitivity = Round.roundTo(1800 / (tdd * (ln((glucoseStatus.glucose / insulinDivisor) + 1))), 0.1)
+        aapsLogger.debug("calculateVariableIsf $caller ${dateUtil.dateAndTimeAndSecondsString(timestamp)} $sensitivity")
+        dynIsfCache.put(key, sensitivity)
+        if (dynIsfCache.size() > 1000) dynIsfCache.clear()
+        return sensitivity
     }
 
     override fun invoke(initiator: String, tempBasalFallback: Boolean) {
@@ -156,7 +214,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
                 hardLimits.maxIC()
             )
         ) return
-        if (!hardLimits.checkHardLimits(profile.getIsfMgdl(), app.aaps.core.ui.R.string.profile_sensitivity_value, HardLimits.MIN_ISF, HardLimits.MAX_ISF)) return
+        if (!hardLimits.checkHardLimits(profile.getIsfMgdl("OpenAPSSMBPlugin"), app.aaps.core.ui.R.string.profile_sensitivity_value, HardLimits.MIN_ISF, HardLimits.MAX_ISF)) return
         if (!hardLimits.checkHardLimits(profile.getMaxDailyBasal(), app.aaps.core.ui.R.string.profile_max_daily_basal_value, 0.02, hardLimits.maxBasal())) return
         if (!hardLimits.checkHardLimits(pump.baseBasalRate, app.aaps.core.ui.R.string.current_basal_value, 0.01, hardLimits.maxBasal())) return
 
@@ -224,6 +282,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
             }
         }
 
+        var autosensResult = AutosensResult()
         val autosensData =
             if (dynIsfMode) {
                 tddStatus ?: error("Internal error. TDD not provided.")
@@ -235,16 +294,16 @@ open class OpenAPSSMBPlugin @Inject constructor(
                         rxBus.send(EventResetOpenAPSGui(rh.gs(R.string.openaps_no_as_data)))
                         return
                     }
-                    lastAutosensResult = autosensData.autosensResult
-                    OapsAutosensData(ratio = lastAutosensResult.ratio)
+                    autosensResult = autosensData.autosensResult
+                    OapsAutosensData(ratio = autosensResult.ratio)
                 } else {
-                    lastAutosensResult.sensResult = "autosens disabled"
+                    autosensResult.sensResult = "autosens disabled"
                     OapsAutosensData(ratio = 1.0)
                 }
 
             }
 
-        val iobArray = iobCobCalculator.calculateIobArrayForSMB(lastAutosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
+        val iobArray = iobCobCalculator.calculateIobArrayForSMB(autosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
         val mealData = iobCobCalculator.getMealDataWithWaitingForCalculationFinish()
 
         val oapsProfile = OapsProfile(
@@ -257,7 +316,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
             max_bg = maxBg,
             target_bg = targetBg,
             carb_ratio = profile.getIc(),
-            sens = profile.getIsfMgdl(),
+            sens = profile.getIsfMgdl("OpenAPSSMBPlugin"),
             autosens_adjust_targets = false, // not used
             max_daily_safety_multiplier = preferences.get(DoubleKey.ApsMaxDailyMultiplier),
             current_basal_safety_multiplier = preferences.get(DoubleKey.ApsMaxCurrentBasalMultiplier),
@@ -322,10 +381,11 @@ open class OpenAPSSMBPlugin @Inject constructor(
             val determineBasalResult = DetermineBasalResult(injector, it)
             // Preserve input data
             determineBasalResult.inputConstraints = inputConstraints
+            determineBasalResult.autosensResult = autosensResult
             determineBasalResult.iobData = iobArray
             determineBasalResult.glucoseStatus = glucoseStatus
             determineBasalResult.currentTemp = currentTemp
-            determineBasalResult.profile = oapsProfile
+            determineBasalResult.oapsProfile = oapsProfile
             determineBasalResult.mealData = mealData
             lastAPSResult = determineBasalResult
             lastAPSRun = now

@@ -5,8 +5,8 @@ import app.aaps.core.data.aps.AutosensResult
 import app.aaps.core.data.aps.BasalData
 import app.aaps.core.data.iob.CobInfo
 import app.aaps.core.data.iob.IobTotal
-import app.aaps.core.data.iob.MealData
 import app.aaps.core.interfaces.aps.AutosensDataStore
+import app.aaps.core.interfaces.aps.MealData
 import app.aaps.core.interfaces.profile.Profile
 
 interface IobCobCalculator {

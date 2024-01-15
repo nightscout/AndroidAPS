@@ -85,11 +85,9 @@ class AppRepository @Inject internal constructor(
         removed.add(Pair("TemporaryBasal", database.temporaryBasalDao.deleteOlderThan(than)))
         removed.add(Pair("ExtendedBolus", database.extendedBolusDao.deleteOlderThan(than)))
         removed.add(Pair("Bolus", database.bolusDao.deleteOlderThan(than)))
-        removed.add(Pair("MultiWaveBolus", database.multiwaveBolusLinkDao.deleteOlderThan(than)))
         removed.add(Pair("TotalDailyDose", database.totalDailyDoseDao.deleteOlderThan(than)))
         removed.add(Pair("Carbs", database.carbsDao.deleteOlderThan(than)))
         removed.add(Pair("TemporaryTarget", database.temporaryTargetDao.deleteOlderThan(than)))
-        removed.add(Pair("ApsResultLink", database.apsResultLinkDao.deleteOlderThan(than)))
         removed.add(Pair("BolusCalculatorResult", database.bolusCalculatorResultDao.deleteOlderThan(than)))
         // keep at least one EPS
         if (database.effectiveProfileSwitchDao.getEffectiveProfileSwitchDataFromTime(than + 1).blockingGet().isNotEmpty())
@@ -111,11 +109,9 @@ class AppRepository @Inject internal constructor(
             removed.add(Pair("CHANGES TemporaryBasal", database.temporaryBasalDao.deleteTrackedChanges()))
             removed.add(Pair("CHANGES Bolus", database.bolusDao.deleteTrackedChanges()))
             removed.add(Pair("CHANGES ExtendedBolus", database.extendedBolusDao.deleteTrackedChanges()))
-            removed.add(Pair("CHANGES MultiWaveBolus", database.multiwaveBolusLinkDao.deleteTrackedChanges()))
             removed.add(Pair("CHANGES TotalDailyDose", database.totalDailyDoseDao.deleteTrackedChanges()))
             removed.add(Pair("CHANGES Carbs", database.carbsDao.deleteTrackedChanges()))
             removed.add(Pair("CHANGES TemporaryTarget", database.temporaryTargetDao.deleteTrackedChanges()))
-            removed.add(Pair("CHANGES ApsResultLink", database.apsResultLinkDao.deleteTrackedChanges()))
             removed.add(Pair("CHANGES BolusCalculatorResult", database.bolusCalculatorResultDao.deleteTrackedChanges()))
             removed.add(Pair("CHANGES EffectiveProfileSwitch", database.effectiveProfileSwitchDao.deleteTrackedChanges()))
             removed.add(Pair("CHANGES ProfileSwitch", database.profileSwitchDao.deleteTrackedChanges()))
@@ -775,14 +771,12 @@ class AppRepository @Inject internal constructor(
 
     fun collectNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int) = NewEntries(
         apsResults = database.apsResultDao.getNewEntriesSince(since, until, limit, offset),
-        apsResultLinks = database.apsResultLinkDao.getNewEntriesSince(since, until, limit, offset),
         bolusCalculatorResults = database.bolusCalculatorResultDao.getNewEntriesSince(since, until, limit, offset),
         boluses = database.bolusDao.getNewEntriesSince(since, until, limit, offset),
         carbs = database.carbsDao.getNewEntriesSince(since, until, limit, offset),
         effectiveProfileSwitches = database.effectiveProfileSwitchDao.getNewEntriesSince(since, until, limit, offset),
         extendedBoluses = database.extendedBolusDao.getNewEntriesSince(since, until, limit, offset),
         glucoseValues = database.glucoseValueDao.getNewEntriesSince(since, until, limit, offset),
-        multiwaveBolusLinks = database.multiwaveBolusLinkDao.getNewEntriesSince(since, until, limit, offset),
         offlineEvents = database.offlineEventDao.getNewEntriesSince(since, until, limit, offset),
         preferencesChanges = database.preferenceChangeDao.getNewEntriesSince(since, until, limit, offset),
         profileSwitches = database.profileSwitchDao.getNewEntriesSince(since, until, limit, offset),

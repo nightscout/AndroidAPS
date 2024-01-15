@@ -41,6 +41,19 @@ class StepsCountDaoTest {
         assertTrue(sc1.contentEqualsTo(sc2!!))
     }
 
+    private fun StepsCount.contentEqualsTo(other: StepsCount): Boolean {
+        return this === other || (
+            duration == other.duration &&
+                timestamp == other.timestamp &&
+                steps5min == other.steps5min &&
+                steps10min == other.steps10min &&
+                steps15min == other.steps15min &&
+                steps30min == other.steps30min &&
+                steps60min == other.steps60min &&
+                steps180min == other.steps180min &&
+                isValid == other.isValid)
+    }
+
     @Test
     fun new_insertAndFind() {
         createDatabase().use { db -> insertAndFind(db) }

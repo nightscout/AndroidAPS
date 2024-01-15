@@ -12,7 +12,6 @@ import app.aaps.database.entities.ExtendedBolus
 import app.aaps.database.entities.Food
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.HeartRate
-import app.aaps.database.entities.MultiwaveBolusLink
 import app.aaps.database.entities.OfflineEvent
 import app.aaps.database.entities.PreferenceChange
 import app.aaps.database.entities.ProfileSwitch
@@ -24,7 +23,6 @@ import app.aaps.database.entities.TotalDailyDose
 import app.aaps.database.entities.UserEntry
 import app.aaps.database.entities.VersionChange
 import app.aaps.database.impl.daos.APSResultDao
-import app.aaps.database.impl.daos.APSResultLinkDao
 import app.aaps.database.impl.daos.BolusCalculatorResultDao
 import app.aaps.database.impl.daos.BolusDao
 import app.aaps.database.impl.daos.CarbsDao
@@ -34,7 +32,6 @@ import app.aaps.database.impl.daos.ExtendedBolusDao
 import app.aaps.database.impl.daos.FoodDao
 import app.aaps.database.impl.daos.GlucoseValueDao
 import app.aaps.database.impl.daos.HeartRateDao
-import app.aaps.database.impl.daos.MultiwaveBolusLinkDao
 import app.aaps.database.impl.daos.OfflineEventDao
 import app.aaps.database.impl.daos.PreferenceChangeDao
 import app.aaps.database.impl.daos.ProfileSwitchDao
@@ -47,14 +44,14 @@ import app.aaps.database.impl.daos.UserEntryDao
 import app.aaps.database.impl.daos.VersionChangeDao
 import java.io.Closeable
 
-const val DATABASE_VERSION = 25
+const val DATABASE_VERSION = 26
 
 @Database(
     version = DATABASE_VERSION,
     entities = [app.aaps.database.entities.APSResult::class, Bolus::class, BolusCalculatorResult::class, Carbs::class,
         EffectiveProfileSwitch::class, ExtendedBolus::class, GlucoseValue::class, ProfileSwitch::class,
-        TemporaryBasal::class, TemporaryTarget::class, TherapyEvent::class, TotalDailyDose::class, app.aaps.database.entities.APSResultLink::class,
-        MultiwaveBolusLink::class, PreferenceChange::class, VersionChange::class, UserEntry::class,
+        TemporaryBasal::class, TemporaryTarget::class, TherapyEvent::class, TotalDailyDose::class,
+        PreferenceChange::class, VersionChange::class, UserEntry::class,
         Food::class, DeviceStatus::class, OfflineEvent::class, HeartRate::class, StepsCount::class],
     exportSchema = true
 )
@@ -71,15 +68,11 @@ internal abstract class AppDatabase : Closeable, RoomDatabase() {
 
     abstract val extendedBolusDao: ExtendedBolusDao
 
-    abstract val multiwaveBolusLinkDao: MultiwaveBolusLinkDao
-
     abstract val totalDailyDoseDao: TotalDailyDoseDao
 
     abstract val carbsDao: CarbsDao
 
     abstract val temporaryTargetDao: TemporaryTargetDao
-
-    abstract val apsResultLinkDao: APSResultLinkDao
 
     abstract val bolusCalculatorResultDao: BolusCalculatorResultDao
 

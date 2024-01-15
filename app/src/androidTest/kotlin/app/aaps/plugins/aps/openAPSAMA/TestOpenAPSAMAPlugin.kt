@@ -82,7 +82,7 @@ class TestOpenAPSAMAPlugin @Inject constructor(
     override var lastAPSResult: DetermineBasalResultAMAFromJS? = null
 
     //override var lastDetermineBasalAdapter: DetermineBasalAdapter? = null
-    override var lastAutosensResult: AutosensResult = AutosensResult()
+    var lastAutosensResult: AutosensResult = AutosensResult()
 
     override fun specialEnableCondition(): Boolean {
         return try {

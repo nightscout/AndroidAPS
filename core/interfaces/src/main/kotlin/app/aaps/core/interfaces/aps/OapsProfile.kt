@@ -1,5 +1,8 @@
 package app.aaps.core.interfaces.aps
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class OapsProfile(
     var dia: Double, // AMA only
     var min_5m_carbimpact: Double, // AMA only

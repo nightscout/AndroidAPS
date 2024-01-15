@@ -1,15 +1,15 @@
 package app.aaps.plugins.aps.openAPS
 
 import android.text.Spanned
-import app.aaps.core.data.iob.GlucoseStatus
 import app.aaps.core.data.iob.IobTotal
-import app.aaps.core.data.iob.MealData
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.CurrentTemp
+import app.aaps.core.interfaces.aps.GlucoseStatus
+import app.aaps.core.interfaces.aps.MealData
 import app.aaps.core.interfaces.aps.OapsProfile
 import app.aaps.core.interfaces.aps.Predictions
 import app.aaps.core.interfaces.constraints.Constraint

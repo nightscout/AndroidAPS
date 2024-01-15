@@ -15,7 +15,7 @@ fun EPS.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
         .put("enteredBy", "openaps://" + "AndroidAPS")
         .put("isValid", isValid)
         .put("eventType", TE.Type.NOTE.text) // move to separate collection when available in NS
-        .put("profileJson", ProfileSealed.EPS(this).toPureNsJson(dateUtil).toString())
+        .put("profileJson", ProfileSealed.EPS(value = this, activePlugin = null).toPureNsJson(dateUtil).toString())
         .put("originalProfileName", originalProfileName)
         .put("originalCustomizedName", originalCustomizedName)
         .put("originalTimeshift", originalTimeshift)
@@ -52,7 +52,7 @@ fun EPS.Companion.fromJson(jsonObject: JSONObject, dateUtil: DateUtil): EPS? {
 
     if (timestamp == 0L) return null
     val pureProfile = pureProfileFromJson(JSONObject(profileJson), dateUtil) ?: return null
-    val profileSealed = ProfileSealed.Pure(pureProfile)
+    val profileSealed = ProfileSealed.Pure(value = pureProfile, activePlugin = null)
 
     return EPS(
         timestamp = timestamp,

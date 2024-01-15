@@ -1,11 +1,11 @@
 package app.aaps.implementation.iob
 
-import app.aaps.core.data.iob.GlucoseStatus
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.AutosensDataStore
+import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.implementation.extensions.asRounded
 import app.aaps.implementation.extensions.log

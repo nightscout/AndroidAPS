@@ -3,7 +3,6 @@ package app.aaps.core.objects.wizard
 import android.annotation.SuppressLint
 import android.content.Context
 import android.text.Spanned
-import app.aaps.core.data.iob.GlucoseStatus
 import app.aaps.core.data.model.BCR
 import app.aaps.core.data.model.OE
 import app.aaps.core.data.model.TE
@@ -13,6 +12,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.configuration.Config
@@ -203,7 +203,7 @@ class BolusWizard @Inject constructor(
         this.totalPercentage = totalPercentage
 
         // Insulin from BG
-        sens = profileUtil.fromMgdlToUnits(profile.getIsfMgdl())
+        sens = profileUtil.fromMgdlToUnits(profile.getIsfMgdl("BolusWizard"))
         targetBGLow = profileUtil.fromMgdlToUnits(profile.getTargetLowMgdl())
         targetBGHigh = profileUtil.fromMgdlToUnits(profile.getTargetHighMgdl())
         if (useTT && tempTarget != null) {

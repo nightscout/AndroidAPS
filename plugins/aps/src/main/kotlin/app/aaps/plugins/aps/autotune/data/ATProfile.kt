@@ -94,8 +94,8 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
     }
 
     fun updateProfile() {
-        data()?.let { profile = ProfileSealed.Pure(it) }
-        data(true)?.let { circadianProfile = ProfileSealed.Pure(it) }
+        data()?.let { profile = ProfileSealed.Pure(value = it, activePlugin = null) }
+        data(true)?.let { circadianProfile = ProfileSealed.Pure(value = it, activePlugin = null) }
     }
 
     //Export json string with oref0 format used for autotune

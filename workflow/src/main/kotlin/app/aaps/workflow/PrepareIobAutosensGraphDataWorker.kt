@@ -31,7 +31,6 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.objects.extensions.combine
-import app.aaps.core.objects.extensions.copy
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import kotlinx.coroutines.Dispatchers
@@ -145,6 +144,7 @@ class PrepareIobAutosensGraphDataWorker(
 
         val adsData = data.iobCobCalculator.ads.clone()
 
+        val nowSens = profileFunction.getProfile(time)?.getIsfMgdl(time, "PrepareIobCobAutosensGraphDataWorkerNow") ?: return Result.success()
         while (time <= endTime) {
             if (isStopped) return Result.failure(workDataOf("Error" to "stopped"))
             val progress = (time - fromTime).toDouble() / (endTime - fromTime) * 100.0
@@ -194,7 +194,8 @@ class PrepareIobAutosensGraphDataWorker(
             // BGI
             val devBgiScale = overviewMenus.isEnabledIn(OverviewMenus.CharType.DEV) == overviewMenus.isEnabledIn(OverviewMenus.CharType.BGI)
             val deviation = if (devBgiScale) autosensData?.deviation ?: 0.0 else 0.0
-            val bgi: Double = iob.activity * profile.getIsfMgdl(time) * 5.0
+            val sens = if (time > dateUtil.now()) nowSens else profile.getIsfMgdl(time, "PrepareIobCobAutosensGraphDataWorker")
+            val bgi: Double = iob.activity * sens * 5.0
             if (time <= now) bgiArrayHist.add(ScaledDataPoint(time, bgi, data.overviewData.bgiScale))
             else bgiArrayPrediction.add(ScaledDataPoint(time, bgi, data.overviewData.bgiScale))
             data.overviewData.maxBGIValue = max(data.overviewData.maxBGIValue, max(abs(bgi), deviation))

@@ -142,6 +142,7 @@ open class Notification {
         const val PUMP_SYNC_ERROR = 88
         const val SMB_FALLBACK = 89
         const val MASTER_PASSWORD_NOT_SET = 90
+        const val DYN_ISF_FALLBACK = 91
 
         const val USER_MESSAGE = 1000
 

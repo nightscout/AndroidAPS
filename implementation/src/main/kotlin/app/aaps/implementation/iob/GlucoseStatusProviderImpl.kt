@@ -1,6 +1,6 @@
 package app.aaps.implementation.iob
 
-import app.aaps.core.data.iob.GlucoseStatus
+import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -50,7 +50,7 @@ class GlucoseStatusProviderImpl @Inject constructor(
                 shortAvgDelta = 0.0,
                 longAvgDelta = 0.0,
                 date = nowDate,
-                duraISFminutes  = 0.0,
+                duraISFminutes = 0.0,
                 duraISFaverage = now.value,
                 parabolaMinutes = 0.0,
                 deltaPl = 0.0,
@@ -114,7 +114,7 @@ class GlucoseStatusProviderImpl @Inject constructor(
         var minutesdur = 0L
         var n = 1
         for (i in 1 until sizeRecords) {
-            if (data[i].value>39 && !data[i].filledGap) {
+            if (data[i].value > 39 && !data[i].filledGap) {
                 n += 1
                 val then = data[i]
                 val thenDate: Long = then.timestamp
@@ -149,21 +149,21 @@ class GlucoseStatusProviderImpl @Inject constructor(
         //var b = 0.0
 
         if (sizeRecords > 3) {
-            var sy   = 0.0 // y
-            var sx   = 0.0 // x
-            var sx2  = 0.0 // x^2
-            var sx3  = 0.0 // x^3
-            var sx4  = 0.0 // x^4
-            var sxy  = 0.0 // x*y
+            var sy = 0.0 // y
+            var sx = 0.0 // x
+            var sx2 = 0.0 // x^2
+            var sx3 = 0.0 // x^3
+            var sx4 = 0.0 // x^4
+            var sxy = 0.0 // x*y
             var sx2y = 0.0 // x^2*y
             val time0 = data[0].timestamp
             var tiLast = 0.0
             //# for best numerical accuracy time and bg must be of same order of magnitude
             val scaleTime = 300.0 // in 5m; values are  0, -1, -2, -3, -4, ...
-            val scaleBg   =  50.0 // TIR range is now 1.4 - 3.6
+            val scaleBg = 50.0 // TIR range is now 1.4 - 3.6
 
             // if (data[i].recalculated > 38) {  } // not checked in past 1.5 years
-            n= 0
+            n = 0
             for (i in 0 until sizeRecords) {
                 val noGap = !data[i].filledGap
                 if (data[i].recalculated > 39 && noGap) {
@@ -177,7 +177,7 @@ class GlucoseStatusProviderImpl @Inject constructor(
                     if (-ti * scaleTime > 47 * 60) {                       // skip records older than 47.5 minutes
                         break
                     } else if (ti < tiLast - 7.5 * 60 / scaleTime) {       // stop scan if a CGM gap > 7.5 minutes is detected
-                        if (i < 3 ) {   // history too short for fit
+                        if (i < 3) {   // history too short for fit
                             duraP = -tiLast * scaleTime / 60.0
                             deltaPl = 0.0
                             deltaPn = 0.0
@@ -202,7 +202,7 @@ class GlucoseStatusProviderImpl @Inject constructor(
                     var detA = 0.0
                     var detB = 0.0
                     var detC = 0.0
-                    if (n > 3 ) {
+                    if (n > 3) {
                         detH = sx4 * (sx2 * n - sx * sx) - sx3 * (sx3 * n - sx * sx2) + sx2 * (sx3 * sx - sx2 * sx2)
                         detA = sx2y * (sx2 * n - sx * sx) - sxy * (sx3 * n - sx * sx2) + sy * (sx3 * sx - sx2 * sx2)
                         detB = sx4 * (sxy * n - sy * sx) - sx3 * (sx2y * n - sy * sx2) + sx2 * (sx2y * sx - sxy * sx2)
@@ -216,32 +216,32 @@ class GlucoseStatusProviderImpl @Inject constructor(
                         var sSquares = 0.0
                         var sResidualSquares = 0.0
                         for (j in 0..i) {
-                                val before = data[j]
-                                sSquares += (before.recalculated / scaleBg - yMean).pow(2.0)
-                                val deltaT: Double = (before.timestamp - time0) / 1000.0 / scaleTime
-                                val bgj: Double = a * deltaT.pow(2.0) + b * deltaT + c
-                                sResidualSquares += (before.recalculated / scaleBg - bgj).pow(2.0)
-                            }
-                            var rSqu = 0.64
-                            if (sSquares != 0.0) {
-                                rSqu = 1 - sResidualSquares / sSquares
-                            }
-                            if (rSqu >= corrMax) {
-                                corrMax = rSqu
-                                // double delta_t = (then_date - time_0) / 1000;
-                                duraP = -ti * scaleTime / 60.0 // remember we are going backwards in time
-                                val delta5Min = 5 * 60 / scaleTime
-                                deltaPl = -scaleBg * (a * (-delta5Min).pow(2.0) - b * delta5Min)    // 5 minute slope from last fitted bg ending at this bg, i.e. t=0
-                                deltaPn = scaleBg * (a * delta5Min.pow(2.0) + b * delta5Min)    // 5 minute slope to next fitted bg starting from this bg, i.e. t=0
-                                bgAcceleration = 2 * a * scaleBg
-                                a0 = c * scaleBg
-                                a1 = b * scaleBg
-                                a2 = a * scaleBg
-                            }
+                            val before = data[j]
+                            sSquares += (before.recalculated / scaleBg - yMean).pow(2.0)
+                            val deltaT: Double = (before.timestamp - time0) / 1000.0 / scaleTime
+                            val bgj: Double = a * deltaT.pow(2.0) + b * deltaT + c
+                            sResidualSquares += (before.recalculated / scaleBg - bgj).pow(2.0)
+                        }
+                        var rSqu = 0.64
+                        if (sSquares != 0.0) {
+                            rSqu = 1 - sResidualSquares / sSquares
+                        }
+                        if (rSqu >= corrMax) {
+                            corrMax = rSqu
+                            // double delta_t = (then_date - time_0) / 1000;
+                            duraP = -ti * scaleTime / 60.0 // remember we are going backwards in time
+                            val delta5Min = 5 * 60 / scaleTime
+                            deltaPl = -scaleBg * (a * (-delta5Min).pow(2.0) - b * delta5Min)    // 5 minute slope from last fitted bg ending at this bg, i.e. t=0
+                            deltaPn = scaleBg * (a * delta5Min.pow(2.0) + b * delta5Min)    // 5 minute slope to next fitted bg starting from this bg, i.e. t=0
+                            bgAcceleration = 2 * a * scaleBg
+                            a0 = c * scaleBg
+                            a1 = b * scaleBg
+                            a2 = a * scaleBg
                         }
                     }
                 }
             }
+        }
         // End parabola fit
 
         return GlucoseStatus(
@@ -251,7 +251,7 @@ class GlucoseStatusProviderImpl @Inject constructor(
             shortAvgDelta = shortAverageDelta,
             delta = delta,
             longAvgDelta = average(longDeltas),
-            duraISFminutes  = minutesdur.toDouble(),
+            duraISFminutes = minutesdur.toDouble(),
             duraISFaverage = oldavg,
             parabolaMinutes = duraP,
             deltaPl = deltaPl,

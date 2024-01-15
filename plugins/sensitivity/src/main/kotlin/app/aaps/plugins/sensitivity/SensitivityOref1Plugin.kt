@@ -149,6 +149,7 @@ class SensitivityOref1Plugin @Inject constructor(
             deviationsHour[i] = deviations
         }
         var hourUsed = 0
+        val sens = profile.getIsfMgdl(toTime, "SensitivityOref1Plugin")
         while (hourUsed < deviationsHour.size) {
             val deviationsArray: ArrayList<Double> = deviationsHour[hourUsed]
             val pastSensitivity = pastSensitivityArray[hourUsed]
@@ -156,7 +157,6 @@ class SensitivityOref1Plugin @Inject constructor(
             if (hourUsed == 1) sensResult = "(24 hours) "
             val ratioLimit = ""
             val deviations: Array<Double> = Array(deviationsArray.size) { i -> deviationsArray[i] }
-            val sens = profile.getIsfMgdl()
             aapsLogger.debug(LTag.AUTOSENS, "Records: $index   $pastSensitivity")
             Arrays.sort(deviations)
             val pSensitive = Percentile.percentile(deviations, 0.50)

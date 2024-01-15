@@ -9,6 +9,7 @@ import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
 import com.google.gson.annotations.Expose
 import java.util.UUID
 
+@Suppress("unused")
 class ProfileElement(ps: EPS, serialNumber: String, dateUtil: DateUtil, profileUtil: ProfileUtil) :
     BaseElement(ps.timestamp, UUID.nameUUIDFromBytes(("AAPS-profile" + ps.timestamp).toByteArray()).toString(), dateUtil) {
 
@@ -44,7 +45,7 @@ class ProfileElement(ps: EPS, serialNumber: String, dateUtil: DateUtil, profileU
 
     init {
         type = "pumpSettings"
-        val profile: Profile = ProfileSealed.EPS(ps)
+        val profile: Profile = ProfileSealed.EPS(value = ps, activePlugin = null)
         // for (br in profile.getBasalValues())
         //     basalSchedules.Normal.add(BasalRate(br.timeAsSeconds * 1000, br.value))
         // for (target in profile.getSingleTargetsMgdl())
@@ -59,7 +60,7 @@ class ProfileElement(ps: EPS, serialNumber: String, dateUtil: DateUtil, profileU
             bgTargets.Normal.add(
                 Target(
                     seconds * 1000,
-                    profileUtil.convertToMgdlDetect((((profile.getTargetLowMgdlTimeFromMidnight(seconds) + profile.getTargetLowMgdlTimeFromMidnight(seconds))) / 2)).toInt()
+                    profileUtil.convertToMgdlDetect(((profile.getTargetLowMgdlTimeFromMidnight(seconds) + profile.getTargetLowMgdlTimeFromMidnight(seconds)) / 2)).toInt()
                 )
             )
             carbRatios.Normal.add(Ratio(seconds * 1000, profile.getIcTimeFromMidnight(seconds).toInt()))

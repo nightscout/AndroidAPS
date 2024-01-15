@@ -109,7 +109,7 @@ class IobCobOrefWorker @Inject internal constructor(
                     continue  // profile not set yet
                 }
                 aapsLogger.debug(LTag.AUTOSENS) { "Processing calculation thread: ${data.reason} ($i/${bucketedData.size})" }
-                val sens = profile.getIsfMgdl(bgTime)
+                val sens = profile.getIsfMgdl(bgTime, "IobCobOrefWorker")
                 val autosensData = instantiator.provideAutosensDataObject()
                 autosensData.time = bgTime
                 if (previous != null) autosensData.activeCarbsList = previous.cloneCarbsList() else autosensData.activeCarbsList = ArrayList()

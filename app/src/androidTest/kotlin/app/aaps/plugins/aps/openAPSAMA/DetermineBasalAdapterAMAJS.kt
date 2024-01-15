@@ -1,12 +1,12 @@
 package app.aaps.plugins.aps.openAPSAMA
 
 import androidx.annotation.VisibleForTesting
-import app.aaps.core.data.iob.GlucoseStatus
 import app.aaps.core.data.iob.IobTotal
-import app.aaps.core.data.iob.MealData
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.DetermineBasalAdapter
+import app.aaps.core.interfaces.aps.GlucoseStatus
+import app.aaps.core.interfaces.aps.MealData
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.logging.AAPSLogger

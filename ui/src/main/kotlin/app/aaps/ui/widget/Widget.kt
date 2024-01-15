@@ -282,7 +282,7 @@ class Widget : AppWidgetProvider() {
         // Show variable sensitivity
         val request = loop.lastRun?.request
         if (request?.variableSens != null) {
-            val isfMgdl = profileFunction.getProfile()?.getIsfMgdl()
+            val isfMgdl = profileFunction.getProfile()?.getIsfMgdl("Widget")
             val variableSens = request.variableSens
             if (variableSens != isfMgdl && variableSens != null && isfMgdl != null) {
                 views.setTextViewText(

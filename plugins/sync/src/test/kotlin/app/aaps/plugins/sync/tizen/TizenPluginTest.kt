@@ -1,13 +1,13 @@
 package app.aaps.plugins.sync.tizen
 
 import app.aaps.core.data.iob.CobInfo
-import app.aaps.core.data.iob.GlucoseStatus
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.iob.IobTotal
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TB
 import app.aaps.core.interfaces.aps.AutosensDataStore
+import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData

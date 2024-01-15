@@ -4,10 +4,12 @@ enum class StringKey(
     override val key: Int,
     val defaultValue: String,
     override val defaultedBySM: Boolean = false,
-    val showInApsMode: Boolean = true,
-    val showInNsClientMode: Boolean = true,
-    val showInPumpControlMode: Boolean = true,
-    val hideParentScreenIfHidden: Boolean = false // PreferenceScreen is final so we cannot extend and modify behavior
+    override val showInApsMode: Boolean = true,
+    override val showInNsClientMode: Boolean = true,
+    override val showInPumpControlMode: Boolean = true,
+    override val dependency: Int = 0,
+    override val negativeDependency: Int = 0,
+    override val hideParentScreenIfHidden: Boolean = false
 ) : PreferenceKey {
 
     GeneralUnits(R.string.key_units, "mg/dl"),

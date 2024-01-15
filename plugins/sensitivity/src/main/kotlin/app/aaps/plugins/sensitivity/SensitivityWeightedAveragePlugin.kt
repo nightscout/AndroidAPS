@@ -128,7 +128,7 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
         if (weights == 0.0) {
             return AutosensResult()
         }
-        val sens = profile.getIsfMgdl()
+        val sens = profile.getIsfMgdl(toTime, "SensitivityWeightedAveragePlugin")
         val ratioLimit = ""
         val sensResult: String
         aapsLogger.debug(LTag.AUTOSENS, "Records: $index   $pastSensitivity")

@@ -1137,7 +1137,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         // Show variable sensitivity
         val profile = profileFunction.getProfile()
         val request = loop.lastRun?.request
-        val isfMgdl = profile?.getIsfMgdl()
+        val isfMgdl = profile?.getIsfMgdl("OverviewFragment")
         val variableSens =
             if (config.APS) request?.variableSens ?: 0.0
             else if (config.NSCLIENT) (processedDeviceStatusData.getAPSResult() as DetermineBasalResult?)?.variableSens ?: 0.0

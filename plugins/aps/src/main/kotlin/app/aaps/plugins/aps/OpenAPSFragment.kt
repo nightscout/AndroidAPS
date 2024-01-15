@@ -1,5 +1,6 @@
 package app.aaps.plugins.aps
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
@@ -24,7 +25,6 @@ import app.aaps.core.utils.HtmlHelper
 import app.aaps.plugins.aps.databinding.OpenapsFragmentBinding
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.events.EventResetOpenAPSGui
-import app.aaps.plugins.aps.utils.JSONFormatter
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -43,7 +43,6 @@ class OpenAPSFragment : DaggerFragment(), MenuProvider {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var jsonFormatter: JSONFormatter
 
     @Suppress("PrivatePropertyName")
     private val ID_MENU_RUN = 503
@@ -124,27 +123,23 @@ class OpenAPSFragment : DaggerFragment(), MenuProvider {
         _binding = null
     }
 
+    @SuppressLint("SetTextI18n")
     @Synchronized
     private fun updateGUI() {
         if (_binding == null) return
         val openAPSPlugin = activePlugin.activeAPS
         openAPSPlugin.lastAPSResult?.let { lastAPSResult ->
-            //binding.result.text = jsonFormatter.format(lastAPSResult.json())
             binding.result.text = lastAPSResult.rawData().dataClassToHtml()
             binding.request.text = lastAPSResult.resultAsSpanned()
             binding.glucosestatus.text = lastAPSResult.glucoseStatus?.dataClassToHtml(listOf("glucose", "delta", "shortAvgDelta", "longAvgDelta"))
             binding.currenttemp.text = lastAPSResult.currentTemp?.dataClassToHtml()
-            binding.iobdata.text = "${rh.gs(R.string.array_of_elements, lastAPSResult.iobData?.size)}\n${lastAPSResult.iob?.dataClassToHtml()}"
-            binding.profile.text = lastAPSResult.profile?.dataClassToHtml()
+            binding.iobdata.text = rh.gs(R.string.array_of_elements, lastAPSResult.iobData?.size) + "\n" + lastAPSResult.iob?.dataClassToHtml()
+            binding.profile.text = lastAPSResult.oapsProfile?.dataClassToHtml()
             binding.mealdata.text = lastAPSResult.mealData?.dataClassToHtml()
             binding.scriptdebugdata.text = lastAPSResult.scriptDebug?.joinToString("\n")
             binding.constraints.text = lastAPSResult.inputConstraints?.getReasons()
-        }
-        if (openAPSPlugin.lastAPSRun != 0L) {
+            binding.autosensdata.text = lastAPSResult.autosensResult?.dataClassToHtml(listOf("ratio", "ratioLimit", "pastSensitivity", "sensResult", "ratioLimit"))
             binding.lastrun.text = dateUtil.dateAndTimeString(openAPSPlugin.lastAPSRun)
-        }
-        openAPSPlugin.lastAutosensResult.let {
-            binding.autosensdata.text = it.dataClassToHtml(listOf("ratio", "ratioLimit", "pastSensitivity", "sensResult", "ratioLimit"))
         }
         binding.swipeRefresh.isRefreshing = false
     }

@@ -1,15 +1,17 @@
 package app.aaps.core.objects.aps
 
 import android.text.Spanned
-import app.aaps.core.data.iob.GlucoseStatus
+import app.aaps.core.data.aps.AutosensResult
 import app.aaps.core.data.iob.IobTotal
-import app.aaps.core.data.iob.MealData
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.CurrentTemp
+import app.aaps.core.interfaces.aps.GlucoseStatus
+import app.aaps.core.interfaces.aps.MealData
+import app.aaps.core.interfaces.aps.OapsAutosensData
 import app.aaps.core.interfaces.aps.OapsProfile
 import app.aaps.core.interfaces.aps.Predictions
 import app.aaps.core.interfaces.aps.RT
@@ -77,11 +79,13 @@ class DetermineBasalResult @Inject constructor(val injector: HasAndroidInjector)
     override var smbConstraint: Constraint<Double>? = null
 
     // Inputs
+    override var autosensResult: AutosensResult? = null
     override var iobData: Array<IobTotal>? = null
     override var glucoseStatus: GlucoseStatus? = null
     override var currentTemp: CurrentTemp? = null
-    override var profile: OapsProfile? = null
+    override var oapsProfile: OapsProfile? = null
     override var mealData: MealData? = null
+    override var autosens: OapsAutosensData? = null
 
     lateinit var result: RT
 

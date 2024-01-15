@@ -132,7 +132,7 @@ class StatusLightHandler @Inject constructor(
             val therapyEvent = persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.CANNULA_CHANGE)
             val usage =
                 if (therapyEvent != null) {
-                    tddCalculator.calculate(therapyEvent.timestamp, dateUtil.now(), allowMissingData = false)?.totalAmount ?: 0.0
+                    tddCalculator.calculateInterval(therapyEvent.timestamp, dateUtil.now(), allowMissingData = false)?.totalAmount ?: 0.0
                 } else 0.0
             runOnUiThread {
                 view?.text = decimalFormatter.to0Decimal(usage, units)

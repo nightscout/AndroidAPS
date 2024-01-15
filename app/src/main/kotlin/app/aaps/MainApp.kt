@@ -240,6 +240,13 @@ class MainApp : DaggerApplication() {
         if (preferences.get(UnitDoubleKey.OverviewHighMark) == 0.0) preferences.remove(UnitDoubleKey.OverviewHighMark)
         if (preferences.getIfExists(BooleanKey.GeneralSimpleMode) == null)
             preferences.put(BooleanKey.GeneralSimpleMode, !preferences.get(BooleanKey.GeneralSetupWizardProcessed))
+        // Migrate from OpenAPSSMBDynamicISFPlugin
+        if (sp.getBoolean("ConfigBuilder_APS_OpenAPSSMBDynamicISFPlugin_Enabled", false)) {
+            sp.remove("ConfigBuilder_APS_OpenAPSSMBDynamicISFPlugin_Enabled")
+            sp.remove("ConfigBuilder_APS_OpenAPSSMBDynamicISFPlugin_Visible")
+            sp.putBoolean("ConfigBuilder_APS_OpenAPSSMB_Enabled", true)
+            preferences.put(BooleanKey.ApsUseDynamicSensitivity, true)
+        }
     }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {

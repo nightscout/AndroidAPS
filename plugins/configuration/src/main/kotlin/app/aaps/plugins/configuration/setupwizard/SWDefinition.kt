@@ -292,7 +292,7 @@ class SWDefinition @Inject constructor(
             )
             .validator {
                 activePlugin.activeProfileSource.profile?.getDefaultProfile()
-                    ?.let { ProfileSealed.Pure(it).isValid("StartupWizard", activePlugin.activePump, config, rh, rxBus, hardLimits, false).isValid }
+                    ?.let { ProfileSealed.Pure(it, activePlugin).isValid("StartupWizard", activePlugin.activePump, config, rh, rxBus, hardLimits, false).isValid }
                     ?: false
             }
             .visibility { (activePlugin.activeProfileSource as PluginBase).isEnabled() }

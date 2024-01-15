@@ -1,5 +1,8 @@
-package app.aaps.core.data.iob
+package app.aaps.core.interfaces.aps
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class GlucoseStatus(
     val glucose: Double,
     val noise: Double = 0.0,

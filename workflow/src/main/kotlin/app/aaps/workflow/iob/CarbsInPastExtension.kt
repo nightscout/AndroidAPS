@@ -17,7 +17,7 @@ fun fromCarbs(t: CA, isAAPSOrWeighted: Boolean, profileFunction: ProfileFunction
     val profile = profileFunction.getProfile(t.timestamp)
     if (isAAPSOrWeighted && profile != null) {
         val maxAbsorptionHours = preferences.get(DoubleKey.AbsorptionMaxTime)
-        val sens = profile.getIsfMgdl(t.timestamp)
+        val sens = profile.getIsfMgdl(t.timestamp, "fromCarbs")
         val ic = profile.getIc(t.timestamp)
         min5minCarbImpact = t.amount / (maxAbsorptionHours * 60 / 5) * sens / ic
         aapsLogger.debug(
