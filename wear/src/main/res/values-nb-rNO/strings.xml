@@ -8,7 +8,7 @@
     <string name="label_watchface_circle">AAPS (sirkel)</string>
     <string name="label_watchface_digital_style">AAPS(Digitalstil)</string>
     <string name="label_watchface_custom">AAPS(Tilpasset)</string>
-    <string name="label_actions_tile">AAPS(Actions)</string>
+    <string name="label_actions_tile">AAPS(Handlinger)</string>
     <string name="label_temp_target_tile">AAPS(Midl. Mål)</string>
     <string name="label_quick_wizard_tile">AAPS(Hurtigknapp)</string>
     <string name="label_warning_sync">Ingen data!</string>
