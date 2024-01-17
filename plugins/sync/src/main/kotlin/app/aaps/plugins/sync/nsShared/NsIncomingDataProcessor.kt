@@ -88,6 +88,8 @@ class NsIncomingDataProcessor @Inject constructor(
      */
     @Suppress("SpellCheckingInspection")
     fun processSgvs(sgvs: Any): Boolean {
+        // Objective0
+        sp.putBoolean(app.aaps.core.utils.R.string.key_objectives_bg_is_available_in_ns, true)
 
         if (!nsClientSource.isEnabled() && !sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_cgm, false)) return false
 

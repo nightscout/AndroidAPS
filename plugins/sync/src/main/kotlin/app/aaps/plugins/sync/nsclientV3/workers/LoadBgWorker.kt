@@ -61,8 +61,6 @@ class LoadBgWorker(
                     if (sgvs.isNotEmpty()) {
                         val action = if (isFirstLoad) "RCV-F" else "RCV"
                         rxBus.send(EventNSClientNewLog("◄ $action", "${sgvs.size} SVGs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
-                        // Objective0
-                        sp.putBoolean(app.aaps.core.utils.R.string.key_objectives_bg_is_available_in_ns, true)
                         // Schedule processing of fetched data and continue of loading
                         continueLoading = response.code != 304 && nsIncomingDataProcessor.processSgvs(sgvs)
                     } else {
