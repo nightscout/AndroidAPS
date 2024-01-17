@@ -205,4 +205,12 @@
     <string name="error">!feil!</string>
     <string name="pref_heartRateSampling">Puls</string>
     <string name="pref_stepsSampling">Aktiver antall skritt</string>
+    <string name="tile_tempt_1">Midlertidig mål 1</string>
+    <string name="tile_tempt_2">Midlertidig mål 2</string>
+    <string name="tile_tempt_3">Midlertidig mål 3</string>
+    <string name="tile_tempt_4">Midlertidig mål 4</string>
+    <string name="tile_action_1">Handling 1</string>
+    <string name="tile_action_2">Handling 2</string>
+    <string name="tile_action_3">Handling 3</string>
+    <string name="tile_action_4">Handling 4</string>
 </resources>
