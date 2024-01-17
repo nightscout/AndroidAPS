@@ -8,7 +8,7 @@
     <string name="omnipod_eros_preferences_category_notifications">Varsler</string>
     <string name="omnipod_eros_preferences_pulse_log_button_enabled">Vis Pulslogg knappen i Pod menyen</string>
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Vis RileyLink status knapp i Pod menyen</string>
-    <string name="omnipod_eros_preferences_battery_change_logging_enabled">Aktiver logging av batteribytte i Aksjoner</string>
+    <string name="omnipod_eros_preferences_battery_change_logging_enabled">Aktiver logging av batteribytte i Handlinger</string>
     <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
     <string name="omnipod_eros_preferences_notification_uncertain_tbr_sound_enabled">Lydvarsel for usikre TBR er aktivert</string>
     <string name="omnipod_eros_preferences_notification_uncertain_smb_sound_enabled">Lydvarsel for usikre SMB er aktivert</string>
