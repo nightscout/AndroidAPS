@@ -263,4 +263,12 @@
     <string name="pref_heartRateSampling">Heart Rate</string>
     <string name="key_steps_sampling" translatable="false">key_steps_sampling</string>
     <string name="pref_stepsSampling">Enable Steps Count</string>
+    <string name="tile_tempt_1">Temp Target 1</string>
+    <string name="tile_tempt_2">Temp Target 2</string>
+    <string name="tile_tempt_3">Temp Target 3</string>
+    <string name="tile_tempt_4">Temp Target 4</string>
+    <string name="tile_action_1">Action 1</string>
+    <string name="tile_action_2">Action 2</string>
+    <string name="tile_action_3">Action 3</string>
+    <string name="tile_action_4">Action 4</string>
 </resources>
