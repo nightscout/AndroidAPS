@@ -1,6 +1,6 @@
 package app.aaps.plugins.aps.autotune
 
-import app.aaps.core.data.iob.IobTotal
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
 import app.aaps.core.data.model.GV

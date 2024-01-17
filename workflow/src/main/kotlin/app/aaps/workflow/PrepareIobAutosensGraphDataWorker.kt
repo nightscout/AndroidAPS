@@ -8,7 +8,7 @@ import androidx.work.workDataOf
 import app.aaps.core.data.aps.AutosensData
 import app.aaps.core.data.aps.AutosensResult
 import app.aaps.core.data.aps.SMBDefaults
-import app.aaps.core.data.iob.IobTotal
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.graph.data.BarGraphSeries
 import app.aaps.core.graph.data.DataPointWithLabelInterface
 import app.aaps.core.graph.data.DeviationDataPoint

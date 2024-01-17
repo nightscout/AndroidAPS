@@ -1,6 +1,6 @@
 package app.aaps.implementation.wizard
 
-import app.aaps.core.data.iob.IobTotal
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.Loop
@@ -50,7 +50,7 @@ class BolusWizardTest : TestBaseWithProfile() {
         val profile = Mockito.mock(Profile::class.java)
         Mockito.`when`(profile.getTargetLowMgdl()).thenReturn(targetLow)
         Mockito.`when`(profile.getTargetLowMgdl()).thenReturn(targetHigh)
-        Mockito.`when`(profile.getIsfMgdl()).thenReturn(insulinSensitivityFactor)
+        Mockito.`when`(profile.getIsfMgdl("test")).thenReturn(insulinSensitivityFactor)
         Mockito.`when`(profile.getIc()).thenReturn(insulinToCarbRatio)
 
         Mockito.`when`(iobCobCalculator.calculateIobFromBolus()).thenReturn(IobTotal(System.currentTimeMillis()))

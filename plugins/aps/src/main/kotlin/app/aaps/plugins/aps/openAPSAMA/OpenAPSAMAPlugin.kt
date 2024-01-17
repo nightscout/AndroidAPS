@@ -6,6 +6,7 @@ import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.APS
+import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.CurrentTemp
 import app.aaps.core.interfaces.aps.OapsAutosensData
 import app.aaps.core.interfaces.aps.OapsProfile
@@ -234,7 +235,7 @@ class OpenAPSAMAPlugin @Inject constructor(
             meal_data = mealData,
             currentTime = now
         ).also {
-            val determineBasalResult = DetermineBasalResult(injector, it)
+            val determineBasalResult = DetermineBasalResult(injector, it, APSResult.Algorithm.AMA)
             // Preserve input data
             determineBasalResult.inputConstraints = inputConstraints
             determineBasalResult.autosensResult = autosensResult
@@ -243,6 +244,7 @@ class OpenAPSAMAPlugin @Inject constructor(
             determineBasalResult.currentTemp = currentTemp
             determineBasalResult.oapsProfile = oapsProfile
             determineBasalResult.mealData = mealData
+            determineBasalResult.oapsAutosensData = autosensData
             lastAPSResult = determineBasalResult
             lastAPSRun = now
             aapsLogger.debug(LTag.APS, "Result: $it")

@@ -1,6 +1,9 @@
-package app.aaps.core.data.iob
+package app.aaps.core.interfaces.aps
+
+import kotlinx.serialization.Serializable
 
 @Suppress("SpellCheckingInspection")
+@Serializable
 data class IobTotal(
     val time: Long,
     var iob: Double = 0.0,

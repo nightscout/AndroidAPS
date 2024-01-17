@@ -2,7 +2,7 @@ package app.aaps.plugins.aps.openAPSSMBDynamicISF
 
 import androidx.annotation.VisibleForTesting
 import app.aaps.core.data.aps.SMBDefaults
-import app.aaps.core.data.iob.IobTotal
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.aps.DetermineBasalAdapter
 import app.aaps.core.interfaces.aps.GlucoseStatus
@@ -233,7 +233,7 @@ class DetermineBasalAdapterSMBDynamicISFJS(private val scriptReader: ScriptReade
         this.profile.put("max_bg", maxBg)
         this.profile.put("target_bg", targetBg)
         this.profile.put("carb_ratio", profile.getIc())
-        this.profile.put("sens", profile.getIsfMgdl())
+        this.profile.put("sens", profile.getIsfMgdl("DetermineBasalAdapterDynamicISFJS"))
         this.profile.put("max_daily_safety_multiplier", preferences.get(DoubleKey.ApsMaxDailyMultiplier))
         this.profile.put("current_basal_safety_multiplier", preferences.get(DoubleKey.ApsMaxCurrentBasalMultiplier))
         this.profile.put("lgsThreshold", profileUtil.convertToMgdlDetect(preferences.get(UnitDoubleKey.ApsLgsThreshold)))

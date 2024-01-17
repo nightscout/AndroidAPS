@@ -6,7 +6,7 @@ import app.aaps.core.data.aps.AutosensResult
 import app.aaps.core.data.aps.BasalData
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.iob.CobInfo
-import app.aaps.core.data.iob.IobTotal
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.plugin.PluginDescription

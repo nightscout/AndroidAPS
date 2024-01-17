@@ -1,7 +1,8 @@
 package app.aaps.plugins.aps.openAPS
 
 import android.text.Spanned
-import app.aaps.core.data.iob.IobTotal
+import app.aaps.core.data.aps.AutosensResult
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
@@ -10,6 +11,7 @@ import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.CurrentTemp
 import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.aps.MealData
+import app.aaps.core.interfaces.aps.OapsAutosensData
 import app.aaps.core.interfaces.aps.OapsProfile
 import app.aaps.core.interfaces.aps.Predictions
 import app.aaps.core.interfaces.constraints.Constraint
@@ -75,12 +77,16 @@ open class APSResultObject(protected val injector: HasAndroidInjector) : APSResu
     override var smbConstraint: Constraint<Double>? = null
 
     // Added only to compile
+    override var algorithm: APSResult.Algorithm = APSResult.Algorithm.UNKNOWN
     override var scriptDebug: List<String>? = null
     override var iobData: Array<IobTotal>? = null
     override var glucoseStatus: GlucoseStatus? = null
     override var currentTemp: CurrentTemp? = null
-    override var profile: OapsProfile? = null
+    override var oapsProfile: OapsProfile? = null
     override var mealData: MealData? = null
+    override var oapsAutosensData: OapsAutosensData? = null
+    override var autosensResult: AutosensResult? = null
+
     override fun predictions(): Predictions? = null
     override fun rawData(): Any = Object()
 

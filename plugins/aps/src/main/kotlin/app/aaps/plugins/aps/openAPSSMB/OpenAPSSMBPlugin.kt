@@ -11,6 +11,7 @@ import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.APS
+import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.CurrentTemp
 import app.aaps.core.interfaces.aps.OapsAutosensData
 import app.aaps.core.interfaces.aps.OapsProfile
@@ -148,9 +149,16 @@ open class OpenAPSSMBPlugin @Inject constructor(
         preferenceFragment.findPreference<SwitchPreference>(rh.gs(app.aaps.core.keys.R.string.key_openaps_enable_smb_after_carbs))?.isVisible = !smbAlwaysEnabled || !advancedFiltering
     }
 
-    val dynIsfCache = LongSparseArray<Double>()
+    private val dynIsfCache = LongSparseArray<Double>()
     private fun calculateVariableIsf(timestamp: Long, caller: String): Double? {
-        // TODO: replace by reading from DB APSResults
+        if (!preferences.get(BooleanKey.ApsUseDynamicSensitivity)) return null
+
+        val result = persistenceLayer.getApsResultCloseTo(timestamp)
+        if (result?.variableSens != null) {
+            aapsLogger.debug("calculateVariableIsf $caller DB  ${dateUtil.dateAndTimeAndSecondsString(timestamp)} ${result.variableSens}")
+            return result.variableSens
+        }
+
         // Round down to 30 min and use it as a key for caching
         val key = timestamp - timestamp % T.mins(30).msecs()
         val cached = dynIsfCache[key]
@@ -159,7 +167,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
             return cached
         }
 
-        if (!preferences.get(BooleanKey.ApsUseDynamicSensitivity)) return null
+        // no cached result found, let's calculate the value
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData ?: return null
         val tdd1D = tddCalculator.averageTDD(tddCalculator.calculate(timestamp, 1, allowMissingDays = false))?.totalAmount ?: return null
         val tdd7D = tddCalculator.averageTDD(tddCalculator.calculate(timestamp, 7, allowMissingDays = false))?.totalAmount ?: return null
@@ -378,7 +386,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
             flatBGsDetected = flatBGsDetected,
             dynIsfMode = dynIsfMode
         ).also {
-            val determineBasalResult = DetermineBasalResult(injector, it)
+            val determineBasalResult = DetermineBasalResult(injector, it, APSResult.Algorithm.SMB)
             // Preserve input data
             determineBasalResult.inputConstraints = inputConstraints
             determineBasalResult.autosensResult = autosensResult
@@ -387,6 +395,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
             determineBasalResult.currentTemp = currentTemp
             determineBasalResult.oapsProfile = oapsProfile
             determineBasalResult.mealData = mealData
+            determineBasalResult.oapsAutosensData = autosensData
             lastAPSResult = determineBasalResult
             lastAPSRun = now
             aapsLogger.debug(LTag.APS, "Result: $it")

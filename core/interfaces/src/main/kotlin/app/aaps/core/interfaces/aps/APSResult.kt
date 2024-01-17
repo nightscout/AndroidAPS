@@ -2,7 +2,6 @@ package app.aaps.core.interfaces.aps
 
 import android.text.Spanned
 import app.aaps.core.data.aps.AutosensResult
-import app.aaps.core.data.iob.IobTotal
 import app.aaps.core.data.model.GV
 import app.aaps.core.interfaces.constraints.Constraint
 import org.json.JSONObject
@@ -39,13 +38,14 @@ interface APSResult {
     var smbConstraint: Constraint<Double>?
 
     // Inputs
+    var algorithm: Algorithm
     var autosensResult: AutosensResult?
     var iobData: Array<IobTotal>?
     var glucoseStatus: GlucoseStatus?
     var currentTemp: CurrentTemp?
     var oapsProfile: OapsProfile?
     var mealData: MealData?
-    var autosens: OapsAutosensData?
+    var oapsAutosensData: OapsAutosensData?
 
     val iob: IobTotal? get() = iobData?.get(0)
 
@@ -55,4 +55,11 @@ interface APSResult {
     fun json(): JSONObject?
     fun predictions(): Predictions?
     fun rawData(): Any
+
+    enum class Algorithm {
+        UNKNOWN,
+        AMA,
+        SMB,
+        AUTO_ISF
+    }
 }

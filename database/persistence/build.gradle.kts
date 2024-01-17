@@ -13,4 +13,5 @@ dependencies {
     implementation(project(":core:data"))
     implementation(project(":core:interfaces"))
     implementation(project(":database:impl"))
+    implementation(project(":core:objects"))
 }

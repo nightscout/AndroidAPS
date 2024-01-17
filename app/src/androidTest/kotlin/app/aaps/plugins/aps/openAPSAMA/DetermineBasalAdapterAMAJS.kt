@@ -1,7 +1,7 @@
 package app.aaps.plugins.aps.openAPSAMA
 
 import androidx.annotation.VisibleForTesting
-import app.aaps.core.data.iob.IobTotal
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.DetermineBasalAdapter
@@ -193,7 +193,7 @@ class DetermineBasalAdapterAMAJS(private val scriptReader: ScriptReader, private
         this.profile.put("max_bg", maxBg)
         this.profile.put("target_bg", targetBg)
         this.profile.put("carb_ratio", profile.getIc())
-        this.profile.put("sens", profile.getIsfMgdl())
+        this.profile.put("sens", profile.getIsfMgdl("DetermineBasalAdapterAMAJS"))
         this.profile.put("max_daily_safety_multiplier", preferences.get(DoubleKey.ApsMaxDailyMultiplier))
         this.profile.put("current_basal_safety_multiplier", preferences.get(DoubleKey.ApsMaxCurrentBasalMultiplier))
         this.profile.put("skip_neutral_temps", true)

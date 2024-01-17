@@ -1,6 +1,7 @@
 package app.aaps.database.impl
 
 import app.aaps.database.ValueWrapper
+import app.aaps.database.entities.APSResult
 import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.BolusCalculatorResult
 import app.aaps.database.entities.Carbs
@@ -80,6 +81,7 @@ class AppRepository @Inject internal constructor(
     fun cleanupDatabase(keepDays: Long, deleteTrackedChanges: Boolean): String {
         val than = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(keepDays)
         val removed = mutableListOf<Pair<String, Int>>()
+        removed.add(Pair("APSResult", database.apsResultDao.deleteOlderThan(than)))
         removed.add(Pair("GlucoseValue", database.glucoseValueDao.deleteOlderThan(than)))
         removed.add(Pair("TherapyEvent", database.therapyEventDao.deleteOlderThan(than)))
         removed.add(Pair("TemporaryBasal", database.temporaryBasalDao.deleteOlderThan(than)))
@@ -104,6 +106,7 @@ class AppRepository @Inject internal constructor(
         removed.add(Pair("StepsCount", database.stepsCountDao.deleteOlderThan(than)))
 
         if (deleteTrackedChanges) {
+            removed.add(Pair("CHANGES APSResult", database.apsResultDao.deleteTrackedChanges()))
             removed.add(Pair("CHANGES GlucoseValue", database.glucoseValueDao.deleteTrackedChanges()))
             removed.add(Pair("CHANGES TherapyEvent", database.therapyEventDao.deleteTrackedChanges()))
             removed.add(Pair("CHANGES TemporaryBasal", database.temporaryBasalDao.deleteTrackedChanges()))
@@ -788,6 +791,10 @@ class AppRepository @Inject internal constructor(
         heartRates = database.heartRateDao.getNewEntriesSince(since, until, limit, offset),
         stepsCount = database.stepsCountDao.getNewEntriesSince(since, until, limit, offset),
     )
+
+    fun getApsResultCloseTo(timestamp: Long): Maybe<APSResult> =
+        database.apsResultDao.getApsResult(timestamp - 5*60*1000, timestamp)
+            .subscribeOn(Schedulers.io())
 
 }
 

@@ -1,7 +1,7 @@
 package app.aaps.plugins.sync.garmin
 
 import app.aaps.core.data.iob.CobInfo
-import app.aaps.core.data.iob.IobTotal
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.GlucoseUnit

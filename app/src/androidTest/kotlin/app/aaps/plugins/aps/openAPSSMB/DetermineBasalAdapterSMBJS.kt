@@ -2,7 +2,7 @@ package app.aaps.plugins.aps.openAPSSMB
 
 import androidx.annotation.VisibleForTesting
 import app.aaps.core.data.aps.SMBDefaults
-import app.aaps.core.data.iob.IobTotal
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.DetermineBasalAdapter
