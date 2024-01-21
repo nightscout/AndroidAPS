@@ -39,7 +39,6 @@ class MedtrumPrimingFragment : MedtrumBaseFragment<FragmentMedtrumPrimingBinding
                         MedtrumViewModel.SetupStep.PRIMED  -> moveStep(PatchStep.PRIME_COMPLETE)
 
                         MedtrumViewModel.SetupStep.ERROR   -> {
-                            moveStep(PatchStep.ERROR)
                             updateSetupStep(MedtrumViewModel.SetupStep.FILLED) // Reset setup step
                             binding.textWaitForPriming.text = rh.gs(R.string.priming_error)
                             binding.btnNegative.visibility = View.VISIBLE
