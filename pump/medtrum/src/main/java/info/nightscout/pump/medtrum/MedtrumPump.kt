@@ -569,7 +569,7 @@ class MedtrumPump @Inject constructor(
             AlarmState.EXPIRED              -> R.string.alarm_expired
             AlarmState.RESERVOIR_EMPTY      -> R.string.alarm_reservoir_empty
             AlarmState.PATCH_FAULT          -> R.string.alarm_patch_fault
-            AlarmState.PATCH_FAULT2         -> R.string.alarm_patch_fault2
+            AlarmState.PATCH_FAULT2         -> R.string.alarm_patch_fault // To avoid confusion, medtrum app also doesn't show patch fault 2
             AlarmState.BASE_FAULT           -> R.string.alarm_base_fault
             AlarmState.BATTERY_OUT          -> R.string.alarm_battery_out
             AlarmState.NO_CALIBRATION       -> R.string.alarm_no_calibration
