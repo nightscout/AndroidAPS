@@ -214,7 +214,7 @@
     <string name="tile_action_3">Handling 3</string>
     <string name="tile_action_4">Handling 4</string>
     <string name="datalayer_notification_title">Forgrunnstjeneste for datalag</string>
-    <string name="datalayer_notification_text">AAPS kjører i forgrunnen. For å skjule dette varslet gå til Utviklerinnstillinger, App-varsler, Tillate klokkeapper, velg AAPS, slå av \"Data Layer Foreground Service Channel\"-varslet.</string>
+    <string name="datalayer_notification_text">AAPS kjører i forgrunnen. For å skjule dette varslet gå til Utvikleralternativer, Appvarsler, Tillatte klokkeapper, velg AAPS, slå av \"Data Layer Foreground Service Channel\"-varslet.</string>
     <string name="on">PÅ</string>
     <string name="off">AV</string>
 </resources>
