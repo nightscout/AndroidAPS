@@ -14,6 +14,7 @@ interface OverviewMenus {
         DEV,
         BGI,
         SEN,
+        VAR_SEN,
         ACT,
         DEVSLOPE,
         HR,

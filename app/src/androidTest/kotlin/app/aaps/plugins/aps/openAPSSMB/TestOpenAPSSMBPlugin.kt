@@ -94,7 +94,7 @@ open class TestOpenAPSSMBPlugin @Inject constructor(
     override var lastAPSResult: DetermineBasalResultSMBFromJS? = null
 
     //override var lastDetermineBasalAdapter: DetermineBasalAdapter? = null
-    override var lastAutosensResult = AutosensResult()
+    private var lastAutosensResult = AutosensResult()
 
     override fun specialEnableCondition(): Boolean {
         return try {
@@ -202,7 +202,7 @@ open class TestOpenAPSSMBPlugin @Inject constructor(
                 hardLimits.maxIC()
             )
         ) return
-        if (!hardLimits.checkHardLimits(profile.getIsfMgdl(), app.aaps.core.ui.R.string.profile_sensitivity_value, HardLimits.MIN_ISF, HardLimits.MAX_ISF)) return
+        if (!hardLimits.checkHardLimits(profile.getIsfMgdl("test"), app.aaps.core.ui.R.string.profile_sensitivity_value, HardLimits.MIN_ISF, HardLimits.MAX_ISF)) return
         if (!hardLimits.checkHardLimits(profile.getMaxDailyBasal(), app.aaps.core.ui.R.string.profile_max_daily_basal_value, 0.02, hardLimits.maxBasal())) return
         if (!hardLimits.checkHardLimits(pump.baseBasalRate, app.aaps.core.ui.R.string.current_basal_value, 0.01, hardLimits.maxBasal())) return
         startPart = System.currentTimeMillis()

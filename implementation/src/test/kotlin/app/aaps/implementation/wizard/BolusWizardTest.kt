@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.invocation.InvocationOnMock
+import org.mockito.kotlin.any
 
 class BolusWizardTest : TestBaseWithProfile() {
 
@@ -50,7 +51,7 @@ class BolusWizardTest : TestBaseWithProfile() {
         val profile = Mockito.mock(Profile::class.java)
         Mockito.`when`(profile.getTargetLowMgdl()).thenReturn(targetLow)
         Mockito.`when`(profile.getTargetLowMgdl()).thenReturn(targetHigh)
-        Mockito.`when`(profile.getIsfMgdl("test")).thenReturn(insulinSensitivityFactor)
+        Mockito.`when`(profile.getIsfMgdl(any())).thenReturn(insulinSensitivityFactor)
         Mockito.`when`(profile.getIc()).thenReturn(insulinToCarbRatio)
 
         Mockito.`when`(iobCobCalculator.calculateIobFromBolus()).thenReturn(IobTotal(System.currentTimeMillis()))
