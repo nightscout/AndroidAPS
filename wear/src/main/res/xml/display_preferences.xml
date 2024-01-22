@@ -4,11 +4,11 @@
 
     <CheckBoxPreference
         android:defaultValue="true"
-        android:key="@string/key_show_cob"
+        android:key="@string/key_show_bg"
         android:summary="Show BG."
+        android:title="@string/pref_show_bg"
         android:summaryOn="@string/on"
         android:summaryOff="@string/off"
-        android:title="@string/pref_show_cob"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
 
