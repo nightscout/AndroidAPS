@@ -271,4 +271,6 @@
     <string name="tile_action_2">Action 2</string>
     <string name="tile_action_3">Action 3</string>
     <string name="tile_action_4">Action 4</string>
+    <string name="on">ON</string>
+    <string name="off">OFF</string>
 </resources>
