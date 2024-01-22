@@ -213,4 +213,8 @@
     <string name="tile_action_2">Azione 2</string>
     <string name="tile_action_3">Azione 3</string>
     <string name="tile_action_4">Azione 4</string>
+    <string name="datalayer_notification_title">Data Layer Foreground Service</string>
+    <string name="datalayer_notification_text">AAPS è in esecuzione in primo piano. Per nascondere le notifiche vai alle opzioni Sviluppatore, notifiche app, app ammesse, seleziona AAPS, Disattiva Data Layer Foreground Service.</string>
+    <string name="on">ON</string>
+    <string name="off">OFF</string>
 </resources>
