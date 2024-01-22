@@ -6,6 +6,8 @@
         android:defaultValue="true"
         android:key="@string/key_show_graph_carbs"
         android:summary="Show Carbs point in graphs"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_show_cob"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
@@ -14,6 +16,8 @@
         android:defaultValue="true"
         android:key="@string/key_show_graph_bolus"
         android:summary="show bolus and SMB"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_show_bolus"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
@@ -22,6 +26,8 @@
         android:defaultValue="true"
         android:key="@string/key_show_graph_temp_basal"
         android:summary="show basal rates"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_show_temp_basal"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
@@ -30,6 +36,8 @@
         android:defaultValue="true"
         android:key="@string/key_show_graph_basal"
         android:summary="show basal rates"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_show_basal_rate"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
@@ -38,6 +46,8 @@
         android:defaultValue="false"
         android:key="@string/key_highlight_basals"
         android:summary="Better visible basal rate and temp basals"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_highlight_basals"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
@@ -46,6 +56,8 @@
         android:defaultValue="true"
         android:key="@string/key_prediction_lines"
         android:summary="show prediction lines"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_prediction_lines"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
@@ -54,6 +66,8 @@
         android:defaultValue="true"
         android:key="@string/key_show_graph_grid"
         android:summary="show prediction lines"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_show_grid"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />

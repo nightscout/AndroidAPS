@@ -61,14 +61,6 @@ class AdaptiveDoublePreference(ctx: Context, attrs: AttributeSet?) : EditTextPre
         holder.isDividerAllowedBelow = false
     }
 
-    fun setMinNumber(min: Double) {
-        this.validatorParameters.floatminNumber = min.toFloat()
-    }
-
-    fun setMaxNumber(max: Int) {
-        this.validatorParameters.floatmaxNumber = max.toFloat()
-    }
-
     private fun obtainValidatorParameters(attrs: AttributeSet?): DefaultEditTextValidator.Parameters {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.FormEditText, 0, 0)
         return DefaultEditTextValidator.Parameters(
