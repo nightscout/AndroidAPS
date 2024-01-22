@@ -6,6 +6,9 @@ import info.nightscout.pump.medtrum.encryption.Crypt
 class MedtrumSnUtil {
 
     fun getDeviceTypeFromSerial(serial: Long): ModelType {
+        if (serial in 106000000..106999999) {
+            return ModelType.INVALID
+        }
 
         return when (Crypt().simpleDecrypt(serial)) {
             in 126000000..126999999 -> ModelType.MD0201
