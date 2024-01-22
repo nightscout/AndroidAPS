@@ -244,6 +244,9 @@ class MainApp : DaggerApplication() {
         if (preferences.get(UnitDoubleKey.OverviewHighMark) == 0.0) preferences.remove(UnitDoubleKey.OverviewHighMark)
         if (preferences.getIfExists(BooleanKey.GeneralSimpleMode) == null)
             preferences.put(BooleanKey.GeneralSimpleMode, !preferences.get(BooleanKey.GeneralSetupWizardProcessed))
+        // convert Double to Int
+        if (preferences.getIfExists(IntKey.ApsDynIsfAdjustmentFactor) != null)
+            preferences.put(IntKey.ApsDynIsfAdjustmentFactor, preferences.get(IntKey.ApsDynIsfAdjustmentFactor))
     }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
