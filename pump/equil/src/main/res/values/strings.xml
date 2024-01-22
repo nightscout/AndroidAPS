@@ -210,5 +210,6 @@
 
     <string name="equil_maxbolus_tips">Max allowed bolus in pump [%1$sU]</string>
     <string name="equil_replace_reservoir">The reservoir is empty. Please replace the reservoir</string>
-
+    <string name="sixhexanumber" translatable="false">^[A-F0-9]{6}$</string>
+    <string name="error_mustbe6hexadidits">Must be 6 characters of ABCDEF0123456789</string>
 </resources>
