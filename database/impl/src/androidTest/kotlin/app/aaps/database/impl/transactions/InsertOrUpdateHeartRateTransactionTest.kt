@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import app.aaps.database.entities.HeartRate
 import app.aaps.database.impl.AppDatabase
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.HeartRateDaoTest
@@ -53,5 +54,13 @@ class InsertOrUpdateHeartRateTransactionTest {
 
         val hr3 = db.heartRateDao.findById(id)!!
         assertTrue(hr2.contentEqualsTo(hr3))
+    }
+
+    private fun HeartRate.contentEqualsTo(other: HeartRate): Boolean {
+        return this === other || (
+            duration == other.duration &&
+                timestamp == other.timestamp &&
+                beatsPerMinute == other.beatsPerMinute &&
+                isValid == other.isValid)
     }
 }
