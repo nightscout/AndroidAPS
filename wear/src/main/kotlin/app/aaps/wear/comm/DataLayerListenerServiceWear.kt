@@ -69,6 +69,7 @@ class DataLayerListenerServiceWear : WearableListenerService() {
     override fun onCreate() {
         AndroidInjection.inject(this)
         super.onCreate()
+        startForegroundService()
         handler.post { updateTranscriptionCapability() }
         disposable += rxBus
             .toObservable(EventWearToMobile::class.java)
@@ -144,17 +145,6 @@ class DataLayerListenerServiceWear : WearableListenerService() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        createNotificationChannel()
-        val notificationIntent = Intent(this, ConfigurationActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
-        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Data Layer Foreground Service")
-            .setContentText(null)
-            .setSmallIcon(R.drawable.ic_icon)
-            .setContentIntent(pendingIntent)
-            .build()
-        startForeground(FOREGROUND_NOTIF_ID, notification)
-
         when (intent?.action) {
 
             INTENT_CANCEL_BOLUS        -> {
@@ -170,10 +160,28 @@ class DataLayerListenerServiceWear : WearableListenerService() {
         return START_STICKY
     }
 
+    private fun startForegroundService() {
+        createNotificationChannel()
+        val notificationIntent = Intent(this, ConfigurationActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
+        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setContentTitle(getString(R.string.datalayer_notification_title))
+            .setContentText(getString(R.string.datalayer_notification_text))
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setSmallIcon(R.drawable.ic_icon)
+            .setContentIntent(pendingIntent)
+            .build()
+        startForeground(FOREGROUND_NOTIF_ID, notification)
+    }
+
     @Suppress("PrivatePropertyName")
     private val CHANNEL_ID: String = "DataLayerForegroundServiceChannel"
     private fun createNotificationChannel() {
-        val serviceChannel = NotificationChannel(CHANNEL_ID, "Data Layer Foreground Service Channel", NotificationManager.IMPORTANCE_DEFAULT)
+        val serviceChannel = NotificationChannel(CHANNEL_ID, "Data Layer Foreground Service Channel", NotificationManager.IMPORTANCE_LOW)
+        serviceChannel.setShowBadge(false)
+        serviceChannel.enableLights(false)
+        serviceChannel.enableVibration(false)
+        serviceChannel.setSound(null, null)
         val manager = getSystemService(NotificationManager::class.java)
         manager.createNotificationChannel(serviceChannel)
     }
