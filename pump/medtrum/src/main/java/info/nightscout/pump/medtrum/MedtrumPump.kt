@@ -18,6 +18,7 @@ import info.nightscout.pump.medtrum.comm.enums.AlarmSetting
 import info.nightscout.pump.medtrum.comm.enums.AlarmState
 import info.nightscout.pump.medtrum.comm.enums.BasalType
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
+import info.nightscout.pump.medtrum.comm.enums.ModelType
 import info.nightscout.pump.medtrum.extension.toByteArray
 import info.nightscout.pump.medtrum.extension.toInt
 import info.nightscout.pump.medtrum.util.MedtrumSnUtil
@@ -291,13 +292,13 @@ class MedtrumPump @Inject constructor(
     var desiredPumpWarning = true
     var desiredPumpWarningExpiryThresholdHours = 72L
 
-    fun pumpType(): PumpType = pumpType(deviceType)
+    fun pumpType(): PumpType = pumpType(ModelType.fromValue(deviceType))
 
-    fun pumpType(type: Int): PumpType =
+    fun pumpType(type: ModelType): PumpType =
         when (type) {
-            MedtrumSnUtil.MD_0201, MedtrumSnUtil.MD_8201 -> PumpType.MEDTRUM_NANO
-            MedtrumSnUtil.MD_8301                        -> PumpType.MEDTRUM_300U
-            else                                         -> PumpType.MEDTRUM_UNTESTED
+            ModelType.MD0201, ModelType.MD8201 -> PumpType.MEDTRUM_NANO
+            ModelType.MD8301                   -> PumpType.MEDTRUM_300U
+            else                               -> PumpType.MEDTRUM_UNTESTED
         }
 
     fun loadVarsFromSP() {
@@ -569,7 +570,7 @@ class MedtrumPump @Inject constructor(
             AlarmState.EXPIRED              -> R.string.alarm_expired
             AlarmState.RESERVOIR_EMPTY      -> R.string.alarm_reservoir_empty
             AlarmState.PATCH_FAULT          -> R.string.alarm_patch_fault
-            AlarmState.PATCH_FAULT2         -> R.string.alarm_patch_fault2
+            AlarmState.PATCH_FAULT2         -> R.string.alarm_patch_fault // To avoid confusion, medtrum app also doesn't show patch fault 2
             AlarmState.BASE_FAULT           -> R.string.alarm_base_fault
             AlarmState.BATTERY_OUT          -> R.string.alarm_battery_out
             AlarmState.NO_CALIBRATION       -> R.string.alarm_no_calibration

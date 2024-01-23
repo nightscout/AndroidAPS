@@ -77,7 +77,6 @@
     <string name="alarm_expired">Expired</string>
     <string name="alarm_reservoir_empty">Reservoir empty</string>
     <string name="alarm_patch_fault">Patch fault</string>
-    <string name="alarm_patch_fault2">Patch fault 2</string>
     <string name="alarm_base_fault">Base fault</string>
     <string name="alarm_battery_out">Battery out</string>
     <string name="alarm_no_calibration">No calibration</string>
@@ -142,7 +141,7 @@
     <string name="sn_input_title">Serial Number</string>
     <string name="sn_input_summary">Enter the serial number of your pump base.</string>
     <string name="sn_input_invalid">Invalid serial number!</string>
-    <string name="pump_unsupported">Pump untested: %1$d! Please contact us at discord or github for support</string>
+    <string name="pump_unsupported">Pump untested: %1$s! Please contact us at discord or github for support</string>
     <string name="alarm_setting_title">Alarm Settings</string>
     <string name="alarm_setting_summary">Select your preferred pump alarm settings.</string>
     <string name="pump_warning_notification_title">Notification on pump warning</string>

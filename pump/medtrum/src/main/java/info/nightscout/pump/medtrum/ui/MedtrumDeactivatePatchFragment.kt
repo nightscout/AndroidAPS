@@ -38,7 +38,6 @@ class MedtrumDeactivatePatchFragment : MedtrumBaseFragment<FragmentMedtrumDeacti
                         }
 
                         MedtrumViewModel.SetupStep.ERROR   -> {
-                            moveStep(PatchStep.ERROR)
                             updateSetupStep(MedtrumViewModel.SetupStep.START_DEACTIVATION) // Reset setup step
                             binding.textDeactivatingPump.text = rh.gs(R.string.deactivating_error)
                             binding.btnNegative.visibility = View.VISIBLE

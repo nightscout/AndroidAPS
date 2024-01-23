@@ -14,6 +14,7 @@ import info.nightscout.pump.medtrum.R
 import info.nightscout.pump.medtrum.code.ConnectionState
 import info.nightscout.pump.medtrum.code.EventType
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
+import info.nightscout.pump.medtrum.comm.enums.ModelType
 import info.nightscout.pump.medtrum.ui.MedtrumBaseNavigator
 import info.nightscout.pump.medtrum.ui.event.SingleLiveEvent
 import info.nightscout.pump.medtrum.ui.event.UIEvent
@@ -199,7 +200,7 @@ class MedtrumOverviewViewModel @Inject constructor(
 
         val activeAlarmStrings = medtrumPump.activeAlarms.map { medtrumPump.alarmStateToString(it) }
         _activeAlarms.postValue(activeAlarmStrings.joinToString("\n"))
-        _pumpType.postValue(medtrumPump.deviceType.toString())
+        _pumpType.postValue(ModelType.fromValue(medtrumPump.deviceType).toString())
         _fwVersion.postValue(medtrumPump.swVersion)
         _patchNo.postValue(medtrumPump.patchId.toString())
 
