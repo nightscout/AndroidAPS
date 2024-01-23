@@ -213,4 +213,8 @@
     <string name="tile_action_2">Eylem 2</string>
     <string name="tile_action_3">Eylem 3</string>
     <string name="tile_action_4">Eylem 4</string>
+    <string name="datalayer_notification_title">Veri Katmanı Ön Plan Hizmeti</string>
+    <string name="datalayer_notification_text">AAPS ön planda çalışıyor. Bildirimi gizlemek için Geliştirici seçenekleri, Uygulama bildirimleri, İzin verilen saat uygulamaları\'na gidin, AAPS\'yi seçin, Veri Katmanı Ön Plan Hizmet Kanalı bildirimini kapatın.</string>
+    <string name="on">AÇIK</string>
+    <string name="off">KAPALI</string>
 </resources>
