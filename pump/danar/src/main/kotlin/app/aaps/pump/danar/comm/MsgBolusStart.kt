@@ -21,7 +21,7 @@ class MsgBolusStart(
         val errorCode = intFromBuff(bytes, 0, 1)
         if (errorCode != 2) {
             failed = true
-            aapsLogger.debug(LTag.PUMPBTCOMM, "Messsage response: $errorCode FAILED!!")
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Messsage response: $errorCode ERROR!!")
         } else {
             failed = false
             aapsLogger.debug(LTag.PUMPBTCOMM, "Messsage response: $errorCode OK")
