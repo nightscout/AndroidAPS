@@ -4,4 +4,5 @@
     <!-- equil - Commands -->
     <!--    推杆回退-->
     <string name="equil_replace_reservoir">המכל ריק. נא להחליפו</string>
+    <string name="error_mustbe6hexadidits">חייב להיות באורך 6 תוים, מהתוים הבאים: ABCDEF0123456789</string>
 </resources>

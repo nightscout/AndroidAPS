@@ -171,4 +171,5 @@ Regola password: deve contenere 4 caratteri, scelti tra ABCDEF0123456789.</strin
     <string name="equil_pump_updated">Micro aggiornato</string>
     <string name="equil_maxbolus_tips">Bolo massimo consentito dal micro [%1$sU]</string>
     <string name="equil_replace_reservoir">Il serbatoio è vuoto. Sostituire il serbatoio</string>
+    <string name="error_mustbe6hexadidits">Deve essere 6 caratteri tra ABCDEF0123456789</string>
 </resources>
