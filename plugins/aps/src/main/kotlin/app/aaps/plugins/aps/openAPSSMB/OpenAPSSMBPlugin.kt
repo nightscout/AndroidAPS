@@ -122,7 +122,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
     override fun getIsfMgdl(timestamp: Long, multiplier: Double, timeShift: Int, caller: String): Double? {
         val start = dateUtil.now()
         val sensitivity = calculateVariableIsf(timestamp, caller)
-        profiler.log(LTag.APS, "getIsfMgdl(timestamp) $caller", start)
+        profiler.log(LTag.APS, String.format("getIsfMgdl(timestamp) %30s", caller), start)
         return sensitivity
     }
 
@@ -159,8 +159,10 @@ open class OpenAPSSMBPlugin @Inject constructor(
             return result.variableSens
         }
 
+        val glucoseStatus = glucoseStatusProvider.glucoseStatusData ?: return null
         // Round down to 30 min and use it as a key for caching
-        val key = timestamp - timestamp % T.mins(30).msecs()
+        // Add BG to key as it affects calculation
+        val key = timestamp - timestamp % T.mins(30).msecs() + glucoseStatus.glucose.toLong()
         val cached = dynIsfCache[key]
         if (cached != null && timestamp < dateUtil.now()) {
             aapsLogger.debug("calculateVariableIsf $caller HIT ${dateUtil.dateAndTimeAndSecondsString(timestamp)} $cached")
@@ -168,7 +170,6 @@ open class OpenAPSSMBPlugin @Inject constructor(
         }
 
         // no cached result found, let's calculate the value
-        val glucoseStatus = glucoseStatusProvider.glucoseStatusData ?: return null
         val tdd1D = tddCalculator.averageTDD(tddCalculator.calculate(timestamp, 1, allowMissingDays = false))?.totalAmount ?: return null
         val tdd7D = tddCalculator.averageTDD(tddCalculator.calculate(timestamp, 7, allowMissingDays = false))?.totalAmount ?: return null
         val tddLast24H = tddCalculator.calculateDaily(-24, 0)?.totalAmount ?: return null
@@ -184,7 +185,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
         val tdd = (tddWeightedFromLast8H * 0.33) + (tddStatus.tdd7D * 0.34) + (tddStatus.tdd1D * 0.33) * preferences.get(IntKey.ApsDynIsfAdjustmentFactor) / 100.0
 
         val sensitivity = Round.roundTo(1800 / (tdd * (ln((glucoseStatus.glucose / insulinDivisor) + 1))), 0.1)
-        aapsLogger.debug("calculateVariableIsf $caller ${dateUtil.dateAndTimeAndSecondsString(timestamp)} $sensitivity")
+        aapsLogger.debug("calculateVariableIsf $caller CAL ${dateUtil.dateAndTimeAndSecondsString(timestamp)} $sensitivity")
         dynIsfCache.put(key, sensitivity)
         if (dynIsfCache.size() > 1000) dynIsfCache.clear()
         return sensitivity

@@ -777,7 +777,7 @@ class DataHandlerMobile @Inject constructor(
         sendTreatments()
         // Status
         // Keep status last. Wear start refreshing after status received
-        sendStatus()
+        sendStatus(from)
     }
 
     private fun sendTreatments() {
@@ -819,29 +819,34 @@ class DataHandlerMobile @Inject constructor(
 
             //temps
             tb2 = processedTbrEbData.getTempBasalIncludingConvertedExtended(runningTime)
-            if (tb1 == null && tb2 == null) {
-                //no temp stays no temp
-            } else if (tb1 != null && tb2 == null) {
-                //temp is over -> push it
-                temps.add(EventData.TreatmentData.TempBasal(tbStart, tbBefore, runningTime, endBasalValue, tbAmount))
-                tb1 = null
-            } else if (tb1 == null && tb2 != null) {
-                //temp begins
-                tb1 = tb2
-                tbStart = runningTime
-                tbBefore = endBasalValue
-                tbAmount = tb1.convertedToAbsolute(runningTime, profileTB)
-            } else if (tb1 != null && tb2 != null) {
-                val currentAmount = tb2.convertedToAbsolute(runningTime, profileTB)
-                if (currentAmount != tbAmount) {
-                    temps.add(EventData.TreatmentData.TempBasal(tbStart, tbBefore, runningTime, currentAmount, tbAmount))
-                    tbStart = runningTime
-                    tbBefore = tbAmount
-                    tbAmount = currentAmount
+            when {
+                tb1 == null && tb2 == null -> {
+                    //no temp stays no temp
+                }
+                tb1 != null && tb2 == null -> {
+                    //temp is over -> push it
+                    temps.add(EventData.TreatmentData.TempBasal(tbStart, tbBefore, runningTime, endBasalValue, tbAmount))
+                    tb1 = null
+                }
+                tb1 == null && tb2 != null -> {
+                    //temp begins
                     tb1 = tb2
+                    tbStart = runningTime
+                    tbBefore = endBasalValue
+                    tbAmount = tb1.convertedToAbsolute(runningTime, profileTB)
+                }
+                tb1 != null && tb2 != null -> {
+                    val currentAmount = tb2.convertedToAbsolute(runningTime, profileTB)
+                    if (currentAmount != tbAmount) {
+                        temps.add(EventData.TreatmentData.TempBasal(tbStart, tbBefore, runningTime, currentAmount, tbAmount))
+                        tbStart = runningTime
+                        tbBefore = tbAmount
+                        tbAmount = currentAmount
+                        tb1 = tb2
+                    }
                 }
             }
-            runningTime += (5 * 60 * 1000).toLong()
+            runningTime += (5 * 60 * 1000L)
         }
         if (beginBasalSegmentTime != runningTime) {
             //push the remaining segment
@@ -897,7 +902,7 @@ class DataHandlerMobile @Inject constructor(
         rxBus.send(EventMobileToWear(EventData.TreatmentData(temps, basals, boluses, predictions)))
     }
 
-    private fun sendStatus() {
+    private fun sendStatus(caller: String) {
         val profile = profileFunction.getProfile()
         var status = rh.gs(app.aaps.core.ui.R.string.noprofile)
         var iobSum = ""
@@ -912,13 +917,10 @@ class DataHandlerMobile @Inject constructor(
             iobDetail = "(${decimalFormatter.to2Decimal(bolusIob.iob)}|${decimalFormatter.to2Decimal(basalIob.basaliob)})"
             cobString = iobCobCalculator.getCobInfo("WatcherUpdaterService").generateCOBString(decimalFormatter)
             currentBasal =
-                processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())?.toStringShort(rh) ?: rh.gs(
-                    app.aaps.core.ui.R.string.pump_base_basal_rate, profile
-                        .getBasal()
-                )
+                processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())?.toStringShort(rh) ?: rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, profile.getBasal())
 
             //bgi
-            val bgi = -(bolusIob.activity + basalIob.activity) * 5 * profileUtil.fromMgdlToUnits(profile.getIsfMgdl("DataHandlerMobile"))
+            val bgi = -(bolusIob.activity + basalIob.activity) * 5 * profileUtil.fromMgdlToUnits(profile.getIsfMgdl("DataHandlerMobile $caller"))
             bgiString = "" + (if (bgi >= 0) "+" else "") + decimalFormatter.to1Decimal(bgi)
             status = generateStatusString(profile)
         }
@@ -1067,12 +1069,12 @@ class DataHandlerMobile @Inject constructor(
         return historyList.size < 3 || df.format(Date(historyList[0].timestamp)) != df.format(Date(System.currentTimeMillis() - if (startsYesterday) 1000 * 60 * 60 * 24 else 0))
     }
 
-    private fun getTDDList(returnDummies: MutableList<TDD>): MutableList<TDD> {
+    private fun getTDDList(returnDummies: List<TDD>): MutableList<TDD> {
         var historyList = persistenceLayer.getLastTotalDailyDoses(10, false).toMutableList()
         //var historyList = databaseHelper.getTDDs().toMutableList()
         historyList = historyList.subList(0, min(10, historyList.size))
         // fill single gaps - only needed for Dana*R data
-        val dummies: MutableList<TDD> = returnDummies
+        val dummies: MutableList<TDD> = returnDummies.toMutableList()
         val df: DateFormat = SimpleDateFormat("dd.MM.", Locale.getDefault())
         for (i in 0 until historyList.size - 1) {
             val elem1 = historyList[i]
@@ -1092,7 +1094,7 @@ class DataHandlerMobile @Inject constructor(
     private val TDD.total
         get() = if (totalAmount > 0) totalAmount else basalAmount + bolusAmount
 
-    private fun generateTDDMessage(historyList: MutableList<TDD>, dummies: MutableList<TDD>): String {
+    private fun generateTDDMessage(historyList: MutableList<TDD>, dummies: List<TDD>): String {
         val profile = profileFunction.getProfile() ?: return rh.gs(R.string.no_profile)
         if (historyList.isEmpty()) {
             return rh.gs(R.string.no_history)
