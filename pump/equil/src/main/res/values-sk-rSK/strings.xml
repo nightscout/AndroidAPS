@@ -177,4 +177,5 @@ Pravidlo pre tvorbu hesla: musí mať 4 znaky a musí obsahovať znaky z tejto s
     <string name="equil_pump_updated">Pumpa aktualizovaná</string>
     <string name="equil_maxbolus_tips">Maximální povolený bolus v pumpe [%1$s JI]</string>
     <string name="equil_replace_reservoir">Zásobník je prázdny. Prosím vymeňte zásobník</string>
+    <string name="error_mustbe6hexadidits">Musí byť 6 znakov z ABCDEF0123456789</string>
 </resources>

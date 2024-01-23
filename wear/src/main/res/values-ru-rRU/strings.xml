@@ -205,4 +205,16 @@
     <string name="error">!ошибка!</string>
     <string name="pref_heartRateSampling">Частота сердечных сокращений</string>
     <string name="pref_stepsSampling">Включить счетчик шагов</string>
+    <string name="tile_tempt_1">Врем. цель 1</string>
+    <string name="tile_tempt_2">Врем. цель 2</string>
+    <string name="tile_tempt_3">Врем. цель 3</string>
+    <string name="tile_tempt_4">Врем. цель 4</string>
+    <string name="tile_action_1">Действие 1</string>
+    <string name="tile_action_2">Действие 2</string>
+    <string name="tile_action_3">Действие 3</string>
+    <string name="tile_action_4">Действие 4</string>
+    <string name="datalayer_notification_title">Передача данных в режиме переднего плана</string>
+    <string name="datalayer_notification_text">AAPS запущен на переднем плане. Чтобы скрыть уведомление, перейдите в Настройки разработчика, Уведомления приложений, Разрешенные приложения для просмотра, выберите AAPS, Отключите уведомление канала службы переднего плана уровня данных.</string>
+    <string name="on">Включено</string>
+    <string name="off">Выкл</string>
 </resources>

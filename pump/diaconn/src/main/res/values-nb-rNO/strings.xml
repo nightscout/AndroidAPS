@@ -134,7 +134,7 @@
     <string name="diaconn_g8_errorcode_3">Kan ikke settes på grunn av feil i kommunikasjonsprotokollen.</string>
     <string name="diaconn_g8_errorcode_4">Måltid registrert, men kan ikke doseres.</string>
     <string name="diaconn_g8_errorcode_6">Avbrutt av pumpe</string>
-    <string name="diaconn_g8_errorcode_7">Ta andre handlinger, begrenset av app-innstillingene.</string>
+    <string name="diaconn_g8_errorcode_7">Tar andre handlinger, begrenser appinnstillingene.</string>
     <string name="diaconn_g8_errorcode_8">Under levering av bolus dose er ytterligere doseringer begrenset.</string>
     <string name="diaconn_g8_errorcode_9">Krever gjenopptak av basal injeksjonen</string>
     <string name="diaconn_g8_errorcode_10">Avbrutt på grunn av at pumpen ikke responderer.</string>

@@ -10,7 +10,7 @@
     <string name="days_ago_round">vor %1$.0f Tagen</string>
     <string name="in_days">in %1$.0f Tagen</string>
     <string name="in_days_round">in %1$.0f Tagen</string>
-    <string name="shorthour">s</string>
+    <string name="shorthour">h</string>
     <string name="days">Tage</string>
     <string name="hours">Stunden</string>
     <string name="unit_second">Sekunde</string>
@@ -42,6 +42,7 @@
     <string name="metadata_wear_import_filename">Dateiname: %1$s</string>
     <string name="metadata_label_plugin_version">Plugin-Version: %1$s</string>
     <string name="metadata_label_watchface_name_version">Name: %1$s (%2$s)</string>
+    <string name="metadata_label_watchface_infos">Info: %1$s</string>
     <string name="pref_show_iob">IOB anzeigen</string>
     <string name="pref_show_detailed_iob">Zeige detailliertes IOB</string>
     <string name="pref_show_cob">COB anzeigen</string>
@@ -56,6 +57,8 @@
     <string name="pref_show_bgi">Zeige BGI</string>
     <string name="pref_show_direction_arrow">Trendpfeil anzeigen</string>
     <string name="pref_show_ago">Min. seit letztem Wert</string>
+    <string name="pref_show_week_number">Kalenderwoche anzeigen</string>
+    <string name="pref_show_date">Datum anzeigen</string>
     <string name="default_custom_watchface_comment">Standard-Watchface, Du kannst auf den Knopf WATCHFACE exportieren drücken, um eine Vorlage zu generieren</string>
     <string name="wear_default_watchface">Standard-Watchface</string>
 </resources>
