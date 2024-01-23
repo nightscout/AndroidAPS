@@ -34,7 +34,8 @@ jobs:
           command: |
             export ANDROID_SDK_ROOT=/opt/android-sdk
             export ANDROID_HOME=/opt/android-sdk
-            ./gradlew connectedFullDebugAndroidTest
+            env
+            ./gradlew -Dorg.gradle.jvmargs=-Xmx6g connectedFullDebugAndroidTest
           
       - run:
           name: Kill emulators
@@ -47,7 +48,7 @@ jobs:
           command: |
             export ANDROID_SDK_ROOT=/opt/android-sdk
             export ANDROID_HOME=/opt/android-sdk
-            ./gradlew testFullDebugUnitTest
+            ./gradlew -Dorg.gradle.jvmargs=-Xmx6g testFullDebugUnitTest
 
       - run:
           run: Run jacocoAllDebugReport

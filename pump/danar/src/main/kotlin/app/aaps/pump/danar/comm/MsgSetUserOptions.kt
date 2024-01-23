@@ -33,7 +33,7 @@ class MsgSetUserOptions(
         val result = intFromBuff(bytes, 0, 1)
         if (result != 1) {
             failed = true
-            aapsLogger.debug(LTag.PUMPCOMM, "Setting user options: $result FAILED!!!")
+            aapsLogger.debug(LTag.PUMPCOMM, "Setting user options: $result ERROR!!!")
         } else {
             aapsLogger.debug(LTag.PUMPCOMM, "Setting user options: $result")
         }
