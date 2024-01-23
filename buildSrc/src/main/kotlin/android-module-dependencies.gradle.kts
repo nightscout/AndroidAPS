@@ -19,6 +19,7 @@ android {
             setProguardFiles(listOf(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"))
         }
         named("debug") {
+            isMinifyEnabled = true
             enableUnitTestCoverage = true
             enableAndroidTestCoverage = true
         }
