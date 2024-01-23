@@ -95,6 +95,12 @@
     <string name="equil_password_title">Mot de passe pompe</string>
     <string name="equil_settings">Paramètres</string>
     <string name="equil_settings_alarm_battery">Alarme batterie faible</string>
+    <string name="equil_history_group_all">Tous</string>
+    <string name="equil_history_group_pair">Appairer</string>
+    <string name="equil_history_group_bolus">Bolus</string>
+    <string name="equil_history_group_basal">Basals</string>
+    <string name="equil_history_group_prime">Amorcer</string>
+    <string name="equil_history_group_configuration">Configurations</string>
     <string name="equil_tab_equil">Historique de l\'Équil</string>
     <string name="equil_history_item1">Réservoir d\'insuline faible</string>
     <string name="equil_history_item2">Réservoir d\'insuline vide</string>
