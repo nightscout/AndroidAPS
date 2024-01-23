@@ -19,7 +19,7 @@ class MsgSetActivateBasalProfile(
         val result = intFromBuff(bytes, 0, 1)
         if (result != 1) {
             failed = true
-            aapsLogger.debug(LTag.PUMPCOMM, "Activate basal profile result: $result FAILED!!!")
+            aapsLogger.debug(LTag.PUMPCOMM, "Activate basal profile result: $result ERROR!!!")
         } else {
             aapsLogger.debug(LTag.PUMPCOMM, "Activate basal profile result: $result")
         }
