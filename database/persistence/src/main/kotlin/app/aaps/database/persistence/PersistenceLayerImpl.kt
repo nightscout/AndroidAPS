@@ -1759,6 +1759,9 @@ class PersistenceLayerImpl @Inject constructor(
     override fun getApsResultCloseTo(timestamp: Long): APSResult? =
         repository.getApsResultCloseTo(timestamp).blockingGet()?.fromDb(injector)
 
+    override fun getApsResults(start: Long, end: Long): List<APSResult> =
+        repository.getApsResults(start, end).map { list -> list.asSequence().map { it.fromDb(injector) }.toList() }.blockingGet()
+
     override fun insertApsResult(apsResult: APSResult): Single<PersistenceLayer.TransactionResult<APSResult>> =
         repository.runTransactionForResult(InsertOrUpdateApsResultTransaction(apsResult.toDb()))
             .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving APSResult", it) }

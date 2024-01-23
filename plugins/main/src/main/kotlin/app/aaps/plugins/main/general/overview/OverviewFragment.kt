@@ -25,11 +25,11 @@ import android.widget.TextView
 import androidx.core.text.toSpanned
 import androidx.recyclerview.widget.LinearLayoutManager
 import app.aaps.core.data.configuration.Constants
-import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
@@ -1060,6 +1060,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             var useCobForScale = false
             var useDevForScale = false
             var useRatioForScale = false
+            var useVarSensForScale = false
             var useDSForScale = false
             var useBGIForScale = false
             var useHRForScale = false
@@ -1071,6 +1072,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal]      -> useDevForScale = true
                 menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal]      -> useBGIForScale = true
                 menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]      -> useRatioForScale = true
+                menuChartSettings[g + 1][OverviewMenus.CharType.VAR_SEN.ordinal]  -> useVarSensForScale = true
                 menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] -> useDSForScale = true
                 menuChartSettings[g + 1][OverviewMenus.CharType.HR.ordinal]       -> useHRForScale = true
                 menuChartSettings[g + 1][OverviewMenus.CharType.STEPS.ordinal]    -> useSTEPSForScale = true
@@ -1083,6 +1085,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             if (menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal]) secondGraphData.addDeviations(useDevForScale, 1.0)
             if (menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal]) secondGraphData.addMinusBGI(useBGIForScale, if (alignDevBgiScale) 1.0 else 0.8)
             if (menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]) secondGraphData.addRatio(useRatioForScale, if (useRatioForScale) 1.0 else 0.8)
+            if (menuChartSettings[g + 1][OverviewMenus.CharType.VAR_SEN.ordinal]) secondGraphData.addVarSens(useVarSensForScale, if (useVarSensForScale) 1.0 else 0.8)
             if (menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] && config.isDev()) secondGraphData.addDeviationSlope(
                 useDSForScale,
                 if (useDSForScale) 1.0 else 0.8,
@@ -1105,6 +1108,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal] ||
                     menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal] ||
                     menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal] ||
+                    menuChartSettings[g + 1][OverviewMenus.CharType.VAR_SEN.ordinal] ||
                     menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] ||
                     menuChartSettings[g + 1][OverviewMenus.CharType.HR.ordinal] ||
                     menuChartSettings[g + 1][OverviewMenus.CharType.STEPS.ordinal]

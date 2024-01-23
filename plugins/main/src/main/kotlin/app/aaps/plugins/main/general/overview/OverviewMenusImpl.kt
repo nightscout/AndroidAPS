@@ -88,9 +88,9 @@ class OverviewMenusImpl @Inject constructor(
                 _setting.toMutableList() // implicitly does a list copy
             else
                 listOf(
-                    arrayOf(true, true, true, false, false, false, false, false, false, false, false, false, false),
-                    arrayOf(false, false, false, false, true, false, false, false, false, false, false, false, false),
-                    arrayOf(false, false, false, false, false, true, false, false, false, false, false, false, false)
+                    arrayOf(true, true, true, false, false, false, false, false, false, false, false, false, false, false),
+                    arrayOf(false, false, false, false, true, false, false, false, false, false, false, false, false, false),
+                    arrayOf(false, false, false, false, false, true, false, false, false, false, false, false, false, false)
                 )
 
     @Synchronized

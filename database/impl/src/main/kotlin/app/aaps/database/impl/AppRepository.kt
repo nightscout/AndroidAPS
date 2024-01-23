@@ -793,7 +793,11 @@ class AppRepository @Inject internal constructor(
     )
 
     fun getApsResultCloseTo(timestamp: Long): Maybe<APSResult> =
-        database.apsResultDao.getApsResult(timestamp - 5*60*1000, timestamp)
+        database.apsResultDao.getApsResult(timestamp - 5 * 60 * 1000, timestamp)
+            .subscribeOn(Schedulers.io())
+
+    fun getApsResults(start: Long, end: Long): Single<List<APSResult>> =
+        database.apsResultDao.getApsResults(start, end)
             .subscribeOn(Schedulers.io())
 
 }

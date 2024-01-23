@@ -1353,6 +1353,15 @@ interface PersistenceLayer {
     fun getApsResultCloseTo(timestamp: Long): APSResult?
 
     /**
+     * Get list of APSResults for interval
+     *
+     * @param start from
+     * @param end to
+     * @return List of APSResult
+     */
+    fun getApsResults(start: Long, end: Long): List<APSResult>
+
+    /**
      * Insert ApsResult record
      *
      * @param apsResult record

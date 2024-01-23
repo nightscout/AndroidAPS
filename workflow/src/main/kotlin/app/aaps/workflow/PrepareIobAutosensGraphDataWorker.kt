@@ -8,7 +8,6 @@ import androidx.work.workDataOf
 import app.aaps.core.data.aps.AutosensData
 import app.aaps.core.data.aps.AutosensResult
 import app.aaps.core.data.aps.SMBDefaults
-import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.graph.data.BarGraphSeries
 import app.aaps.core.graph.data.DataPointWithLabelInterface
 import app.aaps.core.graph.data.DeviationDataPoint
@@ -17,6 +16,7 @@ import app.aaps.core.graph.data.LineGraphSeries
 import app.aaps.core.graph.data.PointsWithLabelGraphSeries
 import app.aaps.core.graph.data.ScaledDataPoint
 import app.aaps.core.graph.data.Shape
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.graph.Scale
 import app.aaps.core.interfaces.iob.IobCobCalculator
@@ -322,6 +322,25 @@ class PrepareIobAutosensGraphDataWorker(
             it.color = rh.gac(ctx, app.aaps.core.ui.R.attr.devSlopeNegColor)
             it.thickness = 3
         }
+
+        // VAR_SENS
+        val varSensArray: MutableList<ScaledDataPoint> = ArrayList()
+        data.overviewData.maxVarSensValueFound = Double.MIN_VALUE
+        data.overviewData.minVarSensValueFound = Double.MAX_VALUE
+        val apsResults = persistenceLayer.getApsResults(fromTime, endTime)
+        apsResults.forEach {
+            it.variableSens?.let { varSens ->
+                assert(it.date in fromTime..endTime)
+                varSensArray.add(ScaledDataPoint(it.date, varSens, data.overviewData.varSensScale))
+                data.overviewData.maxVarSensValueFound = max(data.overviewData.maxVarSensValueFound, varSens)
+                data.overviewData.minVarSensValueFound = min(data.overviewData.minVarSensValueFound, varSens)
+            }
+        }
+        data.overviewData.varSensSeries = LineGraphSeries(Array(varSensArray.size) { i -> varSensArray[i] }).also {
+            it.color = rh.gac(ctx, app.aaps.core.ui.R.attr.ratioColor)
+            it.thickness = 3
+        }
+
         rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_IOB_AUTOSENS_DATA, 100, null))
         return Result.success()
     }
