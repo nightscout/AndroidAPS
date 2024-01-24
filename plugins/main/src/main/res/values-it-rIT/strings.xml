@@ -258,7 +258,6 @@
     <string name="overview_show_deviation_slope">Pendenza deviazione</string>
     <string name="overview_show_activity">Attività</string>
     <string name="overview_show_bgi">Impatto glicemia (BGI)</string>
-    <string name="overview_show_sensitivity">Sensibilità</string>
     <string name="overview_show_deviations">Deviazioni</string>
     <string name="overview_show_cob">CHO attivi</string>
     <string name="overview_show_iob">Insulina attiva</string>
@@ -273,7 +272,6 @@
     <string name="devslope_shortname">PENDEV</string>
     <string name="treatments_shortname">TRATT</string>
     <string name="heartRate_shortname">FC</string>
-    <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Scala del grafico</string>
     <string name="graph_menu_divider_header">Grafico</string>
     <!-- Skins -->
