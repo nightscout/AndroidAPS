@@ -43,7 +43,6 @@
     <string name="enable_bolus_advisor">Bólusvarázsló bekapcsolása</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Előrejelzések</string>
-    <string name="overview_show_sensitivity">Érzékenység</string>
     <string name="overview_show_basals">Bázis</string>
     <string name="overview_show_abs_insulin">Inzulin összesen</string>
     <string name="basal_shortname">BÁZ</string>
