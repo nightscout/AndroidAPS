@@ -6,9 +6,11 @@ import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.BCR
 import app.aaps.core.data.model.BS
+import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.HR
 import app.aaps.core.data.model.SC
+import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TDD
 import app.aaps.core.data.model.TT
@@ -890,11 +892,21 @@ class DataHandlerMobile @Inject constructor(
                             sgv = bg.value,
                             high = 0.0,
                             low = 0.0,
-                            color = rh.gac(context, app.aaps.core.ui.R.attr.originalBgValueColor)
+                            color = predictionColor(context,bg)
                         )
                     )
         }
         rxBus.send(EventMobileToWear(EventData.TreatmentData(temps, basals, boluses, predictions)))
+    }
+    private fun predictionColor(context: Context?, data: GV): Int {
+        return when (data.sourceSensor) {
+            SourceSensor.IOB_PREDICTION   -> rh.gac(context, app.aaps.core.ui.R.attr.iobColor)
+            SourceSensor.COB_PREDICTION   -> rh.gac(context, app.aaps.core.ui.R.attr.cobColor)
+            SourceSensor.A_COB_PREDICTION -> -0x7f000001 and rh.gac(context, app.aaps.core.ui.R.attr.cobColor)
+            SourceSensor.UAM_PREDICTION   -> rh.gac(context, app.aaps.core.ui.R.attr.uamColor)
+            SourceSensor.ZT_PREDICTION    -> rh.gac(context, app.aaps.core.ui.R.attr.ztColor)
+            else                          -> rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor)
+        }
     }
 
     private fun sendStatus() {
