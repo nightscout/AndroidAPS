@@ -258,7 +258,6 @@
     <string name="overview_show_deviation_slope">편차 기울기</string>
     <string name="overview_show_activity">활동</string>
     <string name="overview_show_bgi">BG impact</string>
-    <string name="overview_show_sensitivity">민감도</string>
     <string name="overview_show_deviations">편차</string>
     <string name="overview_show_cob">체내탄수화물양(COB)</string>
     <string name="overview_show_iob">체내인슐린양(IOB)</string>
@@ -273,7 +272,6 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">TREAT</string>
     <string name="heartRate_shortname">HR</string>
-    <string name="sensitivity_shortname">민감도</string>
     <string name="graph_scale">그래프 범위</string>
     <string name="graph_menu_divider_header">그래프</string>
     <!-- Skins -->
