@@ -289,4 +289,5 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Afişează o notificare activă cu o scurtă descriere referitoare la starea buclei</string>
     <string name="old_data">DATE VECHI</string>
+    <string name="overview_show_steps">Paşi</string>
 </resources>
