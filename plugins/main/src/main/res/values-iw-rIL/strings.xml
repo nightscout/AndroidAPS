@@ -259,7 +259,6 @@
     <string name="overview_show_deviation_slope">שיפוע הסטייה</string>
     <string name="overview_show_activity">פעילות</string>
     <string name="overview_show_bgi">השפעת הסוכר בדם</string>
-    <string name="overview_show_sensitivity">רגישות</string>
     <string name="overview_show_deviations">סטיות</string>
     <string name="overview_show_cob">פחמימות פעילות</string>
     <string name="overview_show_iob">אניסולין פעיל</string>
@@ -274,7 +273,6 @@
     <string name="devslope_shortname">שיפוע</string>
     <string name="treatments_shortname">TREAT</string>
     <string name="heartRate_shortname">דופק</string>
-    <string name="sensitivity_shortname">רגישות</string>
     <string name="graph_scale">קנה מידה של הגרף</string>
     <string name="graph_menu_divider_header">גרף</string>
     <!-- Skins -->
