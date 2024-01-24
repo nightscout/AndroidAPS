@@ -1,6 +1,13 @@
 package app.aaps.core.interfaces.aps
 
-interface APS {
+import app.aaps.core.interfaces.configuration.ConfigExportImport
+
+interface APS : ConfigExportImport {
+
+    /**
+     * Algorithm used
+     */
+    val algorithm: APSResult.Algorithm
 
     /**
      * Result of last invocation

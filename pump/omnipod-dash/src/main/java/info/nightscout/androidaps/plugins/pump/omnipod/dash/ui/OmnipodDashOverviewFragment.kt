@@ -491,15 +491,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
                     )
             )
-            val lastConnectionColor =
-                rh.gac(
-                    context,
-                    if (omnipodDashPumpPlugin.isUnreachableAlertTimeoutExceeded(getPumpUnreachableTimeout().toMillis())) {
-                        app.aaps.core.ui.R.attr.warningColor
-                    } else {
-                        app.aaps.core.ui.R.attr.defaultTextColor
-                    }
-                )
+            val lastConnectionColor = rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor)
             podInfoBinding.lastConnection.setTextColor(lastConnectionColor)
         } else {
             podInfoBinding.lastConnection.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor))

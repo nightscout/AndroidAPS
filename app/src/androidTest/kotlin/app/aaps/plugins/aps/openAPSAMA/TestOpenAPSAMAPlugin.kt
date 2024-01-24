@@ -4,6 +4,7 @@ import app.aaps.core.data.aps.AutosensResult
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.APS
+import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -40,6 +41,7 @@ import app.aaps.plugins.aps.events.EventResetOpenAPSGui
 import app.aaps.plugins.aps.utils.ScriptReader
 import dagger.android.HasAndroidInjector
 import org.json.JSONException
+import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.floor
@@ -79,6 +81,7 @@ class TestOpenAPSAMAPlugin @Inject constructor(
 
     // last values
     override var lastAPSRun: Long = 0
+    override val algorithm = APSResult.Algorithm.AMA
     override var lastAPSResult: DetermineBasalResultAMAFromJS? = null
 
     //override var lastDetermineBasalAdapter: DetermineBasalAdapter? = null
@@ -282,5 +285,9 @@ class TestOpenAPSAMAPlugin @Inject constructor(
         val enabled = preferences.get(BooleanKey.ApsUseAutosens)
         if (!enabled) value.set(false, rh.gs(R.string.autosens_disabled_in_preferences), this)
         return value
+    }
+
+    override fun configuration(): JSONObject = JSONObject()
+    override fun applyConfiguration(configuration: JSONObject) {
     }
 }

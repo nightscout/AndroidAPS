@@ -44,6 +44,7 @@ import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.events.EventResetOpenAPSGui
 import dagger.android.HasAndroidInjector
+import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.floor
@@ -82,6 +83,7 @@ class OpenAPSAMAPlugin @Inject constructor(
 
     // last values
     override var lastAPSRun: Long = 0
+    override val algorithm = APSResult.Algorithm.AMA
     override var lastAPSResult: DetermineBasalResult? = null
 
     override fun specialEnableCondition(): Boolean {
@@ -291,4 +293,8 @@ class OpenAPSAMAPlugin @Inject constructor(
         if (!enabled) value.set(false, rh.gs(R.string.autosens_disabled_in_preferences), this)
         return value
     }
+
+    // Needed only for dynamic ISF so far
+    override fun configuration(): JSONObject = JSONObject()
+    override fun applyConfiguration(configuration: JSONObject) {}
 }

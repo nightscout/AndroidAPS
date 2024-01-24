@@ -113,11 +113,17 @@
     <string name="key_absorption_maxtime" translatable="false">absorption_maxtime</string>
     <string name="key_openapsama_autosens_period" translatable="false">openapsama_autosens_period</string>
 
+    <!--    Insulin-->
+    <string name="key_insulin_oref_peak" translatable="false">insulin_oref_peak</string>
+
     <!--    Maintenance-->
     <string name="key_maintenance_logs_email" translatable="false">maintenance_logs_email</string>
     <string name="key_maintenance_logs_amount" translatable="false">maintenance_logs_amount</string>
     <string name="key_email_for_crash_report" translatable="false">email_for_crash_report</string>
     <string name="key_enable_fabric" translatable="false">enable_fabric2</string>
+
+    <!--    Automation-->
+    <string name="key_location" translatable="false">location</string>
 
     <!--    Alerts-->
     <string name="key_missed_bg_readings_threshold_minutes" translatable="false">missed_bg_readings_threshold</string>

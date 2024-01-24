@@ -50,6 +50,8 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.getPassedDurationToTimeInMinutes
 import app.aaps.core.objects.extensions.plannedRemainingMinutes
+import app.aaps.core.objects.extensions.put
+import app.aaps.core.objects.extensions.store
 import app.aaps.core.objects.extensions.target
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.plugins.aps.OpenAPSFragment
@@ -58,6 +60,7 @@ import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.events.EventResetOpenAPSGui
 import app.aaps.plugins.aps.openAPS.TddStatus
 import dagger.android.HasAndroidInjector
+import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.floor
@@ -102,6 +105,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
 
     // last values
     override var lastAPSRun: Long = 0
+    override val algorithm = APSResult.Algorithm.SMB
     override var lastAPSResult: DetermineBasalResult? = null
     override fun supportsDynamicIsf(): Boolean = preferences.get(BooleanKey.ApsUseDynamicSensitivity)
 
@@ -464,5 +468,16 @@ open class OpenAPSSMBPlugin @Inject constructor(
             if (!enabled) value.set(false, rh.gs(R.string.autosens_disabled_in_preferences), this)
         }
         return value
+    }
+
+    override fun configuration(): JSONObject =
+        JSONObject()
+            .put(BooleanKey.ApsUseDynamicSensitivity, preferences, rh)
+            .put(IntKey.ApsDynIsfAdjustmentFactor, preferences, rh)
+
+    override fun applyConfiguration(configuration: JSONObject) {
+        configuration
+            .store(BooleanKey.ApsUseDynamicSensitivity, preferences, rh)
+            .store(IntKey.ApsDynIsfAdjustmentFactor, preferences, rh)
     }
 }

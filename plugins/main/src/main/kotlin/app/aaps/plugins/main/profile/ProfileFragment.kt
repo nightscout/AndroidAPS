@@ -125,6 +125,9 @@ class ProfileFragment : DaggerFragment() {
         val activeProfile = profileFunction.getProfileName()
         val profileIndex = profiles.indexOf(activeProfile)
         profilePlugin.currentProfileIndex = if (profileIndex >= 0) profileIndex else 0
+        val aps = activePlugin.activeAPS
+        binding.isfDynamicLabel.visibility = aps.supportsDynamicIsf().toVisibility()
+        binding.icDynamicLabel.visibility = aps.supportsDynamicIc().toVisibility()
     }
 
     fun build() {

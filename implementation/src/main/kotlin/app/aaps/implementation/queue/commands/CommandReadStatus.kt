@@ -33,7 +33,7 @@ class CommandReadStatus(
 
     override fun execute() {
         activePlugin.activePump.getPumpStatus(reason)
-        localAlertUtils.notifyPumpStatusRead()
+        localAlertUtils.reportPumpStatusRead()
         aapsLogger.debug(LTag.PUMPQUEUE, "CommandReadStatus executed. Reason: $reason")
         val pump = activePlugin.activePump
         val result = instantiator.providePumpEnactResult().success(false)

@@ -8,6 +8,7 @@ import app.aaps.core.data.aps.SMBDefaults
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.APS
+import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.DetermineBasalAdapter
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.constraints.Constraint
@@ -43,6 +44,7 @@ import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.events.EventResetOpenAPSGui
 import app.aaps.plugins.aps.utils.ScriptReader
 import dagger.android.HasAndroidInjector
+import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.floor
@@ -91,6 +93,11 @@ open class TestOpenAPSSMBPlugin @Inject constructor(
 
     // last values
     override var lastAPSRun: Long = 0
+    override val algorithm = APSResult.Algorithm.SMB
+    override fun configuration(): JSONObject = JSONObject()
+    override fun applyConfiguration(configuration: JSONObject) {
+    }
+
     override var lastAPSResult: DetermineBasalResultSMBFromJS? = null
 
     //override var lastDetermineBasalAdapter: DetermineBasalAdapter? = null
