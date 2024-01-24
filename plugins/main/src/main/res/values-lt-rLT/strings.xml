@@ -258,7 +258,6 @@
     <string name="overview_show_deviation_slope">Nuokrypiai</string>
     <string name="overview_show_activity">Aktyvumas</string>
     <string name="overview_show_bgi">Glikemijos įtaka</string>
-    <string name="overview_show_sensitivity">Jautrumas insulinui</string>
     <string name="overview_show_deviations">Nuokrypiai</string>
     <string name="overview_show_cob">Aktyvūs angliavandeniai</string>
     <string name="overview_show_iob">Aktyvus insulinas organizme</string>
@@ -273,7 +272,6 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">ĮRAŠ</string>
     <string name="heartRate_shortname">ŠSD</string>
-    <string name="sensitivity_shortname">JAUTR</string>
     <string name="graph_scale">Grafiko mastelis</string>
     <string name="graph_menu_divider_header">Grafikas</string>
     <!-- Skins -->
