@@ -23,6 +23,7 @@ import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -41,6 +42,7 @@ import app.aaps.database.impl.transactions.InsertBolusWithTempIdTransaction
 import app.aaps.database.impl.transactions.InsertEffectiveProfileSwitch
 import app.aaps.database.impl.transactions.InsertIfNewByTimestampCarbsTransaction
 import app.aaps.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
+import app.aaps.database.impl.transactions.InsertOrUpdateApsResultTransaction
 import app.aaps.database.impl.transactions.InsertOrUpdateBolusCalculatorResultTransaction
 import app.aaps.database.impl.transactions.InsertOrUpdateBolusTransaction
 import app.aaps.database.impl.transactions.InsertOrUpdateCarbsTransaction
@@ -100,6 +102,7 @@ import app.aaps.database.impl.transactions.VersionChangeTransaction
 import app.aaps.database.persistence.converters.fromDb
 import app.aaps.database.persistence.converters.toDb
 import dagger.Reusable
+import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
@@ -113,7 +116,8 @@ class PersistenceLayerImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val repository: AppRepository,
     private val dateUtil: DateUtil,
-    private val config: Config
+    private val config: Config,
+    private val injector: HasAndroidInjector
 ) : PersistenceLayer {
 
     @Suppress("unused")
@@ -1751,4 +1755,26 @@ class PersistenceLayerImpl @Inject constructor(
 
     override fun collectNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): NE =
         repository.collectNewEntriesSince(since, until, limit, offset).fromDb()
+
+    override fun getApsResultCloseTo(timestamp: Long): APSResult? =
+        repository.getApsResultCloseTo(timestamp).blockingGet()?.fromDb(injector)
+
+    override fun getApsResults(start: Long, end: Long): List<APSResult> =
+        repository.getApsResults(start, end).map { list -> list.asSequence().map { it.fromDb(injector) }.toList() }.blockingGet()
+
+    override fun insertApsResult(apsResult: APSResult): Single<PersistenceLayer.TransactionResult<APSResult>> =
+        repository.runTransactionForResult(InsertOrUpdateApsResultTransaction(apsResult.toDb()))
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving APSResult", it) }
+            .map { result ->
+                val transactionResult = PersistenceLayer.TransactionResult<APSResult>()
+                result.inserted.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Inserted APSResult $it")
+                    transactionResult.inserted.add(it.fromDb(injector))
+                }
+                result.updated.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Updated APSResult $it")
+                    transactionResult.updated.add(it.fromDb(injector))
+                }
+                transactionResult
+            }
 }

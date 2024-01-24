@@ -73,7 +73,7 @@ class PreparePredictionsWorker(
         }
 
         val bgListArray: MutableList<DataPointWithLabelInterface> = ArrayList()
-        val predictions: MutableList<GlucoseValueDataPoint>? = apsResult?.predictions
+        val predictions: MutableList<GlucoseValueDataPoint>? = apsResult?.predictionsAsGv
             ?.map { bg -> GlucoseValueDataPoint(bg, profileUtil, rh) }
             ?.toMutableList()
         if (predictions != null) {

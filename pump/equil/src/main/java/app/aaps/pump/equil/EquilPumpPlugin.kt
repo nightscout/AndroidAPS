@@ -358,7 +358,6 @@ import javax.inject.Singleton
         commandQueue.customCommand(CmdTimeSet(), null)
     }
 
-    override fun isUnreachableAlertTimeoutExceeded(alertTimeoutMilliseconds: Long): Boolean = false
     override val isFakingTempsByExtendedBoluses: Boolean = false
     override fun canHandleDST(): Boolean = false
     override fun disconnect(reason: String) {

@@ -25,6 +25,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.database.impl.AppRepository
 import app.aaps.di.TestApplication
 import app.aaps.helpers.RxHelper
+import app.aaps.implementation.profile.ProfileFunctionImpl
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.events.EventResetOpenAPSGui
 import app.aaps.plugins.aps.loop.events.EventLoopSetLastRunGui
@@ -84,6 +85,8 @@ class LoopTest @Inject constructor() {
         rxHelper.listen(EventAPSCalculationFinished::class.java)
         (loop as PluginBase).setPluginEnabled(PluginType.LOOP, true)
 
+        persistenceLayer.clearDatabases()
+
         // Enable event logging
         l.findByName(LTag.EVENTS.name).enabled = true
 
@@ -100,6 +103,7 @@ class LoopTest @Inject constructor() {
         objectivesPlugin.objectives[0].startedOn = 1
 
         // Now there should be missing profile
+        (profileFunction as ProfileFunctionImpl).cache.clear()
         loop.invoke("test2", allowNotification = false)
         loopStatusEvent = rxHelper.waitFor(EventLoopSetLastRunGui::class.java, comment = "step2")
         assertThat(loopStatusEvent.first).isTrue()

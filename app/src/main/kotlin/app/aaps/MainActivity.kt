@@ -302,7 +302,8 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         androidPermission.notifyForBatteryOptimizationPermission(this)
         if (!config.NSCLIENT) androidPermission.notifyForLocationPermissions(this)
         if (config.PUMPDRIVERS) {
-            androidPermission.notifyForSMSPermissions(this, smsCommunicator)
+            if (smsCommunicator.isEnabled())
+                androidPermission.notifyForSMSPermissions(this)
             androidPermission.notifyForSystemWindowPermissions(this)
             androidPermission.notifyForBtConnectPermission(this)
         }

@@ -106,7 +106,7 @@ class AutotuneFragment : DaggerFragment() {
         profileStore = activePlugin.activeProfileSource.profile ?: instantiator.provideProfileStore(JSONObject())
         profileName = if (binding.profileList.text.toString() == rh.gs(app.aaps.core.ui.R.string.active)) "" else binding.profileList.text.toString()
         profileFunction.getProfile()?.let { currentProfile ->
-            profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it) } ?: currentProfile, LocalInsulin(""), injector)
+            profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(value = it, activePlugin = null) } ?: currentProfile, LocalInsulin(""), injector)
         }
         days.addToLayout(binding.selectWeekDays)
         days.view?.setOnWeekdaysChangeListener { i: Int, selected: Boolean ->
@@ -140,7 +140,7 @@ class AutotuneFragment : DaggerFragment() {
             if (!autotunePlugin.calculationRunning) {
                 profileName = if (binding.profileList.text.toString() == rh.gs(app.aaps.core.ui.R.string.active)) "" else binding.profileList.text.toString()
                 profileFunction.getProfile()?.let { currentProfile ->
-                    profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it) } ?: currentProfile, LocalInsulin(""), injector)
+                    profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(value = it, activePlugin = null) } ?: currentProfile, LocalInsulin(""), injector)
                 }
                 autotunePlugin.selectedProfile = profileName
                 resetParam(true)
@@ -213,7 +213,7 @@ class AutotuneFragment : DaggerFragment() {
         binding.autotuneCheckInputProfile.setOnClickListener {
             val pumpProfile = profileFunction.getProfile()?.let { currentProfile ->
                 profileStore.getSpecificProfile(profileName)?.let { specificProfile ->
-                    ATProfile(ProfileSealed.Pure(specificProfile), LocalInsulin(""), injector).also {
+                    ATProfile(ProfileSealed.Pure(specificProfile, null), LocalInsulin(""), injector).also {
                         it.profileName = profileName
                     }
                 }
@@ -317,7 +317,7 @@ class AutotuneFragment : DaggerFragment() {
         profileStore = activePlugin.activeProfileSource.profile ?: instantiator.provideProfileStore(JSONObject())
         profileName = if (binding.profileList.text.toString() == rh.gs(app.aaps.core.ui.R.string.active)) "" else binding.profileList.text.toString()
         profileFunction.getProfile()?.let { currentProfile ->
-            profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it) } ?: currentProfile, LocalInsulin(""), injector)
+            profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(value = it, activePlugin = null) } ?: currentProfile, LocalInsulin(""), injector)
         }
         val profileList: ArrayList<CharSequence> = profileStore.getProfileList()
         profileList.add(0, rh.gs(app.aaps.core.ui.R.string.active))
@@ -380,16 +380,17 @@ class AutotuneFragment : DaggerFragment() {
             return warning
         }
         profileFunction.getProfile()?.let { currentProfile ->
-            profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it) } ?: currentProfile, LocalInsulin(""), injector).also { profile ->
-                if (!profile.isValid) return rh.gs(app.aaps.core.ui.R.string.autotune_profile_invalid)
-                if (profile.icSize > 1) {
-                    warning += nl + rh.gs(app.aaps.core.ui.R.string.autotune_ic_warning, profile.icSize, profile.ic)
-                    nl = "\n"
+            profile =
+                ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(value = it, activePlugin = null) } ?: currentProfile, LocalInsulin(""), injector).also { profile ->
+                    if (!profile.isValid) return rh.gs(app.aaps.core.ui.R.string.autotune_profile_invalid)
+                    if (profile.icSize > 1) {
+                        warning += nl + rh.gs(app.aaps.core.ui.R.string.autotune_ic_warning, profile.icSize, profile.ic)
+                        nl = "\n"
+                    }
+                    if (profile.isfSize > 1) {
+                        warning += nl + rh.gs(app.aaps.core.ui.R.string.autotune_isf_warning, profile.isfSize, profileUtil.fromMgdlToUnits(profile.isf), profileFunction.getUnits().asText)
+                    }
                 }
-                if (profile.isfSize > 1) {
-                    warning += nl + rh.gs(app.aaps.core.ui.R.string.autotune_isf_warning, profile.isfSize, profileUtil.fromMgdlToUnits(profile.isf), profileFunction.getUnits().asText)
-                }
-            }
         }
         return warning
     }

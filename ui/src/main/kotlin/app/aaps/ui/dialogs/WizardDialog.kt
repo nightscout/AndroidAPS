@@ -425,7 +425,7 @@ class WizardDialog : DaggerDialogFragment() {
             specificProfile = profileFunction.getProfile()
             profileName = profileFunction.getProfileName()
         } else
-            specificProfile = profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it) }
+            specificProfile = profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it, activePlugin) }
 
         if (specificProfile == null) return
 

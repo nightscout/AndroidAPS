@@ -259,7 +259,7 @@ class ProfileHelperActivity : TranslatedDaggerAppCompatActivity() {
                 ProfileType.DPV_DEFAULT       -> defaultProfileDPV.profile(age, tdd, basalPct, profileFunction.getUnits())
                 ProfileType.CURRENT           -> profileFunction.getProfile()?.convertToNonCustomizedProfile(dateUtil)
                 ProfileType.AVAILABLE_PROFILE -> activePlugin.activeProfileSource.profile?.getSpecificProfile(profileList[profileUsed[tab]].toString())
-                ProfileType.PROFILE_SWITCH    -> ProfileSealed.EPS(profileSwitch[profileSwitchUsed[tab]]).convertToNonCustomizedProfile(dateUtil)
+                ProfileType.PROFILE_SWITCH    -> ProfileSealed.EPS(value = profileSwitch[profileSwitchUsed[tab]], activePlugin = null).convertToNonCustomizedProfile(dateUtil)
             }
         } catch (e: Exception) {
             null

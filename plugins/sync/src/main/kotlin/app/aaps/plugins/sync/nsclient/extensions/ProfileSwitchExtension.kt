@@ -29,7 +29,7 @@ fun PS.toJson(isAdd: Boolean, dateUtil: DateUtil, decimalFormatter: DecimalForma
             timeshift = 0
             percentage = 100
         }
-        .put("profileJson", ProfileSealed.PS(this).toPureNsJson(dateUtil).toString())
+        .put("profileJson", ProfileSealed.PS(value = this, activePlugin = null).toPureNsJson(dateUtil).toString())
         .also {
             if (ids.pumpId != null) it.put("pumpId", ids.pumpId)
             if (ids.pumpType != null) it.put("pumpType", ids.pumpType!!.name)
@@ -77,7 +77,7 @@ fun PS.Companion.fromJson(jsonObject: JSONObject, dateUtil: DateUtil, activePlug
             val store = profilePlugin.profile ?: return null
             store.getSpecificProfile(profileName) ?: return null
         } else pureProfileFromJson(JSONObject(profileJson), dateUtil) ?: return null
-    val profileSealed = ProfileSealed.Pure(pureProfile)
+    val profileSealed = ProfileSealed.Pure(value = pureProfile, activePlugin = null)
 
     return PS(
         timestamp = timestamp,

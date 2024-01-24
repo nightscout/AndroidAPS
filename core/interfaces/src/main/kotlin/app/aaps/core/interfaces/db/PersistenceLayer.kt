@@ -23,6 +23,7 @@ import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.aps.APSResult
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
@@ -1342,4 +1343,30 @@ interface PersistenceLayer {
         val value: Double,
         val glucoseUnit: GlucoseUnit
     )
+
+    /**
+     * Get nearest older APSResult (max age is 5 min)
+     *
+     * @param timestamp time
+     * @return APSResult or null
+     */
+    fun getApsResultCloseTo(timestamp: Long): APSResult?
+
+    /**
+     * Get list of APSResults for interval
+     *
+     * @param start from
+     * @param end to
+     * @return List of APSResult
+     */
+    fun getApsResults(start: Long, end: Long): List<APSResult>
+
+    /**
+     * Insert ApsResult record
+     *
+     * @param apsResult record
+     * @return List of inserted records
+     */
+    fun insertApsResult(apsResult: APSResult): Single<TransactionResult<APSResult>>
+
 }

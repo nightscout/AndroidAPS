@@ -136,8 +136,8 @@ class LoopFragment : DaggerFragment(), MenuProvider {
     fun updateGUI() {
         if (_binding == null) return
         loop.lastRun?.let {
-            binding.request.text = it.request?.toSpanned() ?: ""
-            binding.constraintsprocessed.text = it.constraintsProcessed?.toSpanned() ?: ""
+            binding.request.text = it.request?.resultAsSpanned() ?: ""
+            binding.constraintsprocessed.text = it.constraintsProcessed?.resultAsSpanned() ?: ""
             binding.source.text = it.source ?: ""
             binding.lastrun.text = dateUtil.dateAndTimeString(it.lastAPSRun)
             binding.smbrequestTime.text = dateUtil.dateAndTimeAndSecondsString(it.lastSMBRequest)

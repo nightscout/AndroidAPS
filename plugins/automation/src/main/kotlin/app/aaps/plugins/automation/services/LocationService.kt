@@ -21,9 +21,9 @@ import app.aaps.core.interfaces.notifications.NotificationHolder
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.plugins.automation.R
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
 import app.aaps.plugins.automation.events.EventLocationChange
 import com.google.android.gms.location.LocationServices
 import dagger.android.DaggerService
@@ -34,7 +34,7 @@ class LocationService : DaggerService() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var notificationHolder: NotificationHolder
@@ -119,19 +119,19 @@ class LocationService : DaggerService() {
         initializeLocationManager()
 
         try {
-            if (sp.getString(R.string.key_location, "NONE") == "NETWORK") locationManager?.requestLocationUpdates(
+            if (preferences.get(StringKey.AutomationLocation) == "NETWORK") locationManager?.requestLocationUpdates(
                 LocationManager.NETWORK_PROVIDER,
                 LOCATION_INTERVAL_ACTIVE,
                 LOCATION_DISTANCE,
                 LocationListener(LocationManager.NETWORK_PROVIDER).also { locationListener = it }
             )
-            if (sp.getString(R.string.key_location, "NONE") == "GPS") locationManager?.requestLocationUpdates(
+            if (preferences.get(StringKey.AutomationLocation) == "GPS") locationManager?.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
                 LOCATION_INTERVAL_ACTIVE,
                 LOCATION_DISTANCE,
                 LocationListener(LocationManager.GPS_PROVIDER).also { locationListener = it }
             )
-            if (sp.getString(R.string.key_location, "NONE") == "PASSIVE") locationManager?.requestLocationUpdates(
+            if (preferences.get(StringKey.AutomationLocation) == "PASSIVE") locationManager?.requestLocationUpdates(
                 LocationManager.PASSIVE_PROVIDER,
                 LOCATION_INTERVAL_PASSIVE,
                 LOCATION_DISTANCE,
@@ -171,7 +171,7 @@ class LocationService : DaggerService() {
     }
 
     private fun initializeLocationManager() {
-        aapsLogger.debug(LTag.LOCATION, "initializeLocationManager - Provider: " + sp.getString(R.string.key_location, "NONE"))
+        aapsLogger.debug(LTag.LOCATION, "initializeLocationManager - Provider: " + preferences.get(StringKey.AutomationLocation))
         if (locationManager == null) {
             locationManager = applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         }

@@ -13,7 +13,7 @@ import java.security.InvalidParameterException
 
 fun NSEffectiveProfileSwitch.toEffectiveProfileSwitch(dateUtil: DateUtil): EPS? {
     val pureProfile = pureProfileFromJson(profileJson, dateUtil) ?: return null
-    val profileSealed = ProfileSealed.Pure(pureProfile)
+    val profileSealed = ProfileSealed.Pure(value = pureProfile, activePlugin = null)
 
     return EPS(
         isValid = isValid,
@@ -41,7 +41,7 @@ fun EPS.toNSEffectiveProfileSwitch(dateUtil: DateUtil): NSEffectiveProfileSwitch
         isValid = isValid,
         date = timestamp,
         utcOffset = T.msecs(utcOffset).mins(),
-        profileJson = ProfileSealed.EPS(this).toPureNsJson(dateUtil),
+        profileJson = ProfileSealed.EPS(value = this, activePlugin = null).toPureNsJson(dateUtil),
         originalProfileName = originalProfileName,
         originalCustomizedName = originalCustomizedName,
         originalTimeshift = originalTimeshift,

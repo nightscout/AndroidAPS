@@ -2,7 +2,6 @@ package app.aaps.database.impl
 
 import app.aaps.database.entities.interfaces.DBEntry
 import app.aaps.database.impl.daos.APSResultDao
-import app.aaps.database.impl.daos.APSResultLinkDao
 import app.aaps.database.impl.daos.BolusCalculatorResultDao
 import app.aaps.database.impl.daos.BolusDao
 import app.aaps.database.impl.daos.CarbsDao
@@ -12,7 +11,6 @@ import app.aaps.database.impl.daos.ExtendedBolusDao
 import app.aaps.database.impl.daos.FoodDao
 import app.aaps.database.impl.daos.GlucoseValueDao
 import app.aaps.database.impl.daos.HeartRateDao
-import app.aaps.database.impl.daos.MultiwaveBolusLinkDao
 import app.aaps.database.impl.daos.OfflineEventDao
 import app.aaps.database.impl.daos.PreferenceChangeDao
 import app.aaps.database.impl.daos.ProfileSwitchDao
@@ -24,7 +22,6 @@ import app.aaps.database.impl.daos.TotalDailyDoseDao
 import app.aaps.database.impl.daos.UserEntryDao
 import app.aaps.database.impl.daos.VersionChangeDao
 import app.aaps.database.impl.daos.delegated.DelegatedAPSResultDao
-import app.aaps.database.impl.daos.delegated.DelegatedAPSResultLinkDao
 import app.aaps.database.impl.daos.delegated.DelegatedBolusCalculatorResultDao
 import app.aaps.database.impl.daos.delegated.DelegatedBolusDao
 import app.aaps.database.impl.daos.delegated.DelegatedCarbsDao
@@ -34,7 +31,6 @@ import app.aaps.database.impl.daos.delegated.DelegatedExtendedBolusDao
 import app.aaps.database.impl.daos.delegated.DelegatedFoodDao
 import app.aaps.database.impl.daos.delegated.DelegatedGlucoseValueDao
 import app.aaps.database.impl.daos.delegated.DelegatedHeartRateDao
-import app.aaps.database.impl.daos.delegated.DelegatedMultiwaveBolusLinkDao
 import app.aaps.database.impl.daos.delegated.DelegatedOfflineEventDao
 import app.aaps.database.impl.daos.delegated.DelegatedPreferenceChangeDao
 import app.aaps.database.impl.daos.delegated.DelegatedProfileSwitchDao
@@ -53,11 +49,9 @@ internal class DelegatedAppDatabase(val changes: MutableList<DBEntry>, val datab
     val temporaryBasalDao: TemporaryBasalDao = DelegatedTemporaryBasalDao(changes, database.temporaryBasalDao)
     val bolusDao: BolusDao = DelegatedBolusDao(changes, database.bolusDao)
     val extendedBolusDao: ExtendedBolusDao = DelegatedExtendedBolusDao(changes, database.extendedBolusDao)
-    val multiwaveBolusLinkDao: MultiwaveBolusLinkDao = DelegatedMultiwaveBolusLinkDao(changes, database.multiwaveBolusLinkDao)
     val totalDailyDoseDao: TotalDailyDoseDao = DelegatedTotalDailyDoseDao(changes, database.totalDailyDoseDao)
     val carbsDao: CarbsDao = DelegatedCarbsDao(changes, database.carbsDao)
     val temporaryTargetDao: TemporaryTargetDao = DelegatedTemporaryTargetDao(changes, database.temporaryTargetDao)
-    val apsResultLinkDao: APSResultLinkDao = DelegatedAPSResultLinkDao(changes, database.apsResultLinkDao)
     val bolusCalculatorResultDao: BolusCalculatorResultDao = DelegatedBolusCalculatorResultDao(changes, database.bolusCalculatorResultDao)
     val effectiveProfileSwitchDao: EffectiveProfileSwitchDao = DelegatedEffectiveProfileSwitchDao(changes, database.effectiveProfileSwitchDao)
     val profileSwitchDao: ProfileSwitchDao = DelegatedProfileSwitchDao(changes, database.profileSwitchDao)

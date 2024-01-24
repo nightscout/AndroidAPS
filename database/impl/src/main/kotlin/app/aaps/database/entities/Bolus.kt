@@ -49,31 +49,9 @@ data class Bolus(
     var insulinConfiguration: InsulinConfiguration? = null
 ) : TraceableDBEntry, DBEntryWithTime {
 
-    fun contentEqualsTo(other: Bolus): Boolean =
-        isValid == other.isValid &&
-            timestamp == other.timestamp &&
-            utcOffset == other.utcOffset &&
-            amount == other.amount &&
-            type == other.type &&
-            notes == other.notes &&
-            isBasalInsulin == other.isBasalInsulin
-
-    fun onlyNsIdAdded(previous: Bolus): Boolean =
-        previous.id != id &&
-            contentEqualsTo(previous) &&
-            previous.interfaceIDs.nightscoutId == null &&
-            interfaceIDs.nightscoutId != null
-
     enum class Type {
         NORMAL,
         SMB,
         PRIMING;
-
-        companion object {
-
-            fun fromString(name: String?) = entries.firstOrNull { it.name == name } ?: NORMAL
-        }
     }
-
-    companion object
 }

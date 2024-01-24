@@ -1,9 +1,9 @@
 package app.aaps.core.nssdk.mapper
 
-import com.google.gson.Gson
-import com.google.gson.JsonParser
 import app.aaps.core.nssdk.localmodel.devicestatus.NSDeviceStatus
 import app.aaps.core.nssdk.remotemodel.RemoteDeviceStatus
+import com.google.gson.Gson
+import com.google.gson.JsonParser
 import org.json.JSONObject
 
 fun NSDeviceStatus.convertToRemoteAndBack(): NSDeviceStatus =
@@ -85,9 +85,11 @@ internal fun RemoteDeviceStatus.Configuration.toNSDeviceStatusConfiguration(): N
         pump = pump,
         version = version,
         insulin = insulin,
+        aps = aps,
         sensitivity = sensitivity,
         smoothing = smoothing,
         insulinConfiguration = insulinConfiguration?.let { JSONObject(it.toString()) },
+        apsConfiguration = apsConfiguration?.let { JSONObject(it.toString()) },
         sensitivityConfiguration = sensitivityConfiguration?.let { JSONObject(it.toString()) },
         overviewConfiguration = overviewConfiguration?.let { JSONObject(it.toString()) },
         safetyConfiguration = safetyConfiguration?.let { JSONObject(it.toString()) }
@@ -98,9 +100,11 @@ internal fun NSDeviceStatus.Configuration.toRemoteDeviceStatusConfiguration(): R
         pump = pump,
         version = version,
         insulin = insulin,
+        aps = aps,
         sensitivity = sensitivity,
         smoothing = smoothing,
         insulinConfiguration = insulinConfiguration?.let { JsonParser.parseString(it.toString()).asJsonObject },
+        apsConfiguration = apsConfiguration?.let { JsonParser.parseString(it.toString()).asJsonObject },
         sensitivityConfiguration = sensitivityConfiguration?.let { JsonParser.parseString(it.toString()).asJsonObject },
         overviewConfiguration = overviewConfiguration?.let { JsonParser.parseString(it.toString()).asJsonObject },
         safetyConfiguration = safetyConfiguration?.let { JsonParser.parseString(it.toString()).asJsonObject }

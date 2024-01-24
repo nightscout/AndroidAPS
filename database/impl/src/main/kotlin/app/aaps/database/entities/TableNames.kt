@@ -1,7 +1,6 @@
 package app.aaps.database.entities
 
 const val TABLE_APS_RESULTS = "apsResults"
-const val TABLE_APS_RESULT_LINKS = "apsResultLinks"
 const val TABLE_BOLUSES = "boluses"
 const val TABLE_BOLUS_CALCULATOR_RESULTS = "bolusCalculatorResults"
 const val TABLE_CARBS = "carbs"
@@ -12,7 +11,6 @@ const val TABLE_HEART_RATE = "heartRate"
 const val TABLE_STEPS_COUNT = "stepsCount"
 const val TABLE_GLUCOSE_VALUES = "glucoseValues"
 const val TABLE_FOODS = "foods"
-const val TABLE_MULTIWAVE_BOLUS_LINKS = "multiwaveBolusLinks"
 const val TABLE_PROFILE_SWITCHES = "profileSwitches"
 const val TABLE_TEMPORARY_BASALS = "temporaryBasals"
 const val TABLE_TEMPORARY_TARGETS = "temporaryTargets"

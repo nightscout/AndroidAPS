@@ -4,14 +4,14 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.Preferences
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
@@ -24,7 +24,7 @@ class InsulinOrefFreePeakPluginTest : TestBase() {
 
     private lateinit var sut: InsulinOrefFreePeakPlugin
 
-    @Mock lateinit var sp: SP
+    @Mock lateinit var preferences: Preferences
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var config: Config
@@ -33,12 +33,12 @@ class InsulinOrefFreePeakPluginTest : TestBase() {
 
     @BeforeEach
     fun setup() {
-        sut = InsulinOrefFreePeakPlugin(sp, rh, profileFunction, rxBus, aapsLogger, config, hardLimits, uiInteraction)
+        sut = InsulinOrefFreePeakPlugin(preferences, rh, profileFunction, rxBus, aapsLogger, config, hardLimits, uiInteraction)
     }
 
     @Test
     fun `simple peak test`() {
-        `when`(sp.getInt(eq(app.aaps.core.utils.R.string.key_insulin_oref_peak), anyInt())).thenReturn(90)
+        `when`(preferences.get(IntKey.InsulinOrefPeak)).thenReturn(90)
         assertThat(sut.peak).isEqualTo(90)
     }
 
@@ -49,7 +49,7 @@ class InsulinOrefFreePeakPluginTest : TestBase() {
 
     @Test
     fun commentStandardTextTest() {
-        `when`(sp.getInt(eq(app.aaps.core.utils.R.string.key_insulin_oref_peak), anyInt())).thenReturn(90)
+        `when`(preferences.get(IntKey.InsulinOrefPeak)).thenReturn(90)
         `when`(rh.gs(eq(R.string.insulin_peak_time))).thenReturn("Peak Time [min]")
         assertThat(sut.commentStandardText()).isEqualTo("Peak Time [min]: 90")
     }

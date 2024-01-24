@@ -77,16 +77,14 @@ class PluginStore @Inject constructor(
         var pluginsInCategory: ArrayList<PluginBase>?
 
         // PluginType.APS
-        if (!config.NSCLIENT && !config.PUMPCONTROL) {
-            pluginsInCategory = getSpecificPluginsList(PluginType.APS)
-            activeAPSStore = getTheOneEnabledInArray(pluginsInCategory, PluginType.APS) as APS?
-            if (activeAPSStore == null) {
-                activeAPSStore = getDefaultPlugin(PluginType.APS) as APS
-                (activeAPSStore as PluginBase).setPluginEnabled(PluginType.APS, true)
-                aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting APSInterface")
-            }
-            setFragmentVisibilities((activeAPSStore as PluginBase).name, pluginsInCategory, PluginType.APS)
+        pluginsInCategory = getSpecificPluginsList(PluginType.APS)
+        activeAPSStore = getTheOneEnabledInArray(pluginsInCategory, PluginType.APS) as APS?
+        if (activeAPSStore == null) {
+            activeAPSStore = getDefaultPlugin(PluginType.APS) as APS
+            (activeAPSStore as PluginBase).setPluginEnabled(PluginType.APS, true)
+            aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting APSInterface")
         }
+        setFragmentVisibilities((activeAPSStore as PluginBase).name, pluginsInCategory, PluginType.APS)
 
         // PluginType.INSULIN
         pluginsInCategory = getSpecificPluginsList(PluginType.INSULIN)

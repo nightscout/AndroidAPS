@@ -18,6 +18,7 @@ class AutosensDataObject(
 
     override var time = 0L
     override var bg = 0.0 // mgdl
+    override var sens = 0.0
     override var pastSensitivity = ""
     override var deviation = 0.0
     override var validDeviation = false

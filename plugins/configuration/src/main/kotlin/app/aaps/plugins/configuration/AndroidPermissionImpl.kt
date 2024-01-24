@@ -19,7 +19,6 @@ import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.plugins.configuration.activities.DaggerAppCompatActivityWithResult
@@ -85,22 +84,20 @@ class AndroidPermissionImpl @Inject constructor(
     }
 
     @Synchronized
-    override fun notifyForSMSPermissions(activity: FragmentActivity, smsCommunicator: SmsCommunicator) {
-        if (smsCommunicator.isEnabled()) {
-            if (permissionNotGranted(activity, Manifest.permission.RECEIVE_SMS))
-                activePlugin.activeOverview.addNotification(
-                    id = Notification.PERMISSION_SMS,
-                    text = rh.gs(app.aaps.core.ui.R.string.smscommunicator_missingsmspermission),
-                    level = Notification.URGENT,
-                    actionButtonId = R.string.request
-                ) {
-                    askForPermission(
-                        activity,
-                        arrayOf(Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS, Manifest.permission.RECEIVE_MMS)
-                    )
-                }
-            else activePlugin.activeOverview.dismissNotification(Notification.PERMISSION_SMS)
-        }
+    override fun notifyForSMSPermissions(activity: FragmentActivity) {
+        if (permissionNotGranted(activity, Manifest.permission.RECEIVE_SMS))
+            activePlugin.activeOverview.addNotification(
+                id = Notification.PERMISSION_SMS,
+                text = rh.gs(app.aaps.core.ui.R.string.smscommunicator_missingsmspermission),
+                level = Notification.URGENT,
+                actionButtonId = R.string.request
+            ) {
+                askForPermission(
+                    activity,
+                    arrayOf(Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS, Manifest.permission.RECEIVE_MMS)
+                )
+            }
+        else activePlugin.activeOverview.dismissNotification(Notification.PERMISSION_SMS)
     }
 
     @SuppressLint("MissingPermission")

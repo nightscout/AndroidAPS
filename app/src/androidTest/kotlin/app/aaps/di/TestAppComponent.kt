@@ -47,6 +47,7 @@ import javax.inject.Singleton
         // Inject TestApplication
         TestModule::class,
         TestsInjectionModule::class,
+        AlgModule::class,
         // Common modules
         AndroidInjectionModule::class,
 

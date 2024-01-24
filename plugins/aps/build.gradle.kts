@@ -27,8 +27,9 @@ dependencies {
     api(Libs.AndroidX.appCompat)
     api(Libs.AndroidX.swipeRefreshLayout)
     api(Libs.AndroidX.gridLayout)
+    api(kotlin("reflect"))
 
-    // APS
+    // APS (it should be androidTestImplementation but it doesn't work)
     api(Libs.Mozilla.rhino)
 
     //Logger

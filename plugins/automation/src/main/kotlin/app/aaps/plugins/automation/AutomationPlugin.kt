@@ -28,6 +28,7 @@ import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.StringKey
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.actions.ActionAlarm
 import app.aaps.plugins.automation.actions.ActionCarePortalEvent
@@ -144,7 +145,7 @@ class AutomationPlugin @Inject constructor(
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ e ->
-                           if (e.isChanged(rh.gs(R.string.key_location))) {
+                           if (e.isChanged(rh.gs(StringKey.AutomationLocation.key))) {
                                locationServiceHelper.stopService(context)
                                locationServiceHelper.startService(context)
                            }

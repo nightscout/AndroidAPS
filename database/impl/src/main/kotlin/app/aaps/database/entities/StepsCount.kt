@@ -37,18 +37,4 @@ data class StepsCount(
     override var referenceId: Long? = null,
     @Embedded
     override var interfaceIDs_backing: InterfaceIDs? = null
-) : TraceableDBEntry, DBEntryWithTimeAndDuration {
-
-    fun contentEqualsTo(other: StepsCount): Boolean {
-        return this === other || (
-            duration == other.duration &&
-                timestamp == other.timestamp &&
-                steps5min == other.steps5min &&
-                steps10min == other.steps10min &&
-                steps15min == other.steps15min &&
-                steps30min == other.steps30min &&
-                steps60min == other.steps60min &&
-                steps180min == other.steps180min &&
-                isValid == other.isValid)
-    }
-}
+) : TraceableDBEntry, DBEntryWithTimeAndDuration

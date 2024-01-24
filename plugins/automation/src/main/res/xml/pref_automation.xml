@@ -3,12 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
-        android:key="@string/key_automation_settings"
+        android:key="automation_settings"
         android:title="@string/automation"
         app:initialExpandedChildrenCount="0">
 
-        <ListPreference
-            android:defaultValue="PASSIVE"
+        <app.aaps.core.keys.AdaptiveListPreference
             android:entries="@array/location"
             android:entryValues="@array/locationValues"
             android:key="@string/key_location"

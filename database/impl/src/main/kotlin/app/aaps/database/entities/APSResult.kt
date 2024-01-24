@@ -37,13 +37,12 @@ data class APSResult(
     var profileJson: String,
     var autosensDataJson: String?,
     var mealDataJson: String,
-    var isMicroBolusAllowed: Boolean?,
     var resultJson: String
 ) : TraceableDBEntry, DBEntryWithTime {
 
     enum class Algorithm {
-        MA,
         AMA,
-        SMB
+        SMB,
+        AUTO_ISF
     }
 }
