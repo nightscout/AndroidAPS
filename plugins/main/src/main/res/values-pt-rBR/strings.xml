@@ -259,7 +259,6 @@
     <string name="overview_show_deviation_slope">Desvio de inclinação</string>
     <string name="overview_show_activity">Atividade</string>
     <string name="overview_show_bgi">Impacto na glicose</string>
-    <string name="overview_show_sensitivity">Sensibilidade</string>
     <string name="overview_show_deviations">Desvios</string>
     <string name="overview_show_cob">Carboidratos a bordo</string>
     <string name="overview_show_iob">Insulina a bordo</string>
@@ -274,7 +273,6 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">TRATA</string>
     <string name="heartRate_shortname">FC</string>
-    <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Escala do gráfico</string>
     <string name="graph_menu_divider_header">Gráfico</string>
     <!-- Skins -->
