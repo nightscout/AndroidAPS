@@ -259,7 +259,6 @@
     <string name="overview_show_deviation_slope">Pendiente de desviación</string>
     <string name="overview_show_activity">Actividad</string>
     <string name="overview_show_bgi">Impacto de glucosa en sangre</string>
-    <string name="overview_show_sensitivity">Sensibilidad</string>
     <string name="overview_show_deviations">Desviaciones</string>
     <string name="overview_show_cob">Carbohidratos activos COB</string>
     <string name="overview_show_iob">Insulina activa</string>
@@ -274,7 +273,6 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">TRAT</string>
     <string name="heartRate_shortname">RC</string>
-    <string name="sensitivity_shortname">Sens</string>
     <string name="graph_scale">Escala gráfica</string>
     <string name="graph_menu_divider_header">Gráfico</string>
     <!-- Skins -->
