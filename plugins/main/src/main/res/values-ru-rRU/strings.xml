@@ -258,7 +258,6 @@
     <string name="overview_show_deviation_slope">Линия отклонения</string>
     <string name="overview_show_activity">Активность</string>
     <string name="overview_show_bgi">Влияние ГК</string>
-    <string name="overview_show_sensitivity">Чувствительность</string>
     <string name="overview_show_deviations">Отклонение</string>
     <string name="overview_show_cob">Активные углеводы COB</string>
     <string name="overview_show_iob">Активный инсулин IOB</string>
@@ -273,7 +272,6 @@
     <string name="devslope_shortname">ЛИНОТКЛН</string>
     <string name="treatments_shortname">НАЗНАЧ</string>
     <string name="heartRate_shortname">ЧСС</string>
-    <string name="sensitivity_shortname">ЧУВСТВ</string>
     <string name="graph_scale">Масштаб графика</string>
     <string name="graph_menu_divider_header">График</string>
     <!-- Skins -->
