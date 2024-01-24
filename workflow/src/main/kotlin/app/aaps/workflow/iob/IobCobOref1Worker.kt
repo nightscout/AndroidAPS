@@ -112,7 +112,6 @@ class IobCobOref1Worker(
                     continue  // profile not set yet
                 }
                 aapsLogger.debug(LTag.AUTOSENS, "Processing calculation thread: ${data.reason} ($i/${bucketedData.size})")
-                val sens = profile.getIsfMgdl(bgTime, "iobCobOref1Worker")
                 val autosensData = instantiator.provideAutosensDataObject()
                 autosensData.time = bgTime
                 if (previous != null) autosensData.activeCarbsList = previous.cloneCarbsList() else autosensData.activeCarbsList = ArrayList()
@@ -128,6 +127,7 @@ class IobCobOref1Worker(
                 autosensData.bg = bg
                 delta = bg - bucketedData[i + 1].recalculated
                 avgDelta = (bg - bucketedData[i + 3].recalculated) / 3
+                val sens = profile.getIsfMgdl(bgTime, bg, "iobCobOref1Worker")
                 val iob = data.iobCobCalculator.calculateFromTreatmentsAndTemps(bgTime, profile)
                 val bgi = -iob.activity * sens * 5
                 val deviation = delta - bgi
@@ -191,7 +191,7 @@ class IobCobOref1Worker(
                 for (recentCarbTreatment in recentCarbTreatments) {
                     autosensData.carbsFromBolus += recentCarbTreatment.amount
                     val isAAPSOrWeighted = activePlugin.activeSensitivity.isMinCarbsAbsorptionDynamic
-                    autosensData.activeCarbsList.add(fromCarbs(recentCarbTreatment, isAAPSOrWeighted, profileFunction, aapsLogger, dateUtil, preferences))
+                    autosensData.activeCarbsList.add(fromCarbs(recentCarbTreatment, bg, isAAPSOrWeighted, profileFunction, aapsLogger, dateUtil, preferences))
                     autosensData.pastSensitivity += "[" + decimalFormatter.to0Decimal(recentCarbTreatment.amount) + "g]"
                 }
 
@@ -221,6 +221,7 @@ class IobCobOref1Worker(
                 autosensData.mealCarbs += autosensData.carbsFromBolus
                 autosensData.deviation = deviation
                 autosensData.bgi = bgi
+                autosensData.sens = sens
                 autosensData.delta = delta
                 autosensData.avgDelta = avgDelta
                 autosensData.avgDeviation = avgDeviation

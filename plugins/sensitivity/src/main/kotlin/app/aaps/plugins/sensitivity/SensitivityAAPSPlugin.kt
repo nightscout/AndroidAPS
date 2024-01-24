@@ -105,7 +105,8 @@ class SensitivityAAPSPlugin @Inject constructor(
             index++
         }
         val deviations = Array(deviationsArray.size) { i -> deviationsArray[i] }
-        val sens = profile.getIsfMgdl(toTime, "SensitivityAAPSPlugin")
+        //val sens = profile.getIsfMgdl(toTime, current.bg, "SensitivityAAPSPlugin")
+        val sens = current.sens
         val ratioLimit = ""
         val sensResult: String
         aapsLogger.debug(LTag.AUTOSENS, "Records: $index   $pastSensitivity")

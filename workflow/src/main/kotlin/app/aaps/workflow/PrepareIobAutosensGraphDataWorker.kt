@@ -144,7 +144,6 @@ class PrepareIobAutosensGraphDataWorker(
 
         val adsData = data.iobCobCalculator.ads.clone()
 
-        val nowSens = profileFunction.getProfile(time)?.getIsfMgdl(time, "PrepareIobCobAutosensGraphDataWorkerNow") ?: return Result.success()
         while (time <= endTime) {
             if (isStopped) return Result.failure(workDataOf("Error" to "stopped"))
             val progress = (time - fromTime).toDouble() / (endTime - fromTime) * 100.0
@@ -184,24 +183,16 @@ class PrepareIobAutosensGraphDataWorker(
                 if (autosensData.failOverToMinAbsorptionRate) {
                     minFailOverActiveList.add(AutosensDataPoint(autosensData, data.overviewData.cobScale, time, rh))
                 }
-            }
+                // BGI
+                val devBgiScale = overviewMenus.isEnabledIn(OverviewMenus.CharType.DEV) == overviewMenus.isEnabledIn(OverviewMenus.CharType.BGI)
+                val deviation = if (devBgiScale) autosensData.deviation else 0.0
+                val sens = autosensData.sens
+                val bgi: Double = iob.activity * sens * 5.0
+                if (time <= now) bgiArrayHist.add(ScaledDataPoint(time, bgi, data.overviewData.bgiScale))
+                else bgiArrayPrediction.add(ScaledDataPoint(time, bgi, data.overviewData.bgiScale))
+                data.overviewData.maxBGIValue = max(data.overviewData.maxBGIValue, max(abs(bgi), deviation))
 
-            // ACTIVITY
-            if (time <= now) actArrayHist.add(ScaledDataPoint(time, iob.activity, data.overviewData.actScale))
-            else actArrayPrediction.add(ScaledDataPoint(time, iob.activity, data.overviewData.actScale))
-            data.overviewData.maxIAValue = max(data.overviewData.maxIAValue, abs(iob.activity))
-
-            // BGI
-            val devBgiScale = overviewMenus.isEnabledIn(OverviewMenus.CharType.DEV) == overviewMenus.isEnabledIn(OverviewMenus.CharType.BGI)
-            val deviation = if (devBgiScale) autosensData?.deviation ?: 0.0 else 0.0
-            val sens = if (time > dateUtil.now()) nowSens else profile.getIsfMgdl(time, "PrepareIobCobAutosensGraphDataWorker")
-            val bgi: Double = iob.activity * sens * 5.0
-            if (time <= now) bgiArrayHist.add(ScaledDataPoint(time, bgi, data.overviewData.bgiScale))
-            else bgiArrayPrediction.add(ScaledDataPoint(time, bgi, data.overviewData.bgiScale))
-            data.overviewData.maxBGIValue = max(data.overviewData.maxBGIValue, max(abs(bgi), deviation))
-
-            // DEVIATIONS
-            if (autosensData != null) {
+                // DEVIATIONS
                 var color = rh.gac(ctx, app.aaps.core.ui.R.attr.deviationBlackColor)  // "="
                 if (autosensData.type == "" || autosensData.type == "non-meal") {
                     if (autosensData.pastSensitivity == "C") color = rh.gac(ctx, app.aaps.core.ui.R.attr.deviationGreyColor)
@@ -215,6 +206,11 @@ class PrepareIobAutosensGraphDataWorker(
                 devArray.add(DeviationDataPoint(time.toDouble(), autosensData.deviation, color, data.overviewData.devScale))
                 data.overviewData.maxDevValueFound = maxOf(data.overviewData.maxDevValueFound, abs(autosensData.deviation), abs(bgi))
             }
+
+            // ACTIVITY
+            if (time <= now) actArrayHist.add(ScaledDataPoint(time, iob.activity, data.overviewData.actScale))
+            else actArrayPrediction.add(ScaledDataPoint(time, iob.activity, data.overviewData.actScale))
+            data.overviewData.maxIAValue = max(data.overviewData.maxIAValue, abs(iob.activity))
 
             // RATIO
             if (autosensData != null) {

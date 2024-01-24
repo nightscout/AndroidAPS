@@ -107,23 +107,23 @@ open class OpenAPSSMBPlugin @Inject constructor(
 
     override fun getIsfMgdl(multiplier: Double, timeShift: Int, caller: String): Double? {
         val start = dateUtil.now()
-        val sensitivity = calculateVariableIsf(dateUtil.now(), caller)
-        if (sensitivity == null)
+        val sensitivity = calculateVariableIsf(start, bg = null)
+        if (sensitivity.second == null)
             uiInteraction.addNotificationValidTo(
-                Notification.DYN_ISF_FALLBACK, dateUtil.now(),
+                Notification.DYN_ISF_FALLBACK, start,
                 rh.gs(R.string.fallback_to_isf_no_tdd), Notification.INFO, dateUtil.now() + T.mins(1).msecs()
             )
         else
             uiInteraction.dismissNotification(Notification.DYN_ISF_FALLBACK)
-        profiler.log(LTag.APS, "getIsfMgdl() $caller", start)
-        return sensitivity
+        profiler.log(LTag.APS, String.format("getIsfMgdl() %s %f %s %s", sensitivity.first, sensitivity.second, dateUtil.dateAndTimeAndSecondsString(start), caller), start)
+        return sensitivity.second
     }
 
-    override fun getIsfMgdl(timestamp: Long, multiplier: Double, timeShift: Int, caller: String): Double? {
+    override fun getIsfMgdl(timestamp: Long, bg: Double, multiplier: Double, timeShift: Int, caller: String): Double? {
         val start = dateUtil.now()
-        val sensitivity = calculateVariableIsf(timestamp, caller)
-        profiler.log(LTag.APS, String.format("getIsfMgdl(timestamp) %30s", caller), start)
-        return sensitivity
+        val sensitivity = calculateVariableIsf(timestamp, bg)
+        profiler.log(LTag.APS, String.format("getIsfMgdl() %s %f %s %s", sensitivity.first, sensitivity.second, dateUtil.dateAndTimeAndSecondsString(timestamp), caller), start)
+        return sensitivity.second
     }
 
     override fun specialEnableCondition(): Boolean {
@@ -150,31 +150,31 @@ open class OpenAPSSMBPlugin @Inject constructor(
     }
 
     private val dynIsfCache = LongSparseArray<Double>()
-    private fun calculateVariableIsf(timestamp: Long, caller: String): Double? {
-        if (!preferences.get(BooleanKey.ApsUseDynamicSensitivity)) return null
+    private fun calculateVariableIsf(timestamp: Long, bg: Double?): Pair<String, Double?> {
+        if (!preferences.get(BooleanKey.ApsUseDynamicSensitivity)) return Pair("OFF", null)
 
         val result = persistenceLayer.getApsResultCloseTo(timestamp)
         if (result?.variableSens != null) {
-            aapsLogger.debug("calculateVariableIsf $caller DB  ${dateUtil.dateAndTimeAndSecondsString(timestamp)} ${result.variableSens}")
-            return result.variableSens
+            //aapsLogger.debug("calculateVariableIsf $caller DB  ${dateUtil.dateAndTimeAndSecondsString(timestamp)} ${result.variableSens}")
+            return Pair("DB", result.variableSens)
         }
 
-        val glucoseStatus = glucoseStatusProvider.glucoseStatusData ?: return null
+        val glucose = bg ?: glucoseStatusProvider.glucoseStatusData?.glucose ?: return Pair("GLUC", null)
         // Round down to 30 min and use it as a key for caching
         // Add BG to key as it affects calculation
-        val key = timestamp - timestamp % T.mins(30).msecs() + glucoseStatus.glucose.toLong()
+        val key = timestamp - timestamp % T.mins(30).msecs() + glucose.toLong()
         val cached = dynIsfCache[key]
         if (cached != null && timestamp < dateUtil.now()) {
-            aapsLogger.debug("calculateVariableIsf $caller HIT ${dateUtil.dateAndTimeAndSecondsString(timestamp)} $cached")
-            return cached
+            //aapsLogger.debug("calculateVariableIsf $caller HIT ${dateUtil.dateAndTimeAndSecondsString(timestamp)} $cached")
+            return Pair("HIT", cached)
         }
 
         // no cached result found, let's calculate the value
-        val tdd1D = tddCalculator.averageTDD(tddCalculator.calculate(timestamp, 1, allowMissingDays = false))?.totalAmount ?: return null
-        val tdd7D = tddCalculator.averageTDD(tddCalculator.calculate(timestamp, 7, allowMissingDays = false))?.totalAmount ?: return null
-        val tddLast24H = tddCalculator.calculateDaily(-24, 0)?.totalAmount ?: return null
-        val tddLast4H = tddCalculator.calculateDaily(-4, 0)?.totalAmount ?: return null
-        val tddLast8to4H = tddCalculator.calculateDaily(-8, -4)?.totalAmount ?: return null
+        val tdd1D = tddCalculator.averageTDD(tddCalculator.calculate(timestamp, 1, allowMissingDays = false))?.totalAmount ?: return Pair("TDD miss", null)
+        val tdd7D = tddCalculator.averageTDD(tddCalculator.calculate(timestamp, 7, allowMissingDays = false))?.totalAmount ?: return Pair("TDD miss", null)
+        val tddLast24H = tddCalculator.calculateDaily(-24, 0)?.totalAmount ?: return Pair("TDD miss", null)
+        val tddLast4H = tddCalculator.calculateDaily(-4, 0)?.totalAmount ?: return Pair("TDD miss", null)
+        val tddLast8to4H = tddCalculator.calculateDaily(-8, -4)?.totalAmount ?: return Pair("TDD miss", null)
         val insulinDivisor = when {
             activePlugin.activeInsulin.peak > 65 -> 55 // lyumjev peak: 45
             activePlugin.activeInsulin.peak > 50 -> 65 // ultra rapid peak: 55
@@ -184,11 +184,11 @@ open class OpenAPSSMBPlugin @Inject constructor(
         val tddWeightedFromLast8H = ((1.4 * tddStatus.tddLast4H) + (0.6 * tddStatus.tddLast8to4H)) * 3
         val tdd = (tddWeightedFromLast8H * 0.33) + (tddStatus.tdd7D * 0.34) + (tddStatus.tdd1D * 0.33) * preferences.get(IntKey.ApsDynIsfAdjustmentFactor) / 100.0
 
-        val sensitivity = Round.roundTo(1800 / (tdd * (ln((glucoseStatus.glucose / insulinDivisor) + 1))), 0.1)
-        aapsLogger.debug("calculateVariableIsf $caller CAL ${dateUtil.dateAndTimeAndSecondsString(timestamp)} $sensitivity")
+        val sensitivity = Round.roundTo(1800 / (tdd * (ln((glucose / insulinDivisor) + 1))), 0.1)
+        //aapsLogger.debug("calculateVariableIsf $caller CAL ${dateUtil.dateAndTimeAndSecondsString(timestamp)} $sensitivity")
         dynIsfCache.put(key, sensitivity)
         if (dynIsfCache.size() > 1000) dynIsfCache.clear()
-        return sensitivity
+        return Pair("CALC", sensitivity)
     }
 
     override fun invoke(initiator: String, tempBasalFallback: Boolean) {

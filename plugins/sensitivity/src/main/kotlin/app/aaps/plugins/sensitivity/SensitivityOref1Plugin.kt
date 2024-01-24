@@ -149,7 +149,8 @@ class SensitivityOref1Plugin @Inject constructor(
             deviationsHour[i] = deviations
         }
         var hourUsed = 0
-        val sens = profile.getIsfMgdl(toTime, "SensitivityOref1Plugin")
+        //val sens = profile.getIsfMgdl(toTime, current.bg, "SensitivityOref1Plugin")
+        val sens = current.sens
         while (hourUsed < deviationsHour.size) {
             val deviationsArray: ArrayList<Double> = deviationsHour[hourUsed]
             val pastSensitivity = pastSensitivityArray[hourUsed]

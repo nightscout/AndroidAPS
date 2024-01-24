@@ -271,9 +271,9 @@ sealed class ProfileSealed(
             aps.getIsfMgdl(100.0 / percentage, timeshift, caller) ?: toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(), 100.0 / percentage, timeshift), units)
         else toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(), 100.0 / percentage, timeshift), units)
 
-    override fun getIsfMgdl(timestamp: Long, caller: String): Double =
+    override fun getIsfMgdl(timestamp: Long, bg: Double, caller: String): Double =
         if (aps?.supportsDynamicIsf() ?: error("APS not defined"))
-            aps.getIsfMgdl(timestamp, 100.0 / percentage, timeshift, caller) ?: toMgdl(
+            aps.getIsfMgdl(timestamp, bg, 100.0 / percentage, timeshift, caller) ?: toMgdl(
                 isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), 100.0 / percentage, timeshift),
                 units
             )

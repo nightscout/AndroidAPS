@@ -72,7 +72,7 @@ interface Profile {
     /**
      * ISF value according to timestamp in MGDL
      */
-    fun getIsfMgdl(timestamp: Long, caller: String): Double
+    fun getIsfMgdl(timestamp: Long, bg: Double, caller: String): Double
 
     /**
      * Average target value according to "now" in MGDL
