@@ -122,6 +122,9 @@
     <string name="key_email_for_crash_report" translatable="false">email_for_crash_report</string>
     <string name="key_enable_fabric" translatable="false">enable_fabric2</string>
 
+    <!--    Automation-->
+    <string name="key_location" translatable="false">location</string>
+
     <!--    Alerts-->
     <string name="key_missed_bg_readings_threshold_minutes" translatable="false">missed_bg_readings_threshold</string>
     <string name="key_pump_unreachable_threshold_minutes" translatable="false">pump_unreachable_threshold</string>
