@@ -258,7 +258,6 @@
     <string name="overview_show_deviation_slope">Pente de déviations</string>
     <string name="overview_show_activity">Activité</string>
     <string name="overview_show_bgi">Impact glycémique</string>
-    <string name="overview_show_sensitivity">Sensibilité</string>
     <string name="overview_show_deviations">Déviations</string>
     <string name="overview_show_cob">Glucides actifs</string>
     <string name="overview_show_iob">Insuline Active</string>
@@ -273,7 +272,6 @@
     <string name="devslope_shortname">PENTEDEV</string>
     <string name="treatments_shortname">TRAIT</string>
     <string name="heartRate_shortname">FC</string>
-    <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Échelle du graph.</string>
     <string name="graph_menu_divider_header">Graph</string>
     <!-- Skins -->
