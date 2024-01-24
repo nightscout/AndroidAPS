@@ -259,7 +259,6 @@
     <string name="overview_show_deviation_slope">Afvigelses hældning</string>
     <string name="overview_show_activity">Aktivitet</string>
     <string name="overview_show_bgi">Blodsukker virkning</string>
-    <string name="overview_show_sensitivity">Sensitivitet</string>
     <string name="overview_show_deviations">Afvigelser</string>
     <string name="overview_show_cob">Aktive kulhydrater </string>
     <string name="overview_show_iob">Aktivt insulin </string>
@@ -274,7 +273,6 @@
     <string name="devslope_shortname">AFVHÆL</string>
     <string name="treatments_shortname">BEHANDL</string>
     <string name="heartRate_shortname">HR</string>
-    <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Graf skala</string>
     <string name="graph_menu_divider_header">Graf</string>
     <!-- Skins -->
