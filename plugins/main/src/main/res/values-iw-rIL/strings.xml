@@ -289,7 +289,6 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">מציג הודעה קבועה עם סקירה קצרה של מה שהלולאה שלכם עושה</string>
     <string name="old_data">נתונים ישנים</string>
-    <string name="overview_show_steps">צעדים</string>
     <string name="steps_shortname">צעדים</string>
     <string name="simple_mode_enabled">נבחר המצב הפשוט</string>
 </resources>
