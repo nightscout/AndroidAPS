@@ -41,6 +41,14 @@ class HeartRateDaoTest {
         assertTrue(hr1.contentEqualsTo(hr2!!))
     }
 
+    private fun HeartRate.contentEqualsTo(other: HeartRate): Boolean {
+        return this === other || (
+            duration == other.duration &&
+                timestamp == other.timestamp &&
+                beatsPerMinute == other.beatsPerMinute &&
+                isValid == other.isValid)
+    }
+
     @Test
     fun new_insertAndFind() {
         createDatabase().use { db -> insertAndFind(db) }

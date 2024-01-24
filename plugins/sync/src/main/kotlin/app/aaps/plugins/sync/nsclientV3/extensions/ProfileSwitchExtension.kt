@@ -19,7 +19,7 @@ fun NSProfileSwitch.toProfileSwitch(activePlugin: ActivePlugin, dateUtil: DateUt
         profileJson?.let { pureProfileFromJson(it, dateUtil) ?: return null }
             ?: activePlugin.activeProfileSource.profile?.getSpecificProfile(profile) ?: return null
 
-    val profileSealed = ProfileSealed.Pure(pureProfile)
+    val profileSealed = ProfileSealed.Pure(value = pureProfile, activePlugin = null)
 
     return PS(
         isValid = isValid,
@@ -57,7 +57,7 @@ fun PS.toNSProfileSwitch(dateUtil: DateUtil, decimalFormatter: DecimalFormatter)
         profile = unmodifiedCustomizedName,
         originalProfileName = profileName,
         originalDuration = duration,
-        profileJson = ProfileSealed.PS(notCustomized).toPureNsJson(dateUtil),
+        profileJson = ProfileSealed.PS(value = notCustomized, activePlugin = null).toPureNsJson(dateUtil),
         identifier = ids.nightscoutId,
         pumpId = ids.pumpId,
         pumpType = ids.pumpType?.name,

@@ -5,7 +5,7 @@ import app.aaps.core.data.aps.ApsMode
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.iob.CobInfo
 import app.aaps.core.data.iob.InMemoryGlucoseValue
-import app.aaps.core.data.iob.IobTotal
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.OE
 import app.aaps.core.data.model.SourceSensor

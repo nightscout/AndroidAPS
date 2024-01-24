@@ -1,12 +1,13 @@
 package app.aaps.core.objects.extensions
 
 import app.aaps.core.data.aps.AutosensResult
-import app.aaps.core.data.iob.IobTotal
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import kotlin.math.ceil
@@ -55,9 +56,9 @@ fun TB.toStringFull(profile: Profile, dateUtil: DateUtil, decimalFormatter: Deci
     }
 }
 
-fun TB.toStringShort(decimalFormatter: DecimalFormatter): String =
-    if (isAbsolute || type == TB.Type.FAKE_EXTENDED) decimalFormatter.to2Decimal(rate) + "U/h"
-    else "${decimalFormatter.to0Decimal(rate)}%"
+fun TB.toStringShort(rh: ResourceHelper): String =
+    if (isAbsolute || type == TB.Type.FAKE_EXTENDED) rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, rate)
+    else rh.gs(app.aaps.core.ui.R.string.formatPercent, rate)
 
 fun TB.iobCalc(time: Long, profile: Profile, insulinInterface: Insulin): IobTotal {
     if (!isValid) return IobTotal(time)

@@ -5,6 +5,8 @@
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="@string/key_dark"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_dark"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
@@ -13,6 +15,8 @@
         android:defaultValue="false"
         android:key="@string/key_match_divider"
         android:summary="Status bar divider background matches watchface background"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_matching_divider"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
@@ -20,6 +24,8 @@
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="@string/key_vibrate_hourly"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_vibrate_hourly"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />

@@ -240,7 +240,7 @@ class XdripPlugin @Inject constructor(
 
         //Temp basal
         processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())?.let {
-            status.append(it.toStringShort(decimalFormatter)).append(" ")
+            status.append(it.toStringShort(rh)).append(" ")
         }
         //IOB
         val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
@@ -253,7 +253,7 @@ class XdripPlugin @Inject constructor(
                 .append(decimalFormatter.to2Decimal(basalIob.basaliob))
                 .append(")")
         if (sp.getBoolean(R.string.key_xdrip_status_show_bgi, true)) {
-            val bgi = -(bolusIob.activity + basalIob.activity) * 5 * profileUtil.fromMgdlToUnits(profile.getIsfMgdl())
+            val bgi = -(bolusIob.activity + basalIob.activity) * 5 * profileUtil.fromMgdlToUnits(profile.getIsfMgdl("XdripPlugin"))
             status.append(" ")
                 .append(if (bgi >= 0) "+" else "")
                 .append(decimalFormatter.to2Decimal(bgi))

@@ -12,10 +12,9 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.view.View
 import android.widget.RemoteViews
-import app.aaps.core.data.iob.IobTotal
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.aps.Loop
-import app.aaps.core.interfaces.aps.VariableSensitivityResult
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -282,8 +281,8 @@ class Widget : AppWidgetProvider() {
 
         // Show variable sensitivity
         val request = loop.lastRun?.request
-        if (request is VariableSensitivityResult) {
-            val isfMgdl = profileFunction.getProfile()?.getIsfMgdl()
+        if (request?.variableSens != null) {
+            val isfMgdl = profileFunction.getProfile()?.getIsfMgdl("Widget")
             val variableSens = request.variableSens
             if (variableSens != isfMgdl && variableSens != null && isfMgdl != null) {
                 views.setTextViewText(

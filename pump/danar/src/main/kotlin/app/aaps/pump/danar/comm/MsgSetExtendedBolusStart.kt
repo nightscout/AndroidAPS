@@ -27,7 +27,7 @@ class MsgSetExtendedBolusStart(
         val result = intFromBuff(bytes, 0, 1)
         if (result != 1) {
             failed = true
-            aapsLogger.debug(LTag.PUMPBTCOMM, "Set extended bolus start result: $result FAILED!!!")
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Set extended bolus start result: $result ERROR!!!")
         } else {
             aapsLogger.debug(LTag.PUMPBTCOMM, "Set extended bolus start result: $result")
         }

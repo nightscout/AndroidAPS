@@ -66,6 +66,7 @@
     <string name="omnipod_common_overview_reservoir_value">%1$.2f Ü kaldı</string>
     <string name="omnipod_common_overview_reservoir_value_over50">50 Ü üzeri</string>
     <string name="omnipod_common_overview_errors">Hatalar</string>
+    <string name="omnipod_common_uncertain">belirsiz</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_cancel">İptal</string>
     <string name="omnipod_common_wizard_button_finish">Bitti</string>

@@ -4,10 +4,12 @@ enum class BooleanKey(
     override val key: Int,
     val defaultValue: Boolean,
     override val defaultedBySM: Boolean = false,
-    val showInApsMode: Boolean = true,
-    val showInNsClientMode: Boolean = true,
-    val showInPumpControlMode: Boolean = true,
-    val hideParentScreenIfHidden: Boolean = false     // PreferenceScreen is final so we cannot extend and modify behavior
+    override val showInApsMode: Boolean = true,
+    override val showInNsClientMode: Boolean = true,
+    override val showInPumpControlMode: Boolean = true,
+    override val dependency: Int = 0,
+    override val negativeDependency: Int = 0,
+    override val hideParentScreenIfHidden: Boolean = false
 ) : PreferenceKey {
 
     GeneralSimpleMode(R.string.key_simple_mode, true),
@@ -27,7 +29,7 @@ enum class BooleanKey(
     OverviewUseSuperBolus(R.string.key_use_superbolus, false, defaultedBySM = true, hideParentScreenIfHidden = true),
     BgSourceUploadToNs(R.string.key_do_bg_ns_upload, true, defaultedBySM = true, hideParentScreenIfHidden = true),
     DexcomCreateSensorChange(R.string.key_dexcom_log_ns_sensor_change, true, defaultedBySM = true),
-    ApsUseAutosens(R.string.key_openaps_use_autosens, true, defaultedBySM = true), // change from default false
+    ApsUseAutosens(R.string.key_openaps_use_autosens, true, defaultedBySM = true, negativeDependency = R.string.key_use_dynamic_sensitivity), // change from default false
     ApsUseSmb(R.string.key_openaps_use_smb, true, defaultedBySM = true), // change from default false
     ApsUseSmbWithHighTt(R.string.key_openaps_allow_smb_with_high_temp_target, false, defaultedBySM = true),
     ApsUseSmbAlways(R.string.key_openaps_enable_smb_always, true, defaultedBySM = true), // change from default false
@@ -38,7 +40,8 @@ enum class BooleanKey(
     ApsSensitivityRaisesTarget(R.string.key_openaps_sensitivity_raises_target, true, defaultedBySM = true),
     ApsResistanceLowersTarget(R.string.key_openaps_resistance_lowers_target, true, defaultedBySM = true), // change from default false
     ApsAlwaysUseShortDeltas(R.string.key_openaps_always_use_short_deltas, false, defaultedBySM = true, hideParentScreenIfHidden = true),
-    ApsDynIsfAdjustSensitivity(R.string.key_dynamic_isf_adjust_sensitivity, false, defaultedBySM = true), // change from default false
+    ApsDynIsfAdjustSensitivity(R.string.key_dynamic_isf_adjust_sensitivity, false, defaultedBySM = true, dependency = R.string.key_use_dynamic_sensitivity), // change from default false
     ApsAmaAutosensAdjustTargets(R.string.key_openaps_ama_autosens_adjust_targets, true, defaultedBySM = true),
+    ApsUseDynamicSensitivity(R.string.key_use_dynamic_sensitivity, false),
     MaintenanceEnableFabric(R.string.key_enable_fabric, true, defaultedBySM = true, hideParentScreenIfHidden = true),
 }

@@ -6,27 +6,27 @@
         android:entries="@array/tile_tempt_names"
         android:entryValues="@array/tile_tempt_values"
         android:key="tile_tempt_1"
-        android:title="Target 1" />
+        android:title="@string/tile_tempt_1" />
 
     <ListPreference
         android:defaultValue="eating_soon"
         android:entries="@array/tile_tempt_names"
         android:entryValues="@array/tile_tempt_values"
         android:key="tile_tempt_2"
-        android:title="Target 2" />
+        android:title="@string/tile_tempt_2" />
 
     <ListPreference
         android:defaultValue="hypo"
         android:entries="@array/tile_tempt_names"
         android:entryValues="@array/tile_tempt_values"
         android:key="tile_tempt_3"
-        android:title="Target 3" />
+        android:title="@string/tile_tempt_3" />
 
     <ListPreference
         android:defaultValue="manual"
         android:entries="@array/tile_tempt_names"
         android:entryValues="@array/tile_tempt_values"
         android:key="tile_tempt_4"
-        android:title="Target 4" />
+        android:title="@string/tile_tempt_4" />
 
 </PreferenceScreen>

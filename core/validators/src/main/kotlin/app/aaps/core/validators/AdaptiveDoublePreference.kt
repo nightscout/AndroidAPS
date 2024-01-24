@@ -4,6 +4,7 @@ import android.content.Context
 import android.text.InputType
 import android.util.AttributeSet
 import androidx.preference.EditTextPreference
+import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceViewHolder
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.SafeParse
@@ -36,6 +37,16 @@ class AdaptiveDoublePreference(ctx: Context, attrs: AttributeSet?) : EditTextPre
         if (preferences.pumpControlMode && !preferenceKey.showInPumpControlMode) {
             isVisible = false; isEnabled = false
         }
+        if (preferenceKey.dependency != 0) {
+            val sp = PreferenceManager.getDefaultSharedPreferences(context)
+            if (!sp.getBoolean(context.getString(preferenceKey.dependency), false))
+                isVisible = false
+        }
+        if (preferenceKey.negativeDependency != 0) {
+            val sp = PreferenceManager.getDefaultSharedPreferences(context)
+            if (sp.getBoolean(context.getString(preferenceKey.dependency), false))
+                isVisible = false
+        }
         validatorParameters = obtainValidatorParameters(attrs)
         setOnBindEditTextListener { editText ->
             validator = DefaultEditTextValidator(editText, validatorParameters, context)
@@ -59,14 +70,6 @@ class AdaptiveDoublePreference(ctx: Context, attrs: AttributeSet?) : EditTextPre
         super.onBindViewHolder(holder)
         holder.isDividerAllowedAbove = false
         holder.isDividerAllowedBelow = false
-    }
-
-    fun setMinNumber(min: Double) {
-        this.validatorParameters.floatminNumber = min.toFloat()
-    }
-
-    fun setMaxNumber(max: Int) {
-        this.validatorParameters.floatmaxNumber = max.toFloat()
     }
 
     private fun obtainValidatorParameters(attrs: AttributeSet?): DefaultEditTextValidator.Parameters {

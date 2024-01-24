@@ -76,7 +76,7 @@
     <string name="ic_long_label">Insulino ir angliavandenių santykis</string>
     <string name="isf_long_label">Jautrumo insulinui faktorius</string>
     <string name="basal_long_label">Valandinė bazė</string>
-    <string name="target_long_label">Tikslinė glikemija</string>
+    <string name="target_long_label">Glikemijos tikslas</string>
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
     <string name="bluetooth">Bluetooth</string>

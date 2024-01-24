@@ -99,6 +99,6 @@ class ProfileStoreObject(
         get() = getProfileList()
             .asSequence()
             .map { profileName -> getSpecificProfile(profileName.toString()) }
-            .map { pureProfile -> pureProfile?.let { ProfileSealed.Pure(pureProfile).isValid("allProfilesValid", activePlugin.activePump, config, rh, rxBus, hardLimits, false) } }
+            .map { pureProfile -> pureProfile?.let { ProfileSealed.Pure(pureProfile, activePlugin).isValid("allProfilesValid", activePlugin.activePump, config, rh, rxBus, hardLimits, false) } }
             .all { it?.isValid == true }
 }

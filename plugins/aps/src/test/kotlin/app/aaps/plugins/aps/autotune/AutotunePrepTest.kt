@@ -1,6 +1,6 @@
 package app.aaps.plugins.aps.autotune
 
-import app.aaps.core.data.iob.IobTotal
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
 import app.aaps.core.data.model.GV
@@ -191,7 +191,7 @@ class AutotunePrepTest : TestBaseWithProfile() {
                 timeZone = timezone,
                 dia = dia
             )
-            return ATProfile(ProfileSealed.Pure(pure), localInsulin, injector).also { it.dateUtil = dateUtil }
+            return ATProfile(ProfileSealed.Pure(pure, activePlugin), localInsulin, injector).also { it.dateUtil = dateUtil }
         } catch (ignored: Exception) {
             return null
         }

@@ -7,7 +7,6 @@ import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.constraints.Objectives.Companion.AUTOSENS_OBJECTIVE
 import app.aaps.core.interfaces.constraints.Objectives.Companion.AUTO_OBJECTIVE
-import app.aaps.core.interfaces.constraints.Objectives.Companion.DYN_ISF_OBJECTIVE
 import app.aaps.core.interfaces.constraints.Objectives.Companion.FIRST_OBJECTIVE
 import app.aaps.core.interfaces.constraints.Objectives.Companion.MAXBASAL_OBJECTIVE
 import app.aaps.core.interfaces.constraints.Objectives.Companion.MAXIOB_ZERO_CL_OBJECTIVE
@@ -23,7 +22,6 @@ import app.aaps.plugins.constraints.objectives.objectives.Objective
 import app.aaps.plugins.constraints.objectives.objectives.Objective0
 import app.aaps.plugins.constraints.objectives.objectives.Objective1
 import app.aaps.plugins.constraints.objectives.objectives.Objective10
-import app.aaps.plugins.constraints.objectives.objectives.Objective11
 import app.aaps.plugins.constraints.objectives.objectives.Objective2
 import app.aaps.plugins.constraints.objectives.objectives.Objective3
 import app.aaps.plugins.constraints.objectives.objectives.Objective4
@@ -77,7 +75,6 @@ class ObjectivesPlugin @Inject constructor(
         objectives.add(Objective7(injector))
         objectives.add(Objective9(injector))
         objectives.add(Objective10(injector))
-        objectives.add(Objective11(injector))
         // edit companion object if you remove/add Objective
     }
 
@@ -136,12 +133,6 @@ class ObjectivesPlugin @Inject constructor(
     override fun isSMBModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         if (!objectives[SMB_OBJECTIVE].isStarted)
             value.set(false, rh.gs(R.string.objectivenotstarted, SMB_OBJECTIVE + 1), this)
-        return value
-    }
-
-    override fun isDynIsfModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
-        if (!objectives[DYN_ISF_OBJECTIVE].isStarted)
-            value.set(false, rh.gs(R.string.objectivenotstarted, DYN_ISF_OBJECTIVE + 1), this)
         return value
     }
 

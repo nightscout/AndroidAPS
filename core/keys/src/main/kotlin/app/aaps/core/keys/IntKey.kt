@@ -7,10 +7,12 @@ enum class IntKey(
     val max: Int,
     override val defaultedBySM: Boolean = false,
     val calculatedDefaultValue: Boolean = false,
-    val showInApsMode: Boolean = true,
-    val showInNsClientMode: Boolean = true,
-    val showInPumpControlMode: Boolean = true,
-    val hideParentScreenIfHidden: Boolean = false, // PreferenceScreen is final so we cannot extend and modify behavior
+    override val showInApsMode: Boolean = true,
+    override val showInNsClientMode: Boolean = true,
+    override val showInPumpControlMode: Boolean = true,
+    override val dependency: Int = 0,
+    override val negativeDependency: Int = 0,
+    override val hideParentScreenIfHidden: Boolean = false,
     val engineeringModeOnly: Boolean = false
 ) : PreferenceKey {
 
@@ -43,9 +45,10 @@ enum class IntKey(
     ApsMaxMinutesOfBasalToLimitSmb(R.string.key_openaps_smb_max_minutes, 30, 15, 120, defaultedBySM = true),
     ApsUamMaxMinutesOfBasalToLimitSmb(R.string.key_openaps_uam_smb_max_minutes, 30, 15, 120, defaultedBySM = true),
     ApsCarbsRequestThreshold(R.string.key_openaps_carbs_required_threshold, 1, 1, 10, defaultedBySM = true),
-    ApsDynIsfAdjustmentFactor(R.string.key_dynamic_isf_adjustment_factor, 100, 1, 300),
+    ApsDynIsfAdjustmentFactor(R.string.key_dynamic_isf_adjustment_factor, 100, 1, 300, dependency = R.string.key_use_dynamic_sensitivity),
     AutosensPeriod(R.string.key_openapsama_autosens_period, 24, 4, 24, calculatedDefaultValue = true),
     MaintenanceLogsAmount(R.string.key_maintenance_logs_amount, 2, 1, 10, defaultedBySM = true),
     AlertsStaleDataThreshold(R.string.key_missed_bg_readings_threshold_minutes, 30, 15, 10000, defaultedBySM = true),
     AlertsPumpUnreachableThreshold(R.string.key_pump_unreachable_threshold_minutes, 30, 30, 300, defaultedBySM = true),
+    InsulinOrefPeak(R.string.key_insulin_oref_peak, 75, 35, 120, hideParentScreenIfHidden = true),
 }

@@ -32,13 +32,4 @@ data class HeartRate(
     override var referenceId: Long? = null,
     @Embedded
     override var interfaceIDs_backing: InterfaceIDs? = null
-) : TraceableDBEntry, DBEntryWithTimeAndDuration {
-
-    fun contentEqualsTo(other: HeartRate): Boolean {
-        return this === other || (
-            duration == other.duration &&
-                timestamp == other.timestamp &&
-                beatsPerMinute == other.beatsPerMinute &&
-                isValid == other.isValid)
-    }
-}
+) : TraceableDBEntry, DBEntryWithTimeAndDuration

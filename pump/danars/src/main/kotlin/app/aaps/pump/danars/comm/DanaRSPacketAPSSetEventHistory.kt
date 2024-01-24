@@ -47,7 +47,7 @@ class DanaRSPacketAPSSetEventHistory(
         val result = intFromBuff(data, 0, 1)
         if (result != 0) {
             failed = true
-            aapsLogger.error(LTag.PUMPCOMM, "Set history entry result: $result FAILED!!!")
+            aapsLogger.error(LTag.PUMPCOMM, "Set history entry result: $result ERROR!!!")
         } else {
             failed = false
             aapsLogger.debug(LTag.PUMPCOMM, "Set history entry result: $result")

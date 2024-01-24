@@ -34,7 +34,7 @@ class MsgSetAPSTempBasalStartV2(
         val result = intFromBuff(bytes, 0, 1)
         if (result != 1) {
             failed = true
-            aapsLogger.debug(LTag.PUMPCOMM, "Set APS temp basal start result: $result FAILED!!!")
+            aapsLogger.debug(LTag.PUMPCOMM, "Set APS temp basal start result: $result ERROR!!!")
         } else {
             failed = false
             aapsLogger.debug(LTag.PUMPCOMM, "Set APS temp basal start result: $result")

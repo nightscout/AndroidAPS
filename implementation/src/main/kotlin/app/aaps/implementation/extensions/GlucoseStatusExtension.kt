@@ -1,6 +1,6 @@
 package app.aaps.implementation.extensions
 
-import app.aaps.core.data.iob.GlucoseStatus
+import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
 

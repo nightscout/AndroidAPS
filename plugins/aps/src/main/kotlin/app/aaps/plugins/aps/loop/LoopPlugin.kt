@@ -273,6 +273,9 @@ class LoopPlugin @Inject constructor(
                 return
             }
 
+            // Store calculations to DB
+            disposable += persistenceLayer.insertApsResult(apsResult).subscribe()
+
             // Prepare for pumps using % basals
             if (pump.pumpDescription.tempBasalStyle == PumpDescription.PERCENT && allowPercentage()) {
                 apsResult.usePercent = true

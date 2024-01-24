@@ -177,4 +177,5 @@
     <string name="equil_pump_updated">Помпа обновлена</string>
     <string name="equil_maxbolus_tips">Максимально допустимый болюс в помпе [%1$s ед]</string>
     <string name="equil_replace_reservoir">Резервуар пуст. Замените резервуар</string>
+    <string name="error_mustbe6hexadidits">Должно быть 6 символов: из этих: ABCDEF0123456789</string>
 </resources>

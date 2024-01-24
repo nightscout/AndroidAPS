@@ -27,6 +27,7 @@ dependencies {
     api(Libs.KotlinX.serializationProtobuf)
 
     api(Libs.Apache.commonsLang3)
+    api(Libs.jodaTimeAndroid)
 
     //RxBus
     api(Libs.Rx.rxKotlin)

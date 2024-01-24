@@ -3,6 +3,7 @@ package app.aaps.core.validators
 import android.content.Context
 import android.util.AttributeSet
 import androidx.preference.EditTextPreference
+import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceViewHolder
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.keys.Preferences
@@ -33,6 +34,16 @@ class AdaptiveStringPreference(ctx: Context, attrs: AttributeSet?) : EditTextPre
         }
         if (preferences.pumpControlMode && !preferenceKey.showInPumpControlMode) {
             isVisible = false; isEnabled = false
+        }
+        if (preferenceKey.dependency != 0) {
+            val sp = PreferenceManager.getDefaultSharedPreferences(context)
+            if (!sp.getBoolean(context.getString(preferenceKey.dependency), false))
+                isVisible = false
+        }
+        if (preferenceKey.negativeDependency != 0) {
+            val sp = PreferenceManager.getDefaultSharedPreferences(context)
+            if (sp.getBoolean(context.getString(preferenceKey.dependency), false))
+                isVisible = false
         }
         validatorParameters = obtainValidatorParameters(attrs)
         setOnBindEditTextListener { editText ->

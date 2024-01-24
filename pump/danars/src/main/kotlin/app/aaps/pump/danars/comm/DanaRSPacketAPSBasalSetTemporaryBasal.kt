@@ -41,7 +41,7 @@ class DanaRSPacketAPSBasalSetTemporaryBasal(
         val result = byteArrayToInt(getBytes(data, DATA_START, 1))
         if (result != 0) {
             failed = true
-            aapsLogger.debug(LTag.PUMPCOMM, "Set APS temp basal start result: $result FAILED!!!")
+            aapsLogger.debug(LTag.PUMPCOMM, "Set APS temp basal start result: $result ERROR!!!")
         } else {
             failed = false
             aapsLogger.debug(LTag.PUMPCOMM, "Set APS temp basal start result: $result")

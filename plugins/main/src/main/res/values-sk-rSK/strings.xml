@@ -289,7 +289,6 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Zobrazuje priebežné oznámenia v Androide s krátkym prehľadom, čo práve uzavretý okruh robí</string>
     <string name="old_data">ZASTARALÉ DÁTA</string>
-    <string name="overview_show_steps">kroky</string>
     <string name="steps_shortname">KROKY</string>
     <string name="simple_mode_enabled">Jednoduchý režim aktívny</string>
 </resources>

@@ -95,6 +95,9 @@ class OverviewDataImpl @Inject constructor(
         therapyEventSeries = PointsWithLabelGraphSeries<DataPointWithLabelInterface>()
         heartRateGraphSeries = PointsWithLabelGraphSeries<DataPointWithLabelInterface>()
         stepsCountGraphSeries = PointsWithLabelGraphSeries<StepsDataPoint>()
+        maxVarSensValueFound = 200.0
+        minVarSensValueFound = 50.0
+        varSensSeries = LineGraphSeries<ScaledDataPoint>()
     }
 
     override fun initRange() {
@@ -133,7 +136,7 @@ class OverviewDataImpl @Inject constructor(
         profileFunction.getProfile()?.let { profile ->
             var temporaryBasal = processedTbrEbData.getTempBasalIncludingConvertedExtended(dateUtil.now())
             if (temporaryBasal?.isInProgress == false) temporaryBasal = null
-            temporaryBasal?.let { "T:" + it.toStringShort(decimalFormatter) }
+            temporaryBasal?.let { "T:" + it.toStringShort(rh) }
                 ?: rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, profile.getBasal())
         } ?: rh.gs(app.aaps.core.ui.R.string.value_unavailable_short)
 
@@ -243,4 +246,9 @@ class OverviewDataImpl @Inject constructor(
     override var heartRateGraphSeries: SeriesData = PointsWithLabelGraphSeries<DataPointWithLabelInterface>()
     override var stepsForScale = Scale()
     override var stepsCountGraphSeries: SeriesData = PointsWithLabelGraphSeries<DataPointWithLabelInterface>()
+
+    override var maxVarSensValueFound = 200.0
+    override var minVarSensValueFound = 50.0
+    override val varSensScale = Scale()
+    override var varSensSeries: SeriesData = LineGraphSeries<ScaledDataPoint>()
 }

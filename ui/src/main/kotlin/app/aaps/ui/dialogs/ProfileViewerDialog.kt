@@ -98,7 +98,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
                     dismiss()
                     return
                 }
-                profile = ProfileSealed.EPS(eps)
+                profile = ProfileSealed.EPS(eps, activePlugin)
                 profile2 = null
                 profileName = eps.originalCustomizedName
                 date = dateUtil.dateAndTimeString(eps.timestamp)
@@ -106,7 +106,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             }
 
             UiInteraction.Mode.CUSTOM_PROFILE  -> {
-                profile = pureProfileFromJson(JSONObject(customProfileJson), dateUtil)?.let { ProfileSealed.Pure(it) }
+                profile = pureProfileFromJson(JSONObject(customProfileJson), dateUtil)?.let { ProfileSealed.Pure(it, activePlugin) }
                 profile2 = null
                 profileName = customProfileName
                 date = ""
@@ -114,8 +114,8 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             }
 
             UiInteraction.Mode.PROFILE_COMPARE -> {
-                profile = pureProfileFromJson(JSONObject(customProfileJson), dateUtil)?.let { ProfileSealed.Pure(it) }
-                profile2 = pureProfileFromJson(JSONObject(customProfileJson2), dateUtil)?.let { ProfileSealed.Pure(it) }
+                profile = pureProfileFromJson(JSONObject(customProfileJson), dateUtil)?.let { ProfileSealed.Pure(it, activePlugin) }
+                profile2 = pureProfileFromJson(JSONObject(customProfileJson2), dateUtil)?.let { ProfileSealed.Pure(it, activePlugin) }
                 profileName = customProfileName
                 binding.headerIcon.setImageResource(R.drawable.ic_compare_profiles)
                 date = ""
@@ -124,7 +124,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
 
             UiInteraction.Mode.DB_PROFILE      -> {
                 val profileList = persistenceLayer.getProfileSwitches()
-                profile = if (profileList.isNotEmpty()) ProfileSealed.PS(profileList[0]) else null
+                profile = if (profileList.isNotEmpty()) ProfileSealed.PS(profileList[0], activePlugin) else null
                 profile2 = null
                 profileName = if (profileList.isNotEmpty()) profileList[0].getCustomizedName(decimalFormatter) else null
                 date = if (profileList.isNotEmpty()) dateUtil.dateAndTimeString(profileList[0].timestamp) else null

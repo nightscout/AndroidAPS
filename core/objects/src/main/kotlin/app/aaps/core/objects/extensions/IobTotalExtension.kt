@@ -1,6 +1,6 @@
 package app.aaps.core.objects.extensions
 
-import app.aaps.core.data.iob.IobTotal
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
 import org.json.JSONArray

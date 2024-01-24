@@ -2,6 +2,7 @@ package app.aaps.core.keys
 
 import android.content.Context
 import android.util.AttributeSet
+import androidx.preference.PreferenceManager
 import androidx.preference.SwitchPreference
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
@@ -22,6 +23,16 @@ class AdaptiveSwitchPreference(context: Context, attrs: AttributeSet?) : SwitchP
         }
         if (preferences.pumpControlMode && !preferenceKey.showInPumpControlMode) {
             isVisible = false; isEnabled = false
+        }
+        if (preferenceKey.dependency != 0) {
+            val sp = PreferenceManager.getDefaultSharedPreferences(context)
+            if (!sp.getBoolean(context.getString(preferenceKey.dependency), false))
+                isVisible = false
+        }
+        if (preferenceKey.negativeDependency != 0) {
+            val sp = PreferenceManager.getDefaultSharedPreferences(context)
+            if (sp.getBoolean(context.getString(preferenceKey.dependency), false))
+                isVisible = false
         }
         setDefaultValue(preferenceKey.defaultValue)
     }
