@@ -258,7 +258,6 @@
     <string name="overview_show_deviation_slope">Odchylka sklonu</string>
     <string name="overview_show_activity">Aktivita</string>
     <string name="overview_show_bgi">Vliv na hladinu glukózy</string>
-    <string name="overview_show_sensitivity">Citlivost</string>
     <string name="overview_show_deviations">Odchylky</string>
     <string name="overview_show_cob">Zbývající sacharidy</string>
     <string name="overview_show_iob">Zbývající inzulín</string>
@@ -273,7 +272,6 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">OŠET</string>
     <string name="heartRate_shortname">TF</string>
-    <string name="sensitivity_shortname">SENZ</string>
     <string name="graph_scale">Měřítko grafu</string>
     <string name="graph_menu_divider_header">Graf</string>
     <!-- Skins -->
