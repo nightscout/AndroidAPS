@@ -84,7 +84,6 @@
     <string name="smb_disabled_in_preferences">SMB מושבת בהעדפות</string>
     <string name="uam_disabled_in_preferences">UAM מושבת בהעדפות</string>
     <string name="autosens_disabled_in_preferences">Autosens מושבת בהעדפות</string>
-    <string name="autosens_disabled_in_dyn_isf">אוטוסנס כבוי ברגישות דינאמית</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">הגבלת IOB ל-%1$.1f יח\' בגלל %2$s</string>
     <string name="maxvalueinpreferences">ערך מקסימלי בהעדפות</string>
