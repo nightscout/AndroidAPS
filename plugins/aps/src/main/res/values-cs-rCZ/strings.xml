@@ -84,7 +84,6 @@
     <string name="smb_disabled_in_preferences">SMB zakázáno v nastavení</string>
     <string name="uam_disabled_in_preferences">UAM zakázáno v nastavení</string>
     <string name="autosens_disabled_in_preferences">Autosens zakázán v nastavení</string>
-    <string name="autosens_disabled_in_dyn_isf">Autosens zakázán v DynISF</string>
     <string name="use_dynamic_sensitivity_title">Povolit dynamickou citlivost</string>
     <string name="use_dynamic_sensitivity_summary">Upravte algoritmus pro použití dynamické citlivosti namísto hodnoty profilu</string>
     <!--    Verify if needed in safety-->
