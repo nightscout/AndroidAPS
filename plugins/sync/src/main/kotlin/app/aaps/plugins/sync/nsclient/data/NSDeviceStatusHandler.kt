@@ -2,6 +2,8 @@ package app.aaps.plugins.sync.nsclient.data
 
 import app.aaps.core.interfaces.aps.RT
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
@@ -71,7 +73,8 @@ class NSDeviceStatusHandler @Inject constructor(
     private val config: Config,
     private val dateUtil: DateUtil,
     private val runningConfiguration: RunningConfiguration,
-    private val processedDeviceStatusData: ProcessedDeviceStatusData
+    private val processedDeviceStatusData: ProcessedDeviceStatusData,
+    private val aapsLogger: AAPSLogger
 ) {
 
     fun handleNewData(deviceStatuses: Array<NSDeviceStatus>) {
@@ -144,7 +147,11 @@ class NSDeviceStatusHandler @Inject constructor(
                 val clock = dateUtil.fromISODateString(timestamp)
                 // check if this is new data
                 if (clock > processedDeviceStatusData.openAPSData.clockSuggested) {
-                    processedDeviceStatusData.openAPSData.suggested = RT.deserialize(it.toString()).apply { this.timestamp = clock }
+                    try {
+                        processedDeviceStatusData.openAPSData.suggested = RT.deserialize(it.toString()).apply { this.timestamp = clock }
+                    } catch (e: Exception) {
+                        aapsLogger.error(LTag.NSCLIENT, e.stackTraceToString())
+                    }
                     processedDeviceStatusData.openAPSData.clockSuggested = clock
                 }
             }
@@ -154,7 +161,11 @@ class NSDeviceStatusHandler @Inject constructor(
                 val clock = dateUtil.fromISODateString(timestamp)
                 // check if this is new data
                 if (clock > processedDeviceStatusData.openAPSData.clockEnacted) {
-                    processedDeviceStatusData.openAPSData.enacted = RT.deserialize(it.toString()).apply { this.timestamp = clock }
+                    try {
+                        processedDeviceStatusData.openAPSData.enacted = RT.deserialize(it.toString()).apply { this.timestamp = clock }
+                    } catch (e: Exception) {
+                        aapsLogger.error(LTag.NSCLIENT, e.stackTraceToString())
+                    }
                     processedDeviceStatusData.openAPSData.clockEnacted = clock
                 }
             }

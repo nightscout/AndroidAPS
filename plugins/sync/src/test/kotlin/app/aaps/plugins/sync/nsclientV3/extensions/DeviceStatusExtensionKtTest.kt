@@ -34,7 +34,7 @@ internal class DeviceStatusExtensionKtTest : TestBase() {
     @BeforeEach
     fun setup() {
         processedDeviceStatusData = ProcessedDeviceStatusDataImpl(rh, dateUtil, sp, instantiator)
-        nsDeviceStatusHandler = NSDeviceStatusHandler(sp, config, dateUtil, runningConfiguration, processedDeviceStatusData)
+        nsDeviceStatusHandler = NSDeviceStatusHandler(sp, config, dateUtil, runningConfiguration, processedDeviceStatusData, aapsLogger)
         Mockito.`when`(config.NSCLIENT).thenReturn(true)
     }
 
