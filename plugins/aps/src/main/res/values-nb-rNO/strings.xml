@@ -84,7 +84,6 @@
     <string name="smb_disabled_in_preferences">SMB deaktivert i innstillinger</string>
     <string name="uam_disabled_in_preferences">UAM deaktivert i innstillinger</string>
     <string name="autosens_disabled_in_preferences">Autosens deaktivert i innstillinger</string>
-    <string name="autosens_disabled_in_dyn_isf">Autosens deaktivert i DynISF</string>
     <string name="use_dynamic_sensitivity_title">Aktiver dynamisk sensitivitet</string>
     <string name="use_dynamic_sensitivity_summary">Juster algoritmen til å bruke dynamisk sensitivitet istedenfor profilverdi</string>
     <!--    Verify if needed in safety-->
