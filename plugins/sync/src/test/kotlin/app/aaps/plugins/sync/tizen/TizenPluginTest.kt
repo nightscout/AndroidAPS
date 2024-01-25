@@ -37,7 +37,7 @@ internal class TizenPluginTest : TestBaseWithProfile() {
     fun setUp() {
         sut = TizenPlugin(
             aapsLogger, rh, aapsSchedulers, context, dateUtil, fabricPrivacy, rxBus, iobCobCalculator, processedTbrEbData, profileFunction, preferences, processedDeviceStatusData,
-            loop, activePlugin, receiverStatusStore, config, glucoseStatusProvider, decimalFormatter
+            loop, activePlugin, receiverStatusStore, config, glucoseStatusProvider
         )
         Mockito.`when`(iobCobCalculator.ads).thenReturn(autosensDataStore)
         Mockito.`when`(autosensDataStore.lastBg()).thenReturn(InMemoryGlucoseValue(1000, 100.0, sourceSensor = SourceSensor.UNKNOWN))
