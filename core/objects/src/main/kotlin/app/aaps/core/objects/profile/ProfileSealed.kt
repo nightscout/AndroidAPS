@@ -266,10 +266,12 @@ sealed class ProfileSealed(
             aps.getIc(timestamp, 100.0 / percentage, timeshift) ?: icBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), 100.0 / percentage, timeshift)
         else icBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), 100.0 / percentage, timeshift)
 
+    override fun getProfileIsfMgdl(): Double =
+        toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(), 100.0 / percentage, timeshift), units)
     override fun getIsfMgdl(caller: String): Double =
         if (aps?.supportsDynamicIsf() ?: error("APS not defined"))
             aps.getIsfMgdl(100.0 / percentage, timeshift, caller) ?: toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(), 100.0 / percentage, timeshift), units)
-        else toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(), 100.0 / percentage, timeshift), units)
+        else getProfileIsfMgdl()
 
     override fun getIsfMgdl(timestamp: Long, bg: Double, caller: String): Double =
         if (aps?.supportsDynamicIsf() ?: error("APS not defined"))

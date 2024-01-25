@@ -457,7 +457,7 @@ class LoopPlugin @Inject constructor(
                         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
                         builder.setSmallIcon(app.aaps.core.ui.R.drawable.notif_icon)
                             .setContentTitle(rh.gs(R.string.open_loop_new_suggestion))
-                            .setContentText(resultAfterConstraints.toString())
+                            .setContentText(resultAfterConstraints.resultAsString())
                             .setAutoCancel(true)
                             .setPriority(Notification.IMPORTANCE_HIGH)
                             .setCategory(Notification.CATEGORY_ALARM)

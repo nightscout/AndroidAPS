@@ -70,6 +70,11 @@ interface Profile {
     fun getIsfMgdl(caller: String): Double
 
     /**
+     * ISF profile value according to "now"" in MGDL
+     */
+    fun getProfileIsfMgdl(): Double
+
+    /**
      * ISF value according to timestamp in MGDL
      */
     fun getIsfMgdl(timestamp: Long, bg: Double, caller: String): Double

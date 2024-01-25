@@ -61,6 +61,7 @@ import app.aaps.plugins.aps.events.EventResetOpenAPSGui
 import app.aaps.plugins.aps.openAPS.TddStatus
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.floor
@@ -462,8 +463,11 @@ open class OpenAPSSMBPlugin @Inject constructor(
 
     override fun isAutosensModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         if (preferences.get(BooleanKey.ApsUseDynamicSensitivity)) {
-            value.set(false, rh.gs(R.string.autosens_disabled_in_dyn_isf), this)
+            // DynISF mode
+            if (!preferences.get(BooleanKey.ApsDynIsfAdjustSensitivity))
+                value.set(false, rh.gs(R.string.autosens_disabled_in_preferences), this)
         } else {
+            // SMB mode
             val enabled = preferences.get(BooleanKey.ApsUseAutosens)
             if (!enabled) value.set(false, rh.gs(R.string.autosens_disabled_in_preferences), this)
         }

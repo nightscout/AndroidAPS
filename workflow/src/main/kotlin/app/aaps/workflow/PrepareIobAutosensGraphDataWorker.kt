@@ -24,6 +24,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.OverviewMenus
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventIobCalculationProgress
@@ -47,6 +48,7 @@ class PrepareIobAutosensGraphDataWorker(
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var overviewMenus: OverviewMenus
     @Inject lateinit var persistenceLayer: PersistenceLayer
@@ -325,8 +327,8 @@ class PrepareIobAutosensGraphDataWorker(
         data.overviewData.minVarSensValueFound = Double.MAX_VALUE
         val apsResults = persistenceLayer.getApsResults(fromTime, endTime)
         apsResults.forEach {
-            it.variableSens?.let { varSens ->
-                assert(it.date in fromTime..endTime)
+            it.variableSens?.let { variableSens ->
+                val varSens = profileUtil.fromMgdlToUnits(variableSens)
                 varSensArray.add(ScaledDataPoint(it.date, varSens, data.overviewData.varSensScale))
                 data.overviewData.maxVarSensValueFound = max(data.overviewData.maxVarSensValueFound, varSens)
                 data.overviewData.minVarSensValueFound = min(data.overviewData.minVarSensValueFound, varSens)
