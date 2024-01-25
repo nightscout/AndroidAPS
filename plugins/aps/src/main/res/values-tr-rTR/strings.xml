@@ -85,7 +85,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="smb_disabled_in_preferences">SMB tercihlerde devre dışı bırakıldı</string>
     <string name="uam_disabled_in_preferences">UAM tercihlerde devre dışı bırakıldı</string>
     <string name="autosens_disabled_in_preferences">Otoduyarlılık tercihlerde devre dışı bırakıldı</string>
-    <string name="autosens_disabled_in_dyn_isf">DinİDF\'de otoduyarlılık devre dışı bırakıldı</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">%2$s\'den dolayı AİNS %1$.1f Ü ile sınırlandırılıyor</string>
     <string name="maxvalueinpreferences">tercihlerde maksimum değer</string>
