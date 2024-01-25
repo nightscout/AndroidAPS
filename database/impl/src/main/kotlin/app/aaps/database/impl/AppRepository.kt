@@ -715,7 +715,7 @@ class AppRepository @Inject internal constructor(
             .subscribeOn(Schedulers.io())
 
     fun insertTotalDailyDose(tdd: TotalDailyDose) {
-        database.totalDailyDoseDao.insert(tdd)
+        Schedulers.io().scheduleDirect { database.totalDailyDoseDao.insert(tdd) }
     }
 
     // OFFLINE EVENT
