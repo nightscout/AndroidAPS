@@ -205,4 +205,16 @@
     <string name="error">!chyba!</string>
     <string name="pref_heartRateSampling">Tepová frekvencia</string>
     <string name="pref_stepsSampling">Povoliť počítanie krokov</string>
+    <string name="tile_tempt_1">Dočasný cieľ 1</string>
+    <string name="tile_tempt_2">Dočasný cieľ 2</string>
+    <string name="tile_tempt_3">Dočasný cieľ 3</string>
+    <string name="tile_tempt_4">Dočasný cieľ 4</string>
+    <string name="tile_action_1">Akcia 1</string>
+    <string name="tile_action_2">Akcia 2</string>
+    <string name="tile_action_3">Akcia 3</string>
+    <string name="tile_action_4">Akcia 4</string>
+    <string name="datalayer_notification_title">Služba popredia dátovej vrstvy</string>
+    <string name="datalayer_notification_text">AAPS pracuje v popredí. Ak chcete skryť oznámenia, prejdite do Vývojárskych nastavení, Oznámenia aplikácií, Povolené aplikácie v hodinkách, vyberte AAPS, vypnite oznámenia o dátovej vrstve v popredí.</string>
+    <string name="on">ZAP</string>
+    <string name="off">VYP</string>
 </resources>
