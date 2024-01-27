@@ -33,7 +33,7 @@
     <string name="result">תוצאה</string>
     <string name="settings">הגדרות</string>
     <string name="statuslights">אורות חיווי</string>
-    <string name="do_ns_upload_title">טוען נתוני סוכר ל-Nightscout</string>
+    <string name="do_ns_upload_title">שלח נתוני סוכר לנייטסקאוט</string>
     <string name="configbuilder_insulin">אינסולין</string>
     <string name="value_unavailable_short">לא זמין</string>
     <string name="master_password">סיסמה ראשית</string>
@@ -94,7 +94,7 @@
     <string name="suspendloop">השהיית הלולאה</string>
     <string name="duration_min_label">משך [min]</string>
     <string name="notification">התראה</string>
-    <string name="noprofile">פרופיל Nightscout טרם נטען</string>
+    <string name="noprofile">פרופיל הנייטסקאוט טרם נטען</string>
     <string name="exists">קיים</string>
     <string name="notexists">לא קיים</string>
     <string name="glucose">גלוקוז</string>
@@ -164,7 +164,7 @@
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">ביטול בזאלי זמני נכשל</string>
     <string name="canceling_eb_failed">ביטול בולוס ממושך נכשל</string>
-    <string name="virtualpump_uploadstatus_title">העלה את סטטוס המשאבה לנייטסקאוט או ל-Tidepool</string>
+    <string name="virtualpump_uploadstatus_title">שלח את סטטוס המשאבה לנייטסקאוט או ל-Tidepool</string>
     <string name="suspendloop_label">השבתת \\ השהיית לולאה</string>
     <string name="iob_label">אינסולין פעיל בגוף (IOB)</string>
     <!--    Protection-->
