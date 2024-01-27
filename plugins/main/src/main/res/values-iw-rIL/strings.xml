@@ -264,6 +264,7 @@
     <string name="overview_show_iob">אניסולין פעיל</string>
     <string name="overview_show_basals">בזאלי</string>
     <string name="overview_show_abs_insulin">אינסולין מוחלט</string>
+    <string name="overview_show_variable_sens">רגישות משתנה</string>
     <string name="prediction_shortname">חיזוי</string>
     <string name="basal_shortname">בזאל\'</string>
     <string name="deviation_shortname">סטייה</string>
@@ -273,6 +274,7 @@
     <string name="devslope_shortname">שיפוע</string>
     <string name="treatments_shortname">TREAT</string>
     <string name="heartRate_shortname">דופק</string>
+    <string name="variable_sensitivity_shortname">רג\' משתנה</string>
     <string name="graph_scale">קנה מידה של הגרף</string>
     <string name="graph_menu_divider_header">גרף</string>
     <!-- Skins -->
@@ -287,6 +289,7 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">מציג הודעה קבועה עם סקירה קצרה של מה שהלולאה שלכם עושה</string>
     <string name="old_data">נתונים ישנים</string>
+    <string name="overview_show_steps">צעדים</string>
     <string name="steps_shortname">צעדים</string>
     <string name="simple_mode_enabled">נבחר המצב הפשוט</string>
 </resources>
