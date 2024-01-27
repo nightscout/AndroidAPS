@@ -108,7 +108,7 @@
     <string name="goto_main_try_again">נא לחזור למסך הראשי ולנסות שוב.</string>
     <string name="restartingapp">יוצא מ-AAPS כדי להחיל הגדרות.</string>
     <string name="ue_exported">רשומות המשתמש יוצאו</string>
-    <string name="protection">Protection (הגנה בסיסמאות)</string>
+    <string name="protection">הגנה בסיסמאות</string>
     <string name="master_password_missing">הסיסמה הראשית לא הוגדרה!\n\nנא להגדירה בהעדפות (%1$s&#8594;%2$s)</string>
     <!--    Maintenance-->
     <string name="maintenance">תחזוקה</string>
