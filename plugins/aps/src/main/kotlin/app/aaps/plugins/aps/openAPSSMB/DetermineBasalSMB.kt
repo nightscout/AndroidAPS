@@ -1,8 +1,9 @@
 package app.aaps.plugins.aps.openAPSSMB
 
-import app.aaps.core.interfaces.aps.IobTotal
+import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.CurrentTemp
 import app.aaps.core.interfaces.aps.GlucoseStatus
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.aps.MealData
 import app.aaps.core.interfaces.aps.OapsAutosensData
 import app.aaps.core.interfaces.aps.OapsProfile
@@ -152,6 +153,7 @@ class DetermineBasalSMB @Inject constructor(
         consoleError.clear()
         consoleLog.clear()
         var rT = RT(
+            algorithm = APSResult.Algorithm.SMB,
             runningDynamicIsf = dynIsfMode,
             timestamp = currentTime,
             consoleLog = consoleLog,
@@ -367,6 +369,7 @@ class DetermineBasalSMB @Inject constructor(
         //console.error(reservoir_data);
 
         rT = RT(
+            algorithm = APSResult.Algorithm.SMB,
             runningDynamicIsf = dynIsfMode,
             timestamp = currentTime,
             bg = bg,

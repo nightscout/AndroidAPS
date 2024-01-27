@@ -31,12 +31,12 @@ data class APSResult(
     override var timestamp: Long,
     override var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
     var algorithm: Algorithm,
-    var glucoseStatusJson: String,
-    var currentTempJson: String,
-    var iobDataJson: String,
-    var profileJson: String,
+    var glucoseStatusJson: String?,
+    var currentTempJson: String?,
+    var iobDataJson: String?,
+    var profileJson: String?,
     var autosensDataJson: String?,
-    var mealDataJson: String,
+    var mealDataJson: String?,
     var resultJson: String
 ) : TraceableDBEntry, DBEntryWithTime {
 

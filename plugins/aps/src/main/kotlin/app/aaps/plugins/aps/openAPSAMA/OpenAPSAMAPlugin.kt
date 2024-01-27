@@ -237,7 +237,7 @@ class OpenAPSAMAPlugin @Inject constructor(
             meal_data = mealData,
             currentTime = now
         ).also {
-            val determineBasalResult = DetermineBasalResult(injector, it, APSResult.Algorithm.AMA)
+            val determineBasalResult = DetermineBasalResult(injector, it)
             // Preserve input data
             determineBasalResult.inputConstraints = inputConstraints
             determineBasalResult.autosensResult = autosensResult

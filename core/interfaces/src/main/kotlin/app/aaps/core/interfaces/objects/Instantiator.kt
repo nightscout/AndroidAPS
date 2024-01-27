@@ -10,7 +10,7 @@ import org.json.JSONObject
 interface Instantiator {
 
     fun provideProfileStore(jsonObject: JSONObject): ProfileStore
-    fun provideAPSResultObject(rt: RT, algorithm: APSResult.Algorithm): APSResult
+    fun provideAPSResultObject(rt: RT): APSResult
     fun provideAutosensDataObject(): AutosensData
     fun providePumpEnactResult(): PumpEnactResult
 }

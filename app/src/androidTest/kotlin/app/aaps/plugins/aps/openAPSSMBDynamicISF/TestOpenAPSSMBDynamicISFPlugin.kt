@@ -99,7 +99,7 @@ class TestOpenAPSSMBDynamicISFPlugin @Inject constructor(
         }
 
     override fun isAutosensModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
-        value.set(false, rh.gs(R.string.autosens_disabled_in_dyn_isf), this)
+        //value.set(false, rh.gs(R.string.autosens_disabled_in_dyn_isf), this)
         return value
     }
 }

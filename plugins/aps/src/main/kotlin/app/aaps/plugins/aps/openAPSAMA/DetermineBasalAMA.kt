@@ -1,8 +1,9 @@
 package app.aaps.plugins.aps.openAPSAMA
 
-import app.aaps.core.interfaces.aps.IobTotal
+import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.CurrentTemp
 import app.aaps.core.interfaces.aps.GlucoseStatus
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.aps.MealData
 import app.aaps.core.interfaces.aps.OapsAutosensData
 import app.aaps.core.interfaces.aps.OapsProfile
@@ -107,6 +108,7 @@ class DetermineBasalAMA @Inject constructor(
         consoleError.clear()
         consoleLog.clear()
         var rT = RT(
+            algorithm = APSResult.Algorithm.AMA,
             runningDynamicIsf = false,
             timestamp = currentTime,
             consoleLog = consoleLog,
@@ -202,6 +204,7 @@ class DetermineBasalAMA @Inject constructor(
         val threshold = min_bg - 0.5 * (min_bg - 50)
 
         rT = RT(
+            algorithm = APSResult.Algorithm.AMA,
             runningDynamicIsf = false,
             timestamp = currentTime,
             bg = bg,

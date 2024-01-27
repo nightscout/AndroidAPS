@@ -18,14 +18,14 @@ fun app.aaps.database.entities.APSResult.fromDb(injector: HasAndroidInjector): A
     when (algorithm) {
         app.aaps.database.entities.APSResult.Algorithm.AMA,
         app.aaps.database.entities.APSResult.Algorithm.SMB ->
-            DetermineBasalResult(injector, Json.decodeFromString(this.resultJson), this.algorithm.fromDb()).also { result ->
+            DetermineBasalResult(injector, Json.decodeFromString(this.resultJson)).also { result ->
                 result.date = this.timestamp
-                result.glucoseStatus = Json.decodeFromString(this.glucoseStatusJson)
-                result.currentTemp = Json.decodeFromString(CurrentTemp.serializer(), this.currentTempJson)
-                result.iobData = Json.decodeFromString(this.iobDataJson)
-                result.oapsProfile = Json.decodeFromString(this.profileJson)
-                result.mealData = Json.decodeFromString(this.mealDataJson)
-                result.oapsAutosensData = this.autosensDataJson?.let { autosensDataJson -> Json.decodeFromString(autosensDataJson) }
+                result.glucoseStatus = this.glucoseStatusJson?.let { Json.decodeFromString(it) }
+                result.currentTemp = this.currentTempJson?.let { Json.decodeFromString(it) }
+                result.iobData = this.iobDataJson?.let { Json.decodeFromString(it) }
+                result.oapsProfile = this.profileJson?.let { Json.decodeFromString(it) }
+                result.mealData = this.mealDataJson?.let { Json.decodeFromString(it) }
+                result.oapsAutosensData = this.autosensDataJson?.let { Json.decodeFromString(it) }
             }
 
         else                                               -> error("Unsupported")
@@ -39,12 +39,12 @@ fun APSResult.toDb(): app.aaps.database.entities.APSResult =
             app.aaps.database.entities.APSResult(
                 timestamp = this.date,
                 algorithm = this.algorithm.toDb(),
-                glucoseStatusJson = Json.encodeToString(GlucoseStatus.serializer(), this.glucoseStatus ?: error("Not provided")),
-                currentTempJson = Json.encodeToString(CurrentTemp.serializer(), this.currentTemp ?: error("Not provided")),
-                iobDataJson = Json.encodeToString(ArraySerializer(IobTotal.serializer()), this.iobData ?: error("Not provided")),
-                profileJson = Json.encodeToString(OapsProfile.serializer(), this.oapsProfile ?: error("Not provided")),
-                mealDataJson = Json.encodeToString(MealData.serializer(), this.mealData ?: error("Not provided")),
-                autosensDataJson = this.oapsAutosensData?.let { oapsAutosensData -> Json.encodeToString(OapsAutosensData.serializer(), oapsAutosensData) },
+                glucoseStatusJson = this.glucoseStatus?.let { Json.encodeToString(GlucoseStatus.serializer(), it) },
+                currentTempJson = this.currentTemp?.let { Json.encodeToString(CurrentTemp.serializer(), it) },
+                iobDataJson = this.iobData?.let { Json.encodeToString(ArraySerializer(IobTotal.serializer()), it) },
+                profileJson = this.oapsProfile?.let { Json.encodeToString(OapsProfile.serializer(), it) },
+                mealDataJson = this.mealData?.let { Json.encodeToString(MealData.serializer(), it) },
+                autosensDataJson = this.oapsAutosensData?.let { Json.encodeToString(OapsAutosensData.serializer(), it) },
                 resultJson = Json.encodeToString(RT.serializer(), this.rawData() as RT)
             )
 
