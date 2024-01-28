@@ -247,9 +247,9 @@ class MainApp : DaggerApplication() {
             sp.putBoolean("ConfigBuilder_APS_OpenAPSSMB_Enabled", true)
             preferences.put(BooleanKey.ApsUseDynamicSensitivity, true)
         }
-        // convert Double to Int
+        // convert Double to IntString
         if (preferences.getIfExists(IntKey.ApsDynIsfAdjustmentFactor) != null)
-            preferences.put(IntKey.ApsDynIsfAdjustmentFactor, preferences.get(IntKey.ApsDynIsfAdjustmentFactor))
+            sp.putString(IntKey.ApsDynIsfAdjustmentFactor.key, preferences.get(IntKey.ApsDynIsfAdjustmentFactor).toString())
     }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {

@@ -138,7 +138,7 @@ class OpenAPSFragment : DaggerFragment(), MenuProvider {
             binding.mealdata.text = lastAPSResult.mealData?.dataClassToHtml()
             binding.scriptdebugdata.text = lastAPSResult.scriptDebug?.joinToString("\n")
             binding.constraints.text = lastAPSResult.inputConstraints?.getReasons()
-            binding.autosensdata.text = lastAPSResult.autosensResult?.dataClassToHtml(listOf("ratio", "ratioLimit", "pastSensitivity", "sensResult", "ratioLimit"))
+            binding.autosensdata.text = lastAPSResult.autosensResult?.dataClassToHtml()
             binding.lastrun.text = dateUtil.dateAndTimeString(openAPSPlugin.lastAPSRun)
         }
         binding.swipeRefresh.isRefreshing = false

@@ -20,6 +20,9 @@ class PumpEnactResultObject(private val rh: ResourceHelper) : PumpEnactResult {
     override var bolusDelivered = 0.0 // real value of delivered insulin
     override var queued = false
 
+    override fun toString() =
+        "PumpEnactResultObject(success=$success,enacted=$enacted,comment=$comment,duration=$duration,absolute=$absolute,percent=$percent,isPercent=$isPercent,isTempCancel=$isTempCancel,bolusDelivered=$bolusDelivered,queued=$queued)"
+
     override fun success(success: Boolean): PumpEnactResultObject = this.also { this.success = success }
     override fun enacted(enacted: Boolean): PumpEnactResultObject = this.also { it.enacted = enacted }
     override fun comment(comment: String): PumpEnactResultObject = this.also { it.comment = comment }

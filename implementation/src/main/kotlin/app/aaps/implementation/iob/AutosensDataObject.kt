@@ -1,7 +1,7 @@
 package app.aaps.implementation.iob
 
-import app.aaps.core.data.aps.AutosensData
-import app.aaps.core.data.aps.AutosensResult
+import app.aaps.core.interfaces.aps.AutosensData
+import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil

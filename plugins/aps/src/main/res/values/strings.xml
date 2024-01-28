@@ -88,7 +88,6 @@
     <string name="smb_disabled_in_preferences">SMB disabled in preferences</string>
     <string name="uam_disabled_in_preferences">UAM disabled in preferences</string>
     <string name="autosens_disabled_in_preferences">Autosens disabled in preferences</string>
-    <string name="autosens_disabled_in_dyn_isf">Autosens disabled in DynISF</string>
     <string name="use_dynamic_sensitivity_title">Enable dynamic sensitivity</string>
     <string name="use_dynamic_sensitivity_summary">Adjust algorithm to use dynamic sensitivity instead of profile value</string>
 

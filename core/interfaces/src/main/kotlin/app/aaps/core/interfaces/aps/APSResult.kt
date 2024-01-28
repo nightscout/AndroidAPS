@@ -1,7 +1,6 @@
 package app.aaps.core.interfaces.aps
 
 import android.text.Spanned
-import app.aaps.core.data.aps.AutosensResult
 import app.aaps.core.data.model.GV
 import app.aaps.core.interfaces.constraints.Constraint
 import org.json.JSONObject
@@ -45,7 +44,6 @@ interface APSResult {
     var currentTemp: CurrentTemp?
     var oapsProfile: OapsProfile?
     var mealData: MealData?
-    var oapsAutosensData: OapsAutosensData?
 
     val iob: IobTotal? get() = iobData?.get(0)
 

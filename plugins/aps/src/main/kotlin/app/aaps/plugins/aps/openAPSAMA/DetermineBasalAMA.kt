@@ -1,10 +1,11 @@
 package app.aaps.plugins.aps.openAPSAMA
 
-import app.aaps.core.interfaces.aps.IobTotal
+import app.aaps.core.interfaces.aps.APSResult
+import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.CurrentTemp
 import app.aaps.core.interfaces.aps.GlucoseStatus
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.aps.MealData
-import app.aaps.core.interfaces.aps.OapsAutosensData
 import app.aaps.core.interfaces.aps.OapsProfile
 import app.aaps.core.interfaces.aps.Predictions
 import app.aaps.core.interfaces.aps.RT
@@ -102,11 +103,12 @@ class DetermineBasalAMA @Inject constructor(
     }
 
     fun determine_basal(
-        glucose_status: GlucoseStatus, currenttemp: CurrentTemp, iob_data_array: Array<IobTotal>, profile: OapsProfile, autosens_data: OapsAutosensData, meal_data: MealData, currentTime: Long
+        glucose_status: GlucoseStatus, currenttemp: CurrentTemp, iob_data_array: Array<IobTotal>, profile: OapsProfile, autosens_data: AutosensResult, meal_data: MealData, currentTime: Long
     ): RT {
         consoleError.clear()
         consoleLog.clear()
         var rT = RT(
+            algorithm = APSResult.Algorithm.AMA,
             runningDynamicIsf = false,
             timestamp = currentTime,
             consoleLog = consoleLog,
@@ -202,6 +204,7 @@ class DetermineBasalAMA @Inject constructor(
         val threshold = min_bg - 0.5 * (min_bg - 50)
 
         rT = RT(
+            algorithm = APSResult.Algorithm.AMA,
             runningDynamicIsf = false,
             timestamp = currentTime,
             bg = bg,

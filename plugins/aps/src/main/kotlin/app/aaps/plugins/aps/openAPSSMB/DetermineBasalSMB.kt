@@ -1,10 +1,11 @@
 package app.aaps.plugins.aps.openAPSSMB
 
-import app.aaps.core.interfaces.aps.IobTotal
+import app.aaps.core.interfaces.aps.APSResult
+import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.CurrentTemp
 import app.aaps.core.interfaces.aps.GlucoseStatus
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.aps.MealData
-import app.aaps.core.interfaces.aps.OapsAutosensData
 import app.aaps.core.interfaces.aps.OapsProfile
 import app.aaps.core.interfaces.aps.Predictions
 import app.aaps.core.interfaces.aps.RT
@@ -146,12 +147,13 @@ class DetermineBasalSMB @Inject constructor(
     }
 
     fun determine_basal(
-        glucose_status: GlucoseStatus, currenttemp: CurrentTemp, iob_data_array: Array<IobTotal>, profile: OapsProfile, autosens_data: OapsAutosensData, meal_data: MealData,
+        glucose_status: GlucoseStatus, currenttemp: CurrentTemp, iob_data_array: Array<IobTotal>, profile: OapsProfile, autosens_data: AutosensResult, meal_data: MealData,
         microBolusAllowed: Boolean, currentTime: Long, flatBGsDetected: Boolean, dynIsfMode: Boolean
     ): RT {
         consoleError.clear()
         consoleLog.clear()
         var rT = RT(
+            algorithm = APSResult.Algorithm.SMB,
             runningDynamicIsf = dynIsfMode,
             timestamp = currentTime,
             consoleLog = consoleLog,
@@ -367,6 +369,7 @@ class DetermineBasalSMB @Inject constructor(
         //console.error(reservoir_data);
 
         rT = RT(
+            algorithm = APSResult.Algorithm.SMB,
             runningDynamicIsf = dynIsfMode,
             timestamp = currentTime,
             bg = bg,
@@ -663,18 +666,20 @@ class DetermineBasalSMB @Inject constructor(
             < bg
         ) {
             future_sens = (1800 / (ln((((fSensBG * 0.5) + (bg * 0.5)) / profile.insulinDivisor) + 1) * profile.TDD))
+            future_sens = round(future_sens, 1)
             consoleLog.add("Future state sensitivity is $future_sens based on eventual and current bg due to flat glucose level above target")
             rT.reason.append("Dosing sensitivity: $future_sens using eventual BG;")
         } else if (glucose_status.delta > 0 && eventualBG > target_bg || eventualBG > bg) {
             future_sens = (1800 / (ln((bg / profile.insulinDivisor) + 1) * profile.TDD))
+            future_sens = round(future_sens, 1)
             consoleLog.add("Future state sensitivity is $future_sens using current bg due to small delta or variation")
             rT.reason.append("Dosing sensitivity: $future_sens using current BG;")
         } else {
             future_sens = (1800 / (ln((fSensBG / profile.insulinDivisor) + 1) * profile.TDD))
+            future_sens = round(future_sens, 1)
             consoleLog.add("Future state sensitivity is $future_sens based on eventual bg due to -ve delta")
             rT.reason.append("Dosing sensitivity: $future_sens using eventual BG;")
         }
-        future_sens = round(future_sens, 1)
 
         val fractionCarbsLeft = meal_data.mealCOB / meal_data.carbs
         // if we have COB and UAM is enabled, average both
