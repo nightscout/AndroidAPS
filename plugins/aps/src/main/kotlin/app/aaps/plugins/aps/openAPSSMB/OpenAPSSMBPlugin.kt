@@ -297,7 +297,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
                 val tddRatio = if (preferences.get(BooleanKey.ApsDynIsfAdjustSensitivity)) tddLast24H.totalAmount / tdd7D.totalAmount else 1.0
                 // Because consumed carbs affects total amount of insulin compensate final ratio by consumed carbs ratio
                 // take only 60% (expecting 40% basal). We cannot use bolus/total because of SMBs
-                val carbsRatio = if (preferences.get(BooleanKey.ApsDynIsfAdjustSensitivity)) ((tddLast24H.carbs / tdd7D.carbs - 1.0) * 0.6) + 1.0 else 1.0
+                val carbsRatio = if (preferences.get(BooleanKey.ApsDynIsfAdjustSensitivity) && tddLast24H.carbs != 0.0 && tdd7D.carbs != 0.0) ((tddLast24H.carbs / tdd7D.carbs - 1.0) * 0.6) + 1.0 else 1.0
                 autosensResult = AutosensResult(
                     ratio = tddRatio / carbsRatio,
                     ratioFromTdd = tddRatio,
