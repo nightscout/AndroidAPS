@@ -1,4 +1,4 @@
-package app.aaps.core.data.aps
+package app.aaps.core.interfaces.aps
 
 interface AutosensData {
 

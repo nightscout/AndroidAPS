@@ -44,7 +44,7 @@ import app.aaps.database.impl.daos.UserEntryDao
 import app.aaps.database.impl.daos.VersionChangeDao
 import java.io.Closeable
 
-const val DATABASE_VERSION = 27
+const val DATABASE_VERSION = 28
 
 @Database(
     version = DATABASE_VERSION,

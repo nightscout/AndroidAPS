@@ -1,11 +1,11 @@
 package app.aaps.core.interfaces.iob
 
-import app.aaps.core.data.aps.AutosensData
-import app.aaps.core.data.aps.AutosensResult
 import app.aaps.core.data.aps.BasalData
 import app.aaps.core.data.iob.CobInfo
-import app.aaps.core.interfaces.aps.IobTotal
+import app.aaps.core.interfaces.aps.AutosensData
 import app.aaps.core.interfaces.aps.AutosensDataStore
+import app.aaps.core.interfaces.aps.AutosensResult
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.aps.MealData
 import app.aaps.core.interfaces.profile.Profile
 

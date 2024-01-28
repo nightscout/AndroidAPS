@@ -1,11 +1,11 @@
 package app.aaps.database.persistence.converters
 
 import app.aaps.core.interfaces.aps.APSResult
+import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.CurrentTemp
 import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.aps.MealData
-import app.aaps.core.interfaces.aps.OapsAutosensData
 import app.aaps.core.interfaces.aps.OapsProfile
 import app.aaps.core.interfaces.aps.RT
 import app.aaps.core.objects.aps.DetermineBasalResult
@@ -25,7 +25,7 @@ fun app.aaps.database.entities.APSResult.fromDb(injector: HasAndroidInjector): A
                 result.iobData = this.iobDataJson?.let { Json.decodeFromString(it) }
                 result.oapsProfile = this.profileJson?.let { Json.decodeFromString(it) }
                 result.mealData = this.mealDataJson?.let { Json.decodeFromString(it) }
-                result.oapsAutosensData = this.autosensDataJson?.let { Json.decodeFromString(it) }
+                result.autosensResult = this.autosensDataJson?.let { Json.decodeFromString(it) }
             }
 
         else                                               -> error("Unsupported")
@@ -44,7 +44,7 @@ fun APSResult.toDb(): app.aaps.database.entities.APSResult =
                 iobDataJson = this.iobData?.let { Json.encodeToString(ArraySerializer(IobTotal.serializer()), it) },
                 profileJson = this.oapsProfile?.let { Json.encodeToString(OapsProfile.serializer(), it) },
                 mealDataJson = this.mealData?.let { Json.encodeToString(MealData.serializer(), it) },
-                autosensDataJson = this.oapsAutosensData?.let { Json.encodeToString(OapsAutosensData.serializer(), it) },
+                autosensDataJson = this.autosensResult?.let { Json.encodeToString(AutosensResult.serializer(), it) },
                 resultJson = Json.encodeToString(RT.serializer(), this.rawData() as RT)
             )
 

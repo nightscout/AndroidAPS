@@ -1,6 +1,6 @@
 package app.aaps.implementation.instantiator
 
-import app.aaps.core.data.aps.AutosensData
+import app.aaps.core.interfaces.aps.AutosensData
 import app.aaps.core.interfaces.aps.RT
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
