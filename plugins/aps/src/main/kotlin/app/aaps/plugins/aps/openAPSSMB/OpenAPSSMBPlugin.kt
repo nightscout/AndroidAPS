@@ -66,6 +66,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.floor
 import kotlin.math.ln
+import app.aaps.core.objects.profile.ProfileSealed
 
 @Singleton
 open class OpenAPSSMBPlugin @Inject constructor(
@@ -335,8 +336,8 @@ open class OpenAPSSMBPlugin @Inject constructor(
             max_daily_safety_multiplier = preferences.get(DoubleKey.ApsMaxDailyMultiplier),
             current_basal_safety_multiplier = preferences.get(DoubleKey.ApsMaxCurrentBasalMultiplier),
             lgsThreshold = profileUtil.convertToMgdlDetect(preferences.get(UnitDoubleKey.ApsLgsThreshold)).toInt(),
-            high_temptarget_raises_sensitivity = false,
-            low_temptarget_lowers_sensitivity = false,
+            high_temptarget_raises_sensitivity = preferences.get(BooleanKey.ApsAutoIsfHighTtRaisesSens), //was false,
+            low_temptarget_lowers_sensitivity = preferences.get(BooleanKey.ApsAutoIsfLowTtLowersSens), // was false,
             sensitivity_raises_target = preferences.get(BooleanKey.ApsSensitivityRaisesTarget),
             resistance_lowers_target = preferences.get(BooleanKey.ApsResistanceLowersTarget),
             adv_target_adjustments = SMBDefaults.adv_target_adjustments,
@@ -363,7 +364,30 @@ open class OpenAPSSMBPlugin @Inject constructor(
             out_units = if (profileFunction.getUnits() == GlucoseUnit.MMOL) "mmol/L" else "mg/dl",
             variable_sens = variableSensitivity,
             insulinDivisor = insulinDivisor,
-            TDD = tdd
+            TDD = tdd,
+            autoISF_version = "3.0",        // was BuildConfig.AUTOISF_VERSION)
+            enable_autoISF = preferences.get(BooleanKey.ApsUseAutoIsf),
+            autoISF_max = preferences.get(DoubleKey.ApsAutoIsfMax),
+            autoISF_min = preferences.get(DoubleKey.ApsAutoIsfMin),
+            bgAccel_ISF_weight = preferences.get(DoubleKey.ApsAutoIsfBgAccelWeight),
+            bgBrake_ISF_weight = preferences.get(DoubleKey.ApsAutoIsfBgBrakeWeight),
+            enable_pp_ISF_always = preferences.get(BooleanKey.ApsAutoIsfPpAlways),
+            pp_ISF_hours = preferences.get(IntKey.ApsAutoIsfPpIsfHours),
+            pp_ISF_weight = preferences.get(DoubleKey.ApsAutoIsfPpWeight),
+            delta_ISFrange_weight = preferences.get(DoubleKey.ApsAutoIsfDeltaWeight),
+            lower_ISFrange_weight = preferences.get(DoubleKey.ApsAutoIsfLowBgWeight),
+            higher_ISFrange_weight = preferences.get(DoubleKey.ApsAutoIsfHighBgWeight),
+            enable_dura_ISF_with_COB = preferences.get(BooleanKey.ApsAutoIsfDuraAfterCarbs),
+            dura_ISF_weight  = preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatioMax),
+            smb_delivery_ratio = preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatio),
+            smb_delivery_ratio_min = preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatioMin),
+            smb_delivery_ratio_max = preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatioMax),
+            smb_delivery_ratio_bg_range = preferences.get(UnitDoubleKey.ApsAutoIsfSmbDeliveryRatioBgRange),
+            smb_max_range_extension = preferences.get(DoubleKey.ApsAutoIsfSmbMaxRangeExtension),
+            enableSMB_EvenOn_OddOff = preferences.get(BooleanKey.ApsAutoIsfSmbOnEvenTt),          // temp target
+            enableSMB_EvenOn_OddOff_always = preferences.get(BooleanKey.ApsAutoIsfSmbOnEvenPt),  // profile target
+            iob_threshold_percent = preferences.get(IntKey.ApsAutoIsfIobThPercent),
+            profile_percentage = if (profile is ProfileSealed.EPS) profile.value.originalPercentage else 100
         )
 
         val microBolusAllowed = constraintsChecker.isSMBModeEnabled(ConstraintObject(tempBasalFallback.not(), aapsLogger)).also { inputConstraints.copyReasons(it) }.value()

@@ -217,7 +217,30 @@ class OpenAPSAMAPlugin @Inject constructor(
             out_units = if (profileFunction.getUnits() == GlucoseUnit.MMOL) "mmol/L" else "mg/dl",
             variable_sens = 0.0, // not used
             insulinDivisor = 0, // not used
-            TDD = 0.0 // not used
+            TDD = 0.0, // not used
+            autoISF_version = "", // not used
+            enable_autoISF = false, // not used
+            autoISF_max = 1.0, // not used
+            autoISF_min = 1.0, // not used
+            bgAccel_ISF_weight = 0.0, // not used
+            bgBrake_ISF_weight = 0.0, // not used
+            enable_pp_ISF_always = false, // not used
+            pp_ISF_hours = 3, // not used
+            pp_ISF_weight = 0.0, // not used
+            delta_ISFrange_weight = 0.0, // not used
+            lower_ISFrange_weight = 0.0, // not used
+            higher_ISFrange_weight = 0.0, // not used
+            enable_dura_ISF_with_COB = false, // not used
+            dura_ISF_weight = 0.0, // not used
+            smb_delivery_ratio = 0.5, // not used
+            smb_delivery_ratio_min = 0.5, // not used
+            smb_delivery_ratio_max = 0.5, // not used
+            smb_delivery_ratio_bg_range = 0.0, // not used
+            smb_max_range_extension = 1.0, // not used
+            enableSMB_EvenOn_OddOff = false, // not used
+            enableSMB_EvenOn_OddOff_always = false, // not used
+            iob_threshold_percent = 100, // not used
+            profile_percentage = 100 // nit used
         )
 
         aapsLogger.debug(LTag.APS, ">>> Invoking determine_basal AMA <<<")
