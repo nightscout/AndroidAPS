@@ -39,7 +39,7 @@ import app.aaps.core.interfaces.rx.events.EventTherapyEventChange
 import app.aaps.core.interfaces.rx.events.EventTreatmentChange
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.wizard.BolusWizard
-import app.aaps.database.impl.AppRepository
+import app.aaps.database.AppRepository
 import app.aaps.di.TestApplication
 import app.aaps.helpers.RxHelper
 import app.aaps.plugins.sync.nsShared.NsIncomingDataProcessor
