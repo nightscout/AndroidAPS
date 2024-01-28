@@ -145,6 +145,346 @@ class DetermineBasalSMB @Inject constructor(
         }
     }
 
+    fun loop_smb(microBolusAllowed: Boolean, profile: OapsProfile, iob_data_iob: Double, iobTH_reduction_ratio: Double) : String
+    {
+        if ( !microBolusAllowed ) {
+            return "AAPS"                                                 // see message in enable_smb
+        }
+        if (profile.temptargetSet && profile.enableSMB_EvenOn_OddOff || profile.min_bg==profile.max_bg && profile.enableSMB_EvenOn_OddOff_always && !profile.temptargetSet)  {
+            var target = convert_bg(profile.target_bg)
+            var msgType: String
+            var evenTarget: Boolean
+            var msgUnits: String
+            var msgTail: String
+            var msgEven: String
+            var msg: String
+            if (profile.temptargetSet) {
+                msgType= "TempTarget"
+            } else {
+                msgType = "profile target"
+            }
+            if (profile.out_units == "mmol/L") {
+                evenTarget = (target.toDouble()*10.0).toInt() % 2 == 0
+                msgUnits   = "has "
+                msgTail    = "decimal"
+            } else {
+                evenTarget = target.toInt() % 2 == 0
+                msgUnits   = "is "
+                msgTail    = "number"
+            }
+            if ( evenTarget ) {
+                msgEven    = "even "
+            } else {
+                msgEven    = "odd "
+            }
+            var iobTHeffective = profile.iob_threshold_percent
+            if ( !evenTarget ) {
+                consoleError.add("SMB disabled; $msgType $target $msgUnits $msgEven $msgTail")
+                consoleError.add("Loop at minimum power")
+                return "blocked"
+            } else if ( profile.max_iob==0.0 ) {
+                consoleError.add("SMB disabled because of max_iob=0")
+                return "blocked"
+            } else if (iobTHeffective/100 < iob_data_iob/(profile.max_iob*iobTH_reduction_ratio)) {
+                if (iobTH_reduction_ratio != 1.0) {
+                    consoleError.add("Full Loop modified max_iob ${profile.max_iob} to effectively ${round(profile.max_iob*iobTH_reduction_ratio,2)} due to profile % and/or exercise mode")
+                    msg = "effective maxIOB ${round(profile.max_iob*iobTH_reduction_ratio,2)}"
+                } else {
+                    msg = "maxIOB ${profile.max_iob}"
+                }
+                consoleError.add("SMB disabled by Full Loop logic: iob ${iob_data_iob} is more than $iobTHeffective% of $msg")
+                consoleError.add("Full Loop capped");
+                return "iobTH";
+            } else {
+                consoleError.add("SMB enabled; $msgType $target $msgUnits $msgEven $msgTail")
+                if (profile.target_bg<100) {     // indirect assessment; later set it in GUI
+                    consoleError.add("Loop at full power")
+                    return "fullLoop"                                      // even number
+                } else {
+                    consoleError.add("Loop at medium power")
+                    return "enforced"                                      // even number
+                }
+            }
+        }
+        consoleError.add("Full Loop disabled")
+        return "AAPS"                                                      // leave it to standard AAPS
+    }
+
+    fun interpolate(xdata: Double, profile: OapsProfile, type: String): Double
+    {   // interpolate ISF behaviour based on polygons defining nonlinear functions defined by value pairs for ...
+        val polyX: Array<Double>
+        val polyY: Array<Double>
+        if (type == "bg") {
+            //  ...         <----------------------  glucose  ---------------------->
+            polyX = arrayOf(50.0, 60.0, 80.0, 90.0, 100.0, 110.0, 150.0, 180.0, 200.0)
+            polyY = arrayOf(-0.5, -0.5, -0.3, -0.2,   0.0,   0.0,   0.5,   0.7,   0.7)
+        } else  {
+            //  ...         <-------  delta  -------->
+            polyX = arrayOf(2.0, 7.0, 12.0, 16.0, 20.0)
+            polyY = arrayOf(0.0, 0.0,  0.4,  0.7,  0.7)
+        }
+        val polymax: Int = polyX.size-1
+        var step = polyX[0]
+        var sVal = polyY[0]
+        var stepT= polyX[polymax]
+        var sValold = polyY[polymax]
+
+        var newVal = 1.0
+        var lowVal = 1.0
+        var topVal : Double
+        var lowX: Double
+        var topX: Double
+        var myX: Double
+        var lowLabl = step
+
+        if (step > xdata) {
+            // extrapolate backwards
+            stepT = polyX[1]
+            sValold = polyY[1]
+            lowVal = sVal
+            topVal = sValold
+            lowX = step
+            topX = stepT
+            myX = xdata
+            newVal = lowVal + (topVal-lowVal)/(topX-lowX)*(myX-lowX)
+        } else if (stepT < xdata) {
+            // extrapolate forwards
+            step   = polyX[polymax-1]
+            sVal   = polyY[polymax-1]
+            lowVal = sVal
+            topVal = sValold
+            lowX = step
+            topX = stepT
+            myX = xdata
+            newVal = lowVal + (topVal-lowVal)/(topX-lowX)*(myX-lowX)
+        } else {
+            // interpolate
+            for ( i: Int in 0..polymax) {
+                step = polyX[i]
+                sVal = polyY[i]
+                if (step == xdata) {
+                    newVal = sVal
+                    break
+                } else if (step > xdata) {
+                    topVal = sVal
+                    lowX= lowLabl
+                    myX = xdata
+                    topX= step
+                    newVal = lowVal + (topVal-lowVal)/(topX-lowX)*(myX-lowX)
+                    break
+                }
+                lowVal = sVal
+                lowLabl= step
+            }
+        }
+        if (type == "delta") {newVal = newVal * profile.delta_ISFrange_weight}      // delta range
+        else if ( xdata>100) {newVal = newVal * profile.higher_ISFrange_weight}     // higher BG range
+        else                 {newVal = newVal * profile.lower_ISFrange_weight}      // lower BG range
+        return newVal
+    }
+
+    fun withinISFlimits(liftISF: Double, minISFReduction: Double, maxISFReduction: Double, sensitivityRatio: Double, origin_sens: String, profile: OapsProfile,
+                        high_temptarget_raises_sensitivity: Boolean, target_bg: Double, normalTarget: Int): Double {
+        var liftISFlimited: Double = liftISF
+        if ( liftISF < minISFReduction ) {
+            consoleError.add("weakest autoISF factor ${round(liftISF,2)} limited by autoISF_min $minISFReduction")
+            liftISFlimited = minISFReduction
+        } else if ( liftISF > maxISFReduction ) {
+            consoleError.add("strongest autoISF factor ${round(liftISF,2)} limited by autoISF_max $maxISFReduction")
+            liftISFlimited = maxISFReduction
+        }
+        var finalISF: Double
+        var origin_sens_final = origin_sens
+        if ( high_temptarget_raises_sensitivity && profile.temptargetSet && target_bg > normalTarget ) {
+            finalISF = liftISFlimited * sensitivityRatio
+            origin_sens_final = " including exercise mode impact"
+        } else if ( liftISFlimited >= 1 ) {
+            finalISF = max(liftISFlimited, sensitivityRatio)
+        } else {
+            finalISF = min(liftISFlimited, sensitivityRatio)
+        }
+        consoleError.add("final ISF factor is ${round(finalISF,2)}" + origin_sens_final)
+        consoleError.add("----------------------------------")
+        consoleError.add("end autoISF")
+        consoleError.add("----------------------------------")
+        return finalISF
+    }
+
+    fun determine_varSMBratio(profile: OapsProfile, bg: Int, target_bg: Double, loop_wanted_smb: String): Double
+    {   // let SMB delivery ratio increase from min to max depending on how much bg exceeds target
+        var smb_delivery_ratio_bg_range = profile.smb_delivery_ratio_bg_range
+        if ( smb_delivery_ratio_bg_range<10 )   { smb_delivery_ratio_bg_range = smb_delivery_ratio_bg_range * 18 }  // was in mmol/l
+        var fix_SMB: Double = profile.smb_delivery_ratio
+        var lower_SMB = min(profile.smb_delivery_ratio_min, profile.smb_delivery_ratio_max)
+        var higher_SMB = max(profile.smb_delivery_ratio_min, profile.smb_delivery_ratio_max)
+        var higher_bg = target_bg + smb_delivery_ratio_bg_range
+        var new_SMB: Double = fix_SMB
+        if ( smb_delivery_ratio_bg_range > 0 ) {
+            new_SMB = lower_SMB + (higher_SMB-lower_SMB)*(bg-target_bg) / smb_delivery_ratio_bg_range
+            new_SMB = max(lower_SMB, min(higher_SMB, new_SMB))   // cap if outside target_bg--higher_bg
+        }
+        if ( loop_wanted_smb=="fullLoop") {                                // go for max impactError.add("SMB delivery ratio set to ${max(fix_SMB, new_SMB)} as max of fixed and interpolated values")
+            return max(fix_SMB, new_SMB)
+        }
+
+        if ( profile.smb_delivery_ratio_bg_range==0.0) {                     // deactivated in SMB extended menu
+            consoleError.add("SMB delivery ratio set to fixed value $fix_SMB")
+            return fix_SMB
+        }
+        if (bg <= target_bg) {
+            consoleError.add("SMB delivery ratio limited by minimum value $lower_SMB")
+            return lower_SMB
+        }
+        if (bg >= higher_bg) {
+            consoleError.add("SMB delivery ratio limited by maximum value $higher_SMB")
+            return higher_SMB
+        }
+        consoleError.add("SMB delivery ratio set to interpolated value $new_SMB")
+        return new_SMB
+    }
+
+    fun autoISF(sens: Double, origin_sens: String, target_bg: Double, profile: OapsProfile, glucose_status: GlucoseStatus, meal_data: MealData, currentTime: Long,
+                sensitivityRatio: Double, loop_wanted_smb: String, high_temptarget_raises_sensitivity: Boolean, normalTarget: Int): Double
+    {   if ( !profile.enable_autoISF) {
+        consoleError.add("autoISF disabled in Preferences")
+        consoleError.add("----------------------------------")
+        consoleError.add("end autoISF")
+        consoleError.add("----------------------------------")
+
+        return sens
+    }
+        var dura05: Double? = glucose_status.duraISFminutes
+        var avg05: Double?  = glucose_status.duraISFaverage
+        var maxISFReduction: Double = profile.autoISF_max
+        var sens_modified = false
+        var pp_ISF = 1.0
+        var delta_ISF = 1.0
+        var acce_ISF = 1.0
+        var acce_weight: Double = 1.0
+        var bg_off = target_bg+10.0 - glucose_status.glucose;                      // move from central BG=100 to target+10 as virtual BG'=100
+
+        // calculate acce_ISF from bg acceleration and adapt ISF accordingly
+        var fit_corr: Double = glucose_status.corrSqu
+        var bg_acce: Double = glucose_status.bgAcceleration
+        if (glucose_status.a2 !=0.0 && fit_corr>=0.9) {
+            var minmax_delta: Double = - glucose_status.a1/2/glucose_status.a2 * 5      // back from 5min block to 1 min
+            var minmax_value: Double = round(glucose_status.a0 - minmax_delta*minmax_delta/25*glucose_status.a2, 1)
+            minmax_delta = round(minmax_delta, 1)
+            if (minmax_delta>0 && bg_acce<0) {
+                consoleError.add("Parabolic fit extrapolates a maximum of ${convert_bg(minmax_value)} in about $minmax_delta minutes")
+            } else if (minmax_delta>0 && bg_acce>0.0) {
+                consoleError.add("Parabolic fit extrapolates a minimum of ${convert_bg(minmax_value)} in about $minmax_delta minutes")
+                if (minmax_delta<=30 && minmax_value<target_bg) {   // start braking
+                    acce_weight = -profile.bgBrake_ISF_weight
+                    consoleError.add("extrapolation below target soon: use bgBrake_ISF_weight of ${-acce_weight}")
+                }
+            }
+        }
+        if ( fit_corr<0.9 ) {
+            consoleError.add("acce_ISF adaptation by-passed as correlation ${round(fit_corr,3)} is too low")
+        } else {
+            var fit_share = 10*(fit_corr-0.9)                                // 0 at correlation 0.9, 1 at 1.00
+            var cap_weight = 1.0                                             // full contribution above target
+            if ( acce_weight==1.0 && glucose_status.glucose<profile.target_bg ) { // below target acce goes towards target
+                if ( bg_acce > 0 ) {
+                    if ( bg_acce>1)            { cap_weight = 0.5 }            // halve the effect below target
+                    acce_weight = profile.bgBrake_ISF_weight
+                } else if ( bg_acce < 0 ) {
+                    acce_weight = profile.bgAccel_ISF_weight
+                }
+            } else if ( acce_weight==1.0) {                                       // above target acce goes away from target
+                if ( bg_acce < 0.0 ) {
+                    acce_weight = profile.bgBrake_ISF_weight
+                } else if ( bg_acce > 0.0 ) {
+                    acce_weight = profile.bgAccel_ISF_weight
+                }
+            }
+            acce_ISF = 1.0 + bg_acce * cap_weight * acce_weight * fit_share
+            consoleError.add("acce_ISF adaptation is ${round(acce_ISF,2)}")
+            if ( acce_ISF != 1.0 ) {
+                sens_modified = true
+            }
+        }
+
+        val bg_ISF = 1 + interpolate(100-bg_off, profile, "bg")
+        consoleError.add("bg_ISF adaptation is ${round(bg_ISF,2)}")
+        var liftISF = 1.0
+        var final_ISF = 1.0
+        if (bg_ISF<1.0) {
+            liftISF = min(bg_ISF, acce_ISF)
+            if ( acce_ISF>1.0 ) {
+                liftISF = bg_ISF * acce_ISF                                 // bg_ISF could become > 1 now
+                consoleError.add("bg_ISF adaptation lifted to ${round(liftISF,2)} as bg accelerates already")
+            }
+            final_ISF = withinISFlimits(liftISF, profile.autoISF_min, maxISFReduction, sensitivityRatio, origin_sens, profile, high_temptarget_raises_sensitivity, target_bg, normalTarget)
+            return min(720.0, round(profile.sens / final_ISF, 1))         // observe ISF maximum of 720(?)
+        } else if ( bg_ISF > 1.0 ) {
+            sens_modified = true
+        }
+
+        var bg_delta = glucose_status.delta
+        var deltaType: String
+        if (profile.enable_pp_ISF_always || profile.pp_ISF_hours >= (currentTime - meal_data.lastCarbTime) / 1000/3600) {
+            deltaType = "pp"
+        } else {
+            deltaType = "delta"
+        }
+        if (bg_off > 0.0) {
+            consoleError.add(deltaType+"_ISF adaptation by-passed as average glucose < $target_bg+10")
+        } else if (glucose_status.shortAvgDelta<0) {
+            consoleError.add(deltaType+"_ISF adaptation by-passed as no rise or too short lived")
+        } else if (deltaType == "pp") {
+            pp_ISF = 1.0 + max(0.0, bg_delta * profile.pp_ISF_weight)
+            consoleError.add("pp_ISF adaptation is ${round(pp_ISF,2)}")
+            if (pp_ISF != 1.0) {
+                sens_modified = true
+            }
+
+        } else {
+            delta_ISF = interpolate(bg_delta, profile, "delta");
+            //  mod V14d: halve the effect below target_bg+30
+            if ( bg_off > -20.0 ) {
+                delta_ISF = 0.5 * delta_ISF
+            }
+            delta_ISF = 1.0 + delta_ISF
+            consoleError.add("delta_ISF adaptation is ${round(delta_ISF,2)}")
+
+            if (delta_ISF != 1.0) {
+                sens_modified = true
+            }
+        }
+
+        var dura_ISF: Double = 1.0
+        val weightISF: Double? = profile.dura_ISF_weight
+        if (meal_data.mealCOB>0 && !profile.enable_dura_ISF_with_COB) {
+            consoleError.add("dura_ISF by-passed; preferences disabled mealCOB of ${round(meal_data.mealCOB,1)}")
+        } else if (dura05!!<10.0) {
+            consoleError.add("dura_ISF by-passed; bg is only $dura05 m at level $avg05");
+        } else if (avg05!! <= target_bg) {
+            consoleError.add("dura_ISF by-passed; avg. glucose $avg05 below target $target_bg")
+        } else {
+            // fight the resistance at high levels
+            val dura05Weight = dura05 / 60
+            var avg05Weight = weightISF!! / target_bg
+            dura_ISF += dura05Weight*avg05Weight*(avg05-target_bg)
+            sens_modified = true
+            consoleError.add("dura_ISF adaptation is ${round(dura_ISF,2)} because ISF ${round(sens,1)} did not do it for ${round(dura05,1)}m")
+        }
+        if ( sens_modified ) {
+            liftISF = max(dura_ISF, max(bg_ISF, max(delta_ISF, max(acce_ISF, pp_ISF))))
+            if ( acce_ISF < 1.0 ) {                                                                           // 13.JAN.2022 brakes on for otherwise stronger or stable ISF
+                consoleError.add("strongest autoISF factor ${round(liftISF,2)} weakened to ${round(liftISF*acce_ISF,2)} as bg decelerates already")
+                liftISF = liftISF * acce_ISF                                                               // brakes on for otherwise stronger or stable ISF
+            }                                                                                               // brakes on for otherwise stronger or stable ISF
+            final_ISF = withinISFlimits(liftISF, profile.autoISF_min, maxISFReduction, sensitivityRatio, origin_sens, profile, high_temptarget_raises_sensitivity, target_bg, normalTarget)
+            return round(profile.sens / final_ISF, 1)
+        }
+        consoleError.add("----------------------------------")
+        consoleError.add("end autoISF")
+        consoleError.add("----------------------------------")
+        return sens     // nothing changed
+    }
+
     fun determine_basal(
         glucose_status: GlucoseStatus, currenttemp: CurrentTemp, iob_data_array: Array<IobTotal>, profile: OapsProfile, autosens_data: OapsAutosensData, meal_data: MealData,
         microBolusAllowed: Boolean, currentTime: Long, flatBGsDetected: Boolean, dynIsfMode: Boolean
@@ -213,7 +553,9 @@ class DetermineBasalSMB @Inject constructor(
         var min_bg = profile.min_bg
         var max_bg = profile.max_bg
 
-        var sensitivityRatio: Double
+        var sensitivityRatio: Double = 1.0
+        var origin_sens = ""
+        var exercise_ratio = 1.0
         val high_temptarget_raises_sensitivity = profile.exercise_mode || profile.high_temptarget_raises_sensitivity
         val normalTarget = 100 // evaluate high/low temptarget against 100, not scheduled target (which might change)
         // when temptarget is 160 mg/dL, run 50% basal (120 = 75%; 140 = 60%),  80 mg/dL with low_temptarget_lowers_sensitivity would give 1.5x basal, but is limited to autosens_max (1.2x by default)
@@ -223,30 +565,37 @@ class DetermineBasalSMB @Inject constructor(
             consoleError.add("---------------------------------------------------------")
             consoleError.add(" Dynamic ISF version 2.0 ")
             consoleError.add("---------------------------------------------------------")
+        } else if (high_temptarget_raises_sensitivity && profile.temptargetSet && target_bg > normalTarget
+            || profile.low_temptarget_lowers_sensitivity && profile.temptargetSet && target_bg < normalTarget) {
+            if (high_temptarget_raises_sensitivity && profile.temptargetSet && target_bg > normalTarget
+                || profile.low_temptarget_lowers_sensitivity && profile.temptargetSet && target_bg < normalTarget ) {
+                // w/ target 100, temp target 110 = .89, 120 = 0.8, 140 = 0.67, 160 = .57, and 200 = .44
+                // e.g.: Sensitivity ratio set to 0.8 based on temp target of 120; Adjusting basal from 1.65 to 1.35; ISF from 58.9 to 73.6
+                //sensitivityRatio = 2/(2+(target_bg-normalTarget)/40);
+                val c = (halfBasalTarget - normalTarget).toDouble()
+                if (c * (c + target_bg-normalTarget) <= 0.0) {
+                    sensitivityRatio = profile.autosens_max
+                } else {
+                    sensitivityRatio = c / (c + target_bg - normalTarget)
+                    // limit sensitivityRatio to profile.autosens_max (1.2x by default)
+                    sensitivityRatio = min(sensitivityRatio, profile.autosens_max)
+                    sensitivityRatio = round(sensitivityRatio, 2)
+                    exercise_ratio = sensitivityRatio
+                    origin_sens = "from TT modifier"
+                    consoleError.add("Sensitivity ratio set to $sensitivityRatio based on temp target of $target_bg; ")
+                }
+            } else {
+                sensitivityRatio = autosens_data.ratio
+                consoleError.add("Autosens ratio: $sensitivityRatio; ")
+            }
         }
-
-        if (high_temptarget_raises_sensitivity && profile.temptargetSet && target_bg > normalTarget
-            || profile.low_temptarget_lowers_sensitivity && profile.temptargetSet && target_bg < normalTarget
-        ) {
-            // w/ target 100, temp target 110 = .89, 120 = 0.8, 140 = 0.67, 160 = .57, and 200 = .44
-            // e.g.: Sensitivity ratio set to 0.8 based on temp target of 120; Adjusting basal from 1.65 to 1.35; ISF from 58.9 to 73.6
-            //sensitivityRatio = 2/(2+(target_bg-normalTarget)/40);
-            val c = (halfBasalTarget - normalTarget).toDouble()
-            sensitivityRatio = c / (c + target_bg - normalTarget)
-            // limit sensitivityRatio to profile.autosens_max (1.2x by default)
-            sensitivityRatio = min(sensitivityRatio, profile.autosens_max)
-            sensitivityRatio = round(sensitivityRatio, 2)
-            consoleLog.add("Sensitivity ratio set to $sensitivityRatio based on temp target of $target_bg; ")
-        } else {
-            sensitivityRatio = autosens_data.ratio
-            consoleLog.add("Autosens ratio: $sensitivityRatio; ")
-        }
+        val iobTH_reduction_ratio = profile.profile_percentage / 100 * exercise_ratio ;     // later: * activityRatio;
         basal = profile.current_basal * sensitivityRatio
         basal = round_basal(basal)
         if (basal != profile_current_basal)
-            consoleLog.add("Adjusting basal from $profile_current_basal to $basal; ")
+            consoleError.add("Adjusting basal from $profile_current_basal to $basal; ")
         else
-            consoleLog.add("Basal unchanged: $basal; ")
+            consoleError.add("Basal unchanged: $basal; ")
 
         // adjust min, max, and target BG for sensitivity, such that 50% increase in ISF raises target from 100 to 120
         if (profile.temptargetSet) {
@@ -282,15 +631,15 @@ class DetermineBasalSMB @Inject constructor(
         val minAvgDelta = min(glucose_status.shortAvgDelta, glucose_status.longAvgDelta)
         val maxDelta = max(glucose_status.delta, max(glucose_status.shortAvgDelta, glucose_status.longAvgDelta))
 
-        val sens =
+        var sens =
             if (dynIsfMode) profile.variable_sens
             else {
                 val profile_sens = round(profile.sens, 1)
                 val adjusted_sens = round(profile.sens / sensitivityRatio, 1)
                 if (adjusted_sens != profile_sens) {
-                    consoleLog.add("ISF from $profile_sens to $adjusted_sens")
+                    consoleError.add("ISF from $profile_sens to $adjusted_sens")
                 } else {
-                    consoleLog.add("ISF unchanged: $adjusted_sens")
+                    consoleError.add("ISF unchanged: $adjusted_sens")
                 }
                 adjusted_sens
                 //console.log(" (autosens ratio "+sensitivityRatio+")");
@@ -309,7 +658,35 @@ class DetermineBasalSMB @Inject constructor(
                 deviation = round((30 / 5) * (glucose_status.longAvgDelta - bgi))
             }
         }
+        var enableSMB = false
+        var loop_wanted_smb = "AAPS"
+        if (!dynIsfMode) {
+            consoleError.add("----------------------------------")
+            consoleError.add("start autoISF ${profile.autoISF_version}")  // fit onto narrow screens
+            consoleError.add("----------------------------------")
+            var loop_wanted_smb = loop_smb(microBolusAllowed, profile, iob_data.iob, iobTH_reduction_ratio)
+            if (microBolusAllowed && loop_wanted_smb != "AAPS") {
+                if (loop_wanted_smb == "enforced" || loop_wanted_smb == "fullLoop") {              // otherwise FL switched SMB off
+                    enableSMB = true
+                }
+            } else {
+                enableSMB = enable_smb(
+                    profile,
+                    microBolusAllowed,
+                    meal_data,
+                    target_bg
+                )
+            }
 
+            sens = autoISF(sens, origin_sens, target_bg, profile, glucose_status, meal_data, currentTime, sensitivityRatio, loop_wanted_smb, high_temptarget_raises_sensitivity, normalTarget);
+        } else {
+            enableSMB = enable_smb(
+                profile,
+                microBolusAllowed,
+                meal_data,
+                target_bg
+            )
+        }
         // calculate the naive (bolus calculator math) eventual BG based on net IOB and sensitivity
         val naive_eventualBG =
             if (dynIsfMode)
@@ -378,7 +755,7 @@ class DetermineBasalSMB @Inject constructor(
             sensitivityRatio = sensitivityRatio, // autosens ratio (fraction of normal basal)
             consoleLog = consoleLog,
             consoleError = consoleError,
-            variable_sens = profile.variable_sens
+            variable_sens = if (dynIsfMode) profile.variable_sens else sens
         )
 
         // generate predicted future BGs based on IOB, COB, and current absorption rate
@@ -394,7 +771,7 @@ class DetermineBasalSMB @Inject constructor(
         ZTpredBGs.add(bg)
         UAMpredBGs.add(bg)
 
-        var enableSMB = enable_smb(profile, microBolusAllowed, meal_data, target_bg)
+        //var enableSMB = enable_smb(profile, microBolusAllowed, meal_data, target_bg) // pulled ahead for autoISF
 
         // enable UAM (if enabled in preferences)
         val enableUAM = profile.enableUAM
@@ -664,18 +1041,24 @@ class DetermineBasalSMB @Inject constructor(
         ) {
             future_sens = (1800 / (ln((((fSensBG * 0.5) + (bg * 0.5)) / profile.insulinDivisor) + 1) * profile.TDD))
             future_sens = round(future_sens, 1)
-            consoleLog.add("Future state sensitivity is $future_sens based on eventual and current bg due to flat glucose level above target")
-            rT.reason.append("Dosing sensitivity: $future_sens using eventual BG;")
+            if (dynIsfMode) {
+                consoleLog.add("Future state sensitivity is $future_sens based on eventual and current bg due to flat glucose level above target")
+                rT.reason.append("Dosing sensitivity: $future_sens using eventual BG;")
+            }
         } else if (glucose_status.delta > 0 && eventualBG > target_bg || eventualBG > bg) {
             future_sens = (1800 / (ln((bg / profile.insulinDivisor) + 1) * profile.TDD))
             future_sens = round(future_sens, 1)
-            consoleLog.add("Future state sensitivity is $future_sens using current bg due to small delta or variation")
-            rT.reason.append("Dosing sensitivity: $future_sens using current BG;")
+            if (dynIsfMode) {
+                consoleLog.add("Future state sensitivity is $future_sens using current bg due to small delta or variation")
+                rT.reason.append("Dosing sensitivity: $future_sens using current BG;")
+            }
         } else {
             future_sens = (1800 / (ln((fSensBG / profile.insulinDivisor) + 1) * profile.TDD))
             future_sens = round(future_sens, 1)
-            consoleLog.add("Future state sensitivity is $future_sens based on eventual bg due to -ve delta")
-            rT.reason.append("Dosing sensitivity: $future_sens using eventual BG;")
+            if (dynIsfMode) {
+                consoleLog.add("Future state sensitivity is $future_sens based on eventual bg due to -ve delta")
+                rT.reason.append("Dosing sensitivity: $future_sens using eventual BG;")
+            }
         }
 
         val fractionCarbsLeft = meal_data.mealCOB / meal_data.carbs
@@ -831,9 +1214,13 @@ class DetermineBasalSMB @Inject constructor(
             //rT.reason += "minGuardBG "+minGuardBG+"<"+threshold+": SMB disabled; ";
             enableSMB = false
         }
-        if (maxDelta > 0.20 * bg) {
-            consoleError.add("maxDelta ${convert_bg(maxDelta)} > 20% of BG ${convert_bg(bg)} - disabling SMB")
-            rT.reason.append("maxDelta " + convert_bg(maxDelta) + " > 20% of BG " + convert_bg(bg) + ": SMB disabled; ")
+        var maxDeltaPercentage = 0.2           // the AAPS default
+        if ( loop_wanted_smb=="fullLoop" ) {   // only if SMB specifically requested, e.g. for full loop
+            maxDeltaPercentage = 0.3
+        }
+        if ( maxDelta > maxDeltaPercentage * bg ) {
+            consoleError.add("maxDelta ${convert_bg(maxDelta)} > $maxDeltaPercentage% of BG ${convert_bg(bg)} - disabling SMB")
+            rT.reason.append("maxDelta " + convert_bg(maxDelta) + " > " + maxDeltaPercentage + "% of BG " + convert_bg(bg) + ": SMB disabled; ")
             enableSMB = false
         }
 
@@ -1038,17 +1425,32 @@ class DetermineBasalSMB @Inject constructor(
             if (microBolusAllowed && enableSMB && bg > threshold) {
                 // never bolus more than maxSMBBasalMinutes worth of basal
                 val mealInsulinReq = round(meal_data.mealCOB / profile.carb_ratio, 3)
+                val smb_max_range = if (dynIsfMode) 1.0 else profile.smb_max_range_extension
                 if (iob_data.iob > mealInsulinReq && iob_data.iob > 0) {
                     consoleError.add("IOB ${iob_data.iob} > COB ${meal_data.mealCOB}; mealInsulinReq = $mealInsulinReq")
                     consoleError.add("profile.maxUAMSMBBasalMinutes: ${profile.maxUAMSMBBasalMinutes} profile.current_basal: ${profile.current_basal}")
-                    maxBolus = round(profile.current_basal * profile.maxUAMSMBBasalMinutes / 60, 1)
+                    maxBolus = round(smb_max_range * profile.current_basal * profile.maxUAMSMBBasalMinutes / 60, 1)
                 } else {
                     consoleError.add("profile.maxSMBBasalMinutes: ${profile.maxSMBBasalMinutes} profile.current_basal: ${profile.current_basal}")
-                    maxBolus = round(profile.current_basal * profile.maxSMBBasalMinutes / 60, 1)
+                    maxBolus = round(smb_max_range * profile.current_basal * profile.maxSMBBasalMinutes / 60, 1)
                 }
                 // bolus 1/2 the insulinReq, up to maxBolus, rounding down to nearest bolus increment
                 val roundSMBTo = 1 / profile.bolus_increment
-                val microBolus = Math.floor(Math.min(insulinReq / 2, maxBolus) * roundSMBTo) / roundSMBTo
+                var microBolus: Double
+                if (dynIsfMode) {
+                    microBolus = Math.floor(Math.min(insulinReq / 2, maxBolus) * roundSMBTo) / roundSMBTo
+                } else {
+                    val smb_ratio = determine_varSMBratio(profile, bg.toInt(), target_bg, loop_wanted_smb)
+                    microBolus = Math.min(insulinReq * smb_ratio, maxBolus)
+                    // mod autoISF3.0-dev: if that would put us over iobTH, then reduce accordingly; allow 30% overrun
+                    val iobTHtolerance = 130
+                    val iobTHvirtual = profile.iob_threshold_percent * iobTHtolerance / 10000 * profile.max_iob * iobTH_reduction_ratio
+                    if (microBolus > iobTHvirtual - iob_data.iob && (loop_wanted_smb == "fullLoop" || loop_wanted_smb == "enforced")) {
+                        microBolus = iobTHvirtual - iob_data.iob
+                        consoleError.add("Full loop capped SMB at ${round(microBolus, 2)} to not exceed $iobTHtolerance% of effective iobTH ${round(iobTHvirtual / iobTHtolerance * 100, 2)}U")
+                    }
+                    microBolus = Math.floor(microBolus * roundSMBTo) / roundSMBTo
+                }
                 // calculate a long enough zero temp to eventually correct back up to target
                 val smbTarget = target_bg
                 val worstCaseInsulinReq = (smbTarget - (naive_eventualBG + minIOBPredBG) / 2.0) / sens
