@@ -374,6 +374,7 @@ class DetermineBasalSMB @Inject constructor(
             if (minmax_delta>0 && bg_acce<0) {
                 consoleError.add("Parabolic fit extrapolates a maximum of ${convert_bg(minmax_value)} in about $minmax_delta minutes")
             } else if (minmax_delta>0 && bg_acce>0.0) {
+                
                 consoleError.add("Parabolic fit extrapolates a minimum of ${convert_bg(minmax_value)} in about $minmax_delta minutes")
                 if (minmax_delta<=30 && minmax_value<target_bg) {   // start braking
                     acce_weight = -profile.bgBrake_ISF_weight
