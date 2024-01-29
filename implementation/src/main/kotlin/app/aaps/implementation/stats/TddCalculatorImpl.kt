@@ -9,6 +9,7 @@ import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import androidx.core.util.size
+import app.aaps.core.data.aps.AverageTDD
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.TDD
 import app.aaps.core.data.pump.defs.PumpType
@@ -127,22 +128,24 @@ class TddCalculatorImpl @Inject constructor(
         return null
     }
 
-    override fun averageTDD(tdds: LongSparseArray<TDD>?): TDD? {
+    override fun averageTDD(tdds: LongSparseArray<TDD>?): AverageTDD? {
         val totalTdd = TDD(timestamp = dateUtil.now())
         tdds ?: return null
         if (tdds.size() == 0) return null
+        var hasCarbs = true
         for (i in 0 until tdds.size()) {
             val tdd = tdds.valueAt(i)
             totalTdd.basalAmount += tdd.basalAmount
             totalTdd.bolusAmount += tdd.bolusAmount
             totalTdd.totalAmount += tdd.totalAmount
             totalTdd.carbs += tdd.carbs
+            if (tdd.carbs == 0.0) hasCarbs = false
         }
         totalTdd.basalAmount /= tdds.size().toDouble()
         totalTdd.bolusAmount /= tdds.size().toDouble()
         totalTdd.totalAmount /= tdds.size().toDouble()
         totalTdd.carbs /= tdds.size().toDouble()
-        return totalTdd
+        return AverageTDD(data = totalTdd, allDaysHaveCarbs = hasCarbs)
     }
 
     override fun stats(context: Context): TableLayout {
@@ -168,7 +171,7 @@ class TddCalculatorImpl @Inject constructor(
                     gravity = Gravity.CENTER_HORIZONTAL
                     setTextAppearance(android.R.style.TextAppearance_Material_Medium)
                 })
-                layout.addView(averageTdd.toTableRow(context, rh, tdds.size(), includeCarbs = true))
+                layout.addView(averageTdd.data.toTableRow(context, rh, tdds.size(), includeCarbs = true))
             }
             todayTdd?.let {
                 layout.addView(TextView(context).apply {
