@@ -1,17 +1,16 @@
 package app.aaps.core.objects.aps
 
 import android.text.Spanned
-import app.aaps.core.data.aps.AutosensResult
-import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.aps.APSResult
+import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.CurrentTemp
 import app.aaps.core.interfaces.aps.GlucoseStatus
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.aps.MealData
-import app.aaps.core.interfaces.aps.OapsAutosensData
 import app.aaps.core.interfaces.aps.OapsProfile
 import app.aaps.core.interfaces.aps.Predictions
 import app.aaps.core.interfaces.aps.RT
@@ -81,7 +80,6 @@ class DetermineBasalResult @Inject constructor(val injector: HasAndroidInjector)
     override var currentTemp: CurrentTemp? = null
     override var oapsProfile: OapsProfile? = null
     override var mealData: MealData? = null
-    override var oapsAutosensData: OapsAutosensData? = null
 
     lateinit var result: RT
 
@@ -90,8 +88,8 @@ class DetermineBasalResult @Inject constructor(val injector: HasAndroidInjector)
         algorithm = APSResult.Algorithm.UNKNOWN
     }
 
-    constructor(injector: HasAndroidInjector, result: RT, algorithm: APSResult.Algorithm) : this(injector) {
-        this.algorithm = algorithm
+    constructor(injector: HasAndroidInjector, result: RT) : this(injector) {
+        this.algorithm = result.algorithm
         this.result = result
         hasPredictions = true
         date = result.timestamp ?: dateUtil.now()
@@ -170,7 +168,7 @@ class DetermineBasalResult @Inject constructor(val injector: HasAndroidInjector)
         } else HtmlHelper.fromHtml(rh.gs(R.string.nochangerequested))
     }
 
-    override fun newAndClone(): DetermineBasalResult = DetermineBasalResult(injector, result, algorithm)
+    override fun newAndClone(): DetermineBasalResult = DetermineBasalResult(injector, result)
     override fun json(): JSONObject = JSONObject(result.serialize())
 
     override fun predictions(): Predictions? = result.predBGs

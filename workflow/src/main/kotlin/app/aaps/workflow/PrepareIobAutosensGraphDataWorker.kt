@@ -5,8 +5,6 @@ import android.graphics.DashPathEffect
 import android.graphics.Paint
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import app.aaps.core.data.aps.AutosensData
-import app.aaps.core.data.aps.AutosensResult
 import app.aaps.core.data.aps.SMBDefaults
 import app.aaps.core.graph.data.BarGraphSeries
 import app.aaps.core.graph.data.DataPointWithLabelInterface
@@ -16,6 +14,8 @@ import app.aaps.core.graph.data.LineGraphSeries
 import app.aaps.core.graph.data.PointsWithLabelGraphSeries
 import app.aaps.core.graph.data.ScaledDataPoint
 import app.aaps.core.graph.data.Shape
+import app.aaps.core.interfaces.aps.AutosensData
+import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.graph.Scale

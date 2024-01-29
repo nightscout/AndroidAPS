@@ -1,8 +1,6 @@
 package app.aaps.plugins.main.iob.iobCobCalculator
 
 import androidx.collection.LongSparseArray
-import app.aaps.core.data.aps.AutosensData
-import app.aaps.core.data.aps.AutosensResult
 import app.aaps.core.data.aps.BasalData
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.iob.CobInfo
@@ -11,7 +9,9 @@ import app.aaps.core.data.model.TB
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.aps.AutosensData
 import app.aaps.core.interfaces.aps.AutosensDataStore
+import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.aps.MealData
 import app.aaps.core.interfaces.db.PersistenceLayer

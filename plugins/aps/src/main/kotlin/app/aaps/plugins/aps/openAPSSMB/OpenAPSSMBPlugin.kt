@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.LongSparseArray
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
-import app.aaps.core.data.aps.AutosensResult
 import app.aaps.core.data.aps.SMBDefaults
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.plugin.PluginDescription
@@ -12,8 +11,8 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.APSResult
+import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.CurrentTemp
-import app.aaps.core.interfaces.aps.OapsAutosensData
 import app.aaps.core.interfaces.aps.OapsProfile
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.constraints.Constraint
@@ -61,7 +60,6 @@ import app.aaps.plugins.aps.events.EventResetOpenAPSGui
 import app.aaps.plugins.aps.openAPS.TddStatus
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
-import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.floor
@@ -258,12 +256,13 @@ open class OpenAPSSMBPlugin @Inject constructor(
         }
         val insulin = activePlugin.activeInsulin
         val insulinDivisor = when {
-            insulin.peak > 65 -> 55 // lyumjev peak: 45
+            insulin.peak > 65 -> 55 // rapid peak: 75
             insulin.peak > 50 -> 65 // ultra rapid peak: 55
-            else              -> 75 // rapid peak: 75
+            else              -> 75 // lyumjev peak: 45
         }
 
-        var tddStatus: TddStatus? = null
+        var autosensResult = AutosensResult()
+        val tddStatus: TddStatus?
         var variableSensitivity = 0.0
         var tdd = 0.0
         if (dynIsfMode) {
@@ -271,8 +270,8 @@ open class OpenAPSSMBPlugin @Inject constructor(
             // without these values DynISF doesn't work properly
             // Current implementation is fallback to SMB if TDD history is not available. Thus calculated here
             val tdd1D = tddCalculator.averageTDD(tddCalculator.calculate(1, allowMissingDays = false))?.totalAmount
-            val tdd7D = tddCalculator.averageTDD(tddCalculator.calculate(7, allowMissingDays = false))?.totalAmount
-            val tddLast24H = tddCalculator.calculateDaily(-24, 0)?.totalAmount
+            val tdd7D = tddCalculator.averageTDD(tddCalculator.calculate(7, allowMissingDays = false))
+            val tddLast24H = tddCalculator.calculateDaily(-24, 0)
             val tddLast4H = tddCalculator.calculateDaily(-4, 0)?.totalAmount
             val tddLast8to4H = tddCalculator.calculateDaily(-8, -4)?.totalAmount
             if (tdd1D == null || tdd7D == null || tddLast4H == null || tddLast8to4H == null || tddLast24H == null) {
@@ -286,37 +285,36 @@ open class OpenAPSSMBPlugin @Inject constructor(
                     }
                 )
                 inputConstraints.copyReasons(
-                    ConstraintObject(false, aapsLogger).apply { set(true, "tdd1D=$tdd1D tdd7D=$tdd7D tddLast4H=$tddLast4H tddLast8to4H=$tddLast8to4H tddLast24H=$tddLast24H", this) }
+                    ConstraintObject(false, aapsLogger).apply { set(true, "tdd1D=$tdd1D tdd7D=${tdd7D?.totalAmount} tddLast4H=$tddLast4H tddLast8to4H=$tddLast8to4H tddLast24H=${tddLast24H?.totalAmount}", this) }
                 )
             } else {
                 uiInteraction.dismissNotification(Notification.SMB_FALLBACK)
-                tddStatus = TddStatus(tdd1D, tdd7D, tddLast24H, tddLast4H, tddLast8to4H)
+                tddStatus = TddStatus(tdd1D, tdd7D.totalAmount, tddLast24H.totalAmount, tddLast4H, tddLast8to4H)
                 val tddWeightedFromLast8H = ((1.4 * tddStatus.tddLast4H) + (0.6 * tddStatus.tddLast8to4H)) * 3
                 tdd = (tddWeightedFromLast8H * 0.33) + (tddStatus.tdd7D * 0.34) + (tddStatus.tdd1D * 0.33) * preferences.get(IntKey.ApsDynIsfAdjustmentFactor) / 100.0
                 variableSensitivity = Round.roundTo(1800 / (tdd * (ln((glucoseStatus.glucose / insulinDivisor) + 1))), 0.1)
-            }
-        }
 
-        var autosensResult = AutosensResult()
-        val autosensData =
-            if (dynIsfMode) {
-                tddStatus ?: error("Internal error. TDD not provided.")
-                OapsAutosensData(ratio = if (preferences.get(BooleanKey.ApsDynIsfAdjustSensitivity)) tddStatus.tddLast24H / tddStatus.tdd7D else 1.0)
-            } else {
-                if (constraintsChecker.isAutosensModeEnabled().value()) {
-                    val autosensData = iobCobCalculator.getLastAutosensDataWithWaitForCalculationFinish("OpenAPSPlugin")
-                    if (autosensData == null) {
-                        rxBus.send(EventResetOpenAPSGui(rh.gs(R.string.openaps_no_as_data)))
-                        return
-                    }
-                    autosensResult = autosensData.autosensResult
-                    OapsAutosensData(ratio = autosensResult.ratio)
-                } else {
-                    autosensResult.sensResult = "autosens disabled"
-                    OapsAutosensData(ratio = 1.0)
+                // Compare insulin consumption of last 24h with last 7 days average
+                val tddRatio = if (preferences.get(BooleanKey.ApsDynIsfAdjustSensitivity)) tddLast24H.totalAmount / tdd7D.totalAmount else 1.0
+                // Because consumed carbs affects total amount of insulin compensate final ratio by consumed carbs ratio
+                // take only 60% (expecting 40% basal). We cannot use bolus/total because of SMBs
+                val carbsRatio = if (preferences.get(BooleanKey.ApsDynIsfAdjustSensitivity) && tddLast24H.carbs != 0.0 && tdd7D.carbs != 0.0) ((tddLast24H.carbs / tdd7D.carbs - 1.0) * 0.6) + 1.0 else 1.0
+                autosensResult = AutosensResult(
+                    ratio = tddRatio / carbsRatio,
+                    ratioFromTdd = tddRatio,
+                    ratioFromCarbs = carbsRatio
+                )
+            }
+        } else {
+            if (constraintsChecker.isAutosensModeEnabled().value()) {
+                val autosensData = iobCobCalculator.getLastAutosensDataWithWaitForCalculationFinish("OpenAPSPlugin")
+                if (autosensData == null) {
+                    rxBus.send(EventResetOpenAPSGui(rh.gs(R.string.openaps_no_as_data)))
+                    return
                 }
-
-            }
+                autosensResult = autosensData.autosensResult
+            } else autosensResult.sensResult = "autosens disabled"
+        }
 
         val iobArray = iobCobCalculator.calculateIobArrayForSMB(autosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
         val mealData = iobCobCalculator.getMealDataWithWaitingForCalculationFinish()
@@ -398,7 +396,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
         aapsLogger.debug(LTag.APS, "Current temp:       $currentTemp")
         aapsLogger.debug(LTag.APS, "IOB data:           ${iobArray.joinToString()}")
         aapsLogger.debug(LTag.APS, "Profile:            $oapsProfile")
-        aapsLogger.debug(LTag.APS, "Autosens data:      $autosensData")
+        aapsLogger.debug(LTag.APS, "Autosens data:      $autosensResult")
         aapsLogger.debug(LTag.APS, "Meal data:          $mealData")
         aapsLogger.debug(LTag.APS, "MicroBolusAllowed:  $microBolusAllowed")
         aapsLogger.debug(LTag.APS, "flatBGsDetected:    $flatBGsDetected")
@@ -409,14 +407,14 @@ open class OpenAPSSMBPlugin @Inject constructor(
             currenttemp = currentTemp,
             iob_data_array = iobArray,
             profile = oapsProfile,
-            autosens_data = autosensData,
+            autosens_data = autosensResult,
             meal_data = mealData,
             microBolusAllowed = microBolusAllowed,
             currentTime = now,
             flatBGsDetected = flatBGsDetected,
             dynIsfMode = dynIsfMode
         ).also {
-            val determineBasalResult = DetermineBasalResult(injector, it, APSResult.Algorithm.SMB)
+            val determineBasalResult = DetermineBasalResult(injector, it)
             // Preserve input data
             determineBasalResult.inputConstraints = inputConstraints
             determineBasalResult.autosensResult = autosensResult
@@ -425,7 +423,6 @@ open class OpenAPSSMBPlugin @Inject constructor(
             determineBasalResult.currentTemp = currentTemp
             determineBasalResult.oapsProfile = oapsProfile
             determineBasalResult.mealData = mealData
-            determineBasalResult.oapsAutosensData = autosensData
             lastAPSResult = determineBasalResult
             lastAPSRun = now
             aapsLogger.debug(LTag.APS, "Result: $it")

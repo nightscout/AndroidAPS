@@ -2,11 +2,11 @@ package app.aaps.plugins.main.iob
 
 import android.content.Context
 import androidx.collection.LongSparseArray
-import app.aaps.core.data.aps.AutosensData
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.aps.AutosensData
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.Preferences
 import app.aaps.implementation.iob.AutosensDataObject

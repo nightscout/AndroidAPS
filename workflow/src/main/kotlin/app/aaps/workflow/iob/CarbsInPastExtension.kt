@@ -1,7 +1,7 @@
 package app.aaps.workflow.iob
 
-import app.aaps.core.data.aps.AutosensData
 import app.aaps.core.data.model.CA
+import app.aaps.core.interfaces.aps.AutosensData
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileFunction

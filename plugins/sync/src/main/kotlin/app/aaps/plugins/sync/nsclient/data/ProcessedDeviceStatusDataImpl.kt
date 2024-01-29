@@ -115,7 +115,7 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
         get() = if (openAPSData.clockSuggested != 0L) openAPSData.clockSuggested else -1
 
     override fun getAPSResult(): APSResult? =
-        openAPSData.suggested?.let { instantiator.provideAPSResultObject(it, APSResult.Algorithm.UNKNOWN) }
+        openAPSData.suggested?.let { instantiator.provideAPSResultObject(it) }
 
     override val uploaderStatus: String
         get() {

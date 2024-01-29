@@ -1362,11 +1362,11 @@ interface PersistenceLayer {
     fun getApsResults(start: Long, end: Long): List<APSResult>
 
     /**
-     * Insert ApsResult record
+     * Insert or update ApsResult record
      *
      * @param apsResult record
      * @return List of inserted records
      */
-    fun insertApsResult(apsResult: APSResult): Single<TransactionResult<APSResult>>
+    fun insertOrUpdateApsResult(apsResult: APSResult): Single<TransactionResult<APSResult>>
 
 }

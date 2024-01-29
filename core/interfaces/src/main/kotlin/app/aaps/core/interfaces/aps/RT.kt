@@ -17,6 +17,7 @@ import java.util.TimeZone
 
 @Serializable
 data class RT(
+    var algorithm: APSResult.Algorithm = APSResult.Algorithm.UNKNOWN,
     var runningDynamicIsf: Boolean,
     @Serializable(with = TimestampToIsoSerializer::class)
     var timestamp: Long? = null,

@@ -1,14 +1,13 @@
 package app.aaps.plugins.aps.openAPSAMA
 
-import app.aaps.core.data.aps.AutosensResult
 import app.aaps.core.data.aps.SMBDefaults
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.APSResult
+import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.CurrentTemp
-import app.aaps.core.interfaces.aps.OapsAutosensData
 import app.aaps.core.interfaces.aps.OapsProfile
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -156,20 +155,15 @@ class OpenAPSAMAPlugin @Inject constructor(
             targetBg = hardLimits.verifyHardLimits(tempTarget.target(), app.aaps.core.ui.R.string.temp_target_value, HardLimits.LIMIT_TEMP_TARGET_BG[0], HardLimits.LIMIT_TEMP_TARGET_BG[1])
         }
 
-        var autosensResult = AutosensResult()
-        val autosensData =
+        val autosensResult =
             if (constraintsChecker.isAutosensModeEnabled().value()) {
                 val autosensData = iobCobCalculator.getLastAutosensDataWithWaitForCalculationFinish("OpenAPSPlugin")
                 if (autosensData == null) {
                     rxBus.send(EventResetOpenAPSGui(rh.gs(R.string.openaps_no_as_data)))
                     return
                 }
-                autosensResult = autosensData.autosensResult
-                OapsAutosensData(ratio = autosensResult.ratio)
-            } else {
-                autosensResult.sensResult = "autosens disabled"
-                OapsAutosensData(ratio = 1.0)
-            }
+                autosensData.autosensResult
+            } else AutosensResult(sensResult = "autosens disabled")
 
         val iobArray = iobCobCalculator.calculateIobArrayInDia(profile)
         val mealData = iobCobCalculator.getMealDataWithWaitingForCalculationFinish()
@@ -248,7 +242,7 @@ class OpenAPSAMAPlugin @Inject constructor(
         aapsLogger.debug(LTag.APS, "Current temp:       $currentTemp")
         aapsLogger.debug(LTag.APS, "IOB data:           ${iobArray.joinToString()}")
         aapsLogger.debug(LTag.APS, "Profile:            $oapsProfile")
-        aapsLogger.debug(LTag.APS, "Autosens data:      $autosensData")
+        aapsLogger.debug(LTag.APS, "Autosens data:      $autosensResult")
         aapsLogger.debug(LTag.APS, "Meal data:          $mealData")
 
         determineBasalAMA.determine_basal(
@@ -256,11 +250,11 @@ class OpenAPSAMAPlugin @Inject constructor(
             currenttemp = currentTemp,
             iob_data_array = iobArray,
             profile = oapsProfile,
-            autosens_data = autosensData,
+            autosens_data = autosensResult,
             meal_data = mealData,
             currentTime = now
         ).also {
-            val determineBasalResult = DetermineBasalResult(injector, it, APSResult.Algorithm.AMA)
+            val determineBasalResult = DetermineBasalResult(injector, it)
             // Preserve input data
             determineBasalResult.inputConstraints = inputConstraints
             determineBasalResult.autosensResult = autosensResult
@@ -269,7 +263,6 @@ class OpenAPSAMAPlugin @Inject constructor(
             determineBasalResult.currentTemp = currentTemp
             determineBasalResult.oapsProfile = oapsProfile
             determineBasalResult.mealData = mealData
-            determineBasalResult.oapsAutosensData = autosensData
             lastAPSResult = determineBasalResult
             lastAPSRun = now
             aapsLogger.debug(LTag.APS, "Result: $it")
