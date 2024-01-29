@@ -89,6 +89,7 @@
     <string name="triggerHeartRateDesc">TF %1$s %2$.0f</string>
     <string name="iob_u">IOB [JI]:</string>
     <string name="distance_short">Vzdial. [m]:</string>
+    <string name="day">Deň</string>
     <string name="recurringTime">Čas zotavovania</string>
     <string name="every">Každých</string>
     <string name="never">Nikdy</string>
