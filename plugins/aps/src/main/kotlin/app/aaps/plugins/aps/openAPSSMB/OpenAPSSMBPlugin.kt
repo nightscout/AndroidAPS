@@ -290,7 +290,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
                 uiInteraction.dismissNotification(Notification.SMB_FALLBACK)
                 tddStatus = TddStatus(tdd1D, tdd7D.data.totalAmount, tddLast24H.totalAmount, tddLast4H, tddLast8to4H)
                 val tddWeightedFromLast8H = ((1.4 * tddStatus.tddLast4H) + (0.6 * tddStatus.tddLast8to4H)) * 3
-                tdd = (tddWeightedFromLast8H * 0.33) + (tddStatus.tdd7D * 0.34) + (tddStatus.tdd1D * 0.33) * preferences.get(IntKey.ApsDynIsfAdjustmentFactor) / 100.0
+                tdd = ((tddWeightedFromLast8H * 0.33) + (tddStatus.tdd7D * 0.34) + (tddStatus.tdd1D * 0.33)) * preferences.get(IntKey.ApsDynIsfAdjustmentFactor) / 100.0
                 variableSensitivity = Round.roundTo(1800 / (tdd * (ln((glucoseStatus.glucose / insulinDivisor) + 1))), 0.1)
 
                 // Compare insulin consumption of last 24h with last 7 days average
