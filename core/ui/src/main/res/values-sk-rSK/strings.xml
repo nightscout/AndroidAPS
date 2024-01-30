@@ -338,6 +338,7 @@
     <string name="uel_export_settings">EXPORTOVAŤ NASTAVENIA</string>
     <string name="uel_import_settings">IMPORTOVAŤ NASTAVENIA</string>
     <string name="uel_reset_databases">RESETOVAŤ DATABÁZY</string>
+    <string name="uel_reset_aps_results">RESETOVAŤ VÝSLEDKY AAPS</string>
     <string name="uel_cleanup_databases">VYČISTIŤ DATABÁZU</string>
     <string name="uel_export_databases">EXPORTOVAŤ DATABÁZY</string>
     <string name="uel_import_databases">IMPORTOVAŤ DATABÁZY</string>
