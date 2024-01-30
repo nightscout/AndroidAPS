@@ -89,6 +89,7 @@
     <string name="triggerHeartRateDesc">KA %1$s %2$.0f</string>
     <string name="iob_u">AİNS [U]:</string>
     <string name="distance_short">Mesafe [m]:</string>
+    <string name="day">Gün</string>
     <string name="recurringTime">Yinelenen zaman</string>
     <string name="every">Her</string>
     <string name="never">Asla</string>
