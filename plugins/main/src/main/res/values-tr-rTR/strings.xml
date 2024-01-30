@@ -153,6 +153,8 @@
     <string name="dia_short">İES</string>
     <string name="target_short">HDF</string>
     <string name="basal_short">BAZ</string>
+    <string name="isf_dynamic_label">Algoritmanız İDF\'nin dinamik hesaplamasını sağlayabilir. Aşağıdaki değerler yalnızca eksik veri olması durumunda geri dönüş olarak kullanılır</string>
+    <string name="ic_dynamic_label">Algoritmanız Kİ\'nin dinamik hesaplamasını sağlayabilir. Aşağıdaki değerler yalnızca eksik veri olması durumunda geri dönüş olarak kullanılır</string>
     <!-- Actions -->
     <string name="actions">Eylemler</string>
     <string name="description_actions">Ortak özelliklere hızlıca erişmek için bazı düğmeler</string>
@@ -259,11 +261,13 @@
     <string name="overview_show_deviation_slope">Sapma eğimi</string>
     <string name="overview_show_activity">Aktivite</string>
     <string name="overview_show_bgi">Kan Şekeri Etkisi</string>
+    <string name="overview_show_sensitivity">Duyarlılık değişikliği</string>
     <string name="overview_show_deviations">Sapma</string>
     <string name="overview_show_cob">Aktif Karbonhidrat</string>
     <string name="overview_show_iob">Aktif İnsülin</string>
     <string name="overview_show_basals">Bazallar</string>
     <string name="overview_show_abs_insulin">Mutlak insülin</string>
+    <string name="overview_show_variable_sens">Değişken duyarlılık</string>
     <string name="prediction_shortname">TAHMİN</string>
     <string name="basal_shortname">BAZAL</string>
     <string name="deviation_shortname">SAPMA</string>
@@ -273,6 +277,8 @@
     <string name="devslope_shortname">EĞİMSAPMA</string>
     <string name="treatments_shortname">TEDAVİ</string>
     <string name="heartRate_shortname">Nabız</string>
+    <string name="sensitivity_shortname">DYRLLK%</string>
+    <string name="variable_sensitivity_shortname">DDYRLLK</string>
     <string name="graph_scale">Grafik ölçeği</string>
     <string name="graph_menu_divider_header">Grafik</string>
     <!-- Skins -->
