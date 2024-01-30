@@ -30,7 +30,21 @@ import io.reactivex.rxjava3.core.Single
 
 interface PersistenceLayer {
 
+    /**
+     *  Clear all DB tables
+     */
     fun clearDatabases()
+
+    /**
+     *  Clear ApsResults table
+     */
+    fun clearApsResults()
+
+    /**
+     * Perform database maintenance
+     * @param keepDays remove all records older than
+     * @param deleteTrackedChanges delete tracked changes from all tables
+     */
     fun cleanupDatabase(keepDays: Long, deleteTrackedChanges: Boolean): String
 
     // BS

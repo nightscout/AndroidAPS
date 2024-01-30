@@ -78,6 +78,7 @@ fun UserEntry.Action.fromDb(): Action =
         UserEntry.Action.EXPORT_SETTINGS                 -> Action.EXPORT_SETTINGS
         UserEntry.Action.IMPORT_SETTINGS                 -> Action.IMPORT_SETTINGS
         UserEntry.Action.RESET_DATABASES                 -> Action.RESET_DATABASES
+        UserEntry.Action.RESET_APS_RESULTS               -> Action.RESET_APS_RESULTS
         UserEntry.Action.CLEANUP_DATABASES               -> Action.CLEANUP_DATABASES
         UserEntry.Action.EXPORT_DATABASES                -> Action.EXPORT_DATABASES
         UserEntry.Action.IMPORT_DATABASES                -> Action.IMPORT_DATABASES
@@ -168,6 +169,7 @@ fun Action.toDb(): UserEntry.Action =
         Action.EXPORT_SETTINGS                 -> UserEntry.Action.EXPORT_SETTINGS
         Action.IMPORT_SETTINGS                 -> UserEntry.Action.IMPORT_SETTINGS
         Action.RESET_DATABASES                 -> UserEntry.Action.RESET_DATABASES
+        Action.RESET_APS_RESULTS               -> UserEntry.Action.RESET_APS_RESULTS
         Action.CLEANUP_DATABASES               -> UserEntry.Action.CLEANUP_DATABASES
         Action.EXPORT_DATABASES                -> UserEntry.Action.EXPORT_DATABASES
         Action.IMPORT_DATABASES                -> UserEntry.Action.IMPORT_DATABASES
