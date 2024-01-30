@@ -338,6 +338,7 @@
     <string name="uel_export_settings">EXPORTAR AJUSTES</string>
     <string name="uel_import_settings">IMPORTAR AJUSTES</string>
     <string name="uel_reset_databases">RESTABLECER BASES DE DATOS</string>
+    <string name="uel_reset_aps_results">RESTABLECER RESULTADOS DE APS</string>
     <string name="uel_cleanup_databases">LIMPIAR BASE DE DATOS</string>
     <string name="uel_export_databases">EXPORTAR BASES DE DATOS</string>
     <string name="uel_import_databases">IMPORTAR BASES DE DATOS</string>
