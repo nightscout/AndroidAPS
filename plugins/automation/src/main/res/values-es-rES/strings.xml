@@ -89,6 +89,7 @@
     <string name="triggerHeartRateDesc">RC %1$s %2$.0f</string>
     <string name="iob_u">IOB (Insulina a Bordo) [U]:</string>
     <string name="distance_short">Dist. [m]:</string>
+    <string name="day">Día</string>
     <string name="recurringTime">Hora de Repetición</string>
     <string name="every">Cada</string>
     <string name="never">Nunca</string>
