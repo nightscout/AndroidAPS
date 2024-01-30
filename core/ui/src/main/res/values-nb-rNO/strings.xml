@@ -338,6 +338,7 @@
     <string name="uel_export_settings">EKSPORTER INNSTILLINGER</string>
     <string name="uel_import_settings">IMPORTER INNSTILLINGER</string>
     <string name="uel_reset_databases">TILBAKESTILL DATABASER</string>
+    <string name="uel_reset_aps_results">TILBAKESTILL APS-RESULTATER</string>
     <string name="uel_cleanup_databases">OPPRYDDING I DATABASER</string>
     <string name="uel_export_databases">EKSPORTER DATABASER</string>
     <string name="uel_import_databases">IMPORTER DATABASER</string>
