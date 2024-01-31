@@ -120,7 +120,8 @@ class StatusLightHandler @Inject constructor(
         view: TextView?, criticalSetting: IntKey, warnSetting: IntKey, level: Double, units: String, maxReading: Double
     ) {
         if (level >= maxReading) {
-            view?.text = decimalFormatter.to0Decimal(maxReading, units)
+            @Suppress("SetTextI18n")
+            view?.text = "${decimalFormatter.to0Decimal(maxReading)}+$units"
             view?.setTextColor(rh.gac(view.context, app.aaps.core.ui.R.attr.defaultTextColor))
         } else {
             handleLevel(view, criticalSetting, warnSetting, level, units)

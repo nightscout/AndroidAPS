@@ -244,7 +244,6 @@
     <string name="overview_show_deviation_slope">斜度偏差</string>
     <string name="overview_show_activity">活动</string>
     <string name="overview_show_bgi">血糖影响</string>
-    <string name="overview_show_sensitivity">灵敏度</string>
     <string name="overview_show_deviations">偏差</string>
     <string name="overview_show_cob">活性碳水化合物</string>
     <string name="overview_show_iob">活性胰岛素</string>
@@ -258,7 +257,6 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">治疗</string>
-    <string name="sensitivity_shortname">灵敏度</string>
     <string name="graph_scale">图形缩放</string>
     <string name="graph_menu_divider_header">绘图</string>
     <!-- Skins -->

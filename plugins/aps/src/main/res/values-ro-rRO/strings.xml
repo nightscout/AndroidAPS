@@ -84,7 +84,6 @@
     <string name="smb_disabled_in_preferences">SMB dezactivat în preferințe</string>
     <string name="uam_disabled_in_preferences">UAM dezactivat din setări</string>
     <string name="autosens_disabled_in_preferences">Autosens dezactivat în preferințe</string>
-    <string name="autosens_disabled_in_dyn_isf">Autosens dezactivat în DynISF</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">Se limitează IOB la %1$.1f U datorită %2$s</string>
     <string name="maxvalueinpreferences">valoare maximă în preferințe</string>

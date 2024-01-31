@@ -96,7 +96,7 @@
     <string name="press_next_or_cancel">Stiskněte <b>Další</b> pro deaktivaci nebo <b>Zrušit</b> pro návrat na hlavní obrazovku.</string>
     <string name="deactivating_pump">Deaktivace Patche. Počkejte prosím.</string>
     <string name="deactivating_error">Nepodařilo se deaktivovat, stiskněte <b>Zahodit</b> pro zapomenutí Patche.</string>
-    <string name="retract_needle">Zatížení jehly. Odstraňte Patch z těla.</string>
+    <string name="retract_needle">Uvolněte jehlu. Odstraňte Patch z těla.</string>
     <string name="remove_base_discard_patch">Odstraňte základnu a vhodně zlikvidujte použitou kanylu.</string>
     <string name="press_next_or_OK">Stiskněte <b>OK</b> pro návrat na hlavní obrazovku. Stiskněte <b>Další</b> pro zahájení aktivace nového Patche.</string>
     <string name="activation_in_progress">Jejda! Něco se pokazilo, zdá se, že již probíhá aktivace.</string>

@@ -84,7 +84,8 @@
     <string name="smb_disabled_in_preferences">SMB deaktivert i innstillinger</string>
     <string name="uam_disabled_in_preferences">UAM deaktivert i innstillinger</string>
     <string name="autosens_disabled_in_preferences">Autosens deaktivert i innstillinger</string>
-    <string name="autosens_disabled_in_dyn_isf">Autosens deaktivert i DynISF</string>
+    <string name="use_dynamic_sensitivity_title">Aktiver dynamisk sensitivitet</string>
+    <string name="use_dynamic_sensitivity_summary">Juster algoritmen til å bruke dynamisk sensitivitet istedenfor profilverdi</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">Begrenser IOB til %1$.1f E på grunn av %2$s</string>
     <string name="maxvalueinpreferences">maks verdi i innstillingene</string>
@@ -117,4 +118,5 @@
     <string name="loop_open_mode_min_change">Minste endringsforespørsel [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">I åpen Loopmodus vil AAPS be deg utføre en hendelse hvis forandringen er større enn denne verdien i %. Standard verdi er 20%</string>
     <string name="fallback_smb_no_tdd">Går tilbake til SMB. Ikke nok data om total daglig dose.</string>
+    <string name="fallback_to_isf_no_tdd">Faller tilbake til profilsensitivitet. Ikke nok TDD-data.</string>
 </resources>

@@ -116,6 +116,7 @@
     <string name="description_maintenance">Poskytuje viaceré funkcie pre údržbu (ako napr. zasielanie logov, vymazanie logov).</string>
     <string name="database_cleanup">Vyčistenie databázy</string>
     <string name="reset_db_confirm">Naozaj chcete vymazať databázu?</string>
+    <string name="reset_aps_results_confirm">Naozaj chcete resetovať uložené výsledky AAPS?</string>
     <string name="maintenance_settings">Nastavenie údržby</string>
     <string name="maintenance_email">E-Mail</string>
     <string name="maintenance_amount">Počet protokolov na odoslanie</string>
@@ -167,4 +168,5 @@
     <string name="metadata_format_new">Nový šifrovaný formát</string>
     <string name="metadata_format_debug">Nový formát pre ladenie (nešifrovaný)</string>
     <string name="metadata_format_other">Neznámy formát exportu</string>
+    <string name="reset_aps_results">Resetovať výsledky APS</string>
 </resources>

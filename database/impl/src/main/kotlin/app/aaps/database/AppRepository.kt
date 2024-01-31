@@ -77,6 +77,8 @@ class AppRepository @Inject internal constructor(
 
     fun clearDatabases() = database.clearAllTables()
 
+    fun clearApsResults() = database.apsResultDao.deleteAllEntries()
+
     fun cleanupDatabase(keepDays: Long, deleteTrackedChanges: Boolean): String {
         val than = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(keepDays)
         val removed = mutableListOf<Pair<String, Int>>()

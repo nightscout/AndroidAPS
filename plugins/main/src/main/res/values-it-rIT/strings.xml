@@ -153,6 +153,8 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">TARG</string>
     <string name="basal_short">BAS</string>
+    <string name="isf_dynamic_label">Il tuo algoritmo può fornire il calcolo dinamico di ISF. I valori sottostanti sono utilizzati solo come fallback in caso di dati mancanti</string>
+    <string name="ic_dynamic_label">Il tuo algoritmo può fornire il calcolo dinamico di ISF. I valori sottostanti sono utilizzati solo come fallback in caso di dati mancanti</string>
     <!-- Actions -->
     <string name="actions">Azioni</string>
     <string name="description_actions">Alcuni tasti per accedere rapidamente alle funzioni comuni</string>
@@ -258,12 +260,13 @@
     <string name="overview_show_deviation_slope">Pendenza deviazione</string>
     <string name="overview_show_activity">Attività</string>
     <string name="overview_show_bgi">Impatto glicemia (BGI)</string>
-    <string name="overview_show_sensitivity">Sensibilità</string>
+    <string name="overview_show_sensitivity">Variazione di sensibilità</string>
     <string name="overview_show_deviations">Deviazioni</string>
     <string name="overview_show_cob">CHO attivi</string>
     <string name="overview_show_iob">Insulina attiva</string>
     <string name="overview_show_basals">Basali</string>
     <string name="overview_show_abs_insulin">Insulina assoluta</string>
+    <string name="overview_show_variable_sens">Sensibilità variabile</string>
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
     <string name="deviation_shortname">DEV</string>
@@ -273,7 +276,8 @@
     <string name="devslope_shortname">PENDEV</string>
     <string name="treatments_shortname">TRATT</string>
     <string name="heartRate_shortname">FC</string>
-    <string name="sensitivity_shortname">SENS</string>
+    <string name="sensitivity_shortname">SENS%</string>
+    <string name="variable_sensitivity_shortname">VSENS</string>
     <string name="graph_scale">Scala del grafico</string>
     <string name="graph_menu_divider_header">Grafico</string>
     <!-- Skins -->

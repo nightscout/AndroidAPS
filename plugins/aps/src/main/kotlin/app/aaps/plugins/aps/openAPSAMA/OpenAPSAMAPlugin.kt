@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.CurrentTemp
 import app.aaps.core.interfaces.aps.OapsProfile
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.constraints.PluginConstraints
@@ -56,6 +57,7 @@ class OpenAPSAMAPlugin @Inject constructor(
     private val rxBus: RxBus,
     private val constraintsChecker: ConstraintsChecker,
     rh: ResourceHelper,
+    config: Config,
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
     private val iobCobCalculator: IobCobCalculator,
@@ -76,6 +78,7 @@ class OpenAPSAMAPlugin @Inject constructor(
         .shortName(R.string.oaps_shortname)
         .preferencesId(R.xml.pref_openapsama)
         .preferencesVisibleInSimpleMode(false)
+        .showInList(config.APS)
         .description(R.string.description_ama),
     aapsLogger, rh
 ), APS, PluginConstraints {

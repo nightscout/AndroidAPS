@@ -258,7 +258,6 @@
     <string name="overview_show_deviation_slope">Richtingscoëfficiënt afwijking</string>
     <string name="overview_show_activity">Activiteit</string>
     <string name="overview_show_bgi">Bloedglucose impact</string>
-    <string name="overview_show_sensitivity">Gevoeligheid</string>
     <string name="overview_show_deviations">Afwijkingen</string>
     <string name="overview_show_cob">Opgenomen Koolhydraten</string>
     <string name="overview_show_iob">Opgenomen Insuline</string>
@@ -273,7 +272,6 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">BEHAND</string>
     <string name="heartRate_shortname">HR</string>
-    <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Grafiek schaal</string>
     <string name="graph_menu_divider_header">Grafiek</string>
     <!-- Skins -->

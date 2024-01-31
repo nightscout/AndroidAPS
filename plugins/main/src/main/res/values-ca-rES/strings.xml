@@ -226,7 +226,6 @@
     <string name="overview_show_deviation_slope">Pendent de desviació</string>
     <string name="overview_show_activity">Activitat</string>
     <string name="overview_show_bgi">Impacte glucèmia</string>
-    <string name="overview_show_sensitivity">Sensibilitat</string>
     <string name="overview_show_deviations">Desviacions</string>
     <string name="overview_show_cob">Carbohidrats actius (COB)</string>
     <string name="overview_show_iob">Insulina \"a bord\" (IOB)</string>
@@ -240,7 +239,6 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">PENDENTDESV</string>
     <string name="treatments_shortname">TRACT</string>
-    <string name="sensitivity_shortname">SENS</string>
     <string name="graph_menu_divider_header">Gràfica</string>
     <!-- Skins -->
     <string name="classic_description">Tema original</string>
