@@ -153,6 +153,8 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">OBJ</string>
     <string name="basal_short">BAS</string>
+    <string name="isf_dynamic_label">El algoritmo puede proporcionar cálculos dinámicos de ISF. Los valores se utilizan sólo como un recurso en caso de falta de datos</string>
+    <string name="ic_dynamic_label">El algoritmo puede proporcionar cálculos dinámicos de IC. Los valores se utilizan sólo como un recurso en caso de falta de datos</string>
     <!-- Actions -->
     <string name="actions">Acciones</string>
     <string name="description_actions">Algunos botones para acceder rápidamente a funciones comunes</string>
@@ -259,12 +261,13 @@
     <string name="overview_show_deviation_slope">Pendiente de desviación</string>
     <string name="overview_show_activity">Actividad</string>
     <string name="overview_show_bgi">Impacto de glucosa en sangre</string>
-    <string name="overview_show_sensitivity">Sensibilidad</string>
+    <string name="overview_show_sensitivity">Cambio de sensibilidad</string>
     <string name="overview_show_deviations">Desviaciones</string>
     <string name="overview_show_cob">Carbohidratos activos COB</string>
     <string name="overview_show_iob">Insulina activa</string>
     <string name="overview_show_basals">Basales</string>
     <string name="overview_show_abs_insulin">Insulina absoluta</string>
+    <string name="overview_show_variable_sens">Sensibilidad variable</string>
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
     <string name="deviation_shortname">DEV</string>
@@ -274,7 +277,8 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">TRAT</string>
     <string name="heartRate_shortname">RC</string>
-    <string name="sensitivity_shortname">Sens</string>
+    <string name="sensitivity_shortname">SENS%</string>
+    <string name="variable_sensitivity_shortname">VSENS</string>
     <string name="graph_scale">Escala gráfica</string>
     <string name="graph_menu_divider_header">Gráfico</string>
     <!-- Skins -->
@@ -289,6 +293,7 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Muestra una notificación en curso con un breve resumen de lo que está haciendo tu bucle</string>
     <string name="old_data">DATOS CADUCADOS</string>
+    <string name="overview_show_steps">Pasos</string>
     <string name="steps_shortname">PASOS</string>
     <string name="simple_mode_enabled">Modo simple habilitado</string>
 </resources>

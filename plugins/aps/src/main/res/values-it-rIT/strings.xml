@@ -84,7 +84,8 @@
     <string name="smb_disabled_in_preferences">SMB disabilitato nelle preferenze</string>
     <string name="uam_disabled_in_preferences">UAM disabilitato nelle preferenze</string>
     <string name="autosens_disabled_in_preferences">Autosens disabilitato nelle preferenze</string>
-    <string name="autosens_disabled_in_dyn_isf">Autosens disabilitato in ISFdin</string>
+    <string name="use_dynamic_sensitivity_title">Abilita sensibilità dinamica</string>
+    <string name="use_dynamic_sensitivity_summary">Regola algoritmo per usare la sensibilità dinamica invece del valore del profilo</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">Limitazione IOB a %1$.1f U a causa di: %2$s</string>
     <string name="maxvalueinpreferences">valore max nelle preferenze</string>
@@ -117,4 +118,5 @@
     <string name="loop_open_mode_min_change">Richiesta minima di modifica [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Il loop aperto mostrerà una nuova richiesta di modifica solo se la modifica è maggiore di questo valore in %. Il valore predefinito è 20%</string>
     <string name="fallback_smb_no_tdd">Ripiego a SMB. Dati TDD insufficienti.</string>
+    <string name="fallback_to_isf_no_tdd">Torna alla sensibilità del profilo. Dati TDD insufficienti.</string>
 </resources>

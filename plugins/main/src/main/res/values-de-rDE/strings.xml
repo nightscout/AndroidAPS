@@ -259,7 +259,6 @@
     <string name="overview_show_deviation_slope">Steigung der Abweichung</string>
     <string name="overview_show_activity">Aktivität</string>
     <string name="overview_show_bgi">Blutzuckerwirkung</string>
-    <string name="overview_show_sensitivity">Sensitivität</string>
     <string name="overview_show_deviations">Abweichungen</string>
     <string name="overview_show_cob">Aktive Kohlenhydrate</string>
     <string name="overview_show_iob">Aktives Insulin</string>
@@ -274,7 +273,6 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">BEH</string>
     <string name="heartRate_shortname">HF</string>
-    <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Diagrammskala</string>
     <string name="graph_menu_divider_header">Diagramm</string>
     <!-- Skins -->

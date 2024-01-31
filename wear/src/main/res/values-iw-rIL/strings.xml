@@ -164,7 +164,7 @@
     <string name="simple_ui_always_on_charging">דלוק תמיד וטוען</string>
     <string name="temp_target_eating_soon">אוכל בקרוב</string>
     <string name="temp_target_hypo">היפו</string>
-    <string name="temp_target_activity">פעילות</string>
+    <string name="temp_target_activity">פעילות גופנית</string>
     <string name="temp_target_manual">ידני</string>
     <string name="temp_target_cancel">ביטול</string>
     <string name="tile_none">ללא</string>

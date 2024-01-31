@@ -205,4 +205,16 @@
     <string name="error">!err!</string>
     <string name="pref_heartRateSampling">Ritmo cardíaco</string>
     <string name="pref_stepsSampling">Habilitar contador de pasos</string>
+    <string name="tile_tempt_1">Objetivo temporal 1</string>
+    <string name="tile_tempt_2">Objetivo temporal 2</string>
+    <string name="tile_tempt_3">Objetivo temporal 3</string>
+    <string name="tile_tempt_4">Objetivo temporal 4</string>
+    <string name="tile_action_1">Acción 1</string>
+    <string name="tile_action_2">Acción 2</string>
+    <string name="tile_action_3">Acción 3</string>
+    <string name="tile_action_4">Acción 4</string>
+    <string name="datalayer_notification_title">Servicio de primer plano de capa de datos</string>
+    <string name="datalayer_notification_text">AAPS está ejecutándose en primer plano. Para ocultar las notificaciones, vaya a las opciones de desarrollador, notificaciones de aplicaciones, aplicaciones de reloj, seleccione AAPS, desactive la notificación del canal de servicio de capa de datos.</string>
+    <string name="on">ENCENDIDO</string>
+    <string name="off">APAGADO</string>
 </resources>

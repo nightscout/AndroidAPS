@@ -84,7 +84,8 @@
     <string name="smb_disabled_in_preferences">Супер микро болюс SMB отключен в настройках</string>
     <string name="uam_disabled_in_preferences">Непредвиденный прием пищи UAM отключен в настройках</string>
     <string name="autosens_disabled_in_preferences">Автоматический подбор чувствительности Autosens отключен в настройках</string>
-    <string name="autosens_disabled_in_dyn_isf">Autosens отключён в DynISF</string>
+    <string name="use_dynamic_sensitivity_title">Включить динамическую чувствительность</string>
+    <string name="use_dynamic_sensitivity_summary">Настроить алгоритм на использование динамической чувствительности вместо значений профиля</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">Ограничение активного инсулина IOB до %1$.1f ед. из-за %2$s</string>
     <string name="maxvalueinpreferences">максимальное значение в настройках</string>
@@ -117,4 +118,5 @@
     <string name="loop_open_mode_min_change">Минимальный запрос на изменения [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Алгоритм ИПЖ выдаст всплывающее окно с запросом на новые изменения, только если изменение больше, чем это значение в %. Значение по умолчанию — 20%</string>
     <string name="fallback_smb_no_tdd">Возврат к СМБ. Недостаточно данных TDD.</string>
+    <string name="fallback_to_isf_no_tdd">Откат к чувствительности профиля. Недостаточно данных TDD.</string>
 </resources>

@@ -116,6 +116,7 @@
     <string name="description_maintenance">Poskytuje funkce pro údržbu (např. odesílání logů, čištění).</string>
     <string name="database_cleanup">Vyčištění databáze</string>
     <string name="reset_db_confirm">Opravdu resetovat všechny databáze?</string>
+    <string name="reset_aps_results_confirm">Opravdu chcete resetovat uložené výsledky APS?</string>
     <string name="maintenance_settings">Nastavení údržby</string>
     <string name="maintenance_email">Příjemce e-mailu</string>
     <string name="maintenance_amount">Počet logů k odeslání</string>
@@ -167,4 +168,5 @@
     <string name="metadata_format_new">Nový zašifrovaný formát</string>
     <string name="metadata_format_debug">Nový formát pro ladění (nešifrovaný)</string>
     <string name="metadata_format_other">Neznámý formát souboru</string>
+    <string name="reset_aps_results">Resetovat výsledky APS</string>
 </resources>

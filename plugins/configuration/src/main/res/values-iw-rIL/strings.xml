@@ -9,7 +9,7 @@
     <string name="welcome">ברוכים הבאים</string>
     <string name="welcometosetupwizard">ברוכים הבאים לאשף ההתקנה. האשף ידריך אתכם בתהליך ההתקנה\n</string>
     <string name="end_user_license_agreement">הסכם רישיון למשתמש</string>
-    <string name="end_user_license_agreement_text">לא מיועד לשימוש למטרת קבלת החלטות רפואיות. בעלי הזכויות מספקים את התוכנית כפי שהיא - \"AS IS\", ללא אחריות מכל סוג שהוא. כל סיכון הנובע מאיכות ו\\או ביצועי התוכנה הוא באחריותך בלבד. במידה ותימצא תקלה בתוכנית, אתם תשאו בכל עלויות שיגרמו לך בשל התקלה.</string>
+    <string name="end_user_license_agreement_text">לא מיועד לשימוש למטרת קבלת החלטות רפואיות. בעלי הזכויות מספקים את התוכנית כפי שהיא - \"AS IS\", ללא אחריות מכל סוג שהוא. כל סיכון הנובע מאיכות ו\\או ביצועי התוכנה הוא באחריותכם\\ן בלבד. במידה ותימצא תקלה בתוכנית, אתם תשאו בכל עלויות שיגרמו לך בשל התקלה.</string>
     <string name="end_user_license_agreement_i_understand">אני מבין\\ה ומסכים\\ה</string>
     <string name="display_settings">הגדרות תצוגה</string>
     <string name="low_mark">סימון נמוך</string>
@@ -96,7 +96,7 @@
     <string name="check_preferences_before_import">בדקו את ההעדפות לפני ביצוע הייבוא:</string>
     <string name="check_preferences_cannot_import">ההעדפות לא ניתנות לייבוא!</string>
     <string name="check_preferences_dangerous_import">אין לייבא העדפות אלה!</string>
-    <string name="nav_export">ייצא הגדרות</string>
+    <string name="nav_export">ייצוא הגדרות</string>
     <string name="export_to">ייצא הגדרות ל-</string>
     <string name="import_from">יבא הגדרות מ-</string>
     <string name="setting_imported">הגדרות מיובאות</string>
@@ -108,7 +108,7 @@
     <string name="goto_main_try_again">נא לחזור למסך הראשי ולנסות שוב.</string>
     <string name="restartingapp">יוצא מ-AAPS כדי להחיל הגדרות.</string>
     <string name="ue_exported">רשומות המשתמש יוצאו</string>
-    <string name="protection">Protection (הגנה בסיסמאות)</string>
+    <string name="protection">הגנה בסיסמאות</string>
     <string name="master_password_missing">הסיסמה הראשית לא הוגדרה!\n\nנא להגדירה בהעדפות (%1$s&#8594;%2$s)</string>
     <!--    Maintenance-->
     <string name="maintenance">תחזוקה</string>

@@ -259,7 +259,6 @@
     <string name="overview_show_deviation_slope">Avvikelsekurva</string>
     <string name="overview_show_activity">Insulinaktivitet (5m)</string>
     <string name="overview_show_bgi">Blodglukospåverkan</string>
-    <string name="overview_show_sensitivity">Känslighet (Sens)</string>
     <string name="overview_show_deviations">Avvikelser (Dev)</string>
     <string name="overview_show_cob">Aktiva KH (COB)</string>
     <string name="overview_show_iob">Aktivt insulin (IOB)</string>
@@ -274,7 +273,6 @@
     <string name="devslope_shortname">Devslope</string>
     <string name="treatments_shortname">Beh</string>
     <string name="heartRate_shortname">HF</string>
-    <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Graf-skala</string>
     <string name="graph_menu_divider_header">Graf</string>
     <!-- Skins -->

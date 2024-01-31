@@ -116,6 +116,7 @@
     <string name="description_maintenance">Fornisce numerose funzioni per la manutenzione (es. invio log, eliminazione log).</string>
     <string name="database_cleanup">Pulizia database</string>
     <string name="reset_db_confirm">Vuoi davvero resettare i database?</string>
+    <string name="reset_aps_results_confirm">Sei sicuro di voler resettare i risultati di APS?</string>
     <string name="maintenance_settings">Impostazioni manutenzione</string>
     <string name="maintenance_email">Destinatario email</string>
     <string name="maintenance_amount">Numero di log da inviare</string>
@@ -167,4 +168,5 @@
     <string name="metadata_format_new">Nuovo formato crittografato</string>
     <string name="metadata_format_debug">Nuovo formato di debug (non crittografato)</string>
     <string name="metadata_format_other">Formato esportazione sconosciuto</string>
+    <string name="reset_aps_results">Resetta i risultati di APS</string>
 </resources>

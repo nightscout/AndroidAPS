@@ -258,7 +258,6 @@
     <string name="overview_show_deviation_slope">Κλίση απόκλισης</string>
     <string name="overview_show_activity">Δραστηριότητα</string>
     <string name="overview_show_bgi">Επιπτώσεις Γλυκόζης Αίματος</string>
-    <string name="overview_show_sensitivity">Ευαισθησία</string>
     <string name="overview_show_deviations">Αποκλίσεις</string>
     <string name="overview_show_cob">Ενεργοί Υδατάνθρακες</string>
     <string name="overview_show_iob">Ενεργή Ινσουλίνη</string>
@@ -273,7 +272,6 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">ΘΕΡΑΠ</string>
     <string name="heartRate_shortname">HR</string>
-    <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Κλίμακα γραφήματος</string>
     <string name="graph_menu_divider_header">Γράφημα</string>
     <!-- Skins -->

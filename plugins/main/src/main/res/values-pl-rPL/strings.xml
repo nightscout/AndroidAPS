@@ -258,7 +258,6 @@
     <string name="overview_show_deviation_slope">Krzywa odchylenie</string>
     <string name="overview_show_activity">Aktywność</string>
     <string name="overview_show_bgi">Wpływ na glikemię (BGI)</string>
-    <string name="overview_show_sensitivity">Wrażliwość</string>
     <string name="overview_show_deviations">Odchylenia</string>
     <string name="overview_show_cob">COB (Aktywne Węglow.)</string>
     <string name="overview_show_iob">IOB (Aktywna Insulina)</string>
@@ -273,7 +272,6 @@
     <string name="devslope_shortname">KRZOD</string>
     <string name="treatments_shortname">TREAT</string>
     <string name="heartRate_shortname">HR</string>
-    <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Skala wykresu</string>
     <string name="graph_menu_divider_header">Wykres</string>
     <!-- Skins -->
