@@ -122,6 +122,7 @@
     <string name="description_maintenance">Provides several functions for maintenance (eg. log sending, log deletion).</string>
     <string name="database_cleanup">Database cleanup</string>
     <string name="reset_db_confirm">Do you really want to reset the databases?</string>
+    <string name="reset_aps_results_confirm">Do you really want to reset stored APS results?</string>
     <string name="maintenance_settings">Maintenance Settings</string>
     <string name="maintenance_email">Email recipient</string>
     <string name="maintenance_amount">No of Logs to send</string>
@@ -177,5 +178,6 @@
     <string name="metadata_format_new">New encrypted format</string>
     <string name="metadata_format_debug">New debug format (unencrypted)</string>
     <string name="metadata_format_other">Unknown export format</string>
+    <string name="reset_aps_results">Reset APS results</string>
 
 </resources>

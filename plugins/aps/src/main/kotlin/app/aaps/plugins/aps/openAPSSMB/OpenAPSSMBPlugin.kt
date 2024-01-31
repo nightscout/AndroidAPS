@@ -174,8 +174,8 @@ open class OpenAPSSMBPlugin @Inject constructor(
         }
 
         // no cached result found, let's calculate the value
-        val tdd1D = tddCalculator.averageTDD(tddCalculator.calculate(timestamp, 1, allowMissingDays = false))?.totalAmount ?: return Pair("TDD miss", null)
-        val tdd7D = tddCalculator.averageTDD(tddCalculator.calculate(timestamp, 7, allowMissingDays = false))?.totalAmount ?: return Pair("TDD miss", null)
+        val tdd1D = tddCalculator.averageTDD(tddCalculator.calculate(timestamp, 1, allowMissingDays = false))?.data?.totalAmount ?: return Pair("TDD miss", null)
+        val tdd7D = tddCalculator.averageTDD(tddCalculator.calculate(timestamp, 7, allowMissingDays = false))?.data?.totalAmount ?: return Pair("TDD miss", null)
         val tddLast24H = tddCalculator.calculateDaily(-24, 0)?.totalAmount ?: return Pair("TDD miss", null)
         val tddLast4H = tddCalculator.calculateDaily(-4, 0)?.totalAmount ?: return Pair("TDD miss", null)
         val tddLast8to4H = tddCalculator.calculateDaily(-8, -4)?.totalAmount ?: return Pair("TDD miss", null)
@@ -269,7 +269,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
             // DynamicISF specific
             // without these values DynISF doesn't work properly
             // Current implementation is fallback to SMB if TDD history is not available. Thus calculated here
-            val tdd1D = tddCalculator.averageTDD(tddCalculator.calculate(1, allowMissingDays = false))?.totalAmount
+            val tdd1D = tddCalculator.averageTDD(tddCalculator.calculate(1, allowMissingDays = false))?.data?.totalAmount
             val tdd7D = tddCalculator.averageTDD(tddCalculator.calculate(7, allowMissingDays = false))
             val tddLast24H = tddCalculator.calculateDaily(-24, 0)
             val tddLast4H = tddCalculator.calculateDaily(-4, 0)?.totalAmount
@@ -285,20 +285,25 @@ open class OpenAPSSMBPlugin @Inject constructor(
                     }
                 )
                 inputConstraints.copyReasons(
-                    ConstraintObject(false, aapsLogger).apply { set(true, "tdd1D=$tdd1D tdd7D=${tdd7D?.totalAmount} tddLast4H=$tddLast4H tddLast8to4H=$tddLast8to4H tddLast24H=${tddLast24H?.totalAmount}", this) }
+                    ConstraintObject(false, aapsLogger).apply { set(true, "tdd1D=$tdd1D tdd7D=${tdd7D?.data?.totalAmount} tddLast4H=$tddLast4H tddLast8to4H=$tddLast8to4H tddLast24H=${tddLast24H?.totalAmount}", this) }
                 )
             } else {
                 uiInteraction.dismissNotification(Notification.SMB_FALLBACK)
-                tddStatus = TddStatus(tdd1D, tdd7D.totalAmount, tddLast24H.totalAmount, tddLast4H, tddLast8to4H)
+                tddStatus = TddStatus(tdd1D, tdd7D.data.totalAmount, tddLast24H.totalAmount, tddLast4H, tddLast8to4H)
                 val tddWeightedFromLast8H = ((1.4 * tddStatus.tddLast4H) + (0.6 * tddStatus.tddLast8to4H)) * 3
-                tdd = (tddWeightedFromLast8H * 0.33) + (tddStatus.tdd7D * 0.34) + (tddStatus.tdd1D * 0.33) * preferences.get(IntKey.ApsDynIsfAdjustmentFactor) / 100.0
+                tdd = ((tddWeightedFromLast8H * 0.33) + (tddStatus.tdd7D * 0.34) + (tddStatus.tdd1D * 0.33)) * preferences.get(IntKey.ApsDynIsfAdjustmentFactor) / 100.0
                 variableSensitivity = Round.roundTo(1800 / (tdd * (ln((glucoseStatus.glucose / insulinDivisor) + 1))), 0.1)
 
                 // Compare insulin consumption of last 24h with last 7 days average
-                val tddRatio = if (preferences.get(BooleanKey.ApsDynIsfAdjustSensitivity)) tddLast24H.totalAmount / tdd7D.totalAmount else 1.0
+                val tddRatio = if (preferences.get(BooleanKey.ApsDynIsfAdjustSensitivity)) tddLast24H.totalAmount / tdd7D.data.totalAmount else 1.0
                 // Because consumed carbs affects total amount of insulin compensate final ratio by consumed carbs ratio
                 // take only 60% (expecting 40% basal). We cannot use bolus/total because of SMBs
-                val carbsRatio = if (preferences.get(BooleanKey.ApsDynIsfAdjustSensitivity) && tddLast24H.carbs != 0.0 && tdd7D.carbs != 0.0) ((tddLast24H.carbs / tdd7D.carbs - 1.0) * 0.6) + 1.0 else 1.0
+                val carbsRatio = if (
+                    preferences.get(BooleanKey.ApsDynIsfAdjustSensitivity) &&
+                    tddLast24H.carbs != 0.0 &&
+                    tdd7D.data.carbs != 0.0 &&
+                    tdd7D.allDaysHaveCarbs
+                ) ((tddLast24H.carbs / tdd7D.data.carbs - 1.0) * 0.6) + 1.0 else 1.0
                 autosensResult = AutosensResult(
                     ratio = tddRatio / carbsRatio,
                     ratioFromTdd = tddRatio,

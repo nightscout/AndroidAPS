@@ -352,6 +352,7 @@
     <string name="uel_export_settings">EXPORT SETTINGS</string>
     <string name="uel_import_settings">IMPORT SETTINGS</string>
     <string name="uel_reset_databases">RESET DATABASES</string>
+    <string name="uel_reset_aps_results">RESET APS RESULTS</string>
     <string name="uel_cleanup_databases">CLEANUP DATABASES</string>
     <string name="uel_export_databases">EXPORT DATABASES</string>
     <string name="uel_import_databases">IMPORT DATABASES</string>

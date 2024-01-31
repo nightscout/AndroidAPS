@@ -74,6 +74,7 @@ enum class Action(val colorGroup: ColorGroup) {
     EXPORT_SETTINGS(ColorGroup.Aaps),
     IMPORT_SETTINGS(ColorGroup.Aaps),
     RESET_DATABASES(ColorGroup.Aaps),
+    RESET_APS_RESULTS(ColorGroup.Aaps),
     CLEANUP_DATABASES(ColorGroup.Aaps),
     EXPORT_DATABASES(ColorGroup.Aaps),
     IMPORT_DATABASES(ColorGroup.Aaps),

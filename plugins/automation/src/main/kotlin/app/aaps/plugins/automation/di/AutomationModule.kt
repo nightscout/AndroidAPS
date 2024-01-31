@@ -34,6 +34,7 @@ import app.aaps.plugins.automation.triggers.TriggerBg
 import app.aaps.plugins.automation.triggers.TriggerBolusAgo
 import app.aaps.plugins.automation.triggers.TriggerCOB
 import app.aaps.plugins.automation.triggers.TriggerConnector
+import app.aaps.plugins.automation.triggers.TriggerDay
 import app.aaps.plugins.automation.triggers.TriggerDelta
 import app.aaps.plugins.automation.triggers.TriggerDummy
 import app.aaps.plugins.automation.triggers.TriggerHeartRate
@@ -74,6 +75,7 @@ abstract class AutomationModule {
     @ContributesAndroidInjector abstract fun triggerBolusAgoInjector(): TriggerBolusAgo
     @ContributesAndroidInjector abstract fun triggerCOBInjector(): TriggerCOB
     @ContributesAndroidInjector abstract fun triggerConnectorInjector(): TriggerConnector
+    @ContributesAndroidInjector abstract fun triggerDayInjector(): TriggerDay
     @ContributesAndroidInjector abstract fun triggerDeltaInjector(): TriggerDelta
     @ContributesAndroidInjector abstract fun triggerDummyInjector(): TriggerDummy
     @ContributesAndroidInjector abstract fun triggerHeartRateInjector(): TriggerHeartRate
