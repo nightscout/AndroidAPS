@@ -89,7 +89,6 @@
     <string name="triggerHeartRateDesc">HR %1$s %2$.0f</string>
     <string name="iob_u">IOB [E]:</string>
     <string name="distance_short">Dist [m]:</string>
-    <string name="day">Dag</string>
     <string name="recurringTime">Gjentakende tidspunkt</string>
     <string name="every">Hver</string>
     <string name="never">Aldri</string>
