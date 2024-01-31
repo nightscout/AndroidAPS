@@ -79,13 +79,13 @@ class SafetyPluginTest : TestBaseWithProfile() {
         safetyPlugin = SafetyPlugin(aapsLogger, rh, sp, preferences, constraintChecker, activePlugin, hardLimits, config, persistenceLayer, dateUtil, uiInteraction, decimalFormatter)
         openAPSSMBPlugin =
             OpenAPSSMBPlugin(
-                injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, profileUtil, context, activePlugin, iobCobCalculator,
+                injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, profileUtil, config, activePlugin, iobCobCalculator,
                 hardLimits, preferences, dateUtil, processedTbrEbData, persistenceLayer, glucoseStatusProvider, tddCalculator, bgQualityCheck,
                 uiInteraction, determineBasalSMB, profiler
             )
         openAPSAMAPlugin =
             OpenAPSAMAPlugin(
-                injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, activePlugin, iobCobCalculator, processedTbrEbData,
+                injector, aapsLogger, rxBus, constraintChecker, rh, config, profileFunction, activePlugin, iobCobCalculator, processedTbrEbData,
                 hardLimits, dateUtil, persistenceLayer, glucoseStatusProvider, preferences, determineBasalAMA
             )
     }
