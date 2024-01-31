@@ -53,7 +53,6 @@ import app.aaps.plugins.automation.triggers.TriggerBg
 import app.aaps.plugins.automation.triggers.TriggerBolusAgo
 import app.aaps.plugins.automation.triggers.TriggerCOB
 import app.aaps.plugins.automation.triggers.TriggerConnector
-import app.aaps.plugins.automation.triggers.TriggerDay
 import app.aaps.plugins.automation.triggers.TriggerDelta
 import app.aaps.plugins.automation.triggers.TriggerHeartRate
 import app.aaps.plugins.automation.triggers.TriggerIob
@@ -387,7 +386,6 @@ class AutomationPlugin @Inject constructor(
             TriggerRecurringTime(injector),
             TriggerTimeRange(injector),
             TriggerBg(injector),
-            TriggerDay(injector),
             TriggerDelta(injector),
             TriggerIob(injector),
             TriggerCOB(injector),

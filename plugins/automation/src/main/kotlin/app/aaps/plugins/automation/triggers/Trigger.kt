@@ -97,7 +97,6 @@ abstract class Trigger(val injector: HasAndroidInjector) {
                 TriggerIob::class.java.simpleName                -> TriggerIob(injector).fromJSON(data.toString())
                 TriggerCOB::class.java.simpleName                -> TriggerCOB(injector).fromJSON(data.toString())
                 TriggerConnector::class.java.simpleName          -> TriggerConnector(injector).fromJSON(data.toString())
-                TriggerDay::class.java.simpleName                -> TriggerDay(injector).fromJSON(data.toString())
                 TriggerDelta::class.java.simpleName              -> TriggerDelta(injector).fromJSON(data.toString())
                 TriggerDummy::class.java.simpleName              -> TriggerDummy(injector).fromJSON(data.toString())
                 TriggerHeartRate::class.java.simpleName          -> TriggerHeartRate(injector).fromJSON(data.toString())
