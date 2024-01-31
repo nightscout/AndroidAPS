@@ -89,7 +89,6 @@
     <string name="triggerHeartRateDesc">FC %1$s %2$.0f</string>
     <string name="iob_u">IOB [U]:</string>
     <string name="distance_short">Dist [m]:</string>
-    <string name="day">Giorno</string>
     <string name="recurringTime">Tempo ricorrente</string>
     <string name="every">Ogni</string>
     <string name="never">Mai</string>
