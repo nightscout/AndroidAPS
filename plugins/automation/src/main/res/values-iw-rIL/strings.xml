@@ -89,7 +89,6 @@
     <string name="triggerHeartRateDesc">קצב לב %1$s %2$.0f</string>
     <string name="iob_u">אינסולין פעיל [U]:</string>
     <string name="distance_short">מרחק [m]:</string>
-    <string name="day">יום</string>
     <string name="recurringTime">זמן חוזרני</string>
     <string name="every">בכל</string>
     <string name="never">אף פעם</string>
