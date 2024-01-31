@@ -276,7 +276,6 @@
 
     <!--    OverviewMenu-->
     <string name="key_graph_config" translatable="false">graphconfig</string>
-
     <string name="overview_show_predictions">Predictions</string>
     <string name="overview_show_treatments">Treatments</string>
     <string name="overview_show_heartRate">Heart Rate</string>
@@ -303,6 +302,7 @@
     <string name="variable_sensitivity_shortname">VSENS</string>
     <string name="graph_scale">Graph scale</string>
     <string name="graph_menu_divider_header">Graph</string>
+    <string name="temp_basal_overview_short_name">T:</string>
 
     <!-- Skins -->
     <string name="classic_description">Original skin</string>

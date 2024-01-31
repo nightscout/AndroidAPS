@@ -97,9 +97,9 @@ class VirtualPumpFragment : DaggerFragment() {
         if (_binding == null) return
         val profile = profileFunction.getProfile() ?: return
         binding.baseBasalRate.text = rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, virtualPumpPlugin.baseBasalRate)
-        binding.tempbasal.text = persistenceLayer.getTemporaryBasalActiveAt(dateUtil.now())?.toStringFull(profile, dateUtil, decimalFormatter)
+        binding.tempbasal.text = persistenceLayer.getTemporaryBasalActiveAt(dateUtil.now())?.toStringFull(profile, dateUtil, rh)
             ?: ""
-        binding.extendedbolus.text = persistenceLayer.getExtendedBolusActiveAt(dateUtil.now())?.toStringFull(dateUtil, decimalFormatter)
+        binding.extendedbolus.text = persistenceLayer.getExtendedBolusActiveAt(dateUtil.now())?.toStringFull(dateUtil, rh)
             ?: ""
         binding.battery.text = rh.gs(app.aaps.core.ui.R.string.format_percent, virtualPumpPlugin.batteryPercent)
         binding.reservoir.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, virtualPumpPlugin.reservoirInUnits.toDouble())

@@ -9,7 +9,6 @@ import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.DecimalFormatter
 import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
@@ -34,24 +33,20 @@ private fun TB.netExtendedRate(profile: Profile) = rate - profile.getBasal(times
 val TB.durationInMinutes
     get() = T.msecs(duration).mins()
 
-fun TB.toStringFull(profile: Profile, dateUtil: DateUtil, decimalFormatter: DecimalFormatter): String {
+fun TB.toStringFull(profile: Profile, dateUtil: DateUtil, rh: ResourceHelper): String {
+    val timeAndDuration = "${dateUtil.timeString(timestamp)} ${getPassedDurationToTimeInMinutes(dateUtil.now())}/${durationInMinutes}'"
+
     return when {
         type == TB.Type.FAKE_EXTENDED -> {
-            decimalFormatter.to2Decimal(rate) + "U/h (" + decimalFormatter.to2Decimal(netExtendedRate(profile)) + "E) @" +
-                dateUtil.timeString(timestamp) +
-                " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + durationInMinutes + "'"
+            rh.gs(app.aaps.core.ui.R.string.temp_basal_tsf_fake_extended, rate, netExtendedRate(profile), timeAndDuration)
         }
 
         isAbsolute                    -> {
-            decimalFormatter.to2Decimal(rate) + "U/h @" +
-                dateUtil.timeString(timestamp) +
-                " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + durationInMinutes + "'"
+            rh.gs(app.aaps.core.ui.R.string.temp_basal_tsf_absolute, rate, timeAndDuration)
         }
 
         else                          -> { // percent
-            rate.toString() + "% @" +
-                dateUtil.timeString(timestamp) +
-                " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + durationInMinutes + "'"
+            rh.gs(app.aaps.core.ui.R.string.temp_basal_tsf_percent, rate, timeAndDuration)
         }
     }
 }
