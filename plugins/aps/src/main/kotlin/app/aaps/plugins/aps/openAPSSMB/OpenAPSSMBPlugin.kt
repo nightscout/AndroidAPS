@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.CurrentTemp
 import app.aaps.core.interfaces.aps.OapsProfile
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.constraints.PluginConstraints
@@ -74,7 +75,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
     rh: ResourceHelper,
     private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,
-    val context: Context,
+    config: Config,
     private val activePlugin: ActivePlugin,
     private val iobCobCalculator: IobCobCalculator,
     private val hardLimits: HardLimits,
@@ -87,7 +88,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
     private val bgQualityCheck: BgQualityCheck,
     private val uiInteraction: UiInteraction,
     private val determineBasalSMB: DetermineBasalSMB,
-    private val profiler: Profiler
+    private val profiler: Profiler,
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.APS)
@@ -97,6 +98,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
         .shortName(app.aaps.core.ui.R.string.smb_shortname)
         .preferencesId(R.xml.pref_openapssmb)
         .preferencesVisibleInSimpleMode(false)
+        .showInList(config.APS)
         .description(R.string.description_smb)
         .setDefault(),
     aapsLogger, rh
