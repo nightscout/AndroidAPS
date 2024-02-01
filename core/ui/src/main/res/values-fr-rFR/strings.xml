@@ -170,6 +170,12 @@
     <string name="iob_label">Insuline Active (IA)</string>
     <string name="loopstatus_targets">CIBLES:</string>
     <string name="loopstatus_OAPS_result">RÉSULTATS OAPS:</string>
+    <string name="extended_bolus_data_point_graph">%1$.2f U (%2$.2f U/h)</string>
+    <string name="temp_basal_tsf_fake_extended">%1$.2f U/h (%2$.2fE) @%3$s</string>
+    <string name="temp_basal_tsf_absolute">%1$.2f U/h @%2$s</string>
+    <string name="temp_basal_tsf_percent">%1$.0f%% @%2$s</string>
+    <string name="extended_bolus_full">E %1$.2f U/h @%2$s %3$s/%4$s min</string>
+    <string name="extended_bolus_medium">%1$.2f U/h %2$s/%3$s\'</string>
     <!--    Protection-->
     <string name="wrongpassword">Mot de passe incorrect</string>
     <string name="wrongpin">Code PIN incorrect</string>
@@ -338,6 +344,7 @@
     <string name="uel_export_settings">PARAMÈTRES EXPORTÉS</string>
     <string name="uel_import_settings">PARAMÈTRES IMPORTÉS</string>
     <string name="uel_reset_databases">BASE DE DONNÉES RÉINITIALISÉE</string>
+    <string name="uel_reset_aps_results">RÉINITIALISER LES RÉSULTATS APS</string>
     <string name="uel_cleanup_databases">SUPPRIMER LES DONNÉES</string>
     <string name="uel_export_databases">BASE DE DONNÉES EXPORTÉE</string>
     <string name="uel_import_databases">BASE DE DONNÉES IMPORTÉE</string>
