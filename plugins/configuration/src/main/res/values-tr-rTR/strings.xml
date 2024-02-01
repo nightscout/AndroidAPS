@@ -116,6 +116,7 @@
     <string name="description_maintenance">Bakım için çeşitli işlevler sağlar (örn. günlük gönder, günlük sil).</string>
     <string name="database_cleanup">Veritabanı temizleme</string>
     <string name="reset_db_confirm">Veritabanlarını gerçekten sıfırlamak istiyor musunuz?</string>
+    <string name="reset_aps_results_confirm">APS sonuçlarını gerçekten sıfırlamak istiyor musunuz?</string>
     <string name="maintenance_settings">Bakım ayarları</string>
     <string name="maintenance_email">E-Posta alıcısı</string>
     <string name="maintenance_amount">Gönderilecek kayıt yok</string>
@@ -167,4 +168,5 @@
     <string name="metadata_format_new">Yeni şifrelenmiş format</string>
     <string name="metadata_format_debug">Yeni hata ayıklama formatı (şifrelenmemiş)</string>
     <string name="metadata_format_other">Bilinmeyen dışa aktarma formatı</string>
+    <string name="reset_aps_results">APS sonuçlarını sıfırla</string>
 </resources>
