@@ -95,6 +95,7 @@
     <string name="equil_password_title">Mot de passe pompe</string>
     <string name="equil_settings">Paramètres</string>
     <string name="equil_settings_alarm_battery">Alarme batterie faible</string>
+    <string name="equil_settings_alarm_insulin">Alerte réservoir bas</string>
     <string name="equil_init_insulin_error">L\'initialisation du réservoir n\'est pas terminée</string>
     <string name="equil_history_group_all">Tous</string>
     <string name="equil_history_group_pair">Appairer</string>
@@ -125,11 +126,13 @@
     <string name="equil_history_item18">Injection anormale arrêtée</string>
     <string name="equil_common_short_status_last_connection">Dernière connexion : il y a %1$d min</string>
     <string name="equil_common_short_status_last_bolus">Dernier bolus : %1$s @ %2$s</string>
+    <string name="equil_common_short_status_temp_basal">DBT : %1$s</string>
     <string name="equil_common_short_status_extended_bolus">Étendu : %1$s</string>
     <string name="equil_common_short_status_reservoir">Réservoir: %1$sU</string>
     <string name="equil_common_overview_button_suspend_delivery">Suspendre</string>
     <string name="equil_common_overview_button_resume_delivery">Reprendre l\'injection</string>
     <string name="equil_common_overview_temp_basal_value">%1$.2f U/h @%2$s (%3$d/%4$d minutes)</string>
+    <string name="equil_common_moments_ago">À l\'instant</string>
     <string name="equil_common_less_than_a_minute_ago">Il y a moins d\'une minute</string>
     <string name="equil_common_time_ago">il y a %1$s</string>
     <string name="equil_common_composite_time">%1$s et %2$s</string>
