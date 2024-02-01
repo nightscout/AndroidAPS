@@ -280,6 +280,7 @@
     <string name="variable_sensitivity_shortname">VSENS</string>
     <string name="graph_scale">Scala del grafico</string>
     <string name="graph_menu_divider_header">Grafico</string>
+    <string name="temp_basal_overview_short_name">T:</string>
     <!-- Skins -->
     <string name="classic_description">Tema originale</string>
     <string name="lowres_description">Tema a bassa risoluzione</string>
