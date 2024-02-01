@@ -84,6 +84,8 @@
     <string name="smb_disabled_in_preferences">SMB désactivé dans les préférences</string>
     <string name="uam_disabled_in_preferences">Repas Non Signalé (RNS) désactivé dans les préférences</string>
     <string name="autosens_disabled_in_preferences">Autosens désactivé dans les préférences</string>
+    <string name="use_dynamic_sensitivity_title">Activer la sensibilité dynamique</string>
+    <string name="use_dynamic_sensitivity_summary">Ajuster l\'algorithme pour utiliser la sensibilité dynamique au lieu de la valeur du profil</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">Limiter l’IA %1$.1f U en raison de la %2$s</string>
     <string name="maxvalueinpreferences">valeur Max dans les préférences</string>
@@ -116,4 +118,5 @@
     <string name="loop_open_mode_min_change">Changement minimum [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Le fonctionnement de la Boucle demandera une confirmation uniquement si le changement est supérieur à cette valeur en %. Par défaut, la valeur est 20%</string>
     <string name="fallback_smb_no_tdd">Revenir à SMB. Pas assez de données DTQ.</string>
+    <string name="fallback_to_isf_no_tdd">Utilisation de la sensibilité du profil. Pas assez de données DTQ.</string>
 </resources>
