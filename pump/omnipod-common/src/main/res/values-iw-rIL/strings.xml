@@ -78,7 +78,7 @@
     <!-- Omnipod - Pod Activation Wizard -->
     <string name="omnipod_common_pod_activation_wizard_start_pod_activation_title">מילוי פוד</string>
     <string name="omnipod_common_pod_activation_wizard_initialize_pod_title">אתחול פוד</string>
-    <string name="omnipod_common_pod_activation_wizard_attach_pod_title">הצמד פוד</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_title">הדביקו את הפוד</string>
     <string name="omnipod_common_pod_activation_wizard_attach_pod_text">הכינו את אתר העירוי. הסירו את מכסה המחט של הפוד ואת כיסוי הדבק והדביקו את הפוד לאתר העירוי.\n\nאם הצינורית בולטת, לחצו על <b>ביטול</b> והיפטרו מהפוד.\n\nלחצו <b>הבא</b> כדי להכניס את הצינורית ולהתחיל מתן בזאלי.</string>
     <string name="omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">בלחיצה על <b>OK</b> הצינורית תוכנס. יש לוודא שהפוד הוצמד לאתר העירוי.</string>
     <string name="omnipod_common_pod_activation_wizard_insert_cannula_title">הכנסת צינורית</string>
