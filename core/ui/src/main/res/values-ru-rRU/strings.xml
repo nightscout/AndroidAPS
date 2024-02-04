@@ -170,6 +170,8 @@
     <string name="iob_label">Активный инсулин (IOB)</string>
     <string name="loopstatus_targets">ЦЕЛИ:</string>
     <string name="loopstatus_OAPS_result">РЕЗУЛЬТАТ: OAPS:</string>
+    <string name="extended_bolus_data_point_graph">%1$.2f ед ( %2$.2f ед/ч )</string>
+    <string name="temp_basal_tsf_fake_extended">%1$.2f ед ( %2$.2f ед/ч)@%3$s</string>
     <!--    Protection-->
     <string name="wrongpassword">Неверный пароль</string>
     <string name="wrongpin">Неверный PIN-код</string>
