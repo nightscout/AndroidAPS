@@ -432,7 +432,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
                 }
 
                 if (!podStateManager.isBasalCertain) {
-                    status += " (" + rh.gs(R.string.omnipod_eros_uncertain) + ")"
+                    status += " (" + rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_uncertain) + ")"
                 }
 
                 status
@@ -471,7 +471,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
                 textColor = rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor)
             } else {
                 textColor = rh.gac(context, app.aaps.core.ui.R.attr.warningColor)
-                text += " (" + rh.gs(R.string.omnipod_eros_uncertain) + ")"
+                text += " (" + rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_uncertain) + ")"
             }
 
             podInfoBinding.lastBolus.text = text
@@ -511,7 +511,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
                     textColor = rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor)
                 } else {
                     textColor = rh.gac(context, app.aaps.core.ui.R.attr.warningColor)
-                    text += " (" + rh.gs(R.string.omnipod_eros_uncertain) + ")"
+                    text += " (" + rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_uncertain) + ")"
                 }
 
                 podInfoBinding.tempBasal.text = text
@@ -525,7 +525,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
                 textColor = rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor)
             } else {
                 textColor = rh.gac(context, app.aaps.core.ui.R.attr.warningColor)
-                text += " (" + rh.gs(R.string.omnipod_eros_uncertain) + ")"
+                text += " (" + rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_uncertain) + ")"
             }
 
             podInfoBinding.tempBasal.text = text

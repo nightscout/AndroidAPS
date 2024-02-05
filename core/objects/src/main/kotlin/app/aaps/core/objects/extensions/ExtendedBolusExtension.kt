@@ -1,15 +1,15 @@
 package app.aaps.core.objects.extensions
 
-import app.aaps.core.data.aps.AutosensResult
-import app.aaps.core.data.iob.IobTotal
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.EB
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.aps.AutosensResult
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.DecimalFormatter
 import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
@@ -22,12 +22,11 @@ fun EB.isInProgress(dateUtil: DateUtil): Boolean =
 val EB.plannedRemainingMinutes: Int
     get() = max(round((end - System.currentTimeMillis()) / 1000.0 / 60).toInt(), 0)
 
-fun EB.toStringFull(dateUtil: DateUtil, decimalFormatter: DecimalFormatter): String =
-    "E " + decimalFormatter.to2Decimal(rate) + "U/h @" + dateUtil.timeString(timestamp) +
-        " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + T.msecs(duration).mins() + "min"
+fun EB.toStringFull(dateUtil: DateUtil, rh:ResourceHelper): String =
+    rh.gs(app.aaps.core.ui.R.string.extended_bolus_full, rate, dateUtil.timeString(timestamp), getPassedDurationToTimeInMinutes(dateUtil.now()), T.msecs(duration).mins())
 
-fun EB.toStringMedium(dateUtil: DateUtil, decimalFormatter: DecimalFormatter): String =
-    decimalFormatter.to2Decimal(rate) + "U/h " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + T.msecs(duration).mins() + "'"
+fun EB.toStringMedium(dateUtil: DateUtil, rh:ResourceHelper): String =
+    rh.gs(app.aaps.core.ui.R.string.extended_bolus_medium, rate, getPassedDurationToTimeInMinutes(dateUtil.now()), T.msecs(duration).mins())
 
 fun EB.getPassedDurationToTimeInMinutes(time: Long): Int =
     ((min(time, end) - timestamp) / 60.0 / 1000).roundToInt()

@@ -84,7 +84,8 @@
     <string name="smb_disabled_in_preferences">SMB zakázané v nastaveniach</string>
     <string name="uam_disabled_in_preferences">UAM zakázané v nastaveniach</string>
     <string name="autosens_disabled_in_preferences">Automatická detekcia citlivosti zakázaná v nastaveniach</string>
-    <string name="autosens_disabled_in_dyn_isf">Autosens zakázaný v DynISF</string>
+    <string name="use_dynamic_sensitivity_title">Povoliť dynamickú citlivosť</string>
+    <string name="use_dynamic_sensitivity_summary">Upravte algoritmus pre použitie dynamickej citlivosti namiesto hodnoty z profilu</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">IOB obmedzený na %1$.1f JI: %2$s</string>
     <string name="maxvalueinpreferences">maximálna hodnota v nastaveniach</string>
@@ -117,4 +118,5 @@
     <string name="loop_open_mode_min_change">Minimálna požiadavka na zmenu [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Otvorený okruh vytvorí novú žiadosť o zmenu iba v prípade, že zmena je väčšia ako táto hodnota v %. Štandardná hodnota je 20%</string>
     <string name="fallback_smb_no_tdd">Použiť algoritmus SMB. Nedostatok dát o CDD.</string>
+    <string name="fallback_to_isf_no_tdd">Použitá hodnota citlivosti z profilu. Nedostatok dát CDD.</string>
 </resources>

@@ -14,7 +14,7 @@ import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import app.aaps.core.data.iob.IobTotal
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.data.model.EB
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.time.T
@@ -267,7 +267,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment(), MenuProvider {
                     tempBasal.toStringFull(
                         profile,
                         dateUtil,
-                        decimalFormatter
+                        rh
                     )
                 }\n" +
                     "${rh.gs(app.aaps.core.ui.R.string.date)}: ${dateUtil.dateAndTimeString(tempBasal.timestamp)}"

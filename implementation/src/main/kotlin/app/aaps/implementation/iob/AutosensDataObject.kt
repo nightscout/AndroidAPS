@@ -1,7 +1,7 @@
 package app.aaps.implementation.iob
 
-import app.aaps.core.data.aps.AutosensData
-import app.aaps.core.data.aps.AutosensResult
+import app.aaps.core.interfaces.aps.AutosensData
+import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil
@@ -18,6 +18,7 @@ class AutosensDataObject(
 
     override var time = 0L
     override var bg = 0.0 // mgdl
+    override var sens = 0.0
     override var pastSensitivity = ""
     override var deviation = 0.0
     override var validDeviation = false

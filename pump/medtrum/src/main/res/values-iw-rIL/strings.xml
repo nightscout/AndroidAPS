@@ -7,6 +7,8 @@
     <string name="active_bolus_label">בולוס פעיל</string>
     <!-- Alarm strings -->
     <!-- wizard-->
+    <string name="step_prepare_patch_connect">חיבור ומילוי</string>
+    <string name="step_prime">תיחול</string>
     <!-- settings-->
     <!-- treatment state-->
 </resources>

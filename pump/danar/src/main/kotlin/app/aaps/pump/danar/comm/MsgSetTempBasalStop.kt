@@ -16,7 +16,7 @@ class MsgSetTempBasalStop(
         val result = intFromBuff(bytes, 0, 1)
         if (result != 1) {
             failed = true
-            aapsLogger.debug(LTag.PUMPBTCOMM, "Set temp basal stop result: $result FAILED!!!")
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Set temp basal stop result: $result ERROR!!!")
         } else {
             failed = false
             aapsLogger.debug(LTag.PUMPBTCOMM, "Set temp basal stop result: $result")

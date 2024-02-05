@@ -50,7 +50,7 @@
     <string name="exerciseprofile_switchprofilebelow100">יש לבצע שינוי פרופיל לפחות מ-100%.</string>
     <string name="exerciseprofile_switchprofileabove100">בצעו שינוי פרופיל ליותר מ-100%.</string>
     <string name="exerciseprofile_leaveat100">יש להשאיר את הפרופיל על 100%.</string>
-    <string name="exerciseprofile_suspendloop">השהית הלולאה.</string>
+    <string name="exerciseprofile_suspendloop">השהיית הלולאה.</string>
     <string name="exerciseprofile_hint1">https://wiki.aaps.app/he/latest/Usage/temptarget.html#activity-temp-target</string>
     <string name="exercise_label">פעילות גופנית וערכי מטרה זמניים</string>
     <string name="exercise_whattodo">איך ניתן להשתמש בערכי מטרה זמניים כדי לסייע למערכת להתמודד בצורה הטובה ביותר עם פעילות גופנית?</string>

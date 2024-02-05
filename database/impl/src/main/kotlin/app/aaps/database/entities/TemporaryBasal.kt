@@ -57,10 +57,5 @@ data class TemporaryBasal(
         SUPERBOLUS,
         FAKE_EXTENDED // in memory only
         ;
-
-        companion object {
-
-            fun fromString(name: String?) = entries.firstOrNull { it.name == name } ?: NORMAL
-        }
     }
 }

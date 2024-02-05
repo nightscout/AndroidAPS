@@ -258,7 +258,6 @@
     <string name="overview_show_deviation_slope">Наклон на отклонението</string>
     <string name="overview_show_activity">Активност</string>
     <string name="overview_show_bgi">Въздействие на Кръвна Захар</string>
-    <string name="overview_show_sensitivity">Чувствителност</string>
     <string name="overview_show_deviations">Отклонения</string>
     <string name="overview_show_cob">Активни въглехидрати</string>
     <string name="overview_show_iob">Действащ инсулин</string>
@@ -273,7 +272,6 @@
     <string name="devslope_shortname">ОТК.НАКЛ</string>
     <string name="treatments_shortname">Леч</string>
     <string name="heartRate_shortname">СР</string>
-    <string name="sensitivity_shortname">ЧУВСТВ</string>
     <string name="graph_scale">Мащаб на графиката</string>
     <string name="graph_menu_divider_header">Графика</string>
     <!-- Skins -->

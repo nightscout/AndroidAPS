@@ -22,7 +22,7 @@ class MsgSetSingleBasalProfile(
         val result = intFromBuff(bytes, 0, 1)
         if (result != 1) {
             failed = true
-            aapsLogger.debug(LTag.PUMPCOMM, "Set basal profile result: $result FAILED!!!")
+            aapsLogger.debug(LTag.PUMPCOMM, "Set basal profile result: $result ERROR!!!")
             uiInteraction.addNotification(Notification.PROFILE_SET_FAILED, rh.gs(app.aaps.pump.dana.R.string.profile_set_failed), Notification.URGENT)
         } else {
             failed = false

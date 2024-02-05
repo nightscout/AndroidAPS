@@ -120,7 +120,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
             val profileList = ArrayList<CharSequence>()
             for (profileName in profileListToCheck) {
                 val profileToCheck = activePlugin.activeProfileSource.profile?.getSpecificProfile(profileName.toString())
-                if (profileToCheck != null && ProfileSealed.Pure(profileToCheck).isValid("ProfileSwitch", activePlugin.activePump, config, rh, rxBus, hardLimits, false).isValid)
+                if (profileToCheck != null && ProfileSealed.Pure(profileToCheck, activePlugin).isValid("ProfileSwitch", activePlugin.activePump, config, rh, rxBus, hardLimits, false).isValid)
                     profileList.add(profileName)
             }
             if (profileList.isEmpty()) {
@@ -193,7 +193,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
 
         activity?.let { activity ->
             val ps = profileFunction.buildProfileSwitch(profileStore, profileName, duration, percent, timeShift, eventTime) ?: return@let
-            val validity = ProfileSealed.PS(ps).isValid(rh.gs(app.aaps.core.ui.R.string.careportal_profileswitch), activePlugin.activePump, config, rh, rxBus, hardLimits, false)
+            val validity = ProfileSealed.PS(ps, activePlugin).isValid(rh.gs(app.aaps.core.ui.R.string.careportal_profileswitch), activePlugin.activePump, config, rh, rxBus, hardLimits, false)
             if (validity.isValid)
                 OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.careportal_profileswitch), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     if (profileFunction.createProfileSwitch(

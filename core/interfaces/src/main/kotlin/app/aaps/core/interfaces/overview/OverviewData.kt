@@ -99,6 +99,11 @@ interface OverviewData {
     val ratioScale: Scale
     var ratioSeries: SeriesData
 
+    var maxVarSensValueFound: Double
+    var minVarSensValueFound: Double
+    val varSensScale: Scale
+    var varSensSeries: SeriesData
+
     var maxFromMaxValueFound: Double
     var maxFromMinValueFound: Double
     val dsMaxScale: Scale

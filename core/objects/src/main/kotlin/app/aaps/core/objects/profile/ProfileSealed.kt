@@ -6,8 +6,10 @@ import app.aaps.core.data.model.IDs
 import app.aaps.core.data.model.data.Block
 import app.aaps.core.data.model.data.TargetBlock
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.Profile.ProfileValue
 import app.aaps.core.interfaces.profile.PureProfile
@@ -44,10 +46,16 @@ sealed class ProfileSealed(
     var ts: Int, // timeshift [hours]
     var pct: Int,
     var iCfg: ICfg,
-    val utcOffset: Long
+    val utcOffset: Long,
+    val aps: APS?
 ) : Profile {
 
-    data class PS(val value: app.aaps.core.data.model.PS) : ProfileSealed(
+    /**
+     * Profile interface created from ProfileSwitch
+     * @param value ProfileSwitch
+     * @param activePlugin access to active APS. Must be provided only when accessing dynamic runtime IC, ISF
+     */
+    data class PS(val value: app.aaps.core.data.model.PS, val activePlugin: ActivePlugin?) : ProfileSealed(
         value.id,
         value.isValid,
         value.ids,
@@ -61,10 +69,16 @@ sealed class ProfileSealed(
         T.msecs(value.timeshift).hours().toInt(),
         value.percentage,
         value.iCfg,
-        value.utcOffset
+        value.utcOffset,
+        activePlugin?.activeAPS
     )
 
-    data class EPS(val value: app.aaps.core.data.model.EPS) : ProfileSealed(
+    /**
+     * Profile interface created from EffectiveProfileSwitch
+     * @param value EffectiveProfileSwitch
+     * @param activePlugin access to active APS. Must be provided only when accessing dynamic runtime IC, ISF
+     */
+    data class EPS(val value: app.aaps.core.data.model.EPS, val activePlugin: ActivePlugin?) : ProfileSealed(
         value.id,
         value.isValid,
         value.ids,
@@ -78,10 +92,16 @@ sealed class ProfileSealed(
         0, // already converted to non customized
         100, // already converted to non customized
         value.iCfg,
-        value.utcOffset
+        value.utcOffset,
+        activePlugin?.activeAPS
     )
 
-    data class Pure(val value: PureProfile) : ProfileSealed(
+    /**
+     * Profile interface created from PureProfile ie. without customization
+     * @param value PureProfile
+     * @param activePlugin access to active APS. Must be provided only when accessing dynamic runtime IC, ISF
+     */
+    data class Pure(val value: PureProfile, val activePlugin: ActivePlugin?) : ProfileSealed(
         0,
         true,
         null,
@@ -95,7 +115,8 @@ sealed class ProfileSealed(
         0,
         100,
         ICfg("", (value.dia * 3600 * 1000).toLong(), 0),
-        value.timeZone.rawOffset.toLong()
+        value.timeZone.rawOffset.toLong(),
+        activePlugin?.activeAPS
     )
 
     override fun isValid(from: String, pump: Pump, config: Config, rh: ResourceHelper, rxBus: RxBus, hardLimits: HardLimits, sendNotifications: Boolean): Profile.ValidityCheck {
@@ -175,8 +196,8 @@ sealed class ProfileSealed(
         for (target in targetBlocks) {
             if (!hardLimits.isInRange(
                     toMgdl(target.lowTarget, units),
-                    HardLimits.VERY_HARD_LIMIT_MIN_BG[0],
-                    HardLimits.VERY_HARD_LIMIT_MIN_BG[1]
+                    HardLimits.LIMIT_MIN_BG[0],
+                    HardLimits.LIMIT_MIN_BG[1]
                 )
             ) {
                 validityCheck.isValid = false
@@ -185,8 +206,8 @@ sealed class ProfileSealed(
             }
             if (!hardLimits.isInRange(
                     toMgdl(target.highTarget, units),
-                    HardLimits.VERY_HARD_LIMIT_MAX_BG[0],
-                    HardLimits.VERY_HARD_LIMIT_MAX_BG[1]
+                    HardLimits.LIMIT_MAX_BG[0],
+                    HardLimits.LIMIT_MAX_BG[1]
                 )
             ) {
                 validityCheck.isValid = false
@@ -235,10 +256,31 @@ sealed class ProfileSealed(
 
     override fun getBasal(): Double = basalBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(), percentage / 100.0, timeshift)
     override fun getBasal(timestamp: Long): Double = basalBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), percentage / 100.0, timeshift)
-    override fun getIc(): Double = icBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(), 100.0 / percentage, timeshift)
-    override fun getIc(timestamp: Long): Double = icBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), 100.0 / percentage, timeshift)
-    override fun getIsfMgdl(): Double = toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(), 100.0 / percentage, timeshift), units)
-    override fun getIsfMgdl(timestamp: Long): Double = toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), 100.0 / percentage, timeshift), units)
+    override fun getIc(): Double =
+        if (aps?.supportsDynamicIc() ?: error("APS not defined"))
+            aps.getIc(100.0 / percentage, timeshift) ?: icBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(), 100.0 / percentage, timeshift)
+        else icBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(), 100.0 / percentage, timeshift)
+
+    override fun getIc(timestamp: Long): Double =
+        if (aps?.supportsDynamicIc() ?: error("APS not defined"))
+            aps.getIc(timestamp, 100.0 / percentage, timeshift) ?: icBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), 100.0 / percentage, timeshift)
+        else icBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), 100.0 / percentage, timeshift)
+
+    override fun getProfileIsfMgdl(): Double =
+        toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(), 100.0 / percentage, timeshift), units)
+    override fun getIsfMgdl(caller: String): Double =
+        if (aps?.supportsDynamicIsf() ?: error("APS not defined"))
+            aps.getIsfMgdl(100.0 / percentage, timeshift, caller) ?: toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(), 100.0 / percentage, timeshift), units)
+        else getProfileIsfMgdl()
+
+    override fun getIsfMgdl(timestamp: Long, bg: Double, caller: String): Double =
+        if (aps?.supportsDynamicIsf() ?: error("APS not defined"))
+            aps.getIsfMgdl(timestamp, bg, 100.0 / percentage, timeshift, caller) ?: toMgdl(
+                isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), 100.0 / percentage, timeshift),
+                units
+            )
+        else toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), 100.0 / percentage, timeshift), units)
+
     override fun getTargetMgdl(): Double = toMgdl(targetBlocks.targetBlockValueBySeconds(MidnightUtils.secondsFromMidnight(), timeshift), units)
     override fun getTargetLowMgdl(): Double = toMgdl(targetBlocks.lowTargetBlockValueBySeconds(MidnightUtils.secondsFromMidnight(), timeshift), units)
     override fun getTargetLowMgdl(timestamp: Long): Double = toMgdl(targetBlocks.lowTargetBlockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), timeshift), units)

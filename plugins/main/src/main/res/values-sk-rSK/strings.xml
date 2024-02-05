@@ -153,6 +153,8 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">CIEĽ</string>
     <string name="basal_short">BAZ</string>
+    <string name="isf_dynamic_label">Váš algoritmus môže poskytnúť dynamický výpočet ISF. Nižšie uvedené hodnoty sú použité iba ako záložné v prípade chýbajúcich údajov</string>
+    <string name="ic_dynamic_label">Váš algoritmus môže poskytnúť dynamický výpočet ISF. Nižšie uvedené hodnoty sú použité iba ako záložné v prípade chýbajúcich údajov</string>
     <!-- Actions -->
     <string name="actions">Akcie</string>
     <string name="description_actions">Niektoré tlačidlá na rýchly prístup do spoločných funkcií</string>
@@ -259,12 +261,13 @@
     <string name="overview_show_deviation_slope">Odchýlka sklonu</string>
     <string name="overview_show_activity">Aktivita</string>
     <string name="overview_show_bgi">Vplyv na glykémiu (BGI)</string>
-    <string name="overview_show_sensitivity">Citlivosť</string>
+    <string name="overview_show_sensitivity">Zmena citlivosti</string>
     <string name="overview_show_deviations">Odchýlky</string>
     <string name="overview_show_cob">Aktívne sacharidy</string>
     <string name="overview_show_iob">Aktívny inzulín</string>
     <string name="overview_show_basals">Bazály</string>
     <string name="overview_show_abs_insulin">Celkový inzulín</string>
+    <string name="overview_show_variable_sens">Premenlivá citlivosť</string>
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAZ</string>
     <string name="deviation_shortname">DEV</string>
@@ -274,7 +277,8 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">OŠET</string>
     <string name="heartRate_shortname">TF</string>
-    <string name="sensitivity_shortname">SENZ</string>
+    <string name="sensitivity_shortname">SENS%</string>
+    <string name="variable_sensitivity_shortname">VSENS</string>
     <string name="graph_scale">Mierka grafu</string>
     <string name="graph_menu_divider_header">Graf</string>
     <!-- Skins -->
@@ -289,4 +293,7 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Zobrazuje priebežné oznámenia v Androide s krátkym prehľadom, čo práve uzavretý okruh robí</string>
     <string name="old_data">ZASTARALÉ DÁTA</string>
+    <string name="overview_show_steps">Kroky</string>
+    <string name="steps_shortname">KROKY</string>
+    <string name="simple_mode_enabled">Jednoduchý režim aktívny</string>
 </resources>

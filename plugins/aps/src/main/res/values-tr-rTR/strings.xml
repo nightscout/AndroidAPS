@@ -85,7 +85,8 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="smb_disabled_in_preferences">SMB tercihlerde devre dışı bırakıldı</string>
     <string name="uam_disabled_in_preferences">UAM tercihlerde devre dışı bırakıldı</string>
     <string name="autosens_disabled_in_preferences">Otoduyarlılık tercihlerde devre dışı bırakıldı</string>
-    <string name="autosens_disabled_in_dyn_isf">DinİDF\'de otoduyarlılık devre dışı bırakıldı</string>
+    <string name="use_dynamic_sensitivity_title">Dinamik duyarlılığı etkinleştir</string>
+    <string name="use_dynamic_sensitivity_summary">Algoritmayı profil değeri yerine dinamik hassasiyeti kullanacak şekilde ayarlayın</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">%2$s\'den dolayı AİNS %1$.1f Ü ile sınırlandırılıyor</string>
     <string name="maxvalueinpreferences">tercihlerde maksimum değer</string>
@@ -118,4 +119,5 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="loop_open_mode_min_change">Minimum istek değişikliği [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Açık Döngü, yalnızca değişiklik % cinsinden bu değerden büyükse yeni değişiklik isteğini açar. Varsayılan değer %20\'dir</string>
     <string name="fallback_smb_no_tdd">SMB\'ye dönülüyor. Yeterli günlük doz verisi yok.</string>
+    <string name="fallback_to_isf_no_tdd">Profil duyarlılığına geri dönüş. Yeterli GTD verisi yok.</string>
 </resources>

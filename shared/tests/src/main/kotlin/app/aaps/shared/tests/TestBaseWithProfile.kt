@@ -21,7 +21,7 @@ import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
-import app.aaps.core.objects.aps.APSResultObject
+import app.aaps.core.objects.aps.DetermineBasalResult
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
@@ -69,7 +69,7 @@ open class TestBaseWithProfile : TestBase() {
 
     val injector = HasAndroidInjector {
         AndroidInjector {
-            if (it is APSResultObject) {
+            if (it is DetermineBasalResult) {
                 it.aapsLogger = aapsLogger
                 it.constraintChecker = constraintsChecker
                 it.preferences = preferences
@@ -109,7 +109,7 @@ open class TestBaseWithProfile : TestBase() {
         Mockito.`when`(activePlugin.activePump).thenReturn(testPumpPlugin)
         Mockito.`when`(preferences.get(StringKey.GeneralUnits)).thenReturn(GlucoseUnit.MGDL.asText)
         hardLimits = HardLimitsMock(sp, preferences, rh)
-        validProfile = ProfileSealed.Pure(pureProfileFromJson(JSONObject(validProfileJSON), dateUtil)!!)
+        validProfile = ProfileSealed.Pure(pureProfileFromJson(JSONObject(validProfileJSON), dateUtil)!!, activePlugin)
         effectiveProfileSwitch = EPS(
             timestamp = dateUtil.now(),
             basalBlocks = validProfile.basalBlocks,
@@ -165,7 +165,12 @@ open class TestBaseWithProfile : TestBase() {
             val string = invocation.getArgument<Int>(0)
             val arg1 = invocation.getArgument<Double?>(1)
             val arg2 = invocation.getArgument<String?>(2)
-            String.format(rh.gs(string), arg1, arg2)
+
+            // Use the safe call operator to handle potential null
+            val formattedString = rh.gs(string) ?: ""
+
+            // Use a default value or handle null appropriately
+            String.format(formattedString, arg1, arg2)
         }.`when`(rh).gs(anyInt(), anyDouble(), anyString())
 
         Mockito.doAnswer { invocation: InvocationOnMock ->

@@ -70,10 +70,10 @@ class ProfileFragment : DaggerFragment() {
         doEdit()
         basalView?.updateLabel(rh.gs(app.aaps.core.ui.R.string.basal_label) + ": " + sumLabel())
         profilePlugin.getEditedProfile()?.let {
-            binding.basalGraph.show(ProfileSealed.Pure(it))
-            binding.icGraph.show(ProfileSealed.Pure(it))
-            binding.isfGraph.show(ProfileSealed.Pure(it))
-            binding.targetGraph.show(ProfileSealed.Pure(it))
+            binding.basalGraph.show(ProfileSealed.Pure(it, null))
+            binding.icGraph.show(ProfileSealed.Pure(it, null))
+            binding.isfGraph.show(ProfileSealed.Pure(it, null))
+            binding.targetGraph.show(ProfileSealed.Pure(it, null))
             binding.insulinGraph.show(activePlugin.activeInsulin, SafeParse.stringToDouble(binding.dia.text))
         }
     }
@@ -90,7 +90,7 @@ class ProfileFragment : DaggerFragment() {
 
     private fun sumLabel(): String {
         val profile = profilePlugin.getEditedProfile()
-        val sum = profile?.let { ProfileSealed.Pure(profile).baseBasalSum() } ?: 0.0
+        val sum = profile?.let { ProfileSealed.Pure(profile, null).baseBasalSum() } ?: 0.0
         return " ∑" + decimalFormatter.to2Decimal(sum) + rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname)
     }
 
@@ -125,6 +125,9 @@ class ProfileFragment : DaggerFragment() {
         val activeProfile = profileFunction.getProfileName()
         val profileIndex = profiles.indexOf(activeProfile)
         profilePlugin.currentProfileIndex = if (profileIndex >= 0) profileIndex else 0
+        val aps = activePlugin.activeAPS
+        binding.isfDynamicLabel.visibility = aps.supportsDynamicIsf().toVisibility()
+        binding.icDynamicLabel.visibility = aps.supportsDynamicIc().toVisibility()
     }
 
     fun build() {
@@ -201,8 +204,8 @@ class ProfileFragment : DaggerFragment() {
                 rh.gs(app.aaps.core.ui.R.string.target_long_label),
                 currentProfile.targetLow,
                 currentProfile.targetHigh,
-                HardLimits.VERY_HARD_LIMIT_MIN_BG,
-                HardLimits.VERY_HARD_LIMIT_TARGET_BG,
+                HardLimits.LIMIT_MIN_BG,
+                HardLimits.LIMIT_TARGET_BG,
                 1.0,
                 DecimalFormat("0"),
                 save
@@ -218,12 +221,12 @@ class ProfileFragment : DaggerFragment() {
                     ("0.0"), save
             )
             val range1 = doubleArrayOf(
-                roundUp(profileUtil.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MIN_BG[0], GlucoseUnit.MMOL)),
-                roundDown(profileUtil.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MIN_BG[1], GlucoseUnit.MMOL))
+                roundUp(profileUtil.fromMgdlToUnits(HardLimits.LIMIT_MIN_BG[0], GlucoseUnit.MMOL)),
+                roundDown(profileUtil.fromMgdlToUnits(HardLimits.LIMIT_MIN_BG[1], GlucoseUnit.MMOL))
             )
             val range2 = doubleArrayOf(
-                roundUp(profileUtil.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MAX_BG[0], GlucoseUnit.MMOL)),
-                roundDown(profileUtil.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MAX_BG[1], GlucoseUnit.MMOL))
+                roundUp(profileUtil.fromMgdlToUnits(HardLimits.LIMIT_MAX_BG[0], GlucoseUnit.MMOL)),
+                roundDown(profileUtil.fromMgdlToUnits(HardLimits.LIMIT_MAX_BG[1], GlucoseUnit.MMOL))
             )
             aapsLogger.info(LTag.CORE, "TimeListEdit", "build: range1" + range1[0] + " " + range1[1] + " range2" + range2[0] + " " + range2[1])
             TimeListEdit(
@@ -267,10 +270,10 @@ class ProfileFragment : DaggerFragment() {
             }
         }
         profilePlugin.getEditedProfile()?.let {
-            binding.basalGraph.show(ProfileSealed.Pure(it))
-            binding.icGraph.show(ProfileSealed.Pure(it))
-            binding.isfGraph.show(ProfileSealed.Pure(it))
-            binding.targetGraph.show(ProfileSealed.Pure(it))
+            binding.basalGraph.show(ProfileSealed.Pure(it, null))
+            binding.icGraph.show(ProfileSealed.Pure(it, null))
+            binding.isfGraph.show(ProfileSealed.Pure(it, null))
+            binding.targetGraph.show(ProfileSealed.Pure(it, null))
             binding.insulinGraph.show(activePlugin.activeInsulin, SafeParse.stringToDouble(binding.dia.text))
         }
 

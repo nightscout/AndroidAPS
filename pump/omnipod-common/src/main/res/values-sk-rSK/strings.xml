@@ -66,6 +66,7 @@
     <string name="omnipod_common_overview_reservoir_value">Zostáva %1$.2f JI</string>
     <string name="omnipod_common_overview_reservoir_value_over50">Zostáva viac ako 50 JI</string>
     <string name="omnipod_common_overview_errors">Chyby</string>
+    <string name="omnipod_common_uncertain">neznáme</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_cancel">Zrušiť</string>
     <string name="omnipod_common_wizard_button_finish">Dokončiť</string>

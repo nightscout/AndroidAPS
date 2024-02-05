@@ -67,6 +67,4 @@
     <!-- Omnipod Eros - Pod Activation Wizard -->
     <string name="omnipod_eros_pod_activation_wizard_start_pod_activation_text">Empleneu un nou pod amb prou insulina per 3 dies.\n\nDurant el procés d\'emplenament el pod hauria de pitar dues vegades. Això indica que s\'ha inserit la quantitat mínima de 80U. Assegureu-vos de buidar completament la jeringa, fins i tot després d\'haver escoltat els dos bips.\n\nDesprés d\'emplenar el pod, premeu <b>Següent</b>.\n\n<b>Nota:</b>no retireu el tap de l\'agulla en aquest moment.\n<b>Nota:</b>poseu el RileyLink en posició vertical i a prop del pod.</string>
     <string name="omnipod_eros_pod_activation_wizard_initialize_pod_text">Intentant emparellar amb el nou pod i encebar-lo.\n\nUn cop finalitzi el procés d\'inicialització, podeu prémer <b>Següent</b>\n\n<b>Nota:</b>poseu el RileyLink en posició vertical i situeu-hi el pod a pocs centímetres.</string>
-    <!-- Omnipod Eros - Other -->
-    <string name="omnipod_eros_uncertain">indeterminat</string>
 </resources>

@@ -302,7 +302,8 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         androidPermission.notifyForBatteryOptimizationPermission(this)
         if (!config.NSCLIENT) androidPermission.notifyForLocationPermissions(this)
         if (config.PUMPDRIVERS) {
-            androidPermission.notifyForSMSPermissions(this, smsCommunicator)
+            if (smsCommunicator.isEnabled())
+                androidPermission.notifyForSMSPermissions(this)
             androidPermission.notifyForSystemWindowPermissions(this)
             androidPermission.notifyForBtConnectPermission(this)
         }
@@ -355,32 +356,33 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         val pageAdapter = TabPageAdapter(this)
         binding.mainNavigationView.setNavigationItemSelectedListener { true }
         val menu = binding.mainNavigationView.menu.also { it.clear() }
-        for (p in activePlugin.getPluginsList()) {
-            // Add to tabs if visible
-            if (
-                preferences.simpleMode && p.isEnabled() && p.hasFragment() && p.pluginDescription.simpleModePosition == PluginDescription.Position.TAB ||
-                !preferences.simpleMode && p.isEnabled() && p.hasFragment() && p.isFragmentVisible()
-            ) pageAdapter.registerNewFragment(p)
-            // Add to menu if not visible
-            if (
-                preferences.simpleMode && p.isEnabled() && p.hasFragment() && !p.pluginDescription.neverVisible && p.pluginDescription.simpleModePosition == PluginDescription.Position.MENU ||
-                !preferences.simpleMode && p.isEnabled() && p.hasFragment() && !p.pluginDescription.neverVisible && !p.isFragmentVisible()
-            ) {
-                val menuItem = menu.add(p.name)
-                menuItem.isCheckable = true
-                if (p.menuIcon != -1) menuItem.setIcon(p.menuIcon)
-                else menuItem.setIcon(app.aaps.core.ui.R.drawable.ic_settings)
-                menuItem.setOnMenuItemClickListener {
-                    startActivity(
-                        Intent(this, SingleFragmentActivity::class.java)
-                            .setAction(this::class.simpleName)
-                            .putExtra("plugin", activePlugin.getPluginsList().indexOf(p))
-                    )
-                    binding.mainDrawerLayout.closeDrawers()
-                    true
+        for (p in activePlugin.getPluginsList())
+            if (p.isEnabled() && p.hasFragment() && p.showInList(p.getType())) {
+                // Add to tabs if visible
+                if (
+                    preferences.simpleMode && p.pluginDescription.simpleModePosition == PluginDescription.Position.TAB ||
+                    !preferences.simpleMode && p.isFragmentVisible()
+                ) pageAdapter.registerNewFragment(p)
+                // Add to menu if not visible
+                if (
+                    preferences.simpleMode && !p.pluginDescription.neverVisible && p.pluginDescription.simpleModePosition == PluginDescription.Position.MENU ||
+                    !preferences.simpleMode && !p.pluginDescription.neverVisible && !p.isFragmentVisible()
+                ) {
+                    val menuItem = menu.add(p.name)
+                    menuItem.isCheckable = true
+                    if (p.menuIcon != -1) menuItem.setIcon(p.menuIcon)
+                    else menuItem.setIcon(app.aaps.core.ui.R.drawable.ic_settings)
+                    menuItem.setOnMenuItemClickListener {
+                        startActivity(
+                            Intent(this, SingleFragmentActivity::class.java)
+                                .setAction(this::class.simpleName)
+                                .putExtra("plugin", activePlugin.getPluginsList().indexOf(p))
+                        )
+                        binding.mainDrawerLayout.closeDrawers()
+                        true
+                    }
                 }
             }
-        }
         binding.mainPager.adapter = pageAdapter
         binding.mainPager.offscreenPageLimit = 8 // This may cause more memory consumption
         checkPluginPreferences(binding.mainPager)

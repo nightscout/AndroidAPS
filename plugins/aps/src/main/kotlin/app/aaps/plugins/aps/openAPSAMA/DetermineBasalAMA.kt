@@ -1,27 +1,26 @@
 package app.aaps.plugins.aps.openAPSAMA
 
-import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.aps.APSResult
+import app.aaps.core.interfaces.aps.AutosensResult
+import app.aaps.core.interfaces.aps.CurrentTemp
+import app.aaps.core.interfaces.aps.GlucoseStatus
+import app.aaps.core.interfaces.aps.IobTotal
+import app.aaps.core.interfaces.aps.MealData
+import app.aaps.core.interfaces.aps.OapsProfile
+import app.aaps.core.interfaces.aps.Predictions
+import app.aaps.core.interfaces.aps.RT
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.plugins.aps.openAPS.AutosensData
-import app.aaps.plugins.aps.openAPS.CurrentTemp
-import app.aaps.plugins.aps.openAPS.GlucoseStatus
-import app.aaps.plugins.aps.openAPS.IobData
-import app.aaps.plugins.aps.openAPS.MealData
-import app.aaps.plugins.aps.openAPS.Profile
-import app.aaps.plugins.aps.openAPS.RT
-import java.math.BigDecimal
-import java.math.RoundingMode
 import java.text.DecimalFormat
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.pow
 import kotlin.math.roundToInt
 
 @Singleton
 class DetermineBasalAMA @Inject constructor(
-    private val profileUtil: ProfileUtil,
-    private val aapsLogger: AAPSLogger
+    private val profileUtil: ProfileUtil
 ) {
 
     private val consoleError = mutableListOf<String>()
@@ -33,26 +32,28 @@ class DetermineBasalAMA @Inject constructor(
     fun round_basal(value: Double): Double = value
 
     // Rounds value to 'digits' decimal places
-    fun round(value: Double, digits: Int): Double = BigDecimal(value).setScale(digits, RoundingMode.HALF_EVEN).toDouble()
-    fun Double.withoutZeros() : String = DecimalFormat("0.##").format(this)
+    // different for negative numbers fun round(value: Double, digits: Int): Double = BigDecimal(value).setScale(digits, RoundingMode.HALF_EVEN).toDouble()
+    fun round(value: Double, digits: Int): Double {
+        val scale = 10.0.pow(digits.toDouble())
+        return round(value * scale) / scale
+    }
+
+    fun Double.withoutZeros(): String = DecimalFormat("0.##").format(this)
     fun round(value: Double): Int = value.roundToInt()
 
     // we expect BG to rise or fall at the rate of BGI,
     // adjusted by the rate at which BG would need to rise /
     // fall to get eventualBG to target over 2 hours
-    fun calculate_expected_delta(dia: Int, targetBg: Int, eventualBg: Int, bgi: Double): Double {
+    fun calculate_expected_delta(dia: Double, targetBg: Double, eventualBg: Double, bgi: Double): Double {
         // (hours * mins_per_hour) / 5 = how many 5 minute periods in 2h = 24
-        val dia_in_5min_blocks = (dia/2 * 60) / 5
+        val dia_in_5min_blocks = (dia / 2.0 * 60.0) / 5.0
         val target_delta = targetBg - eventualBg
         val expectedDelta = round(bgi + (target_delta / dia_in_5min_blocks), 1)
         return expectedDelta
     }
 
-    fun convert_bg(value: Int): String =
-        profileUtil.fromMgdlToStringInUnits(value.toDouble()).replace("-0.0", "0.0")
     fun convert_bg(value: Double): String =
         profileUtil.fromMgdlToStringInUnits(value).replace("-0.0", "0.0")
-
 
     fun reason(rT: RT, msg: String) {
         if (rT.reason.toString().isNotEmpty()) rT.reason.append(". ")
@@ -60,10 +61,10 @@ class DetermineBasalAMA @Inject constructor(
         consoleError.add(msg)
     }
 
-    private fun getMaxSafeBasal(profile: Profile): Double =
+    private fun getMaxSafeBasal(profile: OapsProfile): Double =
         min(profile.max_basal, min(profile.max_daily_safety_multiplier * profile.max_daily_basal, profile.current_basal_safety_multiplier * profile.current_basal))
 
-    fun setTempBasal(_rate: Double, duration: Int, profile: Profile, rT: RT, currenttemp: CurrentTemp): RT {
+    fun setTempBasal(_rate: Double, duration: Int, profile: OapsProfile, rT: RT, currenttemp: CurrentTemp): RT {
         //var maxSafeBasal = Math.min(profile.max_basal, 3 * profile.max_daily_basal, 4 * profile.current_basal);
 
         val maxSafeBasal = getMaxSafeBasal(profile)
@@ -73,7 +74,7 @@ class DetermineBasalAMA @Inject constructor(
 
         val suggestedRate = round_basal(rate)
         if (currenttemp.duration > (duration - 10) && currenttemp.duration <= 120 && suggestedRate <= currenttemp.rate * 1.2 && suggestedRate >= currenttemp.rate * 0.8 && duration > 0) {
-            rT.reason.append(" ${currenttemp.duration}m left and ${currenttemp.rate.withoutZeros()} ~ req ${suggestedRate.withoutZeros()}U/hr: no temp required")
+            rT.reason.append(", but ${currenttemp.duration}m left and ${currenttemp.rate.withoutZeros()} ~ req ${suggestedRate.withoutZeros()}U/hr: no action required")
             return rT
         }
 
@@ -102,18 +103,23 @@ class DetermineBasalAMA @Inject constructor(
     }
 
     fun determine_basal(
-        glucose_status: GlucoseStatus, currenttemp: CurrentTemp, iob_data_array: IobData, profile: Profile, autosens_data: AutosensData, meal_data: MealData
+        glucose_status: GlucoseStatus, currenttemp: CurrentTemp, iob_data_array: Array<IobTotal>, profile: OapsProfile, autosens_data: AutosensResult, meal_data: MealData, currentTime: Long
     ): RT {
+        consoleError.clear()
+        consoleLog.clear()
         var rT = RT(
+            algorithm = APSResult.Algorithm.AMA,
+            runningDynamicIsf = false,
+            timestamp = currentTime,
             consoleLog = consoleLog,
             consoleError = consoleError
         )
-        var basal = round_basal(profile.current_basal * autosens_data.ratio)
+        val basal = round_basal(profile.current_basal * autosens_data.ratio)
         if (basal != profile.current_basal) {
-            consoleError.add("Adjusting basal from ${profile.current_basal} to $basal");
+            consoleError.add("Adjusting basal from ${profile.current_basal} to $basal")
         }
 
-        var bg = glucose_status.glucose;
+        val bg = glucose_status.glucose
         // TODO: figure out how to use raw isig data to estimate BG
         if (bg < 39) {  //Dexcom is in ??? mode or calibrating
             rT.reason.append("CGM is calibrating or in ??? state")
@@ -126,7 +132,7 @@ class DetermineBasalAMA @Inject constructor(
             }
         }
 
-        var max_iob = profile.max_iob; // maximum amount of non-bolus IOB OpenAPS will ever deliver
+        val max_iob = profile.max_iob // maximum amount of non-bolus IOB OpenAPS will ever deliver
 
         // if target_bg is set, great. otherwise, if min and max are set, then set target to their average
         var target_bg = profile.target_bg
@@ -138,9 +144,9 @@ class DetermineBasalAMA @Inject constructor(
             if (profile.temptargetSet) {
                 consoleError.add("Temp Target set, not adjusting with autosens")
             } else {
-                min_bg = ((min_bg - 60) / autosens_data.ratio).roundToInt() + 60
-                max_bg = ((max_bg - 60) / autosens_data.ratio).roundToInt() + 60
-                val new_target_bg = ((target_bg - 60) / autosens_data.ratio).roundToInt() + 60
+                min_bg = round((min_bg - 60) / autosens_data.ratio, 0) + 60
+                max_bg = round((max_bg - 60) / autosens_data.ratio, 0) + 60
+                val new_target_bg = round((target_bg - 60) / autosens_data.ratio) + 60.0
                 if (target_bg == new_target_bg) {
                     consoleError.add("target_bg unchanged: $new_target_bg")
                 } else {
@@ -150,26 +156,26 @@ class DetermineBasalAMA @Inject constructor(
             }
         }
 
-        var iobArray = iob_data_array
+        val iobArray = iob_data_array
         val iob_data = iobArray[0]
 
-        var tick: String
+        val tick: String
 
         if (glucose_status.delta > -0.5) {
             tick = "+" + round(glucose_status.delta)
         } else {
             tick = round(glucose_status.delta).toString()
         }
-        var minDelta = min(glucose_status.delta, min(glucose_status.short_avgdelta, glucose_status.long_avgdelta))
-        var minAvgDelta = min(glucose_status.short_avgdelta, glucose_status.long_avgdelta)
+        val minDelta = min(glucose_status.delta, min(glucose_status.shortAvgDelta, glucose_status.longAvgDelta))
+        val minAvgDelta = min(glucose_status.shortAvgDelta, glucose_status.longAvgDelta)
 
-        var sens = round(profile.sens / autosens_data.ratio, 1)
+        val sens = round(profile.sens / autosens_data.ratio, 1)
         if (sens != profile.sens) {
             consoleError.add("Adjusting sens from ${profile.sens} to $sens")
         }
 
         //calculate BG impact: the amount BG "should" be rising or falling based on insulin activity alone
-        var bgi = round((-iob_data.activity * sens * 5), 2)
+        val bgi = round((-iob_data.activity * sens * 5), 2)
         // project deviations for 30 minutes
         var deviation = round(30 / 5 * (minDelta - bgi))
         // don't overreact to a big negative delta: use minAvgDelta if deviation is negative
@@ -178,26 +184,29 @@ class DetermineBasalAMA @Inject constructor(
         }
 
         // calculate the naive (bolus calculator math) eventual BG based on net IOB and sensitivity
-        var naive_eventualBG =
-            if (iob_data.iob > 0) round(bg - (iob_data.iob * sens))
+        val naive_eventualBG =
+            if (iob_data.iob > 0) round(bg - (iob_data.iob * sens), 0)
             else  // if IOB is negative, be more conservative and use the lower of sens, profile.sens
-                round(bg - (iob_data.iob * min(sens, profile.sens)))
+                round(bg - (iob_data.iob * min(sens, profile.sens)), 0)
 
         // and adjust it for the deviation above
-        var eventualBG: Int = naive_eventualBG + deviation
+        var eventualBG = naive_eventualBG + deviation
         // calculate what portion of that is due to bolussnooze
-        var bolusContrib = iob_data.bolussnooze * sens
+        val bolusContrib = iob_data.bolussnooze * sens
         // and add it back in to get snoozeBG, plus another 50% to avoid low-temping at mealtime
-        var naive_snoozeBG = round(naive_eventualBG + 1.5 * bolusContrib)
+        val naive_snoozeBG = round(naive_eventualBG + 1.5 * bolusContrib, 0)
         // adjust that for deviation like we did eventualBG
         var snoozeBG = naive_snoozeBG + deviation
 
-        var expectedDelta = calculate_expected_delta(profile.dia, target_bg, eventualBG, bgi)
+        val expectedDelta = calculate_expected_delta(profile.dia, target_bg, eventualBG, bgi)
 
         // min_bg of 90 -> threshold of 70, 110 -> 80, and 130 -> 90
-        var threshold = min_bg - 0.5 * (min_bg - 50)
+        val threshold = min_bg - 0.5 * (min_bg - 50)
 
         rT = RT(
+            algorithm = APSResult.Algorithm.AMA,
+            runningDynamicIsf = false,
+            timestamp = currentTime,
             bg = bg,
             tick = tick,
             eventualBG = eventualBG,
@@ -206,7 +215,7 @@ class DetermineBasalAMA @Inject constructor(
             consoleError = consoleError
         )
 
-        var basaliob = iob_data.basaliob
+        val basaliob = iob_data.basaliob
 
         // generate predicted future BGs based on IOB, COB, and current absorption rate
 
@@ -219,37 +228,37 @@ class DetermineBasalAMA @Inject constructor(
         //console.error(meal_data);
         // carb impact and duration are 0 unless changed below
         var ci: Double
-        var cid: Double
+        val cid: Double
         // calculate current carb absorption rate, and how long to absorb all carbs
         // CI = current carb impact on BG in mg/dL/5m
         ci = round((minDelta - bgi) * 10) / 10.0
         if (meal_data.mealCOB * 2 > meal_data.carbs) {
             // set ci to a minimum of 3mg/dL/5m (default) if less than half of carbs have absorbed
-            ci = max(profile.min_5m_carbimpact.toDouble(), ci)
+            ci = max(profile.min_5m_carbimpact, ci)
         }
         val aci = 10
         //5m data points = g * (1U/10g) * (40mg/dL/1U) / (mg/dL/5m)
         cid = meal_data.mealCOB * (sens / profile.carb_ratio) / ci
-        var acid: Double = meal_data.mealCOB * (sens / profile.carb_ratio) / aci
+        val acid: Double = meal_data.mealCOB * (sens / profile.carb_ratio) / aci
         consoleError.add("Carb Impact: $ci mg/dL per 5m; CI Duration: ${Math.round(10 * cid / 6) / 10} hours")
         consoleError.add("Accel. Carb Impact: $aci mg/dL per 5m; ACI Duration: ${Math.round(10 * acid / 6) / 10} hours")
-        var minPredBG = 999
+        var minPredBG = 999.0
         var maxPredBG = bg
-        var eventualPredBG = bg
+        //var eventualPredBG = bg
         var IOBpredBG: Double
         var COBpredBG: Double
         var aCOBpredBG: Double
         iobArray.forEach { iobTick ->
             //console.error(iobTick);
-            val predBGI = round((-iobTick.activity * sens * 5), 2);
+            val predBGI: Double = round((-iobTick.activity * sens * 5), 2)
             // predicted deviation impact drops linearly from current deviation down to zero
             // over 60 minutes (data points every 5m)
-            val predDev = ci * (1 - min(1.0, IOBpredBGs.size / (60.0 / 5.0)))
+            val predDev: Double = (ci * (1 - min(1, IOBpredBGs.size / (60 / 5))))
             IOBpredBG = IOBpredBGs[IOBpredBGs.size - 1] + predBGI + predDev
             //IOBpredBG = IOBpredBGs[IOBpredBGs.length-1] + predBGI;
             // predicted carb impact drops linearly from current carb impact down to zero
             // eventually accounting for all carbs (if they can be absorbed over DIA)
-            val predCI = max(0.0, ci * (1 - COBpredBGs.size / max(cid * 2, 1.0)))
+            val predCI: Double = max(0.0, ci * (1 - COBpredBGs.size / max(cid * 2, 1.0)))
             val predACI = max(0.0, aci * (1 - COBpredBGs.size / max(acid * 2, 1.0)))
             COBpredBG = COBpredBGs[COBpredBGs.size - 1] + predBGI + min(0.0, predDev) + predCI
             aCOBpredBG = aCOBpredBGs[aCOBpredBGs.size - 1] + predBGI + min(0.0, predDev) + predACI
@@ -259,7 +268,7 @@ class DetermineBasalAMA @Inject constructor(
             aCOBpredBGs.add(aCOBpredBG)
             // wait 45m before setting minPredBG
             if (COBpredBGs.size > 9 && (COBpredBG < minPredBG)) {
-                minPredBG = round(COBpredBG)
+                minPredBG = COBpredBG
             }
             if (COBpredBG > maxPredBG) {
                 maxPredBG = COBpredBG
@@ -267,7 +276,7 @@ class DetermineBasalAMA @Inject constructor(
         }
         // set eventualBG to include effect of carbs
         //console.error("PredBGs:",JSON.stringify(predBGs));
-        rT.predBGs = RT.Predictions()
+        rT.predBGs = Predictions()
         IOBpredBGs = IOBpredBGs.map { min(401.0, max(39.0, it)) }.toMutableList()
         for (i in IOBpredBGs.size - 1 downTo 13) {
             if (IOBpredBGs[i - 1] != IOBpredBGs[i]) break
@@ -289,17 +298,17 @@ class DetermineBasalAMA @Inject constructor(
                 else COBpredBGs.removeLast()
             }
             rT.predBGs?.COB = COBpredBGs.map { it.toInt() }
-            eventualBG = max(eventualBG, round(COBpredBGs[COBpredBGs.size - 1]))
+            eventualBG = max(eventualBG, round(COBpredBGs[COBpredBGs.size - 1], 0))
             rT.eventualBG = eventualBG
             minPredBG = min(minPredBG, eventualBG)
             // set snoozeBG to minPredBG
-            snoozeBG = max(snoozeBG, minPredBG)
+            snoozeBG = round(max(snoozeBG, minPredBG), 0)
             rT.snoozeBG = snoozeBG
         }
 
         rT.COB = meal_data.mealCOB
         rT.IOB = iob_data.iob
-        rT.reason.append("COB: ${round(meal_data.mealCOB, 1)}, Dev: $deviation, BGI: $bgi, ISF: ${convert_bg(sens)}, Target: ${convert_bg(target_bg)}; ")
+        rT.reason.append("COB: ${round(meal_data.mealCOB, 1).withoutZeros()}, Dev: $deviation, BGI: ${bgi.withoutZeros()}, ISF: ${convert_bg(sens)}, Target: ${convert_bg(target_bg)}; ")
         if (profile.autosens_adjust_targets && autosens_data.ratio != 1.0)
             rT.reason.append("Autosens: " + autosens_data.ratio + "; ")
         if (bg < threshold) { // low glucose suspend mode: BG is < ~80
@@ -361,7 +370,7 @@ class DetermineBasalAMA @Inject constructor(
                     if (minDelta < 0 && minDelta > expectedDelta) {
                         // if we're barely falling, newinsulinReq should be barely negative
                         rT.reason.append(", Snooze BG ${convert_bg(snoozeBG)}")
-                        var newinsulinReq = round((insulinReq * (minDelta / expectedDelta)), 2)
+                        val newinsulinReq = round((insulinReq * (minDelta / expectedDelta)), 2)
                         //console.error("Increasing insulinReq from " + insulinReq + " to " + newinsulinReq);
                         insulinReq = newinsulinReq
                     }
@@ -369,7 +378,7 @@ class DetermineBasalAMA @Inject constructor(
                     var rate = basal + (2 * insulinReq)
                     rate = round_basal(rate)
                     // if required temp < existing temp basal
-                    var insulinScheduled = currenttemp.duration * (currenttemp.rate - basal) / 60
+                    val insulinScheduled = currenttemp.duration * (currenttemp.rate - basal) / 60
                     if (insulinScheduled < insulinReq - basal * 0.3) { // if current temp would deliver a lot (30% of basal) less than the required insulin, raise the rate
                         rT.reason.append(", ${currenttemp.duration}m@${(currenttemp.rate - basal).toFixed3()} = ${insulinScheduled.toFixed3()} < req $insulinReq-${(basal * 0.3).toFixed2()}")
                         return setTempBasal(rate, 30, profile, rT, currenttemp)
@@ -378,14 +387,14 @@ class DetermineBasalAMA @Inject constructor(
                         rT.reason.append(", temp ${(currenttemp.rate).toFixed3()} ~< req ${round(rate, 2)}U/hr")
                         return rT
                     } else {
-                        rT.reason.append(", setting ${round(rate, 2)}U/hr")
+                        rT.reason.append(", setting ${round(rate, 2).withoutZeros()}U/hr")
                         return setTempBasal(rate, 30, profile, rT, currenttemp)
                     }
                 }
             }
         }
 
-        var minutes_running: Int =
+        val minutes_running: Int =
             if (currenttemp.duration == 0) 30
             else if (currenttemp.minutesrunning != null)
             // If the time the current temp is running is not defined, use default request duration of 30 minutes.
@@ -394,10 +403,10 @@ class DetermineBasalAMA @Inject constructor(
 
         // if there is a low-temp running, and eventualBG would be below min_bg without it, let it run
         if (round_basal(currenttemp.rate) < round_basal(basal)) {
-            var lowtempimpact = (currenttemp.rate - basal) * ((30 - minutes_running) / 60) * sens
-            var adjEventualBG = eventualBG + lowtempimpact
+            val lowtempimpact = (currenttemp.rate - basal) * ((30 - minutes_running) / 60.0) * sens
+            val adjEventualBG = eventualBG + lowtempimpact
             if (adjEventualBG < min_bg) {
-                rT.reason.append("letting low temp of ${currenttemp.rate} run.")
+                rT.reason.append("letting low temp of ${currenttemp.rate.withoutZeros()} run.")
                 return rT
             }
         }
@@ -405,15 +414,15 @@ class DetermineBasalAMA @Inject constructor(
         // if eventual BG is above min but BG is falling faster than expected Delta
         if (minDelta < expectedDelta) {
             if (glucose_status.delta < minDelta) {
-                rT.reason.append("Eventual BG ${convert_bg(eventualBG)} > ${convert_bg(min_bg)} but Delta $tick < Exp. Delta $expectedDelta")
+                rT.reason.append("Eventual BG ${convert_bg(eventualBG)} > ${convert_bg(min_bg)} but Delta $tick < Exp. Delta ${expectedDelta.withoutZeros()}")
             } else {
-                rT.reason.append("Eventual BG ${convert_bg(eventualBG)} > ${convert_bg(min_bg)} but Min. Delta ${minDelta.toFixed2()} < Exp. Delta $expectedDelta")
+                rT.reason.append("Eventual BG ${convert_bg(eventualBG)} > ${convert_bg(min_bg)} but Min. Delta ${minDelta.toFixed2()} < Exp. Delta ${expectedDelta.withoutZeros()}")
             }
             if (currenttemp.duration > 15 && round_basal(basal) == round_basal(currenttemp.rate)) {
-                rT.reason.append(", temp ${currenttemp.rate} ~ req ${round(basal, 2)}U/hr")
+                rT.reason.append(", temp ${currenttemp.rate} ~ req ${round(basal, 2).withoutZeros()}U/hr")
                 return rT
             } else {
-                rT.reason.append("; setting current basal of " + round(basal, 2) + " as temp")
+                rT.reason.append("; setting current basal of " + round(basal, 2).withoutZeros() + " as temp")
                 return setTempBasal(basal, 30, profile, rT, currenttemp)
             }
         }
@@ -453,7 +462,7 @@ class DetermineBasalAMA @Inject constructor(
             // if in meal assist mode, check if snoozeBG is lower, as eventualBG is not dependent on IOB
             var insulinReq = round((min(snoozeBG, eventualBG) - target_bg) / sens, 2)
             if (minDelta < 0 && minDelta > expectedDelta) {
-                var newinsulinReq = round((insulinReq * (1 - (minDelta / expectedDelta))), 2)
+                val newinsulinReq = round((insulinReq * (1 - (minDelta / expectedDelta))), 2)
                 //console.error("Reducing insulinReq from " + insulinReq + " to " + newinsulinReq);
                 insulinReq = newinsulinReq
             }
@@ -464,39 +473,42 @@ class DetermineBasalAMA @Inject constructor(
             }
 
             // rate required to deliver insulinReq more insulin over 30m:
-            var rate = basal + (2 * insulinReq);
+            var rate = basal + (2 * insulinReq)
             rate = round_basal(rate)
 
 //        var maxSafeBasal = Math.min(profile.max_basal, 3 * profile.max_daily_basal, 4 * basal);
 
-            var maxSafeBasal = getMaxSafeBasal(profile)
+            val maxSafeBasal = getMaxSafeBasal(profile)
 
             if (rate > maxSafeBasal) {
-                rT.reason.append("adj. req. rate: ${round(rate, 2)} to maxSafeBasal: $maxSafeBasal, ")
+                rT.reason.append("adj. req. rate: ${round(rate, 2).withoutZeros()} to maxSafeBasal: ${maxSafeBasal.withoutZeros()}, ")
                 rate = round_basal(maxSafeBasal)
             }
 
-            var insulinScheduled = currenttemp.duration * (currenttemp.rate - basal) / 60;
+            val insulinScheduled = currenttemp.duration * (currenttemp.rate - basal) / 60
             if (insulinScheduled >= insulinReq * 2) { // if current temp would deliver >2x more than the required insulin, lower the rate
                 rT.reason.append(
-                    "${currenttemp.duration}m@${(currenttemp.rate - basal).toFixed3()} = ${insulinScheduled.toFixed3()} > 2 * req $insulinReq" + ". Setting temp basal of ${round(rate, 2)} U/hr"
+                    "${currenttemp.duration}m@${(currenttemp.rate - basal).toFixed3()} = ${insulinScheduled.toFixed3()} > 2 * req ${insulinReq.withoutZeros()}" + ". Setting temp basal of ${
+                        round(rate, 2)
+                            .withoutZeros()
+                    }U/hr"
                 )
                 return setTempBasal(rate, 30, profile, rT, currenttemp)
             }
 
             if (currenttemp.duration == 0) { // no temp is set
-                rT.reason.append("no temp, setting ${round(rate, 2)}U/hr")
+                rT.reason.append("no temp, setting ${round(rate, 2).withoutZeros()}U/hr")
                 return setTempBasal(rate, 30, profile, rT, currenttemp)
             }
 
             if (currenttemp.duration > 5 && (round_basal(rate) <= round_basal(currenttemp.rate))) { // if required temp <~ existing temp basal
-                rT.reason.append("temp ${(currenttemp.rate).toFixed3()} >~ req ${round(rate, 2)}U/hr")
+                rT.reason.append("temp ${(currenttemp.rate).toFixed3()} >~ req ${round(rate, 2).withoutZeros()}U/hr")
                 return rT
             }
 
             // required temp > existing temp basal
-            rT.reason.append("temp ${(currenttemp.rate).toFixed3()} < ${round(rate, 2)}U/hr")
-            return setTempBasal(rate, 30, profile, rT, currenttemp);
+            rT.reason.append("temp ${(currenttemp.rate).toFixed3()} < ${round(rate, 2).withoutZeros()}U/hr")
+            return setTempBasal(rate, 30, profile, rT, currenttemp)
         }
     }
 }

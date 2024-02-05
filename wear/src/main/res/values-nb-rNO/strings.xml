@@ -8,7 +8,7 @@
     <string name="label_watchface_circle">AAPS (sirkel)</string>
     <string name="label_watchface_digital_style">AAPS(Digitalstil)</string>
     <string name="label_watchface_custom">AAPS(Tilpasset)</string>
-    <string name="label_actions_tile">AAPS(Actions)</string>
+    <string name="label_actions_tile">AAPS(Handlinger)</string>
     <string name="label_temp_target_tile">AAPS(Midl. Mål)</string>
     <string name="label_quick_wizard_tile">AAPS(Hurtigknapp)</string>
     <string name="label_warning_sync">Ingen data!</string>
@@ -205,4 +205,16 @@
     <string name="error">!feil!</string>
     <string name="pref_heartRateSampling">Puls</string>
     <string name="pref_stepsSampling">Aktiver antall skritt</string>
+    <string name="tile_tempt_1">Midlertidig mål 1</string>
+    <string name="tile_tempt_2">Midlertidig mål 2</string>
+    <string name="tile_tempt_3">Midlertidig mål 3</string>
+    <string name="tile_tempt_4">Midlertidig mål 4</string>
+    <string name="tile_action_1">Handling 1</string>
+    <string name="tile_action_2">Handling 2</string>
+    <string name="tile_action_3">Handling 3</string>
+    <string name="tile_action_4">Handling 4</string>
+    <string name="datalayer_notification_title">Datalag forgrunnstjeneste</string>
+    <string name="datalayer_notification_text">AAPS kjører i forgrunnen. For å skjule dette varslet gå til Utvikleralternativer, Appvarsler, Tillatte klokkeapper, velg AAPS, slå av \"Data Layer Foreground Service Channel\"-varslet.</string>
+    <string name="on">PÅ</string>
+    <string name="off">AV</string>
 </resources>

@@ -26,7 +26,7 @@ class MsgSetHistoryEntryV2(
         val result = intFromBuff(bytes, 0, 1)
         if (result != 1) {
             failed = true
-            aapsLogger.debug(LTag.PUMPCOMM, "Set history entry result: $result FAILED!!!")
+            aapsLogger.debug(LTag.PUMPCOMM, "Set history entry result: $result ERROR!!!")
         } else {
             failed = false
             aapsLogger.debug(LTag.PUMPCOMM, "Set history entry result: $result")

@@ -1,6 +1,6 @@
 package app.aaps.core.objects.interfaces.iob
 
-import app.aaps.core.data.iob.MealData
+import app.aaps.core.interfaces.aps.MealData
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 

@@ -246,7 +246,7 @@ class ActionsFragment : DaggerFragment() {
                 binding.extendedBolus.visibility = View.GONE
                 binding.extendedBolusCancel.visibility = View.VISIBLE
                 @Suppress("SetTextI18n")
-                binding.extendedBolusCancel.text = rh.gs(app.aaps.core.ui.R.string.cancel) + " " + activeExtendedBolus.toStringMedium(dateUtil, decimalFormatter)
+                binding.extendedBolusCancel.text = rh.gs(app.aaps.core.ui.R.string.cancel) + " " + activeExtendedBolus.toStringMedium(dateUtil, rh)
             } else {
                 binding.extendedBolus.visibility = View.VISIBLE
                 binding.extendedBolusCancel.visibility = View.GONE
@@ -262,7 +262,7 @@ class ActionsFragment : DaggerFragment() {
                 binding.setTempBasal.visibility = View.GONE
                 binding.cancelTempBasal.visibility = View.VISIBLE
                 @Suppress("SetTextI18n")
-                binding.cancelTempBasal.text = rh.gs(app.aaps.core.ui.R.string.cancel) + " " + activeTemp.toStringShort(decimalFormatter)
+                binding.cancelTempBasal.text = rh.gs(app.aaps.core.ui.R.string.cancel) + " " + activeTemp.toStringShort(rh)
             } else {
                 binding.setTempBasal.visibility = View.VISIBLE
                 binding.cancelTempBasal.visibility = View.GONE

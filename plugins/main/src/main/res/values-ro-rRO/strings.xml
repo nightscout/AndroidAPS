@@ -259,7 +259,6 @@
     <string name="overview_show_deviation_slope">Panta deviaţiei</string>
     <string name="overview_show_activity">Activitate</string>
     <string name="overview_show_bgi">Impactul glicemiei</string>
-    <string name="overview_show_sensitivity">Sensibilitate</string>
     <string name="overview_show_deviations">Deviații</string>
     <string name="overview_show_cob">Carbohidrați activi</string>
     <string name="overview_show_iob">Insulină activă</string>
@@ -274,7 +273,6 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">TRAT</string>
     <string name="heartRate_shortname">RC</string>
-    <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Scară grafică</string>
     <string name="graph_menu_divider_header">Grafic</string>
     <!-- Skins -->
@@ -289,4 +287,5 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Afişează o notificare activă cu o scurtă descriere referitoare la starea buclei</string>
     <string name="old_data">DATE VECHI</string>
+    <string name="overview_show_steps">Paşi</string>
 </resources>

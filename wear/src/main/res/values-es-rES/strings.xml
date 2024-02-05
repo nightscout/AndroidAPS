@@ -35,7 +35,7 @@
     <string name="pref_show_phone_battery">Mostrar batería del teléfono</string>
     <string name="pref_show_rig_battery">Mostrar batería de la plataforma</string>
     <string name="pref_show_basal_rate">Mostrar la tasa basal</string>
-    <string name="pref_show_loop_status">Mostrar estado del lazo</string>
+    <string name="pref_show_loop_status">Mostrar estado de bucle</string>
     <string name="pref_show_bg">Mostrar glucosa</string>
     <string name="pref_show_bgi">Mostrar BGI (Índice de glucosa en sangre)</string>
     <string name="pref_show_direction_arrow">Mostrar flecha de dirección</string>
@@ -120,7 +120,7 @@
     <string name="press_to_cancel">Presiona para cancelar</string>
     <string name="cancel_bolus">CANCELAR BOLO</string>
     <string name="status_pump">Infusora</string>
-    <string name="status_loop">Lazo</string>
+    <string name="status_loop">Bucle</string>
     <string name="status_profile_switch">Cambio de perfil</string>
     <string name="status_tdd">TDD</string>
     <string name="activity_carb">COB</string>
@@ -188,7 +188,7 @@
     <string name="no_status">S: --</string>
     <string name="time_stamp_na_min_ago">-- Hace min.</string>
     <string name="delta_na">--- mg/dl</string>
-    <string name="no_loop_status">Sin estado del lazo</string>
+    <string name="no_loop_status">Sin estado del bucle</string>
     <string name="cob_000g">000g</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00U</string>
@@ -205,4 +205,16 @@
     <string name="error">!err!</string>
     <string name="pref_heartRateSampling">Ritmo cardíaco</string>
     <string name="pref_stepsSampling">Habilitar contador de pasos</string>
+    <string name="tile_tempt_1">Objetivo temporal 1</string>
+    <string name="tile_tempt_2">Objetivo temporal 2</string>
+    <string name="tile_tempt_3">Objetivo temporal 3</string>
+    <string name="tile_tempt_4">Objetivo temporal 4</string>
+    <string name="tile_action_1">Acción 1</string>
+    <string name="tile_action_2">Acción 2</string>
+    <string name="tile_action_3">Acción 3</string>
+    <string name="tile_action_4">Acción 4</string>
+    <string name="datalayer_notification_title">Servicio de primer plano de capa de datos</string>
+    <string name="datalayer_notification_text">AAPS está ejecutándose en primer plano. Para ocultar las notificaciones, vaya a las opciones de desarrollador, notificaciones de aplicaciones, aplicaciones de reloj, seleccione AAPS, desactive la notificación del canal de servicio de capa de datos.</string>
+    <string name="on">ENCENDIDO</string>
+    <string name="off">APAGADO</string>
 </resources>

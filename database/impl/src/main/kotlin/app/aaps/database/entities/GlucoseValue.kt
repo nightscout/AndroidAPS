@@ -82,6 +82,7 @@ data class GlucoseValue(
         DEXCOM_G6_NATIVE_XDRIP,
         DEXCOM_G5_NATIVE_XDRIP,
         DEXCOM_G6_G5_NATIVE_XDRIP,
+        DEXCOM_G7_NATIVE_XDRIP,
         LIBRE_1_OTHER,
         LIBRE_1_NET,
         LIBRE_1_BLUE,

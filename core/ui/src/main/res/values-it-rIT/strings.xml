@@ -338,6 +338,7 @@
     <string name="uel_export_settings">ESPORTA IMPOSTAZIONI</string>
     <string name="uel_import_settings">IMPORTA IMPOSTAZIONI</string>
     <string name="uel_reset_databases">RESETTA DATABASE</string>
+    <string name="uel_reset_aps_results">RESETTA RISULTATI APS</string>
     <string name="uel_cleanup_databases">PULIZIA DATABASE</string>
     <string name="uel_export_databases">ESPORTA DATABASE</string>
     <string name="uel_import_databases">IMPORTA DATABASE</string>

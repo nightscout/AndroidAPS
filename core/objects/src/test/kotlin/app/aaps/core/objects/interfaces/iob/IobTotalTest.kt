@@ -1,10 +1,9 @@
 package app.aaps.core.objects.interfaces.iob
 
 import android.content.Context
-import app.aaps.core.data.iob.IobTotal
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.extensions.combine
-import app.aaps.core.objects.extensions.copy
 import app.aaps.core.objects.extensions.determineBasalJson
 import app.aaps.core.objects.extensions.json
 import app.aaps.core.objects.extensions.plus

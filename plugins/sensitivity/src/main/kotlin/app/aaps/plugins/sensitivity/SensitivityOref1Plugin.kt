@@ -1,10 +1,10 @@
 package app.aaps.plugins.sensitivity
 
-import app.aaps.core.data.aps.AutosensResult
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.AutosensDataStore
+import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.Sensitivity.SensitivityType
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.PluginConstraints
@@ -149,6 +149,8 @@ class SensitivityOref1Plugin @Inject constructor(
             deviationsHour[i] = deviations
         }
         var hourUsed = 0
+        //val sens = profile.getIsfMgdl(toTime, current.bg, "SensitivityOref1Plugin")
+        val sens = current.sens
         while (hourUsed < deviationsHour.size) {
             val deviationsArray: ArrayList<Double> = deviationsHour[hourUsed]
             val pastSensitivity = pastSensitivityArray[hourUsed]
@@ -156,7 +158,6 @@ class SensitivityOref1Plugin @Inject constructor(
             if (hourUsed == 1) sensResult = "(24 hours) "
             val ratioLimit = ""
             val deviations: Array<Double> = Array(deviationsArray.size) { i -> deviationsArray[i] }
-            val sens = profile.getIsfMgdl()
             aapsLogger.debug(LTag.AUTOSENS, "Records: $index   $pastSensitivity")
             Arrays.sort(deviations)
             val pSensitive = Percentile.percentile(deviations, 0.50)

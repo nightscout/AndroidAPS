@@ -170,7 +170,7 @@ class OverviewPlugin @Inject constructor(
             .put(IntKey.OverviewBattWarning, preferences, rh)
             .put(IntKey.OverviewBattCritical, preferences, rh)
             .put(IntKey.OverviewBolusPercentage, preferences, rh)
-            .put(rh.gs(app.aaps.core.utils.R.string.key_used_autosens_on_main_phone), constraintsChecker.isAutosensModeEnabled().value()) // can be disabled by activated DynISF
+            .put(rh.gs(app.aaps.core.utils.R.string.key_used_autosens_on_main_phone), constraintsChecker.isAutosensModeEnabled().value())
 
     override fun applyConfiguration(configuration: JSONObject) {
         val previousUnits = preferences.getIfExists(StringKey.GeneralUnits) ?: "old"

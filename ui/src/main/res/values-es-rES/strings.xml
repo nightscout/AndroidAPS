@@ -48,9 +48,9 @@
     <string name="timeshift_label">Cambio de hora</string>
     <string name="percentage_label">Porcentaje</string>
     <!-- LoopDialog -->
-    <string name="suspendloopfor1h">Suspender lazo durante 1 hora</string>
-    <string name="suspendloopfor2h">Suspender lazo durante 2 horas</string>
-    <string name="suspendloopfor3h">Suspender lazo durante 3 horas</string>
+    <string name="suspendloopfor1h">Suspender bucle durante 1 hora</string>
+    <string name="suspendloopfor2h">Suspender bucle durante 2 horas</string>
+    <string name="suspendloopfor3h">Suspender bucle durante 3 horas</string>
     <string name="suspendloopfor10h">Suspender bucle durante 10 horas</string>
     <string name="disconnectpump">Desconectar bomba</string>
     <string name="disconnectpumpfor15m">Desconectar la bomba durante 15 minutos</string>
@@ -101,12 +101,12 @@
     <string name="show_invalidated">Mostrar invalidados</string>
     <string name="hide_invalidated">Ocultar invalidados</string>
     <string name="careportal_remove_started_events">Eliminar registros de inicio de AAPS</string>
-    <string name="hide_loop">Ocultar lazo</string>
-    <string name="show_loop">Mostrar lazo</string>
+    <string name="hide_loop">Ocultar bucle</string>
+    <string name="show_loop">Mostrar bucle</string>
     <string name="user_entry">Registro por parte del usuario</string>
     <string name="clone_label">Duplicar</string>
-    <string name="show_loop_records">Mostrar registros del lazo</string>
-    <string name="show_hide_records">Ocultar registros del lazo</string>
+    <string name="show_loop_records">Mostrar registros del bucle</string>
+    <string name="show_hide_records">Ocultar registros del bucle</string>
     <!-- ProfileHelperActivity -->
     <string name="profile1">Perfil 1</string>
     <string name="profile2">Perfil 2</string>

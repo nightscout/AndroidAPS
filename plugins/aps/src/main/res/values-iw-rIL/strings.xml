@@ -10,7 +10,7 @@
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[הורד רגישות עבור ערך מטרה זמני < 100]]></string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">רגישות דינאמית</string>
-    <string name="smb_interval_summary">תדירות מתן SMB בדקות</string>
+    <string name="smb_interval_summary">תדירות מתן SMB (דקות)</string>
     <string name="resistance_lowers_target_title">תנגודת מורידה את ערך המטרה</string>
     <string name="resistance_lowers_target_summary">כשמזוהה תנגודת, הורד את ערך המטרה של הגלוקוז</string>
     <string name="sensitivity_raises_target_title">רגישות מעלה את ערך המטרה</string>
@@ -40,7 +40,7 @@
     <string name="openapsma_autosensdata_label">נתוני חישוב רגישות אוטו\'</string>
     <string name="openapsma_script_debug_data_label">תיקון באגים בסקריפט</string>
     <string name="openapsama_use_autosens">אפשר חישוב רגישות אוטומטי (Autosens)</string>
-    <string name="openapsma_max_basal_title">מינון בזאלי זמני מקסימלי (יח\'\שעה)</string>
+    <string name="openapsma_max_basal_title">מינון בזאלי זמני מקסימלי (יח\'\\שעה)</string>
     <string name="openapsma_max_basal_summary">ערך זה נקרא בזאלי מרבי ב-OpenAPS</string>
     <string name="openapsma_max_iob_title">בזאלי פעיל מרבי ש-OpenAPS יכול לספק (יחידות)</string>
     <string name="openapsma_max_iob_summary">ערך זה נקרא אינסולין פעיל מקסימלי (Max IOB) ב-OpenAPS. זהו מקסימום האינסולין הפעיל ב-[U] ש-APS מאפשר.</string>
@@ -61,10 +61,10 @@
     <string name="enable_smb">אפשר SMB</string>
     <string name="enable_smb_summary">השתמש בסופר מיקרו בולוסים במקום בבזאלי זמני לפעילות מהירה יותר</string>
     <string name="enable_uam_summary">זיהוי של ארוחות לא מוכרזות</string>
-    <string name="enable_smb_always">הפעלת SMB תמיד</string>
+    <string name="enable_smb_always">הפעל SMB תמיד</string>
     <string name="enable_smb_always_summary">אפשר SMB תמיד באופן עצמאי מבולוסים. אפשרי רק עם מקור ערכי סוכר עם דיוק של נתונים כמו G5</string>
-    <string name="enable_smb_after_carbs">הפעלת SMB אחרי פחמימות</string>
-    <string name="enable_smb_after_carbs_summary">הפעלת SMB במשך 6 ש\' אחרי פחמימות, גם אם אין פחמ\' פעילות. אפשרי רק עם מקור ערכי סוכר עם דיוק נתונים כמו G5</string>
+    <string name="enable_smb_after_carbs">הפעל SMB אחרי פחמימות</string>
+    <string name="enable_smb_after_carbs_summary">הפעלת SMB במשך 6 ש\' אחרי פחמימות, גם אם אין פחמ\' פעילות. אפשרי רק עם מקור ערכי סוכר מדויק כמו G6</string>
     <string name="enable_smb_with_cob">הפעלת SMB עם פחמ\' פעילות</string>
     <string name="enable_smb_with_cob_summary">הפעלת SMB כשיש פחמ\' פעילות.</string>
     <string name="enable_smb_with_temp_target">הפעלת SMB עם ערכי מטרה זמניים</string>
@@ -74,7 +74,7 @@
     <string name="smb_max_minutes_summary">מקסימום הדקות של בזאלי אליו SMB מוגבל</string>
     <string name="uam_smb_max_minutes">מקס\' דקות של SMB UAM</string>
     <string name="uam_smb_max_minutes_summary">מקס\' דקות של בזאלי להגבלת SMB לארוחות לא מוכרזות</string>
-    <string name="carbs_req_threshold">סף מינ\' הפחמימות הנדרשות להצעה</string>
+    <string name="carbs_req_threshold">סף מינימום הפחמימות הנדרשות להצעה</string>
     <string name="carbs_req_threshold_summary">כמות הפחמ\' המינימלית (גר\') הדרושה כדי שתוצג התראה על הצעת פחמימות. לא תוצגנה התראות על הצעות הנמוכות מכמות זו.</string>
     <string name="lgs_threshold_summary">ערך הסוכר שמתחתיו מושעה הזרקת אינסולין. ערך ברירת המחדל משתמש במודל מטרה סטנדרטי. המשתמש יכול להגדיר ערך בין 60 ל-100 מג\"\\ד\"ל. ערכים מתחת ל-65 מביאים לשימוש במודל ברירת המחדל</string>
     <string name="lgs_threshold_title">רמת הסוכר נמוכה מסף ההשהיה עקב סוכר נמוך</string>
@@ -84,7 +84,8 @@
     <string name="smb_disabled_in_preferences">SMB מושבת בהעדפות</string>
     <string name="uam_disabled_in_preferences">UAM מושבת בהעדפות</string>
     <string name="autosens_disabled_in_preferences">Autosens מושבת בהעדפות</string>
-    <string name="autosens_disabled_in_dyn_isf">אוטוסנס כבוי ברגישות דינאמית</string>
+    <string name="use_dynamic_sensitivity_title">אפשר רגישות דינמית</string>
+    <string name="use_dynamic_sensitivity_summary">שנה אלגוריתם לשימוש ברגישות דינמית במקום ערך הפרופיל</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">הגבלת IOB ל-%1$.1f יח\' בגלל %2$s</string>
     <string name="maxvalueinpreferences">ערך מקסימלי בהעדפות</string>

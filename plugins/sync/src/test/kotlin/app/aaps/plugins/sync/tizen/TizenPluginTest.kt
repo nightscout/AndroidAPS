@@ -1,14 +1,15 @@
 package app.aaps.plugins.sync.tizen
 
 import app.aaps.core.data.iob.CobInfo
-import app.aaps.core.data.iob.GlucoseStatus
 import app.aaps.core.data.iob.InMemoryGlucoseValue
-import app.aaps.core.data.iob.IobTotal
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TB
 import app.aaps.core.interfaces.aps.AutosensDataStore
+import app.aaps.core.interfaces.aps.GlucoseStatus
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.aps.RT
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
@@ -16,7 +17,6 @@ import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.shared.tests.BundleMock
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
-import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyLong
@@ -37,7 +37,7 @@ internal class TizenPluginTest : TestBaseWithProfile() {
     fun setUp() {
         sut = TizenPlugin(
             aapsLogger, rh, aapsSchedulers, context, dateUtil, fabricPrivacy, rxBus, iobCobCalculator, processedTbrEbData, profileFunction, preferences, processedDeviceStatusData,
-            loop, activePlugin, receiverStatusStore, config, glucoseStatusProvider, decimalFormatter
+            loop, activePlugin, receiverStatusStore, config, glucoseStatusProvider
         )
         Mockito.`when`(iobCobCalculator.ads).thenReturn(autosensDataStore)
         Mockito.`when`(autosensDataStore.lastBg()).thenReturn(InMemoryGlucoseValue(1000, 100.0, sourceSensor = SourceSensor.UNKNOWN))
@@ -59,9 +59,9 @@ internal class TizenPluginTest : TestBaseWithProfile() {
         Mockito.`when`(glucoseStatusProvider.glucoseStatusData).thenReturn(GlucoseStatus(100.0))
         Mockito.`when`(processedDeviceStatusData.openAPSData).thenReturn(ProcessedDeviceStatusData.OpenAPSData().also {
             it.clockSuggested = 1000L
-            it.suggested = JSONObject()
+            it.suggested = RT(runningDynamicIsf = false)
             it.clockEnacted = 1000L
-            it.enacted = JSONObject()
+            it.enacted = RT(runningDynamicIsf = false)
         })
     }
 

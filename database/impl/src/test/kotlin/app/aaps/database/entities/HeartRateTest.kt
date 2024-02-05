@@ -24,6 +24,14 @@ class HeartRateTest {
         assertFalse(hr1.contentEqualsTo(hr1.copy(isValid = false)))
     }
 
+    fun HeartRate.contentEqualsTo(other: HeartRate): Boolean {
+        return this === other || (
+            duration == other.duration &&
+                timestamp == other.timestamp &&
+                beatsPerMinute == other.beatsPerMinute &&
+                isValid == other.isValid)
+    }
+
     companion object {
 
         fun createHeartRate(timestamp: Long? = null, beatsPerMinute: Double = 80.0) =

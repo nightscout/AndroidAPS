@@ -20,6 +20,11 @@
     <string name="pref_vibrate_on_bolus">Bei Bolus vibrieren</string>
     <string name="pref_units_for_actions">Einheit (mg/dl od. mmol/l)</string>
     <string name="units_short">E</string>
+    <string name="pref_display_settings">Anzeige</string>
+    <string name="pref_graph_settings">Diagramm</string>
+    <string name="pref_interface_settings">Aussehen</string>
+    <string name="pref_others_settings">Sonstiges</string>
+    <string name="pref_complication_settings">Komplikation</string>
     <string name="pref_show_date">Datum anzeigen</string>
     <string name="pref_show_iob">IOB anzeigen</string>
     <string name="pref_show_detailed_iob">Zeige detailliertes IOB</string>
@@ -35,8 +40,12 @@
     <string name="pref_show_bgi">Zeige BGI</string>
     <string name="pref_show_direction_arrow">Trendpfeil anzeigen</string>
     <string name="pref_show_ago">Min. seit letztem Wert</string>
+    <string name="pref_show_temp_basal">TBR anzeigen</string>
+    <string name="pref_show_bolus">Bolus &amp; SMB anzeigen</string>
+    <string name="pref_show_grid">Raster anzeigen</string>
     <string name="pref_dark" comment="Enables dark visual theme">Dunkel</string>
     <string name="pref_highlight_basals">Basal hervorheben</string>
+    <string name="pref_prediction_lines">Vorhersagen anzeigen</string>
     <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Querbalken farbgleich</string>
     <string name="pref_chart_timeframe">Zeitraum Diagramm</string>
     <string name="pref_1_hour">1 Std.</string>

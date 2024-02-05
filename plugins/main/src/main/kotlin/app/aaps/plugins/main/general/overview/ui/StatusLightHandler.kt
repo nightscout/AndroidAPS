@@ -53,7 +53,7 @@ class StatusLightHandler @Inject constructor(
         val bgSource = activePlugin.activeBgSource
         handleAge(cannulaAge, TE.Type.CANNULA_CHANGE, IntKey.OverviewCageWarning, IntKey.OverviewCageCritical)
         handleAge(insulinAge, TE.Type.INSULIN_CHANGE, IntKey.OverviewIageWarning, IntKey.OverviewIageCritical)
-        handleAge(sensorAge, TE.Type.SENSOR_CHANGE, IntKey.OverviewCageWarning, IntKey.OverviewCageCritical)
+        handleAge(sensorAge, TE.Type.SENSOR_CHANGE, IntKey.OverviewSageWarning, IntKey.OverviewSageCritical)
         if (pump.pumpDescription.isBatteryReplaceable || pump.isBatteryChangeLoggingEnabled()) {
             handleAge(batteryAge, TE.Type.PUMP_BATTERY_CHANGE, IntKey.OverviewBageWarning, IntKey.OverviewBageCritical)
         }
@@ -120,7 +120,8 @@ class StatusLightHandler @Inject constructor(
         view: TextView?, criticalSetting: IntKey, warnSetting: IntKey, level: Double, units: String, maxReading: Double
     ) {
         if (level >= maxReading) {
-            view?.text = decimalFormatter.to0Decimal(maxReading, units)
+            @Suppress("SetTextI18n")
+            view?.text = "${decimalFormatter.to0Decimal(maxReading)}+$units"
             view?.setTextColor(rh.gac(view.context, app.aaps.core.ui.R.attr.defaultTextColor))
         } else {
             handleLevel(view, criticalSetting, warnSetting, level, units)
@@ -132,7 +133,7 @@ class StatusLightHandler @Inject constructor(
             val therapyEvent = persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.CANNULA_CHANGE)
             val usage =
                 if (therapyEvent != null) {
-                    tddCalculator.calculate(therapyEvent.timestamp, dateUtil.now(), allowMissingData = false)?.totalAmount ?: 0.0
+                    tddCalculator.calculateInterval(therapyEvent.timestamp, dateUtil.now(), allowMissingData = false)?.totalAmount ?: 0.0
                 } else 0.0
             runOnUiThread {
                 view?.text = decimalFormatter.to0Decimal(usage, units)

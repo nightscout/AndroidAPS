@@ -13,7 +13,7 @@
     <string name="alreadydisabled">Ya está deshabilitado</string>
     <string name="alreadysuspended">Ya está suspendido</string>
     <string name="notsuspended">No suspendido</string>
-    <string name="suspendloopforXmin">Suspender lazo durante %1$d min</string>
+    <string name="suspendloopforXmin">Suspender bucle durante %1$d min</string>
     <string name="notification_message">Notificación: %1$s</string>
     <string name="profilename">Cambiar perfil a</string>
     <string name="changengetoprofilename">Cambiar perfil a %1$s</string>

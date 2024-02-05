@@ -258,7 +258,6 @@
     <string name="overview_show_deviation_slope">Pente de déviations</string>
     <string name="overview_show_activity">Activité</string>
     <string name="overview_show_bgi">Impact glycémique</string>
-    <string name="overview_show_sensitivity">Sensibilité</string>
     <string name="overview_show_deviations">Déviations</string>
     <string name="overview_show_cob">Glucides actifs</string>
     <string name="overview_show_iob">Insuline Active</string>
@@ -273,7 +272,6 @@
     <string name="devslope_shortname">PENTEDEV</string>
     <string name="treatments_shortname">TRAIT</string>
     <string name="heartRate_shortname">FC</string>
-    <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Échelle du graph.</string>
     <string name="graph_menu_divider_header">Graph</string>
     <!-- Skins -->
@@ -288,7 +286,6 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Affiche une notification en cours avec un bref aperçu de ce que fait votre Boucle</string>
     <string name="old_data">DONNÉES ANCIENNES</string>
-    <string name="overview_show_steps">pas</string>
     <string name="steps_shortname">PAS</string>
     <string name="simple_mode_enabled">Mode simple activé</string>
 </resources>

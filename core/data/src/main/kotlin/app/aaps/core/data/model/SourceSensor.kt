@@ -15,6 +15,7 @@ enum class SourceSensor(val text: String) {
     DEXCOM_G6_NATIVE_XDRIP("G6 Native"),
     DEXCOM_G5_NATIVE_XDRIP("G5 Native"),
     DEXCOM_G6_G5_NATIVE_XDRIP("G6 Native / G5 Native"),
+    DEXCOM_G7_NATIVE_XDRIP("G7"),
     LIBRE_1_OTHER("Other App"),
     LIBRE_1_NET("Network libre"),
     LIBRE_1_BLUE("BlueReader"),

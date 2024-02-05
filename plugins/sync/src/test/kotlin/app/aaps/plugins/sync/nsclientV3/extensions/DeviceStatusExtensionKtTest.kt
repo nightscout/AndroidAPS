@@ -2,6 +2,7 @@ package app.aaps.plugins.sync.nsclientV3.extensions
 
 import app.aaps.core.data.model.DS
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -27,6 +28,7 @@ internal class DeviceStatusExtensionKtTest : TestBase() {
     @Mock lateinit var config: Config
     @Mock lateinit var runningConfiguration: RunningConfiguration
     @Mock lateinit var instantiator: Instantiator
+    @Mock lateinit var persistenceLayer: PersistenceLayer
 
     private lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
     private lateinit var nsDeviceStatusHandler: NSDeviceStatusHandler
@@ -34,7 +36,7 @@ internal class DeviceStatusExtensionKtTest : TestBase() {
     @BeforeEach
     fun setup() {
         processedDeviceStatusData = ProcessedDeviceStatusDataImpl(rh, dateUtil, sp, instantiator)
-        nsDeviceStatusHandler = NSDeviceStatusHandler(sp, config, dateUtil, runningConfiguration, processedDeviceStatusData)
+        nsDeviceStatusHandler = NSDeviceStatusHandler(sp, config, dateUtil, runningConfiguration, processedDeviceStatusData, aapsLogger, persistenceLayer)
         Mockito.`when`(config.NSCLIENT).thenReturn(true)
     }
 

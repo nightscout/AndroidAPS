@@ -25,13 +25,12 @@ import android.widget.TextView
 import androidx.core.text.toSpanned
 import androidx.recyclerview.widget.LinearLayoutManager
 import app.aaps.core.data.configuration.Constants
-import app.aaps.core.data.iob.IobTotal
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.aps.Loop
-import app.aaps.core.interfaces.aps.VariableSensitivityResult
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.configuration.Config
@@ -98,7 +97,6 @@ import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.core.ui.extensions.toVisibilityKeepSpace
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.databinding.OverviewFragmentBinding
 import app.aaps.plugins.main.general.overview.graphData.GraphData
@@ -453,7 +451,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                             if (lastRun?.lastAPSRun != null && lastRun.constraintsProcessed?.isChangeRequested == true) {
                                 protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable {
                                     if (isAdded)
-                                        OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.tempbasal_label), lastRun.constraintsProcessed?.toSpanned()
+                                        OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.tempbasal_label), lastRun.constraintsProcessed?.resultAsSpanned()
                                             ?: "".toSpanned(), {
                                                                       uel.log(Action.ACCEPTS_TEMP_BASAL, Sources.Overview)
                                                                       (context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?)?.cancel(Constants.notificationID)
@@ -575,7 +573,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             _binding ?: return@runOnUiThread
             if (showAcceptButton && pump.isInitialized() && !pump.isSuspended() && (loop as PluginBase).isEnabled()) {
                 binding.buttonsLayout.acceptTempButton.visibility = View.VISIBLE
-                binding.buttonsLayout.acceptTempButton.text = "${rh.gs(R.string.set_basal_question)}\n${lastRun!!.constraintsProcessed}"
+                binding.buttonsLayout.acceptTempButton.text = "${rh.gs(R.string.set_basal_question)}\n${lastRun?.constraintsProcessed?.resultAsString()}"
             } else {
                 binding.buttonsLayout.acceptTempButton.visibility = View.GONE
             }
@@ -988,7 +986,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     // If the target is not the same as set in the profile then oref has overridden it
                     val targetUsed =
                         if (config.APS) loop.lastRun?.constraintsProcessed?.targetBG ?: 0.0
-                        else if (config.NSCLIENT) JsonHelper.safeGetDouble(processedDeviceStatusData.getAPSResult().json, "targetBG")
+                        else if (config.NSCLIENT) processedDeviceStatusData.getAPSResult()?.targetBG ?: 0.0
                         else 0.0
 
                     if (targetUsed != 0.0 && abs(profile.getTargetMgdl() - targetUsed) > 0.01) {
@@ -1063,6 +1061,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             var useCobForScale = false
             var useDevForScale = false
             var useRatioForScale = false
+            var useVarSensForScale = false
             var useDSForScale = false
             var useBGIForScale = false
             var useHRForScale = false
@@ -1074,6 +1073,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal]      -> useDevForScale = true
                 menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal]      -> useBGIForScale = true
                 menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]      -> useRatioForScale = true
+                menuChartSettings[g + 1][OverviewMenus.CharType.VAR_SEN.ordinal]  -> useVarSensForScale = true
                 menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] -> useDSForScale = true
                 menuChartSettings[g + 1][OverviewMenus.CharType.HR.ordinal]       -> useHRForScale = true
                 menuChartSettings[g + 1][OverviewMenus.CharType.STEPS.ordinal]    -> useSTEPSForScale = true
@@ -1086,6 +1086,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             if (menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal]) secondGraphData.addDeviations(useDevForScale, 1.0)
             if (menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal]) secondGraphData.addMinusBGI(useBGIForScale, if (alignDevBgiScale) 1.0 else 0.8)
             if (menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]) secondGraphData.addRatio(useRatioForScale, if (useRatioForScale) 1.0 else 0.8)
+            if (menuChartSettings[g + 1][OverviewMenus.CharType.VAR_SEN.ordinal]) secondGraphData.addVarSens(useVarSensForScale, if (useVarSensForScale) 1.0 else 0.8)
             if (menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] && config.isDev()) secondGraphData.addDeviationSlope(
                 useDSForScale,
                 if (useDSForScale) 1.0 else 0.8,
@@ -1108,6 +1109,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal] ||
                     menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal] ||
                     menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal] ||
+                    menuChartSettings[g + 1][OverviewMenus.CharType.VAR_SEN.ordinal] ||
                     menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] ||
                     menuChartSettings[g + 1][OverviewMenus.CharType.HR.ordinal] ||
                     menuChartSettings[g + 1][OverviewMenus.CharType.STEPS.ordinal]
@@ -1135,24 +1137,26 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
         binding.infoLayout.sensitivity.text =
             lastAutosensData?.let {
-                String.format(Locale.ENGLISH, "%.0f%%", it.autosensResult.ratio * 100)
+                String.format(Locale.ENGLISH, "AS: %.0f%%", it.autosensResult.ratio * 100)
             } ?: ""
         // Show variable sensitivity
         val profile = profileFunction.getProfile()
         val request = loop.lastRun?.request
-        val isfMgdl = profile?.getIsfMgdl()
+        val isfMgdl = profile?.getProfileIsfMgdl()
         val variableSens =
-            if (config.APS && request is VariableSensitivityResult) request.variableSens ?: 0.0
-            else if (config.NSCLIENT) JsonHelper.safeGetDouble(processedDeviceStatusData.getAPSResult().json, "variable_sens")
+            if (config.APS) request?.variableSens ?: 0.0
+            else if (config.NSCLIENT) processedDeviceStatusData.getAPSResult()?.variableSens ?: 0.0
             else 0.0
+        val ratioUsed = request?.autosensResult?.ratio ?: 1.0
 
         if (variableSens != isfMgdl && variableSens != 0.0 && isfMgdl != null) {
-            binding.infoLayout.variableSensitivity.text =
-                String.format(
-                    Locale.getDefault(), "%1$.1f→%2$.1f",
-                    profileUtil.fromMgdlToUnits(isfMgdl, profileFunction.getUnits()),
-                    profileUtil.fromMgdlToUnits(variableSens, profileFunction.getUnits())
-                )
+            var text = if (ratioUsed != 1.0 && ratioUsed != lastAutosensData?.autosensResult?.ratio) String.format(Locale.getDefault(), "%.0f%%\n", ratioUsed * 100) else ""
+            text += String.format(
+                Locale.getDefault(), "%1$.1f→%2$.1f",
+                profileUtil.fromMgdlToUnits(isfMgdl, profileFunction.getUnits()),
+                profileUtil.fromMgdlToUnits(variableSens, profileFunction.getUnits())
+            )
+            binding.infoLayout.variableSensitivity.text = text
             binding.infoLayout.variableSensitivity.visibility = View.VISIBLE
         } else binding.infoLayout.variableSensitivity.visibility = View.GONE
     }

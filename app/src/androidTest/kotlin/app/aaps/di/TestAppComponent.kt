@@ -2,7 +2,7 @@ package app.aaps.di
 
 import app.aaps.core.objects.di.CoreModule
 import app.aaps.core.validators.di.ValidatorsModule
-import app.aaps.database.impl.di.TestDatabaseModule
+import app.aaps.database.di.TestDatabaseModule
 import app.aaps.database.persistence.di.PersistenceModule
 import app.aaps.implementation.di.ImplementationModule
 import app.aaps.plugins.aps.di.ApsModule
@@ -47,6 +47,7 @@ import javax.inject.Singleton
         // Inject TestApplication
         TestModule::class,
         TestsInjectionModule::class,
+        AlgModule::class,
         // Common modules
         AndroidInjectionModule::class,
 

@@ -88,7 +88,8 @@
     <string name="smb_disabled_in_preferences">SMB disabled in preferences</string>
     <string name="uam_disabled_in_preferences">UAM disabled in preferences</string>
     <string name="autosens_disabled_in_preferences">Autosens disabled in preferences</string>
-    <string name="autosens_disabled_in_dyn_isf">Autosens disabled in DynISF</string>
+    <string name="use_dynamic_sensitivity_title">Enable dynamic sensitivity</string>
+    <string name="use_dynamic_sensitivity_summary">Adjust algorithm to use dynamic sensitivity instead of profile value</string>
 
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">Limiting IOB to %1$.1f U because of %2$s</string>
@@ -126,6 +127,7 @@
     <string name="loop_open_mode_min_change">Minimal request change [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Open Loop will popup new change request only if change is bigger than this value in %. Default value is 20%</string>
     <string name="fallback_smb_no_tdd">Fallback to SMB. Not enough TDD data.</string>
+    <string name="fallback_to_isf_no_tdd">Fallback to profile sensitivity. Not enough TDD data.</string>
 
 
 </resources>

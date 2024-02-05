@@ -153,6 +153,8 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">CÍL</string>
     <string name="basal_short">BAZ</string>
+    <string name="isf_dynamic_label">Váš algoritmus může poskytnout dynamický výpočet ISF. Níže uvedené hodnoty jsou použity pouze jako záložní v případě chybějících údajů</string>
+    <string name="ic_dynamic_label">Váš algoritmus může poskytnout dynamický výpočet IC. Níže uvedené hodnoty jsou použity pouze jako záložní v případě chybějících dat</string>
     <!-- Actions -->
     <string name="actions">Akce</string>
     <string name="description_actions">Tlačítka k běžně používaným úkonům</string>
@@ -258,12 +260,13 @@
     <string name="overview_show_deviation_slope">Odchylka sklonu</string>
     <string name="overview_show_activity">Aktivita</string>
     <string name="overview_show_bgi">Vliv na hladinu glukózy</string>
-    <string name="overview_show_sensitivity">Citlivost</string>
+    <string name="overview_show_sensitivity">Změna citlivosti</string>
     <string name="overview_show_deviations">Odchylky</string>
     <string name="overview_show_cob">Zbývající sacharidy</string>
     <string name="overview_show_iob">Zbývající inzulín</string>
     <string name="overview_show_basals">Bazály</string>
     <string name="overview_show_abs_insulin">Absolutní inzulin</string>
+    <string name="overview_show_variable_sens">Proměnná citlivost</string>
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAZ</string>
     <string name="deviation_shortname">ODCH</string>
@@ -273,7 +276,8 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">OŠET</string>
     <string name="heartRate_shortname">TF</string>
-    <string name="sensitivity_shortname">SENZ</string>
+    <string name="sensitivity_shortname">SEN%</string>
+    <string name="variable_sensitivity_shortname">VSEN</string>
     <string name="graph_scale">Měřítko grafu</string>
     <string name="graph_menu_divider_header">Graf</string>
     <!-- Skins -->
@@ -288,7 +292,7 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Zobrazení průběžného oznámení v Androidu s krátkým přehledem, co smyčka právě dělá</string>
     <string name="old_data">ZASTARALÉ</string>
-    <string name="overview_show_steps">kroky</string>
+    <string name="overview_show_steps">Kroky</string>
     <string name="steps_shortname">KROKY</string>
     <string name="simple_mode_enabled">Jednoduchý režim povolen</string>
 </resources>

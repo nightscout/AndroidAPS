@@ -12,10 +12,9 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.view.View
 import android.widget.RemoteViews
-import app.aaps.core.data.iob.IobTotal
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.aps.Loop
-import app.aaps.core.interfaces.aps.VariableSensitivityResult
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -24,6 +23,7 @@ import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.overview.LastBgData
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -71,6 +71,7 @@ class Widget : AppWidgetProvider() {
     @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var decimalFormatter: DecimalFormatter
     @Inject lateinit var persistenceLayer: PersistenceLayer
+    @Inject lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
 
     companion object {
 
@@ -272,30 +273,32 @@ class Widget : AppWidgetProvider() {
     }
 
     private fun updateSensitivity(views: RemoteViews) {
+        val lastAutosensData = iobCobCalculator.ads.getLastAutosensData("Widget", aapsLogger, dateUtil)
         if (constraintChecker.isAutosensModeEnabled().value())
             views.setImageViewResource(R.id.sensitivity_icon, app.aaps.core.objects.R.drawable.ic_swap_vert_black_48dp_green)
         else
             views.setImageViewResource(R.id.sensitivity_icon, app.aaps.core.objects.R.drawable.ic_x_swap_vert)
-        views.setTextViewText(R.id.sensitivity, iobCobCalculator.ads.getLastAutosensData("Overview", aapsLogger, dateUtil)?.let { autosensData ->
-            String.format(Locale.ENGLISH, "%.0f%%", autosensData.autosensResult.ratio * 100)
+        views.setTextViewText(R.id.sensitivity, lastAutosensData?.let {
+            String.format(Locale.ENGLISH, "%.0f%%", it.autosensResult.ratio * 100)
         } ?: "")
 
         // Show variable sensitivity
         val request = loop.lastRun?.request
-        if (request is VariableSensitivityResult) {
-            val isfMgdl = profileFunction.getProfile()?.getIsfMgdl()
-            val variableSens = request.variableSens
-            if (variableSens != isfMgdl && variableSens != null && isfMgdl != null) {
-                views.setTextViewText(
-                    R.id.variable_sensitivity,
-                    String.format(
-                        Locale.getDefault(), "%1$.1f→%2$.1f",
-                        profileUtil.fromMgdlToUnits(isfMgdl),
-                        profileUtil.fromMgdlToUnits(variableSens)
-                    )
-                )
-                views.setViewVisibility(R.id.variable_sensitivity, View.VISIBLE)
-            } else views.setViewVisibility(R.id.variable_sensitivity, View.GONE)
+        val isfMgdl = profileFunction.getProfile()?.getIsfMgdl("Widget")
+        val variableSens =
+            if (config.APS) request?.variableSens ?: 0.0
+            else if (config.NSCLIENT) processedDeviceStatusData.getAPSResult()?.variableSens ?: 0.0
+            else 0.0
+        val ratioUsed = request?.autosensResult?.ratio ?: 1.0
+        if (variableSens != isfMgdl && variableSens != 0.0 && isfMgdl != null) {
+            var text = if (ratioUsed != 1.0 && ratioUsed != lastAutosensData?.autosensResult?.ratio) String.format(Locale.getDefault(), "%.0f%%\n", ratioUsed * 100) else ""
+            text += String.format(
+                Locale.getDefault(), "%1$.1f→%2$.1f",
+                profileUtil.fromMgdlToUnits(isfMgdl, profileFunction.getUnits()),
+                profileUtil.fromMgdlToUnits(variableSens, profileFunction.getUnits())
+            )
+            views.setTextViewText(R.id.variable_sensitivity, text)
+            views.setViewVisibility(R.id.variable_sensitivity, View.VISIBLE)
         } else views.setViewVisibility(R.id.variable_sensitivity, View.GONE)
     }
 }

@@ -157,7 +157,7 @@ class KeepAliveWorker(
     private fun checkPump() {
         val pump = activePlugin.activePump
         val ps = profileFunction.getRequestedProfile() ?: return
-        val requestedProfile = ProfileSealed.PS(ps)
+        val requestedProfile = ProfileSealed.PS(ps, activePlugin)
         val runningProfile = profileFunction.getProfile()
         val lastConnection = pump.lastDataTime()
         val now = dateUtil.now()

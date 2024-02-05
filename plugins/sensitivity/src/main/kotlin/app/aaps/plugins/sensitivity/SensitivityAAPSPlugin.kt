@@ -1,10 +1,10 @@
 package app.aaps.plugins.sensitivity
 
-import app.aaps.core.data.aps.AutosensResult
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.AutosensDataStore
+import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.Sensitivity.SensitivityType
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -105,7 +105,8 @@ class SensitivityAAPSPlugin @Inject constructor(
             index++
         }
         val deviations = Array(deviationsArray.size) { i -> deviationsArray[i] }
-        val sens = profile.getIsfMgdl()
+        //val sens = profile.getIsfMgdl(toTime, current.bg, "SensitivityAAPSPlugin")
+        val sens = current.sens
         val ratioLimit = ""
         val sensResult: String
         aapsLogger.debug(LTag.AUTOSENS, "Records: $index   $pastSensitivity")

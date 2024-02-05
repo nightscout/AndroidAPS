@@ -8,7 +8,6 @@ import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profiling.Profiler
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
@@ -22,9 +21,10 @@ import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.implementation.iob.GlucoseStatusProviderImpl
+import app.aaps.plugins.aps.openAPSAMA.DetermineBasalAMA
 import app.aaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
+import app.aaps.plugins.aps.openAPSSMB.DetermineBasalSMB
 import app.aaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
-import app.aaps.plugins.aps.openAPSSMBDynamicISF.OpenAPSSMBDynamicISFPlugin
 import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import app.aaps.plugins.constraints.objectives.objectives.Objective
 import app.aaps.plugins.constraints.safety.SafetyPlugin
@@ -64,7 +64,8 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
     @Mock lateinit var insightDatabase: InsightDatabase
     @Mock lateinit var bgQualityCheck: BgQualityCheck
     @Mock lateinit var tddCalculator: TddCalculator
-    @Mock lateinit var importExportPrefs: ImportExportPrefs
+    @Mock lateinit var determineBasalSMB: DetermineBasalSMB
+    @Mock lateinit var determineBasalAMA: DetermineBasalAMA
 
     private lateinit var danaPump: DanaPump
     private lateinit var insightDbHelper: InsightDbHelper
@@ -76,7 +77,6 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
     private lateinit var insightPlugin: InsightPlugin
     private lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
     private lateinit var openAPSAMAPlugin: OpenAPSAMAPlugin
-    private lateinit var openAPSSMBDynamicISFPlugin: OpenAPSSMBDynamicISFPlugin
 
     init {
         addInjector {
@@ -147,19 +147,14 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         )
         openAPSSMBPlugin =
             OpenAPSSMBPlugin(
-                injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, context, activePlugin, iobCobCalculator,
-                processedTbrEbData, hardLimits, profiler, preferences, dateUtil, persistenceLayer, glucoseStatusProvider, bgQualityCheck, tddCalculator, importExportPrefs, config
-            )
-        openAPSSMBDynamicISFPlugin =
-            OpenAPSSMBDynamicISFPlugin(
-                injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, context, activePlugin, iobCobCalculator,
-                processedTbrEbData, hardLimits, profiler, sp, preferences, dateUtil, persistenceLayer, glucoseStatusProvider, bgQualityCheck, tddCalculator, importExportPrefs,
-                config, uiInteraction, objectivesPlugin
+                injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, profileUtil, config, activePlugin, iobCobCalculator,
+                hardLimits, preferences, dateUtil, processedTbrEbData, persistenceLayer, glucoseStatusProvider, tddCalculator, bgQualityCheck,
+                uiInteraction, determineBasalSMB, profiler
             )
         openAPSAMAPlugin =
             OpenAPSAMAPlugin(
-                injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, context, activePlugin, iobCobCalculator,
-                processedTbrEbData, hardLimits, profiler, fabricPrivacy, dateUtil, persistenceLayer, glucoseStatusProvider, preferences, importExportPrefs, config
+                injector, aapsLogger, rxBus, constraintChecker, rh, config, profileFunction, activePlugin, iobCobCalculator, processedTbrEbData,
+                hardLimits, dateUtil, persistenceLayer, glucoseStatusProvider, preferences, determineBasalAMA
             )
         safetyPlugin =
             SafetyPlugin(

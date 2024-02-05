@@ -338,6 +338,7 @@
     <string name="uel_export_settings">EKSPORTER INNSTILLINGER</string>
     <string name="uel_import_settings">IMPORTER INNSTILLINGER</string>
     <string name="uel_reset_databases">TILBAKESTILL DATABASER</string>
+    <string name="uel_reset_aps_results">TILBAKESTILL APS-RESULTATER</string>
     <string name="uel_cleanup_databases">OPPRYDDING I DATABASER</string>
     <string name="uel_export_databases">EKSPORTER DATABASER</string>
     <string name="uel_import_databases">IMPORTER DATABASER</string>
@@ -418,7 +419,7 @@
     <string name="autotune_additional_log_title">Inkluder mer logginformasjon for feilsøking</string>
     <string name="autotune_additional_log_summary">Slå på kun dersom det er forespurt av utviklere for å sende mer logginformasjon for å hjelpe i feilsøking av Autotune</string>
     <string name="autotune_default_tune_days_summary">Standard antall dager som skal analyseres av Autotune (opp til 30)</string>
-    <string name="autotune_tunedprofile_name">Innstilt</string>
+    <string name="autotune_tunedprofile_name">Justert</string>
     <string name="autotune_profile">Profil :</string>
     <string name="autotune_tune_days">Antall dager:</string>
     <string name="autotune_last_run">Siste beregning :</string>

@@ -6,11 +6,12 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.core.objects.extensions.putInt
-import app.aaps.core.objects.extensions.storeInt
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.Preferences
+import app.aaps.core.objects.extensions.put
+import app.aaps.core.objects.extensions.store
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -20,7 +21,7 @@ import javax.inject.Singleton
  */
 @Singleton
 class InsulinOrefFreePeakPlugin @Inject constructor(
-    private val sp: SP,
+    private val preferences: Preferences,
     rh: ResourceHelper,
     profileFunction: ProfileFunction,
     rxBus: RxBus,
@@ -34,9 +35,13 @@ class InsulinOrefFreePeakPlugin @Inject constructor(
 
     override val friendlyName get(): String = rh.gs(R.string.free_peak_oref)
 
-    override fun configuration(): JSONObject = JSONObject().putInt(app.aaps.core.utils.R.string.key_insulin_oref_peak, sp, rh)
+    override fun configuration(): JSONObject =
+        JSONObject()
+            .put(IntKey.InsulinOrefPeak, preferences, rh)
+
     override fun applyConfiguration(configuration: JSONObject) {
-        configuration.storeInt(app.aaps.core.utils.R.string.key_insulin_oref_peak, sp, rh)
+        configuration
+            .store(IntKey.InsulinOrefPeak, preferences, rh)
     }
 
     override fun commentStandardText(): String {
@@ -44,12 +49,7 @@ class InsulinOrefFreePeakPlugin @Inject constructor(
     }
 
     override val peak: Int
-        get() = sp.getInt(app.aaps.core.utils.R.string.key_insulin_oref_peak, DEFAULT_PEAK)
-
-    companion object {
-
-        private const val DEFAULT_PEAK = 75
-    }
+        get() = preferences.get(IntKey.InsulinOrefPeak)
 
     init {
         pluginDescription

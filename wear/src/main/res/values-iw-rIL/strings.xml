@@ -164,7 +164,7 @@
     <string name="simple_ui_always_on_charging">דלוק תמיד וטוען</string>
     <string name="temp_target_eating_soon">אוכל בקרוב</string>
     <string name="temp_target_hypo">היפו</string>
-    <string name="temp_target_activity">פעילות</string>
+    <string name="temp_target_activity">פעילות גופנית</string>
     <string name="temp_target_manual">ידני</string>
     <string name="temp_target_cancel">ביטול</string>
     <string name="tile_none">ללא</string>
@@ -198,4 +198,12 @@
     <string name="error">!שגיאה!</string>
     <string name="pref_heartRateSampling">דופק</string>
     <string name="pref_stepsSampling">הפעלת ספירת צעדים</string>
+    <string name="tile_tempt_1">ערך מטרה זמני 1</string>
+    <string name="tile_tempt_2">ערך מטרה זמני 2</string>
+    <string name="tile_tempt_3">ערך מטרה זמני 3</string>
+    <string name="tile_tempt_4">ערך מטרה זמני 4</string>
+    <string name="tile_action_1">פעולה 1</string>
+    <string name="tile_action_2">פעולה 2</string>
+    <string name="tile_action_3">פעולה 3</string>
+    <string name="tile_action_4">פעולה 4</string>
 </resources>

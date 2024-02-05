@@ -1,9 +1,12 @@
 package app.aaps.wear.comm
 
+import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Intent
 import android.os.Handler
 import android.os.HandlerThread
+import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -14,6 +17,8 @@ import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.shared.impl.weardata.ZipWatchfaceFormat
+import app.aaps.wear.R
+import app.aaps.wear.interaction.ConfigurationActivity
 import app.aaps.wear.interaction.utils.Persistence
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.CapabilityClient
@@ -64,6 +69,7 @@ class DataLayerListenerServiceWear : WearableListenerService() {
     override fun onCreate() {
         AndroidInjection.inject(this)
         super.onCreate()
+        startForegroundService()
         handler.post { updateTranscriptionCapability() }
         disposable += rxBus
             .toObservable(EventWearToMobile::class.java)
@@ -154,6 +160,32 @@ class DataLayerListenerServiceWear : WearableListenerService() {
         return START_STICKY
     }
 
+    private fun startForegroundService() {
+        createNotificationChannel()
+        val notificationIntent = Intent(this, ConfigurationActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
+        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setContentTitle(getString(R.string.datalayer_notification_title))
+            .setContentText(getString(R.string.datalayer_notification_text))
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setSmallIcon(R.drawable.ic_icon)
+            .setContentIntent(pendingIntent)
+            .build()
+        startForeground(FOREGROUND_NOTIF_ID, notification)
+    }
+
+    @Suppress("PrivatePropertyName")
+    private val CHANNEL_ID: String = "DataLayerForegroundServiceChannel"
+    private fun createNotificationChannel() {
+        val serviceChannel = NotificationChannel(CHANNEL_ID, "Data Layer Foreground Service Channel", NotificationManager.IMPORTANCE_LOW)
+        serviceChannel.setShowBadge(false)
+        serviceChannel.enableLights(false)
+        serviceChannel.enableVibration(false)
+        serviceChannel.setSound(null, null)
+        val manager = getSystemService(NotificationManager::class.java)
+        manager.createNotificationChannel(serviceChannel)
+    }
+
     private var transcriptionNodeId: String? = null
 
     private fun updateTranscriptionCapability() {
@@ -235,6 +267,7 @@ class DataLayerListenerServiceWear : WearableListenerService() {
 
         const val BOLUS_PROGRESS_NOTIF_ID = 1
         const val CONFIRM_NOTIF_ID = 2
+        const val FOREGROUND_NOTIF_ID = 3
         const val CHANGE_NOTIF_ID = 556677
 
         const val AAPS_NOTIFY_CHANNEL_ID_OPEN_LOOP = "AndroidAPS-OpenLoop"

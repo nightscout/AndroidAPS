@@ -273,6 +273,9 @@ class LoopPlugin @Inject constructor(
                 return
             }
 
+            // Store calculations to DB
+            disposable += persistenceLayer.insertOrUpdateApsResult(apsResult).subscribe()
+
             // Prepare for pumps using % basals
             if (pump.pumpDescription.tempBasalStyle == PumpDescription.PERCENT && allowPercentage()) {
                 apsResult.usePercent = true
@@ -295,7 +298,8 @@ class LoopPlugin @Inject constructor(
                 resultAfterConstraints.smb = 0.0
             }
             prevCarbsreq = lastRun?.constraintsProcessed?.carbsReq ?: prevCarbsreq
-            lastRun = (lastRun ?: LastRun()).also { lastRun ->
+            if (lastRun == null) lastRun = LastRun()
+            lastRun?.let { lastRun ->
                 lastRun.request = apsResult
                 lastRun.constraintsProcessed = resultAfterConstraints
                 lastRun.lastAPSRun = dateUtil.now()
@@ -438,6 +442,7 @@ class LoopPlugin @Inject constructor(
                                             rxBus.send(EventLoopUpdateGui())
                                         }
                                     })
+                                    buildAndStoreDeviceStatus()
                                 } else {
                                     lastRun.tbrSetByPump = result
                                     lastRun.lastTBRRequest = lastRun.lastAPSRun
@@ -454,7 +459,7 @@ class LoopPlugin @Inject constructor(
                         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
                         builder.setSmallIcon(app.aaps.core.ui.R.drawable.notif_icon)
                             .setContentTitle(rh.gs(R.string.open_loop_new_suggestion))
-                            .setContentText(resultAfterConstraints.toString())
+                            .setContentText(resultAfterConstraints.resultAsString())
                             .setAutoCancel(true)
                             .setPriority(Notification.IMPORTANCE_HIGH)
                             .setCategory(Notification.CATEGORY_ALARM)
@@ -754,37 +759,38 @@ class LoopPlugin @Inject constructor(
         val profile = profileFunction.getProfile() ?: return
         val profileName = profileFunction.getProfileName()
 
-        val lastRun = lastRun
         var apsResult: JSONObject? = null
         var iob: JSONObject? = null
         var enacted: JSONObject? = null
-        if (lastRun != null && lastRun.lastAPSRun > dateUtil.now() - 300 * 1000L) {
-            // do not send if result is older than 1 min
-            apsResult = lastRun.request?.json()?.also {
-                it.put("timestamp", dateUtil.toISOString(lastRun.lastAPSRun))
-            }
-            iob = lastRun.request?.iob?.json(dateUtil)?.also {
-                it.put("time", dateUtil.toISOString(lastRun.lastAPSRun))
-            }
-            val requested = JSONObject()
-            if (lastRun.tbrSetByPump?.enacted == true) { // enacted
-                enacted = lastRun.request?.json()?.also {
-                    it.put("rate", lastRun.tbrSetByPump!!.json(profile.getBasal())["rate"])
-                    it.put("duration", lastRun.tbrSetByPump!!.json(profile.getBasal())["duration"])
-                    it.put("received", true)
+        lastRun?.let { lastRun ->
+            if (lastRun.lastAPSRun > dateUtil.now() - 300 * 1000L) {
+                // do not send if result is older than 1 min
+                apsResult = lastRun.request?.json()?.also {
+                    it.put("timestamp", dateUtil.toISOString(lastRun.lastAPSRun))
                 }
-                requested.put("duration", lastRun.request?.duration)
-                requested.put("rate", lastRun.request?.rate)
-                requested.put("temp", "absolute")
-                requested.put("smb", lastRun.request?.smb)
-                enacted?.put("requested", requested)
-                enacted?.put("smb", lastRun.tbrSetByPump?.bolusDelivered)
+                iob = lastRun.request?.iob?.json(dateUtil)?.also {
+                    it.put("time", dateUtil.toISOString(lastRun.lastAPSRun))
+                }
+                val requested = JSONObject()
+                if (lastRun.tbrSetByPump?.enacted == true) { // enacted
+                    enacted = lastRun.request?.json()?.also {
+                        it.put("rate", lastRun.tbrSetByPump!!.json(profile.getBasal())["rate"])
+                        it.put("duration", lastRun.tbrSetByPump!!.json(profile.getBasal())["duration"])
+                        it.put("received", true)
+                    }
+                    requested.put("duration", lastRun.request?.duration)
+                    requested.put("rate", lastRun.request?.rate)
+                    requested.put("temp", "absolute")
+                    requested.put("smb", lastRun.request?.smb)
+                    enacted?.put("requested", requested)
+                    enacted?.put("smb", lastRun.tbrSetByPump?.bolusDelivered)
+                }
             }
-        } else {
+        } ?: {
             val calcIob = iobCobCalculator.calculateIobArrayInDia(profile)
             if (calcIob.isNotEmpty()) {
                 iob = calcIob[0].json(dateUtil)
-                iob.put("time", dateUtil.toISOString(dateUtil.now()))
+                iob?.put("time", dateUtil.toISOString(dateUtil.now()))
             }
         }
         persistenceLayer.insertDeviceStatus(

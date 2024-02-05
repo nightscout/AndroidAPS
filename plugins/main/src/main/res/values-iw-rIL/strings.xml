@@ -232,7 +232,7 @@
     <string name="activity_target">ערך מטרת פעילות</string>
     <string name="hypo_duration">משך היפו</string>
     <string name="hypo_target">ערך מטרת היפו</string>
-    <string name="fill_bolus_title">מילוי\תיחול כמויות סטנדרטיות של אינסולין</string>
+    <string name="fill_bolus_title">מילוי\\תיחול כמויות סטנדרטיות של אינסולין</string>
     <string name="button1">כפתור 1</string>
     <string name="button2">כפתור 2</string>
     <string name="button3">כפתור 3</string>
@@ -241,7 +241,7 @@
     <string name="low_mark">סימון נמוך</string>
     <string name="high_mark">סימון גבוה</string>
     <string name="short_tabtitles">קצר את כותרות הלשוניות</string>
-    <string name="overview_show_notes_field_in_dialogs_title">הצגת שדות הערות בתיבות דו-שיח של טיפול</string>
+    <string name="overview_show_notes_field_in_dialogs_title">הצג שדות הערות בתיבות דו-שיח של טיפול</string>
     <string name="deliverpartofboluswizard">אשף הבולוס מבצע חישוב אך רק חלק זה של האינסולין המחושב מוזרק. שימושי בשימוש עם אלגוריתם SMB.</string>
     <string name="deliver_part_of_boluswizard_reset_time">הוזרק 100% מהבולוס, אם ערך הסוכר בדם ישן </string>
     <string name="enable_bolus_advisor">אפשר את יועץ הבולוסים</string>
@@ -259,12 +259,12 @@
     <string name="overview_show_deviation_slope">שיפוע הסטייה</string>
     <string name="overview_show_activity">פעילות</string>
     <string name="overview_show_bgi">השפעת הסוכר בדם</string>
-    <string name="overview_show_sensitivity">רגישות</string>
     <string name="overview_show_deviations">סטיות</string>
     <string name="overview_show_cob">פחמימות פעילות</string>
     <string name="overview_show_iob">אניסולין פעיל</string>
     <string name="overview_show_basals">בזאלי</string>
     <string name="overview_show_abs_insulin">אינסולין מוחלט</string>
+    <string name="overview_show_variable_sens">רגישות משתנה</string>
     <string name="prediction_shortname">חיזוי</string>
     <string name="basal_shortname">בזאל\'</string>
     <string name="deviation_shortname">סטייה</string>
@@ -274,7 +274,7 @@
     <string name="devslope_shortname">שיפוע</string>
     <string name="treatments_shortname">TREAT</string>
     <string name="heartRate_shortname">דופק</string>
-    <string name="sensitivity_shortname">רגישות</string>
+    <string name="variable_sensitivity_shortname">רג\' משתנה</string>
     <string name="graph_scale">קנה מידה של הגרף</string>
     <string name="graph_menu_divider_header">גרף</string>
     <!-- Skins -->

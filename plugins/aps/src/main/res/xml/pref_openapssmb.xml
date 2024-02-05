@@ -18,8 +18,36 @@
             android:title="@string/openapssmb_max_iob_title" />
 
         <app.aaps.core.keys.AdaptiveSwitchPreference
-            android:key="@string/key_openaps_use_autosens"
-            android:title="@string/openapsama_use_autosens" />
+            android:key="@string/key_use_dynamic_sensitivity"
+            android:summary="@string/use_dynamic_sensitivity_summary"
+            android:title="@string/use_dynamic_sensitivity_title" />
+
+        <app.aaps.core.validators.AdaptiveIntPreference
+            android:dialogMessage="@string/DynISFAdjust_summary"
+            android:key="@string/key_dynamic_isf_adjustment_factor"
+            android:title="@string/DynISFAdjust_title" />
+
+        <app.aaps.core.validators.AdaptiveUnitPreference
+            android:dialogMessage="@string/lgs_threshold_summary"
+            android:key="@string/key_dynamic_isf_lgs_threshold"
+            android:title="@string/lgs_threshold_title" />
+
+        <app.aaps.core.keys.AdaptiveSwitchPreference
+            android:key="@string/key_dynamic_isf_adjust_sensitivity"
+            android:summary="@string/dynisf_adjust_sensitivity_summary"
+            android:title="@string/dynisf_adjust_sensitivity" />
+
+        <app.aaps.core.keys.AdaptiveSwitchPreference
+            android:dependency="@string/key_dynamic_isf_adjust_sensitivity"
+            android:key="@string/key_openaps_sensitivity_raises_target"
+            android:summary="@string/sensitivity_raises_target_summary"
+            android:title="@string/sensitivity_raises_target_title" />
+
+        <app.aaps.core.keys.AdaptiveSwitchPreference
+            android:dependency="@string/key_dynamic_isf_adjust_sensitivity"
+            android:key="@string/key_openaps_resistance_lowers_target"
+            android:summary="@string/resistance_lowers_target_summary"
+            android:title="@string/resistance_lowers_target_title" />
 
         <app.aaps.core.keys.AdaptiveSwitchPreference
             android:key="@string/key_openaps_use_smb"
@@ -73,16 +101,6 @@
             android:key="@string/key_openaps_use_uam"
             android:summary="@string/enable_uam_summary"
             android:title="@string/enable_uam" />
-
-        <app.aaps.core.keys.AdaptiveSwitchPreference
-            android:key="@string/key_openaps_sensitivity_raises_target"
-            android:summary="@string/sensitivity_raises_target_summary"
-            android:title="@string/sensitivity_raises_target_title" />
-
-        <app.aaps.core.keys.AdaptiveSwitchPreference
-            android:key="@string/key_openaps_resistance_lowers_target"
-            android:summary="@string/resistance_lowers_target_summary"
-            android:title="@string/resistance_lowers_target_title" />
 
         <!-- TODO AS-FIX -->
         <!--<SwitchPreference

@@ -51,6 +51,7 @@
     <string name="extended_bolus">Verzögerter Bolus</string>
     <string name="paused">Pausiert</string>
     <string name="tdd_total">TDD Gesamt</string>
+    <string name="tdd_old_data">Veraltete Daten</string>
     <string name="goingtodeliver">Werde %1$.2f IE abgeben</string>
     <string name="waitingforpump">Warte auf Pumpe</string>
     <string name="androidaps_start">AAPS gestartet</string>
@@ -167,6 +168,8 @@
     <string name="virtualpump_uploadstatus_title">Status zu NS oder Tidepool hochladen</string>
     <string name="suspendloop_label">Deaktiviere/Pausiere den Loop</string>
     <string name="iob_label">Aktives Insulin (IOB)</string>
+    <string name="loopstatus_targets">ZIELE:</string>
+    <string name="loopstatus_OAPS_result">OAPS ERGEBNIS:</string>
     <!--    Protection-->
     <string name="wrongpassword">Falsches Passwort</string>
     <string name="wrongpin">Falsche PIN</string>
@@ -462,6 +465,8 @@
     <string name="bolus_recorded_only">Bolus wird nur aufgezeichnet (Die Pumpe gibt kein Insulin ab!)</string>
     <string name="advisoralarm">Alarmiere mich, wenn es Zeit zum Essen ist. </string>
     <string name="no_action_selected">Keine Aktion ausgewählt, nichts wird geschehen.</string>
+    <string name="carb_equal_zero_no_action">Kohlenhydrate = 0. Keine Aktion!</string>
+    <string name="wizard_no_insulin_required">Kein Insulin erforderlich!</string>
     <string name="wizard_no_actual_bg">Kein aktueller BG liegt als Basis zur Berechnung vor!</string>
     <string name="wizard_no_active_profile">Kein aktives Profil gesetzt!</string>
     <string name="wizard_no_cob">Unbekannter COB! BG-Wert fehlt oder wurde App vor kurzem neu gestartet?</string>
@@ -520,6 +525,7 @@
     <string name="password_cleared">Passwort gelöscht!</string>
     <string name="pairing">Koppeln</string>
     <string name="initializing">Initialisierung...</string>
+    <string name="secs" comment="second short">%1$d s</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Begrenzung der max. Basalrate auf %1$.2f IE/h wegen %2$s</string>
     <string name="pumplimit">Limit der Pumpe</string>
@@ -580,6 +586,7 @@
     <string name="cleanup_db_confirm_sync">Möchten Sie die Datenbank bereinigen?\nEs werden gespeicherte Änderungen und historische Daten gelöscht, die älter als 3 Monate sind.\nDies beschleunigt die vollständige Synchronisierung dramatisch.</string>
     <string name="cleared_entries">Gelöschte Einträge</string>
     <!--    Weekday-->
+    <string name="weekday_sunday_short">So</string>
     <string name="weekday_saturday_short">Sa</string>
     <string name="weekday_friday_short">Fr</string>
     <string name="weekday_thursday_short">Do</string>
@@ -595,5 +602,6 @@
     <string name="saturday_short">Sa</string>
     <string name="sunday_short">So</string>
     <!--    DecimalFormatterImpl -->
+    <string name="format_insulin_units1">%1$.1f IE</string>
     <string name="format_insulin_units">%1$.2f IE</string>
 </resources>

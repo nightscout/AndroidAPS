@@ -86,6 +86,22 @@ class MaintenanceFragment : DaggerFragment() {
                     .subscribeOn(aapsSchedulers.io)
                     .subscribe({ uel.log(Action.DELETE_LOGS, Sources.Maintenance) }, fabricPrivacy::logException)
         }
+        binding.navResetApsResults.setOnClickListener {
+            activity?.let { activity ->
+                OKDialog.showConfirmation(activity, rh.gs(R.string.maintenance), rh.gs(R.string.reset_aps_results_confirm), Runnable {
+                    disposable +=
+                        Completable.fromAction {
+                            persistenceLayer.clearApsResults()
+                        }
+                            .subscribeOn(aapsSchedulers.io)
+                            .subscribeBy(
+                                onError = { aapsLogger.error("Error clearing aps results", it) },
+                                onComplete = { aapsLogger.debug("Aps results cleared") }
+                            )
+                    uel.log(Action.RESET_APS_RESULTS, Sources.Maintenance)
+                })
+            }
+        }
         binding.navResetdb.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, rh.gs(R.string.maintenance), rh.gs(R.string.reset_db_confirm), Runnable {

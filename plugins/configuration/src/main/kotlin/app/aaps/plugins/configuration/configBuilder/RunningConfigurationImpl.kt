@@ -2,6 +2,8 @@ package app.aaps.plugins.configuration.configBuilder
 
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.interfaces.aps.APS
+import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.Sensitivity
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
@@ -55,9 +57,13 @@ class RunningConfigurationImpl @Inject constructor(
                 val overviewInterface = activePlugin.activeOverview
                 val safetyInterface = activePlugin.activeSafety
                 val smoothingInterface = activePlugin.activeSmoothing
+                // APS interface is needed for dynamic sensitivity calculation
+                val apsInterface = activePlugin.activeAPS
 
                 json.put("insulin", insulinInterface.id.value)
                 json.put("insulinConfiguration", insulinInterface.configuration())
+                json.put("aps", apsInterface.algorithm.name)
+                json.put("apsConfiguration", apsInterface.configuration())
                 json.put("sensitivity", sensitivityInterface.id.value)
                 json.put("sensitivityConfiguration", sensitivityInterface.configuration())
                 json.put("smoothing", smoothingInterface.javaClass.simpleName)
@@ -90,6 +96,20 @@ class RunningConfigurationImpl @Inject constructor(
                         configBuilder.performPluginSwitch(p, true, PluginType.INSULIN)
                     }
                     configuration.insulinConfiguration?.let { ic -> insulinPlugin.applyConfiguration(ic) }
+                }
+            }
+        }
+
+        configuration.aps?.let {
+            val algorithm = APSResult.Algorithm.valueOf(it)
+            for (p in activePlugin.getSpecificPluginsListByInterface(APS::class.java)) {
+                val apsPlugin = p as APS
+                if (apsPlugin.algorithm == algorithm) {
+                    if (!p.isEnabled()) {
+                        aapsLogger.debug(LTag.CORE, "Changing aps plugin to ${apsPlugin.algorithm}")
+                        configBuilder.performPluginSwitch(p, true, PluginType.APS)
+                    }
+                    configuration.apsConfiguration?.let { ac -> apsPlugin.applyConfiguration(ac) }
                 }
             }
         }

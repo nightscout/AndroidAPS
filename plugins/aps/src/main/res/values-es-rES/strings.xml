@@ -84,7 +84,8 @@
     <string name="smb_disabled_in_preferences">SMB deshabilitado en preferencias</string>
     <string name="uam_disabled_in_preferences">UAM deshabilitado en las preferencias</string>
     <string name="autosens_disabled_in_preferences">Autosens deshabilitado en preferencias</string>
-    <string name="autosens_disabled_in_dyn_isf">Autosens desactivado en ISF Dinámico</string>
+    <string name="use_dynamic_sensitivity_title">Activar sensibilidad dinámica</string>
+    <string name="use_dynamic_sensitivity_summary">Ajusta el algoritmo para usar la sensibilidad dinámica en lugar del valor del perfil</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">Limitando IOB a %1$.1f U debido a %2$s</string>
     <string name="maxvalueinpreferences">valor máximo en preferencias</string>
@@ -95,8 +96,8 @@
     <string name="run_now">Ejecutar ahora</string>
     <string name="smb_frequency_exceeded">Un bolo ha sido entregado en los últimos 3 minutos, omitiendo SMB</string>
     <string name="pump_not_initialized">¡Bomba no iniciada!</string>
-    <string name="loop_shortname">LAZO</string>
-    <string name="description_loop">Activar o desactivar la posibilidad para activar el lazo.</string>
+    <string name="loop_shortname">BUCLE</string>
+    <string name="description_loop">Activar o desactivar la posibilidad para activar el bucle.</string>
     <string name="no_aps_selected">NO APS Seleccionado o resultado entregado</string>
     <string name="ignore5m">Ignorar 5m</string>
     <string name="ignore15m">Ignorar 15m</string>
@@ -115,6 +116,7 @@
     <string name="loop_smb_execution_time_label">Tiempo de ejecución de SMB</string>
     <string name="loop_smb_set_by_pump_label">SMB administrado por la bomba</string>
     <string name="loop_open_mode_min_change">Valor mínimo de cambio [%]</string>
-    <string name="loop_open_mode_min_change_summary" formatted="false">Valor predeterminado 20%. El lazo abierto realizará una petición de cambio, sólo cuando se supere este valor</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">Valor predeterminado 20%. El bucle abierto realizará una petición de cambio, sólo cuando se supere este valor</string>
     <string name="fallback_smb_no_tdd">Regreso a SMB. No hay suficientes datos de TDD.</string>
+    <string name="fallback_to_isf_no_tdd">Volviendo a la sensibilidad del perfil. No hay suficientes datos TDD.</string>
 </resources>

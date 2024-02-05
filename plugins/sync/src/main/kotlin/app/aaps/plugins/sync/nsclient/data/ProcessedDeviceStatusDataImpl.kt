@@ -11,7 +11,6 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.utils.HtmlHelper
-import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.sync.R
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -80,13 +79,13 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
                 .append("<b>")
                 .append(dateUtil.minAgo(rh, openAPSData.clockEnacted))
                 .append("</b> ")
-                .append(JsonHelper.safeGetString(enacted, "reason"))
+                .append(enacted.reason)
                 .append("<br>")
             if (suggested != null) string
                 .append("<b>")
                 .append(dateUtil.minAgo(rh, openAPSData.clockSuggested))
                 .append("</b> ")
-                .append(JsonHelper.safeGetString(suggested, "reason"))
+                .append(suggested.reason)
                 .append("<br>")
             return HtmlHelper.fromHtml(string.toString())
         }
@@ -115,11 +114,8 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
     override val openApsTimestamp: Long
         get() = if (openAPSData.clockSuggested != 0L) openAPSData.clockSuggested else -1
 
-    override fun getAPSResult(): APSResult =
-        instantiator.provideAPSResultObject().also {
-            it.json = openAPSData.suggested
-            it.date = openAPSData.clockSuggested
-        }
+    override fun getAPSResult(): APSResult? =
+        openAPSData.suggested?.let { instantiator.provideAPSResultObject(it) }
 
     override val uploaderStatus: String
         get() {

@@ -17,4 +17,35 @@ interface PreferenceKey {
      * If not: value from shared preferences is used.
      */
     val defaultedBySM: Boolean
+
+    /**
+     * Show only when APS mode is active (ie not PumpControl and NsClient)
+     */
+    val showInApsMode: Boolean
+
+    /**
+     * Show only when NsClient mode is active
+     */
+    val showInNsClientMode: Boolean
+
+    /**
+     * Show only when PumpControl mode is active
+     */
+    val showInPumpControlMode: Boolean
+
+    /**
+     * show only if master dependency is enabled (ie android:dependency behavior)
+     */
+    val dependency: Int
+
+    /**
+     * show only if master dependency is disabled (ie negative android:dependency behavior)
+     */
+    val negativeDependency: Int
+
+    /**
+     * Hide parent screen
+     * PreferenceScreen is final so we cannot extend and modify thisbehavior
+     */
+    val hideParentScreenIfHidden: Boolean
 }

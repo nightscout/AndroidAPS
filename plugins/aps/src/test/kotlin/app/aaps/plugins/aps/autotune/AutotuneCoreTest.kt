@@ -121,7 +121,7 @@ class AutotuneCoreTest : TestBaseWithProfile() {
                 timeZone = timezone,
                 dia = dia
             )
-            return ATProfile(ProfileSealed.Pure(pure), localInsulin, injector).also { it.dateUtil = dateUtil; it.profileUtil = profileUtil }
+            return ATProfile(ProfileSealed.Pure(pure, activePlugin), localInsulin, injector).also { it.dateUtil = dateUtil; it.profileUtil = profileUtil }
         } catch (ignored: Exception) {
             return null
         }

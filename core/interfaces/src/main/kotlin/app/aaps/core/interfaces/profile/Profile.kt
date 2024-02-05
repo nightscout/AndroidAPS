@@ -12,8 +12,16 @@ import org.json.JSONObject
 
 interface Profile {
 
+    /**
+     *
+     */
+    //val hasDynamicIsf: Boolean
+
     class ValidityCheck(var isValid: Boolean = true, val reasons: ArrayList<String> = arrayListOf())
 
+    /**
+     * Check validity of profile
+     */
     fun isValid(from: String, pump: Pump, config: Config, rh: ResourceHelper, rxBus: RxBus, hardLimits: HardLimits, sendNotifications: Boolean): ValidityCheck
 
     /**
@@ -59,12 +67,17 @@ interface Profile {
     /**
      * ISF value according to "now"" in MGDL
      */
-    fun getIsfMgdl(): Double
+    fun getIsfMgdl(caller: String): Double
+
+    /**
+     * ISF profile value according to "now"" in MGDL
+     */
+    fun getProfileIsfMgdl(): Double
 
     /**
      * ISF value according to timestamp in MGDL
      */
-    fun getIsfMgdl(timestamp: Long): Double
+    fun getIsfMgdl(timestamp: Long, bg: Double, caller: String): Double
 
     /**
      * Average target value according to "now" in MGDL

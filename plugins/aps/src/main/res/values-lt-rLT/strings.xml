@@ -42,7 +42,7 @@
     <string name="openapsma_max_basal_summary">Šis skaičius OpenAPS kontekste vadinamas maks. valandine baze</string>
     <string name="openapsma_max_iob_title">Didžiausias valandinės bazės insulino kiekis, kurį gali suleisti OpenAPS [U]</string>
     <string name="openapsma_max_iob_summary">Šis skaičius OpenAPS kontekste vadinamas maks. AIO\nTai maksimalus insulino vienetų [U] skaičius, kurį DKS gali suleisti vienu metu.</string>
-    <string name="openapsama_autosens_adjust_targets_summary">Numatytoji reikšmė: true\nTai suteikia Autosens funkcijai leidimą keisti tikslinės glikemijos vertes, JIF ir valandinę bazę.</string>
+    <string name="openapsama_autosens_adjust_targets_summary">Numatytoji reikšmė: true\nTai suteikia Autosens funkcijai leidimą keisti glikemijos tikslą, JIF ir valandinę bazę.</string>
     <string name="openapsama_autosens_adjust_targets">Autosens nustatomi tikslai, taip pat</string>
     <string name="openapsama_min_5m_carb_impact_summary">Numatytoji reikšmė: 3.0 (AMA) arba 8.0 (SMB). Tai parametras, nurodantis angliavandenių poveikį glikemijai per 5 min. Numatytoji reikšmė yra 3 mg/dl per 5min. Šis skaičius turi įtakos apskaičiuojant, kaip greitai mažės AAO, kokia bus glikemijos kitimo prognozė, ypač kai ji mažėja labiau nei tikėtasi, arba nedidėja tiek, kiek tikėtasi.</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Numatytoji reikšmė: 3 tai pagrindinis OpenAPS saugiklis. Jis apriboja Jūsų valandinę bazę iki trigubos maksimalios valandinės bazės (standartiniu atveju). Jums greičiausiai neprireiks šios reikšmės keisti, tačiau turėtumėte žinoti, kad ji naudojama kaip saugiklis apskaičiuojant \"3x maksimali dienos bazė; 4x dabartinė valandinė bazė\".</string>
@@ -82,7 +82,6 @@
     <string name="smb_disabled_in_preferences">SMB išjungti nustatymuose</string>
     <string name="uam_disabled_in_preferences">NDM nustatymas išjungtas nustatymuose</string>
     <string name="autosens_disabled_in_preferences">Autosens funkcija išjungta nustatymuose</string>
-    <string name="autosens_disabled_in_dyn_isf">Autosens neveikia DynISF</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">Ribojamas AIO iki %1$.1f V dėl %2$s</string>
     <string name="maxvalueinpreferences">Maksimali reikšmė nustatymuose</string>

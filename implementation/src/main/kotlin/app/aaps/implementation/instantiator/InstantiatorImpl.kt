@@ -1,7 +1,7 @@
 package app.aaps.implementation.instantiator
 
-import app.aaps.core.data.aps.AutosensData
-import app.aaps.core.interfaces.aps.APSResult
+import app.aaps.core.interfaces.aps.AutosensData
+import app.aaps.core.interfaces.aps.RT
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.objects.Instantiator
@@ -14,7 +14,7 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.Preferences
-import app.aaps.core.objects.aps.APSResultObject
+import app.aaps.core.objects.aps.DetermineBasalResult
 import app.aaps.implementation.iob.AutosensDataObject
 import app.aaps.implementation.profile.ProfileStoreObject
 import app.aaps.implementation.pump.PumpEnactResultObject
@@ -38,7 +38,7 @@ class InstantiatorImpl @Inject constructor(
 ) : Instantiator {
 
     override fun provideProfileStore(jsonObject: JSONObject): ProfileStore = ProfileStoreObject(jsonObject, aapsLogger, activePlugin, config, rh, rxBus, hardLimits, dateUtil)
-    override fun provideAPSResultObject(): APSResult = APSResultObject(injector)
+    override fun provideAPSResultObject(rt: RT): DetermineBasalResult = DetermineBasalResult(injector, rt)
     override fun provideAutosensDataObject(): AutosensData = AutosensDataObject(aapsLogger, preferences, dateUtil)
     override fun providePumpEnactResult(): PumpEnactResult = PumpEnactResultObject(rh)
 }

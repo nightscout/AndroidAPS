@@ -153,6 +153,8 @@
     <string name="dia_short">Время действия инсулина DIA</string>
     <string name="target_short">ЦЕЛЬ</string>
     <string name="basal_short">БАЗАЛ</string>
+    <string name="isf_dynamic_label">Алгоритм обеспечивает динамический расчет чувствительности к инсулину ISF. Значения ниже используются только в качестве запасного варианта при отсутствии данных</string>
+    <string name="ic_dynamic_label">Алгоритм обеспечивает динамический расчет углеводного коэффициента IC. Значения ниже используются только в качестве запасного варианта при отсутствии данных</string>
     <!-- Actions -->
     <string name="actions">Действия</string>
     <string name="description_actions">Кнопки быстрого доступа к некоторым распространенным настройкам</string>
@@ -258,12 +260,13 @@
     <string name="overview_show_deviation_slope">Линия отклонения</string>
     <string name="overview_show_activity">Активность</string>
     <string name="overview_show_bgi">Влияние ГК</string>
-    <string name="overview_show_sensitivity">Чувствительность</string>
+    <string name="overview_show_sensitivity">Изменение чувствительности</string>
     <string name="overview_show_deviations">Отклонение</string>
     <string name="overview_show_cob">Активные углеводы COB</string>
     <string name="overview_show_iob">Активный инсулин IOB</string>
     <string name="overview_show_basals">Базал</string>
     <string name="overview_show_abs_insulin">Абсолютный инсулин</string>
+    <string name="overview_show_variable_sens">Переменная чувствительность</string>
     <string name="prediction_shortname">ОЖИД</string>
     <string name="basal_shortname">БАЗ</string>
     <string name="deviation_shortname">ОТКЛН</string>
@@ -273,7 +276,8 @@
     <string name="devslope_shortname">ЛИНОТКЛН</string>
     <string name="treatments_shortname">НАЗНАЧ</string>
     <string name="heartRate_shortname">ЧСС</string>
-    <string name="sensitivity_shortname">ЧУВСТВ</string>
+    <string name="sensitivity_shortname">ЧУВСТВ%</string>
+    <string name="variable_sensitivity_shortname">ПЕРЕМЧУВСТВ</string>
     <string name="graph_scale">Масштаб графика</string>
     <string name="graph_menu_divider_header">График</string>
     <!-- Skins -->
@@ -288,7 +292,7 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Показывает текущие уведомления и краткий обзор событий цикла</string>
     <string name="old_data">старые данные</string>
-    <string name="overview_show_steps">шаги</string>
+    <string name="overview_show_steps">Действия</string>
     <string name="steps_shortname">ШАГИ</string>
     <string name="simple_mode_enabled">Простой режим включен</string>
 </resources>

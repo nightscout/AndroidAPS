@@ -40,7 +40,6 @@
     <string name="key_resistantadult" translatable="false">resistantadult</string>
     <string name="key_pregnant" translatable="false">pregnant</string>
     <string name="key_app_expiration" translatable="false">app_expiration</string>
-    <string name="key_insulin_oref_peak" translatable="false">insulin_oref_peak</string>
     <string name="key_autotune_auto" translatable="false">autotune_auto</string>
     <string name="key_autotune_categorize_uam_as_basal" translatable="false">categorize_uam_as_basal</string>
     <string name="key_autotune_tune_insulin_curve" translatable="false">autotune_tune_insulin_curve</string>
@@ -50,6 +49,8 @@
     <string name="key_autotune_plugin" translatable="false">key_autotune_plugin</string>
     <string name="key_autotune_last_run" translatable="false">key_autotune_last_run</string>
     <string name="key_enable_pump_unreachable_alert" translatable="false">enable_pump_unreachable_alert</string>
+    <string name="key_next_pump_disconnected_alarm" translatable="false">nextPumpDisconnectedAlarm</string>
+    <string name="key_next_missed_reading_alarm" translatable="false">nextMissedReadingsAlarm</string>
     <string name="key_enable_missed_bg_readings_alert" translatable="false">enable_missed_bg_readings</string>
     <string name="key_enable_carbs_required_alert_local" translatable="false">enable_carbs_required_alert_local</string>
     <string name="key_smscommunicator_report_pump_unreachable" translatable="false">smscommunicator_report_pump_unreachable</string>

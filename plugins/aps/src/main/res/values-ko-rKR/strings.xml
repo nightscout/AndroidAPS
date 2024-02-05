@@ -84,7 +84,6 @@
     <string name="smb_disabled_in_preferences">설정에서 SMB가 비활성화 되었습니다.</string>
     <string name="uam_disabled_in_preferences">설정에서 UAM이 비활성화 되었습니다.</string>
     <string name="autosens_disabled_in_preferences">설정에서 Autosens가 비활성화 되었습니다.</string>
-    <string name="autosens_disabled_in_dyn_isf">DynISF에서 Autosens 비활성화</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">%2$s로 인해 IOB가 %1$.1f U으로 제한됩니다.</string>
     <string name="maxvalueinpreferences">설정에서의 최대값</string>

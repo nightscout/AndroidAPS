@@ -205,4 +205,16 @@
     <string name="error">!err!</string>
     <string name="pref_heartRateSampling">Frequenza cardiaca</string>
     <string name="pref_stepsSampling">Abilita Conteggio Passi</string>
+    <string name="tile_tempt_1">Target Temporaneo 1</string>
+    <string name="tile_tempt_2">Target Temporaneo 2</string>
+    <string name="tile_tempt_3">Target Temporaneo 3</string>
+    <string name="tile_tempt_4">Target Temporaneo 4</string>
+    <string name="tile_action_1">Azione 1</string>
+    <string name="tile_action_2">Azione 2</string>
+    <string name="tile_action_3">Azione 3</string>
+    <string name="tile_action_4">Azione 4</string>
+    <string name="datalayer_notification_title">Data Layer Foreground Service</string>
+    <string name="datalayer_notification_text">AAPS è in esecuzione in primo piano. Per nascondere le notifiche vai alle opzioni Sviluppatore, notifiche app, app ammesse, seleziona AAPS, Disattiva Data Layer Foreground Service.</string>
+    <string name="on">ON</string>
+    <string name="off">OFF</string>
 </resources>

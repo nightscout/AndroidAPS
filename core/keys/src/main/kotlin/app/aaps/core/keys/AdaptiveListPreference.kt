@@ -3,6 +3,7 @@ package app.aaps.core.keys
 import android.content.Context
 import android.util.AttributeSet
 import androidx.preference.ListPreference
+import androidx.preference.PreferenceManager
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
@@ -22,6 +23,16 @@ open class AdaptiveListPreference(context: Context, attrs: AttributeSet?) : List
         }
         if (preferences.pumpControlMode && !preferenceKey.showInPumpControlMode) {
             isVisible = false; isEnabled = false
+        }
+        if (preferenceKey.dependency != 0) {
+            val sp = PreferenceManager.getDefaultSharedPreferences(context)
+            if (!sp.getBoolean(context.getString(preferenceKey.dependency), false))
+                isVisible = false
+        }
+        if (preferenceKey.negativeDependency != 0) {
+            val sp = PreferenceManager.getDefaultSharedPreferences(context)
+            if (sp.getBoolean(context.getString(preferenceKey.dependency), false))
+                isVisible = false
         }
         setDefaultValue(preferenceKey.defaultValue)
     }

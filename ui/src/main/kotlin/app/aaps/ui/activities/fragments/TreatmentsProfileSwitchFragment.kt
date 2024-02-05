@@ -94,19 +94,19 @@ class TreatmentsProfileSwitchFragment : DaggerFragment(), MenuProvider {
 
     private fun profileSwitchWithInvalid(now: Long) = persistenceLayer
         .getProfileSwitchesIncludingInvalidFromTime(now - millsToThePast, false)
-        .map { bolus -> bolus.map { ProfileSealed.PS(it) } }
+        .map { ps -> ps.map { ProfileSealed.PS(value = it, activePlugin = null) } }
 
     private fun effectiveProfileSwitchWithInvalid(now: Long) = persistenceLayer
         .getEffectiveProfileSwitchesIncludingInvalidFromTime(now - millsToThePast, false)
-        .map { carb -> carb.map { ProfileSealed.EPS(it) } }
+        .map { eps -> eps.map { ProfileSealed.EPS(value = it, activePlugin = null) } }
 
     private fun profileSwitches(now: Long) = persistenceLayer
         .getProfileSwitchesFromTime(now - millsToThePast, false)
-        .map { bolus -> bolus.map { ProfileSealed.PS(it) } }
+        .map { ps -> ps.map { ProfileSealed.PS(value = it, activePlugin = null) } }
 
     private fun effectiveProfileSwitches(now: Long) = persistenceLayer
         .getEffectiveProfileSwitchesFromTime(now - millsToThePast, false)
-        .map { carb -> carb.map { ProfileSealed.EPS(it) } }
+        .map { eps -> eps.map { ProfileSealed.EPS(value = it, activePlugin = null) } }
 
     private fun swapAdapter() {
         val now = System.currentTimeMillis()
