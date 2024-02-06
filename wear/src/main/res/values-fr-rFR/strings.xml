@@ -216,4 +216,5 @@
     <string name="datalayer_notification_title">Service de premier plan de la couche de données</string>
     <string name="datalayer_notification_text">AAPS est en cours d\'exécution au premier plan. Pour masquer les notifications, allez dans les options de développement, Notifications des applications, Apps montre autorisées, sélectionnez AAPS, Désactivez Service avant plan couche de données.</string>
     <string name="on">ACTIVEE</string>
+    <string name="off">ARRÊT</string>
 </resources>

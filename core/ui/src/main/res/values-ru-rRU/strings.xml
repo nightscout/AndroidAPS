@@ -170,6 +170,12 @@
     <string name="iob_label">Активный инсулин (IOB)</string>
     <string name="loopstatus_targets">ЦЕЛИ:</string>
     <string name="loopstatus_OAPS_result">РЕЗУЛЬТАТ: OAPS:</string>
+    <string name="extended_bolus_data_point_graph">%1$.2f ед ( %2$.2f ед/ч )</string>
+    <string name="temp_basal_tsf_fake_extended">%1$.2f ед ( %2$.2f ед/ч)@%3$s</string>
+    <string name="temp_basal_tsf_absolute">%1$.2f ед/ч @%2$s</string>
+    <string name="temp_basal_tsf_percent">%1$.0f %% @%2$s</string>
+    <string name="extended_bolus_full">ПБ%1$.2f ед/ @%2$s%3$s%4$s мин</string>
+    <string name="extended_bolus_medium">%1$.2f ед/ч %2$s%3$s</string>
     <!--    Protection-->
     <string name="wrongpassword">Неверный пароль</string>
     <string name="wrongpin">Неверный PIN-код</string>
@@ -338,6 +344,7 @@
     <string name="uel_export_settings">ЭКСПОРТИРОВАТЬ НАСТРОЙКИ</string>
     <string name="uel_import_settings">ИМПОРТИРОВАТЬ НАСТРОЙКИ</string>
     <string name="uel_reset_databases">СБРОСИТЬ БАЗЫ ДАННЫХ</string>
+    <string name="uel_reset_aps_results">СБРОС РЕЗУЛЬТАТОВ APS</string>
     <string name="uel_cleanup_databases">ОЧИСТКА ДАННЫХ</string>
     <string name="uel_export_databases">ЭКСПОРТИРОВАТЬ БАЗЫ ДАННЫХ</string>
     <string name="uel_import_databases">ИМПОРТИРОВАТЬ БАЗЫ ДАННЫХ</string>

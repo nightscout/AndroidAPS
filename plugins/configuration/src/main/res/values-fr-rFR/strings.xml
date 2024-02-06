@@ -117,6 +117,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="description_maintenance">Fournir différentes fonctions de maintenance (ex : envoyer, supprimer le journal).</string>
     <string name="database_cleanup">Nettoyer la base de données</string>
     <string name="reset_db_confirm">Voulez-vous vraiment réinitialiser les bases de données ?</string>
+    <string name="reset_aps_results_confirm">Voulez-vous vraiment réinitialiser les résultats sauvegardés d\'APS ?</string>
     <string name="maintenance_settings">Paramètres de maintenance</string>
     <string name="maintenance_email">Destinataire de l\'email</string>
     <string name="maintenance_amount">Nombre de journaux à envoyer</string>
@@ -168,4 +169,5 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="metadata_format_new">Nouveau format chiffré</string>
     <string name="metadata_format_debug">Nouveau format de débogage (non crypté)</string>
     <string name="metadata_format_other">Format d\'export inconnu</string>
+    <string name="reset_aps_results">Réinitialiser les résultats d\'APS</string>
 </resources>

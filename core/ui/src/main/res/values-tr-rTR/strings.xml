@@ -170,6 +170,12 @@
     <string name="iob_label">Aktif İnsülin (AİNS)</string>
     <string name="loopstatus_targets">HEDEFLER:</string>
     <string name="loopstatus_OAPS_result">OAPS SONUCU:</string>
+    <string name="extended_bolus_data_point_graph">%1$.2f Ü ( %2$.2f Ü/s )</string>
+    <string name="temp_basal_tsf_fake_extended">%1$.2f Ü/s (%2$.2fE) @%3$s</string>
+    <string name="temp_basal_tsf_absolute">%1$.2f Ü/s @%2$s</string>
+    <string name="temp_basal_tsf_percent">%1$.0f%% @%2$s</string>
+    <string name="extended_bolus_full">E %1$.2f Ü/s @%2$s %3$s/%4$s dk</string>
+    <string name="extended_bolus_medium">%1$.2f Ü/s %2$s/%3$s\'</string>
     <!--    Protection-->
     <string name="wrongpassword">Hatalı parola</string>
     <string name="wrongpin">Yanlış PIN</string>
@@ -338,6 +344,7 @@
     <string name="uel_export_settings">AYARLARI DIŞA AKTAR</string>
     <string name="uel_import_settings">AYARLARI İÇE AKTAR</string>
     <string name="uel_reset_databases">VERİTABANLARINI SIFIRLA</string>
+    <string name="uel_reset_aps_results">APS SONUÇLARINI SIFIRLA</string>
     <string name="uel_cleanup_databases">TEMİZLEME VERİTABANLARI</string>
     <string name="uel_export_databases">VERİTABANINI DIŞA AKTAR</string>
     <string name="uel_import_databases">VERİTABANINI İÇE AKTAR</string>

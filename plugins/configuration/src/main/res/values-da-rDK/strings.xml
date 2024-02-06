@@ -116,6 +116,7 @@
     <string name="description_maintenance">Giver flere funktioner til vedligeholdelse (f.eks. log afsendelse, log sletning).</string>
     <string name="database_cleanup">Database-oprydning</string>
     <string name="reset_db_confirm">Er du sikker på, at du vil nulstille databaserne?</string>
+    <string name="reset_aps_results_confirm">Er du sikker på, at du vil nulstille gemte APS-resultater?</string>
     <string name="maintenance_settings">Vedligeholdelses Indstillinger</string>
     <string name="maintenance_email">E-mail modtager</string>
     <string name="maintenance_amount">Antal logs at sende</string>
