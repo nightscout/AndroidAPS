@@ -31,7 +31,7 @@ class AdaptiveSwitchPreference(context: Context, attrs: AttributeSet?) : SwitchP
         }
         if (preferenceKey.negativeDependency != 0) {
             val sp = PreferenceManager.getDefaultSharedPreferences(context)
-            if (sp.getBoolean(context.getString(preferenceKey.dependency), false))
+            if (sp.getBoolean(context.getString(preferenceKey.negativeDependency), false))
                 isVisible = false
         }
         setDefaultValue(preferenceKey.defaultValue)
