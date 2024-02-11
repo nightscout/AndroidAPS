@@ -61,6 +61,7 @@ class PrepareTreatmentsDataWorker(
         val fromTime = data.overviewData.fromTime
         rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TREATMENTS_DATA, 0, null))
         data.overviewData.maxTreatmentsValue = 0.0
+        data.overviewData.maxTherapyEventValue = 0.0
         data.overviewData.maxEpsValue = 0.0
         val filteredTreatments: MutableList<DataPointWithLabelInterface> = ArrayList()
         val filteredTherapyEvents: MutableList<DataPointWithLabelInterface> = ArrayList()
