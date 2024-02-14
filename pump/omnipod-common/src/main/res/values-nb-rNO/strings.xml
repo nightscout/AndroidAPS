@@ -177,6 +177,7 @@
     <string name="omnipod_common_ok">OK</string>
     <string name="omnipod_common_cancel">Avbryt</string>
     <string name="omnipod_common_warning">Varsel</string>
+    <string name="omnipod_common_disable_suspend_alerts">DEAKTIVER VARSEL FOR PAUSET LEVERING</string>
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">For litt siden</string>
     <string name="omnipod_common_less_than_a_minute_ago">Mindre enn ett minutt siden</string>
