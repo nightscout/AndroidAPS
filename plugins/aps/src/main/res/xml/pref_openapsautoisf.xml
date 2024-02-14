@@ -115,7 +115,7 @@
             android:summary="@string/low_temptarget_lowers_sensitivity_summary"
             android:title="@string/low_temptarget_lowers_sensitivity_title" />
 
-        <app.aaps.core.validators.AdaptiveUnitPreference
+        <app.aaps.core.validators.AdaptiveIntPreference
             android:dialogMessage="@string/half_basal_exercise_target_summary"
             android:key="@string/key_half_basal_exercise_target"
             android:title="@string/half_basal_exercise_target_title" />
