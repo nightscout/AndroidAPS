@@ -53,6 +53,7 @@ import app.aaps.core.objects.extensions.plannedRemainingMinutes
 import app.aaps.core.objects.extensions.put
 import app.aaps.core.objects.extensions.store
 import app.aaps.core.objects.extensions.target
+import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.plugins.aps.OpenAPSFragment
 import app.aaps.plugins.aps.R
@@ -368,9 +369,31 @@ open class OpenAPSSMBPlugin @Inject constructor(
             out_units = if (profileFunction.getUnits() == GlucoseUnit.MMOL) "mmol/L" else "mg/dl",
             variable_sens = variableSensitivity,
             insulinDivisor = insulinDivisor,
-            TDD = tdd
+            TDD = tdd,
+            autoISF_version = "",
+            enable_autoISF = false,
+            autoISF_max = 1.0,
+            autoISF_min = 1.0,
+            bgAccel_ISF_weight = 0.0,
+            bgBrake_ISF_weight = 0.0,
+            enable_pp_ISF_always = false,
+            pp_ISF_hours = 3,
+            pp_ISF_weight = 0.0,
+            delta_ISFrange_weight = 0.0,
+            lower_ISFrange_weight = 0.0,
+            higher_ISFrange_weight = 0.0,
+            enable_dura_ISF_with_COB = false,
+            dura_ISF_weight = 0.0,
+            smb_delivery_ratio = 0.0,
+            smb_delivery_ratio_min = 0.0,
+            smb_delivery_ratio_max = 0.0,
+            smb_delivery_ratio_bg_range = 0.0,
+            smb_max_range_extension = 1.0,
+            enableSMB_EvenOn_OddOff = false,
+            enableSMB_EvenOn_OddOff_always = false,
+            iob_threshold_percent = 100,
+            profile_percentage = 100
         )
-
         val microBolusAllowed = constraintsChecker.isSMBModeEnabled(ConstraintObject(tempBasalFallback.not(), aapsLogger)).also { inputConstraints.copyReasons(it) }.value()
         val flatBGsDetected = bgQualityCheck.state == BgQualityCheck.State.FLAT
 

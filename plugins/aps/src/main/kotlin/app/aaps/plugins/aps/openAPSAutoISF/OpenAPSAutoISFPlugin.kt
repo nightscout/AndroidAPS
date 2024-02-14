@@ -52,6 +52,7 @@ import app.aaps.core.objects.extensions.plannedRemainingMinutes
 import app.aaps.core.objects.extensions.put
 import app.aaps.core.objects.extensions.store
 import app.aaps.core.objects.extensions.target
+import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.plugins.aps.OpenAPSFragment
 import app.aaps.plugins.aps.R
@@ -96,7 +97,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         .pluginName(R.string.openaps_auto_isf)
         .shortName(R.string.autoisf_shortname)
         .preferencesId(R.xml.pref_openapsautoisf)
-        .preferencesVisibleInSimpleMode(true)
+        .preferencesVisibleInSimpleMode(false)
         .showInList(config.APS)
         .description(R.string.description_auto_isf),
     aapsLogger, rh
@@ -106,7 +107,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
     override var lastAPSRun: Long = 0
     override val algorithm = APSResult.Algorithm.SMB
     override var lastAPSResult: DetermineBasalResult? = null
-    override fun supportsDynamicIsf(): Boolean = preferences.get(BooleanKey.ApsUseAutoIsf)
+    override fun supportsDynamicIsf(): Boolean = false //preferences.get(BooleanKey.ApsUseAutoIsfWeights)
 
     override fun getIsfMgdl(multiplier: Double, timeShift: Int, caller: String): Double? {
         val start = dateUtil.now()
@@ -155,14 +156,12 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
     private val dynIsfCache = LongSparseArray<Double>()
     private fun calculateVariableIsf(timestamp: Long, bg: Double?): Pair<String, Double?> {
         // Calculate here ISF value with AutoISF algo
-        if (!preferences.get(BooleanKey.ApsUseAutoIsf)) return Pair("OFF", null)
-
+        if (!preferences.get(BooleanKey.ApsUseDynamicSensitivity)) return Pair("OFF", null)
         val result = persistenceLayer.getApsResultCloseTo(timestamp)
         if (result?.variableSens != null) {
             //aapsLogger.debug("calculateVariableIsf $caller DB  ${dateUtil.dateAndTimeAndSecondsString(timestamp)} ${result.variableSens}")
             return Pair("DB", result.variableSens)
         }
-
         val glucose = bg ?: glucoseStatusProvider.glucoseStatusData?.glucose ?: return Pair("GLUC", null)
         // Round down to 30 min and use it as a key for caching
         // Add BG to key as it affects calculation
@@ -172,7 +171,6 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
             //aapsLogger.debug("calculateVariableIsf $caller HIT ${dateUtil.dateAndTimeAndSecondsString(timestamp)} $cached")
             return Pair("HIT", cached)
         }
-
         // no cached result found, let's calculate the value
         val tdd1D = tddCalculator.averageTDD(tddCalculator.calculate(timestamp, 1, allowMissingDays = false))?.data?.totalAmount ?: return Pair("TDD miss", null)
         val tdd7D = tddCalculator.averageTDD(tddCalculator.calculate(timestamp, 7, allowMissingDays = false))?.data?.totalAmount ?: return Pair("TDD miss", null)
@@ -227,13 +225,13 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
                 hardLimits.maxIC()
             )
         ) return
-        if (!hardLimits.checkHardLimits(profile.getIsfMgdl("OpenAPSSMBPlugin"), app.aaps.core.ui.R.string.profile_sensitivity_value, HardLimits.MIN_ISF, HardLimits.MAX_ISF)) return
+        if (!hardLimits.checkHardLimits(profile.getIsfMgdl("OpenAPSAutoISFPlugin"), app.aaps.core.ui.R.string.profile_sensitivity_value, HardLimits.MIN_ISF, HardLimits.MAX_ISF)) return
         if (!hardLimits.checkHardLimits(profile.getMaxDailyBasal(), app.aaps.core.ui.R.string.profile_max_daily_basal_value, 0.02, hardLimits.maxBasal())) return
         if (!hardLimits.checkHardLimits(pump.baseBasalRate, app.aaps.core.ui.R.string.current_basal_value, 0.01, hardLimits.maxBasal())) return
 
         // End of check, start gathering data
 
-        val dynIsfMode = preferences.get(BooleanKey.ApsUseAutoIsf)
+        val dynIsfMode = false // preferences.get(BooleanKey.ApsUseAutoIsf) no flag yet for AutoISF
         val smbEnabled = preferences.get(BooleanKey.ApsUseSmb)
         val advancedFiltering = constraintsChecker.isAdvancedFilteringEnabled().also { inputConstraints.copyReasons(it) }.value()
 
@@ -262,7 +260,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         }
 
         var autosensResult = AutosensResult()
-        val tddStatus: TddStatus?
+        //val tddStatus: TddStatus?
         var variableSensitivity = 0.0
         var tdd = 0.0
         if (dynIsfMode) {
@@ -289,12 +287,13 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
                 )
             } else {
                 uiInteraction.dismissNotification(Notification.SMB_FALLBACK)
-                tddStatus = TddStatus(tdd1D, tdd7D.data.totalAmount, tddLast24H.totalAmount, tddLast4H, tddLast8to4H)
-                val tddWeightedFromLast8H = ((1.4 * tddStatus.tddLast4H) + (0.6 * tddStatus.tddLast8to4H)) * 3
-                tdd = ((tddWeightedFromLast8H * 0.33) + (tddStatus.tdd7D * 0.34) + (tddStatus.tdd1D * 0.33)) * preferences.get(IntKey.ApsDynIsfAdjustmentFactor) / 100.0
+                //tddStatus = TddStatus(tdd1D, tdd7D.data.totalAmount, tddLast24H.totalAmount, tddLast4H, tddLast8to4H)
+                //val tddWeightedFromLast8H = ((1.4 * tddStatus.tddLast4H) + (0.6 * tddStatus.tddLast8to4H)) * 3
+                //tdd = ((tddWeightedFromLast8H * 0.33) + (tddStatus.tdd7D * 0.34) + (tddStatus.tdd1D * 0.33)) * preferences.get(IntKey.ApsDynIsfAdjustmentFactor) / 100.0
                 variableSensitivity = Round.roundTo(1800 / (tdd * (ln((glucoseStatus.glucose / insulinDivisor) + 1))), 0.1)
 
-                // Compare insulin consumption of last 24h with last 7 days average
+                // Compare insulin consumption of last 24h with last 7 days average            profile_percentage = if (profile is ProfileSealed.EPS) profile.value.originalPercentage else 100
+
                 val tddRatio = if (preferences.get(BooleanKey.ApsDynIsfAdjustSensitivity)) tddLast24H.totalAmount / tdd7D.data.totalAmount else 1.0
                 // Because consumed carbs affects total amount of insulin compensate final ratio by consumed carbs ratio
                 // take only 60% (expecting 40% basal). We cannot use bolus/total because of SMBs
@@ -334,18 +333,18 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
             max_bg = maxBg,
             target_bg = targetBg,
             carb_ratio = profile.getIc(),
-            sens = profile.getIsfMgdl("OpenAPSSMBPlugin"),
+            sens = profile.getIsfMgdl("OpenAPSAutoISFPlugin"),
             autosens_adjust_targets = false, // not used
             max_daily_safety_multiplier = preferences.get(DoubleKey.ApsMaxDailyMultiplier),
             current_basal_safety_multiplier = preferences.get(DoubleKey.ApsMaxCurrentBasalMultiplier),
             lgsThreshold = profileUtil.convertToMgdlDetect(preferences.get(UnitDoubleKey.ApsLgsThreshold)).toInt(),
-            high_temptarget_raises_sensitivity = false,
-            low_temptarget_lowers_sensitivity = false,
+            high_temptarget_raises_sensitivity = preferences.get(BooleanKey.ApsAutoIsfHighTtRaisesSens), //was false,
+            low_temptarget_lowers_sensitivity = preferences.get(BooleanKey.ApsAutoIsfLowTtLowersSens), // was false,
             sensitivity_raises_target = preferences.get(BooleanKey.ApsSensitivityRaisesTarget),
             resistance_lowers_target = preferences.get(BooleanKey.ApsResistanceLowersTarget),
             adv_target_adjustments = SMBDefaults.adv_target_adjustments,
             exercise_mode = SMBDefaults.exercise_mode,
-            half_basal_exercise_target = SMBDefaults.half_basal_exercise_target,
+            half_basal_exercise_target = preferences.get(IntKey.ApsAutoIsfHalfBasalExerciseTarget),
             maxCOB = SMBDefaults.maxCOB,
             skip_neutral_temps = pump.setNeutralTempAtFullHour(),
             remainingCarbsCap = SMBDefaults.remainingCarbsCap,
@@ -365,9 +364,32 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
             temptargetSet = isTempTarget,
             autosens_max = preferences.get(DoubleKey.AutosensMax),
             out_units = if (profileFunction.getUnits() == GlucoseUnit.MMOL) "mmol/L" else "mg/dl",
-            variable_sens = variableSensitivity,
-            insulinDivisor = insulinDivisor,
-            TDD = tdd
+            variable_sens = 47.11, //variableSensitivity,
+            insulinDivisor = 0,
+            TDD = 0.0,
+            autoISF_version = "3.0",        // was BuildConfig.AUTOISF_VERSION)
+            enable_autoISF = preferences.get(BooleanKey.ApsUseAutoIsfWeights),
+            autoISF_max = preferences.get(DoubleKey.ApsAutoIsfMax),
+            autoISF_min = preferences.get(DoubleKey.ApsAutoIsfMin),
+            bgAccel_ISF_weight = preferences.get(DoubleKey.ApsAutoIsfBgAccelWeight),
+            bgBrake_ISF_weight = preferences.get(DoubleKey.ApsAutoIsfBgBrakeWeight),
+            enable_pp_ISF_always = preferences.get(BooleanKey.ApsAutoIsfPpAlways),
+            pp_ISF_hours = preferences.get(IntKey.ApsAutoIsfPpIsfHours),
+            pp_ISF_weight = preferences.get(DoubleKey.ApsAutoIsfPpWeight),
+            delta_ISFrange_weight = preferences.get(DoubleKey.ApsAutoIsfDeltaWeight),
+            lower_ISFrange_weight = preferences.get(DoubleKey.ApsAutoIsfLowBgWeight),
+            higher_ISFrange_weight = preferences.get(DoubleKey.ApsAutoIsfHighBgWeight),
+            enable_dura_ISF_with_COB = preferences.get(BooleanKey.ApsAutoIsfDuraAfterCarbs),
+            dura_ISF_weight = preferences.get(DoubleKey.ApsAutoIsfDuraWeight),
+            smb_delivery_ratio = preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatio),
+            smb_delivery_ratio_min = preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatioMin),
+            smb_delivery_ratio_max = preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatioMax),
+            smb_delivery_ratio_bg_range = preferences.get(UnitDoubleKey.ApsAutoIsfSmbDeliveryRatioBgRange),
+            smb_max_range_extension = preferences.get(DoubleKey.ApsAutoIsfSmbMaxRangeExtension),
+            enableSMB_EvenOn_OddOff = preferences.get(BooleanKey.ApsAutoIsfSmbOnEvenTt), // for TT
+            enableSMB_EvenOn_OddOff_always = preferences.get(BooleanKey.ApsAutoIsfSmbOnEvenPt), // for profile target
+            iob_threshold_percent = preferences.get(IntKey.ApsAutoIsfIobThPercent),
+            profile_percentage = if (profile is ProfileSealed.EPS) profile.value.originalPercentage else 100
         )
 
         val microBolusAllowed = constraintsChecker.isSMBModeEnabled(ConstraintObject(tempBasalFallback.not(), aapsLogger)).also { inputConstraints.copyReasons(it) }.value()
@@ -465,26 +487,26 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
     }
 
     override fun isAutosensModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
-        if (preferences.get(BooleanKey.ApsUseAutoIsf)) {
-            // DynISF mode
-            if (!preferences.get(BooleanKey.ApsDynIsfAdjustSensitivity))
-                value.set(false, rh.gs(R.string.autosens_disabled_in_preferences), this)
-        } else {
+        // if (preferences.get(BooleanKey.ApsUseAutoIsf)) {
+        //     // DynISF mode
+        //     if (!preferences.get(BooleanKey.ApsDynIsfAdjustSensitivity))
+        //         value.set(false, rh.gs(R.string.autosens_disabled_in_preferences), this)
+        // } else {
             // SMB mode
             val enabled = preferences.get(BooleanKey.ApsUseAutosens)
             if (!enabled) value.set(false, rh.gs(R.string.autosens_disabled_in_preferences), this)
-        }
+        // }
         return value
     }
 
     override fun configuration(): JSONObject =
         JSONObject()
-            .put(BooleanKey.ApsUseAutoIsf, preferences, rh)
+            .put(BooleanKey.ApsUseDynamicSensitivity, preferences, rh)
             .put(IntKey.ApsDynIsfAdjustmentFactor, preferences, rh)
 
     override fun applyConfiguration(configuration: JSONObject) {
         configuration
-            .store(BooleanKey.ApsUseAutoIsf, preferences, rh)
+            .store(BooleanKey.ApsUseDynamicSensitivity, preferences, rh)
             .store(IntKey.ApsDynIsfAdjustmentFactor, preferences, rh)
     }
 }
