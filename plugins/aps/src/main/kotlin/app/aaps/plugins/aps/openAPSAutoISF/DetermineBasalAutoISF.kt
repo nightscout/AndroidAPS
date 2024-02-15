@@ -1,12 +1,12 @@
 package app.aaps.plugins.aps.openAPSAutoISF
 
 import app.aaps.core.interfaces.aps.APSResult
+import app.aaps.core.interfaces.aps.AutoISFProfile
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.CurrentTemp
 import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.aps.MealData
-import app.aaps.core.interfaces.aps.OapsProfile
 import app.aaps.core.interfaces.aps.Predictions
 import app.aaps.core.interfaces.aps.RT
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -15,7 +15,6 @@ import java.time.Instant
 import java.time.ZoneId
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.math.ln
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
@@ -60,7 +59,7 @@ class DetermineBasalAutoISF @Inject constructor(
     //if (profile.out_units === "mmol/L") round(value / 18, 1).toFixed(1);
     //else Math.round(value);
 
-    fun enable_smb(profile: OapsProfile, microBolusAllowed: Boolean, meal_data: MealData, target_bg: Double): Boolean {
+    fun enable_smb(profile: AutoISFProfile, microBolusAllowed: Boolean, meal_data: MealData, target_bg: Double): Boolean {
         // disable SMB when a high temptarget is set
         if (!microBolusAllowed) {
             consoleError.add("SMB disabled (!microBolusAllowed)")
@@ -105,10 +104,10 @@ class DetermineBasalAutoISF @Inject constructor(
         consoleError.add(msg)
     }
 
-    private fun getMaxSafeBasal(profile: OapsProfile): Double =
+    private fun getMaxSafeBasal(profile: AutoISFProfile): Double =
         min(profile.max_basal, min(profile.max_daily_safety_multiplier * profile.max_daily_basal, profile.current_basal_safety_multiplier * profile.current_basal))
 
-    fun setTempBasal(_rate: Double, duration: Int, profile: OapsProfile, rT: RT, currenttemp: CurrentTemp): RT {
+    fun setTempBasal(_rate: Double, duration: Int, profile: AutoISFProfile, rT: RT, currenttemp: CurrentTemp): RT {
         //var maxSafeBasal = Math.min(profile.max_basal, 3 * profile.max_daily_basal, 4 * profile.current_basal);
 
         val maxSafeBasal = getMaxSafeBasal(profile)
@@ -146,7 +145,7 @@ class DetermineBasalAutoISF @Inject constructor(
         }
     }
 
-    fun loop_smb(microBolusAllowed: Boolean, profile: OapsProfile, iob_data_iob: Double, iobTH_reduction_ratio: Double) : String
+    fun loop_smb(microBolusAllowed: Boolean, profile: AutoISFProfile, iob_data_iob: Double, iobTH_reduction_ratio: Double) : String
     {
         if ( !microBolusAllowed ) {
             return "AAPS"                                                 // see message in enable_smb
@@ -211,7 +210,7 @@ class DetermineBasalAutoISF @Inject constructor(
         return "AAPS"                                                      // leave it to standard AAPS
     }
 
-    fun interpolate(xdata: Double, profile: OapsProfile, type: String): Double
+    fun interpolate(xdata: Double, profile: AutoISFProfile, type: String): Double
     {   // interpolate ISF behaviour based on polygons defining nonlinear functions defined by value pairs for ...
         val polyX: Array<Double>
         val polyY: Array<Double>
@@ -284,8 +283,9 @@ class DetermineBasalAutoISF @Inject constructor(
         return newVal
     }
 
-    fun withinISFlimits(liftISF: Double, minISFReduction: Double, maxISFReduction: Double, sensitivityRatio: Double, origin_sens: String, profile: OapsProfile,
-                        high_temptarget_raises_sensitivity: Boolean, target_bg: Double, normalTarget: Int): Double {
+    fun withinISFlimits(
+        liftISF: Double, minISFReduction: Double, maxISFReduction: Double, sensitivityRatio: Double, origin_sens: String, profile: AutoISFProfile,
+        high_temptarget_raises_sensitivity: Boolean, target_bg: Double, normalTarget: Int): Double {
         var liftISFlimited: Double = liftISF
         if ( liftISF < minISFReduction ) {
             consoleError.add("weakest autoISF factor ${round(liftISF,2)} limited by autoISF_min $minISFReduction")
@@ -311,7 +311,7 @@ class DetermineBasalAutoISF @Inject constructor(
         return finalISF
     }
 
-    fun determine_varSMBratio(profile: OapsProfile, bg: Int, target_bg: Double, loop_wanted_smb: String): Double
+    fun determine_varSMBratio(profile: AutoISFProfile, bg: Int, target_bg: Double, loop_wanted_smb: String): Double
     {   // let SMB delivery ratio increase from min to max depending on how much bg exceeds target
         var smb_delivery_ratio_bg_range = profile.smb_delivery_ratio_bg_range
         if ( smb_delivery_ratio_bg_range<10 )   { smb_delivery_ratio_bg_range = smb_delivery_ratio_bg_range * 18 }  // was in mmol/l
@@ -344,8 +344,9 @@ class DetermineBasalAutoISF @Inject constructor(
         return new_SMB
     }
 
-    fun autoISF(sens: Double, origin_sens: String, target_bg: Double, profile: OapsProfile, glucose_status: GlucoseStatus, meal_data: MealData, currentTime: Long,
-                sensitivityRatio: Double, loop_wanted_smb: String, high_temptarget_raises_sensitivity: Boolean, normalTarget: Int): Double {
+    fun autoISF(
+        sens: Double, origin_sens: String, target_bg: Double, profile: AutoISFProfile, glucose_status: GlucoseStatus, meal_data: MealData, currentTime: Long,
+        sensitivityRatio: Double, loop_wanted_smb: String, high_temptarget_raises_sensitivity: Boolean, normalTarget: Int): Double {
         if ( !profile.enable_autoISF) {
             consoleError.add("autoISF disabled in Preferences")
             consoleError.add("----------------------------------")
@@ -488,7 +489,7 @@ class DetermineBasalAutoISF @Inject constructor(
 
 
     fun determine_basal(
-        glucose_status: GlucoseStatus, currenttemp: CurrentTemp, iob_data_array: Array<IobTotal>, profile: OapsProfile, autosens_data: AutosensResult, meal_data: MealData,
+        glucose_status: GlucoseStatus, currenttemp: CurrentTemp, iob_data_array: Array<IobTotal>, profile: AutoISFProfile, autosens_data: AutosensResult, meal_data: MealData,
         microBolusAllowed: Boolean, currentTime: Long, flatBGsDetected: Boolean, dynIsfMode: Boolean
     ): RT {
         consoleError.clear()
@@ -631,9 +632,9 @@ class DetermineBasalAutoISF @Inject constructor(
         val minAvgDelta = min(glucose_status.shortAvgDelta, glucose_status.longAvgDelta)
         val maxDelta = max(glucose_status.delta, max(glucose_status.shortAvgDelta, glucose_status.longAvgDelta))
 
-        var sens =
-            if (dynIsfMode) profile.variable_sens
-            else {
+        //var sens =
+            //if (dynIsfMode) profile.variable_sens
+            //else {
                 val profile_sens = round(profile.sens, 1)
                 val adjusted_sens = round(profile.sens / sensitivityRatio, 1)
                 if (adjusted_sens != profile_sens) {
@@ -641,9 +642,9 @@ class DetermineBasalAutoISF @Inject constructor(
                 } else {
                     consoleError.add("ISF unchanged: $adjusted_sens")
                 }
-                adjusted_sens
+        var sens = adjusted_sens
                 //console.log(" (autosens ratio "+sensitivityRatio+")");
-            }
+            //}
         consoleError.add("CR:${profile.carb_ratio}")
 
         var loop_wanted_smb: String
@@ -760,7 +761,7 @@ class DetermineBasalAutoISF @Inject constructor(
             sensitivityRatio = sensitivityRatio, // autosens ratio (fraction of normal basal)
             consoleLog = consoleLog,
             consoleError = consoleError,
-            variable_sens = if (dynIsfMode) profile.variable_sens else sens
+            variable_sens = sens // if (dynIsfMode) profile.variable_sens else sens
         )
 
         // generate predicted future BGs based on IOB, COB, and current absorption rate
@@ -902,16 +903,16 @@ class DetermineBasalAutoISF @Inject constructor(
         iobArray.forEach { iobTick ->
             //console.error(iobTick);
             val predBGI: Double = round((-iobTick.activity * sens * 5), 2)
-            val IOBpredBGI: Double =
-                if (dynIsfMode) round((-iobTick.activity * (1800 / (profile.TDD * (ln((max(IOBpredBGs[IOBpredBGs.size - 1], 39.0) / profile.insulinDivisor) + 1)))) * 5), 2)
-                else predBGI
+            val IOBpredBGI: Double = predBGI
+                //if (dynIsfMode) round((-iobTick.activity * (1800 / (profile.TDD * (ln((max(IOBpredBGs[IOBpredBGs.size - 1], 39.0) / profile.insulinDivisor) + 1)))) * 5), 2)
+                //else predBGI
             iobTick.iobWithZeroTemp ?: error("iobTick.iobWithZeroTemp missing")
-            val predZTBGI =
-                if (dynIsfMode) round((-iobTick.iobWithZeroTemp!!.activity * (1800 / (profile.TDD * (ln((max(ZTpredBGs[ZTpredBGs.size - 1], 39.0) / profile.insulinDivisor) + 1)))) * 5), 2)
-                else round((-iobTick.iobWithZeroTemp!!.activity * sens * 5), 2)
-            val predUAMBGI =
-                if (dynIsfMode) round((-iobTick.activity * (1800 / (profile.TDD * (ln((max(UAMpredBGs[UAMpredBGs.size - 1], 39.0) / profile.insulinDivisor) + 1)))) * 5), 2)
-                else predBGI
+            val predZTBGI = round((-iobTick.iobWithZeroTemp!!.activity * sens * 5), 2)
+                //if (dynIsfMode) round((-iobTick.iobWithZeroTemp!!.activity * (1800 / (profile.TDD * (ln((max(ZTpredBGs[ZTpredBGs.size - 1], 39.0) / profile.insulinDivisor) + 1)))) * 5), 2)
+                //else round((-iobTick.iobWithZeroTemp!!.activity * sens * 5), 2)
+            val predUAMBGI = predBGI
+                //if (dynIsfMode) round((-iobTick.activity * (1800 / (profile.TDD * (ln((max(UAMpredBGs[UAMpredBGs.size - 1], 39.0) / profile.insulinDivisor) + 1)))) * 5), 2)
+                //else predBGI
             // for IOBpredBGs, predicted deviation impact drops linearly from current deviation down to zero
             // over 60 minutes (data points every 5m)
             val predDev: Double = ci * (1 - min(1.0, IOBpredBGs.size / (60.0 / 5.0)))

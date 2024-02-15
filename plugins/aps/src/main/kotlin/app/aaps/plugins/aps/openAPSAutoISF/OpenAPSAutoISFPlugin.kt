@@ -12,7 +12,7 @@ import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.CurrentTemp
-import app.aaps.core.interfaces.aps.OapsProfile
+import app.aaps.core.interfaces.aps.AutoISFProfile
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
@@ -323,7 +323,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         val iobArray = iobCobCalculator.calculateIobArrayForSMB(autosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
         val mealData = iobCobCalculator.getMealDataWithWaitingForCalculationFinish()
 
-        val oapsProfile = OapsProfile(
+        val autoisfProfile = AutoISFProfile(
             dia = 0.0, // not used
             min_5m_carbimpact = 0.0, // not used
             max_iob = constraintsChecker.getMaxIOBAllowed().also { inputConstraints.copyReasons(it) }.value(),
@@ -364,9 +364,9 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
             temptargetSet = isTempTarget,
             autosens_max = preferences.get(DoubleKey.AutosensMax),
             out_units = if (profileFunction.getUnits() == GlucoseUnit.MMOL) "mmol/L" else "mg/dl",
-            variable_sens = 47.11, //variableSensitivity,
-            insulinDivisor = 0,
-            TDD = 0.0,
+            //variable_sens = 47.11, //variableSensitivity,
+            //insulinDivisor = 0,
+            //TDD = 0.0,
             autoISF_version = "3.0",        // was BuildConfig.AUTOISF_VERSION)
             enable_autoISF = preferences.get(BooleanKey.ApsUseAutoIsfWeights),
             autoISF_max = preferences.get(DoubleKey.ApsAutoIsfMax),
@@ -399,7 +399,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         aapsLogger.debug(LTag.APS, "Glucose status:     $glucoseStatus")
         aapsLogger.debug(LTag.APS, "Current temp:       $currentTemp")
         aapsLogger.debug(LTag.APS, "IOB data:           ${iobArray.joinToString()}")
-        aapsLogger.debug(LTag.APS, "Profile:            $oapsProfile")
+        aapsLogger.debug(LTag.APS, "Profile:            $autoisfProfile")
         aapsLogger.debug(LTag.APS, "Autosens data:      $autosensResult")
         aapsLogger.debug(LTag.APS, "Meal data:          $mealData")
         aapsLogger.debug(LTag.APS, "MicroBolusAllowed:  $microBolusAllowed")
@@ -410,7 +410,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
             glucose_status = glucoseStatus,
             currenttemp = currentTemp,
             iob_data_array = iobArray,
-            profile = oapsProfile,
+            profile = autoisfProfile,
             autosens_data = autosensResult,
             meal_data = mealData,
             microBolusAllowed = microBolusAllowed,
@@ -425,7 +425,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
             determineBasalResult.iobData = iobArray
             determineBasalResult.glucoseStatus = glucoseStatus
             determineBasalResult.currentTemp = currentTemp
-            determineBasalResult.oapsProfile = oapsProfile
+            determineBasalResult.autoIsfProfile = autoisfProfile
             determineBasalResult.mealData = mealData
             lastAPSResult = determineBasalResult
             lastAPSRun = now
