@@ -1417,7 +1417,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     rxBus.send(EventDismissNotification(Notification.FAILED_UPDATE_PROFILE))
                     rxBus.send(EventDismissNotification(Notification.OMNIPOD_TBR_ALERTS))
                     rxBus.send(EventDismissNotification(Notification.OMNIPOD_TIME_OUT_OF_SYNC))
-                    commandQueue.customCommand(CommandDisableSuspendAlerts(), null)
+                    commandQueue.customCommand(CommandDisableSuspendAlerts(rh), null)
                 }
             }
 
@@ -1441,7 +1441,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     rxBus.send(EventDismissNotification(Notification.FAILED_UPDATE_PROFILE))
                     rxBus.send(EventDismissNotification(Notification.OMNIPOD_TBR_ALERTS))
                     rxBus.send(EventDismissNotification(Notification.OMNIPOD_TIME_OUT_OF_SYNC))
-                    commandQueue.customCommand(CommandDisableSuspendAlerts(), null)
+                    commandQueue.customCommand(CommandDisableSuspendAlerts(rh), null)
                 }
             }
 
