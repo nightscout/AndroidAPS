@@ -18,6 +18,10 @@
             android:title="@string/openapssmb_max_iob_title" />
 
         <app.aaps.core.keys.AdaptiveSwitchPreference
+            android:key="@string/key_openaps_use_autosens"
+            android:title="@string/openapsama_use_autosens" />
+
+        <app.aaps.core.keys.AdaptiveSwitchPreference
             android:key="@string/key_use_dynamic_sensitivity"
             android:summary="@string/use_dynamic_sensitivity_summary"
             android:title="@string/use_dynamic_sensitivity_title" />
@@ -38,13 +42,11 @@
             android:title="@string/dynisf_adjust_sensitivity" />
 
         <app.aaps.core.keys.AdaptiveSwitchPreference
-            android:dependency="@string/key_dynamic_isf_adjust_sensitivity"
             android:key="@string/key_openaps_sensitivity_raises_target"
             android:summary="@string/sensitivity_raises_target_summary"
             android:title="@string/sensitivity_raises_target_title" />
 
         <app.aaps.core.keys.AdaptiveSwitchPreference
-            android:dependency="@string/key_dynamic_isf_adjust_sensitivity"
             android:key="@string/key_openaps_resistance_lowers_target"
             android:summary="@string/resistance_lowers_target_summary"
             android:title="@string/resistance_lowers_target_title" />
@@ -55,31 +57,26 @@
             android:title="@string/enable_smb" />
 
         <app.aaps.core.keys.AdaptiveSwitchPreference
-            android:dependency="@string/key_openaps_use_smb"
             android:key="@string/key_openaps_allow_smb_with_high_temp_target"
             android:summary="@string/enable_smb_with_high_temp_target_summary"
             android:title="@string/enable_smb_with_high_temp_target" />
 
         <app.aaps.core.keys.AdaptiveSwitchPreference
-            android:dependency="@string/key_openaps_use_smb"
             android:key="@string/key_openaps_enable_smb_always"
             android:summary="@string/enable_smb_always_summary"
             android:title="@string/enable_smb_always" />
 
         <app.aaps.core.keys.AdaptiveSwitchPreference
-            android:dependency="@string/key_openaps_use_smb"
             android:key="@string/key_openaps_allow_smb_with_COB"
             android:summary="@string/enable_smb_with_cob_summary"
             android:title="@string/enable_smb_with_cob" />
 
         <app.aaps.core.keys.AdaptiveSwitchPreference
-            android:dependency="@string/key_openaps_use_smb"
             android:key="@string/key_openaps_allow_smb_with_low_temp_target"
             android:summary="@string/enable_smb_with_temp_target_summary"
             android:title="@string/enable_smb_with_temp_target" />
 
         <app.aaps.core.keys.AdaptiveSwitchPreference
-            android:dependency="@string/key_openaps_use_smb"
             android:key="@string/key_openaps_enable_smb_after_carbs"
             android:summary="@string/enable_smb_after_carbs_summary"
             android:title="@string/enable_smb_after_carbs" />
