@@ -1,6 +1,5 @@
 package app.aaps.plugins.aps.openAPSSMB
 
-import android.content.Context
 import android.util.LongSparseArray
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
@@ -53,7 +52,6 @@ import app.aaps.core.objects.extensions.plannedRemainingMinutes
 import app.aaps.core.objects.extensions.put
 import app.aaps.core.objects.extensions.store
 import app.aaps.core.objects.extensions.target
-import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.plugins.aps.OpenAPSFragment
 import app.aaps.plugins.aps.R
