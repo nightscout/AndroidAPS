@@ -568,27 +568,24 @@ class DetermineBasalAutoISF @Inject constructor(
 
         if (high_temptarget_raises_sensitivity && profile.temptargetSet && target_bg > normalTarget
             || profile.low_temptarget_lowers_sensitivity && profile.temptargetSet && target_bg < normalTarget) {
-            if (high_temptarget_raises_sensitivity && profile.temptargetSet && target_bg > normalTarget
-                || profile.low_temptarget_lowers_sensitivity && profile.temptargetSet && target_bg < normalTarget ) {
-                // w/ target 100, temp target 110 = .89, 120 = 0.8, 140 = 0.67, 160 = .57, and 200 = .44
-                // e.g.: Sensitivity ratio set to 0.8 based on temp target of 120; Adjusting basal from 1.65 to 1.35; ISF from 58.9 to 73.6
-                //sensitivityRatio = 2/(2+(target_bg-normalTarget)/40);
-                val c = (halfBasalTarget - normalTarget).toDouble()
-                if (c * (c + target_bg-normalTarget) <= 0.0) {
-                    sensitivityRatio = profile.autosens_max
-                } else {
-                    sensitivityRatio = c / (c + target_bg - normalTarget)
-                    // limit sensitivityRatio to profile.autosens_max (1.2x by default)
-                    sensitivityRatio = min(sensitivityRatio, profile.autosens_max)
-                    sensitivityRatio = round(sensitivityRatio, 2)
-                    exercise_ratio = sensitivityRatio
-                    origin_sens = "from TT modifier"
-                    consoleError.add("Sensitivity ratio set to $sensitivityRatio based on temp target of $target_bg; ")
-                }
+            // w/ target 100, temp target 110 = .89, 120 = 0.8, 140 = 0.67, 160 = .57, and 200 = .44
+            // e.g.: Sensitivity ratio set to 0.8 based on temp target of 120; Adjusting basal from 1.65 to 1.35; ISF from 58.9 to 73.6
+            //sensitivityRatio = 2/(2+(target_bg-normalTarget)/40);
+            val c = (halfBasalTarget - normalTarget).toDouble()
+            if (c * (c + target_bg-normalTarget) <= 0.0) {
+                sensitivityRatio = profile.autosens_max
             } else {
-                sensitivityRatio = autosens_data.ratio
-                consoleError.add("Autosens ratio: $sensitivityRatio; ")
+                sensitivityRatio = c / (c + target_bg - normalTarget)
+                // limit sensitivityRatio to profile.autosens_max (1.2x by default)
+                sensitivityRatio = min(sensitivityRatio, profile.autosens_max)
+                sensitivityRatio = round(sensitivityRatio, 2)
+                exercise_ratio = sensitivityRatio
+                origin_sens = "from TT modifier"
+                consoleError.add("Sensitivity ratio set to $sensitivityRatio based on temp target of $target_bg; ")
             }
+        } else {
+            sensitivityRatio = autosens_data.ratio
+            consoleError.add("Autosens ratio: $sensitivityRatio; ")
         }
         val iobTH_reduction_ratio = profile.profile_percentage / 100.0 * exercise_ratio ;     // later: * activityRatio;
         basal = profile.current_basal * sensitivityRatio
