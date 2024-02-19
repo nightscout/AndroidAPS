@@ -73,7 +73,6 @@ class TestOpenAPSAMAPlugin @Inject constructor(
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_generic_icon)
         .pluginName(R.string.openapsama)
         .shortName(R.string.oaps_shortname)
-        .preferencesId(R.xml.pref_openapsama)
         .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_ama),
     aapsLogger, rh
