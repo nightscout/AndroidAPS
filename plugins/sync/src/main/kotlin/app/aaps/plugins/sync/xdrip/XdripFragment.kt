@@ -82,7 +82,7 @@ class XdripFragment : DaggerFragment(), MenuProvider, PluginFragment {
             ID_MENU_FULL_SYNC -> {
                 context?.let { context ->
                     OKDialog.showConfirmation(
-                        context, rh.gs(R.string.ns_client), rh.gs(R.string.full_sync_comment),
+                        context, rh.gs(R.string.xdrip), rh.gs(R.string.full_xdrip_sync_comment),
                         Runnable { handler.post { dataSyncSelector.resetToNextFullSync() } }
                     )
                 }
