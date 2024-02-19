@@ -2,5 +2,21 @@
 <resources>
     <!--  start  -->
     <!-- equil - Commands -->
+    <string name="equil_common_cmd_cancel_bolus">Annuleer Bolus</string>
+    <string name="equil_common_cmd_cancel_tbr">Tijdelijk basaal annuleren</string>
+    <string name="equil_common_cmd_set_basal_schedule">Basaalprofiel instellen</string>
+    <string name="equil_common_cmd_get_status">Equil status ophalen</string>
+    <string name="equil_common_cmd_suspend_delivery">Onderbreek toediening</string>
+    <string name="equil_common_cmd_resume_delivery">Hervat toediening</string>
+    <string name="equil_common_cmd_insert_cannula">Canule inbrengen</string>
+    <string name="equil_common_cmd_set_extended_bolus">Vertraagde bolus instellen</string>
+    <string name="equil_common_cmd_cancel_extended_bolus">Annuleer vertraagde bolus</string>
     <!--    推杆回退-->
+    <string name="equil_common_read_devices">Apparaatinformatie lezen</string>
+    <string name="equil_common_cmd_fill">Vullen</string>
+    <string name="history_manual_confirm">Handmatig bevestigen</string>
+    <string name="equil_command_not_found">Geen apparaat gevonden</string>
+    <string name="equil_command_connect_error">Pomp verbindingsfout</string>
+    <string name="equil_password_title">Pomp wachtwoord</string>
+    <string name="equil_settings">Instellingen</string>
 </resources>
