@@ -19,6 +19,7 @@ import app.aaps.R
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
+import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.PasswordCheck
@@ -31,12 +32,12 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventRebuildTabs
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
 import app.aaps.core.ui.dialogs.OKDialog
-import app.aaps.implementation.plugin.PluginStore
 import app.aaps.plugins.aps.autotune.AutotunePlugin
 import app.aaps.plugins.aps.loop.LoopPlugin
 import app.aaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
@@ -84,7 +85,9 @@ import javax.inject.Inject
 
 class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListener {
 
-    private var pluginId = -1
+    private var pluginName: String? = null
+    private var preferenceScreenClass: String? = null
+    @XmlRes private var xmlId: Int? = null
     private var filter = ""
 
     @Inject lateinit var rxBus: RxBus
@@ -92,7 +95,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var sp: SP
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var profileUtil: ProfileUtil
-    @Inject lateinit var pluginStore: PluginStore
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var config: Config
 
     @Inject lateinit var overviewPlugin: OverviewPlugin
@@ -139,6 +142,11 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var garminPlugin: GarminPlugin
     @Inject lateinit var equilPumpPlugin: EquilPumpPlugin
 
+    companion object {
+
+        const val FILTER = "filter"
+    }
+
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
@@ -146,13 +154,17 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
 
     override fun setArguments(args: Bundle?) {
         super.setArguments(args)
-        pluginId = args?.getInt("id") ?: -1
+        pluginName = args?.getString(UiInteraction.PLUGIN_NAME)
+        xmlId = args?.getInt(UiInteraction.XML_ID)
+        preferenceScreenClass = args?.getString(UiInteraction.PREFERENCE_SCREEN)
         filter = args?.getString("filter") ?: ""
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putInt("id", pluginId)
+        outState.putString(UiInteraction.PLUGIN_NAME, pluginName)
+        outState.putString(UiInteraction.PREFERENCE_SCREEN, preferenceScreenClass)
+        xmlId?.let { outState.putInt(UiInteraction.XML_ID, it) }
         outState.putString("filter", filter)
     }
 
@@ -163,17 +175,6 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
                 .getDefaultSharedPreferences(context)
                 .unregisterOnSharedPreferenceChangeListener(this)
         }
-    }
-
-    private fun addPreferencesFromResourceIfEnabled(p: PluginBase?, rootKey: String?, enabled: Boolean) {
-        if (preferences.simpleMode && p?.pluginDescription?.preferencesVisibleInSimpleMode != true) return
-        if (enabled) addPreferencesFromResourceIfEnabled(p, rootKey)
-    }
-
-    private fun addPreferencesFromResourceIfEnabled(p: PluginBase?, rootKey: String?) {
-        if (preferences.simpleMode && p?.pluginDescription?.preferencesVisibleInSimpleMode != true) return
-        if (p!!.isEnabled() && p.preferencesId != -1)
-            addPreferencesFromResource(p.preferencesId, rootKey)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -187,63 +188,71 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         (savedInstanceState ?: arguments)?.let { bundle ->
-            if (bundle.containsKey("id")) {
-                pluginId = bundle.getInt("id")
+            if (bundle.containsKey(UiInteraction.PLUGIN_NAME)) {
+                pluginName = bundle.getString(UiInteraction.PLUGIN_NAME)
+                preferenceScreenClass = bundle.getString(UiInteraction.PREFERENCE_SCREEN)
+                xmlId = bundle.getInt(UiInteraction.XML_ID)
             }
-            if (bundle.containsKey("filter")) {
-                filter = bundle.getString("filter") ?: ""
+            if (bundle.containsKey(FILTER)) {
+                filter = bundle.getString(FILTER) ?: ""
             }
         }
-        if (pluginId != -1) {
-            addPreferencesFromResource(pluginId, rootKey)
+        if (pluginName != null) {
+            val plugin = activePlugin.getPluginsList().firstOrNull { it.javaClass.simpleName == pluginName } ?: error("Plugin not found")
+            addPreferencesIfEnabled(plugin, rootKey)
+        } else if (preferenceScreenClass != null) {
+            val ps = Class.forName(preferenceScreenClass!!).getDeclaredConstructor().newInstance() as PreferenceScreen
+            addPreferencesFromScreen(ps, rootKey)
+        } else if (xmlId != null && xmlId != 0) {
+            addPreferencesFromResource(xmlId!!, rootKey)
         } else {
             addPreferencesFromResource(R.xml.pref_general, rootKey)
             addPreferencesFromResource(R.xml.pref_protection, rootKey)
-            addPreferencesFromResourceIfEnabled(overviewPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(safetyPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(eversensePlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(dexcomPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(tomatoPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(glunovoPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(intelligoPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(poctechPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(aidexPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(glimpPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(loopPlugin, rootKey, config.APS)
-            addPreferencesFromResourceIfEnabled(openAPSAMAPlugin, rootKey, config.APS)
-            addPreferencesFromResourceIfEnabled(openAPSSMBPlugin, rootKey, config.APS)
-            addPreferencesFromResourceIfEnabled(sensitivityAAPSPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(sensitivityWeightedAveragePlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(sensitivityOref1Plugin, rootKey)
-            addPreferencesFromResourceIfEnabled(danaRPlugin, rootKey, config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(danaRKoreanPlugin, rootKey, config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(danaRv2Plugin, rootKey, config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(danaRSPlugin, rootKey, config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(insightPlugin, rootKey, config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(combov2Plugin, rootKey, config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(medtronicPumpPlugin, rootKey, config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(diaconnG8Plugin, rootKey, config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(eopatchPumpPlugin, rootKey, config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(medtrumPlugin, rootKey, config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(equilPumpPlugin, rootKey, config.PUMPDRIVERS)
+            addPreferencesIfEnabled(overviewPlugin, rootKey)
+            addPreferencesIfEnabled(safetyPlugin, rootKey)
+            addPreferencesIfEnabled(eversensePlugin, rootKey)
+            addPreferencesIfEnabled(dexcomPlugin, rootKey)
+            addPreferencesIfEnabled(tomatoPlugin, rootKey)
+            addPreferencesIfEnabled(glunovoPlugin, rootKey)
+            addPreferencesIfEnabled(intelligoPlugin, rootKey)
+            addPreferencesIfEnabled(poctechPlugin, rootKey)
+            addPreferencesIfEnabled(aidexPlugin, rootKey)
+            addPreferencesIfEnabled(glimpPlugin, rootKey)
+            addPreferencesIfEnabled(loopPlugin, rootKey, config.APS)
+            addPreferencesIfEnabled(openAPSAMAPlugin, rootKey, config.APS)
+            addPreferencesIfEnabled(openAPSSMBPlugin, rootKey, config.APS)
+            addPreferencesIfEnabled(sensitivityAAPSPlugin, rootKey)
+            addPreferencesIfEnabled(sensitivityWeightedAveragePlugin, rootKey)
+            addPreferencesIfEnabled(sensitivityOref1Plugin, rootKey)
+            addPreferencesIfEnabled(danaRPlugin, rootKey, config.PUMPDRIVERS)
+            addPreferencesIfEnabled(danaRKoreanPlugin, rootKey, config.PUMPDRIVERS)
+            addPreferencesIfEnabled(danaRv2Plugin, rootKey, config.PUMPDRIVERS)
+            addPreferencesIfEnabled(danaRSPlugin, rootKey, config.PUMPDRIVERS)
+            addPreferencesIfEnabled(insightPlugin, rootKey, config.PUMPDRIVERS)
+            addPreferencesIfEnabled(combov2Plugin, rootKey, config.PUMPDRIVERS)
+            addPreferencesIfEnabled(medtronicPumpPlugin, rootKey, config.PUMPDRIVERS)
+            addPreferencesIfEnabled(diaconnG8Plugin, rootKey, config.PUMPDRIVERS)
+            addPreferencesIfEnabled(eopatchPumpPlugin, rootKey, config.PUMPDRIVERS)
+            addPreferencesIfEnabled(medtrumPlugin, rootKey, config.PUMPDRIVERS)
+            addPreferencesIfEnabled(equilPumpPlugin, rootKey, config.PUMPDRIVERS)
             addPreferencesFromResource(R.xml.pref_pump, rootKey, config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(virtualPumpPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(insulinOrefFreePeakPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(nsClientPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(nsClientV3Plugin, rootKey)
-            addPreferencesFromResourceIfEnabled(tidepoolPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(smsCommunicatorPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(automationPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(autotunePlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(wearPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(statusLinePlugin, rootKey)
+            addPreferencesIfEnabled(virtualPumpPlugin, rootKey)
+            addPreferencesIfEnabled(insulinOrefFreePeakPlugin, rootKey)
+            addPreferencesIfEnabled(nsClientPlugin, rootKey)
+            addPreferencesIfEnabled(nsClientV3Plugin, rootKey)
+            addPreferencesIfEnabled(tidepoolPlugin, rootKey)
+            addPreferencesIfEnabled(smsCommunicatorPlugin, rootKey)
+            addPreferencesIfEnabled(automationPlugin, rootKey)
+            addPreferencesIfEnabled(autotunePlugin, rootKey)
+            addPreferencesIfEnabled(wearPlugin, rootKey)
+            addPreferencesIfEnabled(statusLinePlugin, rootKey)
             addPreferencesFromResource(R.xml.pref_alerts, rootKey)
             addPreferencesFromResource(app.aaps.plugins.configuration.R.xml.pref_datachoices, rootKey)
-            addPreferencesFromResourceIfEnabled(maintenancePlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(openHumansUploaderPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(garminPlugin, rootKey)
+            addPreferencesIfEnabled(maintenancePlugin, rootKey)
+            addPreferencesIfEnabled(openHumansUploaderPlugin, rootKey)
+            addPreferencesIfEnabled(garminPlugin, rootKey)
         }
-        initSummary(preferenceScreen, pluginId != -1)
+        initSummary(preferenceScreen, pluginName != null)
         preprocessPreferences()
         if (filter != "") updateFilterVisibility(filter, preferenceScreen)
     }
@@ -275,7 +284,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     }
 
     private fun preprocessPreferences() {
-        for (plugin in pluginStore.plugins) {
+        for (plugin in activePlugin.getPluginsList()) {
             if (plugin.isEnabled()) plugin.preprocessPreferences(this)
         }
     }
@@ -313,24 +322,38 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         }
     }
 
-    private fun addPreferencesFromResource(@Suppress("SameParameterValue") @XmlRes preferencesResId: Int, key: String?, enabled: Boolean) {
-        if (enabled) addPreferencesFromResource(preferencesResId, key)
+    private fun addPreferencesIfEnabled(p: PluginBase, rootKey: String?, enabled: Boolean = true) {
+        if (preferences.simpleMode && !p.pluginDescription.preferencesVisibleInSimpleMode) return
+        if (enabled && p.isEnabled() && p.preferencesId != -1)
+            addPreferencesFromResource(p.preferencesId, rootKey)
+        val preferenceScreen = p.preferenceScreen(preferenceManager, requireContext())
+        if (enabled && p.isEnabled() && preferenceScreen != null)
+            addPreferencesFromScreen(preferenceScreen, rootKey)
     }
 
     @SuppressLint("RestrictedApi")
-    private fun addPreferencesFromResource(@XmlRes preferencesResId: Int, key: String?) {
-        context?.let { context ->
-            val xmlRoot = preferenceManager.inflateFromResource(context, preferencesResId, null)
-            val root: Preference?
-            if (key != null) {
-                root = xmlRoot.findPreference(key)
-                if (root == null) return
-                require(root is PreferenceScreen) { ("Preference object with key $key is not a PreferenceScreen") }
-                preferenceScreen = root
-            } else {
-                addPreferencesFromResource(preferencesResId)
+    private fun addPreferencesFromResource(@XmlRes preferencesResId: Int, key: String?, enabled: Boolean = true) {
+        if (enabled)
+            context?.let { context ->
+                val xmlRoot = preferenceManager.inflateFromResource(context, preferencesResId, null)
+                if (key != null) {
+                    val root: Preference = xmlRoot.findPreference(key) ?: return
+                    require(root is PreferenceScreen) { ("Preference object with key $key is not a PreferenceScreen") }
+                    preferenceScreen = root
+                } else {
+                    addPreferencesFromResource(preferencesResId)
+                }
             }
-        }
+    }
+
+    @SuppressLint("RestrictedApi")
+    private fun addPreferencesFromScreen(xmlRoot: PreferenceScreen, key: String?) {
+        preferenceScreen =
+            if (key != null) {
+                val root: Preference = xmlRoot.findPreference(key) ?: return
+                require(root is PreferenceScreen) { ("Preference object with key $key is not a PreferenceScreen") }
+                root
+            } else xmlRoot
     }
 
     private fun updateFilterVisibility(filter: String, p: Preference): Boolean {
@@ -391,7 +414,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             }
         }
 
-        for (plugin in pluginStore.plugins) {
+        for (plugin in activePlugin.getPluginsList()) {
             pref?.let { it.key?.let { plugin.updatePreferenceSummary(pref) } }
         }
 

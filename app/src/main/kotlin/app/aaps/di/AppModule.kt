@@ -1,6 +1,8 @@
 package app.aaps.di
 
 import android.content.Context
+import android.content.SharedPreferences
+import androidx.preference.PreferenceManager
 import app.aaps.MainApp
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.objects.Instantiator
@@ -13,12 +15,14 @@ import dagger.Binds
 import dagger.Lazy
 import dagger.Module
 import dagger.Provides
+import dagger.Reusable
 import dagger.android.HasAndroidInjector
 
 @Suppress("unused")
 @Module(
     includes = [
-        AppModule.AppBindings::class
+        AppModule.AppBindings::class,
+        AppModule.Provide::class
     ]
 )
 open class AppModule {
@@ -39,6 +43,14 @@ open class AppModule {
         if (!config.NSCLIENT) plugins += notNsClient.get()
         //if (config.isUnfinishedMode()) plugins += unfinished.get()
         return plugins.toList().sortedBy { it.first }.map { it.second }
+    }
+
+    @Module
+    open class Provide {
+
+        @Reusable
+        @Provides
+        fun providesDefaultSharedPreferences(context: Context): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     }
 
     @Module

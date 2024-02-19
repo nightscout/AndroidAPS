@@ -53,7 +53,7 @@ class SingleFragmentActivity : DaggerAppCompatActivityWithResult() {
                         protectionCheck.queryProtection(this@SingleFragmentActivity, ProtectionCheck.Protection.PREFERENCES, {
                             val i = Intent(this@SingleFragmentActivity, uiInteraction.preferencesActivity)
                                 .setAction("app.aaps.plugins.configuration.activities.SingleFragmentActivity")
-                                .putExtra("id", plugin?.preferencesId)
+                                .putExtra(UiInteraction.PLUGIN_NAME, plugin?.javaClass?.simpleName)
                             startActivity(i)
                         }, null)
                         true

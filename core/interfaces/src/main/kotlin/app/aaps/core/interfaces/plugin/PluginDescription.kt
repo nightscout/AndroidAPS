@@ -1,4 +1,6 @@
-package app.aaps.core.data.plugin
+package app.aaps.core.interfaces.plugin
+
+import app.aaps.core.data.plugin.PluginType
 
 open class PluginDescription {
 

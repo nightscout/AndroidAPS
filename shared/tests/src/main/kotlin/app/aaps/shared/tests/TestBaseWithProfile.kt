@@ -1,6 +1,5 @@
 package app.aaps.shared.tests
 
-import android.content.Context
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.ICfg
@@ -31,6 +30,7 @@ import app.aaps.implementation.profile.ProfileUtilImpl
 import app.aaps.implementation.utils.DecimalFormatterImpl
 import app.aaps.shared.impl.utils.DateUtilImpl
 import dagger.android.AndroidInjector
+import dagger.android.DaggerApplication
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
@@ -51,7 +51,7 @@ open class TestBaseWithProfile : TestBase() {
     @Mock lateinit var fabricPrivacy: FabricPrivacy
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var config: Config
-    @Mock lateinit var context: Context
+    @Mock lateinit var context: DaggerApplication
     @Mock lateinit var sp: SP
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var constraintsChecker: ConstraintsChecker
@@ -105,6 +105,8 @@ open class TestBaseWithProfile : TestBase() {
         decimalFormatter = DecimalFormatterImpl(rh)
         profileUtil = ProfileUtilImpl(preferences, decimalFormatter)
         testPumpPlugin = TestPumpPlugin(rh)
+        Mockito.`when`(context.applicationContext).thenReturn(context)
+        Mockito.`when`(context.androidInjector()).thenReturn(injector.androidInjector())
         Mockito.`when`(dateUtil.now()).thenReturn(now)
         Mockito.`when`(activePlugin.activePump).thenReturn(testPumpPlugin)
         Mockito.`when`(preferences.get(StringKey.GeneralUnits)).thenReturn(GlucoseUnit.MGDL.asText)
@@ -167,7 +169,7 @@ open class TestBaseWithProfile : TestBase() {
             val arg2 = invocation.getArgument<String?>(2)
 
             // Use the safe call operator to handle potential null
-            val formattedString = rh.gs(string) ?: ""
+            val formattedString = rh.gs(string)
 
             // Use a default value or handle null appropriately
             String.format(formattedString, arg1, arg2)

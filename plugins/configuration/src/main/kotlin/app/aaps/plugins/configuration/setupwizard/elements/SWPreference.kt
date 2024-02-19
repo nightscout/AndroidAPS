@@ -2,6 +2,7 @@ package app.aaps.plugins.configuration.setupwizard.elements
 
 import android.os.Bundle
 import android.widget.LinearLayout
+import androidx.annotation.XmlRes
 import androidx.fragment.app.Fragment
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.plugins.configuration.setupwizard.SWDefinition
@@ -24,9 +25,9 @@ class SWPreference(injector: HasAndroidInjector, private val definition: SWDefin
         super.generateDialog(layout)
     }
 
-    private fun addConfiguration(layout: LinearLayout, xml: Int) {
+    private fun addConfiguration(layout: LinearLayout, @XmlRes xml: Int) {
         (Class.forName(uiInteraction.myPreferenceFragment.name).getDeclaredConstructor().newInstance() as Fragment).also { fragment ->
-            fragment.arguments = Bundle().also { it.putInt("id", xml) }
+            fragment.arguments = Bundle().also { it.putInt(UiInteraction.XML_ID, xml) }
             definition.activity.supportFragmentManager.beginTransaction().run {
                 replace(layout.id, fragment)
                 commit()
