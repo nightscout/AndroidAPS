@@ -4,6 +4,7 @@
     <string name="disable_tbr_over_notification">Deactiveer melding van TBR eind\n(pomp instelling)</string>
     <string name="not_paired">Niet gekoppeld</string>
     <string name="recovering">Herstellen</string>
+    <string name="insight_status">Status</string>
     <string name="recovery_duration">Herstel duur</string>
     <string name="last_connected">Laatste verbinding</string>
     <string name="start_pump">Start pomp</string>
