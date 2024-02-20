@@ -4,7 +4,7 @@
     <string name="sensitivity_oref1">רגישות Oref1</string>
     <string name="sensitivity_aaps">רגישות AAPS</string>
     <string name="sensitivity_weighted_average">רגישות משוקללת ממוצעת</string>
-    <string name="description_sensitivity_aaps">חישוב הרגישות נעשה בהתאם ל־Oref0, אך ניתן לשנות את מסגרת הזמן. ספיגת הפחמימות המינימלית מחושבת לפי משך ספיגת הפחמימות המרבי אשר בהעדפות.</string>
+    <string name="description_sensitivity_aaps">חישוב הרגישות נעשה בהתאם ל־Oref0, אך ניתן לשנות את מסגרת הזמן. ספיגת הפחמימות המינימלית מחושבת לפי משך ספיגת הפחמימות המרבי מההעדפות.</string>
     <string name="description_sensitivity_oref1">הרגישות מחושבת מנתונים מ-8 או 24 השעות האחרונות (הרגישות הנמוכה מביניהם). הפחמימות (אם לא נספגו) מפסיקות להיחשב לאחר משך זמן שהוגדר בהגדרות. תוסף זה מחשב גם ארוחות לא ידועות מראש (UAM).</string>
     <string name="description_sensitivity_weighted_average">הרגישות מחושבת כממוצע משוקלל של ערכי הסטיות. ערכי סטיות חדשים יותר יזכו לשקלול גבוה יותר. ספיגת הפחמימות המינימלית מחושבת על בסיס נתון משך ספיגת פחמימות מקסימלי מההגדרות. אלגוריתם זה הוא המהיר ביותר במעקב אחר שינויי רגישות.</string>
     <string name="uam_disabled_oref1_not_selected">UAM מושבת מפני שהוא מסתמך על תוסף רגישות של Oref1</string>
