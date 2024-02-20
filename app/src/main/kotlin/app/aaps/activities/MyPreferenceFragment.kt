@@ -21,6 +21,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.protection.ProtectionCheck.ProtectionType.BIOMETRIC
@@ -268,7 +269,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         if (key == rh.gs(BooleanKey.OverviewShortTabTitles.key) || key == rh.gs(BooleanKey.GeneralSimpleMode.key)) {
             rxBus.send(EventRebuildTabs())
         }
-        if (key == rh.gs(StringKey.GeneralUnits.key) || key == rh.gs(BooleanKey.GeneralSimpleMode.key) || key == rh.gs(BooleanKey.ApsUseDynamicSensitivity.key)) {
+        if (key == rh.gs(StringKey.GeneralUnits.key) || key == rh.gs(BooleanKey.GeneralSimpleMode.key) || preferences.getDependingOn(key).isNotEmpty()) {
             activity?.recreate()
             return
         }
@@ -284,6 +285,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     }
 
     private fun preprocessPreferences() {
+        // Do plugin overrides
         for (plugin in activePlugin.getPluginsList()) {
             if (plugin.isEnabled()) plugin.preprocessPreferences(this)
         }
@@ -324,11 +326,10 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
 
     private fun addPreferencesIfEnabled(p: PluginBase, rootKey: String?, enabled: Boolean = true) {
         if (preferences.simpleMode && !p.pluginDescription.preferencesVisibleInSimpleMode) return
-        if (enabled && p.isEnabled() && p.preferencesId != -1)
+        if (enabled && p.isEnabled() && p.preferencesId == PluginDescription.PREFERENCE_SCREEN)
+            addPreferencesFromScreen(p.preferenceScreen(preferenceManager, requireContext())!!, rootKey)
+        if (enabled && p.isEnabled() && p.preferencesId > 0)
             addPreferencesFromResource(p.preferencesId, rootKey)
-        val preferenceScreen = p.preferenceScreen(preferenceManager, requireContext())
-        if (enabled && p.isEnabled() && preferenceScreen != null)
-            addPreferencesFromScreen(preferenceScreen, rootKey)
     }
 
     @SuppressLint("RestrictedApi")

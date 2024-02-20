@@ -85,6 +85,7 @@ class OpenAPSAMAPlugin @Inject constructor(
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_generic_icon)
         .pluginName(R.string.openapsama)
         .shortName(R.string.oaps_shortname)
+        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .preferencesVisibleInSimpleMode(false)
         .showInList(config.APS)
         .description(R.string.description_ama),
@@ -308,7 +309,7 @@ class OpenAPSAMAPlugin @Inject constructor(
         val screen = preferenceManager.createPreferenceScreen(context)
         screen.addPreference(category)
         category.apply {
-            key = rh.gs(app.aaps.core.utils.R.string.key_openapsma_settings)
+            key = "openapsma_settings"
             title = rh.gs(R.string.openapsama)
             initialExpandedChildrenCount = 0
             addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.ApsMaxBasal, dialogMessage = R.string.openapsma_max_basal_summary, title = R.string.openapsma_max_basal_title))

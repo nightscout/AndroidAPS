@@ -171,4 +171,11 @@ interface Preferences {
      * @return [PreferenceKey]
      */
     fun get(key: String): PreferenceKey
+
+    /**
+     * Find all [PreferenceKey] which have `dependency` or `negativeDependency`
+     * @param key string representation of key
+     * @return list of [PreferenceKey]
+     */
+    fun getDependingOn(key: String): List<PreferenceKey>
 }

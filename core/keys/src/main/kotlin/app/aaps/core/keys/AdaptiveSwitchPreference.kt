@@ -8,25 +8,27 @@ import androidx.preference.SwitchPreference
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
-class AdaptiveSwitchPreference(context: Context, attrs: AttributeSet?, booleanKey: BooleanKey? = null) : SwitchPreference(context, attrs) {
+class AdaptiveSwitchPreference(
+    ctx: Context,
+    attrs: AttributeSet? = null,
+    booleanKey: BooleanKey?,
+    @StringRes summary: Int? = null,
+    @StringRes title: Int?,
+) : SwitchPreference(ctx, attrs) {
 
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var sharedPrefs: SharedPreferences
 
-    constructor(
-        ctx: Context,
-        booleanKey: BooleanKey,
-        @StringRes summary: Int? = null,
-        @StringRes title: Int,
-
-        ) : this(ctx, null, booleanKey) {
-        key = context.getString(booleanKey.key)
-        summary?.let { setSummary(it) }
-        this.title = context.getString(title)
-    }
+    // Inflater constructor
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, booleanKey = null, title = null)
 
     init {
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
+
+        booleanKey?.let { key = context.getString(it.key) }
+        summary?.let { setSummary(it) }
+        title?.let { this.title = context.getString(it) }
+
         val preferenceKey = booleanKey ?: preferences.get(key) as BooleanKey
         if (preferences.simpleMode && preferenceKey.defaultedBySM) isVisible = false
         if (preferences.apsMode && !preferenceKey.showInApsMode) {

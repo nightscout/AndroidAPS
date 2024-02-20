@@ -344,10 +344,10 @@ class ConfigBuilderPlugin @Inject constructor(
             }
             if (preferences.simpleMode) {
                 pluginPreferences.visibility =
-                    if (plugin.preferencesId == -1 || !plugin.isEnabled(pluginType) || !plugin.pluginDescription.preferencesVisibleInSimpleMode) View.INVISIBLE else View.VISIBLE
+                    if (plugin.preferencesId == PluginDescription.PREFERENCE_NONE || !plugin.isEnabled(pluginType) || !plugin.pluginDescription.preferencesVisibleInSimpleMode) View.INVISIBLE else View.VISIBLE
                 pluginVisibility.visibility = false.toVisibility()
             } else {
-                pluginPreferences.visibility = if (plugin.preferencesId == -1 || !plugin.isEnabled(pluginType)) View.INVISIBLE else View.VISIBLE
+                pluginPreferences.visibility = if (plugin.preferencesId == PluginDescription.PREFERENCE_NONE || !plugin.isEnabled(pluginType)) View.INVISIBLE else View.VISIBLE
                 pluginVisibility.visibility = plugin.hasFragment().toVisibility()
                 pluginVisibility.isEnabled = !(plugin.pluginDescription.neverVisible || plugin.pluginDescription.alwaysVisible) && plugin.isEnabled(pluginType)
                 pluginVisibility.isChecked = plugin.isFragmentVisible()

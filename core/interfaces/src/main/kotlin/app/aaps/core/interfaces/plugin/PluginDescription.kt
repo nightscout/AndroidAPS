@@ -6,6 +6,19 @@ open class PluginDescription {
 
     enum class Position { MENU, TAB }
 
+    companion object {
+
+        /**
+         * Plugin has no xml preferences
+         */
+        const val PREFERENCE_NONE = -1
+
+        /**
+         * Plugin generates [PreferenceScreen] directly
+         */
+        const val PREFERENCE_SCREEN = 0
+    }
+
     var mainType = PluginType.GENERAL
     var fragmentClass: String? = null
     var alwaysVisible = false
@@ -15,7 +28,7 @@ open class PluginDescription {
     var pluginName = -1
     var shortName = -1
     var description = -1
-    var preferencesId = -1
+    var preferencesId = PREFERENCE_NONE
     var enableByDefault = false
     var visibleByDefault = false
     var defaultPlugin = false

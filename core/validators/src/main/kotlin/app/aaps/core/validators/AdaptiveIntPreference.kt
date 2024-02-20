@@ -15,7 +15,13 @@ import app.aaps.core.keys.Preferences
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
-class AdaptiveIntPreference(ctx: Context, attrs: AttributeSet?, intKey: IntKey? = null) : EditTextPreference(ctx, attrs) {
+class AdaptiveIntPreference(
+    ctx: Context,
+    attrs: AttributeSet? = null,
+    intKey: IntKey? = null,
+    @StringRes dialogMessage: Int? = null,
+    @StringRes title: Int?,
+) : EditTextPreference(ctx, attrs) {
 
     private val validatorParameters: DefaultEditTextValidator.Parameters
     private var validator: DefaultEditTextValidator? = null
@@ -26,21 +32,17 @@ class AdaptiveIntPreference(ctx: Context, attrs: AttributeSet?, intKey: IntKey? 
     @Inject lateinit var sharedPrefs: SharedPreferences
     @Inject lateinit var config: Config
 
-    constructor(
-        ctx: Context,
-        intKey: IntKey,
-        @StringRes dialogMessage: Int? = null,
-        @StringRes title: Int,
-
-        ) : this(ctx, null, intKey) {
-        key = context.getString(intKey.key)
-        dialogMessage?.let { setDialogMessage(it) }
-        dialogTitle = context.getString(title)
-        this.title = context.getString(title)
-    }
+    // Inflater constructor
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, intKey = null, title = null)
 
     init {
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
+
+        intKey?.let { key = context.getString(it.key) }
+        dialogMessage?.let { setDialogMessage(it) }
+        title?.let { dialogTitle = context.getString(it) }
+        title?.let { this.title = context.getString(it) }
+
         preferenceKey = intKey ?: preferences.get(key) as IntKey
         if (preferences.simpleMode && preferenceKey.defaultedBySM) isVisible = false
         if (preferences.apsMode && !preferenceKey.showInApsMode) {
