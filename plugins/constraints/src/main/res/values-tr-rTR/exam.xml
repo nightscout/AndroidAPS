@@ -44,6 +44,7 @@
     <string name="noisycgm_pause">Olası aşırı veya düşük dozdan kaçınmak için kapalı döngüyü devre dışı bırakın.</string>
     <string name="noisycgm_replacesensor">Sürekli gürültülü veya hatalı sensörleri değiştirin.</string>
     <string name="noisycgm_checksmoothing">CGM uygulamanızın sorunsuz veriler sağladığını doğrulayın.</string>
+    <string name="noisycgm_hint1">https://wiki.aaps.app/tr/latest/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#smoothing-blood-glucose-data</string>
     <string name="exerciseprofile_label">Egzersiz ve Profiller</string>
     <string name="exerciseprofile_whattodo">Aerobik egzersiz yaparken sistemin size en iyi şekilde yardımcı olması için profilleri nasıl kullanırsınız?</string>
     <string name="exerciseprofile_switchprofilebelow100">%100\'ün altında bir profil geçişi yapın.</string>
