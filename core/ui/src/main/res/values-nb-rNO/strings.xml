@@ -46,7 +46,7 @@
     <string name="mute">Lyd av</string>
     <string name="success">Suksess</string>
     <string name="advanced_settings_title">Avanserte innstillinger</string>
-    <string name="extendedbolusdeliveryerror">Forlenget bolus feilet</string>
+    <string name="extendedbolusdeliveryerror">Forlenget bolus leveringsfeil</string>
     <string name="aps_mode_title">APS modus</string>
     <string name="extended_bolus">Forlenget bolus</string>
     <string name="paused">Pauset</string>
@@ -113,7 +113,7 @@
     <string name="bg_label">BS</string>
     <string name="calibration">Kalibrering</string>
     <string name="alarminxmin">Aktiver alarm om %1$d min</string>
-    <string name="treatmentdeliveryerror">Det er registrert en feil med bolus-leveransen. Sjekk manuelt om den er levert og hvor mye</string>
+    <string name="treatmentdeliveryerror">Det er registrert en feil med boluslevering. Sjekk manuelt om den er levert og hvor mye</string>
     <string name="bolus_reminder">Bolus-påminnelse</string>
     <string name="duration_label">Varighet</string>
     <string name="shortgramm">g</string>
@@ -297,7 +297,7 @@
     <string name="uel_resume">GJENOPPTA</string>
     <string name="uel_suspend">PAUSE</string>
     <string name="uel_hw_pump_allowed">HW PUMPE TILLATT</string>
-    <string name="uel_clear_pairing_keys">NULLSTILL PARRINGSNØKLER</string>
+    <string name="uel_clear_pairing_keys">NULLSTILL SAMMENKOBLINGSNØKLER</string>
     <string name="uel_accepts_temp_basal">AKSEPTER MIDL. BASAL</string>
     <string name="uel_cancel_temp_basal">AVBRYT MIDL. BASAL</string>
     <string name="uel_cancel_bolus">AVBRYT BOLUS</string>
@@ -524,13 +524,13 @@
     <string name="pump_driver_change" comment="26 characters max for translation">Endre pumpedriver.</string>
     <string name="device_changed" comment="26 characters max for translation">Enheten er endret</string>
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
-    <string name="temp_basal_delivery_error">Feil ved levering av midl. basal</string>
+    <string name="temp_basal_delivery_error">Feil ved levering av midlertidig basal</string>
     <string name="not_set_short">Ikke angitt</string>
     <string name="pump_busy">Pumpen er opptatt</string>
     <string name="connection_error">Tilkoblingsfeil til pumpe</string>
     <string name="reading_pump_history">Leser pumpehistorikk</string>
     <string name="password_cleared">Passordet er fjernet!</string>
-    <string name="pairing">Kobler sammen</string>
+    <string name="pairing">Sammenkobler</string>
     <string name="initializing">Initialiserer...</string>
     <string name="secs" comment="second short">%1$d s</string>
     <!--    Constraints-->

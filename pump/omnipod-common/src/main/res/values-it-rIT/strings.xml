@@ -177,6 +177,7 @@
     <string name="omnipod_common_ok">OK</string>
     <string name="omnipod_common_cancel">Annulla</string>
     <string name="omnipod_common_warning">Avviso</string>
+    <string name="omnipod_common_disable_suspend_alerts">DISABILITA ALLARMI DI SOSPENSIONE</string>
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">Momenti fa</string>
     <string name="omnipod_common_less_than_a_minute_ago">Meno di un minuto fa</string>

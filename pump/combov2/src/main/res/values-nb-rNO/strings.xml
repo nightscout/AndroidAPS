@@ -8,7 +8,7 @@
     <string name="combov2_warning">Combo advarsel</string>
     <string name="combov2_error">Combo feil</string>
     <string name="combov2_warning_4">Ring supportlinjen for oppdatering</string>
-    <string name="combov2_warning_10">Bluetooth feilet, koble til på nytt</string>
+    <string name="combov2_warning_10">Bluetoothfeil, utfør sammenkobling på nytt</string>
     <string name="combov2_error_1">Reservoaret er tomt</string>
     <string name="combov2_error_2">Batteri tomt</string>
     <string name="combov2_error_4">Tilstopping</string>
@@ -26,7 +26,7 @@
     <string name="combov2_driver_state_label">Driverstatus</string>
     <string name="combov2_current_activity_label">Nåværende aktivitet</string>
     <string name="bluetooth_address">Bluetooth adresse</string>
-    <string name="combov2_start_pairing">Start paringen</string>
+    <string name="combov2_start_pairing">Start sammenkobling</string>
     <string name="combov2_pairing_in_progress">Kombo sammenkobling pågår</string>
     <string name="combov2_pairing_start_steps">Trinn for å etablere sammenkobling med Combo:\n\n
 1. På pumpen, navigerer til Bluetooth innstillingene\n
@@ -41,7 +41,7 @@ Hvis ingen sammenkobling etableres etter mer enn ~5 minutter:\n\n
 knappene samtidig for å avbryte parringen)\n
 3. Prøv å sammenkoble igjen</string>
     <string name="combov2_enter_pin">Skriv inn PIN</string>
-    <string name="combov2_cancel_pairing">Avbryt paringen</string>
+    <string name="combov2_cancel_pairing">Avbryt sammenkobling</string>
     <string name="combov2_pin_hint">10-sifret PIN</string>
     <string name="combov2_pairing_finished_successfully">Vellykket sammenkobling med Combo</string>
     <string name="combov2_pairing_cancelled">Sammenkobling med Combo avbrutt av brukeren</string>

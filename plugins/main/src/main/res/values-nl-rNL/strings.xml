@@ -153,6 +153,8 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">DOEL</string>
     <string name="basal_short">BAS</string>
+    <string name="isf_dynamic_label">Uw algoritme kan een dynamische berekening van ISF bieden. De waarden hieronder worden alleen gebruikt om op terug te vallen in geval van ontbrekende gegevens</string>
+    <string name="ic_dynamic_label">Uw algoritme kan een dynamische berekening van IC bieden. De waarden hieronder worden alleen gebruikt om op terug te vallen in geval van ontbrekende gegevens</string>
     <!-- Actions -->
     <string name="actions">Acties</string>
     <string name="description_actions">Een aantal knoppen voor snelle toegang tot algemene functies</string>
@@ -263,6 +265,7 @@
     <string name="overview_show_iob">Opgenomen Insuline</string>
     <string name="overview_show_basals">Basalen</string>
     <string name="overview_show_abs_insulin">Absolute insuline</string>
+    <string name="overview_show_variable_sens">Variabele gevoeligheid</string>
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
     <string name="deviation_shortname">DEV</string>
@@ -272,6 +275,8 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">BEHAND</string>
     <string name="heartRate_shortname">HR</string>
+    <string name="sensitivity_shortname">SENS%</string>
+    <string name="variable_sensitivity_shortname">VSENS</string>
     <string name="graph_scale">Grafiek schaal</string>
     <string name="graph_menu_divider_header">Grafiek</string>
     <!-- Skins -->
@@ -286,4 +291,7 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Toont een permanente melding met een beknopt overzicht van hetgeen de Loop momenteel doet</string>
     <string name="old_data">Oude gegevens</string>
+    <string name="overview_show_steps">Stappen</string>
+    <string name="steps_shortname">STAPPEN</string>
+    <string name="simple_mode_enabled">Eenvoudige modus ingeschakeld</string>
 </resources>

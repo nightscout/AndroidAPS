@@ -177,6 +177,7 @@
     <string name="omnipod_common_ok">OK</string>
     <string name="omnipod_common_cancel">Zrušiť</string>
     <string name="omnipod_common_warning">Upozornenie</string>
+    <string name="omnipod_common_disable_suspend_alerts">Vypnúť upozornenia o pozastavení</string>
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">Pred chvíľou</string>
     <string name="omnipod_common_less_than_a_minute_ago">Pred menej ako minútou</string>

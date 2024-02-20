@@ -66,6 +66,7 @@
     <string name="omnipod_common_overview_reservoir_value">%1$.2f E over</string>
     <string name="omnipod_common_overview_reservoir_value_over50">Meer dan 50 E over</string>
     <string name="omnipod_common_overview_errors">Storing</string>
+    <string name="omnipod_common_uncertain">onzeker</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_cancel">Afbreken</string>
     <string name="omnipod_common_wizard_button_finish">Voltooien</string>
@@ -176,6 +177,7 @@
     <string name="omnipod_common_ok">OK</string>
     <string name="omnipod_common_cancel">Afbreken</string>
     <string name="omnipod_common_warning">Waarschuwing</string>
+    <string name="omnipod_common_disable_suspend_alerts">UITSCHAKELEN SUSPEND ALARM</string>
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">Zojuist</string>
     <string name="omnipod_common_less_than_a_minute_ago">Minder dan een minuut geleden</string>
