@@ -44,6 +44,7 @@
     <string name="noisycgm_pause">הפסקת הלולאה כדי למנוע מינון איסולין גבוה מדי\\נמוך מדי.</string>
     <string name="noisycgm_replacesensor">יש להחליף סנסור שבאופן קבוע מספק נתוני רועשים ו\\או לא מדויקים.</string>
     <string name="noisycgm_checksmoothing">יש לוודא שיישום הסנסור מספק נתונים איכותיים ו- \"חלקים\".</string>
+    <string name="noisycgm_hint1">https://wiki.aaps.app/he/latest/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#smoothing-blood-glucose-data</string>
     <string name="exerciseprofile_label">פעילות גופנית ופרופילים</string>
     <string name="exerciseprofile_whattodo">איך השימוש בפרופילים יכול לסייע למערכת להתמודד בצורה הטובה ביותר עם פעילות גופנית?</string>
     <string name="exerciseprofile_switchprofilebelow100">יש לבצע שינוי פרופיל לפחות מ-100%.</string>
@@ -159,7 +160,7 @@
     <string name="breadgrams_hint1">https://wiki.aaps.app/he/latest/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="extendedcarbs_label">פחמימות ממושכות</string>
     <string name="extendedcarbs_handling">מה עושים עם פחמימות ממושכות?</string>
-    <string name="extendedcarbs_future">לתזמון פחמימות עתידיות, שניתן לפזר על פני משך זמן במרווחי זמן שווים (בדומה לבולוס ממושך שמפזר את ההזרקות על פני מרווחי זמן).</string>
+    <string name="extendedcarbs_future">מתזמנים פחמימות עתידיות, שניתן לפזר במרווחי זמן (בדומה לבולוס ממושך שמפזר את ההזרקות על פני מרווחי זמן).</string>
     <string name="extendedcarbs_free">רישום פחמימות שהרווחתם בפעילות גופנית שאתם רוצים להסתיר מ-AndroidAPS.</string>
     <string name="extendedcarbs_fat">פחמימות ממושכות (המפוזרות בעתיד) יכולות לסייע ל-AndroidAPS בהתמודדות עם ארוחות עשירות בשומן\\חלבון.</string>
     <string name="extendedcarbs_rescue">רישום פחמימות בהם השתמשתם להצלה מהיפוגליקמיה.</string>
