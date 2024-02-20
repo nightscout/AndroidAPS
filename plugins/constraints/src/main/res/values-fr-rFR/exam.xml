@@ -44,7 +44,7 @@
     <string name="noisycgm_pause">Désactivez la boucle fermée pour éviter tout sur-dosage ou sous-dosage possible.</string>
     <string name="noisycgm_replacesensor">Remplacez systématiquement les capteurs bruyants ou imprécis.</string>
     <string name="noisycgm_checksmoothing">Vérifiez que votre application MGC fournit des données lissées.</string>
-    <string name="noisycgm_hint1">https://wiki.aaps.app/fr/latest/Usage/Smoothing-Blood-Glucose-Data.html#smoothing-blood-glucose-data</string>
+    <string name="noisycgm_hint1">https://wiki.aaps.app/fr/latest/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#lissage-des-donnees-de-glycemie</string>
     <string name="exerciseprofile_label">Exercices et profils</string>
     <string name="exerciseprofile_whattodo">Comment utiliser les profils pour aider au mieux le système à gérer un exercice aérobique ?</string>
     <string name="exerciseprofile_switchprofilebelow100">Faites un changement de profil à moins de 100%.</string>
