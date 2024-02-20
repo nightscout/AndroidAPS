@@ -44,6 +44,7 @@
     <string name="noisycgm_pause">Απενεργοποιήστε το κλειστό κύκλωμα για να αποφύγετε την υπέρ ή υπο-δοσολογία.</string>
     <string name="noisycgm_replacesensor">Αντικαταστήστε σταθερά θορυβώδεις ή ανακριβείς αισθητήρες.</string>
     <string name="noisycgm_checksmoothing">Βεβαιωθείτε ότι η εφαρμογή CGM σας παρέχει εξομαλυμένα δεδομένα.</string>
+    <string name="noisycgm_hint1">https://wiki.aaps.app/el/latest/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#smoothing-blood-glucose-data</string>
     <string name="exerciseprofile_label">Άσκηση και Προφίλ</string>
     <string name="exerciseprofile_whattodo">Πώς μπορείτε να χρησιμοποιήσετε τα προφίλ για να σας βοηθήσει καλύτερα το σύστημα στην αντιμετώπιση της αερόβιας άσκησης;</string>
     <string name="exerciseprofile_switchprofilebelow100">Κάντε μια αλλαγή προφίλ σε λιγότερο από 100%.</string>
