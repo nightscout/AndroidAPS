@@ -3,7 +3,7 @@
     <string name="bolus_constraint_applied">Bolus-begrensning utført</string>
     <string name="carbs_constraint_applied">Karbohydrat-begrensning utført</string>
     <string name="temp_target_short">TT</string>
-    <string name="dialog_canceled">Dialog avbrutt</string>
+    <string name="dialog_canceled">Dialogvindu avbrutt</string>
     <string name="start_activity_tt">Start midlertidig mål for Aktivitet</string>
     <string name="start_eating_soon_tt">Start midlertidig mål for Spise snart</string>
     <string name="start_hypo_tt">Start midlertidig mål for Hypo</string>
@@ -126,7 +126,7 @@
     <!-- Other dialogs -->
     <string name="basal_rate">Basaldose</string>
     <!--    BolusProgressDialog-->
-    <string name="stop_pressed">STOPP er trykket</string>
+    <string name="stop_pressed">STOPP TRYKKET</string>
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">kun på klokke</string>
     <string name="a11y_only_on_phone">kun på telefon</string>

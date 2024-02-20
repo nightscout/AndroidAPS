@@ -29,9 +29,9 @@
     <string name="tube_changed">Slange byttet</string>
     <string name="insightpump_shortname">Sight</string>
     <string name="insight_alert_notification_channel">Insight pumpe varsler</string>
-    <string name="disable_vibration">Slå av vibrasjoner på manuell bolus</string>
+    <string name="disable_vibration">Slå av vibrasjoner ved levering av manuell bolus</string>
     <string name="disable_vibration_summary">For bolus og forlenget bolus (bare tilgjengelig med Insight firmware 3.x)</string>
-    <string name="disable_vibration_auto">Slå av vibrasjoner ved automatisk bolus</string>
+    <string name="disable_vibration_auto">Slå av vibrasjoner ved levering av automatisk bolus</string>
     <string name="disable_vibration_auto_summary">For SMB og midlertidig basal med TBR emulering (bare tilgjengelig med Insight firmware 3.x)</string>
     <string name="timeout_during_handshake">En timeout oppstod i paringsprosessen - restart Bluetooth</string>
     <string name="pump_stopped">Pumpen stoppet</string>

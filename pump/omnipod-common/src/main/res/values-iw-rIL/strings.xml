@@ -176,6 +176,7 @@
     <string name="omnipod_common_ok">אישור</string>
     <string name="omnipod_common_cancel">ביטול</string>
     <string name="omnipod_common_warning">אזהרה</string>
+    <string name="omnipod_common_disable_suspend_alerts">בטל התראות השהיה</string>
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">לפני כמה רגעים</string>
     <string name="omnipod_common_less_than_a_minute_ago">לפני פחות מדקה</string>

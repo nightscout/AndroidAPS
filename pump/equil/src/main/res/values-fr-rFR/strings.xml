@@ -103,6 +103,7 @@
     <string name="equil_history_group_basal">Basals</string>
     <string name="equil_history_group_prime">Amorcer</string>
     <string name="equil_history_group_configuration">Configurations</string>
+    <string name="equil_tab_action">Action sur l\'historique</string>
     <string name="equil_tab_equil">Historique de l\'Équil</string>
     <string name="equil_password_error">Le mot de passe d\'appairage Equil est incorrect</string>
     <string name="equil_none">aucun</string>
