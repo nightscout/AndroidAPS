@@ -44,7 +44,7 @@
     <string name="noisycgm_pause">Deshabilitar el bucle cerrado para evitar posibles sobredosis o subdosis.</string>
     <string name="noisycgm_replacesensor">Sustituya el sensor con valores muy variables o inexactos.</string>
     <string name="noisycgm_checksmoothing">Comprueba que tu aplicación del CGM proporciona datos suavizados.</string>
-    <string name="noisycgm_hint1">https://wiki.aaps.app/en/latest/Usage/Smoothing-Blood-Glucose-Data.html#smoothing-blood-glucose-data</string>
+    <string name="noisycgm_hint1">https://wiki.aaps.app/en/latest/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#smoothing-blood-glucose-data</string>
     <string name="exerciseprofile_label">Ejercicio y perfiles</string>
     <string name="exerciseprofile_whattodo">¿Cómo puede usar los perfiles para mejorar el sistema durante el ejercicio aeróbico?</string>
     <string name="exerciseprofile_switchprofilebelow100">Cambie el perfil por un valor menor a 100%.</string>
