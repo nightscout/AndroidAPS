@@ -85,4 +85,11 @@ class PreferencesImpl @Inject constructor(
             ?: UnitDoubleKey.entries.find { context.getString(it.key) == key }
             ?: error("Key $key not found")
 
+    override fun getDependingOn(key: String): List<PreferenceKey> =
+        mutableListOf<PreferenceKey>().also { list ->
+            list.addAll(BooleanKey.entries.filter { it.dependency != 0 && context.getString(it.dependency) == key || it.negativeDependency != 0 && context.getString(it.negativeDependency) == key })
+            list.addAll(IntKey.entries.filter { it.dependency != 0 && context.getString(it.dependency) == key || it.negativeDependency != 0 && context.getString(it.negativeDependency) == key })
+            list.addAll(DoubleKey.entries.filter { it.dependency != 0 && context.getString(it.dependency) == key || it.negativeDependency != 0 && context.getString(it.negativeDependency) == key })
+            list.addAll(UnitDoubleKey.entries.filter { it.dependency != 0 && context.getString(it.dependency) == key || it.negativeDependency != 0 && context.getString(it.negativeDependency) == key })
+        }
 }
