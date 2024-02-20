@@ -22,7 +22,7 @@
     <string name="overview_bolusprogress_delivered">Levert</string>
     <string name="overview_bolusprogress_stoped">Stoppet</string>
     <string name="unsupportedfirmware">Pumpens firmvare støttes ikke</string>
-    <string name="pumperror">Pumpe feil</string>
+    <string name="pumperror">Pumpefeil</string>
     <string name="lowbattery">Lavt batterinivå</string>
     <string name="basalcompare">Levert mindre enn innstilt basaldose</string>
     <string name="pumpshutdown">Pumpe avstenging</string>
