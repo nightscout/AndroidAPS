@@ -2,8 +2,6 @@
 <resources>
     <string name="dynisf_adjust_sensitivity">Aktiver TDD-basert sensitivitetsberegning for justering av basal og blodsukkermål</string>
     <string name="dynisf_adjust_sensitivity_summary">Bruker de siste 24t TDD/7D TDD til å beregne sensitivitet som grunnlag til å øke eller redusere basaldosen, samt justere blodsukkermål hvis disse valgene er aktivert, på samme måte som Autosens gjør. Det er anbefalt å starte med dette valget slått av</string>
-    <string name="dyn_isf_adjust_title" formatted="false">Dynamisk ISF justeringsfaktor %</string>
-    <string name="dyn_isf_adjust_summary" formatted="false">Justeringsfaktor for dynamisk ISF. Verdier over 100% vil gi mer aggressive korreksjonsdoser, mens verdier under 100% vil gi mildere korreksjonsdoser.</string>
     <string name="high_temptarget_raises_sensitivity_title">Høyt midlertidig mål øker sensitiviteten</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Øk sensitiviteten for midlertidig mål >= 5,6]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Lavt midlertidig mål reduserer sensitiviteten</string>
@@ -62,13 +60,13 @@
     <string name="enable_smb_summary">Bruk Super Micro Boluser i kombinasjon med midlertidig basal for raskere resultat</string>
     <string name="enable_uam_summary">Oppdage uannonsert måltid (UAM)</string>
     <string name="enable_smb_always">Aktiver SMB alltid</string>
-    <string name="enable_smb_always_summary">Aktiver SMB alltid uavhengig av COB, lave midlertidige mål eller boluser. Bare mulig med en bra filtrert BS-kilde som f.eks. Dexcom G6/G7</string>
+    <string name="enable_smb_always_summary">Aktiver SMB alltid uavhengig av boluser. Bare mulig med en bra filtrert BS kilde som f.eks. Dexcom G5/G6</string>
     <string name="enable_smb_after_carbs">Aktiver SMB etter karbohydrater</string>
-    <string name="enable_smb_after_carbs_summary">Aktiver SMB i 6 timer etter inntak av karbohydrater, selv med 0 COB (Karbo ombord). Bare mulig med en bra filtrert BS-kilde som f. eks. Dexcom G6/G7</string>
+    <string name="enable_smb_after_carbs_summary">Aktiver SMB i 6 timer etter inntak av karbohydrater, selv med 0 COB (Karbo ombord). Bare mulig med en bra filtrert BS-kilde som f. eks. Dexcom G5/G6</string>
     <string name="enable_smb_with_cob">Aktiver SMB med COB</string>
     <string name="enable_smb_with_cob_summary">Aktiver SMB når COB (karbohydrater ombord) er aktiv.</string>
-    <string name="enable_smb_with_temp_target">Aktiver SMB med lav midlertidig målverdi</string>
-    <string name="enable_smb_with_temp_target_summary">Aktiver SMB når en lav midlertidig målverdi er aktivert (spise snart, 5,5 mmol/l eller lavere)</string>
+    <string name="enable_smb_with_temp_target">Aktiver SMB med midlertidig målverdi</string>
+    <string name="enable_smb_with_temp_target_summary">Aktiver SMB når midlertidig målverdi er aktivert (spise snart, aktivitet)</string>
     <string name="enable_smb_with_high_temp_target">Aktiver SMB ved høy midlertidig målverdi</string>
     <string name="enable_smb_with_high_temp_target_summary">Aktiver SMB når det er en høy aktiv midlertidig målverdi (trening, over 100 mg/dl eller 5,5 mmol/l)</string>
     <string name="smb_max_minutes_summary">Maks antall minutter med basal som kan bli SMB</string>
