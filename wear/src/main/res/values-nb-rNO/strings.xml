@@ -148,7 +148,7 @@
     <string name="color_name_white">hvit</string>
     <string name="color_name_black">svart</string>
     <string name="color_name_multicolor">flerfarget</string>
-    <string name="pref_simplify_ui">Forenklet brukergrensesnitt</string>
+    <string name="pref_simplify_ui">Forenkle brukergrensesnittet</string>
     <string name="pref_simplify_ui_sum">Vis kun tid og BS</string>
     <string name="pref_vibrate_hourly">Vibrer hver time</string>
     <string name="pref_show_weeknumber">Vis ukenummer</string>
@@ -168,7 +168,7 @@
     <string name="simple_ui_off">Av</string>
     <string name="simple_ui_charging">Under lading</string>
     <string name="simple_ui_always_on">Alltid På modus</string>
-    <string name="simple_ui_always_on_charging">Alltid på under lading</string>
+    <string name="simple_ui_always_on_charging">Alltid På og under lading</string>
     <string name="temp_target_eating_soon">Spise snart</string>
     <string name="temp_target_hypo">Hypo</string>
     <string name="temp_target_activity">Aktivitet</string>
@@ -188,7 +188,7 @@
     <string name="no_status">S: --</string>
     <string name="time_stamp_na_min_ago">-- Min. siden</string>
     <string name="delta_na">--- mg/dl</string>
-    <string name="no_loop_status">Ingen loop status</string>
+    <string name="no_loop_status">Ingen loop-status</string>
     <string name="cob_000g">000g</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00E</string>
