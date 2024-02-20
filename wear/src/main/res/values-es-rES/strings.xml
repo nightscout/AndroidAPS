@@ -215,6 +215,6 @@
     <string name="tile_action_4">Acción 4</string>
     <string name="datalayer_notification_title">Servicio de primer plano de capa de datos</string>
     <string name="datalayer_notification_text">AAPS está ejecutándose en primer plano. Para ocultar las notificaciones, vaya a las opciones de desarrollador, notificaciones de aplicaciones, aplicaciones de reloj, seleccione AAPS, desactive la notificación del canal de servicio de capa de datos.</string>
-    <string name="on">ACTIVADO</string>
-    <string name="off">DESACTIVADO</string>
+    <string name="on">ENCENDIDO</string>
+    <string name="off">APAGADO</string>
 </resources>
