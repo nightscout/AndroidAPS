@@ -44,6 +44,7 @@
     <string name="noisycgm_pause">Schakel de closed loop uit om te voorkomen dat de closed loop over- of onderdoseert.</string>
     <string name="noisycgm_replacesensor">Vervang sensoren die consequent ruis geven of inaccuraat zijn.</string>
     <string name="noisycgm_checksmoothing">Zorg dat je CGM-app de BG-gegevens vloeiend maakt.</string>
+    <string name="noisycgm_hint1">https://wiki.aaps.app/nl/latest/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#filteren-van-bloed-glucose-waardes</string>
     <string name="exerciseprofile_label">Beweging en profielen</string>
     <string name="exerciseprofile_whattodo">Hoe kun je profielen gebruiken om het systeem het beste te helpen omgaan met conditietraining?</string>
     <string name="exerciseprofile_switchprofilebelow100">Doe een profielwissel naar minder dan 100%.</string>
