@@ -44,7 +44,7 @@
     <string name="noisycgm_pause">Zakažte uzavřenou smyčku, aby nedošlo k předávkování nebo poddávkování.</string>
     <string name="noisycgm_replacesensor">Nahraďte trvale zašůměné nebo nepřesné senzory.</string>
     <string name="noisycgm_checksmoothing">Ověřte, že vaše aplikace CGM vyhlazuje gklykémie.</string>
-    <string name="noisycgm_hint1">https://androidaps.readthedocs.io/cs/latest/Usage/Smoothing-Blood-Glucose-Data.html</string>
+    <string name="noisycgm_hint1">https://wiki.aaps.app/cs/latest/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#vyhlazovani-zarusenych-dat-glykemii</string>
     <string name="exerciseprofile_label">Cvičení a profily</string>
     <string name="exerciseprofile_whattodo">Jak můžete použít profily, abyste mohli nejlépe pomoci systému řešit aerobní cvičení?</string>
     <string name="exerciseprofile_switchprofilebelow100">Přepnout na profil pod 100 %.</string>
