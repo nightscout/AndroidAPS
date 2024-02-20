@@ -189,4 +189,5 @@
     <string name="tdd_line">%1$.2fE %1$.0f%%</string>
     <string name="today">Vandaag</string>
     <string name="weighted">gewogen</string>
+    <string name="full_xdrip_sync_comment">Volledige synchronisatie? Het kan enige tijd duren en tot het is voltooid zie je geen nieuwe gegevens in xDrip+.</string>
 </resources>
