@@ -24,7 +24,7 @@
     <string name="pref_graph_settings">Graf</string>
     <string name="pref_interface_settings">Grensesnitt</string>
     <string name="pref_others_settings">Annet</string>
-    <string name="pref_complication_settings">Urskive</string>
+    <string name="pref_complication_settings">Komplikasjon</string>
     <string name="pref_show_date">Vis dato</string>
     <string name="pref_show_iob">Vis IOB</string>
     <string name="pref_show_detailed_iob">Vis detaljert IOB</string>
@@ -66,9 +66,9 @@
     <string name="pref_ring_history">Ring-historikk</string>
     <string name="pref_light_ring_history">Lys ring-historikk</string>
     <string name="pref_animations">Animasjoner</string>
-    <string name="pref_wizard_in_menu">Kalkulator i Meny</string>
+    <string name="pref_wizard_in_menu">Kalkulator i menyen</string>
     <string name="pref_prime_in_menu">Prime i menyen</string>
-    <string name="pref_single_target">Enkel måleverdi</string>
+    <string name="pref_single_target">Enkelt målverdi</string>
     <string name="pref_wizard_percentage">Kalkulatorprosent</string>
     <string name="pref_complication_tap_action">Handling ved trykk på komplikasjon</string>
     <string name="pref_unicode_in_complications">Unicode i komplikasjoner</string>
@@ -116,7 +116,7 @@
     <string name="action_confirm">BEKREFT</string>
     <string name="action_timeshift">tidsforskyv</string>
     <string name="action_bolus">Bolus</string>
-    <string name="bolus_progress">Bolus fremdrift</string>
+    <string name="bolus_progress">Bolusfremdrift</string>
     <string name="press_to_cancel">trykk for å avbryte</string>
     <string name="cancel_bolus">AVBRYT BOLUS</string>
     <string name="status_pump">Pumpe</string>
@@ -160,11 +160,11 @@
     <string name="digitalstyle_style_full">full stil</string>
     <string name="digitalstyle_pref_your_color">Din farge:</string>
     <string name="digitalstyle_pref_your_color_saturation">Din fargemetning:</string>
-    <string name="digitalstyle_pref_your_color_opacity">Din gjennomsiktighet:</string>
-    <string name="bolus_progress_channel_name">AAPS bolus-framdrift</string>
-    <string name="bolus_progress_silent_channel_name">AAPS stille bolus-framdrift</string>
-    <string name="bolus_progress_channel_description">Bolus framdrift og avbryt</string>
-    <string name="bolus_progress_silent_channel_description">Bolus framdrift og avbryt med mindre vibrasjoner</string>
+    <string name="digitalstyle_pref_your_color_opacity">Din fargeopasitet:</string>
+    <string name="bolus_progress_channel_name">AAPS bolusfremdrift</string>
+    <string name="bolus_progress_silent_channel_name">AAPS stille bolusfremdrift</string>
+    <string name="bolus_progress_channel_description">Bolusfremdrift og avbryt</string>
+    <string name="bolus_progress_silent_channel_description">Bolusfremdrift og avbryt med mindre vibrasjoner</string>
     <string name="simple_ui_off">Av</string>
     <string name="simple_ui_charging">Under lading</string>
     <string name="simple_ui_always_on">Alltid På modus</string>
