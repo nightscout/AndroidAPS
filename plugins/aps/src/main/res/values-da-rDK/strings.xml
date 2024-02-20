@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="dyn_isf_adjust_title" formatted="false">DynamiskISF-justeringsfaktor %</string>
-    <string name="dyn_isf_adjust_summary" formatted="false">Justeringsfaktor for DynamiskISF. Indstil mere end 100% for mere aggressive korrektionsdoser og mindre end 100% for mindre aggressive korrektioner.</string>
     <string name="high_temptarget_raises_sensitivity_title">Høj midlertidig basal øger sensitivitet</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Hæv følsomheden for midlertidige basaler >= 100]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Lav midlertidig basal sænker sensitivitet</string>
