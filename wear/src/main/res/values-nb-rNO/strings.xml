@@ -24,7 +24,7 @@
     <string name="pref_graph_settings">Graf</string>
     <string name="pref_interface_settings">Grensesnitt</string>
     <string name="pref_others_settings">Annet</string>
-    <string name="pref_complication_settings">Urskive</string>
+    <string name="pref_complication_settings">Komplikasjon</string>
     <string name="pref_show_date">Vis dato</string>
     <string name="pref_show_iob">Vis IOB</string>
     <string name="pref_show_detailed_iob">Vis detaljert IOB</string>
@@ -66,9 +66,9 @@
     <string name="pref_ring_history">Ring-historikk</string>
     <string name="pref_light_ring_history">Lys ring-historikk</string>
     <string name="pref_animations">Animasjoner</string>
-    <string name="pref_wizard_in_menu">Kalkulator i Meny</string>
+    <string name="pref_wizard_in_menu">Kalkulator i menyen</string>
     <string name="pref_prime_in_menu">Prime i menyen</string>
-    <string name="pref_single_target">Enkel måleverdi</string>
+    <string name="pref_single_target">Enkelt målverdi</string>
     <string name="pref_wizard_percentage">Kalkulatorprosent</string>
     <string name="pref_complication_tap_action">Handling ved trykk på komplikasjon</string>
     <string name="pref_unicode_in_complications">Unicode i komplikasjoner</string>
@@ -116,7 +116,7 @@
     <string name="action_confirm">BEKREFT</string>
     <string name="action_timeshift">tidsforskyv</string>
     <string name="action_bolus">Bolus</string>
-    <string name="bolus_progress">Bolus fremdrift</string>
+    <string name="bolus_progress">Bolusfremdrift</string>
     <string name="press_to_cancel">trykk for å avbryte</string>
     <string name="cancel_bolus">AVBRYT BOLUS</string>
     <string name="status_pump">Pumpe</string>
@@ -148,7 +148,7 @@
     <string name="color_name_white">hvit</string>
     <string name="color_name_black">svart</string>
     <string name="color_name_multicolor">flerfarget</string>
-    <string name="pref_simplify_ui">Forenklet brukergrensesnitt</string>
+    <string name="pref_simplify_ui">Forenkle brukergrensesnittet</string>
     <string name="pref_simplify_ui_sum">Vis kun tid og BS</string>
     <string name="pref_vibrate_hourly">Vibrer hver time</string>
     <string name="pref_show_weeknumber">Vis ukenummer</string>
@@ -160,15 +160,15 @@
     <string name="digitalstyle_style_full">full stil</string>
     <string name="digitalstyle_pref_your_color">Din farge:</string>
     <string name="digitalstyle_pref_your_color_saturation">Din fargemetning:</string>
-    <string name="digitalstyle_pref_your_color_opacity">Din gjennomsiktighet:</string>
-    <string name="bolus_progress_channel_name">AAPS bolus-framdrift</string>
-    <string name="bolus_progress_silent_channel_name">AAPS stille bolus-framdrift</string>
-    <string name="bolus_progress_channel_description">Bolus framdrift og avbryt</string>
-    <string name="bolus_progress_silent_channel_description">Bolus framdrift og avbryt med mindre vibrasjoner</string>
+    <string name="digitalstyle_pref_your_color_opacity">Din fargeopasitet:</string>
+    <string name="bolus_progress_channel_name">AAPS bolusfremdrift</string>
+    <string name="bolus_progress_silent_channel_name">AAPS stille bolusfremdrift</string>
+    <string name="bolus_progress_channel_description">Bolusfremdrift og avbryt</string>
+    <string name="bolus_progress_silent_channel_description">Bolusfremdrift og avbryt med mindre vibrasjoner</string>
     <string name="simple_ui_off">Av</string>
     <string name="simple_ui_charging">Under lading</string>
     <string name="simple_ui_always_on">Alltid På modus</string>
-    <string name="simple_ui_always_on_charging">Alltid på under lading</string>
+    <string name="simple_ui_always_on_charging">Alltid På og under lading</string>
     <string name="temp_target_eating_soon">Spise snart</string>
     <string name="temp_target_hypo">Hypo</string>
     <string name="temp_target_activity">Aktivitet</string>
@@ -188,7 +188,7 @@
     <string name="no_status">S: --</string>
     <string name="time_stamp_na_min_ago">-- Min. siden</string>
     <string name="delta_na">--- mg/dl</string>
-    <string name="no_loop_status">Ingen loop status</string>
+    <string name="no_loop_status">Ingen loop-status</string>
     <string name="cob_000g">000g</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00E</string>
