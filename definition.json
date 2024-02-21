@@ -3,7 +3,9 @@
  ,{"minAndroid":24,"maxAndroid":25,"supported":"2.6.2"}
  ,{"minAndroid":26,"maxAndroid":27,"supported":"2.8.2"}
  ,{"minAndroid":28,"maxAndroid":99,"supported":"3.0.0"}
+ ,{"endDate":"2024-02-28","version":"4.0"}
  ,{"endDate":"2024-02-28","version":"3.0.0"}
+ ,{"endDate":"2024-02-28","version":"3.0-beta9"}
  ,{"endDate":"2024-02-28","version":"3.0.0.1"}
  ,{"endDate":"2023-12-31","version":"3.0.0.1-dev-h-newsurface"}
  ,{"endDate":"2023-12-31","version":"3.0.0.2-dev-m-Tsunami_3.3"}
