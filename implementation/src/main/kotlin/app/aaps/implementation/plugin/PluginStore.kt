@@ -176,7 +176,7 @@ class PluginStore @Inject constructor(
         get() = activeBgSourceStore ?: checkNotNull(activeBgSourceStore) { "No bg source selected" }
 
     override val activeProfileSource: ProfileSource
-        get() = activeProfile ?: checkNotNull(activeProfile) { "No profile selected" }
+        get() = activeProfile ?: wait() ?: activeProfile ?: checkNotNull(activeProfile) { "No profile selected" }
 
     override val activeInsulin: Insulin
         get() = activeInsulinStore ?: getDefaultPlugin(PluginType.INSULIN) as Insulin
