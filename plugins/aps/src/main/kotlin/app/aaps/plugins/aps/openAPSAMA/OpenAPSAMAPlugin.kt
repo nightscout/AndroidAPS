@@ -303,11 +303,9 @@ class OpenAPSAMAPlugin @Inject constructor(
     override fun configuration(): JSONObject = JSONObject()
     override fun applyConfiguration(configuration: JSONObject) {}
 
-    override fun preferenceScreen(preferenceManager: PreferenceManager, context: Context): PreferenceScreen {
-
+    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context) {
         val category = PreferenceCategory(context)
-        val screen = preferenceManager.createPreferenceScreen(context)
-        screen.addPreference(category)
+        parent.addPreference(category)
         category.apply {
             key = "openapsma_settings"
             title = rh.gs(R.string.openapsama)
@@ -334,6 +332,5 @@ class OpenAPSAMAPlugin @Inject constructor(
                 addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.ApsAmaBolusSnoozeDivisor, dialogMessage = R.string.openapsama_bolus_snooze_dia_divisor_summary, title = R.string.openapsama_bolus_snooze_dia_divisor))
             })
         }
-        return screen
     }
 }

@@ -4,7 +4,6 @@ import android.content.SharedPreferences
 import android.content.res.Resources.Theme
 import android.content.res.TypedArray
 import androidx.preference.PreferenceManager
-import androidx.preference.PreferenceScreen
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
@@ -78,7 +77,8 @@ class OpenAPSAMAPluginTest : TestBaseWithProfile() {
 
     @Test
     fun preferenceScreenTest() {
-        val ps = openAPSAMAPlugin.preferenceScreen(preferenceManager, context)
-        assertThat(ps).isInstanceOf(PreferenceScreen::class.java)
+        val screen = preferenceManager.createPreferenceScreen(context)
+        openAPSAMAPlugin.addPreferenceScreen(preferenceManager, screen, context)
+        assertThat(screen.preferenceCount).isGreaterThan(0)
     }
 }

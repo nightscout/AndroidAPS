@@ -201,9 +201,9 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         if (pluginName != null) {
             val plugin = activePlugin.getPluginsList().firstOrNull { it.javaClass.simpleName == pluginName } ?: error("Plugin not found")
             addPreferencesIfEnabled(plugin, rootKey)
-        } else if (preferenceScreenClass != null) {
-            val ps = Class.forName(preferenceScreenClass!!).getDeclaredConstructor().newInstance() as PreferenceScreen
-            addPreferencesFromScreen(ps, rootKey)
+            // } else if (preferenceScreenClass != null) {
+            //     val ps = Class.forName(preferenceScreenClass!!).getDeclaredConstructor().newInstance() as PreferenceScreen
+            //     addPreferencesFromScreen(ps, rootKey)
         } else if (xmlId != null && xmlId != 0) {
             addPreferencesFromResource(xmlId!!, rootKey)
         } else {
@@ -327,34 +327,36 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     private fun addPreferencesIfEnabled(p: PluginBase, rootKey: String?, enabled: Boolean = true) {
         if (preferences.simpleMode && !p.pluginDescription.preferencesVisibleInSimpleMode) return
         if (enabled && p.isEnabled() && p.preferencesId == PluginDescription.PREFERENCE_SCREEN)
-            addPreferencesFromScreen(p.preferenceScreen(preferenceManager, requireContext())!!, rootKey)
+            addPreferencesFromScreen(p, rootKey)
         if (enabled && p.isEnabled() && p.preferencesId > 0)
             addPreferencesFromResource(p.preferencesId, rootKey)
     }
 
     @SuppressLint("RestrictedApi")
     private fun addPreferencesFromResource(@XmlRes preferencesResId: Int, key: String?, enabled: Boolean = true) {
-        if (enabled)
-            context?.let { context ->
-                val xmlRoot = preferenceManager.inflateFromResource(context, preferencesResId, null)
-                if (key != null) {
-                    val root: Preference = xmlRoot.findPreference(key) ?: return
-                    require(root is PreferenceScreen) { ("Preference object with key $key is not a PreferenceScreen") }
-                    preferenceScreen = root
-                } else {
-                    addPreferencesFromResource(preferencesResId)
-                }
+        if (enabled) {
+            val xmlRoot = preferenceManager.inflateFromResource(requireContext(), preferencesResId, null)
+            if (key != null) {
+                // looking for sub screen
+                val root: Preference = xmlRoot.findPreference(key) ?: return
+                require(root is PreferenceScreen) { ("Preference object with key $key is not a PreferenceScreen") }
+                preferenceScreen = root
+            } else {
+                addPreferencesFromResource(preferencesResId)
             }
+        }
     }
 
     @SuppressLint("RestrictedApi")
-    private fun addPreferencesFromScreen(xmlRoot: PreferenceScreen, key: String?) {
-        preferenceScreen =
-            if (key != null) {
-                val root: Preference = xmlRoot.findPreference(key) ?: return
-                require(root is PreferenceScreen) { ("Preference object with key $key is not a PreferenceScreen") }
-                root
-            } else xmlRoot
+    private fun addPreferencesFromScreen(p: PluginBase, key: String?) {
+        val rootScreen = preferenceScreen ?: preferenceManager.createPreferenceScreen(requireContext()).also { preferenceScreen = it }
+        p.addPreferenceScreen(preferenceManager, rootScreen, requireContext())
+        if (key != null) {
+            // looking for sub screen
+            val root: Preference = rootScreen.findPreference(key) ?: return
+            require(root is PreferenceScreen) { ("Preference object with key $key is not a PreferenceScreen") }
+            preferenceScreen = root
+        }
     }
 
     private fun updateFilterVisibility(filter: String, p: Preference): Boolean {
@@ -470,42 +472,41 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     // to hash password while it is saved and never have to show it, even hashed
 
     override fun onPreferenceTreeClick(preference: Preference): Boolean =
-        context?.let { context ->
             when (preference.key) {
                 rh.gs(app.aaps.core.utils.R.string.key_master_password)        -> {
-                    passwordCheck.queryPassword(context, app.aaps.plugins.configuration.R.string.current_master_password, app.aaps.core.utils.R.string.key_master_password, {
-                        passwordCheck.setPassword(context, app.aaps.core.ui.R.string.master_password, app.aaps.core.utils.R.string.key_master_password)
+                    passwordCheck.queryPassword(requireContext(), app.aaps.plugins.configuration.R.string.current_master_password, app.aaps.core.utils.R.string.key_master_password, {
+                        passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.master_password, app.aaps.core.utils.R.string.key_master_password)
                     })
                     true
                 }
 
                 rh.gs(app.aaps.core.utils.R.string.key_settings_password)      -> {
-                    passwordCheck.setPassword(context, app.aaps.core.ui.R.string.settings_password, app.aaps.core.utils.R.string.key_settings_password)
+                    passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.settings_password, app.aaps.core.utils.R.string.key_settings_password)
                     true
                 }
 
                 rh.gs(app.aaps.core.utils.R.string.key_bolus_password)         -> {
-                    passwordCheck.setPassword(context, app.aaps.core.ui.R.string.bolus_password, app.aaps.core.utils.R.string.key_bolus_password)
+                    passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.bolus_password, app.aaps.core.utils.R.string.key_bolus_password)
                     true
                 }
 
                 rh.gs(app.aaps.core.utils.R.string.key_application_password)   -> {
-                    passwordCheck.setPassword(context, app.aaps.core.ui.R.string.application_password, app.aaps.core.utils.R.string.key_application_password)
+                    passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.application_password, app.aaps.core.utils.R.string.key_application_password)
                     true
                 }
 
                 rh.gs(app.aaps.core.utils.R.string.key_settings_pin)           -> {
-                    passwordCheck.setPassword(context, app.aaps.core.ui.R.string.settings_pin, app.aaps.core.utils.R.string.key_settings_pin, pinInput = true)
+                    passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.settings_pin, app.aaps.core.utils.R.string.key_settings_pin, pinInput = true)
                     true
                 }
 
                 rh.gs(app.aaps.core.utils.R.string.key_bolus_pin)              -> {
-                    passwordCheck.setPassword(context, app.aaps.core.ui.R.string.bolus_pin, app.aaps.core.utils.R.string.key_bolus_pin, pinInput = true)
+                    passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.bolus_pin, app.aaps.core.utils.R.string.key_bolus_pin, pinInput = true)
                     true
                 }
 
                 rh.gs(app.aaps.core.utils.R.string.key_application_pin)        -> {
-                    passwordCheck.setPassword(context, app.aaps.core.ui.R.string.application_pin, app.aaps.core.utils.R.string.key_application_pin, pinInput = true)
+                    passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.application_pin, app.aaps.core.utils.R.string.key_application_pin, pinInput = true)
                     true
                 }
                 // NSClient copy settings
@@ -516,7 +517,6 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
 
                 else                                                           -> super.onPreferenceTreeClick(preference)
             }
-        } ?: super.onPreferenceTreeClick(preference)
 
     fun setFilter(filter: String) {
         this.filter = filter

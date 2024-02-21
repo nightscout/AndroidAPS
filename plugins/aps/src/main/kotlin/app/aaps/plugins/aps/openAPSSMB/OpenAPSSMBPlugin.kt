@@ -499,11 +499,9 @@ open class OpenAPSSMBPlugin @Inject constructor(
             .store(IntKey.ApsDynIsfAdjustmentFactor, preferences, rh)
     }
 
-    override fun preferenceScreen(preferenceManager: PreferenceManager, context: Context): PreferenceScreen {
-
+    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context) {
         val category = PreferenceCategory(context)
-        val screen = preferenceManager.createPreferenceScreen(context)
-        screen.addPreference(category)
+        parent.addPreference(category)
         category.apply {
             key = "openapssmb_settings"
             title = rh.gs(R.string.openapssmb)
@@ -542,6 +540,5 @@ open class OpenAPSSMBPlugin @Inject constructor(
                 )
             })
         }
-        return screen
     }
 }

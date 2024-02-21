@@ -123,9 +123,9 @@ abstract class PluginBase(
     open fun updatePreferenceSummary(pref: Preference) {}
 
     /**
-     * Provide [PreferenceScreen] to show preferences
+     * Add [PreferenceScreen] to preferences
      *
-     * Plugin can provide either [PreferenceScreen] or [preferencesId] XML
+     * Plugin can provide either this method or [preferencesId] XML
      */
-    open fun preferenceScreen(preferenceManager: PreferenceManager, context: Context): PreferenceScreen? = null
+    open fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context) {}
 }

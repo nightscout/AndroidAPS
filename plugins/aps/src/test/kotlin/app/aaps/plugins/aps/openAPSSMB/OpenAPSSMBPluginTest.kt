@@ -4,7 +4,6 @@ import android.content.SharedPreferences
 import android.content.res.Resources.Theme
 import android.content.res.TypedArray
 import androidx.preference.PreferenceManager
-import androidx.preference.PreferenceScreen
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -88,7 +87,8 @@ class OpenAPSSMBPluginTest : TestBaseWithProfile() {
 
     @Test
     fun preferenceScreenTest() {
-        val ps = openAPSSMBPlugin.preferenceScreen(preferenceManager, context)
-        assertThat(ps).isInstanceOf(PreferenceScreen::class.java)
+        val screen = preferenceManager.createPreferenceScreen(context)
+        openAPSSMBPlugin.addPreferenceScreen(preferenceManager, screen, context)
+        assertThat(screen.preferenceCount).isGreaterThan(0)
     }
 }
