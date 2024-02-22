@@ -18,4 +18,5 @@
     <string name="insulin_peak">Peak</string>
     <!--    Loop -->
     <string name="description_loop">Aktiviraj ili deaktiviraj implementaciju koja pokreće loop.</string>
+    <!-- Autotune -->
 </resources>
