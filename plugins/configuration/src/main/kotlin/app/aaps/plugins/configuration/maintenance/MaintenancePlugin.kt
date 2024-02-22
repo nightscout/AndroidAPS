@@ -4,6 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.core.content.FileProvider
+import androidx.preference.PreferenceCategory
+import androidx.preference.PreferenceManager
+import androidx.preference.PreferenceScreen
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -16,6 +19,10 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.validators.AdaptiveIntPreference
+import app.aaps.core.validators.AdaptiveStringPreference
+import app.aaps.core.validators.DefaultEditTextValidator
+import app.aaps.core.validators.EditTextValidator
 import app.aaps.plugins.configuration.R
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
@@ -47,7 +54,7 @@ class MaintenancePlugin @Inject constructor(
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_maintenance)
         .pluginName(R.string.maintenance)
         .shortName(R.string.maintenance_shortname)
-        .preferencesId(R.xml.pref_maintenance)
+        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_maintenance),
     aapsLogger, rh
@@ -223,5 +230,22 @@ class MaintenancePlugin @Inject constructor(
         emailIntent.putExtra(Intent.EXTRA_STREAM, attachmentUri)
         emailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         return emailIntent
+    }
+
+    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context) {
+        val category = PreferenceCategory(context)
+        parent.addPreference(category)
+        category.apply {
+            key = "maintenance_settings"
+            title = rh.gs(R.string.maintenance_settings)
+            initialExpandedChildrenCount = 0
+            addPreference(
+                AdaptiveStringPreference(
+                    ctx = context, stringKey = StringKey.MaintenanceEmail, dialogMessage = R.string.maintenance_email, title = R.string.maintenance_email,
+                    validatorParams = DefaultEditTextValidator.Parameters(testType = EditTextValidator.TEST_EMAIL)
+                )
+            )
+            addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.MaintenanceLogsAmount, title = R.string.maintenance_amount))
+        }
     }
 }

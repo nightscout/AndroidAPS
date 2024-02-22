@@ -2,6 +2,7 @@ package app.aaps.core.validators
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.text.InputType
 import android.util.AttributeSet
 import androidx.annotation.StringRes
 import androidx.preference.EditTextPreference
@@ -18,6 +19,7 @@ class AdaptiveStringPreference(
     stringKey: StringKey? = null,
     @StringRes dialogMessage: Int? = null,
     @StringRes title: Int?,
+    validatorParams: DefaultEditTextValidator.Parameters? = null,
 ) : EditTextPreference(ctx, attrs) {
 
     private val validatorParameters: DefaultEditTextValidator.Parameters
@@ -60,11 +62,14 @@ class AdaptiveStringPreference(
             if (sharedPrefs.getBoolean(context.getString(preferenceKey.dependency), false))
                 isVisible = false
         }
-        validatorParameters = obtainValidatorParameters(attrs)
+        validatorParameters = validatorParams ?: obtainValidatorParameters(attrs)
         setOnBindEditTextListener { editText ->
             validator = DefaultEditTextValidator(editText, validatorParameters, context)
             editText.setSelectAllOnFocus(true)
             editText.setSingleLine()
+            when (validatorParameters.testType) {
+                EditTextValidator.TEST_EMAIL -> editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+            }
         }
         setOnPreferenceChangeListener { _, _ -> validator?.testValidity(false) ?: true }
         setDefaultValue(preferenceKey.defaultValue)
