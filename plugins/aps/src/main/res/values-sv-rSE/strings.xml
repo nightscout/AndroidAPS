@@ -111,4 +111,5 @@
     <string name="loop_smb_set_by_pump_label">SMB påbörjad av pump</string>
     <string name="loop_open_mode_min_change">Minsta ändring som ska utföras [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Open Loop kommer bara att be om justering om ändringen är större än detta värde. Standardvärdet är 20%</string>
+    <!-- Autotune -->
 </resources>
