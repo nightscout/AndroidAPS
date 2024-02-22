@@ -118,4 +118,12 @@
     <string name="time_to_bolus">Time to bolus!\nRun Bolus wizard and do calculation again.</string>
     <string name="error_setting_reminder">Error while setting future alarm</string>
 
+    <!--    Autotune-->
+    <string name="autotune_profile_name">Autotune profile %1$s</string>
+    <string name="autotune_run">Run Autotune</string>
+    <string name="autotune_run_without_autoswitch">Autotune ran without profile switch</string>
+    <string name="autotune_run_with_autoswitch">Autotune ran and profile automatically switched</string>
+    <string name="autotune_run_with_error">Error during last Autotune run</string>
+    <string name="autotune_run_cancelled">Another run of Autotune is detected, run cancelled</string>
+
 </resources>
