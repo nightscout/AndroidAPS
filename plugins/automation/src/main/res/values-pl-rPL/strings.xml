@@ -116,4 +116,5 @@
     <string name="time_to_eat">Czas na posiłek!\nUruchom Kalkulator bolusa aby ponownie wykonać obliczenia.</string>
     <string name="time_to_bolus">Czas na bolus!\nUruchom Kalkulator bolusa aby ponownie wykonać obliczenia.</string>
     <string name="error_setting_reminder">Błąd podczas ustawiania przyszłego alarmu</string>
+    <!--    Autotune-->
 </resources>
