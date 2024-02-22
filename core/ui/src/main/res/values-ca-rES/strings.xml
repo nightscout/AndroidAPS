@@ -343,8 +343,6 @@
     <string name="basalpct">Basal %</string>
     <string name="a11y_user">usuari</string>
     <!-- Autotune -->
-    <string name="autotune_result">Resultat: %1$s</string>
-    <string name="autotune_compare_profile">Comparar perfils</string>
     <!-- Alerts -->
     <string name="raise_notifications_as_android_notifications">Utilitzar avisos del sistema per alarmes i avisos</string>
     <string name="urgent_alarm">Alarma urgent</string>
