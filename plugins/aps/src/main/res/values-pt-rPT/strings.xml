@@ -111,4 +111,5 @@
     <string name="loop_smb_set_by_pump_label">SMB definido pela bomba</string>
     <string name="loop_open_mode_min_change">Pedido de alteração Mínima [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">O Loop aberto irá solicitar uma alteração apenas se a mudança for maior do que este valor em %. O valor padrão é 20%</string>
+    <!-- Autotune -->
 </resources>
