@@ -44,6 +44,7 @@
     <string name="noisycgm_pause">Deaktiviere den Loop, um mögliche Über- oder Unterdosierungen zu verhindern.</string>
     <string name="noisycgm_replacesensor">Ersetze dauerhaft verrauschte oder ungenaue Sensoren.</string>
     <string name="noisycgm_checksmoothing">Vergewissere Dich, dass Deine CGM App geglättete Daten liefert.</string>
+    <string name="noisycgm_hint1">https://wiki.aaps.app/de/latest/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#glattung-der-blut-glukose-daten</string>
     <string name="exerciseprofile_label">Sport und Profile</string>
     <string name="exerciseprofile_whattodo">Wie kannst Du Profile verwenden, um das System am besten beim Umgang mit sportlichen Aktivitäten zu unterstützen?</string>
     <string name="exerciseprofile_switchprofilebelow100">Mache einen Profilwechsel auf unter 100%.</string>

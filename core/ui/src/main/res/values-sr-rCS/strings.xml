@@ -52,7 +52,6 @@
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
     <!-- Autotune -->
-    <string name="autotune_result">Rezultat: %1$s</string>
     <!-- Alerts -->
     <!-- BolusWizard -->
     <string name="quickwizard">Brzi Čarobnjak</string>

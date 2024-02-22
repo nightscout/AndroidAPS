@@ -116,4 +116,10 @@
     <string name="time_to_eat">Време за ядене!\Стартирайте болус съветника и направете изчисления отново.</string>
     <string name="time_to_bolus">Време е за болус!\nВключи болус съветника и направи изчисление отново.</string>
     <string name="error_setting_reminder">Грешка при настройка на аларма!</string>
+    <!--    Autotune-->
+    <string name="autotune_run">Стартирай Autotune</string>
+    <string name="autotune_run_without_autoswitch">Стартиране на Autotune без смяна на профила</string>
+    <string name="autotune_run_with_autoswitch">Стартиране на Autotune и автоматична смяна на профила</string>
+    <string name="autotune_run_with_error">Възникна грешка по време на последното стартиране на Autotune</string>
+    <string name="autotune_run_cancelled">Друго стартиране на Autotune е засечено, текущото е отказано</string>
 </resources>

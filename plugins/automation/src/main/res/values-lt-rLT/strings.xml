@@ -116,4 +116,10 @@
     <string name="time_to_eat">Laikas valgyti!\nĮjunkite Boluso patarėją ir atlikite skaičiavimą dar kartą.</string>
     <string name="time_to_bolus">Laikas bolusui!\nĮjunkite Skaičiuotuvą ir pakartokite skaičiavimus.</string>
     <string name="error_setting_reminder">Klaida nustatant ateities perspėjimus</string>
+    <!--    Autotune-->
+    <string name="autotune_run">Paleisti Autotune</string>
+    <string name="autotune_run_without_autoswitch">Autotune veikė be profilio keitimo</string>
+    <string name="autotune_run_with_autoswitch">Autotune veikė ir profilis automatiškai pakeistas</string>
+    <string name="autotune_run_with_error">Paskutinio Autotune klaida</string>
+    <string name="autotune_run_cancelled">Nustatytas kitas Autotune veikimas, jis atšauktas</string>
 </resources>

@@ -393,8 +393,6 @@
     <string name="basalpct">Basal %</string>
     <string name="a11y_user">utilizador</string>
     <!-- Autotune -->
-    <string name="autotune_missing">Em falta</string>
-    <string name="autotune_compare_profile">Comparar Perfis</string>
     <!-- Alerts -->
     <string name="raise_notifications_as_android_notifications">Utilizar as notificações do sistema para alertas e notificações</string>
     <string name="urgent_alarm">Alarme Urgente</string>

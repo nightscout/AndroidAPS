@@ -49,10 +49,10 @@
     <string name="full_sync_comment">Полная синхронизация? Это может занять много часов и до завершения вы не увидите новые данные в NS.</string>
     <string name="ns_sync_options">Синхронизация</string>
     <string name="ns_upload_summary">Профили, болюсы, углеводы, временные базалы закачиваются в NS</string>
-    <string name="ns_upload">Передавать данные в NS</string>
+    <string name="ns_upload">Передать данные в NS</string>
     <string name="ns_receive_profile_store">Принимать хранилище профилей</string>
     <string name="ns_receive_profile_store_summary">Синхронизировать профили из редактора NS профиля в локальный профиль</string>
-    <string name="ns_receive_temp_target">Получать временные цели</string>
+    <string name="ns_receive_temp_target">Получить временные цели</string>
     <string name="ns_receive_temp_target_summary">Принимать временные цели, установленные через NS или NSClient</string>
     <string name="ns_receive_profile_switch">Получать переключения профиля</string>
     <string name="ns_receive_profile_switch_summary">Принимать переключения профиля, введенные через NS или NSClient</string>
@@ -189,4 +189,5 @@
     <string name="tdd_line">%1$.2fед%1$.0f%%</string>
     <string name="today">Сегодня</string>
     <string name="weighted">взвешенный</string>
+    <string name="full_xdrip_sync_comment">Полная синхронизация? Это может занять длительное время и до завершения вы не увидите новые данные в xDrip+.</string>
 </resources>

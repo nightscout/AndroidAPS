@@ -89,4 +89,7 @@
     <string name="ignore30m">Ignorar 30m</string>
     <string name="basal_set_correctly">Basal configurada ok</string>
     <string name="loop_aps_label">APS</string>
+    <!-- Autotune -->
+    <string name="autotune_result">Resultat: %1$s</string>
+    <string name="autotune_compare_profile">Comparar perfils</string>
 </resources>

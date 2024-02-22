@@ -44,6 +44,7 @@
     <string name="noisycgm_pause">Inaktivera closed loop-läge för att undvika över- eller underdosering.</string>
     <string name="noisycgm_replacesensor">Byt ut brusiga eller felaktiga sensorer.</string>
     <string name="noisycgm_checksmoothing">Kontrollera att din CGM-app ger utjämnade data.</string>
+    <string name="noisycgm_hint1">https://wiki.aaps.app/en/latest/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#smoothing-blood-glucose-data</string>
     <string name="exerciseprofile_label">Träning och profiler</string>
     <string name="exerciseprofile_whattodo">Hur kan du använda profiler för att bäst hjälpa systemet att hantera aerobisk träning?</string>
     <string name="exerciseprofile_switchprofilebelow100">Gör ett profilbyte till mindre än 100%.</string>

@@ -73,7 +73,7 @@
     <string name="result_insulin_carbs">תוצאה: %1$s %2$s</string>
     <string name="missing_carbs">חסרים %1$d גר\'</string>
     <string name="a11y_current_bg">רמת סוכר נוכחית</string>
-    <string name="carb_time_label">מועד פחמימות</string>
+    <string name="carb_time_label">זמן פחמימות</string>
     <string name="a11y_set_carb_timer">הגדרת אזעקה טיימר פחמימות</string>
     <string name="show_calculation">הצג חישוב</string>
     <!-- Treatments -->

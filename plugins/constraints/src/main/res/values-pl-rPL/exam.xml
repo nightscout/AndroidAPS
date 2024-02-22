@@ -44,6 +44,7 @@
     <string name="noisycgm_pause">Wyłącz pętlę zamkniętą, aby uniknąć możliwego przedawkowania lub niedoszacowania.</string>
     <string name="noisycgm_replacesensor">Wymieniaj stale zaszumione lub niewłaściwie wskazujące sensory.</string>
     <string name="noisycgm_checksmoothing">Sprawdź, czy aplikacja CGM zapewnia wygładzone dane.</string>
+    <string name="noisycgm_hint1">https://wiki.aaps.app/en/latest/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#smoothing-blood-glucose-data</string>
     <string name="exerciseprofile_label">Ćwiczenia fizyczne i profile</string>
     <string name="exerciseprofile_whattodo">Jak wykorzystać profile, aby najlepiej pomóc systemowi radzić sobie z ćwiczeniami aerobowymi?</string>
     <string name="exerciseprofile_switchprofilebelow100">Wykonaj zmianę profilu na poniżej 100%.</string>
