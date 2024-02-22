@@ -14,6 +14,7 @@ import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -81,6 +82,7 @@ class XdripPlugin @Inject constructor(
     private val uiInteraction: UiInteraction,
     private val dateUtil: DateUtil,
     aapsLogger: AAPSLogger,
+    private val config: Config,
     private val decimalFormatter: DecimalFormatter
 ) : XDripBroadcast, Sync, PluginBase(
     PluginDescription()
@@ -101,7 +103,6 @@ class XdripPlugin @Inject constructor(
     private val disposable = CompositeDisposable()
     private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private val listLog: MutableList<EventXdripNewLog> = ArrayList()
-    private var lastLoopStatus = false
 
     // Not used Sync interface members
     override val hasWritePermission: Boolean = true
@@ -232,11 +233,8 @@ class XdripPlugin @Inject constructor(
 
     private fun buildStatusLine(profile: Profile): String {
         val status = StringBuilder()
-        @Suppress("LiftReturnOrAssignment")
-        if (!loop.isEnabled()) {
+        if (!loop.isEnabled() && config.APS)
             status.append(rh.gs(R.string.disabled_loop)).append("\n")
-            lastLoopStatus = false
-        } else lastLoopStatus = true
 
         //Temp basal
         processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())?.let {
