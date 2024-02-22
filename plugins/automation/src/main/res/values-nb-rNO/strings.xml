@@ -116,4 +116,5 @@
     <string name="time_to_eat">Nå må du spise!\nBruk boluskalkulator og gjør beregning på nytt.</string>
     <string name="time_to_bolus">Tid for bolus!\nStart boluskalkulator og gjør beregning på nytt.</string>
     <string name="error_setting_reminder">Feil under innstilling av fremtidig alarm</string>
+    <!--    Autotune-->
 </resources>
