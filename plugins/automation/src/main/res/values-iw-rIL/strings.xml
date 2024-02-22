@@ -116,4 +116,5 @@
     <string name="time_to_eat">זמן לאכול!\nהפעילו את אשף הבולוסים וחשבו בולוס חדש.</string>
     <string name="time_to_bolus">זמן להזריק בולוס!\nהשתמשו במחשבון וחשבו מחדש.</string>
     <string name="error_setting_reminder">חלה תקלה בעת הגדרת תזכורת</string>
+    <!--    Autotune-->
 </resources>
