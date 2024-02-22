@@ -117,6 +117,7 @@
     <string name="loop_open_mode_min_change_summary" formatted="false">\"לולאה פתוחה\" תציג בקשת שינוי חדשה רק אם השינוי גדול מערך זה ב-%. ערך ברירת המחדל הוא 20%</string>
     <string name="fallback_smb_no_tdd">חוזר ל-SMB, אין מספיק נתוני מינון יומי.</string>
     <!-- Autotune -->
+    <string name="autotune_description">עזרה בכיוונונים פוטנציאליים בפרופיל (ISF, יחס פחמימות ומינונים בזאליים)</string>
     <string name="autotune_shortname">AT</string>
     <string name="autotune_settings">הגדרות כוונון אוטומטי</string>
     <string name="autotune_auto_title">עדכון פרופיל מאוטומציה</string>
@@ -126,10 +127,10 @@
     <string name="autotune_tune_insulin_curve_title">כיוונון עקומת פעילות האינסולין</string>
     <string name="autotune_tune_insulin_curve_summary">אפשרו רק אם אתם משתמשים בשיא חופשי. אפשרות זו תכוונן את השיא ואת משך פעילות האינסולין</string>
     <string name="autotune_default_tune_days_title">מספר ימי נתונים</string>
-    <string name="autotune_circadian_ic_isf_title">החל תוצאה ממוצעת ב-IC/ISF הצירקדי</string>
-    <string name="autotune_circadian_ic_isf_summary">כוונון אוטומטי לא יכוונן את הווריאציות הצירקדיות, אפשרות זו תחיל רק את הכוונון הממוצע של IC ו-ISF על פרופיל הקלט הצירקדי</string>
+    <string name="autotune_circadian_ic_isf_title">החל תוצאה ממוצעת ב-IC/ISF היומיים</string>
+    <string name="autotune_circadian_ic_isf_summary">כוונון אוטומטי לא יכוונן את הווריאציות הצירקדיות, אפשרות זו תחיל רק את הכוונון הממוצע של IC ו-ISF על פרופיל הקלט היומי</string>
     <string name="autotune_additional_log_title">כלול מידע נוסף ביומן עבור דיבאגינג</string>
-    <string name="autotune_additional_log_summary">הפעל רק אם מתבקש על ידי המפתח לשלוח מידע נוסף ביומן כדי לסייע באיתור באגים של תוסף הכיוונון האוטומטי</string>
+    <string name="autotune_additional_log_summary">הפעילו רק אם נתבקשתם על ידי המפתח לשלוח מידע נוסף ביומן כדי לסייע באיתור באגים של תוסף הכיוונון האוטומטי</string>
     <string name="autotune_default_tune_days_summary">ברירת המחדל של מספר ימי הנתונים לעיבוד על ידי הכיוונון האוטומטי (עד 30)</string>
     <string name="autotune_tunedprofile_name">מכוונן</string>
     <string name="autotune_profile">פרופיל :</string>
@@ -137,7 +138,7 @@
     <string name="autotune_warning">אזהרה :</string>
     <string name="autotune_ic_warning">בפרופיל הנבחר יש %1$d ערכי יחס פחמימות. הכיוונון האוטומטי ישתמש ב-%2$.2f גר\'\\יח\'</string>
     <string name="autotune_isf_warning">בפרופיל הנבחר יש %1$d ערכי יחס תיקון. הכיוונון האוטומטי ישתמש ב-%2$.1f %3$s\\יח\'</string>
-    <string name="autotune_error">שגיאה בנתוני הקלט, נסו להפעיל בשנית או שנסו לצמצם את מספר הימים</string>
+    <string name="autotune_error">שגיאה בנתוני הקלט, נסו להפעיל שוב או שנסו לצמצם את מספר הימים</string>
     <string name="autotune_error_more_days">שגיאה בנתוני הקלט, נסו לצמצם את מספר הימים</string>
     <string name="autotune_warning_during_run">חישוב הכוונון האוטומטי התחיל, אנא התאזרו בסבלנות</string>
     <string name="autotune_warning_after_run">בדקו היטב את התוצאות לפני השימוש בהן!</string>
@@ -146,7 +147,7 @@
     <string name="autotune_param">פרמטר</string>
     <string name="autotune_percent">%</string>
     <string name="autotune_missing">חסר</string>
-    <string name="autotune_run">הפעל Autotune</string>
+    <string name="autotune_run">הפעל כוונון אוטומטי</string>
     <string name="autotune_check_input_profile_button">בדיקת פרופיל הקלט</string>
     <string name="autotune_compare_profile">השוואת פרופילים</string>
     <string name="autotune_copy_localprofile_button">העתקה אל הפרופיל המקומי שלי</string>
