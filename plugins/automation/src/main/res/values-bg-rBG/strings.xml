@@ -116,4 +116,5 @@
     <string name="time_to_eat">Време за ядене!\Стартирайте болус съветника и направете изчисления отново.</string>
     <string name="time_to_bolus">Време е за болус!\nВключи болус съветника и направи изчисление отново.</string>
     <string name="error_setting_reminder">Грешка при настройка на аларма!</string>
+    <!--    Autotune-->
 </resources>
