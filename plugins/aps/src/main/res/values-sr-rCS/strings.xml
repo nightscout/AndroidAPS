@@ -26,4 +26,5 @@
     <string name="description_loop">Aktivirajte ili deaktivirajte implementaciju koja pokreće petlju.</string>
     <string name="loop_aps_label">APS</string>
     <!-- Autotune -->
+    <string name="autotune_result">Rezultat: %1$s</string>
 </resources>
