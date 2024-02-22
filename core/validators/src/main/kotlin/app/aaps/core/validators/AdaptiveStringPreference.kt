@@ -67,6 +67,7 @@ class AdaptiveStringPreference(
             editText.setSingleLine()
         }
         setOnPreferenceChangeListener { _, _ -> validator?.testValidity(false) ?: true }
+        setDefaultValue(preferenceKey.defaultValue)
     }
 
     override fun onAttached() {
@@ -96,9 +97,5 @@ class AdaptiveStringPreference(
         ).also {
             typedArray.recycle()
         }
-    }
-
-    override fun onSetInitialValue(defaultValue: Any?) {
-        text = getPersistedString(defaultValue as String?)
     }
 }
