@@ -116,4 +116,5 @@
     <string name="time_to_eat">Laikas valgyti!\nĮjunkite Boluso patarėją ir atlikite skaičiavimą dar kartą.</string>
     <string name="time_to_bolus">Laikas bolusui!\nĮjunkite Skaičiuotuvą ir pakartokite skaičiavimus.</string>
     <string name="error_setting_reminder">Klaida nustatant ateities perspėjimus</string>
+    <!--    Autotune-->
 </resources>
