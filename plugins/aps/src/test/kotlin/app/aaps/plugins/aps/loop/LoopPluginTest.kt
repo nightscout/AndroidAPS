@@ -15,12 +15,9 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.AdaptiveListPreference
-import app.aaps.core.keys.AdaptiveSwitchPreference
 import app.aaps.core.keys.StringKey
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
-import app.aaps.core.validators.AdaptiveDoublePreference
 import app.aaps.core.validators.AdaptiveIntPreference
-import app.aaps.core.validators.AdaptiveUnitPreference
 import app.aaps.pump.virtual.VirtualPumpPlugin
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat

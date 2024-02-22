@@ -124,9 +124,9 @@ class PreferencesImpl @Inject constructor(
             when (key) {
                 IntKey.AutosensPeriod ->
                     when (get(StringKey.SafetyAge)) {
-                        rh.gs(app.aaps.core.utils.R.string.key_teenage) -> 4
-                        rh.gs(app.aaps.core.utils.R.string.key_child)   -> 4
-                        else                                            -> 24
+                        rh.gs(app.aaps.core.keys.R.string.key_teenage) -> 4
+                        rh.gs(app.aaps.core.keys.R.string.key_child)   -> 4
+                        else                                           -> 24
                     }
 
                 else                  -> error("Unsupported default value calculation")

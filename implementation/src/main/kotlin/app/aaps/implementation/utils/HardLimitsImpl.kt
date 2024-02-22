@@ -44,12 +44,12 @@ class HardLimitsImpl @Inject constructor(
     }
 
     private fun loadAge(): Int = when (preferences.get(StringKey.SafetyAge)) {
-        rh.gs(app.aaps.core.utils.R.string.key_child)          -> CHILD
-        rh.gs(app.aaps.core.utils.R.string.key_teenage)        -> TEENAGE
-        rh.gs(app.aaps.core.utils.R.string.key_adult)          -> ADULT
-        rh.gs(app.aaps.core.utils.R.string.key_resistantadult) -> RESISTANT_ADULT
-        rh.gs(app.aaps.core.utils.R.string.key_pregnant)       -> PREGNANT
-        else                                                   -> ADULT
+        rh.gs(app.aaps.core.keys.R.string.key_child)          -> CHILD
+        rh.gs(app.aaps.core.keys.R.string.key_teenage)        -> TEENAGE
+        rh.gs(app.aaps.core.keys.R.string.key_adult)          -> ADULT
+        rh.gs(app.aaps.core.keys.R.string.key_resistantadult) -> RESISTANT_ADULT
+        rh.gs(app.aaps.core.keys.R.string.key_pregnant)       -> PREGNANT
+        else                                                  -> ADULT
     }
 
     override fun maxBolus(): Double = HardLimits.MAX_BOLUS[loadAge()]

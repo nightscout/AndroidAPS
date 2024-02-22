@@ -141,4 +141,11 @@
     <string name="key_autotune_additional_log" translatable="false">autotune_additional_log</string>
     <string name="key_autotune_last_run" translatable="false">key_autotune_last_run</string>
 
+    <!--Safety-->
+    <string name="key_child" translatable="false">child</string>
+    <string name="key_teenage" translatable="false">teenage</string>
+    <string name="key_adult" translatable="false">adult</string>
+    <string name="key_resistantadult" translatable="false">resistantadult</string>
+    <string name="key_pregnant" translatable="false">pregnant</string>
+
 </resources>

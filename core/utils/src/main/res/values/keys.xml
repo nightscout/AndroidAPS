@@ -15,7 +15,6 @@
     <string name="key_wear_settings" translatable="false">wear_settings</string>
     <string name="key_configbuilder_general_settings" translatable="false">configbuilder_general_settings</string>
     <string name="key_smscommunicator_settings" translatable="false">smscommunicator_settings</string>
-    <string name="key_treatmentssafety_settings" translatable="false">treatmentssafety_settings</string>
     <string name="key_virtualpump_settings" translatable="false">virtualpump_settings</string>
     <string name="key_pump_settings" translatable="false">pump_settings</string>
     <string name="key_tidepool_settings" translatable="false">tidepool_settings</string>
@@ -30,11 +29,6 @@
     <string name="key_active_pump_change_timestamp" translatable="false">active_pump_change_timestamp</string>
     <string name="key_active_pump_type" translatable="false">active_pump_type</string>
     <string name="key_active_pump_serial_number" translatable="false">active_pump_serial_number</string>
-    <string name="key_child" translatable="false">child</string>
-    <string name="key_teenage" translatable="false">teenage</string>
-    <string name="key_adult" translatable="false">adult</string>
-    <string name="key_resistantadult" translatable="false">resistantadult</string>
-    <string name="key_pregnant" translatable="false">pregnant</string>
     <string name="key_app_expiration" translatable="false">app_expiration</string>
     <string name="key_enable_pump_unreachable_alert" translatable="false">enable_pump_unreachable_alert</string>
     <string name="key_next_pump_disconnected_alarm" translatable="false">nextPumpDisconnectedAlarm</string>

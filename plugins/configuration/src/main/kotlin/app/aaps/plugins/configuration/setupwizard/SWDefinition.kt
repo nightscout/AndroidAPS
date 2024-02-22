@@ -238,7 +238,7 @@ class SWDefinition @Inject constructor(
             .add(SWBreak(injector))
             .add(
                 SWRadioButton(injector)
-                    .option(app.aaps.core.ui.R.array.ageArray, app.aaps.core.utils.R.array.ageValues)
+                    .option(activePlugin.activeSafety.ageEntries(), activePlugin.activeSafety.ageEntryValues())
                     .preferenceId(StringKey.SafetyAge.key)
                     .label(app.aaps.core.ui.R.string.patient_type)
                     .comment(app.aaps.core.ui.R.string.patient_age_summary)
