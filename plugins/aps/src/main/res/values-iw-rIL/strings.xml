@@ -116,4 +116,5 @@
     <string name="loop_open_mode_min_change">מינימום לבקשה לשינוי [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">\"לולאה פתוחה\" תציג בקשת שינוי חדשה רק אם השינוי גדול מערך זה ב-%. ערך ברירת המחדל הוא 20%</string>
     <string name="fallback_smb_no_tdd">חוזר ל-SMB, אין מספיק נתוני מינון יומי.</string>
+    <!-- Autotune -->
 </resources>
