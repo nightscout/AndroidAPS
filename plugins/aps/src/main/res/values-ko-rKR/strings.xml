@@ -114,4 +114,5 @@
     <string name="loop_open_mode_min_change">최소 요청 변경 [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">변경 사항이 %의 값보다 큰 경우에만 열린 루프의 새 변경 요청을 팝업합니다. 기본값은 20%입니다.</string>
     <string name="fallback_smb_no_tdd">SMB로 폴백. TDD 데이터가 충분하지 않습니다.</string>
+    <!-- Autotune -->
 </resources>
