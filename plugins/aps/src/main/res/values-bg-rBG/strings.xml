@@ -111,4 +111,5 @@
     <string name="loop_smb_set_by_pump_label">SMB в помпата</string>
     <string name="loop_open_mode_min_change">Минимална стойност за промяна [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Отворен цикъл ще покаже запитването за промяна на базала, само ако е по-голяма от тази стойност в %. Стойността по подразбиране е 20%</string>
+    <!-- Autotune -->
 </resources>
