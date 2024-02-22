@@ -44,4 +44,10 @@ enum class BooleanKey(
     ApsAmaAutosensAdjustTargets(R.string.key_openaps_ama_autosens_adjust_targets, true, defaultedBySM = true),
     ApsUseDynamicSensitivity(R.string.key_use_dynamic_sensitivity, false),
     MaintenanceEnableFabric(R.string.key_enable_fabric, true, defaultedBySM = true, hideParentScreenIfHidden = true),
+
+    AutotuneAutoSwitchProfile(R.string.key_autotune_auto, false),
+    AutotuneCategorizeUamAsBasal(R.string.key_autotune_categorize_uam_as_basal, false),
+    AutotuneTuneInsulinCurve(R.string.key_autotune_tune_insulin_curve, false),
+    AutotuneCircadianIcIsf(R.string.key_autotune_circadian_ic_isf, false),
+    AutotuneAdditionalLog(R.string.key_autotune_additional_log, false),
 }

@@ -43,9 +43,6 @@ ActionsTestBase : TestBaseWithProfile() {
         override val isLGS: Boolean = false
         override val isSuperBolus: Boolean = false
         override val isDisconnected: Boolean = false
-        override var enabled: Boolean
-            get() = true
-            set(_) {}
         override var lastBgTriggeredRun: Long = 0
 
         override fun invoke(initiator: String, allowNotification: Boolean, tempBasalFallback: Boolean) {}
@@ -55,6 +52,9 @@ ActionsTestBase : TestBaseWithProfile() {
         override fun suspendLoop(durationInMinutes: Int, action: app.aaps.core.data.ue.Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>) {}
         override fun disableCarbSuggestions(durationMinutes: Int) {}
         override fun buildAndStoreDeviceStatus() {}
+        override fun entries(): Array<CharSequence> = emptyArray()
+
+        override fun entryValues(): Array<CharSequence> = emptyArray()
 
         override fun setPluginEnabled(type: PluginType, newState: Boolean) {}
     }

@@ -110,8 +110,8 @@ class SWEditEncryptedPassword(injector: HasAndroidInjector, private val cryptoUt
         return this
     }
 
-    override fun save(value: String, updateDelay: Long) {
-        sp.putString(preferenceId, cryptoUtil.hashPassword(value))
+    override fun save(value: CharSequence, updateDelay: Long) {
+        sp.putString(preferenceId, cryptoUtil.hashPassword(value.toString()))
         scheduleChange(updateDelay)
     }
 }

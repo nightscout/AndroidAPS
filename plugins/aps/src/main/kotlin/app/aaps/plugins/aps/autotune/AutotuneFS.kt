@@ -2,6 +2,7 @@ package app.aaps.plugins.aps.autotune
 
 import app.aaps.core.interfaces.logging.LoggerUtils
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.autotune.data.ATProfile
 import app.aaps.plugins.aps.autotune.data.PreppedGlucose
 import org.json.JSONException
@@ -94,7 +95,7 @@ class AutotuneFS @Inject constructor(
     fun exportTunedProfile(tunedProfile: ATProfile) {
         createAutotunefile(TUNEDPROFILE + formatDate(tunedProfile.from) + ".json", tunedProfile.profileToOrefJSON())
         try {
-            createAutotunefile(rh.gs(app.aaps.core.ui.R.string.autotune_tunedprofile_name) + ".json", tunedProfile.profileToOrefJSON(), true)
+            createAutotunefile(rh.gs(R.string.autotune_tunedprofile_name) + ".json", tunedProfile.profileToOrefJSON(), true)
         } catch (e: JSONException) {
         }
     }

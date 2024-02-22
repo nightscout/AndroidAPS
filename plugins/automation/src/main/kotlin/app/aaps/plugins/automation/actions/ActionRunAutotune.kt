@@ -8,9 +8,12 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.Preferences
 import app.aaps.core.ui.elements.WeekDay
 import app.aaps.core.utils.JsonHelper
+import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputDuration
 import app.aaps.plugins.automation.elements.InputProfileName
 import app.aaps.plugins.automation.elements.InputWeekDay
@@ -26,32 +29,32 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var autotunePlugin: Autotune
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
 
     private var defaultValue = 0
     private var inputProfileName = InputProfileName(rh, activePlugin, "", true)
     private var daysBack = InputDuration(0, InputDuration.TimeUnit.DAYS)
     private val days = InputWeekDay().also { it.setAll(true) }
 
-    override fun friendlyName(): Int = app.aaps.core.ui.R.string.autotune_run
-    override fun shortDescription(): String = resourceHelper.gs(app.aaps.core.ui.R.string.autotune_profile_name, inputProfileName.value)
+    override fun friendlyName(): Int = R.string.autotune_run
+    override fun shortDescription(): String = resourceHelper.gs(R.string.autotune_profile_name, inputProfileName.value)
     @DrawableRes override fun icon(): Int = app.aaps.core.ui.R.drawable.ic_actions_profileswitch
 
     override fun doAction(callback: Callback) {
-        val autoSwitch = sp.getBoolean(app.aaps.core.utils.R.string.key_autotune_auto, false)
+        val autoSwitch = preferences.get(BooleanKey.AutotuneAutoSwitchProfile)
         val profileName = if (inputProfileName.value == rh.gs(app.aaps.core.ui.R.string.active)) "" else inputProfileName.value
-        var message = if (autoSwitch) app.aaps.core.ui.R.string.autotune_run_with_autoswitch else app.aaps.core.ui.R.string.autotune_run_without_autoswitch
+        var message = if (autoSwitch) R.string.autotune_run_with_autoswitch else R.string.autotune_run_without_autoswitch
         Thread {
             if (!autotunePlugin.calculationRunning) {
                 autotunePlugin.atLog("[Automation] Run Autotune $profileName, ${daysBack.value} days, Autoswitch $autoSwitch")
                 autotunePlugin.aapsAutotune(daysBack.value, autoSwitch, profileName, days.weekdays)
                 if (!autotunePlugin.lastRunSuccess) {
-                    message = app.aaps.core.ui.R.string.autotune_run_with_error
+                    message = R.string.autotune_run_with_error
                     aapsLogger.error(LTag.AUTOMATION, "Error during Autotune Run")
                 }
                 callback.result(instantiator.providePumpEnactResult().success(autotunePlugin.lastRunSuccess).comment(message)).run()
             } else {
-                message = app.aaps.core.ui.R.string.autotune_run_cancelled
+                message = R.string.autotune_run_cancelled
                 aapsLogger.debug(LTag.AUTOMATION, "Autotune run detected, Autotune Run Cancelled")
                 callback.result(instantiator.providePumpEnactResult().success(false).comment(message)).run()
             }
@@ -61,7 +64,7 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         if (defaultValue == 0)
-            defaultValue = sp.getInt(app.aaps.core.utils.R.string.key_autotune_default_tune_days, 5)
+            defaultValue = preferences.get(IntKey.AutotuneDefaultTuneDays)
         daysBack.value = defaultValue
         LayoutBuilder()
             .add(LabelWithElement(rh, rh.gs(app.aaps.core.ui.R.string.autotune_select_profile), "", inputProfileName))
@@ -77,7 +80,7 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
             .put("profileToTune", inputProfileName.value)
             .put("tunedays", daysBack.value)
         for (i in days.weekdays.indices) {
-            data.put(WeekDay.DayOfWeek.values()[i].name, days.weekdays[i])
+            data.put(WeekDay.DayOfWeek.entries[i].name, days.weekdays[i])
         }
         return JSONObject()
             .put("type", this.javaClass.simpleName)
@@ -88,11 +91,11 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
     override fun fromJSON(data: String): Action {
         val o = JSONObject(data)
         for (i in days.weekdays.indices)
-            days.weekdays[i] = JsonHelper.safeGetBoolean(o, WeekDay.DayOfWeek.values()[i].name, true)
+            days.weekdays[i] = JsonHelper.safeGetBoolean(o, WeekDay.DayOfWeek.entries[i].name, true)
         inputProfileName.value = JsonHelper.safeGetString(o, "profileToTune", "")
         defaultValue = JsonHelper.safeGetInt(o, "tunedays")
         if (defaultValue == 0)
-            defaultValue = sp.getInt(app.aaps.core.utils.R.string.key_autotune_default_tune_days, 5)
+            defaultValue = preferences.get(IntKey.AutotuneDefaultTuneDays)
         daysBack.value = defaultValue
         return this
     }

@@ -184,12 +184,6 @@ class LoopPlugin @Inject constructor(
     override val isSuspended: Boolean
         get() = persistenceLayer.getOfflineEventActiveAt(dateUtil.now()) != null
 
-    override var enabled: Boolean
-        get() = isEnabled()
-        set(value) {
-            setPluginEnabled(PluginType.LOOP, value)
-        }
-
     override val isLGS: Boolean
         get() {
             val closedLoopEnabled = constraintChecker.isClosedLoopAllowed()
@@ -814,27 +808,28 @@ class LoopPlugin @Inject constructor(
     }
 
     override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context) {
-        val entries = arrayOf<CharSequence>(
-            rh.gs(app.aaps.core.ui.R.string.closedloop),
-            rh.gs(app.aaps.core.ui.R.string.openloop),
-            rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend),
-        )
-        val entryValues = arrayOf<CharSequence>(
-            ApsMode.CLOSED.name,
-            ApsMode.OPEN.name,
-            ApsMode.LGS.name,
-        )
         val category = PreferenceCategory(context)
         parent.addPreference(category)
         category.apply {
             key = "loop_settings"
             title = rh.gs(app.aaps.core.ui.R.string.loop)
             initialExpandedChildrenCount = 0
-            addPreference(AdaptiveListPreference(ctx = context, stringKey = StringKey.LoopApsMode, title = app.aaps.core.ui.R.string.aps_mode_title, entries = entries, entryValues = entryValues))
+            addPreference(AdaptiveListPreference(ctx = context, stringKey = StringKey.LoopApsMode, title = app.aaps.core.ui.R.string.aps_mode_title, entries = entries(), entryValues = entryValues()))
             addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.LoopOpenModeMinChange, dialogMessage = R.string.loop_open_mode_min_change_summary, title = R.string.loop_open_mode_min_change))
         }
     }
 
+    override fun entries() = arrayOf<CharSequence>(
+        rh.gs(app.aaps.core.ui.R.string.closedloop),
+        rh.gs(app.aaps.core.ui.R.string.openloop),
+        rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend),
+    )
+
+    override fun entryValues() = arrayOf<CharSequence>(
+        ApsMode.CLOSED.name,
+        ApsMode.OPEN.name,
+        ApsMode.LGS.name,
+    )
     companion object {
 
         private const val CHANNEL_ID = "AAPS-OpenLoop"

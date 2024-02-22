@@ -25,6 +25,7 @@ dependencies {
     implementation(project(":shared:impl"))
 
     testImplementation(project(":implementation"))
+    testImplementation(project(":plugins:aps"))
     testImplementation(project(":plugins:insulin"))
     testImplementation(project(":shared:tests"))
 

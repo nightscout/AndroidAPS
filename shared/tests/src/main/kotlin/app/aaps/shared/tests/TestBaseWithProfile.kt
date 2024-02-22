@@ -179,6 +179,7 @@ open class TestBaseWithProfile : TestBase() {
             val arg2 = invocation.getArgument<String?>(2)
 
             // Use the safe call operator to handle potential null
+            @Suppress("USELESS_ELVIS")
             val formattedString = rh.gs(string) ?: ""
 
             // Use a default value or handle null appropriately

@@ -377,14 +377,14 @@ class SmsCommunicatorPlugin @Inject constructor(
     private fun processLOOP(divided: Array<String>, receivedSms: Sms) {
         when (divided[1].uppercase(Locale.getDefault())) {
             "DISABLE", "STOP" -> {
-                if (loop.enabled) {
+                if (loop.isEnabled()) {
                     val passCode = generatePassCode()
                     val reply = rh.gs(R.string.smscommunicator_loop_disable_reply_with_code, passCode)
                     receivedSms.processed = true
                     messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = false) {
                         override fun run() {
                             uel.log(Action.LOOP_DISABLED, Sources.SMS)
-                            loop.enabled = false
+                            (loop as PluginBase).setPluginEnabled(PluginType.LOOP, false)
                             commandQueue.cancelTempBasal(true, object : Callback() {
                                 override fun run() {
                                     rxBus.send(EventRefreshOverview("SMS_LOOP_STOP"))
@@ -401,14 +401,14 @@ class SmsCommunicatorPlugin @Inject constructor(
             }
 
             "ENABLE", "START" -> {
-                if (!loop.enabled) {
+                if (!loop.isEnabled()) {
                     val passCode = generatePassCode()
                     val reply = rh.gs(R.string.smscommunicator_loop_enable_reply_with_code, passCode)
                     receivedSms.processed = true
                     messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = false) {
                         override fun run() {
                             uel.log(Action.LOOP_ENABLED, Sources.SMS)
-                            loop.enabled = true
+                            (loop as PluginBase).setPluginEnabled(PluginType.LOOP, true)
                             sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.smscommunicator_loop_has_been_enabled)))
                             rxBus.send(EventRefreshOverview("SMS_LOOP_START"))
                         }
@@ -419,7 +419,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             }
 
             "STATUS"          -> {
-                val reply = if (loop.enabled) {
+                val reply = if (loop.isEnabled()) {
                     if (loop.isSuspended) rh.gs(R.string.sms_loop_suspended_for, loop.minutesToEndOfSuspend())
                     else rh.gs(R.string.smscommunicator_loop_is_enabled) + " - " + getApsModeText()
                 } else

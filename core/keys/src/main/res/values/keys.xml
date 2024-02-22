@@ -128,6 +128,17 @@
     <!--    Alerts-->
     <string name="key_missed_bg_readings_threshold_minutes" translatable="false">missed_bg_readings_threshold</string>
     <string name="key_pump_unreachable_threshold_minutes" translatable="false">pump_unreachable_threshold</string>
+
     <!--    Equil-->
     <string name="key_equil_maxbolus" translatable="false">equil_maxbolus</string>
+
+    <!--Autotune-->
+    <string name="key_autotune_auto" translatable="false">autotune_auto</string>
+    <string name="key_autotune_categorize_uam_as_basal" translatable="false">categorize_uam_as_basal</string>
+    <string name="key_autotune_tune_insulin_curve" translatable="false">autotune_tune_insulin_curve</string>
+    <string name="key_autotune_default_tune_days" translatable="false">autotune_default_tune_days</string>
+    <string name="key_autotune_circadian_ic_isf" translatable="false">autotune_circadian_ic_isf</string>
+    <string name="key_autotune_additional_log" translatable="false">autotune_additional_log</string>
+    <string name="key_autotune_last_run" translatable="false">key_autotune_last_run</string>
+
 </resources>

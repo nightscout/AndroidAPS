@@ -5,7 +5,6 @@ import app.aaps.core.data.aps.ApsMode
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.iob.CobInfo
 import app.aaps.core.data.iob.InMemoryGlucoseValue
-import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.OE
 import app.aaps.core.data.model.SourceSensor
@@ -14,7 +13,7 @@ import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.AutosensDataStore
-import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -30,6 +29,7 @@ import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.fromGv
 import app.aaps.implementation.iob.GlucoseStatusProviderImpl
+import app.aaps.plugins.aps.loop.LoopPlugin
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.general.smsCommunicator.otp.OneTimePassword
 import app.aaps.plugins.main.general.smsCommunicator.otp.OneTimePasswordValidationResult
@@ -51,7 +51,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var constraintChecker: ConstraintsChecker
     @Mock lateinit var commandQueue: CommandQueue
-    @Mock lateinit var loop: Loop
+    @Mock lateinit var loop: LoopPlugin
     @Mock lateinit var profileSource: ProfileSource
     @Mock lateinit var otp: OneTimePassword
     @Mock lateinit var xDripBroadcast: XDripBroadcast
@@ -305,7 +305,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         `when`(sp.getBoolean(R.string.key_smscommunicator_remote_commands_allowed, false)).thenReturn(true)
 
         //LOOP STATUS : disabled
-        `when`(loop.enabled).thenReturn(false)
+        `when`(loop.isEnabled()).thenReturn(false)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP STATUS")
         smsCommunicatorPlugin.processSms(sms)
@@ -314,7 +314,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
         //LOOP STATUS : suspended
         `when`(loop.minutesToEndOfSuspend()).thenReturn(10)
-        `when`(loop.enabled).thenReturn(true)
+        `when`(loop.isEnabled()).thenReturn(true)
         `when`(loop.isSuspended).thenReturn(true)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP STATUS")
@@ -323,7 +323,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Suspended (10 m)")
 
         //LOOP STATUS : enabled - APS mode - Closed
-        `when`(loop.enabled).thenReturn(true)
+        `when`(loop.isEnabled()).thenReturn(true)
         `when`(loop.isSuspended).thenReturn(false)
         `when`(preferences.get(StringKey.LoopApsMode)).thenReturn(ApsMode.CLOSED.name)
         smsCommunicatorPlugin.messages = ArrayList()
@@ -358,7 +358,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Loop is enabled - $modeUnknown")
 
         //LOOP : wrong format
-        `when`(loop.enabled).thenReturn(true)
+        `when`(loop.isEnabled()).thenReturn(true)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP")
         smsCommunicatorPlugin.processSms(sms)
@@ -367,7 +367,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
 
         //LOOP DISABLE : already disabled
-        `when`(loop.enabled).thenReturn(false)
+        `when`(loop.isEnabled()).thenReturn(false)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP DISABLE")
         smsCommunicatorPlugin.processSms(sms)
@@ -377,7 +377,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
         //LOOP DISABLE : from enabled
         hasBeenRun = false
-        `when`(loop.enabled).thenReturn(true)
+        `when`(loop.isEnabled()).thenReturn(true)
         // PowerMockito.doAnswer(Answer {
         //     hasBeenRun = true
         //     null
@@ -395,7 +395,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         //assertThat(hasBeenRun).isTrue()
 
         //LOOP ENABLE : already enabled
-        `when`(loop.enabled).thenReturn(true)
+        `when`(loop.isEnabled()).thenReturn(true)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP ENABLE")
         smsCommunicatorPlugin.processSms(sms)
@@ -405,7 +405,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
         //LOOP ENABLE : from disabled
         hasBeenRun = false
-        `when`(loop.enabled).thenReturn(false)
+        `when`(loop.isEnabled()).thenReturn(false)
         // PowerMockito.doAnswer(Answer {
         //     hasBeenRun = true
         //     null
@@ -497,7 +497,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         //LOOP CLOSED
         var smsCommand = "LOOP CLOSED"
         val replyClosed = "In order to switch Loop mode to Closed loop reply with code "
-        `when`(loop.enabled).thenReturn(true)
+        `when`(loop.isEnabled()).thenReturn(true)
         `when`(preferences.get(StringKey.LoopApsMode)).thenReturn(ApsMode.CLOSED.name)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", smsCommand)
@@ -580,7 +580,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
         //PUMP CONNECT
         `when`(persistenceLayer.cancelCurrentOfflineEvent(anyLong(), anyObject(), anyObject(), anyObject(), anyObject())).thenReturn(Single.just(PersistenceLayer.TransactionResult()))
-        `when`(loop.enabled).thenReturn(true)
+        `when`(loop.isEnabled()).thenReturn(true)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "PUMP CONNECT")
         smsCommunicatorPlugin.processSms(sms)

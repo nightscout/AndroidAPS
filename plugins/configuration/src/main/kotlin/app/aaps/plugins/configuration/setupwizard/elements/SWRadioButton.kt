@@ -10,22 +10,29 @@ import dagger.android.HasAndroidInjector
 
 class SWRadioButton(injector: HasAndroidInjector) : SWItem(injector, Type.RADIOBUTTON) {
 
-    private var labelsArray = 0
-    private var valuesArray = 0
+    private var labelsArray : Array<CharSequence> = emptyArray()
+    private var valuesArray : Array<CharSequence> = emptyArray()
     private var radioGroup: RadioGroup? = null
 
+    @Suppress("UNCHECKED_CAST")
     fun option(labels: Int, values: Int): SWRadioButton {
+        labelsArray = rh.gsa(labels) as Array<CharSequence>
+        valuesArray = rh.gsa(values) as Array<CharSequence>
+        return this
+    }
+
+    fun option(labels: Array<CharSequence>, values: Array<CharSequence>): SWRadioButton {
         labelsArray = labels
         valuesArray = values
         return this
     }
 
-    private fun labels(): Array<String> {
-        return rh.gsa(labelsArray)
+    private fun labels(): Array<CharSequence> {
+        return labelsArray
     }
 
-    private fun values(): Array<String> {
-        return rh.gsa(valuesArray)
+    private fun values(): Array<CharSequence> {
+        return valuesArray
     }
 
     override fun generateDialog(layout: LinearLayout) {
