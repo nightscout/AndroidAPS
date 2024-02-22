@@ -14,6 +14,7 @@ import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -73,6 +74,7 @@ class XdripPlugin @Inject constructor(
     rh: ResourceHelper,
     private val aapsSchedulers: AapsSchedulers,
     private val context: Context,
+    private val config: Config,
     private val fabricPrivacy: FabricPrivacy,
     private val loop: Loop,
     private val iobCobCalculator: IobCobCalculator,
@@ -233,7 +235,7 @@ class XdripPlugin @Inject constructor(
     private fun buildStatusLine(profile: Profile): String {
         val status = StringBuilder()
         @Suppress("LiftReturnOrAssignment")
-        if (!loop.isEnabled()) {
+        if (!loop.isEnabled() && config.APS) {
             status.append(rh.gs(R.string.disabled_loop)).append("\n")
             lastLoopStatus = false
         } else lastLoopStatus = true
