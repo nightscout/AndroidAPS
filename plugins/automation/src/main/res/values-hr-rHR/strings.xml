@@ -7,4 +7,5 @@
     <string name="stop_processing">Zaustavi obradu</string>
     <!--    Reminders-->
     <string name="time_to_bolus">Vrijeme je za bolus!\nPokrenite čarobnjak za bolus i ponovite izračun.</string>
+    <!--    Autotune-->
 </resources>
