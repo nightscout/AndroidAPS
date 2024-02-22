@@ -116,4 +116,5 @@
     <string name="time_to_eat">식사할 시간입니다! \nBolus 마법사를 켜고 다시 계산하십시오.</string>
     <string name="time_to_bolus">Bolus 주입할 시간입니다! \nBolus 마법사를 켜고 다시 계산하십시오</string>
     <string name="error_setting_reminder">향후 경고 설정 중 오류 발생</string>
+    <!--    Autotune-->
 </resources>
