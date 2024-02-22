@@ -17,7 +17,6 @@
     <string name="key_maintenance_settings" translatable="false">maintenance_settings</string>
     <string name="key_smscommunicator_settings" translatable="false">smscommunicator_settings</string>
     <string name="key_treatmentssafety_settings" translatable="false">treatmentssafety_settings</string>
-    <string name="key_loop_settings" translatable="false">loop_settings</string>
     <string name="key_virtualpump_settings" translatable="false">virtualpump_settings</string>
     <string name="key_pump_settings" translatable="false">pump_settings</string>
     <string name="key_tidepool_settings" translatable="false">tidepool_settings</string>

@@ -12,6 +12,9 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.SystemClock
 import androidx.core.app.NotificationCompat
+import androidx.preference.PreferenceCategory
+import androidx.preference.PreferenceManager
+import androidx.preference.PreferenceScreen
 import app.aaps.core.data.aps.ApsMode
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.BS
@@ -65,6 +68,7 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.AdaptiveListPreference
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
@@ -75,6 +79,7 @@ import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.convertedToPercent
 import app.aaps.core.objects.extensions.json
 import app.aaps.core.objects.extensions.plannedRemainingMinutes
+import app.aaps.core.validators.AdaptiveIntPreference
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import app.aaps.plugins.aps.loop.extensions.json
@@ -118,7 +123,7 @@ class LoopPlugin @Inject constructor(
         .pluginIcon(app.aaps.core.objects.R.drawable.ic_loop_closed_white)
         .pluginName(app.aaps.core.ui.R.string.loop)
         .shortName(R.string.loop_shortname)
-        .preferencesId(R.xml.pref_loop)
+        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .enableByDefault(config.APS)
         .description(R.string.description_loop),
     aapsLogger, rh
@@ -806,6 +811,28 @@ class LoopPlugin @Inject constructor(
                 configuration = runningConfiguration.configuration().toString()
             )
         )
+    }
+
+    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context) {
+        val entries = arrayOf<CharSequence>(
+            rh.gs(app.aaps.core.ui.R.string.closedloop),
+            rh.gs(app.aaps.core.ui.R.string.openloop),
+            rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend),
+        )
+        val entryValues = arrayOf<CharSequence>(
+            ApsMode.CLOSED.name,
+            ApsMode.OPEN.name,
+            ApsMode.LGS.name,
+        )
+        val category = PreferenceCategory(context)
+        parent.addPreference(category)
+        category.apply {
+            key = "loop_settings"
+            title = rh.gs(app.aaps.core.ui.R.string.loop)
+            initialExpandedChildrenCount = 0
+            addPreference(AdaptiveListPreference(ctx = context, stringKey = StringKey.LoopApsMode, title = app.aaps.core.ui.R.string.aps_mode_title, entries = entries, entryValues = entryValues))
+            addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.LoopOpenModeMinChange, dialogMessage = R.string.loop_open_mode_min_change_summary, title = R.string.loop_open_mode_min_change))
+        }
     }
 
     companion object {

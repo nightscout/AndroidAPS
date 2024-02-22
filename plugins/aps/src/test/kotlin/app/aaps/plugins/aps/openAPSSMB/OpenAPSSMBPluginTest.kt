@@ -29,15 +29,12 @@ class OpenAPSSMBPluginTest : TestBaseWithProfile() {
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var glucoseStatusProvider: GlucoseStatusProvider
     @Mock lateinit var determineBasalSMB: DetermineBasalSMB
-    @Mock lateinit var theme: Theme
-    @Mock lateinit var typedArray: TypedArray
     @Mock lateinit var sharedPrefs: SharedPreferences
     @Mock lateinit var bgQualityCheck: BgQualityCheck
     @Mock lateinit var tddCalculator: TddCalculator
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var profiler: Profiler
     private lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
-    private lateinit var preferenceManager: PreferenceManager
 
     init {
         addInjector {
@@ -65,14 +62,11 @@ class OpenAPSSMBPluginTest : TestBaseWithProfile() {
     }
 
     @BeforeEach fun prepare() {
-        preferenceManager = PreferenceManager(context)
         openAPSSMBPlugin = OpenAPSSMBPlugin(
             injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, profileUtil, config, activePlugin,
             iobCobCalculator, hardLimits, preferences, dateUtil, processedTbrEbData, persistenceLayer, glucoseStatusProvider,
             tddCalculator, bgQualityCheck, uiInteraction, determineBasalSMB, profiler
         )
-        `when`(context.theme).thenReturn(theme)
-        `when`(context.obtainStyledAttributes(anyObject(), any(), any(), any())).thenReturn(typedArray)
     }
 
     @Test

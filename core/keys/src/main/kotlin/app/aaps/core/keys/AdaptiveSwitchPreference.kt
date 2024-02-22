@@ -13,7 +13,7 @@ class AdaptiveSwitchPreference(
     attrs: AttributeSet? = null,
     booleanKey: BooleanKey?,
     @StringRes summary: Int? = null,
-    @StringRes title: Int?,
+    @StringRes title: Int?
 ) : SwitchPreference(ctx, attrs) {
 
     @Inject lateinit var preferences: Preferences

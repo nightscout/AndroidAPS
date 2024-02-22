@@ -1,5 +1,8 @@
 package app.aaps.shared.tests
 
+import android.content.res.Resources
+import android.content.res.TypedArray
+import androidx.preference.PreferenceManager
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.ICfg
@@ -40,6 +43,7 @@ import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.invocation.InvocationOnMock
+import org.mockito.kotlin.any
 
 @Suppress("SpellCheckingInspection")
 open class TestBaseWithProfile : TestBase() {
@@ -55,6 +59,8 @@ open class TestBaseWithProfile : TestBase() {
     @Mock lateinit var sp: SP
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var constraintsChecker: ConstraintsChecker
+    @Mock lateinit var theme: Resources.Theme
+    @Mock lateinit var typedArray: TypedArray
 
     lateinit var dateUtil: DateUtil
     lateinit var profileUtil: ProfileUtil
@@ -85,6 +91,7 @@ open class TestBaseWithProfile : TestBase() {
 
     private lateinit var validProfileJSON: String
     private lateinit var invalidProfileJSON: String
+    lateinit var preferenceManager: PreferenceManager
     lateinit var validProfile: ProfileSealed.Pure
     lateinit var effectiveProfileSwitch: EPS
     lateinit var testPumpPlugin: TestPumpPlugin
@@ -101,12 +108,15 @@ open class TestBaseWithProfile : TestBase() {
         invalidProfileJSON = "{\"dia\":\"1\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"3\"}," +
             "{\"time\":\"2:00\",\"value\":\"3.4\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4.5\"}]," +
             "\"target_high\":[{\"time\":\"00:00\",\"value\":\"7\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
+        preferenceManager = PreferenceManager(context)
         dateUtil = Mockito.spy(DateUtilImpl(context))
         decimalFormatter = DecimalFormatterImpl(rh)
         profileUtil = ProfileUtilImpl(preferences, decimalFormatter)
         testPumpPlugin = TestPumpPlugin(rh)
         Mockito.`when`(context.applicationContext).thenReturn(context)
         Mockito.`when`(context.androidInjector()).thenReturn(injector.androidInjector())
+        Mockito.`when`(context.theme).thenReturn(theme)
+        Mockito.`when`(context.obtainStyledAttributes(anyObject(), any(), any(), any())).thenReturn(typedArray)
         Mockito.`when`(dateUtil.now()).thenReturn(now)
         Mockito.`when`(activePlugin.activePump).thenReturn(testPumpPlugin)
         Mockito.`when`(preferences.get(StringKey.GeneralUnits)).thenReturn(GlucoseUnit.MGDL.asText)
