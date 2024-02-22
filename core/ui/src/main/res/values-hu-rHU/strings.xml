@@ -102,7 +102,6 @@
     <string name="basal">Bázis</string>
     <string name="basalpct">Bázis %</string>
     <!-- Autotune -->
-    <string name="autotune_compare_profile">Profilok összehasonlítása</string>
     <!-- Alerts -->
     <string name="info">INFO</string>
     <!-- BolusWizard -->
