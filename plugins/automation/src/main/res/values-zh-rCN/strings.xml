@@ -111,4 +111,5 @@
     <string name="add_automation">添加规则</string>
     <!--    Reminders-->
     <string name="time_to_bolus">输注胰岛素时间到了！\n请运行大剂量向导，然后再次进行计算。</string>
+    <!--    Autotune-->
 </resources>
