@@ -5,6 +5,7 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.IntentKey
 import app.aaps.core.keys.PreferenceKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
@@ -83,13 +84,15 @@ class PreferencesImpl @Inject constructor(
             ?: IntKey.entries.find { context.getString(it.key) == key }
             ?: DoubleKey.entries.find { context.getString(it.key) == key }
             ?: UnitDoubleKey.entries.find { context.getString(it.key) == key }
+            ?: IntentKey.entries.find { context.getString(it.key) == key }
             ?: error("Key $key not found")
 
     override fun getDependingOn(key: String): List<PreferenceKey> =
         mutableListOf<PreferenceKey>().also { list ->
-            list.addAll(BooleanKey.entries.filter { it.dependency != 0 && context.getString(it.dependency) == key || it.negativeDependency != 0 && context.getString(it.negativeDependency) == key })
-            list.addAll(IntKey.entries.filter { it.dependency != 0 && context.getString(it.dependency) == key || it.negativeDependency != 0 && context.getString(it.negativeDependency) == key })
-            list.addAll(DoubleKey.entries.filter { it.dependency != 0 && context.getString(it.dependency) == key || it.negativeDependency != 0 && context.getString(it.negativeDependency) == key })
-            list.addAll(UnitDoubleKey.entries.filter { it.dependency != 0 && context.getString(it.dependency) == key || it.negativeDependency != 0 && context.getString(it.negativeDependency) == key })
+            list.addAll(BooleanKey.entries.filter { it.dependency != null && context.getString(it.dependency!!.key) == key || it.negativeDependency != null && context.getString(it.negativeDependency!!.key) == key })
+            list.addAll(IntKey.entries.filter { it.dependency != null && context.getString(it.dependency!!.key) == key || it.negativeDependency != null && context.getString(it.negativeDependency!!.key) == key })
+            list.addAll(DoubleKey.entries.filter { it.dependency != null && context.getString(it.dependency!!.key) == key || it.negativeDependency != null && context.getString(it.negativeDependency!!.key) == key })
+            list.addAll(UnitDoubleKey.entries.filter { it.dependency != null && context.getString(it.dependency!!.key) == key || it.negativeDependency != null && context.getString(it.negativeDependency!!.key) == key })
+            list.addAll(IntentKey.entries.filter { it.dependency != null && context.getString(it.dependency!!.key) == key || it.negativeDependency != null && context.getString(it.negativeDependency!!.key) == key })
         }
 }

@@ -105,6 +105,7 @@
     <string name="key_openaps_ama_autosens_adjust_targets" translatable="false">autosens_adjust_targets</string>
     <string name="key_openaps_ama_min_5m_carbs_impact" translatable="false">openapsama_min_5m_carbimpact</string>
     <string name="key_openaps_smb_min_5m_carbs_impact" translatable="false">openapsama_min_5m_carbimpact</string>
+    <string name="key_openaps_link_to_docs" translatable="false">link_to_docs</string>
 
     <!--    Sensitivity-->
     <string name="key_absorption_cutoff" translatable="false">absorption_cutoff</string>
@@ -147,5 +148,14 @@
     <string name="key_adult" translatable="false">adult</string>
     <string name="key_resistantadult" translatable="false">resistantadult</string>
     <string name="key_pregnant" translatable="false">pregnant</string>
+
+    <!--    SMS Communicator-->
+    <string name="key_smscommunicator_otp_password" translatable="false">smscommunicator_otp_password</string>
+    <string name="key_smscommunicator_otp_secret" translatable="false">smscommunicator_otp_secret</string>
+    <string name="key_smscommunicator_remote_bolus_min_distance" translatable="false">smscommunicator_remotebolusmindistance</string>
+    <string name="key_smscommunicator_allowednumbers" translatable="false">smscommunicator_allowednumbers</string>
+    <string name="key_smscommunicator_remote_commands_allowed" translatable="false">smscommunicator_remotecommandsallowed</string>
+    <string name="key_smscommunicator_report_pump_unreachable" translatable="false">smscommunicator_report_pump_unreachable</string>
+    <string name="key_smscommunicator_otp_setup" translatable="false">smscommunicator_otp_setup</string>
 
 </resources>

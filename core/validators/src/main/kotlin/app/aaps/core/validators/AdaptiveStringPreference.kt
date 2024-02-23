@@ -18,6 +18,7 @@ class AdaptiveStringPreference(
     attrs: AttributeSet? = null,
     stringKey: StringKey? = null,
     @StringRes dialogMessage: Int? = null,
+    @StringRes summary: Int? = null,
     @StringRes title: Int?,
     validatorParams: DefaultEditTextValidator.Parameters? = null,
 ) : EditTextPreference(ctx, attrs) {
@@ -38,6 +39,7 @@ class AdaptiveStringPreference(
 
         stringKey?.let { key = context.getString(it.key) }
         dialogMessage?.let { setDialogMessage(it) }
+        summary?.let { setSummary(it) }
         title?.let { dialogTitle = context.getString(it) }
         title?.let { this.title = context.getString(it) }
 
@@ -54,12 +56,12 @@ class AdaptiveStringPreference(
         if (preferences.pumpControlMode && !preferenceKey.showInPumpControlMode) {
             isVisible = false; isEnabled = false
         }
-        if (preferenceKey.dependency != 0) {
-            if (!sharedPrefs.getBoolean(context.getString(preferenceKey.dependency), false))
+        preferenceKey.dependency?.let {
+            if (!sharedPrefs.getBoolean(context.getString(it.key), false))
                 isVisible = false
         }
-        if (preferenceKey.negativeDependency != 0) {
-            if (sharedPrefs.getBoolean(context.getString(preferenceKey.dependency), false))
+        preferenceKey.negativeDependency?.let {
+            if (sharedPrefs.getBoolean(context.getString(it.key), false))
                 isVisible = false
         }
         validatorParameters = validatorParams ?: obtainValidatorParameters(attrs)

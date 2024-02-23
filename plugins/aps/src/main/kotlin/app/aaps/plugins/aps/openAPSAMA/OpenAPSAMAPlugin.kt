@@ -3,7 +3,6 @@ package app.aaps.plugins.aps.openAPSAMA
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
@@ -36,9 +35,11 @@ import app.aaps.core.interfaces.rx.events.EventAPSCalculationFinished
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.Round
+import app.aaps.core.keys.AdaptiveIntentPreference
 import app.aaps.core.keys.AdaptiveSwitchPreference
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.IntentKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.aps.DetermineBasalResult
 import app.aaps.core.objects.constraints.ConstraintObject
@@ -318,7 +319,14 @@ class OpenAPSAMAPlugin @Inject constructor(
             addPreference(preferenceManager.createPreferenceScreen(context).apply {
                 key = "absorption_ama_advanced"
                 title = rh.gs(app.aaps.core.ui.R.string.advanced_settings_title)
-                addPreference(Preference(context).apply { intent = Intent().apply { action = Intent.ACTION_VIEW; data = Uri.parse(rh.gs(R.string.openapsama_link_to_preference_json_doc)) } })
+                addPreference(
+                    AdaptiveIntentPreference(
+                        ctx = context,
+                        intentKey = IntentKey.ApsLinkToDocs,
+                        intent = Intent().apply { action = Intent.ACTION_VIEW; data = Uri.parse(rh.gs(R.string.openapsama_link_to_preference_json_doc)) },
+                        summary = R.string.openapsama_link_to_preference_json_doc_txt
+                    )
+                )
                 addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.ApsAlwaysUseShortDeltas, summary = R.string.always_use_short_avg_summary, title = R.string.always_use_short_avg))
                 addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.ApsMaxDailyMultiplier, dialogMessage = R.string.openapsama_max_daily_safety_multiplier_summary, title = R.string.openapsama_max_daily_safety_multiplier))
                 addPreference(

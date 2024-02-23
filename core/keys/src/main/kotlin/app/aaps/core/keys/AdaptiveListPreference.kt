@@ -1,10 +1,10 @@
 package app.aaps.core.keys
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.util.AttributeSet
 import androidx.annotation.StringRes
 import androidx.preference.ListPreference
-import androidx.preference.PreferenceManager
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
@@ -19,6 +19,7 @@ open class AdaptiveListPreference(
 ) : ListPreference(ctx, attrs) {
 
     @Inject lateinit var preferences: Preferences
+    @Inject lateinit var sharedPrefs: SharedPreferences
 
     // Inflater constructor
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, stringKey = null, title = null)
@@ -43,14 +44,12 @@ open class AdaptiveListPreference(
         if (preferences.pumpControlMode && !preferenceKey.showInPumpControlMode) {
             isVisible = false; isEnabled = false
         }
-        if (preferenceKey.dependency != 0) {
-            val sp = PreferenceManager.getDefaultSharedPreferences(context)
-            if (!sp.getBoolean(context.getString(preferenceKey.dependency), false))
+        preferenceKey.dependency?.let {
+            if (!sharedPrefs.getBoolean(context.getString(it.key), false))
                 isVisible = false
         }
-        if (preferenceKey.negativeDependency != 0) {
-            val sp = PreferenceManager.getDefaultSharedPreferences(context)
-            if (sp.getBoolean(context.getString(preferenceKey.dependency), false))
+        preferenceKey.negativeDependency?.let {
+            if (sharedPrefs.getBoolean(context.getString(it.key), false))
                 isVisible = false
         }
         setDefaultValue(preferenceKey.defaultValue)

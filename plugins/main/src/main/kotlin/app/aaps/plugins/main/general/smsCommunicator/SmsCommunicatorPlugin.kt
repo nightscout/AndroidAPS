@@ -1,12 +1,16 @@
 package app.aaps.plugins.main.general.smsCommunicator
 
 import android.content.Context
+import android.content.Intent
 import android.telephony.SmsManager
 import android.telephony.SmsMessage
 import android.text.TextUtils
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
+import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceManager
+import androidx.preference.PreferenceScreen
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.data.aps.ApsMode
@@ -45,7 +49,6 @@ import app.aaps.core.interfaces.rx.events.EventNSClientRestart
 import app.aaps.core.interfaces.rx.events.EventNewNotification
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.sync.XDripBroadcast
@@ -53,7 +56,11 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.AdaptiveIntentPreference
+import app.aaps.core.keys.AdaptiveSwitchPreference
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.IntentKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.UnitDoubleKey
@@ -62,8 +69,12 @@ import app.aaps.core.objects.extensions.generateCOBString
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
-import app.aaps.core.validators.ValidatingEditTextPreference
+import app.aaps.core.validators.AdaptiveIntPreference
+import app.aaps.core.validators.AdaptiveStringPreference
+import app.aaps.core.validators.DefaultEditTextValidator
+import app.aaps.core.validators.EditTextValidator
 import app.aaps.plugins.main.R
+import app.aaps.plugins.main.general.smsCommunicator.activities.SmsCommunicatorOtpActivity
 import app.aaps.plugins.main.general.smsCommunicator.events.EventSmsCommunicatorUpdateGui
 import app.aaps.plugins.main.general.smsCommunicator.otp.OneTimePassword
 import dagger.android.HasAndroidInjector
@@ -88,7 +99,6 @@ class SmsCommunicatorPlugin @Inject constructor(
     rh: ResourceHelper,
     private val smsManager: SmsManager?,
     private val aapsSchedulers: AapsSchedulers,
-    private val sp: SP,
     private val preferences: Preferences,
     private val constraintChecker: ConstraintsChecker,
     private val rxBus: RxBus,
@@ -114,7 +124,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         .pluginIcon(app.aaps.core.objects.R.drawable.ic_sms)
         .pluginName(R.string.smscommunicator)
         .shortName(R.string.smscommunicator_shortname)
-        .preferencesId(R.xml.pref_smscommunicator)
+        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.description_sms_communicator),
     aapsLogger, rh
 ), SmsCommunicator {
@@ -157,9 +167,9 @@ class SmsCommunicatorPlugin @Inject constructor(
 
     override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
         super.preprocessPreferences(preferenceFragment)
-        val distance = preferenceFragment.findPreference(rh.gs(R.string.key_smscommunicator_remote_bolus_min_distance)) as ValidatingEditTextPreference?
+        val distance = preferenceFragment.findPreference(rh.gs(IntKey.SmsRemoteBolusDistance.key)) as AdaptiveIntPreference?
             ?: return
-        val allowedNumbers = preferenceFragment.findPreference(rh.gs(R.string.key_smscommunicator_allowednumbers)) as EditTextPreference?
+        val allowedNumbers = preferenceFragment.findPreference(rh.gs(StringKey.SmsAllowedNumbers.key)) as AdaptiveStringPreference?
             ?: return
         if (!areMoreNumbers(allowedNumbers.text)) {
             distance.title = (rh.gs(R.string.smscommunicator_remote_bolus_min_distance)
@@ -188,7 +198,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     override fun updatePreferenceSummary(pref: Preference) {
         super.updatePreferenceSummary(pref)
         if (pref is EditTextPreference) {
-            if (pref.getKey().contains("smscommunicator_allowednumbers") && (TextUtils.isEmpty(pref.text?.trim { it <= ' ' }))) {
+            if (pref.getKey().contains(rh.gs(StringKey.SmsAllowedNumbers.key)) && (TextUtils.isEmpty(pref.text?.trim { it <= ' ' }))) {
                 pref.setSummary(rh.gs(R.string.smscommunicator_allowednumbers_summary))
             }
         }
@@ -218,8 +228,8 @@ class SmsCommunicatorPlugin @Inject constructor(
     }
 
     private fun processSettings(ev: EventPreferenceChange?) {
-        if (ev == null || ev.isChanged(rh.gs(R.string.key_smscommunicator_allowednumbers))) {
-            val settings = sp.getString(R.string.key_smscommunicator_allowednumbers, "")
+        if (ev == null || ev.isChanged(rh.gs(StringKey.SmsAllowedNumbers.key))) {
+            val settings = preferences.get(StringKey.SmsAllowedNumbers)
             allowedNumbers.clear()
             val substrings = settings.split(";").toTypedArray()
             for (number in substrings) {
@@ -261,11 +271,11 @@ class SmsCommunicatorPlugin @Inject constructor(
         messages.add(receivedSms)
         aapsLogger.debug(LTag.SMS, receivedSms.toString())
         val divided = receivedSms.text.trim().split(Regex("\\s+")).toTypedArray()
-        val remoteCommandsAllowed = sp.getBoolean(R.string.key_smscommunicator_remote_commands_allowed, false)
+        val remoteCommandsAllowed = preferences.get(BooleanKey.SmsAllowRemoteCommands)
 
         val minDistance =
-            if (areMoreNumbers(sp.getString(R.string.key_smscommunicator_allowednumbers, "")))
-                T.mins(sp.getLong(R.string.key_smscommunicator_remote_bolus_min_distance, T.msecs(Constants.remoteBolusMinDistance).mins())).msecs()
+            if (areMoreNumbers(preferences.get(StringKey.SmsAllowedNumbers)))
+                T.mins(preferences.get(IntKey.SmsRemoteBolusDistance).toLong()).msecs()
             else Constants.remoteBolusMinDistance
 
         if (divided.isNotEmpty() && isCommand(divided[0].uppercase(Locale.getDefault()), receivedSms.phoneNumber)) {
@@ -1148,7 +1158,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             receivedSms.processed = true
             messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = false) {
                 override fun run() {
-                    sp.putBoolean(R.string.key_smscommunicator_remote_commands_allowed, false)
+                    preferences.put(BooleanKey.SmsAllowRemoteCommands, false)
                     val replyText = rh.gs(R.string.smscommunicator_stopped_sms)
                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                     uel.log(
@@ -1269,4 +1279,37 @@ class SmsCommunicatorPlugin @Inject constructor(
             ApsMode.LGS    -> rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend)
             else           -> rh.gs(app.aaps.core.ui.R.string.unknown)
         }
+
+    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context) {
+        val category = PreferenceCategory(context)
+        parent.addPreference(category)
+        category.apply {
+            key = "smscommunicator_settings"
+            title = rh.gs(R.string.smscommunicator)
+            initialExpandedChildrenCount = 0
+            addPreference(
+                AdaptiveStringPreference(
+                    ctx = context, stringKey = StringKey.SmsAllowedNumbers, summary = R.string.smscommunicator_allowednumbers_summary, title = R.string.smscommunicator_allowednumbers,
+                    validatorParams = DefaultEditTextValidator.Parameters(testType = EditTextValidator.TEST_MULTI_PHONE)
+                )
+            )
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.SmsAllowRemoteCommands, title = R.string.smscommunicator_remote_commands_allowed))
+            addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.SmsRemoteBolusDistance, summary = R.string.smscommunicator_remote_bolus_min_distance_summary, title = R.string.smscommunicator_remote_bolus_min_distance))
+            addPreference(
+                AdaptiveStringPreference(
+                    ctx = context, stringKey = StringKey.SmsOtpPassword, summary = R.string.smscommunicator_otp_pin_summary, title = R.string.smscommunicator_otp_pin,
+                    validatorParams = DefaultEditTextValidator.Parameters(testType = EditTextValidator.TEST_PIN_STRENGTH)
+                )
+            )
+            addPreference(
+                AdaptiveIntentPreference(
+                    ctx = context,
+                    intentKey = IntentKey.SmsOtpSetup,
+                    title = R.string.smscommunicator_tab_otp_label,
+                    intent = Intent().apply { action = SmsCommunicatorOtpActivity::class.java.name }
+                )
+            )
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.SmsReportPumpUnreachable, summary = R.string.smscommunicator_report_pump_unreachable_summary, title = R.string.smscommunicator_pump_unreachable))
+        }
+    }
 }

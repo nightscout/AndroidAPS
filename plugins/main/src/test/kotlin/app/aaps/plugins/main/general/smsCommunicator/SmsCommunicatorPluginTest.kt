@@ -1,5 +1,6 @@
 package app.aaps.plugins.main.general.smsCommunicator
 
+import android.content.SharedPreferences
 import android.telephony.SmsManager
 import app.aaps.core.data.aps.ApsMode
 import app.aaps.core.data.configuration.Constants
@@ -11,7 +12,6 @@ import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.plugin.PluginType
-import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -23,11 +23,18 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.AdaptiveIntentPreference
+import app.aaps.core.keys.AdaptiveSwitchPreference
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.fromGv
+import app.aaps.core.validators.AdaptiveDoublePreference
+import app.aaps.core.validators.AdaptiveIntPreference
+import app.aaps.core.validators.AdaptiveStringPreference
+import app.aaps.core.validators.AdaptiveUnitPreference
 import app.aaps.implementation.iob.GlucoseStatusProviderImpl
 import app.aaps.plugins.aps.loop.LoopPlugin
 import app.aaps.plugins.main.R
@@ -60,9 +67,38 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     @Mock lateinit var dateUtilMocked: DateUtil
     @Mock lateinit var autosensDataStore: AutosensDataStore
     @Mock lateinit var smsManager: SmsManager
+    @Mock lateinit var sharedPrefs: SharedPreferences
 
     init {
         addInjector {
+            if (it is AdaptiveDoublePreference) {
+                it.profileUtil = profileUtil
+                it.preferences = preferences
+                it.sharedPrefs = sharedPrefs
+            }
+            if (it is AdaptiveIntPreference) {
+                it.profileUtil = profileUtil
+                it.preferences = preferences
+                it.sharedPrefs = sharedPrefs
+                it.config = config
+            }
+            if (it is AdaptiveUnitPreference) {
+                it.profileUtil = profileUtil
+                it.preferences = preferences
+                it.sharedPrefs = sharedPrefs
+            }
+            if (it is AdaptiveIntentPreference) {
+                it.preferences = preferences
+                it.sharedPrefs = sharedPrefs
+            }
+            if (it is AdaptiveStringPreference) {
+                it.preferences = preferences
+                it.sharedPrefs = sharedPrefs
+            }
+            if (it is AdaptiveSwitchPreference) {
+                it.preferences = preferences
+                it.sharedPrefs = sharedPrefs
+            }
             if (it is AuthRequest) {
                 it.aapsLogger = aapsLogger
                 it.smsCommunicator = smsCommunicatorPlugin
@@ -90,7 +126,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         `when`(iobCobCalculator.ads).thenReturn(autosensDataStore)
         `when`(autosensDataStore.lastBg()).thenReturn(InMemoryGlucoseValue.fromGv(reading))
 
-        `when`(sp.getString(R.string.key_smscommunicator_allowednumbers, "")).thenReturn("1234;5678")
+        `when`(preferences.get(StringKey.SmsAllowedNumbers)).thenReturn("1234;5678")
 
         `when`(
             persistenceLayer.insertAndCancelCurrentTemporaryTarget(anyObject(), anyObject(), anyObject(), anyObject(), anyObject())
@@ -99,7 +135,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         val glucoseStatusProvider = GlucoseStatusProviderImpl(aapsLogger, iobCobCalculator, dateUtilMocked, decimalFormatter)
 
         smsCommunicatorPlugin = SmsCommunicatorPlugin(
-            injector, aapsLogger, rh, smsManager, aapsSchedulers, sp, preferences, constraintChecker, rxBus, profileFunction, profileUtil, fabricPrivacy, activePlugin, commandQueue,
+            injector, aapsLogger, rh, smsManager, aapsSchedulers, preferences, constraintChecker, rxBus, profileFunction, profileUtil, fabricPrivacy, activePlugin, commandQueue,
             loop, iobCobCalculator, xDripBroadcast,
             otp, config, dateUtilMocked, uel,
             glucoseStatusProvider, persistenceLayer, decimalFormatter
@@ -295,14 +331,14 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[1].text).contains("COB: 10(2)g")
 
         // LOOP : test remote control disabled
-        `when`(sp.getBoolean(R.string.key_smscommunicator_remote_commands_allowed, false)).thenReturn(false)
+        `when`(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(false)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP STATUS")
         smsCommunicatorPlugin.processSms(sms)
         assertThat(sms.ignored).isFalse()
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("LOOP STATUS")
         assertThat(smsCommunicatorPlugin.messages[1].text).contains("Remote command is not allowed")
-        `when`(sp.getBoolean(R.string.key_smscommunicator_remote_commands_allowed, false)).thenReturn(true)
+        `when`(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(true)
 
         //LOOP STATUS : disabled
         `when`(loop.isEnabled()).thenReturn(false)
@@ -705,7 +741,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("PROFILE")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Remote command is not allowed")
-        `when`(sp.getBoolean(R.string.key_smscommunicator_remote_commands_allowed, false)).thenReturn(true)
+        `when`(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(true)
 
         //PROFILE
         smsCommunicatorPlugin.messages = ArrayList()
@@ -800,7 +836,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BASAL")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Remote command is not allowed")
-        `when`(sp.getBoolean(R.string.key_smscommunicator_remote_commands_allowed, false)).thenReturn(true)
+        `when`(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(true)
 
         //BASAL
         smsCommunicatorPlugin.messages = ArrayList()
@@ -897,7 +933,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("EXTENDED")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Remote command is not allowed")
-        `when`(sp.getBoolean(R.string.key_smscommunicator_remote_commands_allowed, false)).thenReturn(true)
+        `when`(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(true)
 
         //EXTENDED
         smsCommunicatorPlugin.messages = ArrayList()
@@ -952,7 +988,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BOLUS")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Remote command is not allowed")
-        `when`(sp.getBoolean(R.string.key_smscommunicator_remote_commands_allowed, false)).thenReturn(true)
+        `when`(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(true)
 
         //BOLUS
         smsCommunicatorPlugin.messages = ArrayList()
@@ -962,7 +998,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
         `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(ConstraintObject(1.0, aapsLogger))
         `when`(dateUtilMocked.now()).thenReturn(1000L)
-        `when`(sp.getLong(R.string.key_smscommunicator_remote_bolus_min_distance, T.msecs(Constants.remoteBolusMinDistance).mins())).thenReturn(15L)
+        `when`(preferences.get(IntKey.SmsRemoteBolusDistance)).thenReturn(15)
         //BOLUS 1
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "BOLUS 1")
@@ -1039,7 +1075,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("CAL")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Remote command is not allowed")
-        `when`(sp.getBoolean(R.string.key_smscommunicator_remote_commands_allowed, false)).thenReturn(true)
+        `when`(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(true)
 
         //CAL
         smsCommunicatorPlugin.messages = ArrayList()
@@ -1070,14 +1106,14 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     @Test fun processCarbsTest() {
         `when`(dateUtilMocked.now()).thenReturn(1000000L)
         `when`(dateUtilMocked.timeString(anyLong())).thenReturn("03:01AM")
-        `when`(sp.getBoolean(R.string.key_smscommunicator_remote_commands_allowed, false)).thenReturn(false)
+        `when`(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(false)
         //CAL
         smsCommunicatorPlugin.messages = ArrayList()
         var sms = Sms("1234", "CARBS")
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("CARBS")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Remote command is not allowed")
-        `when`(sp.getBoolean(R.string.key_smscommunicator_remote_commands_allowed, false)).thenReturn(true)
+        `when`(preferences.get(BooleanKey.SmsAllowRemoteCommands)).thenReturn(true)
 
         //CARBS
         smsCommunicatorPlugin.messages = ArrayList()
@@ -1150,5 +1186,12 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.sendNotificationToAllNumbers("abc")
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("abc")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("abc")
+    }
+
+    @Test
+    fun preferenceScreenTest() {
+        val screen = preferenceManager.createPreferenceScreen(context)
+        smsCommunicatorPlugin.addPreferenceScreen(preferenceManager, screen, context)
+        assertThat(screen.preferenceCount).isGreaterThan(0)
     }
 }

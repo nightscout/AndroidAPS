@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.profiling.Profiler
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.keys.AdaptiveIntentPreference
 import app.aaps.core.keys.AdaptiveSwitchPreference
 import app.aaps.core.validators.AdaptiveDoublePreference
 import app.aaps.core.validators.AdaptiveIntPreference
@@ -48,6 +49,10 @@ class OpenAPSSMBPluginTest : TestBaseWithProfile() {
                 it.preferences = preferences
                 it.sharedPrefs = sharedPrefs
                 it.config = config
+            }
+            if (it is AdaptiveIntentPreference) {
+                it.preferences = preferences
+                it.sharedPrefs = sharedPrefs
             }
             if (it is AdaptiveUnitPreference) {
                 it.profileUtil = profileUtil

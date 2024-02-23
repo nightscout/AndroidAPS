@@ -36,12 +36,12 @@ interface PreferenceKey {
     /**
      * show only if master dependency is enabled (ie android:dependency behavior)
      */
-    val dependency: Int
+    val dependency: BooleanKey?
 
     /**
      * show only if master dependency is disabled (ie negative android:dependency behavior)
      */
-    val negativeDependency: Int
+    val negativeDependency: BooleanKey?
 
     /**
      * Hide parent screen

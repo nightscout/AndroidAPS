@@ -14,7 +14,6 @@
     <string name="key_localalert_settings" translatable="false">localalert_settings</string>
     <string name="key_wear_settings" translatable="false">wear_settings</string>
     <string name="key_configbuilder_general_settings" translatable="false">configbuilder_general_settings</string>
-    <string name="key_smscommunicator_settings" translatable="false">smscommunicator_settings</string>
     <string name="key_virtualpump_settings" translatable="false">virtualpump_settings</string>
     <string name="key_pump_settings" translatable="false">pump_settings</string>
     <string name="key_tidepool_settings" translatable="false">tidepool_settings</string>
@@ -35,7 +34,6 @@
     <string name="key_next_missed_reading_alarm" translatable="false">nextMissedReadingsAlarm</string>
     <string name="key_enable_missed_bg_readings_alert" translatable="false">enable_missed_bg_readings</string>
     <string name="key_enable_carbs_required_alert_local" translatable="false">enable_carbs_required_alert_local</string>
-    <string name="key_smscommunicator_report_pump_unreachable" translatable="false">smscommunicator_report_pump_unreachable</string>
     <string name="key_rangetodisplay" translatable="false">rangetodisplay</string>
     <string name="key_local_profile_last_change" translatable="false">local_profile_last_change</string>
     <string name="key_ns_receive_profile_store" translatable="false">ns_receive_profile_store</string>

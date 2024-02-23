@@ -10,8 +10,8 @@ enum class DoubleKey(
     override val showInApsMode: Boolean = true,
     override val showInNsClientMode: Boolean = true,
     override val showInPumpControlMode: Boolean = true,
-    override val dependency: Int = 0,
-    override val negativeDependency: Int = 0,
+    override val dependency: BooleanKey? = null,
+    override val negativeDependency: BooleanKey? = null,
     override val hideParentScreenIfHidden: Boolean = false
 ) : PreferenceKey {
 

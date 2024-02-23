@@ -20,6 +20,7 @@ class AdaptiveIntPreference(
     attrs: AttributeSet? = null,
     intKey: IntKey? = null,
     @StringRes dialogMessage: Int? = null,
+    @StringRes summary: Int? = null,
     @StringRes title: Int?,
 ) : EditTextPreference(ctx, attrs) {
 
@@ -40,6 +41,7 @@ class AdaptiveIntPreference(
 
         intKey?.let { key = context.getString(it.key) }
         dialogMessage?.let { setDialogMessage(it) }
+        summary?.let { setSummary(it) }
         title?.let { dialogTitle = context.getString(it) }
         title?.let { this.title = context.getString(it) }
 
@@ -57,12 +59,12 @@ class AdaptiveIntPreference(
         if (!config.isEngineeringMode() && preferenceKey.engineeringModeOnly) {
             isVisible = false; isEnabled = false
         }
-        if (preferenceKey.dependency != 0) {
-            if (!sharedPrefs.getBoolean(context.getString(preferenceKey.dependency), false))
+        preferenceKey.dependency?.let {
+            if (!sharedPrefs.getBoolean(context.getString(it.key), false))
                 isVisible = false
         }
-        if (preferenceKey.negativeDependency != 0) {
-            if (sharedPrefs.getBoolean(context.getString(preferenceKey.dependency), false))
+        preferenceKey.negativeDependency?.let {
+            if (sharedPrefs.getBoolean(context.getString(it.key), false))
                 isVisible = false
         }
         validatorParameters = obtainValidatorParameters(attrs)

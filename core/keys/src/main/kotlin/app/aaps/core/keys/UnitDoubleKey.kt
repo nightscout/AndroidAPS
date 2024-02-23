@@ -9,8 +9,8 @@ enum class UnitDoubleKey(
     override val showInApsMode: Boolean = true,
     override val showInNsClientMode: Boolean = true,
     override val showInPumpControlMode: Boolean = true,
-    override val dependency: Int = 0,
-    override val negativeDependency: Int = 0,
+    override val dependency: BooleanKey? = null,
+    override val negativeDependency: BooleanKey? = null,
     override val hideParentScreenIfHidden: Boolean = false
 ) : PreferenceKey {
 
@@ -19,5 +19,5 @@ enum class UnitDoubleKey(
     OverviewHypoTarget(R.string.key_hypo_target, 160.0, 108, 180, defaultedBySM = true),
     OverviewLowMark(R.string.key_low_mark, 72.0, 25, 160, showInNsClientMode = false, hideParentScreenIfHidden = true),
     OverviewHighMark(R.string.key_high_mark, 180.0, 90, 250, showInNsClientMode = false),
-    ApsLgsThreshold(R.string.key_dynamic_isf_lgs_threshold, 65.0, 65, 120, defaultedBySM = true, dependency = R.string.key_use_dynamic_sensitivity),
+    ApsLgsThreshold(R.string.key_dynamic_isf_lgs_threshold, 65.0, 65, 120, defaultedBySM = true, dependency =BooleanKey.ApsUseDynamicSensitivity),
 }
