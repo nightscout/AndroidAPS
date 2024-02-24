@@ -29,6 +29,15 @@ class DetermineBasalSMB @Inject constructor(
     private val consoleError = mutableListOf<String>()
     private val consoleLog = mutableListOf<String>()
 
+    private fun consoleLog(msg: String) {
+        consoleLog.add(msg)
+    }
+
+    private fun consoleError(msg: String) {
+        consoleError.add(msg)
+        consoleLog("ERROR: $msg")
+    }
+
     private fun Double.toFixed2(): String = DecimalFormat("0.00#").format(round(this, 2))
 
     fun round_basal(value: Double): Double = value
@@ -63,46 +72,46 @@ class DetermineBasalSMB @Inject constructor(
     fun enable_smb(profile: OapsProfile, microBolusAllowed: Boolean, meal_data: MealData, target_bg: Double): Boolean {
         // disable SMB when a high temptarget is set
         if (!microBolusAllowed) {
-            consoleError.add("SMB disabled (!microBolusAllowed)")
+            consoleError("SMB disabled (!microBolusAllowed)")
             return false
         } else if (!profile.allowSMB_with_high_temptarget && profile.temptargetSet && target_bg > 100) {
-            consoleError.add("SMB disabled due to high temptarget of $target_bg")
+            consoleError("SMB disabled due to high temptarget of $target_bg")
             return false
         }
 
         // enable SMB/UAM if always-on (unless previously disabled for high temptarget)
         if (profile.enableSMB_always) {
-            consoleError.add("SMB enabled due to enableSMB_always")
+            consoleError("SMB enabled due to enableSMB_always")
             return true
         }
 
         // enable SMB/UAM (if enabled in preferences) while we have COB
         if (profile.enableSMB_with_COB && meal_data.mealCOB != 0.0) {
-            consoleError.add("SMB enabled for COB of ${meal_data.mealCOB}")
+            consoleError("SMB enabled for COB of ${meal_data.mealCOB}")
             return true
         }
 
         // enable SMB/UAM (if enabled in preferences) for a full 6 hours after any carb entry
         // (6 hours is defined in carbWindow in lib/meal/total.js)
         if (profile.enableSMB_after_carbs && meal_data.carbs != 0.0) {
-            consoleError.add("SMB enabled for 6h after carb entry")
+            consoleError("SMB enabled for 6h after carb entry")
             return true
         }
 
         // enable SMB/UAM (if enabled in preferences) if a low temptarget is set
         if (profile.enableSMB_with_temptarget && (profile.temptargetSet && target_bg < 100)) {
-            consoleError.add("SMB enabled for temptarget of ${convert_bg(target_bg)}")
+            consoleError("SMB enabled for temptarget of ${convert_bg(target_bg)}")
             return true
         }
 
-        consoleError.add("SMB disabled (no enableSMB preferences active or no condition satisfied)")
+        consoleError("SMB disabled (no enableSMB preferences active or no condition satisfied)")
         return false
     }
 
     fun reason(rT: RT, msg: String) {
         if (rT.reason.toString().isNotEmpty()) rT.reason.append(". ")
         rT.reason.append(msg)
-        consoleError.add(msg)
+        consoleError(msg)
     }
 
     private fun getMaxSafeBasal(profile: OapsProfile): Double =
@@ -222,9 +231,9 @@ class DetermineBasalSMB @Inject constructor(
         val halfBasalTarget = profile.half_basal_exercise_target
 
         if (dynIsfMode) {
-            consoleError.add("---------------------------------------------------------")
-            consoleError.add(" Dynamic ISF version 2.0 ")
-            consoleError.add("---------------------------------------------------------")
+            consoleLog("---------------------------------------------------------")
+            consoleLog(" Dynamic ISF version 2.0 ")
+            consoleLog("---------------------------------------------------------")
         }
 
         if (high_temptarget_raises_sensitivity && profile.temptargetSet && target_bg > normalTarget
@@ -238,17 +247,17 @@ class DetermineBasalSMB @Inject constructor(
             // limit sensitivityRatio to profile.autosens_max (1.2x by default)
             sensitivityRatio = min(sensitivityRatio, profile.autosens_max)
             sensitivityRatio = round(sensitivityRatio, 2)
-            consoleLog.add("Sensitivity ratio set to $sensitivityRatio based on temp target of $target_bg; ")
+            consoleLog("Sensitivity ratio set to $sensitivityRatio based on temp target of $target_bg; ")
         } else {
             sensitivityRatio = autosens_data.ratio
-            consoleLog.add("Autosens ratio: $sensitivityRatio; ")
+            consoleLog("Autosens ratio: $sensitivityRatio; ")
         }
         basal = profile.current_basal * sensitivityRatio
         basal = round_basal(basal)
         if (basal != profile_current_basal)
-            consoleLog.add("Adjusting basal from $profile_current_basal to $basal; ")
+            consoleLog("Adjusting basal from $profile_current_basal to $basal; ")
         else
-            consoleLog.add("Basal unchanged: $basal; ")
+            consoleLog("Basal unchanged: $basal; ")
 
         // adjust min, max, and target BG for sensitivity, such that 50% increase in ISF raises target from 100 to 120
         if (profile.temptargetSet) {
@@ -262,9 +271,9 @@ class DetermineBasalSMB @Inject constructor(
                 // don't allow target_bg below 80
                 new_target_bg = max(80.0, new_target_bg)
                 if (target_bg == new_target_bg)
-                    consoleLog.add("target_bg unchanged: $new_target_bg; ")
+                    consoleLog("target_bg unchanged: $new_target_bg; ")
                 else
-                    consoleLog.add("target_bg from $target_bg to $new_target_bg; ")
+                    consoleLog("target_bg from $target_bg to $new_target_bg; ")
 
                 target_bg = new_target_bg
             }
@@ -290,14 +299,14 @@ class DetermineBasalSMB @Inject constructor(
                 val profile_sens = round(profile.sens, 1)
                 val adjusted_sens = round(profile.sens / sensitivityRatio, 1)
                 if (adjusted_sens != profile_sens) {
-                    consoleLog.add("ISF from $profile_sens to $adjusted_sens")
+                    consoleLog("ISF from $profile_sens to $adjusted_sens")
                 } else {
-                    consoleLog.add("ISF unchanged: $adjusted_sens")
+                    consoleLog("ISF unchanged: $adjusted_sens")
                 }
                 adjusted_sens
                 //console.log(" (autosens ratio "+sensitivityRatio+")");
             }
-        consoleError.add("CR:${profile.carb_ratio}")
+        consoleLog("CR:${profile.carb_ratio}")
 
         //calculate BG impact: the amount BG "should" be rising or falling based on insulin activity alone
         val bgi = round((-iob_data.activity * sens * 5), 2)
@@ -333,24 +342,24 @@ class DetermineBasalSMB @Inject constructor(
             // if eventualBG, naive_eventualBG, and target_bg aren't all above adjustedMinBG, don’t use it
             //console.error("naive_eventualBG:",naive_eventualBG+", eventualBG:",eventualBG);
             if (eventualBG > adjustedMinBG && naive_eventualBG > adjustedMinBG && min_bg > adjustedMinBG) {
-                consoleLog.add("Adjusting targets for high BG: min_bg from $min_bg to $adjustedMinBG; ")
+                consoleLog("Adjusting targets for high BG: min_bg from $min_bg to $adjustedMinBG; ")
                 min_bg = adjustedMinBG
             } else {
-                consoleLog.add("min_bg unchanged: $min_bg; ")
+                consoleLog("min_bg unchanged: $min_bg; ")
             }
             // if eventualBG, naive_eventualBG, and target_bg aren't all above adjustedTargetBG, don’t use it
             if (eventualBG > adjustedTargetBG && naive_eventualBG > adjustedTargetBG && target_bg > adjustedTargetBG) {
-                consoleLog.add("target_bg from $target_bg to $adjustedTargetBG; ")
+                consoleLog("target_bg from $target_bg to $adjustedTargetBG; ")
                 target_bg = adjustedTargetBG
             } else {
-                consoleLog.add("target_bg unchanged: $target_bg; ")
+                consoleLog("target_bg unchanged: $target_bg; ")
             }
             // if eventualBG, naive_eventualBG, and max_bg aren't all above adjustedMaxBG, don’t use it
             if (eventualBG > adjustedMaxBG && naive_eventualBG > adjustedMaxBG && max_bg > adjustedMaxBG) {
-                consoleError.add("max_bg from $max_bg to $adjustedMaxBG")
+                consoleLog("max_bg from $max_bg to $adjustedMaxBG")
                 max_bg = adjustedMaxBG
             } else {
-                consoleError.add("max_bg unchanged: $max_bg")
+                consoleLog("max_bg unchanged: $max_bg")
             }
         }
 
@@ -361,7 +370,7 @@ class DetermineBasalSMB @Inject constructor(
         if (profile.lgsThreshold != null) {
             val lgsThreshold = profile.lgsThreshold ?: error("lgsThreshold missing")
             if (lgsThreshold > threshold) {
-                consoleError.add("Threshold set from ${convert_bg(threshold)} to ${convert_bg(lgsThreshold.toDouble())}; ")
+                consoleError("Threshold set from ${convert_bg(threshold)} to ${convert_bg(lgsThreshold.toDouble())}; ")
                 threshold = lgsThreshold.toDouble()
             }
         }
@@ -425,13 +434,13 @@ class DetermineBasalSMB @Inject constructor(
         // autotuned CR is still in effect even when basals and ISF are being adjusted by TT or autosens
         // this avoids overdosing insulin for large meals when low temp targets are active
         val csf = sens / profile.carb_ratio
-        consoleError.add("profile.sens: ${profile.sens}, sens: $sens, CSF: $csf")
+        consoleError("profile.sens: ${profile.sens}, sens: $sens, CSF: $csf")
 
         val maxCarbAbsorptionRate = 30 // g/h; maximum rate to assume carbs will absorb if no CI observed
         // limit Carb Impact to maxCarbAbsorptionRate * csf in mg/dL per 5m
         val maxCI = round(maxCarbAbsorptionRate * csf * 5 / 60, 1)
         if (ci > maxCI) {
-            consoleError.add("Limiting carb impact from $ci to $maxCI mg/dL/5m ( $maxCarbAbsorptionRate g/h )")
+            consoleError("Limiting carb impact from $ci to $maxCI mg/dL/5m ( $maxCarbAbsorptionRate g/h )")
             ci = maxCI
         }
         var remainingCATimeMin = 3.0 // h; duration of expected not-yet-observed carb absorption
@@ -452,7 +461,7 @@ class DetermineBasalSMB @Inject constructor(
             remainingCATime = remainingCATimeMin + 1.5 * lastCarbAge / 60
             remainingCATime = round(remainingCATime, 1)
             //console.error(fractionCOBAbsorbed, remainingCATimeAdjustment, remainingCATime)
-            consoleError.add("Last carbs " + lastCarbAge + "minutes ago; remainingCATime:" + remainingCATime + "hours;" + round(fractionCOBAbsorbed * 100) + "% carbs absorbed")
+            consoleError("Last carbs " + lastCarbAge + "minutes ago; remainingCATime:" + remainingCATime + "hours;" + round(fractionCOBAbsorbed * 100) + "% carbs absorbed")
         }
 
         // calculate the number of carbs absorbed over remainingCATime hours at current CI
@@ -491,7 +500,7 @@ class DetermineBasalSMB @Inject constructor(
         }
         val acid = max(0.0, meal_data.mealCOB * csf / aci)
         // duration (hours) = duration (5m) * 5 / 60 * 2 (to account for linear decay)
-        consoleError.add("Carb Impact: ${ci} mg/dL per 5m; CI Duration: ${round(cid * 5 / 60 * 2, 1)} hours; remaining CI (~2h peak): ${round(remainingCIpeak, 1)} mg/dL per 5m")
+        consoleError("Carb Impact: ${ci} mg/dL per 5m; CI Duration: ${round(cid * 5 / 60 * 2, 1)} hours; remaining CI (~2h peak): ${round(remainingCIpeak, 1)} mg/dL per 5m")
         //console.error("Accel. Carb Impact:",aci,"mg/dL per 5m; ACI Duration:",round(acid*5/60*2,1),"hours");
         var minIOBPredBG = 999.0
         var minCOBPredBG = 999.0
@@ -600,8 +609,8 @@ class DetermineBasalSMB @Inject constructor(
         // set eventualBG to include effect of carbs
         //console.error("PredBGs:",JSON.stringify(predBGs));
         if (meal_data.mealCOB > 0) {
-            consoleError.add("predCIs (mg/dL/5m):" + predCIs.joinToString(separator = " "))
-            consoleError.add("remainingCIs:      " + remainingCIs.joinToString(separator = " "))
+            consoleError("predCIs (mg/dL/5m):" + predCIs.joinToString(separator = " "))
+            consoleError("remainingCIs:      " + remainingCIs.joinToString(separator = " "))
         }
         rT.predBGs = Predictions()
         IOBpredBGs = IOBpredBGs.map { round(min(401.0, max(39.0, it)), 0) }.toMutableList()
@@ -651,8 +660,8 @@ class DetermineBasalSMB @Inject constructor(
             rT.eventualBG = eventualBG
         }
 
-        consoleError.add("UAM Impact: $uci mg/dL per 5m; UAM Duration: $UAMduration hours")
-        consoleLog.add("EventualBG is $eventualBG ;")
+        consoleError("UAM Impact: $uci mg/dL per 5m; UAM Duration: $UAMduration hours")
+        consoleLog("EventualBG is $eventualBG ;")
 
         minIOBPredBG = max(39.0, minIOBPredBG)
         minCOBPredBG = max(39.0, minCOBPredBG)
@@ -667,17 +676,17 @@ class DetermineBasalSMB @Inject constructor(
         ) {
             future_sens = (1800 / (ln((((fSensBG * 0.5) + (bg * 0.5)) / profile.insulinDivisor) + 1) * profile.TDD))
             future_sens = round(future_sens, 1)
-            consoleLog.add("Future state sensitivity is $future_sens based on eventual and current bg due to flat glucose level above target")
+            consoleLog("Future state sensitivity is $future_sens based on eventual and current bg due to flat glucose level above target")
             rT.reason.append("Dosing sensitivity: $future_sens using eventual BG;")
         } else if (glucose_status.delta > 0 && eventualBG > target_bg || eventualBG > bg) {
             future_sens = (1800 / (ln((bg / profile.insulinDivisor) + 1) * profile.TDD))
             future_sens = round(future_sens, 1)
-            consoleLog.add("Future state sensitivity is $future_sens using current bg due to small delta or variation")
+            consoleLog("Future state sensitivity is $future_sens using current bg due to small delta or variation")
             rT.reason.append("Dosing sensitivity: $future_sens using current BG;")
         } else {
             future_sens = (1800 / (ln((fSensBG / profile.insulinDivisor) + 1) * profile.TDD))
             future_sens = round(future_sens, 1)
-            consoleLog.add("Future state sensitivity is $future_sens based on eventual bg due to -ve delta")
+            consoleLog("Future state sensitivity is $future_sens based on eventual bg due to -ve delta")
             rT.reason.append("Dosing sensitivity: $future_sens using eventual BG;")
         }
 
@@ -759,14 +768,14 @@ class DetermineBasalSMB @Inject constructor(
         // make sure minPredBG isn't higher than avgPredBG
         minPredBG = min(minPredBG, avgPredBG)
 
-        consoleLog.add("minPredBG: $minPredBG minIOBPredBG: $minIOBPredBG minZTGuardBG: $minZTGuardBG")
+        consoleLog("minPredBG: $minPredBG minIOBPredBG: $minIOBPredBG minZTGuardBG: $minZTGuardBG")
         if (minCOBPredBG < 999) {
-            consoleLog.add(" minCOBPredBG: $minCOBPredBG")
+            consoleLog(" minCOBPredBG: $minCOBPredBG")
         }
         if (minUAMPredBG < 999) {
-            consoleLog.add(" minUAMPredBG: $minUAMPredBG")
+            consoleLog(" minUAMPredBG: $minUAMPredBG")
         }
-        consoleError.add(" avgPredBG: $avgPredBG COB: ${meal_data.mealCOB} / ${meal_data.carbs}")
+        consoleError(" avgPredBG: $avgPredBG COB: ${meal_data.mealCOB} / ${meal_data.carbs}")
         // But if the COB line falls off a cliff, don't trust UAM too much:
         // use maxCOBPredBG if it's been set and lower than minPredBG
         if (maxCOBPredBG > bg) {
@@ -830,19 +839,19 @@ class DetermineBasalSMB @Inject constructor(
         }
 
         if (enableSMB && minGuardBG < threshold) {
-            consoleError.add("minGuardBG ${convert_bg(minGuardBG)} projected below ${convert_bg(threshold)} - disabling SMB")
+            consoleError("minGuardBG ${convert_bg(minGuardBG)} projected below ${convert_bg(threshold)} - disabling SMB")
             //rT.reason += "minGuardBG "+minGuardBG+"<"+threshold+": SMB disabled; ";
             enableSMB = false
         }
         if (maxDelta > 0.20 * bg) {
-            consoleError.add("maxDelta ${convert_bg(maxDelta)} > 20% of BG ${convert_bg(bg)} - disabling SMB")
+            consoleError("maxDelta ${convert_bg(maxDelta)} > 20% of BG ${convert_bg(bg)} - disabling SMB")
             rT.reason.append("maxDelta " + convert_bg(maxDelta) + " > 20% of BG " + convert_bg(bg) + ": SMB disabled; ")
             enableSMB = false
         }
 
-        consoleError.add("BG projected to remain above ${convert_bg(min_bg)} for $minutesAboveMinBG minutes")
+        consoleError("BG projected to remain above ${convert_bg(min_bg)} for $minutesAboveMinBG minutes")
         if (minutesAboveThreshold < 240 || minutesAboveMinBG < 60) {
-            consoleError.add("BG projected to remain above ${convert_bg(threshold)} for $minutesAboveThreshold minutes")
+            consoleError("BG projected to remain above ${convert_bg(threshold)} for $minutesAboveThreshold minutes")
         }
         // include at least minutesAboveThreshold worth of zero temps in calculating carbsReq
         // always include at least 30m worth of zero temp (carbs to 80, low temp up to target)
@@ -853,7 +862,7 @@ class DetermineBasalSMB @Inject constructor(
         val COBforCarbsReq = max(0.0, meal_data.mealCOB - 0.25 * meal_data.carbs)
         val carbsReq = round(((bgUndershoot - zeroTempEffectDouble) / csf - COBforCarbsReq))
         val zeroTempEffect = round(zeroTempEffectDouble)
-        consoleError.add("naive_eventualBG: $naive_eventualBG bgUndershoot: $bgUndershoot zeroTempDuration $zeroTempDuration zeroTempEffect: $zeroTempEffect carbsReq: $carbsReq")
+        consoleError("naive_eventualBG: $naive_eventualBG bgUndershoot: $bgUndershoot zeroTempDuration $zeroTempDuration zeroTempEffect: $zeroTempEffect carbsReq: $carbsReq")
         if (carbsReq >= profile.carbsReqThreshold && minutesAboveThreshold <= 45) {
             rT.carbsReq = carbsReq
             rT.carbsReqWithin = minutesAboveThreshold
@@ -1042,11 +1051,11 @@ class DetermineBasalSMB @Inject constructor(
                 // never bolus more than maxSMBBasalMinutes worth of basal
                 val mealInsulinReq = round(meal_data.mealCOB / profile.carb_ratio, 3)
                 if (iob_data.iob > mealInsulinReq && iob_data.iob > 0) {
-                    consoleError.add("IOB ${iob_data.iob} > COB ${meal_data.mealCOB}; mealInsulinReq = $mealInsulinReq")
-                    consoleError.add("profile.maxUAMSMBBasalMinutes: ${profile.maxUAMSMBBasalMinutes} profile.current_basal: ${profile.current_basal}")
+                    consoleError("IOB ${iob_data.iob} > COB ${meal_data.mealCOB}; mealInsulinReq = $mealInsulinReq")
+                    consoleError("profile.maxUAMSMBBasalMinutes: ${profile.maxUAMSMBBasalMinutes} profile.current_basal: ${profile.current_basal}")
                     maxBolus = round(profile.current_basal * profile.maxUAMSMBBasalMinutes / 60, 1)
                 } else {
-                    consoleError.add("profile.maxSMBBasalMinutes: ${profile.maxSMBBasalMinutes} profile.current_basal: ${profile.current_basal}")
+                    consoleError("profile.maxSMBBasalMinutes: ${profile.maxSMBBasalMinutes} profile.current_basal: ${profile.current_basal}")
                     maxBolus = round(profile.current_basal * profile.maxSMBBasalMinutes / 60, 1)
                 }
                 // bolus 1/2 the insulinReq, up to maxBolus, rounding down to nearest bolus increment
@@ -1088,7 +1097,7 @@ class DetermineBasalSMB @Inject constructor(
                 val nextBolusMins = round(SMBInterval - lastBolusAge, 0)
                 val nextBolusSeconds = round((SMBInterval - lastBolusAge) * 60, 0) % 60
                 //console.error(naive_eventualBG, insulinReq, worstCaseInsulinReq, durationReq);
-                consoleError.add("naive_eventualBG $naive_eventualBG,${durationReq}m ${smbLowTempReq}U/h temp needed; last bolus ${lastBolusAge}m ago; maxBolus: $maxBolus")
+                consoleError("naive_eventualBG $naive_eventualBG,${durationReq}m ${smbLowTempReq}U/h temp needed; last bolus ${lastBolusAge}m ago; maxBolus: $maxBolus")
                 if (lastBolusAge > SMBInterval) {
                     if (microBolus > 0) {
                         rT.units = microBolus

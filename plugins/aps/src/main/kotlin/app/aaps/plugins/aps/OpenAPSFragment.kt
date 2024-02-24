@@ -1,10 +1,13 @@
 package app.aaps.plugins.aps
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
+import android.text.SpannableStringBuilder
 import android.text.Spanned
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -136,7 +139,7 @@ class OpenAPSFragment : DaggerFragment(), MenuProvider {
             binding.iobdata.text = rh.gs(R.string.array_of_elements, lastAPSResult.iobData?.size) + "\n" + lastAPSResult.iob?.dataClassToHtml()
             binding.profile.text = lastAPSResult.oapsProfile?.dataClassToHtml()
             binding.mealdata.text = lastAPSResult.mealData?.dataClassToHtml()
-            binding.scriptdebugdata.text = lastAPSResult.scriptDebug?.joinToString("\n")
+            binding.scriptdebugdata.text = lastAPSResult.scriptDebug?.let { buildSpannableFromEntries(it) }
             binding.constraints.text = lastAPSResult.inputConstraints?.getReasons()
             binding.autosensdata.text = lastAPSResult.autosensResult?.dataClassToHtml()
             binding.lastrun.text = dateUtil.dateAndTimeString(openAPSPlugin.lastAPSRun)
@@ -188,4 +191,21 @@ class OpenAPSFragment : DaggerFragment(), MenuProvider {
 
     private fun String.bold(): String = "<b>$this</b>"
     private val br = "<br>"
+
+    private fun buildSpannableFromEntries(entries: List<String>): SpannableStringBuilder {
+        val builder = SpannableStringBuilder()
+        entries.forEach { entry ->
+            val start = builder.length
+            if (entry.startsWith("ERROR: ")) {
+                // Strip the "ERROR: " prefix before displaying
+                val strippedEntry = entry.removePrefix("ERROR: ")
+                builder.append("$strippedEntry\n")
+                val end = builder.length
+                builder.setSpan(ForegroundColorSpan(Color.RED), start, end, SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE)
+            } else {
+                builder.append("$entry\n")
+            }
+        }
+        return builder
+    }
 }
