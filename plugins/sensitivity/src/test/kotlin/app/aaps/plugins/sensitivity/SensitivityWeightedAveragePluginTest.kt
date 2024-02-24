@@ -49,17 +49,17 @@ class SensitivityWeightedAveragePluginTest : TestBaseWithProfile() {
     }
 
     fun isMinCarbsAbsorptionDynamic() {
-        assertThat(sensitivityAAPSPlugin.isMinCarbsAbsorptionDynamic).isTrue()
+        assertThat(sensitivityWeightedAveragePlugin.isMinCarbsAbsorptionDynamic).isTrue()
     }
 
     @Test
     fun isOref1() {
-        assertThat(sensitivityAAPSPlugin.isOref1).isFalse()
+        assertThat(sensitivityWeightedAveragePlugin.isOref1).isFalse()
     }
 
     @Test
     fun getId() {
-        assertThat(sensitivityAAPSPlugin.id).isEqualTo(Sensitivity.SensitivityType.SENSITIVITY_WEIGHTED)
+        assertThat(sensitivityWeightedAveragePlugin.id).isEqualTo(Sensitivity.SensitivityType.SENSITIVITY_WEIGHTED)
     }
 
     @Test
