@@ -231,9 +231,9 @@ class DetermineBasalSMB @Inject constructor(
         val halfBasalTarget = profile.half_basal_exercise_target
 
         if (dynIsfMode) {
-            consoleError("---------------------------------------------------------")
-            consoleError(" Dynamic ISF version 2.0 ")
-            consoleError("---------------------------------------------------------")
+            consoleLog("---------------------------------------------------------")
+            consoleLog(" Dynamic ISF version 2.0 ")
+            consoleLog("---------------------------------------------------------")
         }
 
         if (high_temptarget_raises_sensitivity && profile.temptargetSet && target_bg > normalTarget
@@ -306,7 +306,7 @@ class DetermineBasalSMB @Inject constructor(
                 adjusted_sens
                 //console.log(" (autosens ratio "+sensitivityRatio+")");
             }
-        consoleError("CR:${profile.carb_ratio}")
+        consoleLog("CR:${profile.carb_ratio}")
 
         //calculate BG impact: the amount BG "should" be rising or falling based on insulin activity alone
         val bgi = round((-iob_data.activity * sens * 5), 2)
@@ -356,10 +356,10 @@ class DetermineBasalSMB @Inject constructor(
             }
             // if eventualBG, naive_eventualBG, and max_bg aren't all above adjustedMaxBG, don’t use it
             if (eventualBG > adjustedMaxBG && naive_eventualBG > adjustedMaxBG && max_bg > adjustedMaxBG) {
-                consoleError("max_bg from $max_bg to $adjustedMaxBG")
+                consoleLog("max_bg from $max_bg to $adjustedMaxBG")
                 max_bg = adjustedMaxBG
             } else {
-                consoleError("max_bg unchanged: $max_bg")
+                consoleLog("max_bg unchanged: $max_bg")
             }
         }
 
