@@ -108,7 +108,7 @@ class DetermineBasalResult @Inject constructor(val injector: HasAndroidInjector)
         targetBG = result.targetBG ?: 0.0
         deliverAt = result.deliverAt ?: 0L
         variableSens = result.variable_sens
-        scriptDebug = result.consoleError
+        scriptDebug = result.consoleLog
     }
 
     override val carbsRequiredText: String
