@@ -37,7 +37,7 @@ enum class BooleanKey(
     ApsUseSmbWithCob(R.string.key_openaps_allow_smb_with_COB, true, defaultedBySM = true, dependency = ApsUseSmb), // change from default false
     ApsUseSmbWithLowTt(R.string.key_openaps_allow_smb_with_low_temp_target, true, defaultedBySM = true, dependency = ApsUseSmb), // change from default false
     ApsUseSmbAfterCarbs(R.string.key_openaps_enable_smb_after_carbs, true, defaultedBySM = true, dependency = ApsUseSmb), // change from default false
-    ApsUseUam(R.string.key_openaps_use_uam, true, defaultedBySM = true, dependency = ApsUseSmb), // change from default false
+    ApsUseUam(R.string.key_openaps_use_uam, true, defaultedBySM = true), // change from default false
     ApsSensitivityRaisesTarget(R.string.key_openaps_sensitivity_raises_target, true, defaultedBySM = true),
     ApsResistanceLowersTarget(R.string.key_openaps_resistance_lowers_target, true, defaultedBySM = true), // change from default false
     ApsAlwaysUseShortDeltas(R.string.key_openaps_always_use_short_deltas, false, defaultedBySM = true, hideParentScreenIfHidden = true),

@@ -158,7 +158,11 @@ open class OpenAPSSMBPlugin @Inject constructor(
 
     override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
         super.preprocessPreferences(preferenceFragment)
-        val uamEnabled = preferences.get(BooleanKey.ApsUseUam)
+        val uamEnabled = if (preferences.get(BooleanKey.ApsUseSmb)) {
+            preferences.get(BooleanKey.ApsUseUam)
+        } else {
+            preferences.get(BooleanKey.ApsUseSmb)
+        }
         val smbAlwaysEnabled = if (preferences.get(BooleanKey.ApsUseSmb)) {
             preferences.get(BooleanKey.ApsUseSmbAlways)
         } else {
