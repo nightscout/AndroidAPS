@@ -26,6 +26,15 @@ class DetermineBasalAMA @Inject constructor(
     private val consoleError = mutableListOf<String>()
     private val consoleLog = mutableListOf<String>()
 
+    private fun consoleLog(msg: String) {
+        consoleLog.add(msg)
+    }
+
+    private fun consoleError(msg: String) {
+        consoleError.add(msg)
+        consoleLog("ERROR: $msg")
+    }
+
     private fun Double.toFixed2(): String = DecimalFormat("0.00#").format(round(this, 2))
     private fun Double.toFixed3(): String = DecimalFormat("0.000#").format(round(this, 3))
 
@@ -58,7 +67,7 @@ class DetermineBasalAMA @Inject constructor(
     fun reason(rT: RT, msg: String) {
         if (rT.reason.toString().isNotEmpty()) rT.reason.append(". ")
         rT.reason.append(msg)
-        consoleError.add(msg)
+        consoleError(msg)
     }
 
     private fun getMaxSafeBasal(profile: OapsProfile): Double =
@@ -116,7 +125,7 @@ class DetermineBasalAMA @Inject constructor(
         )
         val basal = round_basal(profile.current_basal * autosens_data.ratio)
         if (basal != profile.current_basal) {
-            consoleError.add("Adjusting basal from ${profile.current_basal} to $basal")
+            consoleError("Adjusting basal from ${profile.current_basal} to $basal")
         }
 
         val bg = glucose_status.glucose
@@ -142,15 +151,15 @@ class DetermineBasalAMA @Inject constructor(
         // adjust min, max, and target BG for sensitivity, such that 50% increase in ISF raises target from 100 to 120
         if (profile.autosens_adjust_targets) {
             if (profile.temptargetSet) {
-                consoleError.add("Temp Target set, not adjusting with autosens")
+                consoleError("Temp Target set, not adjusting with autosens")
             } else {
                 min_bg = round((min_bg - 60) / autosens_data.ratio, 0) + 60
                 max_bg = round((max_bg - 60) / autosens_data.ratio, 0) + 60
                 val new_target_bg = round((target_bg - 60) / autosens_data.ratio) + 60.0
                 if (target_bg == new_target_bg) {
-                    consoleError.add("target_bg unchanged: $new_target_bg")
+                    consoleError("target_bg unchanged: $new_target_bg")
                 } else {
-                    consoleError.add("Adjusting target_bg from $target_bg to $new_target_bg")
+                    consoleError("Adjusting target_bg from $target_bg to $new_target_bg")
                 }
                 target_bg = new_target_bg
             }
@@ -171,7 +180,7 @@ class DetermineBasalAMA @Inject constructor(
 
         val sens = round(profile.sens / autosens_data.ratio, 1)
         if (sens != profile.sens) {
-            consoleError.add("Adjusting sens from ${profile.sens} to $sens")
+            consoleError("Adjusting sens from ${profile.sens} to $sens")
         }
 
         //calculate BG impact: the amount BG "should" be rising or falling based on insulin activity alone
@@ -240,8 +249,8 @@ class DetermineBasalAMA @Inject constructor(
         //5m data points = g * (1U/10g) * (40mg/dL/1U) / (mg/dL/5m)
         cid = meal_data.mealCOB * (sens / profile.carb_ratio) / ci
         val acid: Double = meal_data.mealCOB * (sens / profile.carb_ratio) / aci
-        consoleError.add("Carb Impact: $ci mg/dL per 5m; CI Duration: ${Math.round(10 * cid / 6) / 10} hours")
-        consoleError.add("Accel. Carb Impact: $aci mg/dL per 5m; ACI Duration: ${Math.round(10 * acid / 6) / 10} hours")
+        consoleError("Carb Impact: $ci mg/dL per 5m; CI Duration: ${Math.round(10 * cid / 6) / 10} hours")
+        consoleError("Accel. Carb Impact: $aci mg/dL per 5m; ACI Duration: ${Math.round(10 * acid / 6) / 10} hours")
         var minPredBG = 999.0
         var maxPredBG = bg
         //var eventualPredBG = bg
