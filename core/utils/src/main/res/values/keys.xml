@@ -17,7 +17,6 @@
     <string name="key_virtualpump_settings" translatable="false">virtualpump_settings</string>
     <string name="key_pump_settings" translatable="false">pump_settings</string>
     <string name="key_tidepool_settings" translatable="false">tidepool_settings</string>
-    <string name="key_absorption_settings" translatable="false">absorption_settings</string>
     <string name="key_overview_settings" translatable="false">overview_settings</string>
     <string name="key_medtronic_settings" translatable="false">medtronic_settings</string>
     <string name="key_danars_settings" translatable="false">danars_settings</string>
