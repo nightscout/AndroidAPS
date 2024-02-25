@@ -187,9 +187,6 @@
     <string name="patch_pump">Patch pump</string>
 
     <!-- Overview -->
-    <string name="key_statuslights_copy_ns" translatable="false">statuslights_copy_ns</string>
-    <string name="key_statuslights_overview_advanced" translatable="false">statuslights_overview_advanced</string>
-
     <string name="show_statuslights">Show status lights on home screen</string>
     <string name="statuslights_cage_warning">Threshold warning cannula age [h]</string>
     <string name="statuslights_cage_critical">Threshold critical cannula age [h]</string>
