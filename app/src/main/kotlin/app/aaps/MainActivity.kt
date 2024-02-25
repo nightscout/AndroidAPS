@@ -313,7 +313,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     }
 
     private fun checkPluginPreferences(viewPager: ViewPager2) {
-        if (viewPager.currentItem >= 0) pluginPreferencesMenuItem?.isEnabled = (viewPager.adapter as TabPageAdapter).getPluginAt(viewPager.currentItem).preferencesId > 0
+        if (viewPager.currentItem >= 0) pluginPreferencesMenuItem?.isEnabled = (viewPager.adapter as TabPageAdapter).getPluginAt(viewPager.currentItem).preferencesId != PluginDescription.PREFERENCE_NONE
     }
 
     private fun startWizard(): Boolean =

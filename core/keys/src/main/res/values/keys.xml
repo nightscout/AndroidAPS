@@ -158,4 +158,8 @@
     <string name="key_smscommunicator_report_pump_unreachable" translatable="false">smscommunicator_report_pump_unreachable</string>
     <string name="key_smscommunicator_otp_setup" translatable="false">smscommunicator_otp_setup</string>
 
+    <!--    Overview-->
+    <string name="key_overview_quick_wizard_settings" translatable="false">overview_quickwizard_settings</string>
+    <string name="key_statuslights_copy_ns" translatable="false">statuslights_copy_ns</string>
+
 </resources>

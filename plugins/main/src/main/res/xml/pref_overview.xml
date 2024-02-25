@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
-        android:key="@string/key_overview_settings"
+        android:key="overview_settings"
         android:title="@string/overview"
         app:initialExpandedChildrenCount="0">
 
@@ -158,7 +158,7 @@
             android:title="@string/overview_show_notes_field_in_dialogs_title" />
 
         <androidx.preference.PreferenceScreen
-            android:key="@string/key_statuslights_overview_advanced"
+            android:key="statuslights_overview_advanced"
             android:title="@string/statuslights">
 
             <app.aaps.core.keys.AdaptiveSwitchPreference

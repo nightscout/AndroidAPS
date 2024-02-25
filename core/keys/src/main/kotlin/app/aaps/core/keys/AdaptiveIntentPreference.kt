@@ -13,7 +13,7 @@ class AdaptiveIntentPreference(
     ctx: Context,
     attrs: AttributeSet? = null,
     intentKey: IntentKey?,
-    intent: Intent?,
+    intent: Intent? = null,
     @StringRes summary: Int? = null,
     @StringRes title: Int? = null,
 ) : Preference(ctx, attrs) {

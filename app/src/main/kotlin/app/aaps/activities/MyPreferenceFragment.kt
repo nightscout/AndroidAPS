@@ -510,7 +510,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
                     true
                 }
                 // NSClient copy settings
-                rh.gs(app.aaps.plugins.main.R.string.key_statuslights_copy_ns) -> {
+                rh.gs(app.aaps.core.keys.R.string.key_statuslights_copy_ns) -> {
                     nsSettingStatus.copyStatusLightsNsSettings(context)
                     true
                 }

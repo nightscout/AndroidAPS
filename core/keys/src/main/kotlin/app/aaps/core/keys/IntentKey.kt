@@ -13,4 +13,6 @@ enum class IntentKey(
 
     ApsLinkToDocs(key = R.string.key_openaps_link_to_docs),
     SmsOtpSetup(key = R.string.key_smscommunicator_otp_setup, dependency = BooleanKey.SmsAllowRemoteCommands),
+    OverviewQuickWizardSettings(key = R.string.key_overview_quick_wizard_settings),
+    OverviewCopySettingsFromNs(key = R.string.key_statuslights_copy_ns, dependency = BooleanKey.OverviewShowStatusLights),
 }
