@@ -160,4 +160,6 @@
     <string name="autotune_update_local_profile_message">Oppdater %1$s profil med Autotune-profil?</string>
     <string name="autotune_revert_local_profile_message">Tilbakestill %1$s profil med inngangsprofil?</string>
     <string name="autotune_profile_invalid">Ugyldig profil</string>
+    <string name="not_available_full">Ikke tilgjengelig</string>
+    <string name="pump_disconnected">Pumpe frakoblet</string>
 </resources>
