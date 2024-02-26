@@ -22,6 +22,7 @@ import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -76,6 +77,7 @@ class AutotuneFragment : DaggerFragment() {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var instantiator: Instantiator
+    @Inject lateinit var loop: Loop
 
     private var disposable: CompositeDisposable = CompositeDisposable()
     private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
@@ -252,33 +254,37 @@ class AutotuneFragment : DaggerFragment() {
             val tunedProfile = autotunePlugin.tunedProfile
             autotunePlugin.updateProfile(tunedProfile)
             val circadian = preferences.get(BooleanKey.AutotuneCircadianIcIsf)
-            tunedProfile?.let { tunedP ->
-                tunedP.profileStore(circadian)?.let {
-                    OKDialog.showConfirmation(requireContext(),
-                                              rh.gs(app.aaps.core.ui.R.string.activate_profile) + ": " + tunedP.profileName + " ?",
-                                              {
-                                                  uel.log(
-                                                      action = Action.STORE_PROFILE,
-                                                      source = Sources.Autotune,
-                                                      value = ValueWithUnit.SimpleString(tunedP.profileName)
-                                                  )
-                                                  val now = dateUtil.now()
-                                                  profileFunction.createProfileSwitch(
-                                                      profileStore = it,
-                                                      profileName = tunedP.profileName,
-                                                      durationInMinutes = 0,
-                                                      percentage = 100,
-                                                      timeShiftInHours = 0,
-                                                      timestamp = now,
-                                                      action = Action.PROFILE_SWITCH,
-                                                      source = Sources.Autotune,
-                                                      note = "Autotune AutoSwitch",
-                                                      listValues = listOf(ValueWithUnit.SimpleString(autotunePlugin.tunedProfile!!.profileName))
-                                                  )
-                                                  rxBus.send(EventLocalProfileChanged())
-                                                  updateGui()
-                                              }
-                    )
+            if (loop.isDisconnected) {
+                activity?.let { it1 -> OKDialog.show(it1, rh.gs(R.string.not_available_full), rh.gs(R.string.pump_disconnected)) }
+            } else {
+                tunedProfile?.let { tunedP ->
+                    tunedP.profileStore(circadian)?.let {
+                        OKDialog.showConfirmation(requireContext(),
+                                                  rh.gs(app.aaps.core.ui.R.string.activate_profile) + ": " + tunedP.profileName + " ?",
+                                                  {
+                                                      uel.log(
+                                                          action = Action.STORE_PROFILE,
+                                                          source = Sources.Autotune,
+                                                          value = ValueWithUnit.SimpleString(tunedP.profileName)
+                                                      )
+                                                      val now = dateUtil.now()
+                                                      profileFunction.createProfileSwitch(
+                                                          profileStore = it,
+                                                          profileName = tunedP.profileName,
+                                                          durationInMinutes = 0,
+                                                          percentage = 100,
+                                                          timeShiftInHours = 0,
+                                                          timestamp = now,
+                                                          action = Action.PROFILE_SWITCH,
+                                                          source = Sources.Autotune,
+                                                          note = "Autotune AutoSwitch",
+                                                          listValues = listOf(ValueWithUnit.SimpleString(autotunePlugin.tunedProfile!!.profileName))
+                                                      )
+                                                      rxBus.send(EventLocalProfileChanged())
+                                                      updateGui()
+                                                  }
+                        )
+                    }
                 }
             }
         }
