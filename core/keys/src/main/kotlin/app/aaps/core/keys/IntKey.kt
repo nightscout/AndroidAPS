@@ -55,4 +55,6 @@ enum class IntKey(
     AutotuneDefaultTuneDays(R.string.key_autotune_default_tune_days, 5, 1, 30),
 
     SmsRemoteBolusDistance(R.string.key_smscommunicator_remote_bolus_min_distance, 15, 3, 60),
+
+    BgSourceRandomInterval(R.string.key_randombg_interval_min, 5, 1, 15, defaultedBySM = true)
 }

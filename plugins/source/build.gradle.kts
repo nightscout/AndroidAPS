@@ -20,6 +20,7 @@ dependencies {
     implementation(project(":core:nssdk"))
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
+    implementation(project(":core:validators"))
     implementation(project(":shared:impl"))
 
     testImplementation(Libs.AndroidX.Work.testing)

@@ -13,7 +13,6 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
@@ -30,12 +29,12 @@ import javax.inject.Singleton
 class EversensePlugin @Inject constructor(
     rh: ResourceHelper,
     aapsLogger: AAPSLogger
-) : PluginBase(
+) : AbstractBgSourcePlugin(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
         .pluginIcon(app.aaps.core.objects.R.drawable.ic_eversense)
-        .preferencesId(R.xml.pref_bgsource)
+        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .pluginName(R.string.eversense)
         .shortName(R.string.eversense_shortname)
         .description(R.string.description_source_eversense),

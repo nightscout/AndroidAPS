@@ -6,6 +6,9 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.PowerManager
 import android.os.SystemClock
+import androidx.preference.PreferenceCategory
+import androidx.preference.PreferenceManager
+import androidx.preference.PreferenceScreen
 import app.aaps.core.data.model.CA
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.IDs
@@ -22,9 +25,13 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.keys.AdaptiveSwitchPreference
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.Preferences
 import app.aaps.core.utils.isRunningTest
+import app.aaps.core.validators.AdaptiveIntPreference
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import java.security.SecureRandom
 import java.util.Calendar
@@ -41,14 +48,14 @@ class RandomBgPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     private val persistenceLayer: PersistenceLayer,
     private val virtualPump: VirtualPump,
-    private val sp: SP,
+    private val preferences: Preferences,
     private val config: Config
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
         .pluginIcon(R.drawable.ic_dice)
-        .preferencesId(R.xml.pref_randombg)
+        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .pluginName(R.string.random_bg)
         .shortName(R.string.random_bg_short)
         .preferencesVisibleInSimpleMode(false)
@@ -77,7 +84,7 @@ class RandomBgPlugin @Inject constructor(
     }
 
     private fun updateInterval() {
-        interval = sp.getInt(app.aaps.core.utils.R.string.key_randombg_interval_min, 5).toLong()
+        interval = preferences.get(IntKey.BgSourceRandomInterval).toLong()
     }
 
     private val disposable = CompositeDisposable()
@@ -142,6 +149,18 @@ class RandomBgPlugin @Inject constructor(
                 ids = IDs()
             )
             persistenceLayer.insertOrUpdateCarbs(ca, Action.TREATMENT, Sources.CarbDialog, ca.notes).blockingGet()
+        }
+    }
+
+    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context) {
+        val category = PreferenceCategory(context)
+        parent.addPreference(category)
+        category.apply {
+            key = "bg_source_upload_settings"
+            title = rh.gs(R.string.random_bg)
+            initialExpandedChildrenCount = 0
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.BgSourceUploadToNs, title = app.aaps.core.ui.R.string.do_ns_upload_title))
+            addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.BgSourceRandomInterval, title = R.string.bg_generation_interval_minutes))
         }
     }
 }

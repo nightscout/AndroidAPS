@@ -17,6 +17,7 @@ import androidx.preference.PreferenceScreen
 import androidx.preference.size
 import app.aaps.R
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -28,6 +29,7 @@ import app.aaps.core.interfaces.protection.ProtectionCheck.ProtectionType.BIOMET
 import app.aaps.core.interfaces.protection.ProtectionCheck.ProtectionType.CUSTOM_PASSWORD
 import app.aaps.core.interfaces.protection.ProtectionCheck.ProtectionType.CUSTOM_PIN
 import app.aaps.core.interfaces.protection.ProtectionCheck.ProtectionType.NONE
+import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
@@ -40,46 +42,10 @@ import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.plugins.aps.autotune.AutotunePlugin
-import app.aaps.plugins.aps.loop.LoopPlugin
-import app.aaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
-import app.aaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import app.aaps.plugins.automation.AutomationPlugin
 import app.aaps.plugins.configuration.maintenance.MaintenancePlugin
-import app.aaps.plugins.constraints.safety.SafetyPlugin
-import app.aaps.plugins.insulin.InsulinOrefFreePeakPlugin
-import app.aaps.plugins.main.general.overview.OverviewPlugin
 import app.aaps.plugins.main.general.smsCommunicator.SmsCommunicatorPlugin
-import app.aaps.plugins.sensitivity.SensitivityAAPSPlugin
-import app.aaps.plugins.sensitivity.SensitivityOref1Plugin
-import app.aaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
-import app.aaps.plugins.source.AidexPlugin
-import app.aaps.plugins.source.DexcomPlugin
-import app.aaps.plugins.source.EversensePlugin
-import app.aaps.plugins.source.GlimpPlugin
-import app.aaps.plugins.source.GlunovoPlugin
-import app.aaps.plugins.source.IntelligoPlugin
-import app.aaps.plugins.source.PoctechPlugin
-import app.aaps.plugins.source.TomatoPlugin
-import app.aaps.plugins.sync.garmin.GarminPlugin
-import app.aaps.plugins.sync.nsclient.NSClientPlugin
-import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
-import app.aaps.plugins.sync.openhumans.OpenHumansUploaderPlugin
-import app.aaps.plugins.sync.tidepool.TidepoolPlugin
-import app.aaps.plugins.sync.wear.WearPlugin
-import app.aaps.plugins.sync.xdrip.XdripPlugin
-import app.aaps.pump.danar.DanaRPlugin
-import app.aaps.pump.danarkorean.DanaRKoreanPlugin
-import app.aaps.pump.danars.DanaRSPlugin
-import app.aaps.pump.danarv2.DanaRv2Plugin
-import app.aaps.pump.equil.EquilPumpPlugin
-import app.aaps.pump.insight.InsightPlugin
-import app.aaps.pump.virtual.VirtualPumpPlugin
 import dagger.android.support.AndroidSupportInjection
-import info.nightscout.androidaps.plugins.pump.eopatch.EopatchPumpPlugin
-import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
-import info.nightscout.pump.combov2.ComboV2Plugin
-import info.nightscout.pump.diaconn.DiaconnG8Plugin
-import info.nightscout.pump.medtrum.MedtrumPlugin
 import java.math.BigDecimal
 import java.math.RoundingMode
 import javax.inject.Inject
@@ -98,50 +64,13 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var config: Config
-
-    @Inject lateinit var overviewPlugin: OverviewPlugin
-    @Inject lateinit var automationPlugin: AutomationPlugin
-    @Inject lateinit var autotunePlugin: AutotunePlugin
-    @Inject lateinit var danaRPlugin: DanaRPlugin
-    @Inject lateinit var danaRKoreanPlugin: DanaRKoreanPlugin
-    @Inject lateinit var danaRv2Plugin: DanaRv2Plugin
-    @Inject lateinit var danaRSPlugin: DanaRSPlugin
-    @Inject lateinit var combov2Plugin: ComboV2Plugin
-    @Inject lateinit var insulinOrefFreePeakPlugin: InsulinOrefFreePeakPlugin
-    @Inject lateinit var loopPlugin: LoopPlugin
-    @Inject lateinit var insightPlugin: InsightPlugin
-    @Inject lateinit var medtronicPumpPlugin: MedtronicPumpPlugin
-    @Inject lateinit var nsClientPlugin: NSClientPlugin
-    @Inject lateinit var nsClientV3Plugin: NSClientV3Plugin
-    @Inject lateinit var openAPSAMAPlugin: OpenAPSAMAPlugin
-    @Inject lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
-    @Inject lateinit var safetyPlugin: SafetyPlugin
-    @Inject lateinit var sensitivityAAPSPlugin: SensitivityAAPSPlugin
-    @Inject lateinit var sensitivityOref1Plugin: SensitivityOref1Plugin
-    @Inject lateinit var sensitivityWeightedAveragePlugin: SensitivityWeightedAveragePlugin
-    @Inject lateinit var dexcomPlugin: DexcomPlugin
-    @Inject lateinit var eversensePlugin: EversensePlugin
-    @Inject lateinit var glimpPlugin: GlimpPlugin
-    @Inject lateinit var poctechPlugin: PoctechPlugin
-    @Inject lateinit var tomatoPlugin: TomatoPlugin
-    @Inject lateinit var glunovoPlugin: GlunovoPlugin
-    @Inject lateinit var intelligoPlugin: IntelligoPlugin
-    @Inject lateinit var aidexPlugin: AidexPlugin
-    @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
-    @Inject lateinit var statusLinePlugin: XdripPlugin
-    @Inject lateinit var tidepoolPlugin: TidepoolPlugin
-    @Inject lateinit var virtualPumpPlugin: VirtualPumpPlugin
-    @Inject lateinit var wearPlugin: WearPlugin
-    @Inject lateinit var maintenancePlugin: MaintenancePlugin
-    @Inject lateinit var eopatchPumpPlugin: EopatchPumpPlugin
-    @Inject lateinit var medtrumPlugin: MedtrumPlugin
-
     @Inject lateinit var passwordCheck: PasswordCheck
     @Inject lateinit var nsSettingStatus: NSSettingsStatus
-    @Inject lateinit var openHumansUploaderPlugin: OpenHumansUploaderPlugin
-    @Inject lateinit var diaconnG8Plugin: DiaconnG8Plugin
-    @Inject lateinit var garminPlugin: GarminPlugin
-    @Inject lateinit var equilPumpPlugin: EquilPumpPlugin
+
+    @Inject lateinit var automationPlugin: AutomationPlugin
+    @Inject lateinit var autotunePlugin: AutotunePlugin
+    @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
+    @Inject lateinit var maintenancePlugin: MaintenancePlugin
 
     companion object {
 
@@ -209,49 +138,22 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         } else {
             addPreferencesFromResource(R.xml.pref_general, rootKey)
             addPreferencesFromResource(R.xml.pref_protection, rootKey)
-            addPreferencesIfEnabled(overviewPlugin, rootKey)
-            addPreferencesIfEnabled(safetyPlugin, rootKey)
-            addPreferencesIfEnabled(eversensePlugin, rootKey)
-            addPreferencesIfEnabled(dexcomPlugin, rootKey)
-            addPreferencesIfEnabled(tomatoPlugin, rootKey)
-            addPreferencesIfEnabled(glunovoPlugin, rootKey)
-            addPreferencesIfEnabled(intelligoPlugin, rootKey)
-            addPreferencesIfEnabled(poctechPlugin, rootKey)
-            addPreferencesIfEnabled(aidexPlugin, rootKey)
-            addPreferencesIfEnabled(glimpPlugin, rootKey)
-            addPreferencesIfEnabled(loopPlugin, rootKey, config.APS)
-            addPreferencesIfEnabled(openAPSAMAPlugin, rootKey, config.APS)
-            addPreferencesIfEnabled(openAPSSMBPlugin, rootKey, config.APS)
-            addPreferencesIfEnabled(sensitivityAAPSPlugin, rootKey)
-            addPreferencesIfEnabled(sensitivityWeightedAveragePlugin, rootKey)
-            addPreferencesIfEnabled(sensitivityOref1Plugin, rootKey)
-            addPreferencesIfEnabled(danaRPlugin, rootKey, config.PUMPDRIVERS)
-            addPreferencesIfEnabled(danaRKoreanPlugin, rootKey, config.PUMPDRIVERS)
-            addPreferencesIfEnabled(danaRv2Plugin, rootKey, config.PUMPDRIVERS)
-            addPreferencesIfEnabled(danaRSPlugin, rootKey, config.PUMPDRIVERS)
-            addPreferencesIfEnabled(insightPlugin, rootKey, config.PUMPDRIVERS)
-            addPreferencesIfEnabled(combov2Plugin, rootKey, config.PUMPDRIVERS)
-            addPreferencesIfEnabled(medtronicPumpPlugin, rootKey, config.PUMPDRIVERS)
-            addPreferencesIfEnabled(diaconnG8Plugin, rootKey, config.PUMPDRIVERS)
-            addPreferencesIfEnabled(eopatchPumpPlugin, rootKey, config.PUMPDRIVERS)
-            addPreferencesIfEnabled(medtrumPlugin, rootKey, config.PUMPDRIVERS)
-            addPreferencesIfEnabled(equilPumpPlugin, rootKey, config.PUMPDRIVERS)
-            addPreferencesFromResource(R.xml.pref_pump, rootKey, config.PUMPDRIVERS)
-            addPreferencesIfEnabled(virtualPumpPlugin, rootKey)
-            addPreferencesIfEnabled(insulinOrefFreePeakPlugin, rootKey)
-            addPreferencesIfEnabled(nsClientPlugin, rootKey)
-            addPreferencesIfEnabled(nsClientV3Plugin, rootKey)
-            addPreferencesIfEnabled(tidepoolPlugin, rootKey)
+            addPreferencesIfEnabled(activePlugin.activeOverview as PluginBase, rootKey)
+            addPreferencesIfEnabled(activePlugin.activeSafety as PluginBase, rootKey)
+            addPreferencesIfEnabled(activePlugin.activeBgSource as PluginBase, rootKey)
+            activePlugin.getSpecificPluginsList(PluginType.LOOP).forEach { addPreferencesIfEnabled(it, rootKey, config.APS) }
+            addPreferencesIfEnabled(activePlugin.activeAPS as PluginBase, rootKey, config.APS)
+            addPreferencesIfEnabled(activePlugin.activeSensitivity as PluginBase, rootKey)
+            addPreferencesIfEnabled(activePlugin.activePump as PluginBase, rootKey)
+            addPreferencesFromResource(R.xml.pref_pump, rootKey, config.PUMPDRIVERS && activePlugin.activePump::class.java.name != VirtualPump::class.java.name)
+            addPreferencesIfEnabled(activePlugin.activeInsulin as PluginBase, rootKey)
+            activePlugin.getSpecificPluginsList(PluginType.SYNC).forEach { addPreferencesIfEnabled(it, rootKey) }
             addPreferencesIfEnabled(smsCommunicatorPlugin, rootKey)
             addPreferencesIfEnabled(automationPlugin, rootKey)
             addPreferencesIfEnabled(autotunePlugin, rootKey)
-            addPreferencesIfEnabled(wearPlugin, rootKey)
-            addPreferencesIfEnabled(statusLinePlugin, rootKey)
             addPreferencesFromResource(R.xml.pref_alerts, rootKey)
-            addPreferencesFromResource(app.aaps.plugins.configuration.R.xml.pref_datachoices, rootKey)
             addPreferencesIfEnabled(maintenancePlugin, rootKey)
-            addPreferencesIfEnabled(openHumansUploaderPlugin, rootKey)
-            addPreferencesIfEnabled(garminPlugin, rootKey)
+            addPreferencesFromResource(app.aaps.plugins.configuration.R.xml.pref_datachoices, rootKey)
         }
         initSummary(preferenceScreen, pluginName != null)
         preprocessPreferences()
@@ -472,51 +374,51 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     // to hash password while it is saved and never have to show it, even hashed
 
     override fun onPreferenceTreeClick(preference: Preference): Boolean =
-            when (preference.key) {
-                rh.gs(app.aaps.core.utils.R.string.key_master_password)        -> {
-                    passwordCheck.queryPassword(requireContext(), app.aaps.plugins.configuration.R.string.current_master_password, app.aaps.core.utils.R.string.key_master_password, {
-                        passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.master_password, app.aaps.core.utils.R.string.key_master_password)
-                    })
-                    true
-                }
-
-                rh.gs(app.aaps.core.utils.R.string.key_settings_password)      -> {
-                    passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.settings_password, app.aaps.core.utils.R.string.key_settings_password)
-                    true
-                }
-
-                rh.gs(app.aaps.core.utils.R.string.key_bolus_password)         -> {
-                    passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.bolus_password, app.aaps.core.utils.R.string.key_bolus_password)
-                    true
-                }
-
-                rh.gs(app.aaps.core.utils.R.string.key_application_password)   -> {
-                    passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.application_password, app.aaps.core.utils.R.string.key_application_password)
-                    true
-                }
-
-                rh.gs(app.aaps.core.utils.R.string.key_settings_pin)           -> {
-                    passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.settings_pin, app.aaps.core.utils.R.string.key_settings_pin, pinInput = true)
-                    true
-                }
-
-                rh.gs(app.aaps.core.utils.R.string.key_bolus_pin)              -> {
-                    passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.bolus_pin, app.aaps.core.utils.R.string.key_bolus_pin, pinInput = true)
-                    true
-                }
-
-                rh.gs(app.aaps.core.utils.R.string.key_application_pin)        -> {
-                    passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.application_pin, app.aaps.core.utils.R.string.key_application_pin, pinInput = true)
-                    true
-                }
-                // NSClient copy settings
-                rh.gs(app.aaps.core.keys.R.string.key_statuslights_copy_ns) -> {
-                    nsSettingStatus.copyStatusLightsNsSettings(context)
-                    true
-                }
-
-                else                                                           -> super.onPreferenceTreeClick(preference)
+        when (preference.key) {
+            rh.gs(app.aaps.core.utils.R.string.key_master_password)      -> {
+                passwordCheck.queryPassword(requireContext(), app.aaps.plugins.configuration.R.string.current_master_password, app.aaps.core.utils.R.string.key_master_password, {
+                    passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.master_password, app.aaps.core.utils.R.string.key_master_password)
+                })
+                true
             }
+
+            rh.gs(app.aaps.core.utils.R.string.key_settings_password)    -> {
+                passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.settings_password, app.aaps.core.utils.R.string.key_settings_password)
+                true
+            }
+
+            rh.gs(app.aaps.core.utils.R.string.key_bolus_password)       -> {
+                passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.bolus_password, app.aaps.core.utils.R.string.key_bolus_password)
+                true
+            }
+
+            rh.gs(app.aaps.core.utils.R.string.key_application_password) -> {
+                passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.application_password, app.aaps.core.utils.R.string.key_application_password)
+                true
+            }
+
+            rh.gs(app.aaps.core.utils.R.string.key_settings_pin)         -> {
+                passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.settings_pin, app.aaps.core.utils.R.string.key_settings_pin, pinInput = true)
+                true
+            }
+
+            rh.gs(app.aaps.core.utils.R.string.key_bolus_pin)            -> {
+                passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.bolus_pin, app.aaps.core.utils.R.string.key_bolus_pin, pinInput = true)
+                true
+            }
+
+            rh.gs(app.aaps.core.utils.R.string.key_application_pin)      -> {
+                passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.application_pin, app.aaps.core.utils.R.string.key_application_pin, pinInput = true)
+                true
+            }
+            // NSClient copy settings
+            rh.gs(app.aaps.core.keys.R.string.key_statuslights_copy_ns)  -> {
+                nsSettingStatus.copyStatusLightsNsSettings(context)
+                true
+            }
+
+            else                                                         -> super.onPreferenceTreeClick(preference)
+        }
 
     fun setFilter(filter: String) {
         this.filter = filter

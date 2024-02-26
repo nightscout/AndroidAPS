@@ -18,7 +18,6 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
@@ -39,12 +38,12 @@ class IntelligoPlugin @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     private val dateUtil: DateUtil,
     private val fabricPrivacy: FabricPrivacy
-) : PluginBase(
+) : AbstractBgSourcePlugin(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_intelligo)
-        .preferencesId(R.xml.pref_bgsource)
+        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .pluginName(R.string.intelligo)
         .shortName(R.string.intelligo)
         .preferencesVisibleInSimpleMode(false)

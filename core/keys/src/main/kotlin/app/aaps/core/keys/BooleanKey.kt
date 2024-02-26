@@ -28,7 +28,7 @@ enum class BooleanKey(
     OverviewUseBolusReminder(R.string.key_use_bolus_reminder, true, defaultedBySM = true),
     OverviewUseSuperBolus(R.string.key_use_superbolus, false, defaultedBySM = true, hideParentScreenIfHidden = true),
     BgSourceUploadToNs(R.string.key_do_bg_ns_upload, true, defaultedBySM = true, hideParentScreenIfHidden = true),
-    DexcomCreateSensorChange(R.string.key_dexcom_log_ns_sensor_change, true, defaultedBySM = true),
+    BgSourceCreateSensorChange(R.string.key_dexcom_log_ns_sensor_change, true, defaultedBySM = true),
     ApsUseDynamicSensitivity(R.string.key_use_dynamic_sensitivity, false),
     ApsUseAutosens(R.string.key_openaps_use_autosens, true, defaultedBySM = true, negativeDependency = ApsUseDynamicSensitivity), // change from default false
     ApsUseSmb(R.string.key_openaps_use_smb, true, defaultedBySM = true), // change from default false

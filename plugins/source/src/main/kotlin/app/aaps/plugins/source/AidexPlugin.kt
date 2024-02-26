@@ -14,7 +14,6 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.receivers.Intents
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -30,12 +29,12 @@ class AidexPlugin @Inject constructor(
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     private val config: Config
-) : PluginBase(
+) : AbstractBgSourcePlugin(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
         .pluginIcon((app.aaps.core.objects.R.drawable.ic_blooddrop_48))
-        .preferencesId(R.xml.pref_bgsource)
+        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .pluginName(R.string.aidex)
         .shortName(R.string.aidex_short)
         .preferencesVisibleInSimpleMode(false)

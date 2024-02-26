@@ -71,6 +71,7 @@
     <!--    BG source-->
     <string name="key_do_bg_ns_upload" translatable="false">dexcomg5_nsupload</string>
     <string name="key_dexcom_log_ns_sensor_change" translatable="false">dexcom_lognssensorchange</string>
+    <string name="key_randombg_interval_min" translatable="false">randombg_interval_min</string>
 
     <!--    Loop-->
     <string name="key_loop_open_mode_min_change" translatable="false">loop_openmode_min_change</string>
