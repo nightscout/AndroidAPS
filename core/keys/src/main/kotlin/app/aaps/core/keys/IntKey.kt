@@ -2,19 +2,19 @@ package app.aaps.core.keys
 
 enum class IntKey(
     override val key: Int,
-    val defaultValue: Int,
-    val min: Int,
-    val max: Int,
+    override val defaultValue: Int,
+    override val min: Int,
+    override val max: Int,
     override val defaultedBySM: Boolean = false,
-    val calculatedDefaultValue: Boolean = false,
+    override val calculatedDefaultValue: Boolean = false,
     override val showInApsMode: Boolean = true,
     override val showInNsClientMode: Boolean = true,
     override val showInPumpControlMode: Boolean = true,
-    override val dependency: BooleanKey? = null,
-    override val negativeDependency: BooleanKey? = null,
+    override val dependency: BooleanPreferenceKey? = null,
+    override val negativeDependency: BooleanPreferenceKey? = null,
     override val hideParentScreenIfHidden: Boolean = false,
-    val engineeringModeOnly: Boolean = false
-) : PreferenceKey {
+    override val engineeringModeOnly: Boolean = false
+) : IntPreferenceKey {
 
     OverviewCarbsButtonIncrement1(R.string.key_carbs_button_increment_1, 5, -50, 50, defaultedBySM = true),
     OverviewCarbsButtonIncrement2(R.string.key_carbs_button_increment_2, 10, -50, 50, defaultedBySM = true),

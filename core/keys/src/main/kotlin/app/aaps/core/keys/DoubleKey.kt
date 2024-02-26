@@ -2,18 +2,18 @@ package app.aaps.core.keys
 
 enum class DoubleKey(
     override val key: Int,
-    val defaultValue: Double,
-    val min: Double,
-    val max: Double,
+    override val defaultValue: Double,
+    override val min: Double,
+    override val max: Double,
     override val defaultedBySM: Boolean = false,
-    val calculatedBySM: Boolean = false,
+    override val calculatedBySM: Boolean = false,
     override val showInApsMode: Boolean = true,
     override val showInNsClientMode: Boolean = true,
     override val showInPumpControlMode: Boolean = true,
-    override val dependency: BooleanKey? = null,
-    override val negativeDependency: BooleanKey? = null,
+    override val dependency: BooleanPreferenceKey? = null,
+    override val negativeDependency: BooleanPreferenceKey? = null,
     override val hideParentScreenIfHidden: Boolean = false
-) : PreferenceKey {
+) : DoublePreferenceKey {
 
     OverviewInsulinButtonIncrement1(R.string.key_insulin_button_increment_1, 0.5, -5.0, 5.0, defaultedBySM = true, dependency = BooleanKey.OverviewShowInsulinButton),
     OverviewInsulinButtonIncrement2(R.string.key_insulin_button_increment_2, 1.0, -5.0, 5.0, defaultedBySM = true, dependency = BooleanKey.OverviewShowInsulinButton),

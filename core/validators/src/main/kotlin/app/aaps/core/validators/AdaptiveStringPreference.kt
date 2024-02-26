@@ -9,14 +9,14 @@ import androidx.preference.EditTextPreference
 import androidx.preference.PreferenceViewHolder
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.keys.Preferences
-import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.StringPreferenceKey
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
 class AdaptiveStringPreference(
     ctx: Context,
     attrs: AttributeSet? = null,
-    stringKey: StringKey? = null,
+    stringKey: StringPreferenceKey? = null,
     @StringRes dialogMessage: Int? = null,
     @StringRes summary: Int? = null,
     @StringRes title: Int?,
@@ -25,7 +25,7 @@ class AdaptiveStringPreference(
 
     private val validatorParameters: DefaultEditTextValidator.Parameters
     private var validator: DefaultEditTextValidator? = null
-    private val preferenceKey: StringKey
+    private val preferenceKey: StringPreferenceKey
 
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var preferences: Preferences
@@ -43,7 +43,7 @@ class AdaptiveStringPreference(
         title?.let { dialogTitle = context.getString(it) }
         title?.let { this.title = context.getString(it) }
 
-        preferenceKey = stringKey ?: preferences.get(key) as StringKey
+        preferenceKey = stringKey ?: preferences.get(key) as StringPreferenceKey
         if (preferences.simpleMode && preferenceKey.defaultedBySM) {
             isVisible = false; isEnabled = false
         }

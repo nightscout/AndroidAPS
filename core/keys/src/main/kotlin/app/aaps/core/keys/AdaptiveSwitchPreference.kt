@@ -11,7 +11,7 @@ import javax.inject.Inject
 class AdaptiveSwitchPreference(
     ctx: Context,
     attrs: AttributeSet? = null,
-    booleanKey: BooleanKey?,
+    booleanKey: BooleanPreferenceKey?,
     @StringRes summary: Int? = null,
     @StringRes title: Int?
 ) : SwitchPreference(ctx, attrs) {
@@ -29,7 +29,7 @@ class AdaptiveSwitchPreference(
         summary?.let { setSummary(it) }
         title?.let { this.title = context.getString(it) }
 
-        val preferenceKey = booleanKey ?: preferences.get(key) as BooleanKey
+        val preferenceKey = booleanKey ?: preferences.get(key) as BooleanPreferenceKey
         if (preferences.simpleMode && preferenceKey.defaultedBySM) isVisible = false
         if (preferences.apsMode && !preferenceKey.showInApsMode) {
             isVisible = false; isEnabled = false
@@ -54,7 +54,7 @@ class AdaptiveSwitchPreference(
     override fun onAttached() {
         super.onAttached()
         // PreferenceScreen is final so we cannot extend and modify behavior
-        val preferenceKey = preferences.get(key) as BooleanKey
+        val preferenceKey = preferences.get(key) as BooleanPreferenceKey
         if (preferenceKey.hideParentScreenIfHidden) {
             parent?.isVisible = isVisible
             parent?.isEnabled = isEnabled

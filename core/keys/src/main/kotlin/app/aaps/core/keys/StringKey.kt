@@ -2,15 +2,15 @@ package app.aaps.core.keys
 
 enum class StringKey(
     override val key: Int,
-    val defaultValue: String,
+    override val defaultValue: String,
     override val defaultedBySM: Boolean = false,
     override val showInApsMode: Boolean = true,
     override val showInNsClientMode: Boolean = true,
     override val showInPumpControlMode: Boolean = true,
-    override val dependency: BooleanKey? = null,
-    override val negativeDependency: BooleanKey? = null,
+    override val dependency: BooleanPreferenceKey? = null,
+    override val negativeDependency: BooleanPreferenceKey? = null,
     override val hideParentScreenIfHidden: Boolean = false
-) : PreferenceKey {
+) : StringPreferenceKey {
 
     GeneralUnits(R.string.key_units, "mg/dl"),
     GeneralLanguage(R.string.key_language, "default", defaultedBySM = true),

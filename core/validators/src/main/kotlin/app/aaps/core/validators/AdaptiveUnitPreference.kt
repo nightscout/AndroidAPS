@@ -10,21 +10,21 @@ import androidx.preference.PreferenceViewHolder
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.keys.Preferences
-import app.aaps.core.keys.UnitDoubleKey
+import app.aaps.core.keys.UnitDoublePreferenceKey
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
 class AdaptiveUnitPreference(
     ctx: Context,
     attrs: AttributeSet? = null,
-    unitKey: UnitDoubleKey? = null,
+    unitKey: UnitDoublePreferenceKey? = null,
     @StringRes dialogMessage: Int? = null,
     @StringRes title: Int?,
 ) : EditTextPreference(ctx, attrs) {
 
     private val validatorParameters: DefaultEditTextValidator.Parameters
     private var validator: DefaultEditTextValidator? = null
-    private val preferenceKey: UnitDoubleKey
+    private val preferenceKey: UnitDoublePreferenceKey
 
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var preferences: Preferences
@@ -41,7 +41,7 @@ class AdaptiveUnitPreference(
         title?.let { dialogTitle = context.getString(it) }
         title?.let { this.title = context.getString(it) }
 
-        preferenceKey = unitKey ?: preferences.get(key) as UnitDoubleKey
+        preferenceKey = unitKey ?: preferences.get(key) as UnitDoublePreferenceKey
         if (preferences.simpleMode && preferenceKey.defaultedBySM) isVisible = false
         if (preferences.apsMode && !preferenceKey.showInApsMode) {
             isVisible = false; isEnabled = false

@@ -2,17 +2,17 @@ package app.aaps.core.keys
 
 enum class UnitDoubleKey(
     override val key: Int,
-    val defaultValue: Double,
-    val minMgdl: Int,
-    val maxMgdl: Int,
+    override val defaultValue: Double,
+    override val minMgdl: Int,
+    override val maxMgdl: Int,
     override val defaultedBySM: Boolean = false,
     override val showInApsMode: Boolean = true,
     override val showInNsClientMode: Boolean = true,
     override val showInPumpControlMode: Boolean = true,
-    override val dependency: BooleanKey? = null,
-    override val negativeDependency: BooleanKey? = null,
+    override val dependency: BooleanPreferenceKey? = null,
+    override val negativeDependency: BooleanPreferenceKey? = null,
     override val hideParentScreenIfHidden: Boolean = false
-) : PreferenceKey {
+) : UnitDoublePreferenceKey {
 
     OverviewEatingSoonTarget(R.string.key_eating_soon_target, 90.0, 72, 160, defaultedBySM = true),
     OverviewActivityTarget(R.string.key_activity_target, 140.0, 108, 180, defaultedBySM = true),

@@ -11,7 +11,7 @@ import javax.inject.Inject
 open class AdaptiveListPreference(
     ctx: Context,
     attrs: AttributeSet? = null,
-    stringKey: StringKey?,
+    stringKey: StringPreferenceKey?,
     @StringRes title: Int?,
     @StringRes summary: Int? = null,
     entries: Array<CharSequence>? = null,
@@ -33,7 +33,7 @@ open class AdaptiveListPreference(
         entries?.let { setEntries(it)}
         entryValues?.let { setEntryValues(it)}
 
-        val preferenceKey = stringKey ?: preferences.get(key) as StringKey
+        val preferenceKey = stringKey ?: preferences.get(key) as StringPreferenceKey
         if (preferences.simpleMode && preferenceKey.defaultedBySM) isVisible = false
         if (preferences.apsMode && !preferenceKey.showInApsMode) {
             isVisible = false; isEnabled = false
@@ -58,7 +58,7 @@ open class AdaptiveListPreference(
     override fun onAttached() {
         super.onAttached()
         // PreferenceScreen is final so we cannot extend and modify behavior
-        val preferenceKey = preferences.get(key) as StringKey
+        val preferenceKey = preferences.get(key) as StringPreferenceKey
         if (preferenceKey.hideParentScreenIfHidden) {
             parent?.isVisible = isVisible
             parent?.isEnabled = isEnabled

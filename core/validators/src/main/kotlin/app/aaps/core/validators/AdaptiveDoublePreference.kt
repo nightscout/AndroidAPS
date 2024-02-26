@@ -9,7 +9,7 @@ import androidx.preference.EditTextPreference
 import androidx.preference.PreferenceViewHolder
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.SafeParse
-import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.DoublePreferenceKey
 import app.aaps.core.keys.Preferences
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
@@ -17,14 +17,14 @@ import javax.inject.Inject
 class AdaptiveDoublePreference(
     ctx: Context,
     attrs: AttributeSet? = null,
-    doubleKey: DoubleKey? = null,
+    doubleKey: DoublePreferenceKey? = null,
     @StringRes dialogMessage: Int? = null,
     @StringRes title: Int?,
 ) : EditTextPreference(ctx, attrs) {
 
     private val validatorParameters: DefaultEditTextValidator.Parameters
     private var validator: DefaultEditTextValidator? = null
-    private val preferenceKey: DoubleKey
+    private val preferenceKey: DoublePreferenceKey
 
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var preferences: Preferences
@@ -41,7 +41,7 @@ class AdaptiveDoublePreference(
         title?.let { dialogTitle = context.getString(it) }
         title?.let { this.title = context.getString(it) }
 
-        preferenceKey = doubleKey ?: preferences.get(key) as DoubleKey
+        preferenceKey = doubleKey ?: preferences.get(key) as DoublePreferenceKey
         if (preferences.simpleMode && (preferenceKey.defaultedBySM || preferenceKey.calculatedBySM)) {
             isVisible = false; isEnabled = false
         }
