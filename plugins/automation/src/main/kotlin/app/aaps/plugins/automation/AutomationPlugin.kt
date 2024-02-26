@@ -511,7 +511,8 @@ class AutomationPlugin @Inject constructor(
         removeIfExists(event)
     }
 
-    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context) {
+    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
+        if (requiredKey != null) return
         val entries = arrayOf<CharSequence>(
             rh.gs(R.string.use_passive_location),
             rh.gs(R.string.use_network_location),

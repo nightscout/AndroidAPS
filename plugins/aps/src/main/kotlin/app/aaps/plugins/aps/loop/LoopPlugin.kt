@@ -807,7 +807,8 @@ class LoopPlugin @Inject constructor(
         )
     }
 
-    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context) {
+    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
+        if (requiredKey != null) return
         val category = PreferenceCategory(context)
         parent.addPreference(category)
         category.apply {
@@ -830,6 +831,7 @@ class LoopPlugin @Inject constructor(
         ApsMode.OPEN.name,
         ApsMode.LGS.name,
     )
+
     companion object {
 
         private const val CHANNEL_ID = "AAPS-OpenLoop"

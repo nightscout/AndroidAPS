@@ -235,7 +235,8 @@ class SensitivityOref1Plugin @Inject constructor(
         return value
     }
 
-    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context) {
+    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
+        if (requiredKey != null && requiredKey != "absorption_oref1_advanced") return
         val category = PreferenceCategory(context)
         parent.addPreference(category)
         category.apply {

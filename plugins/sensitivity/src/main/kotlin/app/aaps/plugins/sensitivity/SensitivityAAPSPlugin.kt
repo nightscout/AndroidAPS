@@ -163,7 +163,8 @@ class SensitivityAAPSPlugin @Inject constructor(
             .store(DoubleKey.AbsorptionMaxTime, preferences, rh)
     }
 
-    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context) {
+    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
+        if (requiredKey != null && requiredKey != "absorption_aaps_advanced") return
         val category = PreferenceCategory(context)
         parent.addPreference(category)
         category.apply {

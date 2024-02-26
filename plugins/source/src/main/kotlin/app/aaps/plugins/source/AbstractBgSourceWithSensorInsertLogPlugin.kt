@@ -18,11 +18,12 @@ abstract class AbstractBgSourceWithSensorInsertLogPlugin(
     rh: ResourceHelper
 ) : PluginBase(pluginDescription, aapsLogger, rh), BgSource {
 
-    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context) {
+    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
+        if (requiredKey != null) return
         val category = PreferenceCategory(context)
         parent.addPreference(category)
         category.apply {
-            key = "bg_source_upload_settings"
+            key = "bg_source_with_sensor_upload_settings"
             title = rh.gs(R.string.bgsource_upload)
             initialExpandedChildrenCount = 0
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.BgSourceUploadToNs, title = app.aaps.core.ui.R.string.do_ns_upload_title))

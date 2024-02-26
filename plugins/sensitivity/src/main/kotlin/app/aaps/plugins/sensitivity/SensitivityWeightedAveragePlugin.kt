@@ -181,12 +181,11 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
             .store(DoubleKey.AbsorptionMaxTime, preferences, rh)
             .store(IntKey.AutosensPeriod, preferences, rh)
 
-
     }
 
-    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context) {
+    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
         // Share with SensitivityAAPSPlugin
         val aapsPlugin = activePlugin.getPluginsList().firstOrNull { it::class == SensitivityAAPSPlugin::class } ?: return
-        aapsPlugin.addPreferenceScreen(preferenceManager, parent, context)
+        aapsPlugin.addPreferenceScreen(preferenceManager, parent, context, requiredKey)
     }
 }

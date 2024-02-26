@@ -1280,7 +1280,8 @@ class SmsCommunicatorPlugin @Inject constructor(
             else           -> rh.gs(app.aaps.core.ui.R.string.unknown)
         }
 
-    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context) {
+    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
+        if (requiredKey != null) return
         val category = PreferenceCategory(context)
         parent.addPreference(category)
         category.apply {

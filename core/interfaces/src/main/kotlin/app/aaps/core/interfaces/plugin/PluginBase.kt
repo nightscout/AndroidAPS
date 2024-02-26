@@ -127,5 +127,5 @@ abstract class PluginBase(
      *
      * Plugin can provide either this method or [preferencesId] XML
      */
-    open fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context) {}
+    open fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {}
 }
