@@ -99,7 +99,7 @@ class LoopPluginTest : TestBaseWithProfile() {
     @Test
     fun preferenceScreenTest() {
         val screen = preferenceManager.createPreferenceScreen(context)
-        loopPlugin.addPreferenceScreen(preferenceManager, screen, context)
+        loopPlugin.addPreferenceScreen(preferenceManager, screen, context, null)
         assertThat(screen.preferenceCount).isGreaterThan(0)
     }
 

@@ -1191,7 +1191,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     @Test
     fun preferenceScreenTest() {
         val screen = preferenceManager.createPreferenceScreen(context)
-        smsCommunicatorPlugin.addPreferenceScreen(preferenceManager, screen, context)
+        smsCommunicatorPlugin.addPreferenceScreen(preferenceManager, screen, context, null)
         assertThat(screen.preferenceCount).isGreaterThan(0)
     }
 }

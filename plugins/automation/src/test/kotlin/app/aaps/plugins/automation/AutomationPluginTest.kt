@@ -39,7 +39,7 @@ class AutomationPluginTest : TestBaseWithProfile() {
     @Test
     fun preferenceScreenTest() {
         val screen = preferenceManager.createPreferenceScreen(context)
-        automationPlugin.addPreferenceScreen(preferenceManager, screen, context)
+        automationPlugin.addPreferenceScreen(preferenceManager, screen, context, null)
         assertThat(screen.preferenceCount).isGreaterThan(0)
     }
 }

@@ -65,7 +65,7 @@ class SensitivityWeightedAveragePluginTest : TestBaseWithProfile() {
     @Test
     fun preferenceScreenTest() {
         val screen = preferenceManager.createPreferenceScreen(context)
-        sensitivityWeightedAveragePlugin.addPreferenceScreen(preferenceManager, screen, context)
+        sensitivityWeightedAveragePlugin.addPreferenceScreen(preferenceManager, screen, context, null)
         assertThat(screen.preferenceCount).isGreaterThan(0)
     }
 }

@@ -45,7 +45,7 @@ class AutotunePluginTest : TestBaseWithProfile() {
     @Test
     fun preferenceScreenTest() {
         val screen = preferenceManager.createPreferenceScreen(context)
-        autotunePlugin.addPreferenceScreen(preferenceManager, screen, context)
+        autotunePlugin.addPreferenceScreen(preferenceManager, screen, context, null)
         assertThat(screen.preferenceCount).isGreaterThan(0)
     }
 }

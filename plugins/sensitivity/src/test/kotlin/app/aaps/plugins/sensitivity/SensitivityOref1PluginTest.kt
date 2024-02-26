@@ -60,7 +60,7 @@ class SensitivityOref1PluginTest : TestBaseWithProfile() {
     @Test
     fun preferenceScreenTest() {
         val screen = preferenceManager.createPreferenceScreen(context)
-        sensitivityOref1Plugin.addPreferenceScreen(preferenceManager, screen, context)
+        sensitivityOref1Plugin.addPreferenceScreen(preferenceManager, screen, context, null)
         assertThat(screen.preferenceCount).isGreaterThan(0)
     }
 }

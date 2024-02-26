@@ -73,7 +73,7 @@ class OverviewPluginTest : TestBaseWithProfile() {
     @Test
     fun preferenceScreenTest() {
         val screen = preferenceManager.createPreferenceScreen(context)
-        overviewPlugin.addPreferenceScreen(preferenceManager, screen, context)
+        overviewPlugin.addPreferenceScreen(preferenceManager, screen, context, null)
         assertThat(screen.preferenceCount).isGreaterThan(0)
     }
 }

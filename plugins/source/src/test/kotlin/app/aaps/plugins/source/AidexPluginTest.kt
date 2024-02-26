@@ -32,7 +32,7 @@ class AidexPluginTest : TestBaseWithProfile() {
     @Test
     fun preferenceScreenTest() {
         val screen = preferenceManager.createPreferenceScreen(context)
-        aidexPlugin.addPreferenceScreen(preferenceManager, screen, context)
+        aidexPlugin.addPreferenceScreen(preferenceManager, screen, context, null)
         assertThat(screen.preferenceCount).isGreaterThan(0)
     }
 }

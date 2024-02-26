@@ -43,7 +43,7 @@ class RandomBgPluginTest : TestBaseWithProfile() {
     @Test
     fun preferenceScreenTest() {
         val screen = preferenceManager.createPreferenceScreen(context)
-        randomBgPlugin.addPreferenceScreen(preferenceManager, screen, context)
+        randomBgPlugin.addPreferenceScreen(preferenceManager, screen, context, null)
         assertThat(screen.preferenceCount).isGreaterThan(0)
     }
 }

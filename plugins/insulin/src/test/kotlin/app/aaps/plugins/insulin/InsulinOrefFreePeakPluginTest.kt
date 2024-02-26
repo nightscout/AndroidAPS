@@ -67,7 +67,7 @@ class InsulinOrefFreePeakPluginTest : TestBaseWithProfile() {
     @Test
     fun preferenceScreenTest() {
         val screen = preferenceManager.createPreferenceScreen(context)
-        sut.addPreferenceScreen(preferenceManager, screen, context)
+        sut.addPreferenceScreen(preferenceManager, screen, context, null)
         assertThat(screen.preferenceCount).isGreaterThan(0)
     }
 }

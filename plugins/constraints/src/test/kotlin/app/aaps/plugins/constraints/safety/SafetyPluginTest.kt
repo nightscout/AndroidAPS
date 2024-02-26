@@ -330,7 +330,7 @@ Safety: Limiting max basal rate to 500.00 U/h because of pump limit
     @Test
     fun preferenceScreenTest() {
         val screen = preferenceManager.createPreferenceScreen(context)
-        safetyPlugin.addPreferenceScreen(preferenceManager, screen, context)
+        safetyPlugin.addPreferenceScreen(preferenceManager, screen, context, null)
         assertThat(screen.preferenceCount).isGreaterThan(0)
     }
 }

@@ -72,7 +72,7 @@ class OpenAPSAMAPluginTest : TestBaseWithProfile() {
     @Test
     fun preferenceScreenTest() {
         val screen = preferenceManager.createPreferenceScreen(context)
-        openAPSAMAPlugin.addPreferenceScreen(preferenceManager, screen, context)
+        openAPSAMAPlugin.addPreferenceScreen(preferenceManager, screen, context, null)
         assertThat(screen.preferenceCount).isGreaterThan(0)
     }
 }

@@ -60,7 +60,7 @@ class SensitivityAAPSPluginTest : TestBaseWithProfile() {
     @Test
     fun preferenceScreenTest() {
         val screen = preferenceManager.createPreferenceScreen(context)
-        sensitivityAAPSPlugin.addPreferenceScreen(preferenceManager, screen, context)
+        sensitivityAAPSPlugin.addPreferenceScreen(preferenceManager, screen, context, null)
         assertThat(screen.preferenceCount).isGreaterThan(0)
     }
 }
