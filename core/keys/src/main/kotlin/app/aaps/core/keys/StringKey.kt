@@ -24,4 +24,6 @@ enum class StringKey(
 
     SmsAllowedNumbers(R.string.key_smscommunicator_allowednumbers, ""),
     SmsOtpPassword(R.string.key_smscommunicator_otp_password, "", dependency = BooleanKey.SmsAllowRemoteCommands),
+
+    VirtualPumpType(R.string.key_virtual_pump_type, "Generic AAPS"),
 }

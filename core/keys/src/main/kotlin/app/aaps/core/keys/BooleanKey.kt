@@ -53,4 +53,6 @@ enum class BooleanKey(
 
     SmsAllowRemoteCommands(R.string.key_smscommunicator_remote_commands_allowed, false),
     SmsReportPumpUnreachable(R.string.key_smscommunicator_report_pump_unreachable, true),
+
+    VirtualPumpStatusUpload(R.string.key_virtual_pump_upload_status, false, showInNsClientMode = false),
 }

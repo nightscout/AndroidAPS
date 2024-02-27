@@ -6,7 +6,6 @@
     <string name="key_btwatchdog" translatable="false">bt_watchdog</string>
     <string name="key_btwatchdog_lastbark" translatable="false">bt_watchdog_last</string>
     <string name="key_gradually_increase_notification_volume" translatable="false">gradually_increase_notification_volume</string>
-    <string name="key_virtualpump_type" translatable="false">virtualpump_type</string>
     <string name="key_quickwizard" translatable="false">QuickWizard</string>
     <string name="key_wear_control" translatable="false">wearcontrol</string>
     <string name="key_units_mgdl" translatable="false">units_mgdl</string>
@@ -88,7 +87,6 @@
     <string name="key_ObjectivesmanualEnacts" translatable="false">ObjectivesmanualEnacts</string>
     <string name="key_objectiveuseactions" translatable="false">ObjectivesActionsUsed</string>
     <string name="key_objectiveusescale" translatable="false">ObjectivesScaleUsed</string>
-    <string name="key_virtual_pump_upload_status" translatable="false">virtualpump_uploadstatus</string>
     <string name="key_used_autosens_on_main_phone" translatable="false">used_autosens_on_main_phone</string>
 
 </resources>
