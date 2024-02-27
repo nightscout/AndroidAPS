@@ -204,4 +204,16 @@
     <string name="old_warning">!oud!</string>
     <string name="error">!fout!</string>
     <string name="pref_heartRateSampling">Hartslag</string>
+    <string name="tile_tempt_1">Tijdelijk Streefdoel 1</string>
+    <string name="tile_tempt_2">Tijdelijk Streefdoel 2</string>
+    <string name="tile_tempt_3">Tijdelijk Streefdoel 3</string>
+    <string name="tile_tempt_4">Tijdelijk Streefdoel 4</string>
+    <string name="tile_action_1">Actie 1</string>
+    <string name="tile_action_2">Actie 2</string>
+    <string name="tile_action_3">Actie 3</string>
+    <string name="tile_action_4">Actie 4</string>
+    <string name="datalayer_notification_title">Data Layer Voorgrond Service</string>
+    <string name="datalayer_notification_text">AAPS draait op de voorgrond. Om meldingen te verbergen ga je naar de ontwikkelaarsopties, App meldingen, Toegestane horloge apps, selecteer AAPS, schakel Data Layer Voorgrond Service Kanaal melding uit.</string>
+    <string name="on">AAN</string>
+    <string name="off">UIT</string>
 </resources>

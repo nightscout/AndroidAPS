@@ -4,10 +4,10 @@ import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.time.T
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.interfaces.utils.Round
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.Preferences
 import app.aaps.plugins.aps.autotune.data.ATProfile
@@ -26,7 +26,6 @@ import kotlin.math.roundToInt
 
 @Singleton
 class AutotunePrep @Inject constructor(
-    private val sp: SP,
     private val preferences: Preferences,
     private val dateUtil: DateUtil,
     private val autotuneFS: AutotuneFS,
@@ -35,7 +34,7 @@ class AutotunePrep @Inject constructor(
 
     fun categorize(tunedProfile: ATProfile): PreppedGlucose? {
         val preppedGlucose = categorizeBGDatums(tunedProfile, tunedProfile.localInsulin)
-        val tuneInsulin = sp.getBoolean(app.aaps.core.utils.R.string.key_autotune_tune_insulin_curve, false)
+        val tuneInsulin = preferences.get(BooleanKey.AutotuneTuneInsulinCurve)
         if (tuneInsulin) {
             var minDeviations = 1000000.0
             val diaDeviations: MutableList<DiaDeviation> = ArrayList()
@@ -466,7 +465,7 @@ class AutotunePrep @Inject constructor(
         var isfLength = isfGlucoseData.size
         val uamLength = uamGlucoseData.size
         var basalLength = basalGlucoseData.size
-        if (sp.getBoolean(app.aaps.core.utils.R.string.key_autotune_categorize_uam_as_basal, false)) {
+        if (preferences.get(BooleanKey.AutotuneCategorizeUamAsBasal)) {
             //aapsLogger.debug(LTag.AUTOTUNE, "Categorizing all UAM data as basal.")
             if (verbose)
                 log("Categorizing all UAM data as basal.")

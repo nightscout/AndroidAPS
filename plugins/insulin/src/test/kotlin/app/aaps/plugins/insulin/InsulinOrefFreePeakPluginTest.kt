@@ -1,14 +1,11 @@
 package app.aaps.plugins.insulin
 
-import app.aaps.core.interfaces.configuration.Config
+import android.content.SharedPreferences
 import app.aaps.core.interfaces.insulin.Insulin
-import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.IntKey
-import app.aaps.core.keys.Preferences
-import app.aaps.shared.tests.TestBase
+import app.aaps.core.validators.AdaptiveIntPreference
+import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -20,16 +17,23 @@ import org.mockito.Mockito.`when`
  * Created by adrian on 2019-12-25.
  */
 
-class InsulinOrefFreePeakPluginTest : TestBase() {
+class InsulinOrefFreePeakPluginTest : TestBaseWithProfile() {
 
     private lateinit var sut: InsulinOrefFreePeakPlugin
 
-    @Mock lateinit var preferences: Preferences
-    @Mock lateinit var rh: ResourceHelper
-    @Mock lateinit var profileFunction: ProfileFunction
-    @Mock lateinit var config: Config
-    @Mock lateinit var hardLimits: HardLimits
     @Mock lateinit var uiInteraction: UiInteraction
+    @Mock lateinit var sharedPrefs: SharedPreferences
+
+    init {
+        addInjector {
+            if (it is AdaptiveIntPreference) {
+                it.profileUtil = profileUtil
+                it.preferences = preferences
+                it.sharedPrefs = sharedPrefs
+                it.config = config
+            }
+        }
+    }
 
     @BeforeEach
     fun setup() {
@@ -58,5 +62,12 @@ class InsulinOrefFreePeakPluginTest : TestBase() {
     fun getFriendlyNameTest() {
         `when`(rh.gs(eq(R.string.free_peak_oref))).thenReturn("Free-Peak Oref")
         assertThat(sut.friendlyName).isEqualTo("Free-Peak Oref")
+    }
+
+    @Test
+    fun preferenceScreenTest() {
+        val screen = preferenceManager.createPreferenceScreen(context)
+        sut.addPreferenceScreen(preferenceManager, screen, context, null)
+        assertThat(screen.preferenceCount).isGreaterThan(0)
     }
 }

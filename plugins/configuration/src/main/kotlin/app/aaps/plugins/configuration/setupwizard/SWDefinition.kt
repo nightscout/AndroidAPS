@@ -238,7 +238,7 @@ class SWDefinition @Inject constructor(
             .add(SWBreak(injector))
             .add(
                 SWRadioButton(injector)
-                    .option(app.aaps.core.ui.R.array.ageArray, app.aaps.core.utils.R.array.ageValues)
+                    .option(activePlugin.activeSafety.ageEntries(), activePlugin.activeSafety.ageEntryValues())
                     .preferenceId(StringKey.SafetyAge.key)
                     .label(app.aaps.core.ui.R.string.patient_type)
                     .comment(app.aaps.core.ui.R.string.patient_age_summary)
@@ -361,7 +361,7 @@ class SWDefinition @Inject constructor(
             .skippable(false)
             .add(
                 SWRadioButton(injector)
-                    .option(app.aaps.core.ui.R.array.aps_modeArray, app.aaps.core.ui.R.array.aps_modeValues)
+                    .option(loop.entries(), loop.entryValues())
                     .preferenceId(StringKey.LoopApsMode.key).label(R.string.apsmode_title)
                     .comment(R.string.setupwizard_preferred_aps_mode)
             )

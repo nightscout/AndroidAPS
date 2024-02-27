@@ -1,7 +1,10 @@
 package app.aaps.plugins.sensitivity
 
+import android.content.Context
+import androidx.preference.PreferenceCategory
+import androidx.preference.PreferenceManager
+import androidx.preference.PreferenceScreen
 import app.aaps.core.data.model.TE
-import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.AutosensResult
@@ -11,6 +14,7 @@ import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
@@ -21,6 +25,7 @@ import app.aaps.core.objects.extensions.put
 import app.aaps.core.objects.extensions.store
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.core.utils.Percentile
+import app.aaps.core.validators.AdaptiveDoublePreference
 import app.aaps.plugins.sensitivity.extensions.isPSEvent5minBack
 import app.aaps.plugins.sensitivity.extensions.isTherapyEventEvent5minBack
 import org.json.JSONObject
@@ -45,7 +50,7 @@ class SensitivityOref1Plugin @Inject constructor(
         .pluginName(R.string.sensitivity_oref1)
         .shortName(R.string.sensitivity_shortname)
         .enableByDefault(true)
-        .preferencesId(R.xml.pref_absorption_oref1)
+        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.description_sensitivity_oref1)
         .setDefault(),
     aapsLogger, rh, sp, preferences
@@ -228,5 +233,24 @@ class SensitivityOref1Plugin @Inject constructor(
     override fun isUAMEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         if (!isEnabled()) value.set(false, rh.gs(R.string.uam_disabled_oref1_not_selected), this)
         return value
+    }
+
+    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
+        if (requiredKey != null && requiredKey != "absorption_oref1_advanced") return
+        val category = PreferenceCategory(context)
+        parent.addPreference(category)
+        category.apply {
+            key = "sensitivity_oref1_settings"
+            title = rh.gs(R.string.absorption_settings_title)
+            initialExpandedChildrenCount = 0
+            addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.ApsAmaMin5MinCarbsImpact, dialogMessage = R.string.openapsama_min_5m_carb_impact_summary, title = R.string.openapsama_min_5m_carb_impact))
+            addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.AbsorptionCutOff, dialogMessage = R.string.absorption_cutoff_summary, title = R.string.absorption_cutoff_title))
+            addPreference(preferenceManager.createPreferenceScreen(context).apply {
+                key = "absorption_oref1_advanced"
+                title = rh.gs(app.aaps.core.ui.R.string.advanced_settings_title)
+                addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.AutosensMax, dialogMessage = R.string.openapsama_autosens_max_summary, title = R.string.openapsama_autosens_max))
+                addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.AutosensMin, dialogMessage = R.string.openapsama_autosens_max_summary, title = R.string.openapsama_autosens_max))
+            })
+        }
     }
 }

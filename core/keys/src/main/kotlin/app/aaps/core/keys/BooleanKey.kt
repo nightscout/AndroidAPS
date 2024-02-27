@@ -2,15 +2,15 @@ package app.aaps.core.keys
 
 enum class BooleanKey(
     override val key: Int,
-    val defaultValue: Boolean,
+    override val defaultValue: Boolean,
     override val defaultedBySM: Boolean = false,
     override val showInApsMode: Boolean = true,
     override val showInNsClientMode: Boolean = true,
     override val showInPumpControlMode: Boolean = true,
-    override val dependency: Int = 0,
-    override val negativeDependency: Int = 0,
+    override val dependency: BooleanPreferenceKey? = null,
+    override val negativeDependency: BooleanPreferenceKey? = null,
     override val hideParentScreenIfHidden: Boolean = false
-) : PreferenceKey {
+) : BooleanPreferenceKey {
 
     GeneralSimpleMode(R.string.key_simple_mode, true),
     GeneralSetupWizardProcessed(R.string.key_setupwizard_processed, false),
@@ -28,21 +28,21 @@ enum class BooleanKey(
     OverviewUseBolusReminder(R.string.key_use_bolus_reminder, true, defaultedBySM = true),
     OverviewUseSuperBolus(R.string.key_use_superbolus, false, defaultedBySM = true, hideParentScreenIfHidden = true),
     BgSourceUploadToNs(R.string.key_do_bg_ns_upload, true, defaultedBySM = true, hideParentScreenIfHidden = true),
-    DexcomCreateSensorChange(R.string.key_dexcom_log_ns_sensor_change, true, defaultedBySM = true),
-    ApsUseAutosens(R.string.key_openaps_use_autosens, true, defaultedBySM = true, negativeDependency = R.string.key_use_dynamic_sensitivity), // change from default false
+    BgSourceCreateSensorChange(R.string.key_dexcom_log_ns_sensor_change, true, defaultedBySM = true),
+    ApsUseDynamicSensitivity(R.string.key_use_dynamic_sensitivity, false),
+    ApsUseAutosens(R.string.key_openaps_use_autosens, true, defaultedBySM = true, negativeDependency = ApsUseDynamicSensitivity), // change from default false
     ApsUseSmb(R.string.key_openaps_use_smb, true, defaultedBySM = true), // change from default false
-    ApsUseSmbWithHighTt(R.string.key_openaps_allow_smb_with_high_temp_target, false, defaultedBySM = true),
-    ApsUseSmbAlways(R.string.key_openaps_enable_smb_always, true, defaultedBySM = true), // change from default false
-    ApsUseSmbWithCob(R.string.key_openaps_allow_smb_with_COB, true, defaultedBySM = true), // change from default false
-    ApsUseSmbWithLowTt(R.string.key_openaps_allow_smb_with_low_temp_target, true, defaultedBySM = true), // change from default false
-    ApsUseSmbAfterCarbs(R.string.key_openaps_enable_smb_after_carbs, true, defaultedBySM = true), // change from default false
+    ApsUseSmbWithHighTt(R.string.key_openaps_allow_smb_with_high_temp_target, false, defaultedBySM = true, dependency = ApsUseSmb),
+    ApsUseSmbAlways(R.string.key_openaps_enable_smb_always, true, defaultedBySM = true, dependency = ApsUseSmb), // change from default false
+    ApsUseSmbWithCob(R.string.key_openaps_allow_smb_with_COB, true, defaultedBySM = true, dependency = ApsUseSmb), // change from default false
+    ApsUseSmbWithLowTt(R.string.key_openaps_allow_smb_with_low_temp_target, true, defaultedBySM = true, dependency = ApsUseSmb), // change from default false
+    ApsUseSmbAfterCarbs(R.string.key_openaps_enable_smb_after_carbs, true, defaultedBySM = true, dependency = ApsUseSmb), // change from default false
     ApsUseUam(R.string.key_openaps_use_uam, true, defaultedBySM = true), // change from default false
     ApsSensitivityRaisesTarget(R.string.key_openaps_sensitivity_raises_target, true, defaultedBySM = true),
     ApsResistanceLowersTarget(R.string.key_openaps_resistance_lowers_target, true, defaultedBySM = true), // change from default false
     ApsAlwaysUseShortDeltas(R.string.key_openaps_always_use_short_deltas, false, defaultedBySM = true, hideParentScreenIfHidden = true),
-    ApsDynIsfAdjustSensitivity(R.string.key_dynamic_isf_adjust_sensitivity, false, defaultedBySM = true, dependency = R.string.key_use_dynamic_sensitivity), // change from default false
+    ApsDynIsfAdjustSensitivity(R.string.key_dynamic_isf_adjust_sensitivity, false, defaultedBySM = true, dependency = ApsUseDynamicSensitivity), // change from default false
     ApsAmaAutosensAdjustTargets(R.string.key_openaps_ama_autosens_adjust_targets, true, defaultedBySM = true),
-    ApsUseDynamicSensitivity(R.string.key_use_dynamic_sensitivity, false),
     MaintenanceEnableFabric(R.string.key_enable_fabric, true, defaultedBySM = true, hideParentScreenIfHidden = true),
     ApsAutoIsfHighTtRaisesSens(R.string.key_high_temptarget_raises_sensitivity, false, defaultedBySM = true),
     ApsAutoIsfLowTtLowersSens(R.string.key_low_temptarget_lowers_sensitivity, false, defaultedBySM = true),
@@ -51,4 +51,13 @@ enum class BooleanKey(
     ApsAutoIsfDuraAfterCarbs(R.string.key_enable_dura_ISF_with_COB, false, defaultedBySM = true),
     ApsAutoIsfSmbOnEvenTt(R.string.key_enableSMB_EvenOn_OddOff, false, defaultedBySM = true),         // TempTarget
     ApsAutoIsfSmbOnEvenPt(R.string.key_enableSMB_EvenOn_OddOff_always, false, defaultedBySM = true)   // profile target
+
+    AutotuneAutoSwitchProfile(R.string.key_autotune_auto, false),
+    AutotuneCategorizeUamAsBasal(R.string.key_autotune_categorize_uam_as_basal, false),
+    AutotuneTuneInsulinCurve(R.string.key_autotune_tune_insulin_curve, false),
+    AutotuneCircadianIcIsf(R.string.key_autotune_circadian_ic_isf, false),
+    AutotuneAdditionalLog(R.string.key_autotune_additional_log, false),
+
+    SmsAllowRemoteCommands(R.string.key_smscommunicator_remote_commands_allowed, false),
+    SmsReportPumpUnreachable(R.string.key_smscommunicator_report_pump_unreachable, true),
 }

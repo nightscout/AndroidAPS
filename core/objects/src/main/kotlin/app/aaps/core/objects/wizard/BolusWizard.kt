@@ -128,7 +128,7 @@ class BolusWizard @Inject constructor(
         private set
     var insulinAfterConstraints: Double = 0.0
         private set
-    var calculatedPercentage: Double = 100.0
+    var calculatedPercentage: Int = 100
         private set
     var calculatedCorrection: Double = 0.0
         private set
@@ -270,7 +270,7 @@ class BolusWizard @Inject constructor(
         } else {
             carbsEquivalent = (-calculatedTotalInsulin) * ic
             calculatedTotalInsulin = 0.0
-            calculatedPercentage = percentageCorrection.toDouble()
+            calculatedPercentage = percentageCorrection
             calculatedCorrection = 0.0
         }
 
@@ -528,11 +528,11 @@ class BolusWizard @Inject constructor(
     }
 
     private fun calcPercentageWithConstraints() {
-        calculatedPercentage = 100.0
+        calculatedPercentage = 100
         if (totalBeforePercentageAdjustment != insulinFromCorrection)
-            calculatedPercentage = calculatedTotalInsulin / (totalBeforePercentageAdjustment - insulinFromCorrection) * 100
-        calculatedPercentage = max(calculatedPercentage, 10.0)
-        calculatedPercentage = min(calculatedPercentage, 250.0)
+            calculatedPercentage = (calculatedTotalInsulin / (totalBeforePercentageAdjustment - insulinFromCorrection) * 100).toInt()
+        calculatedPercentage = max(calculatedPercentage, 10)
+        calculatedPercentage = min(calculatedPercentage, 250)
     }
 
     private fun calcCorrectionWithConstraints() {

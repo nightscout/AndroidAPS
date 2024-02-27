@@ -116,4 +116,10 @@
     <string name="time_to_eat">Il est temps de manger !\nExécutez l\'assistant Bolus et refaites le calcul.</string>
     <string name="time_to_bolus">Il est temps de faire le bolus !\nExécutez l\'Assistant et faites de nouveau le calcul.</string>
     <string name="error_setting_reminder">Erreur lors du réglage de l\'alarme future</string>
+    <!--    Autotune-->
+    <string name="autotune_run">Lancer Autotune</string>
+    <string name="autotune_run_without_autoswitch">Autotune exécuté sans changement de profil</string>
+    <string name="autotune_run_with_autoswitch">Autotune exécuté et le profil automatiquement activé</string>
+    <string name="autotune_run_with_error">Erreur lors de la dernière exécution d\'Autotune</string>
+    <string name="autotune_run_cancelled">Une autre exécution d\'Autotune est détectée, l\'exécution est annulée</string>
 </resources>

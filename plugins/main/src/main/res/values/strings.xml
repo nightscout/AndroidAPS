@@ -2,11 +2,6 @@
 <resources>
 
     <!-- SMS Communicator & OTP Authenticator -->
-    <string name="key_smscommunicator_otp_password" translatable="false">smscommunicator_otp_password</string>
-    <string name="key_smscommunicator_otp_secret" translatable="false">smscommunicator_otp_secret</string>
-    <string name="key_smscommunicator_remote_bolus_min_distance" translatable="false">smscommunicator_remotebolusmindistance</string>
-    <string name="key_smscommunicator_allowednumbers" translatable="false">smscommunicator_allowednumbers</string>
-    <string name="key_smscommunicator_remote_commands_allowed" translatable="false">smscommunicator_remotecommandsallowed</string>
 
     <string name="smscommunicator">SMS Communicator</string>
     <string name="smscommunicator_shortname">SMS</string>
@@ -192,9 +187,6 @@
     <string name="patch_pump">Patch pump</string>
 
     <!-- Overview -->
-    <string name="key_statuslights_copy_ns" translatable="false">statuslights_copy_ns</string>
-    <string name="key_statuslights_overview_advanced" translatable="false">statuslights_overview_advanced</string>
-
     <string name="show_statuslights">Show status lights on home screen</string>
     <string name="statuslights_cage_warning">Threshold warning cannula age [h]</string>
     <string name="statuslights_cage_critical">Threshold critical cannula age [h]</string>

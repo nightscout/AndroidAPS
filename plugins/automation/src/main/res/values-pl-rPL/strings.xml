@@ -116,4 +116,10 @@
     <string name="time_to_eat">Czas na posiłek!\nUruchom Kalkulator bolusa aby ponownie wykonać obliczenia.</string>
     <string name="time_to_bolus">Czas na bolus!\nUruchom Kalkulator bolusa aby ponownie wykonać obliczenia.</string>
     <string name="error_setting_reminder">Błąd podczas ustawiania przyszłego alarmu</string>
+    <!--    Autotune-->
+    <string name="autotune_run">Uruchom Autotune</string>
+    <string name="autotune_run_without_autoswitch">Autotune zakończył się bez przełączenia profilu</string>
+    <string name="autotune_run_with_autoswitch">W wyniku uruchomienia Autotune profil został automatycznie przełączony</string>
+    <string name="autotune_run_with_error">Błąd podczas ostatniego uruchomienia Autotune</string>
+    <string name="autotune_run_cancelled">Wykryto Autotune w toku, anulowano próbę kolejnego uruchomienia</string>
 </resources>

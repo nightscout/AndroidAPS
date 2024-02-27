@@ -4,8 +4,10 @@ import android.content.Context
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.SystemClock
+import androidx.preference.PreferenceCategory
+import androidx.preference.PreferenceManager
+import androidx.preference.PreferenceScreen
 import app.aaps.core.data.model.GlucoseUnit
-import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.Loop
@@ -17,6 +19,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -28,6 +31,7 @@ import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.AdaptiveListPreference
 import app.aaps.core.keys.StringKey
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.actions.ActionAlarm
@@ -103,7 +107,7 @@ class AutomationPlugin @Inject constructor(
         .shortName(R.string.automation_short)
         .showInList(config.APS)
         .neverVisible(!config.APS)
-        .preferencesId(R.xml.pref_automation)
+        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.automation_description),
     aapsLogger, rh
 ), Automation {
@@ -505,5 +509,28 @@ class AutomationPlugin @Inject constructor(
             title = rh.gs(app.aaps.core.ui.R.string.bolus_reminder)
         }
         removeIfExists(event)
+    }
+
+    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
+        if (requiredKey != null) return
+        val entries = arrayOf<CharSequence>(
+            rh.gs(R.string.use_passive_location),
+            rh.gs(R.string.use_network_location),
+            rh.gs(R.string.use_gps_location),
+        )
+
+        val entryValues = arrayOf<CharSequence>(
+            "PASSIVE",
+            "NETWORK",
+            "GPS",
+        )
+        val category = PreferenceCategory(context)
+        parent.addPreference(category)
+        category.apply {
+            key = "automation_settings"
+            title = rh.gs(app.aaps.core.ui.R.string.automation)
+            initialExpandedChildrenCount = 0
+            addPreference(AdaptiveListPreference(ctx = context, stringKey = StringKey.AutomationLocation, title = R.string.locationservice, entries = entries, entryValues = entryValues))
+        }
     }
 }

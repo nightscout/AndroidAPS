@@ -1,8 +1,10 @@
 package app.aaps.core.interfaces.plugin
 
+import android.content.Context
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import app.aaps.core.data.plugin.PluginDescription
+import androidx.preference.PreferenceManager
+import androidx.preference.PreferenceScreen
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -119,4 +121,11 @@ abstract class PluginBase(
     protected open fun onStateChange(type: PluginType?, oldState: State?, newState: State?) {}
     open fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {}
     open fun updatePreferenceSummary(pref: Preference) {}
+
+    /**
+     * Add [PreferenceScreen] to preferences
+     *
+     * Plugin can provide either this method or [preferencesId] XML
+     */
+    open fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {}
 }

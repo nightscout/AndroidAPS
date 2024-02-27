@@ -28,7 +28,6 @@
     <string name="es_lang" translatable="false">Spanish</string>
     <string name="sv_lang" translatable="false">Swedish</string>
     <string name="tr_lang" translatable="false">Turkish</string>
-    <string name="key_smscommunicator_settings" translatable="false">smscommunicator</string>
     <string name="key_protection_settings" translatable="false">protection</string>
     <string name="key_last_cleanup_run" translatable="false">last_cleanup_run</string>
     <string name="nav_preferences_plugin">%1$s Preferences</string>

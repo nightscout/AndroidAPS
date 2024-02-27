@@ -2,8 +2,6 @@
 <resources>
     <string name="dynisf_adjust_sensitivity">אפשר יחס רגישות המבוסס על המינון היומי הכולל לשינוי מינון בזאלי וערכי מטרה</string>
     <string name="dynisf_adjust_sensitivity_summary">השתמש במינון יומי כולל של 24 שעות\\7 ימים האחרונים כדי לחשב יחס רגישות לצורך העלאה או הורדה של המינון הבזאלי ובנוסף להתאים את ערך המטרה אם אפשרויות אלו מופעלותת באופן דומה ל-Autosense. מומלץ להתחיל כשאפשרות זו כבויה</string>
-    <string name="DynISFAdjust_title" formatted="false">כיוונון פקטור הרגישות הדינאמית %</string>
-    <string name="DynISFAdjust_summary" formatted="false">כיוונון פקטור הרגישות הדינאמית. הגדירו יותר מ-100% לקבלת תיקונים אגרסיביים יותר ופחות מ-100% לקבלת תיקונים עדינים יותר.</string>
     <string name="high_temptarget_raises_sensitivity_title">ערך מטרה זמני גבוה מעלה את הרגישות</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[הגבר רגישות עבור ערך מטרה זמני >= 100]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">ערך מטרה זמני נמוך מוריד את הרגישות</string>
@@ -118,4 +116,45 @@
     <string name="loop_open_mode_min_change">מינימום לבקשה לשינוי [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">\"לולאה פתוחה\" תציג בקשת שינוי חדשה רק אם השינוי גדול מערך זה ב-%. ערך ברירת המחדל הוא 20%</string>
     <string name="fallback_smb_no_tdd">חוזר ל-SMB, אין מספיק נתוני מינון יומי.</string>
+    <!-- Autotune -->
+    <string name="autotune_description">עזרה בכיוונונים פוטנציאליים בפרופיל (ISF, יחס פחמימות ומינונים בזאליים)</string>
+    <string name="autotune_shortname">AT</string>
+    <string name="autotune_settings">הגדרות כוונון אוטומטי</string>
+    <string name="autotune_auto_title">עדכון פרופיל מאוטומציה</string>
+    <string name="autotune_auto_summary">אם מופעל, Autotune יתעדכן אוטומטית ויעבור לפרופיל קלט לאחר חישוב שהופעל ע\"י אוטומציה.</string>
+    <string name="autotune_categorize_uam_as_basal_title">סווג ארוחות לא מוכרזות כבזאלי</string>
+    <string name="autotune_categorize_uam_as_basal_summary">הפעילו רק אם הזנתם בצורה מהימנה את כל הפחמימות שנאכלו. עם אפשרות זו, עליות פתאומיות שנראות על ידי הכוונון האוטומטי ישמשו כדי להמליץ על שינויים במינון הבזאלי.</string>
+    <string name="autotune_tune_insulin_curve_title">כיוונון עקומת פעילות האינסולין</string>
+    <string name="autotune_tune_insulin_curve_summary">אפשרו רק אם אתם משתמשים בשיא חופשי. אפשרות זו תכוונן את השיא ואת משך פעילות האינסולין</string>
+    <string name="autotune_default_tune_days_title">מספר ימי נתונים</string>
+    <string name="autotune_circadian_ic_isf_title">החל תוצאה ממוצעת ב-IC/ISF היומיים</string>
+    <string name="autotune_circadian_ic_isf_summary">כוונון אוטומטי לא יכוונן את הווריאציות הצירקדיות, אפשרות זו תחיל רק את הכוונון הממוצע של IC ו-ISF על פרופיל הקלט היומי</string>
+    <string name="autotune_additional_log_title">כלול מידע נוסף ביומן עבור דיבאגינג</string>
+    <string name="autotune_additional_log_summary">הפעילו רק אם נתבקשתם על ידי המפתח לשלוח מידע נוסף ביומן כדי לסייע באיתור באגים של תוסף הכיוונון האוטומטי</string>
+    <string name="autotune_default_tune_days_summary">ברירת המחדל של מספר ימי הנתונים לעיבוד על ידי הכיוונון האוטומטי (עד 30)</string>
+    <string name="autotune_tunedprofile_name">מכוונן</string>
+    <string name="autotune_profile">פרופיל :</string>
+    <string name="autotune_last_run">הפעלה אחרונה :</string>
+    <string name="autotune_warning">אזהרה :</string>
+    <string name="autotune_ic_warning">בפרופיל הנבחר יש %1$d ערכי יחס פחמימות. הכיוונון האוטומטי ישתמש ב-%2$.2f גר\'\\יח\'</string>
+    <string name="autotune_isf_warning">בפרופיל הנבחר יש %1$d ערכי יחס תיקון. הכיוונון האוטומטי ישתמש ב-%2$.1f %3$s\\יח\'</string>
+    <string name="autotune_error">שגיאה בנתוני הקלט, נסו להפעיל שוב או שנסו לצמצם את מספר הימים</string>
+    <string name="autotune_error_more_days">שגיאה בנתוני הקלט, נסו לצמצם את מספר הימים</string>
+    <string name="autotune_warning_during_run">חישוב הכוונון האוטומטי התחיל, אנא התאזרו בסבלנות</string>
+    <string name="autotune_warning_after_run">בדקו היטב את התוצאות לפני השימוש בהן!</string>
+    <string name="autotune_partial_result">יום תוצאה חלקי %1$d / %2$d מכוון</string>
+    <string name="autotune_result">תוצאה: %1$s</string>
+    <string name="autotune_param">פרמטר</string>
+    <string name="autotune_percent">%</string>
+    <string name="autotune_missing">חסר</string>
+    <string name="autotune_run">הפעל כוונון אוטומטי</string>
+    <string name="autotune_check_input_profile_button">בדיקת פרופיל הקלט</string>
+    <string name="autotune_compare_profile">השוואת פרופילים</string>
+    <string name="autotune_copy_localprofile_button">העתקה אל הפרופיל המקומי שלי</string>
+    <string name="autotune_update_input_profile_button">עדכן פרופיל קלט</string>
+    <string name="autotune_revert_input_profile_button">ביטול שינויים בפרופיל הקלט</string>
+    <string name="autotune_copy_local_profile_message">ליצור פרופיל מקומי חדש מפרופיל זה?</string>
+    <string name="autotune_update_local_profile_message">לעדכן את פרופיל %1$s עם הפרופיל המכוונן אוטומטית?</string>
+    <string name="autotune_revert_local_profile_message">להחזיר את פרופיל %1$s אל פרופיל קלט?</string>
+    <string name="autotune_profile_invalid">פרופיל לא חוקי</string>
 </resources>

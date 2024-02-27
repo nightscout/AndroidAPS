@@ -1,7 +1,10 @@
 package app.aaps.plugins.constraints.safety
 
+import android.content.Context
+import androidx.preference.PreferenceCategory
+import androidx.preference.PreferenceManager
+import androidx.preference.PreferenceScreen
 import app.aaps.core.data.aps.ApsMode
-import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.configuration.Config
@@ -14,6 +17,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.defs.determineCorrectBolusSize
 import app.aaps.core.interfaces.pump.defs.determineCorrectExtendedBolusSize
@@ -24,6 +28,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.Round
+import app.aaps.core.keys.AdaptiveListPreference
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
@@ -31,6 +36,8 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.put
 import app.aaps.core.objects.extensions.store
+import app.aaps.core.validators.AdaptiveDoublePreference
+import app.aaps.core.validators.AdaptiveIntPreference
 import app.aaps.plugins.constraints.R
 import org.json.JSONObject
 import javax.inject.Inject
@@ -57,7 +64,7 @@ class SafetyPlugin @Inject constructor(
         .alwaysEnabled(true)
         .showInList(false)
         .pluginName(R.string.safety)
-        .preferencesId(R.xml.pref_safety),
+        .preferencesId(PluginDescription.PREFERENCE_SCREEN),
     aapsLogger, rh
 ), PluginConstraints, Safety {
 
@@ -189,4 +196,43 @@ class SafetyPlugin @Inject constructor(
             .store(DoubleKey.SafetyMaxBolus, preferences, rh)
             .store(IntKey.SafetyMaxCarbs, preferences, rh)
     }
+
+    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
+        if (requiredKey != null) return
+        val category = PreferenceCategory(context)
+        parent.addPreference(category)
+        category.apply {
+            key = "safety_settings"
+            title = rh.gs(R.string.treatmentssafety_title)
+            initialExpandedChildrenCount = 0
+            addPreference(
+                AdaptiveListPreference(
+                    ctx = context,
+                    stringKey = StringKey.SafetyAge,
+                    summary = app.aaps.core.ui.R.string.patient_age_summary,
+                    title = app.aaps.core.ui.R.string.patient_type,
+                    entries = ageEntries(),
+                    entryValues = ageEntryValues()
+                )
+            )
+            addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.SafetyMaxBolus, title = app.aaps.core.ui.R.string.max_bolus_title))
+            addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.SafetyMaxCarbs, title = app.aaps.core.ui.R.string.max_carbs_title))
+        }
+    }
+
+    override fun ageEntries() = arrayOf<CharSequence>(
+        rh.gs(app.aaps.core.ui.R.string.child),
+        rh.gs(app.aaps.core.ui.R.string.teenage),
+        rh.gs(app.aaps.core.ui.R.string.adult),
+        rh.gs(app.aaps.core.ui.R.string.resistant_adult),
+        rh.gs(app.aaps.core.ui.R.string.pregnant),
+    )
+
+    override fun ageEntryValues() = arrayOf<CharSequence>(
+        rh.gs(app.aaps.core.keys.R.string.key_child),
+        rh.gs(app.aaps.core.keys.R.string.key_teenage),
+        rh.gs(app.aaps.core.keys.R.string.key_adult),
+        rh.gs(app.aaps.core.keys.R.string.key_resistantadult),
+        rh.gs(app.aaps.core.keys.R.string.key_pregnant),
+    )
 }

@@ -31,7 +31,6 @@ import androidx.core.view.MenuProvider
 import androidx.viewpager2.widget.ViewPager2
 import app.aaps.activities.HistoryBrowseActivity
 import app.aaps.activities.PreferencesActivity
-import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.androidPermissions.AndroidPermission
@@ -43,6 +42,7 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -54,6 +54,7 @@ import app.aaps.core.interfaces.rx.events.EventRebuildTabs
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.ui.IconsProvider
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.keys.BooleanKey
@@ -188,7 +189,6 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                             startActivity(
                                 Intent(this@MainActivity, PreferencesActivity::class.java)
                                     .setAction("info.nightscout.androidaps.MainActivity")
-                                    .putExtra("id", -1)
                             )
                         })
                         true
@@ -256,7 +256,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                             startActivity(
                                 Intent(this@MainActivity, PreferencesActivity::class.java)
                                     .setAction("info.nightscout.androidaps.MainActivity")
-                                    .putExtra("id", plugin.preferencesId)
+                                    .putExtra(UiInteraction.PLUGIN_NAME, plugin.javaClass.simpleName)
                             )
                         })
                         true
@@ -313,7 +313,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     }
 
     private fun checkPluginPreferences(viewPager: ViewPager2) {
-        if (viewPager.currentItem >= 0) pluginPreferencesMenuItem?.isEnabled = (viewPager.adapter as TabPageAdapter).getPluginAt(viewPager.currentItem).preferencesId != -1
+        if (viewPager.currentItem >= 0) pluginPreferencesMenuItem?.isEnabled = (viewPager.adapter as TabPageAdapter).getPluginAt(viewPager.currentItem).preferencesId != PluginDescription.PREFERENCE_NONE
     }
 
     private fun startWizard(): Boolean =

@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Handler
 import android.os.HandlerThread
 import android.text.format.DateFormat
-import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
@@ -14,6 +13,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.objects.Instantiator
+import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.Pump
@@ -202,8 +202,8 @@ import javax.inject.Singleton
             aapsLogger.error("deliverTreatment: Invalid input: neither carbs nor insulin are set in treatment")
             return instantiator.providePumpEnactResult().success(false).enacted(false).bolusDelivered(0.0).comment("Invalid input")
         }
-        val maxBolus=preferences.get(DoubleKey.EquilMaxBolus)
-        if(detailedBolusInfo.insulin >preferences.get(DoubleKey.EquilMaxBolus)){
+        val maxBolus = preferences.get(DoubleKey.EquilMaxBolus)
+        if (detailedBolusInfo.insulin > preferences.get(DoubleKey.EquilMaxBolus)) {
             val formattedValue = "%.2f".format(maxBolus)
             val comment = rh.gs(R.string.equil_maxbolus_tips, formattedValue)
             return instantiator.providePumpEnactResult().success(false).enacted(false).bolusDelivered(0.0).comment(comment)
@@ -218,7 +218,6 @@ import javax.inject.Singleton
             instantiator.providePumpEnactResult().success(false).enacted(false).bolusDelivered(0.0).comment(R.string.equil_not_enough_insulin)
         } else deliverBolus(detailedBolusInfo)
     }
-
 
     override fun stopBolusDelivering() {
         equilManager.stopBolus(bolusProfile)
@@ -364,6 +363,7 @@ import javax.inject.Singleton
         aapsLogger.info(LTag.PUMPCOMM, "disconnect reason=$reason")
         equilManager.closeBleAuto()
     }
+
     override fun stopConnecting() {}
 
     override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {

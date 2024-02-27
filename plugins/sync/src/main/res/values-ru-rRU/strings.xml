@@ -189,4 +189,5 @@
     <string name="tdd_line">%1$.2fед%1$.0f%%</string>
     <string name="today">Сегодня</string>
     <string name="weighted">взвешенный</string>
+    <string name="full_xdrip_sync_comment">Полная синхронизация? Это может занять длительное время и до завершения вы не увидите новые данные в xDrip+.</string>
 </resources>

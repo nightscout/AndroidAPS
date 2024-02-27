@@ -10,7 +10,6 @@ import androidx.work.workDataOf
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
-import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
@@ -19,7 +18,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
@@ -44,12 +43,12 @@ class DexcomPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     private val context: Context,
     config: Config
-) : PluginBase(
+) : AbstractBgSourceWithSensorInsertLogPlugin(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
         .pluginIcon(app.aaps.core.objects.R.drawable.ic_dexcom_g6)
-        .preferencesId(R.xml.pref_dexcom)
+        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .pluginName(R.string.dexcom_app_patched)
         .shortName(R.string.dexcom_short)
         .preferencesVisibleInSimpleMode(false)
@@ -142,7 +141,7 @@ class DexcomPlugin @Inject constructor(
                             sourceSensor = sourceSensor
                         )
                 }
-                var sensorStartTime = if (preferences.get(BooleanKey.DexcomCreateSensorChange) && bundle.containsKey("sensorInsertionTime")) {
+                var sensorStartTime = if (preferences.get(BooleanKey.BgSourceCreateSensorChange) && bundle.containsKey("sensorInsertionTime")) {
                     bundle.getLong("sensorInsertionTime", 0) * 1000
                 } else {
                     null

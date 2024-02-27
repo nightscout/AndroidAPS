@@ -661,24 +661,26 @@ class DetermineBasalSMB @Inject constructor(
 
         val fSensBG = min(minPredBG, bg)
 
-        var future_sens: Double
-        if (bg > target_bg && glucose_status.delta < 3 && glucose_status.delta > -3 && glucose_status.shortAvgDelta > -3 && glucose_status.shortAvgDelta < 3 && eventualBG > target_bg && eventualBG
-            < bg
-        ) {
-            future_sens = (1800 / (ln((((fSensBG * 0.5) + (bg * 0.5)) / profile.insulinDivisor) + 1) * profile.TDD))
-            future_sens = round(future_sens, 1)
-            consoleLog.add("Future state sensitivity is $future_sens based on eventual and current bg due to flat glucose level above target")
-            rT.reason.append("Dosing sensitivity: $future_sens using eventual BG;")
-        } else if (glucose_status.delta > 0 && eventualBG > target_bg || eventualBG > bg) {
-            future_sens = (1800 / (ln((bg / profile.insulinDivisor) + 1) * profile.TDD))
-            future_sens = round(future_sens, 1)
-            consoleLog.add("Future state sensitivity is $future_sens using current bg due to small delta or variation")
-            rT.reason.append("Dosing sensitivity: $future_sens using current BG;")
-        } else {
-            future_sens = (1800 / (ln((fSensBG / profile.insulinDivisor) + 1) * profile.TDD))
-            future_sens = round(future_sens, 1)
-            consoleLog.add("Future state sensitivity is $future_sens based on eventual bg due to -ve delta")
-            rT.reason.append("Dosing sensitivity: $future_sens using eventual BG;")
+        var future_sens = 0.0
+        if (dynIsfMode) {
+            if (bg > target_bg && glucose_status.delta < 3 && glucose_status.delta > -3 && glucose_status.shortAvgDelta > -3 && glucose_status.shortAvgDelta < 3 && eventualBG > target_bg && eventualBG
+                < bg
+            ) {
+                future_sens = (1800 / (ln((((fSensBG * 0.5) + (bg * 0.5)) / profile.insulinDivisor) + 1) * profile.TDD))
+                future_sens = round(future_sens, 1)
+                consoleLog.add("Future state sensitivity is $future_sens based on eventual and current bg due to flat glucose level above target")
+                rT.reason.append("Dosing sensitivity: $future_sens using eventual BG;")
+            } else if (glucose_status.delta > 0 && eventualBG > target_bg || eventualBG > bg) {
+                future_sens = (1800 / (ln((bg / profile.insulinDivisor) + 1) * profile.TDD))
+                future_sens = round(future_sens, 1)
+                consoleLog.add("Future state sensitivity is $future_sens using current bg due to small delta or variation")
+                rT.reason.append("Dosing sensitivity: $future_sens using current BG;")
+            } else {
+                future_sens = (1800 / (ln((fSensBG / profile.insulinDivisor) + 1) * profile.TDD))
+                future_sens = round(future_sens, 1)
+                consoleLog.add("Future state sensitivity is $future_sens based on eventual bg due to -ve delta")
+                rT.reason.append("Dosing sensitivity: $future_sens using eventual BG;")
+            }
         }
 
         val fractionCarbsLeft = meal_data.mealCOB / meal_data.carbs

@@ -14,17 +14,11 @@
     <string name="key_localalert_settings" translatable="false">localalert_settings</string>
     <string name="key_wear_settings" translatable="false">wear_settings</string>
     <string name="key_configbuilder_general_settings" translatable="false">configbuilder_general_settings</string>
-    <string name="key_maintenance_settings" translatable="false">maintenance_settings</string>
-    <string name="key_smscommunicator_settings" translatable="false">smscommunicator_settings</string>
-    <string name="key_openapssmb_settings" translatable="false">openapssmb_settings</string>
-    <string name="key_treatmentssafety_settings" translatable="false">treatmentssafety_settings</string>
-    <string name="key_loop_settings" translatable="false">loop_settings</string>
     <string name="key_virtualpump_settings" translatable="false">virtualpump_settings</string>
     <string name="key_pump_settings" translatable="false">pump_settings</string>
     <string name="key_tidepool_settings" translatable="false">tidepool_settings</string>
     <string name="key_absorption_settings" translatable="false">absorption_settings</string>
     <string name="key_overview_settings" translatable="false">overview_settings</string>
-    <string name="key_openapsma_settings" translatable="false">openapsma_settings</string>
     <string name="key_medtronic_settings" translatable="false">medtronic_settings</string>
     <string name="key_danars_settings" translatable="false">danars_settings</string>
     <string name="key_ns_client_settings" translatable="false">nsclientinternal_settings</string>
@@ -34,26 +28,12 @@
     <string name="key_active_pump_change_timestamp" translatable="false">active_pump_change_timestamp</string>
     <string name="key_active_pump_type" translatable="false">active_pump_type</string>
     <string name="key_active_pump_serial_number" translatable="false">active_pump_serial_number</string>
-    <string name="key_child" translatable="false">child</string>
-    <string name="key_teenage" translatable="false">teenage</string>
-    <string name="key_adult" translatable="false">adult</string>
-    <string name="key_resistantadult" translatable="false">resistantadult</string>
-    <string name="key_pregnant" translatable="false">pregnant</string>
     <string name="key_app_expiration" translatable="false">app_expiration</string>
-    <string name="key_autotune_auto" translatable="false">autotune_auto</string>
-    <string name="key_autotune_categorize_uam_as_basal" translatable="false">categorize_uam_as_basal</string>
-    <string name="key_autotune_tune_insulin_curve" translatable="false">autotune_tune_insulin_curve</string>
-    <string name="key_autotune_default_tune_days" translatable="false">autotune_default_tune_days</string>
-    <string name="key_autotune_circadian_ic_isf" translatable="false">autotune_circadian_ic_isf</string>
-    <string name="key_autotune_additional_log" translatable="false">autotune_additional_log</string>
-    <string name="key_autotune_plugin" translatable="false">key_autotune_plugin</string>
-    <string name="key_autotune_last_run" translatable="false">key_autotune_last_run</string>
     <string name="key_enable_pump_unreachable_alert" translatable="false">enable_pump_unreachable_alert</string>
     <string name="key_next_pump_disconnected_alarm" translatable="false">nextPumpDisconnectedAlarm</string>
     <string name="key_next_missed_reading_alarm" translatable="false">nextMissedReadingsAlarm</string>
     <string name="key_enable_missed_bg_readings_alert" translatable="false">enable_missed_bg_readings</string>
     <string name="key_enable_carbs_required_alert_local" translatable="false">enable_carbs_required_alert_local</string>
-    <string name="key_smscommunicator_report_pump_unreachable" translatable="false">smscommunicator_report_pump_unreachable</string>
     <string name="key_rangetodisplay" translatable="false">rangetodisplay</string>
     <string name="key_local_profile_last_change" translatable="false">local_profile_last_change</string>
     <string name="key_ns_receive_profile_store" translatable="false">ns_receive_profile_store</string>
@@ -110,6 +90,5 @@
     <string name="key_objectiveusescale" translatable="false">ObjectivesScaleUsed</string>
     <string name="key_virtual_pump_upload_status" translatable="false">virtualpump_uploadstatus</string>
     <string name="key_used_autosens_on_main_phone" translatable="false">used_autosens_on_main_phone</string>
-    <string name="key_randombg_interval_min" translatable="false">randombg_interval_min</string>
 
 </resources>

@@ -177,6 +177,7 @@
     <string name="omnipod_common_ok">OK</string>
     <string name="omnipod_common_cancel">Отменить</string>
     <string name="omnipod_common_warning">Внимание</string>
+    <string name="omnipod_common_disable_suspend_alerts">ОТКЛЮЧИТЬ ОПОВЕЩЕНИЯ ОБ ОСТАНОВЕ</string>
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">Только что</string>
     <string name="omnipod_common_less_than_a_minute_ago">Менее минуты назад</string>

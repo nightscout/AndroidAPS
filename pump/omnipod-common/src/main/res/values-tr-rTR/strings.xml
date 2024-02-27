@@ -177,6 +177,7 @@
     <string name="omnipod_common_ok">Tamam</string>
     <string name="omnipod_common_cancel">İptal</string>
     <string name="omnipod_common_warning">Uyarı</string>
+    <string name="omnipod_common_disable_suspend_alerts">ASKIYA ALMA UYARILARINI DEVRE DIŞI BIRAK</string>
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">Dakika önce</string>
     <string name="omnipod_common_less_than_a_minute_ago">Bir dakikadan az bir süre önce</string>

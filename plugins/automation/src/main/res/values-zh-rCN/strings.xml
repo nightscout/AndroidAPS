@@ -111,4 +111,9 @@
     <string name="add_automation">添加规则</string>
     <!--    Reminders-->
     <string name="time_to_bolus">输注胰岛素时间到了！\n请运行大剂量向导，然后再次进行计算。</string>
+    <!--    Autotune-->
+    <string name="autotune_run">运行自动协调</string>
+    <string name="autotune_run_with_autoswitch">运行 Autotune 并自动切换配置文件</string>
+    <string name="autotune_run_with_error">上次 Autotune 运行期间出错</string>
+    <string name="autotune_run_cancelled">检测到另一次自动调试运行，本次运行已取消</string>
 </resources>

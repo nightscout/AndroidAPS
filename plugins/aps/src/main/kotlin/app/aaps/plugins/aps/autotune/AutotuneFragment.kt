@@ -22,6 +22,7 @@ import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -32,13 +33,15 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventLocalProfileChanged
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.elements.WeekDay
@@ -63,7 +66,7 @@ class AutotuneFragment : DaggerFragment() {
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var autotunePlugin: AutotunePlugin
     @Inject lateinit var autotuneFS: AutotuneFS
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var fabricPrivacy: FabricPrivacy
@@ -74,6 +77,7 @@ class AutotuneFragment : DaggerFragment() {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var instantiator: Instantiator
+    @Inject lateinit var loop: Loop
 
     private var disposable: CompositeDisposable = CompositeDisposable()
     private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
@@ -97,12 +101,12 @@ class AutotuneFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sp.putBoolean(app.aaps.core.utils.R.string.key_autotune_tune_insulin_curve, false)  // put to false tune insulin curve
-        sp.putBoolean(app.aaps.core.utils.R.string.key_autotune_additional_log, false)      // put to false additional log
+        preferences.put(BooleanKey.AutotuneTuneInsulinCurve, false)  // put to false tune insulin curve
+        preferences.put(BooleanKey.AutotuneAdditionalLog, false)      // put to false additional log
         autotunePlugin.loadLastRun()
         if (autotunePlugin.lastNbDays.isEmpty())
-            autotunePlugin.lastNbDays = sp.getInt(app.aaps.core.utils.R.string.key_autotune_default_tune_days, 5).toString()
-        val defaultValue = sp.getInt(app.aaps.core.utils.R.string.key_autotune_default_tune_days, 5).toDouble()
+            autotunePlugin.lastNbDays = preferences.get(IntKey.AutotuneDefaultTuneDays).toString()
+        val defaultValue = preferences.get(IntKey.AutotuneDefaultTuneDays).toDouble()
         profileStore = activePlugin.activeProfileSource.profile ?: instantiator.provideProfileStore(JSONObject())
         profileName = if (binding.profileList.text.toString() == rh.gs(app.aaps.core.ui.R.string.active)) "" else binding.profileList.text.toString()
         profileFunction.getProfile()?.let { currentProfile ->
@@ -113,7 +117,7 @@ class AutotuneFragment : DaggerFragment() {
             if (autotunePlugin.calculationRunning)
                 days.view?.setSelectedDays(days.getSelectedDays())
             else {
-                days.set(WeekDay.DayOfWeek.fromCalendarInt(i), selected)
+                days[WeekDay.DayOfWeek.fromCalendarInt(i)] = selected
                 resetParam(false)
                 updateGui()
             }
@@ -150,12 +154,12 @@ class AutotuneFragment : DaggerFragment() {
         }
 
         binding.autotuneCopyLocal.setOnClickListener {
-            val localName = rh.gs(app.aaps.core.ui.R.string.autotune_tunedprofile_name) + " " + dateUtil.dateAndTimeString(autotunePlugin.lastRun)
-            val circadian = sp.getBoolean(app.aaps.core.utils.R.string.key_autotune_circadian_ic_isf, false)
+            val localName = rh.gs(R.string.autotune_tunedprofile_name) + " " + dateUtil.dateAndTimeString(autotunePlugin.lastRun)
+            val circadian = preferences.get(BooleanKey.AutotuneCircadianIcIsf)
             autotunePlugin.tunedProfile?.let { tunedProfile ->
                 OKDialog.showConfirmation(requireContext(),
-                                          rh.gs(app.aaps.core.ui.R.string.autotune_copy_localprofile_button),
-                                          rh.gs(app.aaps.core.ui.R.string.autotune_copy_local_profile_message) + "\n" + localName,
+                                          rh.gs(R.string.autotune_copy_localprofile_button),
+                                          rh.gs(R.string.autotune_copy_local_profile_message) + "\n" + localName,
                                           Runnable {
                                               val profilePlugin = activePlugin.activeProfileSource
                                               profilePlugin.addProfile(profilePlugin.copyFrom(tunedProfile.getProfile(circadian), localName))
@@ -173,8 +177,8 @@ class AutotuneFragment : DaggerFragment() {
         binding.autotuneUpdateProfile.setOnClickListener {
             val localName = autotunePlugin.pumpProfile.profileName
             OKDialog.showConfirmation(requireContext(),
-                                      rh.gs(app.aaps.core.ui.R.string.autotune_update_input_profile_button),
-                                      rh.gs(app.aaps.core.ui.R.string.autotune_update_local_profile_message, localName),
+                                      rh.gs(R.string.autotune_update_input_profile_button),
+                                      rh.gs(R.string.autotune_update_local_profile_message, localName),
                                       Runnable {
                                           autotunePlugin.tunedProfile?.profileName = localName
                                           autotunePlugin.updateProfile(autotunePlugin.tunedProfile)
@@ -193,8 +197,8 @@ class AutotuneFragment : DaggerFragment() {
         binding.autotuneRevertProfile.setOnClickListener {
             val localName = autotunePlugin.pumpProfile.profileName
             OKDialog.showConfirmation(requireContext(),
-                                      rh.gs(app.aaps.core.ui.R.string.autotune_revert_input_profile_button),
-                                      rh.gs(app.aaps.core.ui.R.string.autotune_revert_local_profile_message, localName),
+                                      rh.gs(R.string.autotune_revert_input_profile_button),
+                                      rh.gs(R.string.autotune_revert_local_profile_message, localName),
                                       Runnable {
                                           autotunePlugin.tunedProfile?.profileName = ""
                                           autotunePlugin.updateProfile(autotunePlugin.pumpProfile)
@@ -234,14 +238,14 @@ class AutotuneFragment : DaggerFragment() {
 
         binding.autotuneCompare.setOnClickListener {
             val pumpProfile = autotunePlugin.pumpProfile
-            val circadian = sp.getBoolean(app.aaps.core.utils.R.string.key_autotune_circadian_ic_isf, false)
+            val circadian = preferences.get(BooleanKey.AutotuneCircadianIcIsf)
             val tunedProfile = if (circadian) autotunePlugin.tunedProfile?.circadianProfile else autotunePlugin.tunedProfile?.profile
             uiInteraction.runProfileViewerDialog(
                 fragmentManager = childFragmentManager,
                 time = dateUtil.now(),
                 mode = UiInteraction.Mode.PROFILE_COMPARE,
                 customProfile = pumpProfile.profile.toPureNsJson(dateUtil).toString(),
-                customProfileName = pumpProfile.profileName + "\n" + rh.gs(app.aaps.core.ui.R.string.autotune_tunedprofile_name),
+                customProfileName = pumpProfile.profileName + "\n" + rh.gs(R.string.autotune_tunedprofile_name),
                 customProfile2 = tunedProfile?.toPureNsJson(dateUtil).toString()
             )
         }
@@ -249,34 +253,38 @@ class AutotuneFragment : DaggerFragment() {
         binding.autotuneProfileswitch.setOnClickListener {
             val tunedProfile = autotunePlugin.tunedProfile
             autotunePlugin.updateProfile(tunedProfile)
-            val circadian = sp.getBoolean(app.aaps.core.utils.R.string.key_autotune_circadian_ic_isf, false)
-            tunedProfile?.let { tunedP ->
-                tunedP.profileStore(circadian)?.let {
-                    OKDialog.showConfirmation(requireContext(),
-                                              rh.gs(app.aaps.core.ui.R.string.activate_profile) + ": " + tunedP.profileName + " ?",
-                                              {
-                                                  uel.log(
-                                                      action = Action.STORE_PROFILE,
-                                                      source = Sources.Autotune,
-                                                      value = ValueWithUnit.SimpleString(tunedP.profileName)
-                                                  )
-                                                  val now = dateUtil.now()
-                                                  profileFunction.createProfileSwitch(
-                                                      profileStore = it,
-                                                      profileName = tunedP.profileName,
-                                                      durationInMinutes = 0,
-                                                      percentage = 100,
-                                                      timeShiftInHours = 0,
-                                                      timestamp = now,
-                                                      action = Action.PROFILE_SWITCH,
-                                                      source = Sources.Autotune,
-                                                      note = "Autotune AutoSwitch",
-                                                      listValues = listOf(ValueWithUnit.SimpleString(autotunePlugin.tunedProfile!!.profileName))
-                                                  )
-                                                  rxBus.send(EventLocalProfileChanged())
-                                                  updateGui()
-                                              }
-                    )
+            val circadian = preferences.get(BooleanKey.AutotuneCircadianIcIsf)
+            if (loop.isDisconnected) {
+                activity?.let { it1 -> OKDialog.show(it1, rh.gs(R.string.not_available_full), rh.gs(R.string.pump_disconnected)) }
+            } else {
+                tunedProfile?.let { tunedP ->
+                    tunedP.profileStore(circadian)?.let {
+                        OKDialog.showConfirmation(requireContext(),
+                                                  rh.gs(app.aaps.core.ui.R.string.activate_profile) + ": " + tunedP.profileName + " ?",
+                                                  {
+                                                      uel.log(
+                                                          action = Action.STORE_PROFILE,
+                                                          source = Sources.Autotune,
+                                                          value = ValueWithUnit.SimpleString(tunedP.profileName)
+                                                      )
+                                                      val now = dateUtil.now()
+                                                      profileFunction.createProfileSwitch(
+                                                          profileStore = it,
+                                                          profileName = tunedP.profileName,
+                                                          durationInMinutes = 0,
+                                                          percentage = 100,
+                                                          timeShiftInHours = 0,
+                                                          timestamp = now,
+                                                          action = Action.PROFILE_SWITCH,
+                                                          source = Sources.Autotune,
+                                                          note = "Autotune AutoSwitch",
+                                                          listValues = listOf(ValueWithUnit.SimpleString(autotunePlugin.tunedProfile!!.profileName))
+                                                      )
+                                                      rxBus.send(EventLocalProfileChanged())
+                                                      updateGui()
+                                                  }
+                        )
+                    }
                 }
             }
         }
@@ -340,7 +348,7 @@ class AutotuneFragment : DaggerFragment() {
         binding.autotuneCompare.visibility = View.GONE
         when {
             autotunePlugin.calculationRunning -> {
-                binding.tuneWarning.text = rh.gs(app.aaps.core.ui.R.string.autotune_warning_during_run)
+                binding.tuneWarning.text = rh.gs(R.string.autotune_warning_during_run)
             }
 
             autotunePlugin.lastRunSuccess     -> {
@@ -348,7 +356,7 @@ class AutotuneFragment : DaggerFragment() {
                 binding.autotuneUpdateProfile.visibility = autotunePlugin.updateButtonVisibility
                 binding.autotuneRevertProfile.visibility = if (autotunePlugin.updateButtonVisibility == View.VISIBLE) View.GONE else View.VISIBLE
                 binding.autotuneProfileswitch.visibility = View.VISIBLE
-                binding.tuneWarning.text = rh.gs(app.aaps.core.ui.R.string.autotune_warning_after_run)
+                binding.tuneWarning.text = rh.gs(R.string.autotune_warning_after_run)
                 binding.autotuneCompare.visibility = View.VISIBLE
             }
 
@@ -367,7 +375,7 @@ class AutotuneFragment : DaggerFragment() {
     private fun checkNewDay() {
         val runToday = autotunePlugin.lastRun > MidnightTime.calc(dateUtil.now() - autotunePlugin.autotuneStartHour * 3600 * 1000L) + autotunePlugin.autotuneStartHour * 3600 * 1000L
         if (runToday && autotunePlugin.result != "") {
-            binding.tuneWarning.text = rh.gs(app.aaps.core.ui.R.string.autotune_warning_after_run)
+            binding.tuneWarning.text = rh.gs(R.string.autotune_warning_after_run)
         } else if (!runToday || autotunePlugin.result.isEmpty()) //if new day re-init result, default days, warning and button's visibility
             resetParam(!runToday)
     }
@@ -382,13 +390,13 @@ class AutotuneFragment : DaggerFragment() {
         profileFunction.getProfile()?.let { currentProfile ->
             profile =
                 ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(value = it, activePlugin = null) } ?: currentProfile, LocalInsulin(""), injector).also { profile ->
-                    if (!profile.isValid) return rh.gs(app.aaps.core.ui.R.string.autotune_profile_invalid)
+                    if (!profile.isValid) return rh.gs(R.string.autotune_profile_invalid)
                     if (profile.icSize > 1) {
-                        warning += nl + rh.gs(app.aaps.core.ui.R.string.autotune_ic_warning, profile.icSize, profile.ic)
+                        warning += nl + rh.gs(R.string.autotune_ic_warning, profile.icSize, profile.ic)
                         nl = "\n"
                     }
                     if (profile.isfSize > 1) {
-                        warning += nl + rh.gs(app.aaps.core.ui.R.string.autotune_isf_warning, profile.isfSize, profileUtil.fromMgdlToUnits(profile.isf), profileFunction.getUnits().asText)
+                        warning += nl + rh.gs(R.string.autotune_isf_warning, profile.isfSize, profileUtil.fromMgdlToUnits(profile.isf), profileFunction.getUnits().asText)
                     }
                 }
         }
@@ -398,7 +406,7 @@ class AutotuneFragment : DaggerFragment() {
     private fun resetParam(resetDay: Boolean) {
         binding.tuneWarning.text = addWarnings()
         if (resetDay) {
-            autotunePlugin.lastNbDays = sp.getInt(app.aaps.core.utils.R.string.key_autotune_default_tune_days, 5).toString()
+            autotunePlugin.lastNbDays = preferences.get(IntKey.AutotuneDefaultTuneDays).toString()
             days.setAll(true)
         }
         autotunePlugin.result = ""
@@ -450,7 +458,7 @@ class AutotuneFragment : DaggerFragment() {
                                     })
                                 autotunePlugin.tunedProfile?.let { tuned ->
                                     layout.addView(toTableRowHeader(context))
-                                    val tuneInsulin = sp.getBoolean(app.aaps.core.utils.R.string.key_autotune_tune_insulin_curve, false)
+                                    val tuneInsulin = preferences.get(BooleanKey.AutotuneTuneInsulinCurve)
                                     if (tuneInsulin) {
                                         layout.addView(
                                             toTableRowValue(
@@ -525,7 +533,7 @@ class AutotuneFragment : DaggerFragment() {
             header.addView(TextView(context).apply {
                 layoutParams = lp.apply { column = 0 }
                 textAlignment = TextView.TEXT_ALIGNMENT_CENTER
-                text = if (basal) rh.gs(app.aaps.core.ui.R.string.time) else rh.gs(app.aaps.core.ui.R.string.autotune_param)
+                text = if (basal) rh.gs(app.aaps.core.ui.R.string.time) else rh.gs(R.string.autotune_param)
             })
             header.addView(TextView(context).apply {
                 layoutParams = lp.apply { column = 1 }
@@ -535,17 +543,17 @@ class AutotuneFragment : DaggerFragment() {
             header.addView(TextView(context).apply {
                 layoutParams = lp.apply { column = 2 }
                 textAlignment = TextView.TEXT_ALIGNMENT_CENTER
-                text = rh.gs(app.aaps.core.ui.R.string.autotune_tunedprofile_name)
+                text = rh.gs(R.string.autotune_tunedprofile_name)
             })
             header.addView(TextView(context).apply {
                 layoutParams = lp.apply { column = 3 }
                 textAlignment = TextView.TEXT_ALIGNMENT_CENTER
-                text = rh.gs(app.aaps.core.ui.R.string.autotune_percent)
+                text = rh.gs(R.string.autotune_percent)
             })
             header.addView(TextView(context).apply {
                 layoutParams = lp.apply { column = 4 }
                 textAlignment = TextView.TEXT_ALIGNMENT_CENTER
-                text = if (basal) rh.gs(app.aaps.core.ui.R.string.autotune_missing) else " "
+                text = if (basal) rh.gs(R.string.autotune_missing) else " "
             })
         }
 

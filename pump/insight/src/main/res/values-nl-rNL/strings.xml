@@ -4,6 +4,7 @@
     <string name="disable_tbr_over_notification">Deactiveer melding van TBR eind\n(pomp instelling)</string>
     <string name="not_paired">Niet gekoppeld</string>
     <string name="recovering">Herstellen</string>
+    <string name="insight_status">Status</string>
     <string name="recovery_duration">Herstel duur</string>
     <string name="last_connected">Laatste verbinding</string>
     <string name="start_pump">Start pomp</string>
@@ -13,6 +14,7 @@
     <string name="operating_mode">Werkingsmodus</string>
     <string name="description_pump_insight_local">Pomp integratie voor Accu-Chek Insight pompen</string>
     <string name="not_inserted">Niet geplaatst</string>
+    <string name="tdd_bolus">TDD Bolus</string>
     <string name="tdd_basal">TDD Basaal</string>
     <string name="tbr_formatter">%1$d%% gedurende %2$d / %3$d min</string>
     <string name="multiwave_bolus">Multiwave-Bolus</string>
@@ -22,6 +24,8 @@
     <string name="pairing_completed">Koppeling voltooid</string>
     <string name="code_compare">Worden dezelfde codes weergegeven op dit apparaat als op je pomp?</string>
     <string name="insight_pairing">Insight koppelen</string>
+    <string name="insight_local">Accu-Chek Insight</string>
+    <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Slang vervangen</string>
     <string name="insightpump_shortname">Insight</string>
     <string name="insight_alert_notification_channel">Insight pomp waarschuwingen</string>
@@ -36,7 +40,9 @@
     <string name="short_status_tbr">TBR: %1$d%% gedurende %2$d / %3$d min</string>
     <string name="short_status_extended">Vertraagd: %1$.2f / %2$.2f U gedurende %3$d min</string>
     <string name="short_status_multiwave">Multiwave: %1$.2f / %2$.2f E gedurende %3$d min</string>
+    <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_reservoir">Reservoir: %1$.2f E</string>
+    <string name="short_status_battery">Batt: %1$d%%</string>
     <string name="release_software_version">Release softwareversie</string>
     <string name="ui_processor_software_version">UI processor softwareversie</string>
     <string name="pc_processor_software_version">PC processor softwareversie</string>
@@ -61,4 +67,5 @@
     <string name="pump_alert">Pomp alarm</string>
     <string name="pairing_information">Koppelingsinformatie</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight actualiseren knop</string>
+    <string name="last_connection">%1$s (%2$s)</string>
 </resources>

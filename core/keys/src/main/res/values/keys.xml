@@ -71,6 +71,7 @@
     <!--    BG source-->
     <string name="key_do_bg_ns_upload" translatable="false">dexcomg5_nsupload</string>
     <string name="key_dexcom_log_ns_sensor_change" translatable="false">dexcom_lognssensorchange</string>
+    <string name="key_randombg_interval_min" translatable="false">randombg_interval_min</string>
 
     <!--    Loop-->
     <string name="key_loop_open_mode_min_change" translatable="false">loop_openmode_min_change</string>
@@ -105,31 +106,7 @@
     <string name="key_openaps_ama_autosens_adjust_targets" translatable="false">autosens_adjust_targets</string>
     <string name="key_openaps_ama_min_5m_carbs_impact" translatable="false">openapsama_min_5m_carbimpact</string>
     <string name="key_openaps_smb_min_5m_carbs_impact" translatable="false">openapsama_min_5m_carbimpact</string>
-
-    <!--    Sensitivity-->
-    <string name="key_absorption_cutoff" translatable="false">absorption_cutoff</string>
-    <string name="key_openaps_autosens_max" translatable="false">autosens_max</string>
-    <string name="key_openaps_autosens_min" translatable="false">autosens_min</string>
-    <string name="key_absorption_maxtime" translatable="false">absorption_maxtime</string>
-    <string name="key_openapsama_autosens_period" translatable="false">openapsama_autosens_period</string>
-
-    <!--    Insulin-->
-    <string name="key_insulin_oref_peak" translatable="false">insulin_oref_peak</string>
-
-    <!--    Maintenance-->
-    <string name="key_maintenance_logs_email" translatable="false">maintenance_logs_email</string>
-    <string name="key_maintenance_logs_amount" translatable="false">maintenance_logs_amount</string>
-    <string name="key_email_for_crash_report" translatable="false">email_for_crash_report</string>
-    <string name="key_enable_fabric" translatable="false">enable_fabric2</string>
-
-    <!--    Automation-->
-    <string name="key_location" translatable="false">location</string>
-
-    <!--    Alerts-->
-    <string name="key_missed_bg_readings_threshold_minutes" translatable="false">missed_bg_readings_threshold</string>
-    <string name="key_pump_unreachable_threshold_minutes" translatable="false">pump_unreachable_threshold</string>
-    <!--    Equil-->
-    <string name="key_equil_maxbolus" translatable="false">equil_maxbolus</string>
+    <string name="key_openaps_link_to_docs" translatable="false">link_to_docs</string>
 
     <!--    autoISF -->
     <string name="key_half_basal_exercise_target" translatable="false">half_basal_exercise_target</string>
@@ -157,5 +134,60 @@
     <string name="key_high_temptarget_raises_sensitivity" translatable="false">high_temptarget_raises_sensitivity</string>
     <string name="key_low_temptarget_lowers_sensitivity" translatable="false">low_temptarget_lowers_sensitivity</string>
     <string name="key_openapsama_iob_threshold_percent" translatable="false">iob_threshold_percent</string>
+
+    <!--    Sensitivity-->
+    <string name="key_absorption_cutoff" translatable="false">absorption_cutoff</string>
+    <string name="key_openaps_autosens_max" translatable="false">autosens_max</string>
+    <string name="key_openaps_autosens_min" translatable="false">autosens_min</string>
+    <string name="key_absorption_maxtime" translatable="false">absorption_maxtime</string>
+    <string name="key_openapsama_autosens_period" translatable="false">openapsama_autosens_period</string>
+
+    <!--    Insulin-->
+    <string name="key_insulin_oref_peak" translatable="false">insulin_oref_peak</string>
+
+    <!--    Maintenance-->
+    <string name="key_maintenance_logs_email" translatable="false">maintenance_logs_email</string>
+    <string name="key_maintenance_logs_amount" translatable="false">maintenance_logs_amount</string>
+    <string name="key_email_for_crash_report" translatable="false">email_for_crash_report</string>
+    <string name="key_enable_fabric" translatable="false">enable_fabric2</string>
+
+    <!--    Automation-->
+    <string name="key_location" translatable="false">location</string>
+
+    <!--    Alerts-->
+    <string name="key_missed_bg_readings_threshold_minutes" translatable="false">missed_bg_readings_threshold</string>
+    <string name="key_pump_unreachable_threshold_minutes" translatable="false">pump_unreachable_threshold</string>
+
+    <!--    Equil-->
+    <string name="key_equil_maxbolus" translatable="false">equil_maxbolus</string>
+
+    <!--Autotune-->
+    <string name="key_autotune_auto" translatable="false">autotune_auto</string>
+    <string name="key_autotune_categorize_uam_as_basal" translatable="false">categorize_uam_as_basal</string>
+    <string name="key_autotune_tune_insulin_curve" translatable="false">autotune_tune_insulin_curve</string>
+    <string name="key_autotune_default_tune_days" translatable="false">autotune_default_tune_days</string>
+    <string name="key_autotune_circadian_ic_isf" translatable="false">autotune_circadian_ic_isf</string>
+    <string name="key_autotune_additional_log" translatable="false">autotune_additional_log</string>
+    <string name="key_autotune_last_run" translatable="false">key_autotune_last_run</string>
+
+    <!--Safety-->
+    <string name="key_child" translatable="false">child</string>
+    <string name="key_teenage" translatable="false">teenage</string>
+    <string name="key_adult" translatable="false">adult</string>
+    <string name="key_resistantadult" translatable="false">resistantadult</string>
+    <string name="key_pregnant" translatable="false">pregnant</string>
+
+    <!--    SMS Communicator-->
+    <string name="key_smscommunicator_otp_password" translatable="false">smscommunicator_otp_password</string>
+    <string name="key_smscommunicator_otp_secret" translatable="false">smscommunicator_otp_secret</string>
+    <string name="key_smscommunicator_remote_bolus_min_distance" translatable="false">smscommunicator_remotebolusmindistance</string>
+    <string name="key_smscommunicator_allowednumbers" translatable="false">smscommunicator_allowednumbers</string>
+    <string name="key_smscommunicator_remote_commands_allowed" translatable="false">smscommunicator_remotecommandsallowed</string>
+    <string name="key_smscommunicator_report_pump_unreachable" translatable="false">smscommunicator_report_pump_unreachable</string>
+    <string name="key_smscommunicator_otp_setup" translatable="false">smscommunicator_otp_setup</string>
+
+    <!--    Overview-->
+    <string name="key_overview_quick_wizard_settings" translatable="false">overview_quickwizard_settings</string>
+    <string name="key_statuslights_copy_ns" translatable="false">statuslights_copy_ns</string>
 
 </resources>

@@ -188,7 +188,7 @@ class ImportExportPrefsImpl @Inject constructor(
                                       rh.gs(R.string.master_password_missing, rh.gs(R.string.configbuilder_general), rh.gs(R.string.protection)),
                                       R.string.nav_preferences, {
                                           val intent = Intent(activity, uiInteraction.preferencesActivity).apply {
-                                              putExtra("id", uiInteraction.prefGeneral)
+                                              putExtra(UiInteraction.XML_ID, uiInteraction.prefGeneral)
                                           }
                                           activity.startActivity(intent)
                                       })

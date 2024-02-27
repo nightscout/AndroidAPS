@@ -4,7 +4,15 @@
     <string name="triggercoblabel">Aktivni UGH</string>
     <string name="never">Nikada</string>
     <string name="action">Aktivnost:</string>
+    <string name="remove_selected_items">Ukloni odabrane stavke</string>
+    <string name="count_selected">%1$d odabrano</string>
     <string name="stop_processing">Zaustavi obradu</string>
     <!--    Reminders-->
     <string name="time_to_bolus">Vrijeme je za bolus!\nPokrenite čarobnjak za bolus i ponovite izračun.</string>
+    <!--    Autotune-->
+    <string name="autotune_run">Pokrenite Autotune</string>
+    <string name="autotune_run_without_autoswitch">Autotune je odradio bez promjene profila</string>
+    <string name="autotune_run_with_autoswitch">Autotune je pokrenut i profil se automatski promijenio</string>
+    <string name="autotune_run_with_error">Pogreška tijekom zadnjeg pokretanja automatskog podešavanja</string>
+    <string name="autotune_run_cancelled">Otkriveno je još jedno pokretanje Autotunea, pokretanje je otkazano</string>
 </resources>

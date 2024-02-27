@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import app.aaps.core.data.aps.SMBDefaults
-import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.APSResult
@@ -22,6 +21,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profiling.Profiler
@@ -76,7 +76,6 @@ open class TestOpenAPSSMBPlugin @Inject constructor(
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_generic_icon)
         .pluginName(R.string.openapssmb)
         .shortName(app.aaps.core.ui.R.string.smb_shortname)
-        .preferencesId(R.xml.pref_openapssmb)
         .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_smb)
         .setDefault(),

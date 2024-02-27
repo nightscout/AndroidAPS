@@ -41,6 +41,7 @@
     <string name="dexcom_log_ns_sensor_change_title">Log sensor change to NS</string>
     <string name="dexcom_log_ns_sensor_change_summary">Create event \"Sensor Change\" in NS automatically on sensor start</string>
     <string name="direction">direction</string>
+    <string name="bg_generation_interval_minutes">BG generation interval minutes</string>
 
 
 </resources>

@@ -116,4 +116,11 @@
     <string name="time_to_eat">Čas k jídlu!\nSpusťte Bolusovou kalkulačku a proveďte výpočet znovu.</string>
     <string name="time_to_bolus">Čas na bolus!\nSpusťte Bolusovou kalkulačku a proveďte výpočet znovu.</string>
     <string name="error_setting_reminder">Chyba při nastavení budoucího budíku</string>
+    <!--    Autotune-->
+    <string name="autotune_profile_name">Profil Autotune %1$s</string>
+    <string name="autotune_run">Spustit Autotune</string>
+    <string name="autotune_run_without_autoswitch">Autotune spuštěno bez přepnutí profilu</string>
+    <string name="autotune_run_with_autoswitch">Autotune spuštěno a profil automaticky přepnut</string>
+    <string name="autotune_run_with_error">Chyba při posledním spuštění Autotune</string>
+    <string name="autotune_run_cancelled">Byla zjištěna jiná běžící úloha Autotune, spuštění zrušeno</string>
 </resources>

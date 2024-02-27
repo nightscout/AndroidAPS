@@ -176,13 +176,19 @@ class PluginStore @Inject constructor(
         get() = activeBgSourceStore ?: checkNotNull(activeBgSourceStore) { "No bg source selected" }
 
     override val activeProfileSource: ProfileSource
-        get() = activeProfile ?: checkNotNull(activeProfile) { "No profile selected" }
+        get() = activeProfile ?: wait() ?: activeProfile ?: checkNotNull(activeProfile) { "No profile selected" }
 
     override val activeInsulin: Insulin
         get() = activeInsulinStore ?: getDefaultPlugin(PluginType.INSULIN) as Insulin
 
+    private fun <T> wait(): T? {
+        Thread.sleep(3000)
+        return null
+    }
+
+    // App may not be initialized yet. Wait before second return
     override val activeAPS: APS
-        get() = activeAPSStore ?: checkNotNull(activeAPSStore) { "No APS selected" }
+        get() = activeAPSStore ?: wait() ?: activeAPSStore ?: checkNotNull(activeAPSStore) { "No APS selected" }
 
     override val activePump: Pump
         get() = activePumpStore

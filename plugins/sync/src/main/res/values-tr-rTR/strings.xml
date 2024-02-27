@@ -189,4 +189,5 @@
     <string name="tdd_line">%1$.2fÜ %1$.0f%%</string>
     <string name="today">Bugün</string>
     <string name="weighted">ağırlıklı</string>
+    <string name="full_xdrip_sync_comment">Tam senkronizasyon? Biraz zaman alabilir ve tamamlanana kadar xDrip+\'ta yeni verileri göremezsiniz.</string>
 </resources>
