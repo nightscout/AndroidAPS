@@ -120,6 +120,7 @@
     <string name="fallback_smb_no_tdd">Возврат к СМБ. Недостаточно данных TDD.</string>
     <string name="fallback_to_isf_no_tdd">Откат к чувствительности профиля. Недостаточно данных TDD.</string>
     <!-- Autotune -->
+    <string name="autotune_description">Помощь в возможной корректировке профиля (ISF, IC, базал)</string>
     <string name="autotune_shortname">АвтТюн</string>
     <string name="autotune_settings">Настройки Autotune</string>
     <string name="autotune_auto_title">Профили Автонастройки </string>
@@ -159,4 +160,6 @@
     <string name="autotune_update_local_profile_message">Обновить профиль %1$s профилем Autotune?</string>
     <string name="autotune_revert_local_profile_message">Восстановить профиль %1$s с помощью входного профиля?</string>
     <string name="autotune_profile_invalid">Неверный профиль</string>
+    <string name="not_available_full">Недоступно</string>
+    <string name="pump_disconnected">Помпа отключена</string>
 </resources>
