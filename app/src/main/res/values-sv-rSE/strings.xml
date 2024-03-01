@@ -16,11 +16,6 @@
     <string name="wear">Klocka (Wear)</string>
     <string name="nav_about">Om</string>
     <string name="smscommunicator_missingphonestatepermission">Behörighet saknas</string>
-    <string name="ns_alarm_options">Larminställningar</string>
-    <string name="ns_alarms">Skapa aviseringar från NS-larm</string>
-    <string name="ns_announcements">Skapa aviseringar från NS-meddelanden</string>
-    <string name="ns_alarm_stale_data_value_label">Första varning efter [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Akut varning efter [min]</string>
     <string name="sensitivity_warning">Genom att slå på Autosens funktionen, kom ihåg att skriva in alla KH. Annars kommer programmet göra fel i beräkningar av känslighet (ISF)!!</string>
     <string name="notloadedplugins">Alla profiler laddades inte!</string>
     <string name="valuesnotstored">Alla värden sparades inte!</string>
