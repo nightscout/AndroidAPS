@@ -16,11 +16,6 @@
     <string name="wear">Смарт-часы Wear</string>
     <string name="nav_about">о приложении</string>
     <string name="smscommunicator_missingphonestatepermission">Отсутствует разрешение телефона</string>
-    <string name="ns_alarm_options">опции оповещения</string>
-    <string name="ns_alarms">Создать уведомления из оповещений NS</string>
-    <string name="ns_announcements">Создать уведомления из оповещений NS</string>
-    <string name="ns_alarm_stale_data_value_label">Порог оповещения об устаревших данных [min] (мин)</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Порог тревоги об устаревших данных [min] (мин)</string>
     <string name="sensitivity_warning">Активируя Autosense не забывайте вводить все съеденные углеводы. Иначе отклонения в углеводах будут неверно определены как изменение чувствительности !!</string>
     <string name="notloadedplugins">не все профили загружены!</string>
     <string name="valuesnotstored">Данные не сохранены!</string>
