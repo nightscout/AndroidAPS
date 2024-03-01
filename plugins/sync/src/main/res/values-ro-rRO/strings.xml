@@ -123,7 +123,6 @@
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Conexiune la dispozitivul Garmin (Fenix, Edge, …)</string>
-    <string name="key_garmin_settings">Setări Garmin</string>
     <!--    Wear-->
     <string name="wear_shortname">CEAS</string>
     <string name="description_wear">Monitorizează și controlează AAPS folosind ceasul WearOS.</string>
