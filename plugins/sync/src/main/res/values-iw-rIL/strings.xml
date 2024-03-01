@@ -121,7 +121,6 @@
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">חיבור למכשיר Garmin</string>
-    <string name="key_garmin_settings">הגדרות Garmin</string>
     <!--    Wear-->
     <string name="description_wear">ניטור ושליטה ב-AndroidAPS באמצעות שעון WearOS.</string>
     <string name="no_watch_connected">(השעון לא מחובר)</string>
