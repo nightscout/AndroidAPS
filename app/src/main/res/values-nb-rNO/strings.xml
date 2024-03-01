@@ -16,11 +16,6 @@
     <string name="wear">Klokke</string>
     <string name="nav_about">Om</string>
     <string name="smscommunicator_missingphonestatepermission">Appen mangler tilgang til telefonstatus</string>
-    <string name="ns_alarm_options">Alarmvalg</string>
-    <string name="ns_alarms">Opprett varsler fra NS-alarmer</string>
-    <string name="ns_announcements">Opprett varsler fra NS-meldinger</string>
-    <string name="ns_alarm_stale_data_value_label">Advarsel ved manglende data [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Advarsel ved kritisk mangel på data [min]</string>
     <string name="sensitivity_warning">Hvis du slår på Autosense-funksjonen må du huske å angi alle spiste karbohydrater. Ellers vil Karbo-avvik bli identifisert feil som sensitivitetsendring !!</string>
     <string name="notloadedplugins">Ikke alle profiler ble lastet!</string>
     <string name="valuesnotstored">Verdier ikke lagret!</string>
