@@ -123,7 +123,6 @@
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Conexión al dispositivo Garmin (Fénix, Edge, …)</string>
-    <string name="key_garmin_settings">Ajustes de Garmin</string>
     <!--    Wear-->
     <string name="wear_shortname">RELOJ</string>
     <string name="description_wear">Supervisar y controlar AAPS usando un reloj WearOS</string>
