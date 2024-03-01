@@ -120,7 +120,6 @@
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Susiejimas su Garmin (Fenix, Edge, …)</string>
-    <string name="key_garmin_settings">Garmin nustatymai</string>
     <!--    Wear-->
     <string name="description_wear">Stebėti ir kontroliuoti AndroidAPS naudojant WearOS laikrodį.</string>
     <string name="no_watch_connected">(nėra prijungto laikrodžio)</string>
