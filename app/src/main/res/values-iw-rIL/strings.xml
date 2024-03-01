@@ -16,11 +16,6 @@
     <string name="wear">Wear</string>
     <string name="nav_about">אודות</string>
     <string name="smscommunicator_missingphonestatepermission">הרשאת סטטוס הטלפון חסרה</string>
-    <string name="ns_alarm_options">אפשרויות התראה</string>
-    <string name="ns_alarms">ייצר התראות מאזעקות של Nightscout</string>
-    <string name="ns_announcements">ייצר התראות מהכרזות של Nightscout</string>
-    <string name="ns_alarm_stale_data_value_label">סף התיישנות נתונים [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">סף התיישנות נתונים דחוף [min]</string>
     <string name="sensitivity_warning">בהפעלת פונקציית ה-Autosens יש לזכור שחייבים להזין למערכת את כל הפחמימות שנאכלו. אחרת פחמימות לא יזוהו נכון כשינוי ברגישות!</string>
     <string name="notloadedplugins">לא כל הפרופילים נטענו!</string>
     <string name="valuesnotstored">הערכים לא נשמרו</string>
