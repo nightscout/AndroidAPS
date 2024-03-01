@@ -16,11 +16,6 @@
     <string name="wear">Wear</string>
     <string name="nav_about">Über</string>
     <string name="smscommunicator_missingphonestatepermission">Fehlende Berechtigung für den Zugriff auf den Telefonstatus</string>
-    <string name="ns_alarm_options">Alarm-Optionen</string>
-    <string name="ns_alarms">Benachrichtigungen über NS-Alarme</string>
-    <string name="ns_announcements">Benachrichtigungen über NS-Ankündigungen</string>
-    <string name="ns_alarm_stale_data_value_label">Veraltete Daten seit [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Stark veraltete Daten seit [min]</string>
     <string name="sensitivity_warning">Stelle bei aktivierter Autosens-Funktion sicher, dass du alle eingenommenen Kohlenhydrate eingibst. Ansonsten können die Kohlenhydrat-Abweichungen zu falschen Sensitivitätswerten führen!</string>
     <string name="notloadedplugins">Es sind nicht alle Profile geladen!</string>
     <string name="valuesnotstored">Werte nicht gespeichert!</string>
