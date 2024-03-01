@@ -16,11 +16,6 @@
     <string name="wear">Wear</string>
     <string name="nav_about">O aplikácii</string>
     <string name="smscommunicator_missingphonestatepermission">Chýba oprávnenia pre zisťovanie stavu telefónu</string>
-    <string name="ns_alarm_options">Nastavenie alarmov</string>
-    <string name="ns_alarms">Vytvoriť oznámenia z alarmov NS</string>
-    <string name="ns_announcements">Vytvoriť oznámenia z upozornení NS</string>
-    <string name="ns_alarm_stale_data_value_label">Hraničná hodnota pre zastaralé dáta [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Vysoká hraničná hodnota pre zastaralé dáta [min]</string>
     <string name="sensitivity_warning">Pri zapnutej automatickej detekcii citlivosti, nezabudnite vkladať všetky prijaté sacharidy. V opačnom prípade, budú odchýlky mylne vyhodnocované, ako zmena citlivosti !!</string>
     <string name="notloadedplugins">Nenačítané všetky profily!</string>
     <string name="valuesnotstored">Hodnoty nie sú uložené!</string>
