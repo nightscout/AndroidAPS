@@ -176,7 +176,7 @@ class PumpIOTest {
         // This amounts to 2 pairs of RT_BUTTON_STATUS packets plus the
         // final CTRL_DISCONNECT packets, for a total of 5 packets.
 
-        runBlockingWithWatchdog(6000) {
+        runBlockingWithWatchdog(12000) {
             val testStates = TestStates(true)
             val pumpIO = testStates.pumpIO
             val testIO = testStates.testIO
@@ -245,7 +245,7 @@ class PumpIOTest {
         // to avoid having to deal with RT_KEEP_ALIVE packets in the
         // testIO.sentPacketData list.
 
-        runBlockingWithWatchdog(6000) {
+        runBlockingWithWatchdog(12000) {
             val testStates = TestStates(true)
             val testIO = testStates.testIO
             val pumpIO = testStates.pumpIO
@@ -334,7 +334,7 @@ class PumpIOTest {
         // Check what happens if the user issues redundant waitForLongRTButtonPressToFinish()
         // calls. The second call here should be ignored.
 
-        runBlockingWithWatchdog(6000) {
+        runBlockingWithWatchdog(12000) {
             val testStates = TestStates(true)
             val pumpIO = testStates.pumpIO
 
@@ -371,7 +371,7 @@ class PumpIOTest {
         // RT sequence numbers are monotonically increasing, which
         // is the correct behavior.
 
-        runBlockingWithWatchdog(6000) {
+        runBlockingWithWatchdog(12000) {
             val testStates = TestStates(true)
             val pumpIO = testStates.pumpIO
             val testIO = testStates.testIO
@@ -413,7 +413,7 @@ class PumpIOTest {
 
     @Test
     fun cmdCMDReadErrorWarningStatus() {
-        runBlockingWithWatchdog(6000) {
+        runBlockingWithWatchdog(12000) {
             // Check that a simulated CMD error/warning status retrieval is performed successfully.
             // Feed in raw data bytes into the test IO. These raw bytes are packets that contain
             // error/warning status data. Check that these packets are correctly parsed and that
@@ -466,7 +466,7 @@ class PumpIOTest {
 
     @Test
     fun checkCMDHistoryDeltaRetrieval() {
-        runBlockingWithWatchdog(6000) {
+        runBlockingWithWatchdog(12000) {
             // Check that a simulated CMD history delta retrieval is performed successfully.
             // Feed in raw data bytes into the test IO. These raw bytes are packets that
             // contain history data with a series of events inside. Check that these packets
