@@ -25,10 +25,14 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
 import app.aaps.core.nssdk.localmodel.devicestatus.NSDeviceStatus
 import app.aaps.core.utils.JsonHelper.safeGetString
 import app.aaps.core.utils.JsonHelper.safeGetStringAllowNull
 import app.aaps.core.utils.receivers.DataWorkerStorage
+import app.aaps.core.validators.extensions.stringKey
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsShared.NSAlarmObject
 import app.aaps.plugins.sync.nsShared.NsIncomingDataProcessor
@@ -78,6 +82,7 @@ class NSClientService : DaggerService() {
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var nsClientPlugin: NSClientPlugin
     @Inject lateinit var config: Config
@@ -137,8 +142,8 @@ class NSClientService : DaggerService() {
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event: EventPreferenceChange ->
-                           if (event.isChanged(rh.gs(app.aaps.core.utils.R.string.key_nsclientinternal_url)) ||
-                               event.isChanged(rh.gs(app.aaps.core.utils.R.string.key_nsclientinternal_api_secret)) ||
+                           if (event.isChanged(StringKey.NsClientUrl.stringKey(rh)) ||
+                               event.isChanged(StringKey.NsClientApiSecret.stringKey(rh)) ||
                                event.isChanged(rh.gs(R.string.key_ns_paused))
                            ) {
                                latestDateInReceivedData = 0
@@ -360,8 +365,8 @@ class NSClientService : DaggerService() {
 
     private fun readPreferences() {
         nsEnabled = nsClientPlugin.isEnabled()
-        nsURL = sp.getString(app.aaps.core.utils.R.string.key_nsclientinternal_url, "")
-        nsAPISecret = sp.getString(app.aaps.core.utils.R.string.key_nsclientinternal_api_secret, "")
+        nsURL = preferences.get(StringKey.NsClientUrl)
+        nsAPISecret = preferences.get(StringKey.NsClientApiSecret)
         nsDevice = sp.getString("careportal_enteredby", "")
     }
 
@@ -636,8 +641,7 @@ class NSClientService : DaggerService() {
     }
 
     private fun handleAnnouncement(announcement: JSONObject) {
-        val defaultVal = config.NSCLIENT
-        if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_announcements, defaultVal)) {
+        if (preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements)) {
             val nsAlarm = NSAlarmObject(announcement)
             uiInteraction.addNotificationWithAction(nsAlarm)
             rxBus.send(EventNSClientNewLog("◄ ANNOUNCEMENT", safeGetString(announcement, "message", "received")))
@@ -646,8 +650,7 @@ class NSClientService : DaggerService() {
     }
 
     private fun handleAlarm(alarm: JSONObject) {
-        val defaultVal = config.NSCLIENT
-        if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_alarms, defaultVal)) {
+        if (preferences.get(BooleanKey.NsClientNotificationsFromAlarms)) {
             val snoozedTo = sp.getLong(rh.gs(app.aaps.core.utils.R.string.key_snoozed_to) + alarm.optString("level"), 0L)
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
                 val nsAlarm = NSAlarmObject(alarm)
@@ -659,8 +662,7 @@ class NSClientService : DaggerService() {
     }
 
     private fun handleUrgentAlarm(alarm: JSONObject) {
-        val defaultVal = config.NSCLIENT
-        if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_alarms, defaultVal)) {
+        if (preferences.get(BooleanKey.NsClientNotificationsFromAlarms)) {
             val snoozedTo = sp.getLong(rh.gs(app.aaps.core.utils.R.string.key_snoozed_to) + alarm.optString("level"), 0L)
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
                 val nsAlarm = NSAlarmObject(alarm)

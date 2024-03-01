@@ -167,4 +167,38 @@
     <string name="key_virtual_pump_type" translatable="false">virtualpump_type</string>
     <string name="key_virtual_pump_upload_status" translatable="false">virtualpump_uploadstatus</string>
 
+    <!--    Garmin-->
+    <string name="key_garmin_communication_http" translatable="false">communication_http</string>
+    <string name="key_garmin_communication_http_port" translatable="false">communication_http_port</string>
+
+    <!--    NS Client-->
+    <string name="key_nsclientinternal_url" translatable="false">nsclientinternal_url</string>
+    <string name="key_nsclientinternal_api_secret" translatable="false">nsclientinternal_api_secret</string>
+    <string name="key_ns_client_token" translatable="false">nsclient_token</string>
+    <string name="key_ns_upload" translatable="false">ns_upload</string>
+    <string name="key_ns_use_ws" translatable="false">ns_use_ws</string>
+    <string name="key_ns_receive_cgm" translatable="false">ns_receive_cgm</string>
+    <string name="key_ns_create_announcements_from_carbs_req" translatable="false">ns_create_announcements_from_carbs_req</string>
+    <string name="key_ns_receive_profile_store" translatable="false">ns_receive_profile_store</string>
+    <string name="key_ns_receive_insulin" translatable="false">ns_receive_insulin</string>
+    <string name="key_ns_receive_carbs" translatable="false">ns_receive_carbs</string>
+    <string name="key_ns_receive_therapy_events" translatable="false">ns_receive_therapy_events</string>
+    <string name="key_ns_receive_profile_switch" translatable="false">ns_receive_profile_switch</string>
+    <string name="key_ns_receive_offline_event" translatable="false">ns_receive_offline_event</string>
+    <string name="key_ns_receive_temp_target" translatable="false">ns_receive_temp_target</string>
+    <string name="key_ns_receive_tbr_eb" translatable="false">ns_receive_tbr_eb</string>
+    <string name="key_ns_alarms" translatable="false">ns_alarms</string>
+    <string name="key_ns_alarm_stale_data_value" translatable="false">ns_alarm_stale_data_value</string>
+    <string name="key_ns_alarm_urgent_stale_data_value" translatable="false">ns_alarm_urgent_stale_data_value</string>
+    <string name="key_ns_announcements" translatable="false">ns_announcements</string>
+    <string name="key_ns_cellular" translatable="false">ns_cellular</string>
+    <string name="key_ns_wifi" translatable="false">ns_wifi</string>
+    <string name="key_ns_wifi_ssids" translatable="false">ns_wifi_ssids</string>
+    <string name="key_ns_allow_roaming" translatable="false">ns_allow_roaming</string>
+    <string name="key_ns_battery" translatable="false">ns_battery</string>
+    <string name="key_ns_charging" translatable="false">ns_charging</string>
+    <string name="key_ns_log_app_started_event" translatable="false">ns_log_app_started_event</string>
+    <string name="key_ns_create_announcements_from_errors" translatable="false">ns_create_announcements_from_errors</string>
+    <string name="key_ns_sync_slow" translatable="false">ns_sync_slow</string>
+
 </resources>

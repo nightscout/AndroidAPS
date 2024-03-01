@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.Preferences
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.core.nssdk.mapper.convertToRemoteAndBack
 import app.aaps.plugins.sync.nsclient.data.NSDeviceStatusHandler
@@ -23,6 +24,7 @@ import org.mockito.Mockito
 internal class DeviceStatusExtensionKtTest : TestBase() {
 
     @Mock lateinit var sp: SP
+    @Mock lateinit var preferences: Preferences
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var config: Config
@@ -35,7 +37,7 @@ internal class DeviceStatusExtensionKtTest : TestBase() {
 
     @BeforeEach
     fun setup() {
-        processedDeviceStatusData = ProcessedDeviceStatusDataImpl(rh, dateUtil, sp, instantiator)
+        processedDeviceStatusData = ProcessedDeviceStatusDataImpl(rh, dateUtil, sp, preferences, instantiator)
         nsDeviceStatusHandler = NSDeviceStatusHandler(sp, config, dateUtil, runningConfiguration, processedDeviceStatusData, aapsLogger, persistenceLayer)
         Mockito.`when`(config.NSCLIENT).thenReturn(true)
     }

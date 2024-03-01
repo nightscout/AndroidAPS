@@ -24,7 +24,6 @@ import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.AdaptiveIntentPreference
-import app.aaps.core.keys.AdaptiveSwitchPreference
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
@@ -34,6 +33,7 @@ import app.aaps.core.objects.extensions.fromGv
 import app.aaps.core.validators.AdaptiveDoublePreference
 import app.aaps.core.validators.AdaptiveIntPreference
 import app.aaps.core.validators.AdaptiveStringPreference
+import app.aaps.core.validators.AdaptiveSwitchPreference
 import app.aaps.core.validators.AdaptiveUnitPreference
 import app.aaps.implementation.iob.GlucoseStatusProviderImpl
 import app.aaps.plugins.aps.loop.LoopPlugin
@@ -98,6 +98,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
             if (it is AdaptiveSwitchPreference) {
                 it.preferences = preferences
                 it.sharedPrefs = sharedPrefs
+                it.config = config
             }
             if (it is AuthRequest) {
                 it.aapsLogger = aapsLogger

@@ -70,7 +70,7 @@ class LocalAlertUtilsImpl @Inject constructor(
                     it.soundId =
                         R.raw.alarm
                 }))
-                if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_create_announcements_from_errors, true))
+                if (preferences.get(BooleanKey.NsClientCreateAnnouncementsFromErrors))
                     disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
                         therapyEvent = TE.asAnnouncement(rh.gs(R.string.pump_unreachable)),
                         timestamp = dateUtil.now(),
@@ -137,7 +137,7 @@ class LocalAlertUtilsImpl @Inject constructor(
             n.soundId = R.raw.alarm
             sp.putLong(app.aaps.core.utils.R.string.key_next_missed_reading_alarm, dateUtil.now() + missedReadingsThreshold())
             rxBus.send(EventNewNotification(n))
-            if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_create_announcements_from_errors, true)) {
+            if (preferences.get(BooleanKey.NsClientCreateAnnouncementsFromErrors)) {
                 disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
                     therapyEvent = TE.asAnnouncement(n.text),
                     timestamp = dateUtil.now(),

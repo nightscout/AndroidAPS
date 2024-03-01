@@ -6,8 +6,9 @@ import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.extensions.asAnnouncement
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.ui.alertDialogs.ErrorDialog
@@ -18,7 +19,7 @@ import javax.inject.Inject
 
 class ErrorHelperActivity : TranslatedDaggerAppCompatActivity() {
 
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var dateUtil: DateUtil
 
@@ -34,7 +35,7 @@ class ErrorHelperActivity : TranslatedDaggerAppCompatActivity() {
         errorDialog.title = intent.getStringExtra(AlarmSoundService.TITLE) ?: ""
         errorDialog.show(supportFragmentManager, "Error")
 
-        if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_create_announcements_from_errors, true))
+        if (preferences.get(BooleanKey.NsClientCreateAnnouncementsFromErrors))
             disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
                 therapyEvent = TE.asAnnouncement(intent.getStringExtra(AlarmSoundService.STATUS) ?: ""),
                 timestamp = dateUtil.now(),

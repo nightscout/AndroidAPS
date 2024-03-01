@@ -1,10 +1,13 @@
-package app.aaps.core.keys
+package app.aaps.core.validators
 
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.AttributeSet
 import androidx.annotation.StringRes
 import androidx.preference.SwitchPreference
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.keys.BooleanPreferenceKey
+import app.aaps.core.keys.Preferences
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
@@ -18,6 +21,7 @@ class AdaptiveSwitchPreference(
 
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var sharedPrefs: SharedPreferences
+    @Inject lateinit var config: Config
 
     // Inflater constructor
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, booleanKey = null, title = null)
@@ -38,6 +42,9 @@ class AdaptiveSwitchPreference(
             isVisible = false; isEnabled = false
         }
         if (preferences.pumpControlMode && !preferenceKey.showInPumpControlMode) {
+            isVisible = false; isEnabled = false
+        }
+        if (!config.isEngineeringMode() && preferenceKey.engineeringModeOnly) {
             isVisible = false; isEnabled = false
         }
         preferenceKey.dependency?.let {

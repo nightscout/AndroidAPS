@@ -18,6 +18,9 @@ import app.aaps.core.interfaces.rx.events.*
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
 import app.aaps.core.nssdk.mapper.toNSDeviceStatus
 import app.aaps.core.nssdk.mapper.toNSFood
 import app.aaps.core.nssdk.mapper.toNSSgvV3
@@ -49,6 +52,7 @@ class NSClientV3Service : DaggerService() {
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var nsClientV3Plugin: NSClientV3Plugin
     @Inject lateinit var config: Config
@@ -112,9 +116,9 @@ class NSClientV3Service : DaggerService() {
 
     @Suppress("SameParameterValue")
     private fun initializeWebSockets(reason: String) {
-        if (sp.getString(app.aaps.core.utils.R.string.key_nsclientinternal_url, "").isEmpty()) return
-        val urlStorage = sp.getString(app.aaps.core.utils.R.string.key_nsclientinternal_url, "").lowercase().replace(Regex("/$"), "") + "/storage"
-        val urlAlarm = sp.getString(app.aaps.core.utils.R.string.key_nsclientinternal_url, "").lowercase().replace(Regex("/$"), "") + "/alarm"
+        if (preferences.get(StringKey.NsClientUrl).isEmpty()) return
+        val urlStorage = preferences.get(StringKey.NsClientUrl).lowercase().replace(Regex("/$"), "") + "/storage"
+        val urlAlarm = preferences.get(StringKey.NsClientUrl).lowercase().replace(Regex("/$"), "") + "/alarm"
         if (!nsClientV3Plugin.isAllowed) {
             rxBus.send(EventNSClientNewLog("● WS", nsClientV3Plugin.blockingReason))
         } else if (sp.getBoolean(R.string.key_ns_paused, false)) {
@@ -131,8 +135,8 @@ class NSClientV3Service : DaggerService() {
                     socket.on("update", onDataCreateUpdate)
                     socket.on("delete", onDataDelete)
                 }
-                if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_announcements, config.NSCLIENT) ||
-                    sp.getBoolean(app.aaps.core.utils.R.string.key_ns_alarms, config.NSCLIENT)
+                if (preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements) ||
+                    preferences.get(BooleanKey.NsClientNotificationsFromAlarms)
                 )
                     alarmSocket = IO.socket(urlAlarm).also { socket ->
                         socket.on(Socket.EVENT_CONNECT, onConnectAlarms)
@@ -157,7 +161,7 @@ class NSClientV3Service : DaggerService() {
         rxBus.send(EventNSClientNewLog("◄ WS", "connected storage ID: $socketId"))
         if (storageSocket != null) {
             val authMessage = JSONObject().also {
-                it.put("accessToken", sp.getString(R.string.key_ns_client_token, ""))
+                it.put("accessToken", preferences.get(StringKey.NsClientAccessToken))
                 it.put("collections", JSONArray(arrayOf("devicestatus", "entries", "profile", "treatments", "foods", "settings")))
             }
             rxBus.send(EventNSClientNewLog("► WS", "requesting auth for storage"))
@@ -185,7 +189,7 @@ class NSClientV3Service : DaggerService() {
         rxBus.send(EventNSClientNewLog("◄ WS", "connected alarms ID: $socketId"))
         if (socket != null) {
             val authMessage = JSONObject().also {
-                it.put("accessToken", sp.getString(R.string.key_ns_client_token, ""))
+                it.put("accessToken", preferences.get(StringKey.NsClientAccessToken))
             }
             rxBus.send(EventNSClientNewLog("► WS", "requesting auth for alarms"))
             socket.emit("subscribe", authMessage, Ack { args ->
@@ -275,7 +279,7 @@ class NSClientV3Service : DaggerService() {
         val data = args[0] as JSONObject
         rxBus.send(EventNSClientNewLog("◄ ANNOUNCEMENT", data.optString("message")))
         aapsLogger.debug(LTag.NSCLIENT, data.toString())
-        if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_announcements, config.NSCLIENT))
+        if (preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements))
             uiInteraction.addNotificationWithAction(NSAlarmObject(data))
     }
     private val onAlarm = Emitter.Listener { args ->
@@ -296,7 +300,7 @@ class NSClientV3Service : DaggerService() {
         val data = args[0] as JSONObject
         rxBus.send(EventNSClientNewLog("◄ ALARM", data.optString("message")))
         aapsLogger.debug(LTag.NSCLIENT, data.toString())
-        if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_alarms, config.NSCLIENT)) {
+        if (preferences.get(BooleanKey.NsClientNotificationsFromAlarms)) {
             val snoozedTo = sp.getLong(rh.gs(app.aaps.core.utils.R.string.key_snoozed_to) + data.optString("level"), 0L)
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo)
                 uiInteraction.addNotificationWithAction(NSAlarmObject(data))
@@ -307,7 +311,7 @@ class NSClientV3Service : DaggerService() {
         val data = args[0] as JSONObject
         rxBus.send(EventNSClientNewLog("◄ URGENT ALARM", data.optString("message")))
         aapsLogger.debug(LTag.NSCLIENT, data.toString())
-        if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_alarms, config.NSCLIENT)) {
+        if (preferences.get(BooleanKey.NsClientNotificationsFromAlarms)) {
             val snoozedTo = sp.getLong(rh.gs(app.aaps.core.utils.R.string.key_snoozed_to) + data.optString("level"), 0L)
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo)
                 uiInteraction.addNotificationWithAction(NSAlarmObject(data))

@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.nsclientV3
 
+import android.content.SharedPreferences
 import app.aaps.core.data.model.BCR
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
@@ -29,8 +30,14 @@ import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.sync.DataSyncSelector
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.keys.AdaptiveIntentPreference
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.localmodel.treatment.CreateUpdateResponse
+import app.aaps.core.validators.AdaptiveDoublePreference
+import app.aaps.core.validators.AdaptiveIntPreference
+import app.aaps.core.validators.AdaptiveStringPreference
+import app.aaps.core.validators.AdaptiveSwitchPreference
+import app.aaps.core.validators.AdaptiveUnitPreference
 import app.aaps.plugins.sync.nsShared.StoreDataForDbImpl
 import app.aaps.plugins.sync.nsclient.ReceiverDelegate
 import app.aaps.shared.tests.TestBaseWithProfile
@@ -56,11 +63,46 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var insulin: Insulin
     @Mock lateinit var l: L
+    @Mock lateinit var sharedPrefs: SharedPreferences
 
     private lateinit var storeDataForDb: StoreDataForDb
     private lateinit var sut: NSClientV3Plugin
 
     private var insulinConfiguration: ICfg = ICfg("Insulin", 360 * 60 * 1000, 60 * 60 * 1000)
+
+    init {
+        addInjector {
+            if (it is AdaptiveDoublePreference) {
+                it.profileUtil = profileUtil
+                it.preferences = preferences
+                it.sharedPrefs = sharedPrefs
+            }
+            if (it is AdaptiveIntPreference) {
+                it.profileUtil = profileUtil
+                it.preferences = preferences
+                it.sharedPrefs = sharedPrefs
+                it.config = config
+            }
+            if (it is AdaptiveIntentPreference) {
+                it.preferences = preferences
+                it.sharedPrefs = sharedPrefs
+            }
+            if (it is AdaptiveUnitPreference) {
+                it.profileUtil = profileUtil
+                it.preferences = preferences
+                it.sharedPrefs = sharedPrefs
+            }
+            if (it is AdaptiveSwitchPreference) {
+                it.preferences = preferences
+                it.sharedPrefs = sharedPrefs
+                it.config = config
+            }
+            if (it is AdaptiveStringPreference) {
+                it.preferences = preferences
+                it.sharedPrefs = sharedPrefs
+            }
+        }
+    }
 
     @BeforeEach
     fun mock() {
@@ -70,11 +112,11 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun prepare() {
-        storeDataForDb = StoreDataForDbImpl(aapsLogger, rxBus, persistenceLayer, sp, uel, dateUtil, config, nsClientSource, virtualPump, uiInteraction)
+        storeDataForDb = StoreDataForDbImpl(aapsLogger, rxBus, persistenceLayer, sp, preferences, uel, dateUtil, config, nsClientSource, virtualPump, uiInteraction)
         sut =
             NSClientV3Plugin(
                 aapsLogger, aapsSchedulers, rxBus, rh, context, fabricPrivacy,
-                sp, receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
+                sp, preferences, receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
                 nsClientSource, storeDataForDb, decimalFormatter, l
             )
         sut.nsAndroidClient = nsAndroidClient
@@ -499,5 +541,12 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         sut.nsUpdate("profile", dataPair, "1/3")
         // verify(dataSyncSelectorV3, Times(2)).confirmLastProfileStore(1000)
         // verify(dataSyncSelectorV3, Times(2)).processChangedProfileStore()
+    }
+
+    @Test
+    fun preferenceScreenTest() {
+        val screen = preferenceManager.createPreferenceScreen(context)
+        sut.addPreferenceScreen(preferenceManager, screen, context, null)
+        assertThat(screen.preferenceCount).isGreaterThan(0)
     }
 }

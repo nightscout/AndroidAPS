@@ -2,6 +2,9 @@ package app.aaps.plugins.sync.garmin
 
 import android.content.Context
 import androidx.annotation.VisibleForTesting
+import androidx.preference.PreferenceCategory
+import androidx.preference.PreferenceManager
+import androidx.preference.PreferenceScreen
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.plugin.PluginType
@@ -14,6 +17,11 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventNewBG
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.Preferences
+import app.aaps.core.validators.AdaptiveIntPreference
+import app.aaps.core.validators.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
@@ -50,6 +58,7 @@ class GarminPlugin @Inject constructor(
     private val loopHub: LoopHub,
     private val rxBus: RxBus,
     private val sp: SP,
+    private val preferences: Preferences
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -57,7 +66,7 @@ class GarminPlugin @Inject constructor(
         .pluginName(R.string.garmin)
         .shortName(R.string.garmin)
         .description(R.string.garmin_description)
-        .preferencesId(R.xml.pref_garmin),
+        .preferencesId(PluginDescription.PREFERENCE_SCREEN),
     aapsLogger, resourceHelper
 ) {
 
@@ -91,9 +100,9 @@ class GarminPlugin @Inject constructor(
 
     private fun onPreferenceChange(event: EventPreferenceChange) {
         when (event.changedKey) {
-            "communication_debug_mode"                      -> setupGarminMessenger()
-            "communication_http", "communication_http_port" -> setupHttpServer()
-            "garmin_aaps_key"                               -> sendPhoneAppMessage()
+            "communication_debug_mode"                                                         -> setupGarminMessenger()
+            rh.gs(BooleanKey.GarminLocalHttpServer.key), rh.gs(IntKey.GarminLocalHttpPort.key) -> setupHttpServer()
+            "garmin_aaps_key"                                                                  -> sendPhoneAppMessage()
         }
     }
 
@@ -134,8 +143,8 @@ class GarminPlugin @Inject constructor(
 
     @VisibleForTesting
     fun setupHttpServer(wait: Duration) {
-        if (sp.getBoolean("communication_http", false)) {
-            val port = sp.getInt("communication_http_port", 28891)
+        if (preferences.get(BooleanKey.GarminLocalHttpServer)) {
+            val port = preferences.get(IntKey.GarminLocalHttpPort)
             if (server != null && server?.port == port) return
             aapsLogger.info(LTag.GARMIN, "starting HTTP server on $port")
             server?.close()
@@ -443,5 +452,18 @@ class GarminPlugin @Inject constructor(
             joa.add(jo)
         }
         return joa.toString()
+    }
+
+    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
+        if (requiredKey != null) return
+        val category = PreferenceCategory(context)
+        parent.addPreference(category)
+        category.apply {
+            key = "garmin_settings"
+            title = rh.gs(R.string.garmin)
+            initialExpandedChildrenCount = 0
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.GarminLocalHttpServer, title = R.string.garmin_local_http_server))
+            addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.GarminLocalHttpPort, title = R.string.garmin_local_http_server_port))
+        }
     }
 }

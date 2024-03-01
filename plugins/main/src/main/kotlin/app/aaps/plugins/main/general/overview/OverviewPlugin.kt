@@ -27,7 +27,6 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.AdaptiveIntentPreference
-import app.aaps.core.keys.AdaptiveSwitchPreference
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
@@ -43,6 +42,7 @@ import app.aaps.core.objects.extensions.storeString
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.validators.AdaptiveDoublePreference
 import app.aaps.core.validators.AdaptiveIntPreference
+import app.aaps.core.validators.AdaptiveSwitchPreference
 import app.aaps.core.validators.AdaptiveUnitPreference
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.general.overview.notifications.NotificationStore

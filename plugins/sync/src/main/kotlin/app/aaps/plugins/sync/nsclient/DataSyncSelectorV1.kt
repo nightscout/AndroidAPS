@@ -91,7 +91,7 @@ class DataSyncSelectorV1 @Inject constructor(
             running = true
         }
         rxBus.send(EventNSClientUpdateGuiStatus())
-        if (sp.getBoolean(R.string.key_ns_upload, true) && !isPaused) {
+        if (preferences.get(BooleanKey.NsClientUploadData) && !isPaused) {
             queueCounter.bolusesRemaining = (persistenceLayer.getLastBolusId() ?: 0L) - sp.getLong(R.string.key_ns_bolus_last_synced_id, 0)
             queueCounter.carbsRemaining = (persistenceLayer.getLastCarbsId() ?: 0L) - sp.getLong(R.string.key_ns_carbs_last_synced_id, 0)
             queueCounter.bcrRemaining = (persistenceLayer.getLastBolusCalculatorResultId() ?: 0L) - sp.getLong(R.string.key_ns_bolus_calculator_result_last_synced_id, 0)

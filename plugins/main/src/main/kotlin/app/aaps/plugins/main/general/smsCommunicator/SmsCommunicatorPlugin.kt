@@ -57,7 +57,6 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.AdaptiveIntentPreference
-import app.aaps.core.keys.AdaptiveSwitchPreference
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.IntentKey
@@ -71,6 +70,7 @@ import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.core.validators.AdaptiveIntPreference
 import app.aaps.core.validators.AdaptiveStringPreference
+import app.aaps.core.validators.AdaptiveSwitchPreference
 import app.aaps.core.validators.DefaultEditTextValidator
 import app.aaps.core.validators.EditTextValidator
 import app.aaps.plugins.main.R

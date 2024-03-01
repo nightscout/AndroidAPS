@@ -3,13 +3,15 @@ package app.aaps.core.keys
 enum class BooleanKey(
     override val key: Int,
     override val defaultValue: Boolean,
+    override val calculatedDefaultValue: Boolean = false,
     override val defaultedBySM: Boolean = false,
     override val showInApsMode: Boolean = true,
     override val showInNsClientMode: Boolean = true,
     override val showInPumpControlMode: Boolean = true,
     override val dependency: BooleanPreferenceKey? = null,
     override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false
+    override val hideParentScreenIfHidden: Boolean = false,
+    override val engineeringModeOnly: Boolean = false
 ) : BooleanPreferenceKey {
 
     GeneralSimpleMode(R.string.key_simple_mode, true),
@@ -55,4 +57,27 @@ enum class BooleanKey(
     SmsReportPumpUnreachable(R.string.key_smscommunicator_report_pump_unreachable, true),
 
     VirtualPumpStatusUpload(R.string.key_virtual_pump_upload_status, false, showInNsClientMode = false),
+    GarminLocalHttpServer(R.string.key_garmin_communication_http, false, defaultedBySM = true, hideParentScreenIfHidden = true),
+    NsClientUploadData(R.string.key_ns_upload, true, showInNsClientMode = false, hideParentScreenIfHidden = true),
+    NsClientAcceptCgmData(R.string.key_ns_receive_cgm, false, showInNsClientMode = false, hideParentScreenIfHidden = true),
+    NsClientAcceptProfileStore(R.string.key_ns_receive_profile_store, true, showInNsClientMode = false, hideParentScreenIfHidden = true),
+    NsClientAcceptTempTarget(R.string.key_ns_receive_temp_target, false, showInNsClientMode = false, hideParentScreenIfHidden = true),
+    NsClientAcceptProfileSwitch(R.string.key_ns_receive_profile_switch, false, showInNsClientMode = false, hideParentScreenIfHidden = true),
+    NsClientAcceptInsulin(R.string.key_ns_receive_insulin, false, showInNsClientMode = false, hideParentScreenIfHidden = true),
+    NsClientAcceptCarbs(R.string.key_ns_receive_carbs, false, showInNsClientMode = false, hideParentScreenIfHidden = true),
+    NsClientAcceptTherapyEvent(R.string.key_ns_receive_therapy_events, false, showInNsClientMode = false, hideParentScreenIfHidden = true),
+    NsClientAcceptOfflineEvent(R.string.key_ns_receive_offline_event, false, showInNsClientMode = false, hideParentScreenIfHidden = true),
+    NsClientAcceptTbrEb(R.string.key_ns_receive_tbr_eb, false, showInNsClientMode = false, hideParentScreenIfHidden = true, engineeringModeOnly = true),
+    NsClientNotificationsFromAlarms(R.string.key_ns_alarms, false, calculatedDefaultValue = true),
+    NsClientNotificationsFromAnnouncements(R.string.key_ns_announcements, false, calculatedDefaultValue = true),
+    NsClientUseCellular(R.string.key_ns_cellular, true),
+    NsClientUseRoaming(R.string.key_ns_allow_roaming, true, dependency = NsClientUseCellular),
+    NsClientUseWifi(R.string.key_ns_wifi, true),
+    NsClientUseOnBattery(R.string.key_ns_battery, true),
+    NsClientUseOnCharging(R.string.key_ns_charging, true),
+    NsClientLogAppStart(R.string.key_ns_log_app_started_event, false, calculatedDefaultValue = true),
+    NsClientCreateAnnouncementsFromErrors(R.string.key_ns_create_announcements_from_errors, false, calculatedDefaultValue = true, showInNsClientMode = false),
+    NsClientCreateAnnouncementsFromCarbsReq(R.string.key_ns_create_announcements_from_carbs_req, false, calculatedDefaultValue = true, showInNsClientMode = false),
+    NsClientSlowSync(R.string.key_ns_sync_slow, false),
+    NsClient3UseWs(R.string.key_ns_use_ws, true),
 }

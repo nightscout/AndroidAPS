@@ -44,15 +44,6 @@
     <string name="wear">Wear</string>
     <string name="nav_about">About</string>
     <string name="smscommunicator_missingphonestatepermission">Missing phone state permission</string>
-    <string name="ns_alarm_options">Alarm options</string>
-    <string name="key_ns_announcements" translatable="false">ns_announcements</string>
-    <string name="key_ns_alarms" translatable="false">ns_alarms</string>
-    <string name="key_ns_alarm_stale_data_value" translatable="false">nsalarm_staledatavalue</string>
-    <string name="key_ns_alarm_urgent_stale_data_value" translatable="false">nsalarm_urgent_staledatavalue</string>
-    <string name="ns_alarms">Create notifications from NS alarms</string>
-    <string name="ns_announcements">Create notifications from NS announcements</string>
-    <string name="ns_alarm_stale_data_value_label">Stale data threshold [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Urgent stale data threshold [min]</string>
     <string name="sensitivity_warning">By turning on Autosense feature remember to enter all eated carbs. Otherwise carbs deviations will be identified wrong as sensitivity change !!</string>
     <string name="notloadedplugins">Not all profiles loaded!</string>
     <string name="valuesnotstored">Values not stored!</string>

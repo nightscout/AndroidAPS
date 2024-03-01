@@ -56,5 +56,8 @@ enum class IntKey(
 
     SmsRemoteBolusDistance(R.string.key_smscommunicator_remote_bolus_min_distance, 15, 3, 60),
 
-    BgSourceRandomInterval(R.string.key_randombg_interval_min, 5, 1, 15, defaultedBySM = true)
+    BgSourceRandomInterval(R.string.key_randombg_interval_min, 5, 1, 15, defaultedBySM = true),
+    GarminLocalHttpPort(R.string.key_garmin_communication_http_port, 28891, 1001, 65535, defaultedBySM = true, hideParentScreenIfHidden = true),
+    NsClientAlarmStaleData(R.string.key_ns_alarm_stale_data_value, 16, 15, 120),
+    NsClientUrgentAlarmStaleData(R.string.key_ns_alarm_urgent_stale_data_value, 31, 30, 180),
 }

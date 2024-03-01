@@ -7,8 +7,8 @@ import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.keys.AdaptiveListPreference
-import app.aaps.core.keys.AdaptiveSwitchPreference
 import app.aaps.core.keys.StringKey
+import app.aaps.core.validators.AdaptiveSwitchPreference
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -34,6 +34,7 @@ class VirtualPumpPluginTest : TestBaseWithProfile() {
             if (it is AdaptiveSwitchPreference) {
                 it.preferences = preferences
                 it.sharedPrefs = sharedPreferences
+                it.config = config
             }
         }
     }

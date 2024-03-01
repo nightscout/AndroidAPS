@@ -69,6 +69,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.AdaptiveListPreference
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
@@ -338,7 +339,7 @@ class LoopPlugin @Inject constructor(
                                 val carbReqLocal = Notification(Notification.CARBS_REQUIRED, resultAfterConstraints.carbsRequiredText, Notification.NORMAL)
                                 rxBus.send(EventNewNotification(carbReqLocal))
                             }
-                            if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_create_announcements_from_carbs_req, false)) {
+                            if (preferences.get(BooleanKey.NsClientCreateAnnouncementsFromCarbsReq)) {
                                 disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
                                     therapyEvent = TE.asAnnouncement(resultAfterConstraints.carbsRequiredText),
                                     timestamp = dateUtil.now(),

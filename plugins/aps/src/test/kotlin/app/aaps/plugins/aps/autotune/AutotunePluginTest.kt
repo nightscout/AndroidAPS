@@ -2,8 +2,8 @@ package app.aaps.plugins.aps.autotune
 
 import android.content.SharedPreferences
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.keys.AdaptiveSwitchPreference
 import app.aaps.core.validators.AdaptiveIntPreference
+import app.aaps.core.validators.AdaptiveSwitchPreference
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -31,6 +31,7 @@ class AutotunePluginTest : TestBaseWithProfile() {
             if (it is AdaptiveSwitchPreference) {
                 it.preferences = preferences
                 it.sharedPrefs = sharedPrefs
+                it.config = config
             }
         }
     }
