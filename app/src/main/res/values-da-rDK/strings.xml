@@ -16,11 +16,6 @@
     <string name="wear">Ur</string>
     <string name="nav_about">Om</string>
     <string name="smscommunicator_missingphonestatepermission">Manglende telefonstatus tilladelse</string>
-    <string name="ns_alarm_options">Indstillinger for alarm</string>
-    <string name="ns_alarms">Opret notifikationer fra NS-alarmer</string>
-    <string name="ns_announcements">Opret notifikationer fra NS-meddelelser</string>
-    <string name="ns_alarm_stale_data_value_label">Forældet data grænse [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Akut forældet data grænse [min]</string>
     <string name="sensitivity_warning">Ved at slå funktionen Autosense til husk at indtaste alle spiste kulhydrater. Ellers vil kulhydrat afvigelser blive identificeret forkert som følsomheds ændring !!</string>
     <string name="notloadedplugins">Ikke alle profiler er indlæst!</string>
     <string name="valuesnotstored">Værdier ikke gemt!</string>
