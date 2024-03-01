@@ -16,11 +16,6 @@
     <string name="wear">Wear</string>
     <string name="nav_about">Sobre</string>
     <string name="smscommunicator_missingphonestatepermission">Falta permissão do estado do telefone</string>
-    <string name="ns_alarm_options">Opções Alarme</string>
-    <string name="ns_alarms">Criar notificações dos alarmes do NightScout</string>
-    <string name="ns_announcements">Notificar alerta do servidor NS</string>
-    <string name="ns_alarm_stale_data_value_label">Tempo limite para dados obsoletos [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Tempo limite para Urgência por dados obsoletos [min]</string>
     <string name="sensitivity_warning">Ao ativar a função Autosense lembre-se de introduzir todos os carboidratos (carbs) que comeu. Caso contra contrário os desvios de carbs serão erroneamente identificados como uma variação da sensibilidade!!</string>
     <string name="notloadedplugins">Nem todos perfis foram carregados!</string>
     <string name="valuesnotstored">Valores não guardados!</string>
