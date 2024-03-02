@@ -100,7 +100,6 @@
     <string name="not_connected">Bağlantı yok</string>
     <string name="read_only">Salt okunur</string>
     <string name="working">İşleniyor</string>
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>
