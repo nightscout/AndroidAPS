@@ -17,7 +17,8 @@ import kotlinx.serialization.json.Json
 fun app.aaps.database.entities.APSResult.fromDb(injector: HasAndroidInjector): APSResult =
     when (algorithm) {
         app.aaps.database.entities.APSResult.Algorithm.AMA,
-        app.aaps.database.entities.APSResult.Algorithm.SMB ->
+        app.aaps.database.entities.APSResult.Algorithm.SMB,
+        app.aaps.database.entities.APSResult.Algorithm.AUTO_ISF ->
             DetermineBasalResult(injector, Json.decodeFromString(this.resultJson)).also { result ->
                 result.date = this.timestamp
                 result.glucoseStatus = this.glucoseStatusJson?.let { Json.decodeFromString(it) }
@@ -35,7 +36,8 @@ fun app.aaps.database.entities.APSResult.fromDb(injector: HasAndroidInjector): A
 fun APSResult.toDb(): app.aaps.database.entities.APSResult =
     when (algorithm) {
         APSResult.Algorithm.AMA,
-        APSResult.Algorithm.SMB ->
+        APSResult.Algorithm.SMB,
+        APSResult.Algorithm.AUTO_ISF ->
             app.aaps.database.entities.APSResult(
                 timestamp = this.date,
                 algorithm = this.algorithm.toDb(),

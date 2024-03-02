@@ -29,7 +29,6 @@ import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
@@ -40,7 +39,6 @@ import app.aaps.core.interfaces.profiling.Profiler
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAPSCalculationFinished
-import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
@@ -98,7 +96,6 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
     private val processedTbrEbData: ProcessedTbrEbData,
     private val persistenceLayer: PersistenceLayer,
     private val glucoseStatusProvider: GlucoseStatusProvider,
-    private val tddCalculator: TddCalculator,
     private val bgQualityCheck: BgQualityCheck,
     private val uiInteraction: UiInteraction,
     private val determineBasalAutoISF: DetermineBasalAutoISF,
@@ -119,7 +116,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
 
     // last values
     override var lastAPSRun: Long = 0
-    override val algorithm = APSResult.Algorithm.SMB
+    override val algorithm = APSResult.Algorithm.AUTO_ISF
     override var lastAPSResult: DetermineBasalResult? = null
     private var consoleError = mutableListOf<String>()
 
@@ -145,18 +142,12 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
     val iobThresholdPercent = preferences.get(IntKey.ApsAutoIsfIobThPercent)
     private val exerciseMode = SMBDefaults.exercise_mode
     private val highTemptargetRaisesSensitivity = preferences.get(BooleanKey.ApsAutoIsfHighTtRaisesSens)
-    override fun supportsDynamicIsf(): Boolean = preferences.get(BooleanKey.ApsUseAutoIsfWeights)
+    private var enableDynAps = true
+    override fun supportsDynamicIsf(): Boolean = preferences.get(BooleanKey.ApsUseAutoIsfWeights) && enableDynAps
 
     override fun getIsfMgdl(multiplier: Double, timeShift: Int, caller: String): Double? {
         val start = dateUtil.now()
         val sensitivity = calculateVariableIsf(start, bg = null)
-        if (sensitivity.second == null)
-            uiInteraction.addNotificationValidTo(
-                Notification.DYN_ISF_FALLBACK, start,
-                rh.gs(R.string.fallback_to_isf_no_tdd), Notification.INFO, dateUtil.now() + T.mins(1).msecs()
-            )
-        else
-            uiInteraction.dismissNotification(Notification.DYN_ISF_FALLBACK)
         profiler.log(LTag.APS, String.format("getIsfMgdl() %s %f %s %s", sensitivity.first, sensitivity.second, dateUtil.dateAndTimeAndSecondsString(start), caller), start)
         return sensitivity.second?.let { it * multiplier }
     }
@@ -212,8 +203,10 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
             return Pair("HIT", cached)
         }
         // no cached result found, let's calculate the value
-
+        enableDynAps = false // disable supportsDynamicIsf feature to get profile ISF value
         val sensitivity = (autoISF(timestamp) ?: 1.0) * profile.getIsfMgdlTimeFromMidnight(MidnightUtils.secondsFromMidnight(timestamp))
+        aapsLogger.debug("XXXXX $sensitivity ${profile.getIsfMgdlTimeFromMidnight(MidnightUtils.secondsFromMidnight(timestamp))}")
+        enableDynAps = true // enable supportsDynamicIsf feature after calculation
         dynIsfCache.put(key, sensitivity)
         if (dynIsfCache.size() > 1000) dynIsfCache.clear()
         return Pair("CALC", sensitivity)
@@ -662,10 +655,10 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
             meal_data.mealCOB > 0 && !enable_dura_ISF_with_COB -> {
                 consoleError.add("dura_ISF by-passed; preferences disabled mealCOB of ${round(meal_data.mealCOB, 1)}")
             }
-            dura05!! < 10.0                                    -> {
+            dura05 < 10.0                                    -> {
                 consoleError.add("dura_ISF by-passed; bg is only $dura05 m at level $avg05");
             }
-            avg05!! <= target_bg                               -> {
+            avg05 <= target_bg                               -> {
                 consoleError.add("dura_ISF by-passed; avg. glucose $avg05 below target $target_bg")
             }
             else                                               -> {
@@ -898,7 +891,17 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
     }
 
     override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
-        if (requiredKey != null && requiredKey != "absorption_smb_advanced") return
+        if (requiredKey != null &&
+            requiredKey != "absorption_smb_advanced" &&
+            requiredKey != "auto_isf_settings" &&
+            requiredKey != "acce_ISF_settings" &&
+            requiredKey != "bg_ISF_settings" &&
+            requiredKey != "pp_ISF_settings" &&
+            requiredKey != "delta_ISF_settings" &&
+            requiredKey != "dura_ISF_settings" &&
+            requiredKey != "smb_delivery_settings" &&
+            requiredKey != "full_loop_settings"
+            ) return
         val category = PreferenceCategory(context)
         parent.addPreference(category)
         category.apply {

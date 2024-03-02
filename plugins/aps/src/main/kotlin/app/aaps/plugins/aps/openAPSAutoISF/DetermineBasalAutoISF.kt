@@ -155,7 +155,7 @@ class DetermineBasalAutoISF @Inject constructor(
         consoleError.clear()
         consoleLog.clear()
         var rT = RT(
-            algorithm = APSResult.Algorithm.SMB,
+            algorithm = APSResult.Algorithm.AUTO_ISF,
             runningDynamicIsf = dynIsfMode,
             timestamp = currentTime,
             consoleLog = consoleLog,
@@ -381,7 +381,7 @@ class DetermineBasalAutoISF @Inject constructor(
         //console.error(reservoir_data);
 
         rT = RT(
-            algorithm = APSResult.Algorithm.SMB,
+            algorithm = APSResult.Algorithm.AUTO_ISF,
             runningDynamicIsf = dynIsfMode,
             timestamp = currentTime,
             bg = bg,

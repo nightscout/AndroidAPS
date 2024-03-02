@@ -6,6 +6,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
 import android.text.Spanned
+import androidx.preference.PreferenceCategory
+import androidx.preference.PreferenceManager
+import androidx.preference.PreferenceScreen
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
@@ -34,7 +37,6 @@ import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventNewBG
 import app.aaps.core.interfaces.rx.events.EventNewHistoryData
 import app.aaps.core.interfaces.rx.events.EventXdripNewLog
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.sync.DataSyncSelector
 import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.interfaces.sync.XDripBroadcast
@@ -42,11 +44,16 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.AdaptiveIntentPreference
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.IntentKey
+import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.extensions.generateCOBString
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.extensions.toStringShort
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.HtmlHelper
+import app.aaps.core.validators.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsclient.extensions.toJson
 import app.aaps.plugins.sync.xdrip.events.EventXdripUpdateGUI
@@ -68,7 +75,7 @@ import javax.inject.Singleton
 
 @Singleton
 class XdripPlugin @Inject constructor(
-    private val sp: SP,
+    private val preferences: Preferences,
     private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,
     rh: ResourceHelper,
@@ -91,7 +98,7 @@ class XdripPlugin @Inject constructor(
         .pluginIcon((app.aaps.core.objects.R.drawable.ic_blooddrop_48))
         .pluginName(R.string.xdrip)
         .shortName(R.string.xdrip_shortname)
-        .preferencesId(R.xml.pref_xdrip)
+        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.description_xdrip),
     aapsLogger, rh
 ) {
@@ -181,7 +188,7 @@ class XdripPlugin @Inject constructor(
     }
 
     private fun sendStatusLine() {
-        if (sp.getBoolean(R.string.key_xdrip_send_status, false)) {
+        if (preferences.get(BooleanKey.XdripSendStatus)) {
             val status = profileFunction.getProfile()?.let { buildStatusLine(it) } ?: ""
             context.sendBroadcast(
                 Intent(Intents.ACTION_NEW_EXTERNAL_STATUSLINE).also {
@@ -244,13 +251,13 @@ class XdripPlugin @Inject constructor(
         val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
         val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
         status.append(decimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob)).append(rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname))
-        if (sp.getBoolean(R.string.key_xdrip_status_detailed_iob, true))
+        if (preferences.get(BooleanKey.XdripSendDetailedIob))
             status.append("(")
                 .append(decimalFormatter.to2Decimal(bolusIob.iob))
                 .append("|")
                 .append(decimalFormatter.to2Decimal(basalIob.basaliob))
                 .append(")")
-        if (sp.getBoolean(R.string.key_xdrip_status_show_bgi, true)) {
+        if (preferences.get(BooleanKey.XdripSendBgi)) {
             val bgi = -(bolusIob.activity + basalIob.activity) * 5 * profileUtil.fromMgdlToUnits(profile.getIsfMgdl("XdripPlugin"))
             status.append(" ")
                 .append(if (bgi >= 0) "+" else "")
@@ -395,6 +402,25 @@ class XdripPlugin @Inject constructor(
                 rxBus.send(EventXdripUpdateGUI())
                 Thread.sleep(100)
             }
+        }
+    }
+
+    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
+        if (requiredKey != null && requiredKey != "xdrip_advanced") return
+        val category = PreferenceCategory(context)
+        parent.addPreference(category)
+        category.apply {
+            key = "xdrip_settings"
+            title = rh.gs(R.string.xdrip)
+            initialExpandedChildrenCount = 0
+            addPreference(AdaptiveIntentPreference(ctx = context, intentKey = IntentKey.XdripInfo, summary = R.string.xdrip_local_broadcasts_summary, title = R.string.xdrip_local_broadcasts_title))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.XdripSendStatus, title = R.string.xdrip_send_status_title))
+            addPreference(preferenceManager.createPreferenceScreen(context).apply {
+                key = "xdrip_advanced"
+                title = rh.gs(R.string.xdrip_status_settings)
+                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.XdripSendDetailedIob, summary = R.string.xdrip_status_detailed_iob_summary, title = R.string.xdrip_status_detailed_iob_title))
+                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.XdripSendBgi, summary = R.string.xdrip_status_show_bgi_summary, title = R.string.xdrip_status_show_bgi_title))
+            })
         }
     }
 }
