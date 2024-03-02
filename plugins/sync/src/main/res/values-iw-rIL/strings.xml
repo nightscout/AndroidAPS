@@ -100,7 +100,6 @@
     <string name="not_connected">לא מחובר</string>
     <string name="read_only">לקריאה בלבד</string>
     <string name="working">עובד</string>
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>
