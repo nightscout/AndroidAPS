@@ -50,7 +50,7 @@ enum class BooleanKey(
     ApsAutoIsfPpAlways(R.string.key_enable_postprandial_ISF_always, false, defaultedBySM = true),
     ApsAutoIsfDuraAfterCarbs(R.string.key_enable_dura_ISF_with_COB, false, defaultedBySM = true),
     ApsAutoIsfSmbOnEvenTt(R.string.key_enableSMB_EvenOn_OddOff, false, defaultedBySM = true),         // TempTarget
-    ApsAutoIsfSmbOnEvenPt(R.string.key_enableSMB_EvenOn_OddOff_always, false, defaultedBySM = true)   // profile target
+    ApsAutoIsfSmbOnEvenPt(R.string.key_enableSMB_EvenOn_OddOff_always, false, defaultedBySM = true),   // profile target
 
     AutotuneAutoSwitchProfile(R.string.key_autotune_auto, false),
     AutotuneCategorizeUamAsBasal(R.string.key_autotune_categorize_uam_as_basal, false),
@@ -59,5 +59,5 @@ enum class BooleanKey(
     AutotuneAdditionalLog(R.string.key_autotune_additional_log, false),
 
     SmsAllowRemoteCommands(R.string.key_smscommunicator_remote_commands_allowed, false),
-    SmsReportPumpUnreachable(R.string.key_smscommunicator_report_pump_unreachable, true),
+    SmsReportPumpUnreachable(R.string.key_smscommunicator_report_pump_unreachable, true)
 }

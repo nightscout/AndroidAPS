@@ -202,6 +202,8 @@
     <string name="dura_ISF_settings_summary">dura_ISF settings: ISF for blood glucose plateau above target</string>
     <string name="smb_delivery_settings_title">smb delivery settings</string>
     <string name="smb_delivery_settings_summary">smb delivery settings:  Set of options to increase the actual SMB size which can be delivered in situations where ISF was strengthened, i.e. fairly low ISF figure.\n\nUSE WITH CAUTION</string>
+    <string name="full_loop_settings_title">Full Loop Settings</string>
+    <string name="full_loop_settings_summary">Full Loop Settings: Adjust iobTH and total acce weights for meal types</string>
     <string name="openapsama_enable_autoISF">Enable ISF adaptation by glucose behaviour</string>
     <string name="openapsama_autoISF_max_summary">Default value: 1.2\nThis is a multiplier cap for autoISF to set a limit on how high the autoISF ratio can be, which in turn determines how low it can adjust ISF.\n\nWARNING: Be extremely careful when using values above 2.5</string>
     <string name="openapsama_autoISF_min_summary">Default value: 1.0\nThis is a multiplier cap for autoISF to set a limit on how low the autoISF ratio can be, which in turn determines how high it can adjust ISF.</string>
