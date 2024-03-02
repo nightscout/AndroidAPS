@@ -132,7 +132,7 @@ class MainApp : DaggerApplication() {
                     // log version
                     disposable += persistenceLayer.insertVersionChangeIfChanged(config.VERSION_NAME, BuildConfig.VERSION_CODE, gitRemote, commitHash).subscribe()
                     // log app start
-                    if (sp.getBoolean(app.aaps.plugins.sync.R.string.key_ns_log_app_started_event, config.APS))
+                    if (preferences.get(BooleanKey.NsClientLogAppStart))
                         disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
                             therapyEvent = TE(
                                 timestamp = dateUtil.now(),
@@ -195,34 +195,9 @@ class MainApp : DaggerApplication() {
         }
     }
 
-    @Suppress("SpellCheckingInspection")
     private fun doMigrations() {
         // set values for different builds
-        if (!sp.contains(R.string.key_ns_alarms)) sp.putBoolean(R.string.key_ns_alarms, config.NSCLIENT)
-        if (!sp.contains(R.string.key_ns_announcements)) sp.putBoolean(R.string.key_ns_announcements, config.NSCLIENT)
         // 3.1.0
-        if (sp.contains("ns_wifionly")) {
-            if (sp.getBoolean("ns_wifionly", false)) {
-                sp.putBoolean(app.aaps.plugins.sync.R.string.key_ns_cellular, false)
-                sp.putBoolean(app.aaps.plugins.sync.R.string.key_ns_wifi, true)
-            } else {
-                sp.putBoolean(app.aaps.plugins.sync.R.string.key_ns_cellular, true)
-                sp.putBoolean(app.aaps.plugins.sync.R.string.key_ns_wifi, false)
-            }
-            sp.remove("ns_wifionly")
-        }
-        if (sp.contains("ns_charginonly")) {
-            if (sp.getBoolean("ns_charginonly", false)) {
-                sp.putBoolean(app.aaps.plugins.sync.R.string.key_ns_battery, false)
-                sp.putBoolean(app.aaps.plugins.sync.R.string.key_ns_charging, true)
-            } else {
-                sp.putBoolean(app.aaps.plugins.sync.R.string.key_ns_battery, true)
-                sp.putBoolean(app.aaps.plugins.sync.R.string.key_ns_charging, true)
-            }
-            sp.remove("ns_charginonly")
-        }
-        if (!sp.contains(app.aaps.plugins.sync.R.string.key_ns_log_app_started_event))
-            sp.putBoolean(app.aaps.plugins.sync.R.string.key_ns_log_app_started_event, config.APS)
         if (preferences.getIfExists(StringKey.MaintenanceEmail) == "logs@androidaps.org")
             preferences.put(StringKey.MaintenanceEmail, "logs@aaps.app")
         // fix values for theme switching

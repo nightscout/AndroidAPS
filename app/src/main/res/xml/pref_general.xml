@@ -19,7 +19,7 @@
             android:key="@string/key_language"
             android:title="@string/language" />
 
-        <app.aaps.core.keys.AdaptiveSwitchPreference
+        <app.aaps.core.validators.AdaptiveSwitchPreference
             android:key="@string/key_simple_mode"
             android:title="@string/simple_mode" />
 

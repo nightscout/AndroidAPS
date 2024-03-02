@@ -30,15 +30,16 @@ import app.aaps.core.interfaces.rx.events.EventLocalProfileChanged
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
-import app.aaps.core.keys.AdaptiveSwitchPreference
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.elements.WeekDay
 import app.aaps.core.utils.JsonHelper
 import app.aaps.core.validators.AdaptiveIntPreference
+import app.aaps.core.validators.AdaptiveSwitchPreference
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.autotune.data.ATProfile
 import app.aaps.plugins.aps.autotune.data.LocalInsulin
@@ -315,7 +316,7 @@ class AutotunePlugin @Inject constructor(
         val utcOffset = T.msecs(TimeZone.getDefault().getOffset(dateUtil.now()).toLong()).hours()
         val startDateString = dateUtil.toISOString(firstLoopStart).substring(0, 10)
         val endDateString = dateUtil.toISOString(lastLoopEnd - 24 * 60 * 60 * 1000L).substring(0, 10)
-        val nsUrl = sp.getString(app.aaps.core.utils.R.string.key_nsclientinternal_url, "")
+        val nsUrl = preferences.get(StringKey.NsClientUrl)
         val optCategorizeUam = if (preferences.get(BooleanKey.AutotuneCategorizeUamAsBasal)) "-c=true" else ""
         val optInsulinCurve = if (preferences.get(BooleanKey.AutotuneTuneInsulinCurve)) "-i=true" else ""
         try {
@@ -324,7 +325,7 @@ class AutotunePlugin @Inject constructor(
             jsonSettings.put("utcOffset", utcOffset)
             jsonSettings.put("units", profileFunction.getUnits().asText)
             jsonSettings.put("timezone", TimeZone.getDefault().id)
-            jsonSettings.put("url_nightscout", sp.getString(app.aaps.core.utils.R.string.key_nsclientinternal_url, ""))
+            jsonSettings.put("url_nightscout", nsUrl)
             jsonSettings.put("nbdays", nbDays)
             jsonSettings.put("startdate", startDateString)
             jsonSettings.put("enddate", endDateString)

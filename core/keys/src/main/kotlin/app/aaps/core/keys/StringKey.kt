@@ -24,4 +24,13 @@ enum class StringKey(
 
     SmsAllowedNumbers(R.string.key_smscommunicator_allowednumbers, ""),
     SmsOtpPassword(R.string.key_smscommunicator_otp_password, "", dependency = BooleanKey.SmsAllowRemoteCommands),
+
+    VirtualPumpType(R.string.key_virtual_pump_type, "Generic AAPS"),
+
+    NsClientUrl(R.string.key_nsclientinternal_url, ""),
+    NsClientApiSecret(R.string.key_nsclientinternal_api_secret, ""),
+    NsClientWifiSsids(R.string.key_ns_wifi_ssids, "", dependency = BooleanKey.NsClientUseWifi),
+    NsClientAccessToken(R.string.key_ns_client_token, ""),
+    TidepoolUsername(R.string.key_tidepool_username, ""),
+    TidepoolPassword(R.string.key_tidepool_password, ""),
 }

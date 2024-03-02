@@ -123,7 +123,8 @@
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Tilkobling til Garmin-enheter (Fenix, Edge,…)</string>
-    <string name="key_garmin_settings">Innstillinger for Garmin</string>
+    <string name="garmin_local_http_server_port">Lokal HTTP-serverport</string>
+    <string name="garmin_local_http_server">Lokal HTTP-server</string>
     <!--    Wear-->
     <string name="wear_shortname">WEAR</string>
     <string name="description_wear">Overvåke og kontrollere AAPS ved hjelp av WearOS-klokken.</string>

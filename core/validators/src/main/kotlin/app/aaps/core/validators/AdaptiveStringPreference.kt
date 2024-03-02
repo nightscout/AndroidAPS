@@ -70,7 +70,8 @@ class AdaptiveStringPreference(
             editText.setSelectAllOnFocus(true)
             editText.setSingleLine()
             when (validatorParameters.testType) {
-                EditTextValidator.TEST_EMAIL -> editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+                EditTextValidator.TEST_EMAIL     -> editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+                EditTextValidator.TEST_HTTPS_URL -> editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI
             }
         }
         setOnPreferenceChangeListener { _, _ -> validator?.testValidity(false) ?: true }

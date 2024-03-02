@@ -7,7 +7,7 @@
         android:title="@string/data_choices"
         app:initialExpandedChildrenCount="0">
 
-        <app.aaps.core.keys.AdaptiveSwitchPreference
+        <app.aaps.core.validators.AdaptiveSwitchPreference
             android:key="@string/key_enable_fabric"
             android:summary="@string/allow_automated_crash_reporting"
             android:title="@string/fabric_upload" />

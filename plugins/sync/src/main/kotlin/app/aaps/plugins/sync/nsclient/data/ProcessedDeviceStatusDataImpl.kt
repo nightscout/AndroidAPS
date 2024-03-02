@@ -10,6 +10,8 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.Preferences
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.plugins.sync.R
 import javax.inject.Inject
@@ -20,6 +22,7 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
     private val rh: ResourceHelper,
     private val dateUtil: DateUtil,
     private val sp: SP,
+    private val preferences: Preferences,
     private val instantiator: Instantiator
 ) : ProcessedDeviceStatusData {
 
@@ -99,11 +102,10 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
 
             // test warning level
             val level = when {
-                openAPSData.clockSuggested + T.mins(sp.getLong(app.aaps.core.utils.R.string.key_ns_alarm_urgent_stale_data_value, 31))
-                    .msecs() < dateUtil.now()                                                                                                            -> ProcessedDeviceStatusData.Levels.URGENT
+                openAPSData.clockSuggested + T.mins(preferences.get(IntKey.NsClientUrgentAlarmStaleData).toLong()).msecs() < dateUtil.now() -> ProcessedDeviceStatusData.Levels.URGENT
 
-                openAPSData.clockSuggested + T.mins(sp.getLong(app.aaps.core.utils.R.string.key_ns_alarm_stale_data_value, 16)).msecs() < dateUtil.now() -> ProcessedDeviceStatusData.Levels.WARN
-                else                                                                                                                                     -> ProcessedDeviceStatusData.Levels.INFO
+                openAPSData.clockSuggested + T.mins(preferences.get(IntKey.NsClientAlarmStaleData).toLong()).msecs() < dateUtil.now()       -> ProcessedDeviceStatusData.Levels.WARN
+                else                                                                                                                        -> ProcessedDeviceStatusData.Levels.INFO
             }
             string.append("<span style=\"color:${level.toColor()}\">")
             if (openAPSData.clockSuggested != 0L) string.append(dateUtil.minAgo(rh, openAPSData.clockSuggested)).append(" ")

@@ -160,4 +160,6 @@
     <string name="autotune_update_local_profile_message">Aggiornare il profilo %1$s con il profilo Autotune?</string>
     <string name="autotune_revert_local_profile_message">Ripristinare il profilo %1$s con il profilo di input?</string>
     <string name="autotune_profile_invalid">Profilo non valido</string>
+    <string name="not_available_full">Non disponibile</string>
+    <string name="pump_disconnected">Micro disconnesso</string>
 </resources>

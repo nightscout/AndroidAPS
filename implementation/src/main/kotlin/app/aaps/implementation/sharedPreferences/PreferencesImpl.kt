@@ -56,8 +56,9 @@ class PreferencesImpl @Inject constructor(
         )
 
     override fun get(key: BooleanPreferenceKey): Boolean =
-        if (simpleMode && key.defaultedBySM) key.defaultValue
-        else sp.getBoolean(key.key, key.defaultValue)
+        if (!config.isEngineeringMode() && key.engineeringModeOnly) key.defaultValue
+        else if (simpleMode && key.defaultedBySM) key.defaultValue
+        else sp.getBoolean(key.key, calculatedDefaultValue(key))
 
     override fun getIfExists(key: BooleanPreferenceKey): Boolean? =
         if (sp.contains(key.key)) sp.getBoolean(key.key, key.defaultValue) else null
@@ -101,7 +102,8 @@ class PreferencesImpl @Inject constructor(
     }
 
     override fun get(key: IntPreferenceKey): Int =
-        if (simpleMode && key.defaultedBySM) calculatedDefaultValue(key)
+        if (!config.isEngineeringMode() && key.engineeringModeOnly) key.defaultValue
+        else if (simpleMode && key.defaultedBySM) calculatedDefaultValue(key)
         else if (key.engineeringModeOnly && !config.isEngineeringMode()) calculatedDefaultValue(key)
         else sp.getInt(key.key, calculatedDefaultValue(key))
 
@@ -150,12 +152,24 @@ class PreferencesImpl @Inject constructor(
             }
         else key.defaultValue
 
+    private fun calculatedDefaultValue(key: BooleanPreferenceKey): Boolean =
+        if (key.calculatedDefaultValue)
+            when (key) {
+                BooleanKey.NsClientNotificationsFromAlarms         -> config.NSCLIENT
+                BooleanKey.NsClientNotificationsFromAnnouncements  -> config.NSCLIENT
+                BooleanKey.NsClientLogAppStart                     -> config.APS
+                BooleanKey.NsClientCreateAnnouncementsFromErrors   -> config.APS
+                BooleanKey.NsClientCreateAnnouncementsFromCarbsReq -> config.APS
+                else                                               -> error("Unsupported default value calculation")
+            }
+        else key.defaultValue
+
     private fun calculatePreference(key: DoublePreferenceKey): Double =
         limit(key, when (key) {
-            DoubleKey.ApsMaxBasal -> profileFunction.get().getProfile()?.getMaxDailyBasal()?.let { it * 3 } ?: key.defaultValue
+            DoubleKey.ApsMaxBasal  -> profileFunction.get().getProfile()?.getMaxDailyBasal()?.let { it * 3 } ?: key.defaultValue
             DoubleKey.ApsSmbMaxIob -> recentMaxBolus() + (profileFunction.get().getProfile()?.getMaxDailyBasal()?.let { it * 3 } ?: key.defaultValue)
             DoubleKey.ApsAmaMaxIob -> profileFunction.get().getProfile()?.getMaxDailyBasal()?.let { it * 3 } ?: key.defaultValue
-            else -> error("Unsupported key calculation")
+            else                   -> error("Unsupported key calculation")
         })
 
     private fun limit(key: DoublePreferenceKey, calculated: Double) = min(key.max, max(key.min, calculated))

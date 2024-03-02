@@ -16,11 +16,6 @@
     <string name="wear">Wear</string>
     <string name="nav_about">Quant a</string>
     <string name="smscommunicator_missingphonestatepermission">Falta permís d\'estat del telèfon</string>
-    <string name="ns_alarm_options">Configuració alarmes</string>
-    <string name="ns_alarms">Crear avisos a partir d\'alarmes NS</string>
-    <string name="ns_announcements">Crear avisos a partir d\'avisos d\'NS</string>
-    <string name="ns_alarm_stale_data_value_label">Umbral dades antigues [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Umbral urgent dades antigues [min]</string>
     <string name="sensitivity_warning">En activar la funció Autosens, recordeu introduir tots els carbs consumits. En cas contrari, les desviacions de carbs seran identificades erroniament com canvis de sensibilitat!!</string>
     <string name="notloadedplugins">Falten perfils per carregar!</string>
     <string name="valuesnotstored">Valors no desats!</string>

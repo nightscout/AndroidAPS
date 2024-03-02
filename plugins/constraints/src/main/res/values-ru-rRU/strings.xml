@@ -29,7 +29,7 @@
     <string name="closed_loop_disabled_on_dev_branch">Работает версия разработчика. Замкнутый цикл отключен.</string>
     <string name="closed_loop_disabled_with_eb">Замкнутый цикл отключен из-за работы Пролонгированного Болюса</string>
     <string name="smbalwaysdisabled">Опция супер микро болюс всегда и после углеводов отключена т. к. активный источник ГК не поддерживает комплексное фильтрование</string>
-    <string name="smbnotallowedinopenloopmode">СМБ не работают в режиме открытого цикла</string>
+    <string name="smbnotallowedinopenloopmode">Микроболюсы SMB не работают в режиме открытого цикла</string>
     <string name="maxvalueinpreferences">максимальное значение в настройках</string>
     <string name="hardlimit">жесткий предел</string>
     <string name="treatmentssafety_title">Безопасность терапии</string>
