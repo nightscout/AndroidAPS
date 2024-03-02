@@ -898,7 +898,17 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
     }
 
     override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
-        if (requiredKey != null && requiredKey != "absorption_smb_advanced") return
+        if (requiredKey != null &&
+            requiredKey != "absorption_smb_advanced" &&
+            requiredKey != "auto_isf_settings" &&
+            requiredKey != "acce_ISF_settings" &&
+            requiredKey != "bg_ISF_settings" &&
+            requiredKey != "pp_ISF_settings" &&
+            requiredKey != "delta_ISF_settings" &&
+            requiredKey != "dura_ISF_settings" &&
+            requiredKey != "smb_delivery_settings" &&
+            requiredKey != "full_loop_settings"
+            ) return
         val category = PreferenceCategory(context)
         parent.addPreference(category)
         category.apply {
