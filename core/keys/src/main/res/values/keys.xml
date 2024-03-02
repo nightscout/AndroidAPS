@@ -207,4 +207,15 @@
     <string name="key_tidepool_dev_servers" translatable="false">tidepool_dev_servers</string>
     <string name="key_tidepool_test_login" translatable="false">tidepool_test_login</string>
 
+    <!--    Open Humans-->
+    <string name="key_oh_wifi_only" translatable="false">oh_wifi_only</string>
+    <string name="key_oh_charging_only" translatable="false">oh_charging_only</string>
+
+    <!--    Xdrip-->
+    <string name="key_xdrip_info" translatable="false">xdrip_info</string>
+    <string name="key_xdrip_status_detailed_iob" translatable="false">xdripstatus_detailediob</string>
+    <string name="key_xdrip_status_show_bgi" translatable="false">xdripstatus_showbgi</string>
+    <string name="key_xdrip_send_status" translatable="false">xdrip_send_status</string>
+
+
 </resources>

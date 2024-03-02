@@ -81,4 +81,9 @@ enum class BooleanKey(
     NsClientSlowSync(R.string.key_ns_sync_slow, false),
     NsClient3UseWs(R.string.key_ns_use_ws, true),
     TidepoolUseTestServers(R.string.key_tidepool_dev_servers, false),
+    OpenHumansWifiOnly(R.string.key_oh_wifi_only, true),
+    OpenHumansChargingOnly(R.string.key_oh_charging_only, false),
+    XdripSendStatus(R.string.key_xdrip_send_status, false),
+    XdripSendDetailedIob(R.string.key_xdrip_status_detailed_iob, true, defaultedBySM = true, hideParentScreenIfHidden = true),
+    XdripSendBgi(R.string.key_xdrip_status_show_bgi, true, defaultedBySM = true, hideParentScreenIfHidden = true),
 }

@@ -124,12 +124,6 @@
     <string name="read_only">Read only</string>
     <string name="working">Working</string>
 
-    <!-- xDrip status line -->
-    <string name="key_xdrip_status_detailed_iob" translatable="false">xdripstatus_detailediob</string>
-    <string name="key_xdrip_status_show_bgi" translatable="false">xdripstatus_showbgi</string>
-    <string name="key_xdrip_status_settings" translatable="false">xdripstatus_settings</string>
-    <string name="key_xdrip_send_status" translatable="false">xdrip_send_status</string>
-
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>

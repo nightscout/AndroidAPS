@@ -16,4 +16,5 @@ enum class IntentKey(
     OverviewQuickWizardSettings(key = R.string.key_overview_quick_wizard_settings),
     OverviewCopySettingsFromNs(key = R.string.key_statuslights_copy_ns, dependency = BooleanKey.OverviewShowStatusLights),
     TidepoolTestLogin(key = R.string.key_tidepool_test_login),
+    XdripInfo(key = R.string.key_xdrip_info),
 }
