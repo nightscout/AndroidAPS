@@ -17,8 +17,6 @@ import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.CurrentTemp
-import app.aaps.core.interfaces.aps.GlucoseStatus
-import app.aaps.core.interfaces.aps.MealData
 import app.aaps.core.interfaces.aps.OapsProfile
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.configuration.Config
@@ -48,7 +46,6 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.keys.AdaptiveIntentPreference
-import app.aaps.core.keys.AdaptiveSwitchPreference
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
@@ -67,12 +64,12 @@ import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.core.validators.AdaptiveDoublePreference
 import app.aaps.core.validators.AdaptiveIntPreference
+import app.aaps.core.validators.AdaptiveSwitchPreference
 import app.aaps.core.validators.AdaptiveUnitPreference
 import app.aaps.plugins.aps.OpenAPSFragment
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.events.EventResetOpenAPSGui
-import app.aaps.plugins.aps.openAPS.TddStatus
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import javax.inject.Inject
