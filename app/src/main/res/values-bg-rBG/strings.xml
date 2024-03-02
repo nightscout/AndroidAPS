@@ -16,11 +16,6 @@
     <string name="wear">Часовник</string>
     <string name="nav_about">За приложението</string>
     <string name="smscommunicator_missingphonestatepermission">Липсва разрешение до данни от телефона</string>
-    <string name="ns_alarm_options">Опции за аларми</string>
-    <string name="ns_alarms">Известяване при NS аларми</string>
-    <string name="ns_announcements">Създаване на известия от NS съобщения</string>
-    <string name="ns_alarm_stale_data_value_label">Когато няма данни повече от [мин]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Много стари данни при повече от [мин]</string>
     <string name="sensitivity_warning">Когато включите Autosense, трябва да въвеждате ВСИЧКИ въглехидрати. В противен случай те ще се изчисляват грешно, като повишена чувствителност!!</string>
     <string name="notloadedplugins">Не всички профили са заредени!</string>
     <string name="valuesnotstored">Стойностите не са запазени!</string>

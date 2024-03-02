@@ -16,11 +16,6 @@
     <string name="wear">워치</string>
     <string name="nav_about">버전정보</string>
     <string name="smscommunicator_missingphonestatepermission">전화 상태 권한이 허가되지 않았습니다</string>
-    <string name="ns_alarm_options">알람 옵션</string>
-    <string name="ns_alarms">NS 알람에서 알림 만들기</string>
-    <string name="ns_announcements">NS 안내에서 알림 만들기</string>
-    <string name="ns_alarm_stale_data_value_label">누락 데이터 기준값 [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">위험 누락 데이터 기준값 [min]</string>
     <string name="sensitivity_warning">Autosense 기능을 켜면 모든 섭취된 탄수화물양을 입력하십시오. 그렇지 않으면 탄수화물 편차(deviations)가 민감도 변화로 잘못 인식될것입니다!!</string>
     <string name="notloadedplugins">모든 프로파일이 로드되지 않았습니다.</string>
     <string name="valuesnotstored">값이 저장되지 않았습니다!</string>

@@ -123,7 +123,6 @@
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Připojení k zařízení Garmin (Fenix, Edge, …)</string>
-    <string name="key_garmin_settings">Nastavení hodinek Garmin</string>
     <!--    Wear-->
     <string name="wear_shortname">WEAR</string>
     <string name="description_wear">Zobrazování stavu a řízení AAPS z hodinek s WearOS.</string>

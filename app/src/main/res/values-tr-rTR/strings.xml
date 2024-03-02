@@ -16,11 +16,6 @@
     <string name="wear">Wear</string>
     <string name="nav_about">Hakkında</string>
     <string name="smscommunicator_missingphonestatepermission">Telefon durumu izni eksik</string>
-    <string name="ns_alarm_options">Alarm türleri</string>
-    <string name="ns_alarms">NS alarmlarından bildirimler oluşturun</string>
-    <string name="ns_announcements">NS duyurularından bildirimler oluşturun</string>
-    <string name="ns_alarm_stale_data_value_label">Eski veri eşiği [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Acil durum verileri eşiği [min]</string>
     <string name="sensitivity_warning">Otoduyarlılık özelliğini açarsanız tüm yenen karbonhidratları girmeyi unutmayın. Aksi halde, karbonhidrat sapmaları duyarlılık değiştikçe yanlış tanımlanacaktır!!</string>
     <string name="notloadedplugins">Tüm profiller yüklenmedi!</string>
     <string name="valuesnotstored">Değerler kaydedilmedi!</string>
