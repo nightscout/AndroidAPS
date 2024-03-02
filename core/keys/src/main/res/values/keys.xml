@@ -201,4 +201,10 @@
     <string name="key_ns_create_announcements_from_errors" translatable="false">ns_create_announcements_from_errors</string>
     <string name="key_ns_sync_slow" translatable="false">ns_sync_slow</string>
 
+    <!--    Tidepool-->
+    <string name="key_tidepool_username" translatable="false">tidepool_username</string>
+    <string name="key_tidepool_password" translatable="false">tidepool_password</string>
+    <string name="key_tidepool_dev_servers" translatable="false">tidepool_dev_servers</string>
+    <string name="key_tidepool_test_login" translatable="false">tidepool_test_login</string>
+
 </resources>

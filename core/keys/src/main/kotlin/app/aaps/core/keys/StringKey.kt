@@ -31,4 +31,6 @@ enum class StringKey(
     NsClientApiSecret(R.string.key_nsclientinternal_api_secret, ""),
     NsClientWifiSsids(R.string.key_ns_wifi_ssids, "", dependency = BooleanKey.NsClientUseWifi),
     NsClientAccessToken(R.string.key_ns_client_token, ""),
+    TidepoolUsername(R.string.key_tidepool_username, ""),
+    TidepoolPassword(R.string.key_tidepool_password, ""),
 }

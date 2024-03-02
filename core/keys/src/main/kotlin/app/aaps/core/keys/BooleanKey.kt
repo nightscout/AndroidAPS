@@ -80,4 +80,5 @@ enum class BooleanKey(
     NsClientCreateAnnouncementsFromCarbsReq(R.string.key_ns_create_announcements_from_carbs_req, false, calculatedDefaultValue = true, showInNsClientMode = false),
     NsClientSlowSync(R.string.key_ns_sync_slow, false),
     NsClient3UseWs(R.string.key_ns_use_ws, true),
+    TidepoolUseTestServers(R.string.key_tidepool_dev_servers, false),
 }
