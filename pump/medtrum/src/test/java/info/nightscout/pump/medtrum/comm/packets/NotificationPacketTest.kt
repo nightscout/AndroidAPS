@@ -100,4 +100,100 @@ class NotificationPacketTest : MedtrumTestBase() {
         assertThat(medtrumPump.lastBasalStartTime).isEqualTo(0)
         assertThat(medtrumPump.currentSequenceNumber).isEqualTo(0)
     }
+
+    // Testcase from real erroneous message
+    @Test fun handleNotificationGivenErroneousMessageThenNothingSaved() {
+        // Inputs
+        val data = byteArrayOf(32, 34, 17, -128, 4, -2, 20, -1, -89, 5, 6, 0, 18, 64, 35, 0, -54)
+
+        // Call
+        NotificationPacket(packetInjector).handleNotification(data)
+
+        // Expected values
+        assertThat(medtrumPump.suspendTime).isEqualTo(0)
+        assertThat(medtrumPump.lastBasalStartTime).isEqualTo(0)
+        assertThat(medtrumPump.currentSequenceNumber).isEqualTo(0)
+    }
+
+    @Test fun handleNotificationGivenBolusOutOfRangeThenNothingSaved() {
+        // Inputs
+        val data = byteArrayOf(32, 34, 17, -128, -128, -128, -89, 12, -80, 0, 14, 0, 0, 0, 0, 0, 0)
+        medtrumPump.bolusingTreatment = EventOverviewBolusProgress.Treatment(0.0, 0, false, 1)
+        // Set valid patchID (as in a started pump session)
+        medtrumPump.patchId = 14
+
+        // Call
+        NotificationPacket(packetInjector).handleNotification(data)
+
+        // Expected values
+        assertThat(medtrumPump.bolusDone).isTrue()
+        assertThat(medtrumPump.bolusingTreatment!!.insulin).isWithin(0.01).of(0.0)
+        assertThat(medtrumPump.reservoir).isWithin(0.01).of(0.0)
+    }
+
+    @Test fun handleNotificationGiveWrongPatchIDInBasalDataThenNothingSaved() {
+        // Inputs
+        val data = byteArrayOf(32, 40, 64, 6, 25, 0, 14, 0, 84, -93, -83, 17, 17, 64, 0, -104, 15, 0, 16)
+        // Set a valid patchID (as in a started pump session)
+        medtrumPump.patchId = 15
+
+        // Call
+        NotificationPacket(packetInjector).handleNotification(data)
+
+        // Expected values
+        assertThat(medtrumPump.lastBasalType).isEqualTo(BasalType.NONE)
+        assertThat(medtrumPump.lastBasalRate).isWithin(0.01).of(0.0)
+        assertThat(medtrumPump.lastBasalSequence).isEqualTo(0)
+        assertThat(medtrumPump.lastBasalPatchId).isEqualTo(0)
+        assertThat(medtrumPump.lastBasalStartTime).isEqualTo(0)
+        assertThat(medtrumPump.reservoir).isWithin(0.01).of(0.0)
+    }
+
+    @Test fun handleNotificationGiveBasalOutOfRangeInBasalDataThenNothingSaved() {
+        // Inputs
+        val data = byteArrayOf(32, 40, 64, 6, 25, 0, 14, 0, 84, -93, -83, 17, 127, 127, -128, -104, 14, 0, 16)
+        // Set a valid patchID (as in a started pump session)
+        medtrumPump.patchId = 14
+
+        // Call
+        NotificationPacket(packetInjector).handleNotification(data)
+
+        // Expected values
+        assertThat(medtrumPump.lastBasalType).isEqualTo(BasalType.NONE)
+        assertThat(medtrumPump.lastBasalRate).isWithin(0.01).of(0.0)
+        assertThat(medtrumPump.lastBasalSequence).isEqualTo(0)
+        assertThat(medtrumPump.lastBasalPatchId).isEqualTo(0)
+        assertThat(medtrumPump.lastBasalStartTime).isEqualTo(0)
+        assertThat(medtrumPump.reservoir).isWithin(0.01).of(0.0)
+    }
+
+    @Test fun handleNotificationGivenReservoirOutOfRangeThenNothingSaved() {
+        // Inputs
+        val data = byteArrayOf(32, 34, 16, 0, 3, 0, -128, -128, 0, 0, 0, 0, 0)
+        medtrumPump.bolusingTreatment = EventOverviewBolusProgress.Treatment(0.0, 0, false, 1)
+
+        // Call
+        NotificationPacket(packetInjector).handleNotification(data)
+
+        // Expected values
+        assertThat(medtrumPump.bolusDone).isTrue()
+        assertThat(medtrumPump.bolusingTreatment!!.insulin).isWithin(0.01).of(0.0)
+        assertThat(medtrumPump.reservoir).isWithin(0.01).of(0.0)
+    }
+
+    @Test fun handleNotificationGivenWrongPatchIDThenNothingSaved() {
+        // Inputs
+        val data = byteArrayOf(32, 34, 17, -128, 33, 0, -89, 12, -80, 0, 15, 0, 0, 0, 0, 0, 0)
+        medtrumPump.bolusingTreatment = EventOverviewBolusProgress.Treatment(0.0, 0, false, 1)
+        // Set valid patchID (as in a started pump session)
+        medtrumPump.patchId = 14
+
+        // Call
+        NotificationPacket(packetInjector).handleNotification(data)
+
+        // Expected values
+        assertThat(medtrumPump.bolusDone).isTrue()
+        assertThat(medtrumPump.bolusingTreatment!!.insulin).isWithin(0.01).of(0.0)
+        assertThat(medtrumPump.reservoir).isWithin(0.01).of(0.0)
+    }
 }
