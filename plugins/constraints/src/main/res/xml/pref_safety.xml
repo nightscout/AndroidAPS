@@ -21,7 +21,7 @@
             android:inputType="numberDecimal"
             android:key="@string/key_treatmentssafety_maxbolus"
             android:title="@string/max_bolus_title"
-            validate:floatmaxNumber="25.0"
+            validate:floatmaxNumber="60.0"
             validate:floatminNumber="0.1"
             validate:testType="floatNumericRange" />
 
