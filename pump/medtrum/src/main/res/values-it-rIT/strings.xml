@@ -107,6 +107,7 @@
     <string name="sn_input_title">Numero seriale</string>
     <string name="sn_input_summary">Inserisci il numero di serie della base del micro.</string>
     <string name="sn_input_invalid">Numero di serie non valido!</string>
+    <string name="pump_unsupported">Micro non testato: %1$s! Contattaci su discord o github per supporto</string>
     <string name="alarm_setting_title">Impostazioni allarmi</string>
     <string name="alarm_setting_summary">Seleziona le tue impostazioni di allarme del micro preferite.</string>
     <string name="pump_warning_notification_title">Notifica di avviso del micro</string>
