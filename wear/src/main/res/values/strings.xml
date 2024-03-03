@@ -180,7 +180,6 @@
     <string name="wear_control_no_data">No data available</string>
     <string name="key_preference_id" translatable="false">preference_id</string>
     <string name="key_quickwizard" translatable="false">QuickWizard</string>
-    <string name="key_wear_control" translatable="false">wearcontrol</string>
     <string name="key_units_mgdl" translatable="false">units_mgdl</string>
     <string name="key_bolus_wizard_percentage" translatable="false">boluswizard_percentage</string>
     <string name="key_treatments_safety_max_carbs" translatable="false">treatmentssafety_maxcarbs</string>
