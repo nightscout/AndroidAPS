@@ -98,6 +98,25 @@ class NotificationPacket(val injector: HasAndroidInjector) {
         MASK_UNUSED_LEGACY to ::handleUnusedLegacy
     )
 
+    val sizeMap = mapOf(
+        MASK_SUSPEND to SIZE_SUSPEND,
+        MASK_NORMAL_BOLUS to SIZE_NORMAL_BOLUS,
+        MASK_EXTENDED_BOLUS to SIZE_EXTENDED_BOLUS,
+        MASK_BASAL to SIZE_BASAL,
+        MASK_SETUP to SIZE_SETUP,
+        MASK_RESERVOIR to SIZE_RESERVOIR,
+        MASK_START_TIME to SIZE_START_TIME,
+        MASK_BATTERY to SIZE_BATTERY,
+        MASK_STORAGE to SIZE_STORAGE,
+        MASK_ALARM to SIZE_ALARM,
+        MASK_AGE to SIZE_AGE,
+        MASK_MAGNETO_PLACE to SIZE_MAGNETO_PLACE,
+        MASK_UNUSED_CGM to SIZE_UNUSED_CGM,
+        MASK_UNUSED_COMMAND_CONFIRM to SIZE_UNUSED_COMMAND_CONFIRM,
+        MASK_UNUSED_AUTO_STATUS to SIZE_UNUSED_AUTO_STATUS,
+        MASK_UNUSED_LEGACY to SIZE_UNUSED_LEGACY
+    )
+
     var newPatchStartTime = 0L
 
     init {
@@ -131,6 +150,11 @@ class NotificationPacket(val injector: HasAndroidInjector) {
             return false
         }
 
+        if (!checkDataValidity(fieldMask, data)) {
+            aapsLogger.error(LTag.PUMPCOMM, "Invalid data in message")
+            return false
+        }
+
         aapsLogger.debug(LTag.PUMPCOMM, "Message field mask: $fieldMask")
 
         for ((mask, handler) in maskHandlers) {
@@ -145,25 +169,6 @@ class NotificationPacket(val injector: HasAndroidInjector) {
     private fun calculateExpectedLengthBasedOnFieldMask(fieldMask: Int): Int {
         var expectedLength = SIZE_FIELD_MASK
 
-        val sizeMap = mapOf(
-            MASK_SUSPEND to SIZE_SUSPEND,
-            MASK_NORMAL_BOLUS to SIZE_NORMAL_BOLUS,
-            MASK_EXTENDED_BOLUS to SIZE_EXTENDED_BOLUS,
-            MASK_BASAL to SIZE_BASAL,
-            MASK_SETUP to SIZE_SETUP,
-            MASK_RESERVOIR to SIZE_RESERVOIR,
-            MASK_START_TIME to SIZE_START_TIME,
-            MASK_BATTERY to SIZE_BATTERY,
-            MASK_STORAGE to SIZE_STORAGE,
-            MASK_ALARM to SIZE_ALARM,
-            MASK_AGE to SIZE_AGE,
-            MASK_MAGNETO_PLACE to SIZE_MAGNETO_PLACE,
-            MASK_UNUSED_CGM to SIZE_UNUSED_CGM,
-            MASK_UNUSED_COMMAND_CONFIRM to SIZE_UNUSED_COMMAND_CONFIRM,
-            MASK_UNUSED_AUTO_STATUS to SIZE_UNUSED_AUTO_STATUS,
-            MASK_UNUSED_LEGACY to SIZE_UNUSED_LEGACY
-        )
-
         for ((mask, size) in sizeMap) {
             if (fieldMask and mask != 0) {
                 expectedLength += size
@@ -171,6 +176,69 @@ class NotificationPacket(val injector: HasAndroidInjector) {
         }
 
         return expectedLength
+    }
+
+    private fun calculateOffset(fieldMask: Int, targetMask: Int): Int {
+        var offset = SIZE_FIELD_MASK // Start after the field mask itself
+
+        for ((mask, size) in sizeMap) {
+            if (mask == targetMask) {
+                // Stop when we reach the target mask
+                return offset
+            } else if (fieldMask and mask != 0) {
+                // If the current mask is part of the field mask, add its size to the offset
+                offset += size
+            }
+        }
+
+        // Code should never enter here, if does, it's a bug
+        throw IllegalArgumentException("Target mask not found in field mask")
+    }
+
+    private fun checkDataValidity(fieldMask: Int, data: ByteArray): Boolean {
+        // Notification packet does not have crc check, so we check validity based on expected values in the packet
+        if (fieldMask and MASK_NORMAL_BOLUS != 0) {
+            val offset = calculateOffset(fieldMask, MASK_NORMAL_BOLUS)
+            val bolusDelivered = data.copyOfRange(offset + 1, offset + 3).toInt() * 0.05
+            if (bolusDelivered < 0 || bolusDelivered > 50) {
+                aapsLogger.error(LTag.PUMPCOMM, "Invalid bolus delivered: $bolusDelivered")
+                return false
+            }
+        }
+
+        if (fieldMask and MASK_BASAL != 0) {
+            val offset = calculateOffset(fieldMask, MASK_BASAL)
+            val basalPatchId = data.copyOfRange(offset + 3, offset + 5).toLong()
+            val basalRateAndDelivery = data.copyOfRange(offset + 9, offset + 12).toInt()
+            val basalRate = (basalRateAndDelivery and 0xFFF) * 0.05
+            if (medtrumPump.patchId != 0L && basalPatchId != medtrumPump.patchId) {
+                aapsLogger.error(LTag.PUMPCOMM, "Mismatched patch ID: $basalPatchId vs stored patchID: ${medtrumPump.patchId}")
+                return false
+            }
+            if (basalRate < 0 || basalRate > 40) {
+                aapsLogger.error(LTag.PUMPCOMM, "Invalid basal rate: $basalRate")
+                return false
+            }
+        }
+
+        if (fieldMask and MASK_RESERVOIR != 0) {
+            val offset = calculateOffset(fieldMask, MASK_RESERVOIR) // You need to implement calculateOffset based on your mask handling
+            val reservoirValue = data.copyOfRange(offset, offset + SIZE_RESERVOIR).toInt() * 0.05
+            if (reservoirValue < 0 || reservoirValue > 400) {
+                aapsLogger.error(LTag.PUMPCOMM, "Invalid reservoir value: $reservoirValue")
+                return false
+            }
+        }
+
+        if (fieldMask and MASK_STORAGE != 0) {
+            val offset = calculateOffset(fieldMask, MASK_STORAGE) // Implement calculateOffset accordingly
+            val patchId = data.copyOfRange(offset + 2, offset + 4).toLong() // Assuming patch ID is at the end of the storage data
+            if (medtrumPump.patchId != 0L && patchId != medtrumPump.patchId) {
+                aapsLogger.error(LTag.PUMPCOMM, "Mismatched patch ID: $patchId vs stored patchID: ${medtrumPump.patchId}")
+                return false
+            }
+        }
+        return true
     }
 
     private fun handleSuspend(data: ByteArray, offset: Int): Int {
