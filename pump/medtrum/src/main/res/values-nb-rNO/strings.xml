@@ -107,6 +107,7 @@
     <string name="sn_input_title">Serienummer</string>
     <string name="sn_input_summary">Skriv inn serienummeret til pumpens base.</string>
     <string name="sn_input_invalid">Ugyldig serienummer!</string>
+    <string name="pump_unsupported">Pumpe er ikke testet: %1$s! Vennligst kontakt oss på discord eller github for støtte</string>
     <string name="alarm_setting_title">Alarminnstillinger</string>
     <string name="alarm_setting_summary">Velg dine foretrukne alarminnstillinger.</string>
     <string name="pump_warning_notification_title">Varsel om pumpeadvarsel</string>
