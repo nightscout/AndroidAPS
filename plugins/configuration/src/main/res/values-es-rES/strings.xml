@@ -30,8 +30,6 @@
     <string name="status">Estado:</string>
     <string name="patient_name">Nombre del paciente</string>
     <string name="patient_name_summary">Proporcione el nombre de paciente o el apodo para diferenciar entre varias configuraciones</string>
-    <string name="privacy_settings">Ajustes de privacidad</string>
-    <string name="privacy_summary">Puedes proporcionar una dirección de correo electrónico opcional si quieres ser notificado sobre fallos de la aplicación. Este no es un servicio automatizado. Los desarrolladores se comunicarán contigo en situaciones peligrosas.</string>
     <string name="diawarning">Por favor, recuerde: nuevos perfiles de insulina requieren DIA de al menos 5h. DIA de 5-6h en nuevos perfiles es lo mismo que DIA de 3h en perfiles antiguos.</string>
     <string name="profile">Perfil</string>
     <string name="doprofileswitch">Hacer cambio de perfil</string>
