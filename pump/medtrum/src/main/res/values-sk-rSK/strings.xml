@@ -107,6 +107,7 @@
     <string name="sn_input_title">Sériové číslo</string>
     <string name="sn_input_summary">Zadajte sériové číslo základne Patch.</string>
     <string name="sn_input_invalid">Neplatné sériové číslo!</string>
+    <string name="pump_unsupported">Neodtestovaná pumpa: %1$s! Kontaktujte nás na Discorde alebo Githube, kde získate podporu.</string>
     <string name="alarm_setting_title">Nastavenie výstrah</string>
     <string name="alarm_setting_summary">Vyberte preferované nastavenie výstrah.</string>
     <string name="pump_warning_notification_title">Oznámenie o výstrahe pumpy</string>
