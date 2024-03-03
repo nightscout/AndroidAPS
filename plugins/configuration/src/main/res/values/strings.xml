@@ -32,8 +32,6 @@
     <string name="status">Status:</string>
     <string name="patient_name">Patient name</string>
     <string name="patient_name_summary">Please provide patient name or nickname to differentiate among multiple setups</string>
-    <string name="privacy_settings">Privacy setting</string>
-    <string name="privacy_summary">You can provide optional email address if you want to be notified about app crashes. This is not an automated service. You will be contacted by developers in dangerous situations.</string>
     <string name="diawarning">Please remember: new insulin profiles require DIA at least 5h. DIA 5–6h on new profile is equal to DIA 3h on old insulin profiles.</string>
     <string name="profile">Profile</string>
     <string name="doprofileswitch">Do Profile Switch</string>
