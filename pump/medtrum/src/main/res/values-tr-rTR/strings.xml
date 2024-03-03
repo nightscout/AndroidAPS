@@ -49,7 +49,6 @@
     <string name="alarm_expired">Süresi doldu</string>
     <string name="alarm_reservoir_empty">Rezervuar boş</string>
     <string name="alarm_patch_fault">Patch hatası</string>
-    <string name="alarm_patch_fault2">Patch hatası 2</string>
     <string name="alarm_base_fault">Temel hata</string>
     <string name="alarm_battery_out">Pil bitti</string>
     <string name="alarm_no_calibration">Kalibrasyon yok</string>
@@ -108,7 +107,6 @@
     <string name="sn_input_title">Seri Numarası</string>
     <string name="sn_input_summary">Pompa tabanınızın seri numarasını girin.</string>
     <string name="sn_input_invalid">Geçersiz seri numarası!</string>
-    <string name="pump_unsupported">Pompa test edilmedi: %1$d! Destek için lütfen discord veya github üzerinden bizimle iletişime geçin</string>
     <string name="alarm_setting_title">Alarm Ayarları</string>
     <string name="alarm_setting_summary">Tercih ettiğiniz pompa alarm ayarlarını seçin.</string>
     <string name="pump_warning_notification_title">Pompa uyarısı hakkında bildirim</string>
