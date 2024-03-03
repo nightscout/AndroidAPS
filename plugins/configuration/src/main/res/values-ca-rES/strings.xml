@@ -27,8 +27,6 @@
     <string name="status">Estat:</string>
     <string name="patient_name">Nom del pacient</string>
     <string name="patient_name_summary">Si us plau, proporcioneu el nom o sobrenom del pacient per diferenciar entre diverses configuracions</string>
-    <string name="privacy_settings">Configuració de privacitat</string>
-    <string name="privacy_summary">Podeu proporcionar una adreçá de correu electrònic opcional si voleu ser informat sobre els errors de l\'app. No és un servei automàtic. En cas de situacions de perill, sereu contactats pels desenvolupadors de l\'app.</string>
     <string name="diawarning">Si us plau recordeu: els nous perfils d\'insulina requereixen una DIA de al menys 5h. Una DIA de 5-6h a un perfil nou és equivalent a DIA de 3h d\'un perfil antic.</string>
     <string name="profile">Perfil</string>
     <string name="doprofileswitch">Canviar de perfil</string>
