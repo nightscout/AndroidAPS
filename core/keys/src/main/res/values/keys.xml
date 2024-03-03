@@ -121,7 +121,7 @@
     <!--    Maintenance-->
     <string name="key_maintenance_logs_email" translatable="false">maintenance_logs_email</string>
     <string name="key_maintenance_logs_amount" translatable="false">maintenance_logs_amount</string>
-    <string name="key_email_for_crash_report" translatable="false">email_for_crash_report</string>
+    <string name="key_identification_for_crash_report" translatable="false">email_for_crash_report</string>
     <string name="key_enable_fabric" translatable="false">enable_fabric2</string>
 
     <!--    Automation-->
@@ -217,5 +217,14 @@
     <string name="key_xdrip_status_show_bgi" translatable="false">xdripstatus_showbgi</string>
     <string name="key_xdrip_send_status" translatable="false">xdrip_send_status</string>
 
+    <!--Wear-->
+    <string name="key_wear_control" translatable="false">wearcontrol</string>
+    <string name="key_wearwizard_bg" translatable="false">wearwizard_bg</string>
+    <string name="key_wearwizard_tt" translatable="false">wearwizard_tt</string>
+    <string name="key_wearwizard_trend" translatable="false">wearwizard_trend</string>
+    <string name="key_wearwizard_cob" translatable="false">wearwizard_cob</string>
+    <string name="key_wearwizard_iob" translatable="false">wearwizard_iob</string>
+    <string name="key_wear_custom_watchface_autorization" translatable="false">wear_custom_watchface_autorization</string>
+    <string name="key_wear_notify_on_smb" translatable="false">wear_notifySMB</string>
 
 </resources>

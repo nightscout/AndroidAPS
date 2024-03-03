@@ -50,7 +50,6 @@ import app.aaps.plugins.configuration.setupwizard.elements.SWFragment
 import app.aaps.plugins.configuration.setupwizard.elements.SWHtmlLink
 import app.aaps.plugins.configuration.setupwizard.elements.SWInfoText
 import app.aaps.plugins.configuration.setupwizard.elements.SWPlugin
-import app.aaps.plugins.configuration.setupwizard.elements.SWPreference
 import app.aaps.plugins.configuration.setupwizard.elements.SWRadioButton
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
@@ -216,12 +215,6 @@ class SWDefinition @Inject constructor(
             .skippable(true)
             .add(SWInfoText(injector).label(R.string.patient_name_summary))
             .add(SWEditString(injector).validator(String::isNotEmpty).preferenceId(app.aaps.core.utils.R.string.key_patient_name))
-
-    private val privacy
-        get() = SWScreen(injector, R.string.privacy_settings)
-            .skippable(true)
-            .add(SWInfoText(injector).label(R.string.privacy_summary))
-            .add(SWPreference(injector, this).option(R.xml.pref_datachoices))
 
     private val screenMasterPassword
         get() = SWScreen(injector, app.aaps.core.ui.R.string.master_password)
@@ -418,7 +411,6 @@ class SWDefinition @Inject constructor(
             .add(screenPermissionStore)
             .add(screenMasterPassword)
             .add(screenImport)
-            .add(privacy)
             .add(screenUnits)
             .add(displaySettings)
             .add(screenNsClient)

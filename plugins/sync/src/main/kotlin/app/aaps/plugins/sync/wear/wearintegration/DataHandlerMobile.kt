@@ -56,6 +56,7 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
@@ -423,13 +424,13 @@ class DataHandlerMobile @Inject constructor(
             bg = bgReading.valueToUnits(profileFunction.getUnits()),
             correction = 0.0,
             percentageCorrection = percentage,
-            useBg = sp.getBoolean(app.aaps.core.utils.R.string.key_wearwizard_bg, true),
-            useCob = sp.getBoolean(app.aaps.core.utils.R.string.key_wearwizard_cob, true),
-            includeBolusIOB = sp.getBoolean(app.aaps.core.utils.R.string.key_wearwizard_iob, true),
-            includeBasalIOB = sp.getBoolean(app.aaps.core.utils.R.string.key_wearwizard_iob, true),
+            useBg = preferences.get(BooleanKey.WearWizardBg),
+            useCob = preferences.get(BooleanKey.WearWizardCob),
+            includeBolusIOB = preferences.get(BooleanKey.WearWizardIob),
+            includeBasalIOB = preferences.get(BooleanKey.WearWizardIob),
             useSuperBolus = false,
-            useTT = sp.getBoolean(app.aaps.core.utils.R.string.key_wearwizard_tt, false),
-            useTrend = sp.getBoolean(app.aaps.core.utils.R.string.key_wearwizard_trend, false),
+            useTT = preferences.get(BooleanKey.WearWizardTt),
+            useTrend = preferences.get(BooleanKey.WearWizardTrend),
             useAlarm = false
         )
         val insulinAfterConstraints = bolusWizard.insulinAfterConstraints
@@ -751,7 +752,7 @@ class DataHandlerMobile @Inject constructor(
             EventMobileToWear(
                 EventData.Preferences(
                     timeStamp = System.currentTimeMillis(),
-                    wearControl = sp.getBoolean(app.aaps.core.utils.R.string.key_wear_control, false),
+                    wearControl = preferences.get(BooleanKey.WearControl),
                     unitsMgdl = profileFunction.getUnits() == GlucoseUnit.MGDL,
                     bolusPercentage = preferences.get(IntKey.OverviewBolusPercentage),
                     maxCarbs = preferences.get(IntKey.SafetyMaxCarbs),
@@ -825,11 +826,13 @@ class DataHandlerMobile @Inject constructor(
                 tb1 == null && tb2 == null -> {
                     //no temp stays no temp
                 }
+
                 tb1 != null && tb2 == null -> {
                     //temp is over -> push it
                     temps.add(EventData.TreatmentData.TempBasal(tbStart, tbBefore, runningTime, endBasalValue, tbAmount))
                     tb1 = null
                 }
+
                 tb1 == null && tb2 != null -> {
                     //temp begins
                     tb1 = tb2
@@ -837,6 +840,7 @@ class DataHandlerMobile @Inject constructor(
                     tbBefore = endBasalValue
                     tbAmount = tb1.convertedToAbsolute(runningTime, profileTB)
                 }
+
                 tb1 != null && tb2 != null -> {
                     val currentAmount = tb2.convertedToAbsolute(runningTime, profileTB)
                     if (currentAmount != tbAmount) {
@@ -897,12 +901,13 @@ class DataHandlerMobile @Inject constructor(
                             sgv = bg.value,
                             high = 0.0,
                             low = 0.0,
-                            color = predictionColor(context,bg)
+                            color = predictionColor(context, bg)
                         )
                     )
         }
         rxBus.send(EventMobileToWear(EventData.TreatmentData(temps, basals, boluses, predictions)))
     }
+
     private fun predictionColor(context: Context?, data: GV): Int {
         return when (data.sourceSensor) {
             SourceSensor.IOB_PREDICTION   -> rh.gac(context, app.aaps.core.ui.R.attr.iobColor)

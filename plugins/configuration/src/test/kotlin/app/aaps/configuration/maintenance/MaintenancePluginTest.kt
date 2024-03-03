@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.validators.AdaptiveIntPreference
 import app.aaps.core.validators.AdaptiveStringPreference
+import app.aaps.core.validators.AdaptiveSwitchPreference
 import app.aaps.plugins.configuration.maintenance.MaintenancePlugin
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
@@ -28,6 +29,11 @@ class MaintenancePluginTest : TestBaseWithProfile() {
         addInjector {
             if (it is AdaptiveIntPreference) {
                 it.profileUtil = profileUtil
+                it.preferences = preferences
+                it.sharedPrefs = sharedPrefs
+                it.config = config
+            }
+            if (it is AdaptiveSwitchPreference) {
                 it.preferences = preferences
                 it.sharedPrefs = sharedPrefs
                 it.config = config

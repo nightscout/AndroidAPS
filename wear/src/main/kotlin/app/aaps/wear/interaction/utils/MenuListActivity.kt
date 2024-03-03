@@ -14,6 +14,7 @@ import androidx.wear.widget.WearableLinearLayoutManager.LayoutCallback
 import androidx.wear.widget.WearableRecyclerView
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.Preferences
 import app.aaps.wear.R
 import app.aaps.wear.interaction.utils.MenuListActivity.MenuAdapter.ItemViewHolder
 import dagger.android.DaggerActivity
@@ -27,6 +28,7 @@ import kotlin.math.min
 abstract class MenuListActivity : DaggerActivity() {
 
     @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var rxBus: RxBus
 
     private var elements: List<MenuItem> = listOf()

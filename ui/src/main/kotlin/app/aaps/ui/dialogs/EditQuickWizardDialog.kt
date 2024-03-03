@@ -10,9 +10,10 @@ import android.view.WindowManager
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.SafeParse
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
 import app.aaps.core.ui.extensions.selectedItemPosition
@@ -33,7 +34,7 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var quickWizard: QuickWizard
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
 
     var position = -1
     private var fromSeconds: Int = 0
@@ -61,7 +62,7 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
             position = bundle.getInt("position", -1)
         }
         val entry = if (position == -1) quickWizard.newEmptyItem() else quickWizard[position]
-        if (sp.getBoolean(app.aaps.core.utils.R.string.key_wear_control, false)) {
+        if (preferences.get(BooleanKey.WearControl)) {
             binding.deviceLabel.visibility = View.VISIBLE
             binding.device.visibility = View.VISIBLE
         } else {

@@ -19,7 +19,7 @@ enum class StringKey(
     SafetyAge(R.string.key_safety_age, "adult"),
     LoopApsMode(R.string.key_aps_mode, "open" /* ApsMode.OPEN.name */),
     MaintenanceEmail(R.string.key_maintenance_logs_email, "logs@aaps.app", defaultedBySM = true),
-    MaintenanceIdentification(R.string.key_email_for_crash_report, ""),
+    MaintenanceIdentification(R.string.key_identification_for_crash_report, ""),
     AutomationLocation(R.string.key_location, "PASSIVE", hideParentScreenIfHidden = true),
 
     SmsAllowedNumbers(R.string.key_smscommunicator_allowednumbers, ""),
