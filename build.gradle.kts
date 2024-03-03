@@ -58,5 +58,5 @@ allprojects {
 apply(from = "jacoco_aggregation.gradle.kts")
 
 tasks.register<Delete>("clean").configure {
-    delete(rootProject.buildDir)
+    delete(rootProject.layout.buildDirectory)
 }

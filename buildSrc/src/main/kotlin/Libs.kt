@@ -3,7 +3,7 @@ object Libs {
 
     object Kotlin {
 
-        const val kotlin = "1.9.10"
+        const val kotlin = "1.9.22"
 
         const val stdlibJdk8 = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin"
         const val reflect = "org.jetbrains.kotlin:kotlin-reflect:$kotlin"
