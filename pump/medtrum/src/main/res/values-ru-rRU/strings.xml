@@ -107,6 +107,7 @@
     <string name="sn_input_title">Серийный номер</string>
     <string name="sn_input_summary">Введите серийный номер основания вашей помпы.</string>
     <string name="sn_input_invalid">Неверный серийный номер!</string>
+    <string name="pump_unsupported">Помпа не тестировалась: %1$s! Свяжитесь с нами в discord или github по поводу поддержки</string>
     <string name="alarm_setting_title">Настройки оповещений</string>
     <string name="alarm_setting_summary">Выберите предпочитаемые параметры оповещений помпы.</string>
     <string name="pump_warning_notification_title">Уведомление об оповещениях помпы</string>
