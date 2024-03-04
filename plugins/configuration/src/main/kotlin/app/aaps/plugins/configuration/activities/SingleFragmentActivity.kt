@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.keys.Preferences
 import app.aaps.plugins.configuration.R
 import javax.inject.Inject
 
@@ -19,6 +20,7 @@ class SingleFragmentActivity : DaggerAppCompatActivityWithResult() {
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var uiInteraction: UiInteraction
+    @Inject lateinit var preferences: Preferences
 
     private var plugin: PluginBase? = null
 
@@ -40,7 +42,9 @@ class SingleFragmentActivity : DaggerAppCompatActivityWithResult() {
         // Add menu items without overriding methods in the Activity
         addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                if ((plugin?.preferencesId ?: return) != PluginDescription.PREFERENCE_NONE) menuInflater.inflate(R.menu.menu_single_fragment, menu)
+                if ((plugin?.preferencesId ?: return) == PluginDescription.PREFERENCE_NONE) return
+                if ((preferences.simpleMode && plugin?.pluginDescription?.preferencesVisibleInSimpleMode != true)) return
+                menuInflater.inflate(R.menu.menu_single_fragment, menu)
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
