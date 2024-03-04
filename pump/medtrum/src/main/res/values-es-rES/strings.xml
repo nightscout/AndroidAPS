@@ -49,7 +49,6 @@
     <string name="alarm_expired">Expirado</string>
     <string name="alarm_reservoir_empty">Reservorio vacío</string>
     <string name="alarm_patch_fault">Fallo del parche</string>
-    <string name="alarm_patch_fault2">Falta del parche 2</string>
     <string name="alarm_base_fault">Fallo de base</string>
     <string name="alarm_battery_out">Batería agotada</string>
     <string name="alarm_no_calibration">Sin calibración</string>
@@ -108,7 +107,7 @@
     <string name="sn_input_title">Número de serie</string>
     <string name="sn_input_summary">Introduce el número de serie de la base de la bomba.</string>
     <string name="sn_input_invalid">¡Número de serie inválido!</string>
-    <string name="pump_unsupported">Bomba no probada: %1$d! Por favor, contacta con nosotros en Discord o GitHub para obtener soporte</string>
+    <string name="pump_unsupported">Bomba no probada: %1$s! Por favor, contacta con nosotros en Discord o GitHub para obtener soporte</string>
     <string name="alarm_setting_title">Ajustes de las alarmas</string>
     <string name="alarm_setting_summary">Selecciona los ajustes de la alarma de la bomba que prefieras.</string>
     <string name="pump_warning_notification_title">Notificación sobre advertencia de la bomba</string>

@@ -100,7 +100,6 @@
     <string name="not_connected">Niet verbonden</string>
     <string name="read_only">Alleen lezen</string>
     <string name="working">Bezig</string>
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>

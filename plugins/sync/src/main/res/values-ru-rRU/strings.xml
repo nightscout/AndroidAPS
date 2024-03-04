@@ -100,7 +100,6 @@
     <string name="not_connected">Нет подключения</string>
     <string name="read_only">Только чтение</string>
     <string name="working">Обработка</string>
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip +</string>
     <string name="xdrip_shortname">XD</string>
@@ -123,6 +122,8 @@
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Подключение к устройству Garmin (Fenix, Edge, …)</string>
+    <string name="garmin_local_http_server_port">Порт локального HTTP сервера</string>
+    <string name="garmin_local_http_server">Локальный HTTP сервер</string>
     <!--    Wear-->
     <string name="wear_shortname">WEAR</string>
     <string name="description_wear">Мониторить и контролировать AAPS при помощи часов WearOS.</string>

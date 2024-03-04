@@ -49,7 +49,6 @@
     <string name="alarm_expired">Verlopen</string>
     <string name="alarm_reservoir_empty">Reservoir leeg</string>
     <string name="alarm_patch_fault">Patch fout</string>
-    <string name="alarm_patch_fault2">Patch fout 2</string>
     <string name="alarm_base_fault">Basis fout</string>
     <string name="alarm_battery_out">Batterij leeg</string>
     <string name="alarm_no_calibration">Geen kalibratie</string>
@@ -108,7 +107,6 @@
     <string name="sn_input_title">Serienummer</string>
     <string name="sn_input_summary">Voer het serienummer van uw pompbasis in.</string>
     <string name="sn_input_invalid">Ongeldig serienummer!</string>
-    <string name="pump_unsupported">Pomp niet getest, %1$d! Neem contact met ons op via discord of github voor ondersteuning</string>
     <string name="alarm_setting_title">Alarminstellingen</string>
     <string name="alarm_setting_summary">Selecteer uw gewenste alarminstellingen voor de pomp.</string>
     <string name="pump_warning_notification_title">Notificatie bij pomp waarschuwing</string>

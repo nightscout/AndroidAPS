@@ -30,8 +30,6 @@
     <string name="status">Estado:</string>
     <string name="patient_name">Nome do Paciente</string>
     <string name="patient_name_summary">Por favor, forneça o nome do paciente ou alcunha para diferenciar entre várias configurações</string>
-    <string name="privacy_settings">Definições de privacidade</string>
-    <string name="privacy_summary">Opcionalmente pode fornecer um endereço de e-mail se quiser ser notificado sobre os erros da app. Este não é um serviço automatizado. Será contactado por desenvolvedores em situações perigosas.</string>
     <string name="diawarning">Lembre-se: novos perfis de insulina requerem diâmetro de pelo menos 5h. DIA 5–6h no novo perfil é igual ao diâmetro 3h nos antigos perfis de insulina.</string>
     <string name="profile">Perfil</string>
     <string name="doprofileswitch">Fazer Mudança De Perfil</string>

@@ -30,8 +30,6 @@
     <string name="status">Status:</string>
     <string name="patient_name">Patientens navn</string>
     <string name="patient_name_summary">Angiv venligst patientnavn eller kaldenavn for at skelne mellem flere opsætninger</string>
-    <string name="privacy_settings">Indstillinger for privatliv</string>
-    <string name="privacy_summary">Du kan angive valgfri e-mail-adresse, hvis du ønsker at blive underrettet om app nedbrud. Dette er ikke en automatiseret tjeneste. Du vil blive kontaktet af udviklere i farlige situationer.</string>
     <string name="diawarning">Husk: nye insulinprofiler kræver DIA mindst 5 timer. DIA 5-6 timer på ny profil er lig med DIA 3 timer på gamle insulinprofiler.</string>
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Skift profil</string>

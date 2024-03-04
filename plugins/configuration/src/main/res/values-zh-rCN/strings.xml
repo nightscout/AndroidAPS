@@ -27,8 +27,6 @@
     <string name="status">状态:</string>
     <string name="patient_name">患者名称</string>
     <string name="patient_name_summary">请提供患者姓名或昵称来区分多个设置</string>
-    <string name="privacy_settings">隐私设置</string>
-    <string name="privacy_summary">如果你想得到应用程序重大缺陷的通知，你可以选择提供电子邮件地址、Facebook或Discord等信息。这不是一项自动化的服务。在可能存在危险时，开发人员才会联系您。</string>
     <string name="diawarning">请记住：新的胰岛素分布需要DIA至少5小时。 对于新的配置文件，DIA 5-6小时相当于旧胰岛素配置文件中的DIA 3小时</string>
     <string name="profile">配置文件</string>
     <string name="doprofileswitch">配置文件切换</string>

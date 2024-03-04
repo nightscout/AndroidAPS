@@ -99,7 +99,6 @@
     <string name="not_connected">Няма активна връзка</string>
     <string name="read_only">Само за четене</string>
     <string name="working">Работи</string>
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>

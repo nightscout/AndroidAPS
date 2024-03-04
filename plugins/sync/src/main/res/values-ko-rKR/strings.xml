@@ -99,7 +99,6 @@
     <string name="not_connected">연결되지 않았습니다</string>
     <string name="read_only">읽기 전용</string>
     <string name="working">처리중</string>
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>

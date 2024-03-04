@@ -49,7 +49,6 @@
     <string name="alarm_expired">Expirováno</string>
     <string name="alarm_reservoir_empty">Prázdný zásobník</string>
     <string name="alarm_patch_fault">Chyba Patche</string>
-    <string name="alarm_patch_fault2">Chyba Patche 2</string>
     <string name="alarm_base_fault">Chyba základny</string>
     <string name="alarm_battery_out">Vybitá baterie</string>
     <string name="alarm_no_calibration">Žádná kalibrace</string>
@@ -108,7 +107,6 @@
     <string name="sn_input_title">Sériové číslo</string>
     <string name="sn_input_summary">Zadejte sériové číslo základny Patche.</string>
     <string name="sn_input_invalid">Neplatné sériové číslo!</string>
-    <string name="pump_unsupported">Nevyzkoušená pumpa: %1$d! Kontaktujte nás na Discordu nebo Githubu, kde získáte podporu.</string>
     <string name="alarm_setting_title">Nastavení alarmů</string>
     <string name="alarm_setting_summary">Vyberte preferované nastavení alarmů.</string>
     <string name="pump_warning_notification_title">Oznámení o varování pumpy</string>

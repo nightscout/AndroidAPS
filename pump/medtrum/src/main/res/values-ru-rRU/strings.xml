@@ -49,7 +49,6 @@
     <string name="alarm_expired">Срок истек</string>
     <string name="alarm_reservoir_empty">Резервуар пуст</string>
     <string name="alarm_patch_fault">Ошибка патча</string>
-    <string name="alarm_patch_fault2">Ошибка патча 2</string>
     <string name="alarm_base_fault">Ошибка базы</string>
     <string name="alarm_battery_out">Батарея разряжена</string>
     <string name="alarm_no_calibration">Нет калибровки</string>
@@ -108,7 +107,6 @@
     <string name="sn_input_title">Серийный номер</string>
     <string name="sn_input_summary">Введите серийный номер основания вашей помпы.</string>
     <string name="sn_input_invalid">Неверный серийный номер!</string>
-    <string name="pump_unsupported">Помпа не тестировалась: %1$d! Свяжитесь с нами в discord или github</string>
     <string name="alarm_setting_title">Настройки оповещений</string>
     <string name="alarm_setting_summary">Выберите предпочитаемые параметры оповещений помпы.</string>
     <string name="pump_warning_notification_title">Уведомление об оповещениях помпы</string>

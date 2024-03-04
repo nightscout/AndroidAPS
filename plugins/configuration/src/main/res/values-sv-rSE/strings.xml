@@ -30,8 +30,6 @@
     <string name="status">Status:</string>
     <string name="patient_name">Patientens namn</string>
     <string name="patient_name_summary">Vänligen ange patientens namn eller smeknamn för att kunna skilja mellan flera uppsättningar av inställningar</string>
-    <string name="privacy_settings">Sekretessinställningar</string>
-    <string name="privacy_summary">Du kan ange valfri e-postadress om du vill få meddelanden om appkrascher. Det här är ingen automatiserad tjänst. Du kommer att kontaktas av utvecklare i farliga situationer.</string>
     <string name="diawarning">Kom ihåg: De nya insulinprofilerna kräver en duration (DIA) på minst 5 timmar. En DIA på 5-6 timmar enligt de nya profilerna är ungefär lika med DIA 3 timmar enligt de gamla insulinprofilerna.</string>
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Genomför profilbyte</string>

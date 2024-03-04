@@ -77,7 +77,6 @@
     <string name="tidepool_upload_tbr">Enviar basals temporals</string>
     <string name="tidepool_upload_profile">Enviar canvis de perfil, objectius temporals</string>
     <string name="tidepool_upload_bg">Enviar tests glucèmia</string>
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="disabled_loop">Llaç desactivat</string>
     <string name="xdrip_not_installed">xDrip+ no instal·lat</string>

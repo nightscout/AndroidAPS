@@ -30,8 +30,6 @@
     <string name="status">Stare:</string>
     <string name="patient_name">Numele pacientului</string>
     <string name="patient_name_summary">Vă rugăm să furnizați numele sau porecla pacientului pentru a diferenția între configurări</string>
-    <string name="privacy_settings">Setări de confidenţialitate</string>
-    <string name="privacy_summary">Puteți furniza o adresă de e-mail opțională dacă doriți să fiți notificat despre erorile aplicației. Acesta nu este un serviciu automat. Veți fi contactat de dezvoltatori în situații periculoase.</string>
     <string name="diawarning">Reamintire: noile profiluri necesită o durată de acțiune a insulinei (DIA) de cel puțin 5 ore. DIA de 5-6 ore în profilurile noi sunt echivalente cu DIA 3 ore din profilele vechi.</string>
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Schimbă profilul</string>

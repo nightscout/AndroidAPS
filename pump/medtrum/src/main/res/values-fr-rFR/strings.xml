@@ -49,7 +49,6 @@
     <string name="alarm_expired">Expiré</string>
     <string name="alarm_reservoir_empty">Réservoir vide</string>
     <string name="alarm_patch_fault">Défaut Patch</string>
-    <string name="alarm_patch_fault2">Défaut Patch 2</string>
     <string name="alarm_base_fault">Défaillance de la base</string>
     <string name="alarm_battery_out">Pile morte</string>
     <string name="alarm_no_calibration">Absence d\'étalonnage</string>
@@ -108,7 +107,6 @@
     <string name="sn_input_title">Numéro de série</string>
     <string name="sn_input_summary">Entrez le numéro de série de la base de votre pompe.</string>
     <string name="sn_input_invalid">Numéro de série invalide !</string>
-    <string name="pump_unsupported">Pompe non testée : %1$d! Veuillez nous contacter sur discord ou github pour obtenir de l\'aide</string>
     <string name="alarm_setting_title">Paramètres d\'Alarme</string>
     <string name="alarm_setting_summary">Sélectionnez vos préférences d’alarme de votre pompe.</string>
     <string name="pump_warning_notification_title">Notification sur l\'alerte pompe</string>

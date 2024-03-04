@@ -120,6 +120,7 @@
     <string name="fallback_smb_no_tdd">Regreso a SMB. No hay suficientes datos de TDD.</string>
     <string name="fallback_to_isf_no_tdd">Volviendo a la sensibilidad del perfil. No hay suficientes datos TDD.</string>
     <!-- Autotune -->
+    <string name="autotune_description">Ayuda a realizar ajustes en el perfil (ISF, ratio de carbohidratos y tasas basales)</string>
     <string name="autotune_shortname">AT</string>
     <string name="autotune_settings">Ajustes de Autotune</string>
     <string name="autotune_auto_title">Automatización de cambio de perfil</string>
@@ -159,4 +160,6 @@
     <string name="autotune_update_local_profile_message">¿Actualizar el perfil %1$s con perfil de Autotune?</string>
     <string name="autotune_revert_local_profile_message">¿Revertir el perfil %1$s con perfil de entrada?</string>
     <string name="autotune_profile_invalid">Perfil inválido</string>
+    <string name="not_available_full">No disponible</string>
+    <string name="pump_disconnected">Bomba desconectada</string>
 </resources>

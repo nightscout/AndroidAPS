@@ -9,7 +9,6 @@
     <string name="ns_alarm_stale_data_value_label">Поріг застарівання даних [хв]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Терміновий поріг застарівання даних [хв]</string>
     <!-- Tidepool -->
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <!--    DataBroadcast-->
     <!-- GarminPlugin -->
