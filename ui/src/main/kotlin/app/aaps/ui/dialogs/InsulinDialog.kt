@@ -124,11 +124,19 @@ class InsulinDialog : DialogFragmentWithDate() {
         super.onViewCreated(view, savedInstanceState)
 
         val pump = activePlugin.activePump
-        if (config.NSCLIENT || loop.isDisconnected || pump.isSuspended() || !pump.isInitialized()) {
+        if (config.NSCLIENT) {
             binding.recordOnly.isChecked = true
             binding.recordOnly.isEnabled = false
         }
         val maxInsulin = constraintChecker.getMaxBolusAllowed().value()
+
+        if (loop.isDisconnected || pump.isSuspended() || !pump.isInitialized()) {
+            binding.recordOnly.isChecked = true
+            binding.recordOnly.isEnabled = false
+            binding.recordOnly.setTextColor(rh.gac(app.aaps.core.ui.R.attr.warningColor))
+            binding.header.setBackgroundColor(rh.gac(app.aaps.core.ui.R.attr.ribbonWarningColor))
+            binding.headerText.setTextColor(rh.gac(app.aaps.core.ui.R.attr.ribbonTextWarningColor))
+        }
 
         binding.time.setParams(
             savedInstanceState?.getDouble("time")
