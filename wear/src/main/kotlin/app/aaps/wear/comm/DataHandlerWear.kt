@@ -1,6 +1,5 @@
 package app.aaps.wear.comm
 
-import android.annotation.TargetApi
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -22,6 +21,7 @@ import app.aaps.core.interfaces.rx.events.EventWearDataToMobile
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
@@ -155,8 +155,8 @@ class DataHandlerWear @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe {
                 aapsLogger.debug(LTag.WEAR, "Preferences received from ${it.sourceNodeId}")
-                if (it.wearControl != sp.getBoolean(R.string.key_wear_control, false)) {
-                    sp.putBoolean(R.string.key_wear_control, it.wearControl)
+                if (it.wearControl != preferences.get(BooleanKey.WearControl)) {
+                    preferences.put(BooleanKey.WearControl, it.wearControl)
                     TileService.getUpdater(context).requestUpdate(ActionsTileService::class.java)
                     TileService.getUpdater(context).requestUpdate(TempTargetTileService::class.java)
                     TileService.getUpdater(context).requestUpdate(QuickWizardTileService::class.java)
@@ -256,7 +256,7 @@ class DataHandlerWear @Inject constructor(
         }
     }
 
-     private fun createBolusProgressChannels() {
+    private fun createBolusProgressChannels() {
         createNotificationChannel(
             longArrayOf(0, 50, 1000),
             DataLayerListenerServiceWear.AAPS_NOTIFY_CHANNEL_ID_BOLUS_PROGRESS,
@@ -273,7 +273,7 @@ class DataHandlerWear @Inject constructor(
         )
     }
 
-     private fun createNotificationChannel(vibratePattern: LongArray, channelID: String, name: CharSequence, description: String, importance: Int) {
+    private fun createNotificationChannel(vibratePattern: LongArray, channelID: String, name: CharSequence, description: String, importance: Int) {
         val channel = NotificationChannel(channelID, name, importance)
         channel.description = description
         channel.enableVibration(true)

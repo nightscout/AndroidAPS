@@ -134,15 +134,6 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
 
         // initialize screen wake lock
         processPreferenceChange(EventPreferenceChange(BooleanKey.OverviewKeepScreenOn.key, rh))
-        binding.mainPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageScrollStateChanged(state: Int) {}
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
-            override fun onPageSelected(position: Int) {
-                setPluginPreferenceMenuName()
-                checkPluginPreferences(binding.mainPager)
-                setDisabledMenuItemColorPluginPreferences()
-            }
-        })
 
         disposable += rxBus
             .toObservable(EventRebuildTabs::class.java)
@@ -312,10 +303,6 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             rxBus.send(EventNewNotification(Notification(Notification.MASTER_PASSWORD_NOT_SET, rh.gs(R.string.master_password_not_set), Notification.NORMAL)))
     }
 
-    private fun checkPluginPreferences(viewPager: ViewPager2) {
-        if (viewPager.currentItem >= 0) pluginPreferencesMenuItem?.isEnabled = (viewPager.adapter as TabPageAdapter).getPluginAt(viewPager.currentItem).preferencesId != PluginDescription.PREFERENCE_NONE
-    }
-
     private fun startWizard(): Boolean =
         !preferences.get(BooleanKey.GeneralSetupWizardProcessed)
 
@@ -385,7 +372,6 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             }
         binding.mainPager.adapter = pageAdapter
         binding.mainPager.offscreenPageLimit = 8 // This may cause more memory consumption
-        checkPluginPreferences(binding.mainPager)
 
         // Tabs
         if (preferences.get(BooleanKey.OverviewShortTabTitles)) {
@@ -427,21 +413,6 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         return super.dispatchTouchEvent(event)
     }
 
-    private fun setDisabledMenuItemColorPluginPreferences() {
-        if (pluginPreferencesMenuItem?.isEnabled == false) {
-            val spanString = SpannableString(this.menu?.findItem(R.id.nav_plugin_preferences)?.title.toString())
-            spanString.setSpan(ForegroundColorSpan(rh.gac(app.aaps.core.ui.R.attr.disabledTextColor)), 0, spanString.length, 0)
-            this.menu?.findItem(R.id.nav_plugin_preferences)?.title = spanString
-        }
-    }
-
-    private fun setPluginPreferenceMenuName() {
-        if (binding.mainPager.currentItem >= 0) {
-            val plugin = (binding.mainPager.adapter as TabPageAdapter).getPluginAt(binding.mainPager.currentItem)
-            this.menu?.findItem(R.id.nav_plugin_preferences)?.title = rh.gs(R.string.nav_preferences_plugin, plugin.name)
-        }
-    }
-
     override fun onMenuOpened(featureId: Int, menu: Menu): Boolean {
         menuOpen = true
         if (binding.mainDrawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -449,6 +420,16 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         }
         val result = super.onMenuOpened(featureId, menu)
         menu.findItem(R.id.nav_treatments)?.isEnabled = profileFunction.getProfile() != null
+        if (binding.mainPager.currentItem >= 0) {
+            val plugin = (binding.mainPager.adapter as TabPageAdapter).getPluginAt(binding.mainPager.currentItem)
+            this.menu?.findItem(R.id.nav_plugin_preferences)?.title = rh.gs(R.string.nav_preferences_plugin, plugin.name)
+            pluginPreferencesMenuItem?.isEnabled = (binding.mainPager.adapter as TabPageAdapter).getPluginAt(binding.mainPager.currentItem).preferencesId != PluginDescription.PREFERENCE_NONE
+        }
+        if (pluginPreferencesMenuItem?.isEnabled == false) {
+            val spanString = SpannableString(this.menu?.findItem(R.id.nav_plugin_preferences)?.title.toString())
+            spanString.setSpan(ForegroundColorSpan(rh.gac(app.aaps.core.ui.R.attr.disabledTextColor)), 0, spanString.length, 0)
+            this.menu?.findItem(R.id.nav_plugin_preferences)?.title = spanString
+        }
         return result
     }
 

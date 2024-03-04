@@ -11,9 +11,10 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.weardata.CwfFile
 import app.aaps.core.interfaces.rx.weardata.EventData
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.storage.Storage
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.Preferences
 import app.aaps.plugins.configuration.R
 import app.aaps.plugins.configuration.maintenance.data.PrefMetadataMap
 import app.aaps.plugins.configuration.maintenance.data.PrefsStatusImpl
@@ -38,7 +39,7 @@ class FileListProviderImpl @Inject constructor(
     private val encryptedPrefsFormat: EncryptedPrefsFormat,
     private val storage: Storage,
     private val versionCheckerUtils: VersionCheckerUtils,
-    private val sp: SP,
+    private val preferences: Lazy<Preferences>,
     private val context: Context,
     private val rxBus: RxBus
 ) : FileListProvider {
@@ -83,7 +84,7 @@ class FileListProviderImpl @Inject constructor(
 
     override fun listCustomWatchfaceFiles(): MutableList<CwfFile> {
         val customWatchfaceFiles = mutableListOf<CwfFile>()
-        val customWatchfaceAuthorization = sp.getBoolean(app.aaps.core.utils.R.string.key_wear_custom_watchface_autorization, false)
+        val customWatchfaceAuthorization = preferences.get().get(BooleanKey.WearCustomWatchfaceAuthorization)
         exportsPath.walk().filter { it.isFile && it.name.endsWith(ZipWatchfaceFormat.CWF_EXTENSION) }.forEach { file ->
             ZipWatchfaceFormat.loadCustomWatchface(file.readBytes(), file.name, customWatchfaceAuthorization)?.also { customWatchface ->
                 customWatchfaceFiles.add(customWatchface)

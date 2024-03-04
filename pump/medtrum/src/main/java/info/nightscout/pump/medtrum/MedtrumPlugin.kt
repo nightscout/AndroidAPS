@@ -56,6 +56,7 @@ import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.validators.AdaptiveIntPreference
 import app.aaps.core.validators.ValidatingEditTextPreference
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
+import info.nightscout.pump.medtrum.comm.enums.ModelType
 import info.nightscout.pump.medtrum.services.MedtrumService
 import info.nightscout.pump.medtrum.ui.MedtrumOverviewFragment
 import info.nightscout.pump.medtrum.util.MedtrumSnUtil
@@ -156,7 +157,7 @@ import kotlin.math.abs
                     override fun afterTextChanged(newValue: Editable?) {
                         val newSN = newValue?.toString()?.toLongOrNull(radix = 16) ?: 0
                         val newDeviceType = MedtrumSnUtil().getDeviceTypeFromSerial(newSN)
-                        editText.error = if (newDeviceType == MedtrumSnUtil.INVALID) {
+                        editText.error = if (newDeviceType == ModelType.INVALID) {
                             rh.gs(R.string.sn_input_invalid)
                         } else {
                             null
@@ -177,7 +178,7 @@ import kotlin.math.abs
                 val newDeviceType = MedtrumSnUtil().getDeviceTypeFromSerial(newSN)
 
                 when {
-                    newDeviceType == MedtrumSnUtil.INVALID                           -> {
+                    newDeviceType == ModelType.INVALID                           -> {
                         preferenceFragment.activity?.let { activity ->
                             OKDialog.show(activity, rh.gs(R.string.sn_input_title), rh.gs(R.string.sn_input_invalid))
                         }
@@ -186,7 +187,7 @@ import kotlin.math.abs
 
                     medtrumPump.pumpType(newDeviceType) == PumpType.MEDTRUM_UNTESTED -> {
                         preferenceFragment.activity?.let { activity ->
-                            OKDialog.show(activity, rh.gs(R.string.sn_input_title), rh.gs(R.string.pump_unsupported, newDeviceType))
+                            OKDialog.show(activity, rh.gs(R.string.sn_input_title), rh.gs(R.string.pump_unsupported, newDeviceType.toString()))
                         }
                         false
                     }

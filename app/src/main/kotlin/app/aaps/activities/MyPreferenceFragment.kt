@@ -149,7 +149,6 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreferencesIfEnabled(autotunePlugin, rootKey)
             addPreferencesFromResource(R.xml.pref_alerts, rootKey)
             addPreferencesIfEnabled(maintenancePlugin, rootKey)
-            addPreferencesFromResource(app.aaps.plugins.configuration.R.xml.pref_datachoices, rootKey)
         }
         initSummary(preferenceScreen, pluginName != null)
         preprocessPreferences()

@@ -464,7 +464,7 @@ class LoopPlugin @Inject constructor(
                             .setPriority(Notification.IMPORTANCE_HIGH)
                             .setCategory(Notification.CATEGORY_ALARM)
                             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                        if (sp.getBoolean(app.aaps.core.utils.R.string.key_wear_control, false)) {
+                        if (preferences.get(BooleanKey.WearControl)) {
                             builder.setLocalOnly(true)
                         }
                         presentSuggestion(builder)
