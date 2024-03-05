@@ -16,7 +16,7 @@
     <string name="version_expire">Versjon %1$s utløper den %2$s</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
-    <string name="recalculated_data_used">Bruker rekalkulerte data</string>
+    <string name="recalculated_data_used">Rekalkulerte data benyttes fordi noe BS-data mangler eller at BS ankommer på et ikke-forventet tidspunkt. Vil nullstille seg etter ca 24 timer. Ingen handling kreves</string>
     <string name="bg_too_close">BS for nær:\n%1$s\n%2$s</string>
     <string name="a11y_bg_quality_recalculated">beregnet på nytt</string>
     <string name="a11y_bg_quality_doubles">doble registreringer</string>

@@ -116,7 +116,7 @@
     <string name="action_confirm">ПОДТВЕРДИТЬ</string>
     <string name="action_timeshift">сдвиг по времени</string>
     <string name="action_bolus">Болюс</string>
-    <string name="bolus_progress">Подается болюс</string>
+    <string name="bolus_progress">Вводится болюс</string>
     <string name="press_to_cancel">нажмите для отмены</string>
     <string name="cancel_bolus">ОТМЕНИТЬ БОЛЮС</string>
     <string name="status_pump">Помпа</string>
@@ -161,10 +161,10 @@
     <string name="digitalstyle_pref_your_color">Ваш цвет:</string>
     <string name="digitalstyle_pref_your_color_saturation">Ваша цветовая насыщенность:</string>
     <string name="digitalstyle_pref_your_color_opacity">Непрозрачность вашего цвета:</string>
-    <string name="bolus_progress_channel_name">Подается болюс</string>
-    <string name="bolus_progress_silent_channel_name">Беззвучная подача болюса</string>
-    <string name="bolus_progress_channel_description">Подача и отмена болюса</string>
-    <string name="bolus_progress_silent_channel_description">Подача и отмена болюса с меньшими вибрациями</string>
+    <string name="bolus_progress_channel_name">Вводится болюс</string>
+    <string name="bolus_progress_silent_channel_name">Беззвучный ввод болюса</string>
+    <string name="bolus_progress_channel_description">Ввод и отмена болюса</string>
+    <string name="bolus_progress_silent_channel_description">Введение и отмена болюса с меньшими вибрациями</string>
     <string name="simple_ui_off">Выкл</string>
     <string name="simple_ui_charging">Во время зарядки</string>
     <string name="simple_ui_always_on">Режим: всегда вкл</string>
@@ -192,7 +192,7 @@
     <string name="cob_000g">000г</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00 ед</string>
-    <string name="snooze_alert">Оповещение о переходе AAPS в режим энергосбережения</string>
+    <string name="snooze_alert">Отложить оповещения AAPS</string>
     <string name="sending_snooze">Отправка команды отложить оповещения AAPS</string>
     <string name="short_hour">ч</string>
     <string name="week_short">н</string>

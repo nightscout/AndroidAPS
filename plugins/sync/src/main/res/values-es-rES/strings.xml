@@ -117,8 +117,6 @@
     <string name="xdrip_local_broadcasts_summary">Enviar datos de glucosa y tratamientos a xDrip+. La fuente de datos \"xDrip+ Sync Follower\" debe estar seleccionada y la aceptación de datos debe estar activada en Ajustes - Ajustes entre aplicaciones - Aceptar glucosa/tratamientos</string>
     <string name="xdrip_local_broadcasts_title">Activar las transmisiones a xDrip+</string>
     <!--    DataBroadcast-->
-    <string name="data_broadcaster_short">DBRO</string>
-    <string name="data_broadcaster_description">Transmitir datos a la aplicación G-Watch Wear de Garmin</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Conexión al dispositivo Garmin (Fénix, Edge, …)</string>
@@ -128,7 +126,7 @@
     <string name="description_wear">Supervisar y controlar AAPS usando un reloj WearOS</string>
     <string name="no_watch_connected">(Ningún reloj conectado)</string>
     <string name="pump_status">Estado de la bomba de insulina</string>
-    <string name="loop_status">Estado del lazo</string>
+    <string name="loop_status">Estado del bucle</string>
     <string name="wizard_result">Calc. Asistente:\nInsulina: %1$.2fU\nCarbohidratos: %2$dg</string>
     <string name="quick_wizard_not_available">El asistente rápido seleccionado ya no está disponible, por favor actualice su tarjeta</string>
     <string name="quick_wizard_message">Asistente Rápido: %1$s\nInsulina: %2$.2fU\nCarbohidratos: %3$dg</string>

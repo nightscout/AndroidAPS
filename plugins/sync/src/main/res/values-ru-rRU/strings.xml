@@ -117,8 +117,9 @@
     <string name="xdrip_local_broadcasts_summary">Отправлять данные о глюкозе и терапии на xDrip+. Источником данных должен быть выбран \"xDrip+ Sync Follower\" а в настройках между приложениями надо включить - Принимать глюкозу/терапию</string>
     <string name="xdrip_local_broadcasts_title">Включить трансляции для xDrip+.</string>
     <!--    DataBroadcast-->
-    <string name="data_broadcaster_short">DBRO</string>
-    <string name="data_broadcaster_description">Передавать данные приложению Garmin\'s G-Watch Wear</string>
+    <string name="tizen">Samsung Tizen</string>
+    <string name="tizen_short">TIZ</string>
+    <string name="tizen_description">Передавать данные приложению Samsung G-Watch Wear (OS Tizen)</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Подключение к устройству Garmin (Fenix, Edge, …)</string>

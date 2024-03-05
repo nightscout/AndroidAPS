@@ -124,7 +124,7 @@ class PersistentNotificationPlugin @Inject constructor(
             val lastBG = iobCobCalculator.ads.lastBg()
             val glucoseStatus = glucoseStatusProvider.glucoseStatusData
             if (lastBG != null) {
-                line1aa = profileUtil.fromMgdlToStringInUnits(lastBG.value)
+                line1aa = profileUtil.fromMgdlToStringInUnits(lastBG.recalculated)
                 line1 = line1aa
                 if (glucoseStatus != null) {
                     line1 += ("  Δ" + profileUtil.fromMgdlToSignedStringInUnits(glucoseStatus.delta)

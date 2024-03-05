@@ -117,8 +117,9 @@
     <string name="xdrip_local_broadcasts_summary">Invia dati glicemia e trattamenti a xDrip+. La sorgente dati \"xDrip+ Sync Follower\" deve essere selezionata e l\'accettazione dei dati deve essere abilitata in: Settings - Inter-app settings - Accept Glucose/Treatments</string>
     <string name="xdrip_local_broadcasts_title">Abilita trasmissioni a xDrip+.</string>
     <!--    DataBroadcast-->
-    <string name="data_broadcaster_short">DBRO</string>
-    <string name="data_broadcaster_description">Trasmetti i dati all\'app G-Watch Wear di Garmin</string>
+    <string name="tizen">Samsung Tizen</string>
+    <string name="tizen_short">TIZ</string>
+    <string name="tizen_description">Trasmetti i dati all\'app G-Watch Wear di Samsung (Tizen OS)</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Connessione al dispositivo Garmin (Fenix, Edge, …)</string>

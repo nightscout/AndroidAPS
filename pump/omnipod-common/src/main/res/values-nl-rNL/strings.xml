@@ -124,6 +124,7 @@
     <string name="omnipod_common_pod_status_waiting_for_activation">Setup wordt uitgevoerd (in afwachting van Pod activering)</string>
     <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">Setup wordt uitgevoerd (in afwachting van het inbrengen van de canule)</string>
     <string name="omnipod_common_pod_status_running">Actief</string>
+    <string name="omnipod_common_pod_status_normal">Normaal</string>
     <string name="omnipod_common_pod_status_suspended">Onderbroken</string>
     <string name="omnipod_common_pod_status_pod_fault">Pod fout</string>
     <string name="omnipod_common_pod_status_activation_time_exceeded">Activatie tijd verlopen</string>

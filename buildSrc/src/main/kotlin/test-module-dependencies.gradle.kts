@@ -22,6 +22,9 @@ dependencies {
     androidTestImplementation(Libs.AndroidX.Test.rules)
     androidTestImplementation(Libs.Google.truth)
     androidTestImplementation(Libs.AndroidX.Test.uiAutomator)
+    androidTestImplementation(Libs.Mockito.core)
+    androidTestImplementation(Libs.Mockito.android)
+    androidTestImplementation(Libs.Mockito.kotlin)
 }
 
 tasks.withType<Test> {

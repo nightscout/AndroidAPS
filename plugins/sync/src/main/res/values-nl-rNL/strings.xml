@@ -117,8 +117,6 @@
     <string name="xdrip_local_broadcasts_summary">Verzend glucose en behandelingsgegevens naar xDrip+. Gegevensbron \"xDrip+ Sync Follower\" moet worden geselecteerd en het accepteren van gegevens moet worden ingeschakeld in Instellingen - Inter-app instellingen - Accepteer Glucose/Behandelingen</string>
     <string name="xdrip_local_broadcasts_title">Activeer uitzendingen naar xDrip+.</string>
     <!--    DataBroadcast-->
-    <string name="data_broadcaster_short">DBRO</string>
-    <string name="data_broadcaster_description">Verzend gegevens naar Garmin\'s G-Watch Wear App</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Verbinding met Garmin apparaat (Fenix, Edge, …)</string>

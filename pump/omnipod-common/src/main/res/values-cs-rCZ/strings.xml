@@ -124,6 +124,7 @@
     <string name="omnipod_common_pod_status_waiting_for_activation">Probíhá nastavování (čeká se na aktivaci Podu)</string>
     <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">Probíhá nastavování (čeká se na aplikaci kanyly)</string>
     <string name="omnipod_common_pod_status_running">Běží</string>
+    <string name="omnipod_common_pod_status_normal">Normální</string>
     <string name="omnipod_common_pod_status_suspended">Pozastaveno</string>
     <string name="omnipod_common_pod_status_pod_fault">Chyba Podu</string>
     <string name="omnipod_common_pod_status_activation_time_exceeded">Byl překročen čas aktivace</string>
