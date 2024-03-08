@@ -85,7 +85,6 @@
                         android:paddingStart="5dp"
                         android:paddingEnd="5dp"
                         android:text="@{viewmodel.bleStatus}"
-                        android:textColor="@android:color/white"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -134,7 +133,6 @@
                         android:paddingStart="5dp"
                         android:paddingEnd="5dp"
                         android:text="@{viewmodel.patchConfig.patchSerialNumber}"
-                        android:textColor="@android:color/white"
                         android:textSize="16sp" />
                 </LinearLayout>
 
@@ -173,7 +171,6 @@
                         android:paddingStart="5dp"
                         android:paddingEnd="5dp"
                         android:text="@{viewmodel.patchConfig.patchLotNumber}"
-                        android:textColor="@android:color/white"
                         android:textSize="16sp" />
                 </LinearLayout>
 
@@ -212,7 +209,6 @@
                         android:paddingStart="5dp"
                         android:paddingEnd="5dp"
                         android:text="@{CommonUtils.dateString(viewmodel.patchConfig.patchWakeupTimestamp)}"
-                        android:textColor="@android:color/white"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -252,7 +248,6 @@
                         android:paddingStart="5dp"
                         android:paddingEnd="5dp"
                         android:text="@{CommonUtils.dateString(viewmodel.patchConfig.expireTimestamp)}"
-                        android:textColor="@android:color/white"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -292,7 +287,6 @@
                         android:paddingStart="5dp"
                         android:paddingEnd="5dp"
                         android:text="@{viewmodel.status}"
-                        android:textColor="@android:color/white"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -340,7 +334,6 @@
                         android:paddingStart="5dp"
                         android:paddingEnd="5dp"
                         android:text="@{viewmodel.normalBasal}"
-                        android:textColor="@android:color/white"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -388,7 +381,6 @@
                         android:paddingStart="5dp"
                         android:paddingEnd="5dp"
                         android:text="@{viewmodel.tempBasal}"
-                        android:textColor="@android:color/white"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -436,7 +428,6 @@
                         android:paddingStart="5dp"
                         android:paddingEnd="5dp"
                         android:text="@{viewmodel.patchRemainingInsulin}"
-                        android:textColor="@android:color/white"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -484,7 +475,6 @@
                         android:paddingStart="5dp"
                         android:paddingEnd="5dp"
                         android:text="@{viewmodel.patchConfig.insulinInjectionAmountStr}"
-                        android:textColor="@android:color/white"
                         android:textSize="16sp" />
 
                 </LinearLayout>
