@@ -62,7 +62,7 @@
                 android:layout_marginBottom="40dp"
                 android:gravity="center"
                 android:text="@string/patch_not_active_note"
-                android:textColor="@color/red"
+                android:textColor="@color/warning"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toTopOf="@+id/layout_button"
                 app:layout_constraintEnd_toEndOf="parent"
