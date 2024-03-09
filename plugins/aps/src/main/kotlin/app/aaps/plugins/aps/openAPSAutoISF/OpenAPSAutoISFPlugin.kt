@@ -142,8 +142,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
     val iobThresholdPercent = preferences.get(IntKey.ApsAutoIsfIobThPercent)
     private val exerciseMode = SMBDefaults.exercise_mode
     private val highTemptargetRaisesSensitivity = preferences.get(BooleanKey.ApsAutoIsfHighTtRaisesSens)
-    private var enableDynAps = true
-    override fun supportsDynamicIsf(): Boolean = preferences.get(BooleanKey.ApsUseAutoIsfWeights) && enableDynAps
+    override fun supportsDynamicIsf(): Boolean = preferences.get(BooleanKey.ApsUseAutoIsfWeights)
 
     override fun getIsfMgdl(multiplier: Double, timeShift: Int, caller: String): Double? {
         val start = dateUtil.now()
@@ -190,7 +189,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         if (!preferences.get(BooleanKey.ApsUseDynamicSensitivity)) return Pair("OFF", null)
         val result = persistenceLayer.getApsResultCloseTo(timestamp)
         if (result?.variableSens != null) {
-            //aapsLogger.debug("calculateVariableIsf $caller DB  ${dateUtil.dateAndTimeAndSecondsString(timestamp)} ${result.variableSens}")
+            aapsLogger.debug("calculateVariableIsf DB  ${dateUtil.dateAndTimeAndSecondsString(timestamp)} ${result.variableSens}")
             return Pair("DB", result.variableSens)
         }
         val glucose = bg ?: glucoseStatusProvider.glucoseStatusData?.glucose ?: return Pair("GLUC", null)
@@ -199,14 +198,13 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         val key = timestamp - timestamp % T.mins(30).msecs() + glucose.toLong()
         val cached = dynIsfCache[key]
         if (cached != null && timestamp < dateUtil.now()) {
-            //aapsLogger.debug("calculateVariableIsf $caller HIT ${dateUtil.dateAndTimeAndSecondsString(timestamp)} $cached")
+            aapsLogger.debug("calculateVariableIsf HIT ${dateUtil.dateAndTimeAndSecondsString(timestamp)} $cached")
             return Pair("HIT", cached)
         }
         // no cached result found, let's calculate the value
-        enableDynAps = false // disable supportsDynamicIsf feature to get profile ISF value
-        val sensitivity = (autoISF(timestamp) ?: 1.0) * profile.getIsfMgdlTimeFromMidnight(MidnightUtils.secondsFromMidnight(timestamp))
-        aapsLogger.debug("XXXXX $sensitivity ${profile.getIsfMgdlTimeFromMidnight(MidnightUtils.secondsFromMidnight(timestamp))}")
-        enableDynAps = true // enable supportsDynamicIsf feature after calculation
+        val autoIsfTimestamp = autoISF(timestamp, profile)
+        val sensitivity = autoIsfTimestamp
+        aapsLogger.debug("XXXXX ${dateUtil.dateAndTimeAndSecondsString(timestamp)} $sensitivity ${profile.getProfileIsfMgdl()} ${autoIsfTimestamp}")
         dynIsfCache.put(key, sensitivity)
         if (dynIsfCache.size() > 1000) dynIsfCache.clear()
         return Pair("CALC", sensitivity)
@@ -273,7 +271,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         }
 
         var autosensResult = AutosensResult()
-        var variableSensitivity = 0.0
+        var variableSensitivity = profile.getProfileIsfMgdl()
         val sens = profile.getIsfMgdl("OpenAPSAutoISFPlugin")
 
         if (constraintsChecker.isAutosensModeEnabled().value()) {
@@ -291,8 +289,8 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         var microBolusAllowed = constraintsChecker.isSMBModeEnabled(ConstraintObject(tempBasalFallback.not(), aapsLogger)).also { inputConstraints.copyReasons(it) }.value()
 
         if (dynIsfMode) {
-            consoleError = mutableListOf<String>()
-            variableSensitivity = autoISF(now) ?: 1.0
+            consoleError = mutableListOf()
+            variableSensitivity = autoISF(now, profile)
         }
         val oapsProfile = OapsProfile(
             dia = 0.0, // not used
@@ -474,14 +472,12 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
     fun convert_bg(value: Double): String =
         profileUtil.fromMgdlToStringInUnits(value).replace("-0.0", "0.0")
 
-    fun autoISF(currentTime: Long): Double? {
-        //origin_sens: String, oapsProfile: OapsProfile, sensitivityRatio: Double, loop_wanted_smb: String): Double? {
-        val profile = profileFunction.getProfile()
-        val sens = profile?.getIsfMgdl("OpenAPSAutoISFPlugin")
+    fun autoISF(currentTime: Long, profile: Profile): Double {
+        val sens = profile.getProfileIsfMgdl()
         val glucose_status = glucoseStatusProvider.glucoseStatusData
         val dynIsfMode = preferences.get(BooleanKey.ApsUseAutoIsfWeights)
         val normalTarget = 100
-        if (!dynIsfMode || sens == null || glucose_status == null) {
+        if (!dynIsfMode || glucose_status == null) {
             consoleError.add("autoISF disabled in Preferences")
             consoleError.add("----------------------------------")
             consoleError.add("end autoISF")
@@ -496,7 +492,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
             isTempTarget = true
             target_bg = hardLimits.verifyHardLimits(tempTarget.target(), app.aaps.core.ui.R.string.temp_target_value, HardLimits.LIMIT_TEMP_TARGET_BG[0], HardLimits.LIMIT_TEMP_TARGET_BG[1])
         }
-        var sensitivityRatio = 1.0
+        var sensitivityRatio: Double
         var origin_sens = ""
         val low_temptarget_lowers_sensitivity = preferences.get(BooleanKey.ApsAutoIsfLowTtLowersSens)
         if (high_temptarget_raises_sensitivity && isTempTarget && target_bg > normalTarget
@@ -535,7 +531,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
             val autosensData = iobCobCalculator.getLastAutosensDataWithWaitForCalculationFinish("OpenAPSPlugin")
             if (autosensData == null) {
                 rxBus.send(EventResetOpenAPSGui(rh.gs(R.string.openaps_no_as_data)))
-                return null
+                return sens
             }
             autosensData.autosensResult
         } else autosensResult.sensResult = "autosens disabled"
@@ -547,7 +543,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         var pp_ISF = 1.0
         var delta_ISF = 1.0
         var acce_ISF = 1.0
-        var acce_weight: Double = 1.0
+        var acce_weight = 1.0
         val bg_off = target_bg + 10.0 - glucose_status.glucose;                      // move from central BG=100 to target+10 as virtual BG'=100
 
         // calculate acce_ISF from bg acceleration and adapt ISF accordingly
@@ -598,8 +594,8 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
 
         val bg_ISF = 1 + interpolate(100 - bg_off, "bg")
         consoleError.add("bg_ISF adaptation is ${round(bg_ISF, 2)}")
-        var liftISF = 1.0
-        var final_ISF = 1.0
+        var liftISF: Double
+        var final_ISF: Double
         if (bg_ISF < 1.0) {
             liftISF = min(bg_ISF, acce_ISF)
             if (acce_ISF > 1.0) {
