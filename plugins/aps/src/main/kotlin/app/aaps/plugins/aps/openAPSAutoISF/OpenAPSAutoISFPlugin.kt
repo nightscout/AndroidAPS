@@ -204,7 +204,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         // no cached result found, let's calculate the value
         val autoIsfTimestamp = autoISF(timestamp, profile)
         val sensitivity = autoIsfTimestamp
-        aapsLogger.debug("XXXXX ${dateUtil.dateAndTimeAndSecondsString(timestamp)} $sensitivity ${profile.getProfileIsfMgdl()} ${autoIsfTimestamp}")
+        //aapsLogger.debug("XXXXX ${dateUtil.dateAndTimeAndSecondsString(timestamp)} ${profile.getProfileIsfMgdl()} -> ${autoIsfTimestamp}")
         dynIsfCache.put(key, sensitivity)
         if (dynIsfCache.size() > 1000) dynIsfCache.clear()
         return Pair("CALC", sensitivity)
