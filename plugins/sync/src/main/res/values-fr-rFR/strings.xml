@@ -122,6 +122,8 @@
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Connexion au périphérique Garmin (Fenix, Edge, …)</string>
+    <string name="garmin_local_http_server_port">Port du serveur HTTP local</string>
+    <string name="garmin_local_http_server">Serveur HTTP local</string>
     <!--    Wear-->
     <string name="wear_shortname">WEAR</string>
     <string name="description_wear">Surveillez et contrôlez AAPS en utilisant votre montre WearOS.</string>
