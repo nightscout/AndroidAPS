@@ -296,8 +296,9 @@ class DetermineBasalAutoISF @Inject constructor(
         val maxDelta = max(glucose_status.delta, max(glucose_status.shortAvgDelta, glucose_status.longAvgDelta))
 
         val sens =
-            if (dynIsfMode) profile.variable_sens
-            else {
+            if (dynIsfMode) {
+                profile.variable_sens
+            } else {
                 val profile_sens = round(profile.sens, 1)
                 val adjusted_sens = round(profile.sens / sensitivityRatio, 1)
                 if (adjusted_sens != profile_sens) {
