@@ -2,6 +2,8 @@
 <resources>
     <string name="dynisf_adjust_sensitivity">Activer le ratio de sensibilité basé sur DTQ pour la modification du basal et la cible des glycémies</string>
     <string name="dynisf_adjust_sensitivity_summary">Utilise le dernier DTQ 24h/DTQ 7j pour calculer le ratio de sensibilité utilisé pour augmenter ou diminuer le taux de basal et ajuster aussi la cible de glycémie si ces options sont activées, de la même manière que Autosens. Il est recommandé de commencer avec cette option désactivée</string>
+    <string name="dyn_isf_adjust_title" formatted="false">Facteur d\'ajustement Si dynamique %</string>
+    <string name="dyn_isf_adjust_summary" formatted="false">Facteur d\'ajustement pour SI dynamique. Définissez plus de 100 % pour des corrections plus agressives et moins de 100 % pour des corrections moins agressives.</string>
     <string name="high_temptarget_raises_sensitivity_title">Cible temp. haute élève la sensibilité</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Augmente la Sensibilité pour les cibles temporaires >= 100]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Cible temp. basse abaisse la sensibilité</string>
@@ -118,6 +120,7 @@
     <string name="fallback_smb_no_tdd">Revenir à SMB. Pas assez de données DTQ.</string>
     <string name="fallback_to_isf_no_tdd">Utilisation de la sensibilité du profil. Pas assez de données DTQ.</string>
     <!-- Autotune -->
+    <string name="autotune_description">Aide pour ajuster le profil (SI, rapport G/I et débits de basal)</string>
     <string name="autotune_shortname">AT</string>
     <string name="autotune_settings">Paramètres Autotune</string>
     <string name="autotune_auto_title">Changer le profil avec l\'automatisation</string>
@@ -157,4 +160,6 @@
     <string name="autotune_update_local_profile_message">Mettre à jour le profil %1$s avec le profil Autotune ?</string>
     <string name="autotune_revert_local_profile_message">Annuler la mise à jour du profil %1$s et remettre le profil d\'entrée ?</string>
     <string name="autotune_profile_invalid">Profil invalide</string>
+    <string name="not_available_full">Non disponible</string>
+    <string name="pump_disconnected">Pompe déconnectée</string>
 </resources>
