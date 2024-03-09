@@ -1043,8 +1043,8 @@ class DetermineBasalAutoISF @Inject constructor(
                 if (dynIsfMode) {
                     microBolus = Math.min(insulinReq * smb_ratio, maxBolus)
                     // mod autoISF3.0-dev: if that would put us over iobTH, then reduce accordingly; allow 30% overrun
-                    val iobTHtolerance = 130
-                    val iobTHvirtual = iob_threshold_percent * iobTHtolerance / 10000 * profile.max_iob * iobTH_reduction_ratio
+                    val iobTHtolerance = 130.0
+                    val iobTHvirtual = iob_threshold_percent * iobTHtolerance / 10000.0 * profile.max_iob * iobTH_reduction_ratio
                     if (microBolus > iobTHvirtual - iob_data.iob && (loop_wanted_smb == "fullLoop" || loop_wanted_smb == "enforced")) {
                         microBolus = iobTHvirtual - iob_data.iob
                         consoleError.add("Full loop capped SMB at ${round(microBolus, 2)} to not exceed $iobTHtolerance% of effective iobTH ${round(iobTHvirtual / iobTHtolerance * 100, 2)}U")
