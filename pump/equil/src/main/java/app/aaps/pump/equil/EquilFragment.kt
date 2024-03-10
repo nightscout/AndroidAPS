@@ -2,7 +2,6 @@ package app.aaps.pump.equil
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
@@ -143,7 +142,7 @@ class EquilFragment : DaggerFragment() {
 
             binding.timeDevice.text = dateUtil.dateAndTimeAndSecondsString(equilManager.lastDataTime)
             val runMode = equilManager.runMode
-            binding.mode.setTextColor(Color.WHITE)
+            binding.mode.setTextColor(rh.gac(app.aaps.core.ui.R.attr.defaultTextColor))
             if (equilManager.isActivationCompleted) {
                 when (runMode) {
                     RunMode.RUN     -> {
@@ -174,7 +173,7 @@ class EquilFragment : DaggerFragment() {
                 binding.btnResumeDelivery.visibility = View.GONE
                 binding.btnSuspendDelivery.visibility = View.GONE
                 binding.mode.text = rh.gs(R.string.equil_init_insulin_error)
-                binding.mode.setTextColor(Color.RED)
+                binding.mode.setTextColor(rh.gac(app.aaps.core.ui.R.attr.warningColor))
             }
 
             binding.serialNumber.text = devName
