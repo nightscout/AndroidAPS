@@ -166,4 +166,5 @@
     <string name="metadata_format_new">Nieuwe versleutelde indeling</string>
     <string name="metadata_format_debug">Nieuwe debug indeling (onversleuteld)</string>
     <string name="metadata_format_other">Onbekende export indeling</string>
+    <string name="reset_aps_results">Reset APS resultaten</string>
 </resources>
