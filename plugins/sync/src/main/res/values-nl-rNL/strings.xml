@@ -123,6 +123,7 @@
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Verbinding met Garmin apparaat (Fenix, Edge, …)</string>
     <string name="garmin_local_http_server_port">Lokale HTTP server poort</string>
+    <string name="garmin_local_http_server">Lokale HTTP server</string>
     <!--    Wear-->
     <string name="wear_shortname">WEAR</string>
     <string name="description_wear">Monitor en bedien AAPS met uw WearOS horloge.</string>
