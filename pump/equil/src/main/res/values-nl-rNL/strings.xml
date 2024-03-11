@@ -34,15 +34,31 @@
     <string name="equil_unit_u_hours">%1$s E/u</string>
     <string name="equil_error_no_devices">Geen apparaat</string>
     <string name="equil_ble_config_confirmation_title">Koppel Equil patch pomp</string>
+    <string name="equil_pair">Koppel</string>
+    <string name="equil_pair_error">Koppel fout</string>
+    <string name="equil_air">Verwijder lucht</string>
     <string name="equil_temp_basal_rate">Tijdelijk basaal</string>
+    <string name="equil_total_delivered">Totaal toegediend</string>
+    <string name="equil_last_bolus">Laatste bolus</string>
+    <string name="equil_firmware_version">Firmwareversie</string>
+    <string name="equil_shutdown">Equil auto uit</string>
+    <string name="equil_common_history_tbr_value">Snelheid: %1$.2f E/u, duur: %2$d minuten</string>
+    <string name="equil_common_history_bolus_value">%1$.2f E</string>
+    <string name="equil_history_type">Type：</string>
     <!-- equil - Commands -->
+    <string name="equil_common_cmd_set_bolus">Bolus instellen</string>
     <string name="equil_common_cmd_cancel_bolus">Annuleer Bolus</string>
+    <string name="equil_common_cmd_set_tbr">Tijdelijke basaal instellen</string>
     <string name="equil_common_cmd_cancel_tbr">Tijdelijk basaal annuleren</string>
     <string name="equil_common_cmd_set_basal_schedule">Basaalprofiel instellen</string>
     <string name="equil_common_cmd_get_status">Equil status ophalen</string>
+    <string name="equil_common_cmd_set_time">Tijd instellen</string>
     <string name="equil_common_cmd_suspend_delivery">Onderbreek toediening</string>
     <string name="equil_common_cmd_resume_delivery">Hervat toediening</string>
+    <string name="equil_common_cmd_pair">Koppel Equil</string>
     <string name="equil_common_cmd_insert_cannula">Canule inbrengen</string>
+    <string name="equil_common_cmd_unpair">Ontkoppel Equil</string>
+    <string name="equil_common_cmd_alarm">Alarm</string>
     <string name="equil_common_cmd_set_extended_bolus">Vertraagde bolus instellen</string>
     <string name="equil_common_cmd_cancel_extended_bolus">Annuleer vertraagde bolus</string>
     <!--    推杆回退-->
@@ -51,6 +67,7 @@
     <string name="history_manual_confirm">Handmatig bevestigen</string>
     <string name="equil_command_not_found">Geen apparaat gevonden</string>
     <string name="equil_command_connect_error">Pomp verbindingsfout</string>
+    <string name="equil_command_connect_no_response">Geen reactie van de pomp</string>
     <string name="equil_password_title">Pomp wachtwoord</string>
     <string name="equil_settings">Instellingen</string>
     <string name="equil_settings_alarm_battery">Alarm bij bijna lege batterij</string>
