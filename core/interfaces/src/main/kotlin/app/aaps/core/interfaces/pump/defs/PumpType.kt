@@ -434,6 +434,24 @@ enum class PumpType {
         description = "Medtrum untested",
         model = "untested",
         parent = MEDTRUM_NANO
+    ),
+    EQUIL(
+        description = "Equil",
+        manufacturer = ManufacturerType.Equil,
+        model = "Equil",
+        bolusSize = 0.05,
+        specialBolusSize = null,
+        extendedBolusSettings = DoseSettings(0.05, 30, 5 * 60, 0.05),
+        pumpTempBasalType = PumpTempBasalType.Absolute,
+        tbrSettings = DoseSettings(0.05, 30, 24 * 60, 0.0, 35.0),
+        specialBasalDurations = PumpCapability.BasalRate_Duration30minAllowed,
+        baseBasalMinValue = 0.05,
+        baseBasalMaxValue = 3.0,
+        baseBasalStep = 0.01,
+        baseBasalSpecialSteps = null,
+        pumpCapability = PumpCapability.DiaconnCapabilities,
+        source = Source.EQuil,
+        useHardwareLink = true,
     );
 
     val description: String
@@ -506,7 +524,8 @@ enum class PumpType {
         Medtrum,
         MDI,
         VirtualPump,
-        Unknown
+        Unknown,
+        EQuil
     }
 
     companion object {

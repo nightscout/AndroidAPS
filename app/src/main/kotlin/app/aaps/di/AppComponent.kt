@@ -14,6 +14,7 @@ import app.aaps.plugins.main.di.PluginsModule
 import app.aaps.plugins.source.di.SourceModule
 import app.aaps.plugins.sync.di.OpenHumansModule
 import app.aaps.plugins.sync.di.SyncModule
+import app.aaps.pump.equil.di.EquilModule
 import app.aaps.pump.virtual.di.VirtualPumpModule
 import app.aaps.shared.impl.di.SharedImplModule
 import app.aaps.ui.di.UiModule
@@ -76,6 +77,7 @@ import javax.inject.Singleton
         DanaRSModule::class,
         DiaconnG8Module::class,
         EopatchModule::class,
+        EquilModule::class,
         InsightModule::class,
         InsightDatabaseModule::class,
         MedtronicModule::class,

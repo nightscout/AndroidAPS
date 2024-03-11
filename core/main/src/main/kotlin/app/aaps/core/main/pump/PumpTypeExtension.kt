@@ -59,6 +59,7 @@ fun PumpType.Companion.fromDbPumpType(pt: InterfaceIDs.PumpType): PumpType =
         InterfaceIDs.PumpType.USER                        -> PumpType.USER
         InterfaceIDs.PumpType.DIACONN_G8                  -> PumpType.DIACONN_G8
         InterfaceIDs.PumpType.EOPATCH2                    -> PumpType.EOFLOW_EOPATCH2
+        InterfaceIDs.PumpType.EQUIL                       -> PumpType.EQUIL
         InterfaceIDs.PumpType.MEDTRUM                     -> PumpType.MEDTRUM_NANO
         InterfaceIDs.PumpType.MEDTRUM_300U                -> PumpType.MEDTRUM_300U
         InterfaceIDs.PumpType.MEDTRUM_UNTESTED            -> PumpType.MEDTRUM_UNTESTED
@@ -84,6 +85,7 @@ fun PumpType.Source.toDbSource(): UserEntry.Sources =
         PumpType.Source.Medtrum     -> UserEntry.Sources.Medtrum
         PumpType.Source.MDI         -> UserEntry.Sources.MDI
         PumpType.Source.VirtualPump -> UserEntry.Sources.VirtualPump
+        PumpType.Source.EQuil       -> UserEntry.Sources.Equil
         else                        -> UserEntry.Sources.Unknown
     }
 
@@ -121,6 +123,7 @@ fun PumpType.toDbPumpType(): InterfaceIDs.PumpType =
         PumpType.USER                      -> InterfaceIDs.PumpType.USER
         PumpType.DIACONN_G8                -> InterfaceIDs.PumpType.DIACONN_G8
         PumpType.EOFLOW_EOPATCH2           -> InterfaceIDs.PumpType.EOPATCH2
+        PumpType.EQUIL                     -> InterfaceIDs.PumpType.EQUIL
         PumpType.MEDTRUM_NANO              -> InterfaceIDs.PumpType.MEDTRUM
         PumpType.MEDTRUM_300U              -> InterfaceIDs.PumpType.MEDTRUM_300U
         PumpType.MEDTRUM_UNTESTED          -> InterfaceIDs.PumpType.MEDTRUM_UNTESTED
