@@ -120,6 +120,7 @@
     <string name="fallback_smb_no_tdd">Terugvallen naar SMB. Niet genoeg TDD gegevens.</string>
     <string name="fallback_to_isf_no_tdd">Terugval naar profiel gevoeligheid. Onvoldoende TDD gegevens.</string>
     <!-- Autotune -->
+    <string name="autotune_description">Hulp voor mogelijke aanpassingen van het profiel (ISF, koolhydraten en basaal insuline)</string>
     <string name="autotune_shortname">AT</string>
     <string name="autotune_settings">Autotune instellingen</string>
     <string name="autotune_auto_title">Automatisering Profiel Wissel</string>
@@ -159,4 +160,5 @@
     <string name="autotune_update_local_profile_message">Profiel %1$s bijwerken met Autotune Profiel?</string>
     <string name="autotune_revert_local_profile_message">Profiel %1$s terugzetten met invoerprofiel?</string>
     <string name="autotune_profile_invalid">Profiel ongeldig</string>
+    <string name="not_available_full">Niet beschikbaar</string>
 </resources>
