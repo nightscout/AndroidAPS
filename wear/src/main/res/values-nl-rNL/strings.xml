@@ -204,6 +204,7 @@
     <string name="old_warning">!oud!</string>
     <string name="error">!fout!</string>
     <string name="pref_heartRateSampling">Hartslag</string>
+    <string name="pref_stepsSampling">Stappenteller inschakelen</string>
     <string name="tile_tempt_1">Tijdelijk Streefdoel 1</string>
     <string name="tile_tempt_2">Tijdelijk Streefdoel 2</string>
     <string name="tile_tempt_3">Tijdelijk Streefdoel 3</string>

@@ -117,6 +117,7 @@
     <string name="time_to_bolus">Il est temps de faire le bolus !\nExécutez l\'Assistant et faites de nouveau le calcul.</string>
     <string name="error_setting_reminder">Erreur lors du réglage de l\'alarme future</string>
     <!--    Autotune-->
+    <string name="autotune_profile_name">Profil Autotune %1$s</string>
     <string name="autotune_run">Lancer Autotune</string>
     <string name="autotune_run_without_autoswitch">Autotune exécuté sans changement de profil</string>
     <string name="autotune_run_with_autoswitch">Autotune exécuté et le profil automatiquement activé</string>
