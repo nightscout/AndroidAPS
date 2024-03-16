@@ -56,6 +56,7 @@ import app.aaps.plugins.automation.triggers.TriggerBTDevice
 import app.aaps.plugins.automation.triggers.TriggerBg
 import app.aaps.plugins.automation.triggers.TriggerBolusAgo
 import app.aaps.plugins.automation.triggers.TriggerCOB
+import app.aaps.plugins.automation.triggers.TriggerCanulaAge
 import app.aaps.plugins.automation.triggers.TriggerConnector
 import app.aaps.plugins.automation.triggers.TriggerDelta
 import app.aaps.plugins.automation.triggers.TriggerHeartRate
@@ -403,6 +404,7 @@ class AutomationPlugin @Inject constructor(
             TriggerPumpLastConnection(injector),
             TriggerBTDevice(injector),
             TriggerHeartRate(injector),
+            TriggerCanulaAge(injector)
         )
     }
 
