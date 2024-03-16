@@ -60,6 +60,7 @@ import app.aaps.plugins.automation.triggers.TriggerCanulaAge
 import app.aaps.plugins.automation.triggers.TriggerConnector
 import app.aaps.plugins.automation.triggers.TriggerDelta
 import app.aaps.plugins.automation.triggers.TriggerHeartRate
+import app.aaps.plugins.automation.triggers.TriggerInsulinAge
 import app.aaps.plugins.automation.triggers.TriggerIob
 import app.aaps.plugins.automation.triggers.TriggerLocation
 import app.aaps.plugins.automation.triggers.TriggerProfilePercent
@@ -385,7 +386,7 @@ class AutomationPlugin @Inject constructor(
     }
 
     fun getTriggerDummyObjects(): List<Trigger> {
-        return listOf(
+        val triggers = mutableListOf(
             TriggerConnector(injector),
             TriggerTime(injector),
             TriggerRecurringTime(injector),
@@ -406,7 +407,15 @@ class AutomationPlugin @Inject constructor(
             TriggerHeartRate(injector),
             TriggerCanulaAge(injector)
         )
+
+        val isPatchPump = activePlugin.activePump.pumpDescription.isPatchPump
+        if (!isPatchPump) {
+            triggers.add(TriggerInsulinAge(injector))
+        }
+    
+        return triggers.toList()
     }
+    
 
     /**
      * Generate reminder via [app.aaps.plugins.automation.ui.TimerUtil]

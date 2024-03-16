@@ -38,6 +38,7 @@ import app.aaps.plugins.automation.triggers.TriggerConnector
 import app.aaps.plugins.automation.triggers.TriggerDelta
 import app.aaps.plugins.automation.triggers.TriggerDummy
 import app.aaps.plugins.automation.triggers.TriggerHeartRate
+import app.aaps.plugins.automation.triggers.TriggerInsulinAge
 import app.aaps.plugins.automation.triggers.TriggerIob
 import app.aaps.plugins.automation.triggers.TriggerLocation
 import app.aaps.plugins.automation.triggers.TriggerProfilePercent
@@ -74,6 +75,7 @@ abstract class AutomationModule {
     @ContributesAndroidInjector abstract fun triggerBgInjector(): TriggerBg
     @ContributesAndroidInjector abstract fun triggerBolusAgoInjector(): TriggerBolusAgo
     @ContributesAndroidInjector abstract fun triggerCanulaAgeInjector(): TriggerCanulaAge
+    @ContributesAndroidInjector abstract fun triggerInsulinAgeInjector(): TriggerInsulinAge
     @ContributesAndroidInjector abstract fun triggerCOBInjector(): TriggerCOB
     @ContributesAndroidInjector abstract fun triggerConnectorInjector(): TriggerConnector
     @ContributesAndroidInjector abstract fun triggerDeltaInjector(): TriggerDelta
