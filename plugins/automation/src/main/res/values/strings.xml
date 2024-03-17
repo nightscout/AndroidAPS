@@ -91,6 +91,8 @@
     <string name="triggerCannulaAgeDesc">Cannula age %1$s %2$.1f hour</string>    
     <string name="triggerInsulinAgeLabel">Insulin age</string>
     <string name="triggerInsulinAgeDesc">Insulin age %1$s %2$.1f hour</string>
+    <string name="triggerPumpBatteryAgeLabel">Pump battery age</string>
+    <string name="triggerPumpBatteryAgeDesc">Pump battery age %1$s %2$.1f hour</string>
     <string name="iob_u">IOB [U]:</string>
     <string name="distance_short">Dist [m]:</string>
     <string name="recurringTime">Recurring time</string>

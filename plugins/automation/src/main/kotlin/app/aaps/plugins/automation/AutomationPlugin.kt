@@ -64,6 +64,7 @@ import app.aaps.plugins.automation.triggers.TriggerInsulinAge
 import app.aaps.plugins.automation.triggers.TriggerIob
 import app.aaps.plugins.automation.triggers.TriggerLocation
 import app.aaps.plugins.automation.triggers.TriggerProfilePercent
+import app.aaps.plugins.automation.triggers.TriggerPumpBatteryAge
 import app.aaps.plugins.automation.triggers.TriggerPumpLastConnection
 import app.aaps.plugins.automation.triggers.TriggerRecurringTime
 import app.aaps.plugins.automation.triggers.TriggerTempTarget
@@ -408,9 +409,12 @@ class AutomationPlugin @Inject constructor(
             TriggerCannulaAge(injector)
         )
 
-        val isPatchPump = activePlugin.activePump.pumpDescription.isPatchPump
-        if (!isPatchPump) {
+        val pump = activePlugin.activePump
+        if (!pump.pumpDescription.isPatchPump) {
             triggers.add(TriggerInsulinAge(injector))
+        }
+        if (pump.pumpDescription.isBatteryReplaceable || pump.isBatteryChangeLoggingEnabled()) {
+            triggers.add(TriggerPumpBatteryAge(injector))
         }
     
         return triggers.toList()

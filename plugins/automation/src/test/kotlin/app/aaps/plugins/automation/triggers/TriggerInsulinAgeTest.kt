@@ -51,7 +51,7 @@ class TriggerInsulinAgeTest : TriggerTestBase() {
         assertThat(t.shouldRun()).isFalse()
     }
 
-    @Test fun shouldRunWhenPatchPump() {
+    @Test fun shouldRunPatchPump() {
         val t: TriggerInsulinAge = TriggerInsulinAge(injector).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         val pumpDescription = PumpDescription()
