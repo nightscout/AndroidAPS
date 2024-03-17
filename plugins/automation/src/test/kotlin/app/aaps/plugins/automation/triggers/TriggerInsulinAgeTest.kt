@@ -22,9 +22,8 @@ class TriggerInsulinAgeTest : TriggerTestBase() {
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
 
     @Test fun shouldRunTest() {
-        // Cannula age is 6
-        val cannulaChangeEvent = TE(glucoseUnit = GlucoseUnit.MGDL, timestamp = now - T.hours(6).msecs(), type = TE.Type.INSULIN_CHANGE)
-        `when`(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.INSULIN_CHANGE)).thenReturn(cannulaChangeEvent)
+        val insulinChangeEvent = TE(glucoseUnit = GlucoseUnit.MGDL, timestamp = now - T.hours(6).msecs(), type = TE.Type.INSULIN_CHANGE)
+        `when`(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.INSULIN_CHANGE)).thenReturn(insulinChangeEvent)
         var t: TriggerInsulinAge = TriggerInsulinAge(injector).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isFalse()
         t = TriggerInsulinAge(injector).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)
@@ -67,9 +66,9 @@ class TriggerInsulinAgeTest : TriggerTestBase() {
     }
 
     @Test fun toJSONTest() {
-        val cannulaJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"insulinAgeHours\":4},\"type\":\"TriggerInsulinAge\"}"
+        val triggerJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"insulinAgeHours\":4},\"type\":\"TriggerInsulinAge\"}"
         val t: TriggerInsulinAge = TriggerInsulinAge(injector).setValue(4.0).comparator(Comparator.Compare.IS_EQUAL)
-        JSONAssert.assertEquals(cannulaJson, t.toJSON(), true)
+        JSONAssert.assertEquals(triggerJson, t.toJSON(), true)
     }
 
     @Test fun fromJSONTest() {

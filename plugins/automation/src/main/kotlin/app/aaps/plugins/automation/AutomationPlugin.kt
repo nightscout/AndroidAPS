@@ -67,6 +67,7 @@ import app.aaps.plugins.automation.triggers.TriggerProfilePercent
 import app.aaps.plugins.automation.triggers.TriggerPumpBatteryAge
 import app.aaps.plugins.automation.triggers.TriggerPumpLastConnection
 import app.aaps.plugins.automation.triggers.TriggerRecurringTime
+import app.aaps.plugins.automation.triggers.TriggerSensorAge
 import app.aaps.plugins.automation.triggers.TriggerTempTarget
 import app.aaps.plugins.automation.triggers.TriggerTempTargetValue
 import app.aaps.plugins.automation.triggers.TriggerTime
@@ -406,6 +407,7 @@ class AutomationPlugin @Inject constructor(
             TriggerPumpLastConnection(injector),
             TriggerBTDevice(injector),
             TriggerHeartRate(injector),
+            TriggerSensorAge(injector),
             TriggerCannulaAge(injector)
         )
 

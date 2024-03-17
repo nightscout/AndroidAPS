@@ -22,9 +22,8 @@ class TriggerPumpBatteryAgeTest : TriggerTestBase() {
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
 
     @Test fun shouldRunTest() {
-        // Cannula age is 6
-        val cannulaChangeEvent = TE(glucoseUnit = GlucoseUnit.MGDL, timestamp = now - T.hours(6).msecs(), type = TE.Type.PUMP_BATTERY_CHANGE)
-        `when`(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.PUMP_BATTERY_CHANGE)).thenReturn(cannulaChangeEvent)
+        val pumpBatteryChangeEvent = TE(glucoseUnit = GlucoseUnit.MGDL, timestamp = now - T.hours(6).msecs(), type = TE.Type.PUMP_BATTERY_CHANGE)
+        `when`(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.PUMP_BATTERY_CHANGE)).thenReturn(pumpBatteryChangeEvent)
         var t: TriggerPumpBatteryAge = TriggerPumpBatteryAge(injector).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isFalse()
         t = TriggerPumpBatteryAge(injector).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)
@@ -52,8 +51,8 @@ class TriggerPumpBatteryAgeTest : TriggerTestBase() {
     }
 
     @Test fun shouldRunBatteryAgeSupport() {
-        val cannulaChangeEvent = TE(glucoseUnit = GlucoseUnit.MGDL, timestamp = now - T.hours(6).msecs(), type = TE.Type.PUMP_BATTERY_CHANGE)
-        `when`(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.PUMP_BATTERY_CHANGE)).thenReturn(cannulaChangeEvent)
+        val pumpBatteryChangeEvent = TE(glucoseUnit = GlucoseUnit.MGDL, timestamp = now - T.hours(6).msecs(), type = TE.Type.PUMP_BATTERY_CHANGE)
+        `when`(persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.PUMP_BATTERY_CHANGE)).thenReturn(pumpBatteryChangeEvent)
         val t: TriggerPumpBatteryAge = TriggerPumpBatteryAge(injector).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         val pumpDescription = PumpDescription()
@@ -78,9 +77,9 @@ class TriggerPumpBatteryAgeTest : TriggerTestBase() {
     }
 
     @Test fun toJSONTest() {
-        val cannulaJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"pumpBatteryAgeHours\":4},\"type\":\"TriggerPumpBatteryAge\"}"
+        val triggerJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"pumpBatteryAgeHours\":4},\"type\":\"TriggerPumpBatteryAge\"}"
         val t: TriggerPumpBatteryAge = TriggerPumpBatteryAge(injector).setValue(4.0).comparator(Comparator.Compare.IS_EQUAL)
-        JSONAssert.assertEquals(cannulaJson, t.toJSON(), true)
+        JSONAssert.assertEquals(triggerJson, t.toJSON(), true)
     }
 
     @Test fun fromJSONTest() {

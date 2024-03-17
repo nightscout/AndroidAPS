@@ -45,6 +45,7 @@ import app.aaps.plugins.automation.triggers.TriggerProfilePercent
 import app.aaps.plugins.automation.triggers.TriggerPumpBatteryAge
 import app.aaps.plugins.automation.triggers.TriggerPumpLastConnection
 import app.aaps.plugins.automation.triggers.TriggerRecurringTime
+import app.aaps.plugins.automation.triggers.TriggerSensorAge
 import app.aaps.plugins.automation.triggers.TriggerTempTarget
 import app.aaps.plugins.automation.triggers.TriggerTempTargetValue
 import app.aaps.plugins.automation.triggers.TriggerTime
@@ -75,6 +76,7 @@ abstract class AutomationModule {
     @ContributesAndroidInjector abstract fun triggerAutosensValueInjector(): TriggerAutosensValue
     @ContributesAndroidInjector abstract fun triggerBgInjector(): TriggerBg
     @ContributesAndroidInjector abstract fun triggerBolusAgoInjector(): TriggerBolusAgo
+    @ContributesAndroidInjector abstract fun triggerSensorAgeInjector(): TriggerSensorAge
     @ContributesAndroidInjector abstract fun triggerCanulaAgeInjector(): TriggerCannulaAge
     @ContributesAndroidInjector abstract fun triggerInsulinAgeInjector(): TriggerInsulinAge
     @ContributesAndroidInjector abstract fun triggerPumpBatteryAgeInjector(): TriggerPumpBatteryAge

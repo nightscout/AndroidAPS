@@ -87,6 +87,8 @@
     <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="triggerHeartRate">Heart Rate</string>
     <string name="triggerHeartRateDesc">HR %1$s %2$.0f</string>
+    <string name="triggerSensorAgeLabel">Sensor age</string>
+    <string name="triggerSensorAgeDesc">Sensor age %1$s %2$.1f hour</string>
     <string name="triggerCannulaAgeLabel">Cannula age</string>
     <string name="triggerCannulaAgeDesc">Cannula age %1$s %2$.1f hour</string>    
     <string name="triggerInsulinAgeLabel">Insulin age</string>
