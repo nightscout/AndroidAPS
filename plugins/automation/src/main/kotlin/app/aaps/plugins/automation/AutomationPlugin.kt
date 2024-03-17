@@ -67,6 +67,7 @@ import app.aaps.plugins.automation.triggers.TriggerProfilePercent
 import app.aaps.plugins.automation.triggers.TriggerPumpBatteryAge
 import app.aaps.plugins.automation.triggers.TriggerPumpLastConnection
 import app.aaps.plugins.automation.triggers.TriggerRecurringTime
+import app.aaps.plugins.automation.triggers.TriggerReservoirLevel
 import app.aaps.plugins.automation.triggers.TriggerSensorAge
 import app.aaps.plugins.automation.triggers.TriggerTempTarget
 import app.aaps.plugins.automation.triggers.TriggerTempTargetValue
@@ -408,7 +409,8 @@ class AutomationPlugin @Inject constructor(
             TriggerBTDevice(injector),
             TriggerHeartRate(injector),
             TriggerSensorAge(injector),
-            TriggerCannulaAge(injector)
+            TriggerCannulaAge(injector),
+            TriggerReservoirLevel(injector)
         )
 
         val pump = activePlugin.activePump
