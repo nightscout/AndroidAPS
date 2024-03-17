@@ -33,7 +33,7 @@ import app.aaps.plugins.automation.triggers.TriggerBTDevice
 import app.aaps.plugins.automation.triggers.TriggerBg
 import app.aaps.plugins.automation.triggers.TriggerBolusAgo
 import app.aaps.plugins.automation.triggers.TriggerCOB
-import app.aaps.plugins.automation.triggers.TriggerCanulaAge
+import app.aaps.plugins.automation.triggers.TriggerCannulaAge
 import app.aaps.plugins.automation.triggers.TriggerConnector
 import app.aaps.plugins.automation.triggers.TriggerDelta
 import app.aaps.plugins.automation.triggers.TriggerDummy
@@ -74,7 +74,7 @@ abstract class AutomationModule {
     @ContributesAndroidInjector abstract fun triggerAutosensValueInjector(): TriggerAutosensValue
     @ContributesAndroidInjector abstract fun triggerBgInjector(): TriggerBg
     @ContributesAndroidInjector abstract fun triggerBolusAgoInjector(): TriggerBolusAgo
-    @ContributesAndroidInjector abstract fun triggerCanulaAgeInjector(): TriggerCanulaAge
+    @ContributesAndroidInjector abstract fun triggerCanulaAgeInjector(): TriggerCannulaAge
     @ContributesAndroidInjector abstract fun triggerInsulinAgeInjector(): TriggerInsulinAge
     @ContributesAndroidInjector abstract fun triggerCOBInjector(): TriggerCOB
     @ContributesAndroidInjector abstract fun triggerConnectorInjector(): TriggerConnector

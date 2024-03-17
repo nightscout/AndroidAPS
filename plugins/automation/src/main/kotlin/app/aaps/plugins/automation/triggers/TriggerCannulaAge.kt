@@ -17,22 +17,22 @@ import org.json.JSONObject
 import java.text.DecimalFormat
 import java.util.Optional
 
-class TriggerCanulaAge(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerCannulaAge(injector: HasAndroidInjector) : Trigger(injector) {
 
-    var canulaAgeHours: InputDouble = InputDouble(0.0, 0.0, 336.0, 0.1, DecimalFormat("0.1"))
+    var cannulaAgeHours: InputDouble = InputDouble(0.0, 0.0, 336.0, 0.1, DecimalFormat("0.1"))
     var comparator: Comparator = Comparator(rh)
 
-    private constructor(injector: HasAndroidInjector, triggerCanulaAge: TriggerCanulaAge) : this(injector) {
-        canulaAgeHours = InputDouble(triggerCanulaAge.canulaAgeHours)
-        comparator = Comparator(rh, triggerCanulaAge.comparator.value)
+    private constructor(injector: HasAndroidInjector, triggerCannulaAge: TriggerCannulaAge) : this(injector) {
+        cannulaAgeHours = InputDouble(triggerCannulaAge.cannulaAgeHours)
+        comparator = Comparator(rh, triggerCannulaAge.comparator.value)
     }
 
-    fun setValue(value: Double): TriggerCanulaAge {
-        canulaAgeHours.value = value
+    fun setValue(value: Double): TriggerCannulaAge {
+        cannulaAgeHours.value = value
         return this
     }
 
-    fun comparator(comparator: Comparator.Compare): TriggerCanulaAge {
+    fun comparator(comparator: Comparator.Compare): TriggerCannulaAge {
         this.comparator.value = comparator
         return this
     }
@@ -50,7 +50,7 @@ class TriggerCanulaAge(injector: HasAndroidInjector) : Trigger(injector) {
             aapsLogger.debug(LTag.AUTOMATION, "NOT ready for execution: " + friendlyDescription())
             return false
         }
-        if (comparator.value.check(currentAgeHours, canulaAgeHours.value)) {
+        if (comparator.value.check(currentAgeHours, cannulaAgeHours.value)) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true
         }
@@ -60,20 +60,20 @@ class TriggerCanulaAge(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun dataJSON(): JSONObject =
         JSONObject()
-            .put("canulaAgeHours", canulaAgeHours.value)
+            .put("cannulaAgeHours", cannulaAgeHours.value)
             .put("comparator", comparator.value.toString())
 
     override fun fromJSON(data: String): Trigger {
         val d = JSONObject(data)
-        canulaAgeHours.setValue(safeGetDouble(d, "canulaAgeHours"))
+        cannulaAgeHours.setValue(safeGetDouble(d, "cannulaAgeHours"))
         comparator.setValue(Comparator.Compare.valueOf(JsonHelper.safeGetString(d, "comparator")!!))
         return this
     }
 
-    override fun friendlyName(): Int = R.string.triggerCanulaAgeLabel
+    override fun friendlyName(): Int = R.string.triggerCannulaAgeLabel
 
     override fun friendlyDescription(): String =
-    rh.gs(R.string.triggerCanulaAgeDesc, rh.gs(comparator.value.stringRes), canulaAgeHours.value)
+        rh.gs(R.string.triggerCannulaAgeDesc, rh.gs(comparator.value.stringRes), cannulaAgeHours.value)
 
     override fun icon(): Optional<Int> {
         val isPatchPump = activePlugin.activePump.pumpDescription.isPatchPump
@@ -84,13 +84,13 @@ class TriggerCanulaAge(injector: HasAndroidInjector) : Trigger(injector) {
         }
     }
 
-    override fun duplicate(): Trigger = TriggerCanulaAge(injector, this)
+    override fun duplicate(): Trigger = TriggerCannulaAge(injector, this)
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(rh, R.string.triggerCanulaAgeLabel, this))
+            .add(StaticLabel(rh, R.string.triggerCannulaAgeLabel, this))
             .add(comparator)
-            .add(LabelWithElement(rh, rh.gs(R.string.triggerCanulaAgeLabel) + ": ", rh.gs(app.aaps.core.interfaces.R.string.unit_hour), canulaAgeHours))
+            .add(LabelWithElement(rh, rh.gs(R.string.triggerCannulaAgeLabel) + ": ", rh.gs(app.aaps.core.interfaces.R.string.unit_hour), cannulaAgeHours))
             .build(root)
     }
 }

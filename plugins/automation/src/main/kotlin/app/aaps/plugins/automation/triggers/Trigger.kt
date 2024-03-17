@@ -94,7 +94,7 @@ abstract class Trigger(val injector: HasAndroidInjector) {
                 TriggerBg::class.java.simpleName                 -> TriggerBg(injector).fromJSON(data.toString())
                 TriggerBolusAgo::class.java.simpleName           -> TriggerBolusAgo(injector).fromJSON(data.toString())
                 TriggerBTDevice::class.java.simpleName           -> TriggerBTDevice(injector).fromJSON(data.toString())
-                TriggerCanulaAge::class.java.simpleName          -> TriggerCanulaAge(injector).fromJSON(data.toString())
+                TriggerCannulaAge::class.java.simpleName         -> TriggerCannulaAge(injector).fromJSON(data.toString())
                 TriggerInsulinAge::class.java.simpleName         -> TriggerInsulinAge(injector).fromJSON(data.toString())
                 TriggerIob::class.java.simpleName                -> TriggerIob(injector).fromJSON(data.toString())
                 TriggerCOB::class.java.simpleName                -> TriggerCOB(injector).fromJSON(data.toString())

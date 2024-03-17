@@ -78,7 +78,7 @@ class TriggerInsulinAge(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyName(): Int = R.string.triggerInsulinAgeLabel
 
     override fun friendlyDescription(): String =
-    rh.gs(R.string.triggerInsulinAgeDesc, rh.gs(comparator.value.stringRes), insulinAgeHours.value)
+        rh.gs(R.string.triggerInsulinAgeDesc, rh.gs(comparator.value.stringRes), insulinAgeHours.value)
 
     override fun icon(): Optional<Int> = Optional.of(app.aaps.core.objects.R.drawable.ic_cp_age_insulin)
 
