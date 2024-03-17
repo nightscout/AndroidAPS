@@ -1,25 +1,17 @@
 package app.aaps.plugins.automation.triggers
 
-import app.aaps.core.data.iob.CobInfo
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TE
-import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.time.T
-import app.aaps.pump.virtual.VirtualPumpPlugin
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers
-import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.skyscreamer.jsonassert.JSONAssert
 import java.util.Optional
 
 class TriggerSensorAgeTest : TriggerTestBase() {
-
-    @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
 
     @Test fun shouldRunTest() {
         val sensorAgeEvent = TE(glucoseUnit = GlucoseUnit.MGDL, timestamp = now - T.hours(6).msecs(), type = TE.Type.SENSOR_CHANGE)
@@ -70,7 +62,7 @@ class TriggerSensorAgeTest : TriggerTestBase() {
     }
 
     @Test fun iconTest() {
-        val t= TriggerSensorAge(injector)
+        val t = TriggerSensorAge(injector)
         assertThat(t.icon()).isEqualTo(Optional.of(app.aaps.core.objects.R.drawable.ic_cp_age_sensor))
     }
 }

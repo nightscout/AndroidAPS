@@ -1,15 +1,12 @@
 package app.aaps.plugins.automation.triggers
 
 import android.widget.LinearLayout
-import app.aaps.core.data.model.BS
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.utils.JsonHelper
 import app.aaps.core.utils.JsonHelper.safeGetDouble
-import app.aaps.core.utils.JsonHelper.safeGetString
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDouble
-import app.aaps.plugins.automation.elements.InputDuration
 import app.aaps.plugins.automation.elements.LabelWithElement
 import app.aaps.plugins.automation.elements.LayoutBuilder
 import app.aaps.plugins.automation.elements.StaticLabel
