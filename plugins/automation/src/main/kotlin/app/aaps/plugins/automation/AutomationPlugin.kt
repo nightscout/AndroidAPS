@@ -9,6 +9,7 @@ import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
@@ -65,6 +66,7 @@ import app.aaps.plugins.automation.triggers.TriggerIob
 import app.aaps.plugins.automation.triggers.TriggerLocation
 import app.aaps.plugins.automation.triggers.TriggerProfilePercent
 import app.aaps.plugins.automation.triggers.TriggerPumpBatteryAge
+import app.aaps.plugins.automation.triggers.TriggerPumpBatteryLevel
 import app.aaps.plugins.automation.triggers.TriggerPumpLastConnection
 import app.aaps.plugins.automation.triggers.TriggerRecurringTime
 import app.aaps.plugins.automation.triggers.TriggerReservoirLevel
@@ -420,10 +422,13 @@ class AutomationPlugin @Inject constructor(
         if (pump.pumpDescription.isBatteryReplaceable || pump.isBatteryChangeLoggingEnabled()) {
             triggers.add(TriggerPumpBatteryAge(injector))
         }
-    
+        val erosBatteryLinkAvailable = pump.model() == PumpType.OMNIPOD_EROS && pump.isUseRileyLinkBatteryLevel()
+        if (pump.model().supportBatteryLevel || erosBatteryLinkAvailable) {
+            triggers.add(TriggerPumpBatteryLevel(injector))
+        }
+
         return triggers.toList()
     }
-    
 
     /**
      * Generate reminder via [app.aaps.plugins.automation.ui.TimerUtil]

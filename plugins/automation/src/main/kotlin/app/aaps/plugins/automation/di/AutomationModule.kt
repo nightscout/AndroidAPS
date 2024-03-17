@@ -43,6 +43,7 @@ import app.aaps.plugins.automation.triggers.TriggerIob
 import app.aaps.plugins.automation.triggers.TriggerLocation
 import app.aaps.plugins.automation.triggers.TriggerProfilePercent
 import app.aaps.plugins.automation.triggers.TriggerPumpBatteryAge
+import app.aaps.plugins.automation.triggers.TriggerPumpBatteryLevel
 import app.aaps.plugins.automation.triggers.TriggerPumpLastConnection
 import app.aaps.plugins.automation.triggers.TriggerRecurringTime
 import app.aaps.plugins.automation.triggers.TriggerReservoirLevel
@@ -82,6 +83,7 @@ abstract class AutomationModule {
     @ContributesAndroidInjector abstract fun triggerInsulinAgeInjector(): TriggerInsulinAge
     @ContributesAndroidInjector abstract fun triggerReservoirLevelInjector(): TriggerReservoirLevel
     @ContributesAndroidInjector abstract fun triggerPumpBatteryAgeInjector(): TriggerPumpBatteryAge
+    @ContributesAndroidInjector abstract fun triggerPumpBatteryLevelInjector(): TriggerPumpBatteryLevel
     @ContributesAndroidInjector abstract fun triggerCOBInjector(): TriggerCOB
     @ContributesAndroidInjector abstract fun triggerConnectorInjector(): TriggerConnector
     @ContributesAndroidInjector abstract fun triggerDeltaInjector(): TriggerDelta
