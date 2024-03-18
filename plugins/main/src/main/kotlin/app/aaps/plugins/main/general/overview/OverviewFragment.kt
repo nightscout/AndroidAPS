@@ -583,8 +583,22 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 && preferences.get(BooleanKey.OverviewShowTreatmentButton)).toVisibility()
             binding.buttonsLayout.wizardButton.visibility = (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null
                 && preferences.get(BooleanKey.OverviewShowWizardButton)).toVisibility()
-            binding.buttonsLayout.insulinButton.visibility = (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null
-                && preferences.get(BooleanKey.OverviewShowInsulinButton)).toVisibility()
+            binding.buttonsLayout.insulinButton.visibility = (profile != null && preferences.get(BooleanKey.OverviewShowInsulinButton)).toVisibility()
+            if (loop.isDisconnected || !pump.isInitialized() || pump.isSuspended()) {
+                setRibbon(
+                    binding.buttonsLayout.insulinButton,
+                    app.aaps.core.ui.R.attr.ribbonTextWarningColor,
+                    app.aaps.core.ui.R.attr.ribbonWarningColor,
+                    rh.gs(app.aaps.core.ui.R.string.overview_insulin_label)
+                )
+            } else {
+                setRibbon(
+                    binding.buttonsLayout.insulinButton,
+                    app.aaps.core.ui.R.attr.icBolusColor,
+                    app.aaps.core.ui.R.attr.ribbonDefaultColor,
+                    rh.gs(app.aaps.core.ui.R.string.overview_insulin_label)
+                )
+            }
 
             // **** Calibration & CGM buttons ****
             val xDripIsBgSource = xDripSource.isEnabled()
