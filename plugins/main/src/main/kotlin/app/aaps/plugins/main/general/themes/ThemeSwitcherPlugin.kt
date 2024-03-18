@@ -4,10 +4,10 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
-import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange

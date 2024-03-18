@@ -2,18 +2,26 @@ package app.aaps.plugins.sync.garmin
 
 import android.content.Context
 import androidx.annotation.VisibleForTesting
+import androidx.preference.PreferenceCategory
+import androidx.preference.PreferenceManager
+import androidx.preference.PreferenceScreen
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.GlucoseUnit
-import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventNewBG
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.Preferences
+import app.aaps.core.validators.AdaptiveIntPreference
+import app.aaps.core.validators.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
@@ -50,6 +58,7 @@ class GarminPlugin @Inject constructor(
     private val loopHub: LoopHub,
     private val rxBus: RxBus,
     private val sp: SP,
+    private val preferences: Preferences
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -57,7 +66,7 @@ class GarminPlugin @Inject constructor(
         .pluginName(R.string.garmin)
         .shortName(R.string.garmin)
         .description(R.string.garmin_description)
-        .preferencesId(R.xml.pref_garmin),
+        .preferencesId(PluginDescription.PREFERENCE_SCREEN),
     aapsLogger, resourceHelper
 ) {
 
@@ -67,12 +76,12 @@ class GarminPlugin @Inject constructor(
 
     /** Garmin ConnectIQ application id for native communication. Phone pushes values. */
     private val glucoseAppIds = mapOf(
-       "C9E90EE7E6924829A8B45E7DAFFF5CB4" to "GlucoseWatch_Dev",
-       "1107CA6C2D5644B998D4BCB3793F2B7C" to "GlucoseDataField_Dev",
-       "928FE19A4D3A4259B50CB6F9DDAF0F4A" to "GlucoseWidget_Dev",
-       "662DFCF7F5A147DE8BD37F09574ADB11" to "GlucoseWatch",
-       "815C7328C21248C493AD9AC4682FE6B3" to "GlucoseDataField",
-       "4BDDCC1740084A1FAB83A3B2E2FCF55B" to "GlucoseWidget",
+        "C9E90EE7E6924829A8B45E7DAFFF5CB4" to "GlucoseWatch_Dev",
+        "1107CA6C2D5644B998D4BCB3793F2B7C" to "GlucoseDataField_Dev",
+        "928FE19A4D3A4259B50CB6F9DDAF0F4A" to "GlucoseWidget_Dev",
+        "662DFCF7F5A147DE8BD37F09574ADB11" to "GlucoseWatch",
+        "815C7328C21248C493AD9AC4682FE6B3" to "GlucoseDataField",
+        "4BDDCC1740084A1FAB83A3B2E2FCF55B" to "GlucoseWidget",
     )
 
     @VisibleForTesting
@@ -91,9 +100,9 @@ class GarminPlugin @Inject constructor(
 
     private fun onPreferenceChange(event: EventPreferenceChange) {
         when (event.changedKey) {
-            "communication_debug_mode" -> setupGarminMessenger()
-            "communication_http", "communication_http_port" -> setupHttpServer()
-            "garmin_aaps_key" -> sendPhoneAppMessage()
+            "communication_debug_mode"                                                         -> setupGarminMessenger()
+            rh.gs(BooleanKey.GarminLocalHttpServer.key), rh.gs(IntKey.GarminLocalHttpPort.key) -> setupHttpServer()
+            "garmin_aaps_key"                                                                  -> sendPhoneAppMessage()
         }
     }
 
@@ -103,8 +112,9 @@ class GarminPlugin @Inject constructor(
         garminMessenger = null
         aapsLogger.info(LTag.GARMIN, "initialize IQ messenger in debug=$enableDebug")
         garminMessenger = GarminMessenger(
-            aapsLogger, context, glucoseAppIds, {_, _ -> },
-            true, enableDebug).also { disposable.add(it) }
+            aapsLogger, context, glucoseAppIds, { _, _ -> },
+            true, enableDebug
+        ).also { disposable.add(it) }
     }
 
     override fun onStart() {
@@ -128,13 +138,13 @@ class GarminPlugin @Inject constructor(
     }
 
     private fun setupHttpServer() {
-      setupHttpServer(Duration.ZERO)
+        setupHttpServer(Duration.ZERO)
     }
 
     @VisibleForTesting
     fun setupHttpServer(wait: Duration) {
-        if (sp.getBoolean("communication_http", false)) {
-            val port = sp.getInt("communication_http_port", 28891)
+        if (preferences.get(BooleanKey.GarminLocalHttpServer)) {
+            val port = preferences.get(IntKey.GarminLocalHttpPort)
             if (server != null && server?.port == port) return
             aapsLogger.info(LTag.GARMIN, "starting HTTP server on $port")
             server?.close()
@@ -245,8 +255,7 @@ class GarminPlugin @Inject constructor(
     }
 
     @VisibleForTesting
-    fun requestHandler(action: (URI) -> CharSequence) = {
-            caller: SocketAddress, uri: URI, _: String? ->
+    fun requestHandler(action: (URI) -> CharSequence) = { caller: SocketAddress, uri: URI, _: String? ->
         val key = garminAapsKey
         val deviceKey = getQueryParameter(uri, "key")
         if (key.isNotEmpty() && key != deviceKey) {
@@ -277,9 +286,11 @@ class GarminPlugin @Inject constructor(
         jo.addProperty("remainingInsulin", loopHub.insulinOnboard)
         jo.addProperty("remainingBasalInsulin", loopHub.insulinBasalOnboard)
         loopHub.lowGlucoseMark.takeIf { it > 0.0 }?.let {
-            jo.addProperty("lowGlucoseMark", it.roundToInt()) }
+            jo.addProperty("lowGlucoseMark", it.roundToInt())
+        }
         loopHub.highGlucoseMark.takeIf { it > 0.0 }?.let {
-            jo.addProperty("highGlucoseMark", it.roundToInt()) }
+            jo.addProperty("highGlucoseMark", it.roundToInt())
+        }
         jo.addProperty("glucoseUnit", glucoseUnitStr)
         loopHub.temporaryBasal.also {
             if (!it.isNaN()) jo.addProperty("temporaryBasalRate", it)
@@ -329,7 +340,8 @@ class GarminPlugin @Inject constructor(
         val device: String? = msg["device"] as String?
         receiveHeartRate(
             Instant.ofEpochSecond(samplingStartSec), Instant.ofEpochSecond(samplingEndSec),
-            avg, device, test)
+            avg, device, test
+        )
     }
 
     @VisibleForTesting
@@ -346,7 +358,8 @@ class GarminPlugin @Inject constructor(
 
     private fun receiveHeartRate(
         samplingStart: Instant, samplingEnd: Instant,
-        avg: Int, device: String?, test: Boolean) {
+        avg: Int, device: String?, test: Boolean
+    ) {
         aapsLogger.info(LTag.GARMIN, "average heart rate $avg BPM $samplingStart to $samplingEnd")
         if (test) return
         if (avg > 10 && samplingStart > Instant.ofEpochMilli(0L) && samplingEnd > samplingStart) {
@@ -391,7 +404,7 @@ class GarminPlugin @Inject constructor(
     /** Returns glucose values in Nightscout/Xdrip format. */
     @VisibleForTesting
     fun onSgv(uri: URI): CharSequence {
-        val count = getQueryParameter(uri,"count", 24L)
+        val count = getQueryParameter(uri, "count", 24L)
             .toInt().coerceAtMost(1000).coerceAtLeast(1)
         val briefMode = getQueryParameter(uri, "brief_mode", false)
 
@@ -439,5 +452,18 @@ class GarminPlugin @Inject constructor(
             joa.add(jo)
         }
         return joa.toString()
+    }
+
+    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
+        if (requiredKey != null) return
+        val category = PreferenceCategory(context)
+        parent.addPreference(category)
+        category.apply {
+            key = "garmin_settings"
+            title = rh.gs(R.string.garmin)
+            initialExpandedChildrenCount = 0
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.GarminLocalHttpServer, title = R.string.garmin_local_http_server))
+            addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.GarminLocalHttpPort, title = R.string.garmin_local_http_server_port))
+        }
     }
 }

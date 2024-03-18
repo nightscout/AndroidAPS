@@ -16,11 +16,6 @@
     <string name="wear">Ceas</string>
     <string name="nav_about">Despre</string>
     <string name="smscommunicator_missingphonestatepermission">Nu este acordată permisiunea de citire a stării telefonului</string>
-    <string name="ns_alarm_options">Opțiuni alarmare</string>
-    <string name="ns_alarms">Creare notificări din alarmele NS</string>
-    <string name="ns_announcements">Creare notificări din anunţurile NS</string>
-    <string name="ns_alarm_stale_data_value_label">Prag vechime date [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Prag date mult prea vechi [min]</string>
     <string name="sensitivity_warning">Trebuie introduși toți carbo la pornirea Autosens. În caz contrar, acțiunea carbo va fi percepută ca schimbare a sensibilității!</string>
     <string name="notloadedplugins">Nu s-au încărcat toate profilurile!</string>
     <string name="valuesnotstored">Nu s-au salvat valorile!</string>

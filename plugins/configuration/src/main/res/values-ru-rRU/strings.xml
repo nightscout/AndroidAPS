@@ -30,8 +30,6 @@
     <string name="status">состояние:</string>
     <string name="patient_name">Имя пациента</string>
     <string name="patient_name_summary">Укажите имя или псевдоним пациента, чтобы распознавать разные настройки</string>
-    <string name="privacy_settings">Настройки конфиденцальности</string>
-    <string name="privacy_summary">Вы можете указать дополнительно адрес электронной почты, если хотите получать уведомления о сбоях приложения; что является не автоматизированной рассылкой, а способом связи с разработчиками в опасных ситуациях.</string>
     <string name="diawarning">Напоминание: новые профили инсулина требуют как минимум 5 часов длительности действия DIA. 5-6 часовая DIA эквивалентна трехчасовой на старых профилях.</string>
     <string name="profile">Профиль</string>
     <string name="doprofileswitch">Переключить профиль</string>
@@ -116,6 +114,7 @@
     <string name="description_maintenance">Предоставляет возможности для обслуживания (например. отправку логов, удаление логов).</string>
     <string name="database_cleanup">Очистка базы данных</string>
     <string name="reset_db_confirm">Вы действительно хотите обнулить базы данных?</string>
+    <string name="reset_aps_results_confirm">Вы действительно хотите сбросить хранящиеся результаты APS?</string>
     <string name="maintenance_settings">Параметры обслуживания</string>
     <string name="maintenance_email">Адрес электронной почты</string>
     <string name="maintenance_amount">Количество логов для отправки</string>
@@ -167,4 +166,5 @@
     <string name="metadata_format_new">Новый зашифрованный формат</string>
     <string name="metadata_format_debug">Новый формат отладки (незашифрованный)</string>
     <string name="metadata_format_other">Неизвестный формат экспорта</string>
+    <string name="reset_aps_results">Сбросить результаты APS</string>
 </resources>

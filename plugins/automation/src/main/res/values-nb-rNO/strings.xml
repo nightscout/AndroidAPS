@@ -116,4 +116,11 @@
     <string name="time_to_eat">Nå må du spise!\nBruk boluskalkulator og gjør beregning på nytt.</string>
     <string name="time_to_bolus">Tid for bolus!\nStart boluskalkulator og gjør beregning på nytt.</string>
     <string name="error_setting_reminder">Feil under innstilling av fremtidig alarm</string>
+    <!--    Autotune-->
+    <string name="autotune_profile_name">Autotune profil %1$s</string>
+    <string name="autotune_run">Kjør Autotune</string>
+    <string name="autotune_run_without_autoswitch">Autotune ble kjørt uten profilbytte</string>
+    <string name="autotune_run_with_autoswitch">Autotune utført og profil ble automatisk skiftet ut</string>
+    <string name="autotune_run_with_error">Feil oppdaget under siste Autotune kjøring</string>
+    <string name="autotune_run_cancelled">Autotune kjører allerede. Kjøring avbrutt</string>
 </resources>

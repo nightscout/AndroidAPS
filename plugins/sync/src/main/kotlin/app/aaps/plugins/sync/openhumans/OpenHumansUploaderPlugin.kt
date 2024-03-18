@@ -9,6 +9,9 @@ import android.util.DisplayMetrics
 import android.view.WindowManager
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.preference.PreferenceCategory
+import androidx.preference.PreferenceManager
+import androidx.preference.PreferenceScreen
 import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
@@ -20,16 +23,19 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import app.aaps.core.data.model.HasIDs
 import app.aaps.core.data.model.data.Block
-import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.sync.Sync
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.Preferences
+import app.aaps.core.validators.AdaptiveSwitchPreference
+import app.aaps.core.validators.extensions.stringKey
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.openhumans.delegates.OHAppIDDelegate
 import app.aaps.plugins.sync.openhumans.delegates.OHCounterDelegate
@@ -59,7 +65,7 @@ import javax.inject.Singleton
 class OpenHumansUploaderPlugin @Inject internal constructor(
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
-    private val sp: SP,
+    private val preferences: Preferences,
     private val context: Context,
     private val persistenceLayer: PersistenceLayer,
     private val openHumansAPI: OpenHumansAPI,
@@ -74,7 +80,7 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
         .pluginName(R.string.open_humans)
         .shortName(R.string.open_humans_short)
         .description(R.string.open_humans_description)
-        .preferencesId(R.xml.pref_openhumans)
+        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .fragmentClass(OHFragment::class.qualifiedName),
     aapsLogger, rh
 ) {
@@ -106,7 +112,7 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
     }
 
     private fun onSharedPreferenceChanged(event: EventPreferenceChange) {
-        if (event.changedKey in arrayOf("key_oh_charging_only", "key_oh_wifi_only") && openHumansState != null) scheduleWorker(true)
+        if (event.changedKey in arrayOf(BooleanKey.OpenHumansWifiOnly.stringKey(rh), BooleanKey.OpenHumansChargingOnly.stringKey(rh)) && openHumansState != null) scheduleWorker(true)
     }
 
     suspend fun login(bearerToken: String) = withContext(Dispatchers.IO) {
@@ -561,8 +567,8 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
 
     private fun scheduleWorker(replace: Boolean, delay: Boolean = false) {
         val constraints = Constraints.Builder()
-            .setRequiredNetworkType(if (sp.getBoolean("key_oh_wifi_only", true)) NetworkType.UNMETERED else NetworkType.CONNECTED)
-            .setRequiresCharging(sp.getBoolean("key_oh_charging_only", false))
+            .setRequiredNetworkType(if (preferences.get(BooleanKey.OpenHumansWifiOnly)) NetworkType.UNMETERED else NetworkType.CONNECTED)
+            .setRequiresCharging(preferences.get(BooleanKey.OpenHumansChargingOnly))
             .setRequiresBatteryNotLow(true)
             .build()
         val workRequest = PeriodicWorkRequestBuilder<OpenHumansWorker>(1, TimeUnit.DAYS)
@@ -681,4 +687,16 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
         const val UPLOAD_NOTIFICATION_ID = 3126
     }
 
+    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
+        if (requiredKey != null) return
+        val category = PreferenceCategory(context)
+        parent.addPreference(category)
+        category.apply {
+            key = "open_humans_settings"
+            title = rh.gs(R.string.open_humans)
+            initialExpandedChildrenCount = 0
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.OpenHumansWifiOnly, title = R.string.only_upload_if_connected_to_wifi))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.OpenHumansChargingOnly, title = R.string.only_upload_if_charging))
+        }
+    }
 }

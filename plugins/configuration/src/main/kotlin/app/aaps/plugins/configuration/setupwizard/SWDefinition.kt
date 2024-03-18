@@ -50,7 +50,6 @@ import app.aaps.plugins.configuration.setupwizard.elements.SWFragment
 import app.aaps.plugins.configuration.setupwizard.elements.SWHtmlLink
 import app.aaps.plugins.configuration.setupwizard.elements.SWInfoText
 import app.aaps.plugins.configuration.setupwizard.elements.SWPlugin
-import app.aaps.plugins.configuration.setupwizard.elements.SWPreference
 import app.aaps.plugins.configuration.setupwizard.elements.SWRadioButton
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
@@ -217,12 +216,6 @@ class SWDefinition @Inject constructor(
             .add(SWInfoText(injector).label(R.string.patient_name_summary))
             .add(SWEditString(injector).validator(String::isNotEmpty).preferenceId(app.aaps.core.utils.R.string.key_patient_name))
 
-    private val privacy
-        get() = SWScreen(injector, R.string.privacy_settings)
-            .skippable(true)
-            .add(SWInfoText(injector).label(R.string.privacy_summary))
-            .add(SWPreference(injector, this).option(R.xml.pref_datachoices))
-
     private val screenMasterPassword
         get() = SWScreen(injector, app.aaps.core.ui.R.string.master_password)
             .skippable(false)
@@ -238,7 +231,7 @@ class SWDefinition @Inject constructor(
             .add(SWBreak(injector))
             .add(
                 SWRadioButton(injector)
-                    .option(app.aaps.core.ui.R.array.ageArray, app.aaps.core.utils.R.array.ageValues)
+                    .option(activePlugin.activeSafety.ageEntries(), activePlugin.activeSafety.ageEntryValues())
                     .preferenceId(StringKey.SafetyAge.key)
                     .label(app.aaps.core.ui.R.string.patient_type)
                     .comment(app.aaps.core.ui.R.string.patient_age_summary)
@@ -361,7 +354,7 @@ class SWDefinition @Inject constructor(
             .skippable(false)
             .add(
                 SWRadioButton(injector)
-                    .option(app.aaps.core.ui.R.array.aps_modeArray, app.aaps.core.ui.R.array.aps_modeValues)
+                    .option(loop.entries(), loop.entryValues())
                     .preferenceId(StringKey.LoopApsMode.key).label(R.string.apsmode_title)
                     .comment(R.string.setupwizard_preferred_aps_mode)
             )
@@ -418,7 +411,6 @@ class SWDefinition @Inject constructor(
             .add(screenPermissionStore)
             .add(screenMasterPassword)
             .add(screenImport)
-            .add(privacy)
             .add(screenUnits)
             .add(displaySettings)
             .add(screenNsClient)

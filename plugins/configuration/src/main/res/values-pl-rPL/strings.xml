@@ -30,8 +30,6 @@
     <string name="status">Status:</string>
     <string name="patient_name">Nazwa pacjenta</string>
     <string name="patient_name_summary">Proszę podać nazwę pacjenta lub pseudonim w celu rozróżnienia pomiędzy różnymi konfiguracjami</string>
-    <string name="privacy_settings">Ustawienia prywatności</string>
-    <string name="privacy_summary">Możesz opcjonalnie podać adres e-mail, jeśli chcesz otrzymywać powiadomienia o awariach aplikacji. To nie jest usługa zautomatyzowana. W niebezpiecznych sytuacjach deweloperzy skontaktują się z Tobą.</string>
     <string name="diawarning">Pamiętaj: nowe profile insuliny wymagają ustawienia DIA (czas działania insuliny) powyżej 5h. DIA między 5-6h na nowym profilu odpowiada 3h DIA na starych profilach insuliny.</string>
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Zmień profil</string>

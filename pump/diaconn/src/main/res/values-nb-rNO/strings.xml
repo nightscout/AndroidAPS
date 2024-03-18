@@ -15,13 +15,13 @@
     <string name="diaconn_g8_pairingok">Sammenkobling OK</string>
     <string name="diaconn_g8_waitingforpairing">Venter på sammenkobling</string>
     <string name="diaconn_firmware_version">Versjon</string>
-    <string name="invalidpairing">Ugyldig parringsinformasjon. Krever ny sammenkobling</string>
+    <string name="invalidpairing">Ugyldig sammenkoblingsinformasjon. Ber om ny sammenkobling</string>
     <string name="gettingpumpsettings">Henter pumpe innstillinger</string>
     <string name="gettingpumptime">Henter pumpens tid</string>
     <string name="largetimediff">Stor tidsforskjell:\nKlokken i pumpen avviker mer enn 1,5 timer fra mobilen.\nVennligst juster klokke manuelt på pumpen og sørg for at lesing av loggen fra pumpen ikke fører til uventet oppførsel.\nHvis mulig, fjern loggen fra pumpen før du endrer klokkeslettet eller deaktiver lukket loop for én DIA periode etter siste feil oppføring i historikk, men minst én DIA periode fra nå.</string>
     <string name="largetimedifftitle">Stor tidsforskjell</string>
     <string name="approachingdailylimit">Maksimal daglig insulindose er snart nådd</string>
-    <string name="startingbolus">Starter bolus dosering</string>
+    <string name="startingbolus">Starter boluslevering</string>
     <string name="waitingforestimatedbolusend">Venter på avsluttet bolus dosering</string>
     <string name="gettingbolusstatus">Leser bolus status</string>
     <string name="stoppingtempbasal">Stopper midlertidig basal</string>

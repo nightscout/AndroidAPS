@@ -56,8 +56,8 @@ open class SWItem(val injector: HasAndroidInjector, var type: Type) {
         return this
     }
 
-    open fun save(value: String, updateDelay: Long) {
-        sp.putString(preferenceId, value)
+    open fun save(value: CharSequence, updateDelay: Long) {
+        sp.putString(preferenceId, value.toString())
         scheduleChange(updateDelay)
     }
 

@@ -23,6 +23,8 @@ import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey.CWF_VERSION
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataMap
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.Preferences
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.plugins.configuration.R
@@ -37,6 +39,7 @@ class CustomWatchfaceImportListActivity : TranslatedDaggerAppCompatActivity() {
 
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var fileListProvider: FileListProvider
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsLogger: AAPSLogger
@@ -110,7 +113,7 @@ class CustomWatchfaceImportListActivity : TranslatedDaggerAppCompatActivity() {
                 val colorAttr = if (checkCustomVersion(metadata)) app.aaps.core.ui.R.attr.metadataTextOkColor else app.aaps.core.ui.R.attr.metadataTextWarningColor
                 cwfVersion.setTextColor(rh.gac(cwfVersion.context, colorAttr))
                 val prefExisting = metadata.keys.any { it.isPref }
-                val prefSetting = sp.getBoolean(app.aaps.core.utils.R.string.key_wear_custom_watchface_autorization, false)
+                val prefSetting = preferences.get(BooleanKey.WearCustomWatchfaceAuthorization)
                 val prefColor = if (prefSetting) app.aaps.core.ui.R.attr.metadataTextWarningColor else app.aaps.core.ui.R.attr.importListFileNameColor
                 prefWarning.visibility = (prefExisting && prefSetting).toVisibility()
                 prefInfo.visibility = (prefExisting && !prefSetting).toVisibility()

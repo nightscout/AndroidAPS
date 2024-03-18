@@ -281,6 +281,7 @@
     <string name="variable_sensitivity_shortname">DDYRLLK</string>
     <string name="graph_scale">Grafik ölçeği</string>
     <string name="graph_menu_divider_header">Grafik</string>
+    <string name="temp_basal_overview_short_name">GB:</string>
     <!-- Skins -->
     <string name="classic_description">Orjinal görünüm</string>
     <string name="lowres_description">Düşük çözünürlüklü görünüm</string>

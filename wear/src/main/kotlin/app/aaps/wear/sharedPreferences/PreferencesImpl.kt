@@ -3,12 +3,18 @@ package app.aaps.wear.sharedPreferences
 import android.content.Context
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.BooleanPreferenceKey
 import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.DoublePreferenceKey
 import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.IntPreferenceKey
+import app.aaps.core.keys.IntentKey
 import app.aaps.core.keys.PreferenceKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.StringPreferenceKey
 import app.aaps.core.keys.UnitDoubleKey
+import app.aaps.core.keys.UnitDoublePreferenceKey
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -23,50 +29,60 @@ class PreferencesImpl @Inject constructor(
     override val nsclientMode: Boolean = false
     override val pumpControlMode: Boolean = false
 
-    override fun get(key: BooleanKey): Boolean = sp.getBoolean(key.key, key.defaultValue)
+    private val prefsList: MutableList<Class<out PreferenceKey>> =
+        mutableListOf(
+            BooleanKey::class.java,
+            IntKey::class.java,
+            DoubleKey::class.java,
+            UnitDoubleKey::class.java,
+            StringKey::class.java,
+            IntentKey::class.java,
+        )
 
-    override fun getIfExists(key: BooleanKey): Boolean? =
+    override fun get(key: BooleanPreferenceKey): Boolean = sp.getBoolean(key.key, key.defaultValue)
+
+    override fun getIfExists(key: BooleanPreferenceKey): Boolean? =
         if (sp.contains(key.key)) sp.getBoolean(key.key, key.defaultValue) else null
 
-    override fun put(key: BooleanKey, value: Boolean) {
+    override fun put(key: BooleanPreferenceKey, value: Boolean) {
         sp.putBoolean(key.key, value)
     }
 
-    override fun get(key: StringKey): String = sp.getString(key.key, key.defaultValue)
+    override fun get(key: StringPreferenceKey): String = sp.getString(key.key, key.defaultValue)
 
-    override fun getIfExists(key: StringKey): String? =
+    override fun getIfExists(key: StringPreferenceKey): String? =
         if (sp.contains(key.key)) sp.getString(key.key, key.defaultValue) else null
 
-    override fun put(key: StringKey, value: String) {
+    override fun put(key: StringPreferenceKey, value: String) {
         sp.putString(key.key, value)
     }
 
-    override fun get(key: DoubleKey): Double = sp.getDouble(key.key, key.defaultValue)
+    override fun get(key: DoublePreferenceKey): Double = sp.getDouble(key.key, key.defaultValue)
 
-    override fun getIfExists(key: DoubleKey): Double? =
+    override fun getIfExists(key: DoublePreferenceKey): Double? =
         if (sp.contains(key.key)) sp.getDouble(key.key, key.defaultValue) else null
 
-    override fun put(key: DoubleKey, value: Double) {
+    override fun put(key: DoublePreferenceKey, value: Double) {
         sp.putDouble(key.key, value)
     }
 
-    override fun get(key: UnitDoubleKey): Double =
+    override fun get(key: UnitDoublePreferenceKey): Double =
         error("Not implemented")
     //profileUtil.valueInCurrentUnitsDetect(sp.getDouble(key.key, key.defaultValue))
 
-    override fun getIfExists(key: UnitDoubleKey): Double? =
+    override fun getIfExists(key: UnitDoublePreferenceKey): Double? =
         if (sp.contains(key.key)) sp.getDouble(key.key, key.defaultValue) else null
 
-    override fun put(key: UnitDoubleKey, value: Double) {
+    override fun put(key: UnitDoublePreferenceKey, value: Double) {
         sp.putDouble(key.key, value)
     }
 
-    override fun get(key: IntKey): Int = sp.getInt(key.key, key.defaultValue)
+    override fun get(key: IntPreferenceKey): Int = sp.getInt(key.key, key.defaultValue)
 
-    override fun getIfExists(key: IntKey): Int? =
+    override fun getIfExists(key: IntPreferenceKey): Int? =
         if (sp.contains(key.key)) sp.getInt(key.key, key.defaultValue) else null
 
-    override fun put(key: IntKey, value: Int) {
+    override fun put(key: IntPreferenceKey, value: Int) {
         sp.putInt(key.key, value)
     }
 
@@ -75,14 +91,25 @@ class PreferencesImpl @Inject constructor(
     }
 
     override fun isUnitDependent(key: String): Boolean =
-        UnitDoubleKey.entries.any { context.getString(it.key) == key }
+        prefsList
+            .flatMap { it.enumConstants.asIterable() }
+            .filterIsInstance<UnitDoublePreferenceKey>()
+            .any { context.getString(it.key) == key }
 
     override fun get(key: String): PreferenceKey =
-        BooleanKey.entries.find { context.getString(it.key) == key }
-            ?: StringKey.entries.find { context.getString(it.key) == key }
-            ?: IntKey.entries.find { context.getString(it.key) == key }
-            ?: DoubleKey.entries.find { context.getString(it.key) == key }
-            ?: UnitDoubleKey.entries.find { context.getString(it.key) == key }
+        prefsList
+            .flatMap { it.enumConstants.asIterable() }
+            .find { context.getString(it.key) == key }
             ?: error("Key $key not found")
 
+    override fun getDependingOn(key: String): List<PreferenceKey> =
+        mutableListOf<PreferenceKey>().also { list ->
+            prefsList.forEach { clazz ->
+                list.addAll(clazz.enumConstants.filter { it.dependency != null && context.getString(it.dependency!!.key) == key || it.negativeDependency != null && context.getString(it.negativeDependency!!.key) == key })
+            }
+        }
+
+    override fun registerPreferences(clazz: Class<out PreferenceKey>) {
+        if (clazz !in prefsList) prefsList.add(clazz)
+    }
 }

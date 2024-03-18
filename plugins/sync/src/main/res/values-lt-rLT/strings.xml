@@ -100,7 +100,6 @@
     <string name="not_connected">Neprisijungta</string>
     <string name="read_only">Tik skaityti</string>
     <string name="working">Dirbama</string>
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>
@@ -120,7 +119,6 @@
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Susiejimas su Garmin (Fenix, Edge, …)</string>
-    <string name="key_garmin_settings">Garmin nustatymai</string>
     <!--    Wear-->
     <string name="description_wear">Stebėti ir kontroliuoti AndroidAPS naudojant WearOS laikrodį.</string>
     <string name="no_watch_connected">(nėra prijungto laikrodžio)</string>

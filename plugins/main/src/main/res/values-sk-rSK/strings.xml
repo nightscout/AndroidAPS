@@ -281,6 +281,7 @@
     <string name="variable_sensitivity_shortname">VSENS</string>
     <string name="graph_scale">Mierka grafu</string>
     <string name="graph_menu_divider_header">Graf</string>
+    <string name="temp_basal_overview_short_name">T:</string>
     <!-- Skins -->
     <string name="classic_description">Pôvodný vzhľad</string>
     <string name="lowres_description">Vzhľad pre nízke rozlišenie</string>

@@ -280,6 +280,7 @@
     <string name="variable_sensitivity_shortname">VSEN</string>
     <string name="graph_scale">Měřítko grafu</string>
     <string name="graph_menu_divider_header">Graf</string>
+    <string name="temp_basal_overview_short_name">T:</string>
     <!-- Skins -->
     <string name="classic_description">Původní vzhled</string>
     <string name="lowres_description">Vzhled pro nízké rozlišení</string>

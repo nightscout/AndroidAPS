@@ -4,7 +4,6 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.text.format.DateFormat
 import app.aaps.core.data.model.BS
-import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
@@ -16,6 +15,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
+import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
@@ -1417,7 +1417,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     rxBus.send(EventDismissNotification(Notification.FAILED_UPDATE_PROFILE))
                     rxBus.send(EventDismissNotification(Notification.OMNIPOD_TBR_ALERTS))
                     rxBus.send(EventDismissNotification(Notification.OMNIPOD_TIME_OUT_OF_SYNC))
-                    commandQueue.customCommand(CommandDisableSuspendAlerts(), null)
+                    commandQueue.customCommand(CommandDisableSuspendAlerts(rh), null)
                 }
             }
 
@@ -1441,7 +1441,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     rxBus.send(EventDismissNotification(Notification.FAILED_UPDATE_PROFILE))
                     rxBus.send(EventDismissNotification(Notification.OMNIPOD_TBR_ALERTS))
                     rxBus.send(EventDismissNotification(Notification.OMNIPOD_TIME_OUT_OF_SYNC))
-                    commandQueue.customCommand(CommandDisableSuspendAlerts(), null)
+                    commandQueue.customCommand(CommandDisableSuspendAlerts(rh), null)
                 }
             }
 

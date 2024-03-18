@@ -2,17 +2,22 @@ package app.aaps.plugins.aps.loop
 
 import android.app.NotificationManager
 import android.content.Context
+import android.content.SharedPreferences
+import androidx.preference.PreferenceManager
 import app.aaps.core.data.aps.ApsMode
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.keys.AdaptiveListPreference
 import app.aaps.core.keys.StringKey
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
+import app.aaps.core.validators.AdaptiveIntPreference
 import app.aaps.pump.virtual.VirtualPumpPlugin
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
@@ -32,11 +37,25 @@ class LoopPluginTest : TestBaseWithProfile() {
     @Mock lateinit var uel: UserEntryLogger
     @Mock lateinit var runningConfiguration: RunningConfiguration
     @Mock lateinit var uiInteraction: UiInteraction
+    @Mock lateinit var sharedPrefs: SharedPreferences
 
     private lateinit var loopPlugin: LoopPlugin
 
+    init {
+        addInjector {
+            if (it is AdaptiveIntPreference) {
+                it.profileUtil = profileUtil
+                it.preferences = preferences
+                it.sharedPrefs = sharedPrefs
+                it.config = config
+            }
+            if (it is AdaptiveListPreference) {
+                it.preferences = preferences
+            }
+        }
+    }
     @BeforeEach fun prepare() {
-
+        preferenceManager = PreferenceManager(context)
         loopPlugin = LoopPlugin(
             aapsLogger, aapsSchedulers, rxBus, sp, preferences, config,
             constraintChecker, rh, profileFunction, context, commandQueue, activePlugin, virtualPumpPlugin, iobCobCalculator, processedTbrEbData, receiverStatusStore, fabricPrivacy, dateUtil, uel,
@@ -59,7 +78,7 @@ class LoopPluginTest : TestBaseWithProfile() {
         assertThat(loopPlugin.nameShort).isEqualTo("LOOP")
         assertThat(loopPlugin.hasFragment()).isTrue()
         assertThat(loopPlugin.showInList(PluginType.LOOP)).isTrue()
-        assertThat(loopPlugin.preferencesId.toLong()).isEqualTo(app.aaps.plugins.aps.R.xml.pref_loop.toLong())
+        assertThat(loopPlugin.preferencesId.toLong()).isEqualTo(PluginDescription.PREFERENCE_SCREEN)
 
         // Plugin is disabled by default
         assertThat(loopPlugin.isEnabled()).isFalse()
@@ -75,6 +94,13 @@ class LoopPluginTest : TestBaseWithProfile() {
         assertThat(loopPlugin.isFragmentVisible()).isFalse()
         loopPlugin.setFragmentVisible(PluginType.LOOP, true)
         assertThat(loopPlugin.isFragmentVisible()).isTrue()
+    }
+
+    @Test
+    fun preferenceScreenTest() {
+        val screen = preferenceManager.createPreferenceScreen(context)
+        loopPlugin.addPreferenceScreen(preferenceManager, screen, context, null)
+        assertThat(screen.preferenceCount).isGreaterThan(0)
     }
 
     /* ***********  not working

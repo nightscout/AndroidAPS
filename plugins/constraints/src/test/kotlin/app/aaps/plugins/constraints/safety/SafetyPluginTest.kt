@@ -1,5 +1,6 @@
 package app.aaps.plugins.constraints.safety
 
+import android.content.SharedPreferences
 import app.aaps.core.data.aps.ApsMode
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.PumpDescription
@@ -12,11 +13,14 @@ import app.aaps.core.interfaces.profiling.Profiler
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.core.keys.AdaptiveListPreference
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.core.validators.AdaptiveDoublePreference
+import app.aaps.core.validators.AdaptiveIntPreference
 import app.aaps.plugins.aps.openAPSAMA.DetermineBasalAMA
 import app.aaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import app.aaps.plugins.aps.openAPSSMB.DetermineBasalSMB
@@ -43,6 +47,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
     @Mock lateinit var tddCalculator: TddCalculator
     @Mock lateinit var determineBasalAMA: DetermineBasalAMA
     @Mock lateinit var determineBasalSMB: DetermineBasalSMB
+    @Mock lateinit var sharedPrefs: SharedPreferences
 
     private lateinit var safetyPlugin: SafetyPlugin
     private lateinit var openAPSAMAPlugin: OpenAPSAMAPlugin
@@ -50,6 +55,24 @@ class SafetyPluginTest : TestBaseWithProfile() {
 
     private val pumpDescription = PumpDescription()
 
+    init {
+        addInjector {
+            if (it is AdaptiveDoublePreference) {
+                it.profileUtil = profileUtil
+                it.preferences = preferences
+                it.sharedPrefs = sharedPrefs
+            }
+            if (it is AdaptiveIntPreference) {
+                it.profileUtil = profileUtil
+                it.preferences = preferences
+                it.sharedPrefs = sharedPrefs
+                it.config = config
+            }
+            if (it is AdaptiveListPreference) {
+                it.preferences = preferences
+            }
+        }
+    }
     @BeforeEach
     fun prepare() {
         `when`(rh.gs(app.aaps.plugins.constraints.R.string.hardlimit)).thenReturn("hard limit")
@@ -70,7 +93,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
         `when`(rh.gs(app.aaps.plugins.constraints.R.string.closed_loop_disabled_on_dev_branch)).thenReturn("Running dev version. Closed loop is disabled.")
         `when`(rh.gs(app.aaps.plugins.constraints.R.string.smbalwaysdisabled)).thenReturn("SMB always and after carbs disabled because active BG source doesn\\'t support advanced filtering")
         `when`(rh.gs(app.aaps.plugins.constraints.R.string.smbnotallowedinopenloopmode)).thenReturn("SMB not allowed in open loop mode")
-        `when`(rh.gs(app.aaps.core.utils.R.string.key_child)).thenReturn("child")
+        `when`(rh.gs(app.aaps.core.keys.R.string.key_child)).thenReturn("child")
         `when`(rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend)).thenReturn("Low Glucose Suspend")
 
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
@@ -302,5 +325,12 @@ Safety: Limiting max basal rate to 500.00 U/h because of pump limit
         assertThat(s.value()).isWithin(0.01).of(3.0)
         assertThat(d.getReasons()).isEqualTo("OpenAPSSMB: Limiting IOB to 3.0 U because of max value in preferences\nOpenAPSSMB: Limiting IOB to 22.0 U because of hard limit")
         assertThat(d.getMostLimitedReasons()).isEqualTo("OpenAPSSMB: Limiting IOB to 3.0 U because of max value in preferences")
+    }
+
+    @Test
+    fun preferenceScreenTest() {
+        val screen = preferenceManager.createPreferenceScreen(context)
+        safetyPlugin.addPreferenceScreen(preferenceManager, screen, context, null)
+        assertThat(screen.preferenceCount).isGreaterThan(0)
     }
 }

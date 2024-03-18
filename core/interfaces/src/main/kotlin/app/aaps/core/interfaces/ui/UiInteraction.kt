@@ -24,6 +24,13 @@ interface UiInteraction {
 
     val prefGeneral: Int
 
+    companion object {
+
+        const val PLUGIN_NAME = "PluginName"
+        const val PREFERENCE_SCREEN = "PreferenceScreen"
+        const val XML_ID = "Id"
+    }
+
     /**
      * Show ErrorHelperActivity and start alarm
      * @param ctx Context

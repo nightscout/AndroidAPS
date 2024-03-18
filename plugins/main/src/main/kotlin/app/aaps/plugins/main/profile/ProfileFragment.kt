@@ -12,6 +12,7 @@ import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -60,6 +61,7 @@ class ProfileFragment : DaggerFragment() {
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var decimalFormatter: DecimalFormatter
+    @Inject lateinit var loop: Loop
 
     private var disposable: CompositeDisposable = CompositeDisposable()
     private var inMenu = false
@@ -320,7 +322,11 @@ class ProfileFragment : DaggerFragment() {
         binding.units.text = rh.gs(R.string.units_colon) + " " + (if (currentProfile.mgdl) rh.gs(app.aaps.core.ui.R.string.mgdl) else rh.gs(app.aaps.core.ui.R.string.mmol))
 
         binding.profileswitch.setOnClickListener {
-            uiInteraction.runProfileSwitchDialog(childFragmentManager, profilePlugin.currentProfile()?.name)
+            if (loop.isDisconnected) {
+                activity?.let { activity -> OKDialog.show(activity, rh.gs(R.string.not_available_full), rh.gs(R.string.smscommunicator_pump_disconnected)) }
+            } else {
+                uiInteraction.runProfileSwitchDialog(childFragmentManager, profilePlugin.currentProfile()?.name)
+            }
         }
 
         binding.reset.setOnClickListener {

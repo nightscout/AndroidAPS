@@ -1,14 +1,14 @@
 package app.aaps.configuration.maintenance
 
-import android.content.Context
-import app.aaps.core.interfaces.configuration.Config
+import android.content.SharedPreferences
 import app.aaps.core.interfaces.logging.LoggerUtils
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
-import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.keys.Preferences
+import app.aaps.core.validators.AdaptiveIntPreference
+import app.aaps.core.validators.AdaptiveStringPreference
+import app.aaps.core.validators.AdaptiveSwitchPreference
 import app.aaps.plugins.configuration.maintenance.MaintenancePlugin
-import app.aaps.shared.tests.TestBase
+import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -16,17 +16,35 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import java.io.File
 
-class MaintenancePluginTest : TestBase() {
+class MaintenancePluginTest : TestBaseWithProfile() {
 
-    @Mock lateinit var context: Context
-    @Mock lateinit var rh: ResourceHelper
-    @Mock lateinit var preferences: Preferences
     @Mock lateinit var nsSettingsStatus: NSSettingsStatus
-    @Mock lateinit var config: Config
     @Mock lateinit var loggerUtils: LoggerUtils
     @Mock lateinit var fileListProvider: FileListProvider
+    @Mock lateinit var sharedPrefs: SharedPreferences
 
     private lateinit var sut: MaintenancePlugin
+
+    init {
+        addInjector {
+            if (it is AdaptiveIntPreference) {
+                it.profileUtil = profileUtil
+                it.preferences = preferences
+                it.sharedPrefs = sharedPrefs
+                it.config = config
+            }
+            if (it is AdaptiveSwitchPreference) {
+                it.preferences = preferences
+                it.sharedPrefs = sharedPrefs
+                it.config = config
+            }
+            if (it is AdaptiveStringPreference) {
+                it.profileUtil = profileUtil
+                it.preferences = preferences
+                it.sharedPrefs = sharedPrefs
+            }
+        }
+    }
 
     @BeforeEach
     fun mock() {
@@ -54,5 +72,12 @@ class MaintenancePluginTest : TestBase() {
         zipFile = sut.zipLogs(zipFile, logs)
         assertThat(zipFile.exists()).isTrue()
         assertThat(zipFile.isFile).isTrue()
+    }
+
+    @Test
+    fun preferenceScreenTest() {
+        val screen = preferenceManager.createPreferenceScreen(context)
+        sut.addPreferenceScreen(preferenceManager, screen, context, null)
+        assertThat(screen.preferenceCount).isGreaterThan(0)
     }
 }

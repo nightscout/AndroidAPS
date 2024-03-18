@@ -30,8 +30,6 @@
     <string name="status">Stav:</string>
     <string name="patient_name">Meno pacienta</string>
     <string name="patient_name_summary">Zadajte meno pacienta, alebo prezývku pre rozlíšenie medzi viacerými nastaveniami</string>
-    <string name="privacy_settings">Nastavenia súkromia</string>
-    <string name="privacy_summary">Pokiaľ chcete byť upozornení na zlyhanie aplikácie, môžete zadať voliteľne e-mailovú adresu. Toto nie je automatizovaná služba. Vývojári vás budú kontaktovať v nebezpečných situáciách.</string>
     <string name="diawarning">Prosím, zapamätajte si: Nové inzulínové profily vyžadujú DIA minimálne 5h. DIA 5-6 hodín zodpovedá zhruba nastaveniam 3h na starších typoch profilu.</string>
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Vykonajte zmenu profilu</string>

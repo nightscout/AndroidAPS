@@ -2,26 +2,26 @@ package app.aaps.core.keys
 
 enum class DoubleKey(
     override val key: Int,
-    val defaultValue: Double,
-    val min: Double,
-    val max: Double,
+    override val defaultValue: Double,
+    override val min: Double,
+    override val max: Double,
     override val defaultedBySM: Boolean = false,
-    val calculatedBySM: Boolean = false,
+    override val calculatedBySM: Boolean = false,
     override val showInApsMode: Boolean = true,
     override val showInNsClientMode: Boolean = true,
     override val showInPumpControlMode: Boolean = true,
-    override val dependency: Int = 0,
-    override val negativeDependency: Int = 0,
+    override val dependency: BooleanPreferenceKey? = null,
+    override val negativeDependency: BooleanPreferenceKey? = null,
     override val hideParentScreenIfHidden: Boolean = false
-) : PreferenceKey {
+) : DoublePreferenceKey {
 
-    OverviewInsulinButtonIncrement1(R.string.key_insulin_button_increment_1, 0.5, -5.0, 5.0, defaultedBySM = true),
-    OverviewInsulinButtonIncrement2(R.string.key_insulin_button_increment_2, 1.0, -5.0, 5.0, defaultedBySM = true),
-    OverviewInsulinButtonIncrement3(R.string.key_insulin_button_increment_3, 2.0, -5.0, 5.0, defaultedBySM = true),
+    OverviewInsulinButtonIncrement1(R.string.key_insulin_button_increment_1, 0.5, -5.0, 5.0, defaultedBySM = true, dependency = BooleanKey.OverviewShowInsulinButton),
+    OverviewInsulinButtonIncrement2(R.string.key_insulin_button_increment_2, 1.0, -5.0, 5.0, defaultedBySM = true, dependency = BooleanKey.OverviewShowInsulinButton),
+    OverviewInsulinButtonIncrement3(R.string.key_insulin_button_increment_3, 2.0, -5.0, 5.0, defaultedBySM = true, dependency = BooleanKey.OverviewShowInsulinButton),
     ActionsFillButton1(R.string.key_fill_button_1, 0.3, 0.05, 20.0, defaultedBySM = true, hideParentScreenIfHidden = true),
     ActionsFillButton2(R.string.key_fill_button_2, 0.0, 0.05, 20.0, defaultedBySM = true),
     ActionsFillButton3(R.string.key_fill_button_3, 0.0, 0.05, 20.0, defaultedBySM = true),
-    SafetyMaxBolus(R.string.key_safety_max_bolus, 3.0, 0.1, 25.0),
+    SafetyMaxBolus(R.string.key_safety_max_bolus, 3.0, 0.1, 60.0),
     ApsMaxBasal(R.string.key_openaps_max_basal, 1.0, 0.1, 25.0, defaultedBySM = true, calculatedBySM = true),
     ApsSmbMaxIob(R.string.key_openaps_smb_max_iob, 3.0, 0.0, 70.0, defaultedBySM = true, calculatedBySM = true),
     ApsAmaMaxIob(R.string.key_openaps_ama_max_iob, 1.5, 0.0, 25.0, defaultedBySM = true, calculatedBySM = true),

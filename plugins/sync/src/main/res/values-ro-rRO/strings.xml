@@ -100,7 +100,6 @@
     <string name="not_connected">Neconectat</string>
     <string name="read_only">Doar vizualizare</string>
     <string name="working">În lucru</string>
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>
@@ -123,7 +122,6 @@
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Conexiune la dispozitivul Garmin (Fenix, Edge, …)</string>
-    <string name="key_garmin_settings">Setări Garmin</string>
     <!--    Wear-->
     <string name="wear_shortname">CEAS</string>
     <string name="description_wear">Monitorizează și controlează AAPS folosind ceasul WearOS.</string>

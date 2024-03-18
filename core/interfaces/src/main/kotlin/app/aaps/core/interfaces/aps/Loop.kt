@@ -10,7 +10,15 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 
 interface Loop {
 
+    /**
+     * Check if plugin is currently enabled
+     * @return true if enabled
+     */
     fun isEnabled(): Boolean
+
+    /**
+     * Collected values from last APS run
+     */
     class LastRun {
 
         var request: APSResult? = null
@@ -26,13 +34,15 @@ interface Loop {
         var lastOpenModeAccept: Long = 0
     }
 
+    /**
+     * Last APS run result
+     */
     var lastRun: LastRun?
     var closedLoopEnabled: Constraint<Boolean>?
     val isSuspended: Boolean
     val isLGS: Boolean
     val isSuperBolus: Boolean
     val isDisconnected: Boolean
-    var enabled: Boolean
 
     var lastBgTriggeredRun: Long
 
@@ -44,4 +54,7 @@ interface Loop {
     fun suspendLoop(durationInMinutes: Int, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit?>)
     fun disableCarbSuggestions(durationMinutes: Int)
     fun buildAndStoreDeviceStatus()
+
+    fun entries(): Array<CharSequence>
+    fun entryValues(): Array<CharSequence>
 }

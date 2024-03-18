@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.core.content.FileProvider
-import app.aaps.core.data.plugin.PluginDescription
+import androidx.preference.PreferenceCategory
+import androidx.preference.PreferenceManager
+import androidx.preference.PreferenceScreen
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -12,10 +14,17 @@ import app.aaps.core.interfaces.logging.LoggerUtils
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.validators.AdaptiveIntPreference
+import app.aaps.core.validators.AdaptiveStringPreference
+import app.aaps.core.validators.AdaptiveSwitchPreference
+import app.aaps.core.validators.DefaultEditTextValidator
+import app.aaps.core.validators.EditTextValidator
 import app.aaps.plugins.configuration.R
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
@@ -47,7 +56,7 @@ class MaintenancePlugin @Inject constructor(
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_maintenance)
         .pluginName(R.string.maintenance)
         .shortName(R.string.maintenance_shortname)
-        .preferencesId(R.xml.pref_maintenance)
+        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_maintenance),
     aapsLogger, rh
@@ -223,5 +232,29 @@ class MaintenancePlugin @Inject constructor(
         emailIntent.putExtra(Intent.EXTRA_STREAM, attachmentUri)
         emailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         return emailIntent
+    }
+
+    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
+        if (requiredKey != null && requiredKey != "data_choice_setting") return
+        val category = PreferenceCategory(context)
+        parent.addPreference(category)
+        category.apply {
+            key = "maintenance_settings"
+            title = rh.gs(R.string.maintenance_settings)
+            initialExpandedChildrenCount = 0
+            addPreference(
+                AdaptiveStringPreference(
+                    ctx = context, stringKey = StringKey.MaintenanceEmail, dialogMessage = R.string.maintenance_email, title = R.string.maintenance_email,
+                    validatorParams = DefaultEditTextValidator.Parameters(testType = EditTextValidator.TEST_EMAIL)
+                )
+            )
+            addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.MaintenanceLogsAmount, title = R.string.maintenance_amount))
+            addPreference(preferenceManager.createPreferenceScreen(context).apply {
+                key = "data_choice_setting"
+                title = rh.gs(R.string.data_choices)
+                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.MaintenanceEnableFabric, title = R.string.fabric_upload))
+                addPreference(AdaptiveStringPreference(ctx = context, stringKey = StringKey.MaintenanceIdentification, summary = R.string.summary_email_for_crash_report, title = R.string.identification))
+            })
+        }
     }
 }

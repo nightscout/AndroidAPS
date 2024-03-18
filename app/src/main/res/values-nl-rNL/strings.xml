@@ -16,11 +16,6 @@
     <string name="wear">Wear</string>
     <string name="nav_about">Over</string>
     <string name="smscommunicator_missingphonestatepermission">Machtiging ontbreekt voor telefoon gebruik</string>
-    <string name="ns_alarm_options">Alarm opties</string>
-    <string name="ns_alarms">Maak meldingen van NS alarmen</string>
-    <string name="ns_announcements">Maak meldingen van NS aankondigingen</string>
-    <string name="ns_alarm_stale_data_value_label">Oude gegevens sinds [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Alarm oude gegevens sinds [min]</string>
     <string name="sensitivity_warning">Bij het gebruik van Autosense, vergeet niet alle opgenomen koolhydraten in te geven. Anders zullen BG wijzigingen door maaltijden foutief geïnterpreteerd worden !!</string>
     <string name="notloadedplugins">Niet alle profielen zijn geladen!</string>
     <string name="valuesnotstored">Waarden niet opgeslagen!</string>
@@ -57,4 +52,6 @@
     <string name="count_selected">%1$d geselecteerd</string>
     <string name="sort_label">Sorteren</string>
     <string name="search">Zoeken</string>
+    <string name="simple_mode">Eenvoudige modus</string>
+    <string name="master_password_not_set">Hoofdwachtwoord niet ingesteld</string>
 </resources>

@@ -1,6 +1,9 @@
 package app.aaps.core.data.pump.defs
 
 @Suppress("unused")
+/**
+ * Description of pump capabilities
+ */
 enum class PumpType {
 
     GENERIC_AAPS(

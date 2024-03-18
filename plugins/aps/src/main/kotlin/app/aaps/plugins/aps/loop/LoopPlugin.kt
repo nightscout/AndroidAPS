@@ -12,13 +12,15 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.SystemClock
 import androidx.core.app.NotificationCompat
+import androidx.preference.PreferenceCategory
+import androidx.preference.PreferenceManager
+import androidx.preference.PreferenceScreen
 import app.aaps.core.data.aps.ApsMode
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.DS
 import app.aaps.core.data.model.OE
 import app.aaps.core.data.model.TE
-import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.time.T
@@ -41,6 +43,7 @@ import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
@@ -65,6 +68,8 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.AdaptiveListPreference
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
@@ -75,6 +80,7 @@ import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.convertedToPercent
 import app.aaps.core.objects.extensions.json
 import app.aaps.core.objects.extensions.plannedRemainingMinutes
+import app.aaps.core.validators.AdaptiveIntPreference
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import app.aaps.plugins.aps.loop.extensions.json
@@ -118,7 +124,7 @@ class LoopPlugin @Inject constructor(
         .pluginIcon(app.aaps.core.objects.R.drawable.ic_loop_closed_white)
         .pluginName(app.aaps.core.ui.R.string.loop)
         .shortName(R.string.loop_shortname)
-        .preferencesId(R.xml.pref_loop)
+        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .enableByDefault(config.APS)
         .description(R.string.description_loop),
     aapsLogger, rh
@@ -178,12 +184,6 @@ class LoopPlugin @Inject constructor(
 
     override val isSuspended: Boolean
         get() = persistenceLayer.getOfflineEventActiveAt(dateUtil.now()) != null
-
-    override var enabled: Boolean
-        get() = isEnabled()
-        set(value) {
-            setPluginEnabled(PluginType.LOOP, value)
-        }
 
     override val isLGS: Boolean
         get() {
@@ -339,7 +339,7 @@ class LoopPlugin @Inject constructor(
                                 val carbReqLocal = Notification(Notification.CARBS_REQUIRED, resultAfterConstraints.carbsRequiredText, Notification.NORMAL)
                                 rxBus.send(EventNewNotification(carbReqLocal))
                             }
-                            if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_create_announcements_from_carbs_req, false)) {
+                            if (preferences.get(BooleanKey.NsClientCreateAnnouncementsFromCarbsReq)) {
                                 disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
                                     therapyEvent = TE.asAnnouncement(resultAfterConstraints.carbsRequiredText),
                                     timestamp = dateUtil.now(),
@@ -464,7 +464,7 @@ class LoopPlugin @Inject constructor(
                             .setPriority(Notification.IMPORTANCE_HIGH)
                             .setCategory(Notification.CATEGORY_ALARM)
                             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                        if (sp.getBoolean(app.aaps.core.utils.R.string.key_wear_control, false)) {
+                        if (preferences.get(BooleanKey.WearControl)) {
                             builder.setLocalOnly(true)
                         }
                         presentSuggestion(builder)
@@ -807,6 +807,31 @@ class LoopPlugin @Inject constructor(
             )
         )
     }
+
+    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
+        if (requiredKey != null) return
+        val category = PreferenceCategory(context)
+        parent.addPreference(category)
+        category.apply {
+            key = "loop_settings"
+            title = rh.gs(app.aaps.core.ui.R.string.loop)
+            initialExpandedChildrenCount = 0
+            addPreference(AdaptiveListPreference(ctx = context, stringKey = StringKey.LoopApsMode, title = app.aaps.core.ui.R.string.aps_mode_title, entries = entries(), entryValues = entryValues()))
+            addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.LoopOpenModeMinChange, dialogMessage = R.string.loop_open_mode_min_change_summary, title = R.string.loop_open_mode_min_change))
+        }
+    }
+
+    override fun entries() = arrayOf<CharSequence>(
+        rh.gs(app.aaps.core.ui.R.string.closedloop),
+        rh.gs(app.aaps.core.ui.R.string.openloop),
+        rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend),
+    )
+
+    override fun entryValues() = arrayOf<CharSequence>(
+        ApsMode.CLOSED.name,
+        ApsMode.OPEN.name,
+        ApsMode.LGS.name,
+    )
 
     companion object {
 

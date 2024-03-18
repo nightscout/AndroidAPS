@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.sync.Tidepool
+import app.aaps.core.keys.BooleanKey
 import app.aaps.plugins.constraints.R
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
@@ -33,7 +34,7 @@ class Objective0(injector: HasAndroidInjector) : Objective(injector, "config", R
         })
         tasks.add(object : Task(this, app.aaps.core.ui.R.string.virtualpump_uploadstatus_title) {
             override fun isCompleted(): Boolean {
-                return sp.getBoolean(app.aaps.core.utils.R.string.key_virtual_pump_upload_status, false) || tidepoolPlugin?.hasWritePermission == true
+                return preferences.get(BooleanKey.VirtualPumpStatusUpload) || tidepoolPlugin?.hasWritePermission == true
             }
 
             override fun shouldBeIgnored(): Boolean {

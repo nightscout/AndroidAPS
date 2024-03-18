@@ -116,4 +116,11 @@
     <string name="time_to_eat">Yemek zamanı!\nBolus sihirbazını çalıştırın ve hesaplamayı tekrar yapın.</string>
     <string name="time_to_bolus">Bolus zamanı!\nBolus sihirbazını çalıştırın ve yeniden hesaplama yapın.</string>
     <string name="error_setting_reminder">Gelecek alarmı ayarlanırken hata oluştu</string>
+    <!--    Autotune-->
+    <string name="autotune_profile_name">OtoAyar profili %1$s</string>
+    <string name="autotune_run">Otoayar\'ı Çalıştır</string>
+    <string name="autotune_run_without_autoswitch">OtoAyar profil değiştirme olmadan çalıştı</string>
+    <string name="autotune_run_with_autoswitch">OtoAyar çalıştı ve profil otomatik olarak değiştirildi</string>
+    <string name="autotune_run_with_error">Son OtoAyar çalışması sırasında hata oluştu</string>
+    <string name="autotune_run_cancelled">Başka bir OtoAyar çalıştırması tespit edildi, çalıştırma iptal edildi</string>
 </resources>

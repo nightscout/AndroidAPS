@@ -1,6 +1,5 @@
 package app.aaps.plugins.aps.openAPSAMA
 
-import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.APSResult
@@ -18,6 +17,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profiling.Profiler
@@ -73,7 +73,6 @@ class TestOpenAPSAMAPlugin @Inject constructor(
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_generic_icon)
         .pluginName(R.string.openapsama)
         .shortName(R.string.oaps_shortname)
-        .preferencesId(R.xml.pref_openapsama)
         .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_ama),
     aapsLogger, rh

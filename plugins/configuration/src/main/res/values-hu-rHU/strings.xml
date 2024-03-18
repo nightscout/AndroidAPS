@@ -11,7 +11,6 @@
     <string name="current_master_password">Jelenlegi mesterjelszó</string>
     <string name="status">Állapot:</string>
     <string name="patient_name">Beteg neve</string>
-    <string name="privacy_settings">Adatvédelmi beállítások</string>
     <string name="profile">Profil</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink állapot:</string>
     <!--    ConfigBuilder-->

@@ -87,6 +87,18 @@
     <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="triggerHeartRate">Heart Rate</string>
     <string name="triggerHeartRateDesc">HR %1$s %2$.0f</string>
+    <string name="triggerSensorAgeLabel">Sensor age</string>
+    <string name="triggerSensorAgeDesc">Sensor age %1$s %2$.1f hour</string>
+    <string name="triggerCannulaAgeLabel">Cannula age</string>
+    <string name="triggerCannulaAgeDesc">Cannula age %1$s %2$.1f hour</string>    
+    <string name="triggerInsulinAgeLabel">Insulin age</string>
+    <string name="triggerInsulinAgeDesc">Insulin age %1$s %2$.1f hour</string>
+    <string name="triggerPumpBatteryAgeLabel">Pump battery age</string>
+    <string name="triggerPumpBatteryAgeDesc">Pump battery age %1$s %2$.1f hour</string>
+    <string name="triggerReservoirLevelLabel">Reservoir level</string>
+    <string name="triggerReservoirLevelDesc">Reservoir level %1$s %2$.0f</string>
+    <string name="triggerPumpBatteryLevelLabel">Pump battery level</string>
+    <string name="triggerPumpBatteryLevelDesc">Pump battery level %1$s %2$.0f</string>
     <string name="iob_u">IOB [U]:</string>
     <string name="distance_short">Dist [m]:</string>
     <string name="recurringTime">Recurring time</string>
@@ -117,5 +129,13 @@
     <string name="time_to_eat">Time to eat!\nRun Bolus wizard and do calculation again.</string>
     <string name="time_to_bolus">Time to bolus!\nRun Bolus wizard and do calculation again.</string>
     <string name="error_setting_reminder">Error while setting future alarm</string>
+
+    <!--    Autotune-->
+    <string name="autotune_profile_name">Autotune profile %1$s</string>
+    <string name="autotune_run">Run Autotune</string>
+    <string name="autotune_run_without_autoswitch">Autotune ran without profile switch</string>
+    <string name="autotune_run_with_autoswitch">Autotune ran and profile automatically switched</string>
+    <string name="autotune_run_with_error">Error during last Autotune run</string>
+    <string name="autotune_run_cancelled">Another run of Autotune is detected, run cancelled</string>
 
 </resources>

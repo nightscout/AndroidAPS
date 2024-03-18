@@ -100,7 +100,6 @@
     <string name="not_connected">Non connesso</string>
     <string name="read_only">Sola lettura</string>
     <string name="working">In esecuzione</string>
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>
@@ -123,7 +122,8 @@
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Connessione al dispositivo Garmin (Fenix, Edge, …)</string>
-    <string name="key_garmin_settings">Impostazioni Garmin</string>
+    <string name="garmin_local_http_server_port">Porta server HTTP locale</string>
+    <string name="garmin_local_http_server">Server HTTP locale</string>
     <!--    Wear-->
     <string name="wear_shortname">SMWA</string>
     <string name="description_wear">Monitora e controlla AAPS usando il tuo smartwatch WearOS.</string>
@@ -189,4 +189,5 @@
     <string name="tdd_line">%1$.2fU %1$.0f%%</string>
     <string name="today">Oggi</string>
     <string name="weighted">ponderato</string>
+    <string name="full_xdrip_sync_comment">Sincronizzazione completa? Potrebbe richiedere parecchio e fino alla fine del processo non vedrai nuovi dati in xDrip+.</string>
 </resources>

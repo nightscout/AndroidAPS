@@ -87,7 +87,7 @@ class WizardDialog : DaggerDialogFragment() {
 
     private var queryingProtection = false
     private var wizard: BolusWizard? = null
-    private var calculatedPercentage = 100.0
+    private var calculatedPercentage = 100
     private var calculatedCorrection = 0.0
     private var usePercentage = false
     private var carbsPassedIntoWizard = 0.0
@@ -180,20 +180,20 @@ class WizardDialog : DaggerDialogFragment() {
 
         // If there is no BG using % lower that 100% leads to high BGs
         // because loop doesn't add missing insulin
-        var percentage = preferences.get(IntKey.OverviewBolusPercentage).toDouble()
+        var percentage = preferences.get(IntKey.OverviewBolusPercentage)
         val time = preferences.get(IntKey.OverviewResetBolusPercentageTime).toLong()
         persistenceLayer.getLastGlucoseValue().let {
             // if last value is older or there is no bg
             if (it != null) {
                 if (it.timestamp < dateUtil.now() - T.mins(time).msecs())
-                    percentage = 100.0
-            } else percentage = 100.0
+                    percentage = 100
+            } else percentage = 100
         }
 
         if (usePercentage) {
             calculatedPercentage = percentage
-            binding.correctionInput.setParams(calculatedPercentage, 10.0, 200.0, 5.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher)
-            binding.correctionInput.value = calculatedPercentage
+            binding.correctionInput.setParams(calculatedPercentage.toDouble(), 10.0, 200.0, 5.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher)
+            binding.correctionInput.value = calculatedPercentage.toDouble()
             binding.correctionUnit.text = "%"
         } else {
             binding.correctionInput.setParams(
@@ -214,9 +214,9 @@ class WizardDialog : DaggerDialogFragment() {
                 ?: 0.0, -60.0, 60.0, 5.0, DecimalFormat("0"), false, binding.okcancel.ok, timeTextWatcher
         )
         handler.post { initDialog() }
-        calculatedPercentage = preferences.get(IntKey.OverviewBolusPercentage).toDouble()
+        calculatedPercentage = preferences.get(IntKey.OverviewBolusPercentage)
         binding.percentUsed.text = rh.gs(app.aaps.core.ui.R.string.format_percent, calculatedPercentage)
-        binding.percentUsed.visibility = (calculatedPercentage != 100.0 || usePercentage).toVisibility()
+        binding.percentUsed.visibility = (calculatedPercentage != 100 || usePercentage).toVisibility()
         // ok button
         binding.okcancel.ok.setOnClickListener {
             if (okClicked) {
@@ -270,7 +270,7 @@ class WizardDialog : DaggerDialogFragment() {
                 binding.correctionUnit.text = if (isChecked) "%" else rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname)
                 usePercentage = binding.correctionPercent.isChecked
                 if (usePercentage) {
-                    binding.correctionInput.setParams(calculatedPercentage, 10.0, 200.0, 5.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher)
+                    binding.correctionInput.setParams(calculatedPercentage.toDouble(), 10.0, 200.0, 5.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher)
                     binding.correctionInput.customContentDescription = rh.gs(R.string.a11_correction_percentage)
                 } else {
                     binding.correctionInput.setParams(
@@ -281,7 +281,7 @@ class WizardDialog : DaggerDialogFragment() {
                     binding.correctionInput.customContentDescription = rh.gs(R.string.a11_correction_units)
                 }
                 binding.correctionInput.updateA11yDescription()
-                binding.correctionInput.value = if (usePercentage) calculatedPercentage else Round.roundTo(calculatedCorrection, bolusStep)
+                binding.correctionInput.value = if (usePercentage) calculatedPercentage.toDouble() else Round.roundTo(calculatedCorrection, bolusStep)
             }
         }
         // profile
@@ -441,10 +441,10 @@ class WizardDialog : DaggerDialogFragment() {
         } else
             0.0
         val percentageCorrection = if (usePercentage) {
-            if (Round.roundTo(calculatedPercentage, 1.0) == SafeParse.stringToDouble(binding.correctionInput.text))
+            if (calculatedPercentage == SafeParse.stringToInt(binding.correctionInput.text))
                 calculatedPercentage
             else
-                SafeParse.stringToDouble(binding.correctionInput.text)
+                SafeParse.stringToInt(binding.correctionInput.text)
         } else
             preferences.get(IntKey.OverviewBolusPercentage).toDouble()
         val carbsAfterConstraint = constraintChecker.applyCarbsConstraints(ConstraintObject(carbs, aapsLogger)).value()
@@ -479,7 +479,7 @@ class WizardDialog : DaggerDialogFragment() {
             binding.notesLayout.notes.text.toString(),
             carbTime,
             usePercentage = usePercentage,
-            totalPercentage = percentageCorrection
+            totalPercentage = percentageCorrection.toDouble()
         )
 
         wizard?.let { wizard ->

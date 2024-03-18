@@ -13,6 +13,7 @@
     <string name="objectives_openloop_learned">Open loop kan gebruikt worden voor aanbevelingen, als je een pomp hebt die niet geschikt is voor AAPS of als je de loop niet wilt sluiten.</string>
     <string name="objectives_maxbasal_objective">De Open Loop begrijpen, inclusief de voorgestelde tijdelijke basalen</string>
     <string name="objectives_maxbasal_gate">Gebaseerd op deze ervaringen, beslis wat het maximale basaal mag zijn en stel dit in op de pomp</string>
+    <string name="objectives_maxbasal">Actie uitvoeren om aanbeveling uit te voeren</string>
     <string name="objectives_maxbasal_learned">Ga zorgvuldig om met de veiligheidsfuncties en pas de veiligheidsparameters aan indien nodig.</string>
     <string name="objectives_maxiobzero_objective">Starten met de Closed Loop met bescherming tegen lage Bg</string>
     <string name="objectives_maxiobzero_gate">In closed loop draaien met een max. IOB = 0 gedurende enkele dagen met een beperkt aantal lage BG</string>

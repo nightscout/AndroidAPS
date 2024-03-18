@@ -17,74 +17,44 @@ import androidx.preference.PreferenceScreen
 import androidx.preference.size
 import app.aaps.R
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
+import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.protection.ProtectionCheck.ProtectionType.BIOMETRIC
 import app.aaps.core.interfaces.protection.ProtectionCheck.ProtectionType.CUSTOM_PASSWORD
 import app.aaps.core.interfaces.protection.ProtectionCheck.ProtectionType.CUSTOM_PIN
 import app.aaps.core.interfaces.protection.ProtectionCheck.ProtectionType.NONE
+import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventRebuildTabs
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
 import app.aaps.core.ui.dialogs.OKDialog
-import app.aaps.implementation.plugin.PluginStore
 import app.aaps.plugins.aps.autotune.AutotunePlugin
-import app.aaps.plugins.aps.loop.LoopPlugin
-import app.aaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
-import app.aaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import app.aaps.plugins.automation.AutomationPlugin
 import app.aaps.plugins.configuration.maintenance.MaintenancePlugin
-import app.aaps.plugins.constraints.safety.SafetyPlugin
-import app.aaps.plugins.insulin.InsulinOrefFreePeakPlugin
-import app.aaps.plugins.main.general.overview.OverviewPlugin
 import app.aaps.plugins.main.general.smsCommunicator.SmsCommunicatorPlugin
-import app.aaps.plugins.sensitivity.SensitivityAAPSPlugin
-import app.aaps.plugins.sensitivity.SensitivityOref1Plugin
-import app.aaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
-import app.aaps.plugins.source.AidexPlugin
-import app.aaps.plugins.source.DexcomPlugin
-import app.aaps.plugins.source.EversensePlugin
-import app.aaps.plugins.source.GlimpPlugin
-import app.aaps.plugins.source.GlunovoPlugin
-import app.aaps.plugins.source.IntelligoPlugin
-import app.aaps.plugins.source.PoctechPlugin
-import app.aaps.plugins.source.TomatoPlugin
-import app.aaps.plugins.sync.garmin.GarminPlugin
-import app.aaps.plugins.sync.nsclient.NSClientPlugin
-import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
-import app.aaps.plugins.sync.openhumans.OpenHumansUploaderPlugin
-import app.aaps.plugins.sync.tidepool.TidepoolPlugin
-import app.aaps.plugins.sync.wear.WearPlugin
-import app.aaps.plugins.sync.xdrip.XdripPlugin
-import app.aaps.pump.danar.DanaRPlugin
-import app.aaps.pump.danarkorean.DanaRKoreanPlugin
-import app.aaps.pump.danars.DanaRSPlugin
-import app.aaps.pump.danarv2.DanaRv2Plugin
-import app.aaps.pump.equil.EquilPumpPlugin
-import app.aaps.pump.insight.InsightPlugin
-import app.aaps.pump.virtual.VirtualPumpPlugin
 import dagger.android.support.AndroidSupportInjection
-import info.nightscout.androidaps.plugins.pump.eopatch.EopatchPumpPlugin
-import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
-import info.nightscout.pump.combov2.ComboV2Plugin
-import info.nightscout.pump.diaconn.DiaconnG8Plugin
-import info.nightscout.pump.medtrum.MedtrumPlugin
 import java.math.BigDecimal
 import java.math.RoundingMode
 import javax.inject.Inject
 
 class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListener {
 
-    private var pluginId = -1
+    private var pluginName: String? = null
+    private var preferenceScreenClass: String? = null
+    @XmlRes private var xmlId: Int? = null
     private var filter = ""
 
     @Inject lateinit var rxBus: RxBus
@@ -92,52 +62,20 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var sp: SP
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var profileUtil: ProfileUtil
-    @Inject lateinit var pluginStore: PluginStore
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var config: Config
-
-    @Inject lateinit var overviewPlugin: OverviewPlugin
-    @Inject lateinit var automationPlugin: AutomationPlugin
-    @Inject lateinit var autotunePlugin: AutotunePlugin
-    @Inject lateinit var danaRPlugin: DanaRPlugin
-    @Inject lateinit var danaRKoreanPlugin: DanaRKoreanPlugin
-    @Inject lateinit var danaRv2Plugin: DanaRv2Plugin
-    @Inject lateinit var danaRSPlugin: DanaRSPlugin
-    @Inject lateinit var combov2Plugin: ComboV2Plugin
-    @Inject lateinit var insulinOrefFreePeakPlugin: InsulinOrefFreePeakPlugin
-    @Inject lateinit var loopPlugin: LoopPlugin
-    @Inject lateinit var insightPlugin: InsightPlugin
-    @Inject lateinit var medtronicPumpPlugin: MedtronicPumpPlugin
-    @Inject lateinit var nsClientPlugin: NSClientPlugin
-    @Inject lateinit var nsClientV3Plugin: NSClientV3Plugin
-    @Inject lateinit var openAPSAMAPlugin: OpenAPSAMAPlugin
-    @Inject lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
-    @Inject lateinit var safetyPlugin: SafetyPlugin
-    @Inject lateinit var sensitivityAAPSPlugin: SensitivityAAPSPlugin
-    @Inject lateinit var sensitivityOref1Plugin: SensitivityOref1Plugin
-    @Inject lateinit var sensitivityWeightedAveragePlugin: SensitivityWeightedAveragePlugin
-    @Inject lateinit var dexcomPlugin: DexcomPlugin
-    @Inject lateinit var eversensePlugin: EversensePlugin
-    @Inject lateinit var glimpPlugin: GlimpPlugin
-    @Inject lateinit var poctechPlugin: PoctechPlugin
-    @Inject lateinit var tomatoPlugin: TomatoPlugin
-    @Inject lateinit var glunovoPlugin: GlunovoPlugin
-    @Inject lateinit var intelligoPlugin: IntelligoPlugin
-    @Inject lateinit var aidexPlugin: AidexPlugin
-    @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
-    @Inject lateinit var statusLinePlugin: XdripPlugin
-    @Inject lateinit var tidepoolPlugin: TidepoolPlugin
-    @Inject lateinit var virtualPumpPlugin: VirtualPumpPlugin
-    @Inject lateinit var wearPlugin: WearPlugin
-    @Inject lateinit var maintenancePlugin: MaintenancePlugin
-    @Inject lateinit var eopatchPumpPlugin: EopatchPumpPlugin
-    @Inject lateinit var medtrumPlugin: MedtrumPlugin
-
     @Inject lateinit var passwordCheck: PasswordCheck
     @Inject lateinit var nsSettingStatus: NSSettingsStatus
-    @Inject lateinit var openHumansUploaderPlugin: OpenHumansUploaderPlugin
-    @Inject lateinit var diaconnG8Plugin: DiaconnG8Plugin
-    @Inject lateinit var garminPlugin: GarminPlugin
-    @Inject lateinit var equilPumpPlugin: EquilPumpPlugin
+
+    @Inject lateinit var automationPlugin: AutomationPlugin
+    @Inject lateinit var autotunePlugin: AutotunePlugin
+    @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
+    @Inject lateinit var maintenancePlugin: MaintenancePlugin
+
+    companion object {
+
+        const val FILTER = "filter"
+    }
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
@@ -146,13 +84,17 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
 
     override fun setArguments(args: Bundle?) {
         super.setArguments(args)
-        pluginId = args?.getInt("id") ?: -1
+        pluginName = args?.getString(UiInteraction.PLUGIN_NAME)
+        xmlId = args?.getInt(UiInteraction.XML_ID)
+        preferenceScreenClass = args?.getString(UiInteraction.PREFERENCE_SCREEN)
         filter = args?.getString("filter") ?: ""
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putInt("id", pluginId)
+        outState.putString(UiInteraction.PLUGIN_NAME, pluginName)
+        outState.putString(UiInteraction.PREFERENCE_SCREEN, preferenceScreenClass)
+        xmlId?.let { outState.putInt(UiInteraction.XML_ID, it) }
         outState.putString("filter", filter)
     }
 
@@ -163,17 +105,6 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
                 .getDefaultSharedPreferences(context)
                 .unregisterOnSharedPreferenceChangeListener(this)
         }
-    }
-
-    private fun addPreferencesFromResourceIfEnabled(p: PluginBase?, rootKey: String?, enabled: Boolean) {
-        if (preferences.simpleMode && p?.pluginDescription?.preferencesVisibleInSimpleMode != true) return
-        if (enabled) addPreferencesFromResourceIfEnabled(p, rootKey)
-    }
-
-    private fun addPreferencesFromResourceIfEnabled(p: PluginBase?, rootKey: String?) {
-        if (preferences.simpleMode && p?.pluginDescription?.preferencesVisibleInSimpleMode != true) return
-        if (p!!.isEnabled() && p.preferencesId != -1)
-            addPreferencesFromResource(p.preferencesId, rootKey)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -187,63 +118,39 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         (savedInstanceState ?: arguments)?.let { bundle ->
-            if (bundle.containsKey("id")) {
-                pluginId = bundle.getInt("id")
-            }
-            if (bundle.containsKey("filter")) {
-                filter = bundle.getString("filter") ?: ""
-            }
+            pluginName = bundle.getString(UiInteraction.PLUGIN_NAME)
+            preferenceScreenClass = bundle.getString(UiInteraction.PREFERENCE_SCREEN)
+            xmlId = bundle.getInt(UiInteraction.XML_ID)
+            filter = bundle.getString(FILTER, "")
         }
-        if (pluginId != -1) {
-            addPreferencesFromResource(pluginId, rootKey)
+        if (pluginName != null) {
+            val plugin = activePlugin.getPluginsList().firstOrNull { it.javaClass.simpleName == pluginName } ?: error("Plugin not found")
+            addPreferencesIfEnabled(plugin, rootKey)
+            // } else if (preferenceScreenClass != null) {
+            //     val ps = Class.forName(preferenceScreenClass!!).getDeclaredConstructor().newInstance() as PreferenceScreen
+            //     addPreferencesFromScreen(ps, rootKey)
+        } else if (xmlId != null && xmlId != 0) {
+            addPreferencesFromResource(xmlId!!, rootKey)
         } else {
             addPreferencesFromResource(R.xml.pref_general, rootKey)
             addPreferencesFromResource(R.xml.pref_protection, rootKey)
-            addPreferencesFromResourceIfEnabled(overviewPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(safetyPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(eversensePlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(dexcomPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(tomatoPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(glunovoPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(intelligoPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(poctechPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(aidexPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(glimpPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(loopPlugin, rootKey, config.APS)
-            addPreferencesFromResourceIfEnabled(openAPSAMAPlugin, rootKey, config.APS)
-            addPreferencesFromResourceIfEnabled(openAPSSMBPlugin, rootKey, config.APS)
-            addPreferencesFromResourceIfEnabled(sensitivityAAPSPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(sensitivityWeightedAveragePlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(sensitivityOref1Plugin, rootKey)
-            addPreferencesFromResourceIfEnabled(danaRPlugin, rootKey, config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(danaRKoreanPlugin, rootKey, config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(danaRv2Plugin, rootKey, config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(danaRSPlugin, rootKey, config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(insightPlugin, rootKey, config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(combov2Plugin, rootKey, config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(medtronicPumpPlugin, rootKey, config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(diaconnG8Plugin, rootKey, config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(eopatchPumpPlugin, rootKey, config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(medtrumPlugin, rootKey, config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(equilPumpPlugin, rootKey, config.PUMPDRIVERS)
-            addPreferencesFromResource(R.xml.pref_pump, rootKey, config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(virtualPumpPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(insulinOrefFreePeakPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(nsClientPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(nsClientV3Plugin, rootKey)
-            addPreferencesFromResourceIfEnabled(tidepoolPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(smsCommunicatorPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(automationPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(autotunePlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(wearPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(statusLinePlugin, rootKey)
+            addPreferencesIfEnabled(activePlugin.activeOverview as PluginBase, rootKey)
+            addPreferencesIfEnabled(activePlugin.activeSafety as PluginBase, rootKey)
+            addPreferencesIfEnabled(activePlugin.activeBgSource as PluginBase, rootKey)
+            activePlugin.getSpecificPluginsList(PluginType.LOOP).forEach { addPreferencesIfEnabled(it, rootKey, config.APS) }
+            addPreferencesIfEnabled(activePlugin.activeAPS as PluginBase, rootKey, config.APS)
+            addPreferencesIfEnabled(activePlugin.activeSensitivity as PluginBase, rootKey)
+            addPreferencesIfEnabled(activePlugin.activePump as PluginBase, rootKey)
+            addPreferencesFromResource(R.xml.pref_pump, rootKey, config.PUMPDRIVERS && activePlugin.activePump::class.java.name != VirtualPump::class.java.name)
+            addPreferencesIfEnabled(activePlugin.activeInsulin as PluginBase, rootKey)
+            activePlugin.getSpecificPluginsList(PluginType.SYNC).forEach { addPreferencesIfEnabled(it, rootKey) }
+            addPreferencesIfEnabled(smsCommunicatorPlugin, rootKey)
+            addPreferencesIfEnabled(automationPlugin, rootKey)
+            addPreferencesIfEnabled(autotunePlugin, rootKey)
             addPreferencesFromResource(R.xml.pref_alerts, rootKey)
-            addPreferencesFromResource(app.aaps.plugins.configuration.R.xml.pref_datachoices, rootKey)
-            addPreferencesFromResourceIfEnabled(maintenancePlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(openHumansUploaderPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(garminPlugin, rootKey)
+            addPreferencesIfEnabled(maintenancePlugin, rootKey)
         }
-        initSummary(preferenceScreen, pluginId != -1)
+        initSummary(preferenceScreen, pluginName != null)
         preprocessPreferences()
         if (filter != "") updateFilterVisibility(filter, preferenceScreen)
     }
@@ -259,7 +166,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         if (key == rh.gs(BooleanKey.OverviewShortTabTitles.key) || key == rh.gs(BooleanKey.GeneralSimpleMode.key)) {
             rxBus.send(EventRebuildTabs())
         }
-        if (key == rh.gs(StringKey.GeneralUnits.key) || key == rh.gs(BooleanKey.GeneralSimpleMode.key) || key == rh.gs(BooleanKey.ApsUseDynamicSensitivity.key)) {
+        if (key == rh.gs(StringKey.GeneralUnits.key) || key == rh.gs(BooleanKey.GeneralSimpleMode.key) || preferences.getDependingOn(key).isNotEmpty()) {
             activity?.recreate()
             return
         }
@@ -275,7 +182,8 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     }
 
     private fun preprocessPreferences() {
-        for (plugin in pluginStore.plugins) {
+        // Do plugin overrides
+        for (plugin in activePlugin.getPluginsList()) {
             if (plugin.isEnabled()) plugin.preprocessPreferences(this)
         }
     }
@@ -313,23 +221,38 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         }
     }
 
-    private fun addPreferencesFromResource(@Suppress("SameParameterValue") @XmlRes preferencesResId: Int, key: String?, enabled: Boolean) {
-        if (enabled) addPreferencesFromResource(preferencesResId, key)
+    private fun addPreferencesIfEnabled(p: PluginBase, rootKey: String?, enabled: Boolean = true) {
+        if (preferences.simpleMode && !p.pluginDescription.preferencesVisibleInSimpleMode) return
+        if (enabled && p.isEnabled() && p.preferencesId == PluginDescription.PREFERENCE_SCREEN)
+            addPreferencesFromScreen(p, rootKey)
+        if (enabled && p.isEnabled() && p.preferencesId > 0)
+            addPreferencesFromResource(p.preferencesId, rootKey)
     }
 
     @SuppressLint("RestrictedApi")
-    private fun addPreferencesFromResource(@XmlRes preferencesResId: Int, key: String?) {
-        context?.let { context ->
-            val xmlRoot = preferenceManager.inflateFromResource(context, preferencesResId, null)
-            val root: Preference?
+    private fun addPreferencesFromResource(@XmlRes preferencesResId: Int, key: String?, enabled: Boolean = true) {
+        if (enabled) {
+            val xmlRoot = preferenceManager.inflateFromResource(requireContext(), preferencesResId, null)
             if (key != null) {
-                root = xmlRoot.findPreference(key)
-                if (root == null) return
+                // looking for sub screen
+                val root: Preference = xmlRoot.findPreference(key) ?: return
                 require(root is PreferenceScreen) { ("Preference object with key $key is not a PreferenceScreen") }
                 preferenceScreen = root
             } else {
                 addPreferencesFromResource(preferencesResId)
             }
+        }
+    }
+
+    @SuppressLint("RestrictedApi")
+    private fun addPreferencesFromScreen(p: PluginBase, key: String?) {
+        val rootScreen = preferenceScreen ?: preferenceManager.createPreferenceScreen(requireContext()).also { preferenceScreen = it }
+        p.addPreferenceScreen(preferenceManager, rootScreen, requireContext(), key)
+        if (key != null) {
+            // looking for sub screen
+            val root: Preference = rootScreen.findPreference(key) ?: return
+            require(root is PreferenceScreen) { ("Preference object with key $key is not a PreferenceScreen") }
+            preferenceScreen = root
         }
     }
 
@@ -391,7 +314,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             }
         }
 
-        for (plugin in pluginStore.plugins) {
+        for (plugin in activePlugin.getPluginsList()) {
             pref?.let { it.key?.let { plugin.updatePreferenceSummary(pref) } }
         }
 
@@ -446,53 +369,51 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     // to hash password while it is saved and never have to show it, even hashed
 
     override fun onPreferenceTreeClick(preference: Preference): Boolean =
-        context?.let { context ->
-            when (preference.key) {
-                rh.gs(app.aaps.core.utils.R.string.key_master_password)        -> {
-                    passwordCheck.queryPassword(context, app.aaps.plugins.configuration.R.string.current_master_password, app.aaps.core.utils.R.string.key_master_password, {
-                        passwordCheck.setPassword(context, app.aaps.core.ui.R.string.master_password, app.aaps.core.utils.R.string.key_master_password)
-                    })
-                    true
-                }
-
-                rh.gs(app.aaps.core.utils.R.string.key_settings_password)      -> {
-                    passwordCheck.setPassword(context, app.aaps.core.ui.R.string.settings_password, app.aaps.core.utils.R.string.key_settings_password)
-                    true
-                }
-
-                rh.gs(app.aaps.core.utils.R.string.key_bolus_password)         -> {
-                    passwordCheck.setPassword(context, app.aaps.core.ui.R.string.bolus_password, app.aaps.core.utils.R.string.key_bolus_password)
-                    true
-                }
-
-                rh.gs(app.aaps.core.utils.R.string.key_application_password)   -> {
-                    passwordCheck.setPassword(context, app.aaps.core.ui.R.string.application_password, app.aaps.core.utils.R.string.key_application_password)
-                    true
-                }
-
-                rh.gs(app.aaps.core.utils.R.string.key_settings_pin)           -> {
-                    passwordCheck.setPassword(context, app.aaps.core.ui.R.string.settings_pin, app.aaps.core.utils.R.string.key_settings_pin, pinInput = true)
-                    true
-                }
-
-                rh.gs(app.aaps.core.utils.R.string.key_bolus_pin)              -> {
-                    passwordCheck.setPassword(context, app.aaps.core.ui.R.string.bolus_pin, app.aaps.core.utils.R.string.key_bolus_pin, pinInput = true)
-                    true
-                }
-
-                rh.gs(app.aaps.core.utils.R.string.key_application_pin)        -> {
-                    passwordCheck.setPassword(context, app.aaps.core.ui.R.string.application_pin, app.aaps.core.utils.R.string.key_application_pin, pinInput = true)
-                    true
-                }
-                // NSClient copy settings
-                rh.gs(app.aaps.plugins.main.R.string.key_statuslights_copy_ns) -> {
-                    nsSettingStatus.copyStatusLightsNsSettings(context)
-                    true
-                }
-
-                else                                                           -> super.onPreferenceTreeClick(preference)
+        when (preference.key) {
+            rh.gs(app.aaps.core.utils.R.string.key_master_password)      -> {
+                passwordCheck.queryPassword(requireContext(), app.aaps.plugins.configuration.R.string.current_master_password, app.aaps.core.utils.R.string.key_master_password, {
+                    passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.master_password, app.aaps.core.utils.R.string.key_master_password)
+                })
+                true
             }
-        } ?: super.onPreferenceTreeClick(preference)
+
+            rh.gs(app.aaps.core.utils.R.string.key_settings_password)    -> {
+                passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.settings_password, app.aaps.core.utils.R.string.key_settings_password)
+                true
+            }
+
+            rh.gs(app.aaps.core.utils.R.string.key_bolus_password)       -> {
+                passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.bolus_password, app.aaps.core.utils.R.string.key_bolus_password)
+                true
+            }
+
+            rh.gs(app.aaps.core.utils.R.string.key_application_password) -> {
+                passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.application_password, app.aaps.core.utils.R.string.key_application_password)
+                true
+            }
+
+            rh.gs(app.aaps.core.utils.R.string.key_settings_pin)         -> {
+                passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.settings_pin, app.aaps.core.utils.R.string.key_settings_pin, pinInput = true)
+                true
+            }
+
+            rh.gs(app.aaps.core.utils.R.string.key_bolus_pin)            -> {
+                passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.bolus_pin, app.aaps.core.utils.R.string.key_bolus_pin, pinInput = true)
+                true
+            }
+
+            rh.gs(app.aaps.core.utils.R.string.key_application_pin)      -> {
+                passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.application_pin, app.aaps.core.utils.R.string.key_application_pin, pinInput = true)
+                true
+            }
+            // NSClient copy settings
+            rh.gs(app.aaps.core.keys.R.string.key_statuslights_copy_ns)  -> {
+                nsSettingStatus.copyStatusLightsNsSettings(context)
+                true
+            }
+
+            else                                                         -> super.onPreferenceTreeClick(preference)
+        }
 
     fun setFilter(filter: String) {
         this.filter = filter

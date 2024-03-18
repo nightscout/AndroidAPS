@@ -16,11 +16,6 @@
     <string name="wear">Reloj</string>
     <string name="nav_about">Acerca de</string>
     <string name="smscommunicator_missingphonestatepermission">Falta permiso de estado del teléfono</string>
-    <string name="ns_alarm_options">Opciones de alarmas</string>
-    <string name="ns_alarms">Crear notificaciones de alarmas desde Nightscout</string>
-    <string name="ns_announcements">Crear notificaciones desde Nightscout</string>
-    <string name="ns_alarm_stale_data_value_label">Datos antiguos limite [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Datos antiguos urgentes limite [min]</string>
     <string name="sensitivity_warning">Al activar Autosens, recuerda introducir todos carbohidratos que has comido, sino, las desviaciones de carbohidratos serán identificados incorrectamente, como un cambio de sensibilidad</string>
     <string name="notloadedplugins">Faltan perfiles por cargar!</string>
     <string name="valuesnotstored">Valores no guardados!</string>

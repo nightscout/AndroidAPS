@@ -10,5 +10,6 @@
     <string name="step_prepare_patch_connect">חיבור ומילוי</string>
     <string name="step_prime">תיחול</string>
     <!-- settings-->
+    <string name="pump_unsupported">המשאבה לא נבדקה: %1$s! פנו אלינו לתמיכה דרך discord או github</string>
     <!-- treatment state-->
 </resources>

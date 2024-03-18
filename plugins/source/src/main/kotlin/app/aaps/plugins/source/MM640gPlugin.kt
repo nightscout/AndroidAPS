@@ -7,13 +7,12 @@ import androidx.work.workDataOf
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
-import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.utils.DateUtil
@@ -29,11 +28,11 @@ import javax.inject.Singleton
 class MM640gPlugin @Inject constructor(
     rh: ResourceHelper,
     aapsLogger: AAPSLogger
-) : PluginBase(
+) : AbstractBgSourcePlugin(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
-        .preferencesId(R.xml.pref_bgsource)
+        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .pluginIcon(app.aaps.core.objects.R.drawable.ic_generic_cgm)
         .pluginName(R.string.mm640g)
         .preferencesVisibleInSimpleMode(false)

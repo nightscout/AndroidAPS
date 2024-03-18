@@ -100,7 +100,6 @@
     <string name="not_connected">Nepripojené</string>
     <string name="read_only">Iba na čítanie</string>
     <string name="working">Pracujem</string>
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>
@@ -123,7 +122,8 @@
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Pripájanie k zariadeniu Garmin (Fénix, Edge, ...)</string>
-    <string name="key_garmin_settings">Garmin nastavenia</string>
+    <string name="garmin_local_http_server_port">Port lokálneho HTTP servera</string>
+    <string name="garmin_local_http_server">Lokálny HTTP server</string>
     <!--    Wear-->
     <string name="wear_shortname">WEAR</string>
     <string name="description_wear">Zobrazovanie stavu a riadenie AndroidAPS z hodiniek s WearOS.</string>
@@ -189,4 +189,5 @@
     <string name="tdd_line">%1$.2fJI %1$.0f%%</string>
     <string name="today">Dnes</string>
     <string name="weighted">vážený</string>
+    <string name="full_xdrip_sync_comment">Úplná synchronizácia? Môže to chvíľu trvať a kým neskončí, neuvidíte nové dáta v xDrip+.</string>
 </resources>

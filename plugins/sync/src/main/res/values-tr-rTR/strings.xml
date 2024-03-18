@@ -100,7 +100,6 @@
     <string name="not_connected">Bağlantı yok</string>
     <string name="read_only">Salt okunur</string>
     <string name="working">İşleniyor</string>
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>
@@ -123,7 +122,8 @@
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Garmin cihazına bağlantı (Fenix, Edge,…)</string>
-    <string name="key_garmin_settings">Garmin ayarları</string>
+    <string name="garmin_local_http_server_port">Yerel HTTP sunucusu bağlantı noktası</string>
+    <string name="garmin_local_http_server">Yerel HTTP sunucusu</string>
     <!--    Wear-->
     <string name="wear_shortname">WEAR</string>
     <string name="description_wear">WearOS saatinizi kullanarak AAPS\'yi izleyin ve kontrol edin.</string>
@@ -189,4 +189,5 @@
     <string name="tdd_line">%1$.2fÜ %1$.0f%%</string>
     <string name="today">Bugün</string>
     <string name="weighted">ağırlıklı</string>
+    <string name="full_xdrip_sync_comment">Tam senkronizasyon? Biraz zaman alabilir ve tamamlanana kadar xDrip+\'ta yeni verileri göremezsiniz.</string>
 </resources>

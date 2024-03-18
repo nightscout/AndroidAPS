@@ -100,7 +100,6 @@
     <string name="not_connected">Нет подключения</string>
     <string name="read_only">Только чтение</string>
     <string name="working">Обработка</string>
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip +</string>
     <string name="xdrip_shortname">XD</string>
@@ -123,7 +122,8 @@
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Подключение к устройству Garmin (Fenix, Edge, …)</string>
-    <string name="key_garmin_settings">Настройки Garmin</string>
+    <string name="garmin_local_http_server_port">Порт локального HTTP сервера</string>
+    <string name="garmin_local_http_server">Локальный HTTP сервер</string>
     <!--    Wear-->
     <string name="wear_shortname">WEAR</string>
     <string name="description_wear">Мониторить и контролировать AAPS при помощи часов WearOS.</string>
@@ -148,8 +148,8 @@
     <string name="wearcontrol_summary">Ставить временные цели и вводить терапию с часов.</string>
     <string name="wear_wizard_settings_summary">Расчеты включены в результат калькулятора: </string>
     <string name="wear_general_settings">Общие настройки</string>
-    <string name="wear_notifysmb_title">Оповещать об СМБ</string>
-    <string name="wear_notifysmb_summary">Показывать СМБ на часах как стандартный болюс.</string>
+    <string name="wear_notifysmb_title">Оповещать об SMB</string>
+    <string name="wear_notifysmb_summary">Показывать SMB на часах как стандартный болюс.</string>
     <string name="wear_custom_watchface_settings">Настройка циферблатов</string>
     <string name="wear_custom_watchface_authorization_title">Авторизация пользовательских циферблатов</string>
     <string name="wear_custom_watchface_authorization_summary">Авторизовать загруженные пользовательские циферблаты для изменения и блокировки некоторых параметров отображения часов в соответствии с дизайном часов</string>
@@ -189,4 +189,5 @@
     <string name="tdd_line">%1$.2fед%1$.0f%%</string>
     <string name="today">Сегодня</string>
     <string name="weighted">взвешенный</string>
+    <string name="full_xdrip_sync_comment">Полная синхронизация? Это может занять длительное время и до завершения вы не увидите новые данные в xDrip+.</string>
 </resources>

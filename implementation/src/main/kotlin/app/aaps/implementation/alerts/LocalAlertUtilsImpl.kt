@@ -20,6 +20,7 @@ import app.aaps.core.interfaces.rx.events.EventNewNotification
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.extensions.asAnnouncement
@@ -69,7 +70,7 @@ class LocalAlertUtilsImpl @Inject constructor(
                     it.soundId =
                         R.raw.alarm
                 }))
-                if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_create_announcements_from_errors, true))
+                if (preferences.get(BooleanKey.NsClientCreateAnnouncementsFromErrors))
                     disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
                         therapyEvent = TE.asAnnouncement(rh.gs(R.string.pump_unreachable)),
                         timestamp = dateUtil.now(),
@@ -79,7 +80,7 @@ class LocalAlertUtilsImpl @Inject constructor(
                         listValues = listOf(ValueWithUnit.TEType(TE.Type.ANNOUNCEMENT))
                     ).subscribe()
             }
-            if (sp.getBoolean(app.aaps.core.utils.R.string.key_smscommunicator_report_pump_unreachable, true))
+            if (preferences.get(BooleanKey.SmsReportPumpUnreachable))
                 smsCommunicator.sendNotificationToAllNumbers(rh.gs(R.string.pump_unreachable))
         }
         if (!isStatusOutdated && !alarmTimeoutExpired) rxBus.send(EventDismissNotification(Notification.PUMP_UNREACHABLE))
@@ -136,7 +137,7 @@ class LocalAlertUtilsImpl @Inject constructor(
             n.soundId = R.raw.alarm
             sp.putLong(app.aaps.core.utils.R.string.key_next_missed_reading_alarm, dateUtil.now() + missedReadingsThreshold())
             rxBus.send(EventNewNotification(n))
-            if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_create_announcements_from_errors, true)) {
+            if (preferences.get(BooleanKey.NsClientCreateAnnouncementsFromErrors)) {
                 disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
                     therapyEvent = TE.asAnnouncement(n.text),
                     timestamp = dateUtil.now(),

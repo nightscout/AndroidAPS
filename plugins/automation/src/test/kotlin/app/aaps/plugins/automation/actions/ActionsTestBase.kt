@@ -2,7 +2,6 @@ package app.aaps.plugins.automation.actions
 
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.OE
-import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
@@ -13,6 +12,7 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileSource
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -43,9 +43,6 @@ ActionsTestBase : TestBaseWithProfile() {
         override val isLGS: Boolean = false
         override val isSuperBolus: Boolean = false
         override val isDisconnected: Boolean = false
-        override var enabled: Boolean
-            get() = true
-            set(_) {}
         override var lastBgTriggeredRun: Long = 0
 
         override fun invoke(initiator: String, allowNotification: Boolean, tempBasalFallback: Boolean) {}
@@ -55,6 +52,9 @@ ActionsTestBase : TestBaseWithProfile() {
         override fun suspendLoop(durationInMinutes: Int, action: app.aaps.core.data.ue.Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>) {}
         override fun disableCarbSuggestions(durationMinutes: Int) {}
         override fun buildAndStoreDeviceStatus() {}
+        override fun entries(): Array<CharSequence> = emptyArray()
+
+        override fun entryValues(): Array<CharSequence> = emptyArray()
 
         override fun setPluginEnabled(type: PluginType, newState: Boolean) {}
     }

@@ -27,130 +27,130 @@ interface Preferences {
      * In SimpleMode return default value
      * In FullMode return value from [android.content.SharedPreferences]
      *
-     * @param key [BooleanKey] enum
+     * @param key [BooleanPreferenceKey] enum
      * @return value
      */
-    fun get(key: BooleanKey): Boolean
+    fun get(key: BooleanPreferenceKey): Boolean
 
     /**
      * Get [Boolean] value from [android.content.SharedPreferences] or null if doesn't exist
      *
-     * @param key [BooleanKey] enum
+     * @param key [BooleanPreferenceKey] enum
      * @return value or null
      */
-    fun getIfExists(key: BooleanKey): Boolean?
+    fun getIfExists(key: BooleanPreferenceKey): Boolean?
 
     /**
      * Update [Boolean] value in [android.content.SharedPreferences]
      *
-     * @param key [BooleanKey] enum
+     * @param key [BooleanPreferenceKey] enum
      * @param value value
      */
-    fun put(key: BooleanKey, value: Boolean)
+    fun put(key: BooleanPreferenceKey, value: Boolean)
 
     /**
      * Get [String] value from [android.content.SharedPreferences]
      * In SimpleMode return default value
      * In FullMode return value from [android.content.SharedPreferences]
      *
-     * @param key [StringKey] enum
+     * @param key [StringPreferenceKey] enum
      * @return value
      */
-    fun get(key: StringKey): String
+    fun get(key: StringPreferenceKey): String
 
     /**
      * Get [String] value from [android.content.SharedPreferences] or null if doesn't exist
      *
-     * @param key [StringKey] enum
+     * @param key [StringPreferenceKey] enum
      * @return value or null
      */
-    fun getIfExists(key: StringKey): String?
+    fun getIfExists(key: StringPreferenceKey): String?
 
     /**
      * Update [String] value in [android.content.SharedPreferences]
      *
-     * @param key [StringKey] enum
+     * @param key [StringPreferenceKey] enum
      * @param value value
      */
-    fun put(key: StringKey, value: String)
+    fun put(key: StringPreferenceKey, value: String)
 
     /**
      * Get [Double] value from [android.content.SharedPreferences]
      * In SimpleMode return default value
      * In FullMode return value from [android.content.SharedPreferences]
      *
-     * @param key [DoubleKey] enum
+     * @param key [DoublePreferenceKey] enum
      * @return value
      */
-    fun get(key: DoubleKey): Double
+    fun get(key: DoublePreferenceKey): Double
 
     /**
      * Get [Double] value from [android.content.SharedPreferences] or null if doesn't exist
      *
-     * @param key [DoubleKey] enum
+     * @param key [DoublePreferenceKey] enum
      * @return value or null
      */
-    fun getIfExists(key: DoubleKey): Double?
+    fun getIfExists(key: DoublePreferenceKey): Double?
 
     /**
      * Update [Double] value in [android.content.SharedPreferences]
      *
-     * @param key [DoubleKey] enum
+     * @param key [DoublePreferenceKey] enum
      * @param value value
      */
-    fun put(key: DoubleKey, value: Double)
+    fun put(key: DoublePreferenceKey, value: Double)
 
     /**
      * Get [Double] value from [android.content.SharedPreferences] converted to current units
      * In SimpleMode return default value
      * In FullMode return value from [android.content.SharedPreferences]
      *
-     * @param key [UnitDoubleKey] enum
+     * @param key [UnitDoublePreferenceKey] enum
      * @return value
      */
-    fun get(key: UnitDoubleKey): Double
+    fun get(key: UnitDoublePreferenceKey): Double
 
     /**
      * Get [Double] value from [android.content.SharedPreferences] or null if doesn't exist
      *
-     * @param key [UnitDoubleKey] enum
+     * @param key [UnitDoublePreferenceKey] enum
      * @return value or null
      */
-    fun getIfExists(key: UnitDoubleKey): Double?
+    fun getIfExists(key: UnitDoublePreferenceKey): Double?
 
     /**
      * Update [Double] value in [android.content.SharedPreferences]
      *
-     * @param key [UnitDoubleKey] enum
+     * @param key [UnitDoublePreferenceKey] enum
      * @param value value
      */
-    fun put(key: UnitDoubleKey, value: Double)
+    fun put(key: UnitDoublePreferenceKey, value: Double)
 
     /**
      * Get [Int] value from [android.content.SharedPreferences]
      * In SimpleMode return default value
      * In FullMode return value from [android.content.SharedPreferences]
      *
-     * @param key [IntKey] enum
+     * @param key [IntPreferenceKey] enum
      * @return value
      */
-    fun get(key: IntKey): Int
+    fun get(key: IntPreferenceKey): Int
 
     /**
      * Get [Int] value from [android.content.SharedPreferences] or null if doesn't exist
      *
-     * @param key [IntKey] enum
+     * @param key [IntPreferenceKey] enum
      * @return value or null
      */
-    fun getIfExists(key: IntKey): Int?
+    fun getIfExists(key: IntPreferenceKey): Int?
 
     /**
      * Update [Int] value in [android.content.SharedPreferences]
      *
-     * @param key [IntKey] enum
+     * @param key [IntPreferenceKey] enum
      * @param value value
      */
-    fun put(key: IntKey, value: Int)
+    fun put(key: IntPreferenceKey, value: Int)
 
     /**
      * Remove value from [android.content.SharedPreferences]
@@ -171,4 +171,13 @@ interface Preferences {
      * @return [PreferenceKey]
      */
     fun get(key: String): PreferenceKey
+
+    /**
+     * Find all [PreferenceKey] which have `dependency` or `negativeDependency`
+     * @param key string representation of key
+     * @return list of [PreferenceKey]
+     */
+    fun getDependingOn(key: String): List<PreferenceKey>
+
+    fun registerPreferences(clazz: Class<out PreferenceKey>)
 }

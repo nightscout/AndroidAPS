@@ -16,11 +16,6 @@
     <string name="wear">Wear</string>
     <string name="nav_about">À propos</string>
     <string name="smscommunicator_missingphonestatepermission">Autorisation du téléphone manquante</string>
-    <string name="ns_alarm_options">Options d\'alarme</string>
-    <string name="ns_alarms">Créer des notifications à partir des alarmes NS</string>
-    <string name="ns_announcements">Créer des notifications à partir des notifications NS</string>
-    <string name="ns_alarm_stale_data_value_label">Seuil sans nouvelle donnée Glyc. [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Seuil d\'urgence pour les données obsolètes [min]</string>
     <string name="sensitivity_warning">En activant la fonction Autosens, n’oubliez pas de rentrer tous les glucides consommés. Sinon les déviations de glucides seront incorrectement identifiées pour les changements de sensibilité !!</string>
     <string name="notloadedplugins">Les profils ne sont pas tous téléchargés !</string>
     <string name="valuesnotstored">Valeurs non enregistrées !</string>

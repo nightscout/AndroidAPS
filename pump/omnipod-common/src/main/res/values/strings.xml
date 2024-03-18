@@ -211,6 +211,7 @@
     <string name="omnipod_common_cancel">Cancel</string>
     <string name="omnipod_common_warning">Warning</string>
     <string name="omnipod_common_two_strings_concatenated_by_colon" translatable="false">%1$s: %2$s</string>
+    <string name="omnipod_common_disable_suspend_alerts">DISABLE SUSPEND ALERTS</string>
 
     <!-- Omnipod - Times -->
     <string name="omnipod_common_time_with_timezone" translatable="false">%1$s (%2$s)</string>

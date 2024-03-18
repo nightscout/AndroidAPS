@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.RemoteInput
-import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
@@ -16,6 +15,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.NotificationHolder
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -149,14 +149,14 @@ class PersistentNotificationPlugin @Inject constructor(
             val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
             val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
             line2 =
-                rh.gs(app.aaps.core.ui.R.string.treatments_iob_label_string) + " " + rh.gs(app.aaps.core.ui.R.string.format_insulin_units,(bolusIob.iob + basalIob.basaliob)) + " " + rh.gs(
+                rh.gs(app.aaps.core.ui.R.string.treatments_iob_label_string) + " " + rh.gs(app.aaps.core.ui.R.string.format_insulin_units, (bolusIob.iob + basalIob.basaliob)) + " " + rh.gs(
                     app.aaps.core.ui.R
                         .string.cob
                 ) + ": " + iobCobCalculator.getCobInfo(
                     "PersistentNotificationPlugin"
                 ).generateCOBString(decimalFormatter)
             val line2aa =
-                rh.gs(app.aaps.core.ui.R.string.treatments_iob_label_string) + " " + rh.gs(app.aaps.core.ui.R.string.format_insulin_units,(bolusIob.iob + basalIob.basaliob)) + ". " + rh.gs(
+                rh.gs(app.aaps.core.ui.R.string.treatments_iob_label_string) + " " + rh.gs(app.aaps.core.ui.R.string.format_insulin_units, (bolusIob.iob + basalIob.basaliob)) + ". " + rh.gs(
                     app.aaps.core.ui.R
                         .string.cob
                 ) + ": " + iobCobCalculator.getCobInfo(

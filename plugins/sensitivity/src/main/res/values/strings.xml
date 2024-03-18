@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="key_absorption_category_settings" translatable="false">absorption_category_settings</string>
-
     <string name="sensitivity_shortname">SENS</string>
     <string name="sensitivity_oref1">Sensitivity Oref1</string>
     <string name="sensitivity_aaps">Sensitivity AAPS</string>

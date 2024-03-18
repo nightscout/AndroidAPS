@@ -153,6 +153,8 @@
     <string name="dia_short">DAI</string>
     <string name="target_short">CIBLE</string>
     <string name="basal_short">BAS</string>
+    <string name="isf_dynamic_label">Votre algorithme peut fournir le calcul dynamique de la SI. Les valeurs ci-dessous ne sont utilisées que comme solution de secours en cas de données manquantes</string>
+    <string name="ic_dynamic_label">Votre algorithme peut fournir le calcul dynamique de la G/I. Les valeurs ci-dessous ne sont utilisées que comme solution de secours en cas de données manquantes</string>
     <!-- Actions -->
     <string name="actions">Actions</string>
     <string name="description_actions">Quelques boutons pour accéder rapidement aux fonctions communes</string>
@@ -258,11 +260,13 @@
     <string name="overview_show_deviation_slope">Pente de déviations</string>
     <string name="overview_show_activity">Activité</string>
     <string name="overview_show_bgi">Impact glycémique</string>
+    <string name="overview_show_sensitivity">Changement de la sensibilité</string>
     <string name="overview_show_deviations">Déviations</string>
     <string name="overview_show_cob">Glucides actifs</string>
     <string name="overview_show_iob">Insuline Active</string>
     <string name="overview_show_basals">Basals</string>
     <string name="overview_show_abs_insulin">Insuline absolue</string>
+    <string name="overview_show_variable_sens">Sensibilité variable</string>
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
     <string name="deviation_shortname">DEV</string>
@@ -272,8 +276,11 @@
     <string name="devslope_shortname">PENTEDEV</string>
     <string name="treatments_shortname">TRAIT</string>
     <string name="heartRate_shortname">FC</string>
+    <string name="sensitivity_shortname">SENS%</string>
+    <string name="variable_sensitivity_shortname">VSENS</string>
     <string name="graph_scale">Échelle du graph.</string>
     <string name="graph_menu_divider_header">Graph</string>
+    <string name="temp_basal_overview_short_name">T:</string>
     <!-- Skins -->
     <string name="classic_description">Thème d\'origine</string>
     <string name="lowres_description">Basse résolution</string>
@@ -286,6 +293,7 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Affiche une notification en cours avec un bref aperçu de ce que fait votre Boucle</string>
     <string name="old_data">DONNÉES ANCIENNES</string>
+    <string name="overview_show_steps">Pas</string>
     <string name="steps_shortname">PAS</string>
     <string name="simple_mode_enabled">Mode simple activé</string>
 </resources>

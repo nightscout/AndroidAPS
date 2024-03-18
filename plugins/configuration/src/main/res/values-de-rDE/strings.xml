@@ -30,8 +30,6 @@
     <string name="status">Status:</string>
     <string name="patient_name">Name des Patienten</string>
     <string name="patient_name_summary">Bitte gib den Namen des Patienten oder einen Spitznamen an, um mehrere Setups unterscheiden zu können.</string>
-    <string name="privacy_settings">Privatsphäre-Einstellungen</string>
-    <string name="privacy_summary">Du kannst optional eine E-Mail-Adresse angeben, wenn Du bei Absturzberichten kontaktiert werden möchtest. Dies ist keine Automatik, Du wirst von den Entwicklern in gefährlichen Situationen kontaktiert. </string>
     <string name="diawarning">Bitte beachte: Neue Insulin-Profile benötigen einen DIA von mind. 5 Stunden. Eine DIA von 5-6 Stunden im neuen Insulin-Profil entspricht einem DIA von 3 Stunden bei alten Insulin-Profilen.</string>
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Profilwechsel durchführen</string>

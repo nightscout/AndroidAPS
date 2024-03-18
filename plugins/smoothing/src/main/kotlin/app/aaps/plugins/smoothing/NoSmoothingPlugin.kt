@@ -1,10 +1,10 @@
 package app.aaps.plugins.smoothing
 
 import app.aaps.core.data.iob.InMemoryGlucoseValue
-import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smoothing.Smoothing
 import javax.inject.Inject

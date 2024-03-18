@@ -1,30 +1,47 @@
 package app.aaps.core.validators
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.text.InputType
 import android.util.AttributeSet
+import androidx.annotation.StringRes
 import androidx.preference.EditTextPreference
-import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceViewHolder
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.keys.Preferences
-import app.aaps.core.keys.UnitDoubleKey
+import app.aaps.core.keys.UnitDoublePreferenceKey
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
-class AdaptiveUnitPreference(ctx: Context, attrs: AttributeSet?) : EditTextPreference(ctx, attrs) {
+class AdaptiveUnitPreference(
+    ctx: Context,
+    attrs: AttributeSet? = null,
+    unitKey: UnitDoublePreferenceKey? = null,
+    @StringRes dialogMessage: Int? = null,
+    @StringRes title: Int?,
+) : EditTextPreference(ctx, attrs) {
 
     private val validatorParameters: DefaultEditTextValidator.Parameters
     private var validator: DefaultEditTextValidator? = null
-    private val preferenceKey: UnitDoubleKey
+    private val preferenceKey: UnitDoublePreferenceKey
 
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var preferences: Preferences
+    @Inject lateinit var sharedPrefs: SharedPreferences
+
+    // Inflater constructor
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, unitKey = null, title = null)
 
     init {
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
-        preferenceKey = preferences.get(key) as UnitDoubleKey
+
+        unitKey?.let { key = context.getString(it.key) }
+        dialogMessage?.let { setDialogMessage(it) }
+        title?.let { dialogTitle = context.getString(it) }
+        title?.let { this.title = context.getString(it) }
+
+        preferenceKey = unitKey ?: preferences.get(key) as UnitDoublePreferenceKey
         if (preferences.simpleMode && preferenceKey.defaultedBySM) isVisible = false
         if (preferences.apsMode && !preferenceKey.showInApsMode) {
             isVisible = false; isEnabled = false
@@ -35,14 +52,12 @@ class AdaptiveUnitPreference(ctx: Context, attrs: AttributeSet?) : EditTextPrefe
         if (preferences.pumpControlMode && !preferenceKey.showInPumpControlMode) {
             isVisible = false; isEnabled = false
         }
-        if (preferenceKey.dependency != 0) {
-            val sp = PreferenceManager.getDefaultSharedPreferences(context)
-            if (!sp.getBoolean(context.getString(preferenceKey.dependency), false))
+        preferenceKey.dependency?.let {
+            if (!sharedPrefs.getBoolean(context.getString(it.key), false))
                 isVisible = false
         }
-        if (preferenceKey.negativeDependency != 0) {
-            val sp = PreferenceManager.getDefaultSharedPreferences(context)
-            if (sp.getBoolean(context.getString(preferenceKey.dependency), false))
+        preferenceKey.negativeDependency?.let {
+            if (sharedPrefs.getBoolean(context.getString(it.key), false))
                 isVisible = false
         }
         validatorParameters = obtainValidatorParameters(attrs)

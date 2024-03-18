@@ -116,4 +116,11 @@
     <string name="time_to_eat">¡Hora de comer!\nEjecuta el asistente de bolo y calcula de nuevo.</string>
     <string name="time_to_bolus">¡Hora de comer!\nEjecutar el asistente de bolo y calcular de nuevo.</string>
     <string name="error_setting_reminder">Error al configurar la alarma en el futuro</string>
+    <!--    Autotune-->
+    <string name="autotune_profile_name">Perfil de Autotune %1$s</string>
+    <string name="autotune_run">Ejecutar Autotune</string>
+    <string name="autotune_run_without_autoswitch">Ejecutar Autotune sin cambio de perfil</string>
+    <string name="autotune_run_with_autoswitch">Ejecutar Autotune y cambiar de perfil automáticamente</string>
+    <string name="autotune_run_with_error">Error durante la última ejecución de Autotune</string>
+    <string name="autotune_run_cancelled">Se ha detectado otra ejecución de Autotune, ejecución cancelada</string>
 </resources>

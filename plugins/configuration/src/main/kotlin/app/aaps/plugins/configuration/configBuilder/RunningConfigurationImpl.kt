@@ -17,9 +17,10 @@ import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.smoothing.Smoothing
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.core.nssdk.localmodel.devicestatus.NSDeviceStatus
 import app.aaps.plugins.configuration.R
@@ -32,7 +33,7 @@ import javax.inject.Inject
 class RunningConfigurationImpl @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val configBuilder: ConfigBuilder,
-    private val sp: SP,
+    private val preferences: Preferences,
     private val aapsLogger: AAPSLogger,
     private val config: Config,
     private val rh: ResourceHelper,
@@ -141,8 +142,8 @@ class RunningConfigurationImpl @Inject constructor(
         }
 
         configuration.pump?.let {
-            if (sp.getString(app.aaps.core.utils.R.string.key_virtualpump_type, "fake") != it) {
-                sp.putString(app.aaps.core.utils.R.string.key_virtualpump_type, it)
+            if (preferences.get(StringKey.VirtualPumpType) != it) {
+                preferences.put(StringKey.VirtualPumpType, it)
                 activePlugin.activePump.pumpDescription.fillFor(PumpType.getByDescription(it))
                 pumpSync.connectNewPump(endRunning = false) // do not end running TBRs, we call this only to accept data properly
                 aapsLogger.debug(LTag.CORE, "Changing pump type to $it")

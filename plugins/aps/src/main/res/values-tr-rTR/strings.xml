@@ -2,8 +2,8 @@
 <resources>
     <string name="dynisf_adjust_sensitivity">Bazal ve glikoz hedefi değişikliği için TGD bazlı duyarlılık oranını etkinleştirin</string>
     <string name="dynisf_adjust_sensitivity_summary">Bazal oranı artırmak veya azaltmak için kullanılan duyarlılık oranını hesaplamak için son 24 saatlik TGD/7Gün TGD\'yi kullanır ve aynı zamanda bu seçenek etkinse Otoduyarlılığın yaptığı gibi glikoz hedefini ayarlar. Bu seçenek kapalıyken başlamanız önerilir</string>
-    <string name="DynISFAdjust_title" formatted="false">DinamikİDF Ayar Faktörü %</string>
-    <string name="DynISFAdjust_summary" formatted="false">DinamikİDF için ayarlama faktörü. Daha agresif düzeltme dozları için %100\'den fazla ve daha az agresif düzeltmeler için %100\'den az ayarlayın.</string>
+    <string name="dyn_isf_adjust_title" formatted="false">DinamikİDF Ayarlama Faktörü %</string>
+    <string name="dyn_isf_adjust_summary" formatted="false">DinamikİDF için ayarlama faktörü. Daha agresif düzeltme dozları için %100\'ün üzerine, daha az agresif düzeltmeler için %100\'ün altına ayarlayın.</string>
     <string name="high_temptarget_raises_sensitivity_title">Yüksek geçici hedefler duyarlılığı artırır</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Geçici Hedefler için duyarlılığı artırın >= 100]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Düşük geçici hedefler duyarlılığı azaltır</string>
@@ -120,4 +120,47 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="loop_open_mode_min_change_summary" formatted="false">Açık Döngü, yalnızca değişiklik % cinsinden bu değerden büyükse yeni değişiklik isteğini açar. Varsayılan değer %20\'dir</string>
     <string name="fallback_smb_no_tdd">SMB\'ye dönülüyor. Yeterli günlük doz verisi yok.</string>
     <string name="fallback_to_isf_no_tdd">Profil duyarlılığına geri dönüş. Yeterli GTD verisi yok.</string>
+    <!-- Autotune -->
+    <string name="autotune_description">Potansiyel profil ayarlamaları için yardım (İDF, karbonhidrat ve bazal oranları)</string>
+    <string name="autotune_shortname">AT</string>
+    <string name="autotune_settings">OtoAyar ayarları</string>
+    <string name="autotune_auto_title">Otomasyon Profil değişimi</string>
+    <string name="autotune_auto_summary">Etkinleştirildiğinde, OtoAyar otomatik olarak güncellenir ve bir otomasyon kuralından hesaplama yapıldıktan sonra profile işlenir.</string>
+    <string name="autotune_categorize_uam_as_basal_title">UAM\'yi bazal olarak sınıflandır</string>
+    <string name="autotune_categorize_uam_as_basal_summary">Yalnızca yenen tüm karbonhidratları güvenilir bir şekilde girdiyseniz etkinleştirin, bu seçenekle OtoAyar tarafından görülen ani artışlar bazal oranda değişiklik önermek için kullanılacaktır.</string>
+    <string name="autotune_tune_insulin_curve_title">İnsülin eğrisini ayarla</string>
+    <string name="autotune_tune_insulin_curve_summary">Yalnızca serbest tepe noktası kullanıyorsanız etkinleştirin. Bu seçenek, tepe ve İES sürelerini ayarlayacaktır</string>
+    <string name="autotune_default_tune_days_title">Veri gün sayısı</string>
+    <string name="autotune_circadian_ic_isf_title">Sirkadiyen IC/İDF ortalama sonucunu uygula</string>
+    <string name="autotune_circadian_ic_isf_summary">OtoAyar sirkadiyen varyasyonları ayarlamaz, bu seçenek sirkadiyen giriş profilinize yalnızca IC ve İDF\'nün ortalama ayarını uygular</string>
+    <string name="autotune_additional_log_title">Hata ayıklama için daha fazla günlük bilgisi ekleyin</string>
+    <string name="autotune_additional_log_summary">OtoAyar eklentisinde hata ayıklamaya yardımcı olmak için yalnızca geliştirici tarafından daha fazla günlük bilgisi göndermesi istenirse açın</string>
+    <string name="autotune_default_tune_days_summary">OtoAyar tarafından işlenecek varsayılan veri gün sayısı (30\'a kadar)</string>
+    <string name="autotune_tunedprofile_name">Ayarlandı</string>
+    <string name="autotune_profile">Profil :</string>
+    <string name="autotune_last_run">Son Çalıştırma :</string>
+    <string name="autotune_warning">Uyarı :</string>
+    <string name="autotune_ic_warning">Seçilen profilde %1$d KİO değeri var. OtoAyar %2$.2f g/Ü kullanacak</string>
+    <string name="autotune_isf_warning">Seçilen profilde %1$d İDF değeri var. OtoAyar %2$.1f %3$s/Ü kullanacak</string>
+    <string name="autotune_error">Giriş verilerinde hata, otoayarı tekrar çalıştırmayı deneyin veya gün sayısını azaltın</string>
+    <string name="autotune_error_more_days">Veri girişinde hata, gün sayısını artırın</string>
+    <string name="autotune_warning_during_run">OtoAyar hesaplaması başladı, lütfen sabırlı olun</string>
+    <string name="autotune_warning_after_run">Kullanmadan önce sonuçları dikkatlice kontrol edin!</string>
+    <string name="autotune_partial_result">Kısmi sonuç günü %1$d / %2$d ayarlandı</string>
+    <string name="autotune_result">Sonuç: %1$s</string>
+    <string name="autotune_param">Parametre</string>
+    <string name="autotune_percent">%</string>
+    <string name="autotune_missing">Eksik</string>
+    <string name="autotune_run">Otoayar\'ı Çalıştır</string>
+    <string name="autotune_check_input_profile_button">Giriş profilini kontrol edin</string>
+    <string name="autotune_compare_profile">Profilleri karşılaştırın</string>
+    <string name="autotune_copy_localprofile_button">Yerel profile kopyala</string>
+    <string name="autotune_update_input_profile_button">Giriş profilini güncelle</string>
+    <string name="autotune_revert_input_profile_button">Giriş profilini geri al</string>
+    <string name="autotune_copy_local_profile_message">Bu OtoAyar Profilinden yeni bir yerel profil oluşturulsun mu?</string>
+    <string name="autotune_update_local_profile_message">OtoAyar Profili ile %1$s profili güncellensin mi?</string>
+    <string name="autotune_revert_local_profile_message">Giriş Profili ile %1$s profili geri alınsın mı?</string>
+    <string name="autotune_profile_invalid">Profil geçersiz</string>
+    <string name="not_available_full">Mevcut değil</string>
+    <string name="pump_disconnected">Pompa bağlantısı kesildi</string>
 </resources>

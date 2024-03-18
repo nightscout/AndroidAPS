@@ -21,6 +21,8 @@ import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.Preferences
 import app.aaps.core.nssdk.localmodel.entry.NSSgvV3
 import app.aaps.core.nssdk.localmodel.food.NSFood
 import app.aaps.core.nssdk.localmodel.treatment.NSBolus
@@ -35,7 +37,6 @@ import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryTarget
 import app.aaps.core.nssdk.localmodel.treatment.NSTherapyEvent
 import app.aaps.core.nssdk.localmodel.treatment.NSTreatment
 import app.aaps.core.utils.JsonHelper
-import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsclient.extensions.fromJson
 import app.aaps.plugins.sync.nsclientV3.extensions.toBolus
 import app.aaps.plugins.sync.nsclientV3.extensions.toBolusCalculatorResult
@@ -59,6 +60,7 @@ class NsIncomingDataProcessor @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val nsClientSource: NSClientSource,
     private val sp: SP,
+    private val preferences: Preferences,
     private val rxBus: RxBus,
     private val dateUtil: DateUtil,
     private val activePlugin: ActivePlugin,
@@ -91,7 +93,7 @@ class NsIncomingDataProcessor @Inject constructor(
         // Objective0
         sp.putBoolean(app.aaps.core.utils.R.string.key_objectives_bg_is_available_in_ns, true)
 
-        if (!nsClientSource.isEnabled() && !sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_cgm, false)) return false
+        if (!nsClientSource.isEnabled() && !preferences.get(BooleanKey.NsClientAcceptCgmData)) return false
 
         var latestDateInReceivedData: Long = 0
         aapsLogger.debug(LTag.NSCLIENT, "Received NS Data: $sgvs")
@@ -143,15 +145,15 @@ class NsIncomingDataProcessor @Inject constructor(
 
                 when (treatment) {
                     is NSBolus                  ->
-                        if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_insulin, false) || config.NSCLIENT)
+                        if (preferences.get(BooleanKey.NsClientAcceptInsulin) || config.NSCLIENT)
                             storeDataForDb.boluses.add(treatment.toBolus())
 
                     is NSCarbs                  ->
-                        if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_carbs, false) || config.NSCLIENT)
+                        if (preferences.get(BooleanKey.NsClientAcceptCarbs) || config.NSCLIENT)
                             storeDataForDb.carbs.add(treatment.toCarbs())
 
                     is NSTemporaryTarget        ->
-                        if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_temp_target, false) || config.NSCLIENT) {
+                        if (preferences.get(BooleanKey.NsClientAcceptTempTarget) || config.NSCLIENT) {
                             if (treatment.duration > 0L) {
                                 // not ending event
                                 if (treatment.targetBottomAsMgdl() < Constants.MIN_TT_MGDL
@@ -168,18 +170,18 @@ class NsIncomingDataProcessor @Inject constructor(
                         }
 
                     is NSTemporaryBasal         ->
-                        if (config.isEngineeringMode() && sp.getBoolean(R.string.key_ns_receive_tbr_eb, false) || config.NSCLIENT)
+                        if (preferences.get(BooleanKey.NsClientAcceptTbrEb) || config.NSCLIENT)
                             storeDataForDb.temporaryBasals.add(treatment.toTemporaryBasal())
 
                     is NSEffectiveProfileSwitch ->
-                        if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
+                        if (preferences.get(BooleanKey.NsClientAcceptProfileSwitch) || config.NSCLIENT) {
                             treatment.toEffectiveProfileSwitch(dateUtil)?.let { effectiveProfileSwitch ->
                                 storeDataForDb.effectiveProfileSwitches.add(effectiveProfileSwitch)
                             }
                         }
 
                     is NSProfileSwitch          ->
-                        if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
+                        if (preferences.get(BooleanKey.NsClientAcceptProfileSwitch) || config.NSCLIENT) {
                             treatment.toProfileSwitch(activePlugin, dateUtil)?.let { profileSwitch ->
                                 storeDataForDb.profileSwitches.add(profileSwitch)
                             }
@@ -191,19 +193,19 @@ class NsIncomingDataProcessor @Inject constructor(
                         }
 
                     is NSTherapyEvent           ->
-                        if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT)
+                        if (preferences.get(BooleanKey.NsClientAcceptTherapyEvent) || config.NSCLIENT)
                             treatment.toTherapyEvent().let { therapyEvent ->
                                 storeDataForDb.therapyEvents.add(therapyEvent)
                             }
 
                     is NSOfflineEvent           ->
-                        if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_offline_event, false) && config.isEngineeringMode() || config.NSCLIENT)
+                        if (preferences.get(BooleanKey.NsClientAcceptOfflineEvent) && config.isEngineeringMode() || config.NSCLIENT)
                             treatment.toOfflineEvent().let { offlineEvent ->
                                 storeDataForDb.offlineEvents.add(offlineEvent)
                             }
 
                     is NSExtendedBolus          ->
-                        if (config.isEngineeringMode() && sp.getBoolean(R.string.key_ns_receive_tbr_eb, false) || config.NSCLIENT)
+                        if (preferences.get(BooleanKey.NsClientAcceptTbrEb) || config.NSCLIENT)
                             treatment.toExtendedBolus().let { extendedBolus ->
                                 storeDataForDb.extendedBoluses.add(extendedBolus)
                             }
@@ -260,7 +262,7 @@ class NsIncomingDataProcessor @Inject constructor(
     }
 
     fun processProfile(profileJson: JSONObject) {
-        if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_profile_store, true) || config.NSCLIENT) {
+        if (preferences.get(BooleanKey.NsClientAcceptProfileStore) || config.NSCLIENT) {
             val store = instantiator.provideProfileStore(profileJson)
             val createdAt = store.getStartDate()
             val lastLocalChange = sp.getLong(app.aaps.core.utils.R.string.key_local_profile_last_change, 0)

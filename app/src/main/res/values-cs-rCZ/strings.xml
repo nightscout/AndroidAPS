@@ -16,11 +16,6 @@
     <string name="wear">Wear</string>
     <string name="nav_about">O aplikaci</string>
     <string name="smscommunicator_missingphonestatepermission">Chybí oprávnění pro zjišťování stavu telefonu</string>
-    <string name="ns_alarm_options">Nastavení alarmů</string>
-    <string name="ns_alarms">Vytvořit oznámení z alarmů NS</string>
-    <string name="ns_announcements">Vytvořit oznámení z NS upozornění </string>
-    <string name="ns_alarm_stale_data_value_label">Mezní hodnota pro zastaralá data [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Urgentní mezní hodnota pro zastaralá data [min]</string>
     <string name="sensitivity_warning">Při zapnuté detekci sensitivity nezapomeňte vkládat všechny sacharidy. Jinak budou odchylky mylně vyhodnocovány jako změna sensitivity !!</string>
     <string name="notloadedplugins">Všechny profily nenačteny!</string>
     <string name="valuesnotstored">Hodnoty nejsou uloženy!</string>

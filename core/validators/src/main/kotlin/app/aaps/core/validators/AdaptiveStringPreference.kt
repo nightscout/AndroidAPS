@@ -1,28 +1,49 @@
 package app.aaps.core.validators
 
 import android.content.Context
+import android.content.SharedPreferences
+import android.text.InputType
 import android.util.AttributeSet
+import androidx.annotation.StringRes
 import androidx.preference.EditTextPreference
-import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceViewHolder
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.keys.Preferences
-import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.StringPreferenceKey
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
-class AdaptiveStringPreference(ctx: Context, attrs: AttributeSet?) : EditTextPreference(ctx, attrs) {
+class AdaptiveStringPreference(
+    ctx: Context,
+    attrs: AttributeSet? = null,
+    stringKey: StringPreferenceKey? = null,
+    @StringRes dialogMessage: Int? = null,
+    @StringRes summary: Int? = null,
+    @StringRes title: Int?,
+    validatorParams: DefaultEditTextValidator.Parameters? = null,
+) : EditTextPreference(ctx, attrs) {
 
     private val validatorParameters: DefaultEditTextValidator.Parameters
     private var validator: DefaultEditTextValidator? = null
-    private val preferenceKey: StringKey
+    private val preferenceKey: StringPreferenceKey
 
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var preferences: Preferences
+    @Inject lateinit var sharedPrefs: SharedPreferences
+
+    // Inflater constructor
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, stringKey = null, title = null)
 
     init {
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
-        preferenceKey = preferences.get(key) as StringKey
+
+        stringKey?.let { key = context.getString(it.key) }
+        dialogMessage?.let { setDialogMessage(it) }
+        summary?.let { setSummary(it) }
+        title?.let { dialogTitle = context.getString(it) }
+        title?.let { this.title = context.getString(it) }
+
+        preferenceKey = stringKey ?: preferences.get(key) as StringPreferenceKey
         if (preferences.simpleMode && preferenceKey.defaultedBySM) {
             isVisible = false; isEnabled = false
         }
@@ -35,23 +56,26 @@ class AdaptiveStringPreference(ctx: Context, attrs: AttributeSet?) : EditTextPre
         if (preferences.pumpControlMode && !preferenceKey.showInPumpControlMode) {
             isVisible = false; isEnabled = false
         }
-        if (preferenceKey.dependency != 0) {
-            val sp = PreferenceManager.getDefaultSharedPreferences(context)
-            if (!sp.getBoolean(context.getString(preferenceKey.dependency), false))
+        preferenceKey.dependency?.let {
+            if (!sharedPrefs.getBoolean(context.getString(it.key), false))
                 isVisible = false
         }
-        if (preferenceKey.negativeDependency != 0) {
-            val sp = PreferenceManager.getDefaultSharedPreferences(context)
-            if (sp.getBoolean(context.getString(preferenceKey.dependency), false))
+        preferenceKey.negativeDependency?.let {
+            if (sharedPrefs.getBoolean(context.getString(it.key), false))
                 isVisible = false
         }
-        validatorParameters = obtainValidatorParameters(attrs)
+        validatorParameters = validatorParams ?: obtainValidatorParameters(attrs)
         setOnBindEditTextListener { editText ->
             validator = DefaultEditTextValidator(editText, validatorParameters, context)
             editText.setSelectAllOnFocus(true)
             editText.setSingleLine()
+            when (validatorParameters.testType) {
+                EditTextValidator.TEST_EMAIL     -> editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+                EditTextValidator.TEST_HTTPS_URL -> editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI
+            }
         }
         setOnPreferenceChangeListener { _, _ -> validator?.testValidity(false) ?: true }
+        setDefaultValue(preferenceKey.defaultValue)
     }
 
     override fun onAttached() {
@@ -81,9 +105,5 @@ class AdaptiveStringPreference(ctx: Context, attrs: AttributeSet?) : EditTextPre
         ).also {
             typedArray.recycle()
         }
-    }
-
-    override fun onSetInitialValue(defaultValue: Any?) {
-        text = getPersistedString(defaultValue as String?)
     }
 }

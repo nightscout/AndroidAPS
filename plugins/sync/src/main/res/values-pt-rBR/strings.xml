@@ -99,7 +99,6 @@
     <string name="not_connected">Não conectado</string>
     <string name="read_only">Somente leitura</string>
     <string name="working">Trabalhando</string>
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>

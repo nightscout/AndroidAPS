@@ -30,8 +30,6 @@
     <string name="status">Status:</string>
     <string name="patient_name">Naam patiënt</string>
     <string name="patient_name_summary">Geef de naam of roepnaam van de patiënt op om onderscheid te maken tussen meerdere setups</string>
-    <string name="privacy_settings">Privacyinstellingen</string>
-    <string name="privacy_summary">U kunt optioneel een e-mailadres opgeven als u op de hoogte wilt worden gebracht van applicatie crashes. Dit is geen geautomatiseerde service. De ontwikkelaars zullen contact met u opnemen bij gevaarlijke situaties.</string>
     <string name="diawarning">Onthoud: nieuwe insuline profielen vereisen een minimale DIA van 5 uur. DIA 5 – 6h op nieuw profiel is gelijk aan DIA 3h op oude insuline profielen.</string>
     <string name="profile">Profiel</string>
     <string name="doprofileswitch">Profiel wissel uitvoeren</string>
@@ -116,6 +114,7 @@
     <string name="description_maintenance">Biedt verschillende functies voor onderhoud (bv. log verzenden, verwijderen melden).</string>
     <string name="database_cleanup">Database opschonen</string>
     <string name="reset_db_confirm">Wil je echt de database wissen?</string>
+    <string name="reset_aps_results_confirm">Weet je zeker dat je de opgeslagen APS resultaten wilt resetten?</string>
     <string name="maintenance_settings">Onderhoudsinstellingen</string>
     <string name="maintenance_email">E-mail</string>
     <string name="maintenance_amount">Aantal Logs om te verzenden</string>
@@ -167,4 +166,5 @@
     <string name="metadata_format_new">Nieuwe versleutelde indeling</string>
     <string name="metadata_format_debug">Nieuwe debug indeling (onversleuteld)</string>
     <string name="metadata_format_other">Onbekende export indeling</string>
+    <string name="reset_aps_results">Reset APS resultaten</string>
 </resources>

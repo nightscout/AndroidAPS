@@ -13,7 +13,6 @@ import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
@@ -27,6 +26,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.ProfileSource
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.Pump
@@ -309,7 +309,7 @@ class ConfigBuilderPlugin @Inject constructor(
             pluginPreferences.setOnClickListener {
                 protectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, {
                     val i = Intent(activity, uiInteraction.preferencesActivity)
-                    i.putExtra("id", plugin.preferencesId)
+                    i.putExtra(UiInteraction.PLUGIN_NAME, plugin.javaClass.simpleName)
                     activity.startActivity(i)
                 }, null)
             }
@@ -344,10 +344,10 @@ class ConfigBuilderPlugin @Inject constructor(
             }
             if (preferences.simpleMode) {
                 pluginPreferences.visibility =
-                    if (plugin.preferencesId == -1 || !plugin.isEnabled(pluginType) || !plugin.pluginDescription.preferencesVisibleInSimpleMode) View.INVISIBLE else View.VISIBLE
+                    if (plugin.preferencesId == PluginDescription.PREFERENCE_NONE || !plugin.isEnabled(pluginType) || !plugin.pluginDescription.preferencesVisibleInSimpleMode) View.INVISIBLE else View.VISIBLE
                 pluginVisibility.visibility = false.toVisibility()
             } else {
-                pluginPreferences.visibility = if (plugin.preferencesId == -1 || !plugin.isEnabled(pluginType)) View.INVISIBLE else View.VISIBLE
+                pluginPreferences.visibility = if (plugin.preferencesId == PluginDescription.PREFERENCE_NONE || !plugin.isEnabled(pluginType)) View.INVISIBLE else View.VISIBLE
                 pluginVisibility.visibility = plugin.hasFragment().toVisibility()
                 pluginVisibility.isEnabled = !(plugin.pluginDescription.neverVisible || plugin.pluginDescription.alwaysVisible) && plugin.isEnabled(pluginType)
                 pluginVisibility.isChecked = plugin.isFragmentVisible()

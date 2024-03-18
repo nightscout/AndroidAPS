@@ -10,12 +10,18 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.BooleanPreferenceKey
 import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.DoublePreferenceKey
 import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.IntPreferenceKey
+import app.aaps.core.keys.IntentKey
 import app.aaps.core.keys.PreferenceKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.StringPreferenceKey
 import app.aaps.core.keys.UnitDoubleKey
+import app.aaps.core.keys.UnitDoublePreferenceKey
 import dagger.Lazy
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -39,60 +45,72 @@ class PreferencesImpl @Inject constructor(
     override val nsclientMode: Boolean = config.NSCLIENT
     override val pumpControlMode: Boolean = config.PUMPCONTROL
 
-    override fun get(key: BooleanKey): Boolean =
-        if (simpleMode && key.defaultedBySM) key.defaultValue
-        else sp.getBoolean(key.key, key.defaultValue)
+    private val prefsList: MutableList<Class<out PreferenceKey>> =
+        mutableListOf(
+            BooleanKey::class.java,
+            IntKey::class.java,
+            DoubleKey::class.java,
+            UnitDoubleKey::class.java,
+            StringKey::class.java,
+            IntentKey::class.java,
+        )
 
-    override fun getIfExists(key: BooleanKey): Boolean? =
+    override fun get(key: BooleanPreferenceKey): Boolean =
+        if (!config.isEngineeringMode() && key.engineeringModeOnly) key.defaultValue
+        else if (simpleMode && key.defaultedBySM) key.defaultValue
+        else sp.getBoolean(key.key, calculatedDefaultValue(key))
+
+    override fun getIfExists(key: BooleanPreferenceKey): Boolean? =
         if (sp.contains(key.key)) sp.getBoolean(key.key, key.defaultValue) else null
 
-    override fun put(key: BooleanKey, value: Boolean) {
+    override fun put(key: BooleanPreferenceKey, value: Boolean) {
         sp.putBoolean(key.key, value)
     }
 
-    override fun get(key: StringKey): String =
+    override fun get(key: StringPreferenceKey): String =
         if (simpleMode && key.defaultedBySM) key.defaultValue
         else sp.getString(key.key, key.defaultValue)
 
-    override fun getIfExists(key: StringKey): String? =
+    override fun getIfExists(key: StringPreferenceKey): String? =
         if (sp.contains(key.key)) sp.getString(key.key, key.defaultValue) else null
 
-    override fun put(key: StringKey, value: String) {
+    override fun put(key: StringPreferenceKey, value: String) {
         sp.putString(key.key, value)
     }
 
-    override fun get(key: DoubleKey): Double =
+    override fun get(key: DoublePreferenceKey): Double =
         if (simpleMode && key.calculatedBySM) calculatePreference(key)
         else if (simpleMode && key.defaultedBySM) key.defaultValue
         else sp.getDouble(key.key, key.defaultValue)
 
-    override fun getIfExists(key: DoubleKey): Double? =
+    override fun getIfExists(key: DoublePreferenceKey): Double? =
         if (sp.contains(key.key)) sp.getDouble(key.key, key.defaultValue) else null
 
-    override fun put(key: DoubleKey, value: Double) {
+    override fun put(key: DoublePreferenceKey, value: Double) {
         sp.putDouble(key.key, value)
     }
 
-    override fun get(key: UnitDoubleKey): Double =
+    override fun get(key: UnitDoublePreferenceKey): Double =
         if (simpleMode && key.defaultedBySM) key.defaultValue
         else profileUtil.get().valueInCurrentUnitsDetect(sp.getDouble(key.key, key.defaultValue))
 
-    override fun getIfExists(key: UnitDoubleKey): Double? =
+    override fun getIfExists(key: UnitDoublePreferenceKey): Double? =
         if (sp.contains(key.key)) sp.getDouble(key.key, key.defaultValue) else null
 
-    override fun put(key: UnitDoubleKey, value: Double) {
+    override fun put(key: UnitDoublePreferenceKey, value: Double) {
         sp.putDouble(key.key, value)
     }
 
-    override fun get(key: IntKey): Int =
-        if (simpleMode && key.defaultedBySM) calculatedDefaultValue(key)
+    override fun get(key: IntPreferenceKey): Int =
+        if (!config.isEngineeringMode() && key.engineeringModeOnly) key.defaultValue
+        else if (simpleMode && key.defaultedBySM) calculatedDefaultValue(key)
         else if (key.engineeringModeOnly && !config.isEngineeringMode()) calculatedDefaultValue(key)
         else sp.getInt(key.key, calculatedDefaultValue(key))
 
-    override fun getIfExists(key: IntKey): Int? =
+    override fun getIfExists(key: IntPreferenceKey): Int? =
         if (sp.contains(key.key)) sp.getInt(key.key, calculatedDefaultValue(key)) else null
 
-    override fun put(key: IntKey, value: Int) {
+    override fun put(key: IntPreferenceKey, value: Int) {
         sp.putInt(key.key, value)
     }
 
@@ -104,36 +122,57 @@ class PreferencesImpl @Inject constructor(
         UnitDoubleKey.entries.any { rh.gs(it.key) == key }
 
     override fun get(key: String): PreferenceKey =
-        BooleanKey.entries.find { rh.gs(it.key) == key }
-            ?: StringKey.entries.find { rh.gs(it.key) == key }
-            ?: IntKey.entries.find { rh.gs(it.key) == key }
-            ?: DoubleKey.entries.find { rh.gs(it.key) == key }
-            ?: UnitDoubleKey.entries.find { rh.gs(it.key) == key }
+        prefsList
+            .flatMap { it.enumConstants.asIterable() }
+            .find { rh.gs(it.key) == key }
             ?: error("Key $key not found")
 
-    private fun calculatedDefaultValue(key: IntKey): Int =
+    override fun getDependingOn(key: String): List<PreferenceKey> =
+        mutableListOf<PreferenceKey>().also { list ->
+            prefsList.forEach { clazz ->
+                list.addAll(clazz.enumConstants.filter { it.dependency != null && rh.gs(it.dependency!!.key) == key || it.negativeDependency != null && rh.gs(it.negativeDependency!!.key) == key })
+            }
+        }
+
+    override fun registerPreferences(clazz: Class<out PreferenceKey>) {
+        if (clazz !in prefsList) prefsList.add(clazz)
+    }
+
+    private fun calculatedDefaultValue(key: IntPreferenceKey): Int =
         if (key.calculatedDefaultValue)
             when (key) {
                 IntKey.AutosensPeriod ->
                     when (get(StringKey.SafetyAge)) {
-                        rh.gs(app.aaps.core.utils.R.string.key_teenage) -> 4
-                        rh.gs(app.aaps.core.utils.R.string.key_child)   -> 4
-                        else                                            -> 24
+                        rh.gs(app.aaps.core.keys.R.string.key_teenage) -> 4
+                        rh.gs(app.aaps.core.keys.R.string.key_child)   -> 4
+                        else                                           -> 24
                     }
 
                 else                  -> error("Unsupported default value calculation")
             }
         else key.defaultValue
 
-    private fun calculatePreference(key: DoubleKey): Double =
+    private fun calculatedDefaultValue(key: BooleanPreferenceKey): Boolean =
+        if (key.calculatedDefaultValue)
+            when (key) {
+                BooleanKey.NsClientNotificationsFromAlarms         -> config.NSCLIENT
+                BooleanKey.NsClientNotificationsFromAnnouncements  -> config.NSCLIENT
+                BooleanKey.NsClientLogAppStart                     -> config.APS
+                BooleanKey.NsClientCreateAnnouncementsFromErrors   -> config.APS
+                BooleanKey.NsClientCreateAnnouncementsFromCarbsReq -> config.APS
+                else                                               -> error("Unsupported default value calculation")
+            }
+        else key.defaultValue
+
+    private fun calculatePreference(key: DoublePreferenceKey): Double =
         limit(key, when (key) {
-            DoubleKey.ApsMaxBasal -> profileFunction.get().getProfile()?.getMaxDailyBasal()?.let { it * 3 } ?: key.defaultValue
+            DoubleKey.ApsMaxBasal  -> profileFunction.get().getProfile()?.getMaxDailyBasal()?.let { it * 3 } ?: key.defaultValue
             DoubleKey.ApsSmbMaxIob -> recentMaxBolus() + (profileFunction.get().getProfile()?.getMaxDailyBasal()?.let { it * 3 } ?: key.defaultValue)
             DoubleKey.ApsAmaMaxIob -> profileFunction.get().getProfile()?.getMaxDailyBasal()?.let { it * 3 } ?: key.defaultValue
-            else -> error("Unsupported key calculation")
+            else                   -> error("Unsupported key calculation")
         })
 
-    private fun limit(key: DoubleKey, calculated: Double) = min(key.max, max(key.min, calculated))
+    private fun limit(key: DoublePreferenceKey, calculated: Double) = min(key.max, max(key.min, calculated))
     private fun recentMaxBolus(): Double =
         persistenceLayer
             .getBolusesFromTime(dateUtil.now() - T.days(7).msecs(), true)

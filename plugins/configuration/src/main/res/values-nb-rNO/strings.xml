@@ -26,12 +26,10 @@
     <string name="master_password_summary">Hovedpassordet brukes for å beskytte backup og tilpasse enkelte sikkerhetsinnstillinger i appen. Husk passordet eller lagre det på et trygt sted.</string>
     <string name="current_master_password">Nåværende hovedpassord</string>
     <string name="common_values">Bruk verdiene for det største måltidet du normalt spiser\n</string>
-    <string name="syncinfotext">Synkroniser data til skyen. Du kan hoppe over denne delen nå, men du vil ikke kunne gjennomføre opplæringsmålene før du satte opp Nightscout eller Tidepool-klienten.</string>
+    <string name="syncinfotext">Synkroniser data til skyen. Du kan hoppe over denne delen nå, men du vil ikke kunne gjennomføre opplæringsmålene før du setter opp Nightscout- eller Tidepool-klienten.</string>
     <string name="status">Status:</string>
     <string name="patient_name">Pasientnavn</string>
     <string name="patient_name_summary">Angi pasientnavn eller kallenavn for å kunne skille mellom flere oppsett</string>
-    <string name="privacy_settings">Personverninnstillinger</string>
-    <string name="privacy_summary">Du kan oppgi valgfri e-postadresse hvis du ønsker å bli varslet om krasj. Dette er ikke en automatisert tjeneste. Du vil bli kontaktet av utviklere ved farlige hendelser.</string>
     <string name="diawarning">Husk: nye insulinprofiler krever en DIA på minst 5t. DIA 5-6t på ny profil er lik DIA 3t på gamle insulinprofiler.</string>
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Gjør profilbytte</string>

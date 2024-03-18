@@ -22,7 +22,7 @@
     <string name="pumpdisconnect_whattodo">Hva skal gjøres når du kobler pumpen fra kroppen din?</string>
     <string name="pumpdisconnect_unnecessary">Dette er unødvendig siden insulin ikke vil bli levert hvis pumpen er fysisk frakoblet.</string>
     <string name="pumpdisconnect_missinginsulin">Det hjelper AndroidAPS å forstå at ingen insulin ble levert mens pumpen var fysisk frakoblet.</string>
-    <string name="pumpdisconnect_notstop">Det stopper ikke tilførselen av insulin hvis pumpen forblir koblet til kroppen din.</string>
+    <string name="pumpdisconnect_notstop">Det stopper ikke levering av insulin hvis pumpen forblir koblet til kroppen din.</string>
     <string name="pumpdisconnect_openloop">Det vil sette AndroidAPS i åpen loop modus.</string>
     <string name="pumpdisconnect_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#other-settings</string>
     <string name="objectives_label">AAPS innstillinger</string>
@@ -44,7 +44,7 @@
     <string name="noisycgm_pause">Deaktiver lukket loop for å unngå mulig over- eller underdosering.</string>
     <string name="noisycgm_replacesensor">Bytt alltid ut støyete eller unøyaktige sensorer.</string>
     <string name="noisycgm_checksmoothing">Kontroller at din CGM app leverer glattede data.</string>
-    <string name="noisycgm_hint1">https://wiki.aaps.app/en/latest/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#smoothing-blood-glucose-data</string>
+    <string name="noisycgm_hint1">https://wiki.aaps.app/en/latest/Usage/Smoothing-Blood-Glucose-Data.html#smoothing-blood-glucose-data</string>
     <string name="exerciseprofile_label">Trening og profiler</string>
     <string name="exerciseprofile_whattodo">Hvordan kan du bruke profiler for å hjelpe systemet med å håndtere treninger?</string>
     <string name="exerciseprofile_switchprofilebelow100">Gjør et profilbytte til mindre enn 100%.</string>
@@ -129,7 +129,7 @@
     <string name="wrongcarbs_addinsulin">Gi insulinbolus ved å bruke prime funksjonen for infusjonssettet.</string>
     <string name="wrongcarbs_donothing">Gjør ingenting - AndroidAPS vil gjøre nødvendige justeringer.</string>
     <string name="wrongcarbs_bolus">Gi bolus ved hjelp av Insulin knappen på hjem/oversikts siden.</string>
-    <string name="wronginsulin_label">Feil i insulin levering/registrering</string>
+    <string name="wronginsulin_label">Feil i insulinlevering/registrering</string>
     <string name="wronginsulin_whattodo">Hva ska du gjøre hvis du har fått mindre insulin enn hva pumpens historikk viser, f.eks. på grunn av okklusjon, feil med kanyle eller om du har glemt å koble på pumpen etter en dusj?</string>
     <string name="wronginsulin_careportal">Fjern insulindata fra Nightscout slik at det slettes fra pumpens historikk.</string>
     <string name="wronginsulin_compare">Sammenlign verdiene i AndroidAPS og pumpehistorikken (hvis pumpen støtter dette).</string>
@@ -174,9 +174,9 @@
     <string name="nsclient_fullcontrol">AAPSClient som brukes som ekstern følger app vil både overvåke og gi full kontroll over AAPS.</string>
     <string name="nsclient_hint1">https://wiki.aaps.app/en/latest/Children/Children.html</string>
     <string name="isf_label_exam">Insulinsensitivitetsfaktor (ISF)</string>
-    <string name="isf_increasingvalue">Økte ISF-verdiene vil føre til levering av mer insulin for å dekke opp en viss mengde karbohydrater.</string>
-    <string name="isf_decreasingvalue">Redusering av ISF verdien vil føre til mer insulintilførsel for å korrigere et blodsukker som ligger over målverdien.</string>
-    <string name="isf_noeffect">Å øke eller senke ISF verdien har ingen effekt på insulintilførselen når blodsukkeret er lavere enn målverdien.</string>
+    <string name="isf_increasingvalue">Økte ISF-verdier vil føre til levering av mer insulin for å dekke opp en viss mengde karbohydrater.</string>
+    <string name="isf_decreasingvalue">Redusering av ISF-verdien vil føre til mer insulinlevering for å korrigere et blodsukker som ligger over målverdien.</string>
+    <string name="isf_noeffect">Å øke eller senke ISF-verdien har ingen effekt på insulinleveringen når blodsukkeret er lavere enn målverdien.</string>
     <string name="isf_preferences">ISF skal angis i dine AndroidAPS innstillinger.</string>
     <string name="isf_profile">Å endre ISF verdien i din profil er tilstrekkelig for å ta i bruk endringen.</string>
     <string name="isf_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>

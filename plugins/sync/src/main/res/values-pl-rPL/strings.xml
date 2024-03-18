@@ -100,7 +100,6 @@
     <string name="not_connected">Nie połączono</string>
     <string name="read_only">Tylko do odczytu</string>
     <string name="working">Pracuje</string>
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>
@@ -123,7 +122,6 @@
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Połączenie z urządzeniem Garmin (Fenix, Edge, …)</string>
-    <string name="key_garmin_settings">Ustawienia Garmin</string>
     <!--    Wear-->
     <string name="wear_shortname">WEAR</string>
     <string name="description_wear">Monitoruj i steruj AAPS używając zegarka z WearOS.</string>

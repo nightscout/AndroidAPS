@@ -8,7 +8,6 @@ import androidx.work.workDataOf
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TrendArrow
-import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Sources
@@ -16,7 +15,7 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.receivers.Intents
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
@@ -35,12 +34,12 @@ import kotlin.math.round
 class XdripSourcePlugin @Inject constructor(
     rh: ResourceHelper,
     aapsLogger: AAPSLogger
-) : PluginBase(
+) : AbstractBgSourceWithSensorInsertLogPlugin(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
         .pluginIcon((app.aaps.core.objects.R.drawable.ic_blooddrop_48))
-        .preferencesId(R.xml.pref_dexcom)
+        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .pluginName(R.string.source_xdrip)
         .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_source_xdrip),

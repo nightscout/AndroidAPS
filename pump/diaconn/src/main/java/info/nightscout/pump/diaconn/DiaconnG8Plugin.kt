@@ -9,7 +9,6 @@ import android.text.format.DateFormat
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import app.aaps.core.data.model.BS
-import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
@@ -23,6 +22,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
+import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.DetailedBolusInfo

@@ -100,7 +100,6 @@
     <string name="not_connected">לא מחובר</string>
     <string name="read_only">לקריאה בלבד</string>
     <string name="working">עובד</string>
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>
@@ -121,7 +120,8 @@
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">חיבור למכשיר Garmin</string>
-    <string name="key_garmin_settings">הגדרות Garmin</string>
+    <string name="garmin_local_http_server_port">פורט שרת HTTP מקומי</string>
+    <string name="garmin_local_http_server">שרת HTTP מקומי</string>
     <!--    Wear-->
     <string name="description_wear">ניטור ושליטה ב-AndroidAPS באמצעות שעון WearOS.</string>
     <string name="no_watch_connected">(השעון לא מחובר)</string>
@@ -184,4 +184,5 @@
     <string name="tdd_line">%1$.2fיח\' %1$.0f%</string>
     <string name="today">היום</string>
     <string name="weighted">משוקלל</string>
+    <string name="full_xdrip_sync_comment">בטוחים שברצונכם לבצע סנכרון מלא? סנכרון מלא ייקח שעות מרובות ובינתיים לא תוכלו לראות נתונים חדשים ב-xDrip+.</string>
 </resources>

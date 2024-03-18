@@ -14,9 +14,10 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.SafeParse
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.objects.wizard.QuickWizardEntry
 import app.aaps.core.ui.toast.ToastUtils
@@ -36,9 +37,9 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var quickWizard: QuickWizard
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var sp: SP
     @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var ctx: Context
+    @Inject lateinit var preferences: Preferences
 
     var position = -1
     private var fromSeconds: Int = 0
@@ -73,7 +74,7 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
             position = bundle.getInt("position", -1)
         }
         val entry = if (position == -1) quickWizard.newEmptyItem() else quickWizard[position]
-        if (sp.getBoolean(app.aaps.core.utils.R.string.key_wear_control, false)) {
+        if (preferences.get(BooleanKey.WearControl)) {
             binding.devicePhoneCheckbox.visibility = View.VISIBLE
             binding.deviceWatchCheckbox.visibility = View.VISIBLE
             binding.devicePhoneImage.visibility = View.VISIBLE
@@ -85,7 +86,7 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
             binding.deviceWatchImage.visibility = View.GONE
         }
 
-        if (sp.getBoolean(app.aaps.core.keys.R.string.key_use_superbolus, false)) {
+        if (preferences.get(BooleanKey.OverviewUseSuperbolus)) {
             binding.useSuperBolus.visibility = View.VISIBLE
         } else {
             binding.useSuperBolus.visibility = View.GONE

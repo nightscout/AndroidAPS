@@ -1,8 +1,13 @@
 package app.aaps.plugins.aps.openAPSAMA
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import androidx.preference.PreferenceCategory
+import androidx.preference.PreferenceManager
+import androidx.preference.PreferenceScreen
 import app.aaps.core.data.aps.SMBDefaults
 import app.aaps.core.data.model.GlucoseUnit
-import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.APSResult
@@ -21,6 +26,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -29,8 +35,10 @@ import app.aaps.core.interfaces.rx.events.EventAPSCalculationFinished
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.Round
+import app.aaps.core.keys.AdaptiveIntentPreference
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.IntentKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.aps.DetermineBasalResult
 import app.aaps.core.objects.constraints.ConstraintObject
@@ -39,6 +47,8 @@ import app.aaps.core.objects.extensions.getPassedDurationToTimeInMinutes
 import app.aaps.core.objects.extensions.plannedRemainingMinutes
 import app.aaps.core.objects.extensions.target
 import app.aaps.core.utils.MidnightUtils
+import app.aaps.core.validators.AdaptiveDoublePreference
+import app.aaps.core.validators.AdaptiveSwitchPreference
 import app.aaps.plugins.aps.OpenAPSFragment
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
@@ -76,7 +86,7 @@ class OpenAPSAMAPlugin @Inject constructor(
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_generic_icon)
         .pluginName(R.string.openapsama)
         .shortName(R.string.oaps_shortname)
-        .preferencesId(R.xml.pref_openapsama)
+        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .preferencesVisibleInSimpleMode(false)
         .showInList(config.APS)
         .description(R.string.description_ama),
@@ -293,4 +303,43 @@ class OpenAPSAMAPlugin @Inject constructor(
     // Needed only for dynamic ISF so far
     override fun configuration(): JSONObject = JSONObject()
     override fun applyConfiguration(configuration: JSONObject) {}
+
+    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
+        if (requiredKey != null && requiredKey != "absorption_ama_advanced") return
+        val category = PreferenceCategory(context)
+        parent.addPreference(category)
+        category.apply {
+            key = "openapsma_settings"
+            title = rh.gs(R.string.openapsama)
+            initialExpandedChildrenCount = 0
+            addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.ApsMaxBasal, dialogMessage = R.string.openapsma_max_basal_summary, title = R.string.openapsma_max_basal_title))
+            addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.ApsAmaMaxIob, dialogMessage = R.string.openapsma_max_iob_summary, title = R.string.openapsma_max_iob_title))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.ApsUseAutosens, title = R.string.openapsama_use_autosens))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.ApsAmaAutosensAdjustTargets, summary = R.string.openapsama_autosens_adjust_targets_summary, title = R.string.openapsama_autosens_adjust_targets))
+            addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.ApsAmaMin5MinCarbsImpact, dialogMessage = R.string.openapsama_min_5m_carb_impact_summary, title = R.string.openapsama_min_5m_carb_impact))
+            addPreference(preferenceManager.createPreferenceScreen(context).apply {
+                key = "absorption_ama_advanced"
+                title = rh.gs(app.aaps.core.ui.R.string.advanced_settings_title)
+                addPreference(
+                    AdaptiveIntentPreference(
+                        ctx = context,
+                        intentKey = IntentKey.ApsLinkToDocs,
+                        intent = Intent().apply { action = Intent.ACTION_VIEW; data = Uri.parse(rh.gs(R.string.openapsama_link_to_preference_json_doc)) },
+                        summary = R.string.openapsama_link_to_preference_json_doc_txt
+                    )
+                )
+                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.ApsAlwaysUseShortDeltas, summary = R.string.always_use_short_avg_summary, title = R.string.always_use_short_avg))
+                addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.ApsMaxDailyMultiplier, dialogMessage = R.string.openapsama_max_daily_safety_multiplier_summary, title = R.string.openapsama_max_daily_safety_multiplier))
+                addPreference(
+                    AdaptiveDoublePreference(
+                        ctx = context,
+                        doubleKey = DoubleKey.ApsMaxCurrentBasalMultiplier,
+                        dialogMessage = R.string.openapsama_current_basal_safety_multiplier_summary,
+                        title = R.string.openapsama_current_basal_safety_multiplier
+                    )
+                )
+                addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.ApsAmaBolusSnoozeDivisor, dialogMessage = R.string.openapsama_bolus_snooze_dia_divisor_summary, title = R.string.openapsama_bolus_snooze_dia_divisor))
+            })
+        }
+    }
 }
