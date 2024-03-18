@@ -131,26 +131,8 @@
     <string name="a11y_only_on_watch">само на часовник</string>
     <string name="a11y_only_on_phone">само на смартфон</string>
     <string name="quickwizard_settings">Настройки Бърз достъп</string>
-    <string name="overview_edit_quickwizard_button_text">Текст на бутона:</string>
-    <string name="overview_edit_quickwizard_carbs">Вълехидрати:</string>
     <string name="overview_edit_quickwizard_valid">Валиден:</string>
     <string name="overview_edit_quickwizard_list_activity_add">Добави</string>
     <string name="overview_quickwizard_item_edit_button">Редактирай</string>
-    <string name="overview_edit_quickwizard_show_on_device">Покажи на устройството:</string>
-    <string name="overview_edit_quickwizard_use_bg">Изчисляване на КЗ</string>
-    <string name="overview_edit_quickwizard_use_bolus_iob">Изчисляване на болус спрямо остатъчен инсулин</string>
-    <string name="overview_edit_quickwizard_use_basal_iob">Изчисляване на базал спрямо остатъчен инсулин</string>
-    <string name="overview_edit_quickwizard_use_trend">Изчисляване на тенденцията</string>
-    <string name="overview_edit_quickwizard_use_superbolus">Изчисляване на суперболус</string>
-    <string name="overview_edit_quickwizard_percentage">Проценти</string>
-    <string name="device_all">Всички</string>
-    <string name="device_phone">Смартфон</string>
-    <string name="device_watch">Часовник</string>
-    <string name="positive_only">Само положителни</string>
-    <string name="negative_only">Само отрицателни</string>
-    <string name="overview_editquickwizard_usecob">Изчисляване на остатъчни въглехидрати</string>
-    <string name="overview_editquickwizard_usetemptarget">Изчисляване на временни целеви стойности</string>
-    <string name="overview_editquickwizard_usepercentage">Изчисляване на проценти</string>
-    <string name="app_default">По подразбиране на приложението</string>
     <string name="a11y_drag_and_drop_handle">опция \"плъзни и пусни\"</string>
 </resources>
