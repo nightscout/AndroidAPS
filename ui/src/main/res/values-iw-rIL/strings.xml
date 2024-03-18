@@ -131,26 +131,8 @@
     <string name="a11y_only_on_watch">על השעון בלבד</string>
     <string name="a11y_only_on_phone">על הטלפון בלבד</string>
     <string name="quickwizard_settings">הגדרות אשף מהיר</string>
-    <string name="overview_edit_quickwizard_button_text">טקסט הלחצן:</string>
-    <string name="overview_edit_quickwizard_carbs">פחמימות:</string>
     <string name="overview_edit_quickwizard_valid">תקין:</string>
     <string name="overview_edit_quickwizard_list_activity_add">הוספה</string>
     <string name="overview_quickwizard_item_edit_button">עריכה</string>
-    <string name="overview_edit_quickwizard_show_on_device">הצג רשומה על המכשיר:</string>
-    <string name="overview_edit_quickwizard_use_bg">חישוב רמת הסוכר</string>
-    <string name="overview_edit_quickwizard_use_bolus_iob">חישוב אינסולין פעיל של בולוס</string>
-    <string name="overview_edit_quickwizard_use_basal_iob">חישוב אינסולין פעיל של בזאלי</string>
-    <string name="overview_edit_quickwizard_use_trend">חישוב מגמה</string>
-    <string name="overview_edit_quickwizard_use_superbolus">חישוב סופר בולוס</string>
-    <string name="overview_edit_quickwizard_percentage">אחוזים</string>
-    <string name="device_all">הכול</string>
-    <string name="device_phone">טלפון</string>
-    <string name="device_watch">שעון</string>
-    <string name="positive_only">חיובי בלבד</string>
-    <string name="negative_only">שלילי בלבד</string>
-    <string name="overview_editquickwizard_usecob">חישוב פחמימות פעילות (COB)</string>
-    <string name="overview_editquickwizard_usetemptarget">חישוב ערך מטרה זמני</string>
-    <string name="overview_editquickwizard_usepercentage">חישוב אחוזים</string>
-    <string name="app_default">ברירת המחדל של היישום</string>
     <string name="a11y_drag_and_drop_handle">לחצן גרירה</string>
 </resources>
