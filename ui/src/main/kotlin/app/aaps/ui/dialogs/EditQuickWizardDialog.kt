@@ -86,7 +86,7 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
             binding.deviceWatchImage.visibility = View.GONE
         }
 
-        if (preferences.get(BooleanKey.OverviewUseSuperbolus)) {
+        if (preferences.get(BooleanKey.OverviewUseSuperBolus)) {
             binding.useSuperBolus.visibility = View.VISIBLE
         } else {
             binding.useSuperBolus.visibility = View.GONE
