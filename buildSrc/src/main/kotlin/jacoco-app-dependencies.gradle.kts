@@ -117,11 +117,11 @@ fun Project.registerCodeCoverageTask(
         description = "Generate Jacoco coverage reports on the ${sourceName.replaceFirstChar(Char::titlecase)} build."
 
         val javaDirectories = fileTree(
-            "${project.layout.buildDirectory}/intermediates/classes/${sourcePath}"
+            "${project.buildDir}/intermediates/classes/${sourcePath}"
         ) { exclude(excludedFiles) }
 
         val kotlinDirectories = fileTree(
-            "${project.layout.buildDirectory}/tmp/kotlin-classes/${sourcePath}"
+            "${project.buildDir}/tmp/kotlin-classes/${sourcePath}"
         ) { exclude(excludedFiles) }
 
         val coverageSrcDirectories = listOf(
@@ -137,7 +137,7 @@ fun Project.registerCodeCoverageTask(
         additionalClassDirs.setFrom(files(coverageSrcDirectories))
         sourceDirectories.setFrom(files(coverageSrcDirectories))
         executionData.setFrom(
-            files("${project.layout.buildDirectory}/jacoco/${testTaskName}.exec")
+            files("${project.buildDir}/jacoco/${testTaskName}.exec")
         )
 
         reports {
