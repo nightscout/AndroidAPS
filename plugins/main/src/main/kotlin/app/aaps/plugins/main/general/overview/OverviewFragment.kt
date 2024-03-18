@@ -51,6 +51,7 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
+import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -152,6 +153,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var bgQualityCheck: BgQualityCheck
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var decimalFormatter: DecimalFormatter
+    @Inject lateinit var commandQueue: CommandQueue
 
     private val disposable = CompositeDisposable()
 
@@ -531,7 +533,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                         OKDialog.show(it, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), rh.gs(R.string.constraints_violation) + "\n" + rh.gs(R.string.change_your_input))
                         return
                     }
-                    wizard.confirmAndExecute(it)
+                    wizard.confirmAndExecute(it, quickWizardEntry)
                 }
             }
         }

@@ -28,55 +28,58 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
+                android:layout_marginHorizontal="48dp"
                 android:text="@string/quickwizard_settings"
                 android:textAlignment="center"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
         </RelativeLayout>
 
-        <TextView
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:labelFor="@+id/button_edit"
-            android:text="@string/overview_edit_quickwizard_button_text"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+            android:layout_marginHorizontal="10dp"
+            android:hint="@string/overview_edit_quickwizard_button_text">
 
-        <EditText
-            android:id="@+id/button_edit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:autofillHints="name"
-            android:ems="10"
-            android:inputType="text" />
+            <EditText
+                android:id="@+id/button_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="name"
+                android:gravity="center"
+                android:hint="@string/overview_edit_quickwizard_button_text"
+                android:inputType="text" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:labelFor="@+id/carbs_edit"
-            android:text="@string/overview_edit_quickwizard_carbs"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-        <EditText
-            android:id="@+id/carbs_edit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:autofillHints="number"
-            android:ems="10"
-            android:inputType="numberDecimal" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="7dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="@string/overview_edit_quickwizard_valid"
+            <ImageView
+                android:id="@+id/device_phone_image"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:adjustViewBounds="false"
+                android:contentDescription="@string/a11y_only_on_phone"
+                android:cropToPadding="false"
+                android:scaleType="fitStart"
+                app:srcCompat="@drawable/ic_smartphone" />
+
+            <CheckBox
+                android:id="@+id/device_phone_checkbox"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:padding="10dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="30dp" />
 
             <TextView
                 android:id="@+id/from"
@@ -84,7 +87,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:gravity="center_horizontal|center_vertical"
-                android:padding="10dp"
+                android:padding="1dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 tools:text="08:20pm" />
 
@@ -102,273 +105,454 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:gravity="center_horizontal|center_vertical"
-                android:padding="10dp"
+                android:padding="1dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 tools:text="08:20pm" />
 
+            <View
+                android:layout_width="2dp"
+                android:layout_height="30dp" />
+
+            <CheckBox
+                android:id="@+id/device_watch_checkbox"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:padding="10dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <ImageView
+                android:id="@+id/device_watch_image"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:adjustViewBounds="false"
+                android:contentDescription="@string/a11y_only_on_phone"
+                android:cropToPadding="false"
+                android:scaleType="fitStart"
+                app:srcCompat="@drawable/ic_watch" />
+
+
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/device_label"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/overview_edit_quickwizard_show_on_device"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+        <TableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginHorizontal="10dp">
 
-        <RadioGroup
-            android:id="@+id/device"
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="1dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/carbs_input_label"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:labelFor="@id/carbs_input"
+                        android:minWidth="100dp"
+                        android:paddingVertical="10dp"
+                        android:paddingEnd="2dp"
+                        android:text="@string/carbs"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                </LinearLayout>
+
+                <app.aaps.core.ui.elements.NumberPicker
+                    android:id="@+id/carbs_input"
+                    android:layout_width="130dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:layout_marginVertical="3dp"
+                    app:customContentDescription="@string/carbs" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="start"
+                    android:padding="10dp"
+                    android:text="@string/shortgramm"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="1dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/carbs_correction_label"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:labelFor="@id/correction_input"
+                        android:minWidth="100dp"
+                        android:paddingVertical="10dp"
+                        android:paddingEnd="2dp"
+                        android:text="@string/treatments_wizard_correction_label"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                </LinearLayout>
+
+                <app.aaps.core.ui.elements.NumberPicker
+                    android:id="@+id/correction_input"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:layout_marginVertical="3dp"
+                    app:customContentDescription="@string/a11_correction_units" />
+
+                <TextView
+                    android:id="@+id/correction_unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="start"
+                    android:padding="10dp"
+                    android:text="%"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/carb_time_input_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:autoSizeMaxTextSize="20sp"
+                        android:autoSizeMinTextSize="8sp"
+                        android:autoSizeTextType="uniform"
+                        android:gravity="center_vertical"
+                        android:lines="1"
+                        android:maxLength="12"
+                        android:paddingEnd="2dp"
+                        android:text="@string/carb_time_label"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textStyle="bold" />
+
+                    <CheckBox
+                        android:id="@+id/alarm"
+                        android:layout_width="53dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_gravity="center_vertical"
+                        android:checked="false"
+                        android:contentDescription="@string/a11y_set_carb_timer"
+                        android:drawableEnd="@drawable/ic_access_alarm_24dp"
+                        android:layoutDirection="ltr" />
+
+                </LinearLayout>
+
+                <app.aaps.core.ui.elements.NumberPicker
+                    android:id="@+id/carb_time_input"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:layout_marginVertical="3dp"
+                    app:contentDescription="carb time" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="start"
+                    android:padding="5dp"
+                    android:text="@string/unit_minute_short"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+
+            </TableRow>
+
+        </TableLayout>
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="15dp">
+            android:gravity="center"
+            android:paddingTop="9dp"
+            android:text="@string/overview_edit_quickwizard_useforcalculation"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
-            <RadioButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/device_all" />
-
-            <RadioButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/device_phone" />
-
-            <RadioButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/device_watch" />
-
-        </RadioGroup>
-
-        <TextView
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/overview_edit_quickwizard_use_bg"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+            android:layout_gravity="center_horizontal"
+            android:layout_marginHorizontal="10dp"
+            android:minWidth="220dp"
+            android:orientation="vertical">
 
-        <RadioGroup
-            android:id="@+id/use_bg"
-            android:layout_width="match_parent"
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/use_bg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="5dp"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/bg_label"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                <CheckBox
+                    android:id="@+id/use_temp_target"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="start|center_vertical"
+                    android:lines="1"
+                    android:text="@string/tt_label"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/use_iob"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="5dp"
+                    android:gravity="start|center_vertical"
+                    android:lines="1"
+                    android:text="@string/iob"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                <CheckBox
+                    android:id="@+id/use_positive_iob_only"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="start|center_vertical"
+                    android:lines="1"
+                    android:text="@string/overview_edit_quickwizard_use_positive_iob_only"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+            </LinearLayout>
+
+            <CheckBox
+                android:id="@+id/use_cob"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="start|center_vertical"
+                android:lines="1"
+                android:text="@string/treatments_wizard_cob_label"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+
+            <CheckBox
+                android:id="@+id/use_trend_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="start|center_vertical"
+                android:text="@string/bg_trend_label"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="30dp"
+                android:orientation="vertical">
+
+
+                <Spinner
+                    android:id="@+id/use_trend"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/yes_no_positiveonly_negativeonly"
+                    android:gravity="start" />
+
+                <View
+                    android:id="@+id/use_trend_subline"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginStart="6dp"
+                    android:background="@android:color/darker_gray"
+                    android:paddingStart="2dp" />
+            </LinearLayout>
+
+
+            <CheckBox
+                android:id="@+id/use_super_bolus"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="start|center_vertical"
+                android:lines="1"
+                android:text="@string/overview_edit_quickwizard_superbolus"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <CheckBox
+                android:id="@+id/use_ecarbs"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="start|center_vertical"
+                android:lines="1"
+                android:text="@string/additional_ecarbs"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+        </LinearLayout>
+
+        <TableLayout
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_margin="15dp">
+            android:layout_gravity="center_horizontal"
+            android:layout_marginHorizontal="10dp">
 
-            <RadioButton
+            <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/yes" />
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="2dp">
 
-            <RadioButton
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/time_label"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:minWidth="100dp"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="20dp"
+                        android:text="@string/time_offset"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textStyle="bold" />
+
+
+                </LinearLayout>
+
+                <app.aaps.core.ui.elements.MinutesNumberPicker
+                    android:id="@+id/time"
+                    android:layout_width="130dp"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="2dp"
+                    app:customContentDescription="@string/time_offset" />
+
+                <TextView
+                    android:id="@+id/min_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="start"
+                    android:padding="10dp"
+                    android:text="@string/unit_minute_short"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            </TableRow>
+
+            <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/no" />
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="2dp">
 
-        </RadioGroup>
+                <TextView
+                    android:id="@+id/duration_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:minWidth="100dp"
+                    android:padding="10dp"
+                    android:text="@string/duration_label"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/overview_edit_quickwizard_use_bolus_iob"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                <app.aaps.core.ui.elements.NumberPicker
+                    android:id="@+id/duration"
+                    android:layout_width="51dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="2dp"
+                    app:customContentDescription="@string/duration_label" />
 
-        <RadioGroup
-            android:id="@+id/use_bolus_iob"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="15dp">
+                <TextView
+                    android:id="@+id/h_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="start"
+                    android:padding="10dp"
+                    android:text="@string/shorthour"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
-            <RadioButton
+            </TableRow>
+
+            <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/yes" />
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical">
 
-            <RadioButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/no" />
+                <TextView
+                    android:id="@+id/carbs2_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:minWidth="100dp"
+                    android:padding="10dp"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:text="@string/carbs"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textStyle="bold" />
 
-        </RadioGroup>
+                <app.aaps.core.ui.elements.NumberPicker
+                    android:id="@+id/carbs2"
+                    android:layout_width="130dp"
+                    android:layout_height="40dp"
+                    app:customContentDescription="@string/carbs" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/overview_edit_quickwizard_use_basal_iob"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                <TextView
+                    android:id="@+id/g_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:padding="10dp"
+                    android:text="@string/shortgramm"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
-        <RadioGroup
-            android:id="@+id/use_basal_iob"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="15dp">
-
-            <RadioButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/yes" />
-
-            <RadioButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/no" />
-
-            <RadioButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/positive_only" />
-
-            <RadioButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/negative_only" />
-
-        </RadioGroup>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/overview_editquickwizard_usecob"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-        <RadioGroup
-            android:id="@+id/use_cob"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="15dp">
-
-            <RadioButton
-                android:id="@+id/use_cob_yes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/yes" />
-
-            <RadioButton
-                android:id="@+id/use_cob_no"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/no" />
-
-        </RadioGroup>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/overview_edit_quickwizard_use_trend"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-        <RadioGroup
-            android:id="@+id/use_trend"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="15dp">
-
-            <RadioButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/yes" />
-
-            <RadioButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/no" />
-
-            <RadioButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/positive_only" />
-
-            <RadioButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/negative_only" />
-
-        </RadioGroup>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/overview_edit_quickwizard_use_superbolus"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-        <RadioGroup
-            android:id="@+id/use_super_bolus"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="15dp">
-
-            <RadioButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/yes" />
-
-            <RadioButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/no" />
-
-        </RadioGroup>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/overview_editquickwizard_usetemptarget"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-        <RadioGroup
-            android:id="@+id/use_temp_target"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="15dp">
-
-            <RadioButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/yes" />
-
-            <RadioButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/no" />
-
-        </RadioGroup>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/overview_editquickwizard_usepercentage"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-        <RadioGroup
-            android:id="@+id/use_percentage"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="15dp">
-
-            <RadioButton
-                android:id="@+id/use_percentage_default"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/app_default" />
-
-            <RadioButton
-                android:id="@+id/use_percentage_custom"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/custom" />
-
-        </RadioGroup>
-
-        <TextView
-            android:id="@+id/percentage_label"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/overview_edit_quickwizard_percentage"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-        <EditText
-            android:id="@+id/percentage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:importantForAutofill="no"
-            android:inputType="number"
-            android:maxLength="3" />
+            </TableRow>
+        </TableLayout>
 
         <include
             android:id="@+id/okcancel"
