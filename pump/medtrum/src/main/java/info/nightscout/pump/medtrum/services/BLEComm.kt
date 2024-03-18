@@ -380,9 +380,7 @@ class BLEComm @Inject internal constructor(
             mBluetoothGatt?.discoverServices()
         } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
             if (isConnecting) {
-                // When we are disconnected during connecting, we reset the device address to force a new scan
-                aapsLogger.warn(LTag.PUMPBTCOMM, "Disconnected while connecting! Reset device address")
-                mDevice = null
+                aapsLogger.warn(LTag.PUMPBTCOMM, "Disconnected while connecting!")
                 // Wait a bit before retrying
                 SystemClock.sleep(2000)
             }
