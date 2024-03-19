@@ -131,8 +131,23 @@
     <string name="a11y_only_on_watch">sólo en reloj</string>
     <string name="a11y_only_on_phone">sólo en teléfono</string>
     <string name="quickwizard_settings">Configuración del asistente de configuración</string>
+    <string name="overview_edit_quickwizard_button_text">Botón texto</string>
+    <string name="overview_edit_quickwizard_carbs">Carbohidratos</string>
     <string name="overview_edit_quickwizard_valid">Válido:</string>
     <string name="overview_edit_quickwizard_list_activity_add">Añadir</string>
     <string name="overview_quickwizard_item_edit_button">Editar</string>
+    <string name="overview_edit_quickwizard_use_positive_iob_only">Sólo IOB positiva</string>
+    <string name="overview_edit_quickwizard_superbolus">Superbolo</string>
+    <string name="overview_edit_quickwizard_percentage_to_high">Porcenteje demasiado alto</string>
+    <string name="overview_editquickwizard_percentage">Porcentaje</string>
     <string name="a11y_drag_and_drop_handle">arrastrar y soltar</string>
+    <string name="additional_ecarbs">Añadir eCarbs</string>
+    <string name="overview_edit_quickwizard_useforcalculation">Usado para el cálculo:</string>
+    <string name="constraints_violation">Violación de restricciones</string>
+    <string name="change_your_input">Cambiar datos de entrada</string>
+    <string-array name="yes_no_positiveonly_negativeonly">
+        <item>Ambos</item>
+        <item>Sólo positivo</item>
+        <item>Sólo negativo</item>
+    </string-array>
 </resources>
