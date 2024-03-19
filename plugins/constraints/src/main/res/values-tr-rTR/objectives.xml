@@ -68,7 +68,7 @@
     <string name="objectives_exam_learned_iob">APPS\'in sizin için iyi çalışıp çalışmadığını analiz ederseniz, AİNS grafiğini izlemek size birçok yararlı bilgi verebilir.</string>
     <string name="objectives_exam_learned_cob">AKRB hesaplaması, İDF ile Kİ arasındaki ilişkiye bağlıdır. Artan İDF veya azalan Kİ, daha uzun emilim sürelerine yol açacaktır. Ancak yüzdeli profil değiştirme, her iki değeri aynı anda değiştirir ve emilim süresi etkilenmez.</string>
     <string name="objectives_exam_learned_breadgrams">Karbonhidratların girişinde sadece grama izin verilir.</string>
-    <string name="objectives_exam_learned_ecarbs">E-karbonhidratlar, pompa dünyasında yayma bolusun yerine geçer.</string>
+    <string name="objectives_exam_learned_ecarbs">Y-karbonhidratlar, pompa dünyasında yayma bolusun yerine geçer.</string>
     <string name="objectives_exam_learned_nsclient">Uzaktan izleme ve kontrol mümkündür, ancak tüm özelliklerin uzaktan kullanılabilir olması gerekmez.</string>
     <string name="answerdisabledto">Yanıtlama devre dışı bırakıldı: %1$s</string>
     <string name="wronganswer">Yanlış Cevap!</string>
