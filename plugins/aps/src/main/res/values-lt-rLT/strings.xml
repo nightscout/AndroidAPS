@@ -59,16 +59,16 @@
     <string name="enable_uam_summary">Nedeklaruoto maisto (NDM) aptikimas</string>
     <string name="enable_smb_always">Įjungti SMB visada</string>
     <string name="enable_smb_always_summary">Leisti SMB visada, nepriklausomai nuo bolusų. Įmanoma tik naudojant patikimų, filtruotų glikemijos duomenų šaltinį, pvz.: Dexcom.</string>
-    <string name="enable_smb_after_carbs">Įjungti SMB su angliavandeniais</string>
-    <string name="enable_smb_after_carbs_summary">Leisti SMB iki 6 val po angliavandenių įvedimo, net jei AAO yra 0. Įmanoma tik naudojant patikimų, filtruotų glikemijos duomenų šaltinį, pvz.: Dexcom</string>
+    <string name="enable_smb_after_carbs">Įjungti SMB po angliavandenių</string>
+    <string name="enable_smb_after_carbs_summary">Leisti SMB iki 6 val. po angliavandenių įvedimo, net jei AAO yra 0. Įmanoma tik naudojant patikimų, filtruotų glikemijos duomenų šaltinį, pvz.: Dexcom</string>
     <string name="enable_smb_with_cob">Įjungti SMB su AAO</string>
     <string name="enable_smb_with_cob_summary">Įjungti SMB, kai yra AAO.</string>
     <string name="enable_smb_with_temp_target">Įjungti SMB su laikinais tikslais</string>
-    <string name="enable_smb_with_temp_target_summary">Įjungti SMB, kai laikinas tikslas aktyvuotas (Netrukus valgysiu, Aktyvumas)</string>
-    <string name="enable_smb_with_high_temp_target">Įjungti SMB su intensyviais laikinais tikslais</string>
-    <string name="enable_smb_with_high_temp_target_summary">Įjungti SMB, kai yra aktyvus aukštas tikslas (aktyvumas, daugiau nei 100 mg/dl arba 5,5 mmol/l)</string>
-    <string name="smb_max_minutes_summary">SMB atitinka valandinės bazės insulino kiekį, kuris gaunamas ne daugiau, kaip per</string>
-    <string name="uam_smb_max_minutes">NDM SMB maks. min.</string>
+    <string name="enable_smb_with_temp_target_summary">SMB veiks, kai laikinas tikslas aktyvuotas (Netrukus valgysiu, Aktyvumas)</string>
+    <string name="enable_smb_with_high_temp_target">SMB veiks su aukštais laikinais tikslais</string>
+    <string name="enable_smb_with_high_temp_target_summary">SMB veiks, kai nustatytas aukštas tikslas (Aktyvumas, daugiau nei 100 mg/dl arba 5,5 mmol/l)</string>
+    <string name="smb_max_minutes_summary">SMB atitinka valandinės bazės insulino kiekį, kuris gaunamas ne daugiau, kaip per tiek min.</string>
+    <string name="uam_smb_max_minutes">NDM SMB maks. minutės</string>
     <string name="uam_smb_max_minutes_summary">NDM SMB atitinka valandinės bazės insulino kiekį, kuris gaunamas ne daugiau, kaip per</string>
     <string name="carbs_req_threshold">Minimali būtinų angliavandenių priminimo riba</string>
     <string name="carbs_req_threshold_summary">Minimalus angliavandenių kiekis gramais, apie kurį reikia įspėti. Angliavandenių pasiūlymai, mažesni už šį kiekį, nėra pranešami.</string>
@@ -108,7 +108,7 @@
     <string name="loop_tbr_set_by_pump_label">Laikina bazė nustatyta pompoje</string>
     <string name="loop_smb_request_time_label">SMB užklausos laikas</string>
     <string name="loop_smb_execution_time_label">SMB įvykdymo laikas</string>
-    <string name="loop_smb_set_by_pump_label">SMB nustatyta iš pompos</string>
+    <string name="loop_smb_set_by_pump_label">SMB nustatytas pompoje</string>
     <string name="loop_open_mode_min_change">Minimalaus pokyčio užklausa [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Atviras Ciklas parodys naujų pakeitimų užklausą tik tada, kai pokytis bus didesnis nei ši vertė %. Numatytoji vertė yra 20%</string>
     <string name="fallback_smb_no_tdd">Grįžtama prie SMB. Nepakanka BPD duomenų.</string>
