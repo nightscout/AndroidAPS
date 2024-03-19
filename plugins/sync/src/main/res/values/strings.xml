@@ -203,6 +203,7 @@
     <string name="wear_infos_watchface">Infos Watchface</string>
     <string name="wear_export_watchface">Export template</string>
     <string name="wear_new_custom_watchface_exported">Custom watchface template exported</string>
+    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/en/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Resend All Data</string>
     <string name="open_settings_on_wear">Open Settings on Wear</string>
     <string name="cwf_infos_pref_locked">List of prefs locked by the Watchface</string>
