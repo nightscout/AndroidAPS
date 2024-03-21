@@ -146,6 +146,7 @@ class BLEComm @Inject internal constructor(
         } else {
             // Scan for device
             aapsLogger.debug(LTag.PUMPBTCOMM, "Scanning for device")
+            mDevice = null
             mDeviceSN = deviceSN
             startScan()
         }
