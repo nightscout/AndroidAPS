@@ -61,4 +61,5 @@
     <string name="pref_show_date">Vis dato</string>
     <string name="default_custom_watchface_comment">Standard urskive, du kan klikke på EKSPORTER MAL for å lage en mal</string>
     <string name="wear_default_watchface">Standard urskive</string>
+    <string name="wear_more_watchfaces">Flere urskiver</string>
 </resources>
