@@ -131,8 +131,21 @@
     <string name="a11y_only_on_watch">uniquement sur la montre</string>
     <string name="a11y_only_on_phone">uniquement sur le téléphone</string>
     <string name="quickwizard_settings">Paramètres de l\'Assistant Rapide</string>
+    <string name="overview_edit_quickwizard_button_text">Texte du bouton</string>
+    <string name="overview_edit_quickwizard_carbs">Glucides</string>
     <string name="overview_edit_quickwizard_valid">Valide:</string>
     <string name="overview_edit_quickwizard_list_activity_add">Ajouter</string>
     <string name="overview_quickwizard_item_edit_button">Éditer</string>
+    <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
+    <string name="overview_editquickwizard_percentage">Pourcentage</string>
     <string name="a11y_drag_and_drop_handle">glissez déposez ici</string>
+    <string name="additional_ecarbs">Ajouter eGlucides</string>
+    <string name="overview_edit_quickwizard_useforcalculation">Utiliser pour le calcul:</string>
+    <string name="constraints_violation">Violation des restrictions</string>
+    <string name="change_your_input">Changez votre entrée !</string>
+    <string-array name="yes_no_positiveonly_negativeonly">
+        <item>Les deux</item>
+        <item>Positif uniquement</item>
+        <item>Négatif uniquement</item>
+    </string-array>
 </resources>
