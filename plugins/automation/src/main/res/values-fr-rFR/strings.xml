@@ -93,8 +93,12 @@
     <string name="triggerCannulaAgeDesc">Âge de canule %1$s %2$.1f heure</string>
     <string name="triggerInsulinAgeLabel">Âge de l\'insuline</string>
     <string name="triggerInsulinAgeDesc">Âge de l\'insuline %1$s %2$.1f heure</string>
+    <string name="triggerPumpBatteryAgeLabel">Age de la pile pompe</string>
+    <string name="triggerPumpBatteryAgeDesc">Âge de la pile pompe %1$s %2$.1f heure</string>
     <string name="triggerReservoirLevelLabel">Niveau du réservoir</string>
     <string name="triggerReservoirLevelDesc">Niveau de réservoir %1$s %2$.0f</string>
+    <string name="triggerPumpBatteryLevelLabel">Niveau de la pile pompe</string>
+    <string name="triggerPumpBatteryLevelDesc">Niveau de la pile pompe %1$s %2$.0f</string>
     <string name="iob_u">IA [U]:</string>
     <string name="distance_short">Dist [m]:</string>
     <string name="recurringTime">Période répétitive</string>
