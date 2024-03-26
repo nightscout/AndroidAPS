@@ -131,26 +131,8 @@
     <string name="a11y_only_on_watch">tik laikrodyje</string>
     <string name="a11y_only_on_phone">tik telefone</string>
     <string name="quickwizard_settings">Greitojo patarėjo nustatymai</string>
-    <string name="overview_edit_quickwizard_button_text">Mygtuko tekstas:</string>
-    <string name="overview_edit_quickwizard_carbs">AV:</string>
     <string name="overview_edit_quickwizard_valid">Galioja:</string>
     <string name="overview_edit_quickwizard_list_activity_add">Pridėti</string>
     <string name="overview_quickwizard_item_edit_button">Redaguoti</string>
-    <string name="overview_edit_quickwizard_show_on_device">Rodyti įrašą įrenginyje:</string>
-    <string name="overview_edit_quickwizard_use_bg">Glikemija</string>
-    <string name="overview_edit_quickwizard_use_bolus_iob">Bolusų AIO apskaičiavimas</string>
-    <string name="overview_edit_quickwizard_use_basal_iob">Bazės AIO apskaičiavimas</string>
-    <string name="overview_edit_quickwizard_use_trend">Tendencijos apskaičiavimas</string>
-    <string name="overview_edit_quickwizard_use_superbolus">Superboluso apskaičiavimas</string>
-    <string name="overview_edit_quickwizard_percentage">Procentai</string>
-    <string name="device_all">Visi</string>
-    <string name="device_phone">Telefonas</string>
-    <string name="device_watch">Laikrodis</string>
-    <string name="positive_only">Tik teigiamas</string>
-    <string name="negative_only">Tik neigiamas</string>
-    <string name="overview_editquickwizard_usecob">AAO apskaičiavimas</string>
-    <string name="overview_editquickwizard_usetemptarget">Laikino tikslo apskaičiavimas</string>
-    <string name="overview_editquickwizard_usepercentage">Procentų apskaičiavimas</string>
-    <string name="app_default">Programos numatytieji</string>
     <string name="a11y_drag_and_drop_handle">nutempti ir padėti</string>
 </resources>

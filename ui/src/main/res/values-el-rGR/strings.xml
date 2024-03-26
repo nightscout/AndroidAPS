@@ -131,26 +131,8 @@
     <string name="a11y_only_on_watch">μόνο στο ρολόι</string>
     <string name="a11y_only_on_phone">μόνο στο τηλέφωνο</string>
     <string name="quickwizard_settings">Ρυθμίσεις QuickWizard</string>
-    <string name="overview_edit_quickwizard_button_text">Κείμενο κουμπιού:</string>
-    <string name="overview_edit_quickwizard_carbs">Υδατάνθρακες:</string>
     <string name="overview_edit_quickwizard_valid">Έγκυρο:</string>
     <string name="overview_edit_quickwizard_list_activity_add">Προσθήκη</string>
     <string name="overview_quickwizard_item_edit_button">Επεξεργασία</string>
-    <string name="overview_edit_quickwizard_show_on_device">Εμφάνιση καταχώρησης στη συσκευή:</string>
-    <string name="overview_edit_quickwizard_use_bg">Υπολογισμός γλυκόζης αίματος BG</string>
-    <string name="overview_edit_quickwizard_use_bolus_iob">Υπολογισμός του IOB bolus (ενεργής Ινσουλίνης)</string>
-    <string name="overview_edit_quickwizard_use_basal_iob">Υπολογισμός βασικού IOB</string>
-    <string name="overview_edit_quickwizard_use_trend">Υπολογισμός τάσης</string>
-    <string name="overview_edit_quickwizard_use_superbolus">Υπολογισμός superbolus</string>
-    <string name="overview_edit_quickwizard_percentage">Ποσοστό</string>
-    <string name="device_all">Όλα</string>
-    <string name="device_phone">Τηλέφωνο</string>
-    <string name="device_watch">Ρολόι</string>
-    <string name="positive_only">Θετική μόνο</string>
-    <string name="negative_only">Αρνητική μόνο</string>
-    <string name="overview_editquickwizard_usecob">Υπολογισμός COB (ενεργοί υδατάνθρακες)</string>
-    <string name="overview_editquickwizard_usetemptarget">Υπολογισμός προσωρινού στόχου</string>
-    <string name="overview_editquickwizard_usepercentage">Υπολογισμός ποσοστού</string>
-    <string name="app_default">Προεπιλογή εφαρμογής</string>
     <string name="a11y_drag_and_drop_handle">διαχείριση μεταφοράς και απόθεσης</string>
 </resources>

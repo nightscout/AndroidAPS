@@ -131,26 +131,8 @@
     <string name="a11y_only_on_watch">tylko na zegarku</string>
     <string name="a11y_only_on_phone">tylko na telefonie</string>
     <string name="quickwizard_settings">Ustawienia Szybkiego Bolusa</string>
-    <string name="overview_edit_quickwizard_button_text">Tekst przycisku:</string>
-    <string name="overview_edit_quickwizard_carbs">Węglowodany:</string>
     <string name="overview_edit_quickwizard_valid">Ważny:</string>
     <string name="overview_edit_quickwizard_list_activity_add">Dodaj</string>
     <string name="overview_quickwizard_item_edit_button">Edytuj</string>
-    <string name="overview_edit_quickwizard_show_on_device">Pokaż wpis na urządzeniu:</string>
-    <string name="overview_edit_quickwizard_use_bg">Obliczenia BG</string>
-    <string name="overview_edit_quickwizard_use_bolus_iob">Obliczenia IOB z bolusów</string>
-    <string name="overview_edit_quickwizard_use_basal_iob">Obliczenia IOB z bazy</string>
-    <string name="overview_edit_quickwizard_use_trend">Obliczenia trendu</string>
-    <string name="overview_edit_quickwizard_use_superbolus">Obliczenia Superbolusa</string>
-    <string name="overview_edit_quickwizard_percentage">Procent</string>
-    <string name="device_all">Wszystkie</string>
-    <string name="device_phone">Telefon</string>
-    <string name="device_watch">Zegarek</string>
-    <string name="positive_only">Tylko pozytywne</string>
-    <string name="negative_only">Tylko negatywne</string>
-    <string name="overview_editquickwizard_usecob">Obliczenia COB</string>
-    <string name="overview_editquickwizard_usetemptarget">Obliczenie celu tymczasowego</string>
-    <string name="overview_editquickwizard_usepercentage">Obliczenia procentowe</string>
-    <string name="app_default">Domyślny aplikacji</string>
     <string name="a11y_drag_and_drop_handle">tryb \"Przeciągnij i upuść\"</string>
 </resources>

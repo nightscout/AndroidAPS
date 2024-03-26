@@ -131,26 +131,8 @@
     <string name="a11y_only_on_watch">numai pe ceas</string>
     <string name="a11y_only_on_phone">numai pe telefon</string>
     <string name="quickwizard_settings">Setări AsistentRapid</string>
-    <string name="overview_edit_quickwizard_button_text">Text buton:</string>
-    <string name="overview_edit_quickwizard_carbs">Carbohidrați:</string>
     <string name="overview_edit_quickwizard_valid">Valabil:</string>
     <string name="overview_edit_quickwizard_list_activity_add">Adaugă</string>
     <string name="overview_quickwizard_item_edit_button">Editează</string>
-    <string name="overview_edit_quickwizard_show_on_device">Arată înregistrarea pe dispozitiv:</string>
-    <string name="overview_edit_quickwizard_use_bg">Calcul glicemie</string>
-    <string name="overview_edit_quickwizard_use_bolus_iob">Calcul IOB bolus</string>
-    <string name="overview_edit_quickwizard_use_basal_iob">Calcul IOB bazală</string>
-    <string name="overview_edit_quickwizard_use_trend">Calcul pantă</string>
-    <string name="overview_edit_quickwizard_use_superbolus">Calcul superbolus</string>
-    <string name="overview_edit_quickwizard_percentage">Procentaj</string>
-    <string name="device_all">Toate</string>
-    <string name="device_phone">Telefon</string>
-    <string name="device_watch">Ceas</string>
-    <string name="positive_only">Doar pozitiv</string>
-    <string name="negative_only">Doar negativ</string>
-    <string name="overview_editquickwizard_usecob">Calcul COB</string>
-    <string name="overview_editquickwizard_usetemptarget">Calcul țintă temporară</string>
-    <string name="overview_editquickwizard_usepercentage">Calculul procentajului</string>
-    <string name="app_default">Implicit pentru aplicație</string>
     <string name="a11y_drag_and_drop_handle">mâner de glisare și plasare</string>
 </resources>

@@ -171,13 +171,13 @@
     <string name="pb_label">Pumpebatteri</string>
     <string name="cannula">Kanyle</string>
     <string name="ebstopsloop">Bruk av forlenget bolusfunksjon vil deaktivere lukket loop i perioden med forlenget bolus. Vil du virkelig dette?</string>
-    <string name="statuslights_cannula_age">kanyle alder</string>
+    <string name="statuslights_cannula_age">kanylealder</string>
     <string name="statuslights_patch_pump_age">pumpealder</string>
     <string name="patch_pump">Pumpe</string>
     <!-- Overview -->
     <string name="show_statuslights">Vis statusindikatorer på hjem-skjermen</string>
-    <string name="statuslights_cage_warning">Terskel for advarsel om alder på slangesett [t]</string>
-    <string name="statuslights_cage_critical">Terskel for kritisk alder på slangesett [t]</string>
+    <string name="statuslights_cage_warning">Terskel for advarsel om alder på kanyle [t]</string>
+    <string name="statuslights_cage_critical">Terskel for kritisk alder på kanyle [t]</string>
     <string name="statuslights_iage_warning">Terskel for advarsel, alder på insulin [t]</string>
     <string name="statuslights_iage_critical">Terskel for kritisk alder på insulin [t]</string>
     <string name="statuslights_sage_warning">Terskel for advarsel, alder på sensor [t]</string>

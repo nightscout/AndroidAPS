@@ -61,4 +61,5 @@
     <string name="pref_show_date">Показать дату</string>
     <string name="default_custom_watchface_comment">Циферблат по умолчанию, вы можете нажать на EXPORT WATCHFACE чтобы создать шаблон</string>
     <string name="wear_default_watchface">Циферблат по умолчанию</string>
+    <string name="wear_more_watchfaces">Еще циферблаты</string>
 </resources>

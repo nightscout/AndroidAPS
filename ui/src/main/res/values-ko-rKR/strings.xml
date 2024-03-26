@@ -131,26 +131,8 @@
     <string name="a11y_only_on_watch">watch에서만</string>
     <string name="a11y_only_on_phone">핸드폰에서만</string>
     <string name="quickwizard_settings">빠른마법사 설정</string>
-    <string name="overview_edit_quickwizard_button_text">버튼 텍스트:</string>
-    <string name="overview_edit_quickwizard_carbs">탄수화물:</string>
     <string name="overview_edit_quickwizard_valid">유효한:</string>
     <string name="overview_edit_quickwizard_list_activity_add">추가</string>
     <string name="overview_quickwizard_item_edit_button">편집</string>
-    <string name="overview_edit_quickwizard_show_on_device">기기에 항목 표시:</string>
-    <string name="overview_edit_quickwizard_use_bg">BG 계산</string>
-    <string name="overview_edit_quickwizard_use_bolus_iob">Bolus IOB 계산</string>
-    <string name="overview_edit_quickwizard_use_basal_iob">Basal IOB 계산</string>
-    <string name="overview_edit_quickwizard_use_trend">추이 계산</string>
-    <string name="overview_edit_quickwizard_use_superbolus">Superbolus 계산</string>
-    <string name="overview_edit_quickwizard_percentage">퍼센트</string>
-    <string name="device_all">모두</string>
-    <string name="device_phone">핸드폰</string>
-    <string name="device_watch">워치</string>
-    <string name="positive_only">양수만</string>
-    <string name="negative_only">음수만</string>
-    <string name="overview_editquickwizard_usecob">COB 계산</string>
-    <string name="overview_editquickwizard_usetemptarget">임시 목표 계산</string>
-    <string name="overview_editquickwizard_usepercentage">퍼센트 계산</string>
-    <string name="app_default">애플리케이션 기본값</string>
     <string name="a11y_drag_and_drop_handle">드래그 앤 드롭 핸들</string>
 </resources>
