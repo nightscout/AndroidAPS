@@ -145,6 +145,7 @@
     <string name="overview_edit_quickwizard_useforcalculation">Utilizzati per il calcolo:</string>
     <string name="constraints_violation">Violazione dei vincoli</string>
     <string name="change_your_input">Cambia il tuo input!</string>
+    <string name="confirm_treatment">Si prega di confermare il trattamento</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Entrambi</item>
         <item>Solo positivo</item>
