@@ -166,6 +166,7 @@
     <string name="overview_edit_quickwizard_useforcalculation">Use for calculation:</string>
     <string name="constraints_violation">Constraints violation</string>
     <string name="change_your_input">Change your input!</string>
+    <string name="confirm_treatment">Please confirm treatment</string>
 
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Both</item>
