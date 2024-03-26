@@ -131,8 +131,23 @@
     <string name="a11y_only_on_watch">pouze na hodinkách</string>
     <string name="a11y_only_on_phone">pouze na telefonu</string>
     <string name="quickwizard_settings">Nastavení rychlých bolusů</string>
+    <string name="overview_edit_quickwizard_button_text">Text tlačítka</string>
+    <string name="overview_edit_quickwizard_carbs">Sacharidy</string>
     <string name="overview_edit_quickwizard_valid">Platné:</string>
     <string name="overview_edit_quickwizard_list_activity_add">Přidat</string>
     <string name="overview_quickwizard_item_edit_button">Upravit</string>
+    <string name="overview_edit_quickwizard_use_positive_iob_only">Pouze kladný IOB</string>
+    <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
+    <string name="overview_edit_quickwizard_percentage_to_high">Procento vysoké!</string>
+    <string name="overview_editquickwizard_percentage">Procento</string>
     <string name="a11y_drag_and_drop_handle">Režim „Táhni a pusť“</string>
+    <string name="additional_ecarbs">Přidat eSacharidy</string>
+    <string name="overview_edit_quickwizard_useforcalculation">Použít pro kalkulaci:</string>
+    <string name="constraints_violation">Mimo povolený rozsah</string>
+    <string name="change_your_input">Změňte zadání!</string>
+    <string-array name="yes_no_positiveonly_negativeonly">
+        <item>Oba</item>
+        <item>Pouze kladné</item>
+        <item>Pouze záporné</item>
+    </string-array>
 </resources>
