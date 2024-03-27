@@ -32,6 +32,7 @@
     <string name="equil_tone_mode_tone_and_shake">Trillen en geluid</string>
     <string name="equil_unit_u">%1$s E</string>
     <string name="equil_unit_u_hours">%1$s E/u</string>
+    <string name="equil_unbind_content">Deze operatie zal de toediening van insuline stopzetten en de pomp zuiger terugplaatsen naar de bodem van het reservoir! Dit verwijderd bovendien de verbinding status!</string>
     <string name="equil_error_no_devices">Geen apparaat</string>
     <string name="equil_ble_config_confirmation_title">Koppel Equil patch pomp</string>
     <string name="equil_error">Communicatiefout</string>
@@ -41,11 +42,16 @@
     <string name="equil_devices_number_hint">Apparaat nummer</string>
     <string name="equil_record_basal">Basaal snelheid %1$s E/u</string>
     <string name="equil_record_basal_temp">Tijdelijke basaal snelheid %1$s E/u</string>
+    <string name="equil_record_bolus">Bolus %1$s E</string>
     <string name="equil_error_set_temp_basal_failed_validation">Tijdelijke basaal duur moet groter zijn dan nul en een veelvoud van %1$s minuten.</string>
+    <string name="equil_not_enough_insulin">Onvoldoende insuline beschikbaar in het reservoir</string>
     <string name="equil_low_battery">Batterij laag</string>
+    <string name="equil_low_insulin">Onvoldoende insuline beschikbaar in het reservoir</string>
     <string name="equil_pump_not_run">Pomp niet actief</string>
     <string name="equil_pair">Koppel</string>
     <string name="equil_pair_error">Koppel fout</string>
+    <string name="equil_retry">Opnieuw proberen</string>
+    <string name="equil_fill">Ontlucht/Vul</string>
     <string name="equil_air">Verwijder lucht</string>
     <string name="equil_temp_basal_rate">Tijdelijk basaal</string>
     <string name="equil_total_delivered">Totaal toegediend</string>
@@ -73,9 +79,11 @@
     <string name="equil_common_cmd_set_extended_bolus">Vertraagde bolus instellen</string>
     <string name="equil_common_cmd_cancel_extended_bolus">Annuleer vertraagde bolus</string>
     <!--    推杆回退-->
+    <string name="equil_common_change_insulin">Drukstang terugtrekken</string>
     <string name="equil_common_set_alarm_tone">Alleen voor meldingsgeluid instellen</string>
     <string name="equil_common_set_alarm_shake">Alleen configureren voor trillingen</string>
     <string name="equil_common_set_alarm_mute">Configureren voor stil</string>
+    <string name="equil_common_set_alarm_tone_and_shake">Configureren voor meldingen met geluid en trillen</string>
     <string name="equil_common_read_devices">Apparaatinformatie lezen</string>
     <string name="equil_common_cmd_fill">Vullen</string>
     <string name="history_manual_confirm">Handmatig bevestigen</string>
@@ -106,6 +114,7 @@
     <string name="equil_history_item5">Motor storing gedetecteerd</string>
     <string name="equil_history_item6">Injectie start gepauzeerd</string>
     <string name="equil_history_item7">Injectie al gepauzeerd</string>
+    <string name="equil_history_item8">Automatisch afsluiten dreigt</string>
     <string name="equil_history_item9">Automatisch uit!</string>
     <string name="equil_history_item10">Voorvullen reservoir</string>
     <string name="equil_history_item11">Pomp terugspoelen</string>
@@ -148,8 +157,11 @@
     <string name="equil_password_tips">Stel een nieuw wachtwoord in om te koppelen met Equil v5. pomp, dit wachtwoord zal ook worden gebruikt om in de toekomst de huidige pomp te ontkoppelen. Wees er dus zeker van dat je het onthoudt. Wachtwoordregel: het moet 4 tekens lang zijn, gekozen uit ABCDEF0123456789.</string>
     <string name="delete">Verwijderen</string>
     <string name="equil_set_pair_password">Instellen koppelwachtwoord</string>
+    <string name="equil_hint1">Na het installeren van de pomp op het basisplaat, selecteer of de lucht uit de binnenste naald moet worden verwijderd.</string>
     <string name="equil_unbind">Apparaat ontkoppelen</string>
+    <string name="equil_assemble">Monteer de pomp, het gevulde reservoir en de opgeladen batterij</string>
     <string name="equil_devices_number">Voer nieuw pomp ID in</string>
+    <string name="equil_insert">Prime het reservoir totdat er een druppel insuline aan de punt van de naald zichtbaar is</string>
     <string name="equil_insert2">De pomp mag niet op de pompbasis zitten.</string>
     <string name="equil_attach">Bevestig de pomp aan de basis</string>
     <string name="equil_hint2">Canule vullen</string>
