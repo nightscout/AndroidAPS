@@ -145,6 +145,7 @@
     <string name="overview_edit_quickwizard_useforcalculation">Bruk i beregning:</string>
     <string name="constraints_violation">Brudd på begrensninger</string>
     <string name="change_your_input">Endre dine inndata!</string>
+    <string name="confirm_treatment">Bekreft behandling</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Begge</item>
         <item>Kun positiv</item>
