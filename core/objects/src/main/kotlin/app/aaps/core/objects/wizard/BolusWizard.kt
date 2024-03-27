@@ -50,6 +50,7 @@ import app.aaps.core.objects.extensions.lowValueToUnitsToString
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.utils.HtmlHelper
+import app.aaps.core.utils.JsonHelper
 import dagger.android.HasAndroidInjector
 import java.util.Calendar
 import java.util.LinkedList
@@ -376,11 +377,11 @@ class BolusWizard @Inject constructor(
             actions.add(rh.gs(app.aaps.core.ui.R.string.advisoralarm).formatColor(context, rh, app.aaps.core.ui.R.attr.infoColor))
 
         if (quickWizardEntry != null) {
-            val eCarbsYesNo = quickWizardEntry.storage.get("useEcarbs")
+            val eCarbsYesNo = JsonHelper.safeGetInt(quickWizardEntry.storage, "useEcarbs", QuickWizardEntry.NO)
             if (eCarbsYesNo == QuickWizardEntry.YES) {
-                val timeOffset = SafeParse.stringToInt(quickWizardEntry.storage.get("time").toString())
-                val duration = SafeParse.stringToInt(quickWizardEntry.storage.get("duration").toString())
-                val carbs2 = SafeParse.stringToInt(quickWizardEntry.storage.get("carbs2").toString())
+                val timeOffset = JsonHelper.safeGetInt(quickWizardEntry.storage,"time", 0)
+                val duration = JsonHelper.safeGetInt(quickWizardEntry.storage,"duration", 0)
+                val carbs2 = JsonHelper.safeGetInt(quickWizardEntry.storage,"carbs2", 0)
 
                 if (carbs2 > 0) {
                     val ecarbsMessage = rh.gs(app.aaps.core.ui.R.string.format_carbs, carbs2) + "/" + duration + "h (+" + timeOffset + "min)"
@@ -556,11 +557,11 @@ class BolusWizard @Inject constructor(
     }
 
     private fun scheduleECarbsFromQuickWizard(ctx: Context, quickWizardEntry: QuickWizardEntry) {
-        val eCarbsYesNo = quickWizardEntry.storage.get("useEcarbs")
+        val eCarbsYesNo = JsonHelper.safeGetInt(quickWizardEntry.storage, "useEcarbs", QuickWizardEntry.NO)
         if (eCarbsYesNo == QuickWizardEntry.YES) {
-            val timeOffset = SafeParse.stringToInt(quickWizardEntry.storage.get("time").toString())
-            val duration = SafeParse.stringToInt(quickWizardEntry.storage.get("duration").toString())
-            val carbs2 = SafeParse.stringToInt(quickWizardEntry.storage.get("carbs2").toString())
+            val timeOffset = JsonHelper.safeGetInt(quickWizardEntry.storage,"time", 0)
+            val duration = JsonHelper.safeGetInt(quickWizardEntry.storage,"duration", 0)
+            val carbs2 = JsonHelper.safeGetInt(quickWizardEntry.storage,"carbs2", 0)
 
             val currentTime = Calendar.getInstance().timeInMillis
             val eventTime: Long = currentTime + (timeOffset * 60000)
