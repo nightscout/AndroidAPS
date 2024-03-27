@@ -355,7 +355,7 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
         //validate input for percentage
         if (binding.correctionInput.value.toInt() > MAX_PERCENTAGE) {
             binding.carbsInput.value = MAX_PERCENTAGE
-            ToastUtils.warnToast(ctx, R.string.overview_edit_quickwizard_percentage_to_high)
+            ToastUtils.warnToast(ctx, R.string.overview_edit_quickwizard_percentage_too_high)
         }
 
     }
