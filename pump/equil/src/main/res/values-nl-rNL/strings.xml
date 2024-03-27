@@ -34,6 +34,16 @@
     <string name="equil_unit_u_hours">%1$s E/u</string>
     <string name="equil_error_no_devices">Geen apparaat</string>
     <string name="equil_ble_config_confirmation_title">Koppel Equil patch pomp</string>
+    <string name="equil_error">Communicatiefout</string>
+    <string name="equil_change">Vervang pomp</string>
+    <string name="equil_change_content">Haal de pomp los van de bodemplaat.</string>
+    <string name="equil_unpair_alert">Weet u zeker dat u de controle over %1$s wilt opgeven?</string>
+    <string name="equil_devices_number_hint">Apparaat nummer</string>
+    <string name="equil_record_basal">Basaal snelheid %1$s E/u</string>
+    <string name="equil_record_basal_temp">Tijdelijke basaal snelheid %1$s E/u</string>
+    <string name="equil_error_set_temp_basal_failed_validation">Tijdelijke basaal duur moet groter zijn dan nul en een veelvoud van %1$s minuten.</string>
+    <string name="equil_low_battery">Batterij laag</string>
+    <string name="equil_pump_not_run">Pomp niet actief</string>
     <string name="equil_pair">Koppel</string>
     <string name="equil_pair_error">Koppel fout</string>
     <string name="equil_air">Verwijder lucht</string>
@@ -41,6 +51,7 @@
     <string name="equil_total_delivered">Totaal toegediend</string>
     <string name="equil_last_bolus">Laatste bolus</string>
     <string name="equil_firmware_version">Firmwareversie</string>
+    <string name="equil_shutdown_be">Equil zal automatisch uit gaan</string>
     <string name="equil_shutdown">Equil auto uit</string>
     <string name="equil_common_history_tbr_value">Snelheid: %1$.2f E/u, duur: %2$d minuten</string>
     <string name="equil_common_history_bolus_value">%1$.2f E</string>
