@@ -145,6 +145,7 @@
     <string name="overview_edit_quickwizard_useforcalculation">Usado para el cálculo:</string>
     <string name="constraints_violation">Violación de restricciones</string>
     <string name="change_your_input">Cambiar datos de entrada</string>
+    <string name="confirm_treatment">Por favor, confirma el tratamiento</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Ambos</item>
         <item>Sólo positivo</item>
