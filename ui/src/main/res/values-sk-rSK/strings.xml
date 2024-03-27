@@ -145,6 +145,7 @@
     <string name="overview_edit_quickwizard_useforcalculation">Použiť pre kalkuláciu:</string>
     <string name="constraints_violation">Mimo povolený rozsah</string>
     <string name="change_your_input">Zmeňte zadanie!</string>
+    <string name="confirm_treatment">Prosím potvrďte ošetrenie</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Oba</item>
         <item>Iba kladné</item>
