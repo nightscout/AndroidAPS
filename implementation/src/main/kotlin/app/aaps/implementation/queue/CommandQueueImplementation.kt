@@ -275,7 +275,7 @@ class CommandQueueImplementation @Inject constructor(
                 disposable += persistenceLayer.insertOrUpdateCarbs(
                     carbs = detailedBolusInfo.createCarbs(),
                     action = Action.CARBS,
-                    source = Sources.TreatmentDialog
+                    source = Sources.Database
                 ).subscribe(
                     { callback?.result(instantiator.providePumpEnactResult().enacted(false).success(true))?.run() },
                     { callback?.result(instantiator.providePumpEnactResult().enacted(false).success(false))?.run() }
