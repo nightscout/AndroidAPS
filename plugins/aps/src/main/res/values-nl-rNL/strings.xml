@@ -161,4 +161,5 @@
     <string name="autotune_revert_local_profile_message">Profiel %1$s terugzetten met invoerprofiel?</string>
     <string name="autotune_profile_invalid">Profiel ongeldig</string>
     <string name="not_available_full">Niet beschikbaar</string>
+    <string name="pump_disconnected">Pomp niet verbonden</string>
 </resources>
