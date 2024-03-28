@@ -138,7 +138,6 @@
     <string name="overview_quickwizard_item_edit_button">Rediger</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Kun positiv IOB</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
-    <string name="overview_edit_quickwizard_percentage_to_high">Prosent er for høy!</string>
     <string name="overview_editquickwizard_percentage">Prosent</string>
     <string name="a11y_drag_and_drop_handle">håndtering av dra-og-slipp</string>
     <string name="additional_ecarbs">Legg til eKarbo</string>
