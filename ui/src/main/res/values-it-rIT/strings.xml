@@ -138,6 +138,7 @@
     <string name="overview_quickwizard_item_edit_button">Modifica</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Solo IOB positivo</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolo</string>
+    <string name="overview_edit_quickwizard_percentage_too_high">Percentuale troppo alta!</string>
     <string name="overview_editquickwizard_percentage">Percentuale</string>
     <string name="a11y_drag_and_drop_handle">trascina e rilascia</string>
     <string name="additional_ecarbs">Aggiungi eCarbs</string>
