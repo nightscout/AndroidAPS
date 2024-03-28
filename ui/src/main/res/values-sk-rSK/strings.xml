@@ -138,7 +138,6 @@
     <string name="overview_quickwizard_item_edit_button">Upraviť</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Iba kladný IOB</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
-    <string name="overview_edit_quickwizard_percentage_to_high">Percento vysoké!</string>
     <string name="overview_editquickwizard_percentage">Percento</string>
     <string name="a11y_drag_and_drop_handle">Režim \"Potiahni a pusť\"</string>
     <string name="additional_ecarbs">Pridať eSacharidy</string>
