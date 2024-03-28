@@ -134,6 +134,7 @@
     <string name="overview_edit_quickwizard_valid">תקין:</string>
     <string name="overview_edit_quickwizard_list_activity_add">הוספה</string>
     <string name="overview_quickwizard_item_edit_button">עריכה</string>
+    <string name="overview_edit_quickwizard_percentage_too_high">האחוזים גבוהים מדי!</string>
     <string name="a11y_drag_and_drop_handle">לחצן גרירה</string>
     <string name="confirm_treatment">אשר טיפול</string>
 </resources>
