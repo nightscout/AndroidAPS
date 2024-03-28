@@ -138,7 +138,6 @@
     <string name="overview_quickwizard_item_edit_button">Редактировать</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Только положительный активный инсулин IOB</string>
     <string name="overview_edit_quickwizard_superbolus">Суперболюс</string>
-    <string name="overview_edit_quickwizard_percentage_to_high">Слишком высокий процент!</string>
     <string name="overview_editquickwizard_percentage">Процент</string>
     <string name="a11y_drag_and_drop_handle">перетаскиватель</string>
     <string name="additional_ecarbs">Добавить eCarbs</string>
