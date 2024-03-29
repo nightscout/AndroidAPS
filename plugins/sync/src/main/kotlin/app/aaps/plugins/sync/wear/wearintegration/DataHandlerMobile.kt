@@ -484,6 +484,7 @@ class DataHandlerMobile @Inject constructor(
         val message =
             rh.gs(R.string.wizard_result, bolusWizard.calculatedTotalInsulin, bolusWizard.carbs) + "\n_____________\n" + bolusWizard.explainShort()
         lastBolusWizard = bolusWizard
+        lastQuickWizardEntry = null
         rxBus.send(
             EventMobileToWear(
                 EventData.ConfirmAction(
@@ -583,6 +584,8 @@ class DataHandlerMobile @Inject constructor(
         message += rh.gs(app.aaps.core.ui.R.string.carbs) + ": " + carbsAfterConstraints + rh.gs(R.string.grams_short)
         if (insulinAfterConstraints - command.insulin != 0.0 || carbsAfterConstraints - command.carbs != 0)
             message += "\n" + rh.gs(app.aaps.core.ui.R.string.constraint_applied)
+        lastBolusWizard = null
+        lastQuickWizardEntry = null
         rxBus.send(
             EventMobileToWear(
                 EventData.ConfirmAction(
@@ -606,6 +609,8 @@ class DataHandlerMobile @Inject constructor(
             sendError(rh.gs(app.aaps.core.ui.R.string.carb_equal_zero_no_action))
             return
         }
+        lastBolusWizard = null
+        lastQuickWizardEntry = null
         rxBus.send(
             EventMobileToWear(
                 EventData.ConfirmAction(
@@ -1264,10 +1269,10 @@ class DataHandlerMobile @Inject constructor(
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
 
             val action = when {
-                amount == 0.0     -> Action.CARBS
-                carbs == 0        -> Action.BOLUS
+                amount == 0.0 -> Action.CARBS
+                carbs == 0 -> Action.BOLUS
                 carbsDuration > 0 -> Action.EXTENDED_CARBS
-                else              -> Action.TREATMENT
+                else -> Action.TREATMENT
             }
             uel.log(
                 action = action, source = Sources.Wear,
@@ -1282,33 +1287,34 @@ class DataHandlerMobile @Inject constructor(
                 }
             })
             bolusCalculatorResult?.let { persistenceLayer.insertOrUpdateBolusCalculatorResult(it).blockingGet() }
+            lastQuickWizardEntry?.let { lastQuickWizardEntry ->
+                if (lastQuickWizardEntry.useSuperBolus() == QuickWizardEntry.YES) {
+                    val profile = profileFunction.getProfile() ?: return
+                    val pump = activePlugin.activePump
 
-            if (lastQuickWizardEntry!!.useSuperBolus() == QuickWizardEntry.YES) {
-                val profile = profileFunction.getProfile() ?: return
-                val pump = activePlugin.activePump
+                    //uel.log(Action.SUPERBOLUS_TBR, Sources.WizardDialog)
+                    if (loop.isEnabled()) {
+                        loop.goToZeroTemp(2 * 60, profile, OE.Reason.SUPER_BOLUS, Action.SUPERBOLUS_TBR, Sources.WizardDialog, listOf())
+                        rxBus.send(EventRefreshOverview("WizardDialog"))
+                    }
 
-                //uel.log(Action.SUPERBOLUS_TBR, Sources.WizardDialog)
-                if (loop.isEnabled()) {
-                    loop.goToZeroTemp(2 * 60, profile, OE.Reason.SUPER_BOLUS, Action.SUPERBOLUS_TBR, Sources.WizardDialog, listOf())
-                    rxBus.send(EventRefreshOverview("WizardDialog"))
-                }
-
-                if (pump.pumpDescription.tempBasalStyle == PumpDescription.ABSOLUTE) {
-                    commandQueue.tempBasalAbsolute(0.0, 120, true, profile, PumpSync.TemporaryBasalType.NORMAL, object : Callback() {
-                        override fun run() {
-                            if (!result.success) {
-                                uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.temp_basal_delivery_error), app.aaps.core.ui.R.raw.boluserror)
+                    if (pump.pumpDescription.tempBasalStyle == PumpDescription.ABSOLUTE) {
+                        commandQueue.tempBasalAbsolute(0.0, 120, true, profile, PumpSync.TemporaryBasalType.NORMAL, object : Callback() {
+                            override fun run() {
+                                if (!result.success) {
+                                    uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.temp_basal_delivery_error), app.aaps.core.ui.R.raw.boluserror)
+                                }
                             }
-                        }
-                    })
-                } else {
-                    commandQueue.tempBasalPercent(0, 120, true, profile, PumpSync.TemporaryBasalType.NORMAL, object : Callback() {
-                        override fun run() {
-                            if (!result.success) {
-                                uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.temp_basal_delivery_error), app.aaps.core.ui.R.raw.boluserror)
+                        })
+                    } else {
+                        commandQueue.tempBasalPercent(0, 120, true, profile, PumpSync.TemporaryBasalType.NORMAL, object : Callback() {
+                            override fun run() {
+                                if (!result.success) {
+                                    uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.temp_basal_delivery_error), app.aaps.core.ui.R.raw.boluserror)
+                                }
                             }
-                        }
-                    })
+                        })
+                    }
                 }
             }
         }
