@@ -138,6 +138,7 @@
     <string name="overview_quickwizard_item_edit_button">Düzenle</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Yalnızca pozitif AİNS</string>
     <string name="overview_edit_quickwizard_superbolus">Süperbolus</string>
+    <string name="overview_edit_quickwizard_percentage_too_high">Yüzde çok yüksek!</string>
     <string name="overview_editquickwizard_percentage">Yüzde</string>
     <string name="a11y_drag_and_drop_handle">sürükle ve bırak kolu</string>
     <string name="additional_ecarbs">yKarb ekle</string>
