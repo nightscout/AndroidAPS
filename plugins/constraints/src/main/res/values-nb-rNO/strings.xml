@@ -3,7 +3,7 @@
     <!-- PhoneChecker -->
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">Sommer/vintertid inntreffer innen 24t</string>
-    <string name="dst_loop_disabled_warning">Sommer/vintertid inntreffer innen 3t - lukket loop er midlertidig deaktivert</string>
+    <string name="dst_loop_disabled_warning">Sommer/vintertid inntraff for mindre enn 3 timer siden - Lukket loop er midlertidig deaktivert</string>
     <!-- Storage constraint -->
     <string name="disk_full">Frigjør minst %1$d MB fra internminnet! Loop deaktivert!</string>
     <!-- Version Checker -->
