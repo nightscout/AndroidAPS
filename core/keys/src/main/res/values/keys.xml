@@ -109,6 +109,7 @@
     <string name="key_openaps_link_to_docs" translatable="false">link_to_docs</string>
 
     <!--    autoISF -->
+    <string name="key_use_autoISF" translatable="false">use_autoisf</string>
     <string name="key_half_basal_exercise_target" translatable="false">half_basal_exercise_target</string>
     <string name="key_openapsama_enable_autoISF" translatable="false">openapsama_enable_autoISF</string>
     <string name="key_enable_autoISF" translatable="false">openapsama_enable_autoISF</string>

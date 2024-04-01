@@ -131,7 +131,7 @@ class OpenAPSFragment : DaggerFragment(), MenuProvider {
         openAPSPlugin.lastAPSResult?.let { lastAPSResult ->
             binding.result.text = lastAPSResult.rawData().dataClassToHtml()
             binding.request.text = lastAPSResult.resultAsSpanned()
-            binding.glucosestatus.text = lastAPSResult.glucoseStatus?.dataClassToHtml(listOf("glucose", "delta", "shortAvgDelta", "longAvgDelta", "corrSqu", "bgAcceleration"))
+            binding.glucosestatus.text = lastAPSResult.glucoseStatus?.dataClassToHtml(listOf("glucose", "delta", "shortAvgDelta", "longAvgDelta", "corrSqu", "parabolaMinutes", "bgAcceleration"))
             binding.currenttemp.text = lastAPSResult.currentTemp?.dataClassToHtml()
             binding.iobdata.text = rh.gs(R.string.array_of_elements, lastAPSResult.iobData?.size) + "\n" + lastAPSResult.iob?.dataClassToHtml()
             binding.profile.text = lastAPSResult.oapsProfile?.dataClassToHtml()

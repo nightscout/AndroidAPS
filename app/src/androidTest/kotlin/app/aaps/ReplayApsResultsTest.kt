@@ -795,7 +795,7 @@ class ReplayApsResultsTest @Inject constructor() {
             microBolusAllowed = determineBasalResult.microBolusAllowed,
             currentTime = currentTime,
             flatBGsDetected = determineBasalResult.flatBGsDetected,
-            dynIsfMode =  preferences.get(BooleanKey.ApsUseAutoIsfWeights),
+            autoIsfMode =  preferences.get(BooleanKey.ApsUseAutoIsf),
             iob_threshold_percent = preferences.get(IntKey.ApsAutoIsfIobThPercent),
             smb_max_range_extension = preferences.get(DoubleKey.ApsAutoIsfSmbMaxRangeExtension),
             profile_percentage = 100,

@@ -203,14 +203,16 @@
     <string name="smb_delivery_settings_title">smb delivery settings</string>
     <string name="smb_delivery_settings_summary">smb delivery settings:  Set of options to increase the actual SMB size which can be delivered in situations where ISF was strengthened, i.e. fairly low ISF figure.\n\nUSE WITH CAUTION</string>
     <string name="full_loop_settings_title">Full Loop Settings</string>
-    <string name="full_loop_settings_summary">Full Loop Settings: Adjust iobTH and total acce weights for meal types</string>
+    <string name="full_loop_settings_summary">Full Loop Settings: Adjust iobTH to limit IOB build up</string>
+    <string name="use_autoISF_extensions_title">Enable AutoISF extended functionalities</string>
+    <string name="use_autoISF_extensions_summary">These include ISF modulation due to recent bg behaviour, alternative SMB enablers and support for Full Closed Loop</string>
     <string name="openapsama_enable_autoISF">Enable ISF adaptation by glucose behaviour</string>
-    <string name="openapsama_autoISF_max_summary">Default value: 1.2\nThis is a multiplier cap for autoISF to set a limit on how high the autoISF ratio can be, which in turn determines how low it can adjust ISF.\n\nWARNING: Be extremely careful when using values above 2.5</string>
+    <string name="openapsama_autoISF_max_summary">Default value: 1.0\nThis is a multiplier cap for autoISF to set a limit on how high the autoISF ratio can be, which in turn determines how low it can adjust ISF.\n\nWARNING: Be extremely careful when using values above 2.5</string>
     <string name="openapsama_autoISF_min_summary">Default value: 1.0\nThis is a multiplier cap for autoISF to set a limit on how low the autoISF ratio can be, which in turn determines how high it can adjust ISF.</string>
     <string name="openapsama_dura_ISF_weight_summary" formatted="false">Default value: 0.0\nThis is the rate at which autoISF grows per hour assuming bg is twice the target. With a value of 1.0 it will have reduced ISF to 50% after 1 hour of bg at twice the target.\n\nWith 0.0 the effect of autoISF is effectively disabled.</string>
-    <string name="openapsama_lower_ISFrange_weight_summary">Default value: 0.0\nThis is the weight applied to the polygon which adapats ISF if glucose is below target. \n\nWith 0.0 the effect is effectively disabled.</string>
-    <string name="openapsama_higher_ISFrange_weight_summary">Default value: 0.0\nThis is the weight applied to the polygon which adapats ISF if glucose is above target. \n\nWith 0.0 the effect is effectively disabled.</string>
-    <string name="openapsama_delta_ISFrange_weight_summary">Default value: 0.0\nThis is the weight applied to the polygon which adapats ISF for higher deltas. \n\nWith 0.0 the effect is effectively disabled.</string>
+    <string name="openapsama_lower_ISFrange_weight_summary">Default value: 0.0\nThis is the weight applied to the polygon which adapts ISF if glucose is below target. \n\nWith 0.0 the effect is effectively disabled.</string>
+    <string name="openapsama_higher_ISFrange_weight_summary">Default value: 0.0\nThis is the weight applied to the polygon which adapts ISF if glucose is above target. \n\nWith 0.0 the effect is effectively disabled.</string>
+    <string name="openapsama_delta_ISFrange_weight_summary">Default value: 0.0\nThis is the weight applied to the polygon which adapts ISF for higher deltas. \n\nWith 0.0 the effect is effectively disabled.</string>
     <string name="openapsama_pp_ISF_weight_summary">Default value: 0.0\nThis is the weight applied to the linear slope while glucose rises and which adapts ISF. \n\nWith 0.0 this contribution is effectively disabled.</string>
     <string name="openapsama_pp_ISF_hours_summary">Default value: 3\nThis is the duration in hours how long after a meal the effect will be active. \n\nAAPS will delete carb timing after 10 hours latest no matter what you enter.</string>
     <string name="enable_postprandial_ISF_always">Enable pp_ISF postprandial all day</string>
