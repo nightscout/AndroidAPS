@@ -72,7 +72,7 @@ class DstHelperPlugin @Inject constructor(
             } else {
                 aapsLogger.debug(LTag.CONSTRAINTS, "Loop already suspended")
             }
-            value.set(false, "DST in last 3 hours.", this)
+            value.set(false, rh.gs(R.string.dst_loop_disabled_error), this)
         }
         return value
     }
