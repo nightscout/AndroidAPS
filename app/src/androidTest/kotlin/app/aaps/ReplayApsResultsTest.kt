@@ -98,11 +98,11 @@ class ReplayApsResultsTest @Inject constructor() {
                 OpenAPSAMAPlugin::class.simpleName      -> amas++
             }
             when (algorithm) {
-                //OpenAPSSMBPlugin::class.simpleName      -> testOpenAPSSMB(filename, input, output, injector)
+                OpenAPSSMBPlugin::class.simpleName      -> testOpenAPSSMB(filename, input, output, injector)
                 "OpenAPSSMBAutoISFPlugin"               -> testOpenAPSSMBAutoISF(filename, input, output, injector)
-                //"OpenAPSSMBDynamicISFPlugin"            -> testOpenAPSSMBDynamicISF(filename, input, output, injector)
-                //OpenAPSAMAPlugin::class.simpleName      -> testOpenAPSAMA(filename, input, output, injector)
-                //else                                    -> error("Unsupported")
+                "OpenAPSSMBDynamicISFPlugin"            -> testOpenAPSSMBDynamicISF(filename, input, output, injector)
+                OpenAPSAMAPlugin::class.simpleName      -> testOpenAPSAMA(filename, input, output, injector)
+                else                                    -> error("Unsupported")
             }
         }
         aapsLogger.info(LTag.CORE, "\n**********\nAMA: $amas\nSMB: $smbs\nDynISFs: $dynisfs\nAutoISFs: $autoisfs\nJS time: $jsTime\nKT time: $ktTime\n**********")
