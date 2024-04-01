@@ -9,6 +9,7 @@ import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
@@ -56,14 +57,20 @@ import app.aaps.plugins.automation.triggers.TriggerBTDevice
 import app.aaps.plugins.automation.triggers.TriggerBg
 import app.aaps.plugins.automation.triggers.TriggerBolusAgo
 import app.aaps.plugins.automation.triggers.TriggerCOB
+import app.aaps.plugins.automation.triggers.TriggerCannulaAge
 import app.aaps.plugins.automation.triggers.TriggerConnector
 import app.aaps.plugins.automation.triggers.TriggerDelta
 import app.aaps.plugins.automation.triggers.TriggerHeartRate
+import app.aaps.plugins.automation.triggers.TriggerInsulinAge
 import app.aaps.plugins.automation.triggers.TriggerIob
 import app.aaps.plugins.automation.triggers.TriggerLocation
 import app.aaps.plugins.automation.triggers.TriggerProfilePercent
+import app.aaps.plugins.automation.triggers.TriggerPumpBatteryAge
+import app.aaps.plugins.automation.triggers.TriggerPumpBatteryLevel
 import app.aaps.plugins.automation.triggers.TriggerPumpLastConnection
 import app.aaps.plugins.automation.triggers.TriggerRecurringTime
+import app.aaps.plugins.automation.triggers.TriggerReservoirLevel
+import app.aaps.plugins.automation.triggers.TriggerSensorAge
 import app.aaps.plugins.automation.triggers.TriggerTempTarget
 import app.aaps.plugins.automation.triggers.TriggerTempTargetValue
 import app.aaps.plugins.automation.triggers.TriggerTime
@@ -384,7 +391,7 @@ class AutomationPlugin @Inject constructor(
     }
 
     fun getTriggerDummyObjects(): List<Trigger> {
-        return listOf(
+        val triggers = mutableListOf(
             TriggerConnector(injector),
             TriggerTime(injector),
             TriggerRecurringTime(injector),
@@ -403,7 +410,24 @@ class AutomationPlugin @Inject constructor(
             TriggerPumpLastConnection(injector),
             TriggerBTDevice(injector),
             TriggerHeartRate(injector),
+            TriggerSensorAge(injector),
+            TriggerCannulaAge(injector),
+            TriggerReservoirLevel(injector)
         )
+
+        val pump = activePlugin.activePump
+        if (!pump.pumpDescription.isPatchPump) {
+            triggers.add(TriggerInsulinAge(injector))
+        }
+        if (pump.pumpDescription.isBatteryReplaceable || pump.isBatteryChangeLoggingEnabled()) {
+            triggers.add(TriggerPumpBatteryAge(injector))
+        }
+        val erosBatteryLinkAvailable = pump.model() == PumpType.OMNIPOD_EROS && pump.isUseRileyLinkBatteryLevel()
+        if (pump.model().supportBatteryLevel || erosBatteryLinkAvailable) {
+            triggers.add(TriggerPumpBatteryLevel(injector))
+        }
+
+        return triggers.toList()
     }
 
     /**

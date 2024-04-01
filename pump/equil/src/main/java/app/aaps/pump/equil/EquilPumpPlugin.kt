@@ -79,7 +79,7 @@ import javax.inject.Singleton
     PluginDescription()
         .mainType(PluginType.PUMP)
         .fragmentClass(EquilFragment::class.java.name)
-        .pluginIcon(R.drawable.ic_equil_128)
+        .pluginIcon(app.aaps.core.ui.R.drawable.ic_equil_128)
         .pluginName(R.string.equil_name)
         .shortName(R.string.equil_name_short)
         .preferencesId(R.xml.pref_equil)

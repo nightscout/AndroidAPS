@@ -33,7 +33,7 @@
     <string name="basalmax">Maks. valandinė bazė</string>
     <string name="dailymax">Dienos maksimumas</string>
     <string name="bloodsugarmeasurementalert">Gliukozės kiekio kraujyje matavimo perspėjimas</string>
-    <string name="remaininsulinalert">Likusio insulino kiekis</string>
+    <string name="remaininsulinalert">Senka rezervuaras</string>
     <string name="missedbolus">Nesuleistas bolusas</string>
     <string name="invalidpairing">Netinkama susiejimo informacija. Bandoma susieti iš naujo</string>
     <string name="gettingpumpstatus">Gaunamas pompos statusas</string>

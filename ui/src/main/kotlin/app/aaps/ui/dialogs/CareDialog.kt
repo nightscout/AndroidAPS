@@ -182,6 +182,7 @@ class CareDialog : DialogFragmentWithDate() {
         )
 
         val actions: LinkedList<String> = LinkedList()
+        actions.add(rh.gs(R.string.confirm_treatment))
         if (options == UiInteraction.EventType.BGCHECK || options == UiInteraction.EventType.QUESTION || options == UiInteraction.EventType.ANNOUNCEMENT) {
             val meterType =
                 when {

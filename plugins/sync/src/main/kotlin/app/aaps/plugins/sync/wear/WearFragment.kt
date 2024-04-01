@@ -1,6 +1,7 @@
 package app.aaps.plugins.sync.wear
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -67,9 +68,9 @@ class WearFragment : DaggerFragment() {
                 importExportPrefs.importCustomWatchface(this)
             }
         }
-        binding.defaultCustom.setOnClickListener {
-            rxBus.send(EventMobileToWear(EventData.ActionrequestSetDefaultWatchface(dateUtil.now())))
-            updateGui()
+        binding.moreCustom.setOnClickListener {
+            val intent = Intent().apply { action = Intent.ACTION_VIEW; data = Uri.parse(rh.gs(R.string.wear_link_to_more_cwf_doc)) }
+            startActivity(intent)
         }
         binding.exportCustom.setOnClickListener {
             rxBus.send(EventMobileToWear(EventData.ActionrequestCustomWatchface(true)))

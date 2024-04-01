@@ -100,7 +100,6 @@
     <string name="not_connected">לא מחובר</string>
     <string name="read_only">לקריאה בלבד</string>
     <string name="working">עובד</string>
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>
@@ -117,13 +116,16 @@
     <string name="xdrip_local_broadcasts_summary">שולח נתוני גלוקוז וטיפולים ל-xDrip+. יש לבחור את מקור הנתונים \"xDrip+ Sync Follower\" וקבלת נתונים חייבת להיות מופעלת בהגדרות &gt; הגדרות לשיתוף פעולה בין אפליקציות &gt; קבל גלוקוז\\טיפולים</string>
     <string name="xdrip_local_broadcasts_title">אפשר שידור ל-xDrip+</string>
     <!--    DataBroadcast-->
+    <string name="tizen">סמסונג Tizen</string>
     <string name="tizen_short">TIZ</string>
+    <string name="tizen_description">שידור נתונים לאפליקציית Samsung G-Watch Wear (Tizen OS)</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">חיבור למכשיר Garmin</string>
     <string name="garmin_local_http_server_port">פורט שרת HTTP מקומי</string>
     <string name="garmin_local_http_server">שרת HTTP מקומי</string>
     <!--    Wear-->
+    <string name="wear_shortname">WEAR</string>
     <string name="description_wear">ניטור ושליטה ב-AndroidAPS באמצעות שעון WearOS.</string>
     <string name="no_watch_connected">(השעון לא מחובר)</string>
     <string name="pump_status">סטטוס המשאבה</string>
@@ -155,6 +157,7 @@
     <string name="wear_infos_watchface">פני שעון מידע</string>
     <string name="wear_export_watchface">ייצוא תבנית</string>
     <string name="wear_new_custom_watchface_exported">תבנית פני השעון יוצאה</string>
+    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/en/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">שלח מחדש את כל הנתונים</string>
     <string name="open_settings_on_wear">פתיחת הגדרות Wear</string>
     <string name="cwf_infos_pref_locked">רשימת העדפות ננעלה ע\"י פני השעון</string>
@@ -166,6 +169,7 @@
     <string name="grams_short">גר\'</string>
     <string name="hour_short">ש\'</string>
     <string name="no_active_profile">לא הופעלה החלפת פרופיל!</string>
+    <string name="profile_message">פרופיל:\n\nהיסט זמן: %1$d\אחוזים: %2$d%%</string>
     <string name="target_only_aps_mode">ערכי מטרה חלים רק במצב APS!</string>
     <string name="no_history">אין נתוני עבר!</string>
     <string name="temp_target">ערכי מטרה זמניים</string>

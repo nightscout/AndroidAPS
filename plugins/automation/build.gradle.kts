@@ -24,6 +24,7 @@ dependencies {
     testImplementation(project(":shared:impl"))
     testImplementation(project(":implementation"))
     testImplementation(project(":plugins:main"))
+    testImplementation(project(":pump:virtual"))
 
     api(Libs.AndroidX.constraintLayout)
     api(Libs.Google.Android.PlayServices.location)

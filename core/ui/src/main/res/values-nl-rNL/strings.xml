@@ -174,6 +174,7 @@
     <string name="temp_basal_tsf_fake_extended">%1$.2f E/u (%2$.2fE) @%3$s</string>
     <string name="temp_basal_tsf_absolute">%1$.2f E/u @%2$s</string>
     <string name="temp_basal_tsf_percent">%1$.0f%% @%2$s</string>
+    <string name="extended_bolus_full">%1$.2f E/u @%2$s %3$s/%4$s min</string>
     <string name="extended_bolus_medium">%1$.2f E/u %2$s/%3$s\'</string>
     <!--    Protection-->
     <string name="wrongpassword">Verkeerd wachtwoord</string>
@@ -343,6 +344,7 @@
     <string name="uel_export_settings">EXPORTEER INSTELLINGEN</string>
     <string name="uel_import_settings">IMPORT INSTELLINGEN</string>
     <string name="uel_reset_databases">RESET DATABASES</string>
+    <string name="uel_reset_aps_results">RESET APS RESULTATEN</string>
     <string name="uel_cleanup_databases">DATABASES OPSCHONEN</string>
     <string name="uel_export_databases">EXPORTEER DATABASES</string>
     <string name="uel_import_databases">IMPORT DATABASES</string>
@@ -485,6 +487,7 @@
     <string name="password_cleared">Wachtwoord gewist!</string>
     <string name="pairing">Koppelen</string>
     <string name="initializing">Initialiseren...</string>
+    <string name="secs" comment="second short">%1$d s</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Beperken van basaal tot max %1$.2f E/uur wegens de %2$s</string>
     <string name="pumplimit">Pomp limiet</string>

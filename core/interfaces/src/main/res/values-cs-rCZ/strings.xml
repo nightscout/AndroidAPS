@@ -61,4 +61,5 @@
     <string name="pref_show_date">Zobrazit datum</string>
     <string name="default_custom_watchface_comment">Výchozí ciferník. Můžete kliknout na tlačítko EXPORTOVAT CIFERNÍK pro vygenerování šablony</string>
     <string name="wear_default_watchface">Výchozí ciferník</string>
+    <string name="wear_more_watchfaces">Další ciferníky</string>
 </resources>

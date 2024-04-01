@@ -14,6 +14,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -72,6 +73,7 @@ class InsulinDialog : DialogFragmentWithDate() {
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var decimalFormatter: DecimalFormatter
     @Inject lateinit var injector: HasAndroidInjector
+    @Inject lateinit var loop: Loop
 
     private var queryingProtection = false
     private val disposable = CompositeDisposable()
@@ -121,11 +123,20 @@ class InsulinDialog : DialogFragmentWithDate() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val pump = activePlugin.activePump
         if (config.NSCLIENT) {
             binding.recordOnly.isChecked = true
             binding.recordOnly.isEnabled = false
         }
         val maxInsulin = constraintChecker.getMaxBolusAllowed().value()
+
+        if (loop.isDisconnected || pump.isSuspended() || !pump.isInitialized()) {
+            binding.recordOnly.isChecked = true
+            binding.recordOnly.isEnabled = false
+            binding.recordOnly.setTextColor(rh.gac(app.aaps.core.ui.R.attr.warningColor))
+            binding.header.setBackgroundColor(rh.gac(app.aaps.core.ui.R.attr.ribbonWarningColor))
+            binding.headerText.setTextColor(rh.gac(app.aaps.core.ui.R.attr.ribbonTextWarningColor))
+        }
 
         binding.time.setParams(
             savedInstanceState?.getDouble("time")
@@ -162,7 +173,9 @@ class InsulinDialog : DialogFragmentWithDate() {
             binding.amount.announceValue()
         }
 
-        binding.timeLayout.visibility = View.GONE
+        if (!binding.recordOnly.isChecked) {
+            binding.timeLayout.visibility = View.GONE
+        }
         binding.recordOnly.setOnCheckedChangeListener { _, isChecked: Boolean ->
             binding.timeLayout.visibility = isChecked.toVisibility()
         }

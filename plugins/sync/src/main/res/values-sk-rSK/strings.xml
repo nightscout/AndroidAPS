@@ -100,7 +100,6 @@
     <string name="not_connected">Nepripojené</string>
     <string name="read_only">Iba na čítanie</string>
     <string name="working">Pracujem</string>
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>
@@ -123,6 +122,8 @@
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Pripájanie k zariadeniu Garmin (Fénix, Edge, ...)</string>
+    <string name="garmin_local_http_server_port">Port lokálneho HTTP servera</string>
+    <string name="garmin_local_http_server">Lokálny HTTP server</string>
     <!--    Wear-->
     <string name="wear_shortname">WEAR</string>
     <string name="description_wear">Zobrazovanie stavu a riadenie AndroidAPS z hodiniek s WearOS.</string>
@@ -157,6 +158,7 @@
     <string name="wear_infos_watchface">Informácie o ciferníku</string>
     <string name="wear_export_watchface">Exportovať šablónu</string>
     <string name="wear_new_custom_watchface_exported">Vlastná šablóna ciferníka exportovaná</string>
+    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/cs/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Všetky dáta poslať znova</string>
     <string name="open_settings_on_wear">Otvoriť nastavenia na hodinkách</string>
     <string name="cwf_infos_pref_locked">Zoznam preferencií uzamknutý hodinkami</string>

@@ -9,18 +9,21 @@ import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.HR
+import app.aaps.core.data.model.OE
 import app.aaps.core.data.model.SC
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TDD
 import app.aaps.core.data.model.TT
 import app.aaps.core.data.model.TrendArrow
+import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -38,6 +41,7 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -46,6 +50,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventMobileToWear
+import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.rx.events.EventWearUpdateGui
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
 import app.aaps.core.interfaces.rx.weardata.EventData
@@ -77,6 +82,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DateFormat
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.LinkedList
 import java.util.Locale
@@ -119,9 +125,11 @@ class DataHandlerMobile @Inject constructor(
     private val decimalFormatter: DecimalFormatter
 ) {
 
+    @Inject lateinit var automation: Automation
     private val disposable = CompositeDisposable()
 
     private var lastBolusWizard: BolusWizard? = null
+    private var lastQuickWizardEntry: QuickWizardEntry? = null
 
     init {
         // From Wear
@@ -298,12 +306,42 @@ class DataHandlerMobile @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({
                            aapsLogger.debug(LTag.WEAR, "ActionWizardConfirmed received $it from ${it.sourceNodeId}")
+
+                           var carbTime: Long? = null
+                           var carbTimeOffset: Long = 0
+                           var useAlarm = false
+                           val currentTime = Calendar.getInstance().timeInMillis
+                           var eventTime = currentTime
+                           var carbs2 = 0
+                           var duration = 0
+                           var notes: String? = null
+
                            lastBolusWizard?.let { lastBolusWizard ->
                                if (lastBolusWizard.timeStamp == it.timeStamp) { //use last calculation as confirmed string matches
-                                   doBolus(lastBolusWizard.calculatedTotalInsulin, lastBolusWizard.carbs, null, 0, lastBolusWizard.createBolusCalculatorResult())
+                                   lastQuickWizardEntry?.let { lastQuickWizardEntry ->
+                                       carbTimeOffset = lastQuickWizardEntry.carbTime().toLong()
+                                       carbTime = currentTime + (carbTimeOffset * 60000)
+                                       useAlarm = lastQuickWizardEntry.useAlarm() == QuickWizardEntry.YES
+                                       notes = lastQuickWizardEntry.buttonText()
+
+                                       if (lastQuickWizardEntry.useEcarbs() == QuickWizardEntry.YES) {
+
+                                           val timeOffset = lastQuickWizardEntry.time()
+                                           eventTime += (timeOffset * 60000)
+                                           carbs2 = lastQuickWizardEntry.carbs2()
+                                           duration = lastQuickWizardEntry.duration()
+                                       }
+                                   }
+                                   doBolus(lastBolusWizard.calculatedTotalInsulin, lastBolusWizard.carbs, carbTime, 0, lastBolusWizard.createBolusCalculatorResult(), notes)
+                                   doECarbs(carbs2, eventTime, duration, notes)
+
+                                   if (useAlarm && lastBolusWizard.carbs > 0 && carbTimeOffset > 0) {
+                                       automation.scheduleTimeToEatReminder(T.mins(carbTimeOffset).secs().toInt())
+                                   }
                                }
                            }
                            lastBolusWizard = null
+                           lastQuickWizardEntry = null
                        }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventData.SnoozeAlert::class.java)
@@ -498,10 +536,30 @@ class DataHandlerMobile @Inject constructor(
             return
         }
 
+        var eCarbsMessagePart = ""
+        if (quickWizardEntry.useEcarbs() == QuickWizardEntry.YES) {
+            val carbs2 = quickWizardEntry.carbs2()
+            val offset = quickWizardEntry.time()
+            val durration = quickWizardEntry.duration()
+
+            eCarbsMessagePart += "\n+" + carbs2.toString() + rh.gs(R.string.grams_short) + "/" + durration.toString() + rh.gs(R.string.hour_short) + "(+" + offset.toString() +
+                rh.gs(app.aaps.core.interfaces.R.string.shortminute) + ")"
+        }
+
+        var carbDelayMessagePart = ""
+        if (quickWizardEntry.carbTime() > 0) {
+            carbDelayMessagePart = "(+" + quickWizardEntry.carbTime().toString() + rh.gs(app.aaps.core.interfaces.R.string.shortminute) + ")"
+            if (quickWizardEntry.useAlarm() == QuickWizardEntry.YES) {
+                carbDelayMessagePart += "!"
+            }
+        }
+
         val message = rh.gs(R.string.quick_wizard_message, quickWizardEntry.buttonText(), wizard.calculatedTotalInsulin, quickWizardEntry.carbs()) +
-            "\n_____________\n" + wizard.explainShort()
+            carbDelayMessagePart +
+            eCarbsMessagePart + "\n_____________\n" + wizard.explainShort()
 
         lastBolusWizard = wizard
+        lastQuickWizardEntry = quickWizardEntry
         rxBus.send(
             EventMobileToWear(
                 EventData.ConfirmAction(
@@ -1195,14 +1253,16 @@ class DataHandlerMobile @Inject constructor(
                 .subscribe()
     }
 
-    private fun doBolus(amount: Double, carbs: Int, carbsTime: Long?, carbsDuration: Int, bolusCalculatorResult: BCR?) {
+    private fun doBolus(amount: Double, carbs: Int, carbsTime: Long?, carbsDuration: Int, bolusCalculatorResult: BCR?, notes: String? = null) {
         val detailedBolusInfo = DetailedBolusInfo()
         detailedBolusInfo.insulin = amount
         detailedBolusInfo.carbs = carbs.toDouble()
         detailedBolusInfo.bolusType = BS.Type.NORMAL
         detailedBolusInfo.carbsTimestamp = carbsTime
         detailedBolusInfo.carbsDuration = T.hours(carbsDuration.toLong()).msecs()
+        detailedBolusInfo.notes = notes
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
+
             val action = when {
                 amount == 0.0     -> Action.CARBS
                 carbs == 0        -> Action.BOLUS
@@ -1222,6 +1282,35 @@ class DataHandlerMobile @Inject constructor(
                 }
             })
             bolusCalculatorResult?.let { persistenceLayer.insertOrUpdateBolusCalculatorResult(it).blockingGet() }
+
+            if (lastQuickWizardEntry!!.useSuperBolus() == QuickWizardEntry.YES) {
+                val profile = profileFunction.getProfile() ?: return
+                val pump = activePlugin.activePump
+
+                //uel.log(Action.SUPERBOLUS_TBR, Sources.WizardDialog)
+                if (loop.isEnabled()) {
+                    loop.goToZeroTemp(2 * 60, profile, OE.Reason.SUPER_BOLUS, Action.SUPERBOLUS_TBR, Sources.WizardDialog, listOf())
+                    rxBus.send(EventRefreshOverview("WizardDialog"))
+                }
+
+                if (pump.pumpDescription.tempBasalStyle == PumpDescription.ABSOLUTE) {
+                    commandQueue.tempBasalAbsolute(0.0, 120, true, profile, PumpSync.TemporaryBasalType.NORMAL, object : Callback() {
+                        override fun run() {
+                            if (!result.success) {
+                                uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.temp_basal_delivery_error), app.aaps.core.ui.R.raw.boluserror)
+                            }
+                        }
+                    })
+                } else {
+                    commandQueue.tempBasalPercent(0, 120, true, profile, PumpSync.TemporaryBasalType.NORMAL, object : Callback() {
+                        override fun run() {
+                            if (!result.success) {
+                                uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.temp_basal_delivery_error), app.aaps.core.ui.R.raw.boluserror)
+                            }
+                        }
+                    })
+                }
+            }
         }
     }
 
@@ -1242,7 +1331,7 @@ class DataHandlerMobile @Inject constructor(
         })
     }
 
-    private fun doECarbs(carbs: Int, carbsTime: Long, duration: Int) {
+    private fun doECarbs(carbs: Int, carbsTime: Long, duration: Int, notes: String? = null) {
         uel.log(
             action = if (duration == 0) Action.CARBS else Action.EXTENDED_CARBS,
             source = Sources.Wear,
@@ -1250,7 +1339,7 @@ class DataHandlerMobile @Inject constructor(
                                 ValueWithUnit.Gram(carbs),
                                 ValueWithUnit.Hour(duration).takeIf { duration != 0 })
         )
-        doBolus(0.0, carbs, carbsTime, duration, null)
+        doBolus(0.0, carbs, carbsTime, duration, null, notes)
     }
 
     private fun doProfileSwitch(command: EventData.ActionProfileSwitchConfirmed) {

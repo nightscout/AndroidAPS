@@ -30,8 +30,6 @@
     <string name="status">Статус:</string>
     <string name="patient_name">Име на пациента</string>
     <string name="patient_name_summary">Моля, посочете име на пациента или измислено име, за да се различават</string>
-    <string name="privacy_settings">Настройки за поверителност</string>
-    <string name="privacy_summary">Можете да посочите електронна поща, ако искате да бъдете уведомени за системни проблеми. Това не е автоматичен процес. Разработчиците ще се свържат с вас в случай на опасна ситуация.</string>
     <string name="diawarning">Моля, не забравяйте: нови инсулин профили изискват време на действие на инсулиина - DIA от поне 5ч. DIA 5-6ч на нов профил е равно на DIA 3ч при стари инсулин профили.</string>
     <string name="profile">Профил</string>
     <string name="doprofileswitch">Смени профил</string>

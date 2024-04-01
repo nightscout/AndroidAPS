@@ -100,7 +100,6 @@
     <string name="not_connected">Neconectat</string>
     <string name="read_only">Doar vizualizare</string>
     <string name="working">În lucru</string>
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>

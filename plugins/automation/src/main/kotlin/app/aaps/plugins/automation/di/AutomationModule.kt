@@ -33,15 +33,21 @@ import app.aaps.plugins.automation.triggers.TriggerBTDevice
 import app.aaps.plugins.automation.triggers.TriggerBg
 import app.aaps.plugins.automation.triggers.TriggerBolusAgo
 import app.aaps.plugins.automation.triggers.TriggerCOB
+import app.aaps.plugins.automation.triggers.TriggerCannulaAge
 import app.aaps.plugins.automation.triggers.TriggerConnector
 import app.aaps.plugins.automation.triggers.TriggerDelta
 import app.aaps.plugins.automation.triggers.TriggerDummy
 import app.aaps.plugins.automation.triggers.TriggerHeartRate
+import app.aaps.plugins.automation.triggers.TriggerInsulinAge
 import app.aaps.plugins.automation.triggers.TriggerIob
 import app.aaps.plugins.automation.triggers.TriggerLocation
 import app.aaps.plugins.automation.triggers.TriggerProfilePercent
+import app.aaps.plugins.automation.triggers.TriggerPumpBatteryAge
+import app.aaps.plugins.automation.triggers.TriggerPumpBatteryLevel
 import app.aaps.plugins.automation.triggers.TriggerPumpLastConnection
 import app.aaps.plugins.automation.triggers.TriggerRecurringTime
+import app.aaps.plugins.automation.triggers.TriggerReservoirLevel
+import app.aaps.plugins.automation.triggers.TriggerSensorAge
 import app.aaps.plugins.automation.triggers.TriggerTempTarget
 import app.aaps.plugins.automation.triggers.TriggerTempTargetValue
 import app.aaps.plugins.automation.triggers.TriggerTime
@@ -72,6 +78,12 @@ abstract class AutomationModule {
     @ContributesAndroidInjector abstract fun triggerAutosensValueInjector(): TriggerAutosensValue
     @ContributesAndroidInjector abstract fun triggerBgInjector(): TriggerBg
     @ContributesAndroidInjector abstract fun triggerBolusAgoInjector(): TriggerBolusAgo
+    @ContributesAndroidInjector abstract fun triggerSensorAgeInjector(): TriggerSensorAge
+    @ContributesAndroidInjector abstract fun triggerCanulaAgeInjector(): TriggerCannulaAge
+    @ContributesAndroidInjector abstract fun triggerInsulinAgeInjector(): TriggerInsulinAge
+    @ContributesAndroidInjector abstract fun triggerReservoirLevelInjector(): TriggerReservoirLevel
+    @ContributesAndroidInjector abstract fun triggerPumpBatteryAgeInjector(): TriggerPumpBatteryAge
+    @ContributesAndroidInjector abstract fun triggerPumpBatteryLevelInjector(): TriggerPumpBatteryLevel
     @ContributesAndroidInjector abstract fun triggerCOBInjector(): TriggerCOB
     @ContributesAndroidInjector abstract fun triggerConnectorInjector(): TriggerConnector
     @ContributesAndroidInjector abstract fun triggerDeltaInjector(): TriggerDelta

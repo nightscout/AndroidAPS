@@ -131,26 +131,8 @@
     <string name="a11y_only_on_watch">endast på klockan</string>
     <string name="a11y_only_on_phone">endast på telefonen</string>
     <string name="quickwizard_settings">Inställningar för snabbknappar</string>
-    <string name="overview_edit_quickwizard_button_text">Knapptext:</string>
-    <string name="overview_edit_quickwizard_carbs">Kolhydrater:</string>
     <string name="overview_edit_quickwizard_valid">Giltig:</string>
     <string name="overview_edit_quickwizard_list_activity_add">Lägg till</string>
     <string name="overview_quickwizard_item_edit_button">Ändra</string>
-    <string name="overview_edit_quickwizard_show_on_device">Visa snabbknappar på:</string>
-    <string name="overview_edit_quickwizard_use_bg">BG-beräkning</string>
-    <string name="overview_edit_quickwizard_use_bolus_iob">Bolus IOB-beräkning</string>
-    <string name="overview_edit_quickwizard_use_basal_iob">Basal IOB-beräkning</string>
-    <string name="overview_edit_quickwizard_use_trend">Trendberäkning</string>
-    <string name="overview_edit_quickwizard_use_superbolus">Superbolusberäkning</string>
-    <string name="overview_edit_quickwizard_percentage">Procent</string>
-    <string name="device_all">Alla</string>
-    <string name="device_phone">Telefon</string>
-    <string name="device_watch">Klocka</string>
-    <string name="positive_only">Endast positiva</string>
-    <string name="negative_only">Endast negativa</string>
-    <string name="overview_editquickwizard_usecob">COB-beräkning</string>
-    <string name="overview_editquickwizard_usetemptarget">Beräkning av temporärt målvärde</string>
-    <string name="overview_editquickwizard_usepercentage">Procentuell beräkning</string>
-    <string name="app_default">Appens standardinställning</string>
     <string name="a11y_drag_and_drop_handle">dra och släpp-handtag</string>
 </resources>

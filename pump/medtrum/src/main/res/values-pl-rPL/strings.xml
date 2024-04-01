@@ -49,7 +49,6 @@
     <string name="alarm_expired">Ważność wygasła</string>
     <string name="alarm_reservoir_empty">Zbiornik w pompie jest pusty</string>
     <string name="alarm_patch_fault">Błąd Patcha</string>
-    <string name="alarm_patch_fault2">Błąd Patcha 2</string>
     <string name="alarm_base_fault">Błąd bazy</string>
     <string name="alarm_battery_out">Rozładowana bateria</string>
     <string name="alarm_no_calibration">Brak kalibracji</string>
@@ -108,7 +107,6 @@
     <string name="sn_input_title">Numer seryjny</string>
     <string name="sn_input_summary">Wprowadź numer seryjny bazy pompy.</string>
     <string name="sn_input_invalid">Nieprawidłowy numer seryjny!</string>
-    <string name="pump_unsupported">Pompa nieprzetestowana: %1$d! Skontaktuj się z nami na Discordzie lub github, aby uzyskać wsparcie</string>
     <string name="alarm_setting_title">Ustawienia alarmu</string>
     <string name="alarm_setting_summary">Wybierz preferowaną konfigurację alarmu pompy.</string>
     <string name="pump_warning_notification_title">Powiadomienie o ostrzeżeniu pompy</string>

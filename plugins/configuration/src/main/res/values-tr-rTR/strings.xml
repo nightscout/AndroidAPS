@@ -30,8 +30,6 @@
     <string name="status">Durum:</string>
     <string name="patient_name">Hasta Adı</string>
     <string name="patient_name_summary">Lütfen çoklu kurulumlar arasında ayrım yapmak için hasta adı veya takma ad belirleyin</string>
-    <string name="privacy_settings">Gizlilik ayarı</string>
-    <string name="privacy_summary">Uygulama çökmeleri hakkında bilgilendirilmek istiyorsanız isteğe bağlı e-posta adresi sağlayabilirsiniz. Bu otomatik bir hizmet değildir. Tehlikeli durumlarda geliştiriciler sizinle iletişime geçecektir.</string>
     <string name="diawarning">Lütfen unutmayın: yeni insülin profilleri en az 5 saat DIA gerektirir. Yeni profildeki DIA 5–6 saat, eski insülin profillerinde DIA 3saat\'e eşittir.</string>
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Profil Değişimi Yap</string>

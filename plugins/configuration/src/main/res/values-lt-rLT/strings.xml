@@ -30,8 +30,6 @@
     <string name="status">Statusas:</string>
     <string name="patient_name">Paciento vardas</string>
     <string name="patient_name_summary">Įrašykite paciento vardą arba slapyvardį, kad galima būtų atskirti tarp skirtingų konfigūracijų.</string>
-    <string name="privacy_settings">Privatumo nuostatos</string>
-    <string name="privacy_summary">Nurodykite el. pašto adresą (neprivaloma), jei norite gauti informaciją apie programos klaidas. Tai nėra automatizuota paslauga. Kūrėjai susisieks esant pavojingoms situacijoms.</string>
     <string name="diawarning">Svarbu: DKS profiliuose IVT turi būti bent 5 val. Tai atitinka 3 val. IVT įprastoje pompos terapijoje.</string>
     <string name="profile">Profilis</string>
     <string name="doprofileswitch">Profilio keitimas</string>

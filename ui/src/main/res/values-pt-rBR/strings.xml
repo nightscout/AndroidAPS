@@ -131,26 +131,8 @@
     <string name="a11y_only_on_watch">somente no smartwatch</string>
     <string name="a11y_only_on_phone">somente no telefone</string>
     <string name="quickwizard_settings">Configurações Assistente Rápido</string>
-    <string name="overview_edit_quickwizard_button_text">Texto do botão:</string>
-    <string name="overview_edit_quickwizard_carbs">Carboidratos:</string>
     <string name="overview_edit_quickwizard_valid">Válido:</string>
     <string name="overview_edit_quickwizard_list_activity_add">Adicionar</string>
     <string name="overview_quickwizard_item_edit_button">Editar</string>
-    <string name="overview_edit_quickwizard_show_on_device">Mostrar entrada no dispositivo:</string>
-    <string name="overview_edit_quickwizard_use_bg">Cálculo de glicemia</string>
-    <string name="overview_edit_quickwizard_use_bolus_iob">Cáculo IA de Bólus</string>
-    <string name="overview_edit_quickwizard_use_basal_iob">Cálculo IA de Basal</string>
-    <string name="overview_edit_quickwizard_use_trend">Cálculo tendência</string>
-    <string name="overview_edit_quickwizard_use_superbolus">Cálculo de superbolus</string>
-    <string name="overview_edit_quickwizard_percentage">Porcentagem</string>
-    <string name="device_all">Todos</string>
-    <string name="device_phone">Telefone</string>
-    <string name="device_watch">Relógio</string>
-    <string name="positive_only">Apenas positivo</string>
-    <string name="negative_only">Apenas negativo</string>
-    <string name="overview_editquickwizard_usecob">Cálculo CA</string>
-    <string name="overview_editquickwizard_usetemptarget">Cálculo alvo temporário</string>
-    <string name="overview_editquickwizard_usepercentage">Cálculo de porcentagem</string>
-    <string name="app_default">Padrão do aplicativo</string>
     <string name="a11y_drag_and_drop_handle">arraste e solte aqui</string>
 </resources>

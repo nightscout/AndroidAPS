@@ -70,8 +70,8 @@
 
                 <ImageView
                     android:id="@+id/device"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:adjustViewBounds="false"
                     android:contentDescription="@string/a11y_only_on_phone"
                     android:cropToPadding="false"

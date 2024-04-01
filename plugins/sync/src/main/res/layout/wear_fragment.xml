@@ -157,24 +157,24 @@
                         app:layout_columnWeight="1"
                         app:layout_gravity="fill"
                         app:layout_row="1"
-                        app:layout_column="0" />
+                        app:layout_column="1" />
 
                     <app.aaps.core.ui.elements.SingleClickButton
-                        android:id="@+id/default_custom"
+                        android:id="@+id/more_custom"
                         style="@style/GrayButton"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:drawableTop="@drawable/set_default"
+                        android:drawableTop="@drawable/more_cwf"
                         android:paddingStart="0dp"
                         android:paddingEnd="0dp"
-                        android:text="@string/wear_default_watchface"
+                        android:text="@string/wear_more_watchfaces"
                         android:textSize="12sp"
                         android:textColor="?attr/treatmentButton"
                         android:visibility="visible"
                         app:layout_columnWeight="1"
                         app:layout_gravity="fill"
                         app:layout_row="1"
-                        app:layout_column="1" />
+                        app:layout_column="0" />
 
                 </androidx.gridlayout.widget.GridLayout>
 

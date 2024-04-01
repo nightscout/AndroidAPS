@@ -253,7 +253,7 @@ class OverviewPlugin @Inject constructor(
                     ctx = context,
                     intentKey = IntentKey.OverviewQuickWizardSettings,
                     title = R.string.quickwizard_settings,
-                    intent = Intent().apply { action = uiInteraction.quickWizardListActivity::class.java.name }
+                    intent = Intent(context, uiInteraction.quickWizardListActivity)
                 )
             )
             addPreference(preferenceManager.createPreferenceScreen(context).apply {

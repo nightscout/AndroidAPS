@@ -30,8 +30,6 @@
     <string name="status">סטטוס: </string>
     <string name="patient_name">שם המטופל\\ת</string>
     <string name="patient_name_summary">נא לציין את שם המטופל\\ת או כינוי, להבחנה בין מספר הגדרות</string>
-    <string name="privacy_settings">הגדרות פרטיות</string>
-    <string name="privacy_summary">אם תרצו, תוכלו לספק כתובת דוא\"ל כדי לקבל דיווח על קריסות יישום. שירות זה אינו אוטומטי. המפתחים יצרו איתכם קשר במצבים מסוכנים.</string>
     <string name="diawarning">חשוב לזכור: פרופילי אינסולין חדשים דורשים משך פעילות אינסולין (DIA) של 5 ש\' לפחות. ערך של 5-6 ש\' בפרופיל חדש שווה לערך של 3 ש\' בפרופילים ישנים.</string>
     <string name="profile">פרופיל</string>
     <string name="doprofileswitch">החלפת פרופיל</string>
