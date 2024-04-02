@@ -137,4 +137,5 @@
     <string name="overview_edit_quickwizard_percentage_too_high">האחוזים גבוהים מדי!</string>
     <string name="a11y_drag_and_drop_handle">לחצן גרירה</string>
     <string name="confirm_treatment">אשר טיפול</string>
+    <string name="recalculate">חשב מחדש</string>
 </resources>
