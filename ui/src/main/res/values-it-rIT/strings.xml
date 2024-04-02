@@ -17,6 +17,7 @@
     <!--     Activities-->
     <string name="activity_monitor">Monitor attività</string>
     <string name="do_you_want_reset_stats">Vuoi resettare le statistiche sull\'attività?</string>
+    <string name="do_you_want_recalculate_tdd_stats">Vuoi ricalcolare le statistiche TDD?</string>
     <string name="statistics">Statistiche</string>
     <string name="calculation_in_progress">Calcolo in corso</string>
     <string name="invalid_age">Inserimento età non valido</string>
@@ -145,6 +146,7 @@
     <string name="constraints_violation">Violazione dei vincoli</string>
     <string name="change_your_input">Cambia il tuo input!</string>
     <string name="confirm_treatment">Si prega di confermare il trattamento</string>
+    <string name="recalculate">Ricalcola</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Entrambi</item>
         <item>Solo positivo</item>
