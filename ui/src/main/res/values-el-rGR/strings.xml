@@ -17,7 +17,6 @@
     <!--     Activities-->
     <string name="activity_monitor">Παρακολούθηση δραστηριότητας</string>
     <string name="do_you_want_reset_stats">Θέλετε να επαναφέρετε τα στατιστικά δραστηριότητας;</string>
-    <string name="do_you_want_reset_tdd_stats">Θέλετε να επαναφέρετε τα στατιστικά TDD(Ημερήσια Συνολική Δόση) ;</string>
     <string name="statistics">Στατιστικά</string>
     <string name="calculation_in_progress">Υπολογισμός σε εξέλιξη</string>
     <string name="invalid_age">Μη έγκυρη καταχώρηση ηλικίας</string>
