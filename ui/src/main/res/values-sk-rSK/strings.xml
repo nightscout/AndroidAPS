@@ -17,6 +17,7 @@
     <!--     Activities-->
     <string name="activity_monitor">Monitor aktivity</string>
     <string name="do_you_want_reset_stats">Chcete resetovať štatistiky aktivity?</string>
+    <string name="do_you_want_recalculate_tdd_stats">Chcete prepočítať štatistiky CDD?</string>
     <string name="statistics">Štatistika</string>
     <string name="calculation_in_progress">Prebieha výpočet</string>
     <string name="invalid_age">Neplatný záznam veku</string>
@@ -145,6 +146,7 @@
     <string name="constraints_violation">Mimo povolený rozsah</string>
     <string name="change_your_input">Zmeňte zadanie!</string>
     <string name="confirm_treatment">Prosím potvrďte ošetrenie</string>
+    <string name="recalculate">Prepočítať</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Oba</item>
         <item>Iba kladné</item>
