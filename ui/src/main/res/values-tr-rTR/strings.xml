@@ -17,7 +17,6 @@
     <!--     Activities-->
     <string name="activity_monitor">Aktivite monitörü</string>
     <string name="do_you_want_reset_stats">Etkinlik istatistiklerini sıfırlamak istiyor musunuz?</string>
-    <string name="do_you_want_reset_tdd_stats">GTD istatistiklerini sıfırlamak istiyor musunuz?</string>
     <string name="statistics">İstatistikler</string>
     <string name="calculation_in_progress">Hesaplanıyor</string>
     <string name="invalid_age">Geçersiz yaş girişi</string>
