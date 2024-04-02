@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.utils.T
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.pump.medtrum.comm.enums.BasalType
+import info.nightscout.pump.medtrum.comm.enums.ModelType
 import info.nightscout.pump.medtrum.util.MedtrumSnUtil
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
@@ -139,7 +140,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         val receivedTime = 1500L
         val duration = T.mins(5).msecs()
 
-        medtrumPump.deviceType = MedtrumSnUtil.MD_8301
+        medtrumPump.deviceType = ModelType.MD8301.value
 
         // Mocks
         val expectedTemporaryBasal: PumpSync.PumpState.TemporaryBasal = mock(PumpSync.PumpState.TemporaryBasal::class.java)
@@ -191,7 +192,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         val basalStartTime = 1000L
         val receivedTime = 1500L
 
-        medtrumPump.deviceType = MedtrumSnUtil.MD_8301
+        medtrumPump.deviceType = ModelType.MD8301.value
 
         // Mocks
         val expectedTemporaryBasal: PumpSync.PumpState.TemporaryBasal = mock(PumpSync.PumpState.TemporaryBasal::class.java)
@@ -240,7 +241,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         val basalStartTime = 1000L
         val receivedTime = 1500L
 
-        medtrumPump.deviceType = MedtrumSnUtil.MD_8301
+        medtrumPump.deviceType = ModelType.MD8301.value
 
         // Mocks
         val expectedTemporaryBasal: PumpSync.PumpState.TemporaryBasal = mock(PumpSync.PumpState.TemporaryBasal::class.java)
@@ -293,7 +294,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         val duration = T.mins(5).msecs()
 
         medtrumPump.actualBasalProfile = medtrumPump.buildMedtrumProfileArray(validProfile)!!
-        medtrumPump.deviceType = MedtrumSnUtil.MD_8301
+        medtrumPump.deviceType = ModelType.MD8301.value
 
         // Mocks
         val expectedTemporaryBasal: PumpSync.PumpState.TemporaryBasal = mock(PumpSync.PumpState.TemporaryBasal::class.java)
@@ -346,7 +347,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         val basalStartTime = 1000L
         val receivedTime = 1500L
 
-        medtrumPump.deviceType = MedtrumSnUtil.MD_8301
+        medtrumPump.deviceType = ModelType.MD8301.value
 
         // Mocks
         val expectedTemporaryBasal: PumpSync.PumpState.TemporaryBasal = mock(PumpSync.PumpState.TemporaryBasal::class.java)
@@ -441,7 +442,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         val basalStartTime = 1000L
         val receivedTime = 1500L
 
-        medtrumPump.deviceType = MedtrumSnUtil.MD_8301
+        medtrumPump.deviceType = ModelType.MD8301.value
 
         // Mocks
         val expectedTemporaryBasal: PumpSync.PumpState.TemporaryBasal = mock(PumpSync.PumpState.TemporaryBasal::class.java)
@@ -492,7 +493,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         val basalStartTime = 1000L
         val receivedTime = 1500L
 
-        medtrumPump.deviceType = MedtrumSnUtil.MD_8301
+        medtrumPump.deviceType = ModelType.MD8301.value
 
         // Mocks
         Mockito.`when`(pumpSync.expectedPumpState()).thenReturn(
@@ -537,7 +538,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         val basalStartTime = 1000L
         val receivedTime = 1500L
 
-        medtrumPump.deviceType = MedtrumSnUtil.MD_8301
+        medtrumPump.deviceType = ModelType.MD8301.value
 
         // Mocks
         val expectedTemporaryBasal: PumpSync.PumpState.TemporaryBasal = mock(PumpSync.PumpState.TemporaryBasal::class.java)
@@ -581,7 +582,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         val basalStartTime = 1000L
         val receivedTime = 1500L
 
-        medtrumPump.deviceType = MedtrumSnUtil.MD_8301
+        medtrumPump.deviceType = ModelType.MD8301.value
 
         // Mocks
         Mockito.`when`(pumpSync.expectedPumpState()).thenReturn(
@@ -650,7 +651,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
 
     @Test fun setFakeTBRIfNotSetWhenNoFakeTBRAlreadyRunningExpectPumpSync() {
         // Inputs
-        medtrumPump.deviceType = MedtrumSnUtil.MD_8301
+        medtrumPump.deviceType = ModelType.MD8301.value
 
         // Mocks
         val expectedTemporaryBasal: PumpSync.PumpState.TemporaryBasal = mock(PumpSync.PumpState.TemporaryBasal::class.java)
@@ -684,7 +685,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
 
     @Test fun setFakeTBRIfNotSetWhenFakeTBRAlreadyRunningExpectNoPumpSync() {
         // Inputs
-        medtrumPump.deviceType = MedtrumSnUtil.MD_8301
+        medtrumPump.deviceType = ModelType.MD8301.value
 
         // Mocks
         val expectedTemporaryBasal: PumpSync.PumpState.TemporaryBasal = mock(PumpSync.PumpState.TemporaryBasal::class.java)

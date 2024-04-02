@@ -180,9 +180,9 @@
 
 
     <!--    DataBroadcast-->
-    <string name="data_broadcaster">Data Broadcaster</string>
-    <string name="data_broadcaster_short">DBRO</string>
-    <string name="data_broadcaster_description">Broadcast data to Garmin\'s G-Watch Wear App</string>
+    <string name="tizen">Samsung Tizen</string>
+    <string name="tizen_short">TIZ</string>
+    <string name="tizen_description">Broadcast data to Samsung\'s G-Watch Wear App (Tizen OS)</string>
 
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>

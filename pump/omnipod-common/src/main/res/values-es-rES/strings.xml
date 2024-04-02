@@ -125,6 +125,7 @@
     <string name="omnipod_common_pod_status_waiting_for_activation">Configuración en curso (esperando para activar el Pod)</string>
     <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">Configuración en curso (en espera de inserción de cánula)</string>
     <string name="omnipod_common_pod_status_running">Funcionando</string>
+    <string name="omnipod_common_pod_status_normal">Normal</string>
     <string name="omnipod_common_pod_status_suspended">Suspendido</string>
     <string name="omnipod_common_pod_status_pod_fault">Error del Pod</string>
     <string name="omnipod_common_pod_status_activation_time_exceeded">Tiempo de activación excedido</string>

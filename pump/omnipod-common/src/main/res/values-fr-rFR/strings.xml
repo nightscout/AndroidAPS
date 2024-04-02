@@ -53,7 +53,7 @@
     <string name="omnipod_common_overview_pod_unique_id">ID unique</string>
     <string name="omnipod_common_overview_lot_number">Numéro de lot</string>
     <string name="omnipod_common_overview_pod_sequence_number">Numéro de série</string>
-    <string name="omnipod_common_overview_pod_expiry_date">Pod Expiré</string>
+    <string name="omnipod_common_overview_pod_expiry_date">Pod expire le</string>
     <string name="omnipod_common_overview_last_connection">Dernière connexion</string>
     <string name="omnipod_common_overview_last_bolus">Dernier bolus</string>
     <string name="omnipod_common_overview_temp_basal_rate">Débit de Basal Temp.</string>

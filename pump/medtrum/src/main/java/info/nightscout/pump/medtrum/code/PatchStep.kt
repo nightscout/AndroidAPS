@@ -15,7 +15,6 @@ enum class PatchStep {
     ACTIVATE_COMPLETE,
     RETRY_ACTIVATION,
     RETRY_ACTIVATION_CONNECT,
-    ERROR,
     CANCEL,
     COMPLETE;
 }

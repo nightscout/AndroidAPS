@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="dynisf_adjust_sensitivity">Activer le ratio de sensibilité basé sur DTQ pour la modification du basal et la cible des glycémies</string>
+    <string name="dynisf_adjust_sensitivity_summary">Utilise le dernier DTQ 24h/DTQ 7j pour calculer le ratio de sensibilité utilisé pour augmenter ou diminuer le taux de basal et ajuster aussi la cible de glycémie si ces options sont activées, de la même manière que Autosens. Il est recommandé de commencer avec cette option désactivée</string>
     <string name="DynISFAdjust_title" formatted="false">Facteur d\'ajustement Si dynamique %</string>
     <string name="DynISFAdjust_summary" formatted="false">Facteur d\'ajustement pour Si dynamique. Définissez plus de 100 % pour des corrections plus agressives et moins de 100 % pour des corrections moins agressives.</string>
     <string name="high_temptarget_raises_sensitivity_title">Cible temp. haute élève la sensibilité</string>

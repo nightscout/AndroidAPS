@@ -1,4 +1,4 @@
-package app.aaps.plugins.sync.dataBroadcaster
+package app.aaps.plugins.sync.tizen
 
 import android.content.Context
 import android.content.Intent
@@ -41,7 +41,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class DataBroadcastPlugin @Inject constructor(
+class TizenPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
@@ -64,9 +64,9 @@ class DataBroadcastPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.SYNC)
         .pluginIcon(app.aaps.core.main.R.drawable.ic_watch)
-        .pluginName(R.string.data_broadcaster)
-        .shortName(R.string.data_broadcaster_short)
-        .description(R.string.data_broadcaster_description),
+        .pluginName(R.string.tizen)
+        .shortName(R.string.tizen_short)
+        .description(R.string.tizen_description),
     aapsLogger, rh, injector
 ) {
 

@@ -1,5 +1,6 @@
 package app.aaps.core.interfaces.pump
 
+import app.aaps.core.interfaces.db.GlucoseUnit
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.defs.PumpType
 import app.aaps.core.interfaces.utils.DateUtil
@@ -256,6 +257,26 @@ interface PumpSync {
      * @return true if new record is created
      **/
     fun insertTherapyEventIfNewWithTimestamp(timestamp: Long, type: DetailedBolusInfo.EventType, note: String? = null, pumpId: Long? = null, pumpType: PumpType, pumpSerial: String): Boolean
+
+    /**
+     * Synchronization of FINGER_STICK_BG_VALUE events
+     *
+     * Assuming there will be no clash on timestamp from different pumps
+     * only timestamp and type is compared
+     *
+     * If db record doesn't exist, new record is created.
+     * If exists, data is ignored
+     *
+     * @param timestamp     timestamp of event from pump history
+     * @param glucose       glucose value
+     * @param glucoseUnit   glucose unit
+     * @param note          note
+     * @param pumpId        pump id from history if available
+     * @param pumpType      pump type like PumpType.ACCU_CHEK_COMBO
+     * @param pumpSerial    pump serial number
+     * @return true if new record is created
+     **/
+    fun insertFingerBgIfNewWithTimestamp(timestamp: Long, glucose: Double, glucoseUnit: GlucoseUnit, note: String? = null, pumpId: Long? = null, pumpType: PumpType, pumpSerial: String): Boolean
 
     /**
      * Create an announcement

@@ -30,6 +30,7 @@ dependencies {
     testImplementation(project(":shared:tests"))
     testImplementation(project(":implementation"))
     testImplementation(project(":plugins:aps"))
+    androidTestImplementation(project(":shared:tests"))
 
     // OpenHuman
     api(Libs.Squareup.Okhttp3.okhttp)
@@ -48,6 +49,10 @@ dependencies {
 
     // DataLayerListenerService
     api(Libs.Google.Android.PlayServices.wearable)
+
+    // Garmin
+    api(Libs.connectiqSdk)
+    androidTestImplementation(Libs.connectiqSdk)
 
     kapt(Libs.Dagger.compiler)
     kapt(Libs.Dagger.androidProcessor)

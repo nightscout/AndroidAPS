@@ -207,6 +207,7 @@ android {
     //Deleting it causes a binding error
     buildFeatures {
         dataBinding = true
+        buildConfig = true
     }
 }
 
