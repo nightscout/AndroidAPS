@@ -17,7 +17,6 @@
     <!--     Activities-->
     <string name="activity_monitor">Monitor de actividade</string>
     <string name="do_you_want_reset_stats">Quer reiniciar as estatísticas de actividade?</string>
-    <string name="do_you_want_reset_tdd_stats">Quer reiniciar as estatísticas do TID?</string>
     <string name="statistics">Estatísticas</string>
     <string name="calculation_in_progress">Cálculo em curso</string>
     <string name="invalid_age">Entrada de idade inválida</string>
