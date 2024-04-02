@@ -75,6 +75,7 @@ fun UserEntry.Sources.fromDb(): Sources =
         UserEntry.Sources.Aaps                -> Sources.Aaps
         UserEntry.Sources.BgFragment          -> Sources.BgFragment
         UserEntry.Sources.Garmin              -> Sources.Garmin
+        UserEntry.Sources.Database            -> Sources.Database
         UserEntry.Sources.Unknown             -> Sources.Unknown
     }
 
@@ -150,6 +151,7 @@ fun Sources.toDb(): UserEntry.Sources =
         Sources.Aaps                -> UserEntry.Sources.Aaps
         Sources.BgFragment          -> UserEntry.Sources.BgFragment
         Sources.Garmin              -> UserEntry.Sources.Garmin
+        Sources.Database            -> UserEntry.Sources.Database
         Sources.Unknown             -> UserEntry.Sources.Unknown
     }
 
