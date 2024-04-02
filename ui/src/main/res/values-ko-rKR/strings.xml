@@ -17,7 +17,6 @@
     <!--     Activities-->
     <string name="activity_monitor">활동 모니터</string>
     <string name="do_you_want_reset_stats">활동 통계를 초기화하시겠습니까?</string>
-    <string name="do_you_want_reset_tdd_stats">TDD 통계를 재설정하시겠습니까?</string>
     <string name="statistics">통계</string>
     <string name="calculation_in_progress">계산 진행 중</string>
     <string name="invalid_age">유효하지 않은 나이입니다</string>
