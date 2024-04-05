@@ -68,6 +68,7 @@ Please follow these steps:
 * Trigger build in Github Actions
 * Download the `aaps.zip` file in `Artifacts`
 
+ 
 ### 如果你不熟悉安卓开发：
 你需要获取安卓签名文件的密码等信息，因安全原因，这些敏感信息不能公开发布于此。
 **强烈建议学习相关知识，编译完APK后，用你自己的签名文件签名。**
