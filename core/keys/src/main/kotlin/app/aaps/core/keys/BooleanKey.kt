@@ -48,7 +48,7 @@ enum class BooleanKey(
     MaintenanceEnableFabric(R.string.key_enable_fabric, true, defaultedBySM = true, hideParentScreenIfHidden = true),
     ApsAutoIsfHighTtRaisesSens(R.string.key_high_temptarget_raises_sensitivity, false, defaultedBySM = true),
     ApsAutoIsfLowTtLowersSens(R.string.key_low_temptarget_lowers_sensitivity, false, defaultedBySM = true),
-    ApsUseAutoIsf(R.string.key_use_autoISF, false, defaultedBySM = true),
+    ApsUseAutoIsf(R.string.key_use_autoISF, false),
     ApsUseAutoIsfWeights(R.string.key_enable_autoISF, false, defaultedBySM = true),
     ApsAutoIsfPpAlways(R.string.key_enable_postprandial_ISF_always, false, defaultedBySM = true),
     ApsAutoIsfDuraAfterCarbs(R.string.key_enable_dura_ISF_with_COB, false, defaultedBySM = true),

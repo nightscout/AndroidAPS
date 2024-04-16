@@ -156,7 +156,7 @@ class DetermineBasalAutoISF @Inject constructor(
         consoleLog.clear()
         var rT = RT(
             algorithm = APSResult.Algorithm.AUTO_ISF,
-            runningDynamicIsf = autoIsfMode,
+            runningDynamicIsf = false, // autoIsfMode,
             timestamp = currentTime,
             consoleLog = consoleLog,
             consoleError = consoleError
@@ -218,7 +218,7 @@ class DetermineBasalAutoISF @Inject constructor(
         var max_bg = profile.max_bg
 
         var sensitivityRatio = 1.0
-        var origin_sens = ""
+        // var origin_sens = ""
         var exercise_ratio = 1.0
         val high_temptarget_raises_sensitivity = profile.exercise_mode || profile.high_temptarget_raises_sensitivity
         val normalTarget = 100 // evaluate high/low temptarget against 100, not scheduled target (which might change)
@@ -240,7 +240,7 @@ class DetermineBasalAutoISF @Inject constructor(
                 sensitivityRatio = min(sensitivityRatio, profile.autosens_max)
                 sensitivityRatio = round(sensitivityRatio, 2)
                 exercise_ratio = sensitivityRatio
-                origin_sens = "from TT modifier"
+                // origin_sens = "from TT modifier"
                 consoleError.add("Sensitivity ratio set to $sensitivityRatio based on temp target of $target_bg; ")
             }
         } else {
@@ -248,10 +248,10 @@ class DetermineBasalAutoISF @Inject constructor(
             consoleError.add("Autosens ratio: $sensitivityRatio; ")
         }
         var iobTH_reduction_ratio = 1.0
-        var use_iobTH = false
+        // var use_iobTH = false
         if (iob_threshold_percent != 100) {
             iobTH_reduction_ratio = profile_percentage / 100.0 * exercise_ratio ;     // later: * activityRatio;
-            use_iobTH = true
+            // use_iobTH = true
         }
         basal = profile.current_basal * sensitivityRatio
         basal = round_basal(basal)
@@ -404,7 +404,7 @@ class DetermineBasalAutoISF @Inject constructor(
 
         rT = RT(
             algorithm = APSResult.Algorithm.AUTO_ISF,
-            runningDynamicIsf = autoIsfMode,
+            runningDynamicIsf = false, // autoIsfMode,
             timestamp = currentTime,
             bg = bg,
             tick = tick,
