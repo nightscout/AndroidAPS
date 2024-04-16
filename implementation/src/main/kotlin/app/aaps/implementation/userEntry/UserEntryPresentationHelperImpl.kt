@@ -109,6 +109,7 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         Sources.Overview            -> app.aaps.core.ui.R.drawable.ic_home
         Sources.Aaps                -> R.drawable.ic_aaps
         Sources.Garmin              -> app.aaps.core.ui.R.drawable.ic_generic_icon
+        Sources.Database            -> app.aaps.core.ui.R.drawable.ic_database_cleanup
         Sources.Unknown             -> app.aaps.core.ui.R.drawable.ic_generic_icon
         Sources.Random              -> R.drawable.ic_aaps
         Sources.BgFragment          -> R.drawable.ic_aaps

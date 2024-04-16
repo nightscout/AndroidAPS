@@ -92,7 +92,7 @@ class StatsActivity : TranslatedDaggerAppCompatActivity() {
             }
         }
         binding.resetTdd.setOnClickListener {
-            OKDialog.showConfirmation(this, rh.gs(R.string.do_you_want_reset_tdd_stats)) {
+            OKDialog.showConfirmation(this, rh.gs(R.string.do_you_want_recalculate_tdd_stats)) {
                 handler.post {
                     uel.log(Action.STAT_RESET, Sources.Stats)
                     persistenceLayer.clearCachedTddData(0)
