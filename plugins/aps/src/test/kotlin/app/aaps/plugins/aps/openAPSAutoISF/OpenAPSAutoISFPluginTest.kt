@@ -165,7 +165,7 @@ class OpenAPSAutoISFPluginTest : TestBaseWithProfile() {
             out_units = if (profileFunction.getUnits() == GlucoseUnit.MMOL) "mmol/L" else "mg/dl",
             variable_sens = 100.0, //variableSensitivity,
             insulinDivisor = 0,
-            TDD = 0.0
+            TDD = 0.0               // TODO complete with AutoISF dedicated parameters
         )
         assertThat(openAPSAutoISFPlugin.determine_varSMBratio(oapsProfile,100, 90.0, "fullLoop")).isEqualTo(0.5)
     }

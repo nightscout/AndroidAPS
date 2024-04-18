@@ -10,7 +10,6 @@ import app.aaps.core.interfaces.aps.CurrentTemp
 import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.aps.MealData
 import app.aaps.core.interfaces.aps.OapsProfile
-import app.aaps.core.interfaces.aps.AutoISFProfile
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.FileListProvider
@@ -712,7 +711,7 @@ class ReplayApsResultsTest @Inject constructor() {
             insulinDivisor = 0,
             TDD = 0.0
         )
-        val profile = AutoISFProfile(
+        val profile = OapsProfile(
             dia = 0.0,
             min_5m_carbimpact = 0.0,
             max_iob = determineBasalResult.profile.getDouble("max_iob"),
@@ -753,6 +752,9 @@ class ReplayApsResultsTest @Inject constructor() {
             temptargetSet = determineBasalResult.profile.getBoolean("temptargetSet"),
             autosens_max = determineBasalResult.profile.getDouble("autosens_max"),
             out_units = determineBasalResult.profile.optString("out_units"),
+            variable_sens = determineBasalResult.profile.getDouble("variable_sens"),
+            insulinDivisor = 0,
+            TDD = 0.0,
             autoISF_version = determineBasalResult.profile.optString("autoISF_version"),
             enable_autoISF = determineBasalResult.profile.getBoolean("enable_autoISF"),
             autoISF_max = determineBasalResult.profile.getDouble("autoISF_max"),
@@ -763,8 +765,6 @@ class ReplayApsResultsTest @Inject constructor() {
             pp_ISF_hours = determineBasalResult.profile.getInt("pp_ISF_hours"),
             pp_ISF_weight = determineBasalResult.profile.getDouble("pp_ISF_weight"),
             delta_ISFrange_weight = determineBasalResult.profile.getDouble("delta_ISFrange_weight"),
-            lower_ISFrange_weight = determineBasalResult.profile.getDouble("lower_ISFrange_weight"),
-            higher_ISFrange_weight = determineBasalResult.profile.getDouble("higher_ISFrange_weight"),
             enable_dura_ISF_with_COB = determineBasalResult.profile.getBoolean("enable_dura_ISF_with_COB"),
             dura_ISF_weight = determineBasalResult.profile.getDouble("dura_ISF_weight"),
             smb_delivery_ratio = determineBasalResult.profile.getDouble("smb_delivery_ratio"),

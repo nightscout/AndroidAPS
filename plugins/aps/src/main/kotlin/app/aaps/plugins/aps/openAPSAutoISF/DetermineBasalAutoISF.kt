@@ -156,7 +156,7 @@ class DetermineBasalAutoISF @Inject constructor(
         consoleLog.clear()
         var rT = RT(
             algorithm = APSResult.Algorithm.AUTO_ISF,
-            runningDynamicIsf = false, // autoIsfMode,
+            runningDynamicIsf = autoIsfMode,
             timestamp = currentTime,
             consoleLog = consoleLog,
             consoleError = consoleError
@@ -311,7 +311,7 @@ class DetermineBasalAutoISF @Inject constructor(
 
         if (autoIsfMode) {
             consoleError.add("----------------------------------")
-            consoleError.add("start AutoISF 3.0")
+            consoleError.add("start AutoISF ${profile.autoISF_version}")
             consoleError.add("----------------------------------")
             consoleError.addAll(auto_isf_console)
         }
@@ -404,7 +404,7 @@ class DetermineBasalAutoISF @Inject constructor(
 
         rT = RT(
             algorithm = APSResult.Algorithm.AUTO_ISF,
-            runningDynamicIsf = false, // autoIsfMode,
+            runningDynamicIsf = autoIsfMode,
             timestamp = currentTime,
             bg = bg,
             tick = tick,
