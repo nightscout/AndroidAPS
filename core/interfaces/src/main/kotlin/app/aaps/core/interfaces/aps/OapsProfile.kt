@@ -59,6 +59,8 @@ data class OapsProfile(
     var pp_ISF_hours:  Int = 3,
     var pp_ISF_weight: Double = 0.0,
     var delta_ISFrange_weight: Double = 0.0,
+    var lower_ISFrange_weight: Double = 0.0,
+    var higher_ISFrange_weight: Double = 0.0,
     var enable_dura_ISF_with_COB: Boolean = false,
     var dura_ISF_weight: Double = 0.0,
     var smb_delivery_ratio: Double = 0.5,

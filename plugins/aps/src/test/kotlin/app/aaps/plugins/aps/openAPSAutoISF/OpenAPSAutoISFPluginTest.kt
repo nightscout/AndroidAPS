@@ -117,11 +117,11 @@ class OpenAPSAutoISFPluginTest : TestBaseWithProfile() {
 
     @Test
     fun determine_varSMBratioTest() {
-        val smb_delivery_ratio = 0.3        //preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatio)
-        val smb_delivery_ratio_min = 0.4    //preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatioMin)
-        val smb_delivery_ratio_max = 0.6    //preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatioMax)
-        val smb_delivery_ratio_bg_range = preferences.get(UnitDoubleKey.ApsAutoIsfSmbDeliveryRatioBgRange)
-        val smbMaxRangeExtension = 2.0      //preferences.get(DoubleKey.ApsAutoIsfSmbMaxRangeExtension)
+        preferences.put(DoubleKey.ApsAutoIsfSmbDeliveryRatio, 0.3)
+        preferences.put(DoubleKey.ApsAutoIsfSmbDeliveryRatioMin, 0.4)
+        preferences.put(DoubleKey.ApsAutoIsfSmbDeliveryRatioMax, 0.6)
+        preferences.put(UnitDoubleKey.ApsAutoIsfSmbDeliveryRatioBgRange, 20.0)
+        preferences.put(DoubleKey.ApsAutoIsfSmbMaxRangeExtension, 1.0)
         val oapsProfile = OapsProfile(
             dia = 0.0, // not used
             min_5m_carbimpact = 0.0, // not used
@@ -165,7 +165,13 @@ class OpenAPSAutoISFPluginTest : TestBaseWithProfile() {
             out_units = if (profileFunction.getUnits() == GlucoseUnit.MMOL) "mmol/L" else "mg/dl",
             variable_sens = 100.0, //variableSensitivity,
             insulinDivisor = 0,
-            TDD = 0.0               // TODO complete with AutoISF dedicated parameters
+            TDD = 0.0 ,              // TODO complete with AutoISF dedicated parameters
+            smb_delivery_ratio =  preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatio),
+            smb_delivery_ratio_min =  preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatioMin),
+            smb_delivery_ratio_max = preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatioMax),
+            smb_delivery_ratio_bg_range = preferences.get(UnitDoubleKey.ApsAutoIsfSmbDeliveryRatioBgRange),
+            smb_max_range_extension = preferences.get(DoubleKey.ApsAutoIsfSmbMaxRangeExtension)
+
         )
         assertThat(openAPSAutoISFPlugin.determine_varSMBratio(oapsProfile,100, 90.0, "fullLoop")).isEqualTo(0.5)
     }

@@ -666,51 +666,6 @@ class ReplayApsResultsTest @Inject constructor() {
         for (i in 0 until determineBasalResult.iobData!!.length())
             iobData.add(determineBasalResult.iobData!!.getJSONObject(i).toIob())
         val currentTime = determineBasalResult.currentTime
-        val oprofile = OapsProfile(
-            dia = 0.0,
-            min_5m_carbimpact = 0.0,
-            max_iob = determineBasalResult.profile.getDouble("max_iob"),
-            max_daily_basal = determineBasalResult.profile.getDouble("max_daily_basal"),
-            max_basal = determineBasalResult.profile.getDouble("max_basal"),
-            min_bg = determineBasalResult.profile.getDouble("min_bg"),
-            max_bg = determineBasalResult.profile.getDouble("max_bg"),
-            target_bg = determineBasalResult.profile.getDouble("target_bg"),
-            carb_ratio = determineBasalResult.profile.getDouble("carb_ratio"),
-            sens = determineBasalResult.profile.getDouble("sens"),
-            autosens_adjust_targets = false,
-            max_daily_safety_multiplier = determineBasalResult.profile.getDouble("max_daily_safety_multiplier"),
-            current_basal_safety_multiplier = determineBasalResult.profile.getDouble("current_basal_safety_multiplier"),
-            lgsThreshold = null,
-            high_temptarget_raises_sensitivity = determineBasalResult.profile.getBoolean("high_temptarget_raises_sensitivity"),
-            low_temptarget_lowers_sensitivity = determineBasalResult.profile.getBoolean("low_temptarget_lowers_sensitivity"),
-            sensitivity_raises_target = determineBasalResult.profile.getBoolean("sensitivity_raises_target"),
-            resistance_lowers_target = determineBasalResult.profile.getBoolean("resistance_lowers_target"),
-            adv_target_adjustments = determineBasalResult.profile.getBoolean("adv_target_adjustments"),
-            exercise_mode = determineBasalResult.profile.getBoolean("exercise_mode"),
-            half_basal_exercise_target = determineBasalResult.profile.getInt("half_basal_exercise_target"),
-            maxCOB = determineBasalResult.profile.getInt("maxCOB"),
-            skip_neutral_temps = determineBasalResult.profile.getBoolean("skip_neutral_temps"),
-            remainingCarbsCap = determineBasalResult.profile.getInt("remainingCarbsCap"),
-            enableUAM = determineBasalResult.profile.getBoolean("enableUAM"),
-            A52_risk_enable = determineBasalResult.profile.getBoolean("A52_risk_enable"),
-            SMBInterval = determineBasalResult.profile.getInt("SMBInterval"),
-            enableSMB_with_COB = determineBasalResult.profile.getBoolean("enableSMB_with_COB"),
-            enableSMB_with_temptarget = determineBasalResult.profile.getBoolean("enableSMB_with_temptarget"),
-            allowSMB_with_high_temptarget = determineBasalResult.profile.getBoolean("allowSMB_with_high_temptarget"),
-            enableSMB_always = determineBasalResult.profile.getBoolean("enableSMB_always"),
-            enableSMB_after_carbs = determineBasalResult.profile.getBoolean("enableSMB_after_carbs"),
-            maxSMBBasalMinutes = determineBasalResult.profile.getInt("maxSMBBasalMinutes"),
-            maxUAMSMBBasalMinutes = determineBasalResult.profile.getInt("maxUAMSMBBasalMinutes"),
-            bolus_increment = determineBasalResult.profile.getDouble("bolus_increment"),
-            carbsReqThreshold = determineBasalResult.profile.getInt("carbsReqThreshold"),
-            current_basal = determineBasalResult.profile.getDouble("current_basal"),
-            temptargetSet = determineBasalResult.profile.getBoolean("temptargetSet"),
-            autosens_max = determineBasalResult.profile.getDouble("autosens_max"),
-            out_units = determineBasalResult.profile.optString("out_units"),
-            variable_sens = 0.0,
-            insulinDivisor = 0,
-            TDD = 0.0
-        )
         val profile = OapsProfile(
             dia = 0.0,
             min_5m_carbimpact = 0.0,
@@ -752,7 +707,7 @@ class ReplayApsResultsTest @Inject constructor() {
             temptargetSet = determineBasalResult.profile.getBoolean("temptargetSet"),
             autosens_max = determineBasalResult.profile.getDouble("autosens_max"),
             out_units = determineBasalResult.profile.optString("out_units"),
-            variable_sens = determineBasalResult.profile.getDouble("variable_sens"),
+            variable_sens = 116.7, // TODO only available in result.variableSens? , not in determineBasalResult.profile.getDouble("variable_sens"),
             insulinDivisor = 0,
             TDD = 0.0,
             autoISF_version = determineBasalResult.profile.optString("autoISF_version"),
@@ -765,6 +720,8 @@ class ReplayApsResultsTest @Inject constructor() {
             pp_ISF_hours = determineBasalResult.profile.getInt("pp_ISF_hours"),
             pp_ISF_weight = determineBasalResult.profile.getDouble("pp_ISF_weight"),
             delta_ISFrange_weight = determineBasalResult.profile.getDouble("delta_ISFrange_weight"),
+            lower_ISFrange_weight = determineBasalResult.profile.getDouble("lower_ISFrange_weight"),
+            higher_ISFrange_weight = determineBasalResult.profile.getDouble("higher_ISFrange_weight"),
             enable_dura_ISF_with_COB = determineBasalResult.profile.getBoolean("enable_dura_ISF_with_COB"),
             dura_ISF_weight = determineBasalResult.profile.getDouble("dura_ISF_weight"),
             smb_delivery_ratio = determineBasalResult.profile.getDouble("smb_delivery_ratio"),
@@ -789,17 +746,17 @@ class ReplayApsResultsTest @Inject constructor() {
             glucose_status = glucoseStatus,
             currenttemp = currentTemp,
             iob_data_array = iobData.toTypedArray(),
-            profile = oprofile,
+            profile = profile,
             autosens_data = autosensData,
             meal_data = meatData,
             microBolusAllowed = determineBasalResult.microBolusAllowed,
             currentTime = currentTime,
             flatBGsDetected = determineBasalResult.flatBGsDetected,
-            autoIsfMode =  preferences.get(BooleanKey.ApsUseAutoIsf),
+            autoIsfMode =  true, //preferences.get(BooleanKey.ApsUseAutoIsf),
             iob_threshold_percent = preferences.get(IntKey.ApsAutoIsfIobThPercent),
             smb_max_range_extension = preferences.get(DoubleKey.ApsAutoIsfSmbMaxRangeExtension),
-            profile_percentage = 100,
-            smb_ratio = 0.5,
+            profile_percentage = profile.profile_percentage, // 100,
+            smb_ratio = profile.smb_delivery_ratio, // 0.5,
             loop_wanted_smb = "dummy",
             auto_isf_console = mutableListOf<String>("start AutoISF", "end AutoISF")
         )
@@ -813,11 +770,11 @@ class ReplayApsResultsTest @Inject constructor() {
         aapsLogger.debug(LTag.APS, "File: $filename")
 //      //   assertThat(resultKt.reason.toString()).isEqualTo(result?.json?.getString("reason"))
         assertThat(resultKt.tick ?: "").isEqualTo(result?.json()?.optString("tick"))
-//        assertThat(resultKt.eventualBG ?: Double.NaN).isEqualTo(result?.json()?.optDouble("eventualBG"))
+        assertThat(resultKt.eventualBG ?: Double.NaN).isEqualTo(result?.json()?.optDouble("eventualBG"))
         assertThat(resultKt.targetBG ?: Double.NaN).isEqualTo(result?.json()?.optDouble("targetBG"))
         assertThat(resultKt.insulinReq ?: Double.NaN).isEqualTo(result?.json()?.optDouble("insulinReq"))
-//        assertThat(resultKt.carbsReq ?: 0).isEqualTo(result?.json()?.optInt("carbsReq"))
-//        assertThat(resultKt.carbsReqWithin ?: 0).isEqualTo(result?.json()?.optInt("carbsReqWithin"))
+        assertThat(resultKt.carbsReq ?: 0).isEqualTo(result?.json()?.optInt("carbsReq"))
+        assertThat(resultKt.carbsReqWithin ?: 0).isEqualTo(result?.json()?.optInt("carbsReqWithin"))
         assertThat(resultKt.units ?: Double.NaN).isEqualTo(result?.json()?.optDouble("units"))
         assertThat(resultKt.sensitivityRatio ?: Double.NaN).isEqualTo(result?.json()?.optDouble("sensitivityRatio"))
         assertThat(resultKt.duration ?: 0).isEqualTo(result?.json()?.optInt("duration"))

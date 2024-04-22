@@ -347,6 +347,8 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
             pp_ISF_hours = pp_ISF_hours,
             pp_ISF_weight = pp_ISF_weight,
             delta_ISFrange_weight = delta_ISFrange_weight,
+            lower_ISFrange_weight = lower_ISFrange_weight,
+            higher_ISFrange_weight = higher_ISFrange_weight,
             enable_dura_ISF_with_COB = enable_dura_ISF_with_COB,
             dura_ISF_weight = dura_ISF_weight,
             smb_delivery_ratio = smb_delivery_ratio,
@@ -401,7 +403,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         aapsLogger.debug(LTag.APS, "MicroBolusAllowed:  $microBolusAllowed")
         aapsLogger.debug(LTag.APS, "flatBGsDetected:    $flatBGsDetected")
         aapsLogger.debug(LTag.APS, "AutoIsfMode:        $autoIsfMode")
-        aapsLogger.debug(LTag.APS, "AutoISF extras:     ${Json.encodeToString(OapsProfile.serializer(), oapsProfile)}")
+        //aapsLogger.debug(LTag.APS, "AutoISF extras:     ${Json.encodeToString(OapsProfile.serializer(), oapsProfile)}")
 
         determineBasalAutoISF.determine_basal(
             glucose_status = glucoseStatus,
@@ -522,13 +524,6 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         val glucose_status = glucoseStatusProvider.glucoseStatusData
         // val autoIsfMode = preferences.get(BooleanKey.ApsUseAutoIsf)
 
-        if (!supportsDynamicIsf() || !autoIsfWeights || glucose_status == null) {
-            consoleError.add("autoISF weights disabled in Preferences")
-            consoleError.add("----------------------------------")
-            consoleError.add("end AutoISF")
-            consoleError.add("----------------------------------")
-            return sens
-        }
         val high_temptarget_raises_sensitivity = exerciseMode || highTemptargetRaisesSensitivity
         val meal_data = iobCobCalculator.getMealDataWithWaitingForCalculationFinish()
         var target_bg = hardLimits.verifyHardLimits(profile.getTargetMgdl(), app.aaps.core.ui.R.string.temp_target_value, HardLimits.LIMIT_TARGET_BG[0], HardLimits.LIMIT_TARGET_BG[1])
@@ -570,6 +565,13 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
             } else autosensResult.sensResult = "autosens disabled"
             sensitivityRatio = autosensResult.ratio
             // consoleError.add("Autosens ratio: $sensitivityRatio; ")
+        }
+        if (!supportsDynamicIsf() || !autoIsfWeights || glucose_status == null) {
+            consoleError.add("autoISF weights disabled in Preferences")
+            consoleError.add("----------------------------------")
+            consoleError.add("end AutoISF")
+            consoleError.add("----------------------------------")
+            return round(sens / sensitivityRatio, 1)
         }
         val autosensResult = AutosensResult()
 
@@ -731,7 +733,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         consoleError.add("----------------------------------")
         consoleError.add("end AutoISF")
         consoleError.add("----------------------------------")
-        return sens     // nothing changed
+        return round(sens / sensitivityRatio, 1)     // nothing changed
     }
 
     fun interpolate(xdata: Double, type: String): Double {   // interpolate ISF behaviour based on polygons defining nonlinear functions defined by value pairs for ...
@@ -970,7 +972,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
             addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.ApsMaxBasal, dialogMessage = R.string.openapsma_max_basal_summary, title = R.string.openapsma_max_basal_title))
             addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.ApsSmbMaxIob, dialogMessage = R.string.openapssmb_max_iob_summary, title = R.string.openapssmb_max_iob_title))
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.ApsUseAutosens, title = R.string.openapsama_use_autosens))
-            addPreference(AdaptiveUnitPreference(ctx = context, unitKey = UnitDoubleKey.ApsLgsThreshold, dialogMessage = R.string.lgs_threshold_summary, title = R.string.lgs_threshold_title))
+            //addPreference(AdaptiveUnitPreference(ctx = context, unitKey = UnitDoubleKey.ApsLgsThreshold, dialogMessage = R.string.lgs_threshold_summary, title = R.string.lgs_threshold_title))
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.ApsSensitivityRaisesTarget, summary = R.string.sensitivity_raises_target_summary, title = R.string.sensitivity_raises_target_title))
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.ApsResistanceLowersTarget, summary = R.string.resistance_lowers_target_summary, title = R.string.resistance_lowers_target_title))
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.ApsAutoIsfHighTtRaisesSens, summary = R.string.high_temptarget_raises_sensitivity_summary, title = R.string.high_temptarget_raises_sensitivity_title))
