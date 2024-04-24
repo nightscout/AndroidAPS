@@ -150,6 +150,32 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
             false
         }
 
+
+        binding.graphScale6h.setOnClickListener {
+            rangeToDisplay = 6
+            resetScaleText()
+            setTime(historyBrowserData.overviewData.fromTime)
+            loadAll("rangeChange")
+        }
+        binding.graphScale12h.setOnClickListener {
+            rangeToDisplay = 12
+            resetScaleText()
+            setTime(historyBrowserData.overviewData.fromTime)
+            loadAll("rangeChange")
+        }
+        binding.graphScale18h.setOnClickListener {
+            rangeToDisplay = 18
+            resetScaleText()
+            setTime(historyBrowserData.overviewData.fromTime)
+            loadAll("rangeChange")
+        }
+        binding.graphScale24h.setOnClickListener {
+            rangeToDisplay = 24
+            resetScaleText()
+            setTime(historyBrowserData.overviewData.fromTime)
+            loadAll("rangeChange")
+        }
+
         val dm = DisplayMetrics()
         @Suppress("DEPRECATION")
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R)
@@ -261,6 +287,20 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
         }
     }
 
+
+    private fun resetScaleText() {
+        binding.graphScale6h.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Small)
+        binding.graphScale12h.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Small)
+        binding.graphScale18h.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Small)
+        binding.graphScale24h.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Small)
+        when (rangeToDisplay) {
+            6   -> binding.graphScale6h.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Medium)
+            12  -> binding.graphScale12h.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Medium)
+            18  -> binding.graphScale18h.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Medium)
+            24  -> binding.graphScale24h.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Medium)
+        }
+    }
+
     @Suppress("SameParameterValue")
     private fun loadAll(from: String) {
         updateDate()
@@ -318,7 +358,7 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
         aapsLogger.debug(LTag.UI, "updateGui $from")
 
         updateDate()
-
+        resetScaleText()
         val pump = activePlugin.activePump
         val graphData = GraphData(injector, binding.bgGraph, historyBrowserData.overviewData)
         val menuChartSettings = overviewMenus.setting

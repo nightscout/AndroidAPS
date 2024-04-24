@@ -241,6 +241,27 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             false
         }
 
+        binding.graphsLayout.graphScale6h.setOnClickListener {
+            sp.putInt(app.aaps.core.utils.R.string.key_rangetodisplay, 6)
+            resetScaleText()
+            rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.utils.R.string.key_rangetodisplay)))
+        }
+        binding.graphsLayout.graphScale12h.setOnClickListener {
+            sp.putInt(app.aaps.core.utils.R.string.key_rangetodisplay, 12)
+            resetScaleText()
+            rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.utils.R.string.key_rangetodisplay)))
+        }
+        binding.graphsLayout.graphScale18h.setOnClickListener {
+            sp.putInt(app.aaps.core.utils.R.string.key_rangetodisplay, 18)
+            resetScaleText()
+            rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.utils.R.string.key_rangetodisplay)))
+        }
+        binding.graphsLayout.graphScale24h.setOnClickListener {
+            sp.putInt(app.aaps.core.utils.R.string.key_rangetodisplay, 24)
+            resetScaleText()
+            rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.utils.R.string.key_rangetodisplay)))
+        }
+
         prepareGraphsIfNeeded(overviewMenus.setting.size)
         context?.let { overviewMenus.setupChartMenu(it, binding.graphsLayout.chartMenuButton) }
         binding.graphsLayout.chartMenuButton.visibility = preferences.simpleMode.not().toVisibility()
@@ -260,6 +281,19 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         binding.buttonsLayout.quickWizardButton.setOnLongClickListener(this)
         binding.infoLayout.apsMode.setOnClickListener(this)
         binding.infoLayout.apsMode.setOnLongClickListener(this)
+    }
+
+    fun resetScaleText() {
+        binding.graphsLayout.graphScale6h.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Small)
+        binding.graphsLayout.graphScale12h.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Small)
+        binding.graphsLayout.graphScale18h.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Small)
+        binding.graphsLayout.graphScale24h.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Small)
+        when (sp.getInt(app.aaps.core.utils.R.string.key_rangetodisplay,6)) {
+            6   -> binding.graphsLayout.graphScale6h.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Medium)
+            12  -> binding.graphsLayout.graphScale12h.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Medium)
+            18  -> binding.graphsLayout.graphScale18h.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Medium)
+            24  -> binding.graphsLayout.graphScale24h.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Medium)
+        }
     }
 
     @Synchronized
@@ -372,6 +406,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (!config.appInitialized) return
         runOnUiThread {
             _binding ?: return@runOnUiThread
+            resetScaleText()
             updateTime()
             updateSensitivity()
             updateGraph()

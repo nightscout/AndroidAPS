@@ -17,6 +17,56 @@
             android:layout_height="200dp"
             android:contentDescription="@string/a11y_graph" />
 
+        <LinearLayout
+            android:id="@+id/graph_scale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/graph_scale_6h"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="40dp"
+                android:text="@string/graph_scale_6h"
+                android:contentDescription="@string/a11y_graph_scale_6h"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+            <TextView
+                android:id="@+id/graph_scale_12h"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:text="@string/graph_scale_12h"
+                android:contentDescription="@string/a11y_graph_scale_12h"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+            <TextView
+                android:id="@+id/graph_scale_18h"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:text="@string/graph_scale_18h"
+                android:contentDescription="@string/a11y_graph_scale_18h"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+            <TextView
+                android:id="@+id/graph_scale_24h"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:text="@string/graph_scale_24h"
+                android:contentDescription="@string/a11y_graph_scale_24h"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+        </LinearLayout>
+
         <ImageButton
             android:id="@+id/chart_menu_button"
             android:layout_width="30dp"
