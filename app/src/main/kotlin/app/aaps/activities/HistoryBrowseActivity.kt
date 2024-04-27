@@ -294,10 +294,10 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
         binding.graphScale18h.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Small)
         binding.graphScale24h.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Small)
         when (rangeToDisplay) {
-            6   -> binding.graphScale6h.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Medium)
-            12  -> binding.graphScale12h.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Medium)
-            18  -> binding.graphScale18h.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Medium)
-            24  -> binding.graphScale24h.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Medium)
+            6   -> binding.graphScale6h.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.highColor))
+            12  -> binding.graphScale12h.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.highColor))
+            18  -> binding.graphScale18h.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.highColor))
+            24  -> binding.graphScale24h.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.highColor))
         }
     }
 

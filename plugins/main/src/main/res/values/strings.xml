@@ -203,7 +203,7 @@
     <string name="statuslights_bat_warning">Threshold warning pump battery level [%]</string>
     <string name="statuslights_bat_critical">Threshold critical pump battery level [%]</string>
     <string name="statuslights_copy_ns">Copy settings from NS</string>
-    <string name="graph_scale_6h">6 hours</string>
+    <string name="graph_scale_6h">6h</string>
     <string name="graph_scale_12h">12h</string>
     <string name="graph_scale_18h">18h</string>
     <string name="graph_scale_24h">24h</string>

@@ -289,10 +289,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         binding.graphsLayout.graphScale18h.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Small)
         binding.graphsLayout.graphScale24h.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Small)
         when (sp.getInt(app.aaps.core.utils.R.string.key_rangetodisplay,6)) {
-            6   -> binding.graphsLayout.graphScale6h.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Medium)
-            12  -> binding.graphsLayout.graphScale12h.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Medium)
-            18  -> binding.graphsLayout.graphScale18h.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Medium)
-            24  -> binding.graphsLayout.graphScale24h.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Medium)
+            6   -> binding.graphsLayout.graphScale6h.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.highColor))
+            12  -> binding.graphsLayout.graphScale12h.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.highColor))
+            18  -> binding.graphsLayout.graphScale18h.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.highColor))
+            24  -> binding.graphsLayout.graphScale24h.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.highColor))
         }
     }
 
