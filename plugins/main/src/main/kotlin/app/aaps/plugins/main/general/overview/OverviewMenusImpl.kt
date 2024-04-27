@@ -175,6 +175,7 @@ class OverviewMenusImpl @Inject constructor(
             }
 
             popup.setOnMenuItemClickListener {
+                var keepMenu = false
                 synchronized(this) {
                     try {
                         // id < 100 graph header - divider 1, 2, 3 .....
@@ -191,17 +192,20 @@ class OverviewMenusImpl @Inject constructor(
                             it.itemId == numOfGraphs                           -> {
                                 // add new empty
                                 _setting.add(Array(CharTypeData.entries.size) { false })
+                                keepMenu = true
                             }
 
                             it.itemId < 100                                    -> {
                                 // remove graph
                                 _setting.removeAt(it.itemId)
+                                keepMenu = true
                             }
 
                             else                                               -> {
                                 val graphNumber = it.itemId / 100 - 1
                                 val item = it.itemId % 100
                                 _setting[graphNumber][item] = !it.isChecked
+                                keepMenu = true
                             }
                         }
                     } catch (exception: Exception) {
@@ -210,6 +214,8 @@ class OverviewMenusImpl @Inject constructor(
                 }
                 storeGraphConfig()
                 setupChartMenu(context, chartButton)
+                if (keepMenu)
+                    chartButton.performClick()
                 rxBus.send(EventRefreshOverview("OnMenuItemClickListener", now = true))
                 return@setOnMenuItemClickListener true
             }

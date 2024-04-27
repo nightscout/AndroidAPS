@@ -6,6 +6,63 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:id="@+id/graph_scale"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.google.android.material.chip.ChipGroup
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="1"
+            app:singleSelection="true"
+            app:chipSpacing="10dp">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/graph_scale_6h"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/graph_scale_6h"
+                android:contentDescription="@string/a11y_graph_scale_6h"
+                style="@style/Widget.MaterialComponents.Chip.Choice" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/graph_scale_12h"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/graph_scale_12h"
+                android:contentDescription="@string/a11y_graph_scale_12h"
+                style="@style/Widget.MaterialComponents.Chip.Choice" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/graph_scale_18h"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/graph_scale_18h"
+                android:contentDescription="@string/a11y_graph_scale_18h"
+                style="@style/Widget.MaterialComponents.Chip.Choice" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/graph_scale_24h"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/graph_scale_24h"
+                android:contentDescription="@string/a11y_graph_scale_24h"
+                style="@style/Widget.MaterialComponents.Chip.Choice" />
+
+        </com.google.android.material.chip.ChipGroup>
+
+        <ImageButton
+            android:id="@+id/chart_menu_button"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="end"
+            android:contentDescription="@string/chart_menu"
+            app:srcCompat="@drawable/ic_arrow_drop_down_white_24dp" />
+
+    </LinearLayout>
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="0dp"
@@ -16,17 +73,6 @@
             android:layout_width="wrap_content"
             android:layout_height="200dp"
             android:contentDescription="@string/a11y_graph" />
-
-        <ImageButton
-            android:id="@+id/chart_menu_button"
-            android:layout_width="30dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="3dp"
-            android:contentDescription="@string/chart_menu"
-            android:paddingTop="5dp"
-            app:srcCompat="@drawable/ic_arrow_drop_down_white_24dp" />
 
     </RelativeLayout>
 
