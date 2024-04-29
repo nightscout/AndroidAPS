@@ -288,6 +288,18 @@ class CarbsDialog : DialogFragmentWithDate() {
         if (carbsAfterConstraints > 0 || activitySelected || eatingSoonSelected || hypoSelected) {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.carbs), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
+                    val selectedTTDuration = when {
+                        activitySelected -> activityTTDuration
+                        eatingSoonSelected -> eatingSoonTTDuration
+                        hypoSelected -> hypoTTDuration
+                        else -> 0
+                    }
+                    val selectedTT = when {
+                        activitySelected -> activityTT
+                        eatingSoonSelected -> eatingSoonTT
+                        hypoSelected -> hypoTT
+                        else -> 0.0
+                    }
                     val reason = when {
                         activitySelected -> TT.Reason.ACTIVITY
                         eatingSoonSelected -> TT.Reason.EATING_SOON
@@ -298,18 +310,18 @@ class CarbsDialog : DialogFragmentWithDate() {
                         disposable += persistenceLayer.insertAndCancelCurrentTemporaryTarget(
                             temporaryTarget = TT(
                                 timestamp = System.currentTimeMillis(),
-                                duration = TimeUnit.MINUTES.toMillis(hypoTTDuration.toLong()),
+                                duration = TimeUnit.MINUTES.toMillis(selectedTTDuration.toLong()),
                                 reason = reason,
-                                lowTarget = profileUtil.convertToMgdl(hypoTT, profileUtil.units),
-                                highTarget = profileUtil.convertToMgdl(hypoTT, profileUtil.units)
+                                lowTarget = profileUtil.convertToMgdl(selectedTT, profileUtil.units),
+                                highTarget = profileUtil.convertToMgdl(selectedTT, profileUtil.units)
                             ),
                             action = Action.TT,
                             source = Sources.CarbDialog,
                             note = null,
                             listValues = listOf(
                                 ValueWithUnit.TETTReason(reason),
-                                ValueWithUnit.fromGlucoseUnit(hypoTT, units),
-                                ValueWithUnit.Minute(hypoTTDuration)
+                                ValueWithUnit.fromGlucoseUnit(selectedTT, units),
+                                ValueWithUnit.Minute(selectedTTDuration)
                             )
                         ).subscribe()
                     if (carbsAfterConstraints > 0) {
