@@ -25,6 +25,7 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
+import org.mockito.Mockito.`when`
 
 class OpenAPSAutoISFPluginTest : TestBaseWithProfile() {
 
@@ -34,7 +35,6 @@ class OpenAPSAutoISFPluginTest : TestBaseWithProfile() {
     @Mock lateinit var determineBasalSMB: DetermineBasalAutoISF
     @Mock lateinit var sharedPrefs: SharedPreferences
     @Mock lateinit var bgQualityCheck: BgQualityCheck
-    @Mock lateinit var tddCalculator: TddCalculator
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var profiler: Profiler
     private lateinit var openAPSAutoISFPlugin: OpenAPSAutoISFPlugin
@@ -117,62 +117,12 @@ class OpenAPSAutoISFPluginTest : TestBaseWithProfile() {
 
     @Test
     fun determine_varSMBratioTest() {
-        preferences.put(DoubleKey.ApsAutoIsfSmbDeliveryRatio, 0.3)
-        preferences.put(DoubleKey.ApsAutoIsfSmbDeliveryRatioMin, 0.4)
-        preferences.put(DoubleKey.ApsAutoIsfSmbDeliveryRatioMax, 0.6)
-        preferences.put(UnitDoubleKey.ApsAutoIsfSmbDeliveryRatioBgRange, 20.0)
-        preferences.put(DoubleKey.ApsAutoIsfSmbMaxRangeExtension, 1.0)
-        val oapsProfile = OapsProfile(
-            dia = 0.0, // not used
-            min_5m_carbimpact = 0.0, // not used
-            max_iob = 8.0, //constraintsChecker.getMaxIOBAllowed().also { inputConstraints.copyReasons(it) }.value(),
-            max_daily_basal = 0.4, //profile.getMaxDailyBasal(),
-            max_basal = 0.4, //constraintsChecker.getMaxBasalAllowed(profile).also { inputConstraints.copyReasons(it) }.value(),
-            min_bg = 90.0,
-            max_bg = 90.0,
-            target_bg = 90.0,
-            carb_ratio = 10.0, //profile.getIc(),
-            sens = 100.0, //sens,
-            autosens_adjust_targets = false, // not used
-            max_daily_safety_multiplier = preferences.get(DoubleKey.ApsMaxDailyMultiplier),
-            current_basal_safety_multiplier = preferences.get(DoubleKey.ApsMaxCurrentBasalMultiplier),
-            lgsThreshold = profileUtil.convertToMgdlDetect(preferences.get(UnitDoubleKey.ApsLgsThreshold)).toInt(),
-            high_temptarget_raises_sensitivity = preferences.get(BooleanKey.ApsAutoIsfHighTtRaisesSens), //exerciseMode || highTemptargetRaisesSensitivity, //was false,
-            low_temptarget_lowers_sensitivity = preferences.get(BooleanKey.ApsAutoIsfLowTtLowersSens), // was false,
-            sensitivity_raises_target = preferences.get(BooleanKey.ApsSensitivityRaisesTarget),
-            resistance_lowers_target = preferences.get(BooleanKey.ApsResistanceLowersTarget),
-            adv_target_adjustments = SMBDefaults.adv_target_adjustments,
-            exercise_mode = SMBDefaults.exercise_mode,
-            half_basal_exercise_target = preferences.get(IntKey.ApsAutoIsfHalfBasalExerciseTarget),
-            maxCOB = SMBDefaults.maxCOB,
-            skip_neutral_temps = false,  //pump.setNeutralTempAtFullHour(),
-            remainingCarbsCap = SMBDefaults.remainingCarbsCap,
-            enableUAM = true, //constraintsChecker.isUAMEnabled().also { inputConstraints.copyReasons(it) }.value(),
-            A52_risk_enable = SMBDefaults.A52_risk_enable,
-            SMBInterval = preferences.get(IntKey.ApsMaxSmbFrequency),
-            enableSMB_with_COB = preferences.get(BooleanKey.ApsUseSmbWithCob), //smbEnabled &&
-            enableSMB_with_temptarget = preferences.get(BooleanKey.ApsUseSmbWithLowTt), //smbEnabled &&
-            allowSMB_with_high_temptarget = preferences.get(BooleanKey.ApsUseSmbWithHighTt), //smbEnabled &&
-            enableSMB_always = preferences.get(BooleanKey.ApsUseSmbAlways), //smbEnabled &&  && advancedFiltering,
-            enableSMB_after_carbs = preferences.get(BooleanKey.ApsUseSmbAfterCarbs), //smbEnabled &&  && advancedFiltering,
-            maxSMBBasalMinutes = preferences.get(IntKey.ApsMaxMinutesOfBasalToLimitSmb),
-            maxUAMSMBBasalMinutes = preferences.get(IntKey.ApsUamMaxMinutesOfBasalToLimitSmb),
-            bolus_increment = 0.1, //pump.pumpDescription.bolusStep,
-            carbsReqThreshold = preferences.get(IntKey.ApsCarbsRequestThreshold),
-            current_basal = activePlugin.activePump.baseBasalRate,
-            temptargetSet = false,
-            autosens_max = preferences.get(DoubleKey.AutosensMax),
-            out_units = if (profileFunction.getUnits() == GlucoseUnit.MMOL) "mmol/L" else "mg/dl",
-            variable_sens = 100.0, //variableSensitivity,
-            insulinDivisor = 0,
-            TDD = 0.0 ,              // TODO complete with AutoISF dedicated parameters
-            smb_delivery_ratio =  preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatio),
-            smb_delivery_ratio_min =  preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatioMin),
-            smb_delivery_ratio_max = preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatioMax),
-            smb_delivery_ratio_bg_range = preferences.get(UnitDoubleKey.ApsAutoIsfSmbDeliveryRatioBgRange),
-            smb_max_range_extension = preferences.get(DoubleKey.ApsAutoIsfSmbMaxRangeExtension)
+        `when`(preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatio)).thenReturn(0.3)
+        `when`(preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatioMin)).thenReturn(0.4)
+        `when`(preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatioMax)).thenReturn(0.6)
+        `when`(preferences.get(UnitDoubleKey.ApsAutoIsfSmbDeliveryRatioBgRange)).thenReturn(20.0)
+        `when`(preferences.get(DoubleKey.ApsAutoIsfSmbMaxRangeExtension)).thenReturn(1.0)
 
-        )
-        assertThat(openAPSAutoISFPlugin.determine_varSMBratio(oapsProfile,100, 90.0, "fullLoop")).isEqualTo(0.5)
+        assertThat(openAPSAutoISFPlugin.determine_varSMBratio(100, 90.0, "fullLoop")).isEqualTo(0.5)
     }
 }

@@ -69,7 +69,6 @@ import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.events.EventResetOpenAPSGui
 import dagger.android.HasAndroidInjector
-import kotlinx.serialization.json.Json
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -136,7 +135,8 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
     private val smb_delivery_ratio; get() = preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatio)
     private val smb_delivery_ratio_min; get() = preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatioMin)
     private val smb_delivery_ratio_max; get() = preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatioMax)
-    private val smb_delivery_ratio_bg_range; get() = preferences.get(UnitDoubleKey.ApsAutoIsfSmbDeliveryRatioBgRange)
+    private val smb_delivery_ratio_bg_range
+        get() = if (preferences.get(UnitDoubleKey.ApsAutoIsfSmbDeliveryRatioBgRange) < 10.0) preferences.get(UnitDoubleKey.ApsAutoIsfSmbDeliveryRatioBgRange) * GlucoseUnit.MMOLL_TO_MGDL else preferences.get(UnitDoubleKey.ApsAutoIsfSmbDeliveryRatioBgRange)
     val smbMaxRangeExtension; get() = preferences.get(DoubleKey.ApsAutoIsfSmbMaxRangeExtension)
     private val enableSMB_EvenOn_OddOff; get() = preferences.get(BooleanKey.ApsAutoIsfSmbOnEvenTt) // for TT
     private val enableSMB_EvenOn_OddOff_always; get() = preferences.get(BooleanKey.ApsAutoIsfSmbOnEvenPt) // for profile target
@@ -391,7 +391,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         val iobTHvirtual = iobThresholdPercent * iobTHtolerance / 10000.0 * oapsProfile.max_iob * iobTH_reduction_ratio
         val loopWantedSmb = loop_smb(microBolusAllowed, oapsProfile, iobData.iob, use_iobTH, iobTHvirtual / iobTHtolerance * 100.0)
         val flatBGsDetected = bgQualityCheck.state == BgQualityCheck.State.FLAT
-        val smbRatio = determine_varSMBratio(oapsProfile, glucoseStatus.glucose.toInt(), target_bg, loopWantedSmb)
+        val smbRatio = determine_varSMBratio(glucoseStatus.glucose.toInt(), target_bg, loopWantedSmb)
 
         aapsLogger.debug(LTag.APS, ">>> Invoking determine_basal AutoISF <<<")
         aapsLogger.debug(LTag.APS, "Glucose status:     $glucoseStatus")
@@ -916,11 +916,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         return "AAPS"                                                      // leave it to standard AAPS
     }
 
-    fun determine_varSMBratio(profile: OapsProfile, bg: Int, target_bg: Double, loop_wanted_smb: String): Double {   // let SMB delivery ratio increase from min to max depending on how much bg exceeds target
-        var smb_delivery_ratio_bg_range = smb_delivery_ratio_bg_range
-        if (smb_delivery_ratio_bg_range < 10) {
-            smb_delivery_ratio_bg_range = smb_delivery_ratio_bg_range * 18
-        }  // was in mmol/l
+    fun determine_varSMBratio(bg: Int, target_bg: Double, loop_wanted_smb: String): Double {   // let SMB delivery ratio increase from min to max depending on how much bg exceeds target
         val fix_SMB: Double = smb_delivery_ratio
         val lower_SMB = min(smb_delivery_ratio_min, smb_delivery_ratio_max)
         val higher_SMB = max(smb_delivery_ratio_min, smb_delivery_ratio_max)
