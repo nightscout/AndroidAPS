@@ -137,7 +137,7 @@ class QuickWizardListActivity : TranslatedDaggerAppCompatActivity(), OnStartDrag
                     val pump = activePlugin.activePump
                     val quickWizardEntry = quickWizard[position]
 
-                    if (quickWizardEntry != null && actualBg != null && profile != null) {
+                    if (actualBg != null && profile != null) {
                         val wizard = quickWizardEntry.doCalc(profile, profileName, actualBg)
 
                         if (wizard.calculatedTotalInsulin > 0.0 && quickWizardEntry.carbs() > 0.0) {
