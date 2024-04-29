@@ -158,6 +158,7 @@
     <string name="wear_infos_watchface">Watchface informatie</string>
     <string name="wear_export_watchface">Exporteer template</string>
     <string name="wear_new_custom_watchface_exported">Aanpasbare watchface template geëxporteerd</string>
+    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/nl/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Update Wear gegevens</string>
     <string name="open_settings_on_wear">Open instellingen op Wear</string>
     <string name="cwf_infos_pref_locked">Lijst met instellingen die zijn vergrendeld door watchface</string>

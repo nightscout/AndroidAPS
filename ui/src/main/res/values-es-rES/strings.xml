@@ -17,7 +17,7 @@
     <!--     Activities-->
     <string name="activity_monitor">Monitor de actividad</string>
     <string name="do_you_want_reset_stats">¿Desea restablecer las estadísticas de actividad?</string>
-    <string name="do_you_want_reset_tdd_stats">¿Desea restablecer las estadísticas de TDD?</string>
+    <string name="do_you_want_recalculate_tdd_stats">¿Quieres recalcular las estadísticas de TDD?</string>
     <string name="statistics">Estadísticas</string>
     <string name="calculation_in_progress">Cálculo en curso</string>
     <string name="invalid_age">Entrada de edad no válida</string>
@@ -138,13 +138,15 @@
     <string name="overview_quickwizard_item_edit_button">Editar</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Sólo IOB positiva</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolo</string>
-    <string name="overview_edit_quickwizard_percentage_to_high">Porcenteje demasiado alto</string>
+    <string name="overview_edit_quickwizard_percentage_too_high">¡Porcentaje demasiado alto!</string>
     <string name="overview_editquickwizard_percentage">Porcentaje</string>
     <string name="a11y_drag_and_drop_handle">arrastrar y soltar</string>
     <string name="additional_ecarbs">Añadir eCarbs</string>
     <string name="overview_edit_quickwizard_useforcalculation">Usado para el cálculo:</string>
     <string name="constraints_violation">Violación de restricciones</string>
     <string name="change_your_input">Cambiar datos de entrada</string>
+    <string name="confirm_treatment">Por favor, confirma el tratamiento</string>
+    <string name="recalculate">Recalcular</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Ambos</item>
         <item>Sólo positivo</item>
