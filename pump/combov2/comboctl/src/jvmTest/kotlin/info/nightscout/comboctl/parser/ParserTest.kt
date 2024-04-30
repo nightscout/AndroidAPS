@@ -824,6 +824,16 @@ class ParserTest {
     }
 
     @Test
+    fun checkTemporaryBasalRate24HoursDurationParsing() {
+        val testContext = TestContext(testFrameTbrDuration24HoursScreen, 0, skipTitleString = true)
+        val result = TemporaryBasalRateDurationScreenParser().parse(testContext.parseContext)
+        assertEquals(ParseResult.Value::class, result::class)
+        val screen = (result as ParseResult.Value<*>).value as ParsedScreen.TemporaryBasalRateDurationScreen
+        assertEquals(false, screen.isBlinkedOut)
+        assertEquals(24 * 60, screen.durationInMinutes)
+    }
+
+    @Test
     fun checkTimeAndDateSettingsScreenParsing() {
         val testScreens = listOf(
             Pair(testTimeAndDateSettingsHour12hFormatScreen, ParsedScreen.TimeAndDateSettingsHourScreen(20)),

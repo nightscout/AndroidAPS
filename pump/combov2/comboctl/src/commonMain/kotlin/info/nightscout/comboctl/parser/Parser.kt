@@ -871,6 +871,63 @@ class TimeParser : Parser() {
     }
 }
 
+/**
+ * Parses the available tokens as a duration.
+ *
+ * Durations are shown similar to how times show up, in HH:MM format. They are never
+ * using any other format though (unlike times, which can show up in AM/PM form for example).
+ * Also, a duration of 24:00 is valid, while a time of 24:00 is not.
+ *
+ * The result is an Int that contains the duration in minutes.
+ *
+ * @property parseMode Parse mode. Useful for restricting the valid integer glyphs.
+ */
+class DurationParser(private val parseMode: GlyphDigitParseMode = GlyphDigitParseMode.ALL_DIGITS) : Parser() {
+    override fun parseImpl(parseContext: ParseContext): ParseResult {
+        var tokenCounter = 0
+        val digits = mutableListOf<Int>()
+        var gotSeparator = false
+
+        while (parseContext.hasMoreTokens() && (tokenCounter < 5)) {
+            val token = parseContext.nextToken()
+            when (val glyph = token.glyph) {
+                is Glyph.SmallDigit -> when (parseMode) {
+                    GlyphDigitParseMode.SMALL_DIGITS_ONLY,
+                    GlyphDigitParseMode.ALL_DIGITS ->
+                        digits.add(glyph.digit)
+                    else                           ->
+                        return ParseResult.Failed
+                }
+                is Glyph.LargeDigit -> when (parseMode) {
+                    GlyphDigitParseMode.LARGE_DIGITS_ONLY,
+                    GlyphDigitParseMode.ALL_DIGITS ->
+                        digits.add(glyph.digit)
+                    else                           ->
+                        return ParseResult.Failed
+                }
+                Glyph.SmallSymbol(SmallSymbol.SEPARATOR),
+                Glyph.LargeSymbol(LargeSymbol.SEPARATOR) -> {
+                    if (tokenCounter != 2)
+                        return ParseResult.Failed
+                    else
+                        gotSeparator = true
+                }
+                else -> Unit
+            }
+            parseContext.advance()
+            tokenCounter++
+        }
+
+        if (!gotSeparator || (digits.size != 4))
+            return ParseResult.Failed
+
+        val hour = digits[0] * 10 + digits[1]
+        val minute = digits[2] * 10 + digits[3]
+
+        return ParseResult.Value(hour * 60 + minute)
+    }
+}
+
 /******************************************
  *** Intermediate-level utility parsers ***
  ******************************************/
@@ -1255,7 +1312,7 @@ class TemporaryBasalRatePercentageScreenParser : Parser() {
                 OptionalParser(IntegerParser()), // TBR percentage
                 SingleGlyphParser(Glyph.LargeSymbol(LargeSymbol.PERCENT)),
                 SingleGlyphParser(Glyph.SmallSymbol(SmallSymbol.ARROW)),
-                TimeParser()
+                DurationParser(GlyphDigitParseMode.SMALL_DIGITS_ONLY)
             ),
             allowIncompleteSequences = true
         ).parse(parseContext)
@@ -1266,10 +1323,10 @@ class TemporaryBasalRatePercentageScreenParser : Parser() {
         parseResult as ParseResult.Sequence
 
         val remainingTbrDurationParseResult = if (parseResult.size >= 2)
-            parseResult.valueAtOrNull<LocalDateTime>(1)
+            parseResult.valueAtOrNull<Int>(1)
         else
             null
-        val remainingTbrDurationInMinutes = remainingTbrDurationParseResult?.let { it.hour * 60 + it.minute } ?: 0
+        val remainingTbrDurationInMinutes = remainingTbrDurationParseResult ?: 0
 
         return ParseResult.Value(
             ParsedScreen.TemporaryBasalRatePercentageScreen(
@@ -1285,7 +1342,7 @@ class TemporaryBasalRateDurationScreenParser : Parser() {
         val parseResult = SequenceParser(
             listOf(
                 SingleGlyphParser(Glyph.LargeSymbol(LargeSymbol.ARROW)),
-                OptionalParser(TimeParser())
+                OptionalParser(DurationParser(GlyphDigitParseMode.LARGE_DIGITS_ONLY))
             )
         ).parse(parseContext)
 
@@ -1293,14 +1350,11 @@ class TemporaryBasalRateDurationScreenParser : Parser() {
             return ParseResult.Failed
 
         parseResult as ParseResult.Sequence
-        val durationParseResult = parseResult.valueAtOrNull<LocalDateTime>(0)
+        val durationParseResult = parseResult.valueAtOrNull<Int>(0)
 
         return ParseResult.Value(
             ParsedScreen.TemporaryBasalRateDurationScreen(
-                durationInMinutes = if (durationParseResult != null)
-                    durationParseResult.hour * 60 + durationParseResult.minute
-                else
-                    null
+                durationInMinutes = durationParseResult
             )
         )
     }
@@ -1352,7 +1406,7 @@ class TbrMainScreenParser : Parser() {
         val parseResult = SequenceParser(
             listOf(
                 SingleGlyphParser(Glyph.SmallSymbol(SmallSymbol.ARROW)),
-                TimeParser(), // Remaining TBR duration
+                DurationParser(GlyphDigitParseMode.SMALL_DIGITS_ONLY), // Remaining TBR duration
                 SingleGlyphParser(Glyph.LargeSymbol(LargeSymbol.BASAL)),
                 FirstSuccessParser(
                     listOf(
@@ -1381,13 +1435,13 @@ class TbrMainScreenParser : Parser() {
             if (parseResult.size >= 5) parseResult.valueAt<Glyph.SmallSymbol>(4).symbol else null
         )
 
-        val remainingTbrDuration = parseResult.valueAt<LocalDateTime>(0)
+        val remainingTbrDuration = parseResult.valueAt<Int>(0)
 
         return ParseResult.Value(
             ParsedScreen.MainScreen(
                 MainScreenContent.Tbr(
                     currentTime = parseContext.topLeftTime!!,
-                    remainingTbrDurationInMinutes = remainingTbrDuration.hour * 60 + remainingTbrDuration.minute,
+                    remainingTbrDurationInMinutes = remainingTbrDuration,
                     tbrPercentage = parseResult.valueAt<Int>(1),
                     activeBasalProfileNumber = parseResult.valueAt<Glyph.SmallDigit>(2).digit,
                     currentBasalRateFactor = parseResult.valueAt<Int>(3),
@@ -1405,7 +1459,7 @@ class ExtendedAndMultiwaveBolusMainScreenParser : Parser() {
         val parseResult = SequenceParser(
             listOf(
                 SingleGlyphParser(Glyph.SmallSymbol(SmallSymbol.ARROW)),
-                TimeParser(), // Remaining extended/multiwave bolus duration
+                DurationParser(GlyphDigitParseMode.SMALL_DIGITS_ONLY), // Remaining extended/multiwave bolus duration
                 SingleGlyphTypeParser(Glyph.LargeSymbol::class), // Extended / multiwave symbol
                 OptionalParser(SingleGlyphTypeParser(Glyph.SmallSymbol::class)), // TBR arrow up/down symbol (only present if TBR is active)
                 DecimalParser(), // Remaining bolus amount
@@ -1444,13 +1498,13 @@ class ExtendedAndMultiwaveBolusMainScreenParser : Parser() {
             if (parseResult.size >= 7) parseResult.valueAt<Glyph.SmallSymbol>(6).symbol else null
         )
 
-        val remainingBolusDuration = parseResult.valueAt<LocalDateTime>(0)
+        val remainingBolusDuration = parseResult.valueAt<Int>(0)
 
         return ParseResult.Value(
             ParsedScreen.MainScreen(
                 MainScreenContent.ExtendedOrMultiwaveBolus(
                     currentTime = parseContext.topLeftTime!!,
-                    remainingBolusDurationInMinutes = remainingBolusDuration.hour * 60 + remainingBolusDuration.minute,
+                    remainingBolusDurationInMinutes = remainingBolusDuration,
                     isExtendedBolus = isExtendedBolus,
                     remainingBolusAmount = parseResult.valueAt<Int>(3),
                     tbrIsActive = tbrIsActive,
@@ -1601,7 +1655,7 @@ class MyDataBolusDataScreenParser : Parser() {
                 SingleGlyphParser(Glyph.SmallSymbol(SmallSymbol.DIVIDE)),
                 IntegerParser(GlyphDigitParseMode.SMALL_DIGITS_ONLY), // Total num entries
                 OptionalParser(SingleGlyphParser(Glyph.SmallSymbol(SmallSymbol.ARROW))),
-                OptionalParser(TimeParser()), // Duration - only present in multiwave and extended bolus entries
+                OptionalParser(DurationParser(GlyphDigitParseMode.SMALL_DIGITS_ONLY)), // Duration - only present in multiwave and extended bolus entries
                 SingleGlyphParser(Glyph.SmallSymbol(SmallSymbol.CLOCK)),
                 TimeParser(), // Timestamp time
                 SingleGlyphParser(Glyph.SmallSymbol(SmallSymbol.CALENDAR)),
@@ -1622,7 +1676,7 @@ class MyDataBolusDataScreenParser : Parser() {
         val bolusAmount = parseResult.valueAt<Int>(1)
         val index = parseResult.valueAt<Int>(2)
         val totalNumEntries = parseResult.valueAt<Int>(3)
-        val duration = parseResult.valueAtOrNull<LocalDateTime>(4)
+        val duration = parseResult.valueAtOrNull<Int>(4)
         val timestamp = combinedDateTime(
             date = parseResult.valueAt<LocalDate>(6),
             time = parseResult.valueAt<LocalDateTime>(5)
@@ -1635,7 +1689,7 @@ class MyDataBolusDataScreenParser : Parser() {
                 timestamp = timestamp,
                 bolusAmount = bolusAmount,
                 bolusType = bolusType,
-                durationInMinutes = if (duration != null) (duration.hour * 60 + duration.minute) else null
+                durationInMinutes = duration
             )
         )
     }
@@ -1734,7 +1788,7 @@ class MyDataTbrDataScreenParser : Parser() {
                 SingleGlyphParser(Glyph.SmallSymbol(SmallSymbol.DIVIDE)),
                 IntegerParser(GlyphDigitParseMode.SMALL_DIGITS_ONLY), // Total num entries
                 SingleGlyphParser(Glyph.SmallSymbol(SmallSymbol.ARROW)),
-                TimeParser(), // Duration
+                DurationParser(GlyphDigitParseMode.SMALL_DIGITS_ONLY), // Duration
                 SingleGlyphParser(Glyph.SmallSymbol(SmallSymbol.CLOCK)),
                 TimeParser(), // Timestamp time
                 SingleGlyphParser(Glyph.SmallSymbol(SmallSymbol.CALENDAR)),
@@ -1749,7 +1803,7 @@ class MyDataTbrDataScreenParser : Parser() {
         val percentage = parseResult.valueAt<Int>(1)
         val index = parseResult.valueAt<Int>(2)
         val totalNumEntries = parseResult.valueAt<Int>(3)
-        val duration = parseResult.valueAt<LocalDateTime>(4)
+        val duration = parseResult.valueAt<Int>(4)
         val timestamp = combinedDateTime(
             date = parseResult.valueAt<LocalDate>(6),
             time = parseResult.valueAt<LocalDateTime>(5)
@@ -1761,7 +1815,7 @@ class MyDataTbrDataScreenParser : Parser() {
                 totalNumEntries = totalNumEntries,
                 timestamp = timestamp,
                 percentage = percentage,
-                durationInMinutes = duration.hour * 60 + duration.minute
+                durationInMinutes = duration
             )
         )
     }
