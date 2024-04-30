@@ -1392,6 +1392,30 @@ class PumpIO(
         }
     }
 
+    /**
+     * Run a block with the heartbeat disabled, and enable the heartbeat again once the block is finished.
+     *
+     * If no heartbeat was running prior to the block invocation, this does not enable the heartbeat.
+     *
+     * @param block Block to run without a heartbeat.
+     */
+    suspend fun runWithoutHeartbeat(block: (suspend () -> Unit)) {
+        val mode = _currentModeFlow.value
+        when (mode) {
+            Mode.COMMAND -> stopCMDPingHeartbeat()
+            Mode.REMOTE_TERMINAL -> stopRTKeepAliveHeartbeat()
+            else -> Unit
+        }
+
+        block()
+
+        when (mode) {
+            Mode.COMMAND -> startCMDPingHeartbeat()
+            Mode.REMOTE_TERMINAL -> startRTKeepAliveHeartbeat()
+            else -> Unit
+        }
+    }
+
     /*************************************
      *** PRIVATE FUNCTIONS AND CLASSES ***
      *************************************/
