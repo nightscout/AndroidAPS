@@ -539,6 +539,12 @@ class StringParser : Parser() {
     }
 }
 
+enum class GlyphDigitParseMode {
+    ALL_DIGITS,
+    SMALL_DIGITS_ONLY,
+    LARGE_DIGITS_ONLY
+}
+
 /**
  * Parses the available tokens as one integer until a non-integer glyph is found or the end is reached.
  *
@@ -548,14 +554,9 @@ class StringParser : Parser() {
  *           are multiple integers visually in a sequence.
  */
 class IntegerParser(
-    private val parseMode: Mode = Mode.ALL_DIGITS,
+    private val parseMode: GlyphDigitParseMode = GlyphDigitParseMode.ALL_DIGITS,
     private val checkForWhitespace: Boolean = false
 ) : Parser() {
-    enum class Mode {
-        ALL_DIGITS,
-        SMALL_DIGITS_ONLY,
-        LARGE_DIGITS_ONLY
-    }
 
     override fun parseImpl(parseContext: ParseContext): ParseResult {
         var integer = 0
@@ -575,15 +576,15 @@ class IntegerParser(
             when (val glyph = token.glyph) {
                 is Glyph.SmallDigit ->
                     when (parseMode) {
-                        Mode.ALL_DIGITS,
-                        Mode.SMALL_DIGITS_ONLY -> integer = integer * 10 + glyph.digit
+                        GlyphDigitParseMode.ALL_DIGITS,
+                        GlyphDigitParseMode.SMALL_DIGITS_ONLY -> integer = integer * 10 + glyph.digit
                         else -> break
                     }
 
                 is Glyph.LargeDigit ->
                     when (parseMode) {
-                        Mode.ALL_DIGITS,
-                        Mode.LARGE_DIGITS_ONLY -> integer = integer * 10 + glyph.digit
+                        GlyphDigitParseMode.ALL_DIGITS,
+                        GlyphDigitParseMode.LARGE_DIGITS_ONLY -> integer = integer * 10 + glyph.digit
                         else -> break
                     }
 
@@ -1225,7 +1226,7 @@ class BasalRateTotalScreenParser : Parser() {
                 SingleGlyphParser(Glyph.LargeSymbol(LargeSymbol.BASAL_SET)),
                 DecimalParser(),
                 SingleGlyphParser(Glyph.LargeCharacter('u')),
-                IntegerParser(IntegerParser.Mode.SMALL_DIGITS_ONLY),
+                IntegerParser(GlyphDigitParseMode.SMALL_DIGITS_ONLY),
                 SingleGlyphParser(Glyph.SmallSymbol(SmallSymbol.CHECK)),
                 SingleGlyphTypeParser(Glyph.SmallCharacter::class)
             )
@@ -1359,7 +1360,7 @@ class TbrMainScreenParser : Parser() {
                         SingleGlyphParser(Glyph.SmallSymbol(SmallSymbol.DOWN))
                     )
                 ),
-                IntegerParser(IntegerParser.Mode.LARGE_DIGITS_ONLY), // TBR percentage
+                IntegerParser(GlyphDigitParseMode.LARGE_DIGITS_ONLY), // TBR percentage
                 SingleGlyphParser(Glyph.LargeSymbol(LargeSymbol.PERCENT)),
                 SingleGlyphTypeParser(Glyph.SmallDigit::class), // Basal rate number
                 DecimalParser(), // Current basal rate factor
@@ -1516,7 +1517,7 @@ class BasalRateFactorSettingScreenParser : Parser() {
                 SingleGlyphParser(Glyph.LargeSymbol(LargeSymbol.BASAL)),
                 OptionalParser(DecimalParser()),
                 SingleGlyphParser(Glyph.LargeSymbol(LargeSymbol.UNITS_PER_HOUR)),
-                IntegerParser(IntegerParser.Mode.SMALL_DIGITS_ONLY)
+                IntegerParser(GlyphDigitParseMode.SMALL_DIGITS_ONLY)
             )
         ).parse(parseContext)
 
@@ -1545,7 +1546,7 @@ class TimeAndDateSettingsScreenParser(val titleId: TitleID) : Parser() {
         val parseResult = SequenceParser(
             listOf(
                 SingleGlyphTypeParser(Glyph.LargeSymbol::class),
-                OptionalParser(IntegerParser(IntegerParser.Mode.LARGE_DIGITS_ONLY)), // Quantity
+                OptionalParser(IntegerParser(GlyphDigitParseMode.LARGE_DIGITS_ONLY)), // Quantity
                 OptionalParser(StringParser()) // AM/PM
             )
         ).parse(parseContext)
@@ -1596,9 +1597,9 @@ class MyDataBolusDataScreenParser : Parser() {
                 SingleGlyphTypeParser(Glyph.SmallSymbol::class), // Bolus type
                 DecimalParser(), // Bolus amount,
                 SingleGlyphParser(Glyph.SmallCharacter('U')),
-                IntegerParser(IntegerParser.Mode.SMALL_DIGITS_ONLY), // Index
+                IntegerParser(GlyphDigitParseMode.SMALL_DIGITS_ONLY), // Index
                 SingleGlyphParser(Glyph.SmallSymbol(SmallSymbol.DIVIDE)),
-                IntegerParser(IntegerParser.Mode.SMALL_DIGITS_ONLY), // Total num entries
+                IntegerParser(GlyphDigitParseMode.SMALL_DIGITS_ONLY), // Total num entries
                 OptionalParser(SingleGlyphParser(Glyph.SmallSymbol(SmallSymbol.ARROW))),
                 OptionalParser(TimeParser()), // Duration - only present in multiwave and extended bolus entries
                 SingleGlyphParser(Glyph.SmallSymbol(SmallSymbol.CLOCK)),
@@ -1646,10 +1647,10 @@ class MyDataErrorDataScreenParser : Parser() {
             listOf(
                 SingleGlyphTypeParser(Glyph.SmallSymbol::class), // Alert type
                 SingleGlyphTypeParser(Glyph.SmallCharacter::class), // Alert letter ('W' or 'E')
-                IntegerParser(IntegerParser.Mode.SMALL_DIGITS_ONLY, checkForWhitespace = true), // Alert number
-                IntegerParser(IntegerParser.Mode.SMALL_DIGITS_ONLY), // Index
+                IntegerParser(GlyphDigitParseMode.SMALL_DIGITS_ONLY, checkForWhitespace = true), // Alert number
+                IntegerParser(GlyphDigitParseMode.SMALL_DIGITS_ONLY), // Index
                 SingleGlyphParser(Glyph.SmallSymbol(SmallSymbol.DIVIDE)),
-                IntegerParser(IntegerParser.Mode.SMALL_DIGITS_ONLY), // Total num entries
+                IntegerParser(GlyphDigitParseMode.SMALL_DIGITS_ONLY), // Total num entries
                 StringParser(), // Alert description - ignored
                 SingleGlyphParser(Glyph.SmallSymbol(SmallSymbol.CLOCK)),
                 TimeParser(), // Timestamp time
@@ -1691,9 +1692,9 @@ class MyDataDailyTotalsScreenParser : Parser() {
     override fun parseImpl(parseContext: ParseContext): ParseResult {
         val parseResult = SequenceParser(
             listOf(
-                IntegerParser(IntegerParser.Mode.SMALL_DIGITS_ONLY), // Index
+                IntegerParser(GlyphDigitParseMode.SMALL_DIGITS_ONLY), // Index
                 SingleGlyphParser(Glyph.SmallSymbol(SmallSymbol.DIVIDE)),
-                IntegerParser(IntegerParser.Mode.SMALL_DIGITS_ONLY), // Total num entries
+                IntegerParser(GlyphDigitParseMode.SMALL_DIGITS_ONLY), // Total num entries
                 SingleGlyphParser(Glyph.SmallSymbol(SmallSymbol.SUM)),
                 DecimalParser(), // Total daily amount
                 SingleGlyphParser(Glyph.SmallCharacter('U')),
@@ -1727,11 +1728,11 @@ class MyDataTbrDataScreenParser : Parser() {
         val parseResult = SequenceParser(
             listOf(
                 SingleGlyphTypeParser(Glyph.SmallSymbol::class), // TBR type - is ignored (it only indicates whether or not TBR was < or > 100%)
-                IntegerParser(IntegerParser.Mode.SMALL_DIGITS_ONLY), // Percentage
+                IntegerParser(GlyphDigitParseMode.SMALL_DIGITS_ONLY), // Percentage
                 SingleGlyphParser(Glyph.SmallSymbol(SmallSymbol.PERCENT)),
-                IntegerParser(IntegerParser.Mode.SMALL_DIGITS_ONLY), // Index
+                IntegerParser(GlyphDigitParseMode.SMALL_DIGITS_ONLY), // Index
                 SingleGlyphParser(Glyph.SmallSymbol(SmallSymbol.DIVIDE)),
-                IntegerParser(IntegerParser.Mode.SMALL_DIGITS_ONLY), // Total num entries
+                IntegerParser(GlyphDigitParseMode.SMALL_DIGITS_ONLY), // Total num entries
                 SingleGlyphParser(Glyph.SmallSymbol(SmallSymbol.ARROW)),
                 TimeParser(), // Duration
                 SingleGlyphParser(Glyph.SmallSymbol(SmallSymbol.CLOCK)),

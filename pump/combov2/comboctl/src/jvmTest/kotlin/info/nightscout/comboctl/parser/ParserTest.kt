@@ -183,7 +183,7 @@ class ParserTest {
             listOf(
                 StringParser(),
                 SingleGlyphParser(Glyph.LargeSymbol(LargeSymbol.CLOCK)),
-                IntegerParser(IntegerParser.Mode.LARGE_DIGITS_ONLY),
+                IntegerParser(GlyphDigitParseMode.LARGE_DIGITS_ONLY),
                 TimeParser()
             )
         ).parse(testContext.parseContext)
@@ -208,7 +208,7 @@ class ParserTest {
             listOf(
                 StringParser(),
                 SingleGlyphParser(Glyph.LargeSymbol(LargeSymbol.CLOCK)),
-                IntegerParser(IntegerParser.Mode.LARGE_DIGITS_ONLY),
+                IntegerParser(GlyphDigitParseMode.LARGE_DIGITS_ONLY),
                 OptionalParser(StringParser()),
                 TimeParser()
             )
@@ -235,7 +235,7 @@ class ParserTest {
             listOf(
                 StringParser(),
                 SingleGlyphParser(Glyph.LargeSymbol(LargeSymbol.CLOCK)),
-                IntegerParser(IntegerParser.Mode.LARGE_DIGITS_ONLY),
+                IntegerParser(GlyphDigitParseMode.LARGE_DIGITS_ONLY),
                 OptionalParser(StringParser()),
                 TimeParser()
             )
