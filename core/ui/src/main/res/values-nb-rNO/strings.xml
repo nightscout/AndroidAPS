@@ -414,7 +414,7 @@
     <string name="autotune_select_profile">Velg profil du vil justere</string>
     <!-- Alerts -->
     <string name="raise_notifications_as_android_notifications">Bruk systemvarslinger for alarmer og varslinger</string>
-    <string name="urgent_alarm">Kritisk alarm</string>
+    <string name="urgent_alarm">Viktig varsel</string>
     <string name="info">INFO</string>
     <!-- BolusWizard -->
     <string name="bolus_advisor">Bolusveiviser</string>
