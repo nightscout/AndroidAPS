@@ -600,6 +600,7 @@ class ReplayApsResultsTest @Inject constructor() {
         determineBasalResult.currentTime = input.getLong("currentTime")
         determineBasalResult.flatBGsDetected = input.getBoolean("flatBGsDetected")
         val result = determineBasalResult.invoke()
+        val varSens = result?.variableSens!!
         val endJs = System.currentTimeMillis()
         jsTime += (endJs - startJs)
 
@@ -707,7 +708,7 @@ class ReplayApsResultsTest @Inject constructor() {
             temptargetSet = determineBasalResult.profile.getBoolean("temptargetSet"),
             autosens_max = determineBasalResult.profile.getDouble("autosens_max"),
             out_units = determineBasalResult.profile.optString("out_units"),
-            variable_sens = 116.7, // TODO only available in result.variableSens? , not in determineBasalResult.profile.getDouble("variable_sens"),
+            variable_sens = varSens, // TODO only available in result.variableSens? , not in determineBasalResult.profile.getDouble("variable_sens"),
             insulinDivisor = 0,
             TDD = 0.0,
             autoISF_version = determineBasalResult.profile.optString("autoISF_version"),

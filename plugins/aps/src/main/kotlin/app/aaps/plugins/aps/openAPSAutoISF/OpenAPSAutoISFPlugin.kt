@@ -10,6 +10,7 @@ import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
 import androidx.preference.SwitchPreference
 import app.aaps.core.data.aps.SMBDefaults
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
@@ -364,7 +365,6 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         //done calculate exercise ratio
         var exerciseRatio = 1.0
         // TODO eliminate
-        var origin_sens = ""
         val target_bg = (minBg + maxBg) / 2
         if (highTemptargetRaisesSensitivity && isTempTarget && target_bg > normalTarget
             || oapsProfile.low_temptarget_lowers_sensitivity && isTempTarget && target_bg < normalTarget
@@ -518,6 +518,9 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
 
     fun convert_bg(value: Double): String =
         profileUtil.fromMgdlToStringInUnits(value).replace("-0.0", "0.0")
+
+    fun convert_bg_to_units(value: Double, profile: OapsProfile): Double =
+        if (profile.out_units == "mmol/L") value * Constants.MGDL_TO_MMOLL else value
 
     fun autoISF(currentTime: Long, profile: Profile): Double {
         val sens = profile.getProfileIsfMgdl()
@@ -850,13 +853,13 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
             return "AAPS"                                                 // see message in enable_smb
         }
         if (profile.temptargetSet && enableSMB_EvenOn_OddOff || profile.min_bg == profile.max_bg && enableSMB_EvenOn_OddOff_always && !profile.temptargetSet) {
-            val target = convert_bg(profile.target_bg)
+            //TODO: cleaner conversion back to original mmol/L if applicable
+            var target = convert_bg_to_units(profile.target_bg, profile)
             val msgType: String
             val evenTarget: Boolean
             val msgUnits: String
             val msgTail: String
             val msgEven: String
-            val msg: String
             msgType = if (profile.temptargetSet) {
                 "TempTarget"
             } else {
