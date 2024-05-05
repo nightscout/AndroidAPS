@@ -260,13 +260,13 @@
     <string name="overview_show_deviation_slope">Pente de déviations</string>
     <string name="overview_show_activity">Activité</string>
     <string name="overview_show_bgi">Impact glycémique</string>
-    <string name="overview_show_sensitivity">Changement de la sensibilité</string>
+    <string name="overview_show_sensitivity">Variation SI</string>
     <string name="overview_show_deviations">Déviations</string>
     <string name="overview_show_cob">Glucides actifs</string>
     <string name="overview_show_iob">Insuline Active</string>
     <string name="overview_show_basals">Basals</string>
     <string name="overview_show_abs_insulin">Insuline absolue</string>
-    <string name="overview_show_variable_sens">Sensibilité variable</string>
+    <string name="overview_show_variable_sens">AutoSens</string>
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
     <string name="deviation_shortname">DEV</string>
@@ -277,7 +277,7 @@
     <string name="treatments_shortname">TRAIT</string>
     <string name="heartRate_shortname">FC</string>
     <string name="sensitivity_shortname">SENS%</string>
-    <string name="variable_sensitivity_shortname">VSENS</string>
+    <string name="variable_sensitivity_shortname">V_SI</string>
     <string name="graph_scale">Échelle du graph.</string>
     <string name="graph_menu_divider_header">Graph</string>
     <string name="temp_basal_overview_short_name">T:</string>

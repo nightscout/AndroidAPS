@@ -17,7 +17,6 @@
     <!--     Activities-->
     <string name="activity_monitor">Activiteitsmonitor</string>
     <string name="do_you_want_reset_stats">Wil je de activiteitenstatistieken resetten?</string>
-    <string name="do_you_want_reset_tdd_stats">Wilt u de TDD statistieken resetten?</string>
     <string name="statistics">Statistieken</string>
     <string name="calculation_in_progress">Berekening wordt uitgevoerd</string>
     <string name="invalid_age">Ongeldige leeftijd ingevoerd</string>
@@ -131,8 +130,24 @@
     <string name="a11y_only_on_watch">alleen op smartwatch</string>
     <string name="a11y_only_on_phone">alleen op telefoon</string>
     <string name="quickwizard_settings">QuickWizard instellingen</string>
+    <string name="overview_edit_quickwizard_button_text">Knop tekst</string>
+    <string name="overview_edit_quickwizard_carbs">Koolhydraten</string>
     <string name="overview_edit_quickwizard_valid">Geldig:</string>
     <string name="overview_edit_quickwizard_list_activity_add">Toevoegen</string>
     <string name="overview_quickwizard_item_edit_button">Wijzig</string>
+    <string name="overview_edit_quickwizard_use_positive_iob_only">Alleen positieve IOB</string>
+    <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
+    <string name="overview_edit_quickwizard_percentage_too_high">Percentage te hoog!</string>
+    <string name="overview_editquickwizard_percentage">Percentage</string>
     <string name="a11y_drag_and_drop_handle">sleep-modus</string>
+    <string name="additional_ecarbs">Voeg eCarbs toe</string>
+    <string name="overview_edit_quickwizard_useforcalculation">Gebruik voor berekening:</string>
+    <string name="constraints_violation">Voldoet niet aan de beperkingen</string>
+    <string name="change_your_input">Wijzig de invoer!</string>
+    <string name="confirm_treatment">Bevestig alstublieft de behandeling</string>
+    <string-array name="yes_no_positiveonly_negativeonly">
+        <item>Beide</item>
+        <item>Alleen positief</item>
+        <item>Alleen negatief</item>
+    </string-array>
 </resources>

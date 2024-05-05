@@ -17,7 +17,6 @@
     <!--     Activities-->
     <string name="activity_monitor">Aktyvumo stebėjimas</string>
     <string name="do_you_want_reset_stats">Ar norite iš naujo nustatyti aktyvumo statistiką?</string>
-    <string name="do_you_want_reset_tdd_stats">Ar norite iš naujo nustatyti BPD statistiką?</string>
     <string name="statistics">Statistika</string>
     <string name="calculation_in_progress">Skaičiuojama</string>
     <string name="invalid_age">Neteisingas amžiaus įrašas</string>

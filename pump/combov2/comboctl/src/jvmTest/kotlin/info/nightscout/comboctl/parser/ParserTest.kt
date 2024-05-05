@@ -183,7 +183,7 @@ class ParserTest {
             listOf(
                 StringParser(),
                 SingleGlyphParser(Glyph.LargeSymbol(LargeSymbol.CLOCK)),
-                IntegerParser(IntegerParser.Mode.LARGE_DIGITS_ONLY),
+                IntegerParser(GlyphDigitParseMode.LARGE_DIGITS_ONLY),
                 TimeParser()
             )
         ).parse(testContext.parseContext)
@@ -208,7 +208,7 @@ class ParserTest {
             listOf(
                 StringParser(),
                 SingleGlyphParser(Glyph.LargeSymbol(LargeSymbol.CLOCK)),
-                IntegerParser(IntegerParser.Mode.LARGE_DIGITS_ONLY),
+                IntegerParser(GlyphDigitParseMode.LARGE_DIGITS_ONLY),
                 OptionalParser(StringParser()),
                 TimeParser()
             )
@@ -235,7 +235,7 @@ class ParserTest {
             listOf(
                 StringParser(),
                 SingleGlyphParser(Glyph.LargeSymbol(LargeSymbol.CLOCK)),
-                IntegerParser(IntegerParser.Mode.LARGE_DIGITS_ONLY),
+                IntegerParser(GlyphDigitParseMode.LARGE_DIGITS_ONLY),
                 OptionalParser(StringParser()),
                 TimeParser()
             )
@@ -821,6 +821,16 @@ class ParserTest {
             assertEquals(testScreen.second == null, screen.isBlinkedOut)
             assertEquals(testScreen.second, screen.durationInMinutes)
         }
+    }
+
+    @Test
+    fun checkTemporaryBasalRate24HoursDurationParsing() {
+        val testContext = TestContext(testFrameTbrDuration24HoursScreen, 0, skipTitleString = true)
+        val result = TemporaryBasalRateDurationScreenParser().parse(testContext.parseContext)
+        assertEquals(ParseResult.Value::class, result::class)
+        val screen = (result as ParseResult.Value<*>).value as ParsedScreen.TemporaryBasalRateDurationScreen
+        assertEquals(false, screen.isBlinkedOut)
+        assertEquals(24 * 60, screen.durationInMinutes)
     }
 
     @Test

@@ -4,6 +4,7 @@
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">שינוי לשעון קיץ ב-24 השעות הקרובות</string>
     <string name="dst_loop_disabled_warning">חל מעבר לשעון קיץ לפני פחות מ-3 שעות - לולאה סגורה מושבתת</string>
+    <string name="dst_loop_disabled_error">שינוי בשעון הקיץ (DST) התרחש לפני פחות מ-3 שעות. הלולאה הסגורה מושבתת זמנית והיא תופעל מחדש אוטומטית 3 שעות אחרי שינוי שעון הקיץ</string>
     <!-- Storage constraint -->
     <string name="disk_full">יש לפנות לפחות %1$d מ\"ב מנפח האחסון של מכשירכם! הלולאה מושבתת!</string>
     <!-- Version Checker -->

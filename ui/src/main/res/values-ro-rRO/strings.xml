@@ -17,7 +17,6 @@
     <!--     Activities-->
     <string name="activity_monitor">Monitorizare activitate</string>
     <string name="do_you_want_reset_stats">Doriți să resetați statisticile de activitate?</string>
-    <string name="do_you_want_reset_tdd_stats">Doriți să resetați statisticile DZT?</string>
     <string name="statistics">Statistici</string>
     <string name="calculation_in_progress">Calcul în desfășurare</string>
     <string name="invalid_age">Valoare vârstă invalidă</string>

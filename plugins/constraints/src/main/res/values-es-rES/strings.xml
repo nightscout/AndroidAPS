@@ -4,6 +4,7 @@
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">Cambio al horario de verano en menos de 24 horas</string>
     <string name="dst_loop_disabled_warning">Cambio al horario de verano hace menos de 3 horas - Bucle cerrado deshabilitado</string>
+    <string name="dst_loop_disabled_error">El cambio al horario de verano se producirá en menos de 3 horas. El lazo cerrado se desactivará temporalmente y se volverá a activar automáticamente 3 horas después del cambio al horario de verano</string>
     <!-- Storage constraint -->
     <string name="disk_full">Debe liberar al menos %1$d MB de almacenamiento interno. ¡El bucle se encuentra desactivado!</string>
     <!-- Version Checker -->

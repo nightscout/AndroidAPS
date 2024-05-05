@@ -61,4 +61,5 @@
     <string name="pref_show_date">Mostrar fecha</string>
     <string name="default_custom_watchface_comment">Esfera predeterminada, puedes hacer clic en el botón EXPORTAR ESFERA para generar una plantilla</string>
     <string name="wear_default_watchface">Esfera por defecto</string>
+    <string name="wear_more_watchfaces">Más esferas</string>
 </resources>

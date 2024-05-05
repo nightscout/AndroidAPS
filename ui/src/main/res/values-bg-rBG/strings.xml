@@ -17,7 +17,6 @@
     <!--     Activities-->
     <string name="activity_monitor">Мониторинг на активност</string>
     <string name="do_you_want_reset_stats">Искате да нулирате статистиката?</string>
-    <string name="do_you_want_reset_tdd_stats">Искате да нулирате TDD статистиката?</string>
     <string name="statistics">Статистика</string>
     <string name="calculation_in_progress">Калкулация в прогресс</string>
     <string name="invalid_age">Невалидна възраст</string>
