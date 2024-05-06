@@ -103,7 +103,6 @@
     <string name="troubleshooting_wheretoask">Onde você pode encontrar ajuda com o AAPS?</string>
     <string name="troubleshooting_fb">Você pode perguntar em grupos de usuários do AndroidAPS no Facebook.</string>
     <string name="troubleshooting_wiki">Você pode ler (e reler) a documentação do AAPS.</string>
-    <string name="troubleshooting_gitter">Você pode pedir ajuda ou registrar problemas técnicos no Discord do AndroidAPS.</string>
     <string name="troubleshooting_yourendo">Você deveria pedir/perguntar à sua clínica de diabetes/endocrinologista.</string>
     <string name="troubleshooting_hint1">https://wiki.aaps.app/en/latest/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
