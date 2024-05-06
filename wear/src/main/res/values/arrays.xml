@@ -117,4 +117,18 @@
         <item>none</item>
     </string-array>
 
+    <string-array name="heartrate_smoothing">
+        <item>@string/pref_1_min</item>
+        <item>@string/pref_5_min</item>
+        <item>@string/pref_10_min</item>
+        <item>@string/pref_15_min</item>
+    </string-array>
+
+    <string-array name="heartrate_smoothing_values">
+        <item>1</item>
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+    </string-array>
+
 </resources>
