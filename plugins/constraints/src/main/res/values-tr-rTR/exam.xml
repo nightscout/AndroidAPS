@@ -103,7 +103,6 @@
     <string name="troubleshooting_wheretoask">AAPS ile ilgili nereden yardım alabilirsiniz?</string>
     <string name="troubleshooting_fb">AAPS Kullanıcıları Facebook grubundan tavsiye isteyebilirsiniz.</string>
     <string name="troubleshooting_wiki">AAPS belgelerini okumalısınız (ve yeniden okumalısınız).</string>
-    <string name="troubleshooting_gitter">AAPS Discord\'da tavsiye isteyebilir ve teknik sorunları veya hataları bildirebilirsiniz.</string>
     <string name="troubleshooting_yourendo">Diyabet kliniğinize/endokrinoloğunuza sormalısınız.</string>
     <string name="troubleshooting_hint1">https://wiki.aaps.app/tr/latest/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
