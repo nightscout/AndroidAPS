@@ -103,7 +103,6 @@
     <string name="troubleshooting_wheretoask">Wo können Sie nach Hilfe bei AAPS suchen?</string>
     <string name="troubleshooting_fb">Du kannst in der \"AAPS Users\" Facebookgruppe um Rat bitten.</string>
     <string name="troubleshooting_wiki">Du solltest die AndroidAPS-Dokumentation lesen (und wiederholt lesen).</string>
-    <string name="troubleshooting_gitter">Im Discord Channel \"AAPS\" kannst Du bei technischen Problemen oder Fragestellungen um Hilfe bitten.</string>
     <string name="troubleshooting_yourendo">Du solltest Deine Diabetesklinik / Deinen Diabetologen fragen.</string>
     <string name="troubleshooting_hint1">https://wiki.aaps.app/de/latest/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/loopedDE/</string>
