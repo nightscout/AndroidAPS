@@ -129,7 +129,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     val commands = mapOf(
         "BG" to "BG",
         "LOOP" to "LOOP STOP/DISABLE/START/ENABLE/RESUME/STATUS/CLOSED/LGS\nLOOP SUSPEND 20",
-        "NSCLIENT" to "NSCLIENT RESTART",
+        "AAPSCLIENT" to "AAPSCLIENT RESTART",
         "PUMP" to "PUMP\nPUMP CONNECT\nPUMP DISCONNECT 30\n",
         "BASAL" to "BASAL STOP/CANCEL\nBASAL 0.3\nBASAL 0.3 20\nBASAL 30%\nBASAL 30% 20\n",
         "BOLUS" to "BOLUS 1.2\nBOLUS 1.2 MEAL",
@@ -280,7 +280,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                     else if (divided.size == 2 || divided.size == 3) processLOOP(divided, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
 
-                "NSCLIENT" ->
+                "AAPSCLIENT" ->
                     if (divided.size == 2) processNSCLIENT(divided, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
 
@@ -542,7 +542,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     private fun processNSCLIENT(divided: Array<String>, receivedSms: Sms) {
         if (divided[1].uppercase(Locale.getDefault()) == "RESTART") {
             rxBus.send(EventNSClientRestart())
-            sendSMS(Sms(receivedSms.phoneNumber, "NSCLIENT RESTART SENT"))
+            sendSMS(Sms(receivedSms.phoneNumber, "AAPSCLIENT RESTART SENT"))
             receivedSms.processed = true
         } else
             sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
