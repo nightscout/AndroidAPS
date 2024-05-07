@@ -71,11 +71,11 @@
     <string name="pref_single_target">Единичная цель</string>
     <string name="pref_wizard_percentage">Процент калькулятора</string>
     <string name="pref_complication_tap_action">Действия при нажатии кнопки расширений</string>
-    <string name="pref_unicode_in_complications">Юникод в репликации</string>
+    <string name="pref_unicode_in_complications">Юникод в дополнениях</string>
     <string name="pref_version">Версия:</string>
     <string name="pref_moreWatchfaceSettings">Еще настройки циферблатов</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Смотрите конфигурацию циферблата.</string>
-    <string name="menu_tempt">ВремЦ</string>
+    <string name="menu_tempt">ВЦ</string>
     <string name="menu_wizard">Калькулятор</string>
     <string name="menu_wizard_short">Кальк</string>
     <string name="menu_treatment">Терапия</string>
@@ -89,13 +89,13 @@
     <string name="menu_prime_fill">Прайм/заполнение</string>
     <string name="menu_none">Не показывать</string>
     <string name="menu_default">По умолчанию</string>
-    <string name="menu_menu">Menu</string>
+    <string name="menu_menu">Меню</string>
     <string name="quick_wizard_short">XL</string>
     <string name="action_duration">Длительность</string>
     <string name="action_tempt_confirmation">Запрошена временная цель</string>
     <string name="action_quick_wizard_confirmation">Запрошен мастер настройки</string>
     <string name="action_treatment_confirmation">Запрошена терапия</string>
-    <string name="action_bolus_confirmation">Запрошен Болюс</string>
+    <string name="action_bolus_confirmation">Запрошен болюс</string>
     <string name="action_wizard_confirmation">Расчет запрошен</string>
     <string name="action_fill_confirmation">Заполнение запрошено</string>
     <string name="action_ecarb_confirmation">Углеводы запрошены</string>
@@ -104,7 +104,7 @@
     <string name="action_low" comment="In temp target menu, lower value from range">Низкое значение</string>
     <string name="action_high" comment="In temp target menu, higher value from range">Высокое значение</string>
     <string name="action_carbs">Углеводы</string>
-    <string name="action_ecarbs">растянутые углеводы eCarbs </string>
+    <string name="action_ecarbs">Растянутые углеводы eCarbs </string>
     <string name="action_percentage">Процент</string>
     <string name="action_start_min">Начало [min]</string>
     <string name="action_duration_h">Продолжительность [h]</string>
@@ -114,7 +114,6 @@
     <string name="action_preset_3">Предустановка 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Произвольное количество</string>
     <string name="action_confirm">ПОДТВЕРДИТЬ</string>
-    <string name="action_timeshift">сдвиг по времени</string>
     <string name="action_bolus">Болюс</string>
     <string name="bolus_progress">Вводится болюс</string>
     <string name="press_to_cancel">нажмите для отмены</string>
@@ -198,8 +197,6 @@
     <string name="week_short">н</string>
     <string name="day_short">д</string>
     <string name="hour_short">ч</string>
-    <string name="hour_minute">%1$s%2$s</string>
-    <string name="hour_minute_second">%1$s%2$s%3$s</string>
     <string name="old">старые</string>
     <string name="old_warning">!старое!</string>
     <string name="error">!ошибка!</string>
@@ -215,6 +212,6 @@
     <string name="tile_action_4">Действие 4</string>
     <string name="datalayer_notification_title">Передача данных в режиме переднего плана</string>
     <string name="datalayer_notification_text">AAPS запущен на переднем плане. Чтобы скрыть уведомление, перейдите в Настройки разработчика, Уведомления приложений, Разрешенные приложения для просмотра, выберите AAPS, Отключите уведомление канала службы переднего плана уровня данных.</string>
-    <string name="on">Включено</string>
-    <string name="off">Выкл</string>
+    <string name="on">ВКЛ</string>
+    <string name="off">ВЫКЛ</string>
 </resources>
