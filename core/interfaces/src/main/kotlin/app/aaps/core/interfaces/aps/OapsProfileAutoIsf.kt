@@ -3,7 +3,7 @@ package app.aaps.core.interfaces.aps
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class OapsProfile(
+data class OapsProfileAutoIsf(
     var dia: Double, // AMA only
     var min_5m_carbimpact: Double, // AMA only
     var max_iob: Double,
@@ -47,5 +47,29 @@ data class OapsProfile(
     //DynISF only
     var variable_sens: Double,
     var insulinDivisor: Int,
-    var TDD: Double
+    var TDD: Double,
+    //AutoISF only
+    var autoISF_version: String = "",
+    var enable_autoISF: Boolean = true,
+    var autoISF_max: Double = 1.0,
+    var autoISF_min: Double = 1.0,
+    var bgAccel_ISF_weight: Double = 0.0,
+    var bgBrake_ISF_weight: Double = 0.0,
+    var enable_pp_ISF_always: Boolean = false,
+    var pp_ISF_hours:  Int = 3,
+    var pp_ISF_weight: Double = 0.0,
+    var delta_ISFrange_weight: Double = 0.0,
+    var lower_ISFrange_weight: Double = 0.0,
+    var higher_ISFrange_weight: Double = 0.0,
+    var enable_dura_ISF_with_COB: Boolean = false,
+    var dura_ISF_weight: Double = 0.0,
+    var smb_delivery_ratio: Double = 0.5,
+    var smb_delivery_ratio_min: Double = 0.5,
+    var smb_delivery_ratio_max: Double = 0.5,
+    var smb_delivery_ratio_bg_range: Double = 0.0,
+    var smb_max_range_extension: Double = 1.0,
+    var enableSMB_EvenOn_OddOff: Boolean = false,
+    var enableSMB_EvenOn_OddOff_always: Boolean = false,
+    var iob_threshold_percent: Int = 100,
+    var profile_percentage: Int = 100
 )

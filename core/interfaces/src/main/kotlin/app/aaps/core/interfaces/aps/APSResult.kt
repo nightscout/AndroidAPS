@@ -43,6 +43,7 @@ interface APSResult {
     var glucoseStatus: GlucoseStatus?
     var currentTemp: CurrentTemp?
     var oapsProfile: OapsProfile?
+    var oapsProfileAutoIsf: OapsProfileAutoIsf?
     var mealData: MealData?
 
     val iob: IobTotal? get() = iobData?.get(0)

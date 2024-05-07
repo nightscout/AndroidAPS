@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.aps.CurrentTemp
 import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.aps.MealData
 import app.aaps.core.interfaces.aps.OapsProfile
+import app.aaps.core.interfaces.aps.OapsProfileAutoIsf
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.FileListProvider
@@ -667,7 +668,7 @@ class ReplayApsResultsTest @Inject constructor() {
         for (i in 0 until determineBasalResult.iobData!!.length())
             iobData.add(determineBasalResult.iobData!!.getJSONObject(i).toIob())
         val currentTime = determineBasalResult.currentTime
-        val profile = OapsProfile(
+        val profile = OapsProfileAutoIsf(
             dia = 0.0,
             min_5m_carbimpact = 0.0,
             max_iob = determineBasalResult.profile.getDouble("max_iob"),
