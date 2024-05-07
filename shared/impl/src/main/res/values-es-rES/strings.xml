@@ -1,2 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="cwf_comment_background">Imagen de fondo</string>
+    <string name="cwf_comment_chart">Gráficos (Glucosa, basal, líneas de predicción...)</string>
+    <string name="cwf_comment_cover_chart">Imagen frente al gráfico y detrás de campos de texto</string>
+    <string name="cwf_comment_freetext1">Texto libre 1</string>
+    <string name="cwf_comment_freetext2">Texto libre 2</string>
+    <string name="cwf_comment_freetext3">Texto libre 3</string>
+    <string name="cwf_comment_freetext4">Texto libre 4</string>
+    <string name="cwf_comment_iob1">Etiqueta IOB o Suma de IOB si es detallada</string>
+    <string name="cwf_comment_iob2">Suma de IOB o (Bolos_IOB|Basal_IOB) si se detalla</string>
+    <string name="cwf_comment_cob1">Etiqueta COB</string>
+</resources>
