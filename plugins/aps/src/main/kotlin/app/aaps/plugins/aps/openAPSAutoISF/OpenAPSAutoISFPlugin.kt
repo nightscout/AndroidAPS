@@ -18,7 +18,7 @@ import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.CurrentTemp
-import app.aaps.core.interfaces.aps.OapsProfile
+import app.aaps.core.interfaces.aps.OapsProfileAutoIsf
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
@@ -40,7 +40,6 @@ import app.aaps.core.interfaces.profiling.Profiler
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAPSCalculationFinished
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.Round
@@ -97,7 +96,6 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     private val glucoseStatusProvider: GlucoseStatusProvider,
     private val bgQualityCheck: BgQualityCheck,
-    private val uiInteraction: UiInteraction,
     private val determineBasalAutoISF: DetermineBasalAutoISF,
     private val profiler: Profiler
 ) : PluginBase(
@@ -294,7 +292,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
             consoleError = mutableListOf()
             variableSensitivity = autoISF(now, profile)
         }
-        val oapsProfile = OapsProfile(
+        val oapsProfile = OapsProfileAutoIsf(
             dia = 0.0, // not used
             min_5m_carbimpact = 0.0, // not used
             max_iob = constraintsChecker.getMaxIOBAllowed().also { inputConstraints.copyReasons(it) }.value(),
@@ -336,8 +334,6 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
             autosens_max = preferences.get(DoubleKey.AutosensMax),
             out_units = if (profileFunction.getUnits() == GlucoseUnit.MMOL) "mmol/L" else "mg/dl",
             variable_sens = variableSensitivity,
-            insulinDivisor = 0,
-            TDD = 0.0,
             autoISF_version = autoIsfVersion,
             enable_autoISF = autoIsfWeights,
             autoISF_max = autoISF_max,
@@ -430,7 +426,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
             determineBasalResult.iobData = iobArray
             determineBasalResult.glucoseStatus = glucoseStatus
             determineBasalResult.currentTemp = currentTemp
-            determineBasalResult.oapsProfile = oapsProfile
+            determineBasalResult.oapsProfileAutoIsf = oapsProfile
             determineBasalResult.mealData = mealData
             lastAPSResult = determineBasalResult
             lastAPSRun = now
@@ -519,7 +515,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
     fun convert_bg(value: Double): String =
         profileUtil.fromMgdlToStringInUnits(value).replace("-0.0", "0.0")
 
-    fun convert_bg_to_units(value: Double, profile: OapsProfile): Double =
+    fun convert_bg_to_units(value: Double, profile: OapsProfileAutoIsf): Double =
         if (profile.out_units == "mmol/L") value * Constants.MGDL_TO_MMOLL else value
 
     fun autoISF(currentTime: Long, profile: Profile): Double {
@@ -848,7 +844,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         return finalISF
     }
 
-    fun loop_smb(microBolusAllowed: Boolean, profile: OapsProfile, iob_data_iob: Double, useIobTh: Boolean, iobThEffective: Double): String {
+    fun loop_smb(microBolusAllowed: Boolean, profile: OapsProfileAutoIsf, iob_data_iob: Double, useIobTh: Boolean, iobThEffective: Double): String {
         if (!microBolusAllowed) {
             return "AAPS"                                                 // see message in enable_smb
         }

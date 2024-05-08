@@ -7,8 +7,7 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.profiling.Profiler
-import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.interfaces.aps.OapsProfile
+import app.aaps.core.interfaces.aps.OapsProfileAutoIsf
 import app.aaps.core.keys.AdaptiveIntentPreference
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
@@ -33,7 +32,6 @@ class OpenAPSAutoISFPluginTest : TestBaseWithProfile() {
     @Mock lateinit var determineBasalSMB: DetermineBasalAutoISF
     @Mock lateinit var sharedPrefs: SharedPreferences
     @Mock lateinit var bgQualityCheck: BgQualityCheck
-    @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var profiler: Profiler
     private lateinit var openAPSAutoISFPlugin: OpenAPSAutoISFPlugin
 
@@ -71,7 +69,7 @@ class OpenAPSAutoISFPluginTest : TestBaseWithProfile() {
         openAPSAutoISFPlugin = OpenAPSAutoISFPlugin(
             injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, profileUtil, config, activePlugin,
             iobCobCalculator, hardLimits, preferences, dateUtil, processedTbrEbData, persistenceLayer, glucoseStatusProvider,
-            bgQualityCheck, uiInteraction, determineBasalSMB, profiler
+            bgQualityCheck, determineBasalSMB, profiler
         )
     }
 
@@ -143,7 +141,7 @@ class OpenAPSAutoISFPluginTest : TestBaseWithProfile() {
 
     @Test
     fun loop_smbTest() {
-        val profile = OapsProfile(
+        val profile = OapsProfileAutoIsf(
             dia = 0.0, // not used
             min_5m_carbimpact = 0.0, // not used
             max_iob = 10.0,
@@ -185,8 +183,6 @@ class OpenAPSAutoISFPluginTest : TestBaseWithProfile() {
             autosens_max = preferences.get(DoubleKey.AutosensMax),
             out_units = "mg/dl",
             variable_sens = 111.1,
-            insulinDivisor = 0,
-            TDD = 0.0,
             autoISF_version = "3.0",
             enable_autoISF = true,
             autoISF_max = 1.5,
@@ -232,7 +228,7 @@ class OpenAPSAutoISFPluginTest : TestBaseWithProfile() {
         val profile = profileFunction.getProfile(now)
         if ( profile == null) return
 
-        val oapsProfile = OapsProfile(
+        val oapsProfile = OapsProfileAutoIsf(
             dia = 0.0, // not used
             min_5m_carbimpact = 0.0, // not used
             max_iob = 10.0,
@@ -274,8 +270,6 @@ class OpenAPSAutoISFPluginTest : TestBaseWithProfile() {
             autosens_max = preferences.get(DoubleKey.AutosensMax),
             out_units = "mg/dl",
             variable_sens = 47.11,
-            insulinDivisor = 0,
-            TDD = 0.0,
             autoISF_version = "3.0",
             enable_autoISF = false,
             autoISF_max = 1.5,
