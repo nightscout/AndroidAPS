@@ -334,8 +334,6 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
             autosens_max = preferences.get(DoubleKey.AutosensMax),
             out_units = if (profileFunction.getUnits() == GlucoseUnit.MMOL) "mmol/L" else "mg/dl",
             variable_sens = variableSensitivity,
-            insulinDivisor = 0,
-            TDD = 0.0,
             autoISF_version = autoIsfVersion,
             enable_autoISF = autoIsfWeights,
             autoISF_max = autoISF_max,

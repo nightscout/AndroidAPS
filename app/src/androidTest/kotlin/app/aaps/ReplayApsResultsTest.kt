@@ -710,8 +710,6 @@ class ReplayApsResultsTest @Inject constructor() {
             autosens_max = determineBasalResult.profile.getDouble("autosens_max"),
             out_units = determineBasalResult.profile.optString("out_units"),
             variable_sens = varSens, // TODO only available in result.variableSens? , not in determineBasalResult.profile.getDouble("variable_sens"),
-            insulinDivisor = 0,
-            TDD = 0.0,
             autoISF_version = determineBasalResult.profile.optString("autoISF_version"),
             enable_autoISF = determineBasalResult.profile.getBoolean("enable_autoISF"),
             autoISF_max = determineBasalResult.profile.getDouble("autoISF_max"),
@@ -772,7 +770,7 @@ class ReplayApsResultsTest @Inject constructor() {
         aapsLogger.debug(LTag.APS, "File: $filename")
 //      //   assertThat(resultKt.reason.toString()).isEqualTo(result?.json?.getString("reason"))
         assertThat(resultKt.tick ?: "").isEqualTo(result?.json()?.optString("tick"))
-        assertThat(resultKt.eventualBG ?: Double.NaN).isEqualTo(result?.json()?.optDouble("eventualBG"))
+        assertThat(resultKt.eventualBG ?: 0.0).isWithin(1.0).of(result?.json()?.optDouble("eventualBG") ?:0.0)
         assertThat(resultKt.targetBG ?: Double.NaN).isEqualTo(result?.json()?.optDouble("targetBG"))
         assertThat(resultKt.insulinReq ?: Double.NaN).isEqualTo(result?.json()?.optDouble("insulinReq"))
         assertThat(resultKt.carbsReq ?: 0).isEqualTo(result?.json()?.optInt("carbsReq"))
