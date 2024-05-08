@@ -531,34 +531,34 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
         assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Current loop mode: $modeLgs")
 
-        //NSCLIENT RESTART
+        //AAPSCLIENT RESTART
         `when`(loop.isEnabled()).thenReturn(true)
         `when`(loop.isSuspended).thenReturn(false)
         smsCommunicatorPlugin.messages = ArrayList()
-        sms = Sms("1234", "NSCLIENT RESTART")
+        sms = Sms("1234", "AAPSCLIENT RESTART")
         smsCommunicatorPlugin.processSms(sms)
         assertThat(sms.ignored).isFalse()
-        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("NSCLIENT RESTART")
-        assertThat(smsCommunicatorPlugin.messages[1].text).contains("NSCLIENT RESTART")
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("AAPSCLIENT RESTART")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("AAPSCLIENT RESTART")
 
-        //NSCLIENT BLA BLA
+        //AAPSCLIENT BLA BLA
         `when`(loop.isEnabled()).thenReturn(true)
         `when`(loop.isSuspended).thenReturn(false)
         smsCommunicatorPlugin.messages = ArrayList()
-        sms = Sms("1234", "NSCLIENT BLA BLA")
+        sms = Sms("1234", "AAPSCLIENT BLA BLA")
         smsCommunicatorPlugin.processSms(sms)
         assertThat(sms.ignored).isFalse()
-        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("NSCLIENT BLA BLA")
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("AAPSCLIENT BLA BLA")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
 
-        //NSCLIENT BLABLA
+        //AAPSCLIENT BLABLA
         `when`(loop.isEnabled()).thenReturn(true)
         `when`(loop.isSuspended).thenReturn(false)
         smsCommunicatorPlugin.messages = ArrayList()
-        sms = Sms("1234", "NSCLIENT BLABLA")
+        sms = Sms("1234", "AAPSCLIENT BLABLA")
         smsCommunicatorPlugin.processSms(sms)
         assertThat(sms.ignored).isFalse()
-        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("NSCLIENT BLABLA")
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("AAPSCLIENT BLABLA")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
 
         //PUMP
