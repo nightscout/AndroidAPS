@@ -215,7 +215,7 @@ abstract class PluginsListModule {
     abstract fun bindMedtrumPlugin(plugin: MedtrumPlugin): PluginBase
 
     @Binds
-    @AllConfigs
+    @PumpDriver
     @IntoMap
     @IntKey(170)
     abstract fun bindEquilPumpPlugin(plugin: EquilPumpPlugin): PluginBase
