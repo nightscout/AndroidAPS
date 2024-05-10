@@ -120,6 +120,7 @@
     <string name="activating_pump">Activating pump and setting initial basal rate. Please Wait.</string>
     <string name="activating_error">Failed to activate, press <b>Retry</b> to try again.</string>
     <string name="activating_complete">New patch activated. %.2f Units remaining.</string>
+    <string name="can_export_settings">You can export the settings to be able to recover this patch session later.</string>
     <string name="press_OK_to_return">Press <b>OK</b> to return to main screen.</string>
 
     <string name="deactivate_sure">Are you sure that you want to deactivate the current patch?</string>
