@@ -82,7 +82,7 @@ class BLEComm @Inject internal constructor(
 
     private var mDeviceSN: Long = 0
     private var mCallback: BLECommCallback? = null
-    private var mDevice: BluetoothDevice? = null
+    private var mDeviceAddress: String? = null
 
     fun setCallback(callback: BLECommCallback?) {
         this.mCallback = callback
@@ -122,7 +122,9 @@ class BLEComm @Inject internal constructor(
     @Synchronized
     fun connect(from: String, deviceSN: Long): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
-            ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
+            (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED ||
+            ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+            ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED)
         ) {
             ToastUtils.errorToast(context, context.getString(app.aaps.core.ui.R.string.need_connect_permission))
             aapsLogger.error(LTag.PUMPBTCOMM, "missing permission: $from")
@@ -139,14 +141,14 @@ class BLEComm @Inject internal constructor(
         mWritePackets = null
         mReadPacket = null
 
-        if (mDevice != null && mDeviceSN == deviceSN) {
+        if (mDeviceAddress != null && mDeviceSN == deviceSN)  {
             // Skip scanning and directly connect to gatt
             aapsLogger.debug(LTag.PUMPBTCOMM, "Skipping scan and directly connecting to gatt")
-            connectGatt(mDevice!!)
+            mBluetoothAdapter?.getRemoteDevice(mDeviceAddress)?.let { connectGatt(it) }
         } else {
             // Scan for device
             aapsLogger.debug(LTag.PUMPBTCOMM, "Scanning for device")
-            mDevice = null
+            mDeviceAddress = null
             mDeviceSN = deviceSN
             startScan()
         }
@@ -218,7 +220,7 @@ class BLEComm @Inject internal constructor(
             if (manufacturerData?.getDeviceSN() == mDeviceSN) {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "Found our device! deviceSN: " + manufacturerData.getDeviceSN())
                 stopScan()
-                mDevice = result.device
+                mDeviceAddress = result.device.address
                 connectGatt(result.device)
             }
         }
