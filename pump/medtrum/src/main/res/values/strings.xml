@@ -109,6 +109,7 @@
     <string name="patch_not_active_note">Pump base should not be connected to the patch until the next step!</string>
     <string name="connect_pump_base">Connect pump base to a new patch, remove the residual air and fill with insulin, then press <b>Next</b>.</string>
     <string name="note_min_70_units">Note: A minimum of 70 units is required for activation.</string>
+    <string name="reservoir_text_and_level">Reservoir: %.2f U</string>
     <string name="do_not_attach_to_body">Do not attach the patch to the body yet.</string>
     <string name="half_press_needle">Half-press needle button. Then tap <b>Next</b> to start prime.</string>
     <string name="wait_for_priming">Please wait for the priming to complete.</string>
@@ -119,6 +120,7 @@
     <string name="activating_pump">Activating pump and setting initial basal rate. Please Wait.</string>
     <string name="activating_error">Failed to activate, press <b>Retry</b> to try again.</string>
     <string name="activating_complete">New patch activated. %.2f Units remaining.</string>
+    <string name="can_export_settings">You can export the settings to be able to recover this patch session later.</string>
     <string name="press_OK_to_return">Press <b>OK</b> to return to main screen.</string>
 
     <string name="deactivate_sure">Are you sure that you want to deactivate the current patch?</string>

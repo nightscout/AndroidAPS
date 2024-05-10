@@ -3,8 +3,12 @@ package info.nightscout.pump.medtrum.ui
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.ui.toast.ToastUtils
 import info.nightscout.pump.medtrum.R
@@ -16,6 +20,8 @@ class MedtrumActivateCompleteFragment : MedtrumBaseFragment<FragmentMedtrumActiv
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rh: ResourceHelper
+    @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var importExportPrefs: ImportExportPrefs
 
     companion object {
 
@@ -41,6 +47,13 @@ class MedtrumActivateCompleteFragment : MedtrumBaseFragment<FragmentMedtrumActiv
                         }
                     }
                 }
+            }
+        }
+        binding.navExport.setOnClickListener {
+            uel.log(Action.EXPORT_SETTINGS, Sources.Maintenance)
+            // start activity for checking permissions...
+            importExportPrefs.verifyStoragePermissions(this) {
+                importExportPrefs.exportSharedPreferences(this)
             }
         }
     }
