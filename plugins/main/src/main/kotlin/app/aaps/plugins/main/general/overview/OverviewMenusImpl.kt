@@ -143,7 +143,7 @@ class OverviewMenusImpl @Inject constructor(
                 var insert = true
                 if (m == CharTypeData.PRE) insert = predictionsAvailable
                 if (insert && m.primary) {
-                    createCustomMenuItemView(v.context, m, itemRow, layout)
+                    createCustomMenuItemView(v.context, m, itemRow, layout, true)
                     itemRow++
                 }
             }
@@ -171,7 +171,7 @@ class OverviewMenusImpl @Inject constructor(
                 var insert = true
                 if (m == CharTypeData.DEVSLOPE) insert = config.isDev()
                 if (insert && m.secondary) {
-                    createCustomMenuItemView(v.context, m, itemRow, layout)
+                    createCustomMenuItemView(v.context, m, itemRow, layout, false)
                     itemRow++
                 }
             }
@@ -191,7 +191,7 @@ class OverviewMenusImpl @Inject constructor(
         }
     }
 
-    private fun createCustomMenuItemView(context: Context, m: CharTypeData, rowIndex: Int, layout: GridLayout)  {
+    private fun createCustomMenuItemView(context: Context, m: CharTypeData, rowIndex: Int, layout: GridLayout, primary: Boolean)  {
         var layoutParamsLabel = GridLayout.LayoutParams(GridLayout.spec(rowIndex, 1), GridLayout.spec(0, 1))
         val textView = TextView(context).also {
             it.text = formatedText(m)
@@ -202,12 +202,12 @@ class OverviewMenusImpl @Inject constructor(
 
         // Create one or 4 checkbox
         for (i in 1..4) {
-            val item = if (m.secondary || i == 4) CheckBox(context) else TextView(context)
+            val item = if (!primary || i == 4) CheckBox(context) else TextView(context)
             item.id = i
             if (item is CheckBox) {
-                if (m.primary)
+                if (primary)
                     item.isChecked = _setting[0][m.ordinal]
-                if (m.secondary)
+                else
                     item.isChecked = _setting[i][m.ordinal]
                 checkBoxes.add(item)
             }
