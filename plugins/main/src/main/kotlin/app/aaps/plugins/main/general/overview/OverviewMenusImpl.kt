@@ -4,12 +4,16 @@ import android.content.Context
 import android.text.SpannableString
 import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
-import android.view.Menu
+import android.view.Gravity
 import android.view.View
+import android.widget.CheckBox
+import android.widget.CompoundButton
 import android.widget.ImageButton
+import android.widget.PopupWindow
+import android.widget.TextView
 import androidx.annotation.AttrRes
 import androidx.annotation.StringRes
-import androidx.appcompat.widget.PopupMenu
+import androidx.gridlayout.widget.GridLayout
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -17,7 +21,6 @@ import app.aaps.core.interfaces.overview.OverviewMenus
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
-import app.aaps.core.interfaces.rx.events.EventScale
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.Preferences
@@ -67,7 +70,6 @@ class OverviewMenusImpl @Inject constructor(
     companion object {
 
         const val MAX_GRAPHS = 5 // including main
-        const val SCALE_ID = 1001
     }
 
     override fun enabledTypes(graph: Int): String {
@@ -84,13 +86,18 @@ class OverviewMenusImpl @Inject constructor(
 
     override val setting: List<Array<Boolean>>
         @Synchronized get() =
-            if (!preferences.simpleMode)
-                _setting.toMutableList() // implicitly does a list copy
+            if (!preferences.simpleMode) // implicitly does a list copy and update according to number of graphs
+                _setting.toMutableList().also {
+                    while(_setting.size < MAX_GRAPHS)
+                        _setting.add(Array(CharTypeData.entries.size) { false })
+                }
             else
                 listOf(
                     arrayOf(true, true, true, false, false, false, false, false, false, false, false, false, false, false),
                     arrayOf(false, false, false, false, true, false, false, false, false, false, false, false, false, false),
-                    arrayOf(false, false, false, false, false, true, false, false, false, false, false, false, false, false)
+                    arrayOf(false, false, false, false, false, true, false, false, false, false, false, false, false, false),
+                    arrayOf(false, false, false, false, false, false, false, false, false, false, false, false, false, false),
+                    arrayOf(false, false, false, false, false, false, false, false, false, false, false, false, false, false)
                 )
 
     @Synchronized
@@ -119,8 +126,7 @@ class OverviewMenusImpl @Inject constructor(
     }
 
     override fun setupChartMenu(context: Context, chartButton: ImageButton) {
-        val settingsCopy = setting
-        val numOfGraphs = settingsCopy.size // 1 main + x secondary
+        var itemRow = 0
 
         chartButton.setOnClickListener { v: View ->
             val predictionsAvailable: Boolean = when {
@@ -128,100 +134,115 @@ class OverviewMenusImpl @Inject constructor(
                 config.NSCLIENT -> true
                 else            -> false
             }
-            val popup = PopupMenu(v.context, v)
+            val popup = PopupWindow(v.context)
+            val layout = GridLayout(v.context)
+            layout.columnCount = 5
 
-            popup.menu.addSubMenu(Menu.NONE, SCALE_ID, Menu.NONE, rh.gs(R.string.graph_scale)).also {
-                it.add(Menu.NONE, SCALE_ID + 6, Menu.NONE, "6")
-                it.add(Menu.NONE, SCALE_ID + 12, Menu.NONE, "12")
-                it.add(Menu.NONE, SCALE_ID + 18, Menu.NONE, "18")
-                it.add(Menu.NONE, SCALE_ID + 24, Menu.NONE, "24")
-            }
-
-            val used = arrayListOf<Int>()
-
-            for (g in 0 until numOfGraphs) {
-                if (g != 0) {
-                    val dividerItem = popup.menu.add(Menu.NONE, g, Menu.NONE, "------- ${rh.gs(R.string.graph_menu_divider_header)} $g -------")
-                    dividerItem.isCheckable = true
-                    dividerItem.isChecked = true
-                }
-                CharTypeData.entries.forEach { m ->
-                    if (g == 0 && !m.primary) return@forEach
-                    if (g > 0 && !m.secondary) return@forEach
-                    var insert = true
-                    if (m == CharTypeData.PRE) insert = predictionsAvailable
-                    if (m == CharTypeData.DEVSLOPE) insert = config.isDev()
-                    if (used.contains(m.ordinal)) insert = false
-                    for (g2 in g + 1 until numOfGraphs) {
-                        if (settingsCopy[g2][m.ordinal]) insert = false
-                    }
-                    if (insert) {
-                        val item = popup.menu.add(Menu.NONE, m.ordinal + 100 * (g + 1), Menu.NONE, rh.gs(m.nameId))
-                        val title = item.title
-                        val s = SpannableString(" $title ")
-                        s.setSpan(ForegroundColorSpan(rh.gac(m.attrTextId)), 0, s.length, 0)
-                        s.setSpan(BackgroundColorSpan(rh.gac(m.attrId)), 0, s.length, 0)
-                        item.title = s
-                        item.isCheckable = true
-                        item.isChecked = settingsCopy[g][m.ordinal]
-                        if (settingsCopy[g][m.ordinal]) used.add(m.ordinal)
-                    }
+            // instert primary items
+            CharTypeData.entries.forEach { m ->
+                var insert = true
+                if (m == CharTypeData.PRE) insert = predictionsAvailable
+                if (insert && m.primary) {
+                    createCustomMenuItemView(v.context, m, itemRow, layout)
+                    itemRow++
                 }
             }
-            if (numOfGraphs < MAX_GRAPHS) {
-                val dividerItem = popup.menu.add(Menu.NONE, numOfGraphs, Menu.NONE, "------- ${rh.gs(R.string.graph_menu_divider_header)} $numOfGraphs -------")
-                dividerItem.isCheckable = true
-                dividerItem.isChecked = false
+
+            // insert hearder row
+            var layoutParamsLabel = GridLayout.LayoutParams(GridLayout.spec(itemRow, 1), GridLayout.spec(0, 1))
+            val textView = TextView(context).also {
+                it.text = " ${rh.gs(R.string.graph_menu_divider_header)}"
+            }
+            layout.addView(textView, layoutParamsLabel)
+            for (i in 1..4) {
+                val item = TextView(context).also {
+                    it.gravity = Gravity.CENTER
+                    it.text = "$i"
+                }
+                layoutParamsLabel = GridLayout.LayoutParams(GridLayout.spec(itemRow, 1), GridLayout.spec(i, 1)).apply {
+                    setGravity(Gravity.CENTER)
+                }
+                layout.addView(item, layoutParamsLabel)
+            }
+            itemRow++
+
+            // instert secondary items
+            CharTypeData.entries.forEach { m ->
+                var insert = true
+                if (m == CharTypeData.DEVSLOPE) insert = config.isDev()
+                if (insert && m.secondary) {
+                    createCustomMenuItemView(v.context, m, itemRow, layout)
+                    itemRow++
+                }
             }
 
-            popup.setOnMenuItemClickListener {
-                var keepMenu = false
-                synchronized(this) {
-                    try {
-                        // id < 100 graph header - divider 1, 2, 3 .....
-                        when {
-                            it.itemId == SCALE_ID                              -> {
-                                // do nothing, submenu
-                            }
+            popup.contentView = layout
+            // Permettre la fermeture de la PopupWindow en touchant en dehors
+            popup.isOutsideTouchable = true
+            popup.isFocusable = true
 
-                            it.itemId > SCALE_ID && it.itemId < SCALE_ID + 100 -> {
-                                val hours = it.itemId - SCALE_ID // 6,12,....
-                                rxBus.send(EventScale(hours))
-                            }
+            popup.setOnDismissListener {
+                // todo: reorganize graph to remove empty graphs in the middle
 
-                            it.itemId == numOfGraphs                           -> {
-                                // add new empty
-                                _setting.add(Array(CharTypeData.entries.size) { false })
-                                keepMenu = true
-                            }
-
-                            it.itemId < 100                                    -> {
-                                // remove graph
-                                _setting.removeAt(it.itemId)
-                                keepMenu = true
-                            }
-
-                            else                                               -> {
-                                val graphNumber = it.itemId / 100 - 1
-                                val item = it.itemId % 100
-                                _setting[graphNumber][item] = !it.isChecked
-                                keepMenu = true
-                            }
-                        }
-                    } catch (exception: Exception) {
-                        fabricPrivacy.logException(exception)
-                    }
-                }
-                storeGraphConfig()
-                setupChartMenu(context, chartButton)
-                if (keepMenu)
-                    chartButton.performClick()
                 rxBus.send(EventRefreshOverview("OnMenuItemClickListener", now = true))
-                return@setOnMenuItemClickListener true
             }
-            chartButton.setImageResource(R.drawable.ic_arrow_drop_up_white_24dp)
-            popup.setOnDismissListener { chartButton.setImageResource(R.drawable.ic_arrow_drop_down_white_24dp) }
-            popup.show()
+
+            popup.showAsDropDown(v)
+        }
+    }
+
+    private fun createCustomMenuItemView(context: Context, m: CharTypeData, rowIndex: Int, layout: GridLayout)  {
+        var layoutParamsLabel = GridLayout.LayoutParams(GridLayout.spec(rowIndex, 1), GridLayout.spec(0, 1))
+        val textView = TextView(context).also {
+            it.text = formatedText(m)
+        }
+        layout.addView(textView, layoutParamsLabel)
+
+        val checkBoxes = mutableListOf<CheckBox>()
+
+        // Create one or 4 checkbox
+        for (i in 1..4) {
+            val item = if (m.secondary || i == 4) CheckBox(context) else TextView(context)
+            item.id = i
+            if (item is CheckBox) {
+                if (m.primary)
+                    item.isChecked = _setting[0][m.ordinal]
+                if (m.secondary)
+                    item.isChecked = _setting[i][m.ordinal]
+                checkBoxes.add(item)
+            }
+            layoutParamsLabel = GridLayout.LayoutParams(GridLayout.spec(rowIndex, 1), GridLayout.spec(i, 1))
+            layout.addView(item, layoutParamsLabel)
+        }
+
+        val checkBoxListener = CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
+            // Update other Checkboxes on same row to allow a curve to only one subgraph
+            if (isChecked) {
+                checkBoxes.forEach { checkBox ->
+                    if (checkBox != buttonView) {
+                        if (checkBox is CheckBox) checkBox.isChecked = false
+                    }
+                }
+            }
+            if (m.primary)
+                _setting[0][m.ordinal] = checkBoxes[0].isChecked
+            else {
+                checkBoxes.forEach { checkBox ->
+                    _setting[checkBox.id][m.ordinal] = checkBox.isChecked
+                }
+            }
+            storeGraphConfig()
+            rxBus.send(EventRefreshOverview("OnMenuItemClickListener", now = true))
+        }
+
+        checkBoxes.forEach { checkBox ->
+            if (checkBox is CheckBox) checkBox.setOnCheckedChangeListener(checkBoxListener)
+        }
+    }
+    private fun formatedText(m: CharTypeData): SpannableString {
+        return SpannableString(" ${rh.gs(m.nameId)} ").also {
+            it.setSpan(ForegroundColorSpan(rh.gac(m.attrTextId)), 0, it.length, 0)
+            it.setSpan(BackgroundColorSpan(rh.gac(m.attrId)), 0, it.length, 0)
         }
     }
 
