@@ -103,11 +103,13 @@
     <string name="troubleshooting_wheretoask">Où pouvez-vous chercher de l\'aide pour AAPS ?</string>
     <string name="troubleshooting_fb">Vous pouvez demander des conseils dans le groupe Facebook des utilisateurs AAPS.</string>
     <string name="troubleshooting_wiki">Vous devriez lire (et relire) la documentation AAPS.</string>
-    <string name="troubleshooting_gitter">Vous pouvez demander des conseils et signaler des problèmes techniques ou des défauts dans le Discord d\'AAPS.</string>
+    <string name="troubleshooting_discord">Vous pouvez demander des conseils, discuter des problèmes techniques et des demandes de fonctionnalités dans le Discord d\'AAPS.</string>
+    <string name="troubleshooting_github">Vous pouvez soumettre des problèmes tels que des bugs et des demandes de fonctionnalités sur Github.</string>
     <string name="troubleshooting_yourendo">Vous devez demander à votre diabétologue/professionnels de santés.</string>
     <string name="troubleshooting_hint1">https://wiki.aaps.app/fr/latest/Installing-AndroidAPS/Update-to-new-version.html#resolution-de-problemes</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
     <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
+    <string name="troubleshooting_hint4">https://github.com/nightscout/AndroidAPS/issues</string>
     <string name="insulin_plugins">Plugins Insuline</string>
     <string name="insulin_ultrarapid">Quelle insuline devez-vous utiliser avec le plugin Ultra-Rapid-Oref?</string>
     <string name="insulin_fiasp">Fiasp®</string>

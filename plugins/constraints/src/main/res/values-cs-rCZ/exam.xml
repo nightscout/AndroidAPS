@@ -103,11 +103,13 @@
     <string name="troubleshooting_wheretoask">Kde můžete hledat pomoc s AAPS?</string>
     <string name="troubleshooting_fb">Můžete požádat o radu v Facebookové skupině uživatelů AAPS.</string>
     <string name="troubleshooting_wiki">Měli byste si přečíst (a znovu přečíst) dokumentaci AAPS.</string>
-    <string name="troubleshooting_gitter">Můžete požádat o radu a nahlásit technické problémy nebo potíže na Discordu AAPS.</string>
+    <string name="troubleshooting_discord">Můžete požádat o radu a nahlásit technické problémy nebo potíže na Discordu AAPS.</string>
+    <string name="troubleshooting_github">Problémy a žádosti o funkce můžete odeslat na Githubu.</string>
     <string name="troubleshooting_yourendo">Měli byste se zeptat svého lékaře/endokrinologa.</string>
     <string name="troubleshooting_hint1">https://wiki.aaps.app/cs/latest/Installing-AndroidAPS/Update-to-new-version.html#reseni-problemu</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
     <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
+    <string name="troubleshooting_hint4">https://github.com/nightscout/AndroidAPS/issues</string>
     <string name="insulin_plugins">Pluginy Inzulín</string>
     <string name="insulin_ultrarapid">Který inzulin byste měli používat s pluginem Ultra-Rapid Oref?</string>
     <string name="insulin_fiasp">Fiasp®</string>

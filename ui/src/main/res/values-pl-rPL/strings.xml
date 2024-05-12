@@ -17,7 +17,6 @@
     <!--     Activities-->
     <string name="activity_monitor">Monitor aktywności</string>
     <string name="do_you_want_reset_stats">Czy chcesz zresetować statystyki aktywności?</string>
-    <string name="do_you_want_reset_tdd_stats">Czy chcesz zresetować statystyki TDD?</string>
     <string name="statistics">Statystyki</string>
     <string name="calculation_in_progress">Trwa obliczanie</string>
     <string name="invalid_age">Nieprawidłowy wpis wieku</string>

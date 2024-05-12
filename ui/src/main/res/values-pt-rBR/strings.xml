@@ -17,7 +17,6 @@
     <!--     Activities-->
     <string name="activity_monitor">Monitor de atividade</string>
     <string name="do_you_want_reset_stats">Quer reiniciar as estatísticas de atividade?</string>
-    <string name="do_you_want_reset_tdd_stats">Quer reiniciar as estatísticas de TDD (total de doses diárias)?</string>
     <string name="statistics">Estatísticas</string>
     <string name="calculation_in_progress">Cálculo em andamento</string>
     <string name="invalid_age">Entrada de idade inválida</string>

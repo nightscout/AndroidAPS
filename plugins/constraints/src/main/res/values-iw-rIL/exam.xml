@@ -103,7 +103,6 @@
     <string name="troubleshooting_wheretoask">איפה אפשר לחפש עזרה לגבי AndroidAPS?</string>
     <string name="troubleshooting_fb">אפשר לבקש עצות בקבוצת הפייסבוק \"AndroidAPS Users\" (אנגלית).</string>
     <string name="troubleshooting_wiki">צריך לקרוא (ולקרוא מחדש) את מסמכי AndroidAPS.</string>
-    <string name="troubleshooting_gitter">תוכלו לבקש עצות ולרשום בעיות טכניות או בעיות ב-Discord של AndroidAPS.</string>
     <string name="troubleshooting_yourendo">עליכם לשאול את המרפאה\\הרופא האנדוקרינולוג שלכם.</string>
     <string name="troubleshooting_hint1">https://wiki.aaps.app/he/latest/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>

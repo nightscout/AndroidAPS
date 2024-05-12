@@ -45,6 +45,10 @@
     <color name="ic_local_reset">#E93057</color>
     <color name="ic_local_save">#67E86A</color>
 
+    <!--    Toggle Buttons-->
+    <color name="toggle_button_background">#303030</color>
+    <color name="toggle_button_stroke">#8A8A8A</color>
+
     <!--    Fragments-->
     <color name="pumpStatusBackground">#505050</color>
 

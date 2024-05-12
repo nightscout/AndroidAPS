@@ -103,7 +103,6 @@
     <string name="troubleshooting_wheretoask">Kde môžete hľadať pomoc s AAPS?</string>
     <string name="troubleshooting_fb">Môžete požiadať o radu vo Facebookovej skupine používateľov AAPS.</string>
     <string name="troubleshooting_wiki">Mali by ste si prečítať (a znovu prečítať) dokumentáciu k AAPS.</string>
-    <string name="troubleshooting_gitter">Môžete požiadať o radu a nahlásiť technické problémy, alebo chyby na Discorde AAPS.</string>
     <string name="troubleshooting_yourendo">Mali by ste se spýtať svojho lekára/endokrinológa.</string>
     <string name="troubleshooting_hint1">https://wiki.aaps.app/cs/latest/Installing-AndroidAPS/Update-to-new-version.html#reseni-problemu</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>

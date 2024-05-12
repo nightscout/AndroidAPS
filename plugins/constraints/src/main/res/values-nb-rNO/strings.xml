@@ -3,7 +3,8 @@
     <!-- PhoneChecker -->
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">Sommer/vintertid inntreffer innen 24t</string>
-    <string name="dst_loop_disabled_warning">Sommer/vintertid inntreffer innen 3t - lukket loop er midlertidig deaktivert</string>
+    <string name="dst_loop_disabled_warning">Sommer/vintertid inntraff for mindre enn 3 timer siden - Lukket loop er midlertidig deaktivert</string>
+    <string name="dst_loop_disabled_error">Justering av sommer/vintertid (DST) skjedde for mindre enn 3 timer siden. Lukket loop er midlertidig deaktivert, vil automatisk aktiveres på nytt 3 timer etter klokken ble justert av DST</string>
     <!-- Storage constraint -->
     <string name="disk_full">Frigjør minst %1$d MB fra internminnet! Loop deaktivert!</string>
     <!-- Version Checker -->
@@ -18,7 +19,7 @@
     <!-- BG Quality -->
     <string name="recalculated_data_used">Rekalkulerte data benyttes fordi noe BS-data mangler eller at BS ankommer på et ikke-forventet tidspunkt. Vil nullstille seg etter ca 24 timer. Ingen handling kreves</string>
     <string name="bg_too_close">BS for nær:\n%1$s\n%2$s</string>
-    <string name="a11y_bg_quality_recalculated">beregnet på nytt</string>
+    <string name="a11y_bg_quality_recalculated">rekalkulert</string>
     <string name="a11y_bg_quality_doubles">doble registreringer</string>
     <string name="a11y_bg_quality_flat">Flate verdier. Vurderer dette til å være feil</string>
     <!-- Safety -->

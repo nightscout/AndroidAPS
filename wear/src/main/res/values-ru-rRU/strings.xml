@@ -25,27 +25,27 @@
     <string name="pref_interface_settings">Интерфейс</string>
     <string name="pref_others_settings">Другое</string>
     <string name="pref_complication_settings">Дополнения</string>
-    <string name="pref_show_date">Показать дату</string>
-    <string name="pref_show_iob">Показать акт инс IOB</string>
+    <string name="pref_show_date">Отображать дату</string>
+    <string name="pref_show_iob">Отображать IOB</string>
     <string name="pref_show_detailed_iob">Отображать IOB подробно</string>
-    <string name="pref_show_cob">Показать акт угл COB</string>
-    <string name="pref_show_delta">Показывать дельту</string>
+    <string name="pref_show_cob">Отображать COB</string>
+    <string name="pref_show_delta">Отображать дельту</string>
     <string name="pref_show_detailed_delta">Отображать дельту подробно</string>
-    <string name="pref_show_avgdelta">Показывать среднюю дельту</string>
-    <string name="pref_show_phone_battery">Показывать заряд батареи телефона</string>
-    <string name="pref_show_rig_battery">Показывать заряд батареи системы</string>
-    <string name="pref_show_basal_rate">Показать базальную скорость</string>
-    <string name="pref_show_loop_status">Показывать состояние цикла</string>
-    <string name="pref_show_bg">Показывать ГК</string>
+    <string name="pref_show_avgdelta">Отображать среднюю дельту</string>
+    <string name="pref_show_phone_battery">Отображать заряд батареи телефона</string>
+    <string name="pref_show_rig_battery">Отображать заряд батареи системы</string>
+    <string name="pref_show_basal_rate">Отображать БС</string>
+    <string name="pref_show_loop_status">Отображать состояние цикла</string>
+    <string name="pref_show_bg">Отображать ГК</string>
     <string name="pref_show_bgi">Отображать ГКИ (BGI)</string>
-    <string name="pref_show_direction_arrow">Показывать стрелку тренда</string>
-    <string name="pref_show_ago">Показывать ретро события</string>
-    <string name="pref_show_temp_basal">Показывать ВБС</string>
-    <string name="pref_show_bolus">Показывать болюс &amp; SMB</string>
-    <string name="pref_show_grid">Показывать сетку</string>
+    <string name="pref_show_direction_arrow">Отображать стрелку тренда</string>
+    <string name="pref_show_ago">Отображать историю</string>
+    <string name="pref_show_temp_basal">Отображать ВБС</string>
+    <string name="pref_show_bolus">Отображать болюс &amp; СМБ</string>
+    <string name="pref_show_grid">Отображать сетку</string>
     <string name="pref_dark" comment="Enables dark visual theme">Тёмная</string>
     <string name="pref_highlight_basals">Выделить базалы</string>
-    <string name="pref_prediction_lines">Показывать прогноз</string>
+    <string name="pref_prediction_lines">Отображать прогнозы</string>
     <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Соответствующий делитель</string>
     <string name="pref_chart_timeframe">Временной диапазон графика</string>
     <string name="pref_1_hour">1 час</string>
@@ -71,11 +71,11 @@
     <string name="pref_single_target">Единичная цель</string>
     <string name="pref_wizard_percentage">Процент калькулятора</string>
     <string name="pref_complication_tap_action">Действия при нажатии кнопки расширений</string>
-    <string name="pref_unicode_in_complications">Юникод в репликации</string>
+    <string name="pref_unicode_in_complications">Юникод в дополнениях</string>
     <string name="pref_version">Версия:</string>
     <string name="pref_moreWatchfaceSettings">Еще настройки циферблатов</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Смотрите конфигурацию циферблата.</string>
-    <string name="menu_tempt">ВремЦ</string>
+    <string name="menu_tempt">ВЦ</string>
     <string name="menu_wizard">Калькулятор</string>
     <string name="menu_wizard_short">Кальк</string>
     <string name="menu_treatment">Терапия</string>
@@ -89,13 +89,13 @@
     <string name="menu_prime_fill">Прайм/заполнение</string>
     <string name="menu_none">Не показывать</string>
     <string name="menu_default">По умолчанию</string>
-    <string name="menu_menu">Menu</string>
+    <string name="menu_menu">Меню</string>
     <string name="quick_wizard_short">XL</string>
     <string name="action_duration">Длительность</string>
     <string name="action_tempt_confirmation">Запрошена временная цель</string>
     <string name="action_quick_wizard_confirmation">Запрошен мастер настройки</string>
     <string name="action_treatment_confirmation">Запрошена терапия</string>
-    <string name="action_bolus_confirmation">Запрошен Болюс</string>
+    <string name="action_bolus_confirmation">Запрошен болюс</string>
     <string name="action_wizard_confirmation">Расчет запрошен</string>
     <string name="action_fill_confirmation">Заполнение запрошено</string>
     <string name="action_ecarb_confirmation">Углеводы запрошены</string>
@@ -104,7 +104,7 @@
     <string name="action_low" comment="In temp target menu, lower value from range">Низкое значение</string>
     <string name="action_high" comment="In temp target menu, higher value from range">Высокое значение</string>
     <string name="action_carbs">Углеводы</string>
-    <string name="action_ecarbs">растянутые углеводы eCarbs </string>
+    <string name="action_ecarbs">Растянутые углеводы eCarbs </string>
     <string name="action_percentage">Процент</string>
     <string name="action_start_min">Начало [min]</string>
     <string name="action_duration_h">Продолжительность [h]</string>
@@ -114,7 +114,6 @@
     <string name="action_preset_3">Предустановка 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Произвольное количество</string>
     <string name="action_confirm">ПОДТВЕРДИТЬ</string>
-    <string name="action_timeshift">сдвиг по времени</string>
     <string name="action_bolus">Болюс</string>
     <string name="bolus_progress">Вводится болюс</string>
     <string name="press_to_cancel">нажмите для отмены</string>
@@ -198,8 +197,6 @@
     <string name="week_short">н</string>
     <string name="day_short">д</string>
     <string name="hour_short">ч</string>
-    <string name="hour_minute">%1$s%2$s</string>
-    <string name="hour_minute_second">%1$s%2$s%3$s</string>
     <string name="old">старые</string>
     <string name="old_warning">!старое!</string>
     <string name="error">!ошибка!</string>
@@ -215,6 +212,6 @@
     <string name="tile_action_4">Действие 4</string>
     <string name="datalayer_notification_title">Передача данных в режиме переднего плана</string>
     <string name="datalayer_notification_text">AAPS запущен на переднем плане. Чтобы скрыть уведомление, перейдите в Настройки разработчика, Уведомления приложений, Разрешенные приложения для просмотра, выберите AAPS, Отключите уведомление канала службы переднего плана уровня данных.</string>
-    <string name="on">Включено</string>
-    <string name="off">Выкл</string>
+    <string name="on">ВКЛ</string>
+    <string name="off">ВЫКЛ</string>
 </resources>

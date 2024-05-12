@@ -1681,46 +1681,51 @@ class Pump(
                 else
                     immediateBolusAmount
 
-                while (true) {
-                    delay(bolusStatusUpdateIntervalInMs)
+                // Do the polling without the heartbeat, since it is unnecessary. The
+                // heartbeat is required during idle phases to let the Combo know that
+                // the client is still there. Polling will implicitly do that already.
+                pumpIO.runWithoutHeartbeat {
+                    while (true) {
+                        delay(bolusStatusUpdateIntervalInMs)
 
-                    val status = pumpIO.getCMDCurrentBolusDeliveryStatus()
+                        val status = pumpIO.getCMDCurrentBolusDeliveryStatus()
 
-                    logger(LogLevel.VERBOSE) { "Got current bolus delivery status: $status" }
+                        logger(LogLevel.VERBOSE) { "Got current bolus delivery status: $status" }
 
-                    val deliveredAmount = when (status.deliveryState) {
-                        ApplicationLayer.CMDBolusDeliveryState.DELIVERING           -> expectedImmediateAmount - status.remainingAmount
-                        ApplicationLayer.CMDBolusDeliveryState.DELIVERED            -> expectedImmediateAmount
+                        val deliveredAmount = when (status.deliveryState) {
+                            ApplicationLayer.CMDBolusDeliveryState.DELIVERING           -> expectedImmediateAmount - status.remainingAmount
+                            ApplicationLayer.CMDBolusDeliveryState.DELIVERED            -> expectedImmediateAmount
 
-                        ApplicationLayer.CMDBolusDeliveryState.CANCELLED_BY_USER    -> {
-                            logger(LogLevel.DEBUG) { "Bolus cancelled by user" }
-                            throw BolusCancelledByUserException(
-                                deliveredImmediateAmount = expectedImmediateAmount - status.remainingAmount,
-                                totalImmediateAmount = expectedImmediateAmount
-                            )
+                            ApplicationLayer.CMDBolusDeliveryState.CANCELLED_BY_USER    -> {
+                                logger(LogLevel.DEBUG) { "Bolus cancelled by user" }
+                                throw BolusCancelledByUserException(
+                                    deliveredImmediateAmount = expectedImmediateAmount - status.remainingAmount,
+                                    totalImmediateAmount = expectedImmediateAmount
+                                )
+                            }
+
+                            ApplicationLayer.CMDBolusDeliveryState.ABORTED_DUE_TO_ERROR -> {
+                                logger(LogLevel.ERROR) { "Bolus aborted due to a delivery error" }
+                                throw BolusAbortedDueToErrorException(
+                                    deliveredImmediateAmount = expectedImmediateAmount - status.remainingAmount,
+                                    totalImmediateAmount = expectedImmediateAmount
+                                )
+                            }
+
+                            else                                                        -> continue
                         }
 
-                        ApplicationLayer.CMDBolusDeliveryState.ABORTED_DUE_TO_ERROR -> {
-                            logger(LogLevel.ERROR) { "Bolus aborted due to a delivery error" }
-                            throw BolusAbortedDueToErrorException(
-                                deliveredImmediateAmount = expectedImmediateAmount - status.remainingAmount,
+                        bolusDeliveryProgressReporter.setCurrentProgressStage(
+                            RTCommandProgressStage.DeliveringBolus(
+                                deliveredImmediateAmount = deliveredAmount,
                                 totalImmediateAmount = expectedImmediateAmount
                             )
-                        }
-
-                        else                                                        -> continue
-                    }
-
-                    bolusDeliveryProgressReporter.setCurrentProgressStage(
-                        RTCommandProgressStage.DeliveringBolus(
-                            deliveredImmediateAmount = deliveredAmount,
-                            totalImmediateAmount = expectedImmediateAmount
                         )
-                    )
 
-                    if (deliveredAmount >= expectedImmediateAmount) {
-                        bolusDeliveryProgressReporter.setCurrentProgressStage(BasicProgressStage.Finished)
-                        break
+                        if (deliveredAmount >= expectedImmediateAmount) {
+                            bolusDeliveryProgressReporter.setCurrentProgressStage(BasicProgressStage.Finished)
+                            break
+                        }
                     }
                 }
             }
@@ -2785,8 +2790,8 @@ class Pump(
                         ) {
                             logger(LogLevel.DEBUG) {
                                 "Unknown/unexpected TBR detected; expected TBR with percentage $expectedCurrentTbrPercentage " +
-                                    "and remaining duration expectedRemainingDurationInMinutes; actual TBR has percentage " +
-                                    "$actualRemainingDurationInMinutes and remaining duration $actualRemainingDurationInMinutes"
+                                    "and remaining duration $expectedRemainingDurationInMinutes; actual TBR has percentage " +
+                                    "$actualCurrentTbrPercentage and remaining duration $actualRemainingDurationInMinutes"
                             }
 
                             pumpIO.switchMode(PumpIO.Mode.REMOTE_TERMINAL)

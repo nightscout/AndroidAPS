@@ -196,9 +196,7 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
             useECarbs(checkedId)
         }
 
-        binding.useIob.setOnCheckedChangeListener { _, checkedId ->
-            processIOB()
-        }
+        binding.useIob.setOnCheckedChangeListener { _, _ -> processIOB() }
 
         val maxCarbs = constraintChecker.getMaxCarbsAllowed().value().toDouble()
 
@@ -272,13 +270,9 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
         binding.duration.value = SafeParse.stringToDouble(entry.duration().toString())
         useECarbs(radioNumbersToCheckBox(entry.useEcarbs()))
 
-        binding.useCob.setOnCheckedChangeListener { _, checkedId ->
-            processCob()
-        }
+        binding.useCob.setOnCheckedChangeListener { _, _ -> processCob() }
 
-        binding.useTrendCheckbox.setOnCheckedChangeListener { _, checkedId ->
-            processTrend()
-        }
+        binding.useTrendCheckbox.setOnCheckedChangeListener { _, _ -> processTrend() }
 
         processCob()
         processIOB()
