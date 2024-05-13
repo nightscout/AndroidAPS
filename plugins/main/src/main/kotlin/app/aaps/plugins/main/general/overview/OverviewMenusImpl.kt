@@ -1,15 +1,20 @@
 package app.aaps.plugins.main.general.overview
 
+import android.app.ActionBar.LayoutParams
 import android.content.Context
+import android.text.Layout
 import android.text.SpannableString
 import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.CompoundButton
+import android.widget.HorizontalScrollView
 import android.widget.ImageButton
 import android.widget.PopupWindow
+import android.widget.ScrollView
 import android.widget.TextView
 import androidx.annotation.AttrRes
 import androidx.annotation.StringRes
@@ -83,21 +88,25 @@ class OverviewMenusImpl @Inject constructor(
     }
 
     private var _setting: MutableList<Array<Boolean>> = ArrayList()
+        get() = field.also {
+            while (it.size < MAX_GRAPHS)
+                it.add(Array(CharTypeData.entries.size) { false })
+        }
 
     override val setting: List<Array<Boolean>>
         @Synchronized get() =
             if (!preferences.simpleMode) // implicitly does a list copy and update according to number of graphs
                 _setting.toMutableList().also {
-                    while(_setting.size < MAX_GRAPHS)
-                        _setting.add(Array(CharTypeData.entries.size) { false })
+                    for (i in it.size - 1 downTo 1) {
+                        if (!it[i].any { it })
+                            it.removeAt(i)
+                    }
                 }
             else
                 listOf(
                     arrayOf(true, true, true, false, false, false, false, false, false, false, false, false, false, false),
                     arrayOf(false, false, false, false, true, false, false, false, false, false, false, false, false, false),
-                    arrayOf(false, false, false, false, false, true, false, false, false, false, false, false, false, false),
-                    arrayOf(false, false, false, false, false, false, false, false, false, false, false, false, false, false),
-                    arrayOf(false, false, false, false, false, false, false, false, false, false, false, false, false, false)
+                    arrayOf(false, false, false, false, false, true, false, false, false, false, false, false, false, false)
                 )
 
     @Synchronized
@@ -135,8 +144,15 @@ class OverviewMenusImpl @Inject constructor(
                 else            -> false
             }
             val popup = PopupWindow(v.context)
+            val scrollView = ScrollView(context)                        // required to be able to scroll menu on low res screen
+            val horizontalScrollView = HorizontalScrollView(context)    // Workaround because I was not able to manage first column width for long labels
+            horizontalScrollView.addView(scrollView)
+
             val layout = GridLayout(v.context)
-            layout.columnCount = 5
+            layout.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)  // not sure it works
+
+            scrollView.addView(layout)
+            layout.columnCount = MAX_GRAPHS
 
             // instert primary items
             CharTypeData.entries.forEach { m ->
@@ -152,9 +168,10 @@ class OverviewMenusImpl @Inject constructor(
             var layoutParamsLabel = GridLayout.LayoutParams(GridLayout.spec(itemRow, 1), GridLayout.spec(0, 1))
             val textView = TextView(context).also {
                 it.text = " ${rh.gs(R.string.graph_menu_divider_header)}"
+                it.maxLines = 3                                                     // don't works currently
             }
             layout.addView(textView, layoutParamsLabel)
-            for (i in 1..4) {
+            for (i in 1..(MAX_GRAPHS - 1)) {
                 val item = TextView(context).also {
                     it.gravity = Gravity.CENTER
                     it.text = "$i"
@@ -176,14 +193,19 @@ class OverviewMenusImpl @Inject constructor(
                 }
             }
 
-            popup.contentView = layout
+            popup.contentView = horizontalScrollView
             // Permettre la fermeture de la PopupWindow en touchant en dehors
             popup.isOutsideTouchable = true
             popup.isFocusable = true
 
-            popup.setOnDismissListener {
-                // todo: reorganize graph to remove empty graphs in the middle
-
+            popup.setOnDismissListener {    // remove empty graphs
+                _setting.let {
+                    for (i in it.size - 1 downTo 1) {
+                        if (!it[i].any { it })
+                            it.removeAt(i)
+                    }
+                }
+                storeGraphConfig()
                 rxBus.send(EventRefreshOverview("OnMenuItemClickListener", now = true))
             }
 
@@ -191,18 +213,19 @@ class OverviewMenusImpl @Inject constructor(
         }
     }
 
-    private fun createCustomMenuItemView(context: Context, m: CharTypeData, rowIndex: Int, layout: GridLayout, primary: Boolean)  {
+    private fun createCustomMenuItemView(context: Context, m: CharTypeData, rowIndex: Int, layout: GridLayout, primary: Boolean) {
         var layoutParamsLabel = GridLayout.LayoutParams(GridLayout.spec(rowIndex, 1), GridLayout.spec(0, 1))
         val textView = TextView(context).also {
             it.text = formatedText(m)
+            it.maxLines = 3                                                     // don't works currently
         }
         layout.addView(textView, layoutParamsLabel)
 
         val checkBoxes = mutableListOf<CheckBox>()
 
         // Create one or 4 checkbox
-        for (i in 1..4) {
-            val item = if (!primary || i == 4) CheckBox(context) else TextView(context)
+        for (i in 1..(MAX_GRAPHS - 1)) {
+            val item = if (!primary || i == (MAX_GRAPHS - 1)) CheckBox(context) else TextView(context)
             item.id = i
             if (item is CheckBox) {
                 if (primary)
@@ -220,7 +243,7 @@ class OverviewMenusImpl @Inject constructor(
             if (isChecked) {
                 checkBoxes.forEach { checkBox ->
                     if (checkBox != buttonView) {
-                        if (checkBox is CheckBox) checkBox.isChecked = false
+                        checkBox.isChecked = false
                     }
                 }
             }
@@ -236,9 +259,10 @@ class OverviewMenusImpl @Inject constructor(
         }
 
         checkBoxes.forEach { checkBox ->
-            if (checkBox is CheckBox) checkBox.setOnCheckedChangeListener(checkBoxListener)
+            checkBox.setOnCheckedChangeListener(checkBoxListener)
         }
     }
+
     private fun formatedText(m: CharTypeData): SpannableString {
         return SpannableString(" ${rh.gs(m.nameId)} ").also {
             it.setSpan(ForegroundColorSpan(rh.gac(m.attrTextId)), 0, it.length, 0)
