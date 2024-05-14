@@ -22,6 +22,7 @@ import android.view.View.OnLongClickListener
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
+import android.graphics.Typeface
 import android.widget.TextView
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.text.toSpanned
@@ -223,6 +224,14 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             false
         }
 
+        val selectedScale = sp.getInt(app.aaps.core.utils.R.string.key_rangetodisplay, 6)
+        when (selectedScale) {
+            6   -> binding.graphsLayout.graphScale6h.isChecked = true
+            12  -> binding.graphsLayout.graphScale12h.isChecked = true
+            18  -> binding.graphsLayout.graphScale18h.isChecked = true
+            24  -> binding.graphsLayout.graphScale24h.isChecked = true
+        }
+
         binding.graphsLayout.chartMenuButton.setOnLongClickListener { v: View ->
             val popup = PopupMenu(v.context, v)
             popup.menu.add(Menu.NONE, 6, Menu.NONE, rh.gq(app.aaps.core.ui.R.plurals.hours, 6, 6))
@@ -284,15 +293,16 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     }
 
     fun resetScaleText() {
-        binding.graphsLayout.graphScale6h.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Small)
-        binding.graphsLayout.graphScale12h.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Small)
-        binding.graphsLayout.graphScale18h.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Small)
-        binding.graphsLayout.graphScale24h.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Small)
+        binding.graphsLayout.graphScale6h.setTypeface(null, Typeface.NORMAL)
+        binding.graphsLayout.graphScale12h.setTypeface(null, Typeface.NORMAL)
+        binding.graphsLayout.graphScale18h.setTypeface(null, Typeface.NORMAL)
+        binding.graphsLayout.graphScale24h.setTypeface(null, Typeface.NORMAL)
+
         when (sp.getInt(app.aaps.core.utils.R.string.key_rangetodisplay,6)) {
-            6   -> binding.graphsLayout.graphScale6h.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.highColor))
-            12  -> binding.graphsLayout.graphScale12h.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.highColor))
-            18  -> binding.graphsLayout.graphScale18h.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.highColor))
-            24  -> binding.graphsLayout.graphScale24h.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.highColor))
+            6   -> binding.graphsLayout.graphScale6h.setTypeface(null, Typeface.BOLD)
+            12  -> binding.graphsLayout.graphScale12h.setTypeface(null, Typeface.BOLD)
+            18  -> binding.graphsLayout.graphScale18h.setTypeface(null, Typeface.BOLD)
+            24  -> binding.graphsLayout.graphScale24h.setTypeface(null, Typeface.BOLD)
         }
     }
 
