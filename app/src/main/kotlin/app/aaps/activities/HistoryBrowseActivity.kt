@@ -2,15 +2,13 @@ package app.aaps.activities
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Typeface
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.view.Menu
-import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
-import androidx.appcompat.widget.PopupMenu
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -131,47 +129,27 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
                 .show(supportFragmentManager, "history_date_picker")
         }
 
-        binding.chartMenuButton.setOnLongClickListener { v: View ->
-            val popup = PopupMenu(v.context, v)
-            popup.menu.add(Menu.NONE, 6, Menu.NONE, rh.gq(app.aaps.core.ui.R.plurals.hours, 6, 6))
-            popup.menu.add(Menu.NONE, 12, Menu.NONE, rh.gq(app.aaps.core.ui.R.plurals.hours, 12, 12))
-            popup.menu.add(Menu.NONE, 18, Menu.NONE, rh.gq(app.aaps.core.ui.R.plurals.hours, 18, 18))
-            popup.menu.add(Menu.NONE, 24, Menu.NONE, rh.gq(app.aaps.core.ui.R.plurals.hours, 24, 24))
-            popup.setOnMenuItemClickListener {
-                // id == Range to display ...
-                rangeToDisplay = it.itemId
-                setTime(historyBrowserData.overviewData.fromTime)
-                loadAll("rangeChange")
-                return@setOnMenuItemClickListener true
-            }
-            binding.chartMenuButton.setImageResource(app.aaps.plugins.main.R.drawable.ic_arrow_drop_up_white_24dp)
-            popup.setOnDismissListener { binding.chartMenuButton.setImageResource(app.aaps.plugins.main.R.drawable.ic_arrow_drop_down_white_24dp) }
-            popup.show()
-            false
-        }
-
-
         binding.graphScale6h.setOnClickListener {
             rangeToDisplay = 6
-            resetScaleText()
+            updateScaleButtons()
             setTime(historyBrowserData.overviewData.fromTime)
             loadAll("rangeChange")
         }
         binding.graphScale12h.setOnClickListener {
             rangeToDisplay = 12
-            resetScaleText()
+            updateScaleButtons()
             setTime(historyBrowserData.overviewData.fromTime)
             loadAll("rangeChange")
         }
         binding.graphScale18h.setOnClickListener {
             rangeToDisplay = 18
-            resetScaleText()
+            updateScaleButtons()
             setTime(historyBrowserData.overviewData.fromTime)
             loadAll("rangeChange")
         }
         binding.graphScale24h.setOnClickListener {
             rangeToDisplay = 24
-            resetScaleText()
+            updateScaleButtons()
             setTime(historyBrowserData.overviewData.fromTime)
             loadAll("rangeChange")
         }
@@ -287,17 +265,17 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
         }
     }
 
+    fun updateScaleButtons() {
+        binding.graphScale6h.setTypeface(null, Typeface.NORMAL)
+        binding.graphScale12h.setTypeface(null, Typeface.NORMAL)
+        binding.graphScale18h.setTypeface(null, Typeface.NORMAL)
+        binding.graphScale24h.setTypeface(null, Typeface.NORMAL)
 
-    private fun resetScaleText() {
-        binding.graphScale6h.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Small)
-        binding.graphScale12h.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Small)
-        binding.graphScale18h.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Small)
-        binding.graphScale24h.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Small)
         when (rangeToDisplay) {
-            6   -> binding.graphScale6h.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.highColor))
-            12  -> binding.graphScale12h.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.highColor))
-            18  -> binding.graphScale18h.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.highColor))
-            24  -> binding.graphScale24h.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.highColor))
+            6   -> binding.graphScale6h.apply { setTypeface(null, Typeface.BOLD); isChecked = true }
+            12  -> binding.graphScale12h.apply { setTypeface(null, Typeface.BOLD); isChecked = true }
+            18  -> binding.graphScale18h.apply { setTypeface(null, Typeface.BOLD); isChecked = true }
+            24  -> binding.graphScale24h.apply { setTypeface(null, Typeface.BOLD); isChecked = true }
         }
     }
 
@@ -358,7 +336,7 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
         aapsLogger.debug(LTag.UI, "updateGui $from")
 
         updateDate()
-        resetScaleText()
+        updateScaleButtons()
         val pump = activePlugin.activePump
         val graphData = GraphData(injector, binding.bgGraph, historyBrowserData.overviewData)
         val menuChartSettings = overviewMenus.setting
