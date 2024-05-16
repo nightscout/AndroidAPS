@@ -1,8 +1,6 @@
 package app.aaps.plugins.main.general.overview
 
-import android.app.ActionBar.LayoutParams
 import android.content.Context
-import android.text.Layout
 import android.text.SpannableString
 import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
@@ -125,12 +123,10 @@ class OverviewMenusImpl @Inject constructor(
             // reset when new CharType added
             for (s in _setting)
                 if (s.size != OverviewMenus.CharType.entries.size) {
-                    _setting = ArrayList()
-                    _setting.add(Array(OverviewMenus.CharType.entries.size) { CharTypeData.entries[it].enabledByDefault })
+                    _setting = ArrayList<Array<Boolean>>().also { it.add(Array(OverviewMenus.CharType.entries.size) { CharTypeData.entries[it].enabledByDefault }) }
                 }
         } else {
-            _setting = ArrayList()
-            _setting.add(Array(OverviewMenus.CharType.entries.size) { CharTypeData.entries[it].enabledByDefault })
+            _setting = ArrayList<Array<Boolean>>().also { it.add(Array(OverviewMenus.CharType.entries.size) { CharTypeData.entries[it].enabledByDefault }) }
         }
     }
 
@@ -201,7 +197,7 @@ class OverviewMenusImpl @Inject constructor(
             popup.setOnDismissListener {    // remove empty graphs
                 _setting.let {
                     for (i in it.size - 1 downTo 1) {
-                        if (!it[i].any { it })
+                        if (!isSecondary(it[i]))
                             it.removeAt(i)
                     }
                 }
@@ -212,6 +208,8 @@ class OverviewMenusImpl @Inject constructor(
             popup.showAsDropDown(v)
         }
     }
+
+    fun isSecondary(graphArray: Array<Boolean>): Boolean = graphArray.filterIndexed { index, _ -> CharTypeData.entries[index].secondary }.reduce { acc, b -> acc || b }
 
     private fun createCustomMenuItemView(context: Context, m: CharTypeData, rowIndex: Int, layout: GridLayout, primary: Boolean) {
         var layoutParamsLabel = GridLayout.LayoutParams(GridLayout.spec(rowIndex, 1), GridLayout.spec(0, 1))
