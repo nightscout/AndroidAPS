@@ -16,7 +16,6 @@ import android.os.HandlerThread
 import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.View
 import android.view.View.OnLongClickListener
 import android.view.ViewGroup
@@ -24,7 +23,6 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.graphics.Typeface
 import android.widget.TextView
-import androidx.appcompat.widget.PopupMenu
 import androidx.core.text.toSpanned
 import androidx.recyclerview.widget.LinearLayoutManager
 import app.aaps.core.data.configuration.Constants
@@ -232,42 +230,24 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             24  -> binding.graphsLayout.graphScale24h.isChecked = true
         }
 
-        binding.graphsLayout.chartMenuButton.setOnLongClickListener { v: View ->
-            val popup = PopupMenu(v.context, v)
-            popup.menu.add(Menu.NONE, 6, Menu.NONE, rh.gq(app.aaps.core.ui.R.plurals.hours, 6, 6))
-            popup.menu.add(Menu.NONE, 12, Menu.NONE, rh.gq(app.aaps.core.ui.R.plurals.hours, 12, 12))
-            popup.menu.add(Menu.NONE, 18, Menu.NONE, rh.gq(app.aaps.core.ui.R.plurals.hours, 18, 18))
-            popup.menu.add(Menu.NONE, 24, Menu.NONE, rh.gq(app.aaps.core.ui.R.plurals.hours, 24, 24))
-            popup.setOnMenuItemClickListener {
-                // id == Range to display ...
-                sp.putInt(app.aaps.core.utils.R.string.key_rangetodisplay, it.itemId)
-                rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.utils.R.string.key_rangetodisplay)))
-                return@setOnMenuItemClickListener true
-            }
-            binding.graphsLayout.chartMenuButton.setImageResource(R.drawable.ic_arrow_drop_up_white_24dp)
-            popup.setOnDismissListener { binding.graphsLayout.chartMenuButton.setImageResource(R.drawable.ic_arrow_drop_down_white_24dp) }
-            popup.show()
-            false
-        }
-
         binding.graphsLayout.graphScale6h.setOnClickListener {
             sp.putInt(app.aaps.core.utils.R.string.key_rangetodisplay, 6)
-            resetScaleText()
+            updateScaleButtons()
             rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.utils.R.string.key_rangetodisplay)))
         }
         binding.graphsLayout.graphScale12h.setOnClickListener {
             sp.putInt(app.aaps.core.utils.R.string.key_rangetodisplay, 12)
-            resetScaleText()
+            updateScaleButtons()
             rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.utils.R.string.key_rangetodisplay)))
         }
         binding.graphsLayout.graphScale18h.setOnClickListener {
             sp.putInt(app.aaps.core.utils.R.string.key_rangetodisplay, 18)
-            resetScaleText()
+            updateScaleButtons()
             rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.utils.R.string.key_rangetodisplay)))
         }
         binding.graphsLayout.graphScale24h.setOnClickListener {
             sp.putInt(app.aaps.core.utils.R.string.key_rangetodisplay, 24)
-            resetScaleText()
+            updateScaleButtons()
             rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.utils.R.string.key_rangetodisplay)))
         }
 
@@ -292,17 +272,17 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         binding.infoLayout.apsMode.setOnLongClickListener(this)
     }
 
-    fun resetScaleText() {
+    fun updateScaleButtons() {
         binding.graphsLayout.graphScale6h.setTypeface(null, Typeface.NORMAL)
         binding.graphsLayout.graphScale12h.setTypeface(null, Typeface.NORMAL)
         binding.graphsLayout.graphScale18h.setTypeface(null, Typeface.NORMAL)
         binding.graphsLayout.graphScale24h.setTypeface(null, Typeface.NORMAL)
 
         when (sp.getInt(app.aaps.core.utils.R.string.key_rangetodisplay,6)) {
-            6   -> binding.graphsLayout.graphScale6h.setTypeface(null, Typeface.BOLD)
-            12  -> binding.graphsLayout.graphScale12h.setTypeface(null, Typeface.BOLD)
-            18  -> binding.graphsLayout.graphScale18h.setTypeface(null, Typeface.BOLD)
-            24  -> binding.graphsLayout.graphScale24h.setTypeface(null, Typeface.BOLD)
+            6   -> binding.graphsLayout.graphScale6h.apply { setTypeface(null, Typeface.BOLD); isChecked = true }
+            12  -> binding.graphsLayout.graphScale12h.apply { setTypeface(null, Typeface.BOLD); isChecked = true }
+            18  -> binding.graphsLayout.graphScale18h.apply { setTypeface(null, Typeface.BOLD); isChecked = true }
+            24  -> binding.graphsLayout.graphScale24h.apply { setTypeface(null, Typeface.BOLD); isChecked = true }
         }
     }
 
@@ -416,7 +396,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (!config.appInitialized) return
         runOnUiThread {
             _binding ?: return@runOnUiThread
-            resetScaleText()
+            updateScaleButtons()
             updateTime()
             updateSensitivity()
             updateGraph()
