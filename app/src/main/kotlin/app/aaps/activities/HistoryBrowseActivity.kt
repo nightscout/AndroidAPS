@@ -2,13 +2,15 @@ package app.aaps.activities
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Typeface
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.view.Menu
+import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.appcompat.widget.PopupMenu
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -34,6 +36,7 @@ import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.core.ui.extensions.toVisibilityKeepSpace
 import app.aaps.databinding.ActivityHistorybrowseBinding
+import app.aaps.plugins.main.R
 import app.aaps.plugins.main.general.overview.graphData.GraphData
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.jjoe64.graphview.GraphView
@@ -129,31 +132,6 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
                 .show(supportFragmentManager, "history_date_picker")
         }
 
-        binding.graphScale6h.setOnClickListener {
-            rangeToDisplay = 6
-            updateScaleButtons()
-            setTime(historyBrowserData.overviewData.fromTime)
-            loadAll("rangeChange")
-        }
-        binding.graphScale12h.setOnClickListener {
-            rangeToDisplay = 12
-            updateScaleButtons()
-            setTime(historyBrowserData.overviewData.fromTime)
-            loadAll("rangeChange")
-        }
-        binding.graphScale18h.setOnClickListener {
-            rangeToDisplay = 18
-            updateScaleButtons()
-            setTime(historyBrowserData.overviewData.fromTime)
-            loadAll("rangeChange")
-        }
-        binding.graphScale24h.setOnClickListener {
-            rangeToDisplay = 24
-            updateScaleButtons()
-            setTime(historyBrowserData.overviewData.fromTime)
-            loadAll("rangeChange")
-        }
-
         val dm = DisplayMetrics()
         @Suppress("DEPRECATION")
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R)
@@ -166,7 +144,25 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
         binding.bgGraph.gridLabelRenderer?.reloadStyles()
         binding.bgGraph.gridLabelRenderer?.labelVerticalWidth = axisWidth
 
-        overviewMenus.setupChartMenu(context, binding.chartMenuButton)
+        overviewMenus.setupChartMenu(binding.chartMenuButton)
+        binding.scaleButton.setOnClickListener { v: View ->
+            val popup = PopupMenu(v.context, v)
+            popup.menu.add(Menu.NONE, 6, Menu.NONE, rh.gs(R.string.graph_long_scale_6h))
+            popup.menu.add(Menu.NONE, 12, Menu.NONE, rh.gs(R.string.graph_long_scale_12h))
+            popup.menu.add(Menu.NONE, 18, Menu.NONE, rh.gs(R.string.graph_long_scale_18h))
+            popup.menu.add(Menu.NONE, 24, Menu.NONE, rh.gs(R.string.graph_long_scale_24h))
+            popup.setOnMenuItemClickListener {
+                // id == Range to display ...
+                rangeToDisplay = it.itemId
+                updateScaletext()
+                rxBus.send(EventScale(rangeToDisplay))
+                return@setOnMenuItemClickListener true
+            }
+            binding.scaleButton.setCompoundDrawablesWithIntrinsicBounds(null, null, rh.gd(R.drawable.ic_arrow_drop_up_white_24dp), null)
+            popup.setOnDismissListener { binding.scaleButton.setCompoundDrawablesWithIntrinsicBounds(null, null, rh.gd(R.drawable.ic_arrow_drop_down_white_24dp), null) }
+            popup.show()
+            false
+        }
         prepareGraphsIfNeeded(overviewMenus.setting.size)
         savedInstanceState?.let { bundle ->
             rangeToDisplay = bundle.getInt("rangeToDisplay", 0)
@@ -265,20 +261,6 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
         }
     }
 
-    fun updateScaleButtons() {
-        binding.graphScale6h.setTypeface(null, Typeface.NORMAL)
-        binding.graphScale12h.setTypeface(null, Typeface.NORMAL)
-        binding.graphScale18h.setTypeface(null, Typeface.NORMAL)
-        binding.graphScale24h.setTypeface(null, Typeface.NORMAL)
-
-        when (rangeToDisplay) {
-            6   -> binding.graphScale6h.apply { setTypeface(null, Typeface.BOLD); isChecked = true }
-            12  -> binding.graphScale12h.apply { setTypeface(null, Typeface.BOLD); isChecked = true }
-            18  -> binding.graphScale18h.apply { setTypeface(null, Typeface.BOLD); isChecked = true }
-            24  -> binding.graphScale24h.apply { setTypeface(null, Typeface.BOLD); isChecked = true }
-        }
-    }
-
     @Suppress("SameParameterValue")
     private fun loadAll(from: String) {
         updateDate()
@@ -331,12 +313,21 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
         binding.zoom.text = rangeToDisplay.toString()
     }
 
+    private fun updateScaletext() {
+        binding.scaleButton.text = when (rangeToDisplay) {
+            6   -> rh.gs(R.string.graph_scale_6h)
+            12  -> rh.gs(R.string.graph_scale_12h)
+            18  -> rh.gs(R.string.graph_scale_18h)
+            24  -> rh.gs(R.string.graph_scale_24h)
+            else -> ""
+        }
+    }
     @SuppressLint("SetTextI18n")
     fun updateGUI(from: String) {
         aapsLogger.debug(LTag.UI, "updateGui $from")
 
         updateDate()
-        updateScaleButtons()
+        updateScaletext()
         val pump = activePlugin.activePump
         val graphData = GraphData(injector, binding.bgGraph, historyBrowserData.overviewData)
         val menuChartSettings = overviewMenus.setting

@@ -130,18 +130,18 @@ class OverviewMenusImpl @Inject constructor(
         }
     }
 
-    override fun setupChartMenu(context: Context, chartButton: ImageButton) {
-        var itemRow = 0
+    override fun setupChartMenu(chartButton: ImageButton) {
 
         chartButton.setOnClickListener { v: View ->
+            var itemRow = 0
             val predictionsAvailable: Boolean = when {
                 config.APS      -> loop.lastRun?.request?.hasPredictions ?: false
                 config.NSCLIENT -> true
                 else            -> false
             }
             val popup = PopupWindow(v.context)
-            val scrollView = ScrollView(context)                        // required to be able to scroll menu on low res screen
-            val horizontalScrollView = HorizontalScrollView(context)    // Workaround because I was not able to manage first column width for long labels
+            val scrollView = ScrollView(v.context)                        // required to be able to scroll menu on low res screen
+            val horizontalScrollView = HorizontalScrollView(v.context)    // Workaround because I was not able to manage first column width for long labels
             horizontalScrollView.addView(scrollView)
 
             val layout = GridLayout(v.context)
@@ -162,13 +162,13 @@ class OverviewMenusImpl @Inject constructor(
 
             // insert hearder row
             var layoutParamsLabel = GridLayout.LayoutParams(GridLayout.spec(itemRow, 1), GridLayout.spec(0, 1))
-            val textView = TextView(context).also {
+            val textView = TextView(v.context).also {
                 it.text = " ${rh.gs(R.string.graph_menu_divider_header)}"
                 it.maxLines = 3                                                     // don't works currently
             }
             layout.addView(textView, layoutParamsLabel)
             for (i in 1..(MAX_GRAPHS - 1)) {
-                val item = TextView(context).also {
+                val item = TextView(v.context).also {
                     it.gravity = Gravity.CENTER
                     it.text = "$i"
                 }
@@ -188,13 +188,12 @@ class OverviewMenusImpl @Inject constructor(
                     itemRow++
                 }
             }
-
             popup.contentView = horizontalScrollView
             // Permettre la fermeture de la PopupWindow en touchant en dehors
             popup.isOutsideTouchable = true
             popup.isFocusable = true
-
             popup.setOnDismissListener {    // remove empty graphs
+                chartButton.setImageResource(R.drawable.ic_arrow_drop_down_white_24dp)
                 _setting.let {
                     for (i in it.size - 1 downTo 1) {
                         if (!isSecondary(it[i]))
@@ -204,7 +203,7 @@ class OverviewMenusImpl @Inject constructor(
                 storeGraphConfig()
                 rxBus.send(EventRefreshOverview("OnMenuItemClickListener", now = true))
             }
-
+            chartButton.setImageResource(R.drawable.ic_arrow_drop_up_white_24dp)
             popup.showAsDropDown(v)
         }
     }

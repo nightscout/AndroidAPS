@@ -16,13 +16,14 @@ import android.os.HandlerThread
 import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.View.OnLongClickListener
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
-import android.graphics.Typeface
 import android.widget.TextView
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.text.toSpanned
 import androidx.recyclerview.widget.LinearLayoutManager
 import app.aaps.core.data.configuration.Constants
@@ -222,37 +223,30 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             false
         }
 
-        val selectedScale = sp.getInt(app.aaps.core.utils.R.string.key_rangetodisplay, 6)
-        when (selectedScale) {
-            6   -> binding.graphsLayout.graphScale6h.isChecked = true
-            12  -> binding.graphsLayout.graphScale12h.isChecked = true
-            18  -> binding.graphsLayout.graphScale18h.isChecked = true
-            24  -> binding.graphsLayout.graphScale24h.isChecked = true
-        }
-
-        binding.graphsLayout.graphScale6h.setOnClickListener {
-            sp.putInt(app.aaps.core.utils.R.string.key_rangetodisplay, 6)
-            updateScaleButtons()
-            rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.utils.R.string.key_rangetodisplay)))
-        }
-        binding.graphsLayout.graphScale12h.setOnClickListener {
-            sp.putInt(app.aaps.core.utils.R.string.key_rangetodisplay, 12)
-            updateScaleButtons()
-            rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.utils.R.string.key_rangetodisplay)))
-        }
-        binding.graphsLayout.graphScale18h.setOnClickListener {
-            sp.putInt(app.aaps.core.utils.R.string.key_rangetodisplay, 18)
-            updateScaleButtons()
-            rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.utils.R.string.key_rangetodisplay)))
-        }
-        binding.graphsLayout.graphScale24h.setOnClickListener {
-            sp.putInt(app.aaps.core.utils.R.string.key_rangetodisplay, 24)
-            updateScaleButtons()
-            rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.utils.R.string.key_rangetodisplay)))
-        }
-
         prepareGraphsIfNeeded(overviewMenus.setting.size)
-        context?.let { overviewMenus.setupChartMenu(it, binding.graphsLayout.chartMenuButton) }
+        overviewMenus.setupChartMenu(binding.graphsLayout.chartMenuButton)
+        updateScaletext()
+
+
+        binding.graphsLayout.scaleButton.setOnClickListener { v: View ->
+            val popup = PopupMenu(v.context, v)
+            popup.menu.add(Menu.NONE, 6, Menu.NONE, rh.gs(R.string.graph_long_scale_6h))
+            popup.menu.add(Menu.NONE, 12, Menu.NONE, rh.gs(R.string.graph_long_scale_12h))
+            popup.menu.add(Menu.NONE, 18, Menu.NONE, rh.gs(R.string.graph_long_scale_18h))
+            popup.menu.add(Menu.NONE, 24, Menu.NONE, rh.gs(R.string.graph_long_scale_24h))
+            popup.setOnMenuItemClickListener {
+                // id == Range to display ...
+                sp.putInt(app.aaps.core.utils.R.string.key_rangetodisplay, it.itemId)
+                updateScaletext()
+                rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.utils.R.string.key_rangetodisplay)))
+                return@setOnMenuItemClickListener true
+            }
+            binding.graphsLayout.scaleButton.setCompoundDrawablesWithIntrinsicBounds(null, null, rh.gd(R.drawable.ic_arrow_drop_up_white_24dp), null)
+            popup.setOnDismissListener { binding.graphsLayout.scaleButton.setCompoundDrawablesWithIntrinsicBounds(null, null, rh.gd(R.drawable.ic_arrow_drop_down_white_24dp), null) }
+            popup.show()
+            false
+        }
+
         binding.graphsLayout.chartMenuButton.visibility = preferences.simpleMode.not().toVisibility()
 
         binding.activeProfile.setOnClickListener(this)
@@ -272,17 +266,15 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         binding.infoLayout.apsMode.setOnLongClickListener(this)
     }
 
-    fun updateScaleButtons() {
-        binding.graphsLayout.graphScale6h.setTypeface(null, Typeface.NORMAL)
-        binding.graphsLayout.graphScale12h.setTypeface(null, Typeface.NORMAL)
-        binding.graphsLayout.graphScale18h.setTypeface(null, Typeface.NORMAL)
-        binding.graphsLayout.graphScale24h.setTypeface(null, Typeface.NORMAL)
 
-        when (sp.getInt(app.aaps.core.utils.R.string.key_rangetodisplay,6)) {
-            6   -> binding.graphsLayout.graphScale6h.apply { setTypeface(null, Typeface.BOLD); isChecked = true }
-            12  -> binding.graphsLayout.graphScale12h.apply { setTypeface(null, Typeface.BOLD); isChecked = true }
-            18  -> binding.graphsLayout.graphScale18h.apply { setTypeface(null, Typeface.BOLD); isChecked = true }
-            24  -> binding.graphsLayout.graphScale24h.apply { setTypeface(null, Typeface.BOLD); isChecked = true }
+    private fun updateScaletext() {
+        val selectedScale = sp.getInt(app.aaps.core.utils.R.string.key_rangetodisplay, 6)
+        binding.graphsLayout.scaleButton.text = when (selectedScale) {
+            6   -> rh.gs(R.string.graph_scale_6h)
+            12  -> rh.gs(R.string.graph_scale_12h)
+            18  -> rh.gs(R.string.graph_scale_18h)
+            24  -> rh.gs(R.string.graph_scale_24h)
+            else -> ""
         }
     }
 
@@ -396,7 +388,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (!config.appInitialized) return
         runOnUiThread {
             _binding ?: return@runOnUiThread
-            updateScaleButtons()
+            updateScaletext()
             updateTime()
             updateSensitivity()
             updateGraph()
