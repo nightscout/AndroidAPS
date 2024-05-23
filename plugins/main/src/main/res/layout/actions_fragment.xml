@@ -13,6 +13,29 @@
         android:orientation="vertical">
 
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/careportal_statuslight"
+            style="@style/Widget.MaterialComponents.CardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginTop="4dp"
+            app:cardCornerRadius="4dp"
+            app:contentPadding="2dp"
+            app:cardElevation="2dp"
+            app:cardUseCompatPadding="false"
+            android:layout_gravity="center">
+
+            <include
+                android:id="@+id/status"
+                layout="@layout/actions_stats_fragment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/actions"
             style="@style/Widget.MaterialComponents.CardView"
             android:layout_width="match_parent"
@@ -134,29 +157,6 @@
                     app:layout_row="1" />
 
             </androidx.gridlayout.widget.GridLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/careportal_statuslight"
-            style="@style/Widget.MaterialComponents.CardView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginTop="4dp"
-            app:cardCornerRadius="4dp"
-            app:contentPadding="2dp"
-            app:cardElevation="2dp"
-            app:cardUseCompatPadding="false"
-            android:layout_gravity="center">
-
-            <include
-                android:id="@+id/status"
-                layout="@layout/actions_stats_fragment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp" />
 
         </com.google.android.material.card.MaterialCardView>
 
