@@ -21,9 +21,7 @@ import android.view.View.OnLongClickListener
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
-import android.view.Menu
 import android.widget.TextView
-import androidx.appcompat.widget.PopupMenu
 import androidx.core.text.toSpanned
 import androidx.recyclerview.widget.LinearLayoutManager
 import app.aaps.core.data.configuration.Constants
@@ -223,25 +221,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             false
         }
         prepareGraphsIfNeeded(overviewMenus.setting.size)
-        overviewMenus.setupChartMenu(binding.graphsLayout.chartMenuButton)
-        updateScaletext()
-
-        binding.graphsLayout.scaleButton.setOnClickListener { v: View ->
-            val popup = PopupMenu(v.context, v)
-            popup.menu.add(Menu.NONE, 6, Menu.NONE, rh.gs(R.string.graph_long_scale_6h))
-            popup.menu.add(Menu.NONE, 12, Menu.NONE, rh.gs(R.string.graph_long_scale_12h))
-            popup.menu.add(Menu.NONE, 18, Menu.NONE, rh.gs(R.string.graph_long_scale_18h))
-            popup.menu.add(Menu.NONE, 24, Menu.NONE, rh.gs(R.string.graph_long_scale_24h))
-            popup.setOnMenuItemClickListener {
-                // id == Range to display ...
-                rxBus.send(EventScale(it.itemId))
-                return@setOnMenuItemClickListener true
-            }
-            binding.graphsLayout.scaleButton.setCompoundDrawablesWithIntrinsicBounds(null, null, rh.gd(R.drawable.ic_arrow_drop_up_white_24dp), null)
-            popup.setOnDismissListener { binding.graphsLayout.scaleButton.setCompoundDrawablesWithIntrinsicBounds(null, null, rh.gd(R.drawable.ic_arrow_drop_down_white_24dp), null) }
-            popup.show()
-            false
-        }
+        overviewMenus.setupChartMenu(binding.graphsLayout.chartMenuButton, binding.graphsLayout.scaleButton)
+        binding.graphsLayout.scaleButton.text = overviewMenus.scaleString(overviewData.rangeToDisplay)
 
         binding.graphsLayout.chartMenuButton.visibility = preferences.simpleMode.not().toVisibility()
 
@@ -262,16 +243,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         binding.infoLayout.apsMode.setOnLongClickListener(this)
     }
 
-    private fun updateScaletext() {
-        val selectedScale = sp.getInt(app.aaps.core.utils.R.string.key_rangetodisplay, 6)
-        binding.graphsLayout.scaleButton.text = when (selectedScale) {
-            6   -> rh.gs(R.string.graph_scale_6h)
-            12  -> rh.gs(R.string.graph_scale_12h)
-            18  -> rh.gs(R.string.graph_scale_18h)
-            24  -> rh.gs(R.string.graph_scale_24h)
-            else -> ""
-        }
-    }
     @Synchronized
     override fun onPause() {
         super.onPause()
@@ -311,7 +282,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             .subscribe({
                            overviewData.rangeToDisplay = it.hours
                            sp.putInt(app.aaps.core.utils.R.string.key_rangetodisplay, it.hours)
-                           updateScaletext()
                            rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.utils.R.string.key_rangetodisplay)))
                            sp.putBoolean(app.aaps.core.utils.R.string.key_objectiveusescale, true)
                        }, fabricPrivacy::logException)
@@ -383,7 +353,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (!config.appInitialized) return
         runOnUiThread {
             _binding ?: return@runOnUiThread
-            updateScaletext()
             updateTime()
             updateSensitivity()
             updateGraph()
@@ -947,6 +916,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     private fun updateTime() {
         _binding ?: return
+        binding.graphsLayout.scaleButton.text = overviewMenus.scaleString(overviewData.rangeToDisplay)
         binding.infoLayout.time.text = dateUtil.timeString(dateUtil.now())
         // Status lights
         val pump = activePlugin.activePump

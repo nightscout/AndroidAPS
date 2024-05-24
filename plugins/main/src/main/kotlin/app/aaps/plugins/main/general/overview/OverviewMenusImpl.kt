@@ -5,8 +5,10 @@ import android.text.SpannableString
 import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
 import android.view.Gravity
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.CheckBox
 import android.widget.CompoundButton
 import android.widget.HorizontalScrollView
@@ -16,6 +18,7 @@ import android.widget.ScrollView
 import android.widget.TextView
 import androidx.annotation.AttrRes
 import androidx.annotation.StringRes
+import androidx.appcompat.widget.PopupMenu
 import androidx.gridlayout.widget.GridLayout
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
@@ -24,6 +27,7 @@ import app.aaps.core.interfaces.overview.OverviewMenus
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
+import app.aaps.core.interfaces.rx.events.EventScale
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.Preferences
@@ -130,7 +134,7 @@ class OverviewMenusImpl @Inject constructor(
         }
     }
 
-    override fun setupChartMenu(chartButton: ImageButton) {
+    override fun setupChartMenu(chartButton: ImageButton, scaleButton: Button) {
 
         chartButton.setOnClickListener { v: View ->
             var itemRow = 0
@@ -206,6 +210,23 @@ class OverviewMenusImpl @Inject constructor(
             chartButton.setImageResource(R.drawable.ic_arrow_drop_up_white_24dp)
             popup.showAsDropDown(v)
         }
+
+        scaleButton.setOnClickListener { v: View ->
+            val popup = PopupMenu(v.context, v)
+            popup.menu.add(Menu.NONE, 6, Menu.NONE, rh.gs(R.string.graph_long_scale_6h))
+            popup.menu.add(Menu.NONE, 12, Menu.NONE, rh.gs(R.string.graph_long_scale_12h))
+            popup.menu.add(Menu.NONE, 18, Menu.NONE, rh.gs(R.string.graph_long_scale_18h))
+            popup.menu.add(Menu.NONE, 24, Menu.NONE, rh.gs(R.string.graph_long_scale_24h))
+            popup.setOnMenuItemClickListener {
+                // id == Range to display ...
+                rxBus.send(EventScale(it.itemId))
+                return@setOnMenuItemClickListener true
+            }
+            scaleButton.setCompoundDrawablesWithIntrinsicBounds(null, null, rh.gd(R.drawable.ic_arrow_drop_up_white_24dp), null)
+            popup.setOnDismissListener { scaleButton.setCompoundDrawablesWithIntrinsicBounds(null, null, rh.gd(R.drawable.ic_arrow_drop_down_white_24dp), null) }
+            popup.show()
+            false
+        }
     }
 
     fun isSecondary(graphArray: Array<Boolean>): Boolean = graphArray.filterIndexed { index, _ -> CharTypeData.entries[index].secondary }.reduce { acc, b -> acc || b }
@@ -272,6 +293,13 @@ class OverviewMenusImpl @Inject constructor(
         val numOfGraphs = settingsCopy.size // 1 main + x secondary
         for (g in 0 until numOfGraphs) if (settingsCopy[g][type.ordinal]) return g
         return -1
+    }
+    override fun scaleString(rangeToDisplay: Int): String = when (rangeToDisplay) {
+        6   -> rh.gs(R.string.graph_scale_6h)
+        12  -> rh.gs(R.string.graph_scale_12h)
+        18  -> rh.gs(R.string.graph_scale_18h)
+        24  -> rh.gs(R.string.graph_scale_24h)
+        else -> ""
     }
 
 }

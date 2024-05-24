@@ -4,13 +4,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.view.Menu
-import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
-import androidx.appcompat.widget.PopupMenu
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -144,23 +141,7 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
         binding.bgGraph.gridLabelRenderer?.reloadStyles()
         binding.bgGraph.gridLabelRenderer?.labelVerticalWidth = axisWidth
 
-        overviewMenus.setupChartMenu(binding.chartMenuButton)
-        binding.scaleButton.setOnClickListener { v: View ->
-            val popup = PopupMenu(v.context, v)
-            popup.menu.add(Menu.NONE, 6, Menu.NONE, rh.gs(R.string.graph_long_scale_6h))
-            popup.menu.add(Menu.NONE, 12, Menu.NONE, rh.gs(R.string.graph_long_scale_12h))
-            popup.menu.add(Menu.NONE, 18, Menu.NONE, rh.gs(R.string.graph_long_scale_18h))
-            popup.menu.add(Menu.NONE, 24, Menu.NONE, rh.gs(R.string.graph_long_scale_24h))
-            popup.setOnMenuItemClickListener {
-                // id == Range to display ...
-                rxBus.send(EventScale(it.itemId))
-                return@setOnMenuItemClickListener true
-            }
-            binding.scaleButton.setCompoundDrawablesWithIntrinsicBounds(null, null, rh.gd(R.drawable.ic_arrow_drop_up_white_24dp), null)
-            popup.setOnDismissListener { binding.scaleButton.setCompoundDrawablesWithIntrinsicBounds(null, null, rh.gd(R.drawable.ic_arrow_drop_down_white_24dp), null) }
-            popup.show()
-            false
-        }
+        overviewMenus.setupChartMenu(binding.chartMenuButton, binding.scaleButton)
         prepareGraphsIfNeeded(overviewMenus.setting.size)
         savedInstanceState?.let { bundle ->
             rangeToDisplay = bundle.getInt("rangeToDisplay", 0)
@@ -204,7 +185,6 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
             .observeOn(aapsSchedulers.main)
             .subscribe({
                            rangeToDisplay = it.hours
-                           updateScaletext()
                            setTime(historyBrowserData.overviewData.fromTime)
                            loadAll("rangeChange")
                        }, fabricPrivacy::logException)
@@ -312,21 +292,12 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
         binding.zoom.text = rangeToDisplay.toString()
     }
 
-    private fun updateScaletext() {
-        binding.scaleButton.text = when (rangeToDisplay) {
-            6   -> rh.gs(R.string.graph_scale_6h)
-            12  -> rh.gs(R.string.graph_scale_12h)
-            18  -> rh.gs(R.string.graph_scale_18h)
-            24  -> rh.gs(R.string.graph_scale_24h)
-            else -> ""
-        }
-    }
     @SuppressLint("SetTextI18n")
     fun updateGUI(from: String) {
         aapsLogger.debug(LTag.UI, "updateGui $from")
 
         updateDate()
-        updateScaletext()
+        binding.scaleButton.text = overviewMenus.scaleString(rangeToDisplay)
         val pump = activePlugin.activePump
         val graphData = GraphData(injector, binding.bgGraph, historyBrowserData.overviewData)
         val menuChartSettings = overviewMenus.setting
