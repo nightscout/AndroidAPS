@@ -260,13 +260,13 @@
     <string name="overview_show_deviation_slope">Pente de déviations</string>
     <string name="overview_show_activity">Activité</string>
     <string name="overview_show_bgi">Impact glycémique</string>
-    <string name="overview_show_sensitivity">Variation SI</string>
+    <string name="overview_show_sensitivity">AutoSens</string>
     <string name="overview_show_deviations">Déviations</string>
     <string name="overview_show_cob">Glucides actifs</string>
     <string name="overview_show_iob">Insuline Active</string>
     <string name="overview_show_basals">Basals</string>
     <string name="overview_show_abs_insulin">Insuline absolue</string>
-    <string name="overview_show_variable_sens">AutoSens</string>
+    <string name="overview_show_variable_sens">SI variable</string>
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
     <string name="deviation_shortname">DEV</string>
