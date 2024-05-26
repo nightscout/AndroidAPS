@@ -209,7 +209,17 @@ class MedtrumOverviewViewModel @Inject constructor(
                 _patchExpiry.postValue("")
             } else {
                 val expiry = medtrumPump.patchStartTime + T.hours(72).msecs()
-                _patchExpiry.postValue(dateUtil.dateAndTimeString(expiry))
+                val currentTime = System.currentTimeMillis()
+                val timeLeft = expiry - currentTime
+                val daysLeft = T.msecs(timeLeft).days()
+                val hoursLeft = T.msecs(timeLeft).hours() % 24
+
+                val daysString = if (daysLeft > 0) "$daysLeft ${rh.gs(app.aaps.core.interfaces.R.string.days)} " else ""
+                val hoursString = "$hoursLeft ${rh.gs(app.aaps.core.interfaces.R.string.hours)}"
+
+                val expiryString = dateUtil.dateAndTimeString(expiry) + "\n(" + daysString + hoursString + ")"
+
+                _patchExpiry.postValue(expiryString)
             }
         } else {
             _patchExpiry.postValue(rh.gs(R.string.expiry_not_enabled))
