@@ -38,7 +38,6 @@ class MedtrumActivateFragment : MedtrumBaseFragment<FragmentMedtrumActivateBindi
                         MedtrumViewModel.SetupStep.ACTIVATED -> moveStep(PatchStep.ACTIVATE_COMPLETE)
 
                         MedtrumViewModel.SetupStep.ERROR     -> {
-                            moveStep(PatchStep.ERROR)
                             updateSetupStep(MedtrumViewModel.SetupStep.PRIMED) // Reset setup step
                             binding.textActivatingPump.text = rh.gs(R.string.activating_error)
                             binding.btnPositive.visibility = View.VISIBLE

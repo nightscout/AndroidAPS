@@ -132,7 +132,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
                            if (event.isChanged(rh.gs(R.string.key_sn_input))) {
                                aapsLogger.debug(LTag.PUMPCOMM, "Serial number changed, reporting new pump!")
                                medtrumPump.loadUserSettingsFromSP()
-                               medtrumPump.deviceType = MedtrumSnUtil().getDeviceTypeFromSerial(medtrumPump.pumpSN)
+                               medtrumPump.deviceType = MedtrumSnUtil().getDeviceTypeFromSerial(medtrumPump.pumpSN).value
                                medtrumPump.resetPatchParameters()
                                pumpSync.connectNewPump()
                                medtrumPump.setFakeTBRIfNotSet()

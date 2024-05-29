@@ -90,7 +90,7 @@ class SetupWizardActivity : DaggerAppCompatActivityWithResult() {
                         true
                     }
 
-                    else              -> false
+                    else -> false
                 }
         })
     }

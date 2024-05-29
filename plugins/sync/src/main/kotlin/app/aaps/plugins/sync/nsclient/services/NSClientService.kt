@@ -561,8 +561,6 @@ class NSClientService : DaggerService() {
                         val sgvs = data.getJSONArray("sgvs")
                         if (sgvs.length() > 0) {
                             rxBus.send(EventNSClientNewLog("◄ DATA", "received " + sgvs.length() + " sgvs"))
-                            // Objective0
-                            sp.putBoolean(app.aaps.core.utils.R.string.key_objectives_bg_is_available_in_ns, true)
                             nsIncomingDataProcessor.processSgvs(sgvs)
                             storeDataForDb.storeGlucoseValuesToDb()
                         }

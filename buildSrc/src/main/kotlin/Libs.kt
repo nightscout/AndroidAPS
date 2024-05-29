@@ -152,8 +152,11 @@ object Libs {
     }
 
     object Mockito {
+        private const val mockitoVersion = "5.6.0"
 
-        const val jupiter = "org.mockito:mockito-junit-jupiter:5.6.0"
+        const val android = "org.mockito:mockito-android:$mockitoVersion"
+        const val core = "org.mockito:mockito-core:$mockitoVersion"
+        const val jupiter = "org.mockito:mockito-junit-jupiter:$mockitoVersion"
         const val kotlin = "org.mockito.kotlin:mockito-kotlin:5.1.0"
     }
 
@@ -197,19 +200,5 @@ object Libs {
     const val commonCodecs = "commons-codec:commons-codec:1.16.0"
     const val kulid = "com.github.guepardoapps:kulid:2.0.0.0"
     const val xstream = "com.thoughtworks.xstream:xstream:1.4.20"
-
-    const val ormLite = "4.46"
-
-    const val junit = "4.13.2"
-    const val mockito = "5.6.0"
-    const val dexmaker = "1.2"
-    const val byteBuddy = "1.12.8"
-
-    const val androidx_junit = "1.1.5"
-    const val androidx_rules = "1.5.0"
-
-    const val kotlinx_datetime = "0.4.1"
-    const val kotlinx_serialization = "1.6.0"
-
-    const val caverock_androidsvg = "1.4"
+    const val connectiqSdk = "com.garmin.connectiq:ciq-companion-app-sdk:2.0.3@aar"
 }

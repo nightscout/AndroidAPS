@@ -5,43 +5,42 @@
     <string name="key_last_processed_glunovo_timestamp" translatable="false">last_processed_glunovo_timestamp</string>
     <string name="key_last_processed_intelligo_timestamp" translatable="false">last_processed_intelligo_timestamp</string>
 
-    <string name="ns_client_bg">NSClient BG</string>
-    <string name="ns_client_bg_short">NS BG</string>
-    <string name="description_source_ns_client">Downloads BG data from Nightscout</string>
-    <string name="source_xdrip">xDrip+ BG</string>
-    <string name="description_source_xdrip">Receive BG values from xDrip+.</string>
+    <string name="ns_client_bg">Glicemia via NSClient</string>
+    <string name="ns_client_bg_short">Glicose via NS</string>
+    <string name="description_source_ns_client">Downloads de dados de Glicose do Nightscout</string>
+    <string name="source_xdrip">xDrip+</string>
+    <string name="description_source_xdrip">Receber valores de glicose do xDrip+.</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
-    <string name="description_source_dexcom">Receive BG values from the \'Build Your Own Dexcom App\'.</string>
-    <string name="eversense">Eversense App (patched)</string>
+    <string name="description_source_dexcom">Receber valores de glicemia do \'Build Your Own Dexcom App\'.</string>
+    <string name="eversense">Aplicação Eversense (com patch)</string>
     <string name="eversense_shortname" translatable="false">EVR</string>
-    <string name="description_source_eversense">Receive BG values from the patched Eversense app.</string>
+    <string name="description_source_eversense">Receber valores de Glicose da aplicação Eversense modificada.</string>
     <string name="glimp">Glimp</string>
-    <string name="description_source_glimp">Receive BG values from Glimp.</string>
+    <string name="description_source_glimp">Receber valores BG do Glimp.</string>
     <string name="mm640g">MM640g</string>
-    <string name="description_source_mm640g">Receive BG values from the 600SeriesAndroidUploader.</string>
+    <string name="description_source_mm640g">Receber valores de Glucose do 600SeriesAndroidUploader.</string>
     <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">Receive BG values from Poctech app</string>
+    <string name="description_source_poctech">Receber valores Glucose da app Poctech</string>
     <string name="glunovo">Glunovo</string>
-    <string name="description_source_glunovo">Receive values from Glunovo app</string>
+    <string name="description_source_glunovo">Receber valores GLIC do aplicativo Glunovo</string>
     <string name="intelligo">Intelligo</string>
-    <string name="description_source_intelligo">Receive values from Intelligo app</string>
+    <string name="description_source_intelligo">Receber valores da app Intelligo</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
-    <string name="description_source_tomato">Receive BG values from Tomato app (MiaoMiao device)</string>
+    <string name="description_source_tomato">Receber valores de Glicose da aplicação Tomato (dispositivo MiaoMiao)</string>
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>
-    <string name="description_source_aidex">Receive BG values from GlucoRx Aidex CGMS.</string>
-    <string name="random_bg">Random BG</string>
-    <string name="description_source_random_bg">Generate random BG data (Demo mode only)</string>
-    <string name="random_bg_short">BG</string>
-
-    <string name="do_xdrip_upload_title">Send BG data to xDrip+</string>
-    <string name="do_xdrip_upload_summary">In xDrip+ select 640g/Eversense data source</string>
-    <string name="bgsource_upload">BG upload settings</string>
-    <string name="dexcom_log_ns_sensor_change_title">Log sensor change to NS</string>
-    <string name="dexcom_log_ns_sensor_change_summary">Create event \"Sensor Change\" in NS automatically on sensor start</string>
-    <string name="direction">direction</string>
+    <string name="description_source_aidex">Receber valores BG do GlucoRx Aidex CGMS.</string>
+    <string name="random_bg">Glicemia aleatória</string>
+    <string name="description_source_random_bg">Gerar dados aleatórios de glicemia (apenas no modo de demonstração)</string>
+    <string name="random_bg_short">Glicemia</string>
+    <string name="do_xdrip_upload_title">Enviar dados de glicemia para xDrip+</string>
+    <string name="do_xdrip_upload_summary">Selecione 640g/Eversense como fonte no xDrip+</string>
+    <string name="bgsource_upload">Configurações de upload de BG</string>
+    <string name="dexcom_log_ns_sensor_change_title">Registrar mudança de sensor no NS</string>
+    <string name="dexcom_log_ns_sensor_change_summary">Criar evento \"Mudança de Sensor\" no NS automaticamente ao iniciar o sensor.</string>
+    <string name="direction">direção</string>
 
 
 </resources>
