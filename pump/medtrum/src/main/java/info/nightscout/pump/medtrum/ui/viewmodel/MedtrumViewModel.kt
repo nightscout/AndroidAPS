@@ -137,7 +137,6 @@ class MedtrumViewModel @Inject constructor(
                 PatchStep.CANCEL,
                 PatchStep.COMPLETE,
                 PatchStep.ACTIVATE_COMPLETE,
-                PatchStep.ERROR,
                 PatchStep.START_DEACTIVATION,
                 PatchStep.DEACTIVATE,
                 PatchStep.FORCE_DEACTIVATION,
@@ -307,7 +306,6 @@ class MedtrumViewModel @Inject constructor(
 
             PatchStep.COMPLETE,
             PatchStep.FORCE_DEACTIVATION,
-            PatchStep.ERROR,
             PatchStep.CANCEL                   -> _title.value
         }
 

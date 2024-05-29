@@ -86,6 +86,9 @@ android {
             versionName = Versions.appVersion + "-aapsclient2"
         }
     }
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 allprojects {

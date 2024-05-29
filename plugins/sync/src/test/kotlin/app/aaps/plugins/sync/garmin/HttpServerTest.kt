@@ -77,7 +77,7 @@ internal class HttpServerTest: TestBase() {
         HttpServer(aapsLogger, port).use { server ->
             server.registerEndpoint("/foo")  { _: SocketAddress, uri: URI, _: String? ->
                     assertEquals(URI("/foo"), uri)
-                    "test"
+                    HttpURLConnection.HTTP_OK to "test"
                 }
             assertTrue(server.awaitReady(Duration.ofSeconds(10)))
             val resp = reqUri.toURL().openConnection() as HttpURLConnection

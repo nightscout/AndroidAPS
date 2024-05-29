@@ -276,7 +276,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         })
         // Setup views on 2nd and next activity start
         // On 1st start app is still initializing, start() is delayed and run from EventAppInitialized
-        if (config.appInitialized) start()
+        if (config.appInitialized) setupViews()
     }
 
     private fun start() {

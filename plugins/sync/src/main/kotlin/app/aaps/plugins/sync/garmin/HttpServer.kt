@@ -34,7 +34,7 @@ class HttpServer internal constructor(private var aapsLogger: AAPSLogger, val po
 
     private val serverThread: Thread
     private val workerExecutor: Executor = Executors.newCachedThreadPool()
-    private val endpoints: MutableMap<String, (SocketAddress, URI, String?) -> CharSequence> =
+    private val endpoints: MutableMap<String, (SocketAddress, URI, String?) -> Pair<Int, CharSequence>> =
         ConcurrentHashMap()
     private var serverSocket: ServerSocket? = null
     private val readyLock = ReentrantLock()
@@ -76,7 +76,7 @@ class HttpServer internal constructor(private var aapsLogger: AAPSLogger, val po
     }
 
     /** Register an endpoint (path) to handle requests. */
-    fun registerEndpoint(path: String, endpoint: (SocketAddress, URI, String?) -> CharSequence) {
+    fun registerEndpoint(path: String, endpoint: (SocketAddress, URI, String?) -> Pair<Int, CharSequence>) {
         aapsLogger.info(LTag.GARMIN, "Register: '$path'")
         endpoints[path] = endpoint
     }
@@ -127,8 +127,8 @@ class HttpServer internal constructor(private var aapsLogger: AAPSLogger, val po
                 respond(HttpURLConnection.HTTP_NOT_FOUND, out)
             } else {
                 try {
-                    val body = endpoint(s.remoteSocketAddress, uri, reqBody)
-                    respond(HttpURLConnection.HTTP_OK, body, "application/json", out)
+                    val (code, body) = endpoint(s.remoteSocketAddress, uri, reqBody)
+                    respond(code, body, "application/json", out)
                 } catch (e: Exception) {
                     aapsLogger.error(LTag.GARMIN, "endpoint " + uri.path + " failed", e)
                     respond(HttpURLConnection.HTTP_INTERNAL_ERROR, out)

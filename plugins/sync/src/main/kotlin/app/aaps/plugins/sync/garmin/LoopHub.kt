@@ -20,6 +20,12 @@ interface LoopHub {
     /** Returns the remaining bolus insulin on board. */
     val insulinOnboard: Double
 
+    /** Returns the basal insulin on board. */
+    val insulinBasalOnboard: Double
+
+    /** Returns the remaining carbs on board. */
+    val carbsOnboard: Double?
+
     /** Returns true if the pump is connected. */
     val isConnected: Boolean
 

@@ -79,6 +79,7 @@ import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.json.JSONObject
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
@@ -135,6 +136,8 @@ class LoopPlugin @Inject constructor(
         disposable += rxBus
             .toObservable(EventTempTargetChange::class.java)
             .observeOn(aapsSchedulers.io)
+            // Skip db change of ending previous TT
+            .debounce(10L, TimeUnit.SECONDS)
             .subscribe({ invoke("EventTempTargetChange", true) }, fabricPrivacy::logException)
     }
 

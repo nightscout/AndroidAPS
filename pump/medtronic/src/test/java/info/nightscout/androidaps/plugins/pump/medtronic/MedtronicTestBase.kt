@@ -4,7 +4,7 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.shared.tests.TestBase
+import app.aaps.shared.tests.TestBaseWithProfile
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
@@ -16,15 +16,13 @@ import info.nightscout.pump.common.sync.PumpSyncStorage
 import org.mockito.Answers
 import org.mockito.Mock
 
-open class MedtronicTestBase : TestBase() {
+open class MedtronicTestBase : TestBaseWithProfile() {
 
     var rileyLinkUtil = RileyLinkUtil()
 
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var pumpSyncStorage: PumpSyncStorage
-    @Mock(answer = Answers.RETURNS_DEEP_STUBS) lateinit var activePlugin: ActivePlugin
-    @Mock lateinit var sp: SP
-    @Mock lateinit var rh: ResourceHelper
+    @Mock(answer = Answers.RETURNS_DEEP_STUBS) override lateinit var activePlugin: ActivePlugin
 
     lateinit var medtronicUtil: MedtronicUtil
     lateinit var decoder: MedtronicPumpHistoryDecoder
@@ -51,6 +49,24 @@ open class MedtronicTestBase : TestBase() {
 
         //return inputList
 
+    }
+
+    fun getPumpHistoryEntryFromData(vararg elements: Int): PumpHistoryEntry {
+        val data: MutableList<Byte> = ArrayList()
+        for (item in elements) {
+            var b = if (item > 128) item - 256 else item
+            data.add(b.toByte());
+        }
+
+        val entryType = PumpHistoryEntryType.getByCode(data[0])
+
+        val phe = PumpHistoryEntry()
+        phe.setEntryType(medtronicUtil.medtronicPumpModel, entryType)
+        phe.setData(data, false)
+
+        decoder.decodeRecord(phe)
+
+        return phe
     }
 
     private fun preProcessTBRs(tbrsInput: MutableList<PumpHistoryEntry>): MutableList<PumpHistoryEntry> {
