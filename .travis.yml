@@ -3,19 +3,19 @@ jdk: openjdk11
 dist: trusty
 env:
   matrix:
-    - ANDROID_TARGET=android-28 ANDROID_ABI=x86 org.gradle.jvmargs=-XX:-OmitStackTraceInFastThrow
+    - ANDROID_TARGET=android-31 ANDROID_ABI=x86 org.gradle.jvmargs=-XX:-OmitStackTraceInFastThrow
 android:
   components:
   - platform-tools
   - tools
   - build-tools-29.0.2
-  - android-28
+  - android-31
   - extra-google-m2repository
   - extra-android-m2repository
   - extra-google-google_play_services
   
 before_install:
-#- yes | sdkmanager "platforms;android-28"
+#- yes | sdkmanager "platforms;android-31
 
 script:
   # Unit Test

@@ -8,8 +8,8 @@ object Versions {
     const val ndkVersion = "21.1.6352462"
 
     const val compileSdk = 34
-    const val minSdk = 28
-    const val targetSdk = 28
+    const val minSdk = 21
+    const val targetSdk = 34
     const val wearMinSdk = 26
     const val wearTargetSdk = 29
 
