@@ -174,11 +174,10 @@
     <string name="key_xdrip_offline_event_last_synced_id" translatable="false">xdrip_offline_event_last_synced_id</string>
     <string name="key_xdrip_profile_store_last_synced_timestamp" translatable="false">xdrip_profile_store_last_synced_timestamp</string>
 
-
-    <!-- DataBroadcast-->
-    <string name="data_broadcaster">Data Broadcaster</string>
-    <string name="data_broadcaster_short">DBRO</string>
-    <string name="data_broadcaster_description">Broadcast data to Garmin\'s G-Watch Wear App</string>
+    <!--    DataBroadcast-->
+    <string name="tizen">Samsung Tizen</string>
+    <string name="tizen_short">TIZ</string>
+    <string name="tizen_description">Broadcast data para Samsung\'s G-Watch Wear App (Tizen OS)</string>
 
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
