@@ -14,6 +14,7 @@ jobs:
     executor:
       name: android/android-machine
       resource-class: large
+      tag: '29.0.2'
 
     steps:
       - checkout
