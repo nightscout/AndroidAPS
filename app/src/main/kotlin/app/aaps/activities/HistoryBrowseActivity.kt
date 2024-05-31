@@ -181,6 +181,10 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
             .observeOn(aapsSchedulers.main)
             .subscribe({ updateGUI("EventRefreshOverview") }, fabricPrivacy::logException)
         disposable += rxBus
+            .toObservable(EventRefreshOverview::class.java)
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ updateGUI("EventRefreshOverview") }, fabricPrivacy::logException)
+        disposable += rxBus
             .toObservable(EventScale::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
