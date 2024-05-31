@@ -112,6 +112,7 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
             loadAll("onLongClickZoom")
             true
         }
+        binding.chartMenuButton.visibility = preferences.simpleMode.not().toVisibility()
 
         binding.date.setOnClickListener {
             MaterialDatePicker.Builder.datePicker()
