@@ -1,6 +1,7 @@
 package app.aaps.plugins.main.general.overview
 
 import android.content.Context
+import android.graphics.drawable.ColorDrawable
 import android.text.SpannableString
 import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
@@ -135,7 +136,13 @@ class OverviewMenusImpl @Inject constructor(
     }
 
     override fun setupChartMenu(chartButton: ImageButton, scaleButton: Button) {
-
+        chartButton.setColorFilter(rh.gac(chartButton.context, app.aaps.core.ui.R.attr.defaultTextColor))
+        scaleButton.setCompoundDrawablesWithIntrinsicBounds(
+            null,
+            null,
+            rh.gd(R.drawable.ic_arrow_drop_down_white_24dp)?.also { it.setTint(rh.gac(scaleButton.context, app.aaps.core.ui.R.attr.defaultTextColor))},
+            null
+        )
         chartButton.setOnClickListener { v: View ->
             var itemRow = 0
             val predictionsAvailable: Boolean = when {
@@ -144,6 +151,7 @@ class OverviewMenusImpl @Inject constructor(
                 else            -> false
             }
             val popup = PopupWindow(v.context)
+            popup.setBackgroundDrawable(ColorDrawable(rh.gac(chartButton.context, app.aaps.core.ui.R.attr.popupWindowBackground)))
             val scrollView = ScrollView(v.context)                        // required to be able to scroll menu on low res screen
             val horizontalScrollView = HorizontalScrollView(v.context)    // Workaround because I was not able to manage first column width for long labels
             horizontalScrollView.addView(scrollView)
@@ -222,8 +230,20 @@ class OverviewMenusImpl @Inject constructor(
                 rxBus.send(EventScale(it.itemId))
                 return@setOnMenuItemClickListener true
             }
-            scaleButton.setCompoundDrawablesWithIntrinsicBounds(null, null, rh.gd(R.drawable.ic_arrow_drop_up_white_24dp), null)
-            popup.setOnDismissListener { scaleButton.setCompoundDrawablesWithIntrinsicBounds(null, null, rh.gd(R.drawable.ic_arrow_drop_down_white_24dp), null) }
+            scaleButton.setCompoundDrawablesWithIntrinsicBounds(
+                null,
+                null,
+                rh.gd(R.drawable.ic_arrow_drop_up_white_24dp)?.also { it.setTint(rh.gac(v.context, app.aaps.core.ui.R.attr.defaultTextColor))},
+                null
+            )
+            popup.setOnDismissListener {
+                scaleButton.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    null,
+                    rh.gd(R.drawable.ic_arrow_drop_down_white_24dp)?.also { it.setTint(rh.gac(v.context, app.aaps.core.ui.R.attr.defaultTextColor))},
+                    null
+                )
+            }
             popup.show()
             false
         }

@@ -91,6 +91,7 @@
         <item name="ribbonTextWarningColor">@color/ribbonTextWarning</item>
         <!---Background  -->
         <item name="defaultBackground">@color/defaultBackground</item>
+        <item name="popupWindowBackground">@color/ribbonTextWarning</item>
         <!---Toast  -->
         <item name="toastBaseTextColor">@color/toastBase</item>
         <item name="toastBackgroundColor">@color/buttonBackground</item>
