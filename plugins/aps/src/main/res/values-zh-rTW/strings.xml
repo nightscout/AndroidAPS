@@ -68,7 +68,7 @@
     <string name="enable_smb_with_cob">在COB存在時啟用SMB</string>
     <string name="enable_smb_with_cob_summary">在COB活躍時啟用SMB。</string>
     <string name="enable_smb_with_temp_target">在有臨時目標時啟用SMB</string>
-    <string name="enable_smb_with_temp_target_summary">在有臨時目標（即將進食，運動）時啟用SMB</string>
+    <string name="enable_smb_with_temp_target_summary">有臨時目標時啟用SMB（即將進食，運動）</string>
     <string name="enable_smb_with_high_temp_target">在高臨時目標時啟用SMB</string>
     <string name="enable_smb_with_high_temp_target_summary">在高臨時目標活躍時啟用SMB（運動，超過100 mg/dl或5.5 mmol/l）</string>
     <string name="smb_max_minutes_summary">限制SMB的最大基礎分鐘數</string>
