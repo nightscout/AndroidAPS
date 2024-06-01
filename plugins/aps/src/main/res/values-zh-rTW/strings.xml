@@ -117,7 +117,7 @@
     <string name="loop_smb_set_by_pump_label">幫浦設置的SMB</string>
     <string name="loop_open_mode_min_change">最小請求變更 [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">開環模式將彈出新變更請求，僅當變更超過此值的百分比。預設值為20%</string>
-    <string name="fallback_smb_no_tdd">回退到SMB。沒有足夠的TDD資料。</string>
+    <string name="fallback_smb_no_tdd">回退SMB。沒有足夠的TDD資料。</string>
     <string name="fallback_to_isf_no_tdd">回退到檔案靈敏度。沒有足夠的TDD資料。</string>
     <!-- Autotune -->
     <string name="autotune_description">幫助調整檔案（ISF、碳水化合物比率和基礎率）</string>
