@@ -209,7 +209,7 @@
     <string name="profileswitchtime_iwant">如果您比平時早2小時起床，應如何通知AAPS您的時間表變更？</string>
     <string name="profileswitchtime_2">啟動一個時間偏移為2的個人設置切換</string>
     <string name="profileswitchtime__2">啟動一個時間偏移為-2的個人設置切換</string>
-    <string name="profileswitchtime_tt">設置即將進食的臨時目標。</string>
+    <string name="profileswitchtime_tt">設置即將用餐的臨時目標。</string>
     <string name="profileswitchtime_100">進行個人設置切換到高於100%。</string>
     <string name="profileswitchtime_hint1">https://wiki.aaps.app/en/latest/Usage/Profiles.html#timeshift</string>
     <string name="profileswitch4_label">個人設置變更</string>
