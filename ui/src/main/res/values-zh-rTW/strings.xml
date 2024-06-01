@@ -4,9 +4,9 @@
     <string name="carbs_constraint_applied">已套用碳水化合物限制</string>
     <string name="temp_target_short">TT</string>
     <string name="dialog_canceled">對話框已取消</string>
-    <string name="start_activity_tt">開始活動 TT</string>
-    <string name="start_eating_soon_tt">開始即將進食 TT</string>
-    <string name="start_hypo_tt">開始低血糖 TT</string>
+    <string name="start_activity_tt">開始活動(臨時目標)</string>
+    <string name="start_eating_soon_tt">即將開始用餐 (臨時目標)</string>
+    <string name="start_hypo_tt">開始低血糖(臨時目標)</string>
     <string name="time_offset">時間偏移</string>
     <string name="unit_minute_short">分鐘</string>
     <string name="remind_to_bolus_later">稍後提醒輸注</string>
@@ -42,7 +42,7 @@
     <string name="record_pump_site_change">記錄幫浦位置更換</string>
     <string name="record_insulin_cartridge_change">記錄胰島素匣更換</string>
     <!-- InsulinDialog -->
-    <string name="do_not_bolus_record_only">不輸注，僅記錄</string>
+    <string name="do_not_bolus_record_only">不注射，僅記錄</string>
     <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">重用 %1$d%% %2$小時</string>
     <string name="timeshift_label">時間移動</string>
