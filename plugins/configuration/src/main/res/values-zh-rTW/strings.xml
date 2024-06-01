@@ -66,7 +66,7 @@
     <string name="configbuilder_sync">同步</string>
     <string name="configbuilder_sync_description">資料上傳和同步外掛。</string>
     <string name="configbuilder_constraints_description">哪些約束條件應用？</string>
-    <string name="configbuilder_loop">迴圈</string>
+    <string name="configbuilder_loop">閉環</string>
     <string name="configbuilder_loop_description">使用此功能啟用AAPS的迴圈集成。</string>
     <string name="configbuilder_insulin_description">您正在使用哪種類型的胰島素？</string>
     <string name="configbuilder_bgsource">血糖來源</string>
