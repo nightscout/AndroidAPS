@@ -1,177 +1,184 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     tools:parentTag="android.widget.LinearLayout">
 
-    <LinearLayout
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:focusable="true"
-        android:orientation="horizontal">
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="2dp"
+        app:cardUseCompatPadding="false"
+        app:contentPadding="2dp">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1.5"
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-            android:text="@string/omnipod_dash_overview_bluetooth_address"
-            android:textAlignment="viewEnd"
-            android:textSize="14sp" />
+            android:orientation="vertical"
+            android:padding="8dp">
 
-        <TextView
-            android:layout_width="5dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:gravity="center_horizontal"
-            android:paddingStart="2dp"
-            android:paddingEnd="2dp"
-            android:text=":"
-            android:textSize="14sp"
-            tools:ignore="HardcodedText" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Bluetooth"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:paddingBottom="4dp" />
 
-        <TextView
-            android:id="@+id/omnipod_dash_bluetooth_address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-            android:textAlignment="viewStart"
-            android:textSize="14sp" />
+            <!-- Bluetooth Address -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="4dp">
 
-    </LinearLayout>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.3"
+                    android:paddingStart="2dp"
+                    android:paddingEnd="2dp"
+                    android:text="@string/omnipod_dash_overview_bluetooth_address"
+                    android:textAlignment="viewEnd"
+                    android:textSize="14sp" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:focusable="true"
-        android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text=":"
+                    android:textSize="14sp"
+                    tools:ignore="HardcodedText" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.5"
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-            android:text="@string/omnipod_dash_overview_bluetooth_status"
-            android:textAlignment="viewEnd"
-            android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/omnipod_dash_bluetooth_address"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.7"
+                    android:paddingStart="2dp"
+                    android:paddingEnd="2dp"
+                    android:textAlignment="viewStart"
+                    android:textSize="14sp" />
+            </LinearLayout>
 
-        <TextView
-            android:layout_width="5dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:gravity="center_horizontal"
-            android:paddingStart="2dp"
-            android:paddingEnd="2dp"
-            android:text=":"
-            android:textSize="14sp"
-            tools:ignore="HardcodedText" />
+            <!-- Bluetooth Status -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="4dp">
 
-        <com.joanzapata.iconify.widget.IconTextView
-            android:id="@+id/omnipod_dash_bluetooth_status"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-            android:textAlignment="viewStart"
-            android:textSize="14sp"
-            tools:ignore="HardcodedText" />
-    </LinearLayout>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.3"
+                    android:paddingStart="2dp"
+                    android:paddingEnd="2dp"
+                    android:text="@string/omnipod_dash_overview_bluetooth_status"
+                    android:textAlignment="viewEnd"
+                    android:textSize="14sp" />
 
-    <LinearLayout
-        android:id="@+id/connectionQuality"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:focusable="true"
-        android:orientation="horizontal"
-        android:visibility="gone">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text=":"
+                    android:textSize="14sp"
+                    tools:ignore="HardcodedText" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.5"
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-            android:text="@string/omnipod_dash_overview_bluetooth_connection_quality"
-            android:textAlignment="viewEnd"
-            android:textSize="14sp" />
+                <com.joanzapata.iconify.widget.IconTextView
+                    android:id="@+id/omnipod_dash_bluetooth_status"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.7"
+                    android:paddingStart="2dp"
+                    android:paddingEnd="2dp"
+                    android:textAlignment="viewStart"
+                    android:textSize="14sp"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
 
-        <TextView
-            android:layout_width="5dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:gravity="center_horizontal"
-            android:paddingStart="2dp"
-            android:paddingEnd="2dp"
-            android:text=":"
-            android:textSize="14sp"
-            tools:ignore="HardcodedText" />
+            <!-- Connection Quality -->
+            <LinearLayout
+                android:id="@+id/connectionQuality"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="4dp"
+                android:visibility="gone">
 
-        <com.joanzapata.iconify.widget.IconTextView
-            android:id="@+id/omnipod_dash_bluetooth_connection_quality"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-            android:textAlignment="viewStart"
-            android:textSize="14sp"
-            tools:ignore="HardcodedText" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.3"
+                    android:paddingStart="2dp"
+                    android:paddingEnd="2dp"
+                    android:text="@string/omnipod_dash_overview_bluetooth_connection_quality"
+                    android:textAlignment="viewEnd"
+                    android:textSize="14sp" />
 
-    </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text=":"
+                    android:textSize="14sp"
+                    tools:ignore="HardcodedText" />
 
-    <LinearLayout
-        android:id="@+id/deliveryStatus"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:focusable="true"
-        android:orientation="horizontal"
-        android:visibility="gone">
+                <com.joanzapata.iconify.widget.IconTextView
+                    android:id="@+id/omnipod_dash_bluetooth_connection_quality"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.7"
+                    android:paddingStart="2dp"
+                    android:paddingEnd="2dp"
+                    android:textAlignment="viewStart"
+                    android:textSize="14sp"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.5"
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-            android:text="@string/omnipod_dash_overview_delivery_status"
-            android:textAlignment="viewEnd"
-            android:textSize="14sp" />
+            <!-- Delivery Status -->
+            <LinearLayout
+                android:id="@+id/deliveryStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="4dp"
+                android:visibility="gone">
 
-        <TextView
-            android:layout_width="5dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:gravity="center_horizontal"
-            android:paddingStart="2dp"
-            android:paddingEnd="2dp"
-            android:text=":"
-            android:textSize="14sp"
-            tools:ignore="HardcodedText" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.3"
+                    android:paddingStart="2dp"
+                    android:paddingEnd="2dp"
+                    android:text="@string/omnipod_dash_overview_delivery_status"
+                    android:textAlignment="viewEnd"
+                    android:textSize="14sp" />
 
-        <com.joanzapata.iconify.widget.IconTextView
-            android:id="@+id/omnipod_dash_delivery_status"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-            android:textAlignment="viewStart"
-            android:textSize="14sp"
-            tools:ignore="HardcodedText" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text=":"
+                    android:textSize="14sp"
+                    tools:ignore="HardcodedText" />
 
-    </LinearLayout>
+                <com.joanzapata.iconify.widget.IconTextView
+                    android:id="@+id/omnipod_dash_delivery_status"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.7"
+                    android:paddingStart="2dp"
+                    android:paddingEnd="2dp"
+                    android:textAlignment="viewStart"
+                    android:textSize="14sp"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="2dip"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="5dp"
-        android:background="?android:attr/dividerHorizontal" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 
 </merge>
