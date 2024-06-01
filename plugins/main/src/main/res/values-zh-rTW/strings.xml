@@ -228,8 +228,8 @@
     <string name="thirdcarbsincrement">第三次碳水化合物增量</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">預設臨時目標</string>
-    <string name="eatingsoon_duration">即將進食的持續時間</string>
-    <string name="eatingsoon_target">即將進食的目標</string>
+    <string name="eatingsoon_duration">即將用餐的持續時間</string>
+    <string name="eatingsoon_target">即將用餐的目標</string>
     <string name="activity_duration">活動持續時間</string>
     <string name="activity_target">活動目標</string>
     <string name="hypo_duration">低血糖持續時間</string>
