@@ -14,7 +14,7 @@
     <string name="insulinlimitviolation">胰島素限制違規</string>
     <string name="boluserrorcode">請求：%1$.2fU 已注射：%2$.2fU 錯誤代碼：%3$s</string>
     <string name="danar_valuenotsetproperly">值未正確設定</string>
-    <string name="danar_setbasalstep001">設定基礎速率步長為 0.01 U/h</string>
+    <string name="danar_setbasalstep001">設定基礎速率為 0.01 U/h</string>
     <string name="resetpairing">重置配對資訊？</string>
     <string name="dana_model">%1$s\n型號：%2$02X\n協議：%3$02X\n代碼：%4$02X</string>
     <string name="processinghistory">處理事件</string>
@@ -115,6 +115,6 @@
     <string name="press_ok_on_the_pump">在幫浦上按下 OK\n並輸入顯示的兩個數字\n按下減號按鈕以保持幫浦顯示開啟，直到輸入完成。</string>
     <string name="num1pin">1:（12 位數字）</string>
     <string name="num2pin">2:（8 位數字）</string>
-    <string name="basal_bolus_step">基礎速率/注射步長</string>
+    <string name="basal_bolus_step">基礎速率/注射</string>
     <string name="carbs_store_error">碳水化合物可能未正確存儲。如有需要，請手動檢查並重新存儲。</string>
 </resources>
