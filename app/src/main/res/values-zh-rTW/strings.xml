@@ -7,13 +7,13 @@
     <string name="nav_refreshtreatments">從 NS 重新整理治療</string>
     <string name="nav_exit">退出</string>
     <string name="delta">增量</string>
-    <string name="profile_label">個人資料</string>
+    <string name="profile_label">個人設置</string>
     <string name="save">儲存</string>
-    <string name="reloadprofile">重新載入個人資料</string>
+    <string name="reloadprofile">重新載入個人設置</string>
     <string name="correctionbous">修正</string>
     <string name="ns_upload_only">(停用此功能有危險) 只上傳到 NS</string>
-    <string name="ns_upload_only_summary">僅上傳到 NS (停用同步)。除非選擇像 xDrip+ 這樣的本地來源，否則對 SGV 無效。使用 NS-Profiles 時，對個人資料無效。\n!!! 警告 !!! 停用此選項可能會導致故障和胰島素過量，如果您的任何組件 (AAPS、NS、xDrip+) 配置錯誤。請仔細觀察 AAPS 顯示的資料是否與幫浦狀態匹配！</string>
-    <string name="wear">穿戴</string>
+    <string name="ns_upload_only_summary">僅上傳到 NS (停用同步)。除非選擇像 xDrip+ 這樣的本地來源，否則對 SGV 無效。使用 NS-Profiles 時，對個人設置無效。\n!!! 警告 !!! 停用此選項可能會導致故障和胰島素過量，如果您的任何組件 (AAPS、NS、xDrip+) 配置錯誤。請仔細觀察 AAPS 顯示的資料是否與幫浦狀態匹配！</string>
+    <string name="wear">穿戴裝置</string>
     <string name="nav_about">關於</string>
     <string name="smscommunicator_missingphonestatepermission">缺少電話狀態權限</string>
     <string name="sensitivity_warning">開啟自動感應功能時請記得輸入所有進食的碳水化合物。否則碳水化合物偏差將被錯誤識別為敏感性變化！</string>
@@ -39,7 +39,7 @@
     <string name="clearqueueconfirm">清除佇列？佇列中的所有資料將丟失！</string>
     <string name="chartmenu">圖表選單</string>
     <string name="authorizationfailed">授權失敗</string>
-    <string name="copytolocalprofile_invalid">無法建立個人資料。個人資料無效。</string>
+    <string name="copytolocalprofile_invalid">無法建立個人設置。個人設置無效。</string>
     <string name="clear_filter">清除篩選器</string>
     <string name="cannula">套管</string>
     <string name="email_address">電子郵件地址</string>
