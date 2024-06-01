@@ -169,7 +169,7 @@
     <string name="simple_ui_charging">充電時</string>
     <string name="simple_ui_always_on">始終開啟模式</string>
     <string name="simple_ui_always_on_charging">始終開啟和充電時</string>
-    <string name="temp_target_eating_soon">即將進食</string>
+    <string name="temp_target_eating_soon">即將用餐</string>
     <string name="temp_target_hypo">低血糖</string>
     <string name="temp_target_activity">活動</string>
     <string name="temp_target_manual">手動</string>
@@ -192,7 +192,7 @@
     <string name="cob_000g">000g</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00U</string>
-    <string name="snooze_alert">AAPS 暫停警報</string>
+    <string name="snooze_alert">AAPS 延遲警報</string>
     <string name="sending_snooze">發送暫停到 AAPS</string>
     <string name="short_hour">小時</string>
     <string name="week_short">週</string>
