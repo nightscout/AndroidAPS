@@ -28,7 +28,7 @@
     <string name="extended_boluses">延長注射</string>
     <string name="carbohydrates">碳水化合物</string>
     <string name="careportal_events">Careportal 事件（不包括備註）</string>
-    <string name="profile_switches">個人資料切換</string>
+    <string name="profile_switches">個人設置切換</string>
     <string name="total_daily_doses">每日總劑量</string>
     <string name="temporary_basal_rates">臨時基礎速率</string>
     <string name="temporary_targets">臨時目標</string>
