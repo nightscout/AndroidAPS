@@ -237,7 +237,7 @@
     <string name="glucosetype_sensor">感測器</string>
     <string name="manual">手動</string>
     <string name="unknown">未知</string>
-    <string name="eatingsoon">即將進食</string>
+    <string name="eatingsoon">即將用餐</string>
     <string name="hypo">低血糖</string>
     <string name="activity">活動</string>
     <string name="wear">穿戴裝置</string>
