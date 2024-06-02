@@ -121,7 +121,7 @@
     <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">啟用不確定 SMB 通知音效</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">啟用不確定胰島素劑量通知音效</string>
     <!-- Omnipod - Pod Status -->
-    <string name="omnipod_common_pod_status_no_active_pod">無活躍的 Pod</string>
+    <string name="omnipod_common_pod_status_no_active_pod">無可用的 Pod</string>
     <string name="omnipod_common_pod_status_waiting_for_activation">設置進行中（等待 Pod 啟動）</string>
     <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">設置進行中（等待插入套管）</string>
     <string name="omnipod_common_pod_status_running">運行中</string>
@@ -165,7 +165,7 @@
     <string name="omnipod_common_alert_low_reservoir">低儲存槽</string>
     <string name="omnipod_common_alert_unknown_alert">未知警報</string>
     <!-- Omnipod - Short status -->
-    <string name="omnipod_common_short_status_no_active_pod">無活躍的 Pod</string>
+    <string name="omnipod_common_short_status_no_active_pod">無可用的 Pod</string>
     <string name="omnipod_common_short_status_last_connection">最後連線：%1$d 分鐘前</string>
     <string name="omnipod_common_short_status_last_bolus">最後劑量：%1$s @ %2$s</string>
     <string name="omnipod_common_short_status_temp_basal">臨時基礎率：%1$s</string>
