@@ -10,7 +10,7 @@
     <string name="label_watchface_custom">AAPS(自訂)</string>
     <string name="label_actions_tile">AAPS(動作)</string>
     <string name="label_temp_target_tile">AAPS(臨時目標)</string>
-    <string name="label_quick_wizard_tile">AAPS(快速精靈)</string>
+    <string name="label_quick_wizard_tile">AAPS(快速嚮導)</string>
     <string name="label_warning_sync">無資料！</string>
     <string name="label_warning_old">資料過舊！</string>
     <string name="label_warning_since">自 %1$s 起</string>
@@ -93,7 +93,7 @@
     <string name="quick_wizard_short">XL</string>
     <string name="action_duration">持續時間</string>
     <string name="action_tempt_confirmation">已請求臨時目標</string>
-    <string name="action_quick_wizard_confirmation">已請求快速精靈</string>
+    <string name="action_quick_wizard_confirmation">已請求快速嚮導</string>
     <string name="action_treatment_confirmation">已請求治療</string>
     <string name="action_bolus_confirmation">已請求注射</string>
     <string name="action_wizard_confirmation">已請求計算</string>
