@@ -17,13 +17,13 @@
     <string name="bolus_delivered_successfully">注射 %1$.2f U 已成功送達</string>
     <string name="no_valid_basal_rate">未從幫浦讀取到有效的基礎率</string>
     <string name="limiting_iob">因 %2$s 限制 IOB 為 %1$.1f U</string>
-    <string name="loop_disabled">迴路因限制已停用</string>
+    <string name="loop_disabled">閉環因限制已停用</string>
     <string name="event_type">事件類型</string>
     <string name="reload">重新載入</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="save">儲存</string>
-    <string name="snooze">延遲</string>
+    <string name="snooze">延遲提醒</string>
     <string name="virtual_pump">虛擬幫浦</string>
     <string name="constraints">限制</string>
     <string name="superbolus">超級注射</string>
@@ -89,7 +89,7 @@
     <string name="removerecord">移除記錄</string>
     <string name="loopisdisabled">閉環已停用</string>
     <string name="alarm">警報</string>
-    <string name="disableloop">停用迴路</string>
+    <string name="disableloop">停用閉環</string>
     <string name="enableloop">啟用閉環</string>
     <string name="resumeloop">恢復閉環</string>
     <string name="suspendloop">暫停閉環</string>
@@ -235,15 +235,15 @@
     <string name="boluswizard">注射響導</string>
     <string name="glucosetype_finger">手指</string>
     <string name="glucosetype_sensor">感測器</string>
-    <string name="manual">手動</string>
+    <string name="manual">手動操作</string>
     <string name="unknown">未知</string>
     <string name="eatingsoon">即將用餐</string>
     <string name="hypo">低血糖</string>
     <string name="activity">活動</string>
-    <string name="wear">穿戴裝置</string>
+    <string name="wear">WearOS手錶</string>
     <string name="automation">自動化</string>
     <string name="custom">自訂</string>
-    <string name="loop">迴路</string>
+    <string name="loop">閉環</string>
     <string name="ns">NS</string>
     <string name="record">記錄</string>
     <!--    Command-->
@@ -363,8 +363,8 @@
     <string name="ue_action">操作</string>
     <string name="ue_timestamp">時間戳記</string>
     <string name="ue_none">無單位</string>
-    <string name="uel_loop_change">迴路已更改</string>
-    <string name="uel_loop_removed">迴路已移除</string>
+    <string name="uel_loop_change">閉環已更改</string>
+    <string name="uel_loop_removed">閉環已移除</string>
     <string name="uel_other">其他</string>
     <!-- HardLimits -->
     <string name="profile_low_target">設定檔低目標</string>
@@ -418,14 +418,14 @@
     <string name="info">資訊</string>
     <!-- BolusWizard -->
     <string name="bolus_advisor">注射顧問</string>
-    <string name="bolus_advisor_message">您的血糖過高。建議不要立即進食，等待血糖恢復正常。您想現在進行修正注射並提醒您何時進食嗎？這種情況下不會記錄碳水化合物，當我們提醒您時，您必須再次使用響導。</string>
+    <string name="bolus_advisor_message">您的血糖過高。建議不要立即用餐，等待血糖恢復正常。您想現在進行修正注射，並提醒您何時用餐嗎？這種情況下不會記錄碳水化合物，當我們提醒您時，您必須再次使用響導。</string>
     <string name="cobvsiob">COB 對 IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! 檢測到碳水化合物吸收緩慢：%2$d%% 的時間。請再次檢查您的計算。COB 可能被高估，因此可能會注射更多的胰島素 !!!!!</font>]]></string>
     <string name="partialboluswizard">傳送此部分的注射響導結果 [%]</string>
     <string name="partialboluswizard_reset_time">舊血糖時間閾值 [分鐘]</string>
     <string name="bolus_constraint_applied_warn">注射限制已套用：%1$.2f U 至 %2$.2f U</string>
     <string name="bolus_recorded_only">僅記錄注射（不由幫浦傳送）</string>
-    <string name="advisoralarm">當到達進食時間時運行警報</string>
+    <string name="advisoralarm">當到達用餐時間時提醒我</string>
     <string name="no_action_selected">未選擇任何操作，無事發生</string>
     <string name="carb_equal_zero_no_action">碳水化合物 = 0。未採取任何行動！</string>
     <string name="wizard_no_insulin_required">不需要胰島素！</string>
