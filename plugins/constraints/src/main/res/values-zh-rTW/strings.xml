@@ -30,7 +30,7 @@
     <string name="closed_loop_disabled_on_dev_branch">運行開發版本。閉環已停用。</string>
     <string name="closed_loop_disabled_with_eb">由於運行延長注射已停用閉環</string>
     <string name="smbalwaysdisabled">由於活動的BG源不支援高級過濾，SMB總是並在碳水化合物後停用</string>
-    <string name="smbnotallowedinopenloopmode">在開放環模式中不允許SMB</string>
+    <string name="smbnotallowedinopenloopmode">在開環模式中不允許SMB</string>
     <string name="maxvalueinpreferences">偏好設定中的最大值</string>
     <string name="hardlimit">硬限制</string>
     <string name="treatmentssafety_title">治療安全</string>
