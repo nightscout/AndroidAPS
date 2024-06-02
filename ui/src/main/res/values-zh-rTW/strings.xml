@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bolus_constraint_applied">已套用輸注限制</string>
+    <string name="bolus_constraint_applied">已套用注射限制</string>
     <string name="carbs_constraint_applied">已套用碳水化合物限制</string>
     <string name="temp_target_short">TT</string>
     <string name="dialog_canceled">對話框已取消</string>
@@ -9,7 +9,7 @@
     <string name="start_hypo_tt">開始低血糖(臨時目標)</string>
     <string name="time_offset">時間偏移</string>
     <string name="unit_minute_short">分鐘</string>
-    <string name="remind_to_bolus_later">稍後提醒輸注</string>
+    <string name="remind_to_bolus_later">稍後提醒注射</string>
     <string name="a11y_carb_reminder">設定提醒</string>
     <!--    Widget-->
     <string name="configure">配置透明度</string>
@@ -93,7 +93,7 @@
     <string name="prime">預填充</string>
     <string name="profile_changes">設定檔變更</string>
     <string name="tempt_targets">臨時目標</string>
-    <string name="carbs_and_bolus">碳水化合物與輸注</string>
+    <string name="carbs_and_bolus">碳水化合物與注射</string>
     <string name="show_invalidated_records">顯示無效/已移除記錄</string>
     <string name="hide_invalidated_records">隱藏無效/已移除記錄</string>
     <string name="refresh_from_nightscout">從 Nightscout 重新整理</string>
@@ -118,8 +118,8 @@
     <string name="motol_default_profile">預設設定檔</string>
     <string name="current_profile">當前設定檔</string>
     <string name="available_profile">可用設定檔</string>
-    <string name="format_with_tdd">年齡：%1$d 總每日劑量：%2$.0f U</string>
-    <string name="format_with_tdd_and_pct">年齡：%1$d 總每日劑量：%2$.0f U %3$d%%</string>
+    <string name="format_with_tdd">年齡：%1$d 每日總劑量：%2$.0f U</string>
+    <string name="format_with_tdd_and_pct">年齡：%1$d 每日總劑量：%2$.0f U %3$d%%</string>
     <string name="format_with_weight">年齡：%1$d 體重：%2$.0f kg</string>
     <string name="dpv_default_profile">DPV 預設設定檔</string>
     <string name="invalid_pct">無效的百分比輸入</string>
@@ -137,7 +137,7 @@
     <string name="overview_edit_quickwizard_list_activity_add">新增</string>
     <string name="overview_quickwizard_item_edit_button">編輯</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">僅使用正 IOB</string>
-    <string name="overview_edit_quickwizard_superbolus">超級輸注</string>
+    <string name="overview_edit_quickwizard_superbolus">超級注射</string>
     <string name="overview_edit_quickwizard_percentage_too_high">百分比過高！</string>
     <string name="overview_editquickwizard_percentage">百分比</string>
     <string name="a11y_drag_and_drop_handle">拖放操作把手</string>
