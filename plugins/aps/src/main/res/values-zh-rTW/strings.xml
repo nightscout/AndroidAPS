@@ -40,7 +40,7 @@
     <string name="openapsma_autosensdata_label">自動靈敏度資料</string>
     <string name="openapsma_script_debug_data_label">腳本除錯</string>
     <string name="openapsama_use_autosens">使用自動靈敏度功能</string>
-    <string name="openapsma_max_basal_title">Temp Basal可以設置的最大U/h</string>
+    <string name="openapsma_max_basal_title">臨時基礎率可以設置的最大U/h</string>
     <string name="openapsma_max_basal_summary">在OpenAPS上下文中，這個值稱為最大基礎率</string>
     <string name="openapsma_max_iob_title">OpenAPS可以提供的最大基礎IOB [U]</string>
     <string name="openapsma_max_iob_summary">在OpenAPS上下文中，這個值稱為最大IOB\n這是APS一次可以提供的最大胰島素量 [U]。</string>
@@ -59,7 +59,7 @@
     <string name="openapssmb_max_iob_summary">在OpenAPS上下文中，這個值稱為最大IOB\n如果當前IOB大於此值，OpenAPS將不會增加更多胰島素</string>
     <string name="enable_uam">啟用UAM</string>
     <string name="enable_smb">啟用SMB</string>
-    <string name="enable_smb_summary">使用超微小注射(SMB)來取代臨時基礎率，以便更快地作用</string>
+    <string name="enable_smb_summary">使用超微量注射(SMB)來取代臨時基礎率，以便更快地作用</string>
     <string name="enable_uam_summary">檢測未宣布的餐點</string>
     <string name="enable_smb_always">始終啟用SMB</string>
     <string name="enable_smb_always_summary">始終啟用SMB，獨立於注射。僅適用於具有良好資料過濾的BG來源，如G5</string>
@@ -68,7 +68,7 @@
     <string name="enable_smb_with_cob">在COB存在時啟用SMB</string>
     <string name="enable_smb_with_cob_summary">在COB活躍時啟用SMB。</string>
     <string name="enable_smb_with_temp_target">在有臨時目標時啟用SMB</string>
-    <string name="enable_smb_with_temp_target_summary">有臨時目標時啟用SMB（即將進食，運動）</string>
+    <string name="enable_smb_with_temp_target_summary">有臨時目標時啟用SMB（即將用餐，運動）</string>
     <string name="enable_smb_with_high_temp_target">在高臨時目標時啟用SMB</string>
     <string name="enable_smb_with_high_temp_target_summary">在高臨時目標活躍時啟用SMB（運動，超過100 mg/dl或5.5 mmol/l）</string>
     <string name="smb_max_minutes_summary">限制SMB的最大基礎分鐘數</string>
@@ -126,7 +126,7 @@
     <string name="autotune_auto_title">自動切換檔案</string>
     <string name="autotune_auto_summary">如果啟用，自動調整將在計算後自動更新並切換到輸入檔案。</string>
     <string name="autotune_categorize_uam_as_basal_title">將UAM分類為基礎率</string>
-    <string name="autotune_categorize_uam_as_basal_summary">僅在您已可靠地輸入所有進食的碳水化合物時啟用此選項，這樣自動調整會使用突然而至的升高來推薦基礎率的變更。</string>
+    <string name="autotune_categorize_uam_as_basal_summary">僅在您已可靠地輸入所有用餐的碳水化合物時啟用此選項，這樣自動調整會使用突然而至的升高來推薦基礎率的變更。</string>
     <string name="autotune_tune_insulin_curve_title">調整胰島素曲線</string>
     <string name="autotune_tune_insulin_curve_summary">僅在您使用自由峰值時啟用此選項。這個選項將調整峰值和DIA的持續時間</string>
     <string name="autotune_default_tune_days_title">資料天數</string>
