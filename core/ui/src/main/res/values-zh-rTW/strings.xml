@@ -8,7 +8,7 @@
     <string name="bolus_delivering">正在注射 %1$.2f U</string>
     <string name="constraint_applied">已套用限制！</string>
     <string name="tempbasals_iobtotal_label_string">總 IOB：</string>
-    <string name="tt_label">TT</string>
+    <string name="tt_label">臨時目標</string>
     <string name="pump_unreachable">幫浦無法使用</string>
     <string name="insulin_unit_shortname">U</string>
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
