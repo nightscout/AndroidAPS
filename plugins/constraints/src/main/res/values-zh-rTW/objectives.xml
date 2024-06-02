@@ -15,7 +15,7 @@
     <string name="objectives_maxbasal_gate">根據經驗，決定應設置的最大基礎速率，並在幫浦和偏好設定中設置。在簡單模式下，這個值根據Wiki中的建議計算，不需要設置。</string>
     <string name="objectives_maxbasal">執行動作以滿足建議</string>
     <string name="objectives_maxbasal_learned">注意安全功能，必要時調整安全參數。</string>
-    <string name="objectives_maxiobzero_objective">開始以低血糖維持功能閉環</string>
+    <string name="objectives_maxiobzero_objective">開始以低血糖暫停功能閉環</string>
     <string name="objectives_maxiobzero_gate">在最大IOB=0的情況下運行閉環幾天，而不會有太多低血糖事件。在簡單模式下，這個值根據Wiki中的建議計算，不需要設置。</string>
     <string name="objectives_maxiobzero_learned">將MaxIOB設置為零可防止低血糖，且不會增加超過基礎速率的胰島素（除非IOB為負）。</string>
     <string name="objectives_maxiob_objective">調整閉環，將最大IOB提高到0以上，並逐步降低血糖目標</string>
