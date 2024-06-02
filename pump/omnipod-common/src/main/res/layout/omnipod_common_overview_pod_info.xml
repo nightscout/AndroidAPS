@@ -54,23 +54,14 @@
                             android:paddingStart="4dp"
                             android:paddingEnd="4dp"
                             android:text="@string/omnipod_common_overview_errors"
-                            android:textAlignment="viewEnd"
+                            android:textAlignment="viewStart"
                             android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:text=":"
-                            android:textSize="14sp"
-                            android:layout_marginEnd="8dp"
-                            tools:ignore="HardcodedText" />
 
                         <TextView
                             android:id="@+id/errors"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2.0"
+                            android:layout_weight="2.5"
                             android:paddingStart="4dp"
                             android:paddingEnd="4dp"
                             android:textAlignment="viewStart"
@@ -92,23 +83,14 @@
                             android:paddingStart="4dp"
                             android:paddingEnd="4dp"
                             android:text="@string/omnipod_common_overview_pod_active_alerts"
-                            android:textAlignment="viewEnd"
+                            android:textAlignment="viewStart"
                             android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:text=":"
-                            android:textSize="14sp"
-                            android:layout_marginEnd="8dp"
-                            tools:ignore="HardcodedText" />
 
                         <TextView
                             android:id="@+id/pod_active_alerts"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2.0"
+                            android:layout_weight="2.5"
                             android:paddingStart="4dp"
                             android:paddingEnd="4dp"
                             android:textAlignment="viewStart"
@@ -130,23 +112,14 @@
                             android:paddingStart="4dp"
                             android:paddingEnd="4dp"
                             android:text="@string/omnipod_common_overview_pod_expiry_date"
-                            android:textAlignment="viewEnd"
+                            android:textAlignment="viewStart"
                             android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:text=":"
-                            android:textSize="14sp"
-                            android:layout_marginEnd="8dp"
-                            tools:ignore="HardcodedText" />
 
                         <TextView
                             android:id="@+id/pod_expiry_date"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2.0"
+                            android:layout_weight="2.5"
                             android:paddingStart="4dp"
                             android:paddingEnd="4dp"
                             android:textAlignment="viewStart"
@@ -197,23 +170,14 @@
                             android:paddingStart="4dp"
                             android:paddingEnd="4dp"
                             android:text="@string/omnipod_common_overview_reservoir"
-                            android:textAlignment="viewEnd"
+                            android:textAlignment="viewStart"
                             android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:text=":"
-                            android:textSize="14sp"
-                            android:layout_marginEnd="8dp"
-                            tools:ignore="HardcodedText" />
 
                         <TextView
                             android:id="@+id/reservoir"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2.0"
+                            android:layout_weight="2.5"
                             android:paddingStart="4dp"
                             android:paddingEnd="4dp"
                             android:textAlignment="viewStart"
@@ -234,23 +198,14 @@
                             android:paddingStart="4dp"
                             android:paddingEnd="4dp"
                             android:text="@string/omnipod_common_overview_total_delivered"
-                            android:textAlignment="viewEnd"
+                            android:textAlignment="viewStart"
                             android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:text=":"
-                            android:textSize="14sp"
-                            android:layout_marginEnd="8dp"
-                            tools:ignore="HardcodedText" />
 
                         <TextView
                             android:id="@+id/total_delivered"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2.0"
+                            android:layout_weight="2.5"
                             android:paddingStart="4dp"
                             android:paddingEnd="4dp"
                             android:textAlignment="viewStart"
@@ -271,23 +226,14 @@
                             android:paddingStart="4dp"
                             android:paddingEnd="4dp"
                             android:text="@string/omnipod_common_overview_base_basal_rate"
-                            android:textAlignment="viewEnd"
+                            android:textAlignment="viewStart"
                             android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:text=":"
-                            android:textSize="14sp"
-                            android:layout_marginEnd="8dp"
-                            tools:ignore="HardcodedText" />
 
                         <TextView
                             android:id="@+id/base_basal_rate"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2.0"
+                            android:layout_weight="2.5"
                             android:paddingStart="4dp"
                             android:paddingEnd="4dp"
                             android:textAlignment="viewStart"
@@ -308,23 +254,14 @@
                             android:paddingStart="4dp"
                             android:paddingEnd="4dp"
                             android:text="@string/omnipod_common_overview_temp_basal_rate"
-                            android:textAlignment="viewEnd"
+                            android:textAlignment="viewStart"
                             android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:text=":"
-                            android:textSize="14sp"
-                            android:layout_marginEnd="8dp"
-                            tools:ignore="HardcodedText" />
 
                         <TextView
                             android:id="@+id/temp_basal"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2.0"
+                            android:layout_weight="2.5"
                             android:paddingStart="4dp"
                             android:paddingEnd="4dp"
                             android:textAlignment="viewStart"
@@ -374,23 +311,14 @@
                             android:paddingStart="4dp"
                             android:paddingEnd="4dp"
                             android:text="@string/omnipod_common_overview_pod_status"
-                            android:textAlignment="viewEnd"
+                            android:textAlignment="viewStart"
                             android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:text=":"
-                            android:textSize="14sp"
-                            android:layout_marginEnd="8dp"
-                            tools:ignore="HardcodedText" />
 
                         <com.joanzapata.iconify.widget.IconTextView
                             android:id="@+id/pod_status"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2.0"
+                            android:layout_weight="2.5"
                             android:paddingStart="4dp"
                             android:paddingEnd="4dp"
                             android:text=""
@@ -412,23 +340,14 @@
                             android:paddingStart="4dp"
                             android:paddingEnd="4dp"
                             android:text="@string/omnipod_common_overview_last_connection"
-                            android:textAlignment="viewEnd"
+                            android:textAlignment="viewStart"
                             android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:text=":"
-                            android:textSize="14sp"
-                            android:layout_marginEnd="8dp"
-                            tools:ignore="HardcodedText" />
 
                         <TextView
                             android:id="@+id/last_connection"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2.0"
+                            android:layout_weight="2.5"
                             android:paddingStart="4dp"
                             android:paddingEnd="4dp"
                             android:textAlignment="viewStart"
@@ -449,23 +368,14 @@
                             android:paddingStart="4dp"
                             android:paddingEnd="4dp"
                             android:text="@string/omnipod_common_overview_last_bolus"
-                            android:textAlignment="viewEnd"
+                            android:textAlignment="viewStart"
                             android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:text=":"
-                            android:textSize="14sp"
-                            android:layout_marginEnd="8dp"
-                            tools:ignore="HardcodedText" />
 
                         <TextView
                             android:id="@+id/last_bolus"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2.0"
+                            android:layout_weight="2.5"
                             android:paddingStart="4dp"
                             android:paddingEnd="4dp"
                             android:textAlignment="viewStart"
@@ -516,23 +426,14 @@
                             android:paddingStart="4dp"
                             android:paddingEnd="4dp"
                             android:text="@string/omnipod_common_overview_pod_unique_id"
-                            android:textAlignment="viewEnd"
+                            android:textAlignment="viewStart"
                             android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:text=":"
-                            android:textSize="14sp"
-                            android:layout_marginEnd="8dp"
-                            tools:ignore="HardcodedText" />
 
                         <TextView
                             android:id="@+id/unique_id"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2.0"
+                            android:layout_weight="2.5"
                             android:paddingStart="4dp"
                             android:paddingEnd="4dp"
                             android:textAlignment="viewStart"
@@ -555,23 +456,14 @@
                             android:paddingStart="4dp"
                             android:paddingEnd="4dp"
                             android:text="@string/omnipod_common_overview_lot_number"
-                            android:textAlignment="viewEnd"
+                            android:textAlignment="viewStart"
                             android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:text=":"
-                            android:textSize="14sp"
-                            android:layout_marginEnd="8dp"
-                            tools:ignore="HardcodedText" />
 
                         <TextView
                             android:id="@+id/pod_lot"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2.0"
+                            android:layout_weight="2.5"
                             android:paddingStart="4dp"
                             android:paddingEnd="4dp"
                             android:textAlignment="viewStart"
@@ -593,23 +485,14 @@
                             android:paddingStart="4dp"
                             android:paddingEnd="4dp"
                             android:text="@string/omnipod_common_overview_pod_sequence_number"
-                            android:textAlignment="viewEnd"
+                            android:textAlignment="viewStart"
                             android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:text=":"
-                            android:textSize="14sp"
-                            android:layout_marginEnd="8dp"
-                            tools:ignore="HardcodedText" />
 
                         <TextView
                             android:id="@+id/pod_sequence_number"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2.0"
+                            android:layout_weight="2.5"
                             android:paddingStart="4dp"
                             android:paddingEnd="4dp"
                             android:textAlignment="viewStart"
@@ -631,23 +514,14 @@
                             android:paddingStart="4dp"
                             android:paddingEnd="4dp"
                             android:text="@string/omnipod_common_overview_firmware_version"
-                            android:textAlignment="viewEnd"
+                            android:textAlignment="viewStart"
                             android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:text=":"
-                            android:textSize="14sp"
-                            android:layout_marginEnd="8dp"
-                            tools:ignore="HardcodedText" />
 
                         <TextView
                             android:id="@+id/firmware_version"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2.0"
+                            android:layout_weight="2.5"
                             android:paddingStart="4dp"
                             android:paddingEnd="4dp"
                             android:textAlignment="viewStart"
@@ -669,23 +543,14 @@
                             android:paddingStart="4dp"
                             android:paddingEnd="4dp"
                             android:text="@string/omnipod_common_overview_time_on_pod"
-                            android:textAlignment="viewEnd"
+                            android:textAlignment="viewStart"
                             android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:text=":"
-                            android:textSize="14sp"
-                            android:layout_marginEnd="8dp"
-                            tools:ignore="HardcodedText" />
 
                         <TextView
                             android:id="@+id/time_on_pod"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2.0"
+                            android:layout_weight="2.5"
                             android:paddingStart="4dp"
                             android:paddingEnd="4dp"
                             android:textAlignment="viewStart"

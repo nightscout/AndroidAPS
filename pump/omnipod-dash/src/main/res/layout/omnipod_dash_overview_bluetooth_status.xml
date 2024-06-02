@@ -41,23 +41,14 @@
                     android:paddingStart="4dp"
                     android:paddingEnd="4dp"
                     android:text="@string/omnipod_dash_overview_bluetooth_address"
-                    android:textAlignment="viewEnd"
+                    android:textAlignment="viewStart"
                     android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text=":"
-                    android:textSize="14sp"
-                    android:layout_marginEnd="8dp"
-                    tools:ignore="HardcodedText" />
 
                 <TextView
                     android:id="@+id/omnipod_dash_bluetooth_address"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2.0"
+                    android:layout_weight="2.5"
                     android:paddingStart="4dp"
                     android:paddingEnd="4dp"
                     android:textAlignment="viewStart"
@@ -79,23 +70,14 @@
                     android:paddingStart="4dp"
                     android:paddingEnd="4dp"
                     android:text="@string/omnipod_dash_overview_bluetooth_status"
-                    android:textAlignment="viewEnd"
+                    android:textAlignment="viewStart"
                     android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text=":"
-                    android:textSize="14sp"
-                    android:layout_marginEnd="8dp"
-                    tools:ignore="HardcodedText" />
 
                 <com.joanzapata.iconify.widget.IconTextView
                     android:id="@+id/omnipod_dash_bluetooth_status"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2.0"
+                    android:layout_weight="2.5"
                     android:paddingStart="4dp"
                     android:paddingEnd="4dp"
                     android:textAlignment="viewStart"
@@ -119,23 +101,14 @@
                     android:paddingStart="4dp"
                     android:paddingEnd="4dp"
                     android:text="@string/omnipod_dash_overview_bluetooth_connection_quality"
-                    android:textAlignment="viewEnd"
+                    android:textAlignment="viewStart"
                     android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text=":"
-                    android:textSize="14sp"
-                    android:layout_marginEnd="8dp"
-                    tools:ignore="HardcodedText" />
 
                 <com.joanzapata.iconify.widget.IconTextView
                     android:id="@+id/omnipod_dash_bluetooth_connection_quality"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2.0"
+                    android:layout_weight="2.5"
                     android:paddingStart="4dp"
                     android:paddingEnd="4dp"
                     android:textAlignment="viewStart"
@@ -159,23 +132,14 @@
                     android:paddingStart="4dp"
                     android:paddingEnd="4dp"
                     android:text="@string/omnipod_dash_overview_delivery_status"
-                    android:textAlignment="viewEnd"
+                    android:textAlignment="viewStart"
                     android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text=":"
-                    android:textSize="14sp"
-                    android:layout_marginEnd="8dp"
-                    tools:ignore="HardcodedText" />
 
                 <com.joanzapata.iconify.widget.IconTextView
                     android:id="@+id/omnipod_dash_delivery_status"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2.0"
+                    android:layout_weight="2.5"
                     android:paddingStart="4dp"
                     android:paddingEnd="4dp"
                     android:textAlignment="viewStart"
