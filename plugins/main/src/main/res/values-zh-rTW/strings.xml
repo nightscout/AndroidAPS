@@ -247,11 +247,11 @@
     <string name="deliverpartofboluswizard">注射嚮導執行計算，但僅輸送計算出的部分胰島素。對SMB算法有用。</string>
     <string name="deliver_part_of_boluswizard_reset_time">如果血糖值超過，則輸送全部注射（100%）</string>
     <string name="enable_bolus_advisor">啟用注射建議</string>
-    <string name="enable_bolus_advisor_summary">使用提醒來延後開始用餐，而不是在高血糖期間使用嚮導結果（“預注射”）</string>
+    <string name="enable_bolus_advisor_summary">提醒需要延後用餐，不要在高血糖期間用餐（“應提早注射”）</string>
     <string name="enablesuperbolus">在嚮導中啟用超級注射</string>
     <string name="enablesuperbolus_summary">在嚮導中啟用超級注射功能。在了解其實際功能之前不要啟用。盲目使用可能會導致胰島素過量！</string>
     <string name="enablebolusreminder">啟用注射提醒</string>
-    <string name="enablebolusreminder_summary">使用提醒在嚮導中稍後進行注射（“後注射”）</string>
+    <string name="enablebolusreminder_summary">使用提醒，在提示後再進行注射（\"後注射\"）</string>
     <string name="run_question">運行 %s？</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">預測</string>
