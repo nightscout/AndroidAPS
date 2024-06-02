@@ -17,7 +17,7 @@
     <string name="bolus_delivered_successfully">注射 %1$.2f U 已成功送達</string>
     <string name="no_valid_basal_rate">未從幫浦讀取到有效的基礎率</string>
     <string name="limiting_iob">因 %2$s 限制 IOB 為 %1$.1f U</string>
-    <string name="loop_disabled">閉環因限制已停用</string>
+    <string name="loop_disabled">循環因限制已停用</string>
     <string name="event_type">事件類型</string>
     <string name="reload">重新載入</string>
     <string name="mgdl">mg/dl</string>
@@ -65,7 +65,7 @@
     <string name="carbs">碳水化合物</string>
     <string name="invalid_profile">無效的設定檔！</string>
     <string name="no_profile_set">未設置設定檔</string>
-    <string name="active"><![CDATA[<啟動>]]></string>
+    <string name="active"><![CDATA[<已啟用的設定檔>]]></string>
     <string name="date">日期</string>
     <string name="units_label">單位</string>
     <string name="dia_label">DIA</string>
@@ -87,12 +87,12 @@
     <string name="pump_time_updated">幫浦時間已更新</string>
     <string name="exit">退出</string>
     <string name="removerecord">移除記錄</string>
-    <string name="loopisdisabled">閉環已停用</string>
+    <string name="loopisdisabled">循環已停用</string>
     <string name="alarm">警報</string>
-    <string name="disableloop">停用閉環</string>
-    <string name="enableloop">啟用閉環</string>
-    <string name="resumeloop">恢復閉環</string>
-    <string name="suspendloop">暫停閉環</string>
+    <string name="disableloop">停用循環</string>
+    <string name="enableloop">啟用循環</string>
+    <string name="resumeloop">恢復循環</string>
+    <string name="suspendloop">暫停循環</string>
     <string name="duration_min_label">持續時間 [分鐘]</string>
     <string name="notification">通知</string>
     <string name="noprofile">尚未從 NS 載入設定檔</string>
@@ -119,7 +119,7 @@
     <string name="shortgramm">g</string>
     <string name="pumpsuspended">幫浦已暫停</string>
     <string name="notconfigured">未配置</string>
-    <string name="loopsuspended">閉環已暫停</string>
+    <string name="loopsuspended">循環已暫停</string>
     <string name="trend_arrow">趨勢箭頭</string>
     <string name="a11y_autosens_label">自動感應</string>
     <string name="required">需要</string>
@@ -147,7 +147,7 @@
     <string name="confirm_remove_multiple_items">您確定要移除 %1$d 項目嗎</string>
     <string name="overview_treatment_label">治療</string>
     <string name="copytolocalprofile">從此設定檔建立新設定檔？</string>
-    <string name="wear_wizard_settings">響導設定</string>
+    <string name="wear_wizard_settings">嚮導設定</string>
     <string name="bg_trend_label">15 分鐘趨勢</string>
     <string name="treatments_wizard_cob_label">COB 活性碳水</string>
     <string name="bolus_iob_label">注射 IOB</string>
@@ -166,7 +166,7 @@
     <string name="canceling_tbr_failed">取消臨時基礎率失敗</string>
     <string name="canceling_eb_failed">取消延長注射失敗</string>
     <string name="virtualpump_uploadstatus_title">上傳幫浦狀態到 NS 或 Tidepool</string>
-    <string name="suspendloop_label">停用/暫停閉環</string>
+    <string name="suspendloop_label">停用/暫停循環</string>
     <string name="iob_label">已注入胰島素 (IOB)</string>
     <string name="loopstatus_targets">目標：</string>
     <string name="loopstatus_OAPS_result">OAPS 結果：</string>
@@ -232,7 +232,7 @@
     <string name="temporary_target">臨時目標</string>
     <string name="careportal_temporarytargetvalue">臨時目標值</string>
     <string name="careportal_temporarytargetcancel">臨時目標取消</string>
-    <string name="boluswizard">注射響導</string>
+    <string name="boluswizard">注射嚮導</string>
     <string name="glucosetype_finger">手指</string>
     <string name="glucosetype_sensor">傳感器</string>
     <string name="manual">手動操作</string>
@@ -243,7 +243,7 @@
     <string name="wear">WearOS手錶</string>
     <string name="automation">自動化</string>
     <string name="custom">自訂</string>
-    <string name="loop">閉環</string>
+    <string name="loop">循環</string>
     <string name="ns">NS</string>
     <string name="record">記錄</string>
     <!--    Command-->
@@ -288,10 +288,10 @@
     <string name="uel_profile_switch">設定檔切換</string>
     <string name="uel_profile_switch_cloned">設定檔切換已複製</string>
     <string name="uel_closed_loop_mode">閉環模式</string>
-    <string name="uel_lgs_loop_mode">LGS 閉環模式</string>
+    <string name="uel_lgs_loop_mode">低血糖暫停循環模式</string>
     <string name="uel_open_loop_mode">開環模式</string>
-    <string name="uel_loop_disabled">閉環停用</string>
-    <string name="uel_loop_enabled">閉環啟用</string>
+    <string name="uel_loop_disabled">循環停用</string>
+    <string name="uel_loop_enabled">循環啟用</string>
     <string name="uel_reconnect">重新連線</string>
     <string name="uel_disconnect">斷線</string>
     <string name="uel_resume">恢復</string>
@@ -363,8 +363,8 @@
     <string name="ue_action">操作</string>
     <string name="ue_timestamp">時間戳記</string>
     <string name="ue_none">無單位</string>
-    <string name="uel_loop_change">閉環已更改</string>
-    <string name="uel_loop_removed">閉環已移除</string>
+    <string name="uel_loop_change">循環已更改</string>
+    <string name="uel_loop_removed">循環已移除</string>
     <string name="uel_other">其他</string>
     <!-- HardLimits -->
     <string name="profile_low_target">設定檔低目標</string>
@@ -418,10 +418,10 @@
     <string name="info">資訊</string>
     <!-- BolusWizard -->
     <string name="bolus_advisor">注射顧問</string>
-    <string name="bolus_advisor_message">您的血糖過高。建議不要立即用餐，等待血糖恢復正常。您想現在進行修正注射，並提醒您何時用餐嗎？這種情況下不會記錄碳水化合物，當我們提醒您時，您必須再次使用響導。</string>
+    <string name="bolus_advisor_message">您的血糖過高。建議不要立即用餐，等待血糖恢復正常。您想現在進行修正注射，並提醒您何時用餐嗎？這種情況下不會記錄碳水化合物，當我們提醒您時，您必須再次使用嚮導。</string>
     <string name="cobvsiob">COB 對 IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! 檢測到碳水化合物吸收緩慢：%2$d%% 的時間。請再次檢查您的計算。COB 可能被高估，因此可能會注射更多的胰島素 !!!!!</font>]]></string>
-    <string name="partialboluswizard">傳送此部分的注射響導結果 [%]</string>
+    <string name="partialboluswizard">傳送一部分的注射嚮導結果 [%]</string>
     <string name="partialboluswizard_reset_time">舊血糖時間閾值 [分鐘]</string>
     <string name="bolus_constraint_applied_warn">注射限制已套用：%1$.2f U 至 %2$.2f U</string>
     <string name="bolus_recorded_only">僅記錄注射（不由幫浦傳送）</string>
@@ -445,7 +445,7 @@
     <string name="wizard_explain_tt">臨時目標：%1$s</string>
     <string name="wizard_explain_tt_to">%1$s 至 %2$s</string>
     <string name="wizard_pump_not_available">無可用幫浦！</string>
-    <string name="quickwizard">快速響導</string>
+    <string name="quickwizard">快速嚮導</string>
     <!--    Preferences-->
     <string name="child">兒童</string>
     <string name="teenage">青少年</string>
