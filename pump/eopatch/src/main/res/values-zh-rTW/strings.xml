@@ -65,7 +65,7 @@
     <string name="patch_remove_protection_tape">貼上貼片</string>
     <string name="patch_remove_protection_tape_step">4/6</string>
     <string name="patch_remove_protection_tape_desc_1">清潔並乾燥應用部位，然後將貼片貼在皮膚上。</string>
-    <string name="patch_remove_protection_tape_desc_2">檢查輸注部位，然後點擊“開始安全檢查”。</string>
+    <string name="patch_remove_protection_tape_desc_2">檢查注射部位，然後點擊“開始安全檢查”。</string>
     <string name="patch_start_safety_check">開始安全檢查</string>
     <string name="patch_safety_check">安全檢查…</string>
     <string name="patch_safety_check_step">5/6</string>
