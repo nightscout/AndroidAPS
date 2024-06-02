@@ -6,7 +6,7 @@
     <string name="alert_r4_title">更換輸液組</string>
     <string name="alert_r7_title">臨時基礎率完成</string>
     <string name="alert_w31_title">卡匣剩餘量低</string>
-    <string name="alert_w32_title">電池電量低</string>
+    <string name="alert_w32_title">電池電量過低</string>
     <string name="alert_w33_title">無效的時間/日期</string>
     <string name="alert_w34_title">保固到期</string>
     <string name="alert_w36_title">臨時基礎率取消</string>
