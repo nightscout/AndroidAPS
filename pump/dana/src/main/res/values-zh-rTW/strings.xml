@@ -8,7 +8,7 @@
     <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
     <string name="description_pump_dana_rs">DANA Diabecare RS 和 Dana-i 幫浦的幫浦整合</string>
-    <string name="maxbolusviolation">最大注射違規</string>
+    <string name="maxbolusviolation">違度最大注射原則</string>
     <string name="commanderror">命令錯誤</string>
     <string name="speederror">速度錯誤</string>
     <string name="insulinlimitviolation">胰島素限制違規</string>
