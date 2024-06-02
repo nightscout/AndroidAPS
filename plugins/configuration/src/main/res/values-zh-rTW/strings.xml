@@ -54,7 +54,7 @@
     <string name="error_asking_for_permissions">請求權限時出錯</string>
     <string name="alert_dialog_permission_battery_optimization_failed">此設備似乎不支援電池優化白名單 - 您可能會遇到效能問題。</string>
     <!--    ConfigBuilder-->
-    <string name="config_builder">配置構建器</string>
+    <string name="config_builder">建構設定檔</string>
     <string name="configbuilder_pump">幫浦</string>
     <string name="configbuilder_pump_description">您想用AAPS使用哪個幫浦？</string>
     <string name="configbuilder_profile">檔案</string>
