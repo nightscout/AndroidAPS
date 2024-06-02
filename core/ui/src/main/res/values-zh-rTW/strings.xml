@@ -429,7 +429,7 @@
     <string name="no_action_selected">未選擇任何操作，無事發生</string>
     <string name="carb_equal_zero_no_action">碳水化合物 = 0。未採取任何行動！</string>
     <string name="wizard_no_insulin_required">不需要胰島素！</string>
-    <string name="wizard_no_actual_bg">無最近的 BG 可用於計算！</string>
+    <string name="wizard_no_actual_bg">沒有最近的血糖值可用於計算！</string>
     <string name="wizard_no_active_profile">未設置活動設定檔！</string>
     <string name="wizard_no_cob">未知的 COB！BG 讀數丟失或最近的應用程式重啟？</string>
     <string name="wizard_carbs_constraint">碳水化合物限制違規！</string>
