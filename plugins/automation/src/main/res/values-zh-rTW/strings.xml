@@ -125,8 +125,8 @@
     <string name="add_automation">新增規則</string>
     <string name="stop_processing">停止處理</string>
     <!--    Reminders-->
-    <string name="time_to_eat">該吃飯了！\n運行注射精靈並重新計算。</string>
-    <string name="time_to_bolus">該注射了！\n運行注射精靈並重新計算。</string>
+    <string name="time_to_eat">該吃飯了！\n運行注射嚮導並重新計算。</string>
+    <string name="time_to_bolus">該注射了！\n運行注射嚮導並重新計算。</string>
     <string name="error_setting_reminder">設置未來警報時出錯</string>
     <!--    Autotune-->
     <string name="autotune_profile_name">自動調整檔案 %1$s</string>
