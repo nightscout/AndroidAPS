@@ -8,14 +8,14 @@
     <string name="objectives_0_objective">設置可視化和監控，分析基礎速率和比率</string>
     <string name="objectives_0_gate">驗證在Nightscout中可用的血糖資料，並上傳幫浦胰島素資料</string>
     <string name="objectives_0_learned">您已完成AAPS生態系統的基本設置。Nightscout對於AAPS運行不是必需的，但對於報告或監控其他患者非常有用。如果您僅使用Nightscout來為自己報告，則不必一直連線到NS。您可以設置僅在家庭WiFi上傳，節省電池。</string>
-    <string name="objectives_openloop_objective">開放環模式啟動</string>
-    <string name="objectives_openloop_gate">在開放環模式下運行幾天，手動執行許多臨時基礎速率。設置和使用臨時和預設臨時目標（例如，活動或低血糖治療碳水化合物）</string>
-    <string name="objectives_openloop_learned">如果您沒有兼容的幫浦或者尚未準備好閉環，開放環可用於建議。</string>
-    <string name="objectives_maxbasal_objective">了解您的開放環，包括其臨時基礎速率建議</string>
+    <string name="objectives_openloop_objective">開環模式啟動</string>
+    <string name="objectives_openloop_gate">在開環模式下運行幾天，手動執行許多臨時基礎速率。設置和使用臨時和預設臨時目標（例如，活動或低血糖治療碳水化合物）</string>
+    <string name="objectives_openloop_learned">如果您沒有兼容的幫浦或者尚未準備好閉環，開環可用於建議。</string>
+    <string name="objectives_maxbasal_objective">了解您的開環，包括其臨時基礎速率建議</string>
     <string name="objectives_maxbasal_gate">根據經驗，決定應設置的最大基礎速率，並在幫浦和偏好設定中設置。在簡單模式下，這個值根據Wiki中的建議計算，不需要設置。</string>
     <string name="objectives_maxbasal">執行動作以滿足建議</string>
     <string name="objectives_maxbasal_learned">注意安全功能，必要時調整安全參數。</string>
-    <string name="objectives_maxiobzero_objective">開始以低血糖懸浮功能閉環</string>
+    <string name="objectives_maxiobzero_objective">開始以低血糖維持功能閉環</string>
     <string name="objectives_maxiobzero_gate">在最大IOB=0的情況下運行閉環幾天，而不會有太多低血糖事件。在簡單模式下，這個值根據Wiki中的建議計算，不需要設置。</string>
     <string name="objectives_maxiobzero_learned">將MaxIOB設置為零可防止低血糖，且不會增加超過基礎速率的胰島素（除非IOB為負）。</string>
     <string name="objectives_maxiob_objective">調整閉環，將最大IOB提高到0以上，並逐步降低血糖目標</string>
@@ -36,12 +36,12 @@
     <string name="accomplished">已完成：%1$s</string>
     <string name="objectives_usage_objective">學習如何控制AAPS</string>
     <string name="objectives_usage_gate">在AAPS中執行不同操作</string>
-    <string name="objectives_usage_learned">您已學會處理AAPS的基本操作。主控件在概覽螢幕上可通過點擊或長按訪問，更多控件在操作螢幕上。您應該知道如何將外掛螢幕放到頂部可滾動選單，或讓它顯示在左上角的已啟用外掛列表中。</string>
-    <string name="objectives_useprofileswitch">將個人配置檔設為90%持續10分鐘 (長按首頁概覽左上角的配置檔名稱)</string>
-    <string name="objectives_usedisconnectpump">模擬淋浴。斷開幫浦連線1小時（長按開放環）</string>
+    <string name="objectives_usage_learned">您已學會處理AAPS的基本操作。主控件在首頁概覽螢幕上可通過點擊或長按訪問，更多控件在操作螢幕上。您應該知道如何將外掛螢幕放到頂部可滾動選單，或讓它顯示在左上角的已啟用外掛列表中。</string>
+    <string name="objectives_useprofileswitch">將個人配置檔設為90%持續10分鐘 (長按首頁首頁概覽左上角的配置檔名稱)</string>
+    <string name="objectives_usedisconnectpump">模擬淋浴。斷開幫浦連線1小時（長按開環）</string>
     <string name="objectives_usereconnectpump">... 並以同樣方式重新連線</string>
     <string name="objectives_usetemptarget">建立持續10分鐘的自定義臨時目標（長按當前目標）</string>
-    <string name="objectives_useactions">在配置構建器中啟用動作外掛，使其可見並顯示其內容在頂部選單</string>
+    <string name="objectives_useactions">在建構設定檔中啟用動作外掛，使其可見並顯示其內容在頂部選單</string>
     <string name="objectives_useloop">顯示循環外掛的內容</string>
     <string name="objectives_usescale">通過長按血糖圖使用縮放功能</string>
     <string name="objectives_exam_objective">證明您的知識</string>
