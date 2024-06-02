@@ -8,7 +8,7 @@
     <string name="cwf_comment_freetext3">自訂義文字 3</string>
     <string name="cwf_comment_freetext4">自訂義文字 4</string>
     <string name="cwf_comment_iob1">IOB 標籤或詳細資料時的 IOB 總和</string>
-    <string name="cwf_comment_iob2">IOB 總和或詳細資料時的（輸注 IOB | 基礎率 IOB）</string>
+    <string name="cwf_comment_iob2">IOB 總和或詳細資料時的（注射 IOB | 基礎率 IOB）</string>
     <string name="cwf_comment_cob1">COB 標籤</string>
     <string name="cwf_comment_cob2">COB 值</string>
     <string name="cwf_comment_delta">短期血糖變化</string>
