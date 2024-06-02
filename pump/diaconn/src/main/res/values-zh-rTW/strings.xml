@@ -32,7 +32,7 @@
     <string name="description_pump_diaconn_g8">Diaconn G8 幫浦整合</string>
     <string name="diaconn_g8_pump">Diaconn G8</string>
     <string name="diaconn_g8_pump_shortname">Diaconn G8</string>
-    <string name="maxbolusviolation">最大劑量違規</string>
+    <string name="maxbolusviolation">違度最大劑量原則</string>
     <string name="commanderror">指令錯誤</string>
     <string name="speederror">速度錯誤</string>
     <string name="insulinlimitviolation">胰島素限制違規</string>
@@ -132,7 +132,7 @@
     <string name="diaconn_g8_errorcode_1">由於封包 CRC 錯誤，無法查詢。</string>
     <string name="diaconn_g8_errorcode_2">無法設置為輸入參數錯誤。</string>
     <string name="diaconn_g8_errorcode_3">無法設置為協議規範錯誤。</string>
-    <string name="diaconn_g8_errorcode_4">進食時間，無法注射。</string>
+    <string name="diaconn_g8_errorcode_4">用餐時間，無法注射。</string>
     <string name="diaconn_g8_errorcode_6">被幫浦取消</string>
     <string name="diaconn_g8_errorcode_7">執行其他操作，限制應用設置。</string>
     <string name="diaconn_g8_errorcode_8">在另一個注射過程中，限制注射。</string>
