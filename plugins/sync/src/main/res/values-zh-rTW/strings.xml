@@ -181,8 +181,8 @@
     <string name="no_profile">缺少個人設置載入</string>
     <string name="aps_only">僅適用於 APS 模式！</string>
     <string name="last_aps_result_na">最後結果不可用！</string>
-    <string name="loop_status_closed">關閉循環</string>
-    <string name="loop_status_open">開放循環</string>
+    <string name="loop_status_closed">閉環</string>
+    <string name="loop_status_open">開環</string>
     <string name="loop_status_disabled">循環停用</string>
     <string name="aps">APS</string>
     <string name="last_run">上次運行</string>
