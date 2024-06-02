@@ -49,9 +49,9 @@
     <string name="smscommunicator_tt_set">目標 %1$s 持續 %2$d 分鐘設置成功</string>
     <string name="smscommunicator_tt_canceled">臨時目標取消成功</string>
     <string name="smscommunicator_remote_commands_allowed">允許通過SMS進行遠端命令</string>
-    <string name="smscommunicator_loop_has_been_disabled">閉環已停用</string>
-    <string name="smscommunicator_loop_has_been_enabled">閉環已啟用</string>
-    <string name="smscommunicator_loop_is_enabled">閉環已啟用</string>
+    <string name="smscommunicator_loop_has_been_disabled">循環已停用</string>
+    <string name="smscommunicator_loop_has_been_enabled">循環已啟用</string>
+    <string name="smscommunicator_loop_is_enabled">循環已啟用</string>
     <string name="smscommunicator_pump_connect_with_code">要連線幫浦請回覆代碼 %1$s</string>
     <string name="smscommunicator_pump_connect_fail">連線幫浦失敗</string>
     <string name="smscommunicator_pump_disconnect_with_code">要斷開幫浦連線 %1$d 分鐘請回覆代碼 %2$s</string>
@@ -64,10 +64,10 @@
     <string name="smscommunicator_extended_reply_with_code">要開始延長注射 %1$.2f U 持續 %2$d 分鐘請回覆代碼 %3$s</string>
     <string name="smscommunicator_carbs_reply_with_code">要輸入 %1$dg 在 %2$s 請回覆代碼 %3$s</string>
     <string name="smscommunicator_basal_pct_reply_with_code">要開始基礎速率 %1$d%% 持續 %2$d 分鐘請回覆代碼 %3$s</string>
-    <string name="smscommunicator_suspend_reply_with_code">要暫停閉環 %1$d 分鐘請回覆代碼 %2$s</string>
-    <string name="smscommunicator_loop_resume_reply_with_code">要恢復閉環請回覆代碼 %1$s</string>
-    <string name="smscommunicator_loop_enable_reply_with_code">要啟用閉環請回覆代碼 %1$s</string>
-    <string name="smscommunicator_loop_disable_reply_with_code">要停用閉環請回覆代碼 %1$s</string>
+    <string name="smscommunicator_suspend_reply_with_code">要暫停循環 %1$d 分鐘請回覆代碼 %2$s</string>
+    <string name="smscommunicator_loop_resume_reply_with_code">要恢復循環請回覆代碼 %1$s</string>
+    <string name="smscommunicator_loop_enable_reply_with_code">要啟用循環請回覆代碼 %1$s</string>
+    <string name="smscommunicator_loop_disable_reply_with_code">要停用循環請回覆代碼 %1$s</string>
     <string name="smscommunicator_tempbasal_set">臨時基礎速率 %1$.2fU/h 持續 %2$d 分鐘已成功開始</string>
     <string name="smscommunicator_extended_set">延長注射 %1$.2fU 持續 %2$d 分鐘已成功開始</string>
     <string name="smscommunicator_carbs_set">碳水化合物 %1$d g 已成功輸入</string>
@@ -84,17 +84,17 @@
     <string name="smscommunicator_unknown_command">未知命令或錯誤的回覆</string>
     <string name="smscommunicator_another_bolus_in_queue">有另一個注射在隊列中。請稍後再試。</string>
     <string name="smscommunicator_wrong_duration">錯誤的持續時間</string>
-    <string name="smscommunicator_loop_suspended">閉環已暫停</string>
-    <string name="smscommunicator_loop_resumed">閉環已恢復</string>
+    <string name="smscommunicator_loop_suspended">循環已暫停</string>
+    <string name="smscommunicator_loop_resumed">循環已恢復</string>
     <string name="smscommunicator_invalid_phone_number">無效的SMS電話號碼</string>
     <string name="smscommunicator_calibration_sent">校準已發送。接收必須在xDrip+中啟用。</string>
     <string name="smscommunicator_calibration_failed">xDrip+未接收校準</string>
     <string name="smscommunicator_message_body">無效的訊息內容</string>
     <string name="smscommunicator_report_pump_unreachable_summary">當幫浦無法使用事件觸發時發送SMS</string>
     <string name="smscommunicator_pump_unreachable">報告幫浦無法使用</string>
-    <string name="smscommunicator_set_lgs_reply_with_code">要將閉環模式切換為LGS（低血糖維持）請回覆代碼 %1$s</string>
-    <string name="smscommunicator_set_closed_loop_reply_with_code">要將閉環模式切換為閉環請回覆代碼 %1$s</string>
-    <string name="smscommunicator_current_loop_mode">當前閉環模式：%1$s</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">要將循環模式切換為LGS（低血糖維持）請回覆代碼 %1$s</string>
+    <string name="smscommunicator_set_closed_loop_reply_with_code">要將循環模式切換為閉環請回覆代碼 %1$s</string>
+    <string name="smscommunicator_current_loop_mode">當前循環模式：%1$s</string>
     <string name="wrong_format">錯誤的格式</string>
     <string name="sms_actual_bg">BG：</string>
     <string name="sms_last_bg">最後BG：</string>
@@ -108,7 +108,7 @@
     <string name="sms_profile_switch_created">配置切換已建立</string>
     <string name="sms_wrong_tbr_duration">TBR持續時間必須是 %1$d 分鐘的倍數且大於0。</string>
     <string name="a11y_otp_qr_code">設置一次性密碼的QR Code</string>
-    <string name="disabled_loop">閉環已停用</string>
+    <string name="disabled_loop">循環已停用</string>
     <!-- Food-->
     <string name="food_short">食物</string>
     <string name="description_food">顯示在Nightscout中定義的食物預設</string>
@@ -201,7 +201,7 @@
     <string name="overview_cgm">CGM</string>
     <string name="overview">首頁概覽</string>
     <string name="overview_shortname">主頁</string>
-    <string name="description_overview">顯示當前閉環狀態和最常用操作的按鈕</string>
+    <string name="description_overview">顯示當前循環狀態和最常用操作的按鈕</string>
     <string name="overview_buttons_selection">按鈕</string>
     <string name="show_calibration_button_summary">向xDrip+發送校準或打開BYODA校準對話框</string>
     <string name="show_cgm_button_summary">打開xDrip+或BYODA，返回按鈕返回AAPS</string>
@@ -244,12 +244,12 @@
     <string name="high_mark">高標記</string>
     <string name="short_tabtitles">縮短標籤標題</string>
     <string name="overview_show_notes_field_in_dialogs_title">在治療對話框中顯示備註欄</string>
-    <string name="deliverpartofboluswizard">注射嚮導執行計算，但僅輸送計算出的部分胰島素。對SMB算法有用。</string>
+    <string name="deliverpartofboluswizard">注射嚮導執行計算，但僅輸送計算出的一部分胰島素。對SMB算法有用。</string>
     <string name="deliver_part_of_boluswizard_reset_time">如果血糖值超過，則輸送全部注射（100%）</string>
     <string name="enable_bolus_advisor">啟用注射建議</string>
     <string name="enable_bolus_advisor_summary">提醒需要延後用餐，不要在高血糖期間用餐（“應提早注射”）</string>
     <string name="enablesuperbolus">在嚮導中啟用超級注射</string>
-    <string name="enablesuperbolus_summary">在嚮導中啟用超級注射功能。在了解其實際功能之前不要啟用。盲目使用可能會導致胰島素過量！</string>
+    <string name="enablesuperbolus_summary">在嚮導中啟用超級注射功能。在暸解其實際功能之前不要啟用。盲目使用可能會導致胰島素過量！</string>
     <string name="enablebolusreminder">啟用注射提醒</string>
     <string name="enablebolusreminder_summary">使用提醒，在提示後再進行注射（\"後注射\"）</string>
     <string name="run_question">運行 %s？</string>
@@ -291,7 +291,7 @@
     <!--    Iob-->
     <string name="send_logfiles">將今天的日誌文件與此時間一起發送給開發人員。意外情況。</string>
     <!--    PersistentNotification-->
-    <string name="description_persistent_notification">顯示持續通知，簡要概述您的閉環正在執行的操作</string>
+    <string name="description_persistent_notification">顯示持續通知，簡要概述您的循環正在執行的操作</string>
     <string name="old_data">舊資料</string>
     <string name="overview_show_steps">步數</string>
     <string name="steps_shortname">步數</string>
