@@ -14,7 +14,7 @@
     <string name="cwf_comment_delta">短期血糖變化</string>
     <string name="cwf_comment_avg_delta">平均血糖變化（15 分鐘）</string>
     <string name="cwf_comment_uploader_battery">手機電池電量 (%)</string>
-    <string name="cwf_comment_rig_battery">全域環電池電量 (%)</string>
+    <string name="cwf_comment_rig_battery">全域循環電池電量 (%)</string>
     <string name="cwf_comment_basalRate">基礎率</string>
     <string name="cwf_comment_bgi">BGI 值</string>
     <string name="cwf_comment_time">時間（HH:MM 或 HH:MM:SS）</string>
@@ -26,7 +26,7 @@
     <string name="cwf_comment_day">日期（DD）</string>
     <string name="cwf_comment_week_number">週數（ww）</string>
     <string name="cwf_comment_month">月份名稱（簡短）</string>
-    <string name="cwf_comment_loop">迴圈狀態及時間</string>
+    <string name="cwf_comment_loop">循環狀態及時間</string>
     <string name="cwf_comment_direction">方向箭頭</string>
     <string name="cwf_comment_timestamp">最後收到血糖的分鐘數</string>
     <string name="cwf_comment_sgv">血糖值</string>
