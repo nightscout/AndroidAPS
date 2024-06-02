@@ -50,7 +50,7 @@
     <string name="exerciseprofile_switchprofilebelow100">進行個人設置切換到低於100%。</string>
     <string name="exerciseprofile_switchprofileabove100">進行個人設置切換到高於100%。</string>
     <string name="exerciseprofile_leaveat100">將個人設置設置為100%。</string>
-    <string name="exerciseprofile_suspendloop">暫停閉環。</string>
+    <string name="exerciseprofile_suspendloop">暫停循環。</string>
     <string name="exerciseprofile_hint1">https://wiki.aaps.app/en/latest/Usage/temptarget.html#activity-temp-target</string>
     <string name="exercise_label">運動與臨時目標</string>
     <string name="exercise_whattodo">如何使用臨時目標來幫助系統最好地應對有氧運動？</string>
@@ -59,7 +59,7 @@
     <string name="exercise_setunchanged">保持您的血糖目標不變。</string>
     <string name="exercise_15g">等待血糖降至低血糖臨時目標以下，然後攝取15克快速作用的碳水化合物。</string>
     <string name="exercise_hint1">https://wiki.aaps.app/en/latest/Usage/temptarget.html#activity-temp-target</string>
-    <string name="suspendloop_doigetinsulin">在停用/暫停閉環時，我會接收到胰島素嗎？</string>
+    <string name="suspendloop_doigetinsulin">在停用/暫停循環時，我會接收到胰島素嗎？</string>
     <string name="suspendloop_yes">是的，基礎胰島素將繼續輸送。</string>
     <string name="suspendloop_no">不會，胰島素輸送將停止。</string>
     <string name="basaltest_label">基礎、ISF和I:C測試</string>
@@ -225,5 +225,5 @@
     <string name="basalhelp_facebook">Facebook</string>
     <string name="other_medication_label">其他藥物。請閱讀以下聲明並勾選框以接受聲明。</string>
     <string name="other_medication_text">AAPS會降低基礎速率或暫停胰島素輸送以提高血糖。SGLT2抑制劑類藥物（格列佛寧）可以防止血糖上升，從而可能導致危險的胰島素缺乏，引起DKA。
-\n常見的品牌名有：Invokana®、Forxiga®、Jardiance®、Steglatro®、Suglat®、Apleway®、Deberza®、Synjardy®、Vokanamet®、Xigduo®。\n\n我在此承諾，在使用AAPS時不會服用此類藥物，或在使用此類藥物之前停用閉環。</string>
+\n常見的品牌名有：Invokana®、Forxiga®、Jardiance®、Steglatro®、Suglat®、Apleway®、Deberza®、Synjardy®、Vokanamet®、Xigduo®。\n\n我在此承諾，在使用AAPS時不會服用此類藥物，或在使用此類藥物之前停用循環。</string>
 </resources>
