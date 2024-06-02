@@ -16,7 +16,7 @@
     <string name="label_warning_since">自 %1$s 起</string>
     <string name="label_warning_sync_aaps">與 AAPS 同步！</string>
     <string name="msg_warning_sync">自 %1$s 起無接收到資料！請檢查手機上的 AAPS 是否將資料傳送到手錶</string>
-    <string name="msg_warning_old">AAPS 資料已過期 %1$s！請檢查您的感應器、xDrip+、NS、AAPS 配置或其他！</string>
+    <string name="msg_warning_old">AAPS 資料已過期 %1$s！請檢查您的傳感器、xDrip+、NS、AAPS 配置或其他！</string>
     <string name="pref_vibrate_on_bolus">注射時震動</string>
     <string name="pref_units_for_actions">動作單位</string>
     <string name="units_short">U</string>
@@ -114,7 +114,7 @@
     <string name="action_preset_3">預設 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">自訂數量</string>
     <string name="action_confirm">確認</string>
-    <string name="action_timeshift">時間移動</string>
+    <string name="action_timeshift">時間偏移</string>
     <string name="action_bolus">注射</string>
     <string name="bolus_progress">注射進度</string>
     <string name="press_to_cancel">按下取消</string>
@@ -176,7 +176,7 @@
     <string name="temp_target_cancel">取消</string>
     <string name="tile_none">無</string>
     <string name="tile_no_config">無可用配置</string>
-    <string name="wear_control_not_enabled">穿戴控制已停用</string>
+    <string name="wear_control_not_enabled">Wear控制已停用</string>
     <string name="wear_control_no_data">無可用資料</string>
     <string name="increment">增加</string>
     <string name="decrement">減少</string>
