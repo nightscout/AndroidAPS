@@ -92,7 +92,7 @@
     <string name="smscommunicator_message_body">無效的訊息內容</string>
     <string name="smscommunicator_report_pump_unreachable_summary">當幫浦無法使用事件觸發時發送SMS</string>
     <string name="smscommunicator_pump_unreachable">報告幫浦無法使用</string>
-    <string name="smscommunicator_set_lgs_reply_with_code">要將閉環模式切換為LGS（低血糖懸浮）請回覆代碼 %1$s</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">要將閉環模式切換為LGS（低血糖維持）請回覆代碼 %1$s</string>
     <string name="smscommunicator_set_closed_loop_reply_with_code">要將閉環模式切換為閉環請回覆代碼 %1$s</string>
     <string name="smscommunicator_current_loop_mode">當前閉環模式：%1$s</string>
     <string name="wrong_format">錯誤的格式</string>
@@ -199,7 +199,7 @@
     <string name="a11y_bg_outdated">過期</string>
     <string name="set_basal_question">接受新的臨時基礎速率：</string>
     <string name="overview_cgm">CGM</string>
-    <string name="overview">概覽</string>
+    <string name="overview">首頁概覽</string>
     <string name="overview_shortname">主頁</string>
     <string name="description_overview">顯示當前閉環狀態和最常用操作的按鈕</string>
     <string name="overview_buttons_selection">按鈕</string>
@@ -239,7 +239,7 @@
     <string name="button2">按鈕2</string>
     <string name="button3">按鈕3</string>
     <string name="prefs_range_title">可視化範圍</string>
-    <string name="prefs_range_summary">概覽和智慧手錶中圖表的高低標記</string>
+    <string name="prefs_range_summary">首頁概覽和智慧手錶中圖表的高低標記</string>
     <string name="low_mark">低標記</string>
     <string name="high_mark">高標記</string>
     <string name="short_tabtitles">縮短標籤標題</string>
@@ -247,7 +247,7 @@
     <string name="deliverpartofboluswizard">注射嚮導執行計算，但僅輸送計算出的部分胰島素。對SMB算法有用。</string>
     <string name="deliver_part_of_boluswizard_reset_time">如果血糖值超過，則輸送全部注射（100%）</string>
     <string name="enable_bolus_advisor">啟用注射建議</string>
-    <string name="enable_bolus_advisor_summary">使用提醒來延後開始進食，而不是在高血糖期間使用嚮導結果（“預注射”）</string>
+    <string name="enable_bolus_advisor_summary">使用提醒來延後開始用餐，而不是在高血糖期間使用嚮導結果（“預注射”）</string>
     <string name="enablesuperbolus">在嚮導中啟用超級注射</string>
     <string name="enablesuperbolus_summary">在嚮導中啟用超級注射功能。在了解其實際功能之前不要啟用。盲目使用可能會導致胰島素過量！</string>
     <string name="enablebolusreminder">啟用注射提醒</string>
