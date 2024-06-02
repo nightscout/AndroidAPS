@@ -77,7 +77,6 @@
     <string name="carbs_req_threshold">建議碳水化合物的最低碳水化合物量</string>
     <string name="carbs_req_threshold_summary">顯示碳水化合物建議警報的最低碳水化合物克數。低於此數字的碳水化合物建議不會觸發通知。</string>
     <string name="lgs_threshold_summary">低於此值將暫停胰島素的BG值。預設值使用標準目標模型。用戶可以設置60mg/dl（3.3mmol/l）到100mg/dl（5.5mmol/l）之間的值。低於65/3.6的值將使用預設模型</string>
-    <string name="lgs_threshold_title">低血糖暫停發生的BG水平</string>
     <string name="increasing_max_basal">增加最大基礎值，因為設置低於您的最大基礎檔案</string>
     <string name="max_basal_multiplier">最大基礎乘數</string>
     <string name="max_daily_basal_multiplier">最大每日基礎乘數</string>
@@ -97,7 +96,7 @@
     <string name="smb_frequency_exceeded">在過去3分鐘內已經進行了一次注射，跳過SMB</string>
     <string name="pump_not_initialized">幫浦未初始化！</string>
     <string name="loop_shortname">LOOP</string>
-    <string name="description_loop">啟用或停用觸發迴圈的實作。</string>
+    <string name="description_loop">啟用或停用觸發閉環。</string>
     <string name="no_aps_selected">未選擇或提供結果的APS</string>
     <string name="ignore5m">忽略5分鐘</string>
     <string name="ignore15m">忽略15分鐘</string>
