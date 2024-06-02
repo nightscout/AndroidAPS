@@ -214,9 +214,9 @@
     <string name="careportal_question_message">問題：%1$s</string>
     <string name="careportal_exercise_message">運動：%1$s</string>
     <string name="careportal_pump_site_change">幫浦位置更改</string>
-    <string name="cgm_sensor_insert">CGM 感測器插入</string>
-    <string name="careportal_cgmsensorstart">CGM 感測器啟動</string>
-    <string name="careportal_cgm_sensor_stop">CGM 感測器停止</string>
+    <string name="cgm_sensor_insert">CGM 傳感器植入</string>
+    <string name="careportal_cgmsensorstart">CGM 傳感器啟動</string>
+    <string name="careportal_cgm_sensor_stop">CGM 傳感器停止</string>
     <string name="careportal_dad_alert">D.A.D. 警報</string>
     <string name="careportal_insulin_cartridge_change">胰島素匣更換</string>
     <string name="careportal_profileswitch">設定檔切換</string>
@@ -234,7 +234,7 @@
     <string name="careportal_temporarytargetcancel">臨時目標取消</string>
     <string name="boluswizard">注射響導</string>
     <string name="glucosetype_finger">手指</string>
-    <string name="glucosetype_sensor">感測器</string>
+    <string name="glucosetype_sensor">傳感器</string>
     <string name="manual">手動操作</string>
     <string name="unknown">未知</string>
     <string name="eatingsoon">即將用餐</string>
