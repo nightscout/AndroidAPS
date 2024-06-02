@@ -74,7 +74,7 @@
     <string name="no_profile_selected">未選擇設定檔。請選擇設定檔後重試。</string>
     <string name="no_sn_in_settings">未知序列號。請在設定中輸入幫浦底座序列號並重試。</string>
     <string name="base_serial">幫浦底座序列號: %1$X</string>
-    <string name="patch_begin_activation">無活躍貼片。按 <b>下一步</b> 開始啟動過程。</string>
+    <string name="patch_begin_activation">無可用的貼片。按 <b>下一步</b> 開始啟動過程。</string>
     <string name="patch_not_active_note">幫浦底座應該在下一步之前不要連線到貼片！</string>
     <string name="connect_pump_base">連線幫浦底座到新貼片，移除殘餘空氣並填充胰島素，然後按 <b>下一步</b>。</string>
     <string name="note_min_70_units">注意: 啟動需要至少 70 單位。</string>
