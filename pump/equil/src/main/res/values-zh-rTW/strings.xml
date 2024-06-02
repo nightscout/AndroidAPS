@@ -45,7 +45,7 @@
     <string name="equil_record_bolus">注射 %1$s U</string>
     <string name="equil_error_set_temp_basal_failed_validation">臨時基礎速率的持續時間必須大於零且為%1$s分鐘的倍數。</string>
     <string name="equil_not_enough_insulin">儲液盒中的胰島素不足</string>
-    <string name="equil_low_battery">電池電量低</string>
+    <string name="equil_low_battery">電池電量過低</string>
     <string name="equil_low_insulin">儲液盒中的胰島素不足</string>
     <string name="equil_pump_not_run">幫浦未運行</string>
     <string name="equil_pair">配對</string>
