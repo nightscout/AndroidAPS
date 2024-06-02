@@ -41,7 +41,7 @@
     <string name="noisycgm_label">干擾的CGM讀數</string>
     <string name="noisycgm_whattodo">如果CGM資料干擾，應該怎麼做？</string>
     <string name="noisycgm_nothing">什麼也不做 - AAPS會處理。</string>
-    <string name="noisycgm_pause">停用閉環以避免可能的過量或不足劑量。</string>
+    <string name="noisycgm_pause">停用閉環以避免可能的過量或劑量不足。</string>
     <string name="noisycgm_replacesensor">更換持續有干擾或不準確的傳感器。</string>
     <string name="noisycgm_checksmoothing">確認您的CGM應用提供平滑的資料。</string>
     <string name="noisycgm_hint1">https://wiki.aaps.app/en/latest/Usage/Smoothing-Blood-Glucose-Data.html#smoothing-blood-glucose-data</string>
@@ -130,7 +130,7 @@
     <string name="wrongcarbs_treatmentstab">在治療選單中刪除錯誤的輸入，然後輸入正確的碳水化合物值。</string>
     <string name="wrongcarbs_addinsulin">使用輸液組的注射選單進行胰島素注射。</string>
     <string name="wrongcarbs_donothing">什麼也不做 - AAPS會進行適當的調整。</string>
-    <string name="wrongcarbs_bolus">在概覽中使用胰島素（注射）按鈕進行注射。</string>
+    <string name="wrongcarbs_bolus">在首頁概覽中使用胰島素（注射）按鈕進行注射。</string>
     <string name="wronginsulin_label">胰島素輸送/輸入錯誤</string>
     <string name="wronginsulin_whattodo">如果您收到的胰島素少於幫浦歷史記錄建議的量（例如因為阻塞、套管失敗或淋浴後忘記重新連線幫浦），應該怎麼做？</string>
     <string name="wronginsulin_careportal">從Nightscout Careportal中刪除胰島素資料以將其從幫浦歷史中移除。</string>
@@ -205,7 +205,7 @@
     <string name="profileswitch2_basalhigher">基礎速率將提高20%。</string>
     <string name="profileswitch2_bgunchanged">目標血糖將保持不變。</string>
     <string name="profileswitch2_isfhigher">ISF將提高20%。</string>
-    <string name="profileswitchtime_label">個人資料切換</string>
+    <string name="profileswitchtime_label">個人設置切換</string>
     <string name="profileswitchtime_iwant">如果您比平時早2小時起床，應如何通知AAPS您的時間表變更？</string>
     <string name="profileswitchtime_2">啟動一個時間偏移為2的個人設置切換</string>
     <string name="profileswitchtime__2">啟動一個時間偏移為-2的個人設置切換</string>
