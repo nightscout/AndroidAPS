@@ -23,7 +23,7 @@
     <string name="overview_bolusprogress_stoped">已停止</string>
     <string name="unsupportedfirmware">不支援的幫浦韌體</string>
     <string name="pumperror">幫浦錯誤</string>
-    <string name="lowbattery">電池電量低</string>
+    <string name="lowbattery">電池電量過低</string>
     <string name="basalcompare">低於預設基礎速率</string>
     <string name="pumpshutdown">幫浦關閉</string>
     <string name="batterydischarged">幫浦電池耗盡</string>
