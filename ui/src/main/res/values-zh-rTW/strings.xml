@@ -30,8 +30,8 @@
     <string name="survey_comment">注意：僅此畫面可見的資料會匿名上傳。ID 是分配給此 AAPS 安裝的。若您的主要設定檔變更，您可以再次提交資料，但請至少運行一週，以確保結果在範圍內可見。我們感謝您的協助。</string>
     <string name="glucose_type">血糖類型</string>
     <string name="bg_other">其他</string>
-    <string name="bg_meter">血糖計</string>
-    <string name="bg_sensor">感應器</string>
+    <string name="bg_meter">血糖機</string>
+    <string name="bg_sensor">傳感器</string>
     <!-- WizardDialog -->
     <string name="format_bg_isf">%1$s ISF：%2$.1f</string>
     <string name="format_cob_ic">%1$.1f g IC：%2$.1f</string>
@@ -45,7 +45,7 @@
     <string name="do_not_bolus_record_only">不注射，僅記錄</string>
     <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">重用 %1$d%% %2$小時</string>
-    <string name="timeshift_label">時間移動</string>
+    <string name="timeshift_label">時間偏移</string>
     <string name="percentage_label">百分比</string>
     <!-- LoopDialog -->
     <string name="suspendloopfor1h">暫停迴圈 1 小時</string>
