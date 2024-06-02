@@ -4,10 +4,10 @@
     <string name="setupwizard_units_prompt">選擇您要顯示值的單位</string>
     <string name="next_button">下一步</string>
     <string name="previous_button">上一步</string>
-    <string name="nav_setupwizard">設定精靈</string>
+    <string name="nav_setupwizard">設定嚮導</string>
     <string name="setupwizard_finish">完成</string>
     <string name="welcome">歡迎</string>
-    <string name="welcometosetupwizard">歡迎使用設定精靈。它將引導您完成設置過程\n</string>
+    <string name="welcometosetupwizard">歡迎使用設定嚮導。它將引導您完成設置過程\n</string>
     <string name="end_user_license_agreement">終端用戶許可協議</string>
     <string name="end_user_license_agreement_text">不得用於醫療決策。本程式不提供任何保證，在適用法律允許的範圍內。除非另有書面說明，版權持有人和/或其他方提供的程式“按現狀”提供，不提供任何明示或暗示的保證，包括但不限於對特定用途的適銷性和適用性的隱含保證。程式的質量和性能風險完全由您承擔。如果程式被證明有缺陷，您將承擔所有必要的服務、維修或更正的費用。</string>
     <string name="end_user_license_agreement_i_understand">我理解並同意</string>
@@ -33,11 +33,11 @@
     <string name="diawarning">請記住：新胰島素檔案需要至少5小時的DIA。在新檔案上DIA 5-6小時等於舊胰島素檔案上的DIA 3小時。</string>
     <string name="profile">檔案</string>
     <string name="doprofileswitch">切換檔案</string>
-    <string name="exitwizard">跳過設定精靈</string>
+    <string name="exitwizard">跳過設定嚮導</string>
     <string name="setupwizard_loop_description">按下面的按鈕啟用AAPS建議/進行基礎變更</string>
     <string name="setupwizard_sensitivity_description">靈敏度外掛用於靈敏度檢測和COB計算。更多資訊請訪問：</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
-    <string name="setupwizard_aps_description">從可用的算法中選擇一個。它們按從舊到新的順序排列。較新的算法通常更強大和更積極。因此，如果您是新手迴圈用戶，可能會從AMA開始，而不是最新的。請勿忘記閱讀OpenAPS文檔並在使用前進行配置。</string>
+    <string name="setupwizard_aps_description">從可用的算法中選擇一個。它們按從舊到新的順序排列。較新的算法通常更強大和更積極。因此，如果您是新手循環用戶，可能會從AMA開始，而不是最新的。請勿忘記閱讀OpenAPS文檔並在使用前進行配置。</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">請在下方配置您的RileyLink。選擇RileyLink後，一旦RileyLink狀態顯示為“已連線”，即可繼續設置。這可能需要一分鐘。\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>注意：</b> 您可以在幫浦設置完成後繼續設置。\n</string>
     <string name="startobjective">開始您的第一個目標</string>
@@ -66,8 +66,8 @@
     <string name="configbuilder_sync">同步</string>
     <string name="configbuilder_sync_description">資料上傳和同步外掛。</string>
     <string name="configbuilder_constraints_description">哪些約束條件應用？</string>
-    <string name="configbuilder_loop">閉環</string>
-    <string name="configbuilder_loop_description">使用此功能啟用AAPS的迴圈集成。</string>
+    <string name="configbuilder_loop">循環</string>
+    <string name="configbuilder_loop_description">使用此功能啟用AAPS的循環集成。</string>
     <string name="configbuilder_insulin_description">您正在使用哪種類型的胰島素？</string>
     <string name="configbuilder_bgsource">血糖來源</string>
     <string name="configbuilder_bgsource_description">AAPS應從哪裡獲取資料？</string>
