@@ -28,124 +28,148 @@
                 android:paddingBottom="4dp" />
 
             <!-- Bluetooth Address -->
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:padding="4dp">
 
                 <TextView
+                    android:id="@+id/bluetooth_address_label"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.5"
-                    android:paddingStart="4dp"
-                    android:paddingEnd="4dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
                     android:text="@string/omnipod_dash_overview_bluetooth_address"
                     android:textAlignment="viewStart"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toStartOf="@+id/omnipod_dash_bluetooth_address"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
 
                 <TextView
                     android:id="@+id/omnipod_dash_bluetooth_address"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2.5"
-                    android:paddingStart="4dp"
-                    android:paddingEnd="4dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
                     android:textAlignment="viewStart"
                     android:textIsSelectable="true"
-                    android:textSize="14sp" />
-            </LinearLayout>
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/bluetooth_address_label"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <!-- Bluetooth Status -->
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:padding="4dp">
 
                 <TextView
+                    android:id="@+id/bluetooth_status_label"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.5"
-                    android:paddingStart="4dp"
-                    android:paddingEnd="4dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
                     android:text="@string/omnipod_dash_overview_bluetooth_status"
                     android:textAlignment="viewStart"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toStartOf="@+id/omnipod_dash_bluetooth_status"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
 
                 <com.joanzapata.iconify.widget.IconTextView
                     android:id="@+id/omnipod_dash_bluetooth_status"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2.5"
-                    android:paddingStart="4dp"
-                    android:paddingEnd="4dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
                     android:textAlignment="viewStart"
                     android:textSize="14sp"
-                    tools:ignore="HardcodedText" />
-            </LinearLayout>
+                    tools:ignore="HardcodedText"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/bluetooth_status_label"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <!-- Connection Quality -->
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/connectionQuality"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:padding="4dp"
                 android:visibility="gone">
 
                 <TextView
+                    android:id="@+id/connection_quality_label"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.5"
-                    android:paddingStart="4dp"
-                    android:paddingEnd="4dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
                     android:text="@string/omnipod_dash_overview_bluetooth_connection_quality"
                     android:textAlignment="viewStart"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toStartOf="@+id/omnipod_dash_bluetooth_connection_quality"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
 
                 <com.joanzapata.iconify.widget.IconTextView
                     android:id="@+id/omnipod_dash_bluetooth_connection_quality"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2.5"
-                    android:paddingStart="4dp"
-                    android:paddingEnd="4dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
                     android:textAlignment="viewStart"
                     android:textSize="14sp"
-                    tools:ignore="HardcodedText" />
-            </LinearLayout>
+                    tools:ignore="HardcodedText"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/connection_quality_label"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <!-- Delivery Status -->
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/deliveryStatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:padding="4dp"
                 android:visibility="gone">
 
                 <TextView
+                    android:id="@+id/delivery_status_label"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.5"
-                    android:paddingStart="4dp"
-                    android:paddingEnd="4dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
                     android:text="@string/omnipod_dash_overview_delivery_status"
                     android:textAlignment="viewStart"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toStartOf="@+id/omnipod_dash_delivery_status"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
 
                 <com.joanzapata.iconify.widget.IconTextView
                     android:id="@+id/omnipod_dash_delivery_status"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2.5"
-                    android:paddingStart="4dp"
-                    android:paddingEnd="4dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
                     android:textAlignment="viewStart"
                     android:textSize="14sp"
-                    tools:ignore="HardcodedText" />
-            </LinearLayout>
+                    tools:ignore="HardcodedText"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/delivery_status_label"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>

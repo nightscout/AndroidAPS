@@ -41,91 +41,109 @@
                         android:paddingBottom="4dp" />
 
                     <!-- Errors -->
-                    <LinearLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
                         android:padding="4dp">
 
                         <TextView
+                            android:id="@+id/errors_label"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1.5"
-                            android:paddingStart="4dp"
-                            android:paddingEnd="4dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
                             android:text="@string/omnipod_common_overview_errors"
                             android:textAlignment="viewStart"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toStartOf="@+id/errors"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
 
                         <TextView
                             android:id="@+id/errors"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2.5"
-                            android:paddingStart="4dp"
-                            android:paddingEnd="4dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
                             android:textAlignment="viewStart"
                             android:textIsSelectable="true"
-                            android:textSize="14sp" />
-                    </LinearLayout>
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/errors_label"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <!-- Pod Active Alerts -->
-                    <LinearLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
                         android:padding="4dp">
 
                         <TextView
+                            android:id="@+id/pod_active_alerts_label"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1.5"
-                            android:paddingStart="4dp"
-                            android:paddingEnd="4dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
                             android:text="@string/omnipod_common_overview_pod_active_alerts"
                             android:textAlignment="viewStart"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toStartOf="@+id/pod_active_alerts"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
 
                         <TextView
                             android:id="@+id/pod_active_alerts"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2.5"
-                            android:paddingStart="4dp"
-                            android:paddingEnd="4dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
                             android:textAlignment="viewStart"
                             android:textIsSelectable="true"
-                            android:textSize="14sp" />
-                    </LinearLayout>
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/pod_active_alerts_label"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <!-- Pod Expires -->
-                    <LinearLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
                         android:padding="4dp">
 
                         <TextView
+                            android:id="@+id/pod_expiry_date_label"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1.5"
-                            android:paddingStart="4dp"
-                            android:paddingEnd="4dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
                             android:text="@string/omnipod_common_overview_pod_expiry_date"
                             android:textAlignment="viewStart"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toStartOf="@+id/pod_expiry_date"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
 
                         <TextView
                             android:id="@+id/pod_expiry_date"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2.5"
-                            android:paddingStart="4dp"
-                            android:paddingEnd="4dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
                             android:textAlignment="viewStart"
                             android:textIsSelectable="true"
-                            android:textSize="14sp" />
-                    </LinearLayout>
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/pod_expiry_date_label"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -157,116 +175,144 @@
                         android:paddingBottom="4dp" />
 
                     <!-- Reservoir -->
-                    <LinearLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
                         android:padding="4dp">
 
                         <TextView
+                            android:id="@+id/reservoir_label"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1.5"
-                            android:paddingStart="4dp"
-                            android:paddingEnd="4dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
                             android:text="@string/omnipod_common_overview_reservoir"
                             android:textAlignment="viewStart"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toStartOf="@+id/reservoir"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
 
                         <TextView
                             android:id="@+id/reservoir"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2.5"
-                            android:paddingStart="4dp"
-                            android:paddingEnd="4dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
                             android:textAlignment="viewStart"
-                            android:textSize="14sp" />
-                    </LinearLayout>
+                            android:textIsSelectable="true"
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/reservoir_label"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <!-- Total Delivered -->
-                    <LinearLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
                         android:padding="4dp">
 
                         <TextView
+                            android:id="@+id/total_delivered_label"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1.5"
-                            android:paddingStart="4dp"
-                            android:paddingEnd="4dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
                             android:text="@string/omnipod_common_overview_total_delivered"
                             android:textAlignment="viewStart"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toStartOf="@+id/total_delivered"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
 
                         <TextView
                             android:id="@+id/total_delivered"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2.5"
-                            android:paddingStart="4dp"
-                            android:paddingEnd="4dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
                             android:textAlignment="viewStart"
-                            android:textSize="14sp" />
-                    </LinearLayout>
+                            android:textIsSelectable="true"
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/total_delivered_label"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <!-- Base Basal Rate -->
-                    <LinearLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
                         android:padding="4dp">
 
                         <TextView
+                            android:id="@+id/base_basal_rate_label"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1.5"
-                            android:paddingStart="4dp"
-                            android:paddingEnd="4dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
                             android:text="@string/omnipod_common_overview_base_basal_rate"
                             android:textAlignment="viewStart"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toStartOf="@+id/base_basal_rate"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
 
                         <TextView
                             android:id="@+id/base_basal_rate"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2.5"
-                            android:paddingStart="4dp"
-                            android:paddingEnd="4dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
                             android:textAlignment="viewStart"
-                            android:textSize="14sp" />
-                    </LinearLayout>
+                            android:textIsSelectable="true"
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/base_basal_rate_label"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <!-- Temp Basal Rate -->
-                    <LinearLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
                         android:padding="4dp">
 
                         <TextView
+                            android:id="@+id/temp_basal_label"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1.5"
-                            android:paddingStart="4dp"
-                            android:paddingEnd="4dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
                             android:text="@string/omnipod_common_overview_temp_basal_rate"
                             android:textAlignment="viewStart"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toStartOf="@+id/temp_basal"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
 
                         <TextView
                             android:id="@+id/temp_basal"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2.5"
-                            android:paddingStart="4dp"
-                            android:paddingEnd="4dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
                             android:textAlignment="viewStart"
-                            android:textSize="14sp" />
-                    </LinearLayout>
+                            android:textIsSelectable="true"
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/temp_basal_label"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -298,89 +344,107 @@
                         android:paddingBottom="4dp" />
 
                     <!-- Pod Status -->
-                    <LinearLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
                         android:padding="4dp">
 
                         <TextView
+                            android:id="@+id/pod_status_label"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1.5"
-                            android:paddingStart="4dp"
-                            android:paddingEnd="4dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
                             android:text="@string/omnipod_common_overview_pod_status"
                             android:textAlignment="viewStart"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toStartOf="@+id/pod_status"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
 
                         <com.joanzapata.iconify.widget.IconTextView
                             android:id="@+id/pod_status"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2.5"
-                            android:paddingStart="4dp"
-                            android:paddingEnd="4dp"
-                            android:text=""
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
                             android:textAlignment="viewStart"
-                            android:textSize="14sp" />
-                    </LinearLayout>
+                            android:textSize="14sp"
+                            tools:ignore="HardcodedText"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/pod_status_label"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <!-- Last Connection -->
-                    <LinearLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
                         android:padding="4dp">
 
                         <TextView
+                            android:id="@+id/last_connection_label"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1.5"
-                            android:paddingStart="4dp"
-                            android:paddingEnd="4dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
                             android:text="@string/omnipod_common_overview_last_connection"
                             android:textAlignment="viewStart"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toStartOf="@+id/last_connection"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
 
                         <TextView
                             android:id="@+id/last_connection"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2.5"
-                            android:paddingStart="4dp"
-                            android:paddingEnd="4dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
                             android:textAlignment="viewStart"
-                            android:textSize="14sp" />
-                    </LinearLayout>
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/last_connection_label"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <!-- Last Bolus -->
-                    <LinearLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
                         android:padding="4dp">
 
                         <TextView
+                            android:id="@+id/last_bolus_label"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1.5"
-                            android:paddingStart="4dp"
-                            android:paddingEnd="4dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
                             android:text="@string/omnipod_common_overview_last_bolus"
                             android:textAlignment="viewStart"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toStartOf="@+id/last_bolus"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
 
                         <TextView
                             android:id="@+id/last_bolus"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2.5"
-                            android:paddingStart="4dp"
-                            android:paddingEnd="4dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
                             android:textAlignment="viewStart"
-                            android:textSize="14sp" />
-                    </LinearLayout>
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/last_bolus_label"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -411,151 +475,181 @@
                         android:textStyle="bold"
                         android:paddingBottom="4dp" />
 
-                    <!-- Unique ID -->
-                    <LinearLayout
-                        android:id="@+id/omnipod_common_overview_pod_unique_id_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="4dp">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1.5"
-                            android:paddingStart="4dp"
-                            android:paddingEnd="4dp"
-                            android:text="@string/omnipod_common_overview_pod_unique_id"
-                            android:textAlignment="viewStart"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:id="@+id/unique_id"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="2.5"
-                            android:paddingStart="4dp"
-                            android:paddingEnd="4dp"
-                            android:textAlignment="viewStart"
-                            android:textIsSelectable="true"
-                            android:textSize="14sp" />
-                    </LinearLayout>
-
-                    <!-- Pod Lot -->
-                    <LinearLayout
-                        android:id="@+id/omnipod_common_overview_lot_number_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="4dp">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1.5"
-                            android:paddingStart="4dp"
-                            android:paddingEnd="4dp"
-                            android:text="@string/omnipod_common_overview_lot_number"
-                            android:textAlignment="viewStart"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:id="@+id/pod_lot"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="2.5"
-                            android:paddingStart="4dp"
-                            android:paddingEnd="4dp"
-                            android:textAlignment="viewStart"
-                            android:textIsSelectable="true"
-                            android:textSize="14sp" />
-                    </LinearLayout>
-
-                    <!-- Pod Tid -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="4dp">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1.5"
-                            android:paddingStart="4dp"
-                            android:paddingEnd="4dp"
-                            android:text="@string/omnipod_common_overview_pod_sequence_number"
-                            android:textAlignment="viewStart"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:id="@+id/pod_sequence_number"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="2.5"
-                            android:paddingStart="4dp"
-                            android:paddingEnd="4dp"
-                            android:textAlignment="viewStart"
-                            android:textIsSelectable="true"
-                            android:textSize="14sp" />
-                    </LinearLayout>
-
-                    <!-- Pod fw version -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="4dp">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1.5"
-                            android:paddingStart="4dp"
-                            android:paddingEnd="4dp"
-                            android:text="@string/omnipod_common_overview_firmware_version"
-                            android:textAlignment="viewStart"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:id="@+id/firmware_version"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="2.5"
-                            android:paddingStart="4dp"
-                            android:paddingEnd="4dp"
-                            android:textAlignment="viewStart"
-                            android:textIsSelectable="true"
-                            android:textSize="14sp" />
-                    </LinearLayout>
-
                     <!-- Pod Time -->
-                    <LinearLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
                         android:padding="4dp">
 
                         <TextView
+                            android:id="@+id/time_on_pod_label"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1.5"
-                            android:paddingStart="4dp"
-                            android:paddingEnd="4dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
                             android:text="@string/omnipod_common_overview_time_on_pod"
                             android:textAlignment="viewStart"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toStartOf="@+id/time_on_pod"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
 
                         <TextView
                             android:id="@+id/time_on_pod"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2.5"
-                            android:paddingStart="4dp"
-                            android:paddingEnd="4dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
                             android:textAlignment="viewStart"
-                            android:textSize="14sp" />
-                    </LinearLayout>
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/time_on_pod_label"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <!-- Unique ID -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/omnipod_common_overview_pod_unique_id_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="4dp">
+
+                        <TextView
+                            android:id="@+id/unique_id_label"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
+                            android:text="@string/omnipod_common_overview_pod_unique_id"
+                            android:textAlignment="viewStart"
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toStartOf="@+id/unique_id"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+
+                        <TextView
+                            android:id="@+id/unique_id"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
+                            android:textAlignment="viewStart"
+                            android:textIsSelectable="true"
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/unique_id_label"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <!-- Pod Lot -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/omnipod_common_overview_lot_number_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="4dp">
+
+                        <TextView
+                            android:id="@+id/pod_lot_label"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
+                            android:text="@string/omnipod_common_overview_lot_number"
+                            android:textAlignment="viewStart"
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toStartOf="@+id/pod_lot"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+
+                        <TextView
+                            android:id="@+id/pod_lot"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
+                            android:textAlignment="viewStart"
+                            android:textIsSelectable="true"
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/pod_lot_label"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <!-- Pod Tid -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="4dp">
+
+                        <TextView
+                            android:id="@+id/pod_sequence_number_label"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
+                            android:text="@string/omnipod_common_overview_pod_sequence_number"
+                            android:textAlignment="viewStart"
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toStartOf="@+id/pod_sequence_number"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+
+                        <TextView
+                            android:id="@+id/pod_sequence_number"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
+                            android:textAlignment="viewStart"
+                            android:textIsSelectable="true"
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/pod_sequence_number_label"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <!-- Pod fw version -->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="4dp">
+
+                        <TextView
+                            android:id="@+id/firmware_version_label"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
+                            android:text="@string/omnipod_common_overview_firmware_version"
+                            android:textAlignment="viewStart"
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toStartOf="@+id/firmware_version"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+
+                        <TextView
+                            android:id="@+id/firmware_version"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
+                            android:textAlignment="viewStart"
+                            android:textIsSelectable="true"
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/firmware_version_label"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <!-- Queue TextView -->
                     <TextView
