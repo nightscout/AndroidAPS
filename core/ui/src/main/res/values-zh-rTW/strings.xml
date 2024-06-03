@@ -33,7 +33,7 @@
     <string name="result">結果</string>
     <string name="settings">設定</string>
     <string name="statuslights">狀態燈</string>
-    <string name="do_ns_upload_title">將 BG 資料上傳到 NS</string>
+    <string name="do_ns_upload_title">將血糖資料上傳至 NS 伺服器</string>
     <string name="configbuilder_insulin">胰島素</string>
     <string name="value_unavailable_short">無法使用</string>
     <string name="master_password">主密碼</string>
