@@ -167,7 +167,7 @@
     <string name="canceling_eb_failed">取消延長注射失敗</string>
     <string name="virtualpump_uploadstatus_title">上傳幫浦狀態到 NS 或 Tidepool</string>
     <string name="suspendloop_label">停用/暫停循環</string>
-    <string name="iob_label">已注入胰島素 (IOB)</string>
+    <string name="iob_label">IOB 活性胰島素</string>
     <string name="loopstatus_targets">目標：</string>
     <string name="loopstatus_OAPS_result">OAPS 結果：</string>
     <string name="extended_bolus_data_point_graph">%1$.2f U ( %2$.2f U/h )</string>
