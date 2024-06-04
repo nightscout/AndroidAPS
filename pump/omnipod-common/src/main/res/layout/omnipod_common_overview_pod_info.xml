@@ -57,7 +57,8 @@
                             app:layout_constraintEnd_toStartOf="@+id/errors"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintHorizontal_weight="1.5" />
 
                         <TextView
                             android:id="@+id/errors"
@@ -69,7 +70,8 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/errors_label"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintHorizontal_weight="2" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <!-- Pod Active Alerts -->
@@ -89,7 +91,8 @@
                             app:layout_constraintEnd_toStartOf="@+id/pod_active_alerts"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintHorizontal_weight="1.5" />
 
                         <TextView
                             android:id="@+id/pod_active_alerts"
@@ -101,7 +104,8 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/pod_active_alerts_label"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintHorizontal_weight="2" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <!-- Pod Expires -->
@@ -121,7 +125,8 @@
                             app:layout_constraintEnd_toStartOf="@+id/pod_expiry_date"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintHorizontal_weight="1.5" />
 
                         <TextView
                             android:id="@+id/pod_expiry_date"
@@ -133,7 +138,8 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/pod_expiry_date_label"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintHorizontal_weight="2" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </LinearLayout>
@@ -182,7 +188,8 @@
                             app:layout_constraintEnd_toStartOf="@+id/reservoir"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintHorizontal_weight="1.5" />
 
                         <TextView
                             android:id="@+id/reservoir"
@@ -194,7 +201,8 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/reservoir_label"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintHorizontal_weight="2" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <!-- Total Delivered -->
@@ -214,7 +222,8 @@
                             app:layout_constraintEnd_toStartOf="@+id/total_delivered"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintHorizontal_weight="1.5" />
 
                         <TextView
                             android:id="@+id/total_delivered"
@@ -226,7 +235,8 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/total_delivered_label"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintHorizontal_weight="2" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <!-- Base Basal Rate -->
@@ -246,7 +256,8 @@
                             app:layout_constraintEnd_toStartOf="@+id/base_basal_rate"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintHorizontal_weight="1.5" />
 
                         <TextView
                             android:id="@+id/base_basal_rate"
@@ -258,7 +269,8 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/base_basal_rate_label"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintHorizontal_weight="2" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <!-- Temp Basal Rate -->
@@ -278,7 +290,8 @@
                             app:layout_constraintEnd_toStartOf="@+id/temp_basal"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintHorizontal_weight="1.5" />
 
                         <TextView
                             android:id="@+id/temp_basal"
@@ -290,7 +303,8 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/temp_basal_label"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintHorizontal_weight="2" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </LinearLayout>
@@ -339,7 +353,8 @@
                             app:layout_constraintEnd_toStartOf="@+id/pod_status"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintHorizontal_weight="1.5" />
 
                         <com.joanzapata.iconify.widget.IconTextView
                             android:id="@+id/pod_status"
@@ -351,7 +366,8 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/pod_status_label"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintHorizontal_weight="2" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <!-- Last Connection -->
@@ -371,7 +387,8 @@
                             app:layout_constraintEnd_toStartOf="@+id/last_connection"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintHorizontal_weight="1.5" />
 
                         <TextView
                             android:id="@+id/last_connection"
@@ -382,7 +399,8 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/last_connection_label"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintHorizontal_weight="2" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <!-- Last Bolus -->
@@ -402,7 +420,8 @@
                             app:layout_constraintEnd_toStartOf="@+id/last_bolus"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintHorizontal_weight="1.5" />
 
                         <TextView
                             android:id="@+id/last_bolus"
@@ -413,7 +432,8 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/last_bolus_label"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintHorizontal_weight="2" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </LinearLayout>
@@ -462,7 +482,8 @@
                             app:layout_constraintEnd_toStartOf="@+id/time_on_pod"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintHorizontal_weight="1.5" />
 
                         <TextView
                             android:id="@+id/time_on_pod"
@@ -473,7 +494,8 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/time_on_pod_label"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintHorizontal_weight="2" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <!-- Unique ID -->
@@ -494,7 +516,8 @@
                             app:layout_constraintEnd_toStartOf="@+id/unique_id"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintHorizontal_weight="1.5" />
 
                         <TextView
                             android:id="@+id/unique_id"
@@ -506,7 +529,8 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/unique_id_label"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintHorizontal_weight="2" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <!-- Pod Lot -->
@@ -527,7 +551,8 @@
                             app:layout_constraintEnd_toStartOf="@+id/pod_lot"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintHorizontal_weight="1.5" />
 
                         <TextView
                             android:id="@+id/pod_lot"
@@ -539,7 +564,8 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/pod_lot_label"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintHorizontal_weight="2" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <!-- Pod Tid -->
@@ -559,7 +585,8 @@
                             app:layout_constraintEnd_toStartOf="@+id/pod_sequence_number"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintHorizontal_weight="1.5" />
 
                         <TextView
                             android:id="@+id/pod_sequence_number"
@@ -571,7 +598,8 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/pod_sequence_number_label"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintHorizontal_weight="2" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <!-- Pod fw version -->
@@ -591,7 +619,8 @@
                             app:layout_constraintEnd_toStartOf="@+id/firmware_version"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintHorizontal_weight="1.5" />
 
                         <TextView
                             android:id="@+id/firmware_version"
@@ -603,7 +632,8 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/firmware_version_label"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent" />
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintHorizontal_weight="2" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <!-- Queue TextView -->
