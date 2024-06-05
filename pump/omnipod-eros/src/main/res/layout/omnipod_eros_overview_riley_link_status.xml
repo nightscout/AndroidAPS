@@ -19,14 +19,6 @@
             android:orientation="vertical"
             android:padding="8dp">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="RileyLink"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:paddingBottom="4dp" />
-
             <!-- RileyLink Status -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
