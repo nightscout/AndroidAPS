@@ -22,7 +22,7 @@
     <string name="omnipod_dash_overview_bluetooth_status">Bluetooth Status</string>
     <string name="omnipod_dash_overview_bluetooth_address">Bluetooth Address</string>
     <string name="omnipod_dash_overview_firmware_version_value">Firmware %1$s / Bluetooth %2$s</string>
-    <string name="omnipod_dash_overview_bluetooth_connection_quality">Connection quality</string>
+    <string name="omnipod_dash_overview_bluetooth_connection_quality">Connection Quality</string>
     <string name="omnipod_dash_overview_delivery_status">Delivery Status</string>
 
     <!-- Omnipod Dash - Pod Activation Wizard -->

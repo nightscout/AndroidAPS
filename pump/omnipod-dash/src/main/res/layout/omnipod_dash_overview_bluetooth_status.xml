@@ -100,7 +100,8 @@
                 android:id="@+id/connectionQuality"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="4dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
                 android:visibility="gone">
 
                 <TextView
@@ -137,7 +138,8 @@
                 android:id="@+id/deliveryStatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="4dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
                 android:visibility="gone">
 
                 <TextView
