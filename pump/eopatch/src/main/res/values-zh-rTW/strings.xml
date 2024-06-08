@@ -6,7 +6,7 @@
     <string name="category_alerts">警報</string>
     <string name="low_reservoir">儲液盒低警報</string>
     <string name="patch_expiration_reminders">貼片過期提醒</string>
-    <string name="patch_buzzer_reminders">貼片蜂鳴器提醒</string>
+    <string name="patch_buzzer_reminders">貼片嗶器提醒</string>
     <string name="time_format_a_h_mm">h:mm a</string>
     <string name="eopatch_ble_status">藍牙狀態</string>
     <string name="eopatch_serial_number">序列號</string>
@@ -52,7 +52,7 @@
     <string name="patch_step_desc_1">1.</string>
     <string name="patch_wake_up_desc_1">將胰島素注入室溫的新貼片中。檢查注射器的角度。</string>
     <string name="patch_step_desc_2">2.</string>
-    <string name="patch_wake_up_desc_2">檢查是否有一聲蜂鳴。</string>
+    <string name="patch_wake_up_desc_2">檢查是否有一聲嗶聲。</string>
     <string name="patch_start_pairing">開始配對</string>
     <string name="patch_connect_new">貼片配對</string>
     <string name="patch_connect_new_step">2/6</string>
@@ -74,8 +74,8 @@
     <string name="patch_rotate_knob">插入針頭</string>
     <string name="patch_rotate_knob_step">6/6</string>
     <string name="patch_rotate_knob_desc_1">旋轉針頭動作桿超過100°以插入針頭，然後完全旋轉以移除它</string>
-    <string name="patch_rotate_knob_desc_2">檢查是否有一聲蜂鳴，然後點擊“下一步”。</string>
-    <string name="patch_rotate_knob_desc_2_needle_insertion_error">檢查是否有一聲蜂鳴，然後點擊“重試”。</string>
+    <string name="patch_rotate_knob_desc_2">檢查是否有一聲嗶聲，然後點擊“下一步”。</string>
+    <string name="patch_rotate_knob_desc_2_needle_insertion_error">檢查是否有一聲嗶聲，然後點擊“重試”。</string>
     <string name="patch_basal_schedule">貼片啟動完成！</string>
     <string name="patch_basal_schedule_desc_1">已啟用\'%1$s\'計畫。</string>
     <string name="patch_basal_schedule_desc_2">貼片接近到期時間時會提醒您。\n如有需要，請更改提醒時間。</string>
