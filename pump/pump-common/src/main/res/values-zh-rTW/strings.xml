@@ -59,7 +59,7 @@
     <!-- Pump Error -->
     <string name="pump_settings_error_basal_profiles_not_enabled">幫浦未啟用基礎率配置。請在幫浦上啟用。</string>
     <string name="pump_settings_error_incorrect_basal_profile_selected">幫浦上設定的基礎率配置不正確（必須為 %s）。</string>
-    <string name="pump_settings_error_wrong_tbr_type_set">幫浦上設定的 TBR 類型錯誤（必須為 %s）。</string>
+    <string name="pump_settings_error_wrong_tbr_type_set">幫浦上設定的臨時基礎率類型錯誤（必須為 %s）。</string>
     <string name="pump_settings_error_wrong_max_bolus_set">幫浦上設定的最大注射量錯誤（必須為 %1$.2f）。</string>
     <string name="pump_settings_error_wrong_max_basal_set">幫浦上設定的最大基礎率錯誤（必須為 %1$.2f）。</string>
     <!-- Pump History -->
