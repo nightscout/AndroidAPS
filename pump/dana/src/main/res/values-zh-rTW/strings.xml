@@ -68,10 +68,10 @@
     <string name="danar_user_options">用戶選項</string>
     <string name="danar_time_display">顯示時間格式</string>
     <string name="danar_button_scroll">按鈕捲動</string>
-    <string name="danar_beep">按鈕按下時蜂鳴</string>
+    <string name="danar_beep">按鈕按下時發出嗶聲</string>
     <string name="danar_pump_alarm">警報</string>
     <string name="danar_pump_alarm_sound">聲音</string>
-    <string name="danar_pump_alarm_vibrate">振動</string>
+    <string name="danar_pump_alarm_vibrate">震動</string>
     <string name="danar_pump_alarm_both">兩者</string>
     <string name="danar_screen_timeout">LCD 開啟時間 [秒]</string>
     <string name="danar_backlight">背光開啟時間 [秒]</string>
