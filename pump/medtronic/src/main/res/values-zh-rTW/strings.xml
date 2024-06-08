@@ -88,7 +88,7 @@
     <string name="common_off">關</string>
     <string name="pump_time_updated">幫浦時間已更新</string>
     <string name="set_neutral_temps_title">設置中性臨時基礎率</string>
-    <string name="set_neutral_temps_summary">如果啟用，將在每小時結束前取消臨時基礎率。這種方法可以幫助防止某些幫浦在整點發出聲音/振動。</string>
+    <string name="set_neutral_temps_summary">如果啟用，將在每小時結束前取消臨時基礎率。這種方法可以幫助防止某些幫浦在整點發出聲音/震動。</string>
     <string name="mdt_tbr_remaining">%1$.1f U/h（剩餘 %2$d 分鐘）</string>
     <string name="invalid_history_data">檢測到無效的幫浦歷史紀錄資料。打開新問題並提供日誌。</string>
     <string name="riley_statistics">RL 統計</string>
