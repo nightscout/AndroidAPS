@@ -10,7 +10,7 @@
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">在 Pod 管理選單中顯示 RileyLink 統計按鈕</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">在動作中啟用電池更換日誌</string>
     <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
-    <string name="omnipod_eros_preferences_notification_uncertain_tbr_sound_enabled">啟用不確定 TBR 通知音效</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_tbr_sound_enabled">啟用不確定臨時基礎率通知音效</string>
     <string name="omnipod_eros_preferences_notification_uncertain_smb_sound_enabled">啟用不確定 SMB 通知音效</string>
     <string name="omnipod_eros_preferences_notification_uncertain_bolus_sound_enabled">啟用不確定注射通知音效</string>
     <!-- Omnipod Eros - History -->
@@ -47,7 +47,7 @@
     <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">取消臨時基礎輸送可能失敗。請手動重新整理 Omnipod 標籤中的 Pod 狀態。</string>
     <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">設定臨時基礎輸送失敗。如果之前運行了一個臨時基礎輸送，它可能已被取消。請手動重新整理 Omnipod 標籤中的 Pod 狀態。</string>
     <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">設定臨時基礎輸送可能失敗。如果之前運行了一個臨時基礎輸送，它已被取消。請手動重新整理 Omnipod 標籤中的 Pod 狀態。</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_validation">TBR 持續時間必須大於零且為 %1$s 分鐘的倍數。</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_validation">臨時基礎率持續時間必須大於零，且為 %1$s 分鐘的倍數。</string>
     <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">設定時間可能失敗。輸送可能已暫停！請手動重新整理 Omnipod 標籤中的 Pod 狀態並在需要時恢復輸送。</string>
     <string name="omnipod_eros_error_set_time_failed_delivery_suspended">設定時間失敗。輸送已暫停！請從 Omnipod 標籤手動恢復輸送。</string>
     <string name="omnipod_eros_error_failed_to_read_pulse_log">無法讀取脈搏日誌</string>
@@ -65,6 +65,6 @@
     <string name="omnipod_eros_pod_management_pulse_log">脈搏日誌</string>
     <string name="omnipod_eros_pod_management_pulse_log_value">脈搏日誌（已複製到剪貼簿）</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->
-    <string name="omnipod_eros_pod_activation_wizard_start_pod_activation_text">將足夠 3 天的胰島素注入新 Pod。\n\n在加注過程中，請聆聽 Pod 發出的兩聲蜂鳴音，這表示已注入最低量 80U。即使聽到兩聲蜂鳴音，也請務必將注射器完全排空。\n\n加注完成後，請按<b>下一步</b>。\n\n<b>注意：</b>此時不要取下 Pod 的針帽。\n<b>注意：</b>請將 RileyLink 豎直放置，並將 Pod 放在其幾英寸之外。</string>
+    <string name="omnipod_eros_pod_activation_wizard_start_pod_activation_text">將足夠 3 天的胰島素注入新 Pod。\n\n在加注過程中，請聆聽 Pod 發出的兩聲嗶聲，這表示已注入最低量 80U。即使聽到兩聲嗶聲，也請務必將注射器完全排空。\n\n加注完成後，請按<b>下一步</b>。\n\n<b>注意：</b>此時不要取下 Pod 的針帽。\n<b>注意：</b>請將 RileyLink 豎直放置，並將 Pod 放在其幾英寸之外。</string>
     <string name="omnipod_eros_pod_activation_wizard_initialize_pod_text">嘗試與新 Pod 配對並進行預填充。\n\n初始化過程完成後，請按<b>下一步</b>。\n\n<b>注意：</b>請將 RileyLink 豎直放置，並將 Pod 放在其幾英寸之外。</string>
 </resources>
