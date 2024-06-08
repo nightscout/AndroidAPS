@@ -103,7 +103,7 @@
     <string name="careportal_remove_started_events">移除 AAPS 已開始的條目</string>
     <string name="hide_loop">隱藏迴圈</string>
     <string name="show_loop">顯示迴圈</string>
-    <string name="user_entry">用戶條目</string>
+    <string name="user_entry">用戶入口</string>
     <string name="clone_label">複製</string>
     <string name="show_loop_records">顯示迴圈記錄</string>
     <string name="show_hide_records">隱藏迴圈記錄</string>
