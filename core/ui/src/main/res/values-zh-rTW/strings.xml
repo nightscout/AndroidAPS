@@ -203,7 +203,7 @@
     <string name="mins">%1$d 分鐘</string>
     <!--    Translator-->
     <string name="careportal">Careportal</string>
-    <string name="careportal_bgcheck">BG 檢查</string>
+    <string name="careportal_bgcheck">血糖檢查</string>
     <string name="careportal_mbg">手動 BG 或校正</string>
     <string name="careportal_announcement">公告</string>
     <string name="careportal_note">備註</string>
