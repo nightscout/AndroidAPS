@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="enable_tbr_over_notification">啟用 TBR 結束通知\n（幫浦設定）</string>
-    <string name="disable_tbr_over_notification">停用 TBR 結束通知\n（幫浦設定）</string>
+    <string name="enable_tbr_over_notification">啟用臨時基礎率結束通知\n（幫浦設定）</string>
+    <string name="disable_tbr_over_notification">停用臨時基礎率結束通知\n（幫浦設定）</string>
     <string name="not_paired">未配對</string>
     <string name="recovering">恢復中</string>
     <string name="insight_status">狀態</string>
@@ -29,15 +29,15 @@
     <string name="tube_changed">已更換導管</string>
     <string name="insightpump_shortname">Sight</string>
     <string name="insight_alert_notification_channel">Insight 幫浦警報</string>
-    <string name="disable_vibration">停用手動胰島素注射時的振動</string>
+    <string name="disable_vibration">停用手動胰島素注射時的震動</string>
     <string name="disable_vibration_summary">對於注射和延長注射（僅適用於 Insight 韌體 3.x）</string>
-    <string name="disable_vibration_auto">停用自動胰島素注射時的振動</string>
-    <string name="disable_vibration_auto_summary">適用於 SMB 和帶有 TBR 模擬的臨時基礎率（僅適用於 Insight 韌體 3.x）</string>
+    <string name="disable_vibration_auto">停用自動胰島素注射時的震動</string>
+    <string name="disable_vibration_auto_summary">適用於 SMB 和帶有臨時基礎率模擬的臨時基礎率（僅適用於 Insight 韌體 3.x）</string>
     <string name="timeout_during_handshake">交握過程中逾時 - 重置藍牙</string>
     <string name="pump_stopped">幫浦停止</string>
     <string name="pump_started">幫浦啟動</string>
     <string name="short_status_last_connected">上次連線：%1$d 分鐘前</string>
-    <string name="short_status_tbr">TBR：%1$d%% 持續 %2$d / %3$d 分鐘</string>
+    <string name="short_status_tbr">臨時基礎率：%1$d%% 持續 %2$d / %3$d 分鐘</string>
     <string name="short_status_extended">延長：%1$.2f / %2$.2f U 持續 %3$d 分鐘</string>
     <string name="short_status_multiwave">多波：%1$.2f / %2$.2f U 持續 %3$d 分鐘</string>
     <string name="short_status_tdd">TDD：%1$.2f</string>
@@ -59,8 +59,8 @@
     <string name="log_battery_changes">記錄電池變更</string>
     <string name="log_operating_mode_changes">記錄運行模式變更</string>
     <string name="log_alerts">記錄警報</string>
-    <string name="enable_tbr_emulation">啟用 TBR 模擬</string>
-    <string name="enable_tbr_emulation_summary">使用延長胰島素注射代替 TBR 以繞過 250%% 限制</string>
+    <string name="enable_tbr_emulation">啟用臨時基礎率模擬</string>
+    <string name="enable_tbr_emulation_summary">使用延長胰島素注射代替臨時基礎率以繞過 250%% 限制</string>
     <string name="disconnect_delay">斷線延遲 [秒]</string>
     <string name="max_recovery_duration">最大恢復持續時間 [秒]</string>
     <string name="min_recovery_duration">最小恢復持續時間 [秒]</string>
