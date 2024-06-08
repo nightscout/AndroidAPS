@@ -106,7 +106,7 @@
     <string name="sms_loop_suspended_for">暫停 (%1$d 分鐘)</string>
     <string name="sms_read_status_failed">讀取狀態失敗</string>
     <string name="sms_profile_switch_created">配置切換已建立</string>
-    <string name="sms_wrong_tbr_duration">TBR持續時間必須是 %1$d 分鐘的倍數且大於0。</string>
+    <string name="sms_wrong_tbr_duration">臨時基礎率持續時間必須是 %1$d 分鐘的倍數且大於0。</string>
     <string name="a11y_otp_qr_code">設置一次性密碼的QR Code</string>
     <string name="disabled_loop">循環已停用</string>
     <!-- Food-->
