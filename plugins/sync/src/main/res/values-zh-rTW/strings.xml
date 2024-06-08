@@ -58,8 +58,8 @@
     <string name="ns_receive_profile_switch_summary">接受通過 NS 或 NSClient 輸入的個人設置切換</string>
     <string name="ns_receive_offline_event">接收 APS 離線事件</string>
     <string name="ns_receive_offline_event_summary">接受通過 NS 或 NSClient 輸入的 APS 離線事件</string>
-    <string name="ns_receive_tbr_eb">接收 TBR 和 EB</string>
-    <string name="ns_receive_tbr_eb_summary">接受通過另一實例輸入的 TBR 和 EB</string>
+    <string name="ns_receive_tbr_eb">接收臨時基礎率和 EB</string>
+    <string name="ns_receive_tbr_eb_summary">接受通過另一實例輸入的臨時基礎率和 EB</string>
     <string name="ns_receive_insulin">接收胰島素</string>
     <string name="ns_receive_insulin_summary">接受通過 NS 或 NSClient 輸入的胰島素（僅計算 IOB，不會實際注射）</string>
     <string name="ns_receive_carbs">接收碳水化合物</string>
@@ -91,7 +91,7 @@
     <string name="description_tidepool">將資料上傳到 Tidepool</string>
     <string name="tidepool_upload_cgm">上傳 CGM 資料</string>
     <string name="tidepool_upload_bolus">上傳治療（胰島素，碳水化合物）</string>
-    <string name="tidepool_upload_tbr">上傳臨時基礎速率</string>
+    <string name="tidepool_upload_tbr">上傳臨時基礎</string>
     <string name="tidepool_upload_profile">上傳個人設置切換，臨時目標</string>
     <string name="tidepool_upload_bg">上傳血糖測試</string>
     <string name="remove_all">移除全部</string>
