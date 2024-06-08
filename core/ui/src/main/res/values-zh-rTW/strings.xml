@@ -163,7 +163,7 @@
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
-    <string name="canceling_tbr_failed">取消臨時基礎率失敗</string>
+    <string name="canceling_tbr_failed">取消臨時基礎失敗</string>
     <string name="canceling_eb_failed">取消延長注射失敗</string>
     <string name="virtualpump_uploadstatus_title">上傳幫浦狀態到 NS 或 Tidepool</string>
     <string name="suspendloop_label">停用/暫停循環</string>
@@ -277,7 +277,7 @@
     <string name="uel_bolus_calculator">注射計算器</string>
     <string name="uel_bolus_advisor">注射顧問</string>
     <string name="uel_extended_bolus">延長注射</string>
-    <string name="uel_superbolus_tbr">超級注射 TBR</string>
+    <string name="uel_superbolus_tbr">超級注射臨時基礎率</string>
     <string name="uel_carbs">碳水化合物</string>
     <string name="uel_extended_carbs">延長碳水化合物</string>
     <string name="uel_temp_basal">臨時基礎率</string>
@@ -398,7 +398,7 @@
     <string name="stop_pump">停止幫浦</string>
     <string name="temp_basal_absolute">臨時基礎率 %1$.2f U/h %2$d 分鐘</string>
     <string name="temp_basal_percent">臨時基礎率 %1$d%% %2$d 分鐘</string>
-    <string name="insight_set_tbr_over_notification">Insight 設置 TBR 超過通知</string>
+    <string name="insight_set_tbr_over_notification">Insight 設置臨時基礎率超過通知</string>
     <string name="read_status" comment="10 characters max for READSTATUS translation">讀取狀態 %1$s</string>
     <string name="keepalive_status_outdated" comment="26 characters max for translation">保持存活。狀態過期。</string>
     <string name="keepalive_basal_outdated" comment="26 characters max for translation">保持存活。基礎率過期。</string>
