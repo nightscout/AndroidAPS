@@ -35,7 +35,7 @@
     <string name="pref_show_phone_battery">顯示手機電池</string>
     <string name="pref_show_rig_battery">顯示裝置電池</string>
     <string name="pref_show_basal_rate">顯示基礎率</string>
-    <string name="pref_show_loop_status">顯示迴圈狀態</string>
+    <string name="pref_show_loop_status">顯示循環狀態</string>
     <string name="pref_show_bg">顯示血糖指數</string>
     <string name="pref_show_bgi">顯示血糖指數</string>
     <string name="pref_show_direction_arrow">顯示方向箭頭</string>
@@ -82,7 +82,7 @@
     <string name="menu_treatment_short">治療</string>
     <string name="menu_bolus">注射</string>
     <string name="menu_carb">碳水化合物</string>
-    <string name="menu_ecarb">eCarbs</string>
+    <string name="menu_ecarb">碳水化合物</string>
     <string name="menu_settings">設定</string>
     <string name="menu_status">狀態</string>
     <string name="menu_resync">重新同步</string>
@@ -98,13 +98,13 @@
     <string name="action_bolus_confirmation">已請求注射</string>
     <string name="action_wizard_confirmation">已請求計算</string>
     <string name="action_fill_confirmation">已請求填充</string>
-    <string name="action_ecarb_confirmation">已請求 eCarbs</string>
+    <string name="action_ecarb_confirmation">已請求碳水化合物</string>
     <string name="action_profile_switch_confirmation">已請求設定檔切換</string>
     <string name="action_target" comment="In temp target menu, single target value">目標</string>
     <string name="action_low" comment="In temp target menu, lower value from range">低</string>
     <string name="action_high" comment="In temp target menu, higher value from range">高</string>
     <string name="action_carbs">碳水化合物</string>
-    <string name="action_ecarbs">eCarbs</string>
+    <string name="action_ecarbs">碳水化合物</string>
     <string name="action_percentage">百分比</string>
     <string name="action_start_min">開始 [分鐘]</string>
     <string name="action_duration_h">持續時間 [小時]</string>
