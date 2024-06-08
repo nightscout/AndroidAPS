@@ -65,8 +65,8 @@
     <!-- equil - Commands -->
     <string name="equil_common_cmd_set_bolus">設定注射</string>
     <string name="equil_common_cmd_cancel_bolus">取消注射</string>
-    <string name="equil_common_cmd_set_tbr">設定臨時基礎速率</string>
-    <string name="equil_common_cmd_cancel_tbr">取消臨時基礎速率</string>
+    <string name="equil_common_cmd_set_tbr">設定臨時基礎</string>
+    <string name="equil_common_cmd_cancel_tbr">取消臨時基礎</string>
     <string name="equil_common_cmd_set_basal_schedule">設定基礎速率計劃</string>
     <string name="equil_common_cmd_get_status">獲取Equil狀態</string>
     <string name="equil_common_cmd_set_time">設定時間</string>
