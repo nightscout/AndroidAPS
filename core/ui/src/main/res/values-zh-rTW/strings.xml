@@ -40,7 +40,7 @@
     <string name="ue_export_to_csv">匯出使用者輸入到 Excel (csv)</string>
     <string name="confirm">確認</string>
     <string name="pump">幫浦</string>
-    <string name="missed_bg_readings">遺失的 BG 讀數</string>
+    <string name="missed_bg_readings">遺失的血糖讀數</string>
     <string name="treatments_iob_label_string">IOB：</string>
     <string name="mute5min">靜音 5 分鐘</string>
     <string name="mute">靜音</string>
@@ -110,7 +110,7 @@
     <string name="add_new">新增</string>
     <string name="addnew_above">在上方新增</string>
     <string name="wrong_pump_data">資料來自不同的幫浦。更換幫浦驅動程式以重置幫浦狀態。</string>
-    <string name="bg_label">BG</string>
+    <string name="bg_label">血糖</string>
     <string name="calibration">校正</string>
     <string name="alarminxmin">在 %1$d 分鐘內運行警報</string>
     <string name="treatmentdeliveryerror">注射報告錯誤。請手動檢查實際送達量</string>
@@ -204,7 +204,7 @@
     <!--    Translator-->
     <string name="careportal">Careportal</string>
     <string name="careportal_bgcheck">血糖檢查</string>
-    <string name="careportal_mbg">手動 BG 或校正</string>
+    <string name="careportal_mbg">手動血糖或校正</string>
     <string name="careportal_announcement">公告</string>
     <string name="careportal_note">備註</string>
     <string name="careportal_question">問題</string>
@@ -314,7 +314,7 @@
     <string name="uel_treatments_ns_refresh">治療 NS 重新整理</string>
     <string name="uel_tt_ns_refresh">臨時目標 NS 重新整理</string>
     <string name="uel_automation_removed">自動化已移除</string>
-    <string name="uel_bg_removed">BG 已移除</string>
+    <string name="uel_bg_removed">血糖已移除</string>
     <string name="uel_careportal_removed">Careportal 已移除</string>
     <string name="uel_bolus_removed">注射已移除</string>
     <string name="uel_carbs_removed">碳水化合物已移除</string>
@@ -431,12 +431,12 @@
     <string name="wizard_no_insulin_required">不需要胰島素！</string>
     <string name="wizard_no_actual_bg">沒有最近的血糖值可用於計算！</string>
     <string name="wizard_no_active_profile">未設置活動設定檔！</string>
-    <string name="wizard_no_cob">未知的 COB！BG 讀數丟失或最近的應用程式重啟？</string>
+    <string name="wizard_no_cob">未知的 COB！血糖讀數丟失或最近的應用程式重啟？</string>
     <string name="wizard_carbs_constraint">碳水化合物限制違規！</string>
     <string name="wizard_explain_calc">計算（IC：%1$.1f，ISF：%2$.1f）</string>
     <string name="wizard_explain_carbs">碳水化合物：%1$.2fU</string>
     <string name="wizard_explain_cob">COB：%1$.0fg %2$.2fU</string>
-    <string name="wizard_explain_bg">BG：%1$.2fU</string>
+    <string name="wizard_explain_bg">血糖：%1$.2fU</string>
     <string name="wizard_explain_iob">IOB：%1$.2fU</string>
     <string name="wizard_explain_superbolus">超級注射：%1$.2fU</string>
     <string name="wizard_explain_trend">15 分鐘趨勢：%1$.2fU</string>
