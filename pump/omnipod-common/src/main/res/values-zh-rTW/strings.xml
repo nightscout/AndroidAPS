@@ -9,8 +9,8 @@
     <string name="omnipod_common_pod_management_button_deactivate_pod">停用 Pod</string>
     <string name="omnipod_common_pod_management_button_discard_pod">丟棄 Pod</string>
     <string name="omnipod_common_pod_management_discard_pod_confirmation">如果丟棄 Pod，您將無法再與其通訊。只有在所有通訊持續失敗時才應這樣做。如果您仍能與 Pod 通訊，請使用 <b>停用 Pod</b> 選項。\n\n如果您希望繼續，請確保將 Pod 從您的身體上取下！</string>
-    <string name="omnipod_common_pod_management_button_play_test_beep">播放測試蜂鳴音</string>
-    <string name="omnipod_common_pod_management_button_playing_test_beep">播放測試蜂鳴音中…</string>
+    <string name="omnipod_common_pod_management_button_play_test_beep">播放測試嗶聲</string>
+    <string name="omnipod_common_pod_management_button_playing_test_beep">播放測試嗶聲中…</string>
     <string name="omnipod_common_pod_management_button_pod_history">Pod 歷史</string>
     <!-- Omnipod - Error -->
     <string name="omnipod_common_error_pod_not_attached">無可用的 Pod</string>
@@ -30,7 +30,7 @@
     <string name="omnipod_common_error_pod_fault_activation_time_exceeded">Pod 的啟動時間已超過。此 Pod 無法再啟動。</string>
     <string name="omnipod_common_error_failed_to_verify_activation_progress">驗證啟動進度失敗。請重試。</string>
     <string name="omnipod_common_error_pod_suspended">Pod 已暫停</string>
-    <string name="omnipod_common_error_failed_to_play_test_beep">播放測試蜂鳴音失敗</string>
+    <string name="omnipod_common_error_failed_to_play_test_beep">播放測試嗶聲失敗</string>
     <string name="omnipod_common_error_time_out_of_sync">Pod 上的時間不同步。請在 Omnipod 標籤中更新時間。</string>
     <string name="omnipod_common_error_unexpected_exception">發生意外錯誤。請回報！（%1$s：%2$s）。</string>
     <!-- Omnipod - Confirmation -->
@@ -98,26 +98,26 @@
     <string name="omnipod_common_pod_deactivation_wizard_discard_pod_confirmation">如果丟棄 Pod，您將無法再與其通訊。只有在所有通訊持續失敗時才應這樣做。您確定要丟棄 Pod 嗎？</string>
     <string name="omnipod_common_pod_deactivation_wizard_discard_pod">丟棄 Pod</string>
     <!-- Omnipod - Preferences -->
-    <string name="omnipod_common_preferences_bolus_beeps_enabled">啟用胰島素劑量蜂鳴音</string>
-    <string name="omnipod_common_preferences_basal_beeps_enabled">啟用基礎蜂鳴音</string>
-    <string name="omnipod_common_preferences_smb_beeps_enabled">啟用 SMB 蜂鳴音</string>
-    <string name="omnipod_common_preferences_tbr_beeps_enabled">啟用 TBR 蜂鳴音</string>
+    <string name="omnipod_common_preferences_bolus_beeps_enabled">啟用胰島素劑量時，發出嗶聲</string>
+    <string name="omnipod_common_preferences_basal_beeps_enabled">啟用基礎蜂時，發出嗶聲</string>
+    <string name="omnipod_common_preferences_smb_beeps_enabled">啟用 SMB 時，發出嗶聲</string>
+    <string name="omnipod_common_preferences_tbr_beeps_enabled">啟用臨時基礎率時，發出嗶聲</string>
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">在 Omnipod 標籤中顯示暫停輸送按鈕</string>
     <string name="omnipod_common_preferences_time_change_enabled">啟用 DST/時區檢測</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">啟用到期提醒</string>
-    <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">啟用時，當到達指定時間時，Pod 將蜂鳴提醒</string>
+    <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">啟用時，當到達指定時間時，Pod 將發出嗶聲提醒</string>
     <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">到期前幾小時提醒（72 小時）</string>
     <string name="omnipod_common_preferences_expiration_alarm_enabled">啟用到期警報</string>
-    <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">啟用時，當到達指定時間以及關機前一小時，Pod 將蜂鳴提醒</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">啟用時，當到達指定時間以及關機前一小時，Pod 將發出嗶聲提醒</string>
     <string name="omnipod_common_preferences_expiration_alarm_hours_before_shutdown">幫浦到期前幾小時警報（80 小時）</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">啟用儲液盒低量時警報</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">單位數量</string>
     <string name="omnipod_common_preferences_automatically_silence_alerts">自動靜音 Pod 警報</string>
     <string name="omnipod_common_preferences_category_other">其他</string>
     <string name="omnipod_common_preferences_category_alerts">警報</string>
-    <string name="omnipod_common_preferences_category_confirmation_beeps">確認蜂鳴音</string>
+    <string name="omnipod_common_preferences_category_confirmation_beeps">確認嗶聲</string>
     <string name="omnipod_common_preferences_category_notifications">通知</string>
-    <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">啟用不確定 TBR 通知音效</string>
+    <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">啟用不確定臨時基礎率時通知音效</string>
     <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">啟用不確定 SMB 通知音效</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">啟用不確定胰島素劑量通知音效</string>
     <!-- Omnipod - Pod Status -->
@@ -136,9 +136,9 @@
     <string name="omnipod_common_cmd_discard_pod">丟棄 Pod</string>
     <string name="omnipod_common_cmd_set_bolus">設置胰島素劑量</string>
     <string name="omnipod_common_cmd_cancel_bolus">取消胰島素劑量</string>
-    <string name="omnipod_common_cmd_set_tbr">設置臨時基礎率</string>
-    <string name="omnipod_common_cmd_cancel_tbr_by_driver">取消臨時基礎率（由驅動程式內部處理）</string>
-    <string name="omnipod_common_cmd_cancel_tbr">取消臨時基礎率</string>
+    <string name="omnipod_common_cmd_set_tbr">設置臨時基礎</string>
+    <string name="omnipod_common_cmd_cancel_tbr_by_driver">取消臨時基礎（由驅動程式內部處理）</string>
+    <string name="omnipod_common_cmd_cancel_tbr">取消臨時基礎</string>
     <string name="omnipod_common_cmd_set_basal_schedule">設置基礎排程</string>
     <string name="omnipod_common_cmd_get_pod_status">獲取 Pod 狀態</string>
     <string name="omnipod_common_cmd_get_pod_info">獲取 Pod 資訊</string>
@@ -151,11 +151,11 @@
     <string name="omnipod_common_cmd_initialize_pod">初始化 Pod</string>
     <string name="omnipod_common_cmd_insert_cannula">插入套管</string>
     <string name="omnipod_common_cmd_read_pulse_log">讀取脈衝日誌</string>
-    <string name="omnipod_common_cmd_set_fake_suspended_tbr">設置假的臨時基礎率，因為 Pod 已暫停</string>
-    <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">取消因 Pod 暫停而設置的假的臨時基礎率</string>
-    <string name="omnipod_common_cmd_split_tbr">拆分臨時基礎率，因為取消時出現不確定故障</string>
-    <string name="omnipod_common_cmd_beep_config">蜂鳴音配置</string>
-    <string name="omnipod_common_cmd_play_test_beep">播放測試蜂鳴音</string>
+    <string name="omnipod_common_cmd_set_fake_suspended_tbr">設置假的臨時基礎，因為 Pod 已暫停</string>
+    <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">取消因 Pod 暫停而設置的假的臨時基礎</string>
+    <string name="omnipod_common_cmd_split_tbr">拆分臨時基礎，因為取消時出現不確定故障</string>
+    <string name="omnipod_common_cmd_beep_config">嗶聲配置</string>
+    <string name="omnipod_common_cmd_play_test_beep">播放測試嗶聲</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_finish_pairing_reminder">完成配對提醒</string>
     <string name="omnipod_common_alert_finish_setup_reminder_reminder">完成設置提醒</string>
