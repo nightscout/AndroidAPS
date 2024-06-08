@@ -202,7 +202,7 @@
     <!--    Temptarget-->
     <string name="mins">%1$d 分鐘</string>
     <!--    Translator-->
-    <string name="careportal">Careportal</string>
+    <string name="careportal">照護入口</string>
     <string name="careportal_bgcheck">血糖檢查</string>
     <string name="careportal_mbg">手動血糖或校正</string>
     <string name="careportal_announcement">公告</string>
@@ -268,8 +268,8 @@
     <string name="weight">權重</string>
     <string name="warning_Message">如果使用注射進行注射/填充，可能不準確！</string>
     <string name="olddata_Message">舊資料，請按「重新載入」</string>
-    <string name="tbb">總基礎率</string>
-    <string name="tbb2">TBB * 2</string>
+    <string name="tbb">總基礎胰島素基礎量(TBB)</string>
+    <string name="tbb2">總基礎胰島素基礎量(TBB) * 2</string>
     <!--    Ntp-->
     <string name="timedetection">時間偵測</string>
     <!-- User Entry -->
@@ -303,19 +303,19 @@
     <string name="uel_cancel_bolus">取消注射</string>
     <string name="uel_cancel_extended_bolus">取消延長注射</string>
     <string name="uel_cancel_tt">取消臨時目標</string>
-    <string name="uel_careportal">護理</string>
+    <string name="uel_careportal">照護</string>
     <string name="uel_site_change">更換位置</string>
     <string name="uel_reservoir_change">更換儲存器</string>
     <string name="uel_calibration">校正</string>
     <string name="uel_prime_bolus">注射注射</string>
     <string name="uel_treatment">治療</string>
-    <string name="uel_careportal_ns_refresh">護理 NS 重新整理</string>
+    <string name="uel_careportal_ns_refresh">照護 NS 重新整理</string>
     <string name="uel_profile_switch_ns_refresh">設定檔切換 NS 重新整理</string>
     <string name="uel_treatments_ns_refresh">治療 NS 重新整理</string>
     <string name="uel_tt_ns_refresh">臨時目標 NS 重新整理</string>
     <string name="uel_automation_removed">自動化已移除</string>
     <string name="uel_bg_removed">血糖已移除</string>
-    <string name="uel_careportal_removed">Careportal 已移除</string>
+    <string name="uel_careportal_removed">照護已移除</string>
     <string name="uel_bolus_removed">注射已移除</string>
     <string name="uel_carbs_removed">碳水化合物已移除</string>
     <string name="uel_temp_basal_removed">臨時基礎率已移除</string>
