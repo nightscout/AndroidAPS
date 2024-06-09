@@ -98,7 +98,7 @@
     <string name="noprofile">尚未從 NS 載入設定檔</string>
     <string name="exists">存在</string>
     <string name="notexists">不存在</string>
-    <string name="glucose">葡萄糖</string>
+    <string name="glucose">血糖</string>
     <string name="iob">IOB 活性胰島素</string>
     <string name="cob">COB 活性碳水</string>
     <string name="name_short">名稱：</string>
