@@ -107,7 +107,7 @@
     <string name="action_ecarbs">碳水化合物</string>
     <string name="action_percentage">百分比</string>
     <string name="action_start_min">開始 [分鐘]</string>
-    <string name="action_duration_h">持續時間 [小時]</string>
+    <string name="action_duration_h">持續 [小時]</string>
     <string name="action_insulin">胰島素</string>
     <string name="action_preset_1">預設 1</string>
     <string name="action_preset_2">預設 2</string>
