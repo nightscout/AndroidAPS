@@ -44,7 +44,7 @@
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">不注射，僅記錄</string>
     <!-- ProfileSwitchDialog -->
-    <string name="reuse_profile_pct_hours">重用 %1$d%% %2$小時</string>
+    <string name="reuse_profile_pct_hours">重新使用 %1$d%% %2$小時</string>
     <string name="timeshift_label">時間偏移</string>
     <string name="percentage_label">百分比</string>
     <!-- LoopDialog -->
