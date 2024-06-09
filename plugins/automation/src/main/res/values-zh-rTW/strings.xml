@@ -83,7 +83,7 @@
     <string name="target_u">目標 [%1$s]：</string>
     <string name="lastboluslabel">最後一次注射時間前</string>
     <string name="lastboluscompared">最後一次注射時間 %1$s %2$s 分鐘前</string>
-    <string name="triggercoblabel">COB</string>
+    <string name="triggercoblabel">COB 活性碳水</string>
     <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="triggerHeartRate">心率</string>
     <string name="triggerHeartRateDesc">心率 %1$s %2$.0f</string>
