@@ -101,7 +101,7 @@
     <string name="triggerPumpBatteryLevelDesc">幫浦電池電量 %1$s %2$.0f</string>
     <string name="iob_u">IOB [U]：</string>
     <string name="distance_short">距離 [米]：</string>
-    <string name="recurringTime">重複時間</string>
+    <string name="recurringTime">周期時間</string>
     <string name="every">每</string>
     <string name="never">從不</string>
     <string name="condition">條件：</string>
@@ -115,7 +115,7 @@
     <string name="preconditions">前提條件：</string>
     <string name="automation_event">自動化事件</string>
     <string name="reorder_label">重新排序</string>
-    <string name="user_action">用戶操作</string>
+    <string name="user_action">需用戶操作</string>
     <string name="remove_automation">移除自動化</string>
     <string name="sort_automation">排序自動化</string>
     <string name="remove_selected_items">移除選擇項目</string>
