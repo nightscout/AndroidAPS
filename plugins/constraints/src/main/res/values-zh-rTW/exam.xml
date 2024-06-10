@@ -130,7 +130,7 @@
     <string name="wrongcarbs_treatmentstab">在治療選單中刪除錯誤的輸入，然後輸入正確的碳水化合物值。</string>
     <string name="wrongcarbs_addinsulin">使用輸液組的注射選單進行胰島素注射。</string>
     <string name="wrongcarbs_donothing">什麼也不做 - AAPS會進行適當的調整。</string>
-    <string name="wrongcarbs_bolus">在首頁概覽中使用胰島素（注射）按鈕進行注射。</string>
+    <string name="wrongcarbs_bolus">在首頁總覽中使用胰島素（注射）按鈕進行注射。</string>
     <string name="wronginsulin_label">胰島素輸送/輸入錯誤</string>
     <string name="wronginsulin_whattodo">如果您收到的胰島素少於幫浦歷史記錄建議的量（例如因為阻塞、套管失敗或淋浴後忘記重新連線幫浦），應該怎麼做？</string>
     <string name="wronginsulin_careportal">從Nightscout Careportal中刪除胰島素資料以將其從幫浦歷史中移除。</string>
