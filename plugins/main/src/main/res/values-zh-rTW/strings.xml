@@ -199,7 +199,7 @@
     <string name="a11y_bg_outdated">過期</string>
     <string name="set_basal_question">接受新的臨時基礎速率：</string>
     <string name="overview_cgm">CGM</string>
-    <string name="overview">首頁概覽</string>
+    <string name="overview">首頁總覽</string>
     <string name="overview_shortname">主頁</string>
     <string name="description_overview">顯示當前循環狀態和最常用操作的按鈕</string>
     <string name="overview_buttons_selection">按鈕</string>
@@ -239,7 +239,7 @@
     <string name="button2">按鈕2</string>
     <string name="button3">按鈕3</string>
     <string name="prefs_range_title">可視化範圍</string>
-    <string name="prefs_range_summary">首頁概覽和智慧手錶中圖表的高低標記</string>
+    <string name="prefs_range_summary">首頁總覽和智慧手錶中圖表的高低標記</string>
     <string name="low_mark">低標記</string>
     <string name="high_mark">高標記</string>
     <string name="short_tabtitles">縮短標籤標題</string>
