@@ -33,7 +33,7 @@
     <string name="smscommunicator_allowednumbers">允許的電話號碼</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_bolus_reply_with_code">要輸送 %1$.2fU 的注射請回覆代碼 %2$s</string>
-    <string name="smscommunicator_meal_bolus_reply_with_code">要輸送 %1$.2fU 的餐餐注射請回覆代碼 %2$s</string>
+    <string name="smscommunicator_meal_bolus_reply_with_code">要輸送 %1$.2fU 的餐前注射請回覆代碼 %2$s</string>
     <string name="smscommunicator_temptarget_with_code">要設置臨時目標 %1$s 請回覆代碼 %2$s</string>
     <string name="smscommunicator_temptarget_cancel">要取消臨時目標請回覆代碼 %1$s</string>
     <string name="smscommunicator_stops_ns_with_code">要停用SMS遠端服務請回覆代碼 %1$s。\n\n請記住，您只能從AAPS主手機重新啟用它。</string>
@@ -44,7 +44,7 @@
     <string name="smscommunicator_remote_bolus_min_distance">一次注射與下一次注射之間至少必須經過多少分鐘</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">為了您的安全，編輯此偏好設定需要添加至少兩個電話號碼。</string>
     <string name="smscommunicator_bolus_delivered">注射 %1$.2f U 成功輸送</string>
-    <string name="smscommunicator_meal_bolus_delivered">餐餐注射 %1$.2f U 成功輸送</string>
+    <string name="smscommunicator_meal_bolus_delivered">餐前注射 %1$.2f U 成功輸送</string>
     <string name="smscommunicator_meal_bolus_delivered_tt">目標 %1$s 持續 %2$d 分鐘</string>
     <string name="smscommunicator_tt_set">目標 %1$s 持續 %2$d 分鐘設置成功</string>
     <string name="smscommunicator_tt_canceled">臨時目標取消成功</string>
@@ -217,7 +217,7 @@
     <string name="quickwizard_settings">快速嚮導設置</string>
     <string name="keep_screen_on_title">保持螢幕開啟</string>
     <string name="keep_screen_on_summary">防止Android關閉螢幕。當未連線電源時，這將消耗大量能量。</string>
-    <string name="treatments">治療</string>
+    <string name="treatments">治療紀錄</string>
     <string name="carb_increment_button_message">按下按鈕時要添加的碳水化合物數量</string>
     <string name="insulin_increment_button_message">按下按鈕時要添加的胰島素量</string>
     <string name="firstinsulinincrement">第一次胰島素增量</string>
