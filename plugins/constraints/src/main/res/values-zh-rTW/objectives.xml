@@ -25,7 +25,7 @@
     <string name="objectives_autosens_gate">成功進行一周的白天循環，並定期輸入碳水化合物。在簡單模式下，自動感應預設啟用。</string>
     <string name="objectives_autosens_learned">如果您的自動感應結果未在100%上下波動，您的個人設置可能是錯誤的。</string>
     <string name="objectives_smb_objective">啟用日間使用的附加功能，例如SMB</string>
-    <string name="objectives_smb_gate">您必須閱讀Wiki並提高MaxIOB以使SMB正常工作！一個好的開始是MaxIOB=平均餐餐注射+3倍的每日最大基礎速率。在簡單模式下，這個值根據Wiki中的建議計算，不需要設置。</string>
+    <string name="objectives_smb_gate">您必須閱讀Wiki並提高MaxIOB以使SMB正常工作！一個好的開始是MaxIOB=平均餐前注射+3倍的每日最大基礎速率。在簡單模式下，這個值根據Wiki中的建議計算，不需要設置。</string>
     <string name="objectives_smb_learned">使用SMB是您的目標。Oref1算法設計是為了幫助您的注射。您不應該給食物全量注射，只有部分，讓AAPS在需要時給予剩餘的注射。這樣可以給錯誤計算的碳水化合物留出更多空間。您知道可以設置注射計算器結果的百分比以減少注射量嗎？</string>
     <string name="objectives_auto_objective">啟用自動化</string>
     <string name="objectives_auto_gate">閱讀有關自動化如何工作的文檔。設置您的第一個簡單規則。讓AAPS僅顯示通知而不是行動。當您確定自動化在正確的時間觸發時，用實際行動替換通知。(https://wiki.aaps.app/en/latest/Usage/Automation.html)</string>
