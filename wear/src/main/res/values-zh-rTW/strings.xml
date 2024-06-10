@@ -120,7 +120,7 @@
     <string name="press_to_cancel">按下取消</string>
     <string name="cancel_bolus">取消注射</string>
     <string name="status_pump">幫浦</string>
-    <string name="status_loop">迴圈</string>
+    <string name="status_loop">循環</string>
     <string name="status_profile_switch">設定檔切換</string>
     <string name="status_tdd">每日總劑量</string>
     <string name="activity_carb">碳水化合物</string>
@@ -188,7 +188,7 @@
     <string name="no_status">S: --</string>
     <string name="time_stamp_na_min_ago">-- 分鐘前</string>
     <string name="delta_na">--- mg/dl</string>
-    <string name="no_loop_status">無迴圈狀態</string>
+    <string name="no_loop_status">無循環狀態</string>
     <string name="cob_000g">000g</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00U</string>
