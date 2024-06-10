@@ -48,10 +48,10 @@
     <string name="timeshift_label">時間偏移</string>
     <string name="percentage_label">百分比</string>
     <!-- LoopDialog -->
-    <string name="suspendloopfor1h">暫停迴圈 1 小時</string>
-    <string name="suspendloopfor2h">暫停迴圈 2 小時</string>
-    <string name="suspendloopfor3h">暫停迴圈 3 小時</string>
-    <string name="suspendloopfor10h">暫停迴圈 10 小時</string>
+    <string name="suspendloopfor1h">暫停循環 1 小時</string>
+    <string name="suspendloopfor2h">暫停循環 2 小時</string>
+    <string name="suspendloopfor3h">暫停循環 3 小時</string>
+    <string name="suspendloopfor10h">暫停循環 10 小時</string>
     <string name="disconnectpump">斷開幫浦連線</string>
     <string name="disconnectpumpfor15m">斷開幫浦連線 15 分鐘</string>
     <string name="disconnectpumpfor30m">斷開幫浦連線 30 分鐘</string>
@@ -101,12 +101,12 @@
     <string name="show_invalidated">顯示無效</string>
     <string name="hide_invalidated">隱藏無效</string>
     <string name="careportal_remove_started_events">移除 AAPS 已開始的條目</string>
-    <string name="hide_loop">隱藏迴圈</string>
-    <string name="show_loop">顯示迴圈</string>
+    <string name="hide_loop">隱藏循環</string>
+    <string name="show_loop">顯示循環</string>
     <string name="user_entry">用戶入口</string>
     <string name="clone_label">複製</string>
-    <string name="show_loop_records">顯示迴圈記錄</string>
-    <string name="show_hide_records">隱藏迴圈記錄</string>
+    <string name="show_loop_records">顯示循環記錄</string>
+    <string name="show_hide_records">隱藏循環記錄</string>
     <!-- ProfileHelperActivity -->
     <string name="profile1">設定檔 1</string>
     <string name="profile2">設定檔 2</string>
