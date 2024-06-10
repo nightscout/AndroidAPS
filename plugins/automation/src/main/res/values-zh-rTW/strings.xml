@@ -13,7 +13,7 @@
     <string name="alreadydisabled">已停用</string>
     <string name="alreadysuspended">已暫停</string>
     <string name="notsuspended">未暫停</string>
-    <string name="suspendloopforXmin">暫停迴圈 %1$d 分鐘</string>
+    <string name="suspendloopforXmin">暫停循環 %1$d 分鐘</string>
     <string name="notification_message">通知：%1$s</string>
     <string name="profilename">切換檔案至</string>
     <string name="changengetoprofilename">切換檔案至 %1$s</string>
