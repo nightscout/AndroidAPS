@@ -49,7 +49,7 @@
     <string name="openapsama_min_5m_carb_impact_summary">預設值：3.0（AMA）或8.0（SMB）。這是一個預設每5分鐘碳水化合物吸收影響的設置。預設值是每5分鐘3mg/dl。這會影響碳水化合物的衰減速度，以及在血糖下降超過預期或上升不如預期時，計算未來預測血糖的碳水化合物吸收量。</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">預設值：3 這是一個關鍵的OpenAPS安全上限。這會將您的基礎率限制為您最大基礎率的3倍（在這個情況中）。您可能不需要更改此值，但您應該了解所討論的“3倍最大日基礎率；4倍當前基礎率”的安全上限。</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">預設值：4 這是關鍵OpenAPS安全上限的另一半，“3倍最大日基礎率；4倍當前基礎率”的另一半。這意味著無論您的幫浦設置的最大基礎率是多少，您的基礎率都不能高於此數字的當前基礎率的4倍。這是為了防止在理解算法如何工作之前設置過高的最大基礎率而進入危險區域。預設值是4倍；大多數人不需要調整此值，反而更可能需要調整其他設置，如果他們覺得“達到”這個安全上限。</string>
-    <string name="openapsama_bolus_snooze_dia_divisor_summary">預設值：2\n在您進行餐前注射後會執行注射延遲，因此當您剛吃完飯時，循環不會使用低溫度。這裡的示例和預設值為2；因此3小時的DIA意味著注射延遲會逐漸在1.5小時內（3DIA/2）結束。</string>
+    <string name="openapsama_bolus_snooze_dia_divisor_summary">預設值：2\n在您進行餐前注射後，將會延遲注射，因此當您剛吃完飯時，循環不會使用低臨時。這裡的示例和預設值為2；因此3小時的DIA意味著延遲注射會逐漸在1.5小時內（3DIA/2）結束。</string>
     <string name="openapsama_link_to_preference_json_doc_txt">注意！\n通常您不需要更改以下值。請點擊這裡並閱讀文本，確保您在更改這些值之前理解它。</string>
     <string name="always_use_short_avg">始終使用短平均增量而不是簡單增量</string>
     <string name="always_use_short_avg_summary">當來自未過濾來源（如xDrip+）的資料發生干擾時有用。</string>
