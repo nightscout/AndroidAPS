@@ -128,7 +128,7 @@
     <string name="autotune_categorize_uam_as_basal_title">將UAM分類為基礎率</string>
     <string name="autotune_categorize_uam_as_basal_summary">僅在您已可靠地輸入所有用餐的碳水化合物時啟用此選項，這樣自動調整會使用突然而至的升高來推薦基礎率的變更。</string>
     <string name="autotune_tune_insulin_curve_title">調整胰島素曲線</string>
-    <string name="autotune_tune_insulin_curve_summary">僅在您使用自由峰值時啟用此選項。這個選項將調整峰值和DIA的持續時間</string>
+    <string name="autotune_tune_insulin_curve_summary">僅在您使用自定峰值時啟用此選項。這個選項將調整峰值和DIA的持續時間</string>
     <string name="autotune_default_tune_days_title">資料天數</string>
     <string name="autotune_circadian_ic_isf_title">將平均結果應用於日夜IC/ISF</string>
     <string name="autotune_circadian_ic_isf_summary">自動調整不會調整日夜變化，此選項僅將IC和ISF的平均調整應用於您的日夜輸入檔案</string>
