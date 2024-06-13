@@ -41,7 +41,7 @@
     <string name="passwords">密碼</string>
     <string name="nightscout_url">Nightscout URL</string>
     <string name="nightscout_api_secret">Nightscout API 密碼</string>
-    <string name="free_text_fields">自由文本欄位</string>
+    <string name="free_text_fields">自定義文字欄位</string>
     <string name="agree">我理解並同意。</string>
     <string name="login_open_humans">登錄到 Open Humans</string>
     <string name="final_touches">最後的修整</string>
