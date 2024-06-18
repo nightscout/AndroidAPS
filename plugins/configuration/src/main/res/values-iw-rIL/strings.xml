@@ -94,7 +94,6 @@
     <string name="check_preferences_before_import">בדקו את ההעדפות לפני ביצוע הייבוא:</string>
     <string name="check_preferences_cannot_import">ההעדפות לא ניתנות לייבוא!</string>
     <string name="check_preferences_dangerous_import">אין לייבא העדפות אלה!</string>
-    <string name="nav_export">ייצוא הגדרות</string>
     <string name="export_to">ייצא הגדרות ל-</string>
     <string name="import_from">יבא הגדרות מ-</string>
     <string name="setting_imported">הגדרות מיובאות</string>
