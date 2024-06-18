@@ -79,7 +79,6 @@
     <string name="check_preferences_before_import">请在导入之前检查首选项：</string>
     <string name="check_preferences_cannot_import">无法导入首选项！</string>
     <string name="check_preferences_dangerous_import">不应导入首选项 !</string>
-    <string name="nav_export">导出配置</string>
     <string name="export_to">导出配置</string>
     <string name="import_from">导入配置</string>
     <string name="setting_imported">配置导入了</string>
