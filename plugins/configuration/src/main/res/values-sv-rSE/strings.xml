@@ -94,7 +94,6 @@
     <string name="check_preferences_before_import">Vänligen kontrollera inställningarna innan du importerar:</string>
     <string name="check_preferences_cannot_import">Inställningarna kan inte importeras!</string>
     <string name="check_preferences_dangerous_import">Inställningar bör inte importeras!</string>
-    <string name="nav_export">Exportera inställningar</string>
     <string name="export_to">Exportera inställningar till</string>
     <string name="import_from">Importera inställningar från</string>
     <string name="setting_imported">Inställningar importerade</string>
