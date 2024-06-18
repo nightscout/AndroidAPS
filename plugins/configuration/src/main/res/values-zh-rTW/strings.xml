@@ -94,7 +94,6 @@
     <string name="check_preferences_before_import">請在匯入前檢查偏好設定：</string>
     <string name="check_preferences_cannot_import">無法匯入偏好設定！</string>
     <string name="check_preferences_dangerous_import">不應匯入偏好設定！</string>
-    <string name="nav_export">匯出設定</string>
     <string name="export_to">匯出設定到</string>
     <string name="import_from">從...匯入設定</string>
     <string name="setting_imported">設定已匯入</string>
