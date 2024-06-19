@@ -29,7 +29,7 @@ class PathedOTAppPlugin @Inject constructor(injector: HasAndroidInjector, rh: Re
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
         .preferencesId(R.xml.pref_bgsource)
-        .pluginIcon(app.aaps.core.main.R.drawable.ic_generic_cgm)
+        .pluginIcon(app.aaps.core.ui.R.mipmap.ottai_icon)
         .pluginName(R.string.patched_ottai_app)
         .description(R.string.description_source_patched_ottai_app),
     aapsLogger, rh, injector), BgSource {
