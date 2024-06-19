@@ -94,7 +94,6 @@
     <string name="check_preferences_before_import">가져오기 전에 환경설정을 확인하세요.</string>
     <string name="check_preferences_cannot_import">환경 설정을 가져올 수가 없습니다.</string>
     <string name="check_preferences_dangerous_import">환경 설정을 가져오면 안됩니다.</string>
-    <string name="nav_export">설정 저장하기</string>
     <string name="export_to">다음 위치에 설정을 저장하시겠습니까</string>
     <string name="import_from">다음 위치에서 설정을 불러오시겠습니까</string>
     <string name="setting_imported">설정을 불러왔습니다</string>

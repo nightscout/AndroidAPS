@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="smoothing_shortname">平滑處理</string>
+    <string name="exponential_smoothing_name">指數平滑</string>
+    <string name="description_exponential_smoothing">"二階指數平滑算法"</string>
+    <string name="avg_smoothing_name">平均平滑</string>
+    <string name="description_avg_smoothing">"平均平滑算法，最新值不受影響"</string>
+    <string name="no_smoothing_name">無平滑</string>
+    <string name="description_no_smoothing">"對輸入的血糖資料不進行平滑處理。當您已經有過濾的資料時使用，例如來自BYODA G6的資料。"</string>
+</resources>

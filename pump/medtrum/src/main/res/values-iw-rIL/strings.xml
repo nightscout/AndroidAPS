@@ -9,6 +9,7 @@
     <!-- wizard-->
     <string name="step_prepare_patch_connect">חיבור ומילוי</string>
     <string name="step_prime">תיחול</string>
+    <string name="can_export_settings">ניתן לייצא את ההגדרות כדי להיות מסוגלים לשחזר את הפעלת המשאבה הנוכחית מאוחר יותר.</string>
     <!-- settings-->
     <string name="pump_unsupported">המשאבה לא נבדקה: %1$s! פנו אלינו לתמיכה דרך discord או github</string>
     <!-- treatment state-->

@@ -87,7 +87,7 @@
     <string name="cobcompared">GA %1$s %2$.0f</string>
     <string name="triggerHeartRate">Fréquence Cardiaque</string>
     <string name="triggerHeartRateDesc">FC %1$s %2$.0f</string>
-    <string name="triggerSensorAgeLabel">Age capteur</string>
+    <string name="triggerSensorAgeLabel">Âge capteur</string>
     <string name="triggerSensorAgeDesc">Âge du capteur %1$s %2$.1f heure</string>
     <string name="triggerCannulaAgeLabel">Âge canule</string>
     <string name="triggerCannulaAgeDesc">Âge de canule %1$s %2$.1f heure</string>

@@ -95,7 +95,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="check_preferences_before_import">Veuillez vérifier les préférences avant d\'importer:</string>
     <string name="check_preferences_cannot_import">Les préférences ne peuvent pas être importées !</string>
     <string name="check_preferences_dangerous_import">Les préférences ne doivent pas être importées !</string>
-    <string name="nav_export">Exporter les paramètres</string>
     <string name="export_to">Exporter les paramètres au</string>
     <string name="import_from">Importer les paramètres depuis</string>
     <string name="setting_imported">Paramètres importés</string>

@@ -94,7 +94,6 @@
     <string name="check_preferences_before_import">Ελέγξτε τις προτιμήσεις πριν την εισαγωγή:</string>
     <string name="check_preferences_cannot_import">Δεν είναι δυνατή η εισαγωγή προτιμήσεων!</string>
     <string name="check_preferences_dangerous_import">Δεν πρέπει να εισαχθούν προτιμήσεις!</string>
-    <string name="nav_export">Εξαγωγή ρυθμίσεων</string>
     <string name="export_to">Εξαγωγή ρυθμίσεων σε</string>
     <string name="import_from">Εισαγωγή ρυθμίσεων από</string>
     <string name="setting_imported">Ρυθμίσεις εισήχθησαν</string>

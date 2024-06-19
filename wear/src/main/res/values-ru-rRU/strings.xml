@@ -114,6 +114,7 @@
     <string name="action_preset_3">Предустановка 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Произвольное количество</string>
     <string name="action_confirm">ПОДТВЕРДИТЬ</string>
+    <string name="action_timeshift">смещение по времени</string>
     <string name="action_bolus">Болюс</string>
     <string name="bolus_progress">Вводится болюс</string>
     <string name="press_to_cancel">нажмите для отмены</string>
@@ -197,6 +198,8 @@
     <string name="week_short">н</string>
     <string name="day_short">д</string>
     <string name="hour_short">ч</string>
+    <string name="hour_minute">%1$s:%2$s</string>
+    <string name="hour_minute_second">%1$s%2$s%3$s</string>
     <string name="old">старые</string>
     <string name="old_warning">!старое!</string>
     <string name="error">!ошибка!</string>
