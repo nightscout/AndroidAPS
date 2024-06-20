@@ -48,6 +48,9 @@ interface Intents {
         var AIDEX_TRANSMITTER_SN = "com.microtechmd.cgms.aidex.TransmitterSerialNumber"
         var AIDEX_SENSOR_ID = "com.microtechmd.cgms.aidex.SensorId"
 
+        // Patched Ottai App -> AAPS
+        const val OTAPP_BG = "cn.diyaps.sharing.OT_APP"
+
         // Patched SI App -> AAPS
         const val SIAPP_BG = "cn.diyaps.sharing.SI_APP"
 

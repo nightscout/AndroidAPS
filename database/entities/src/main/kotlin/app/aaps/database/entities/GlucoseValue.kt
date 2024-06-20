@@ -116,6 +116,7 @@ data class GlucoseValue(
         MM_600_SERIES("MM600Series"),
         EVERSENSE("Eversense"),
         AIDEX("GlucoRx Aidex"),
+        OTApp("Ottai App"),
         SIApp("SI App"),
         SinoApp("SI App"),
         RANDOM("Random"),
