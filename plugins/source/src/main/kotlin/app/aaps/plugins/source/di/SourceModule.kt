@@ -10,6 +10,7 @@ import app.aaps.plugins.source.EversensePlugin
 import app.aaps.plugins.source.GlimpPlugin
 import app.aaps.plugins.source.MM640gPlugin
 import app.aaps.plugins.source.NSClientSourcePlugin
+import app.aaps.plugins.source.PathedOTAppPlugin
 import app.aaps.plugins.source.PathedSIAppPlugin
 import app.aaps.plugins.source.PathedSinoAppPlugin
 import app.aaps.plugins.source.PoctechPlugin
@@ -34,6 +35,7 @@ abstract class SourceModule {
     @ContributesAndroidInjector abstract fun contributesXdripWorker(): XdripSourcePlugin.XdripSourceWorker
     @ContributesAndroidInjector abstract fun contributesDexcomWorker(): DexcomPlugin.DexcomWorker
     @ContributesAndroidInjector abstract fun contributesMM640gWorker(): MM640gPlugin.MM640gWorker
+    @ContributesAndroidInjector abstract fun contributesOTAppWorker(): PathedOTAppPlugin.PathedOTAppWorker
     @ContributesAndroidInjector abstract fun contributesSIAppWorker(): PathedSIAppPlugin.PathedSIAppWorker
     @ContributesAndroidInjector abstract fun contributesSinoAppWorker(): PathedSinoAppPlugin.PathedSinoAppWorker
     @ContributesAndroidInjector abstract fun contributesGlimpWorker(): GlimpPlugin.GlimpWorker

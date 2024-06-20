@@ -43,6 +43,9 @@
     <string name="dexcom_log_ns_sensor_change_summary">Create event \"Sensor Change\" in NS automatically on sensor start</string>
     <string name="direction">direction</string>
 
+    <!-- Patched OT App -->
+    <string name="patched_ottai_app">欧态-小欧生态</string>
+    <string name="description_source_patched_ottai_app">从欧态易测APP接收血糖值。</string>
     <!-- Patched SI and Sino App -->
     <string name="patched_si_app">Patched SI App</string>
     <string name="patched_sino_app">Patched Sino App</string>
