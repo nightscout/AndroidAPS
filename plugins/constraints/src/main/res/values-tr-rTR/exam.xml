@@ -103,10 +103,13 @@
     <string name="troubleshooting_wheretoask">AAPS ile ilgili nereden yardım alabilirsiniz?</string>
     <string name="troubleshooting_fb">AAPS Kullanıcıları Facebook grubundan tavsiye isteyebilirsiniz.</string>
     <string name="troubleshooting_wiki">AAPS belgelerini okumalısınız (ve yeniden okumalısınız).</string>
+    <string name="troubleshooting_discord">AAPS Discord\'da, tavsiye isteyebilir, teknik problemleri tartışabilir ve özellik isteğinde bulunabilirsiniz.</string>
+    <string name="troubleshooting_github">Hatalar ve özellik isteklerini de Github\'a gönderebilirsiniz.</string>
     <string name="troubleshooting_yourendo">Diyabet kliniğinize/endokrinoloğunuza sormalısınız.</string>
     <string name="troubleshooting_hint1">https://wiki.aaps.app/tr/latest/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
     <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
+    <string name="troubleshooting_hint4">https://github.com/nightscout/AndroidAPS/issues</string>
     <string name="insulin_plugins">İnsülin Eklentileri</string>
     <string name="insulin_ultrarapid">Ultra-Hızlı Oref eklentisi ile hangi insülini kullanmalısınız?</string>
     <string name="insulin_fiasp">Fiasp®</string>
