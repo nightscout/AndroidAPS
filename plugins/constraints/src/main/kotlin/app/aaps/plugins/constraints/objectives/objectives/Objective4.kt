@@ -20,9 +20,9 @@ class Objective4(injector: HasAndroidInjector) : Objective(injector, "maxbasal",
         tasks.add(
             object : Task(this, R.string.objectives_maxbasal_gate) {
                 override fun isCompleted(): Boolean {
-                    val profile = profileFunction.getProfile() ?: return false
-                    val maxBasalSet = sp.getDouble(app.aaps.core.utils.R.string.key_openapsma_max_basal, 0.0)
-                    val maxDailyBasal = profile.getMaxDailyBasal()
+                    // val profile = profileFunction.getProfile() ?: return false
+                    // val maxBasalSet = sp.getDouble(app.aaps.core.utils.R.string.key_openapsma_max_basal, 0.0)
+                    // val maxDailyBasal = profile.getMaxDailyBasal()
                     return true
                 }
             }.learned(Learned(R.string.objectives_maxbasal_learned))
