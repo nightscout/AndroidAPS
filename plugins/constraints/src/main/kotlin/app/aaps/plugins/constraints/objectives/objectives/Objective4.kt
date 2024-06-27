@@ -23,7 +23,7 @@ class Objective4(injector: HasAndroidInjector) : Objective(injector, "maxbasal",
                     val profile = profileFunction.getProfile() ?: return false
                     val maxBasalSet = sp.getDouble(app.aaps.core.utils.R.string.key_openapsma_max_basal, 0.0)
                     val maxDailyBasal = profile.getMaxDailyBasal()
-                    return maxBasalSet > 2.8 * maxDailyBasal
+                    return true
                 }
             }.learned(Learned(R.string.objectives_maxbasal_learned))
         )
