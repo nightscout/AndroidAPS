@@ -8,7 +8,7 @@ class Objective7(injector: HasAndroidInjector) : Objective(injector, "autosens",
 
     init {
         tasks.add(
-            MinimumDurationTask(this, T.days(7).msecs())
+            MinimumDurationTask(this, T.days(0).msecs())
                 .learned(Learned(R.string.objectives_autosens_learned))
         )
     }
