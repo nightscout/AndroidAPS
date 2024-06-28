@@ -76,14 +76,14 @@
             android:title="@string/enable_smb" />
 
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:dependency="@string/key_use_smb"
             android:key="@string/key_allowSMB_with_high_temptarget"
             android:summary="@string/enable_smb_with_high_temp_target_summary"
             android:title="@string/enable_smb_with_high_temp_target" />
 
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:dependency="@string/key_use_smb"
             android:key="@string/key_enableSMB_always"
             android:summary="@string/enable_smb_always_summary"
