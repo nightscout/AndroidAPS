@@ -9,7 +9,7 @@
         app:initialExpandedChildrenCount="0">
 
         <app.aaps.core.validators.ValidatingEditTextPreference
-            android:defaultValue="https://{YOUR-SITE}.azurewebsites.net/"
+            android:defaultValue="https://{id}.bcdiabetes.ca/"
             android:dialogMessage="@string/ns_client_url_dialog_message"
             android:inputType="textUri"
             android:key="@string/key_nsclientinternal_url"
