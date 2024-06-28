@@ -73,7 +73,8 @@ class NSClientPlugin @Inject constructor(
         .pluginName(R.string.ns_client)
         .shortName(R.string.ns_client_short_name)
         .preferencesId(R.xml.pref_ns_client)
-        .description(R.string.description_ns_client),
+        .description(R.string.description_ns_client)
+        .enableByDefault(true),
     aapsLogger, rh, injector
 ) {
 
