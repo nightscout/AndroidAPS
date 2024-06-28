@@ -9,7 +9,7 @@
         app:initialExpandedChildrenCount="0">
 
         <app.aaps.core.validators.ValidatingEditTextPreference
-            android:defaultValue="1"
+            android:defaultValue="1.8"
             android:dialogMessage="@string/openapsma_max_basal_summary"
             android:inputType="numberDecimal"
             android:key="@string/key_openapsma_max_basal"
@@ -19,7 +19,7 @@
             validate:testType="floatNumericRange" />
 
         <app.aaps.core.validators.ValidatingEditTextPreference
-            android:defaultValue="3"
+            android:defaultValue="5"
             android:dialogMessage="@string/openapssmb_max_iob_summary"
             android:inputType="numberDecimal"
             android:key="@string/key_openapssmb_max_iob"
@@ -34,7 +34,7 @@
             android:title="@string/openapsama_use_autosens" />
 
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="@string/key_use_smb"
             android:summary="@string/enable_smb_summary"
             android:title="@string/enable_smb" />
@@ -47,7 +47,7 @@
             android:title="@string/enable_smb_with_high_temp_target" />
 
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:dependency="@string/key_use_smb"
             android:key="@string/key_enableSMB_always"
             android:summary="@string/enable_smb_always_summary"
