@@ -27,7 +27,8 @@ class ExponentialSmoothingPlugin @Inject constructor(
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_timeline_24)
         .pluginName(R.string.exponential_smoothing_name)
         .shortName(R.string.smoothing_shortname)
-        .description(R.string.description_exponential_smoothing),
+        .description(R.string.description_exponential_smoothing)
+        .enableByDefault(true),
     aapsLogger, rh, injector
 ), Smoothing {
 
