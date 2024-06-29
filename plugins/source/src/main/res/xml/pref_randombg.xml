@@ -9,7 +9,7 @@
         android:title="Random BG">
 
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="@string/key_do_ns_upload"
             android:title="@string/do_ns_upload_title" />
 
