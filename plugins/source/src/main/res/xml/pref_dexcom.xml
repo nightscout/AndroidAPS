@@ -8,12 +8,12 @@
         app:initialExpandedChildrenCount="0">
 
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="@string/key_do_ns_upload"
             android:title="@string/do_ns_upload_title" />
 
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="@string/key_dexcom_log_ns_sensor_change"
             android:summary="@string/dexcom_log_ns_sensor_change_summary"
             android:title="@string/dexcom_log_ns_sensor_change_title" />
