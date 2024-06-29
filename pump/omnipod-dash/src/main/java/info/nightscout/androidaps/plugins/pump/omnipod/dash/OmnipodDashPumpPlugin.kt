@@ -135,6 +135,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             .preferencesId(R.xml.omnipod_dash_preferences)
             .description(R.string.omnipod_dash_pump_description)
             .enableByDefault(true)
+            .visibleByDefault(true)
 
         private val pumpDescription = PumpDescription(PumpType.OMNIPOD_DASH)
     }

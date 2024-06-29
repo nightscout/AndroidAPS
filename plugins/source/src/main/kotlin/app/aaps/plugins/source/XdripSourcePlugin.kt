@@ -46,7 +46,8 @@ class XdripSourcePlugin @Inject constructor(
         .preferencesId(R.xml.pref_dexcom)
         .pluginName(R.string.source_xdrip)
         .description(R.string.description_source_xdrip)
-        .enableByDefault(true),
+        .enableByDefault(true)
+        .visibleByDefault(true),
     aapsLogger, rh, injector
 ), BgSource, XDripSource {
 

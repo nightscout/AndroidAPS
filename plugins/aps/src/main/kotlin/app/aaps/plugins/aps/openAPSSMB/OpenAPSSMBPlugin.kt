@@ -72,7 +72,8 @@ open class OpenAPSSMBPlugin @Inject constructor(
         .shortName(app.aaps.core.ui.R.string.smb_shortname)
         .preferencesId(R.xml.pref_openapssmb)
         .description(R.string.description_smb)
-        .setDefault(),
+        .setDefault()
+        .visibleByDefault(true),
     aapsLogger, rh, injector
 ), APS, PluginConstraints {
 
