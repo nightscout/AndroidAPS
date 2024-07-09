@@ -99,7 +99,7 @@
     <string name="omnipod_common_pod_deactivation_wizard_discard_pod">丟棄 Pod</string>
     <!-- Omnipod - Preferences -->
     <string name="omnipod_common_preferences_bolus_beeps_enabled">啟用胰島素劑量時，發出嗶聲</string>
-    <string name="omnipod_common_preferences_basal_beeps_enabled">啟用基礎蜂時，發出嗶聲</string>
+    <string name="omnipod_common_preferences_basal_beeps_enabled">啟用個人設置基礎時，發出嗶聲</string>
     <string name="omnipod_common_preferences_smb_beeps_enabled">啟用 SMB 時，發出嗶聲</string>
     <string name="omnipod_common_preferences_tbr_beeps_enabled">啟用臨時基礎率時，發出嗶聲</string>
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">在 Omnipod 標籤中顯示暫停輸送按鈕</string>
