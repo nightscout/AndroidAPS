@@ -159,7 +159,7 @@
     <string name="breadgrams_grams">估計和記錄攝入的碳水化合物時應僅使用克。</string>
     <string name="breadgrams_exchange">攝入的碳水化合物可以使用適當的交換系統記錄（例如DAFNE「CHO」交換或歐洲「麵包單位」）。</string>
     <string name="breadgrams_decay">AAPS使用動態模型來估計碳水化合物吸收並計算COB。</string>
-    <string name="breadgrams_calc">如果血糖水平超出可接受範圍（過低或過高），注射計算器可以用來提供碳水化合物或胰島素的修正建議。</string>
+    <string name="breadgrams_calc">如果血糖水平超出可接受範圍（過低或過高），注射計算機可以用來提供碳水化合物或胰島素的修正建議。</string>
     <string name="breadgrams_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="extendedcarbs_label">e-碳水化合物</string>
     <string name="extendedcarbs_handling">您可以使用e-碳水化合物（延長碳水化合物）做什麼？</string>
