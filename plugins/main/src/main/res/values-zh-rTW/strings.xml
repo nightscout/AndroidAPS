@@ -120,7 +120,7 @@
     <string name="short_fat">脂肪</string>
     <string name="category">類別</string>
     <string name="subcategory">子類別</string>
-    <string name="calculator_label">計算器</string>
+    <string name="calculator_label">計算機</string>
     <!-- Theme switcher dark and light mode-->
     <string name="theme_switcher_summary">選擇深色、淺色或跟隨系統主題</string>
     <string name="app_color_scheme">應用顏色方案</string>
