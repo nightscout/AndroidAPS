@@ -275,7 +275,7 @@
     <string name="timedetection">時間偵測</string>
     <!-- User Entry -->
     <string name="uel_bolus">注射</string>
-    <string name="uel_bolus_calculator">注射計算器</string>
+    <string name="uel_bolus_calculator">注射計算機</string>
     <string name="uel_bolus_advisor">注射顧問</string>
     <string name="uel_extended_bolus">延長注射</string>
     <string name="uel_superbolus_tbr">超級注射臨時基礎率</string>
