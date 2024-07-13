@@ -24,7 +24,9 @@ import android.os.SystemClock
 import androidx.core.app.ActivityCompat
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.ui.toast.ToastUtils
+import info.nightscout.pump.medtrum.R
 import info.nightscout.pump.medtrum.comm.ManufacturerData
 import info.nightscout.pump.medtrum.comm.ReadDataPacket
 import info.nightscout.pump.medtrum.comm.WriteCommandPackets
@@ -46,7 +48,8 @@ interface BLECommCallback {
 @Singleton
 class BLEComm @Inject internal constructor(
     private val aapsLogger: AAPSLogger,
-    private val context: Context
+    private val context: Context,
+    private val sp: SP
 ) {
 
     companion object {
@@ -383,7 +386,12 @@ class BLEComm @Inject internal constructor(
             mBluetoothGatt?.discoverServices()
         } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
             if (isConnecting) {
-                aapsLogger.warn(LTag.PUMPBTCOMM, "Disconnected while connecting!")
+                val resetDevice = sp.getBoolean(R.string.key_scan_on_connection_error, true)
+                if (resetDevice) {
+                    // When we are disconnected during connecting, we reset the device address to force a new scan
+                    aapsLogger.warn(LTag.PUMPBTCOMM, "Disconnected while connecting! Reset device address")
+                    mDeviceAddress = null
+                }
                 // Wait a bit before retrying
                 SystemClock.sleep(2000)
             }

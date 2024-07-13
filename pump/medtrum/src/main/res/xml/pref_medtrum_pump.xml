@@ -63,6 +63,18 @@
             validate:minNumber="20"
             validate:testType="numericRange" />
 
+        <androidx.preference.PreferenceScreen
+            android:key="medtrum_advanced_settings"
+            android:title="@string/advanced_settings_title">
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_scan_on_connection_error"
+                android:title="@string/scan_on_connection_error_title"
+                android:summary="@string/scan_on_connection_error_summary" />
+
+        </androidx.preference.PreferenceScreen>
+
     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>
