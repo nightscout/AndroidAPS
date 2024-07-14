@@ -207,27 +207,40 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/pump_status_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:background="?attr/pumpStatusBackground"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
         android:visibility="gone">
 
         <TextView
             android:id="@+id/pump_status"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
-            android:background="?attr/pumpStatusBackground"
-            android:gravity="center_vertical|center_horizontal"
-            android:paddingTop="6dp"
-            android:paddingBottom="6dp"
+            android:layout_centerInParent="true"
+            android:gravity="center"
             android:text="@string/initializing"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
-    </LinearLayout>
+        <Button
+            android:id="@+id/stop_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="@string/stop"
+            android:backgroundTint="?attr/bolusColor"
+            android:textColor="?attr/defaultTextColor"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:layout_marginEnd="16dp"
+            android:visibility="gone" />
+
+    </RelativeLayout>
 
     <ProgressBar
         android:id="@+id/progress_bar"
