@@ -172,7 +172,7 @@
     <string name="nsclient_howcanyou">如何遠端監控AAPS（例如監控您的孩子）？</string>
     <string name="nsclient_nightscout">AAPSClient應用、Nightscout應用和Nightscout網頁都允許您遠端監控AAPS。</string>
     <string name="nsclient_dexcomfollow">其他應用（例如Dexcom follow、xDrip運行在跟隨模式下）允許您遠端跟踪某些參數（例如血糖/傳感器值），但使用不同的算法，因此可能會有不準確的IOB或COB值。</string>
-    <string name="nsclient_data">要遠端跟踪AAPS，兩個設備都必須有網絡連線（例如通過Wi-Fi或行動/蜂窩網絡資料）。</string>
+    <string name="nsclient_data">要遠端追踪AAPS，兩個設備都必須有網絡連線（例如通過Wi-Fi或行動網路）。</string>
     <string name="nsclient_fullcontrol">AAPSClient作為遠端跟隨者使用時，既可以監控也可以完全控制AAPS。</string>
     <string name="nsclient_hint1">https://wiki.aaps.app/en/latest/Children/Children.html</string>
     <string name="isf_label_exam">胰島素敏感因子 (ISF)</string>
