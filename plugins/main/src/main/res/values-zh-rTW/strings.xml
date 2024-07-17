@@ -120,7 +120,7 @@
     <string name="short_fat">脂肪</string>
     <string name="category">類別</string>
     <string name="subcategory">子類別</string>
-    <string name="calculator_label">計算器</string>
+    <string name="calculator_label">計算機</string>
     <!-- Theme switcher dark and light mode-->
     <string name="theme_switcher_summary">選擇深色、淺色或跟隨系統主題</string>
     <string name="app_color_scheme">應用顏色方案</string>
@@ -217,7 +217,7 @@
     <string name="quickwizard_settings">快速嚮導設置</string>
     <string name="keep_screen_on_title">保持螢幕開啟</string>
     <string name="keep_screen_on_summary">防止Android關閉螢幕。當未連線電源時，這將消耗大量能量。</string>
-    <string name="treatments">治療紀錄</string>
+    <string name="treatments">治療措施</string>
     <string name="carb_increment_button_message">按下按鈕時要添加的碳水化合物數量</string>
     <string name="insulin_increment_button_message">按下按鈕時要添加的胰島素量</string>
     <string name="firstinsulinincrement">第一次胰島素增量</string>
