@@ -3,6 +3,7 @@ package app.aaps.pump.equil
 import android.content.Context
 import android.os.Handler
 import android.os.HandlerThread
+import android.os.SystemClock
 import android.text.format.DateFormat
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
@@ -243,6 +244,7 @@ import javax.inject.Singleton
                 pumpEnactResult = cancelTempBasal(true)
             }
             if (pumpEnactResult.success) {
+                SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
                 pumpEnactResult = equilManager.setTempBasal(
                     absoluteRate, durationInMinutes, false
                 )
