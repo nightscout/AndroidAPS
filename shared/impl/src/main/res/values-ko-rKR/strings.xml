@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cwf_comment_background">배경화면 이미지</string>
+    <string name="cwf_comment_chart">그래픽 (혈당, basal, 예측 선...)</string>
+    <string name="cwf_comment_cover_chart">그래프 앞 그리고 문자 필드 뒤 이미지</string>
+    <string name="cwf_comment_freetext1">무료 문자 1</string>
+    <string name="cwf_comment_freetext2">무료 문자 2</string>
+    <string name="cwf_comment_freetext3">무료 문자 3</string>
+    <string name="cwf_comment_freetext4">무료 문자 4</string>
+    <string name="cwf_comment_iob1">자세한 경우 IOB 레이블 또는 IOB 합계</string>
+    <string name="cwf_comment_iob2">자세한 경우 IOB 합계 또는 (Bolus_IOB|Basal_IOB)</string>
+    <string name="cwf_comment_cob1">COB 레이블</string>
+    <string name="cwf_comment_cob2">COB 값</string>
+    <string name="cwf_comment_delta">단기 BG 델타</string>
+    <string name="cwf_comment_avg_delta">평균 BG 델타 (15분)</string>
+    <string name="cwf_comment_uploader_battery">핸드폰 베터리 (%)</string>
+    <string name="cwf_comment_rig_battery">글로벌 루프 베터리 (%)</string>
+    <string name="cwf_comment_basalRate">Basal양</string>
+    <string name="cwf_comment_bgi">BGI 값</string>
+    <string name="cwf_comment_time">시간 (HH:MM 또는 HH:MM:SS)</string>
+    <string name="cwf_comment_hour">시간 (HH)</string>
+    <string name="cwf_comment_minute">분 (MM)</string>
+    <string name="cwf_comment_second">초 (SS)</string>
+    <string name="cwf_comment_timePeriod">오전 또는 오후</string>
+    <string name="cwf_comment_day_name">요일</string>
+    <string name="cwf_comment_day">일 (DD)</string>
+    <string name="cwf_comment_week_number">주 번호 (ww)</string>
+    <string name="cwf_comment_month">월명 (짧게)</string>
+    <string name="cwf_comment_loop">루프 상태 및 이전</string>
+    <string name="cwf_comment_direction">방향 화살표</string>
+    <string name="cwf_comment_timestamp">몇 분 전에 마지막으로 받은 BG</string>
+    <string name="cwf_comment_sgv">BG 값</string>
+    <string name="cwf_comment_cover_plate">문자 앞의 표지 이미지 (다이얼...)</string>
+    <string name="cwf_comment_hour_hand">시침 이미지 (아날로그 시계)</string>
+    <string name="cwf_comment_minute_hand">분침 이미지 (아날로그 시계)</string>
+    <string name="cwf_comment_second_hand">초침 이미지 (아날로그 시계)</string>
+</resources>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumoCommon - Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">幫浦或驅動程式不支援此操作。</string>
+    <string name="pump_operation_not_yet_supported_by_pump">幫浦尚未支援此操作。</string>
+    <string name="common_resultok">確定</string>
+    <string name="pump_serial_number">幫浦序列號</string>
+    <string name="bolus_delivered_so_far">%1$.2f U / %2$.2f U 已輸送</string>
+    <!-- PumpCommon - Pump Status -->
+    <string name="pump_status_not_initialized">未初始化</string>
+    <string name="pump_status_initialized">已初始化</string>
+    <string name="pump_status_encrypt">加密通訊中</string>
+    <string name="pump_status_ready">準備就緒</string>
+    <string name="pump_status_busy">忙碌中</string>
+    <string name="pump_status_suspended">已暫停</string>
+    <string name="pump_status_executing_command">執行命令中</string>
+    <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">基礎率</string>
+    <string name="history_group_configuration">配置</string>
+    <string name="history_group_notification">通知</string>
+    <string name="history_group_statistic">統計資料</string>
+    <string name="history_group_unknown">未知</string>
+    <string name="history_group_all">全部</string>
+    <string name="history_group_bolus">注射</string>
+    <string name="history_group_prime">預填充</string>
+    <string name="history_group_alarm">警報</string>
+    <string name="history_group_glucose">血糖</string>
+    <string name="history_group_base">基本</string>
+    <string name="history_group_other">其他</string>
+    <string name="history_group_events">所有事件</string>
+    <string name="history_group_events_no_stat">事件（無統計）</string>
+    <!-- Time -->
+    <string name="time_today">今天</string>
+    <string name="time_last_hour">過去一小時</string>
+    <string name="time_last_3_hours">過去三小時</string>
+    <string name="time_last_6_hours">過去六小時</string>
+    <string name="time_last_12_hours">過去十二小時</string>
+    <string name="time_last_2_days">過去兩天</string>
+    <string name="time_last_4_days">過去四天</string>
+    <string name="time_last_week">過去一週</string>
+    <string name="time_last_month">過去一個月</string>
+    <!-- BLE Config -->
+    <string name="ble_config_button_scan_start">掃描</string>
+    <string name="ble_config_scan_stop">停止</string>
+    <string name="ble_config_scan_selected">已選擇</string>
+    <string name="ble_config_scan_scanning">掃描中</string>
+    <string name="ble_config_scan_finished">掃描完成</string>
+    <string name="ble_config_scan_error">掃描錯誤：%1$d</string>
+    <string name="ble_config_connected_never">從未連線</string>
+    <string name="ble_config_remove">移除</string>
+    <!-- BLE Errors -->
+    <string name="ble_error_bt_disabled">藍牙已停用</string>
+    <string name="ble_error_no_bt_adapter">無藍牙適配器</string>
+    <string name="ble_error_configured_pump_not_found">未找到配置的幫浦</string>
+    <string name="ble_error_pump_unreachable">幫浦無法使用</string>
+    <string name="ble_error_failed_to_conn_to_ble_device">連線 BLE 裝置失敗</string>
+    <string name="ble_error_encryption_failed">加密失敗</string>
+    <string name="ble_error_pump_found_unbonded">找到未綁定的幫浦</string>
+    <!-- Pump Error -->
+    <string name="pump_settings_error_basal_profiles_not_enabled">幫浦未啟用基礎率配置。請在幫浦上啟用。</string>
+    <string name="pump_settings_error_incorrect_basal_profile_selected">幫浦上設定的基礎率配置不正確（必須為 %s）。</string>
+    <string name="pump_settings_error_wrong_tbr_type_set">幫浦上設定的臨時基礎率類型錯誤（必須為 %s）。</string>
+    <string name="pump_settings_error_wrong_max_bolus_set">幫浦上設定的最大注射量錯誤（必須為 %1$.2f）。</string>
+    <string name="pump_settings_error_wrong_max_basal_set">幫浦上設定的最大基礎率錯誤（必須為 %1$.2f）。</string>
+    <!-- Pump History -->
+    <string name="pump_history_type">類型：</string>
+    <plurals name="duration_days">
+        <item quantity="other">%1$d 天</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="other">%1$d 小時</item>
+    </plurals>
+    <plurals name="hoursago">
+        <item quantity="other">%1$d 小時前</item>
+    </plurals>
+    <plurals name="daysago">
+        <item quantity="other">%1$d 天前</item>
+    </plurals>
+</resources>

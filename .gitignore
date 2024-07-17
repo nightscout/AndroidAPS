@@ -6,6 +6,7 @@
 */output-metadata.json
 /build
 /captures
+/java_pid*
 *.apk
 build/
 !.idea/dictionaries/project-dictionary.xml

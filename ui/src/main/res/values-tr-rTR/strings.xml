@@ -17,6 +17,7 @@
     <!--     Activities-->
     <string name="activity_monitor">Aktivite monitörü</string>
     <string name="do_you_want_reset_stats">Etkinlik istatistiklerini sıfırlamak istiyor musunuz?</string>
+    <string name="do_you_want_recalculate_tdd_stats">GTD istatistiklerini tekrar hesaplamak istiyor musunuz?</string>
     <string name="statistics">İstatistikler</string>
     <string name="calculation_in_progress">Hesaplanıyor</string>
     <string name="invalid_age">Geçersiz yaş girişi</string>
@@ -145,6 +146,7 @@
     <string name="constraints_violation">Kısıtlamalar ihlali</string>
     <string name="change_your_input">Girişinizi değiştirin!</string>
     <string name="confirm_treatment">Lütfen tedaviyi onaylayın</string>
+    <string name="recalculate">Tekrar Hesapla</string>
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>İkisi de</item>
         <item>Sadece pozitif</item>

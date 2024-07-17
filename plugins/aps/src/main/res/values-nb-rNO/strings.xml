@@ -70,7 +70,7 @@
     <string name="enable_smb_with_temp_target">Aktiver SMB med lav midlertidig målverdi</string>
     <string name="enable_smb_with_temp_target_summary">Aktiver SMB når en lav midlertidig målverdi er aktivert (spise snart, 5,5 mmol/l eller lavere)</string>
     <string name="enable_smb_with_high_temp_target">Aktiver SMB ved høy midlertidig målverdi</string>
-    <string name="enable_smb_with_high_temp_target_summary">Aktiver SMB når det er en høy aktiv midlertidig målverdi (trening, over 100 mg/dl eller 5,5 mmol/l)</string>
+    <string name="enable_smb_with_high_temp_target_summary">Aktiver SMB når det er en høy aktiv midlertidig målverdi (aktivitet, over 5,5 mmol/l)</string>
     <string name="smb_max_minutes_summary">Maks antall minutter med basal som kan bli SMB</string>
     <string name="uam_smb_max_minutes">UAM SMB maks minutter</string>
     <string name="uam_smb_max_minutes_summary">Maks antall minutter med basal som kan bli SMB ved UAM</string>

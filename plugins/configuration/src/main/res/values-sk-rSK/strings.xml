@@ -94,7 +94,6 @@
     <string name="check_preferences_before_import">Prosím skontrolujte nastavenia predtým, ako importujete:</string>
     <string name="check_preferences_cannot_import">Nastavenia nemôžu byť importované!</string>
     <string name="check_preferences_dangerous_import">Nastavenia by nemali byť importované!</string>
-    <string name="nav_export">Exportovať nastavenia</string>
     <string name="export_to">Exportovať nastavenia do</string>
     <string name="import_from">Importovať nastavenia z</string>
     <string name="setting_imported">Nastavenia importované</string>

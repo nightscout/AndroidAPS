@@ -94,7 +94,6 @@
     <string name="check_preferences_before_import">Verificați preferințele înainte de a le importa:</string>
     <string name="check_preferences_cannot_import">Preferințele nu pot fi importate!</string>
     <string name="check_preferences_dangerous_import">Preferințele nu ar trebui importate!</string>
-    <string name="nav_export">Exportă setările</string>
     <string name="export_to">Exportă setările către</string>
     <string name="import_from">Importă setările din</string>
     <string name="setting_imported">Setări importate</string>

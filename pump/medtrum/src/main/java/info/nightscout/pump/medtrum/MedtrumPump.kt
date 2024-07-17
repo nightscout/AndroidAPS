@@ -582,6 +582,9 @@ class MedtrumPump @Inject constructor(
         patchId = 0
         syncedSequenceNumber = 1
         currentSequenceNumber = 1
+        reservoir = 0.0
+        batteryVoltage_B = 0.0
+        patchStartTime = 0L
     }
 
     fun handleNewPatch(newPatchId: Long, sequenceNumber: Int, newStartTime: Long) {

@@ -103,7 +103,6 @@
     <string name="troubleshooting_wheretoask">Πού μπορείτε να ψάξετε για βοήθεια σχετικά με το AAPS;</string>
     <string name="troubleshooting_fb">Μπορείτε να ζητήσετε συμβουλές από την ομάδα χρηστών AAPS στο Facebook.</string>
     <string name="troubleshooting_wiki">Θα πρέπει να διαβάσετε (και να ξαναδιαβάσετε) την τεκμηρίωση του AAPS.</string>
-    <string name="troubleshooting_gitter">Μπορείτε να ζητήσετε συμβουλές και να καταγράφετε τεχνικά προβλήματα ή προβλήματα στο Discord του AAPS.</string>
     <string name="troubleshooting_yourendo">Θα πρέπει να ρωτήσετε στην κλινική που σας παρακολουθεί για το διαβήτη / ενδοκρινολόγο σας.</string>
     <string name="troubleshooting_hint1">https://wiki.aaps.app/el/latest/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
