@@ -1,6 +1,6 @@
 object KtsBuildVersions {
 
-    const val gradle = "8.5.0"
+    const val gradle = "8.5.1"
     const val kotlin = "1.9.23"
 }
 
