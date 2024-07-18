@@ -11,12 +11,6 @@ android {
     namespace = "app.aaps.pump.danars"
     ndkVersion = Versions.ndkVersion
 
-    defaultConfig {
-        ndk {
-            moduleName = "BleCommandUtil"
-        }
-    }
-
     sourceSets.getByName("main") {
         jniLibs.srcDirs("src/main/jniLibs")
     }

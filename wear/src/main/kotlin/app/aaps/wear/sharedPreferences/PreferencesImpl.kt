@@ -92,20 +92,20 @@ class PreferencesImpl @Inject constructor(
 
     override fun isUnitDependent(key: String): Boolean =
         prefsList
-            .flatMap { it.enumConstants.asIterable() }
+            .flatMap { it.enumConstants!!.asIterable() }
             .filterIsInstance<UnitDoublePreferenceKey>()
             .any { context.getString(it.key) == key }
 
     override fun get(key: String): PreferenceKey =
         prefsList
-            .flatMap { it.enumConstants.asIterable() }
+            .flatMap { it.enumConstants!!.asIterable() }
             .find { context.getString(it.key) == key }
             ?: error("Key $key not found")
 
     override fun getDependingOn(key: String): List<PreferenceKey> =
         mutableListOf<PreferenceKey>().also { list ->
             prefsList.forEach { clazz ->
-                list.addAll(clazz.enumConstants.filter { it.dependency != null && context.getString(it.dependency!!.key) == key || it.negativeDependency != null && context.getString(it.negativeDependency!!.key) == key })
+                list.addAll(clazz.enumConstants!!.filter { it.dependency != null && context.getString(it.dependency!!.key) == key || it.negativeDependency != null && context.getString(it.negativeDependency!!.key) == key })
             }
         }
 
