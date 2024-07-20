@@ -41,7 +41,7 @@ enum class DoubleKey(
     ApsAutoIsfLowBgWeight(R.string.key_openapsama_lower_ISFrange_weight, 0.0, 0.0, 2.0, defaultedBySM = true),
     ApsAutoIsfHighBgWeight(R.string.key_openapsama_higher_ISFrange_weight, 0.0, 0.0, 2.0, defaultedBySM = true),
     ApsAutoIsfPpWeight(R.string.key_openapsama_pp_ISF_weight, 0.0, 0.0, 1.0, defaultedBySM = true),
-    ApsAutoIsfDeltaWeight(R.string.key_openapsama_delta_ISFrange_weight, 0.0, 0.0, 1.0, defaultedBySM = true),
+    //ApsAutoIsfDeltaWeight(R.string.key_openapsama_delta_ISFrange_weight, 0.0, 0.0, 1.0, defaultedBySM = true),
     ApsAutoIsfDuraWeight(R.string.key_openapsama_dura_ISF_weight, 0.0, 0.0, 3.0, defaultedBySM = true),
     ApsAutoIsfSmbDeliveryRatio(R.string.key_openapsama_smb_delivery_ratio, 0.5, 0.5, 1.0, defaultedBySM = true),
     ApsAutoIsfSmbDeliveryRatioMin(R.string.key_openapsama_smb_delivery_ratio_min, 0.5, 0.5, 1.0, defaultedBySM = true),

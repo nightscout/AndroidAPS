@@ -258,19 +258,19 @@ class DetermineBasalAdapterAutoISFJS(private val scriptReader: ScriptReader, pri
         this.profile.put("temptargetSet", tempTargetSet)
         this.profile.put("autosens_max", preferences.get(DoubleKey.AutosensMax))
         // mod use autoisf here
-        this.profile.put("autoISF_version", "3.0")        // was BuildConfig.AUTOISF_VERSION)
+        this.profile.put("autoISF_version", "3.0.1")        // was BuildConfig.AUTOISF_VERSION)
         this.profile.put("enable_autoISF", preferences.get(BooleanKey.ApsUseAutoIsfWeights))
         this.profile.put("autoISF_max",  preferences.get(DoubleKey.ApsAutoIsfMax))
         this.profile.put("autoISF_min",  preferences.get(DoubleKey.ApsAutoIsfMin))
         this.profile.put("bgAccel_ISF_weight",  preferences.get(DoubleKey.ApsAutoIsfBgAccelWeight))
         this.profile.put("bgBrake_ISF_weight",  preferences.get(DoubleKey.ApsAutoIsfBgBrakeWeight))
-        this.profile.put("enable_pp_ISF_always", preferences.get(BooleanKey.ApsAutoIsfPpAlways))
-        this.profile.put("pp_ISF_hours",  preferences.get(IntKey.ApsAutoIsfPpIsfHours))
+        //this.profile.put("enable_pp_ISF_always", preferences.get(BooleanKey.ApsAutoIsfPpAlways))
+        //this.profile.put("pp_ISF_hours",  preferences.get(IntKey.ApsAutoIsfPpIsfHours))
         this.profile.put("pp_ISF_weight",  preferences.get(DoubleKey.ApsAutoIsfPpWeight))
-        this.profile.put("delta_ISFrange_weight",  preferences.get(DoubleKey.ApsAutoIsfDeltaWeight))
+        //this.profile.put("delta_ISFrange_weight",  preferences.get(DoubleKey.ApsAutoIsfDeltaWeight))
         this.profile.put("lower_ISFrange_weight",  preferences.get(DoubleKey.ApsAutoIsfLowBgWeight))
         this.profile.put("higher_ISFrange_weight",  preferences.get(DoubleKey.ApsAutoIsfHighBgWeight))
-        this.profile.put("enable_dura_ISF_with_COB", preferences.get(BooleanKey.ApsAutoIsfDuraAfterCarbs))
+        //this.profile.put("enable_dura_ISF_with_COB", preferences.get(BooleanKey.ApsAutoIsfDuraAfterCarbs))
         this.profile.put("dura_ISF_weight",  preferences.get(DoubleKey.ApsAutoIsfDuraWeight))
         // include SMB adaptations
         this.profile.put("smb_delivery_ratio", preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatio))
@@ -278,8 +278,8 @@ class DetermineBasalAdapterAutoISFJS(private val scriptReader: ScriptReader, pri
         this.profile.put("smb_delivery_ratio_max", preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatioMax))
         this.profile.put("smb_delivery_ratio_bg_range", preferences.get(UnitDoubleKey.ApsAutoIsfSmbDeliveryRatioBgRange))
         this.profile.put("smb_max_range_extension", preferences.get(DoubleKey.ApsAutoIsfSmbMaxRangeExtension))
-        this.profile.put("enableSMB_EvenOn_OddOff", preferences.get(BooleanKey.ApsAutoIsfSmbOnEvenTt)) // TT
-        this.profile.put("enableSMB_EvenOn_OddOff_always", preferences.get(BooleanKey.ApsAutoIsfSmbOnEvenPt)) // profile
+        //this.profile.put("enableSMB_EvenOn_OddOff", preferences.get(BooleanKey.ApsAutoIsfSmbOnEvenTt)) // TT
+        this.profile.put("enableSMB_EvenOn_OddOff_always", preferences.get(BooleanKey.ApsAutoIsfSmbOnEvenTarget)) // profile
         this.profile.put("iob_threshold_percent", preferences.get(IntKey.ApsAutoIsfIobThPercent))
         this.profile.put("profile_percentage", if (profile is ProfileSealed.EPS) profile.value.originalPercentage else 100)
         if (profileFunction.getUnits() == GlucoseUnit.MMOL) {

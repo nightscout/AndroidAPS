@@ -189,27 +189,22 @@ class OpenAPSAutoISFPluginTest : TestBaseWithProfile() {
             autoISF_min = 0.7,
             bgAccel_ISF_weight = 0.0,
             bgBrake_ISF_weight = 0.0,
-            enable_pp_ISF_always = true,
-            pp_ISF_hours = 3,
             pp_ISF_weight = 0.0,
-            delta_ISFrange_weight = 0.0,
             lower_ISFrange_weight = 0.0,
             higher_ISFrange_weight = 0.0,
-            enable_dura_ISF_with_COB = true,
             dura_ISF_weight = 0.0,
             smb_delivery_ratio = 0.5,
             smb_delivery_ratio_min = 0.6,
             smb_delivery_ratio_max = 1.0,
             smb_delivery_ratio_bg_range = 0.0,
             smb_max_range_extension = 1.0,
-            enableSMB_EvenOn_OddOff = true,
             enableSMB_EvenOn_OddOff_always = true,
             iob_threshold_percent = 100,
             profile_percentage = 100
         )
         assertThat(openAPSAutoISFPlugin.loop_smb(false,  profile, 11.0, false, 11.1)).isEqualTo("AAPS")
-        `when`(preferences.get(BooleanKey.ApsAutoIsfSmbOnEvenPt)).thenReturn(true)
-        `when`(preferences.get(BooleanKey.ApsAutoIsfSmbOnEvenTt)).thenReturn(true)
+        `when`(preferences.get(BooleanKey.ApsAutoIsfSmbOnEvenTarget)).thenReturn(true)
+        //`when`(preferences.get(BooleanKey.ApsAutoIsfSmbOnEvenTt)).thenReturn(true)
         assertThat(openAPSAutoISFPlugin.loop_smb(true,  profile, 11.0, false, 11.1)).isEqualTo("fullLoop")
         assertThat(openAPSAutoISFPlugin.loop_smb(true,  profile, 11.0, true, 10.1)).isEqualTo("iobTH")
         profile.target_bg = 122.0
@@ -217,8 +212,8 @@ class OpenAPSAutoISFPluginTest : TestBaseWithProfile() {
         profile.target_bg = 91.8    //5.1
         profile.out_units = "mmol/L"
         assertThat(openAPSAutoISFPlugin.loop_smb(true,  profile, 11.0, false, 11.1)).isEqualTo("blocked")
-        `when`(preferences.get(BooleanKey.ApsAutoIsfSmbOnEvenPt)).thenReturn(false)
-        `when`(preferences.get(BooleanKey.ApsAutoIsfSmbOnEvenTt)).thenReturn(false)
+        `when`(preferences.get(BooleanKey.ApsAutoIsfSmbOnEvenTarget)).thenReturn(false)
+        //`when`(preferences.get(BooleanKey.ApsAutoIsfSmbOnEvenTt)).thenReturn(false)
         assertThat(openAPSAutoISFPlugin.loop_smb(true,  profile, 11.0, false, 11.1)).isEqualTo("AAPS")
     }
 
@@ -276,20 +271,15 @@ class OpenAPSAutoISFPluginTest : TestBaseWithProfile() {
             autoISF_min = 0.7,
             bgAccel_ISF_weight = 0.0,
             bgBrake_ISF_weight = 0.0,
-            enable_pp_ISF_always = true,
-            pp_ISF_hours = 3,
             pp_ISF_weight = 0.0,
-            delta_ISFrange_weight = 0.0,
             lower_ISFrange_weight = 0.0,
             higher_ISFrange_weight = 0.0,
-            enable_dura_ISF_with_COB = true,
             dura_ISF_weight = 0.0,
             smb_delivery_ratio = 0.5,
             smb_delivery_ratio_min = 0.6,
             smb_delivery_ratio_max = 1.0,
             smb_delivery_ratio_bg_range = 0.0,
             smb_max_range_extension = 1.0,
-            enableSMB_EvenOn_OddOff = true,
             enableSMB_EvenOn_OddOff_always = true,
             iob_threshold_percent = 100,
             profile_percentage = 100
