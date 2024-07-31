@@ -22,7 +22,7 @@ enum class PumpCapability {
 
     //DanaWithHistoryCapabilities(arrayOf(Bolus, ExtendedBolus, TempBasal, BasalProfileSet, Refill, ReplaceBattery, StoreCarbInfo, TDD, ManualTDDLoad)),
     DanaWithHistoryCapabilities(arrayOf(Bolus, ExtendedBolus, TempBasal, BasalProfileSet, Refill, ReplaceBattery, TDD, ManualTDDLoad)),
-    InsightCapabilities(arrayOf(Bolus, ExtendedBolus, TempBasal, BasalProfileSet, Refill, ReplaceBattery, TDD, BasalRate30min)),
+    InsightCapabilities(arrayOf(Bolus, ExtendedBolus, TempBasal, BasalProfileSet, Refill, ReplaceBattery, BasalRate30min)),
     MedtronicCapabilities(arrayOf(Bolus, TempBasal, BasalProfileSet, Refill, ReplaceBattery, TDD)),
     OmnipodCapabilities(arrayOf(Bolus, TempBasal, BasalProfileSet, BasalRate30min)),
     YpsomedCapabilities(arrayOf(Bolus, ExtendedBolus, TempBasal, BasalProfileSet, Refill, ReplaceBattery, TDD, ManualTDDLoad)),  // BasalRates (separately grouped)
