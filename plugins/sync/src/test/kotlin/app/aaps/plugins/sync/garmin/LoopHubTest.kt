@@ -260,8 +260,8 @@ class LoopHubTest : TestBase() {
 
     @Test
     fun testPostCarbs() {
-        val constraint = mock<Constraint<Int>>() {
-            on { value() }.thenReturn(99)
+        val constraint = mock<Constraint<Int>> {
+            onGeneric { value() }.thenReturn(99)
         }
         whenever(constraints.getMaxCarbsAllowed()).thenReturn(constraint)
         loopHub.postCarbs(100)
