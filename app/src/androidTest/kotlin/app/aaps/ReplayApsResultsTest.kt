@@ -753,7 +753,8 @@ class ReplayApsResultsTest @Inject constructor() {
             profile_percentage = profile.profile_percentage, // 100,
             smb_ratio = profile.smb_delivery_ratio, // 0.5,
             loop_wanted_smb = "dummy",
-            auto_isf_console = mutableListOf<String>("start AutoISF", "end AutoISF")
+            auto_isf_consoleLog = mutableListOf<String>("end AutoISF"),
+            auto_isf_consoleError = mutableListOf<String>("start AutoISF")
         )
         val endKt = System.currentTimeMillis()
         ktTime += (endKt - startKt)

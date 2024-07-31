@@ -117,6 +117,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
     override val algorithm = APSResult.Algorithm.AUTO_ISF
     override var lastAPSResult: DetermineBasalResult? = null
     private var consoleError = mutableListOf<String>()
+    private var consoleLog = mutableListOf<String>()
     val autoIsfVersion = "3.0.1"
     val autoIsfWeights; get() = preferences.get(BooleanKey.ApsUseAutoIsfWeights)
     private val autoISF_max; get() = preferences.get(DoubleKey.ApsAutoIsfMax)
@@ -290,6 +291,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
 
         if (autoIsfMode) {
             consoleError = mutableListOf()
+            consoleLog = mutableListOf()
             variableSensitivity = autoISF(now, profile)
         }
         val oapsProfile = OapsProfileAutoIsf(
@@ -412,7 +414,8 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
             smb_ratio = smbRatio,
             smb_max_range_extension = smbMaxRangeExtension,
             iob_threshold_percent = iobThresholdPercent,
-            auto_isf_console = consoleError
+            auto_isf_consoleError = consoleError,
+            auto_isf_consoleLog = consoleLog
         ).also {
             val determineBasalResult = DetermineBasalResult(injector, it)
             // Preserve input data
@@ -519,7 +522,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         // val autoIsfMode = preferences.get(BooleanKey.ApsUseAutoIsf)
 
         val high_temptarget_raises_sensitivity = exerciseMode || highTemptargetRaisesSensitivity
-        val meal_data = iobCobCalculator.getMealDataWithWaitingForCalculationFinish()
+        // val meal_data = iobCobCalculator.getMealDataWithWaitingForCalculationFinish()
         var target_bg = hardLimits.verifyHardLimits(profile.getTargetMgdl(), app.aaps.core.ui.R.string.temp_target_value, HardLimits.LIMIT_TARGET_BG[0], HardLimits.LIMIT_TARGET_BG[1])
         var isTempTarget = false
         persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())?.let { tempTarget ->
@@ -635,7 +638,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
             }
         }
 
-        val bg_ISF = 1 + interpolate(100 - bg_off, "bg")
+        val bg_ISF = 1 + interpolate(100 - bg_off)      //, "bg")
         consoleError.add("bg_ISF adaptation is ${round(bg_ISF, 2)}")
         var liftISF: Double
         var final_ISF: Double
@@ -711,7 +714,8 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         return round(sens / sensitivityRatio, 1)     // nothing changed
     }
 
-    fun interpolate(xdata: Double, type: String): Double {   // interpolate ISF behaviour based on polygons defining nonlinear functions defined by value pairs for ...
+    //fun interpolate(xdata: Double, type: String): Double {   // interpolate ISF behaviour based on polygons defining nonlinear functions defined by value pairs for ...
+    fun interpolate(xdata: Double): Double {   // interpolate ISF behaviour based on polygons defining nonlinear functions defined by value pairs for ...
             //  ...         <----------------------  glucose  ---------------------->
         val polyX = arrayOf(50.0, 60.0, 80.0, 90.0, 100.0, 110.0, 150.0, 180.0, 200.0)
         val polyY = arrayOf(-0.5, -0.5, -0.3, -0.2, 0.0, 0.0, 0.5, 0.7, 0.7)
@@ -818,7 +822,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         if (enableSMB_EvenOn_OddOff_always) {
             //TODO: cleaner conversion back to original mmol/L if applicable
             var target = convert_bg_to_units(profile.target_bg, profile)
-            val msgType: String
+            // val msgType: String
             val evenTarget: Boolean
             val msgUnits: String
             val msgTail: String
@@ -847,38 +851,38 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
             if (useIobTh) {
                 val iobThPercent = round(iobThEffective / profile.max_iob * 100.0, 0)
                 if (iobThPercent == iobThUser.toDouble()) {
-                    consoleError.add("User setting iobTH=$iobThUser% not modulated")
+                    consoleLog.add("User setting iobTH=$iobThUser% not modulated")
                 } else {
-                    consoleError.add("User setting iobTH=$iobThUser% modulated to ${iobThPercent.toInt()}% or ${round(iobThEffective, 2)}U")
-                    consoleError.add("  due to profile %, exercise mode or similar")
+                    consoleLog.add("User setting iobTH=$iobThUser% modulated to ${iobThPercent.toInt()}% or ${round(iobThEffective, 2)}U")
+                    consoleLog.add("  due to profile %, exercise mode or similar")
                 }
             } else {
-                consoleError.add("User setting iobTH=100% disables iobTH method")
+                consoleLog.add("User setting iobTH=100% disables iobTH method")
             }
 
             if (!evenTarget) {
-                consoleError.add("SMB disabled; current target $target $msgUnits $msgEven $msgTail")
-                consoleError.add("Loop allows minimal power")
+                consoleLog.add("SMB disabled; current target $target $msgUnits $msgEven $msgTail")
+                consoleLog.add("Loop allows minimal power")
                 return "blocked"
             } else if (profile.max_iob == 0.0) {
-                consoleError.add("SMB disabled because of max_iob=0")
+                consoleLog.add("SMB disabled because of max_iob=0")
                 return "blocked"
             } else if (useIobTh && iobThEffective < iob_data_iob) {
-                consoleError.add("SMB disabled by Full Loop logic: iob ${iob_data_iob} is above effective iobTH $iobThEffective")
-                consoleError.add("Loop power level temporarily capped")
+                consoleLog.add("SMB disabled by Full Loop logic: iob ${iob_data_iob} is above effective iobTH $iobThEffective")
+                consoleLog.add("Loop power level temporarily capped")
                 return "iobTH"
             } else {
-                consoleError.add("SMB enabled; current target $target $msgUnits $msgEven $msgTail")
+                consoleLog.add("SMB enabled; current target $target $msgUnits $msgEven $msgTail")
                 return if (profile.target_bg < 100) {     // indirect assessment; later set it in GUI
-                    consoleError.add("Loop allows maximum power")
+                    consoleLog.add("Loop allows maximum power")
                     "fullLoop"                                      // even number
                 } else {
-                    consoleError.add("Loop allows medium power")
+                    consoleLog.add("Loop allows medium power")
                     "enforced"                                      // even number
                 }
             }
         }
-        consoleError.add("Loop allows APS power level")
+        consoleLog.add("Loop allows APS power level")
         return "AAPS"                                                      // leave it to standard AAPS
     }
 
@@ -893,23 +897,23 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
             new_SMB = max(lower_SMB, min(higher_SMB, new_SMB))   // cap if outside target_bg--higher_bg
         }
         if (loop_wanted_smb == "fullLoop") {                                // go for max impact
-            consoleError.add("SMB delivery ratio set to ${max(fix_SMB, new_SMB)} as max of fixed and interpolated values")
+            consoleLog.add("SMB delivery ratio set to ${round(max(fix_SMB, new_SMB), 2)} as max of fixed and interpolated values")
             return max(fix_SMB, new_SMB)
         }
 
         if (smb_delivery_ratio_bg_range == 0.0) {                     // deactivated in SMB extended menu
-            consoleError.add("SMB delivery ratio set to fixed value $fix_SMB")
+            consoleLog.add("SMB delivery ratio set to fixed value ${round(fix_SMB, 2)}")
             return fix_SMB
         }
         if (bg <= target_bg) {
-            consoleError.add("SMB delivery ratio limited by minimum value $lower_SMB")
+            consoleLog.add("SMB delivery ratio limited by minimum value ${round(lower_SMB, 2)}")
             return lower_SMB
         }
         if (bg >= higher_bg) {
-            consoleError.add("SMB delivery ratio limited by maximum value $higher_SMB")
+            consoleLog.add("SMB delivery ratio limited by maximum value ${round(higher_SMB, 2)}")
             return higher_SMB
         }
-        consoleError.add("SMB delivery ratio set to interpolated value $new_SMB")
+        consoleLog.add("SMB delivery ratio set to interpolated value ${round(new_SMB, 2)}")
         return new_SMB
     }
 

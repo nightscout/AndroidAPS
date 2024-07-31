@@ -132,11 +132,11 @@ class OpenAPSAutoISFPluginTest : TestBaseWithProfile() {
     fun interpolateTest() {
         `when`(preferences.get(DoubleKey.ApsAutoIsfLowBgWeight)).thenReturn(10.0)
         `when`(preferences.get(DoubleKey.ApsAutoIsfHighBgWeight)).thenReturn(1.0)
-        assertThat(openAPSAutoISFPlugin.interpolate(45.0,  "bg")).isEqualTo(-5.0)
-        assertThat(openAPSAutoISFPlugin.interpolate(55.0,  "bg")).isEqualTo(-5.0)
-        assertThat(openAPSAutoISFPlugin.interpolate(100.0,  "bg")).isEqualTo(0.0)
-        assertThat(openAPSAutoISFPlugin.interpolate(130.0,  "bg")).isEqualTo(0.25)
-        assertThat(openAPSAutoISFPlugin.interpolate(230.0,  "bg")).isEqualTo(0.7)
+        assertThat(openAPSAutoISFPlugin.interpolate(45.0)).isEqualTo(-5.0)
+        assertThat(openAPSAutoISFPlugin.interpolate(55.0)).isEqualTo(-5.0)
+        assertThat(openAPSAutoISFPlugin.interpolate(100.0)).isEqualTo(0.0)
+        assertThat(openAPSAutoISFPlugin.interpolate(130.0)).isEqualTo(0.25)
+        assertThat(openAPSAutoISFPlugin.interpolate(230.0)).isEqualTo(0.7)
     }
 
     @Test

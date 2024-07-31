@@ -149,7 +149,7 @@ class DetermineBasalAutoISF @Inject constructor(
     fun determine_basal(
         glucose_status: GlucoseStatus, currenttemp: CurrentTemp, iob_data_array: Array<IobTotal>, profile: OapsProfileAutoIsf, autosens_data: AutosensResult, meal_data: MealData,
         microBolusAllowed: Boolean, currentTime: Long, flatBGsDetected: Boolean, autoIsfMode: Boolean, loop_wanted_smb: String, profile_percentage: Int, smb_ratio: Double,
-        smb_max_range_extension: Double, iob_threshold_percent: Int, auto_isf_console: MutableList<String>
+        smb_max_range_extension: Double, iob_threshold_percent: Int,             auto_isf_consoleError: MutableList<String>, auto_isf_consoleLog: MutableList<String>
     ): RT {
         consoleError.clear()
         consoleLog.clear()
@@ -312,7 +312,8 @@ class DetermineBasalAutoISF @Inject constructor(
             consoleError.add("----------------------------------")
             consoleError.add("start AutoISF ${profile.autoISF_version}")
             consoleError.add("----------------------------------")
-            consoleError.addAll(auto_isf_console)
+            consoleError.addAll(auto_isf_consoleLog)
+            consoleError.addAll(auto_isf_consoleError)
         }
         // mod autoISF3.0-dev: if that would put us over iobTH, then reduce accordingly; allow 30% overrun
         val iobTHtolerance = 130.0
