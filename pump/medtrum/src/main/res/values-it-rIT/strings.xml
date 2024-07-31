@@ -122,6 +122,8 @@
     <string name="hourly_max_insulin_summary">Specificare le unità massime di insulina consentite per ora. Se superate, il micro sarà sospeso.</string>
     <string name="daily_max_insulin_title">Insulina massima giornaliera [Units]</string>
     <string name="daily_max_insulin_summary">Specificare le unità massime di insulina consentite per giorno. Se superate, il micro sarà sospeso.</string>
+    <string name="scan_on_connection_error_title">Scansione in caso di errore di connessione</string>
+    <string name="scan_on_connection_error_summary">ATTENZIONE: Abilitare solo in caso di problemi di connessione. Se abilitato, il driver esegue una scansione della pompa prima di tentare di riconnettersi ad essa. Assicurati di avere impostato il permesso di Posizione su \"Consenti sempre\"</string>
     <!-- treatment state-->
     <string name="getting_pump_status">Ricezione stato micro</string>
     <string name="getting_bolus_status">Ricezione stato bolo</string>
