@@ -89,6 +89,7 @@
     <string name="activating_pump">Pomp activeren en initiële basaalstand instellen. Even geduld alstublieft.</string>
     <string name="activating_error">Activeren mislukt, druk op <b>Opnieuw</b> om het nogmaals te proberen.</string>
     <string name="activating_complete">Nieuwe patch geactiveerd. %.2f Eenheden resterend.</string>
+    <string name="can_export_settings">Je kunt de instellingen exporteren om deze patch sessie later te kunnen herstellen.</string>
     <string name="press_OK_to_return">Druk op <b>OK</b> om terug te keren naar het hoofdscherm.</string>
     <string name="deactivate_sure">Weet u zeker dat u de huidige patch wilt deactiveren?</string>
     <string name="cancel_sure">Weet u zeker dat u de activatie wil annuleren?</string>
