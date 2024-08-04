@@ -200,6 +200,11 @@
     <string name="graph_long_scale_18h">18 timer</string>
     <string name="graph_long_scale_24h">24 timer</string>
     <string name="a11y_graph">graf</string>
+    <string name="a11y_graph_scale">velg graf-skala</string>
+    <string name="a11y_graph_scale_6h">graf-skala 6 timer</string>
+    <string name="a11y_graph_scale_12h">graf-skala 12 timer</string>
+    <string name="a11y_graph_scale_18h">graf-skala 18 timer</string>
+    <string name="a11y_graph_scale_24h">graf-skala 24 timer</string>
     <string name="a11y_insulin_label">insulin</string>
     <string name="chart_menu">Diagram meny</string>
     <string name="a11y_bg_quality">blodsukkermålingens kvalitet</string>
