@@ -195,7 +195,7 @@ class DataLayerListenerServiceWear : WearableListenerService() {
         if (sp.getBoolean(R.string.key_heart_rate_sampling, false)) {
             if (heartRateListener == null) {
                 heartRateListener = HeartRateListener(
-                    this, aapsLogger, aapsSchedulers
+                    this, aapsLogger, sp, aapsSchedulers
                 ).also { hrl -> disposable += hrl }
             }
         } else {
