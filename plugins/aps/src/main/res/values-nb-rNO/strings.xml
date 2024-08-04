@@ -43,7 +43,7 @@
     <string name="openapsma_max_basal_title">Maks E/t en midlertidig basal kan settes til</string>
     <string name="openapsma_max_basal_summary">Denne verdien kalles max basal i OpenAPS</string>
     <string name="openapsma_max_iob_title">Maksimum basal IOB som OpenAPS kan levere [E]</string>
-    <string name="openapsma_max_iob_summary">Denne verdien kalles Max IOB i OpenAPS.\nDet er maks insulinmengde i [E] som APS kan levere i en dose.</string>
+    <string name="openapsma_max_iob_summary">Denne verdien kalles Maks IOB av OpenAPS\nAAPS vil ikke gi mere insulin hvis mengden insulin ombord (IOB) overstiger denne verdien.</string>
     <string name="openapsama_autosens_adjust_targets_summary">Standard verdi: sann\nGir autosens tillatelse til å justere BS-mål, i tillegg til ISF og basaler.</string>
     <string name="openapsama_autosens_adjust_targets">Autosens justerer også BS målverdier</string>
     <string name="openapsama_min_5m_carb_impact_summary">Standardverdi er: 3.0 (AMA) eller 8.0 (SMB). Dette er grunninnstillingen for KH-opptak per 5 minutt. Den påvirker hvor raskt COB skal reduseres, og benyttes i beregning av fremtidig BS-kurve når BS enten synker eller øker mer enn forventet. Standardverdi er 3mg/dl/5 min.</string>
@@ -56,7 +56,7 @@
     <string name="openapsama_max_daily_safety_multiplier">Multiplikator for maks daglig basal</string>
     <string name="openapsama_current_basal_safety_multiplier">Multiplikator for gjeldende basal</string>
     <string name="openapssmb_max_iob_title">Maks total IOB OpenAPS ikke kan overstige [E]</string>
-    <string name="openapssmb_max_iob_summary">Denne verdien kalles Maks IOB av OpenAPS\nAAPS vil ikke gi mere insulin hvis mengden insulin ombord (IOB) overstiger denne verdien</string>
+    <string name="openapssmb_max_iob_summary">Denne verdien kalles Maks IOB av OpenAPS\nAAPS vil ikke gi mere insulin hvis mengden insulin ombord (IOB) overstiger denne verdien. Anbefalt startinnstilling er \"gjennomsnittlig måltidsbolus + 3x den høyeste basalraten i døgnet\".</string>
     <string name="enable_uam">Aktiver UAM</string>
     <string name="enable_smb">Aktiver SMB</string>
     <string name="enable_smb_summary">Bruk Super Micro Boluser i kombinasjon med midlertidig basal for raskere resultat</string>
