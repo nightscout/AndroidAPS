@@ -109,8 +109,8 @@ abstract class BaseWatchFace : WatchFace() {
 
     private var mLastSvg = ""
     private var mLastDirection = ""
-    private var heartRateListener: HeartRateListener? = null
-    private var stepCountListener: StepCountListener? = null
+    //private var heartRateListener: HeartRateListener? = null
+    //private var stepCountListener: StepCountListener? = null
 
     override fun onCreate() {
         // Not derived from DaggerService, do injection here
@@ -127,8 +127,8 @@ abstract class BaseWatchFace : WatchFace() {
             .subscribe { event: EventWearPreferenceChange ->
                 simpleUi.updatePreferences()
                 if (event.changedKey != null && event.changedKey == "delta_granularity") rxBus.send(EventWearToMobile(ActionResendData("BaseWatchFace:onSharedPreferenceChanged")))
-                if (event.changedKey == getString(R.string.key_heart_rate_sampling)) updateHeartRateListener()
-                if (event.changedKey == getString(R.string.key_steps_sampling)) updatestepsCountListener()
+                //if (event.changedKey == getString(R.string.key_heart_rate_sampling)) updateHeartRateListener()
+                //if (event.changedKey == getString(R.string.key_steps_sampling)) updatestepsCountListener()
                 if (layoutSet) setDataFields()
                 invalidate()
             }
@@ -153,15 +153,15 @@ abstract class BaseWatchFace : WatchFace() {
         layoutView = binding.root
         performViewSetup()
         rxBus.send(EventWearToMobile(ActionResendData("BaseWatchFace::onCreate")))
-        updateHeartRateListener()
-        updatestepsCountListener()
+        //updateHeartRateListener()
+        //updatestepsCountListener()
     }
 
     private fun forceUpdate() {
         setDataFields()
         invalidate()
     }
-
+/*
     private fun updateHeartRateListener() {
         if (sp.getBoolean(R.string.key_heart_rate_sampling, false)) {
             if (heartRateListener == null) {
@@ -191,7 +191,7 @@ abstract class BaseWatchFace : WatchFace() {
             }
         }
     }
-
+*/
     override fun onTapCommand(tapType: Int, x: Int, y: Int, eventTime: Long) {
         binding.chart?.let { chart ->
             if (tapType == TAP_TYPE_TAP && x >= chart.left && x <= chart.right && y >= chart.top && y <= chart.bottom) {
