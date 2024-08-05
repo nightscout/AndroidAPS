@@ -109,8 +109,6 @@ abstract class BaseWatchFace : WatchFace() {
 
     private var mLastSvg = ""
     private var mLastDirection = ""
-    //private var heartRateListener: HeartRateListener? = null
-    //private var stepCountListener: StepCountListener? = null
 
     override fun onCreate() {
         // Not derived from DaggerService, do injection here
@@ -127,8 +125,6 @@ abstract class BaseWatchFace : WatchFace() {
             .subscribe { event: EventWearPreferenceChange ->
                 simpleUi.updatePreferences()
                 if (event.changedKey != null && event.changedKey == "delta_granularity") rxBus.send(EventWearToMobile(ActionResendData("BaseWatchFace:onSharedPreferenceChanged")))
-                //if (event.changedKey == getString(R.string.key_heart_rate_sampling)) updateHeartRateListener()
-                //if (event.changedKey == getString(R.string.key_steps_sampling)) updatestepsCountListener()
                 if (layoutSet) setDataFields()
                 invalidate()
             }
@@ -153,45 +149,13 @@ abstract class BaseWatchFace : WatchFace() {
         layoutView = binding.root
         performViewSetup()
         rxBus.send(EventWearToMobile(ActionResendData("BaseWatchFace::onCreate")))
-        //updateHeartRateListener()
-        //updatestepsCountListener()
     }
 
     private fun forceUpdate() {
         setDataFields()
         invalidate()
     }
-/*
-    private fun updateHeartRateListener() {
-        if (sp.getBoolean(R.string.key_heart_rate_sampling, false)) {
-            if (heartRateListener == null) {
-                heartRateListener = HeartRateListener(
-                    this, aapsLogger, aapsSchedulers
-                ).also { hrl -> disposable += hrl }
-            }
-        } else {
-            heartRateListener?.let { hrl ->
-                disposable.remove(hrl)
-                heartRateListener = null
-            }
-        }
-    }
 
-    private fun updatestepsCountListener() {
-        if (sp.getBoolean(R.string.key_steps_sampling, false)) {
-            if (stepCountListener == null) {
-                stepCountListener = StepCountListener(
-                    this, aapsLogger, aapsSchedulers
-                ).also { scl -> disposable += scl }
-            }
-        } else {
-            stepCountListener?.let { scl ->
-                disposable.remove(scl)
-                stepCountListener = null
-            }
-        }
-    }
-*/
     override fun onTapCommand(tapType: Int, x: Int, y: Int, eventTime: Long) {
         binding.chart?.let { chart ->
             if (tapType == TAP_TYPE_TAP && x >= chart.left && x <= chart.right && y >= chart.top && y <= chart.bottom) {
