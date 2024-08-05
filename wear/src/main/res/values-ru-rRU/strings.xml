@@ -217,4 +217,14 @@
     <string name="datalayer_notification_text">AAPS запущен на переднем плане. Чтобы скрыть уведомление, перейдите в Настройки разработчика, Уведомления приложений, Разрешенные приложения для просмотра, выберите AAPS, Отключите уведомление канала службы переднего плана уровня данных.</string>
     <string name="on">ВКЛ</string>
     <string name="off">ВЫКЛ</string>
+    <string name="complication_full_status">Полная информация о статусе</string>
+    <string name="complication_full_status_flipped">Полный статус (в обратном виде)</string>
+    <string name="complication_blood_glucose">Гликемия</string>
+    <string name="complication_br_cob_iob">База, актУг &amp; актИнс</string>
+    <string name="complication_cob_iob">АктУг &amp; актИнс</string>
+    <string name="complication_cob_icon">Иконка актУг</string>
+    <string name="complication_cob_detailed">АктУг подробно</string>
+    <string name="complication_iob_icon">Иконка актИнс</string>
+    <string name="complication_iob_detailed">АктИнс подробно</string>
+    <string name="complication_uploader_phone_battery">Батарея загрузчика/телефона</string>
 </resources>
