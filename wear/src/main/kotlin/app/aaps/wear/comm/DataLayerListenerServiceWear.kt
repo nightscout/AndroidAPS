@@ -93,7 +93,6 @@ class DataLayerListenerServiceWear : WearableListenerService() {
             .toObservable(EventWearPreferenceChange::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe { event: EventWearPreferenceChange ->
-                if (event.changedKey != null && event.changedKey == "delta_granularity") rxBus.send(EventWearToMobile(ActionResendData("BaseWatchFace:onSharedPreferenceChanged")))
                 if (event.changedKey == getString(R.string.key_heart_rate_sampling)) updateHeartRateListener()
                 if (event.changedKey == getString(R.string.key_steps_sampling)) updatestepsCountListener()
             }
