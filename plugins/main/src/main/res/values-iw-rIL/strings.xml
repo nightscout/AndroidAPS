@@ -190,6 +190,7 @@
     <string name="statuslights_bat_critical">סף התראה קריטית של רמת הסוללה [%]</string>
     <string name="statuslights_copy_ns">העתקת הגדרות מ-Nightscout</string>
     <string name="a11y_graph">גרף</string>
+    <string name="a11y_graph_scale">בחר קנה מידה של הגרף</string>
     <string name="a11y_insulin_label">אינסולין</string>
     <string name="chart_menu">תפריט הגרף</string>
     <string name="a11y_bg_quality">איכות נתוני סוכר</string>
