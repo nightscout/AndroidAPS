@@ -182,6 +182,7 @@
     <string name="autotune_log_sum_basal" translatable="false">|\t∑\t|\t%1$3.1f |\t%2$3.1f |\n</string>
     <string name="not_available_full">Not available</string>
     <string name="pump_disconnected">Pump disconnected</string>
+
     <!--    autoISF -->
     <string name="half_basal_exercise_target_title">Half basal exercise target</string>
     <string name="half_basal_exercise_target_summary" formatted="false">Set to a number, e.g. 160, which means when temp target is 160 mg/dL and High temptarget raises sensitivity=true, run 50% basal at this level (120 = 75%; 140 = 60%).</string>
@@ -196,10 +197,6 @@
     <string name="enable_postprandial_ISF_always_summary">Enable the postprandial ISF adaptation all the time regardless of when the last meal was taken.</string>
     <string name="pp_ISF_settings_title">pp_ISF settings</string>
     <string name="pp_ISF_settings_summary">pp_ISF settings: ISF for postprandial (after meal) glucose rise</string>
-    <!--
-    <string name="delta_ISF_settings_title">delta_ISF settings</string>
-    <string name="delta_ISF_settings_summary">delta_ISF settings: ISF adaptations for positive delta, i.e. rising blood glucose</string>
-    -->
     <string name="dura_ISF_settings_title">dura_ISF settings</string>
     <string name="dura_ISF_settings_summary">dura_ISF settings: ISF for blood glucose plateau above target</string>
     <string name="smb_delivery_settings_title">SMB delivery settings</string>
@@ -214,27 +211,14 @@
     <string name="openapsama_dura_ISF_weight_summary" formatted="false">Default value: 0.0\nThis is the rate at which autoISF grows per hour assuming bg is twice the target. With a value of 1.0 it will have reduced ISF to 50% after 1 hour of bg at twice the target.\n\nWith 0.0 the effect of autoISF is effectively disabled.</string>
     <string name="openapsama_lower_ISFrange_weight_summary">Default value: 0.0\nThis is the weight applied to the polygon which adapts ISF if glucose is below target. \n\nWith 0.0 the effect is effectively disabled.</string>
     <string name="openapsama_higher_ISFrange_weight_summary">Default value: 0.0\nThis is the weight applied to the polygon which adapts ISF if glucose is above target. \n\nWith 0.0 the effect is effectively disabled.</string>
-    <!--
-    <string name="openapsama_delta_ISFrange_weight_summary">Default value: 0.0\nThis is the weight applied to the polygon which adapts ISF for higher deltas. \n\nWith 0.0 the effect is effectively disabled.</string>
-    -->
     <string name="openapsama_pp_ISF_weight_summary">Default value: 0.0\nThis is the weight applied to the linear slope while glucose rises and which adapts ISF. \n\nWith 0.0 this contribution is effectively disabled.</string>
-    <!--
-    <string name="openapsama_pp_ISF_hours_summary">Default value: 3\nThis is the duration in hours how long after a meal the effect will be active. \n\nAAPS will delete carb timing after 10 hours latest no matter what you enter.</string>
-    <string name="enable_postprandial_ISF_always">Enable pp_ISF postprandial all day</string>
-    -->
     <string name="openapsama_bgAccel_ISF_weight_summary">Default value: 0.0\nThis is the weight applied while glucose accelerates and which strengthens ISF. \n\nWith 0.0 this contribution is effectively disabled.</string>
     <string name="openapsama_bgBrake_ISF_weight_summary">Default value: 0.0\nThis is the weight applied while glucose decelerates and which weakens ISF. \n\nWith 0.0 this contribution is effectively disabled.</string>
     <string name="openapsama_autoISF_max">Max autoISF ratio\n(autoISF_max)</string>
     <string name="openapsama_autoISF_min">Min autoISF ratio\n(autoISF_min)</string>
     <string name="openapsama_lower_ISFrange_weight">lower ISF-range weight\n(lower_ISFrange_weight)</string>
     <string name="openapsama_higher_ISFrange_weight">higher ISF-range weight\n(higher_ISFrange_weight)</string>
-    <!--
-    <string name="openapsama_delta_ISFrange_weight">delta ISF-range weight\n(delta_ISFrange_weight)</string>
-    -->
     <string name="openapsama_pp_ISF_weight">postprandial ISF weight\n(pp_ISF_weight)</string>
-    <!--
-    <string name="openapsama_pp_ISF_hours">postprandial ISF time window\n(pp_ISF_hours)</string>
-    -->
     <string name="openapsama_bgAccel_ISF_weight">Weight while BG accelerates\n(bgAccel_ISF_weight)</string>
     <string name="openapsama_bgBrake_ISF_weight">Weight while BG decelerates\n(bgBrake_ISF_weight)</string>
     <string name="openapsama_dura_ISF_weight">dura_ISF weight\n(dura_ISF_weight)</string>
@@ -248,10 +232,6 @@
     <string name="openapsama_smb_delivery_ratio_max_summary">Default value: 0.5 This is the upper end of a linearly increasing ratio rather than the fix value above.</string>
     <string name="openapsama_smb_delivery_ratio_bg_range_summary">Default value: 0. The linearly increasing SMB delivery ratio is mapped to the glucose range [target_bg, target_bg+bg_range].\nAt target_bg the SMB ratio is smb_delivery_ratio_min, at target_bg+bg_range it is smb_delivery_ratio_max\nWith 0 the linearly increasing SMB ratio is disabled and the fixed smb_delivery_ratio is used.</string>
     <string name="openapsama_smb_max_range_extension_summary">Default value: 1 This is another key OpenAPS safety cap, and specifies by what factor you can exceed the regular 120 maxSMB/maxUAM minutes. Increase this experimental value slowly and with caution.</string>
-    <!--
-    <string name="enableSMB_EvenOn_OddOff">Enable alternative activation of SMB depending on TempTarget</string>
-    <string name="enableSMB_EvenOn_OddOff_summary">\nenabled if ...\nTempTarget(mmol/L) has even decimal\nor TempTarget(mg/dL) is even number\n\ndisabled otherwise</string>
-    -->
     <string name="enableSMB_EvenOn_OddOff_always">Enable alternative activation of SMB depending on active target being even number</string>
     <string name="enableSMB_EvenOn_OddOff_always_summary">\nenabled ...\nif active target(mmol/L) has even decimal\nor active target(mg/dL) is even number\n\ndisabled otherwise</string>
     <string name="openapsama_iob_threshold_percent_summary" formatted="false">Default value: 100%\nWith 100% this feature is effectively disabled.</string>

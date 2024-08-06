@@ -247,10 +247,8 @@ class DetermineBasalAutoISF @Inject constructor(
             consoleError.add("Autosens ratio: $sensitivityRatio; ")
         }
         var iobTH_reduction_ratio = 1.0
-        // var use_iobTH = false
         if (iob_threshold_percent != 100) {
             iobTH_reduction_ratio = profile_percentage / 100.0 * exercise_ratio ;     // later: * activityRatio;
-            // use_iobTH = true
         }
         basal = profile.current_basal * sensitivityRatio
         basal = round_basal(basal)
@@ -318,7 +316,6 @@ class DetermineBasalAutoISF @Inject constructor(
         // mod autoISF3.0-dev: if that would put us over iobTH, then reduce accordingly; allow 30% overrun
         val iobTHtolerance = 130.0
         val iobTHvirtual = iob_threshold_percent * iobTHtolerance / 10000.0 * profile.max_iob * iobTH_reduction_ratio
-        //var loop_wanted_smb = loop_smb(microBolusAllowed, profile, iob_data, use_iobTH, iobTHvirtual/iobTHtolerance*100.0);
         var enableSMB = false;
         if (microBolusAllowed && loop_wanted_smb != "AAPS") {
             if ( loop_wanted_smb=="enforced" || loop_wanted_smb=="fullLoop" ) {              // otherwise FL switched SMB off
