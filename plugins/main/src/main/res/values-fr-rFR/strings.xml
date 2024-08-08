@@ -200,6 +200,7 @@
     <string name="graph_long_scale_18h">18 heures</string>
     <string name="graph_long_scale_24h">24 heures</string>
     <string name="a11y_graph">graphique</string>
+    <string name="a11y_graph_scale">choisir l\'échelle du graph.</string>
     <string name="a11y_graph_scale_6h">échelle du graphique 6 heures</string>
     <string name="a11y_graph_scale_12h">échelle du graphique 12 heures</string>
     <string name="a11y_graph_scale_18h">échelle du graphique 18 heures</string>
