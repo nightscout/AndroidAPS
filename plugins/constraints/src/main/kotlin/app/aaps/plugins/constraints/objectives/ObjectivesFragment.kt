@@ -297,7 +297,7 @@ class ObjectivesFragment : DaggerFragment() {
                                     rxBus.send(EventNtpStatus(rh.gs(R.string.failedretrievetime), 99))
                                 }
                             }
-                        }, receiverStatusStore.isConnected)
+                        }, receiverStatusStore.isKnownNetworkStatus && receiverStatusStore.isConnected)
                     }
                 }
             }
@@ -332,7 +332,7 @@ class ObjectivesFragment : DaggerFragment() {
                                     rxBus.send(EventNtpStatus(rh.gs(R.string.failedretrievetime), 99))
                                 }
                             }
-                        }, receiverStatusStore.isConnected)
+                        }, receiverStatusStore.isKnownNetworkStatus && receiverStatusStore.isConnected)
                     }
             }
             holder.binding.unstart.setOnClickListener {

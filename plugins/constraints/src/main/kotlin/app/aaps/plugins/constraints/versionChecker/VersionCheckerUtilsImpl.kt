@@ -31,8 +31,6 @@ class VersionCheckerUtilsImpl @Inject constructor(
     private val uiInteraction: UiInteraction
 ) : VersionCheckerUtils {
 
-    private fun isConnected(): Boolean = receiverStatusStore.isConnected
-
     override fun triggerCheckVersion() {
 
         if (!sp.contains(R.string.key_last_successful_version_check_timestamp)) {
@@ -47,7 +45,7 @@ class VersionCheckerUtilsImpl @Inject constructor(
     }
 
     private fun checkVersion() =
-        if (isConnected()) {
+        if (receiverStatusStore.isKnownNetworkStatus && receiverStatusStore.isConnected) {
             Thread {
                 try {
                     val definition: String = URL("https://raw.githubusercontent.com/nightscout/AndroidAPS/versions/definition.json").readText()
