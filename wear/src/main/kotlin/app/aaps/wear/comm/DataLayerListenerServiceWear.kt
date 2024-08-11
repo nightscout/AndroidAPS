@@ -15,11 +15,15 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventWearDataToMobile
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData
+import app.aaps.core.interfaces.rx.weardata.EventData.ActionResendData
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.shared.impl.weardata.ZipWatchfaceFormat
 import app.aaps.wear.R
+import app.aaps.wear.events.EventWearPreferenceChange
+import app.aaps.wear.heartrate.HeartRateListener
 import app.aaps.wear.interaction.ConfigurationActivity
 import app.aaps.wear.interaction.utils.Persistence
+import app.aaps.wear.wearStepCount.StepCountListener
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.CapabilityClient
 import com.google.android.gms.wearable.CapabilityInfo
@@ -61,6 +65,8 @@ class DataLayerListenerServiceWear : WearableListenerService() {
     private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
     private val disposable = CompositeDisposable()
+    private var heartRateListener: HeartRateListener? = null
+    private var stepCountListener: StepCountListener? = null
 
     private val rxPath get() = getString(app.aaps.core.interfaces.R.string.path_rx_bridge)
     private val rxDataPath get() = getString(app.aaps.core.interfaces.R.string.path_rx_data_bridge)
@@ -83,6 +89,16 @@ class DataLayerListenerServiceWear : WearableListenerService() {
             .subscribe {
                 sendMessage(rxDataPath, it.payload.serializeByte())
             }
+        disposable += rxBus
+            .toObservable(EventWearPreferenceChange::class.java)
+            .observeOn(aapsSchedulers.main)
+            .subscribe { event: EventWearPreferenceChange ->
+                if (event.changedKey == getString(R.string.key_heart_rate_sampling)) updateHeartRateListener()
+                if (event.changedKey == getString(R.string.key_steps_sampling)) updatestepsCountListener()
+            }
+
+        updateHeartRateListener()
+        updatestepsCountListener()
     }
 
     override fun onCapabilityChanged(p0: CapabilityInfo) {
@@ -172,6 +188,37 @@ class DataLayerListenerServiceWear : WearableListenerService() {
             .setContentIntent(pendingIntent)
             .build()
         startForeground(FOREGROUND_NOTIF_ID, notification)
+    }
+
+
+    private fun updateHeartRateListener() {
+        if (sp.getBoolean(R.string.key_heart_rate_sampling, false)) {
+            if (heartRateListener == null) {
+                heartRateListener = HeartRateListener(
+                    this, aapsLogger, aapsSchedulers
+                ).also { hrl -> disposable += hrl }
+            }
+        } else {
+            heartRateListener?.let { hrl ->
+                disposable.remove(hrl)
+                heartRateListener = null
+            }
+        }
+    }
+
+    private fun updatestepsCountListener() {
+        if (sp.getBoolean(R.string.key_steps_sampling, false)) {
+            if (stepCountListener == null) {
+                stepCountListener = StepCountListener(
+                    this, aapsLogger, aapsSchedulers
+                ).also { scl -> disposable += scl }
+            }
+        } else {
+            stepCountListener?.let { scl ->
+                disposable.remove(scl)
+                stepCountListener = null
+            }
+        }
     }
 
     @Suppress("PrivatePropertyName")

@@ -79,10 +79,6 @@ class LocationService : DaggerService() {
         override fun onProviderEnabled(provider: String) {
             aapsLogger.debug(LTag.LOCATION, "onProviderEnabled: $provider")
         }
-
-        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
-            aapsLogger.debug(LTag.LOCATION, "onStatusChanged: $provider")
-        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {

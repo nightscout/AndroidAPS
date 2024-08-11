@@ -4,6 +4,7 @@
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">Omschakeling van zomer- of wintertijd in 24 uur of minder</string>
     <string name="dst_loop_disabled_warning">Omschakeling zomer/wintertijd minder dan 3 uur geleden - Gesloten Lus modus gedeactiveerd</string>
+    <string name="dst_loop_disabled_error">Zomer/wintertijd (DST) is minder dan 3 uur geleden veranderd. De closed loop is tijdelijk uitgeschakeld en zal 3 uur na de wijziging automatisch opnieuw inschakelen</string>
     <!-- Storage constraint -->
     <string name="disk_full">Maak minstens %1$d MB vrij in interne opslag! Loop is uitgeschakeld!</string>
     <!-- Version Checker -->

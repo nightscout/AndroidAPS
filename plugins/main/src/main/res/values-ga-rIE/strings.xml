@@ -60,8 +60,5 @@
     <string name="activity_shortname">GNÍ</string>
     <!-- Skins -->
     <!--    Iob-->
-    <!--    Wear-->
-    <string name="wear_shortname">WEAR</string>
-    <string name="wear_general_settings">Socruithe Ginearálta</string>
     <!--    PersistentNotification-->
 </resources>

@@ -8,6 +8,7 @@
     <string name="key_pump_warning_expiry_hour" translatable="false">pump_expiry_warning_hour</string>
     <string name="key_hourly_max_insulin" translatable="false">hourly_max_insulin</string>
     <string name="key_daily_max_insulin" translatable="false">daily_max_insulin</string>
+    <string name="key_scan_on_connection_error" translatable="false">scan_on_connection_error</string>
 
     <string name="key_medtrum_pump_settings" translatable="false">medtrum_pump_setting</string>
     <string name="key_pump_state" translatable="false">pump_state</string>
@@ -156,6 +157,8 @@
     <string name="hourly_max_insulin_summary">Specify the maximum units of insulin allowed per hour. If exceeded, the pump will suspend.</string>
     <string name="daily_max_insulin_title">Daily Maximum Insulin [Units]</string>
     <string name="daily_max_insulin_summary">Specify the maximum units of insulin allowed per day. If exceeded, the pump will suspend.</string>
+    <string name="scan_on_connection_error_title">Scan on connection error</string>
+    <string name="scan_on_connection_error_summary">WARNING: Only enable if you have connection problems. If enabled the driver scans for the pump again before trying to reconnect to the pump. Make sure you have Location permission set to "Always allow" </string>
 
     <!-- treatment state-->
     <string name="getting_pump_status">Getting pump status</string>

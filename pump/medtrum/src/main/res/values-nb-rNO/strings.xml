@@ -122,6 +122,7 @@
     <string name="hourly_max_insulin_summary">Angi maksimalt antall enheter insulin tillatt per time. Hvis overskredet vil pumpen suspendere.</string>
     <string name="daily_max_insulin_title">Maks insulin per dag [Enheter]</string>
     <string name="daily_max_insulin_summary">Angi maksimalt antall enheter insulin tillatt per dag. Hvis overskredet vil pumpen suspendere.</string>
+    <string name="scan_on_connection_error_title">Skann ved tilkoblingsfeil</string>
     <!-- treatment state-->
     <string name="getting_pump_status">Henter pumpestatus</string>
     <string name="getting_bolus_status">Henter bolus status</string>

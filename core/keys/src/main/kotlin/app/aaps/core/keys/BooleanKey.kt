@@ -90,7 +90,7 @@ enum class BooleanKey(
     XdripSendStatus(R.string.key_xdrip_send_status, false),
     XdripSendDetailedIob(R.string.key_xdrip_status_detailed_iob, true, defaultedBySM = true, hideParentScreenIfHidden = true),
     XdripSendBgi(R.string.key_xdrip_status_show_bgi, true, defaultedBySM = true, hideParentScreenIfHidden = true),
-    WearControl(key = R.string.key_wear_control, defaultValue = false, dependency = WearControl),
+    WearControl(key = R.string.key_wear_control, defaultValue = false),
     WearWizardBg(key = R.string.key_wearwizard_bg, defaultValue = true, dependency = WearControl, hideParentScreenIfHidden = true),
     WearWizardTt(key = R.string.key_wearwizard_tt, defaultValue = false, dependency = WearControl, hideParentScreenIfHidden = true),
     WearWizardTrend(key = R.string.key_wearwizard_trend, defaultValue = false, dependency = WearControl, hideParentScreenIfHidden = true),

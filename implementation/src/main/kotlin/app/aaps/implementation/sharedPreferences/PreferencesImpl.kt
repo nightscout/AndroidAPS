@@ -123,14 +123,14 @@ class PreferencesImpl @Inject constructor(
 
     override fun get(key: String): PreferenceKey =
         prefsList
-            .flatMap { it.enumConstants.asIterable() }
+            .flatMap { it.enumConstants!!.asIterable() }
             .find { rh.gs(it.key) == key }
             ?: error("Key $key not found")
 
     override fun getDependingOn(key: String): List<PreferenceKey> =
         mutableListOf<PreferenceKey>().also { list ->
             prefsList.forEach { clazz ->
-                list.addAll(clazz.enumConstants.filter { it.dependency != null && rh.gs(it.dependency!!.key) == key || it.negativeDependency != null && rh.gs(it.negativeDependency!!.key) == key })
+                list.addAll(clazz.enumConstants!!.filter { it.dependency != null && rh.gs(it.dependency!!.key) == key || it.negativeDependency != null && rh.gs(it.negativeDependency!!.key) == key })
             }
         }
 

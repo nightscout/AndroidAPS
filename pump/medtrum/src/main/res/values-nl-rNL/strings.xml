@@ -78,6 +78,7 @@
     <string name="patch_not_active_note">Pomp basis mag niet verbonden zijn met de patch tot de volgende stap!</string>
     <string name="connect_pump_base">Verbind de pompbasis op een nieuwe patch, ontlucht de patch, vul met insuline en druk op <b>Volgende</b>.</string>
     <string name="note_min_70_units">Opmerking: Voor de activering zijn minimaal 70 eenheden vereist.</string>
+    <string name="reservoir_text_and_level">Reservoir: %.2f E</string>
     <string name="do_not_attach_to_body">Plaats de patch nog niet op het lichaam.</string>
     <string name="half_press_needle">Druk de naald knop half in. Druk daarna op <b>Volgende</b> om het voorvullen te starten.</string>
     <string name="wait_for_priming">Wacht alstublieft tot het voorvullen voltooid is.</string>
@@ -120,6 +121,7 @@
     <string name="hourly_max_insulin_summary">Geef de maximale hoeveelheid insuline per uur op. Indien overschreden zal de pomp de insuline toediening onderbreken.</string>
     <string name="daily_max_insulin_title">Maximale insuline per dag [Eenheden]</string>
     <string name="daily_max_insulin_summary">Geef de maximale hoeveelheid insuline per dag op. Indien overschreden zal de pomp de insuline toediening onderbreken.</string>
+    <string name="scan_on_connection_error_title">Scan bij verbindingsfout</string>
     <!-- treatment state-->
     <string name="getting_pump_status">Pompstatus aan het ophalen</string>
     <string name="getting_bolus_status">Bolus status aan het ophalen</string>
