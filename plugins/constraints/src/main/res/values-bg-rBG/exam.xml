@@ -103,7 +103,6 @@
     <string name="troubleshooting_wheretoask">Къде можете да потърсите помощ за AAPS?</string>
     <string name="troubleshooting_fb">Можете да потърсите съвет във Facebook групite AndroidAPS Users или Найтскаут България</string>
     <string name="troubleshooting_wiki">Трябва да прочетете (и препрочетете) документацията на AAPS.</string>
-    <string name="troubleshooting_gitter">Можете да поискате съвет и да регистрирате технически проблеми или въпроси в AAPS Discord.</string>
     <string name="troubleshooting_yourendo">Трябва да попитате вашия диабетен лекар/ендокринолог.</string>
     <string name="troubleshooting_hint1">https://wiki.aaps.app/en/latest/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="alarmSettings">
+        <item>燈光、震動和嗶聲</item>
+        <item>燈光和震動</item>
+        <item>燈光和嗶聲</item>
+        <item>燈光</item>
+        <item>震動和嗶聲</item>
+        <item>震動</item>
+        <item>嗶聲</item>
+        <item>靜音</item>
+    </string-array>
+</resources>

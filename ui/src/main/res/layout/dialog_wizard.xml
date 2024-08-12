@@ -272,68 +272,43 @@
         <LinearLayout
             android:id="@+id/checkbox_row"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:paddingHorizontal="10dp">
+            android:layout_height="40dp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
             <ToggleButton
                 android:id="@+id/bg_checkbox_icon"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:checked="true"
+                style="@style/ToggleBtnStyle"
                 android:contentDescription="@string/bg_label"
-                android:drawableTop="@drawable/checkbox_bg_icon"
-                android:scaleX="1.4"
-                android:scaleY="1.4" />
+                android:drawableTop="@drawable/checkbox_bg_icon" />
 
             <ToggleButton
                 android:id="@+id/tt_checkbox_icon"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:checked="true"
+                style="@style/ToggleBtnStyle"
                 android:contentDescription="@string/tt_label"
-                android:drawableTop="@drawable/checkbox_tt_icon"
-                android:scaleX="1.6"
-                android:scaleY="1.6" />
+                android:drawableTop="@drawable/checkbox_tt_icon" />
 
             <ToggleButton
                 android:id="@+id/trend_checkbox_icon"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:checked="true"
+                style="@style/ToggleBtnStyle"
                 android:contentDescription="@string/bg_trend_label"
-                android:drawableTop="@drawable/checkbox_trend_icon"
-                android:scaleX="1.4"
-                android:scaleY="1.4" />
+                android:drawableTop="@drawable/checkbox_trend_icon" />
 
             <ToggleButton
                 android:id="@+id/iob_checkbox_icon"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:checked="true"
+                style="@style/ToggleBtnStyle"
                 android:contentDescription="@string/iob"
-                android:drawableTop="@drawable/checkbox_iob_icon"
-                android:scaleX="1.4"
-                android:scaleY="1.4" />
+                android:drawableTop="@drawable/checkbox_iob_icon" />
 
             <ToggleButton
                 android:id="@+id/cob_checkbox_icon"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:checked="true"
+                style="@style/ToggleBtnStyle"
                 android:contentDescription="@string/treatments_wizard_cob_label"
-                android:drawableTop="@drawable/checkbox_cob_icon"
-                android:scaleX="1.6"
-                android:scaleY="1.6" />
+                android:drawableTop="@drawable/checkbox_cob_icon" />
 
         </LinearLayout>
 

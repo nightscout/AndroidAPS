@@ -1,7 +1,10 @@
 package app.aaps.plugins.main.general.overview
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import android.os.Build
 import androidx.annotation.StringRes
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceManager
@@ -48,6 +51,7 @@ import app.aaps.plugins.main.R
 import app.aaps.plugins.main.general.overview.notifications.NotificationStore
 import app.aaps.plugins.main.general.overview.notifications.NotificationWithAction
 import app.aaps.plugins.main.general.overview.notifications.events.EventUpdateOverviewNotification
+import app.aaps.plugins.main.general.overview.notifications.receivers.DismissNotificationReceiver
 import app.aaps.shared.impl.rx.bus.RxBusImpl
 import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -118,6 +122,7 @@ class OverviewPlugin @Inject constructor(
 
     override fun onStart() {
         super.onStart()
+        registerLocalBroadcastReceiver()
         overviewMenus.loadGraphConfig()
         overviewData.initRange()
 
@@ -154,6 +159,7 @@ class OverviewPlugin @Inject constructor(
 
     override fun onStop() {
         disposable.clear()
+        unregisterLocalBroadcastReceiver()
         super.onStop()
     }
 
@@ -310,5 +316,20 @@ class OverviewPlugin @Inject constructor(
                 addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.OverviewUseSuperBolus, summary = R.string.enablesuperbolus_summary, title = R.string.enablesuperbolus))
             })
         }
+    }
+
+    private val dismissReceiver = DismissNotificationReceiver()
+
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
+    private fun registerLocalBroadcastReceiver() {
+        val filter = IntentFilter().apply { addAction(DismissNotificationReceiver.ACTION) }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            context.registerReceiver(dismissReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
+        else
+            context.registerReceiver(dismissReceiver, filter)
+    }
+
+    private fun unregisterLocalBroadcastReceiver() {
+        context.unregisterReceiver(dismissReceiver)
     }
 }

@@ -63,6 +63,7 @@
     <attr name="ribbonTextWarningColor" format="reference|color" />
     <!---Background  -->
     <attr name="defaultBackground" format="reference|color" />
+    <attr name="popupWindowBackground" format="reference|color" />
     <!---Toast  -->
     <attr name="toastBaseTextColor" format="reference|color" />
     <attr name="toastBackgroundColor" format="reference|color" />

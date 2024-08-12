@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cwf_comment_background">Fono paveiksliukas</string>
+    <string name="cwf_comment_chart">Grafikai (glikemija, bazė, prognozės...)</string>
+    <string name="cwf_comment_cover_chart">Paveiksliukas už teksto ir prieš grafiką</string>
+    <string name="cwf_comment_freetext1">Laisvas tekstas 1</string>
+    <string name="cwf_comment_freetext2">Laisvas tekstas 2</string>
+    <string name="cwf_comment_freetext3">Laisvas tekstas 3</string>
+    <string name="cwf_comment_freetext4">Laisvas tekstas 4</string>
+    <string name="cwf_comment_iob1">Sudėtinis arba detalus AIO</string>
+    <string name="cwf_comment_iob2">Sudėtinis arba detalus (Boluso_AIO|Bazės_AIO) AIO</string>
+    <string name="cwf_comment_cob1">AAO žyma</string>
+    <string name="cwf_comment_cob2">AAO vertė</string>
+    <string name="cwf_comment_delta">Trumpo laikotarpio pokytis</string>
+    <string name="cwf_comment_avg_delta">Vidutinis pokytis (15 min)</string>
+    <string name="cwf_comment_uploader_battery">Telefono baterija (%)</string>
+    <string name="cwf_comment_rig_battery">Baterija (%)</string>
+    <string name="cwf_comment_basalRate">Bazė</string>
+    <string name="cwf_comment_bgi">BGI vertė</string>
+    <string name="cwf_comment_time">Laikas (val:min arba val:min:sek)</string>
+    <string name="cwf_comment_hour">Val.</string>
+    <string name="cwf_comment_minute">Min.</string>
+    <string name="cwf_comment_second">Sek.</string>
+    <string name="cwf_comment_timePeriod">AM ar PM</string>
+    <string name="cwf_comment_day_name">Savaitės diena</string>
+    <string name="cwf_comment_day">Diena (d.)</string>
+    <string name="cwf_comment_week_number">Savaitės numeris</string>
+    <string name="cwf_comment_month">Mėnuo (sutrump.)</string>
+    <string name="cwf_comment_loop">Ciklo būsena</string>
+    <string name="cwf_comment_direction">Tendencijos rodyklė</string>
+    <string name="cwf_comment_timestamp">Prieš kiek minučių nuskaityta glikemija</string>
+    <string name="cwf_comment_sgv">Glikemija</string>
+    <string name="cwf_comment_cover_plate">Paveiksliukas prieš tekstą (skambučius...)</string>
+    <string name="cwf_comment_hour_hand">Analoginio laikrodžio valandinė rodyklė</string>
+    <string name="cwf_comment_minute_hand">Analoginio laikrodžio minutinė rodyklė</string>
+    <string name="cwf_comment_second_hand">Analoginio laikrodžio sekundinė rodyklė</string>
+</resources>

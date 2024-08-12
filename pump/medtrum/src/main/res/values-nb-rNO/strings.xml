@@ -78,6 +78,7 @@
     <string name="patch_not_active_note">Pumpebase skal ikke kobles til patch før neste steg!</string>
     <string name="connect_pump_base">Koble pumpebase til ny patch, fjern overflødig luft og full med insulin. Deretter trykk <b>Neste</b>.</string>
     <string name="note_min_70_units">Merk: Minimum 70 enheter kreves for aktivering.</string>
+    <string name="reservoir_text_and_level">Reservoar: %.2f E</string>
     <string name="do_not_attach_to_body">Ikke koble patch til kroppen enda.</string>
     <string name="half_press_needle">Trykk nål-knappen halvveis. Trykk deretter <b>Neste</b> for å starte priming.</string>
     <string name="wait_for_priming">Vent mens priming fullføres.</string>
@@ -88,6 +89,7 @@
     <string name="activating_pump">Aktiverer pumpe og setter basaldose. Vennligst vent.</string>
     <string name="activating_error">Kunne ikke aktivere, trykk <b>Prøv igjen</b> for å prøve igjen.</string>
     <string name="activating_complete">Ny patch aktivert. %.2f enheter gjenstår.</string>
+    <string name="can_export_settings">Du kan eksportere innstillingene for å kunne gjenopprette denne patchøkten senere.</string>
     <string name="press_OK_to_return">Trykk <b>OK</b> for å gå tilbake til hovedskjermen.</string>
     <string name="deactivate_sure">Er du sikker på at du vil deaktivere det gjeldende patch?</string>
     <string name="cancel_sure">Er du sikker på at du vil avbryte aktiveringen?</string>
@@ -120,6 +122,7 @@
     <string name="hourly_max_insulin_summary">Angi maksimalt antall enheter insulin tillatt per time. Hvis overskredet vil pumpen suspendere.</string>
     <string name="daily_max_insulin_title">Maks insulin per dag [Enheter]</string>
     <string name="daily_max_insulin_summary">Angi maksimalt antall enheter insulin tillatt per dag. Hvis overskredet vil pumpen suspendere.</string>
+    <string name="scan_on_connection_error_title">Skann ved tilkoblingsfeil</string>
     <!-- treatment state-->
     <string name="getting_pump_status">Henter pumpestatus</string>
     <string name="getting_bolus_status">Henter bolus status</string>

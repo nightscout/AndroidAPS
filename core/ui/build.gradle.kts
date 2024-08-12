@@ -15,6 +15,8 @@ dependencies {
     api(Libs.AndroidX.core)
     api(Libs.AndroidX.appCompat)
     api(Libs.AndroidX.preference)
+    api(Libs.AndroidX.gridLayout)
+
 
     api(Libs.Google.Android.material)
 

@@ -94,7 +94,6 @@
     <string name="check_preferences_before_import">Controlla le preferenze prima dell\'importazione:</string>
     <string name="check_preferences_cannot_import">Le preferenze non possono essere importate!</string>
     <string name="check_preferences_dangerous_import">Le preferenze non dovrebbero essere importate!</string>
-    <string name="nav_export">Esporta impostazioni</string>
     <string name="export_to">Esportare impostazioni su</string>
     <string name="import_from">Importare impostazioni da</string>
     <string name="setting_imported">Impostazioni importate</string>

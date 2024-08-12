@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_only_numeric_digits_allowed">只允許數字。</string>
+    <string name="error_only_numeric_digits_range_allowed">只允許範圍 %1$s - %2$s 內的數字。</string>
+    <string name="error_this_field_cannot_contain_special_character">此欄位不能包含任何特殊字元。</string>
+    <string name="error_only_standard_letters_are_allowed">只允許標準字母。</string>
+    <string name="error_field_must_not_be_empty">此欄位不可為空。</string>
+    <string name="error_email_address_not_valid">電子郵件地址無效。</string>
+    <string name="error_creditcard_number_not_valid">信用卡號碼無效。</string>
+    <string name="error_phone_not_valid">電話號碼無效。</string>
+    <string name="error_domain_not_valid">網域名稱無效。</string>
+    <string name="error_ip_not_valid">IP 位址無效。</string>
+    <string name="error_url_not_valid">網站網址無效。</string>
+    <string name="error_notvalid_personname">名字或姓氏無效。</string>
+    <string name="error_notvalid_personfullname">全名無效。</string>
+    <string name="error_date_not_valid">格式無效。</string>
+    <string name="error_mustbe4digitnumber">必須是4位數字。</string>
+    <string name="error_mustbe6digitnumber">必須是6位數字。</string>
+    <string name="error_mustbe12hexadidits">必須是12個字元，由 ABCDEF0123456789 組成。</string>
+    <string name="error_mustbe8hexadidits">必須是8個字元，由 ABCDEF0123456789 組成。</string>
+    <string name="error_mustbe4hexadidits">必須是4個字元，由 ABCDEF0123456789 組成。</string>
+    <string name="error_not_a_minimum_length">未達最小長度。</string>
+    <string name="error_pin_not_valid">PIN碼應為3至6位數，且不可為連號或相同數字。</string>
+</resources>

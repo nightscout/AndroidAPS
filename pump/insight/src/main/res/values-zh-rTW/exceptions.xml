@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="connection_failed">連線失敗</string>
+    <string name="connection_lost">連線中斷</string>
+    <string name="pairing_rejected">配對被拒絕</string>
+    <string name="socket_creation_failed">Socket 建立失敗</string>
+    <string name="timeout">逾時</string>
+    <string name="maximum_number_of_bolus_type_already_running">已運行最大數量的胰島素注射類型</string>
+    <string name="no_active_tbr_to_cancel">沒有可取消的活動臨時基礎率</string>
+    <string name="no_active_tbr_to_change">沒有可更改的活動臨時基礎率</string>
+    <string name="no_such_bolus_to_cancel">沒有此類胰島素注射可取消</string>
+    <string name="pump_already_in_that_state_exception">幫浦已處於該狀態</string>
+    <string name="run_mode_not_allowed">運行模式不允許</string>
+</resources>

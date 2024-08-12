@@ -94,7 +94,6 @@
     <string name="check_preferences_before_import">Controleer instellingen voor het importeren:</string>
     <string name="check_preferences_cannot_import">Instellingen kunnen niet worden geïmporteerd!</string>
     <string name="check_preferences_dangerous_import">Instellingen zouden niet moeten worden geïmporteerd!</string>
-    <string name="nav_export">Exporteer instellingen</string>
     <string name="export_to">Exporteer instellingen naar</string>
     <string name="import_from">Importeer instellingen van</string>
     <string name="setting_imported">Instellingen geïmporteerd</string>

@@ -120,8 +120,6 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Bunaidh</string>
     <string name="basalpct">Bunaidh %</string>
-    <!-- Autotune -->
-    <string name="autotune_result">Toradh: %1$s</string>
     <!-- Alerts -->
     <!-- BolusWizard -->
     <!--    Preferences-->

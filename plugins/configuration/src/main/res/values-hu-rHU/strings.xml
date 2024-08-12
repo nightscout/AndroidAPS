@@ -19,7 +19,6 @@
     <string name="configbuilder_loop">Loop</string>
     <!--ImportExport-->
     <string name="import_setting">Beállítások importálása</string>
-    <string name="nav_export">Beállítások exportálása</string>
     <string name="setting_imported">Beállítások importálva</string>
     <string name="old_master_password">Régi mesterjelszó</string>
     <string name="filenotfound">Fájl nem található</string>

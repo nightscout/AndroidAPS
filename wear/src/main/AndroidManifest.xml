@@ -214,7 +214,7 @@
             android:name=".complications.LongStatusComplication"
             android:exported="true"
             android:icon="@drawable/ic_aaps_full"
-            android:label="Full Status"
+            android:label="@string/complication_full_status"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
                 <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
@@ -232,7 +232,7 @@
             android:name=".complications.LongStatusFlippedComplication"
             android:exported="true"
             android:icon="@drawable/ic_aaps_full"
-            android:label="Full Status (flipped)"
+            android:label="@string/complication_full_status_flipped"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
                 <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
@@ -250,7 +250,7 @@
             android:name=".complications.SgvComplication"
             android:exported="true"
             android:icon="@drawable/ic_sgv"
-            android:label="Blood Glucose"
+            android:label="@string/complication_blood_glucose"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
                 <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
@@ -268,7 +268,7 @@
             android:name=".complications.BrCobIobComplication"
             android:exported="true"
             android:icon="@drawable/ic_br_cob_iob"
-            android:label="BR, CoB &amp; IoB"
+            android:label="@string/complication_br_cob_iob"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
                 <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
@@ -286,7 +286,7 @@
             android:name=".complications.CobIobComplication"
             android:exported="true"
             android:icon="@drawable/ic_cob_iob"
-            android:label="CoB &amp; IoB"
+            android:label="@string/complication_cob_iob"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
                 <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
@@ -304,7 +304,7 @@
             android:name=".complications.CobIconComplication"
             android:exported="true"
             android:icon="@drawable/ic_carbs"
-            android:label="CoB Icon"
+            android:label="@string/complication_cob_icon"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
                 <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
@@ -322,7 +322,7 @@
             android:name=".complications.CobDetailedComplication"
             android:exported="true"
             android:icon="@drawable/ic_cob_detailed"
-            android:label="CoB Detailed"
+            android:label="@string/complication_cob_detailed"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
                 <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
@@ -340,7 +340,7 @@
             android:name=".complications.IobIconComplication"
             android:exported="true"
             android:icon="@drawable/ic_ins"
-            android:label="IoB Icon"
+            android:label="@string/complication_iob_icon"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
                 <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
@@ -358,7 +358,7 @@
             android:name=".complications.IobDetailedComplication"
             android:exported="true"
             android:icon="@drawable/ic_iob_detailed"
-            android:label="IoB Detailed"
+            android:label="@string/complication_iob_detailed"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
                 <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
@@ -376,7 +376,7 @@
             android:name=".complications.UploaderBatteryComplication"
             android:exported="true"
             android:icon="@drawable/ic_battery_charging_wireless_50"
-            android:label="Uploader/Phone Battery"
+            android:label="@string/complication_uploader_phone_battery"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
                 <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />

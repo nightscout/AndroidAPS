@@ -94,7 +94,6 @@
     <string name="check_preferences_before_import">Проверьте настройки перед импортом:</string>
     <string name="check_preferences_cannot_import">Не удается импортировать настройки!</string>
     <string name="check_preferences_dangerous_import">Не следует импортировать настройки!</string>
-    <string name="nav_export">экспорт настроек</string>
     <string name="export_to">экспортировать настройки в</string>
     <string name="import_from">импортировать настройки из</string>
     <string name="setting_imported">настройки импортированы</string>

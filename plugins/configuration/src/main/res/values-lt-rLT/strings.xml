@@ -94,7 +94,6 @@
     <string name="check_preferences_before_import">Prašom patikrinti nustatymus prieš importuojant:</string>
     <string name="check_preferences_cannot_import">Nustatymai negali būti importuoti!</string>
     <string name="check_preferences_dangerous_import">Nustatymai neturėtų būti importuoti!</string>
-    <string name="nav_export">Eksportuoti nustatymus</string>
     <string name="export_to">Eksportuoti nustatymus</string>
     <string name="import_from">Importuoti nustatymus iš</string>
     <string name="setting_imported">Nustatymai importuoti</string>

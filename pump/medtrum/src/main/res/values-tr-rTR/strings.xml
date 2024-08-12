@@ -78,6 +78,7 @@
     <string name="patch_not_active_note">Bir sonraki adıma kadar pompa tabanı patch\'a bağlanmamalıdır!</string>
     <string name="connect_pump_base">Pompa tabanını yeni bir patch\'a bağlayın, kalan havayı çıkarın ve insülinle doldurun, ardından <b>İleri</b>\'ye basın.</string>
     <string name="note_min_70_units">Not: Etkinleştirme için minimum 70 ünite gereklidir.</string>
+    <string name="reservoir_text_and_level">Rezervuar: %.2f U</string>
     <string name="do_not_attach_to_body">Patch\'i henüz gövdeye takmayın.</string>
     <string name="half_press_needle">İğne düğmesine yarım basın. Daha sonra hazırlamayı başlatmak için <b>İleri</b>\'ye dokunun.</string>
     <string name="wait_for_priming">Lütfen pompa hazırlanırken bekleyin.</string>
@@ -88,6 +89,7 @@
     <string name="activating_pump">Pompa etkinleştiriliyor ve başlangıç bazal hızı ayarlanıyor. Lütfen bekleyin.</string>
     <string name="activating_error">Etkinleştirilemedi. Tekrar denemek için <b>Tekrar Dene</b>\'ye basın.</string>
     <string name="activating_complete">Yeni patch etkinleştirildi. %.2f ünite kaldı.</string>
+    <string name="can_export_settings">Bu pompa oturumunu daha sonra kurtarabilmek için ayarları dışa aktarabilirsiniz.</string>
     <string name="press_OK_to_return">Ana ekrana dönmek için <b>Tamam</b>\'a basın.</string>
     <string name="deactivate_sure">Mevcut patch\'i devre dışı bırakmak istediğinizden emin misiniz?</string>
     <string name="cancel_sure">Etkinleştirmeyi iptal etmek istediğinizden emin misiniz?</string>

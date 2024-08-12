@@ -29,7 +29,6 @@
     <!--ImportExport-->
     <string name="nav_preferences">Osobne postavke</string>
     <string name="import_setting">Uvezi postavke</string>
-    <string name="nav_export">Izvezi postavke</string>
     <string name="setting_imported">Postavke su uvezene</string>
     <string name="filenotfound">Datoteka nije pronađena</string>
     <string name="protection">Zaštita</string>

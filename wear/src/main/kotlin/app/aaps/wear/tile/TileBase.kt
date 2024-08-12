@@ -123,6 +123,7 @@ abstract class TileBase : TileService() {
         return source.getValidFor()
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onResourcesRequest(
         requestParams: ResourcesRequest
     ): ListenableFuture<Resources> = serviceScope.future {

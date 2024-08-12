@@ -42,8 +42,8 @@ project.afterEvaluate {
         val classesDirectories = mutableListOf<String>().also {
             subprojects.forEach { proj ->
                 variants.forEach { variant ->
-                    it.add("${proj.buildDir}/intermediates/javac/$variant/classes")
-                    it.add("${proj.buildDir}/tmp/kotlin-classes/$variant")
+                    it.add("${proj.layout.buildDirectory}/intermediates/javac/$variant/classes")
+                    it.add("${proj.layout.buildDirectory}/tmp/kotlin-classes/$variant")
                 }
             }
         }
@@ -71,12 +71,12 @@ project.afterEvaluate {
         val executions = mutableListOf<String>().also {
             subprojects.forEach { proj ->
                 variants.forEach { variant ->
-                    val path = "${proj.buildDir}/outputs/unit_test_code_coverage/${variant}UnitTest/test${variant.replaceFirstChar(Char::titlecase)}UnitTest.exec"
+                    val path = "${proj.layout.buildDirectory}/outputs/unit_test_code_coverage/${variant}UnitTest/test${variant.replaceFirstChar(Char::titlecase)}UnitTest.exec"
                     if ((File(path)).exists()) {
                         it.add(path)
                         println("Collecting execution data from: $path")
                     }
-                    val androidPath = "${proj.buildDir}/outputs/code_coverage/${variant}AndroidTest/connected/"
+                    val androidPath = "${proj.layout.buildDirectory}/outputs/code_coverage/${variant}AndroidTest/connected/"
                     val androidFiles = fileTree(androidPath)
                     androidFiles.forEach { file ->
                         it.add(file.path)

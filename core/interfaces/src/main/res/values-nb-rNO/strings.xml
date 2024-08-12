@@ -8,7 +8,7 @@
     <string name="hoursago">%1$.1f timer siden</string>
     <string name="days_ago">%1$.1f dager siden</string>
     <string name="days_ago_round">%1$.0f dager siden</string>
-    <string name="in_days">om %1$.0f dager</string>
+    <string name="in_days">i %1$.0f dager</string>
     <string name="in_days_round">om %1$.0f dager</string>
     <string name="shorthour">t</string>
     <string name="days">dager</string>

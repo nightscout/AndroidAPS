@@ -78,7 +78,6 @@
     <string name="check_preferences_before_import">Si us plau comproveu la configuració abans d\'importar:</string>
     <string name="check_preferences_cannot_import">La configuració no pot ser importada!</string>
     <string name="check_preferences_dangerous_import">La configuració no s\'hauria d\'importar!</string>
-    <string name="nav_export">Exportar configuració</string>
     <string name="export_to">Exportar configuració a</string>
     <string name="import_from">Importar configuració de</string>
     <string name="setting_imported">Configuració importada</string>

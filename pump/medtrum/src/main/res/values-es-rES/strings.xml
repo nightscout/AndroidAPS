@@ -78,6 +78,7 @@
     <string name="patch_not_active_note">¡La base de la bomba no debe conectarse al parche hasta el siguiente paso!</string>
     <string name="connect_pump_base">Conecta la base de la bomba a un nuevo parche, elimina el aire residual y rellena con insulina. Después pulsa <b>Siguiente</b>.</string>
     <string name="note_min_70_units">Nota: Se necesitan un mínimo de 70 unidades para la actvación.</string>
+    <string name="reservoir_text_and_level">Reservorio: %.2f U</string>
     <string name="do_not_attach_to_body">No pegues todavía el parche al cuerpo.</string>
     <string name="half_press_needle">Pulsa el botón de la aguja hasta la mitad. A continuación, pulsa <b>Siguiente</b> para iniciar el purgado.</string>
     <string name="wait_for_priming">Espera a que finalice el cebado.</string>
@@ -88,6 +89,7 @@
     <string name="activating_pump">Activando la bomba y ajustando la tasa basal inicial. Espera por favor.</string>
     <string name="activating_error">Fallo al activar, pulsa <b>Reintentar</b> para volver a intenetarlo.</string>
     <string name="activating_complete">Nuevo parche activado %.2f Unidades restantes.</string>
+    <string name="can_export_settings">Puedes exportar los ajustes para poder recuperar esta sesión del parche más adelante.</string>
     <string name="press_OK_to_return">Presiona <b>OK</b> para volver a la pantalla principal.</string>
     <string name="deactivate_sure">¿Estás seguro de que quieres desactivar el parche actual?</string>
     <string name="cancel_sure">¿Estás seguro de que quieres cancelar la activación?</string>
@@ -120,6 +122,8 @@
     <string name="hourly_max_insulin_summary">Especificar las unidades máximas de insulina permitidas por hora. Si se supera, la bomba se suspenderá.</string>
     <string name="daily_max_insulin_title">Insulina máxima diaria [Units]</string>
     <string name="daily_max_insulin_summary">Especificar las unidades máximas de insulina permitidas por día. Si se superan, la bomba se suspenderá.</string>
+    <string name="scan_on_connection_error_title">Escanear por error de conexión</string>
+    <string name="scan_on_connection_error_summary">ADVERTENCIA: Habilitar sólo si tienes problemas de conexión. Si se habilita, el controlador escanea la bomba de nuevo antes de intentar reconectarse con la bomba. Asegúrate de tener permiso de ubicación establecido en \"Permitir siempre\" </string>
     <!-- treatment state-->
     <string name="getting_pump_status">Obteniendo el estado de la bomba</string>
     <string name="getting_bolus_status">Obteneniendo el estado del bolo</string>

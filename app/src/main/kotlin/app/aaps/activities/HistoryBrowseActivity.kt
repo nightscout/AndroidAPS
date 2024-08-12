@@ -33,6 +33,7 @@ import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.core.ui.extensions.toVisibilityKeepSpace
 import app.aaps.databinding.ActivityHistorybrowseBinding
+import app.aaps.plugins.main.R
 import app.aaps.plugins.main.general.overview.graphData.GraphData
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.jjoe64.graphview.GraphView
@@ -112,6 +113,7 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
             loadAll("onLongClickZoom")
             true
         }
+        binding.chartMenuButton.visibility = preferences.simpleMode.not().toVisibility()
 
         binding.date.setOnClickListener {
             MaterialDatePicker.Builder.datePicker()
@@ -140,7 +142,7 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
         binding.bgGraph.gridLabelRenderer?.reloadStyles()
         binding.bgGraph.gridLabelRenderer?.labelVerticalWidth = axisWidth
 
-        overviewMenus.setupChartMenu(context, binding.chartMenuButton)
+        overviewMenus.setupChartMenu(binding.chartMenuButton, binding.scaleButton)
         prepareGraphsIfNeeded(overviewMenus.setting.size)
         savedInstanceState?.let { bundle ->
             rangeToDisplay = bundle.getInt("rangeToDisplay", 0)
@@ -177,6 +179,10 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
             .subscribe({ updateCalcProgress(it.finalPercent) }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventUpdateOverviewGraph::class.java)
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ updateGUI("EventRefreshOverview") }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventRefreshOverview::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ updateGUI("EventRefreshOverview") }, fabricPrivacy::logException)
         disposable += rxBus
@@ -296,7 +302,7 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
         aapsLogger.debug(LTag.UI, "updateGui $from")
 
         updateDate()
-
+        binding.scaleButton.text = overviewMenus.scaleString(rangeToDisplay)
         val pump = activePlugin.activePump
         val graphData = GraphData(injector, binding.bgGraph, historyBrowserData.overviewData)
         val menuChartSettings = overviewMenus.setting
