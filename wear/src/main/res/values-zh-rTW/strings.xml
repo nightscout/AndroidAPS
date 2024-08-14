@@ -217,4 +217,14 @@
     <string name="datalayer_notification_text">AAPS 正在前台運行。若要隱藏通知，請前往開發人員選項、應用通知、允許的手錶應用，選擇 AAPS，關閉資料層前台服務頻道通知。</string>
     <string name="on">開</string>
     <string name="off">關</string>
+    <string name="complication_full_status">完整狀態</string>
+    <string name="complication_full_status_flipped">完整狀態（翻轉）</string>
+    <string name="complication_blood_glucose">血糖</string>
+    <string name="complication_br_cob_iob">BR、CoB及IoB</string>
+    <string name="complication_cob_iob">BR、CoB及IoB</string>
+    <string name="complication_cob_icon">CoB圖示</string>
+    <string name="complication_cob_detailed">CoB 詳細</string>
+    <string name="complication_iob_icon">IoB圖示</string>
+    <string name="complication_iob_detailed">IoB詳細</string>
+    <string name="complication_uploader_phone_battery">Uploader/顯示手機電池</string>
 </resources>
