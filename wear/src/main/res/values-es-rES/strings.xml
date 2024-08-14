@@ -217,4 +217,14 @@
     <string name="datalayer_notification_text">AAPS está ejecutándose en primer plano. Para ocultar las notificaciones, vaya a las opciones de desarrollador, notificaciones de aplicaciones, aplicaciones de reloj, seleccione AAPS, desactive la notificación del canal de servicio de capa de datos.</string>
     <string name="on">ENCENDIDO</string>
     <string name="off">APAGADO</string>
+    <string name="complication_full_status">Estado completo</string>
+    <string name="complication_full_status_flipped">Estado completo (invertido)</string>
+    <string name="complication_blood_glucose">Glucosa en sangre</string>
+    <string name="complication_br_cob_iob">BR, COB &amp; IOB</string>
+    <string name="complication_cob_iob">COB &amp; IOB</string>
+    <string name="complication_cob_icon">Icono COB</string>
+    <string name="complication_cob_detailed">COB detallado</string>
+    <string name="complication_iob_icon">Icono IOB</string>
+    <string name="complication_iob_detailed">IOB detallado</string>
+    <string name="complication_uploader_phone_battery">Batería de teléfono que sube los datos</string>
 </resources>

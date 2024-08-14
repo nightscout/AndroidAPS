@@ -158,6 +158,7 @@
     <string name="wear_infos_watchface">Informazioni watchface</string>
     <string name="wear_export_watchface">Esporta template</string>
     <string name="wear_new_custom_watchface_exported">Esportato template personalizzato di Watchface</string>
+    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/en/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Invia di nuovo tutti i dati</string>
     <string name="open_settings_on_wear">Apri impostazioni sullo smartwatch</string>
     <string name="cwf_infos_pref_locked">Elenco impostazioni bloccate dalla watchface</string>
