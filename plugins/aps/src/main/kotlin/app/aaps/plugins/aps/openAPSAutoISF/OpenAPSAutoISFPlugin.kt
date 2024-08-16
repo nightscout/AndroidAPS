@@ -86,7 +86,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
     rh: ResourceHelper,
     private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,
-    config: Config,
+    private val config: Config,
     private val activePlugin: ActivePlugin,
     private val iobCobCalculator: IobCobCalculator,
     private val hardLimits: HardLimits,
@@ -157,12 +157,13 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
     }
 
     override fun specialEnableCondition(): Boolean {
-        return try {
-            activePlugin.activePump.pumpDescription.isTempBasalCapable
-        } catch (ignored: Exception) {
-            // may fail during initialization
-            true
-        }
+        return config.isEngineeringMode() && config.isDev() &&
+            try {
+                activePlugin.activePump.pumpDescription.isTempBasalCapable
+            } catch (ignored: Exception) {
+                // may fail during initialization
+                true
+            }
     }
 
     override fun specialShowInListCondition(): Boolean {
