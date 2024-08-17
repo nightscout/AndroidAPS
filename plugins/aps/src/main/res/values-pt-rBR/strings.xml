@@ -151,4 +151,5 @@
     <string name="autotune_update_local_profile_message">Atualizar perfil %1$s com perfil do Autotune?</string>
     <string name="autotune_revert_local_profile_message">Reverter o perfil %1$s para o perfil inicial?</string>
     <string name="autotune_profile_invalid">Perfil inválido</string>
+    <!--    autoISF -->
 </resources>
