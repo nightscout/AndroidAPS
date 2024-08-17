@@ -53,6 +53,10 @@
     <string name="pref_3_hours">3 часа</string>
     <string name="pref_4_hours">4 часа</string>
     <string name="pref_5_hours">5 часов</string>
+    <string name="pref_1_min">отключено</string>
+    <string name="pref_5_min">5 мин</string>
+    <string name="pref_10_min">10 мин</string>
+    <string name="pref_15_min">15 мин</string>
     <string name="pref_input_design">Дизайн Ввода</string>
     <string name="pref_default">По умолчанию</string>
     <string name="pref_quick_righty">Быстрый правосторонний</string>
@@ -204,6 +208,7 @@
     <string name="old_warning">!старое!</string>
     <string name="error">!ошибка!</string>
     <string name="pref_heartRateSampling">Частота сердечных сокращений</string>
+    <string name="pref_heartRateSmoothing">Сглаживание частоты сердечных сокращений</string>
     <string name="pref_stepsSampling">Включить счетчик шагов</string>
     <string name="tile_tempt_1">Врем. цель 1</string>
     <string name="tile_tempt_2">Врем. цель 2</string>
