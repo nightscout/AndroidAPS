@@ -162,4 +162,5 @@
     <string name="autotune_profile_invalid">無效的檔案</string>
     <string name="not_available_full">無法使用</string>
     <string name="pump_disconnected">幫浦已中斷連線</string>
+    <!--    autoISF -->
 </resources>
