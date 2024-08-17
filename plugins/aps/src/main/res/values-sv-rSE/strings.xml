@@ -151,4 +151,5 @@
     <string name="autotune_update_local_profile_message">Uppdatera %1$s med Autotune-profil?</string>
     <string name="autotune_revert_local_profile_message">Återställ %1$s med angiven profil?</string>
     <string name="autotune_profile_invalid">Felaktig profil</string>
+    <!--    autoISF -->
 </resources>
