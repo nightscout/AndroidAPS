@@ -157,4 +157,5 @@
     <string name="autotune_update_local_profile_message">לעדכן את פרופיל %1$s עם הפרופיל המכוונן אוטומטית?</string>
     <string name="autotune_revert_local_profile_message">להחזיר את פרופיל %1$s אל פרופיל קלט?</string>
     <string name="autotune_profile_invalid">פרופיל לא חוקי</string>
+    <!--    autoISF -->
 </resources>
