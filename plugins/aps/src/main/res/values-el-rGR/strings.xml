@@ -152,4 +152,5 @@
     <string name="autotune_update_local_profile_message">Ενημέρωση του προφίλ %1$s με το Προφίλ Autotune;</string>
     <string name="autotune_revert_local_profile_message">Επαναφορά προφίλ %1$s με Προφίλ Εισαγωγής;</string>
     <string name="autotune_profile_invalid">Μη έγκυρο προφίλ</string>
+    <!--    autoISF -->
 </resources>
