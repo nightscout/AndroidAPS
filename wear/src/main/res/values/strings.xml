@@ -53,6 +53,10 @@
     <string name="pref_3_hours">3 hours</string>
     <string name="pref_4_hours">4 hours</string>
     <string name="pref_5_hours">5 hours</string>
+    <string name="pref_1_min">disabled</string>
+    <string name="pref_5_min">5 min</string>
+    <string name="pref_10_min">10 min</string>
+    <string name="pref_15_min">15 min</string>
     <string name="pref_input_design">Input Design</string>
     <string name="pref_default">Default</string>
     <string name="pref_quick_righty">Quick righty</string>
@@ -260,6 +264,8 @@
     <string name="error">!err!</string>
     <string name="key_heart_rate_sampling" translatable="false">heart_rate_sampling</string>
     <string name="pref_heartRateSampling">Heart Rate</string>
+    <string name="key_heart_rate_smoothing" translatable="false">heart_rate_smoothing</string>
+    <string name="pref_heartRateSmoothing">HR Smoothing</string>
     <string name="key_steps_sampling" translatable="false">key_steps_sampling</string>
     <string name="pref_stepsSampling">Enable Steps Count</string>
     <string name="tile_tempt_1">Temp Target 1</string>
