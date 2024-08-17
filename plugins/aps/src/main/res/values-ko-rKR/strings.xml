@@ -154,4 +154,5 @@
     <string name="autotune_update_local_profile_message">Autotune 프로파일에서 %1$s 프로파일을 업데이트 하시겠습니까?</string>
     <string name="autotune_revert_local_profile_message">입력 프로파일과 함께 %1$s 프로파일을 되돌리시겠습니까?</string>
     <string name="autotune_profile_invalid">프로파일이 잘못되었습니다</string>
+    <!--    autoISF -->
 </resources>
