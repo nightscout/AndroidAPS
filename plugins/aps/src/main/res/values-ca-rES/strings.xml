@@ -92,4 +92,5 @@
     <!-- Autotune -->
     <string name="autotune_result">Resultat: %1$s</string>
     <string name="autotune_compare_profile">Comparar perfils</string>
+    <!--    autoISF -->
 </resources>
