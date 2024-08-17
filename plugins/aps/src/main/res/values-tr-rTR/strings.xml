@@ -163,4 +163,5 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="autotune_profile_invalid">Profil geçersiz</string>
     <string name="not_available_full">Mevcut değil</string>
     <string name="pump_disconnected">Pompa bağlantısı kesildi</string>
+    <!--    autoISF -->
 </resources>
