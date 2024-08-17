@@ -162,4 +162,5 @@
     <string name="autotune_profile_invalid">Неверный профиль</string>
     <string name="not_available_full">Недоступно</string>
     <string name="pump_disconnected">Помпа отключена</string>
+    <!--    autoISF -->
 </resources>
