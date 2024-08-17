@@ -46,6 +46,10 @@ enum class BooleanKey(
     ApsDynIsfAdjustSensitivity(R.string.key_dynamic_isf_adjust_sensitivity, false, defaultedBySM = true, dependency = ApsUseDynamicSensitivity), // change from default false
     ApsAmaAutosensAdjustTargets(R.string.key_openaps_ama_autosens_adjust_targets, true, defaultedBySM = true),
     MaintenanceEnableFabric(R.string.key_enable_fabric, true, defaultedBySM = true, hideParentScreenIfHidden = true),
+    ApsAutoIsfHighTtRaisesSens(R.string.key_high_temptarget_raises_sensitivity, false, defaultedBySM = true),
+    ApsAutoIsfLowTtLowersSens(R.string.key_low_temptarget_lowers_sensitivity, false, defaultedBySM = true),
+    ApsUseAutoIsfWeights(R.string.key_enable_autoISF, false, defaultedBySM = true),
+    ApsAutoIsfSmbOnEvenTarget(R.string.key_enableSMB_EvenOn_OddOff_always, false, defaultedBySM = true),   // profile target
 
     AutotuneAutoSwitchProfile(R.string.key_autotune_auto, false),
     AutotuneCategorizeUamAsBasal(R.string.key_autotune_categorize_uam_as_basal, false),

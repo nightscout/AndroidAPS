@@ -45,6 +45,8 @@ enum class IntKey(
     ApsMaxMinutesOfBasalToLimitSmb(R.string.key_openaps_smb_max_minutes, 30, 15, 120, defaultedBySM = true, dependency = BooleanKey.ApsUseSmb),
     ApsUamMaxMinutesOfBasalToLimitSmb(R.string.key_openaps_uam_smb_max_minutes, 30, 15, 120, defaultedBySM = true, dependency = BooleanKey.ApsUseSmb),
     ApsCarbsRequestThreshold(R.string.key_openaps_carbs_required_threshold, 1, 1, 10, defaultedBySM = true),
+    ApsAutoIsfHalfBasalExerciseTarget(R.string.key_half_basal_exercise_target, 160, 120, 200, defaultedBySM = true),
+    ApsAutoIsfIobThPercent(R.string.key_openapsama_iob_threshold_percent, 100, 10, 100, defaultedBySM = true),
     ApsDynIsfAdjustmentFactor(R.string.key_dynamic_isf_adjustment_factor, 100, 1, 300, dependency = BooleanKey.ApsUseDynamicSensitivity),
     AutosensPeriod(R.string.key_openapsama_autosens_period, 24, 4, 24, calculatedDefaultValue = true),
     MaintenanceLogsAmount(R.string.key_maintenance_logs_amount, 2, 1, 10, defaultedBySM = true),

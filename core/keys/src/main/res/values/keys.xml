@@ -108,6 +108,29 @@
     <string name="key_openaps_smb_min_5m_carbs_impact" translatable="false">openapsama_min_5m_carbimpact</string>
     <string name="key_openaps_link_to_docs" translatable="false">link_to_docs</string>
 
+    <!--    autoISF -->
+    <string name="key_use_autoISF" translatable="false">use_autoisf</string>
+    <string name="key_half_basal_exercise_target" translatable="false">half_basal_exercise_target</string>
+    <string name="key_openapsama_enable_autoISF" translatable="false">openapsama_enable_autoISF</string>
+    <string name="key_enable_autoISF" translatable="false">openapsama_enable_autoISF</string>
+    <string name="key_openapsama_autoISF_max" translatable="false">autoISF_max</string>
+    <string name="key_openapsama_autoISF_min" translatable="false">autoISF_min</string>
+    <string name="key_openapsama_dura_ISF_weight" translatable="false">dura_ISF_weight</string>
+    <string name="key_openapsama_lower_ISFrange_weight" translatable="false">lower_ISFrange_weight</string>
+    <string name="key_openapsama_higher_ISFrange_weight" translatable="false">higher_ISFrange_weight</string>
+    <string name="key_openapsama_pp_ISF_weight" translatable="false">pp_ISF_weight</string>
+    <string name="key_openapsama_bgAccel_ISF_weight" translatable="false">bgAccel_ISF_weight</string>
+    <string name="key_openapsama_bgBrake_ISF_weight" translatable="false">bgBrake_ISF_weight</string>
+    <string name="key_openapsama_smb_delivery_ratio" translatable="false">openapsama_smb_delivery_ratio</string>
+    <string name="key_openapsama_smb_delivery_ratio_min" translatable="false">openapsama_smb_delivery_ratio_min</string>
+    <string name="key_openapsama_smb_delivery_ratio_max" translatable="false">openapsama_smb_delivery_ratio_max</string>
+    <string name="key_openapsama_smb_delivery_ratio_bg_range" translatable="false">openapsama_smb_delivery_ratio_bg_range</string>
+    <string name="key_openapsama_smb_max_range_extension" translatable="false">openapsama_smb_max_range_extension</string>
+    <string name="key_enableSMB_EvenOn_OddOff_always" translatable="false">Enable alternative activation of SMB always</string>
+    <string name="key_high_temptarget_raises_sensitivity" translatable="false">high_temptarget_raises_sensitivity</string>
+    <string name="key_low_temptarget_lowers_sensitivity" translatable="false">low_temptarget_lowers_sensitivity</string>
+    <string name="key_openapsama_iob_threshold_percent" translatable="false">iob_threshold_percent</string>
+
     <!--    Sensitivity-->
     <string name="key_absorption_cutoff" translatable="false">absorption_cutoff</string>
     <string name="key_openaps_autosens_max" translatable="false">autosens_max</string>

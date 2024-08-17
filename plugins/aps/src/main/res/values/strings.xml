@@ -10,6 +10,7 @@
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Lower sensitivity for temptargets < 100]]></string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamic ISF</string>
+    <string name="openaps_auto_isf">Auto ISF</string>
     <string name="smb_interval_summary">How frequently SMBs will be given in min</string>
     <string name="resistance_lowers_target_title">Resistance lowers target</string>
     <string name="resistance_lowers_target_summary">When resistance is detected, lower the target glucose</string>
@@ -19,6 +20,7 @@
     <string name="openapsma_no_glucose_data">No glucose data available</string>
     <string name="openaps_no_as_data">No autosens data available</string>
     <string name="dynisf_shortname">DYNISF</string>
+    <string name="autoisf_shortname">AUTOISF</string>
     <string name="executing">Executing</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Array of %1$d elements.\nActual value:</string>
@@ -26,6 +28,7 @@
     <string name="description_ama">State of the algorithm in 2017</string>
     <string name="description_smb">Most recent algorithm for advanced users</string>
     <string name="description_smb_dynamic_isf">Most recent algorithm for advanced users with dynamic/automatic ISF</string>
+    <string name="description_auto_isf">Most recent algorithm for advanced users with AutoISF extensions</string>
     <string name="openapsama_bolus_snooze_dia_divisor">Bolus snooze dia divisor</string>
 
     <string name="openapsma_run">Run now</string>
@@ -179,5 +182,59 @@
     <string name="autotune_log_sum_basal" translatable="false">|\t∑\t|\t%1$3.1f |\t%2$3.1f |\n</string>
     <string name="not_available_full">Not available</string>
     <string name="pump_disconnected">Pump disconnected</string>
+
+    <!--    autoISF -->
+    <string name="half_basal_exercise_target_title">Half basal exercise target</string>
+    <string name="half_basal_exercise_target_summary" formatted="false">Set to a number, e.g. 160, which means when temp target is 160 mg/dL and High temptarget raises sensitivity=true, run 50% basal at this level (120 = 75%; 140 = 60%).</string>
+    <string name="autoISF_settings_title">AutoISF settings</string>
+    <string name="autoISF_settings_summary">AutoISF allows to adapt the insulin sensitivity factor (ISF) in various scenarios of glucose behaviour\n\nIt can also adapt SMB delivery settings</string>
+    <string name="acce_ISF_settings_title">acce_ISF settings</string>
+    <string name="acce_ISF_settings_summary">acce_ISF settings: adjust ISF for accelerating/decelerating blood glucose</string>
+    <string name="enableautoISFwithcob">Enable dura_ISF with COB</string>
+    <string name="enableautoISFwithcob_summary">Enable dura_ISF when there is COB active</string>
+    <string name="bg_ISF_settings_title">bg_ISF settings</string>
+    <string name="bg_ISF_settings_summary">bg_ISF settings: ISF depending on blood glucose level according to a predefined polygon</string>
+    <string name="enable_postprandial_ISF_always_summary">Enable the postprandial ISF adaptation all the time regardless of when the last meal was taken.</string>
+    <string name="pp_ISF_settings_title">pp_ISF settings</string>
+    <string name="pp_ISF_settings_summary">pp_ISF settings: ISF for postprandial (after meal) glucose rise</string>
+    <string name="dura_ISF_settings_title">dura_ISF settings</string>
+    <string name="dura_ISF_settings_summary">dura_ISF settings: ISF for blood glucose plateau above target</string>
+    <string name="smb_delivery_settings_title">SMB delivery settings</string>
+    <string name="smb_delivery_settings_summary">Set of options to increase the actual SMB size which can be delivered in situations where ISF was strengthened, i.e. fairly low ISF figure.\n\nUSE WITH CAUTION</string>
+    <string name="full_loop_settings_title">Full Loop Settings</string>
+    <string name="full_loop_settings_summary">Full Loop Settings: Adjust iobTH to limit IOB build up</string>
+    <string name="use_autoISF_extensions_title">Enable AutoISF extended functionalities</string>
+    <string name="use_autoISF_extensions_summary">These include ISF modulation due to recent bg behaviour, alternative SMB enablers and support for Full Closed Loop</string>
+    <string name="openapsama_enable_autoISF">Enable ISF adaptation by glucose behaviour</string>
+    <string name="openapsama_autoISF_max_summary">Default value: 1.0\nThis is a multiplier cap for autoISF to set a limit on how high the autoISF ratio can be, which in turn determines how low it can adjust ISF.\n\nWARNING: Be extremely careful when using values above 2.5</string>
+    <string name="openapsama_autoISF_min_summary">Default value: 1.0\nThis is a multiplier cap for autoISF to set a limit on how low the autoISF ratio can be, which in turn determines how high it can adjust ISF.</string>
+    <string name="openapsama_dura_ISF_weight_summary" formatted="false">Default value: 0.0\nThis is the rate at which autoISF grows per hour assuming bg is twice the target. With a value of 1.0 it will have reduced ISF to 50% after 1 hour of bg at twice the target.\n\nWith 0.0 the effect of autoISF is effectively disabled.</string>
+    <string name="openapsama_lower_ISFrange_weight_summary">Default value: 0.0\nThis is the weight applied to the polygon which adapts ISF if glucose is below target. \n\nWith 0.0 the effect is effectively disabled.</string>
+    <string name="openapsama_higher_ISFrange_weight_summary">Default value: 0.0\nThis is the weight applied to the polygon which adapts ISF if glucose is above target. \n\nWith 0.0 the effect is effectively disabled.</string>
+    <string name="openapsama_pp_ISF_weight_summary">Default value: 0.0\nThis is the weight applied to the linear slope while glucose rises and which adapts ISF. \n\nWith 0.0 this contribution is effectively disabled.</string>
+    <string name="openapsama_bgAccel_ISF_weight_summary">Default value: 0.0\nThis is the weight applied while glucose accelerates and which strengthens ISF. \n\nWith 0.0 this contribution is effectively disabled.</string>
+    <string name="openapsama_bgBrake_ISF_weight_summary">Default value: 0.0\nThis is the weight applied while glucose decelerates and which weakens ISF. \n\nWith 0.0 this contribution is effectively disabled.</string>
+    <string name="openapsama_autoISF_max">Max autoISF ratio\n(autoISF_max)</string>
+    <string name="openapsama_autoISF_min">Min autoISF ratio\n(autoISF_min)</string>
+    <string name="openapsama_lower_ISFrange_weight">lower ISF-range weight\n(lower_ISFrange_weight)</string>
+    <string name="openapsama_higher_ISFrange_weight">higher ISF-range weight\n(higher_ISFrange_weight)</string>
+    <string name="openapsama_pp_ISF_weight">postprandial ISF weight\n(pp_ISF_weight)</string>
+    <string name="openapsama_bgAccel_ISF_weight">Weight while BG accelerates\n(bgAccel_ISF_weight)</string>
+    <string name="openapsama_bgBrake_ISF_weight">Weight while BG decelerates\n(bgBrake_ISF_weight)</string>
+    <string name="openapsama_dura_ISF_weight">dura_ISF weight\n(dura_ISF_weight)</string>
+    <string name="openapsama_smb_delivery_ratio">fixed SMB delivery ratio\n(smb_delivery_ratio)</string>
+    <string name="openapsama_smb_delivery_ratio_min">variable SMB delivery ratio, lower end\n(smb_delivery_ratio_min)</string>
+    <string name="openapsama_smb_delivery_ratio_max">variable SMB delivery ratio, upper end\n(smb_delivery_ratio_max)</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range">variable SMB delivery ratio, mapped glucose range\n(smb_delivery_ratio_bg_range)</string>
+    <string name="openapsama_smb_max_range_extension">SMB/UAM max range extension\n(smb_max_range_extension)</string>
+    <string name="openapsama_smb_delivery_ratio_summary">Default value: 0.5 This is another key OpenAPS safety cap, and specifies what share of the total insulin required can be delivered as SMB. This is to prevent people from getting into dangerous territory by setting SMB requests from the caregivers phone at the same time. Increase this experimental value slowly and with caution.</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">Default value: 0.5 This is the lower end of a linearly increasing ratio rather than the fix value above.</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">Default value: 0.5 This is the upper end of a linearly increasing ratio rather than the fix value above.</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range_summary">Default value: 0. The linearly increasing SMB delivery ratio is mapped to the glucose range [target_bg, target_bg+bg_range].\nAt target_bg the SMB ratio is smb_delivery_ratio_min, at target_bg+bg_range it is smb_delivery_ratio_max\nWith 0 the linearly increasing SMB ratio is disabled and the fixed smb_delivery_ratio is used.</string>
+    <string name="openapsama_smb_max_range_extension_summary">Default value: 1 This is another key OpenAPS safety cap, and specifies by what factor you can exceed the regular 120 maxSMB/maxUAM minutes. Increase this experimental value slowly and with caution.</string>
+    <string name="enableSMB_EvenOn_OddOff_always">Enable alternative activation of SMB depending on active target being even number</string>
+    <string name="enableSMB_EvenOn_OddOff_always_summary">\nenabled ...\nif active target(mmol/L) has even decimal\nor active target(mg/dL) is even number\n\ndisabled otherwise</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Default value: 100%\nWith 100% this feature is effectively disabled.</string>
+    <string name="openapsama_iob_threshold_percent">Percentage of maxIOB above which SMBs are disabled\n(iob_threshold_percent)</string>
 
 </resources>

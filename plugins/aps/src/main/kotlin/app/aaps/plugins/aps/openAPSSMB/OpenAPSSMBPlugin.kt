@@ -398,7 +398,6 @@ open class OpenAPSSMBPlugin @Inject constructor(
             insulinDivisor = insulinDivisor,
             TDD = tdd
         )
-
         val microBolusAllowed = constraintsChecker.isSMBModeEnabled(ConstraintObject(tempBasalFallback.not(), aapsLogger)).also { inputConstraints.copyReasons(it) }.value()
         val flatBGsDetected = bgQualityCheck.state == BgQualityCheck.State.FLAT
 

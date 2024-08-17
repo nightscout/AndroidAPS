@@ -20,4 +20,5 @@ enum class UnitDoubleKey(
     OverviewLowMark(R.string.key_low_mark, 72.0, 25, 160, showInNsClientMode = false, hideParentScreenIfHidden = true),
     OverviewHighMark(R.string.key_high_mark, 180.0, 90, 250, showInNsClientMode = false),
     ApsLgsThreshold(R.string.key_dynamic_isf_lgs_threshold, 65.0, 65, 120, defaultedBySM = true, dependency =BooleanKey.ApsUseDynamicSensitivity),
+    ApsAutoIsfSmbDeliveryRatioBgRange(R.string.key_openapsama_smb_delivery_ratio_bg_range, 0.0, 0, 100, defaultedBySM = true)
 }

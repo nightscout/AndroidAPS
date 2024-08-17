@@ -34,6 +34,18 @@ enum class DoubleKey(
     AbsorptionMaxTime(R.string.key_absorption_maxtime, 6.0, 4.0, 10.0),
     AutosensMin(R.string.key_openaps_autosens_min, 0.7, 0.1, 1.0, defaultedBySM = true, hideParentScreenIfHidden = true),
     AutosensMax(R.string.key_openaps_autosens_max, 1.2, 0.5, 3.0, defaultedBySM = true),
+    ApsAutoIsfMin(R.string.key_openapsama_autoISF_min, 1.0, 0.3, 1.0, defaultedBySM = true),
+    ApsAutoIsfMax(R.string.key_openapsama_autoISF_max, 1.0, 1.0, 3.0, defaultedBySM = true),
+    ApsAutoIsfBgAccelWeight(R.string.key_openapsama_bgAccel_ISF_weight, 0.0, 0.0, 1.0, defaultedBySM = true),
+    ApsAutoIsfBgBrakeWeight(R.string.key_openapsama_bgBrake_ISF_weight, 0.0, 0.0, 1.0, defaultedBySM = true),
+    ApsAutoIsfLowBgWeight(R.string.key_openapsama_lower_ISFrange_weight, 0.0, 0.0, 2.0, defaultedBySM = true),
+    ApsAutoIsfHighBgWeight(R.string.key_openapsama_higher_ISFrange_weight, 0.0, 0.0, 2.0, defaultedBySM = true),
+    ApsAutoIsfPpWeight(R.string.key_openapsama_pp_ISF_weight, 0.0, 0.0, 1.0, defaultedBySM = true),
+    ApsAutoIsfDuraWeight(R.string.key_openapsama_dura_ISF_weight, 0.0, 0.0, 3.0, defaultedBySM = true),
+    ApsAutoIsfSmbDeliveryRatio(R.string.key_openapsama_smb_delivery_ratio, 0.5, 0.5, 1.0, defaultedBySM = true),
+    ApsAutoIsfSmbDeliveryRatioMin(R.string.key_openapsama_smb_delivery_ratio_min, 0.5, 0.5, 1.0, defaultedBySM = true),
+    ApsAutoIsfSmbDeliveryRatioMax(R.string.key_openapsama_smb_delivery_ratio_max, 0.5, 0.5, 1.0, defaultedBySM = true),
+    ApsAutoIsfSmbMaxRangeExtension(R.string.key_openapsama_smb_max_range_extension, 1.0, 1.0, 5.0, defaultedBySM = true),
     EquilMaxBolus(R.string.key_equil_maxbolus, 10.0, 0.1, 25.0),
 
 }

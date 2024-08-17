@@ -10,12 +10,17 @@ import app.aaps.core.interfaces.aps.CurrentTemp
 import app.aaps.core.interfaces.aps.GlucoseStatus
 import app.aaps.core.interfaces.aps.MealData
 import app.aaps.core.interfaces.aps.OapsProfile
+import app.aaps.core.interfaces.aps.OapsProfileAutoIsf
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.storage.Storage
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.Preferences
 import app.aaps.core.utils.JsonHelper
 import app.aaps.di.TestApplication
 import app.aaps.plugins.aps.openAPSAMA.DetermineBasalAMA
@@ -25,6 +30,8 @@ import app.aaps.plugins.aps.openAPSSMB.DetermineBasalAdapterSMBJS
 import app.aaps.plugins.aps.openAPSSMB.DetermineBasalSMB
 import app.aaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import app.aaps.plugins.aps.openAPSSMBDynamicISF.DetermineBasalAdapterSMBDynamicISFJS
+import app.aaps.plugins.aps.openAPSAutoISF.DetermineBasalAutoISF
+import app.aaps.plugins.aps.openAPSSMBAutoISF.DetermineBasalAdapterAutoISFJS
 import app.aaps.plugins.aps.utils.ScriptReader
 import com.google.common.truth.Truth.assertThat
 import dagger.android.HasAndroidInjector
@@ -49,8 +56,10 @@ class ReplayApsResultsTest @Inject constructor() {
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var determineBasalAMA: DetermineBasalAMA
     @Inject lateinit var determineBasalSMBDynamicISF: DetermineBasalSMB
+    @Inject lateinit var determineBasalAutoISF: DetermineBasalAutoISF
     @Inject lateinit var sp: SP
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var preferences: Preferences
 
     private val context = ApplicationProvider.getApplicationContext<TestApplication>()
 
@@ -70,6 +79,7 @@ class ReplayApsResultsTest @Inject constructor() {
         @Suppress("SpellCheckingInspection") var amas = 0
         @Suppress("SpellCheckingInspection") var smbs = 0
         @Suppress("SpellCheckingInspection") var dynisfs = 0
+        @Suppress("SpellCheckingInspection") var autoisfs = 0
         val results = readResultFiles()
         assertThat(results.size).isGreaterThan(0)
         results.forEach { test ->
@@ -82,18 +92,20 @@ class ReplayApsResultsTest @Inject constructor() {
             val output = JSONObject(outputString)
             aapsLogger.info(LTag.CORE, "***** File: $filename *****")
             when (algorithm) {
-                OpenAPSSMBPlugin::class.simpleName -> smbs++
-                "OpenAPSSMBDynamicISFPlugin"       -> dynisfs++
-                OpenAPSAMAPlugin::class.simpleName -> amas++
+                OpenAPSSMBPlugin::class.simpleName      -> smbs++
+                "OpenAPSSMBAutoISFPlugin"               -> autoisfs++
+                "OpenAPSSMBDynamicISFPlugin"            -> dynisfs++
+                OpenAPSAMAPlugin::class.simpleName      -> amas++
             }
             when (algorithm) {
-                OpenAPSSMBPlugin::class.simpleName -> testOpenAPSSMB(filename, input, output, injector)
-                "OpenAPSSMBDynamicISFPlugin"       -> testOpenAPSSMBDynamicISF(filename, input, output, injector)
-                OpenAPSAMAPlugin::class.simpleName -> testOpenAPSAMA(filename, input, output, injector)
-                else                               -> error("Unsupported")
+                OpenAPSSMBPlugin::class.simpleName      -> testOpenAPSSMB(filename, input, output, injector)
+                "OpenAPSSMBAutoISFPlugin"               -> testOpenAPSSMBAutoISF(filename, input, output, injector)
+                "OpenAPSSMBDynamicISFPlugin"            -> testOpenAPSSMBDynamicISF(filename, input, output, injector)
+                OpenAPSAMAPlugin::class.simpleName      -> testOpenAPSAMA(filename, input, output, injector)
+                else                                    -> error("Unsupported")
             }
         }
-        aapsLogger.info(LTag.CORE, "\n**********\nAMA: $amas\nSMB: $smbs\nDynISFs: $dynisfs\nJS time: $jsTime\nKT time: $ktTime\n**********")
+        aapsLogger.info(LTag.CORE, "\n**********\nAMA: $amas\nSMB: $smbs\nDynISFs: $dynisfs\nAutoISFs: $autoisfs\nJS time: $jsTime\nKT time: $ktTime\n**********")
     }
 
     private fun testOpenAPSSMB(filename: String, input: JSONObject, output: JSONObject, injector: HasAndroidInjector) {
@@ -574,6 +586,198 @@ class ReplayApsResultsTest @Inject constructor() {
         assertThat(resultKt.COB ?: Double.NaN).isEqualTo(result?.json()?.optDouble("COB"))
         assertThat(resultKt.IOB ?: Double.NaN).isEqualTo(result?.json()?.optDouble("IOB"))
         assertThat(resultKt.variable_sens ?: Double.NaN).isEqualTo(result?.json()?.optDouble("variable_sens"))
+    }
+
+    private fun testOpenAPSSMBAutoISF(filename: String, input: JSONObject, output: JSONObject, injector: HasAndroidInjector) {
+        val startJs = System.currentTimeMillis()
+        val determineBasalResult = DetermineBasalAdapterAutoISFJS(ScriptReader(), injector)
+        determineBasalResult.profile = input.getJSONObject("profile")
+        determineBasalResult.glucoseStatus = input.getJSONObject("glucoseStatus")
+        determineBasalResult.iobData = input.getJSONArray("iob_data")
+        determineBasalResult.mealData = input.getJSONObject("meal_data")
+        determineBasalResult.currentTemp = input.getJSONObject("currenttemp")
+        determineBasalResult.autosensData = input.getJSONObject("autosens_data")
+        determineBasalResult.microBolusAllowed = input.getBoolean("microBolusAllowed")
+        determineBasalResult.currentTime = input.getLong("currentTime")
+        determineBasalResult.flatBGsDetected = input.getBoolean("flatBGsDetected")
+        val result = determineBasalResult.invoke()
+        val varSens = result?.variableSens!!
+        val endJs = System.currentTimeMillis()
+        jsTime += (endJs - startJs)
+
+        aapsLogger.info(LTag.APS, "Expected --> $output")
+        assertThat(result).isNotNull()
+        JSONAssert.assertEquals(
+            "Error in file $filename",
+            output.toString(),
+            result?.json()?.apply {
+                // this is added afterwards to json. Copy from original
+                put("timestamp", output.getString("timestamp"))
+            }.toString(),
+            CustomComparator(JSONCompareMode.LENIENT, Customization("tick") { o1: Any?, o2: Any? -> o1.toString() == o2.toString() })
+        )
+
+        // Exclude these with whole number delta as the alg is producing different results
+        // on inputs like 2.0 which are evaluated as Int 2
+        val delta = determineBasalResult.glucoseStatus.getDouble("delta")
+        if (floor(delta) == delta) return
+        // Pass to DetermineBasalSMB
+
+        if (determineBasalResult.profile.optString("out_units") == "mmol/L")
+            sp.putString(app.aaps.core.keys.R.string.key_units, GlucoseUnit.MMOL.asText)
+        else
+            sp.putString(app.aaps.core.keys.R.string.key_units, GlucoseUnit.MGDL.asText)
+
+        val startKt = System.currentTimeMillis()
+        val glucoseStatus = GlucoseStatus(
+            glucose = determineBasalResult.glucoseStatus.getDouble("glucose"),
+            noise = determineBasalResult.glucoseStatus.getDouble("noise"),
+            delta = determineBasalResult.glucoseStatus.getDouble("delta"),
+            shortAvgDelta = determineBasalResult.glucoseStatus.getDouble("short_avgdelta"),
+            longAvgDelta = determineBasalResult.glucoseStatus.getDouble("long_avgdelta"),
+            date = determineBasalResult.glucoseStatus.getLong("date"),
+            duraISFminutes = determineBasalResult.glucoseStatus.getDouble("dura_ISF_minutes"),
+            duraISFaverage = determineBasalResult.glucoseStatus.getDouble("dura_ISF_average"),
+            a0 = determineBasalResult.glucoseStatus.getDouble("parabola_fit_a0"),
+            a1 = determineBasalResult.glucoseStatus.getDouble("parabola_fit_a1"),
+            a2 = determineBasalResult.glucoseStatus.getDouble("parabola_fit_a2"),
+            bgAcceleration = determineBasalResult.glucoseStatus.getDouble("bg_acceleration"),
+            corrSqu = determineBasalResult.glucoseStatus.getDouble("parabola_fit_correlation")
+        )
+        val currentTemp = CurrentTemp(
+            duration = determineBasalResult.currentTemp.getInt("duration"),
+            rate = determineBasalResult.currentTemp.getDouble("rate"),
+            minutesrunning = null
+        )
+        val autosensData = AutosensResult(
+            ratio = determineBasalResult.autosensData.getDouble("ratio")
+        )
+
+        fun JSONObject.toIob(): IobTotal =
+            IobTotal(
+                time = dateUtil.fromISODateString(this.getString("time")),
+                iob = this.getDouble("iob"),
+                basaliob = this.getDouble("basaliob"),
+                bolussnooze = this.getDouble("bolussnooze"),
+                activity = this.getDouble("activity"),
+                lastBolusTime = this.getLong("lastBolusTime"),
+                iobWithZeroTemp = this.optJSONObject("iobWithZeroTemp")?.toIob()
+            )
+
+        val iobData = arrayListOf<IobTotal>()
+        for (i in 0 until determineBasalResult.iobData!!.length())
+            iobData.add(determineBasalResult.iobData!!.getJSONObject(i).toIob())
+        val currentTime = determineBasalResult.currentTime
+        val profile = OapsProfileAutoIsf(
+            dia = 0.0,
+            min_5m_carbimpact = 0.0,
+            max_iob = determineBasalResult.profile.getDouble("max_iob"),
+            max_daily_basal = determineBasalResult.profile.getDouble("max_daily_basal"),
+            max_basal = determineBasalResult.profile.getDouble("max_basal"),
+            min_bg = determineBasalResult.profile.getDouble("min_bg"),
+            max_bg = determineBasalResult.profile.getDouble("max_bg"),
+            target_bg = determineBasalResult.profile.getDouble("target_bg"),
+            carb_ratio = determineBasalResult.profile.getDouble("carb_ratio"),
+            sens = determineBasalResult.profile.getDouble("sens"),
+            autosens_adjust_targets = false,
+            max_daily_safety_multiplier = determineBasalResult.profile.getDouble("max_daily_safety_multiplier"),
+            current_basal_safety_multiplier = determineBasalResult.profile.getDouble("current_basal_safety_multiplier"),
+            lgsThreshold = null,
+            high_temptarget_raises_sensitivity = determineBasalResult.profile.getBoolean("high_temptarget_raises_sensitivity"),
+            low_temptarget_lowers_sensitivity = determineBasalResult.profile.getBoolean("low_temptarget_lowers_sensitivity"),
+            sensitivity_raises_target = determineBasalResult.profile.getBoolean("sensitivity_raises_target"),
+            resistance_lowers_target = determineBasalResult.profile.getBoolean("resistance_lowers_target"),
+            adv_target_adjustments = determineBasalResult.profile.getBoolean("adv_target_adjustments"),
+            exercise_mode = determineBasalResult.profile.getBoolean("exercise_mode"),
+            half_basal_exercise_target = determineBasalResult.profile.getInt("half_basal_exercise_target"),
+            maxCOB = determineBasalResult.profile.getInt("maxCOB"),
+            skip_neutral_temps = determineBasalResult.profile.getBoolean("skip_neutral_temps"),
+            remainingCarbsCap = determineBasalResult.profile.getInt("remainingCarbsCap"),
+            enableUAM = determineBasalResult.profile.getBoolean("enableUAM"),
+            A52_risk_enable = determineBasalResult.profile.getBoolean("A52_risk_enable"),
+            SMBInterval = determineBasalResult.profile.getInt("SMBInterval"),
+            enableSMB_with_COB = determineBasalResult.profile.getBoolean("enableSMB_with_COB"),
+            enableSMB_with_temptarget = determineBasalResult.profile.getBoolean("enableSMB_with_temptarget"),
+            allowSMB_with_high_temptarget = determineBasalResult.profile.getBoolean("allowSMB_with_high_temptarget"),
+            enableSMB_always = determineBasalResult.profile.getBoolean("enableSMB_always"),
+            enableSMB_after_carbs = determineBasalResult.profile.getBoolean("enableSMB_after_carbs"),
+            maxSMBBasalMinutes = determineBasalResult.profile.getInt("maxSMBBasalMinutes"),
+            maxUAMSMBBasalMinutes = determineBasalResult.profile.getInt("maxUAMSMBBasalMinutes"),
+            bolus_increment = determineBasalResult.profile.getDouble("bolus_increment"),
+            carbsReqThreshold = determineBasalResult.profile.getInt("carbsReqThreshold"),
+            current_basal = determineBasalResult.profile.getDouble("current_basal"),
+            temptargetSet = determineBasalResult.profile.getBoolean("temptargetSet"),
+            autosens_max = determineBasalResult.profile.getDouble("autosens_max"),
+            out_units = determineBasalResult.profile.optString("out_units"),
+            variable_sens = varSens, // TODO only available in result.variableSens? , not in determineBasalResult.profile.getDouble("variable_sens"),
+            autoISF_version = determineBasalResult.profile.optString("autoISF_version"),
+            enable_autoISF = determineBasalResult.profile.getBoolean("enable_autoISF"),
+            autoISF_max = determineBasalResult.profile.getDouble("autoISF_max"),
+            autoISF_min = determineBasalResult.profile.getDouble("autoISF_min"),
+            bgAccel_ISF_weight = determineBasalResult.profile.getDouble("bgAccel_ISF_weight"),
+            bgBrake_ISF_weight = determineBasalResult.profile.getDouble("bgBrake_ISF_weight"),
+            pp_ISF_weight = determineBasalResult.profile.getDouble("pp_ISF_weight"),
+            lower_ISFrange_weight = determineBasalResult.profile.getDouble("lower_ISFrange_weight"),
+            higher_ISFrange_weight = determineBasalResult.profile.getDouble("higher_ISFrange_weight"),
+            dura_ISF_weight = determineBasalResult.profile.getDouble("dura_ISF_weight"),
+            smb_delivery_ratio = determineBasalResult.profile.getDouble("smb_delivery_ratio"),
+            smb_delivery_ratio_min = determineBasalResult.profile.getDouble("smb_delivery_ratio_min"),
+            smb_delivery_ratio_max = determineBasalResult.profile.getDouble("smb_delivery_ratio_max"),
+            smb_delivery_ratio_bg_range = determineBasalResult.profile.getDouble("smb_delivery_ratio_bg_range"),
+            smb_max_range_extension = determineBasalResult.profile.getDouble("smb_max_range_extension"),
+            enableSMB_EvenOn_OddOff_always = determineBasalResult.profile.getBoolean("enableSMB_EvenOn_OddOff_always"),
+            iob_threshold_percent = determineBasalResult.profile.getInt("iob_threshold_percent"),
+            profile_percentage = determineBasalResult.profile.getInt("profile_percentage")
+        )
+        val meatData = MealData(
+            carbs = determineBasalResult.mealData.getDouble("carbs"),
+            mealCOB = determineBasalResult.mealData.getDouble("mealCOB"),
+            slopeFromMaxDeviation = determineBasalResult.mealData.getDouble("slopeFromMaxDeviation"),
+            slopeFromMinDeviation = determineBasalResult.mealData.getDouble("slopeFromMinDeviation"),
+            lastBolusTime = determineBasalResult.mealData.getLong("lastBolusTime"),
+            lastCarbTime = determineBasalResult.mealData.getLong("lastCarbTime")
+        )
+        val resultKt = determineBasalAutoISF.determine_basal(
+            glucose_status = glucoseStatus,
+            currenttemp = currentTemp,
+            iob_data_array = iobData.toTypedArray(),
+            profile = profile,
+            autosens_data = autosensData,
+            meal_data = meatData,
+            microBolusAllowed = determineBasalResult.microBolusAllowed,
+            currentTime = currentTime,
+            flatBGsDetected = determineBasalResult.flatBGsDetected,
+            autoIsfMode =  true, //preferences.get(BooleanKey.ApsUseAutoIsf),
+            iob_threshold_percent = preferences.get(IntKey.ApsAutoIsfIobThPercent),
+            smb_max_range_extension = preferences.get(DoubleKey.ApsAutoIsfSmbMaxRangeExtension),
+            profile_percentage = profile.profile_percentage, // 100,
+            smb_ratio = profile.smb_delivery_ratio, // 0.5,
+            loop_wanted_smb = "dummy",
+            auto_isf_consoleLog = mutableListOf<String>("end AutoISF"),
+            auto_isf_consoleError = mutableListOf<String>("start AutoISF")
+        )
+        val endKt = System.currentTimeMillis()
+        ktTime += (endKt - startKt)
+//
+        // aapsLogger.info(LTag.APS, resultKt.toString())
+//
+        // aapsLogger.debug(LTag.APS, result?.json()?.getString("reason") ?: "")
+        // aapsLogger.debug(LTag.APS, resultKt.reason.toString())
+        aapsLogger.debug(LTag.APS, "File: $filename")
+//      //   assertThat(resultKt.reason.toString()).isEqualTo(result?.json?.getString("reason"))
+        assertThat(resultKt.tick ?: "").isEqualTo(result.json()?.optString("tick"))
+        assertThat(resultKt.eventualBG ?: 0.0).isWithin(1.0).of(result.json()?.optDouble("eventualBG") ?: 0.0)
+        assertThat(resultKt.targetBG ?: Double.NaN).isEqualTo(result.json()?.optDouble("targetBG"))
+        assertThat(resultKt.insulinReq ?: Double.NaN).isEqualTo(result.json()?.optDouble("insulinReq"))
+        assertThat(resultKt.carbsReq ?: 0).isEqualTo(result.json()?.optInt("carbsReq"))
+        assertThat(resultKt.carbsReqWithin ?: 0).isEqualTo(result.json()?.optInt("carbsReqWithin"))
+        assertThat(resultKt.units ?: Double.NaN).isEqualTo(result.json()?.optDouble("units"))
+        assertThat(resultKt.sensitivityRatio ?: Double.NaN).isEqualTo(result.json()?.optDouble("sensitivityRatio"))
+        assertThat(resultKt.duration ?: 0).isEqualTo(result.json()?.optInt("duration"))
+        assertThat(resultKt.rate ?: Double.NaN).isEqualTo(result.json()?.optDouble("rate"))
+        assertThat(resultKt.COB ?: Double.NaN).isEqualTo(result.json()?.optDouble("COB"))
+        assertThat(resultKt.IOB ?: Double.NaN).isEqualTo(result.json()?.optDouble("IOB"))
+        assertThat(resultKt.variable_sens ?: Double.NaN).isEqualTo(result.json()?.optDouble("variable_sens"))
     }
 
     enum class TestSource { ASSET, FILE }

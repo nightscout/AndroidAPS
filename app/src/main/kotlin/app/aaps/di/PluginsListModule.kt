@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.plugins.aps.autotune.AutotunePlugin
 import app.aaps.plugins.aps.loop.LoopPlugin
 import app.aaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
+import app.aaps.plugins.aps.openAPSAutoISF.OpenAPSAutoISFPlugin
 import app.aaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import app.aaps.plugins.automation.AutomationPlugin
 import app.aaps.plugins.configuration.configBuilder.ConfigBuilderPlugin
@@ -243,6 +244,12 @@ abstract class PluginsListModule {
     @IntoMap
     @IntKey(220)
     abstract fun bindOpenAPSSMBPlugin(plugin: OpenAPSSMBPlugin): PluginBase
+
+    @Binds
+    @APS
+    @IntoMap
+    @IntKey(225)
+    abstract fun bindOpenAPSAutoISFPlugin(plugin: OpenAPSAutoISFPlugin): PluginBase
 
     @Binds
     @AllConfigs
