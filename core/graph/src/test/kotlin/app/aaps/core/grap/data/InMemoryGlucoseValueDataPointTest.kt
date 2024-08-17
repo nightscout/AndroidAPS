@@ -7,7 +7,6 @@ import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.graph.data.InMemoryGlucoseValueDataPoint
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.keys.Preferences
 import com.google.common.truth.Truth.assertThat
@@ -28,7 +27,6 @@ internal class InMemoryGlucoseValueDataPointTest {
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var rh: ResourceHelper
-    @Mock lateinit var profileUtil: ProfileUtil
     @Mock lateinit var context: Context
 
     @BeforeEach
@@ -40,7 +38,7 @@ internal class InMemoryGlucoseValueDataPointTest {
     @Test
     fun alphaShouldBeAddedForFilledGaps() {
         val gv = InMemoryGlucoseValue(1000, 100.0, sourceSensor = SourceSensor.UNKNOWN)
-        val sut = InMemoryGlucoseValueDataPoint(gv, preferences, profileFunction, profileUtil, rh)
+        val sut = InMemoryGlucoseValueDataPoint(gv, preferences, profileFunction, rh)
 
         var alpha = sut.color(context).ushr(24)
         assertThat(alpha).isEqualTo(255)

@@ -48,7 +48,7 @@ class PrepareBucketedDataWorker(
         val bucketedListArray: MutableList<DataPointWithLabelInterface> = ArrayList()
         for (inMemoryGlucoseValue in bucketedData) {
             if (inMemoryGlucoseValue.timestamp < fromTime || inMemoryGlucoseValue.timestamp > toTime) continue
-            bucketedListArray.add(InMemoryGlucoseValueDataPoint(inMemoryGlucoseValue, preferences, profileFunction, profileUtil, rh))
+            bucketedListArray.add(InMemoryGlucoseValueDataPoint(inMemoryGlucoseValue, preferences, profileFunction, rh))
         }
         bucketedListArray.sortWith { o1: DataPointWithLabelInterface, o2: DataPointWithLabelInterface -> o1.x.compareTo(o2.x) }
         data.overviewData.bucketedGraphSeries = PointsWithLabelGraphSeries(Array(bucketedListArray.size) { i -> bucketedListArray[i] })

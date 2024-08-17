@@ -75,6 +75,8 @@ class OpenAPSAutoISFPluginTest : TestBaseWithProfile() {
 
     @Test
     fun specialEnableConditionTest() {
+        `when`(config.isEngineeringMode()).thenReturn(true)
+        `when`(config.isDev()).thenReturn(true)
         assertThat(openAPSAutoISFPlugin.specialEnableCondition()).isTrue()
     }
 
@@ -90,29 +92,30 @@ class OpenAPSAutoISFPluginTest : TestBaseWithProfile() {
         assertThat(screen.preferenceCount).isGreaterThan(0)
     }
 
+    @Suppress("KotlinConstantConditions")
     @Test
-    fun withinISFlimitsTest() {
-        var autoIsfMin = 0.7
-        var autoIsfMax = 1.2
+    fun withinISFLimitsTest() {
+        val autoIsfMin = 0.7
+        val autoIsfMax = 1.2
         var sens = 1.1  // from Autosens
-        val origin_sens = ""
+        val originSens = ""
         var ttSet = false
         var exerciseMode = false
-        var targetBg = 120.0
+        val targetBg = 120.0
         val normalTarget = 100
-        assertThat(openAPSAutoISFPlugin.withinISFlimits(1.7, autoIsfMin, autoIsfMax, sens, origin_sens, ttSet, exerciseMode, targetBg, normalTarget)).isEqualTo(1.2) // upper limit
-        assertThat(openAPSAutoISFPlugin.withinISFlimits(0.5, autoIsfMin, autoIsfMax, sens, origin_sens, ttSet, exerciseMode, targetBg, normalTarget)).isEqualTo(0.7) // lower limit
+        assertThat(openAPSAutoISFPlugin.withinISFlimits(1.7, autoIsfMin, autoIsfMax, sens, originSens, ttSet, exerciseMode, targetBg, normalTarget)).isEqualTo(1.2) // upper limit
+        assertThat(openAPSAutoISFPlugin.withinISFlimits(0.5, autoIsfMin, autoIsfMax, sens, originSens, ttSet, exerciseMode, targetBg, normalTarget)).isEqualTo(0.7) // lower limit
         sens = 1.5  // from Autosens
-        assertThat(openAPSAutoISFPlugin.withinISFlimits(1.7, autoIsfMin, autoIsfMax, sens, origin_sens, ttSet, exerciseMode, targetBg, normalTarget)).isEqualTo(1.5) // autosens 1.5 wins
+        assertThat(openAPSAutoISFPlugin.withinISFlimits(1.7, autoIsfMin, autoIsfMax, sens, originSens, ttSet, exerciseMode, targetBg, normalTarget)).isEqualTo(1.5) // autosens 1.5 wins
         sens = 0.5  // from Autosens
-        assertThat(openAPSAutoISFPlugin.withinISFlimits(0.5, autoIsfMin, autoIsfMax, sens, origin_sens, ttSet, exerciseMode, targetBg, normalTarget)).isEqualTo(0.5) // autosens 0.5 wins
+        assertThat(openAPSAutoISFPlugin.withinISFlimits(0.5, autoIsfMin, autoIsfMax, sens, originSens, ttSet, exerciseMode, targetBg, normalTarget)).isEqualTo(0.5) // autosens 0.5 wins
         exerciseMode = true
         ttSet = true
-        assertThat(openAPSAutoISFPlugin.withinISFlimits(0.5, autoIsfMin, autoIsfMax, sens, origin_sens, ttSet, exerciseMode, targetBg, normalTarget)).isEqualTo(0.35) // exercise mode
+        assertThat(openAPSAutoISFPlugin.withinISFlimits(0.5, autoIsfMin, autoIsfMax, sens, originSens, ttSet, exerciseMode, targetBg, normalTarget)).isEqualTo(0.35) // exercise mode
     }
 
     @Test
-    fun determine_varSMBratioTest() {
+    fun determine_varSMBRatioTest() {
         `when`(preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatio)).thenReturn(0.55)
         `when`(preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatioMin)).thenReturn(0.4)
         `when`(preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatioMax)).thenReturn(0.6)
@@ -220,8 +223,7 @@ class OpenAPSAutoISFPluginTest : TestBaseWithProfile() {
     @Test
     fun autoISFTest() {
         // TODO get profile
-        val profile = profileFunction.getProfile(now)
-        if ( profile == null) return
+        val profile = profileFunction.getProfile(now) ?: return
 
         val oapsProfile = OapsProfileAutoIsf(
             dia = 0.0, // not used
@@ -286,18 +288,18 @@ class OpenAPSAutoISFPluginTest : TestBaseWithProfile() {
         )
         assertThat(openAPSAutoISFPlugin.autoISF(now, profile)).isEqualTo(47.11)                             // inactive
         `when`(oapsProfile.enable_autoISF).thenReturn(true)
-        val glucose_status = glucoseStatusProvider.glucoseStatusData!!
-        `when`(glucose_status.corrSqu).thenReturn(0.4711)
+        val glucoseStatus = glucoseStatusProvider.glucoseStatusData!!
+        `when`(glucoseStatus.corrSqu).thenReturn(0.4711)
         assertThat(openAPSAutoISFPlugin.autoISF(now, profile)).isEqualTo(47.11)                             // bad parabola
         `when`(preferences.get(BooleanKey.ApsAutoIsfHighTtRaisesSens)).thenReturn(true)
         `when`(preferences.get(IntKey.ApsAutoIsfHalfBasalExerciseTarget)).thenReturn(160)
         assertThat(openAPSAutoISFPlugin.autoISF(now, profile)).isEqualTo(47.11 * 2.0)                       // exercise mode w/o AutoISF
-        `when`(glucose_status.corrSqu).thenReturn(0.95)
-        `when`(glucose_status.glucose).thenReturn(90.0)
-        `when`(glucose_status.a0).thenReturn(90.3)
-        `when`(glucose_status.a1).thenReturn(2.0)
-        `when`(glucose_status.a2).thenReturn(3.0)
-        `when`(glucose_status.bgAcceleration).thenReturn(2.0 * glucose_status.a2)
+        `when`(glucoseStatus.corrSqu).thenReturn(0.95)
+        `when`(glucoseStatus.glucose).thenReturn(90.0)
+        `when`(glucoseStatus.a0).thenReturn(90.3)
+        `when`(glucoseStatus.a1).thenReturn(2.0)
+        `when`(glucoseStatus.a2).thenReturn(3.0)
+        `when`(glucoseStatus.bgAcceleration).thenReturn(2.0 * glucoseStatus.a2)
         `when`(preferences.get(DoubleKey.ApsAutoIsfBgAccelWeight)).thenReturn(2.0)
         assertThat(openAPSAutoISFPlugin.autoISF(now, profile)).isEqualTo(47.11 * 2.0 * 2.0)                 // acce_ISF + exercise mode
         `when`(preferences.get(BooleanKey.ApsAutoIsfHighTtRaisesSens)).thenReturn(false)
