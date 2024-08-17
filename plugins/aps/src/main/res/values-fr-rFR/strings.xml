@@ -162,4 +162,5 @@
     <string name="autotune_profile_invalid">Profil invalide</string>
     <string name="not_available_full">Non disponible</string>
     <string name="pump_disconnected">Pompe déconnectée</string>
+    <!--    autoISF -->
 </resources>
