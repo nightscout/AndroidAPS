@@ -162,4 +162,5 @@
     <string name="autotune_profile_invalid">Neplatný profil</string>
     <string name="not_available_full">Nedostupný</string>
     <string name="pump_disconnected">Pumpa odpojena</string>
+    <!--    autoISF -->
 </resources>
