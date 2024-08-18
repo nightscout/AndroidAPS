@@ -28,6 +28,7 @@
     <string name="description_ama">2017年算法狀態</string>
     <string name="description_smb">針對高級用戶的最新算法</string>
     <string name="description_smb_dynamic_isf">針對高級用戶的最新算法，具備動態/自動ISF</string>
+    <string name="description_auto_isf">最先進的演算法，適用於進階使用者並包含自動ISF擴展功能</string>
     <string name="openapsama_bolus_snooze_dia_divisor">注射延遲DIA劑量分配器</string>
     <string name="openapsma_run">立即執行</string>
     <string name="openapsma_last_run_label">最後執行</string>
@@ -165,4 +166,18 @@
     <string name="not_available_full">無法使用</string>
     <string name="pump_disconnected">幫浦已中斷連線</string>
     <!--    autoISF -->
+    <string name="half_basal_exercise_target_title">半基礎運動目標</string>
+    <string name="half_basal_exercise_target_summary" formatted="false">設置為一個數字，例如 160，這表示當臨時目標為 160 mg/dL 且高臨時目標提高敏感性=true時，在此水平運行 50% 的基礎率（120 = 75%；140 = 60%）。</string>
+    <string name="autoISF_settings_title">自動ISF設定</string>
+    <string name="autoISF_settings_summary">AutoISF 允許在各種葡萄糖行為情境中調整胰島素敏感性因子 (ISF)\n\n它還可以調整SMB輸送設定</string>
+    <string name="acce_ISF_settings_title">acce_ISF設置</string>
+    <string name="acce_ISF_settings_summary">acce_ISF 設置：調整 ISF 以加速/減緩血糖變化</string>
+    <string name="enableautoISFwithcob">啟用 dura_ISF 與碳水化合物影響 (COB)</string>
+    <string name="enableautoISFwithcob_summary">當有碳水化合物影響 (COB) 活躍時啟用 dura_ISF</string>
+    <string name="bg_ISF_settings_title">bg_ISF設置</string>
+    <string name="bg_ISF_settings_summary">bg_ISF 設定：根據預定義的多邊形，根據血糖水平調整 ISF</string>
+    <string name="enable_postprandial_ISF_always_summary">無論上一餐何時進食，始終啟用餐後 ISF 調整。</string>
+    <string name="pp_ISF_settings_title">pp_ISF設定</string>
+    <string name="pp_ISF_settings_summary">pp_ISF 設定：用於餐後血糖升高的 ISF</string>
+    <string name="dura_ISF_settings_title">dura_ISF設定</string>
 </resources>
