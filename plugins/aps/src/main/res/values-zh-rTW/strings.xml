@@ -167,17 +167,56 @@
     <string name="pump_disconnected">幫浦已中斷連線</string>
     <!--    autoISF -->
     <string name="half_basal_exercise_target_title">半基礎運動目標</string>
-    <string name="half_basal_exercise_target_summary" formatted="false">設置為一個數字，例如 160，這表示當臨時目標為 160 mg/dL 且高臨時目標提高敏感性=true時，在此水平運行 50% 的基礎率（120 = 75%；140 = 60%）。</string>
+    <string name="half_basal_exercise_target_summary" formatted="false">設定為一個數字，例如 160，這表示當臨時目標為 160 mg/dL 且高臨時目標提高敏感性=true時，在此水平運行 50% 的基礎率（120 = 75%；140 = 60%）。</string>
     <string name="autoISF_settings_title">自動ISF設定</string>
     <string name="autoISF_settings_summary">AutoISF 允許在各種葡萄糖行為情境中調整胰島素敏感性因子 (ISF)\n\n它還可以調整SMB輸送設定</string>
-    <string name="acce_ISF_settings_title">acce_ISF設置</string>
-    <string name="acce_ISF_settings_summary">acce_ISF 設置：調整 ISF 以加速/減緩血糖變化</string>
+    <string name="acce_ISF_settings_title">acce_ISF設定</string>
+    <string name="acce_ISF_settings_summary">acce_ISF 設定：調整 ISF 以加速/減緩血糖變化</string>
     <string name="enableautoISFwithcob">啟用 dura_ISF 與碳水化合物影響 (COB)</string>
     <string name="enableautoISFwithcob_summary">當有碳水化合物影響 (COB) 活躍時啟用 dura_ISF</string>
-    <string name="bg_ISF_settings_title">bg_ISF設置</string>
+    <string name="bg_ISF_settings_title">bg_ISF設定</string>
     <string name="bg_ISF_settings_summary">bg_ISF 設定：根據預定義的多邊形，根據血糖水平調整 ISF</string>
     <string name="enable_postprandial_ISF_always_summary">無論上一餐何時進食，始終啟用餐後 ISF 調整。</string>
     <string name="pp_ISF_settings_title">pp_ISF設定</string>
     <string name="pp_ISF_settings_summary">pp_ISF 設定：用於餐後血糖升高的 ISF</string>
     <string name="dura_ISF_settings_title">dura_ISF設定</string>
+    <string name="dura_ISF_settings_summary">dura_ISF 設定：針對高於目標的血糖平穩期的 ISF</string>
+    <string name="smb_delivery_settings_title">SMB輸送設定</string>
+    <string name="smb_delivery_settings_summary">這是一組選項，可以在ISF變強（即ISF數值較低）時，增加實際可輸送的SMB劑量。\n\n請小心使用</string>
+    <string name="full_loop_settings_title">全循環設定</string>
+    <string name="full_loop_settings_summary">全循環設定：調整 iobTH 以限制IOB增加</string>
+    <string name="use_autoISF_extensions_title">啟用 AutoISF 擴展功能</string>
+    <string name="use_autoISF_extensions_summary">這些包括最近的血糖行為所導致的ISF調整，替代的SMB啟用程式以及對完全閉環的支援</string>
+    <string name="openapsama_enable_autoISF">啟用根據血糖變化進行的 ISF 調整</string>
+    <string name="openapsama_autoISF_max_summary">預設值：1.0\n這是 autoISF 的倍數上限，用來限制 autoISF 比例的最高值，這也會決定它能將 ISF 調整到多低。\n\n警告：使用超過 2.5 的數值時，請格外小心</string>
+    <string name="openapsama_autoISF_min_summary">預設值：1.0\n這是 autoISF 的倍數上限，用來限制 autoISF 比例的最低值，這也會決定它能將 ISF 調整到多高。</string>
+    <string name="openapsama_dura_ISF_weight_summary" formatted="false">預設值：0.0\n這是 autoISF 每小時增長的速率，假設血糖是目標值的兩倍。當設置為 1.0 時，血糖在目標值的兩倍持續1小時後，ISF 將減少至 50%。\n\n當設置為 0.0 時，autoISF 的效果實際上是停用的。</string>
+    <string name="openapsama_lower_ISFrange_weight_summary">預設值：0.0\n這是應用於多邊形的權重，用來在血糖低於目標時調整 ISF。\n\n當設置為 0.0 時，該效果實際上是停用的。</string>
+    <string name="openapsama_higher_ISFrange_weight_summary">預設值：0.0\n這是應用於多邊形的權重，用來在血糖高於目標時調整 ISF。\n\n當設置為 0.0 時，該效果實際上是停用的。</string>
+    <string name="openapsama_pp_ISF_weight_summary">預設值：0.0\n這是應用於葡萄糖上升時的線性斜率的權重，用來調整 ISF。\n\n當設置為 0.0 時，這部分貢獻實際上是停用的。\"</string>
+    <string name="openapsama_bgAccel_ISF_weight_summary">預設值：0.0\n這是應用於葡萄糖加速時的權重，用來加強 ISF。\n\n當設置為 0.0 時，這部分貢獻實際上是停用的。</string>
+    <string name="openapsama_bgBrake_ISF_weight_summary">預設值：0.0\n這是應用於葡萄糖減速時的權重，用來削弱 ISF。\n\n當設置為 0.0 時，這部分貢獻實際上是停用的。</string>
+    <string name="openapsama_autoISF_max">最大自動ISF比率
+(autoISF_max)</string>
+    <string name="openapsama_autoISF_min">最小自動ISF比率\n(autoISF_min)</string>
+    <string name="openapsama_lower_ISFrange_weight">較低的 ISF 範圍權重\n(lower_ISFrange_weight)</string>
+    <string name="openapsama_higher_ISFrange_weight">較高的 ISF 範圍的權重\n(higher_ISFrange_weight)</string>
+    <string name="openapsama_pp_ISF_weight">餐後 ISF 權重\n(pp_ISF_weight)</string>
+    <string name="openapsama_bgAccel_ISF_weight">血糖加速时的權重\n(bgAccel_ISF_weight)</string>
+    <string name="openapsama_bgBrake_ISF_weight">血糖減速時的權重\n(bgBrake_ISF_weight)</string>
+    <string name="openapsama_dura_ISF_weight">dura_ISF 權重\n(dura_ISF_weight)</string>
+    <string name="openapsama_smb_delivery_ratio">固定的 SMB 傳輸率\n(smb_delivery_ratio)</string>
+    <string name="openapsama_smb_delivery_ratio_min">可變的 SMB 傳輸率的下限(smb_delivery_ratio_min)</string>
+    <string name="openapsama_smb_delivery_ratio_max">可變的 SMB 傳輸率的上限\n(smb_delivery_ratio_max)</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range">可變的 SMB 傳輸率對應的血糖範圍\n(smb_delivery_ratio_bg_range)\"</string>
+    <string name="openapsama_smb_max_range_extension">SMB/UAM 最大範圍延伸\n(smb_max_range_extension)</string>
+    <string name="openapsama_smb_delivery_ratio_summary">預設值：0.5 這是另一個重要的 OpenAPS 安全上限，指定了總胰島素需求中可以通過 SMB 輸送的比例。這樣做是為了防止在護理人員的手機上同時設置 SMB 請求時進入危險區域。請慢慢地且謹慎地增加這個實驗值。</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">預設值：0.5 這是線性遞增比例的下限，而不是前面提到的固定值。</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">預設值：0.5 這是線性遞增比例的上限，而不是前面提到的固定值。</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range_summary">預設值：0。線性遞增的 SMB 傳輸率會對應到血糖範圍 [target_bg, target_bg+bg_range]。\n在 target_bg 時，SMB 比例為 smb_delivery_ratio_min；在 target_bg+bg_range 時，比例為 smb_delivery_ratio_max。\n如果設置為 0，線性遞增的 SMB 率會被停用，將使用固定的 smb_delivery_ratio。</string>
+    <string name="openapsama_smb_max_range_extension_summary">預設值：1 這是另一個重要的 OpenAPS 安全上限，指定了可以超過正常 120 maxSMB/maxUAM 分鐘的倍數。請慢慢地且謹慎地增加這個實驗值。</string>
+    <string name="enableSMB_EvenOn_OddOff_always">啟用根據活動目標是偶數的情況下啟用SMB的替代啟動</string>
+    <string name="enableSMB_EvenOn_OddOff_always_summary">\n啟用 ...\n如果活動目標 (mmol/L) 是偶數小數\n或活動目標 (mg/dL) 是偶數\n\n否則停用</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">預設值：100%\n設置為 100% 時，此功能實際上是被停用的。</string>
+    <string name="openapsama_iob_threshold_percent">SMB 啟用期間 maxIOB 之上個百分比\n(iob_threshold_percent)</string>
 </resources>
