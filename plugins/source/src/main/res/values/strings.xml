@@ -42,6 +42,7 @@
     <string name="dexcom_log_ns_sensor_change_title">Log sensor change to NS</string>
     <string name="dexcom_log_ns_sensor_change_summary">Create event \"Sensor Change\" in NS automatically on sensor start</string>
     <string name="direction">direction</string>
-
-
+    <!-- Patched Syai Tag App -->
+    <string name="patched_syai_tag_app">Syai Tag</string>
+    <string name="description_source_patched_syai_tag_app">Receive glucose data from Syai Tag App.</string>
 </resources>

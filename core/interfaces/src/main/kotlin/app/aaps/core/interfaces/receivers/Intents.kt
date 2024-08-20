@@ -48,6 +48,9 @@ interface Intents {
         var AIDEX_TRANSMITTER_SN = "com.microtechmd.cgms.aidex.TransmitterSerialNumber"
         var AIDEX_SENSOR_ID = "com.microtechmd.cgms.aidex.SensorId"
 
+        // Patched Syai Tag App -> AAPS
+        const val SYAI_TAG_APP_BG = "info.nightscout.androidaps.action.SYAI_TAG_APP"
+
         // Broadcast status
         const val AAPS_BROADCAST = "info.nightscout.androidaps.status"
     }
