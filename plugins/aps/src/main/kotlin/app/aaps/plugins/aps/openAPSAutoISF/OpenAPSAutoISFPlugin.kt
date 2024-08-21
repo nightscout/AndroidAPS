@@ -181,6 +181,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
     }
 
     private val dynIsfCache = LongSparseArray<Double>()
+    @Synchronized
     private fun calculateVariableIsf(timestamp: Long, bg: Double?): Pair<String, Double?> {
         val profile = profileFunction.getProfile(timestamp)
         if (profile == null) return Pair("OFF", null)

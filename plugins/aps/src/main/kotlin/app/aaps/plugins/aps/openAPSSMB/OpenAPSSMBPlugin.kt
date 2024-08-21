@@ -183,6 +183,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
     }
 
     private val dynIsfCache = LongSparseArray<Double>()
+    @Synchronized
     private fun calculateVariableIsf(timestamp: Long, bg: Double?): Pair<String, Double?> {
         if (!preferences.get(BooleanKey.ApsUseDynamicSensitivity)) return Pair("OFF", null)
 
