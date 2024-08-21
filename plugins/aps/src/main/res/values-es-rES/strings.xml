@@ -10,6 +10,7 @@
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Reducir la sensibilidad para objetivos temporales < 100]]></string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">ISF Dinámico</string>
+    <string name="openaps_auto_isf">Auto ISF</string>
     <string name="smb_interval_summary">Con qué frecuencia se administrarán los SMB en min</string>
     <string name="resistance_lowers_target_title">Resistencia baja el objetivo</string>
     <string name="resistance_lowers_target_summary">Cuando se detecta resistencia a la insulina, disminuye el objetivo de glucosa</string>
@@ -19,6 +20,7 @@
     <string name="openapsma_no_glucose_data">No hay disponibles datos de glucosa</string>
     <string name="openaps_no_as_data">No hay datos disponibles de autosens</string>
     <string name="dynisf_shortname">DYNISF</string>
+    <string name="autoisf_shortname">AUTOISF</string>
     <string name="executing">Ejecutando</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Matriz de %1$d elementos.\nValor actual:</string>
@@ -26,6 +28,7 @@
     <string name="description_ama">Estado del algoritmo en 2017</string>
     <string name="description_smb">Algoritmo más reciente para usuarios avanzados</string>
     <string name="description_smb_dynamic_isf">Algoritmo más reciente para usuarios avanzados con ISF dinámico/automático</string>
+    <string name="description_auto_isf">Algoritmo más reciente para usuarios avanzados con la extensión AutoISF</string>
     <string name="openapsama_bolus_snooze_dia_divisor">DIA Divisor para suspensión de bolos</string>
     <string name="openapsma_run">Ejecutar ahora</string>
     <string name="openapsma_last_run_label">Última ejecución</string>
@@ -163,4 +166,13 @@
     <string name="not_available_full">No disponible</string>
     <string name="pump_disconnected">Bomba desconectada</string>
     <!--    autoISF -->
+    <string name="half_basal_exercise_target_title">Basal media con objetivo actividad</string>
+    <string name="autoISF_settings_title">Ajustes de AutoISF</string>
+    <string name="acce_ISF_settings_title">Ajuste de acce_ISF</string>
+    <string name="acce_ISF_settings_summary">Ajuste acce_ISF: Ajustar ISF para acelerar/desacelerar la glucosa en sangre</string>
+    <string name="openapsama_smb_max_range_extension_summary">Valor por defecto: 1. Este es otro limitador máximo de seguridad clave de OpenAPS y especifica por que factor puedes exceder los 120 minutos maxSMB/maxUAM normales. Nota: Aumenta este valor experimental lentamente y con precaución.</string>
+    <string name="enableSMB_EvenOn_OddOff_always">Habilitar la activación alternativa de SMBs en función a que el valor del objetivo temporal activo sea un número \"par\"</string>
+    <string name="enableSMB_EvenOn_OddOff_always_summary">\nHabilitado ...\nsi el objetivo temporal activo (mmol/L) tiene un decimal par \no el objetivo temporal activo (mg/dL) es un número par\n\ndeshabilitado en cualquier otro caso</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Valor por defecto: 100%\nCon un valor de 100% esta característica estará operativamente desactivada</string>
+    <string name="openapsama_iob_threshold_percent">Porcentaje de maxIOB que tras superarlo, se desactivan automáticamente los SMBs\n(iob_threshold_percent)</string>
 </resources>
