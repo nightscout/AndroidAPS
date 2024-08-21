@@ -168,8 +168,16 @@
     <!--    autoISF -->
     <string name="half_basal_exercise_target_title">Basal media con objetivo actividad</string>
     <string name="autoISF_settings_title">Ajustes de AutoISF</string>
+    <string name="autoISF_settings_summary">AutoISF permite adaptar el factor de sensibilidad a la insulina (ISF) en varios escenarios de comportamiento de la glucosa\n\nTambién puede adaptar la configuración de entrega de SMBs</string>
     <string name="acce_ISF_settings_title">Ajuste de acce_ISF</string>
     <string name="acce_ISF_settings_summary">Ajuste acce_ISF: Ajustar ISF para acelerar/desacelerar la glucosa en sangre</string>
+    <string name="smb_delivery_settings_title">Ajustes de entrega de SMB</string>
+    <string name="smb_delivery_settings_summary">Conjunto de opciones para aumentar el tamaño real del SMB que se puede entregar, en situaciones en las que el ISF se volvió más agresivo, es decir, una valor de ISF bastante bajo.\n\nUSAR CON PRECAUCIÓN</string>
+    <string name="full_loop_settings_title">Ajustes del lazo cerrado completo</string>
+    <string name="full_loop_settings_summary">Ajustes del lazo cerrado completo: Ajuste de iobTH para limitar la acumulación de IOB</string>
+    <string name="use_autoISF_extensions_title">Habilitar las funcionalidades extendidas de AutoISF</string>
+    <string name="use_autoISF_extensions_summary">Estos incluyen la modulación del ISF en función al comportamiento reciente de la glucosa, habilitadores de SMB alternativos y soporte para el Lazo Cerrado Completo</string>
+    <string name="openapsama_enable_autoISF">Habilitar la adaptación del ISF en función al comportamiento de la glucosa</string>
     <string name="openapsama_smb_max_range_extension_summary">Valor por defecto: 1. Este es otro limitador máximo de seguridad clave de OpenAPS y especifica por que factor puedes exceder los 120 minutos maxSMB/maxUAM normales. Nota: Aumenta este valor experimental lentamente y con precaución.</string>
     <string name="enableSMB_EvenOn_OddOff_always">Habilitar la activación alternativa de SMBs en función a que el valor del objetivo temporal activo sea un número \"par\"</string>
     <string name="enableSMB_EvenOn_OddOff_always_summary">\nHabilitado ...\nsi el objetivo temporal activo (mmol/L) tiene un decimal par \no el objetivo temporal activo (mg/dL) es un número par\n\ndeshabilitado en cualquier otro caso</string>
