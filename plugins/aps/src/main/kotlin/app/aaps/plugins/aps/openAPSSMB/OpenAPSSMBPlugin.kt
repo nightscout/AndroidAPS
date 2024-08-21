@@ -216,7 +216,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
         }
         val tddStatus = TddStatus(tdd1D, tdd7D, tddLast24H, tddLast4H, tddLast8to4H)
         val tddWeightedFromLast8H = ((1.4 * tddStatus.tddLast4H) + (0.6 * tddStatus.tddLast8to4H)) * 3
-        val tdd = (tddWeightedFromLast8H * 0.33) + (tddStatus.tdd7D * 0.34) + (tddStatus.tdd1D * 0.33) * preferences.get(IntKey.ApsDynIsfAdjustmentFactor) / 100.0
+        val tdd = ((tddWeightedFromLast8H * 0.33) + (tddStatus.tdd7D * 0.34) + (tddStatus.tdd1D * 0.33)) * preferences.get(IntKey.ApsDynIsfAdjustmentFactor) / 100.0
 
         val sensitivity = Round.roundTo(1800 / (tdd * (ln((glucose / insulinDivisor) + 1))), 0.1)
         //aapsLogger.debug("calculateVariableIsf $caller CAL ${dateUtil.dateAndTimeAndSecondsString(timestamp)} $sensitivity")
