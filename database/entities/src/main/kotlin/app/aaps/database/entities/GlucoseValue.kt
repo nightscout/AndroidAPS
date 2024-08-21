@@ -116,6 +116,7 @@ data class GlucoseValue(
         MM_600_SERIES("MM600Series"),
         EVERSENSE("Eversense"),
         AIDEX("GlucoRx Aidex"),
+        SyaiTagApp("Syai Tag App"),
         RANDOM("Random"),
         UNKNOWN("Unknown"),
 
