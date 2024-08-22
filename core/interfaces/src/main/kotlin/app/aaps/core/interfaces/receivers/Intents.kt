@@ -50,5 +50,8 @@ interface Intents {
 
         // Broadcast status
         const val AAPS_BROADCAST = "info.nightscout.androidaps.status"
+
+        // Patched Syai Tag App -> AAPS
+        const val SYAI_TAG_APP = "info.nightscout.androidaps.action.SYAI_TAG_APP"
     }
 }
