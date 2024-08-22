@@ -109,7 +109,7 @@ class XdripSourcePlugin @Inject constructor(
                 noise = null,
                 trendArrow = GlucoseValue.TrendArrow.fromString(bundle.getString(Intents.EXTRA_BG_SLOPE_NAME)),
                 sourceSensor = GlucoseValue.SourceSensor.fromString(
-                    bundle.getString(Intents.XDRIP_DATA_SOURCE_DESCRIPTION)
+                    bundle.getString(Intents.XDRIP_DATA_SOURCE)
                         ?: ""
                 )
             )
