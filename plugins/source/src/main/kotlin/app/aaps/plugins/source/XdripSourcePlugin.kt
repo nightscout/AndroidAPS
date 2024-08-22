@@ -106,7 +106,7 @@ class XdripSourcePlugin @Inject constructor(
                 raw = round(bundle.getDouble(Intents.EXTRA_RAW, 0.0)),
                 noise = null,
                 trendArrow = TrendArrow.fromString(bundle.getString(Intents.EXTRA_BG_SLOPE_NAME)),
-                sourceSensor = SourceSensor.fromString(bundle.getString(Intents.XDRIP_DATA_SOURCE_DESCRIPTION) ?: "")
+                sourceSensor = SourceSensor.fromString(bundle.getString(Intents.XDRIP_DATA_SOURCE) ?: "")
             )
             val sensorStartTime = getSensorStartTime(bundle)
             persistenceLayer.insertCgmSourceData(Sources.Xdrip, glucoseValues, emptyList(), sensorStartTime)
