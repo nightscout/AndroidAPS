@@ -37,7 +37,7 @@
     <string name="pref_show_basal_rate">顯示基礎率</string>
     <string name="pref_show_loop_status">顯示循環狀態</string>
     <string name="pref_show_bg">顯示血糖指數</string>
-    <string name="pref_show_bgi">顯示血糖指數</string>
+    <string name="pref_show_bgi">顯示血糖影響</string>
     <string name="pref_show_direction_arrow">顯示方向箭頭</string>
     <string name="pref_show_ago">顯示時間</string>
     <string name="pref_show_temp_basal">顯示臨時基礎率</string>
