@@ -272,7 +272,7 @@
     <string name="overview_show_heartRate">心率</string>
     <string name="overview_show_deviation_slope">偏差斜率</string>
     <string name="overview_show_activity">活動</string>
-    <string name="overview_show_bgi">血糖影響</string>
+    <string name="overview_show_bgi">血糖變化率</string>
     <string name="overview_show_sensitivity">敏感度變化</string>
     <string name="overview_show_deviations">偏差</string>
     <string name="overview_show_cob">碳水化合物</string>
@@ -284,7 +284,7 @@
     <string name="basal_shortname">基礎</string>
     <string name="deviation_shortname">偏差</string>
     <string name="activity_shortname">活動</string>
-    <string name="bgi_shortname">-血糖影響</string>
+    <string name="bgi_shortname">-血糖變化率</string>
     <string name="abs_insulin_shortname">絕對</string>
     <string name="devslope_shortname">偏差斜率</string>
     <string name="treatments_shortname">治療</string>
