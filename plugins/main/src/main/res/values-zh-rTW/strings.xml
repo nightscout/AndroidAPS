@@ -284,7 +284,7 @@
     <string name="basal_shortname">基礎</string>
     <string name="deviation_shortname">偏差</string>
     <string name="activity_shortname">活動</string>
-    <string name="bgi_shortname">-血糖指數</string>
+    <string name="bgi_shortname">-血糖影響</string>
     <string name="abs_insulin_shortname">絕對</string>
     <string name="devslope_shortname">偏差斜率</string>
     <string name="treatments_shortname">治療</string>
