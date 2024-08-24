@@ -176,4 +176,8 @@
     <string name="enableautoISFwithcob_summary">Включить dura_ISF, когда имеются активные углеводы COB</string>
     <string name="bg_ISF_settings_title">настройки bg_ISF</string>
     <string name="bg_ISF_settings_summary">Настройки BG_ISF: ISF зависит от уровня гликемии по заранее определенному многоугольнику</string>
+    <string name="enable_postprandial_ISF_always_summary">Всегда включать адаптивный постпрандиальный ISF независимо от времени недавнего приема пищи.</string>
+    <string name="pp_ISF_settings_title">Настройки pp_ISF</string>
+    <string name="pp_ISF_settings_summary">Настройки pp_ISF: коэффициент чувствительности ISF для постпрандиального (после еды) подъема уровня глюкозы</string>
+    <string name="dura_ISF_settings_title">настройки dura_ISF</string>
 </resources>
