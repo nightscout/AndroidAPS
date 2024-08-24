@@ -169,4 +169,11 @@
     <string name="half_basal_exercise_target_title">Половина дозы базального инсулина при ВЦ Нагрузка</string>
     <string name="half_basal_exercise_target_summary" formatted="false">Установливается как число, например, 160 означает, что при ВЦ 160 мг/дл и настройке \"Высокая ВЦ повышает чувствительность =true\", активируется 50% базальной скорости (120 = 75%; 140 = 60%).</string>
     <string name="autoISF_settings_title">Настройки AutoISF</string>
+    <string name="autoISF_settings_summary">АвтоISF позволяет адаптировать фактор чувствительности (ISF) к различных вариантам изменения гликемии\n\nОн также может изменять настройки микроболюсов SMB</string>
+    <string name="acce_ISF_settings_title">настройки acce_ISF</string>
+    <string name="acce_ISF_settings_summary">Настройка acce_ISF: изменять ISF для ускорения/замедления гликемии</string>
+    <string name="enableautoISFwithcob">Включить dura_ISF при наличии активных углеводов COB</string>
+    <string name="enableautoISFwithcob_summary">Включить dura_ISF, когда имеются активные углеводы COB</string>
+    <string name="bg_ISF_settings_title">настройки bg_ISF</string>
+    <string name="bg_ISF_settings_summary">Настройки BG_ISF: ISF зависит от уровня гликемии по заранее определенному многоугольнику</string>
 </resources>
