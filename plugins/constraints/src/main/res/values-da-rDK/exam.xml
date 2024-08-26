@@ -68,7 +68,6 @@
     <string name="basaltest_havingregularhighlow">Når du oplever hyppig højt eller lavt blodsukker.</string>
     <string name="basaltest_weekly">Mindst én gang om ugen.</string>
     <string name="basaltest_fixed">Når de er angivet og valideret, skal disse værdier ikke ændres over tid.</string>
-    <string name="basaltest_hint1">https://wiki.aaps.app/da/latest/Getting-Started/FAQ.html#androidaps-settings</string>
     <string name="prerequisites_label">Forudsætninger</string>
     <string name="prerequisites_what">Hvad er afgørende for at opsætte og bruge AAPS?</string>
     <string name="prerequisites_determinedcorrectprofile">Valideret profilinformationer (Basaler, I:C, ISF, DIA).</string>
