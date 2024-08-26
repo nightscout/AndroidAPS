@@ -31,12 +31,10 @@
                 android:id="@+id/scale_button"
                 android:layout_width="41dp"
                 android:layout_height="27dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
                 android:layout_marginEnd="55dp"
                 android:backgroundTint="#1F1F1F"
                 android:contentDescription="@string/a11y_graph_scale"
-                android:drawableRight="@drawable/ic_arrow_drop_down_white_24dp"
+                android:drawableEnd="@drawable/ic_arrow_drop_down_white_24dp"
                 android:padding="0dp"
                 android:textAllCaps="false" />
 
@@ -44,8 +42,6 @@
                 android:id="@+id/chart_menu_button"
                 android:layout_width="24dp"
                 android:layout_height="32dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
                 android:backgroundTint="#1F1F1F"
                 android:contentDescription="@string/chart_menu"
                 app:srcCompat="@drawable/ic_arrow_drop_down_white_24dp" />
