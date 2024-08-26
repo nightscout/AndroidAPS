@@ -182,4 +182,6 @@
     <string name="dura_ISF_settings_title">настройки dura_ISF</string>
     <string name="dura_ISF_settings_summary">настройки dura_ISF при выходе ГК на плато выше целеввого диапазона</string>
     <string name="smb_delivery_settings_title">Настройки введения микроболюсов SMB</string>
+    <string name="smb_delivery_settings_summary">Набор параметров для увеличения фактического размера микроболюсов SMB, которые могут быть применены при усилении ISF, т.е. при низких значениях ISF.\n\nИСПОЛЬЗОВАТЬ С ОСТОРОЖНОСТЬЮ</string>
+    <string name="full_loop_settings_title">Параметры полного цикла</string>
 </resources>
