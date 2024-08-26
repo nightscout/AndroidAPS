@@ -68,7 +68,6 @@
     <string name="basaltest_havingregularhighlow">Bei häufig hohen oder niedrigen Blutzuckerwerten.</string>
     <string name="basaltest_weekly">Mindestens einmal pro Woche.</string>
     <string name="basaltest_fixed">Einmal gesetzt und überprüft, sollten sich diese Werte im Laufe der Zeit nicht ändern.</string>
-    <string name="basaltest_hint1">https://wiki.aaps.app/de/latest/Getting-Started/FAQ.html#androidaps-einstellungen</string>
     <string name="prerequisites_label">Voraussetzungen</string>
     <string name="prerequisites_what">Was ist wichtig für die Einrichtung und Nutzung von AndroidAPS?</string>
     <string name="prerequisites_determinedcorrectprofile">Überprüfe die Profil-Einstellungen (Basal, IC, ISF, DIA).</string>
