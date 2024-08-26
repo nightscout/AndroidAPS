@@ -180,4 +180,6 @@
     <string name="pp_ISF_settings_title">Настройки pp_ISF</string>
     <string name="pp_ISF_settings_summary">Настройки pp_ISF: коэффициент чувствительности ISF для постпрандиального (после еды) подъема уровня глюкозы</string>
     <string name="dura_ISF_settings_title">настройки dura_ISF</string>
+    <string name="dura_ISF_settings_summary">настройки dura_ISF при выходе ГК на плато выше целеввого диапазона</string>
+    <string name="smb_delivery_settings_title">Настройки введения микроболюсов SMB</string>
 </resources>
