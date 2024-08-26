@@ -12,6 +12,9 @@
 * Profile Helper: Buttons, Alignement, Scaling
 * Profile TDD: Button, Alignement, Scaling
 * Activity Survey: Buttons, Alignement, Scaling
+* Autotune: Buttons, Spacing
+* Omnipod Common Buttons: Changes, Alignement
+* Dash Pod Managment: Buttons, Alignment, Centering
 
 ## New Files
 Drawables added:
