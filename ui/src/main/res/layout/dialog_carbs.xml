@@ -46,7 +46,6 @@
             android:padding="5dp" />
 
         <LinearLayout
-            android:layout_marginStart="87dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -80,10 +79,6 @@
             android:paddingEnd="5dp">
 
             <TableRow
-                android:layout_marginStart="35dp"
-                android:layout_marginEnd="13dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical">
@@ -142,10 +137,6 @@
             </TableRow>
 
             <TableRow
-                android:layout_marginStart="35dp"
-                android:layout_marginEnd="13dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical">
@@ -182,10 +173,6 @@
             </TableRow>
 
             <TableRow
-                android:layout_marginStart="35dp"
-                android:layout_marginEnd="13dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical">
@@ -223,8 +210,6 @@
         </TableLayout>
 
         <LinearLayout
-            android:layout_marginStart="25dp"
-            android:layout_marginEnd="25dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
@@ -237,9 +222,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="+5"
-                tools:ignore="HardcodedText"
-                app:cornerRadius="8dp"
-                app:strokeColor="@color/colorPrimary"/>
+                tools:ignore="HardcodedText" />
 
             <com.google.android.material.button.MaterialButton
                 style="@style/GrayButton"
@@ -248,9 +231,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="+10"
-                tools:ignore="HardcodedText"
-                app:cornerRadius="8dp"
-                app:strokeColor="@color/colorPrimary"/>
+                tools:ignore="HardcodedText" />
 
             <com.google.android.material.button.MaterialButton
                 style="@style/GrayButton"
@@ -259,9 +240,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="+20"
-                tools:ignore="HardcodedText"
-                app:cornerRadius="8dp"
-                app:strokeColor="@color/colorPrimary"/>
+                tools:ignore="HardcodedText" />
 
         </LinearLayout>
 
