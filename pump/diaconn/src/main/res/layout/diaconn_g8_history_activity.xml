@@ -47,6 +47,8 @@
         android:layout_alignParentBottom="true"
         android:text="@string/reload"
         app:icon="@drawable/ic_actions_refill"
-        app:iconTint="@color/ic_actions_refill" />
+        app:iconTint="@color/ic_actions_refill"
+        app:cornerRadius="8dp"
+        app:strokeColor="@color/colorPrimary"/>
 
 </RelativeLayout>

@@ -700,7 +700,9 @@
             android:drawableTop="@drawable/ic_pump_history"
             android:paddingStart="0dp"
             android:paddingEnd="0dp"
-            android:text="@string/pump_history" />
+            android:text="@string/pump_history"
+            app:cornerRadius="8dp"
+            app:strokeColor="@color/colorPrimary"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/stats"
@@ -711,7 +713,9 @@
             android:drawableTop="@drawable/ic_stats"
             android:paddingStart="0dp"
             android:paddingEnd="0dp"
-            android:text="@string/stats" />
+            android:text="@string/stats"
+            app:cornerRadius="8dp"
+            app:strokeColor="@color/colorPrimary" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/user_options"
@@ -722,7 +726,9 @@
             android:drawableTop="@drawable/ic_user_options"
             android:paddingStart="0dp"
             android:paddingEnd="0dp"
-            android:text="@string/diaconn_g8_user_options" />
+            android:text="@string/diaconn_g8_user_options"
+            app:cornerRadius="8dp"
+            app:strokeColor="@color/colorPrimary" />
 
     </LinearLayout>
 

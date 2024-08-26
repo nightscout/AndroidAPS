@@ -629,7 +629,7 @@
             android:gravity="center_vertical|center_horizontal"
             android:paddingTop="6dp"
             android:paddingBottom="6dp"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:textAppearance="?android:attr/textAppearanceSmall"/>
     </LinearLayout>
 
     <LinearLayout
@@ -651,7 +651,7 @@
             android:gravity="center_vertical|center_horizontal"
             android:paddingTop="6dp"
             android:paddingBottom="6dp"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:textAppearance="?android:attr/textAppearanceSmall"/>
     </LinearLayout>
 
     <LinearLayout
@@ -671,7 +671,9 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:text="@string/view_profile"
-            app:iconPadding="-4dp" />
+            app:iconPadding="-4dp"
+            app:cornerRadius="8dp"
+            app:strokeColor="@color/colorPrimary"/>
 
         <app.aaps.core.ui.elements.SingleClickButton
             android:id="@+id/history"
@@ -685,7 +687,9 @@
             android:maxLines="2"
             android:text="@string/pump_history"
             app:iconPadding="-4dp"
-            tools:ignore="TooManyViews" />
+            tools:ignore="TooManyViews"
+            app:cornerRadius="8dp"
+            app:strokeColor="@color/colorPrimary"/>
 
         <app.aaps.core.ui.elements.SingleClickButton
             android:id="@+id/stats"
@@ -698,7 +702,9 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:text="@string/stats"
-            app:iconPadding="-4dp" />
+            app:iconPadding="-4dp"
+            app:cornerRadius="8dp"
+            app:strokeColor="@color/colorPrimary"/>
 
         <app.aaps.core.ui.elements.SingleClickButton
             android:id="@+id/user_options"
@@ -711,7 +717,9 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:text="@string/danar_user_options"
-            app:iconPadding="-4dp" />
+            app:iconPadding="-4dp"
+            app:cornerRadius="8dp"
+            app:strokeColor="@color/colorPrimary"/>
 
     </LinearLayout>
 

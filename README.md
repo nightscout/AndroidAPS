@@ -13,8 +13,13 @@
 * Profile TDD: Button, Alignement, Scaling
 * Activity Survey: Buttons, Alignement, Scaling
 * Autotune: Buttons, Spacing
-* Omnipod Common Buttons: Changes, Alignement
-* Dash Pod Managment: Buttons, Alignment, Centering
+* Danar: Buttons
+* Diaconn G8: Buttons
+* Equil: Buttons
+* Medtronic: Buttons
+* Omnipod Common: Buttons, Changes, Alignement
+* Omnipod Dash: Buttons, Alignment, Centering
+* Omnipod Eros: Buttons
 
 ## New Files
 Drawables added:

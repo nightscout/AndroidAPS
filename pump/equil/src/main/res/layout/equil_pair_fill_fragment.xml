@@ -59,6 +59,8 @@
             style="@style/GrayButton"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:text="@string/equil_finish" />
+            android:text="@string/equil_finish"
+            app:cornerRadius="8dp"
+            app:strokeColor="@color/colorPrimary" />
     </LinearLayout>
 </LinearLayout>
