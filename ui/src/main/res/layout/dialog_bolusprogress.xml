@@ -83,6 +83,8 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="30dp"
         android:layout_marginBottom="20dp"
+        app:cornerRadius="8dp"
+        app:strokeColor="@color/colorPrimary"
         android:text="@string/stop" />
 
 </LinearLayout>

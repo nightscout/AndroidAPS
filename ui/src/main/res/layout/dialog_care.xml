@@ -78,6 +78,10 @@
         </RadioGroup>
 
         <LinearLayout
+            android:layout_marginStart="35dp"
+            android:layout_marginEnd="13dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="8dp"
             android:id="@+id/bg_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -116,6 +120,10 @@
         </LinearLayout>
 
         <LinearLayout
+            android:layout_marginStart="35dp"
+            android:layout_marginEnd="13dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="8dp"
             android:id="@+id/duration_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
