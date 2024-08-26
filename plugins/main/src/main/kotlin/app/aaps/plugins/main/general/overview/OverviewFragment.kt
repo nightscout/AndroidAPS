@@ -1154,7 +1154,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
         binding.infoLayout.sensitivity.text =
             lastAutosensData?.let {
-                String.format(Locale.ENGLISH, "AS: %.0f%%", it.autosensResult.ratio * 100)
+                String.format(Locale.ENGLISH, "%.0f%%", it.autosensResult.ratio * 100)
             } ?: ""
         // Show variable sensitivity
         val profile = profileFunction.getProfile()

@@ -9,6 +9,9 @@
     tools:context=".ui.DashPodManagementActivity">
 
     <LinearLayout
+        android:layout_marginTop="270dp"
+        android:layout_marginStart="13dp"
+        android:layout_marginEnd="13dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -37,7 +40,9 @@
                 app:layout_constrainedHeight="@+id/Actions_Row_1_horizontal_guideline"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@+id/Actions_Col_1_Row_1_vertical_guideline"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:cornerRadius="8dp"
+                app:strokeColor="@color/colorPrimary"/>
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/Actions_Col_1_Row_1_vertical_guideline"
@@ -58,7 +63,9 @@
                 app:layout_constrainedHeight="@+id/Actions_Row_1_horizontal_guideline"
                 app:layout_constraintLeft_toRightOf="@+id/Actions_Col_1_Row_1_vertical_guideline"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:cornerRadius="8dp"
+                app:strokeColor="@color/colorPrimary"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -73,7 +80,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0" />
+                app:layout_constraintGuide_begin="0dp" />
 
             <app.aaps.core.ui.elements.SingleClickButton
                 android:id="@+id/button_play_test_beep"
@@ -87,7 +94,9 @@
                 app:layout_constrainedHeight="@+id/Actions_Row_2_horizontal_guideline"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@+id/Actions_Col_1_Row_2_vertical_guideline"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:cornerRadius="8dp"
+                app:strokeColor="@color/colorPrimary"/>
 
             <app.aaps.core.ui.elements.SingleClickButton
                 android:id="@+id/button_pod_history"
@@ -99,9 +108,12 @@
                 android:textAllCaps="false"
                 android:visibility="visible"
                 app:layout_constrainedHeight="@+id/Actions_Row_2_horizontal_guideline"
+                app:layout_constraintHorizontal_bias="0.555"
                 app:layout_constraintLeft_toRightOf="@+id/Actions_Col_1_Row_2_vertical_guideline"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:cornerRadius="8dp"
+                app:strokeColor="@color/colorPrimary"/>
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/Actions_Col_1_Row_2_vertical_guideline"

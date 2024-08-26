@@ -346,7 +346,9 @@
                 android:paddingLeft="0dp"
                 android:paddingRight="0dp"
                 android:text="@string/equil_ble_config_confirmation_title"
-                android:visibility="gone" />
+                android:visibility="gone"
+                app:cornerRadius="8dp"
+                app:strokeColor="@color/colorPrimary" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_op_dressing"
@@ -357,7 +359,9 @@
                 android:drawableTop="@drawable/equil_ic_dressing"
                 android:paddingLeft="0dp"
                 android:paddingRight="0dp"
-                android:text="@string/equil_dressing" />
+                android:text="@string/equil_dressing"
+                app:cornerRadius="8dp"
+                app:strokeColor="@color/colorPrimary" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_history"
@@ -368,7 +372,9 @@
                 android:drawableTop="@drawable/equil_ic_hositry"
                 android:paddingLeft="0dp"
                 android:paddingRight="0dp"
-                android:text="@string/equil_history" />
+                android:text="@string/equil_history"
+                app:cornerRadius="8dp"
+                app:strokeColor="@color/colorPrimary" />
 
 
             <com.google.android.material.button.MaterialButton
@@ -380,7 +386,9 @@
                 android:drawableTop="@drawable/ic_equil_overview_resume_delivery"
                 android:drawablePadding="4dp"
                 android:text="@string/equil_common_overview_button_resume_delivery"
-                android:visibility="gone" />
+                android:visibility="gone"
+                app:cornerRadius="8dp"
+                app:strokeColor="@color/colorPrimary" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_suspend_delivery"
@@ -391,7 +399,9 @@
                 android:drawableTop="@drawable/ic_equil_overview_suspend_delivery"
                 android:drawablePadding="4dp"
                 android:text="@string/equil_common_overview_button_suspend_delivery"
-                android:visibility="gone" />
+                android:visibility="gone"
+                app:cornerRadius="8dp"
+                app:strokeColor="@color/colorPrimary" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_unbind"
@@ -402,7 +412,9 @@
                 android:drawableTop="@drawable/equil_ic_settings"
                 android:paddingLeft="0dp"
                 android:paddingRight="0dp"
-                android:text="@string/equil_unbind" />
+                android:text="@string/equil_unbind"
+                app:cornerRadius="8dp"
+                app:strokeColor="@color/colorPrimary" />
 
 
         </androidx.appcompat.widget.LinearLayoutCompat>

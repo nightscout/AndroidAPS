@@ -31,6 +31,8 @@
         </com.google.android.material.tabs.TabLayout>
 
         <com.google.android.material.textfield.TextInputLayout
+            android:layout_marginStart="35dp"
+            android:layout_marginEnd="35dp"
             android:id="@+id/profile_type_title"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
@@ -48,6 +50,8 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
+            android:layout_marginStart="35dp"
+            android:layout_marginEnd="35dp"
             android:id="@+id/default_profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -82,6 +86,8 @@
                 </TableRow>
 
                 <TableRow
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
                     android:id="@+id/tdd_row"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -130,6 +136,8 @@
                 </TableRow>
 
                 <TableRow
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
                     android:id="@+id/basal_pct_from_tdd_row"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -161,12 +169,16 @@
                 android:orientation="vertical" />
 
             <app.aaps.core.ui.elements.SingleClickButton
+                android:layout_marginStart="55dp"
+                android:layout_marginEnd="55dp"
                 android:id="@+id/copy_to_local_profile"
                 style="@style/GrayButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_clone_48"
-                android:text="@string/clone_label" />
+                android:text="@string/clone_label"
+                app:cornerRadius="8dp"
+                app:strokeColor="@color/colorPrimary"/>
 
         </LinearLayout>
 
@@ -192,6 +204,8 @@
             android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
+                android:layout_marginStart="35dp"
+                android:layout_marginEnd="35dp"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -216,6 +230,8 @@
             android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
+                android:layout_marginStart="35dp"
+                android:layout_marginEnd="35dp"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -235,12 +251,16 @@
         </LinearLayout>
 
         <app.aaps.core.ui.elements.SingleClickButton
+            android:layout_marginStart="90dp"
+            android:layout_marginEnd="90dp"
             android:id="@+id/compare_profiles"
             style="@style/GrayButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableStart="@drawable/ic_compare_profiles"
-            android:text="@string/compare_profile" />
+            android:text="@string/compare_profile"
+            app:cornerRadius="8dp"
+            app:strokeColor="@color/colorPrimary"/>
 
     </LinearLayout>
 

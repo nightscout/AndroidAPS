@@ -156,7 +156,7 @@
     <string name="invalid">INVALID</string>
     <string name="login">Login</string>
     <string name="prime_fill">Prime/Fill</string>
-    <string name="overview_insulin_label">Insulin</string>
+    <string name="overview_insulin_label"> </string>
     <string name="stoptemptarget">Stop temp target</string>
     <string name="closedloop">Closed Loop</string>
     <string name="openloop">Open Loop</string>

@@ -65,7 +65,9 @@
                 android:layout_height="64dp"
                 android:paddingStart="0dp"
                 android:paddingEnd="0dp"
-                android:text="@string/equil_next" />
+                android:text="@string/equil_next"
+                app:cornerRadius="8dp"
+                app:strokeColor="@color/colorPrimary" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
