@@ -68,7 +68,7 @@
     <string name="basaltest_havingregularhighlow">When experiencing frequent high or low blood glucose.</string>
     <string name="basaltest_weekly">At least once per week.</string>
     <string name="basaltest_fixed">Once set and validated, these values should not change over time.</string>
-    <string name="basaltest_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#androidaps-settings</string>
+    <string name="basaltest_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#aaps-settings</string>
     <string name="prerequisites_label">Prerequisites</string>
     <string name="prerequisites_what">What is essential to set up and use AAPS?</string>
     <string name="prerequisites_determinedcorrectprofile">Validated profile information (Basal, IC, ISF, DIA).</string>
