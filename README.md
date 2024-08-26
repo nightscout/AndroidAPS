@@ -1,23 +1,23 @@
 # Only Working on "Dev" branch
 
 # UI Changes
-* Overview: Buttons, Alignement, Scaling
+* Overview: Buttons, Alignment, Scaling
 * Overview: Presentation of AutoSense removed "AS: "
-* Dialog Insulin: Buttons, Alignement
-* Dialog Carbs: Buttons, Alignement
-* Dialog Wizard: Buttons, Alignement
-* Dialog Bolus Progress: Buttons, Alignement
-* Dialog Calibration: Alignement
-* Dialog Care: Alignement
-* Profile Helper: Buttons, Alignement, Scaling
-* Profile TDD: Button, Alignement, Scaling
-* Activity Survey: Buttons, Alignement, Scaling
+* Dialog Insulin: Buttons, Alignment
+* Dialog Carbs: Buttons, Alignment
+* Dialog Wizard: Buttons, Alignment
+* Dialog Bolus Progress: Buttons, Alignment
+* Dialog Calibration: Alignment
+* Dialog Care: Alignment
+* Profile Helper: Buttons, Alignment, Scaling
+* Profile TDD: Button, Alignment, Scaling
+* Activity Survey: Buttons, Alignment, Scaling
 * Autotune: Buttons, Spacing
 * Danar: Buttons
 * Diaconn G8: Buttons
 * Equil: Buttons
 * Medtronic: Buttons
-* Omnipod Common: Buttons, Changes, Alignement
+* Omnipod Common: Buttons, Changes, Alignment
 * Omnipod Dash: Buttons, Alignment, Centering
 * Omnipod Eros: Buttons
 
@@ -27,7 +27,8 @@ UI button and states for "Bolus Wizard" and "Activity Survey" since they use eit
 UI background for label in "Bolus Wizard" dialog.
 
 Location:
-ui/src/main/res/drawable/
+/ui/src/main/res/drawable/
+/plugins/main/src/main/res/drawable
 
 Added:
 ui_bolwiz_title_bg.xml
