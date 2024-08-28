@@ -38,40 +38,40 @@ ui.button_press.xml
 ui.button_bg.xml
 
 ## Animations added:
-Dialogs: Carbs, Insulin, TempTarget, Bolus Wizard
+Overview: Carbs, Insulin, Loop Dialog, Profile Viewer, TempTarget, Bolus Wizard,
 
 Location:
 /ui/src/main/res/anim/
 
-Added:
-carbs_dialog_funnel_down.xml
-carbs_dialog_funnel_up.xml
-insulin_dialog_funnel_down.xml
-insulin_dialog_funnel_up.xml
-loop_dialog_funnel_down.xml
-loop_dialog_funnel_up.xml
-profile_viewer_funnel_down.xml
-profile_viewer_funnel_up.xml
-temp_dialog_funnel_down.xml
-temp_dialog_funnel_up.xml
-wiz_dialog_funnel_down.xml
-wiz_dialog_funnel_up.xml
+Added: <br />
+carbs_dialog_funnel_down.xml <br />
+carbs_dialog_funnel_up.xml <br />
+insulin_dialog_funnel_down.xml <br />
+insulin_dialog_funnel_up.xml <br />
+loop_dialog_funnel_down.xml <br />
+loop_dialog_funnel_up.xml <br />
+profile_viewer_funnel_down.xml <br />
+profile_viewer_funnel_up.xml <br />
+temp_dialog_funnel_down.xml <br />
+temp_dialog_funnel_up.xml <br />
+wiz_dialog_funnel_down.xml <br />
+wiz_dialog_funnel_up.xml <br />
 
 ## String Changes
 Location:
-/core/ui/src/main/res/values/strings/strings.xml
-String change: line 159
-Changes "overview_insulin_label" to " " since i was unable to fully remove the label with >android:text=" "<
+/core/ui/src/main/res/values/strings/strings.xml <br />
+String change: line 159 <br />
+Changes "overview_insulin_label" to " " since i was unable to fully remove the label with >android:text=" "<  <br />
 
-Location:
-/ui/src/main/res/values/styles/styles.xml
-Strings Added: line 12 > 40
-"TempDialogFunnelAnimation"
-"WizDialogFunnelAnimation"
-"CarbsDialogFunnelAnimation"
-"InsulinDialogFunnelAnimation"
-"LoopDialogFunnelAnimation"
-"ProfileViewerFunnelAnimation"
+Location: <br />
+/ui/src/main/res/values/styles/styles.xml <br />
+Strings Added: line 12 > 40 <br />
+"TempDialogFunnelAnimation" <br />
+"WizDialogFunnelAnimation" <br />
+"CarbsDialogFunnelAnimation" <br />
+"InsulinDialogFunnelAnimation" <br />
+"LoopDialogFunnelAnimation" <br />
+"ProfileViewerFunnelAnimation" <br />
 
 
 
