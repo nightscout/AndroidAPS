@@ -22,8 +22,8 @@
 * Omnipod Dash: Buttons, Alignment, Centering
 * Omnipod Eros: Buttons
 
-## New Files
-# Drawables added:
+# New Files
+## Drawables added:
 UI button and states for "Bolus Wizard" and "Activity Survey" since they use either >Button< or >ToggleButton< value.
 UI background for label in "Bolus Wizard" dialog.
 
@@ -37,7 +37,7 @@ ui.button_state.xml
 ui.button_press.xml
 ui.button_bg.xml
 
-# Animations added:
+## Animations added:
 Dialogs: Carbs, Insulin, TempTarget, Bolus Wizard
 
 Location:
