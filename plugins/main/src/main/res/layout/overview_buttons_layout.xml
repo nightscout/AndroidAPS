@@ -58,7 +58,7 @@
             android:id="@+id/insulin_button"
             style="@style/ButtonSmallFontStyle"
             android:layout_width="0px"
-            android:layout_height="60dp"
+            android:layout_height="68dp"
             android:layout_weight="0.5"
             android:drawableTop="@drawable/ic_bolus"
             android:ellipsize="end"

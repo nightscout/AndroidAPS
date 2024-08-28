@@ -54,7 +54,9 @@
                     app:layout_column="0"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill"
-                    app:layout_row="0" />
+                    app:layout_row="0"
+                    app:cornerRadius="8dp"
+                    app:strokeColor="@color/colorPrimary" />
 
                 <app.aaps.core.ui.elements.SingleClickButton
                     android:id="@+id/temp_target"
@@ -69,7 +71,9 @@
                     app:layout_column="1"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill"
-                    app:layout_row="0" />
+                    app:layout_row="0"
+                    app:cornerRadius="8dp"
+                    app:strokeColor="@color/colorPrimary" />
 
                 <app.aaps.core.ui.elements.SingleClickButton
                     android:id="@+id/set_temp_basal"
@@ -84,7 +88,9 @@
                     app:layout_column="0"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill"
-                    app:layout_row="1" />
+                    app:layout_row="1"
+                    app:cornerRadius="8dp"
+                    app:strokeColor="@color/colorPrimary" />
 
                 <app.aaps.core.ui.elements.SingleClickButton
                     android:id="@+id/cancel_temp_basal"
@@ -100,7 +106,9 @@
                     app:layout_column="0"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill"
-                    app:layout_row="1" />
+                    app:layout_row="1"
+                    app:cornerRadius="8dp"
+                    app:strokeColor="@color/colorPrimary" />
 
                 <app.aaps.core.ui.elements.SingleClickButton
                     android:id="@+id/extended_bolus"
@@ -115,7 +123,9 @@
                     app:layout_column="1"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill"
-                    app:layout_row="1" />
+                    app:layout_row="1"
+                    app:cornerRadius="8dp"
+                    app:strokeColor="@color/colorPrimary" />
 
                 <app.aaps.core.ui.elements.SingleClickButton
                     android:id="@+id/extended_bolus_cancel"
@@ -131,7 +141,9 @@
                     app:layout_column="1"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill"
-                    app:layout_row="1" />
+                    app:layout_row="1"
+                    app:cornerRadius="8dp"
+                    app:strokeColor="@color/colorPrimary" />
 
             </androidx.gridlayout.widget.GridLayout>
 
@@ -201,7 +213,9 @@
                     app:layout_column="0"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill"
-                    app:layout_row="2" />
+                    app:layout_row="2"
+                    app:cornerRadius="8dp"
+                    app:strokeColor="@color/colorPrimary" />
 
                 <app.aaps.core.ui.elements.SingleClickButton
                     android:id="@+id/cgm_sensor_insert"
@@ -216,7 +230,9 @@
                     app:layout_column="1"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill"
-                    app:layout_row="2" />
+                    app:layout_row="2"
+                    app:cornerRadius="8dp"
+                    app:strokeColor="@color/colorPrimary" />
 
                 <app.aaps.core.ui.elements.SingleClickButton
                     android:id="@+id/fill"
@@ -231,7 +247,9 @@
                     app:layout_column="0"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill"
-                    app:layout_row="3" />
+                    app:layout_row="3"
+                    app:cornerRadius="8dp"
+                    app:strokeColor="@color/colorPrimary" />
 
                 <app.aaps.core.ui.elements.SingleClickButton
                     android:id="@+id/pump_battery_change"
@@ -246,7 +264,9 @@
                     app:layout_column="1"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill"
-                    app:layout_row="3" />
+                    app:layout_row="3"
+                    app:cornerRadius="8dp"
+                    app:strokeColor="@color/colorPrimary" />
 
                 <app.aaps.core.ui.elements.SingleClickButton
                     android:id="@+id/note"
@@ -261,7 +281,9 @@
                     app:layout_column="0"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill"
-                    app:layout_row="4" />
+                    app:layout_row="4"
+                    app:cornerRadius="8dp"
+                    app:strokeColor="@color/colorPrimary" />
 
                 <app.aaps.core.ui.elements.SingleClickButton
                     android:id="@+id/exercise"
@@ -276,7 +298,9 @@
                     app:layout_column="1"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill"
-                    app:layout_row="4" />
+                    app:layout_row="4"
+                    app:cornerRadius="8dp"
+                    app:strokeColor="@color/colorPrimary" />
 
                 <app.aaps.core.ui.elements.SingleClickButton
                     android:id="@+id/announcement"
@@ -291,7 +315,9 @@
                     app:layout_column="0"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill"
-                    app:layout_row="5" />
+                    app:layout_row="5"
+                    app:cornerRadius="8dp"
+                    app:strokeColor="@color/colorPrimary" />
 
                 <app.aaps.core.ui.elements.SingleClickButton
                     android:id="@+id/question"
@@ -306,7 +332,9 @@
                     app:layout_column="1"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill"
-                    app:layout_row="5" />
+                    app:layout_row="5"
+                    app:cornerRadius="8dp"
+                    app:strokeColor="@color/colorPrimary" />
 
             </androidx.gridlayout.widget.GridLayout>
 
@@ -354,7 +382,9 @@
                     app:layout_column="0"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill"
-                    app:layout_row="6" />
+                    app:layout_row="6"
+                    app:cornerRadius="8dp"
+                    app:strokeColor="@color/colorPrimary" />
 
                 <app.aaps.core.ui.elements.SingleClickButton
                     android:id="@+id/tdd_stats"
@@ -369,7 +399,9 @@
                     app:layout_column="1"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill"
-                    app:layout_row="6" />
+                    app:layout_row="6"
+                    app:cornerRadius="8dp"
+                    app:strokeColor="@color/colorPrimary" />
 
             </androidx.gridlayout.widget.GridLayout>
 
