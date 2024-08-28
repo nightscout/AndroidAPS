@@ -29,4 +29,14 @@
         <item name="android:windowExitAnimation">@anim/insulin_dialog_funnel_down</item>
     </style>
 
+    <style name="LoopDialogFunnelAnimation">
+        <item name="android:windowEnterAnimation">@anim/loop_dialog_funnel_up</item>
+        <item name="android:windowExitAnimation">@anim/loop_dialog_funnel_down</item>
+    </style>
+
+    <style name="ProfileViewerFunnelAnimation">
+        <item name="android:windowEnterAnimation">@anim/profile_viewer_funnel_up</item>
+        <item name="android:windowExitAnimation">@anim/profile_viewer_funnel_down</item>
+    </style>
+
 </resources>

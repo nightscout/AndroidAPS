@@ -48,6 +48,10 @@ carbs_dialog_funnel_down.xml
 carbs_dialog_funnel_up.xml
 insulin_dialog_funnel_down.xml
 insulin_dialog_funnel_up.xml
+loop_dialog_funnel_down.xml
+loop_dialog_funnel_up.xml
+profile_viewer_funnel_down.xml
+profile_viewer_funnel_up.xml
 temp_dialog_funnel_down.xml
 temp_dialog_funnel_up.xml
 wiz_dialog_funnel_down.xml
@@ -61,12 +65,13 @@ Changes "overview_insulin_label" to " " since i was unable to fully remove the l
 
 Location:
 /ui/src/main/res/values/styles/styles.xml
-String change: line 12 > 30
+Strings Added: line 12 > 40
 "TempDialogFunnelAnimation"
 "WizDialogFunnelAnimation"
 "CarbsDialogFunnelAnimation"
 "InsulinDialogFunnelAnimation"
-
+"LoopDialogFunnelAnimation"
+"ProfileViewerFunnelAnimation"
 
 
 
