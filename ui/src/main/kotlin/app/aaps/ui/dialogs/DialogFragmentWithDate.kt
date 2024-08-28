@@ -60,7 +60,6 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
         }
     }
 
-    
     override fun onStart() {
         super.onStart()
         dialog?.window?.setLayout(
@@ -76,6 +75,7 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
         savedInstanceState.putLong("eventTimeOriginal", eventTimeOriginal)
     }
 
+    //Animation for opening and closing
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
         dialog.window?.setWindowAnimations(R.style.DialogSlideAnimation)
