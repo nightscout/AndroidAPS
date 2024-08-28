@@ -207,7 +207,6 @@ class OpenAPSAutoISFPluginTest : TestBaseWithProfile() {
         )
         assertThat(openAPSAutoISFPlugin.loop_smb(false,  profile, 11.0, false, 11.1)).isEqualTo("AAPS")
         `when`(preferences.get(BooleanKey.ApsAutoIsfSmbOnEvenTarget)).thenReturn(true)
-        //`when`(preferences.get(BooleanKey.ApsAutoIsfSmbOnEvenTt)).thenReturn(true)
         assertThat(openAPSAutoISFPlugin.loop_smb(true,  profile, 11.0, false, 11.1)).isEqualTo("fullLoop")
         assertThat(openAPSAutoISFPlugin.loop_smb(true,  profile, 11.0, true, 10.1)).isEqualTo("iobTH")
         profile.target_bg = 122.0
@@ -215,8 +214,15 @@ class OpenAPSAutoISFPluginTest : TestBaseWithProfile() {
         profile.target_bg = 91.8    //5.1
         profile.out_units = "mmol/L"
         assertThat(openAPSAutoISFPlugin.loop_smb(true,  profile, 11.0, false, 11.1)).isEqualTo("blocked")
+        profile.target_bg = 149.4   //8.3
+        assertThat(openAPSAutoISFPlugin.loop_smb(true,  profile, 11.0, false, 11.1)).isEqualTo("blocked")
+        profile.target_bg = 147.6   //8.2
+        assertThat(openAPSAutoISFPlugin.loop_smb(true,  profile, 11.0, false, 11.1)).isEqualTo("enforced")
+        profile.target_bg = 145.8   //8.1
+        assertThat(openAPSAutoISFPlugin.loop_smb(true,  profile, 11.0, false, 11.1)).isEqualTo("blocked")
+        profile.target_bg = 144.0   //8.0
+        assertThat(openAPSAutoISFPlugin.loop_smb(true,  profile, 11.0, false, 11.1)).isEqualTo("enforced")
         `when`(preferences.get(BooleanKey.ApsAutoIsfSmbOnEvenTarget)).thenReturn(false)
-        //`when`(preferences.get(BooleanKey.ApsAutoIsfSmbOnEvenTt)).thenReturn(false)
         assertThat(openAPSAutoISFPlugin.loop_smb(true,  profile, 11.0, false, 11.1)).isEqualTo("AAPS")
     }
 
