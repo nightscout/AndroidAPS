@@ -3,7 +3,7 @@
 # UI Changes
 * Overview: Buttons, Alignment, Scaling
 * Overview: Presentation of AutoSense removed "AS: "
-* Funnel Animation: DialogFragmentWithDate
+* Funnel Animation for overview dialogs
 * Dialog Insulin: Buttons, Alignment
 * Dialog Carbs: Buttons, Alignment
 * Dialog Wizard: Buttons, Alignment
@@ -38,28 +38,34 @@ ui.button_press.xml
 ui.button_bg.xml
 
 # Animations added:
-DialogFragmentWithDate.kt now has funnel animation for opening and closing.
+Dialogs: Carbs, Insulin, TempTarget, Bolus Wizard
 
 Location:
 /ui/src/main/res/anim/
 
 Added:
-dialog_funnel_down.xml
-dialog_funnel_up.xml
+carbs_dialog_funnel_down.xml
+carbs_dialog_funnel_up.xml
+insulin_dialog_funnel_down.xml
+insulin_dialog_funnel_up.xml
+temp_dialog_funnel_down.xml
+temp_dialog_funnel_up.xml
+wiz_dialog_funnel_down.xml
+wiz_dialog_funnel_up.xml
 
 ## String Changes
 Location:
-/core/ui/src/main/res/values
+/core/ui/src/main/res/values/strings/strings.xml
 String change: line 159
 Changes "overview_insulin_label" to " " since i was unable to fully remove the label with >android:text=" "<
 
 Location:
-/ui/src/main/res/values/
-String change: line 12 > 15
-Added "DialogSlideAnimation" for dialog funnel animation
-
-
-
+/ui/src/main/res/values/styles/styles.xml
+String change: line 12 > 30
+"TempDialogFunnelAnimation"
+"WizDialogFunnelAnimation"
+"CarbsDialogFunnelAnimation"
+"InsulinDialogFunnelAnimation"
 
 
 

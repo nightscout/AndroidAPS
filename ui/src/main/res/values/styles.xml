@@ -9,8 +9,24 @@
         <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
 
-    <style name="DialogSlideAnimation">
-        <item name="android:windowEnterAnimation">@anim/dialog_funnel_up</item>
-        <item name="android:windowExitAnimation">@anim/dialog_funnel_down</item>
+    <style name="TempDialogFunnelAnimation">
+        <item name="android:windowEnterAnimation">@anim/temp_dialog_funnel_up</item>
+        <item name="android:windowExitAnimation">@anim/temp_dialog_funnel_down</item>
     </style>
+
+    <style name="WizDialogFunnelAnimation">
+        <item name="android:windowEnterAnimation">@anim/wiz_dialog_funnel_up</item>
+        <item name="android:windowExitAnimation">@anim/wiz_dialog_funnel_down</item>
+    </style>
+
+    <style name="CarbsDialogFunnelAnimation">
+        <item name="android:windowEnterAnimation">@anim/carbs_dialog_funnel_up</item>
+        <item name="android:windowExitAnimation">@anim/carbs_dialog_funnel_down</item>
+    </style>
+
+    <style name="InsulinDialogFunnelAnimation">
+        <item name="android:windowEnterAnimation">@anim/insulin_dialog_funnel_up</item>
+        <item name="android:windowExitAnimation">@anim/insulin_dialog_funnel_down</item>
+    </style>
+
 </resources>

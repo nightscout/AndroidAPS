@@ -126,9 +126,9 @@ class WizardDialog : DaggerDialogFragment() {
     //Animation for opening and closing
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
         return if (enter) {
-            android.view.animation.AnimationUtils.loadAnimation(context, R.anim.dialog_funnel_up)
+            android.view.animation.AnimationUtils.loadAnimation(context, R.anim.wiz_dialog_funnel_up)
         } else {
-            android.view.animation.AnimationUtils.loadAnimation(context, R.anim.dialog_funnel_down)
+            android.view.animation.AnimationUtils.loadAnimation(context, R.anim.wiz_dialog_funnel_down)
         }
     }
 
@@ -149,7 +149,7 @@ class WizardDialog : DaggerDialogFragment() {
     //Animation for opening and closing
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
-        dialog.window?.setWindowAnimations(R.style.DialogSlideAnimation)
+        dialog.window?.setWindowAnimations(R.style.WizDialogFunnelAnimation)
         return dialog
     }
 

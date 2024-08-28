@@ -1,10 +1,12 @@
 package app.aaps.ui.dialogs
 
+import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
 import android.widget.ArrayAdapter
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
@@ -57,10 +59,26 @@ class TempTargetDialog : DialogFragmentWithDate() {
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
 
+    //Animation for opening and closing
+    override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
+        return if (enter) {
+            android.view.animation.AnimationUtils.loadAnimation(context, R.anim.temp_dialog_funnel_up)
+        } else {
+            android.view.animation.AnimationUtils.loadAnimation(context, R.anim.temp_dialog_funnel_down)
+        }
+    }
+
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
         savedInstanceState.putDouble("duration", binding.duration.value)
         savedInstanceState.putDouble("tempTarget", binding.temptarget.value)
+    }
+
+    //Animation for opening and closing
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState)
+        dialog.window?.setWindowAnimations(R.style.TempDialogFunnelAnimation)
+        return dialog
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

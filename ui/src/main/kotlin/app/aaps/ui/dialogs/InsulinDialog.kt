@@ -1,5 +1,6 @@
 package app.aaps.ui.dialogs
 
+import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
@@ -7,6 +8,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
@@ -105,10 +107,26 @@ class InsulinDialog : DialogFragmentWithDate() {
         }
     }
 
+    //Animation for opening and closing
+    override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
+        return if (enter) {
+            android.view.animation.AnimationUtils.loadAnimation(context, R.anim.insulin_dialog_funnel_up)
+        } else {
+            android.view.animation.AnimationUtils.loadAnimation(context, R.anim.insulin_dialog_funnel_down)
+        }
+    }
+
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
         savedInstanceState.putDouble("time", binding.time.value)
         savedInstanceState.putDouble("amount", binding.amount.value)
+    }
+
+    //Animation for opening and closing
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState)
+        dialog.window?.setWindowAnimations(R.style.InsulinDialogFunnelAnimation)
+        return dialog
     }
 
     override fun onCreateView(

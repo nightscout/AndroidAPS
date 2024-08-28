@@ -1,13 +1,11 @@
 package app.aaps.ui.dialogs
 
-import android.app.Dialog
 import android.os.Bundle
 import android.text.format.DateFormat
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
-import android.view.animation.Animation
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.FragmentManager
@@ -18,7 +16,6 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.ui.extensions.toVisibility
-import app.aaps.ui.R
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
@@ -51,15 +48,6 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
     //one shot guards
     private var okClicked: AtomicBoolean = AtomicBoolean(false)
 
-    //Animation for opening and closing
-    override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
-        return if (enter) {
-            android.view.animation.AnimationUtils.loadAnimation(context, R.anim.dialog_funnel_up)
-        } else {
-            android.view.animation.AnimationUtils.loadAnimation(context, R.anim.dialog_funnel_down)
-        }
-    }
-
     override fun onStart() {
         super.onStart()
         dialog?.window?.setLayout(
@@ -73,13 +61,6 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
         super.onSaveInstanceState(savedInstanceState)
         savedInstanceState.putLong("eventTime", eventTime)
         savedInstanceState.putLong("eventTimeOriginal", eventTimeOriginal)
-    }
-
-    //Animation for opening and closing
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = super.onCreateDialog(savedInstanceState)
-        dialog.window?.setWindowAnimations(R.style.DialogSlideAnimation)
-        return dialog
     }
 
     fun onCreateViewGeneral() {
