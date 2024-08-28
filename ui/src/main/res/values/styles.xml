@@ -8,4 +8,9 @@
         <item name="android:background">?android:attr/colorBackground</item>
         <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
+
+    <style name="DialogSlideAnimation">
+        <item name="android:windowEnterAnimation">@anim/dialog_funnel_up</item>
+        <item name="android:windowExitAnimation">@anim/dialog_funnel_down</item>
+    </style>
 </resources>

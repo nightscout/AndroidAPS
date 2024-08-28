@@ -3,6 +3,7 @@
 # UI Changes
 * Overview: Buttons, Alignment, Scaling
 * Overview: Presentation of AutoSense removed "AS: "
+* Funnel Animation: DialogFragmentWithDate
 * Dialog Insulin: Buttons, Alignment
 * Dialog Carbs: Buttons, Alignment
 * Dialog Wizard: Buttons, Alignment
@@ -22,7 +23,7 @@
 * Omnipod Eros: Buttons
 
 ## New Files
-Drawables added:
+# Drawables added:
 UI button and states for "Bolus Wizard" and "Activity Survey" since they use either >Button< or >ToggleButton< value.
 UI background for label in "Bolus Wizard" dialog.
 
@@ -36,18 +37,26 @@ ui.button_state.xml
 ui.button_press.xml
 ui.button_bg.xml
 
+# Animations added:
+DialogFragmentWithDate.kt now has funnel animation for opening and closing.
+
+Location:
+/ui/src/main/res/anim/
+
+Added:
+dialog_funnel_down.xml
+dialog_funnel_up.xml
+
 ## String Changes
 Location:
 /core/ui/src/main/res/values
-
-String changed: line 159
+String change: line 159
 Changes "overview_insulin_label" to " " since i was unable to fully remove the label with >android:text=" "<
 
-
-
-
-
-
+Location:
+/ui/src/main/res/values/
+String change: line 12 > 15
+Added "DialogSlideAnimation" for dialog funnel animation
 
 
 
