@@ -46,8 +46,11 @@
             android:padding="5dp" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_marginStart="5dp"
+            android:layout_width="308dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="7dp"
             android:orientation="horizontal">
 
             <TextView
@@ -83,8 +86,12 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_marginStart="5dp"
+            android:layout_width="309dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="7dp"
+            android:layout_marginBottom="7dp"
             android:orientation="horizontal">
 
             <TextView
@@ -118,6 +125,7 @@
         </LinearLayout>
 
         <com.google.android.material.textfield.TextInputLayout
+            android:layout_marginBottom="7dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -126,6 +134,8 @@
             android:hint="@string/reason">
 
             <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:layout_marginStart="45dp"
+                android:layout_marginEnd="45dp"
                 android:id="@+id/reasonList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -139,11 +149,14 @@
             android:orientation="horizontal">
 
             <app.aaps.core.ui.elements.SingleClickButton
+                android:layout_marginStart="3dp"
+                android:layout_marginEnd="3dp"
+                app:cornerRadius="8dp"
+                app:strokeColor="@color/colorPrimary"
                 android:id="@+id/target_cancel"
                 style="@style/ButtonSmallFontStyle"
                 android:layout_width="0px"
                 android:layout_height="fill_parent"
-                android:layout_marginEnd="-2dp"
                 android:layout_weight="0.5"
                 android:drawableTop="@drawable/ic_target_cancel"
                 android:paddingStart="5dp"
@@ -152,11 +165,12 @@
                 android:textColor="?attr/tempTargetConfirmation" />
 
             <app.aaps.core.ui.elements.SingleClickButton
+                app:cornerRadius="8dp"
+                app:strokeColor="@color/colorPrimary"
                 android:id="@+id/eating_soon"
                 style="@style/ButtonSmallFontStyle"
                 android:layout_width="0px"
                 android:layout_height="fill_parent"
-                android:layout_marginEnd="-2dp"
                 android:layout_weight="0.5"
                 android:drawableTop="@drawable/ic_target_eatingsoon"
                 android:paddingStart="5dp"
@@ -165,11 +179,14 @@
                 android:textColor="?attr/carbsColor" />
 
             <app.aaps.core.ui.elements.SingleClickButton
+                android:layout_marginStart="3dp"
+                android:layout_marginEnd="3dp"
+                app:cornerRadius="8dp"
+                app:strokeColor="@color/colorPrimary"
                 android:id="@+id/activity"
                 style="@style/ButtonSmallFontStyle"
                 android:layout_width="0px"
                 android:layout_height="fill_parent"
-                android:layout_marginEnd="-2dp"
                 android:layout_weight="0.5"
                 android:drawableTop="@drawable/ic_target_activity"
                 android:paddingStart="5dp"
@@ -178,6 +195,8 @@
                 android:textColor="?attr/exerciseColor" />
 
             <app.aaps.core.ui.elements.SingleClickButton
+                app:cornerRadius="8dp"
+                app:strokeColor="@color/colorPrimary"
                 android:id="@+id/hypo"
                 style="@style/ButtonSmallFontStyle"
                 android:layout_width="0px"

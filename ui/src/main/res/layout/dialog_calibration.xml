@@ -47,12 +47,13 @@
             android:padding="5dp" />
 
         <LinearLayout
+            android:layout_marginStart="5dp"
             android:id="@+id/bg_layout"
-            android:layout_width="match_parent"
+            android:layout_width="299dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:orientation="horizontal"
-            android:paddingTop="10dp"
-            android:layout_marginStart="35dp">
+            android:paddingTop="10dp">
 
             <TextView
                 android:id="@+id/bg_label"

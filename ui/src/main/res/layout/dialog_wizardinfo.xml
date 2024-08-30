@@ -486,6 +486,8 @@
             android:paddingBottom="8dp">
 
             <com.google.android.material.button.MaterialButton
+                app:cornerRadius="8dp"
+                app:strokeColor="@color/colorPrimary"
                 android:id="@+id/close"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

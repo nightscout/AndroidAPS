@@ -83,17 +83,17 @@
             android:padding="5dp" />
 
         <TableLayout
-            android:layout_width="match_parent"
+            android:layout_marginStart="5dp"
+            android:layout_width="337dp"
             android:layout_height="match_parent"
-            android:layout_marginEnd="15dp"
-            android:layout_marginStart="42dp"
+            android:layout_gravity="center"
             android:paddingStart="0dp"
             android:paddingEnd="5dp">
 
             <TableRow
-                android:layout_marginTop="7dp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginTop="7dp">
 
                 <TextView
                     android:id="@+id/bg_input_label"
@@ -125,9 +125,9 @@
             </TableRow>
 
             <TableRow
-                android:layout_marginTop="7dp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginTop="7dp">
 
                 <TextView
                     android:id="@+id/carbs_input_label"
@@ -160,9 +160,9 @@
             </TableRow>
 
             <TableRow
-                android:layout_marginTop="7dp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginTop="7dp">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -216,9 +216,9 @@
             </TableRow>
 
             <TableRow
-                android:layout_marginTop="8dp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -696,6 +696,7 @@
             android:paddingEnd="5dp">
 
             <CheckBox
+                android:layout_marginStart="7dp"
                 android:id="@+id/calculation_checkbox"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"

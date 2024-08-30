@@ -49,37 +49,43 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
     <com.google.android.material.button.MaterialButton
-        style="@style/GrayButton"
         android:id="@+id/mute_5min"
-        android:layout_width="match_parent"
+        style="@style/GrayButton"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="15dp"
         android:layout_marginStart="30dp"
+        android:layout_marginTop="15dp"
         android:layout_marginEnd="30dp"
-        android:text="@string/mute5min" />
+        android:text="@string/mute5min"
+        app:cornerRadius="8dp"
+        app:strokeColor="@color/colorPrimary" />
 
     <com.google.android.material.button.MaterialButton
-        style="@style/GrayButton"
         android:id="@+id/mute"
-        android:layout_width="match_parent"
+        style="@style/GrayButton"
+        android:layout_width="181dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="15dp"
         android:layout_marginStart="30dp"
+        android:layout_marginTop="15dp"
         android:layout_marginEnd="30dp"
-        android:text="@string/mute" />
+        android:text="@string/mute"
+        app:cornerRadius="8dp"
+        app:strokeColor="@color/colorPrimary" />
 
     <com.google.android.material.button.MaterialButton
-        style="@style/GrayButton"
         android:id="@+id/ok"
-        android:layout_width="match_parent"
+        style="@style/GrayButton"
+        android:layout_width="184dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="30dp"
         android:layout_marginStart="30dp"
+        android:layout_marginTop="15dp"
         android:layout_marginEnd="30dp"
-        android:text="@string/ok" />
+        android:layout_marginBottom="30dp"
+        android:text="@string/ok"
+        app:cornerRadius="8dp"
+        app:strokeColor="@color/colorPrimary" />
 
 </LinearLayout>

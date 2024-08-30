@@ -50,11 +50,11 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
-            android:layout_marginStart="35dp"
-            android:layout_marginEnd="35dp"
             android:id="@+id/default_profile"
-            android:layout_width="match_parent"
+            android:layout_width="328dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="5dp"
             android:orientation="vertical">
 
             <TableLayout
@@ -86,11 +86,11 @@
                 </TableRow>
 
                 <TableRow
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
                     android:id="@+id/tdd_row"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
                     android:gravity="center_vertical">
 
                     <TextView
@@ -136,11 +136,11 @@
                 </TableRow>
 
                 <TableRow
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
                     android:id="@+id/basal_pct_from_tdd_row"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
                     android:gravity="center_vertical">
 
                     <TextView
@@ -169,16 +169,16 @@
                 android:orientation="vertical" />
 
             <app.aaps.core.ui.elements.SingleClickButton
-                android:layout_marginStart="55dp"
-                android:layout_marginEnd="55dp"
                 android:id="@+id/copy_to_local_profile"
                 style="@style/GrayButton"
-                android:layout_width="match_parent"
+                android:layout_width="116dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="-5dp"
                 android:drawableStart="@drawable/ic_clone_48"
                 android:text="@string/clone_label"
                 app:cornerRadius="8dp"
-                app:strokeColor="@color/colorPrimary"/>
+                app:strokeColor="@color/colorPrimary" />
 
         </LinearLayout>
 
@@ -204,11 +204,10 @@
             android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:layout_marginStart="35dp"
-                android:layout_marginEnd="35dp"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="match_parent"
+                android:layout_width="340dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:hint="@string/selected_profile"
                 android:paddingHorizontal="5dp">
 
@@ -230,11 +229,10 @@
             android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:layout_marginStart="35dp"
-                android:layout_marginEnd="35dp"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="match_parent"
+                android:layout_width="341dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:hint="@string/careportal_profileswitch"
                 android:paddingHorizontal="5dp">
 
@@ -251,16 +249,15 @@
         </LinearLayout>
 
         <app.aaps.core.ui.elements.SingleClickButton
-            android:layout_marginStart="90dp"
-            android:layout_marginEnd="90dp"
             android:id="@+id/compare_profiles"
             style="@style/GrayButton"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:drawableStart="@drawable/ic_compare_profiles"
             android:text="@string/compare_profile"
             app:cornerRadius="8dp"
-            app:strokeColor="@color/colorPrimary"/>
+            app:strokeColor="@color/colorPrimary" />
 
     </LinearLayout>
 
