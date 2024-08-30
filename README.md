@@ -73,6 +73,22 @@ Strings Added: line 12 > 40 <br />
 "LoopDialogFunnelAnimation" <br />
 "ProfileViewerFunnelAnimation" <br />
 
+# Dialog
+
+<img src="https://github.com/user-attachments/assets/d88c8fed-e1da-4f0e-b6ce-a6d9d0afef0c" height="389" width="366"> <br />
+
+<img src="https://github.com/user-attachments/assets/bcc63c33-337f-49c4-82b5-7b3bf48660ad" height="250" width="366"> <br />
+
+<img src="https://github.com/user-attachments/assets/e984435b-b9ad-4077-b845-75a0eefb5d9d" height="388" width="366"> <br />
+
+<img src="https://github.com/user-attachments/assets/19e5b78a-1b8b-4e52-b938-86d04acb37f3" height="409" width="366"> <br />
+
+<img src="https://github.com/user-attachments/assets/7c7ba80f-9244-4031-b538-df272ecc15a3" height="326" width="366"> <br />
+
+
+https://github.com/user-attachments/assets/7f97890f-2b5f-4834-97a8-1b9a2aee3481
+
+
 
 
 # AAPS
