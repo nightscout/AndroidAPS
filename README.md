@@ -1,5 +1,9 @@
 # Only Working on "Dev" branch
 
+# TL:DR
+* Scared to cut my fingers, buttons now have round edges
+* Dialog closing/opening for Overview items have a sexy funnel animation
+
 # UI Changes
 * Overview: Buttons, Alignment, Scaling
 * Overview: Presentation of AutoSense removed "AS: "
@@ -24,23 +28,24 @@
 
 # New Files
 ## Drawables added:
-UI button and states for "Bolus Wizard" and "Activity Survey" since they use either >Button< or >ToggleButton< value.
+UI button and states for "Bolus Wizard" and "Activity Survey" <br />
+since they use either >Button< or >ToggleButton< value. <br />
 UI background for label in "Bolus Wizard" dialog.
 
-Location:
-/ui/src/main/res/drawable/
+Location: <br />
+/ui/src/main/res/drawable/ <br />
 /plugins/main/src/main/res/drawable
 
 Added:
-ui_bolwiz_title_bg.xml
-ui.button_state.xml
-ui.button_press.xml
-ui.button_bg.xml
+ui_bolwiz_title_bg.xml <br />
+ui.button_state.xml <br />
+ui.button_press.xml <br />
+ui.button_bg.xml <br />
 
 ## Animations added:
 Overview: Carbs, Insulin, Loop Dialog, Profile Viewer, TempTarget, Bolus Wizard,
 
-Location:
+Location: <br />
 /ui/src/main/res/anim/
 
 Added: <br />
