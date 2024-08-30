@@ -78,7 +78,7 @@ Strings Added: line 12 > 40 <br />
 "LoopDialogFunnelAnimation" <br />
 "ProfileViewerFunnelAnimation" <br />
 
-# Dialog
+# Preview (Outdated adjustments have been made)
 
 <img src="https://github.com/user-attachments/assets/d88c8fed-e1da-4f0e-b6ce-a6d9d0afef0c" height="389" width="366"> <br />
 
