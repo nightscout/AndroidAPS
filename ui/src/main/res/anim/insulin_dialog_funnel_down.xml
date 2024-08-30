@@ -8,14 +8,14 @@
     <scale
         android:fromXScale="1.0"
         android:fromYScale="1.0"
-        android:toXScale="0.01"
-        android:toYScale="0.01"
+        android:toXScale="0.1"
+        android:toYScale="0.1"
         android:duration="@android:integer/config_shortAnimTime"
-        android:pivotX="12%"
+        android:pivotX="18%"
         android:pivotY="190%"/>
     <alpha
         android:fromAlpha="1.0"
-        android:toAlpha="0.0001"
+        android:toAlpha="0.1"
         android:duration="@android:integer/config_shortAnimTime"
         android:interpolator="@android:anim/accelerate_decelerate_interpolator"/>
 </set>

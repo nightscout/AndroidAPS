@@ -46,11 +46,10 @@
             android:padding="5dp" />
 
         <LinearLayout
-            android:layout_marginStart="45dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginTop="7dp"
-            android:layout_width="match_parent"
+            android:layout_width="308dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="7dp"
             android:orientation="horizontal">
 
             <TextView
@@ -86,11 +85,11 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_marginStart="45dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginTop="7dp"
-            android:layout_width="match_parent"
+            android:layout_width="309dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="7dp"
+            android:layout_marginBottom="7dp"
             android:orientation="horizontal">
 
             <TextView
@@ -124,6 +123,7 @@
         </LinearLayout>
 
         <com.google.android.material.textfield.TextInputLayout
+            android:layout_marginBottom="7dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

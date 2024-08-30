@@ -85,7 +85,7 @@
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginEnd="15dp"
+            android:layout_marginEnd="35dp"
             android:layout_marginStart="42dp"
             android:paddingStart="0dp"
             android:paddingEnd="5dp">
@@ -696,6 +696,7 @@
             android:paddingEnd="5dp">
 
             <CheckBox
+                android:layout_marginStart="17dp"
                 android:id="@+id/calculation_checkbox"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"

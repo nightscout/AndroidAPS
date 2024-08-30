@@ -172,15 +172,19 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/reload"
             style="@style/GrayButton"
-            android:layout_width="150dp"
+            android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_marginStart="125dp"
             android:layout_marginEnd="125dp"
+            android:paddingStart="3dp"
+            android:paddingEnd="8dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
             android:text="@string/reload"
+            app:cornerRadius="8dp"
             app:icon="@drawable/ic_actions_refill"
             app:iconTint="@color/ic_actions_refill"
-            app:strokeColor="@color/colorPrimary"
-            app:cornerRadius="8dp"/>
+            app:strokeColor="@color/colorPrimary" />
 
     </LinearLayout>
 
