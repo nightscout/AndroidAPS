@@ -45,6 +45,7 @@
             android:padding="5dp" />
 
         <LinearLayout
+            android:layout_marginStart="5dp"
             android:id="@+id/percent_layout"
             android:layout_width="285dp"
             android:layout_height="wrap_content"
@@ -84,6 +85,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:layout_marginStart="5dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:id="@+id/absolute_layout"
@@ -124,6 +126,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:layout_marginStart="5dp"
             android:layout_width="285dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

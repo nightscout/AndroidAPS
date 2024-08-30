@@ -83,6 +83,7 @@
             android:padding="5dp" />
 
         <TableLayout
+            android:layout_marginStart="5dp"
             android:layout_width="337dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"

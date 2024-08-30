@@ -60,6 +60,8 @@
                 android:text="@string/careportal_pump_site_change" />
 
             <CheckBox
+                android:layout_marginTop="7dp"
+                android:layout_marginBottom="7dp"
                 android:id="@+id/fill_cartridge_change"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -68,8 +70,10 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="239dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="5dp"
             android:orientation="horizontal">
 
             <TextView

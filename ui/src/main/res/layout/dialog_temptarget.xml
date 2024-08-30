@@ -46,6 +46,7 @@
             android:padding="5dp" />
 
         <LinearLayout
+            android:layout_marginStart="5dp"
             android:layout_width="308dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -85,6 +86,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:layout_marginStart="5dp"
             android:layout_width="309dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
