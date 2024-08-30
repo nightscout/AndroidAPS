@@ -21,6 +21,8 @@
 
             <ImageView
                 android:id="@+id/loop_icon"
+                android:layout_marginTop="3dp"
+                android:layout_marginStart="3dp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:importantForAccessibility="no"
@@ -59,7 +61,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:text="@string/loop"
+                android:text=""
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <LinearLayout
@@ -70,6 +72,8 @@
                 android:orientation="horizontal">
 
                 <app.aaps.core.ui.elements.SingleClickButton
+                    app:cornerRadius="8dp"
+                    app:strokeColor="@color/colorPrimary"
                     android:id="@+id/overview_closeloop"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="0dp"
@@ -85,6 +89,8 @@
                     android:visibility="gone" />
 
                 <app.aaps.core.ui.elements.SingleClickButton
+                    app:cornerRadius="8dp"
+                    app:strokeColor="@color/colorPrimary"
                     android:id="@+id/overview_lgsloop"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="0dp"
@@ -99,6 +105,8 @@
                     android:visibility="gone" />
 
                 <app.aaps.core.ui.elements.SingleClickButton
+                    app:cornerRadius="8dp"
+                    app:strokeColor="@color/colorPrimary"
                     android:id="@+id/overview_openloop"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="0dp"
@@ -113,6 +121,8 @@
                     android:visibility="gone" />
 
                 <app.aaps.core.ui.elements.SingleClickButton
+                    app:cornerRadius="8dp"
+                    app:strokeColor="@color/colorPrimary"
                     android:id="@+id/overview_enable"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="0dp"
@@ -128,6 +138,8 @@
                     android:visibility="gone" />
 
                 <app.aaps.core.ui.elements.SingleClickButton
+                    app:cornerRadius="8dp"
+                    app:strokeColor="@color/colorPrimary"
                     android:id="@+id/overview_disable"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="0dp"
@@ -160,15 +172,17 @@
 
             <TextView
                 android:id="@+id/overview_suspend_header"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
+                android:layout_gravity="center"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:text="@string/suspendloop"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <app.aaps.core.ui.elements.SingleClickButton
+                app:cornerRadius="8dp"
+                app:strokeColor="@color/colorPrimary"
                 android:id="@+id/overview_resume"
                 style="@style/ButtonSmallFontStyle"
                 android:layout_width="wrap_content"
@@ -190,6 +204,8 @@
                 android:orientation="horizontal">
 
                 <app.aaps.core.ui.elements.SingleClickButton
+                    app:cornerRadius="8dp"
+                    app:strokeColor="@color/colorPrimary"
                     android:id="@+id/overview_suspend_1h"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="0px"
@@ -202,6 +218,8 @@
                     android:text="@string/duration1h" />
 
                 <app.aaps.core.ui.elements.SingleClickButton
+                    app:cornerRadius="8dp"
+                    app:strokeColor="@color/colorPrimary"
                     android:id="@+id/overview_suspend_2h"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="0px"
@@ -214,6 +232,8 @@
                     android:text="@string/duration2h" />
 
                 <app.aaps.core.ui.elements.SingleClickButton
+                    app:cornerRadius="8dp"
+                    app:strokeColor="@color/colorPrimary"
                     android:id="@+id/overview_suspend_3h"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="0px"
@@ -226,6 +246,8 @@
                     android:text="@string/duration3h" />
 
                 <app.aaps.core.ui.elements.SingleClickButton
+                    app:cornerRadius="8dp"
+                    app:strokeColor="@color/colorPrimary"
                     android:id="@+id/overview_suspend_10h"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="0px"
@@ -257,15 +279,17 @@
 
             <TextView
                 android:id="@+id/overview_pump_header"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
+                android:layout_gravity="center"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:text="@string/disconnectpump"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <app.aaps.core.ui.elements.SingleClickButton
+                app:cornerRadius="8dp"
+                app:strokeColor="@color/colorPrimary"
                 android:id="@+id/overview_reconnect"
                 style="@style/ButtonSmallFontStyle"
                 android:layout_width="wrap_content"
@@ -287,6 +311,8 @@
                 android:orientation="horizontal">
 
                 <app.aaps.core.ui.elements.SingleClickButton
+                    app:cornerRadius="8dp"
+                    app:strokeColor="@color/colorPrimary"
                     android:id="@+id/overview_disconnect_15m"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="0px"
@@ -299,6 +325,8 @@
                     android:text="@string/duration15m" />
 
                 <app.aaps.core.ui.elements.SingleClickButton
+                    app:cornerRadius="8dp"
+                    app:strokeColor="@color/colorPrimary"
                     android:id="@+id/overview_disconnect_30m"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="0px"
@@ -311,6 +339,8 @@
                     android:text="@string/duration30m" />
 
                 <app.aaps.core.ui.elements.SingleClickButton
+                    app:cornerRadius="8dp"
+                    app:strokeColor="@color/colorPrimary"
                     android:id="@+id/overview_disconnect_1h"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="0px"
@@ -323,6 +353,8 @@
                     android:text="@string/duration1h" />
 
                 <app.aaps.core.ui.elements.SingleClickButton
+                    app:cornerRadius="8dp"
+                    app:strokeColor="@color/colorPrimary"
                     android:id="@+id/overview_disconnect_2h"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="0px"
@@ -335,6 +367,8 @@
                     android:text="@string/duration2h" />
 
                 <app.aaps.core.ui.elements.SingleClickButton
+                    app:cornerRadius="8dp"
+                    app:strokeColor="@color/colorPrimary"
                     android:id="@+id/overview_disconnect_3h"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="0px"
@@ -359,6 +393,8 @@
             android:background="?android:attr/dividerHorizontal" />
 
         <com.google.android.material.button.MaterialButton
+            app:cornerRadius="8dp"
+            app:strokeColor="@color/colorPrimary"
             android:id="@+id/cancel"
             style="@style/OkCancelButton.Text"
             android:layout_width="fill_parent"
