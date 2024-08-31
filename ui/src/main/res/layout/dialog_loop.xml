@@ -54,16 +54,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/overview_loop_header"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:text=""
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-
             <LinearLayout
                 android:id="@+id/overview_loop_buttons"
                 android:layout_width="wrap_content"
@@ -393,17 +383,18 @@
             android:background="?android:attr/dividerHorizontal" />
 
         <com.google.android.material.button.MaterialButton
-            app:cornerRadius="8dp"
-            app:strokeColor="@color/colorPrimary"
+            android:layout_gravity="end"
             android:id="@+id/cancel"
             style="@style/OkCancelButton.Text"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
-            android:text="@string/cancel"
             android:padding="10dp"
-            android:textAlignment="textEnd" />
+            android:text="@string/cancel"
+            android:textAlignment="textEnd"
+            app:cornerRadius="8dp"
+            app:strokeColor="@color/colorPrimary" />
 
     </LinearLayout>
 

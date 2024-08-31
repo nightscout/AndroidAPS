@@ -18,11 +18,16 @@
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/left"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:background="@drawable/ui_button_states"
+                android:layout_width="44dp"
+                android:layout_height="40dp"
+                android:scaleX="0.7"
+                android:scaleY="0.7"
                 app:srcCompat="@drawable/ic_chevron_left_black_24dp" />
 
             <com.google.android.material.button.MaterialButton
+                app:cornerRadius="8dp"
+                app:strokeColor="@color/colorPrimary"
                 android:id="@+id/date"
                 style="@style/GrayButton"
                 android:layout_width="wrap_content"
@@ -31,18 +36,26 @@
                 android:text="@string/date" />
 
             <androidx.appcompat.widget.AppCompatImageButton
+                android:background="@drawable/ui_button_states"
                 android:id="@+id/right"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_width="44dp"
+                android:layout_height="40dp"
+                android:scaleX="0.7"
+                android:scaleY="0.7"
                 app:srcCompat="@drawable/ic_chevron_right_black_24dp" />
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/end"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:background="@drawable/ui_button_states"
+                android:layout_width="44dp"
+                android:layout_height="40dp"
+                android:scaleX="0.7"
+                android:scaleY="0.7"
                 app:srcCompat="@drawable/ic_last_page_black_24dp" />
 
             <com.google.android.material.button.MaterialButton
+                app:cornerRadius="8dp"
+                app:strokeColor="@color/colorPrimary"
                 android:id="@+id/zoom"
                 style="@style/GrayButton"
                 android:layout_width="wrap_content"
@@ -79,6 +92,9 @@
                     android:layout_height="match_parent" />
 
                 <Button
+                    android:background="@drawable/ui_button_states"
+                    android:scaleX="0.8"
+                    android:scaleY="0.8"
                     android:id="@+id/scale_button"
                     android:layout_width="65dp"
                     android:layout_height="35dp"
@@ -91,6 +107,9 @@
                     android:contentDescription="@string/a11y_graph_scale" />
 
                 <ImageButton
+                    android:background="@drawable/ui_button_states"
+                    android:scaleX="0.8"
+                    android:scaleY="0.8"
                     android:id="@+id/chart_menu_button"
                     android:layout_width="35dp"
                     android:layout_height="35dp"

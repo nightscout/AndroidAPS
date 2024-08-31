@@ -39,18 +39,11 @@
         </RelativeLayout>
 
         <LinearLayout
-            android:id="@+id/spacer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="5dp" />
-
-        <LinearLayout
-            android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:orientation="vertical"
-            android:padding="5dp">
+            android:padding="2dp">
 
             <CheckBox
                 android:id="@+id/activity_tt"

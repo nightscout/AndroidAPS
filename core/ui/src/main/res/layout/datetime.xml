@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_width="230dp"
+    android:layout_height="27dp"
     android:orientation="horizontal"
-    android:paddingTop="2dp">
+    android:layout_marginTop="8dp"
+    android:layout_marginStart="31dp"
+    android:layout_marginBottom="-38dp">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="71dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:width="120dp"
         android:labelFor="@+id/eventtime"
-        android:paddingStart="10dp"
-        android:paddingEnd="4dp"
+        android:scaleX="0.95"
+        android:scaleY="0.95"
         android:text="@string/event_time_label"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textStyle="bold" />
@@ -23,11 +25,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="5dp"
         android:background="@drawable/background_input_border"
         android:clickable="true"
         android:foreground="?attr/selectableItemBackgroundBorderless"
-        android:padding="10dp"
+        android:padding="4dp"
         tools:text="2017/05/05" />
 
     <TextView
@@ -38,7 +40,7 @@
         android:background="@drawable/background_input_border"
         android:clickable="true"
         android:foreground="?attr/selectableItemBackgroundBorderless"
-        android:padding="10dp"
+        android:padding="4dp"
         tools:text="08:20pm" />
 
 </LinearLayout>

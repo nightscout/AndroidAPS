@@ -8,18 +8,19 @@
 # UI Changes
 * Overview: Buttons, Alignment, Scaling
 * Overview: Presentation of AutoSense removed "AS: "
-* Funnel Animation for overview dialogs
+* Automation Dialog: Buttons, Alignment, Centering
+* Activity Survey: Buttons, Alignment, Scaling
+* Autotune: Buttons, Spacing
 * Dialog Insulin: Buttons, Alignment
 * Dialog Carbs: Buttons, Alignment
 * Dialog Wizard: Buttons, Alignment
 * Dialog Bolus Progress: Buttons, Alignment
 * Dialog Calibration: Alignment
 * Dialog Care: Alignment
+* History Browser: Buttons
 * Profile Helper: Buttons, Alignment, Scaling
 * Profile TDD: Button, Alignment, Scaling
-* Automation Dialog: Buttons, Alignment, Centering
-* Activity Survey: Buttons, Alignment, Scaling
-* Autotune: Buttons, Spacing
+* Funnel Animation for overview dialogs
 * Danar: Buttons
 * Diaconn G8: Buttons
 * Equil: Buttons
