@@ -3,6 +3,7 @@
 # TL:DR
 * Scared to cut my fingers, buttons now have round edges
 * Dialog closing/opening for Overview items have a sexy funnel animation
+* Overall alignment and centering for dialog objects/items
 
 # UI Changes
 * Overview: Buttons, Alignment, Scaling
