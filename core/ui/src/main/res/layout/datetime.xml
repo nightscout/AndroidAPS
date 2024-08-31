@@ -5,7 +5,7 @@
     android:layout_height="27dp"
     android:orientation="horizontal"
     android:layout_marginTop="8dp"
-    android:layout_marginStart="31dp"
+    android:layout_marginStart="8dp"
     android:layout_marginBottom="-38dp">
 
     <TextView
