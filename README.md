@@ -3,21 +3,25 @@
 # TL:DR
 * Scared to cut my fingers, buttons now have round edges
 * Dialog closing/opening for Overview items have a sexy funnel animation
+* Overall alignment and centering for dialog objects/items
 
 # UI Changes
 * Overview: Buttons, Alignment, Scaling
 * Overview: Presentation of AutoSense removed "AS: "
-* Funnel Animation for overview dialogs
+* Automation Dialog: Buttons, Alignment, Centering
+* Activity Survey: Buttons, Alignment, Scaling
+* Autotune: Buttons, Spacing
+* Dialog: DateTime Alignment
 * Dialog Insulin: Buttons, Alignment
 * Dialog Carbs: Buttons, Alignment
 * Dialog Wizard: Buttons, Alignment
 * Dialog Bolus Progress: Buttons, Alignment
 * Dialog Calibration: Alignment
 * Dialog Care: Alignment
+* History Browser: Buttons
 * Profile Helper: Buttons, Alignment, Scaling
 * Profile TDD: Button, Alignment, Scaling
-* Activity Survey: Buttons, Alignment, Scaling
-* Autotune: Buttons, Spacing
+* Funnel Animation for overview dialogs
 * Danar: Buttons
 * Diaconn G8: Buttons
 * Equil: Buttons
@@ -28,13 +32,16 @@
 
 # New Files
 ## Drawables added:
-UI button and states for "Bolus Wizard" and "Activity Survey" <br />
+UI button and states for "Bolus Wizard", "Activity Survey", <br />
+"Automation Dialog" and "History Browser" <br />
 since they use either >Button< or >ToggleButton< value. <br />
 UI background for label in "Bolus Wizard" dialog.
 
 Location: <br />
 /ui/src/main/res/drawable/ <br />
-/plugins/main/src/main/res/drawable
+/plugins/main/src/main/res/drawable/  <br />
+/plugins/automation/src/main/res/drawable/  <br />
+/core/ui/src/main/res/drawable/
 
 Added:
 ui_bolwiz_title_bg.xml <br />
@@ -78,20 +85,27 @@ Strings Added: line 12 > 40 <br />
 "LoopDialogFunnelAnimation" <br />
 "ProfileViewerFunnelAnimation" <br />
 
-# Dialog
+# Preview
 
-<img src="https://github.com/user-attachments/assets/d88c8fed-e1da-4f0e-b6ce-a6d9d0afef0c" height="389" width="366"> <br />
+<img src="https://github.com/user-attachments/assets/190357e9-d5ae-4afa-ae91-60adc3a92e80" height="258" width="367">
+<img src="https://github.com/user-attachments/assets/9045e81f-6fc9-4770-bc45-c4ac33ac40a2" height="343" width="367"> <br />
 
-<img src="https://github.com/user-attachments/assets/bcc63c33-337f-49c4-82b5-7b3bf48660ad" height="250" width="366"> <br />
+<img src="https://github.com/user-attachments/assets/2e697a53-b82f-4474-8b89-30a47447db94" height="348" width="367">
+<img src="https://github.com/user-attachments/assets/c21bb355-8f1a-45d7-afca-673e1121b811" height="392" width="367"> <br />
 
-<img src="https://github.com/user-attachments/assets/e984435b-b9ad-4077-b845-75a0eefb5d9d" height="388" width="366"> <br />
-
-<img src="https://github.com/user-attachments/assets/19e5b78a-1b8b-4e52-b938-86d04acb37f3" height="409" width="366"> <br />
-
-<img src="https://github.com/user-attachments/assets/7c7ba80f-9244-4031-b538-df272ecc15a3" height="326" width="366"> <br />
+<img src="https://github.com/user-attachments/assets/0640ec46-d626-4df5-b58c-fb75f52b9060" height="251" width="367">
+<img src="https://github.com/user-attachments/assets/9c72c6c0-1be4-4c12-acd2-b4d15c825d33" height="306" width="367"> <br />
 
 
-https://github.com/user-attachments/assets/7f97890f-2b5f-4834-97a8-1b9a2aee3481
+
+
+
+
+
+https://github.com/user-attachments/assets/aabb73c8-a525-4431-8d5a-f4da1386a31b
+
+
+
 
 
 
