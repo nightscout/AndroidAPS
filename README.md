@@ -11,6 +11,7 @@
 * Automation Dialog: Buttons, Alignment, Centering
 * Activity Survey: Buttons, Alignment, Scaling
 * Autotune: Buttons, Spacing
+* Dialog: DateTime Alignment
 * Dialog Insulin: Buttons, Alignment
 * Dialog Carbs: Buttons, Alignment
 * Dialog Wizard: Buttons, Alignment
@@ -31,15 +32,16 @@
 
 # New Files
 ## Drawables added:
-UI button and states for "Bolus Wizard" and "Activity Survey" <br />
-and "Automation Dialog" <br />
+UI button and states for "Bolus Wizard", "Activity Survey", <br />
+"Automation Dialog" and "History Browser" <br />
 since they use either >Button< or >ToggleButton< value. <br />
 UI background for label in "Bolus Wizard" dialog.
 
 Location: <br />
 /ui/src/main/res/drawable/ <br />
 /plugins/main/src/main/res/drawable/  <br />
-/plugins/automation/src/main/res/drawable/
+/plugins/automation/src/main/res/drawable/  <br />
+/core/ui/src/main/res/drawable/
 
 Added:
 ui_bolwiz_title_bg.xml <br />
