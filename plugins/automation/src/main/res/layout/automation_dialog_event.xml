@@ -58,8 +58,10 @@
             android:padding="10dp">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="153dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="-25dp"
                 android:orientation="horizontal">
 
                 <ImageButton
@@ -73,7 +75,7 @@
 
                 <CheckBox
                     android:id="@+id/user_action"
-                    android:layout_width="match_parent"
+                    android:layout_width="122dp"
                     android:layout_height="wrap_content"
                     android:text="@string/user_action" />
 
@@ -81,13 +83,15 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/inputEventTitle"
-                android:layout_width="match_parent"
+                android:layout_width="334dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:hint="@string/taskname" />
 
             <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_width="284dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
 
                 <ImageView
                     android:id="@+id/trigger_image"
@@ -113,7 +117,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:background="?attr/activity_title_backgroundColor"
+                    android:background="@drawable/ui_button_states"
                     android:padding="8dp"
                     android:text="@string/edit_short"
                     tools:ignore="RelativeOverlap" />
@@ -122,23 +126,26 @@
 
             <TextView
                 android:id="@+id/triggerDescription"
-                android:layout_width="match_parent"
+                android:layout_width="359dp"
                 android:layout_height="match_parent"
+                android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:orientation="vertical" />
 
             <TextView
                 android:id="@+id/forcedTriggerDescriptionLabel"
-                android:layout_width="match_parent"
+                android:layout_width="360dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:text="@string/preconditions"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/forcedTriggerDescription"
-                android:layout_width="match_parent"
+                android:layout_width="358dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:orientation="vertical" />
@@ -151,8 +158,9 @@
                 android:background="?android:attr/dividerHorizontal" />
 
             <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_width="283dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
 
                 <ImageView
                     android:id="@+id/action_image"
@@ -172,13 +180,13 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:background="@drawable/ui_button_states"
                     android:id="@+id/addAction"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:background="?attr/activity_title_backgroundColor"
                     android:padding="8dp"
                     android:text="@string/add_short"
                     tools:ignore="RelativeOverlap" />
@@ -187,8 +195,9 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/actionListView"
-                android:layout_width="match_parent"
+                android:layout_width="383dp"
                 android:layout_height="match_parent"
+                android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp" />
 

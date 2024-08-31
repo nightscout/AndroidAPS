@@ -16,6 +16,7 @@
 * Dialog Care: Alignment
 * Profile Helper: Buttons, Alignment, Scaling
 * Profile TDD: Button, Alignment, Scaling
+* Automation Dialog: Buttons, Alignment, Centering
 * Activity Survey: Buttons, Alignment, Scaling
 * Autotune: Buttons, Spacing
 * Danar: Buttons
@@ -29,12 +30,14 @@
 # New Files
 ## Drawables added:
 UI button and states for "Bolus Wizard" and "Activity Survey" <br />
+and "Automation Dialog" <br />
 since they use either >Button< or >ToggleButton< value. <br />
 UI background for label in "Bolus Wizard" dialog.
 
 Location: <br />
 /ui/src/main/res/drawable/ <br />
-/plugins/main/src/main/res/drawable
+/plugins/main/src/main/res/drawable/  <br />
+/plugins/automation/src/main/res/drawable/
 
 Added:
 ui_bolwiz_title_bg.xml <br />
