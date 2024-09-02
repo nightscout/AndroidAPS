@@ -44,7 +44,7 @@
     <string name="noisycgm_pause">Disable the closed loop to avoid possible over or underdosing.</string>
     <string name="noisycgm_replacesensor">Replace consistently noisy or inaccurate sensors.</string>
     <string name="noisycgm_checksmoothing">Verify that your CGM app provides smoothed data.</string>
-    <string name="noisycgm_hint1">https://wiki.aaps.app/en/latest/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#smoothing-blood-glucose-data</string>
+    <string name="noisycgm_hint1">https://wiki.aaps.app/en/latest/Usage/Smoothing-Blood-Glucose-Data.html#smoothing-blood-glucose-data</string>
     <string name="exerciseprofile_label">Exercise and Profiles</string>
     <string name="exerciseprofile_whattodo">How can you use profiles to best help the system deal with aerobic exercise?</string>
     <string name="exerciseprofile_switchprofilebelow100">Do a profile switch to less than 100%.</string>
