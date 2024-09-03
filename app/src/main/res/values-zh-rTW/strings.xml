@@ -45,7 +45,7 @@
     <string name="email_address">電子郵件地址</string>
     <string name="remove_bg_readings">移除血糖讀數</string>
     <string name="identification_not_set">開發模式下未設置識別</string>
-    <string name="a11y_dialog">對話框</string>
+    <string name="a11y_dialog">對話視窗</string>
     <!-- WEAR OS-->
     <string name="wear_unknown_action_string">未知的操作命令：</string>
     <string name="remove_selected_items">移除選定的項目</string>
