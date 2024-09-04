@@ -69,7 +69,7 @@ class SyaiTagPlugin @Inject constructor(
                                         raw = jsonObject.getDouble("sgv"),
                                         noise = null,
                                         trendArrow = TrendArrow.fromString(jsonObject.getString("direction")),
-                                        sourceSensor = SourceSensor.SyaiTag
+                                        sourceSensor = SourceSensor.SYAI_TAG
                                     )
                                 else  -> aapsLogger.debug(LTag.BGSOURCE, "Unknown entries type: $type")
                             }

@@ -441,6 +441,12 @@ abstract class PluginsListModule {
     @Binds
     @AllConfigs
     @IntoMap
+    @IntKey(474)
+    abstract fun bindPatchedSyaiTagPlugin(plugin: SyaiTagPlugin): PluginBase
+
+    @Binds
+    @AllConfigs
+    @IntoMap
     @IntKey(475)
     abstract fun bindRandomBgPlugin(plugin: RandomBgPlugin): PluginBase
 
@@ -473,12 +479,6 @@ abstract class PluginsListModule {
     @IntoMap
     @IntKey(610)
     abstract fun bindAvgSmoothingPlugin(plugin: AvgSmoothingPlugin): PluginBase
-
-    @Binds
-    @AllConfigs
-    @IntoMap
-    @IntKey(688)
-    abstract fun bindPatchedSyaiTagPlugin(plugin: SyaiTagPlugin): PluginBase
 
     @Qualifier
     annotation class AllConfigs
