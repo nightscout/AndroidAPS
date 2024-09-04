@@ -54,11 +54,10 @@ class XdripSourcePlugin @Inject constructor(
     private fun detectSource(glucoseValue: GV) {
         advancedFiltering = arrayOf(
             SourceSensor.DEXCOM_NATIVE_UNKNOWN,
-            SourceSensor.DEXCOM_G6_NATIVE,
             SourceSensor.DEXCOM_G5_NATIVE,
-            SourceSensor.DEXCOM_G6_NATIVE_XDRIP,
             SourceSensor.DEXCOM_G5_NATIVE_XDRIP,
-            SourceSensor.DEXCOM_G6_G5_NATIVE_XDRIP,
+            SourceSensor.DEXCOM_G6_NATIVE,
+            SourceSensor.DEXCOM_G6_NATIVE_XDRIP,
             SourceSensor.DEXCOM_G7_NATIVE_XDRIP
         ).any { it == glucoseValue.sourceSensor }
     }
