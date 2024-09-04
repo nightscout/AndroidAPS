@@ -155,6 +155,7 @@ class PreferencesImpl @Inject constructor(
     private fun calculatedDefaultValue(key: BooleanPreferenceKey): Boolean =
         if (key.calculatedDefaultValue)
             when (key) {
+                BooleanKey.OverviewKeepScreenOn                    -> config.NSCLIENT
                 BooleanKey.NsClientNotificationsFromAlarms         -> config.NSCLIENT
                 BooleanKey.NsClientNotificationsFromAnnouncements  -> config.NSCLIENT
                 BooleanKey.NsClientLogAppStart                     -> config.APS

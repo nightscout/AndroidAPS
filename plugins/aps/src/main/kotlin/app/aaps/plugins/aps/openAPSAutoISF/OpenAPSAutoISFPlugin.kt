@@ -181,6 +181,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
     }
 
     private val dynIsfCache = LongSparseArray<Double>()
+    @Synchronized
     private fun calculateVariableIsf(timestamp: Long, bg: Double?): Pair<String, Double?> {
         val profile = profileFunction.getProfile(timestamp)
         if (profile == null) return Pair("OFF", null)
@@ -816,19 +817,17 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
             val msgTail: String
             val msgEven: String
             if (profile.out_units == "mmol/L") {
-                evenTarget = (target.toDouble() * 10.0).toInt() % 2 == 0
+                evenTarget = round(target * 10.0 , 0).toInt() % 2 == 0
+                target = round(target, 1)
                 msgUnits = "has"
                 msgTail = "decimal"
             } else {
-                evenTarget = target.toInt() % 2 == 0
+                evenTarget = round(target, 0).toInt() % 2 == 0
+                target = round(target, 0)
                 msgUnits = "is"
                 msgTail = "number"
             }
-            msgEven = if (evenTarget) {
-                "even"
-            } else {
-                "odd"
-            }
+            msgEven = if (evenTarget) "even" else "odd"
 
             val iobThUser = preferences.get(IntKey.ApsAutoIsfIobThPercent)  //iobThresholdPercent
             if (useIobTh) {
