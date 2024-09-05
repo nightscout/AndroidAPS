@@ -225,7 +225,7 @@
     <string name="constraints_violation">約束違反</string>
     <string name="change_your_input">更改您的輸入！</string>
     <string name="openaps">OpenAPS</string>
-    <string name="uploader">上傳器</string>
+    <string name="uploader">上傳設備</string>
     <string name="data_status">BG資料狀態</string>
     <string name="quickwizard_settings">快速嚮導設置</string>
     <string name="keep_screen_on_title">保持螢幕開啟</string>
