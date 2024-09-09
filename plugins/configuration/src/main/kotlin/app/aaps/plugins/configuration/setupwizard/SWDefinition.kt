@@ -120,7 +120,7 @@ class SWDefinition @Inject constructor(
             .skippable(false)
             .add(
                 SWRadioButton(injector)
-                    .option(R.array.unitsArray, R.array.unitsValues)
+                    .option(uiInteraction.unitsEntries, uiInteraction.unitsValues)
                     .preferenceId(StringKey.GeneralUnits.key).label(R.string.units)
                     .comment(R.string.setupwizard_units_prompt)
             )
@@ -214,16 +214,16 @@ class SWDefinition @Inject constructor(
         get() = SWScreen(injector, R.string.patient_name)
             .skippable(true)
             .add(SWInfoText(injector).label(R.string.patient_name_summary))
-            .add(SWEditString(injector).validator(String::isNotEmpty).preferenceId(app.aaps.core.utils.R.string.key_patient_name))
+            .add(SWEditString(injector).validator(String::isNotEmpty).preferenceId(StringKey.GeneralPatientName.key))
 
     private val screenMasterPassword
         get() = SWScreen(injector, app.aaps.core.ui.R.string.master_password)
             .skippable(false)
             .add(SWInfoText(injector).label(app.aaps.core.ui.R.string.master_password))
-            .add(SWEditEncryptedPassword(injector, cryptoUtil).preferenceId(app.aaps.core.utils.R.string.key_master_password))
+            .add(SWEditEncryptedPassword(injector, cryptoUtil).preferenceId(app.aaps.core.keys.R.string.key_master_password))
             .add(SWBreak(injector))
             .add(SWInfoText(injector).label(R.string.master_password_summary))
-            .validator { !cryptoUtil.checkPassword("", sp.getString(app.aaps.core.utils.R.string.key_master_password, "")) }
+            .validator { !cryptoUtil.checkPassword("", sp.getString(app.aaps.core.keys.R.string.key_master_password, "")) }
 
     private val screenAge
         get() = SWScreen(injector, app.aaps.core.ui.R.string.patient_type)

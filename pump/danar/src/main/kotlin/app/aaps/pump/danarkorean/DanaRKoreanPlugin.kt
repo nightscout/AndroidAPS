@@ -31,6 +31,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.database.DanaHistoryDatabase
@@ -58,6 +59,7 @@ class DanaRKoreanPlugin @Inject constructor(
     dateUtil: DateUtil,
     private val fabricPrivacy: FabricPrivacy,
     pumpSync: PumpSync,
+    preferences: Preferences,
     uiInteraction: UiInteraction,
     danaHistoryDatabase: DanaHistoryDatabase,
     decimalFormatter: DecimalFormatter,
@@ -74,6 +76,7 @@ class DanaRKoreanPlugin @Inject constructor(
     sp,
     dateUtil,
     pumpSync,
+    preferences,
     uiInteraction,
     danaHistoryDatabase,
     decimalFormatter,

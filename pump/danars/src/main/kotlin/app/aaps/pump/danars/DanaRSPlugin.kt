@@ -47,12 +47,14 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.pump.dana.DanaFragment
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.comm.RecordTypes
 import app.aaps.pump.dana.database.DanaHistoryDatabase
+import app.aaps.pump.dana.keys.DanaStringKey
 import app.aaps.pump.danars.events.EventDanaRSDeviceChange
 import app.aaps.pump.danars.services.DanaRSService
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -77,6 +79,7 @@ class DanaRSPlugin @Inject constructor(
     commandQueue: CommandQueue,
     private val danaPump: DanaPump,
     private val pumpSync: PumpSync,
+    private val preferences: Preferences,
     private val detailedBolusInfoStorage: DetailedBolusInfoStorage,
     private val temporaryBasalStorage: TemporaryBasalStorage,
     private val fabricPrivacy: FabricPrivacy,
@@ -102,6 +105,12 @@ class DanaRSPlugin @Inject constructor(
     private var danaRSService: DanaRSService? = null
     private var mDeviceAddress = ""
     var mDeviceName = ""
+
+    // Make plugin preferences available to AAPS
+    init {
+        preferences.registerPreferences(DanaStringKey::class.java)
+    }
+
     override val pumpDescription
         get() = PumpDescription().fillFor(danaPump.pumpType())
 

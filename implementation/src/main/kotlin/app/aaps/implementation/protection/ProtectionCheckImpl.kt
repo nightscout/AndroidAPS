@@ -22,21 +22,21 @@ class ProtectionCheckImpl @Inject constructor(
     private var lastAuthorization = mutableListOf(0L, 0L, 0L)
 
     private val passwordsResourceIDs = listOf(
-        app.aaps.core.utils.R.string.key_settings_password,
-        app.aaps.core.utils.R.string.key_application_password,
-        app.aaps.core.utils.R.string.key_bolus_password
+        app.aaps.core.keys.R.string.key_settings_password,
+        app.aaps.core.keys.R.string.key_application_password,
+        app.aaps.core.keys.R.string.key_bolus_password
     )
 
     private val pinsResourceIDs = listOf(
-        app.aaps.core.utils.R.string.key_settings_pin,
-        app.aaps.core.utils.R.string.key_application_pin,
-        app.aaps.core.utils.R.string.key_bolus_pin
+        app.aaps.core.keys.R.string.key_settings_pin,
+        app.aaps.core.keys.R.string.key_application_pin,
+        app.aaps.core.keys.R.string.key_bolus_pin
     )
 
     private val protectionTypeResourceIDs = listOf(
-        app.aaps.core.utils.R.string.key_settings_protection,
-        app.aaps.core.utils.R.string.key_application_protection,
-        app.aaps.core.utils.R.string.key_bolus_protection
+        app.aaps.core.keys.R.string.key_settings_protection,
+        app.aaps.core.keys.R.string.key_application_protection,
+        app.aaps.core.keys.R.string.key_bolus_protection
     )
 
     private val titlePassResourceIDs = listOf(
@@ -58,7 +58,7 @@ class ProtectionCheckImpl @Inject constructor(
         return when (ProtectionCheck.ProtectionType.entries[sp.getInt(protectionTypeResourceIDs[protection.ordinal], ProtectionCheck.ProtectionType.NONE.ordinal)]) {
             ProtectionCheck.ProtectionType.NONE            -> false
             ProtectionCheck.ProtectionType.BIOMETRIC       -> true
-            ProtectionCheck.ProtectionType.MASTER_PASSWORD -> sp.getString(app.aaps.core.utils.R.string.key_master_password, "") != ""
+            ProtectionCheck.ProtectionType.MASTER_PASSWORD -> sp.getString(app.aaps.core.keys.R.string.key_master_password, "") != ""
             ProtectionCheck.ProtectionType.CUSTOM_PASSWORD -> sp.getString(passwordsResourceIDs[protection.ordinal], "") != ""
             ProtectionCheck.ProtectionType.CUSTOM_PIN      -> sp.getString(pinsResourceIDs[protection.ordinal], "") != ""
         }
@@ -69,7 +69,7 @@ class ProtectionCheckImpl @Inject constructor(
     }
 
     private fun activeSession(protection: ProtectionCheck.Protection): Boolean {
-        var timeout = TimeUnit.SECONDS.toMillis(preferences.get(IntKey.GeneralProtectionTimeout).toLong())
+        var timeout = TimeUnit.SECONDS.toMillis(preferences.get(IntKey.ProtectionTimeout).toLong())
         // Default timeout to pass the resume check at start of an activity
         timeout = if (timeout < 1000) 1000 else timeout
         val last = lastAuthorization[protection.ordinal]
@@ -99,7 +99,7 @@ class ProtectionCheckImpl @Inject constructor(
                 passwordCheck.queryPassword(
                     activity,
                     app.aaps.core.ui.R.string.master_password,
-                    app.aaps.core.utils.R.string.key_master_password,
+                    app.aaps.core.keys.R.string.key_master_password,
                     { onOk(protection); ok?.run() },
                     { cancel?.run() },
                     { fail?.run() })

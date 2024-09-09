@@ -35,6 +35,7 @@ import app.aaps.core.interfaces.utils.Round.ceilTo
 import app.aaps.core.interfaces.utils.Round.floorTo
 import app.aaps.core.interfaces.utils.Round.roundTo
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.R
@@ -64,6 +65,7 @@ class DanaRv2Plugin @Inject constructor(
     dateUtil: DateUtil,
     private val fabricPrivacy: FabricPrivacy,
     pumpSync: PumpSync,
+    preferences: Preferences,
     uiInteraction: UiInteraction,
     danaHistoryDatabase: DanaHistoryDatabase,
     decimalFormatter: DecimalFormatter,
@@ -80,6 +82,7 @@ class DanaRv2Plugin @Inject constructor(
     sp,
     dateUtil,
     pumpSync,
+    preferences,
     uiInteraction,
     danaHistoryDatabase,
     decimalFormatter,

@@ -7,7 +7,6 @@ import androidx.annotation.RawRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.FragmentManager
 import app.aaps.MainActivity
-import app.aaps.R
 import app.aaps.activities.HistoryBrowseActivity
 import app.aaps.activities.MyPreferenceFragment
 import app.aaps.activities.PreferencesActivity
@@ -62,7 +61,9 @@ class UiInteractionImpl @Inject constructor(
     override val preferencesActivity: Class<*> = PreferencesActivity::class.java
     override val myPreferenceFragment: Class<*> = MyPreferenceFragment::class.java
     override val quickWizardListActivity: Class<*> = QuickWizardListActivity::class.java
-    override val prefGeneral: Int = R.xml.pref_general
+
+    override val unitsEntries = arrayOf<CharSequence>("mg/dL", "mmol/L")
+    override val unitsValues = arrayOf<CharSequence>("mg/dl", "mmol")
 
     override fun runAlarm(status: String, title: String, @RawRes soundId: Int) {
         val i = Intent(context, errorHelperActivity)

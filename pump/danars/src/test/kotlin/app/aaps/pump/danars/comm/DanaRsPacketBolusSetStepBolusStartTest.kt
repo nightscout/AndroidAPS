@@ -67,6 +67,7 @@ class DanaRsPacketBolusSetStepBolusStartTest : DanaRSTestBase() {
                 commandQueue,
                 danaPump,
                 pumpSync,
+                preferences,
                 detailedBolusInfoStorage,
                 temporaryBasalStorage,
                 fabricPrivacy,

@@ -1,5 +1,6 @@
 package app.aaps.core.validators.di
 
+import app.aaps.core.keys.AdaptiveClickPreference
 import app.aaps.core.validators.AdaptiveDoublePreference
 import app.aaps.core.validators.AdaptiveIntPreference
 import app.aaps.core.validators.AdaptiveStringPreference
@@ -23,5 +24,6 @@ abstract class ValidatorsModule {
     @ContributesAndroidInjector abstract fun adaptiveDoublePreferenceInjector(): AdaptiveDoublePreference
     @ContributesAndroidInjector abstract fun adaptiveStringPreferenceInjector(): AdaptiveStringPreference
     @ContributesAndroidInjector abstract fun adaptiveSwitchPreferenceInjector(): AdaptiveSwitchPreference
+    @ContributesAndroidInjector abstract fun adaptiveClickPreferenceInjector(): AdaptiveClickPreference
 
 }

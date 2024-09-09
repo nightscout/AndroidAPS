@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.database.DanaHistoryDatabase
+import app.aaps.pump.dana.keys.DanaStringKey
 import app.aaps.pump.danarkorean.DanaRKoreanPlugin
 import app.aaps.shared.tests.TestBaseWithProfile
 import org.junit.jupiter.api.Assertions
@@ -31,7 +32,7 @@ class DanaRKoreanPluginTest : TestBaseWithProfile() {
     @BeforeEach
     fun prepareMocks() {
         `when`(sp.getString(app.aaps.pump.dana.R.string.key_danars_address, "")).thenReturn("")
-        `when`(sp.getString(app.aaps.pump.dana.R.string.key_danar_bt_name, "")).thenReturn("")
+        `when`(preferences.get(DanaStringKey.DanaBtName)).thenReturn("")
         `when`(rh.gs(app.aaps.core.ui.R.string.pumplimit)).thenReturn("pump limit")
         `when`(rh.gs(app.aaps.core.ui.R.string.itmustbepositivevalue)).thenReturn("it must be positive value")
         `when`(rh.gs(app.aaps.core.ui.R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
@@ -39,7 +40,7 @@ class DanaRKoreanPluginTest : TestBaseWithProfile() {
         danaPump = DanaPump(aapsLogger, sp, dateUtil, instantiator, decimalFormatter)
         danaRPlugin = DanaRKoreanPlugin(
             aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, activePlugin, sp, commandQueue, danaPump, dateUtil, fabricPrivacy,
-            pumpSync, uiInteraction, danaHistoryDatabase, decimalFormatter, instantiator
+            pumpSync, preferences, uiInteraction, danaHistoryDatabase, decimalFormatter, instantiator
         )
     }
 

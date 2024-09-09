@@ -33,11 +33,13 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round.roundTo
+import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.pump.dana.DanaFragment
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.comm.RecordTypes
 import app.aaps.pump.dana.database.DanaHistoryDatabase
+import app.aaps.pump.dana.keys.DanaStringKey
 import app.aaps.pump.danar.services.AbstractDanaRExecutionService
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -61,6 +63,7 @@ abstract class AbstractDanaRPlugin protected constructor(
     protected var sp: SP,
     protected var dateUtil: DateUtil,
     protected var pumpSync: PumpSync,
+    protected val preferences: Preferences,
     protected var uiInteraction: UiInteraction,
     protected var danaHistoryDatabase: DanaHistoryDatabase,
     protected var decimalFormatter: DecimalFormatter,
@@ -83,6 +86,11 @@ abstract class AbstractDanaRPlugin protected constructor(
     override var pumpDescription = PumpDescription()
         protected set
 
+    // Make plugin preferences available to AAPS
+    init {
+        preferences.registerPreferences(DanaStringKey::class.java)
+    }
+
     override fun onStart() {
         super.onStart()
         disposable += rxBus
@@ -94,13 +102,13 @@ abstract class AbstractDanaRPlugin protected constructor(
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe { event: EventPreferenceChange ->
-                if (event.isChanged(rh.gs(app.aaps.pump.dana.R.string.key_danar_bt_name))) {
+                if (event.isChanged(DanaStringKey.DanaBtName.key, rh)) {
                     danaPump.reset()
                     pumpSync.connectNewPump(true)
                     commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.device_changed), null)
                 }
             }
-        danaPump.serialNumber = sp.getString(app.aaps.pump.dana.R.string.key_danar_bt_name, "") // fill at start to allow password reset
+        danaPump.serialNumber = preferences.get(DanaStringKey.DanaBtName) // fill at start to allow password reset
     }
 
     override fun onStop() {
@@ -356,10 +364,7 @@ abstract class AbstractDanaRPlugin protected constructor(
                 extended.put("ExtendedBolusRemaining", extendedBolus.plannedRemainingMinutes)
             }
             extended.put("BaseBasalRate", baseBasalRate)
-            try {
-                extended.put("ActiveProfile", profileName)
-            } catch (ignored: Exception) {
-            }
+            extended.put("ActiveProfile", profileName)
             pumpJson.put("battery", battery)
             pumpJson.put("status", status)
             pumpJson.put("extended", extended)

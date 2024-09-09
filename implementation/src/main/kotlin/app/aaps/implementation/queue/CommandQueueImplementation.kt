@@ -45,6 +45,7 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.getCustomizedName
 import app.aaps.core.objects.profile.ProfileSealed
@@ -91,6 +92,7 @@ class CommandQueueImplementation @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val context: Context,
     private val sp: SP,
+    private val preferences: Preferences,
     private val config: Config,
     private val dateUtil: DateUtil,
     private val fabricPrivacy: FabricPrivacy,
@@ -214,7 +216,7 @@ class CommandQueueImplementation @Inject constructor(
     @Synchronized fun notifyAboutNewCommand() = handler.post {
         waitForFinishedThread()
         if (thread == null || thread!!.state == Thread.State.TERMINATED) {
-            thread = QueueThread(this, context, aapsLogger, rxBus, activePlugin, rh, sp, androidPermission, config)
+            thread = QueueThread(this, context, aapsLogger, rxBus, activePlugin, rh, sp, preferences, androidPermission, config)
             thread!!.start()
             aapsLogger.debug(LTag.PUMPQUEUE, "Starting new thread")
         } else {
@@ -235,7 +237,7 @@ class CommandQueueImplementation @Inject constructor(
         aapsLogger.debug(LTag.PUMPQUEUE, "Starting new queue")
         val tempCommandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh,
-            constraintChecker, profileFunction, activePlugin, context, sp,
+            constraintChecker, profileFunction, activePlugin, context, sp, preferences,
             config, dateUtil, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter, instantiator
         )
         tempCommandQueue.readStatus(reason, callback)
@@ -290,7 +292,7 @@ class CommandQueueImplementation @Inject constructor(
             }
 
         }
-        var type = if (detailedBolusInfo.bolusType == BS.Type.SMB) CommandType.SMB_BOLUS else CommandType.BOLUS
+        val type = if (detailedBolusInfo.bolusType == BS.Type.SMB) CommandType.SMB_BOLUS else CommandType.BOLUS
         if (type == CommandType.SMB_BOLUS) {
             if (bolusInQueue()) {
                 aapsLogger.debug(LTag.PUMPQUEUE, "Rejecting SMB since a bolus is queue/running")

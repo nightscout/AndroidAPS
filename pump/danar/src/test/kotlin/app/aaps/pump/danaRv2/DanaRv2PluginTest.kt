@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.database.DanaHistoryDatabase
+import app.aaps.pump.dana.keys.DanaStringKey
 import app.aaps.pump.danarv2.DanaRv2Plugin
 import app.aaps.shared.tests.TestBaseWithProfile
 import org.junit.jupiter.api.Assertions
@@ -34,7 +35,7 @@ class DanaRv2PluginTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun prepareMocks() {
-        `when`(sp.getString(app.aaps.pump.dana.R.string.key_danar_bt_name, "")).thenReturn("")
+        `when`(preferences.get(DanaStringKey.DanaBtName)).thenReturn("")
         `when`(sp.getString(app.aaps.pump.dana.R.string.key_danars_address, "")).thenReturn("")
         `when`(rh.gs(app.aaps.core.ui.R.string.pumplimit)).thenReturn("pump limit")
         `when`(rh.gs(app.aaps.core.ui.R.string.itmustbepositivevalue)).thenReturn("it must be positive value")
@@ -43,7 +44,7 @@ class DanaRv2PluginTest : TestBaseWithProfile() {
         danaPump = DanaPump(aapsLogger, sp, dateUtil, instantiator, decimalFormatter)
         danaRv2Plugin = DanaRv2Plugin(
             aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, activePlugin, sp, commandQueue, danaPump, detailedBolusInfoStorage,
-            temporaryBasalStorage, dateUtil, fabricPrivacy, pumpSync, uiInteraction, danaHistoryDatabase, decimalFormatter, instantiator
+            temporaryBasalStorage, dateUtil, fabricPrivacy, pumpSync, preferences, uiInteraction, danaHistoryDatabase, decimalFormatter, instantiator
         )
     }
 

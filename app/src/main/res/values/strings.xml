@@ -1,33 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="default_lang" translatable="false">System default</string>
-    <string name="en_lang" translatable="false">English</string>
-    <string name="cs_lang" translatable="false">Czech</string>
-    <string name="af_lang" translatable="false">Afrikaans</string>
-    <string name="bg_lang" translatable="false">Bulgarian</string>
-    <string name="nl_lang" translatable="false">Dutch</string>
-    <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
-    <string name="fr_lang" translatable="false">French</string>
-    <string name="de_lang" translatable="false">German</string>
-    <string name="dk_lang" translatable="false">Danish</string>
-    <string name="el_lang" translatable="false">Greek</string>
-    <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
-    <string name="zh_lang" translatable="false">Chinese</string>
-    <string name="ga_lang" translatable="false">Irish</string>
-    <string name="it_lang" translatable="false">Italian</string>
-    <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <string name="ko_lang" translatable="false">Korean</string>
-    <string name="lt_lang" translatable="false">Lithuanian</string>
-    <string name="no_lang" translatable="false">Norwegian</string>
-    <string name="pl_lang" translatable="false">Polish</string>
-    <string name="pt_lang" translatable="false">Portuguese</string>
-    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string>
-    <string name="ro_lang" translatable="false">Romanian</string>
-    <string name="ru_lang" translatable="false">Russian</string>
-    <string name="sk_lang" translatable="false">Slovak</string>
-    <string name="es_lang" translatable="false">Spanish</string>
-    <string name="sv_lang" translatable="false">Swedish</string>
-    <string name="tr_lang" translatable="false">Turkish</string>
     <string name="key_protection_settings" translatable="false">protection</string>
     <string name="key_last_cleanup_run" translatable="false">last_cleanup_run</string>
     <string name="nav_preferences_plugin">%1$s Preferences</string>

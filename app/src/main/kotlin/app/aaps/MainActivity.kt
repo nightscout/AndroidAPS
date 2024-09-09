@@ -28,7 +28,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuCompat
 import androidx.core.view.MenuProvider
-import androidx.viewpager2.widget.ViewPager2
 import app.aaps.activities.HistoryBrowseActivity
 import app.aaps.activities.PreferencesActivity
 import app.aaps.core.data.ue.Action
@@ -299,7 +298,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             androidPermission.notifyForBtConnectPermission(this)
         }
         passwordResetCheck(this)
-        if (sp.getString(app.aaps.core.utils.R.string.key_master_password, "") == "")
+        if (sp.getString(app.aaps.core.keys.R.string.key_master_password, "") == "")
             rxBus.send(EventNewNotification(Notification(Notification.MASTER_PASSWORD_NOT_SET, rh.gs(R.string.master_password_not_set), Notification.NORMAL)))
     }
 
@@ -485,7 +484,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         val passwordReset = File(fileListProvider.ensureExtraDirExists(), "PasswordReset")
         if (passwordReset.exists()) {
             val sn = activePlugin.activePump.serialNumber()
-            sp.putString(app.aaps.core.utils.R.string.key_master_password, cryptoUtil.hashPassword(sn))
+            sp.putString(app.aaps.core.keys.R.string.key_master_password, cryptoUtil.hashPassword(sn))
             passwordReset.delete()
             ToastUtils.okToast(context, context.getString(app.aaps.core.ui.R.string.password_set))
         }

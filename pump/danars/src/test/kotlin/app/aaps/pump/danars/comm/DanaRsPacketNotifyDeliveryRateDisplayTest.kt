@@ -71,6 +71,7 @@ class DanaRsPacketNotifyDeliveryRateDisplayTest : DanaRSTestBase() {
                 commandQueue,
                 danaPump,
                 pumpSync,
+                preferences,
                 detailedBolusInfoStorage,
                 temporaryBasalStorage,
                 fabricPrivacy,

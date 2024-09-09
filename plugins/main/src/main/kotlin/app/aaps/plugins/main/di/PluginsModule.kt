@@ -17,7 +17,6 @@ import dagger.android.ContributesAndroidInjector
         ProfileModule::class,
         ProfileModule.Bindings::class,
         SkinsModule::class,
-        SkinsUiModule::class,
         ActionsModule::class,
         OverviewModule::class,
     ]

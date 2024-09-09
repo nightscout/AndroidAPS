@@ -14,8 +14,18 @@ enum class StringKey(
 
     GeneralUnits(R.string.key_units, "mg/dl"),
     GeneralLanguage(R.string.key_language, "default", defaultedBySM = true),
+    GeneralPatientName(R.string.key_patient_name, ""),
     GeneralSkin(R.string.key_skin, ""),
     GeneralDarkMode(R.string.key_use_dark_mode, "dark", defaultedBySM = true),
+
+    ProtectionMasterPassword(R.string.key_master_password, ""),
+    ProtectionSettingsPassword(R.string.key_settings_password, ""),
+    ProtectionSettingsPin(R.string.key_settings_pin, ""),
+    ProtectionApplicationPassword(R.string.key_application_password, ""),
+    ProtectionApplicationPin(R.string.key_application_pin, ""),
+    ProtectionBolusPassword(R.string.key_bolus_password, ""),
+    ProtectionBolusPin(R.string.key_bolus_pin, ""),
+
     SafetyAge(R.string.key_safety_age, "adult"),
     LoopApsMode(R.string.key_aps_mode, "open" /* ApsMode.OPEN.name */),
     MaintenanceEmail(R.string.key_maintenance_logs_email, "logs@aaps.app", defaultedBySM = true),

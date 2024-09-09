@@ -43,7 +43,7 @@ class QueueThreadTest : TestBaseWithProfile() {
     fun prepare() {
         commandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker,
-            profileFunction, activePlugin, context, sp, config, dateUtil, fabricPrivacy, androidPermission,
+            profileFunction, activePlugin, context, sp, preferences, config, dateUtil, fabricPrivacy, androidPermission,
             uiInteraction, persistenceLayer, decimalFormatter, instantiator
         )
 
@@ -65,7 +65,7 @@ class QueueThreadTest : TestBaseWithProfile() {
             .thenReturn(percentageConstraint)
         Mockito.`when`(rh.gs(ArgumentMatchers.eq(app.aaps.core.ui.R.string.temp_basal_absolute), anyObject(), anyObject())).thenReturn("TEMP BASAL %1\$.2f U/h %2\$d min")
 
-        sut = QueueThread(commandQueue, context, aapsLogger, rxBus, activePlugin, rh, sp, androidPermission, config)
+        sut = QueueThread(commandQueue, context, aapsLogger, rxBus, activePlugin, rh, sp, preferences, androidPermission, config)
     }
 
     @Test

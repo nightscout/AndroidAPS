@@ -71,6 +71,7 @@ class DanaRSPluginTest : DanaRSTestBase() {
                 commandQueue,
                 danaPump,
                 pumpSync,
+                preferences,
                 detailedBolusInfoStorage,
                 temporaryBasalStorage,
                 fabricPrivacy,

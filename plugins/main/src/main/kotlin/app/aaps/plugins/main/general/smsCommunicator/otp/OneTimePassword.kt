@@ -37,7 +37,7 @@ class OneTimePassword @Inject constructor(
      */
     fun name(): String {
         val defaultUserName = rh.gs(app.aaps.core.ui.R.string.patient_name_default)
-        var userName = sp.getString(app.aaps.core.utils.R.string.key_patient_name, defaultUserName).replace(":", "").trim()
+        var userName = preferences.get(StringKey.GeneralPatientName).replace(":", "").trim()
         if (userName.isEmpty())
             userName = defaultUserName
         return userName

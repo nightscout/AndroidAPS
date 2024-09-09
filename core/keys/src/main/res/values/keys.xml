@@ -4,6 +4,19 @@
     <string name="key_simple_mode" translatable="false">simple_mode</string>
     <string name="key_setupwizard_processed" translatable="false">startupwizard_processed</string>
     <string name="key_units" translatable="false">units</string>
+    <string name="key_patient_name" translatable="false">patient_name</string>
+
+    <!--    Protection-->
+    <string name="key_master_password" translatable="false">master_password</string>
+    <string name="key_settings_password" translatable="false">settings_password</string>
+    <string name="key_settings_pin" translatable="false">settings_pin</string>
+    <string name="key_application_password" translatable="false">application_password</string>
+    <string name="key_application_pin" translatable="false">application_pin</string>
+    <string name="key_bolus_password" translatable="false">bolus_password</string>
+    <string name="key_bolus_pin" translatable="false">bolus_pin</string>
+    <string name="key_settings_protection" translatable="false">settings_protection</string>
+    <string name="key_application_protection" translatable="false">application_protection</string>
+    <string name="key_bolus_protection" translatable="false">bolus_protection</string>
 
     <!--    Overview-->
     <string name="key_keep_screen_on" translatable="false">keep_screen_on</string>
@@ -54,6 +67,9 @@
     <string name="key_use_dark_mode" translatable="false">use_dark_mode</string>
     <string name="key_skin" translatable="false">skin</string>
     <string name="key_protection_timeout" translatable="false">protection_timeout</string>
+
+    <!--    Pump-->
+    <string name="key_btwatchdog" translatable="false">bt_watchdog</string>
 
     <!--    Actions-->
     <string name="key_fill_button_1" translatable="false">fill_button1</string>

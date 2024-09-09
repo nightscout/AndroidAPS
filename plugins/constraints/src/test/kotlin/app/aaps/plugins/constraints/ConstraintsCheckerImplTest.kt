@@ -31,6 +31,7 @@ import app.aaps.plugins.constraints.safety.SafetyPlugin
 import app.aaps.plugins.source.GlimpPlugin
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.database.DanaHistoryDatabase
+import app.aaps.pump.dana.keys.DanaStringKey
 import app.aaps.pump.danar.DanaRPlugin
 import app.aaps.pump.danars.DanaRSPlugin
 import app.aaps.pump.insight.InsightPlugin
@@ -121,7 +122,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         `when`(sp.getString(app.aaps.pump.dana.R.string.key_danars_name, "")).thenReturn("")
         `when`(sp.getString(app.aaps.pump.dana.R.string.key_danars_address, "")).thenReturn("")
         // R
-        `when`(sp.getString(app.aaps.pump.dana.R.string.key_danar_bt_name, "")).thenReturn("")
+        `when`(preferences.get(DanaStringKey.DanaBtName)).thenReturn("")
 
         //SafetyPlugin
         constraintChecker = ConstraintsCheckerImpl(activePlugin, aapsLogger)
@@ -133,12 +134,12 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, rh, activePlugin, sp, config)
         danaRPlugin = DanaRPlugin(
             aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, activePlugin, sp, commandQueue, danaPump, dateUtil, fabricPrivacy, pumpSync,
-            uiInteraction, danaHistoryDatabase, decimalFormatter, instantiator
+            preferences, uiInteraction, danaHistoryDatabase, decimalFormatter, instantiator
         )
         danaRSPlugin =
             DanaRSPlugin(
                 aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, profileFunction,
-                sp, commandQueue, danaPump, pumpSync, detailedBolusInfoStorage, temporaryBasalStorage,
+                sp, commandQueue, danaPump, pumpSync, preferences, detailedBolusInfoStorage, temporaryBasalStorage,
                 fabricPrivacy, dateUtil, uiInteraction, danaHistoryDatabase, decimalFormatter, instantiator
             )
         insightPlugin = InsightPlugin(
