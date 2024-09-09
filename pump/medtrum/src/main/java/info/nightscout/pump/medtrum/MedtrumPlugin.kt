@@ -45,11 +45,13 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventDismissNotification
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
@@ -72,7 +74,7 @@ import kotlin.math.abs
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     commandQueue: CommandQueue,
-    private val sp: SP,
+    private val preferences: Preferences,
     private val constraintChecker: ConstraintsChecker,
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
@@ -111,7 +113,7 @@ import kotlin.math.abs
             .subscribe({ context.unbindService(mConnection) }, fabricPrivacy::logException)
 
         // Force enable pump unreachable alert due to some failure modes of Medtrum pump
-        sp.putBoolean(app.aaps.core.utils.R.string.key_enable_pump_unreachable_alert, true)
+        preferences.put(BooleanKey.AlertPumpUnreachable, true)
     }
 
     override fun onStop() {
@@ -254,8 +256,8 @@ import kotlin.math.abs
     }
 
     private fun preprocessConnectionAlertSettings(preferenceFragment: PreferenceFragmentCompat) {
-        val unreachableAlertSetting = preferenceFragment.findPreference<SwitchPreference>(rh.gs(app.aaps.core.utils.R.string.key_enable_pump_unreachable_alert))
-        val unreachableThresholdSetting = preferenceFragment.findPreference<AdaptiveIntPreference>(rh.gs(app.aaps.core.keys.R.string.key_pump_unreachable_threshold_minutes))
+        val unreachableAlertSetting = preferenceFragment.findPreference<SwitchPreference>(rh.gs(BooleanKey.AlertPumpUnreachable.key))
+        val unreachableThresholdSetting = preferenceFragment.findPreference<AdaptiveIntPreference>(rh.gs(IntKey.AlertsPumpUnreachableThreshold.key))
 
         unreachableAlertSetting?.apply {
             isSelectable = false

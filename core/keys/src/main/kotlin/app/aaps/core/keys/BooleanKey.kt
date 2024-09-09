@@ -29,7 +29,15 @@ enum class BooleanKey(
     OverviewUseBolusAdvisor(R.string.key_use_bolus_advisor, true, defaultedBySM = true),
     OverviewUseBolusReminder(R.string.key_use_bolus_reminder, true, defaultedBySM = true),
     OverviewUseSuperBolus(R.string.key_use_superbolus, false, defaultedBySM = true, hideParentScreenIfHidden = true),
+
     PumpBtWatchdog(R.string.key_btwatchdog, false, showInNsClientMode = false, hideParentScreenIfHidden = true),
+
+    AlertMissedBgReading(R.string.key_enable_missed_bg_readings_alert, false),
+    AlertPumpUnreachable(R.string.key_enable_pump_unreachable_alert, true),
+    AlertCarbsRequired(R.string.key_enable_carbs_required_alert_local, true),
+    AlertUrgentAsAndroidNotification(R.string.key_raise_notifications_as_android_notifications, true),
+    AlertIncreaseVolume(R.string.key_gradually_increase_notification_volume, true),
+
     BgSourceUploadToNs(R.string.key_do_bg_ns_upload, true, defaultedBySM = true, hideParentScreenIfHidden = true),
     BgSourceCreateSensorChange(R.string.key_dexcom_log_ns_sensor_change, true, defaultedBySM = true),
     ApsUseDynamicSensitivity(R.string.key_use_dynamic_sensitivity, false),

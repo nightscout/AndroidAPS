@@ -53,8 +53,8 @@ enum class IntKey(
     ApsDynIsfAdjustmentFactor(R.string.key_dynamic_isf_adjustment_factor, 100, 1, 300, dependency = BooleanKey.ApsUseDynamicSensitivity),
     AutosensPeriod(R.string.key_openapsama_autosens_period, 24, 4, 24, calculatedDefaultValue = true),
     MaintenanceLogsAmount(R.string.key_maintenance_logs_amount, 2, 1, 10, defaultedBySM = true),
-    AlertsStaleDataThreshold(R.string.key_missed_bg_readings_threshold_minutes, 30, 15, 10000, defaultedBySM = true),
-    AlertsPumpUnreachableThreshold(R.string.key_pump_unreachable_threshold_minutes, 30, 30, 300, defaultedBySM = true),
+    AlertsStaleDataThreshold(R.string.key_missed_bg_readings_threshold_minutes, 30, 15, 10000, defaultedBySM = true, dependency = BooleanKey.AlertMissedBgReading),
+    AlertsPumpUnreachableThreshold(R.string.key_pump_unreachable_threshold_minutes, 30, 30, 300, defaultedBySM = true, dependency = BooleanKey.AlertPumpUnreachable),
     InsulinOrefPeak(R.string.key_insulin_oref_peak, 75, 35, 120, hideParentScreenIfHidden = true),
 
     AutotuneDefaultTuneDays(R.string.key_autotune_default_tune_days, 5, 1, 30),

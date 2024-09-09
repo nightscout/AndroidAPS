@@ -7,7 +7,6 @@
     <string name="key_quickwizard" translatable="false">QuickWizard</string>
     <string name="key_units_mgdl" translatable="false">units_mgdl</string>
     <string name="key_bgsource_upload_settings" translatable="false">bgsource_upload_settings</string>
-    <string name="key_localalert_settings" translatable="false">localalert_settings</string>
     <string name="key_virtualpump_settings" translatable="false">virtualpump_settings</string>
     <string name="key_tidepool_settings" translatable="false">tidepool_settings</string>
     <string name="key_absorption_settings" translatable="false">absorption_settings</string>
@@ -20,10 +19,8 @@
     <string name="key_active_pump_type" translatable="false">active_pump_type</string>
     <string name="key_active_pump_serial_number" translatable="false">active_pump_serial_number</string>
     <string name="key_app_expiration" translatable="false">app_expiration</string>
-    <string name="key_enable_pump_unreachable_alert" translatable="false">enable_pump_unreachable_alert</string>
     <string name="key_next_pump_disconnected_alarm" translatable="false">nextPumpDisconnectedAlarm</string>
     <string name="key_next_missed_reading_alarm" translatable="false">nextMissedReadingsAlarm</string>
-    <string name="key_enable_missed_bg_readings_alert" translatable="false">enable_missed_bg_readings</string>
     <string name="key_enable_carbs_required_alert_local" translatable="false">enable_carbs_required_alert_local</string>
     <string name="key_rangetodisplay" translatable="false">rangetodisplay</string>
     <string name="key_local_profile_last_change" translatable="false">local_profile_last_change</string>

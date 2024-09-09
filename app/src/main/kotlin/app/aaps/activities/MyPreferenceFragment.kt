@@ -155,7 +155,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreferencesIfEnabled(smsCommunicatorPlugin, rootKey)
             addPreferencesIfEnabled(automationPlugin, rootKey)
             addPreferencesIfEnabled(autotunePlugin, rootKey)
-            addPreferencesFromResource(R.xml.pref_alerts, rootKey)
+            addAlertScreen()
             addPreferencesIfEnabled(maintenancePlugin, rootKey)
         }
         initSummary(preferenceScreen, pluginName != null)
@@ -373,42 +373,6 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
 
     override fun onPreferenceTreeClick(preference: Preference): Boolean =
         when (preference.key) {
-            // rh.gs(app.aaps.core.keys.R.string.key_master_password)      -> {
-            //     passwordCheck.queryPassword(requireContext(), app.aaps.plugins.configuration.R.string.current_master_password, app.aaps.core.keys.R.string.key_master_password, {
-            //         passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.master_password, app.aaps.core.keys.R.string.key_master_password)
-            //     })
-            //     true
-            // }
-
-            // rh.gs(app.aaps.core.keys.R.string.key_settings_password) -> {
-            //     passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.settings_password, app.aaps.core.keys.R.string.key_settings_password)
-            //     true
-            // }
-
-            // rh.gs(app.aaps.core.keys.R.string.key_bolus_password) -> {
-            //     passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.bolus_password, app.aaps.core.keys.R.string.key_bolus_password)
-            //     true
-            // }
-
-            // rh.gs(app.aaps.core.keys.R.string.key_application_password) -> {
-            //     passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.application_password, app.aaps.core.keys.R.string.key_application_password)
-            //     true
-            // }
-
-            // rh.gs(app.aaps.core.keys.R.string.key_settings_pin) -> {
-            //     passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.settings_pin, app.aaps.core.keys.R.string.key_settings_pin, pinInput = true)
-            //     true
-            // }
-
-            // rh.gs(app.aaps.core.keys.R.string.key_bolus_pin) -> {
-            //     passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.bolus_pin, app.aaps.core.keys.R.string.key_bolus_pin, pinInput = true)
-            //     true
-            // }
-
-            // rh.gs(app.aaps.core.keys.R.string.key_application_pin) -> {
-            //     passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.application_pin, app.aaps.core.keys.R.string.key_application_pin, pinInput = true)
-            //     true
-            // }
             // NSClient copy settings
             rh.gs(app.aaps.core.keys.R.string.key_statuslights_copy_ns) -> {
                 nsSettingStatus.copyStatusLightsNsSettings(context)
@@ -600,6 +564,27 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             title = rh.gs(app.aaps.core.ui.R.string.pump)
             initialExpandedChildrenCount = 0
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.PumpBtWatchdog, title = app.aaps.core.ui.R.string.btwatchdog_title, summary = app.aaps.core.ui.R.string.btwatchdog_summary))
+        }
+    }
+
+    private fun addAlertScreen() {
+
+        val rootScreen = preferenceScreen ?: preferenceManager.createPreferenceScreen(requireContext()).also { preferenceScreen = it }
+        val context = requireContext()
+
+        val category = PreferenceCategory(context)
+        rootScreen.addPreference(category)
+        category.apply {
+            key = "local_alerts_settings"
+            title = rh.gs(R.string.localalertsettings_title)
+            initialExpandedChildrenCount = 0
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.AlertMissedBgReading, title = R.string.enable_missed_bg_readings_alert))
+            addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.AlertsStaleDataThreshold, title = app.aaps.plugins.sync.R.string.ns_alarm_stale_data_value_label))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.AlertPumpUnreachable, title = R.string.enable_pump_unreachable_alert))
+            addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.AlertsPumpUnreachableThreshold, title = R.string.pump_unreachable_threshold))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.AlertCarbsRequired, title = R.string.enable_carbs_req_alert))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.AlertUrgentAsAndroidNotification, title = app.aaps.core.ui.R.string.raise_notifications_as_android_notifications))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.AlertIncreaseVolume, title = R.string.gradually_increase_notification_volume))
         }
     }
 }

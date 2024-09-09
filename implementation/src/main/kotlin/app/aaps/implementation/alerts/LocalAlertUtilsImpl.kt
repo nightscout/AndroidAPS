@@ -63,7 +63,7 @@ class LocalAlertUtilsImpl @Inject constructor(
         val alarmTimeoutExpired = isAlarmTimeoutExpired(lastConnection, pumpUnreachableThreshold())
         val nextAlarmOccurrenceReached = sp.getLong(app.aaps.core.utils.R.string.key_next_pump_disconnected_alarm, 0L) < dateUtil.now()
         if (config.APS && isStatusOutdated && alarmTimeoutExpired && nextAlarmOccurrenceReached && !isDisconnected) {
-            if (sp.getBoolean(app.aaps.core.utils.R.string.key_enable_pump_unreachable_alert, true)) {
+            if (preferences.get(BooleanKey.AlertPumpUnreachable)) {
                 aapsLogger.debug(LTag.CORE, "Generating pump unreachable alarm. lastConnection: " + dateUtil.dateAndTimeString(lastConnection) + " isStatusOutdated: true")
                 sp.putLong(app.aaps.core.utils.R.string.key_next_pump_disconnected_alarm, dateUtil.now() + pumpUnreachableThreshold())
                 rxBus.send(EventNewNotification(Notification(Notification.PUMP_UNREACHABLE, rh.gs(R.string.pump_unreachable), Notification.URGENT).also {
@@ -129,7 +129,7 @@ class LocalAlertUtilsImpl @Inject constructor(
 
     override fun checkStaleBGAlert() {
         val bgReading = persistenceLayer.getLastGlucoseValue() ?: return
-        if (sp.getBoolean(app.aaps.core.utils.R.string.key_enable_missed_bg_readings_alert, false)
+        if (preferences.get(BooleanKey.AlertMissedBgReading)
             && bgReading.timestamp + missedReadingsThreshold() < dateUtil.now()
             && sp.getLong(app.aaps.core.utils.R.string.key_next_missed_reading_alarm, 0L) < dateUtil.now()
         ) {

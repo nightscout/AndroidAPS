@@ -71,6 +71,13 @@
     <!--    Pump-->
     <string name="key_btwatchdog" translatable="false">bt_watchdog</string>
 
+    <!--    Alert-->
+    <string name="key_enable_missed_bg_readings_alert" translatable="false">enable_missed_bg_readings</string>
+    <string name="key_enable_pump_unreachable_alert" translatable="false">enable_pump_unreachable_alert</string>
+    <string name="key_enable_carbs_required_alert_local" translatable="false">enable_carbs_required_alert_local</string>
+    <string name="key_raise_notifications_as_android_notifications" translatable="false">raise_urgent_alarms_as_android_notification</string>
+    <string name="key_gradually_increase_notification_volume" translatable="false">gradually_increase_notification_volume</string>
+
     <!--    Actions-->
     <string name="key_fill_button_1" translatable="false">fill_button1</string>
     <string name="key_fill_button_2" translatable="false">fill_button2</string>
