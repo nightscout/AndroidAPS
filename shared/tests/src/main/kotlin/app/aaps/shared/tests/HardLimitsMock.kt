@@ -51,12 +51,12 @@ import kotlin.math.min
     }
 
     private fun loadAge(): Int = when (preferences.get(StringKey.SafetyAge)) {
-        rh.gs(app.aaps.core.keys.R.string.key_child)          -> CHILD
-        rh.gs(app.aaps.core.keys.R.string.key_teenage)        -> TEENAGE
-        rh.gs(app.aaps.core.keys.R.string.key_adult)          -> ADULT
-        rh.gs(app.aaps.core.keys.R.string.key_resistantadult) -> RESISTANT_ADULT
-        rh.gs(app.aaps.core.keys.R.string.key_pregnant)       -> PREGNANT
-        else                                                  -> ADULT
+        ageEntryValues()[HardLimits.AgeType.CHILD.ordinal]           -> HardLimits.AgeType.CHILD.ordinal
+        ageEntryValues()[HardLimits.AgeType.TEENAGE.ordinal]         -> HardLimits.AgeType.TEENAGE.ordinal
+        ageEntryValues()[HardLimits.AgeType.ADULT.ordinal]           -> HardLimits.AgeType.ADULT.ordinal
+        ageEntryValues()[HardLimits.AgeType.RESISTANT_ADULT.ordinal] -> HardLimits.AgeType.RESISTANT_ADULT.ordinal
+        ageEntryValues()[HardLimits.AgeType.PREGNANT.ordinal]        -> HardLimits.AgeType.PREGNANT.ordinal
+        else                                                         -> HardLimits.AgeType.ADULT.ordinal
     }
 
     override fun maxBolus(): Double = MAX_BOLUS[loadAge()]
@@ -83,4 +83,21 @@ import kotlin.math.min
         }
         return newValue
     }
+
+    override fun ageEntries() = arrayOf<CharSequence>(
+        rh.gs(app.aaps.core.ui.R.string.child),
+        rh.gs(app.aaps.core.ui.R.string.teenage),
+        rh.gs(app.aaps.core.ui.R.string.adult),
+        rh.gs(app.aaps.core.ui.R.string.resistant_adult),
+        rh.gs(app.aaps.core.ui.R.string.pregnant),
+    )
+
+    @Suppress("SpellCheckingInspection")
+    override fun ageEntryValues() = arrayOf<CharSequence>(
+        "child",
+        "teenage",
+        "adult",
+        "resistantadult",
+        "pregnant"
+    )
 }

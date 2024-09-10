@@ -26,16 +26,15 @@ import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.interfaces.sync.Tidepool
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.AdaptiveIntentPreference
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntentKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.utils.HtmlHelper
-import app.aaps.core.validators.AdaptiveStringPreference
-import app.aaps.core.validators.AdaptiveSwitchPreference
 import app.aaps.core.validators.DefaultEditTextValidator
 import app.aaps.core.validators.EditTextValidator
-import app.aaps.core.validators.extensions.stringKey
+import app.aaps.core.validators.preferences.AdaptiveIntentPreference
+import app.aaps.core.validators.preferences.AdaptiveStringPreference
+import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsShared.events.EventConnectivityOptionChanged
 import app.aaps.plugins.sync.nsclient.ReceiverDelegate
@@ -131,9 +130,9 @@ class TidepoolPlugin @Inject constructor(
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event ->
-                           if (event.isChanged(BooleanKey.TidepoolUseTestServers.stringKey(rh))
-                               || event.isChanged(StringKey.TidepoolUsername.stringKey(rh))
-                               || event.isChanged(StringKey.TidepoolPassword.stringKey(rh))
+                           if (event.isChanged(BooleanKey.TidepoolUseTestServers.key)
+                               || event.isChanged(StringKey.TidepoolUsername.key)
+                               || event.isChanged(StringKey.TidepoolPassword.key)
                            )
                                tidepoolUploader.resetInstance()
                        }, fabricPrivacy::logException)
@@ -147,7 +146,7 @@ class TidepoolPlugin @Inject constructor(
     override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
         super.preprocessPreferences(preferenceFragment)
 
-        val tidepoolTestLogin: Preference? = preferenceFragment.findPreference(IntentKey.TidepoolTestLogin.stringKey(rh))
+        val tidepoolTestLogin: Preference? = preferenceFragment.findPreference(IntentKey.TidepoolTestLogin.key)
         tidepoolTestLogin?.setOnPreferenceClickListener {
             preferenceFragment.context?.let {
                 tidepoolUploader.testLogin(it)

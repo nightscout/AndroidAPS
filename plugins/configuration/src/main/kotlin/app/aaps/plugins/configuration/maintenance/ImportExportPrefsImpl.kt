@@ -158,7 +158,7 @@ class ImportExportPrefsImpl @Inject constructor(
     }
 
     private fun askForMasterPass(activity: FragmentActivity, @StringRes canceledMsg: Int, then: ((password: String) -> Unit)) {
-        passwordCheck.queryPassword(activity, app.aaps.core.ui.R.string.master_password, app.aaps.core.keys.R.string.key_master_password, { password ->
+        passwordCheck.queryPassword(activity, app.aaps.core.ui.R.string.master_password, StringKey.ProtectionMasterPassword.key, { password ->
             then(password)
         }, {
                                         ToastUtils.warnToast(activity, rh.gs(canceledMsg))
@@ -170,7 +170,7 @@ class ImportExportPrefsImpl @Inject constructor(
         activity: FragmentActivity, @StringRes canceledMsg: Int, @StringRes passwordName: Int, @StringRes passwordExplanation: Int?,
         @StringRes passwordWarning: Int?, then: ((password: String) -> Unit)
     ) {
-        passwordCheck.queryAnyPassword(activity, passwordName, app.aaps.core.keys.R.string.key_master_password, passwordExplanation, passwordWarning, { password ->
+        passwordCheck.queryAnyPassword(activity, passwordName, StringKey.ProtectionMasterPassword.key, passwordExplanation, passwordWarning, { password ->
             then(password)
         }, {
                                            ToastUtils.warnToast(activity, rh.gs(canceledMsg))
@@ -183,7 +183,7 @@ class ImportExportPrefsImpl @Inject constructor(
     }
 
     private fun assureMasterPasswordSet(activity: FragmentActivity, @StringRes wrongPwdTitle: Int): Boolean {
-        if (!sp.contains(app.aaps.core.keys.R.string.key_master_password) || (sp.getString(app.aaps.core.keys.R.string.key_master_password, "") == "")) {
+        if (preferences.getIfExists(StringKey.ProtectionMasterPassword).isNullOrEmpty()) {
             WarningDialog.showWarning(
                 activity, rh.gs(wrongPwdTitle), rh.gs(R.string.master_password_missing, rh.gs(R.string.protection)), R.string.nav_preferences,
                 { activity.startActivity(Intent(activity, uiInteraction.preferencesActivity).putExtra(UiInteraction.PREFERENCE, UiInteraction.Preferences.PROTECTION)) }

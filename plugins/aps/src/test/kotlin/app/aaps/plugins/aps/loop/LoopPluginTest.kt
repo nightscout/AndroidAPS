@@ -14,10 +14,10 @@ import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.keys.AdaptiveListPreference
 import app.aaps.core.keys.StringKey
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
-import app.aaps.core.validators.AdaptiveIntPreference
+import app.aaps.core.validators.preferences.AdaptiveIntPreference
+import app.aaps.core.validators.preferences.AdaptiveListPreference
 import app.aaps.pump.virtual.VirtualPumpPlugin
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
@@ -54,6 +54,7 @@ class LoopPluginTest : TestBaseWithProfile() {
             }
         }
     }
+
     @BeforeEach fun prepare() {
         preferenceManager = PreferenceManager(context)
         loopPlugin = LoopPlugin(

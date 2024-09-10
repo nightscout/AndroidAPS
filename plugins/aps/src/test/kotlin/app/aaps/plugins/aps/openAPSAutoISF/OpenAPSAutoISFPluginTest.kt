@@ -2,21 +2,21 @@ package app.aaps.plugins.aps.openAPSAutoISF
 
 import android.content.SharedPreferences
 import app.aaps.core.data.aps.SMBDefaults
+import app.aaps.core.interfaces.aps.OapsProfileAutoIsf
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.profiling.Profiler
-import app.aaps.core.interfaces.aps.OapsProfileAutoIsf
-import app.aaps.core.keys.AdaptiveIntentPreference
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.UnitDoubleKey
-import app.aaps.core.validators.AdaptiveDoublePreference
-import app.aaps.core.validators.AdaptiveIntPreference
-import app.aaps.core.validators.AdaptiveSwitchPreference
-import app.aaps.core.validators.AdaptiveUnitPreference
+import app.aaps.core.validators.preferences.AdaptiveDoublePreference
+import app.aaps.core.validators.preferences.AdaptiveIntPreference
+import app.aaps.core.validators.preferences.AdaptiveIntentPreference
+import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
+import app.aaps.core.validators.preferences.AdaptiveUnitPreference
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -205,25 +205,25 @@ class OpenAPSAutoISFPluginTest : TestBaseWithProfile() {
             iob_threshold_percent = 100,
             profile_percentage = 100
         )
-        assertThat(openAPSAutoISFPlugin.loop_smb(false,  profile, 11.0, false, 11.1)).isEqualTo("AAPS")
+        assertThat(openAPSAutoISFPlugin.loop_smb(false, profile, 11.0, false, 11.1)).isEqualTo("AAPS")
         `when`(preferences.get(BooleanKey.ApsAutoIsfSmbOnEvenTarget)).thenReturn(true)
-        assertThat(openAPSAutoISFPlugin.loop_smb(true,  profile, 11.0, false, 11.1)).isEqualTo("fullLoop")
-        assertThat(openAPSAutoISFPlugin.loop_smb(true,  profile, 11.0, true, 10.1)).isEqualTo("iobTH")
+        assertThat(openAPSAutoISFPlugin.loop_smb(true, profile, 11.0, false, 11.1)).isEqualTo("fullLoop")
+        assertThat(openAPSAutoISFPlugin.loop_smb(true, profile, 11.0, true, 10.1)).isEqualTo("iobTH")
         profile.target_bg = 122.0
-        assertThat(openAPSAutoISFPlugin.loop_smb(true,  profile, 11.0, false, 11.1)).isEqualTo("enforced")
+        assertThat(openAPSAutoISFPlugin.loop_smb(true, profile, 11.0, false, 11.1)).isEqualTo("enforced")
         profile.target_bg = 91.8    //5.1
         profile.out_units = "mmol/L"
-        assertThat(openAPSAutoISFPlugin.loop_smb(true,  profile, 11.0, false, 11.1)).isEqualTo("blocked")
+        assertThat(openAPSAutoISFPlugin.loop_smb(true, profile, 11.0, false, 11.1)).isEqualTo("blocked")
         profile.target_bg = 149.4   //8.3
-        assertThat(openAPSAutoISFPlugin.loop_smb(true,  profile, 11.0, false, 11.1)).isEqualTo("blocked")
+        assertThat(openAPSAutoISFPlugin.loop_smb(true, profile, 11.0, false, 11.1)).isEqualTo("blocked")
         profile.target_bg = 147.6   //8.2
-        assertThat(openAPSAutoISFPlugin.loop_smb(true,  profile, 11.0, false, 11.1)).isEqualTo("enforced")
+        assertThat(openAPSAutoISFPlugin.loop_smb(true, profile, 11.0, false, 11.1)).isEqualTo("enforced")
         profile.target_bg = 145.8   //8.1
-        assertThat(openAPSAutoISFPlugin.loop_smb(true,  profile, 11.0, false, 11.1)).isEqualTo("blocked")
+        assertThat(openAPSAutoISFPlugin.loop_smb(true, profile, 11.0, false, 11.1)).isEqualTo("blocked")
         profile.target_bg = 144.0   //8.0
-        assertThat(openAPSAutoISFPlugin.loop_smb(true,  profile, 11.0, false, 11.1)).isEqualTo("enforced")
+        assertThat(openAPSAutoISFPlugin.loop_smb(true, profile, 11.0, false, 11.1)).isEqualTo("enforced")
         `when`(preferences.get(BooleanKey.ApsAutoIsfSmbOnEvenTarget)).thenReturn(false)
-        assertThat(openAPSAutoISFPlugin.loop_smb(true,  profile, 11.0, false, 11.1)).isEqualTo("AAPS")
+        assertThat(openAPSAutoISFPlugin.loop_smb(true, profile, 11.0, false, 11.1)).isEqualTo("AAPS")
     }
 
     @Test
@@ -310,7 +310,7 @@ class OpenAPSAutoISFPluginTest : TestBaseWithProfile() {
         assertThat(openAPSAutoISFPlugin.autoISF(now, profile)).isEqualTo(47.11 * 2.0 * 2.0)                 // acce_ISF + exercise mode
         `when`(preferences.get(BooleanKey.ApsAutoIsfHighTtRaisesSens)).thenReturn(false)
         assertThat(openAPSAutoISFPlugin.autoISF(now, profile)).isEqualTo(47.11 * 2.0)                       // acce_ISF w/o exercise mode
-       `when`(preferences.get(DoubleKey.ApsAutoIsfLowBgWeight)).thenReturn(2.0)
+        `when`(preferences.get(DoubleKey.ApsAutoIsfLowBgWeight)).thenReturn(2.0)
         assertThat(openAPSAutoISFPlugin.autoISF(now, profile)).isEqualTo(47.11 * 1.0)                       // bg_ISF strengthened by acce_ISF
 
     }

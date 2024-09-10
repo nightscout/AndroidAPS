@@ -1,13 +1,13 @@
 package app.aaps.plugins.aps.openAPSSMBAutoISF
 
-import androidx.annotation.VisibleForTesting
 //import app.aaps.plugins.aps.openAPSAutoISF.
+import androidx.annotation.VisibleForTesting
 import app.aaps.core.data.aps.SMBDefaults
-import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.DetermineBasalAdapter
 import app.aaps.core.interfaces.aps.GlucoseStatus
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.aps.MealData
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
@@ -16,7 +16,6 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
@@ -28,7 +27,7 @@ import app.aaps.core.objects.extensions.convertToJSONArray
 import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.getPassedDurationToTimeInMinutes
 import app.aaps.core.objects.extensions.plannedRemainingMinutes
-import app.aaps.plugins.aps.R
+import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.plugins.aps.logger.LoggerCallback
 import app.aaps.plugins.aps.openAPSSMB.DetermineBasalResultSMBFromJS
 import app.aaps.plugins.aps.utils.ScriptReader
@@ -222,10 +221,8 @@ class DetermineBasalAdapterAutoISFJS(private val scriptReader: ScriptReader, pri
         this.profile.put("max_daily_safety_multiplier", preferences.get(DoubleKey.ApsMaxDailyMultiplier))
         this.profile.put("current_basal_safety_multiplier", preferences.get(DoubleKey.ApsMaxCurrentBasalMultiplier))
 
-        //mProfile.put("high_temptarget_raises_sensitivity", SP.getBoolean(R.string.key_high_temptarget_raises_sensitivity, SMBDefaults.high_temptarget_raises_sensitivity));
-        this.profile.put("high_temptarget_raises_sensitivity",  preferences.get(BooleanKey.ApsAutoIsfHighTtRaisesSens))
-        //mProfile.put("low_temptarget_lowers_sensitivity", SP.getBoolean(R.string.key_low_temptarget_lowers_sensitivity, SMBDefaults.low_temptarget_lowers_sensitivity));
-        this.profile.put("low_temptarget_lowers_sensitivity",  preferences.get(BooleanKey.ApsAutoIsfLowTtLowersSens))
+        this.profile.put("high_temptarget_raises_sensitivity", preferences.get(BooleanKey.ApsAutoIsfHighTtRaisesSens))
+        this.profile.put("low_temptarget_lowers_sensitivity", preferences.get(BooleanKey.ApsAutoIsfLowTtLowersSens))
         this.profile.put("sensitivity_raises_target", preferences.get(BooleanKey.ApsSensitivityRaisesTarget))
         this.profile.put("resistance_lowers_target", preferences.get(BooleanKey.ApsResistanceLowersTarget))
         this.profile.put("adv_target_adjustments", SMBDefaults.adv_target_adjustments)
@@ -260,18 +257,18 @@ class DetermineBasalAdapterAutoISFJS(private val scriptReader: ScriptReader, pri
         // mod use autoisf here
         this.profile.put("autoISF_version", "3.0.1")        // was BuildConfig.AUTOISF_VERSION)
         this.profile.put("enable_autoISF", preferences.get(BooleanKey.ApsUseAutoIsfWeights))
-        this.profile.put("autoISF_max",  preferences.get(DoubleKey.ApsAutoIsfMax))
-        this.profile.put("autoISF_min",  preferences.get(DoubleKey.ApsAutoIsfMin))
-        this.profile.put("bgAccel_ISF_weight",  preferences.get(DoubleKey.ApsAutoIsfBgAccelWeight))
-        this.profile.put("bgBrake_ISF_weight",  preferences.get(DoubleKey.ApsAutoIsfBgBrakeWeight))
+        this.profile.put("autoISF_max", preferences.get(DoubleKey.ApsAutoIsfMax))
+        this.profile.put("autoISF_min", preferences.get(DoubleKey.ApsAutoIsfMin))
+        this.profile.put("bgAccel_ISF_weight", preferences.get(DoubleKey.ApsAutoIsfBgAccelWeight))
+        this.profile.put("bgBrake_ISF_weight", preferences.get(DoubleKey.ApsAutoIsfBgBrakeWeight))
         //this.profile.put("enable_pp_ISF_always", preferences.get(BooleanKey.ApsAutoIsfPpAlways))
         //this.profile.put("pp_ISF_hours",  preferences.get(IntKey.ApsAutoIsfPpIsfHours))
-        this.profile.put("pp_ISF_weight",  preferences.get(DoubleKey.ApsAutoIsfPpWeight))
+        this.profile.put("pp_ISF_weight", preferences.get(DoubleKey.ApsAutoIsfPpWeight))
         //this.profile.put("delta_ISFrange_weight",  preferences.get(DoubleKey.ApsAutoIsfDeltaWeight))
-        this.profile.put("lower_ISFrange_weight",  preferences.get(DoubleKey.ApsAutoIsfLowBgWeight))
-        this.profile.put("higher_ISFrange_weight",  preferences.get(DoubleKey.ApsAutoIsfHighBgWeight))
+        this.profile.put("lower_ISFrange_weight", preferences.get(DoubleKey.ApsAutoIsfLowBgWeight))
+        this.profile.put("higher_ISFrange_weight", preferences.get(DoubleKey.ApsAutoIsfHighBgWeight))
         //this.profile.put("enable_dura_ISF_with_COB", preferences.get(BooleanKey.ApsAutoIsfDuraAfterCarbs))
-        this.profile.put("dura_ISF_weight",  preferences.get(DoubleKey.ApsAutoIsfDuraWeight))
+        this.profile.put("dura_ISF_weight", preferences.get(DoubleKey.ApsAutoIsfDuraWeight))
         // include SMB adaptations
         this.profile.put("smb_delivery_ratio", preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatio))
         this.profile.put("smb_delivery_ratio_min", preferences.get(DoubleKey.ApsAutoIsfSmbDeliveryRatioMin))

@@ -694,7 +694,7 @@ class CustomWatchface : BaseWatchFace() {
 
         companion object {
 
-            fun fromKey(key: String) = PrefMap.values().firstOrNull { it.key == key }
+            fun fromKey(key: String) = entries.firstOrNull { it.key == key }
         }
     }
 

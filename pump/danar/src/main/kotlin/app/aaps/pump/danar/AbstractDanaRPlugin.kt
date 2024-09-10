@@ -102,7 +102,7 @@ abstract class AbstractDanaRPlugin protected constructor(
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe { event: EventPreferenceChange ->
-                if (event.isChanged(DanaStringKey.DanaBtName.key, rh)) {
+                if (event.isChanged(DanaStringKey.DanaBtName.key)) {
                     danaPump.reset()
                     pumpSync.connectNewPump(true)
                     commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.device_changed), null)

@@ -18,10 +18,11 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.receivers.Intents
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.source.XDripSource
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import kotlinx.coroutines.Dispatchers
@@ -71,14 +72,14 @@ class XdripSourcePlugin @Inject constructor(
 
         @Inject lateinit var xdripSourcePlugin: XdripSourcePlugin
         @Inject lateinit var persistenceLayer: PersistenceLayer
-        @Inject lateinit var sp: SP
+        @Inject lateinit var preferences: Preferences
         @Inject lateinit var dateUtil: DateUtil
         @Inject lateinit var dataWorkerStorage: DataWorkerStorage
         @Inject lateinit var uel: UserEntryLogger
 
         fun getSensorStartTime(bundle: Bundle): Long? {
             val now = dateUtil.now()
-            var sensorStartTime: Long? = if (sp.getBoolean(app.aaps.core.keys.R.string.key_dexcom_log_ns_sensor_change, false)) {
+            var sensorStartTime: Long? = if (preferences.get(BooleanKey.BgSourceCreateSensorChange)) {
                 bundle.getLong(Intents.EXTRA_SENSOR_STARTED_AT, 0)
             } else {
                 null

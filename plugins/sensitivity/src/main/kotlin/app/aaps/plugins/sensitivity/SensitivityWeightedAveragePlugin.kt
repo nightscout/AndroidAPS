@@ -169,17 +169,17 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
 
     override fun configuration(): JSONObject =
         JSONObject()
-            .put(DoubleKey.AutosensMin, preferences, rh)
-            .put(DoubleKey.AutosensMax, preferences, rh)
-            .put(DoubleKey.AbsorptionMaxTime, preferences, rh)
-            .put(IntKey.AutosensPeriod, preferences, rh)
+            .put(DoubleKey.AutosensMin, preferences)
+            .put(DoubleKey.AutosensMax, preferences)
+            .put(DoubleKey.AbsorptionMaxTime, preferences)
+            .put(IntKey.AutosensPeriod, preferences)
 
     override fun applyConfiguration(configuration: JSONObject) {
         configuration
-            .store(DoubleKey.AutosensMin, preferences, rh)
-            .store(DoubleKey.AutosensMax, preferences, rh)
-            .store(DoubleKey.AbsorptionMaxTime, preferences, rh)
-            .store(IntKey.AutosensPeriod, preferences, rh)
+            .store(DoubleKey.AutosensMin, preferences)
+            .store(DoubleKey.AutosensMax, preferences)
+            .store(DoubleKey.AbsorptionMaxTime, preferences)
+            .store(IntKey.AutosensPeriod, preferences)
 
     }
 

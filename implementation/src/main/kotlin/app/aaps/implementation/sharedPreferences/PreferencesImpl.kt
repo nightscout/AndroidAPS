@@ -5,7 +5,6 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
@@ -31,7 +30,6 @@ import kotlin.math.min
 @Singleton
 class PreferencesImpl @Inject constructor(
     private val sp: SP,
-    private val rh: ResourceHelper,
     private val profileUtil: Lazy<ProfileUtil>,
     private val profileFunction: Lazy<ProfileFunction>,
     private val hardLimits: Lazy<HardLimits>,
@@ -119,18 +117,18 @@ class PreferencesImpl @Inject constructor(
     }
 
     override fun isUnitDependent(key: String): Boolean =
-        UnitDoubleKey.entries.any { rh.gs(it.key) == key }
+        UnitDoubleKey.entries.any { it.key == key }
 
     override fun get(key: String): PreferenceKey =
         prefsList
             .flatMap { it.enumConstants!!.asIterable() }
-            .find { rh.gs(it.key) == key }
+            .find { it.key == key }
             ?: error("Key $key not found")
 
     override fun getDependingOn(key: String): List<PreferenceKey> =
         mutableListOf<PreferenceKey>().also { list ->
             prefsList.forEach { clazz ->
-                list.addAll(clazz.enumConstants!!.filter { it.dependency != null && rh.gs(it.dependency!!.key) == key || it.negativeDependency != null && rh.gs(it.negativeDependency!!.key) == key })
+                list.addAll(clazz.enumConstants!!.filter { it.dependency != null && it.dependency!!.key == key || it.negativeDependency != null && it.negativeDependency!!.key == key })
             }
         }
 
@@ -143,9 +141,9 @@ class PreferencesImpl @Inject constructor(
             when (key) {
                 IntKey.AutosensPeriod ->
                     when (get(StringKey.SafetyAge)) {
-                        rh.gs(app.aaps.core.keys.R.string.key_teenage) -> 4
-                        rh.gs(app.aaps.core.keys.R.string.key_child)   -> 4
-                        else                                           -> 24
+                        hardLimits.get().ageEntryValues()[HardLimits.AgeType.TEENAGE.ordinal] -> 4
+                        hardLimits.get().ageEntryValues()[HardLimits.AgeType.CHILD.ordinal]   -> 4
+                        else                                                                  -> 24
                     }
 
                 else                  -> error("Unsupported default value calculation")

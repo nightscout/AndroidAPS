@@ -38,7 +38,7 @@ class SWRadioButton(injector: HasAndroidInjector) : SWItem(injector, Type.RADIOB
         layout.addView(desc)
 
         // Get if there is already value in SP
-        val previousValue = sp.getString(preferenceId, "none")
+        val previousValue = preferences.get(preference)
         radioGroup = RadioGroup(context)
         radioGroup?.clearCheck()
         radioGroup?.orientation = LinearLayout.VERTICAL
@@ -59,8 +59,8 @@ class SWRadioButton(injector: HasAndroidInjector) : SWItem(injector, Type.RADIOB
         super.generateDialog(layout)
     }
 
-    fun preferenceId(preferenceId: Int): SWRadioButton {
-        this.preferenceId = preferenceId
+    fun preference(preference: String): SWRadioButton {
+        this.preference = preference
         return this
     }
 }

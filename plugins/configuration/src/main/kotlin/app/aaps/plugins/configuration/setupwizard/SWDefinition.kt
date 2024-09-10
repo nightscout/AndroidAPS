@@ -121,7 +121,7 @@ class SWDefinition @Inject constructor(
             .add(
                 SWRadioButton(injector)
                     .option(uiInteraction.unitsEntries, uiInteraction.unitsValues)
-                    .preferenceId(StringKey.GeneralUnits.key).label(R.string.units)
+                    .preference(StringKey.GeneralUnits.key).label(R.string.units)
                     .comment(R.string.setupwizard_units_prompt)
             )
             .validator { preferences.getIfExists(StringKey.GeneralUnits) != null }
@@ -131,7 +131,7 @@ class SWDefinition @Inject constructor(
             .skippable(false)
             .add(
                 SWEditNumberWithUnits(injector, UnitDoubleKey.OverviewLowMark.defaultValue * Constants.MGDL_TO_MMOLL, 3.0, 8.0)
-                    .preferenceId(UnitDoubleKey.OverviewLowMark)
+                    .preference(UnitDoubleKey.OverviewLowMark)
                     .updateDelay(5)
                     .label(R.string.low_mark)
                     .comment(R.string.low_mark_comment)
@@ -139,7 +139,7 @@ class SWDefinition @Inject constructor(
             .add(SWBreak(injector))
             .add(
                 SWEditNumberWithUnits(injector, UnitDoubleKey.OverviewHighMark.defaultValue * Constants.MGDL_TO_MMOLL, 5.0, 20.0)
-                    .preferenceId(UnitDoubleKey.OverviewHighMark)
+                    .preference(UnitDoubleKey.OverviewHighMark)
                     .updateDelay(5)
                     .label(R.string.high_mark)
                     .comment(R.string.high_mark_comment)
@@ -214,16 +214,16 @@ class SWDefinition @Inject constructor(
         get() = SWScreen(injector, R.string.patient_name)
             .skippable(true)
             .add(SWInfoText(injector).label(R.string.patient_name_summary))
-            .add(SWEditString(injector).validator(String::isNotEmpty).preferenceId(StringKey.GeneralPatientName.key))
+            .add(SWEditString(injector).validator(String::isNotEmpty).preference(StringKey.GeneralPatientName))
 
     private val screenMasterPassword
         get() = SWScreen(injector, app.aaps.core.ui.R.string.master_password)
             .skippable(false)
             .add(SWInfoText(injector).label(app.aaps.core.ui.R.string.master_password))
-            .add(SWEditEncryptedPassword(injector, cryptoUtil).preferenceId(app.aaps.core.keys.R.string.key_master_password))
+            .add(SWEditEncryptedPassword(injector, cryptoUtil).preference(StringKey.ProtectionMasterPassword))
             .add(SWBreak(injector))
             .add(SWInfoText(injector).label(R.string.master_password_summary))
-            .validator { !cryptoUtil.checkPassword("", sp.getString(app.aaps.core.keys.R.string.key_master_password, "")) }
+            .validator { !cryptoUtil.checkPassword("", preferences.get(StringKey.ProtectionMasterPassword)) }
 
     private val screenAge
         get() = SWScreen(injector, app.aaps.core.ui.R.string.patient_type)
@@ -231,22 +231,22 @@ class SWDefinition @Inject constructor(
             .add(SWBreak(injector))
             .add(
                 SWRadioButton(injector)
-                    .option(activePlugin.activeSafety.ageEntries(), activePlugin.activeSafety.ageEntryValues())
-                    .preferenceId(StringKey.SafetyAge.key)
+                    .option(hardLimits.ageEntries(), hardLimits.ageEntryValues())
+                    .preference(StringKey.SafetyAge.key)
                     .label(app.aaps.core.ui.R.string.patient_type)
                     .comment(app.aaps.core.ui.R.string.patient_age_summary)
             )
             .add(SWBreak(injector))
             .add(
                 SWEditNumber(injector, 3.0, 0.1, 25.0)
-                    .preferenceId(DoubleKey.SafetyMaxBolus.key)
+                    .preference(DoubleKey.SafetyMaxBolus)
                     .updateDelay(5)
                     .label(app.aaps.core.ui.R.string.max_bolus_title)
                     .comment(R.string.common_values)
             )
             .add(
                 SWEditIntNumber(injector, 48, 1, 100)
-                    .preferenceId(IntKey.SafetyMaxCarbs.key)
+                    .preference(IntKey.SafetyMaxCarbs)
                     .updateDelay(5)
                     .label(app.aaps.core.ui.R.string.max_carbs_title)
                     .comment(R.string.common_values)
@@ -355,7 +355,7 @@ class SWDefinition @Inject constructor(
             .add(
                 SWRadioButton(injector)
                     .option(loop.entries(), loop.entryValues())
-                    .preferenceId(StringKey.LoopApsMode.key).label(R.string.apsmode_title)
+                    .preference(StringKey.LoopApsMode.key).label(R.string.apsmode_title)
                     .comment(R.string.setupwizard_preferred_aps_mode)
             )
             .validator { preferences.getIfExists(StringKey.LoopApsMode) != null }

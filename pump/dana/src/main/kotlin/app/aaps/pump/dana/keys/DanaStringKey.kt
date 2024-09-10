@@ -2,10 +2,9 @@ package app.aaps.pump.dana.keys
 
 import app.aaps.core.keys.BooleanPreferenceKey
 import app.aaps.core.keys.StringPreferenceKey
-import app.aaps.pump.dana.R
 
 enum class DanaStringKey(
-    override val key: Int,
+    override val key: String,
     override val defaultValue: String,
     override val defaultedBySM: Boolean = false,
     override val showInApsMode: Boolean = true,
@@ -16,5 +15,5 @@ enum class DanaStringKey(
     override val hideParentScreenIfHidden: Boolean = false
 ) : StringPreferenceKey {
 
-    DanaBtName(R.string.key_danar_bt_name, ""),
+    DanaBtName("danar_bt_name", ""),
 }

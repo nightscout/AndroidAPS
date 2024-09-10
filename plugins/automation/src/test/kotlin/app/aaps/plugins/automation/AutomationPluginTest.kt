@@ -3,7 +3,7 @@ package app.aaps.plugins.automation
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.keys.AdaptiveListPreference
+import app.aaps.core.validators.preferences.AdaptiveListPreference
 import app.aaps.plugins.automation.services.LocationServiceHelper
 import app.aaps.plugins.automation.ui.TimerUtil
 import app.aaps.shared.tests.TestBaseWithProfile

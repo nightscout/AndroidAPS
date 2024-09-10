@@ -1,6 +1,5 @@
 package app.aaps.wear.sharedPreferences
 
-import android.content.Context
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanPreferenceKey
@@ -20,8 +19,7 @@ import javax.inject.Singleton
 
 @Singleton
 class PreferencesImpl @Inject constructor(
-    private val sp: SP,
-    private val context: Context
+    private val sp: SP
 ) : Preferences {
 
     override val simpleMode: Boolean = false
@@ -94,18 +92,18 @@ class PreferencesImpl @Inject constructor(
         prefsList
             .flatMap { it.enumConstants!!.asIterable() }
             .filterIsInstance<UnitDoublePreferenceKey>()
-            .any { context.getString(it.key) == key }
+            .any { it.key == key }
 
     override fun get(key: String): PreferenceKey =
         prefsList
             .flatMap { it.enumConstants!!.asIterable() }
-            .find { context.getString(it.key) == key }
+            .find { it.key == key }
             ?: error("Key $key not found")
 
     override fun getDependingOn(key: String): List<PreferenceKey> =
         mutableListOf<PreferenceKey>().also { list ->
             prefsList.forEach { clazz ->
-                list.addAll(clazz.enumConstants!!.filter { it.dependency != null && context.getString(it.dependency!!.key) == key || it.negativeDependency != null && context.getString(it.negativeDependency!!.key) == key })
+                list.addAll(clazz.enumConstants!!.filter { it.dependency != null && it.dependency!!.key == key || it.negativeDependency != null && it.negativeDependency!!.key == key })
             }
         }
 

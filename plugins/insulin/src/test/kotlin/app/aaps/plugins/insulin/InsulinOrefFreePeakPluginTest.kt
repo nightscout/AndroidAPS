@@ -4,7 +4,7 @@ import android.content.SharedPreferences
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.IntKey
-import app.aaps.core.validators.AdaptiveIntPreference
+import app.aaps.core.validators.preferences.AdaptiveIntPreference
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach

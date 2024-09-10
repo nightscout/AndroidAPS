@@ -122,7 +122,7 @@ class MaintenanceFragment : DaggerFragment() {
                             .subscribeBy(
                                 onError = { aapsLogger.error("Error clearing databases", it) },
                                 onComplete = {
-                                    rxBus.send(EventPreferenceChange(rh.gs(StringKey.GeneralUnits.key)))
+                                    rxBus.send(EventPreferenceChange(StringKey.GeneralUnits.key))
                                     runOnUiThread { activity.recreate() }
                                 }
                             )

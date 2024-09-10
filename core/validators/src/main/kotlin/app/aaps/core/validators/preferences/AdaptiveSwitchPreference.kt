@@ -1,38 +1,39 @@
-package app.aaps.core.keys
+package app.aaps.core.validators.preferences
 
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.util.AttributeSet
 import androidx.annotation.StringRes
-import androidx.preference.Preference
+import androidx.preference.SwitchPreference
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.keys.BooleanPreferenceKey
+import app.aaps.core.keys.Preferences
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
-class AdaptiveIntentPreference(
+class AdaptiveSwitchPreference(
     ctx: Context,
     attrs: AttributeSet? = null,
-    intentKey: IntentKey?,
-    intent: Intent? = null,
+    booleanKey: BooleanPreferenceKey?,
     @StringRes summary: Int? = null,
-    @StringRes title: Int? = null,
-) : Preference(ctx, attrs) {
+    @StringRes title: Int?
+) : SwitchPreference(ctx, attrs) {
 
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var sharedPrefs: SharedPreferences
+    @Inject lateinit var config: Config
 
     // Inflater constructor
-    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, intentKey = null, intent = null)
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, booleanKey = null, title = null)
 
     init {
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
 
-        intentKey?.let { key = context.getString(it.key) }
+        booleanKey?.let { key = it.key }
         summary?.let { setSummary(it) }
         title?.let { this.title = context.getString(it) }
-        this.intent = intent
 
-        val preferenceKey = intentKey ?: preferences.get(key) as IntentKey
+        val preferenceKey = booleanKey ?: preferences.get(key) as BooleanPreferenceKey
         if (preferences.simpleMode && preferenceKey.defaultedBySM) isVisible = false
         if (preferences.apsMode && !preferenceKey.showInApsMode) {
             isVisible = false; isEnabled = false
@@ -43,20 +44,24 @@ class AdaptiveIntentPreference(
         if (preferences.pumpControlMode && !preferenceKey.showInPumpControlMode) {
             isVisible = false; isEnabled = false
         }
+        if (!config.isEngineeringMode() && preferenceKey.engineeringModeOnly) {
+            isVisible = false; isEnabled = false
+        }
         preferenceKey.dependency?.let {
-            if (!sharedPrefs.getBoolean(context.getString(it.key), false))
+            if (!sharedPrefs.getBoolean(it.key, false))
                 isVisible = false
         }
         preferenceKey.negativeDependency?.let {
-            if (sharedPrefs.getBoolean(context.getString(it.key), false))
+            if (sharedPrefs.getBoolean(it.key, false))
                 isVisible = false
         }
+        setDefaultValue(preferenceKey.defaultValue)
     }
 
     override fun onAttached() {
         super.onAttached()
         // PreferenceScreen is final so we cannot extend and modify behavior
-        val preferenceKey = preferences.get(key) as IntentKey
+        val preferenceKey = preferences.get(key) as BooleanPreferenceKey
         if (preferenceKey.hideParentScreenIfHidden) {
             parent?.isVisible = isVisible
             parent?.isEnabled = isEnabled

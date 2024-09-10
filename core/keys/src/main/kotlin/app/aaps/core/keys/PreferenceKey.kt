@@ -8,7 +8,7 @@ interface PreferenceKey {
     /**
      * Associated [android.content.SharedPreferences] key
      */
-    val key: Int
+    val key: String
 
     /**
      * Affected by simple mode?

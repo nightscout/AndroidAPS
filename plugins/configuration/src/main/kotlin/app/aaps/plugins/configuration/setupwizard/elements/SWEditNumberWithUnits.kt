@@ -42,7 +42,7 @@ class SWEditNumberWithUnits(injector: HasAndroidInjector, private val init: Doub
         label?.let { l.setText(it) }
         l.setTypeface(l.typeface, Typeface.BOLD)
         layout.addView(l)
-        var initValue = sp.getDouble(preferenceId, init)
+        var initValue = sp.getDouble(preference, init)
         initValue = profileUtil.valueInCurrentUnitsDetect(initValue)
         val numberPicker = NumberPicker(context)
         if (profileUtil.units == GlucoseUnit.MMOL)
@@ -59,8 +59,8 @@ class SWEditNumberWithUnits(injector: HasAndroidInjector, private val init: Doub
         super.generateDialog(layout)
     }
 
-    fun preferenceId(preference: UnitDoubleKey): SWEditNumberWithUnits {
-        this.preferenceId = preference.key
+    fun preference(preference: UnitDoubleKey): SWEditNumberWithUnits {
+        this.preference = preference.key
         return this
     }
 

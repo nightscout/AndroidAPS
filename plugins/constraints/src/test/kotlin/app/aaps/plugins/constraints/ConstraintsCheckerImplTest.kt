@@ -104,7 +104,6 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         `when`(rh.gs(app.aaps.core.ui.R.string.pumplimit)).thenReturn("pump limit")
         `when`(rh.gs(app.aaps.core.ui.R.string.limitingbolus)).thenReturn("Limiting bolus to %.1f U because of %s")
         `when`(rh.gs(R.string.hardlimit)).thenReturn("hard limit")
-        `when`(rh.gs(app.aaps.core.keys.R.string.key_child)).thenReturn("child")
         `when`(rh.gs(R.string.limitingcarbs)).thenReturn("Limiting carbs to %d g because of %s")
         `when`(rh.gs(app.aaps.plugins.aps.R.string.limiting_iob)).thenReturn("Limiting IOB to %.1f U because of %s")
         `when`(rh.gs(app.aaps.core.ui.R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
@@ -159,7 +158,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
             )
         safetyPlugin =
             SafetyPlugin(
-                aapsLogger, rh, sp, preferences, constraintChecker, activePlugin, hardLimits,
+                aapsLogger, rh, preferences, constraintChecker, activePlugin, hardLimits,
                 config, persistenceLayer, dateUtil, uiInteraction, decimalFormatter
             )
         val constraintsPluginsList = ArrayList<PluginBase>()

@@ -55,8 +55,8 @@ import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.core.validators.AdaptiveIntPreference
 import app.aaps.core.validators.ValidatingEditTextPreference
+import app.aaps.core.validators.preferences.AdaptiveIntPreference
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
 import info.nightscout.pump.medtrum.comm.enums.ModelType
 import info.nightscout.pump.medtrum.services.MedtrumService
@@ -180,7 +180,7 @@ import kotlin.math.abs
                 val newDeviceType = MedtrumSnUtil().getDeviceTypeFromSerial(newSN)
 
                 when {
-                    newDeviceType == ModelType.INVALID                           -> {
+                    newDeviceType == ModelType.INVALID                               -> {
                         preferenceFragment.activity?.let { activity ->
                             OKDialog.show(activity, rh.gs(R.string.sn_input_title), rh.gs(R.string.sn_input_invalid))
                         }
@@ -256,8 +256,8 @@ import kotlin.math.abs
     }
 
     private fun preprocessConnectionAlertSettings(preferenceFragment: PreferenceFragmentCompat) {
-        val unreachableAlertSetting = preferenceFragment.findPreference<SwitchPreference>(rh.gs(BooleanKey.AlertPumpUnreachable.key))
-        val unreachableThresholdSetting = preferenceFragment.findPreference<AdaptiveIntPreference>(rh.gs(IntKey.AlertsPumpUnreachableThreshold.key))
+        val unreachableAlertSetting = preferenceFragment.findPreference<SwitchPreference>(BooleanKey.AlertPumpUnreachable.key)
+        val unreachableThresholdSetting = preferenceFragment.findPreference<AdaptiveIntPreference>(IntKey.AlertsPumpUnreachableThreshold.key)
 
         unreachableAlertSetting?.apply {
             isSelectable = false

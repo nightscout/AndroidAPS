@@ -1,10 +1,12 @@
-package app.aaps.core.keys
+package app.aaps.core.validators.preferences
 
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.AttributeSet
 import androidx.annotation.StringRes
 import androidx.preference.ListPreference
+import app.aaps.core.keys.IntPreferenceKey
+import app.aaps.core.keys.Preferences
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
@@ -28,12 +30,12 @@ open class AdaptiveListIntPreference(
     init {
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
 
-        intKey?.let { key = context.getString(it.key) }
+        intKey?.let { key = it.key }
         title?.let { this.title = context.getString(it) }
         dialogMessage?.let { this.dialogMessage = context.getString(it) }
         summary?.let { this.summary = context.getString(it) }
-        entries?.let { setEntries(it)}
-        entryValues?.let { setEntryValues(it)}
+        entries?.let { setEntries(it) }
+        entryValues?.let { setEntryValues(it) }
 
         val preferenceKey = intKey ?: preferences.get(key) as IntPreferenceKey
         if (preferences.simpleMode && preferenceKey.defaultedBySM) isVisible = false
@@ -47,11 +49,11 @@ open class AdaptiveListIntPreference(
             isVisible = false; isEnabled = false
         }
         preferenceKey.dependency?.let {
-            if (!sharedPrefs.getBoolean(context.getString(it.key), false))
+            if (!sharedPrefs.getBoolean(it.key, false))
                 isVisible = false
         }
         preferenceKey.negativeDependency?.let {
-            if (sharedPrefs.getBoolean(context.getString(it.key), false))
+            if (sharedPrefs.getBoolean(it.key, false))
                 isVisible = false
         }
         setDefaultValue(preferenceKey.defaultValue.toString())

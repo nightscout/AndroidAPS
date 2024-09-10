@@ -28,8 +28,6 @@
     <string name="key_objectiveusetemptarget" translatable="false">ObjectivesTempTargetUsed</string>
     <string name="key_objectiveusedisconnect" translatable="false">ObjectivesDisconnectUsed</string>
     <string name="key_objectiveusereconnect" translatable="false">ObjectivesReconnectUsed</string>
-    <string name="key_high_temptarget_raises_sensitivity" translatable="false">high_temptarget_raises_sensitivity</string>
-    <string name="key_low_temptarget_lowers_sensitivity" translatable="false">low_temptarget_lowers_sensitivity</string>
     <string name="key_wear_detailediob" translatable="false">wear_detailediob</string>
     <string name="key_wear_showbgi" translatable="false">wear_showbgi</string>
     <string name="key_wear_detailed_delta" translatable="false">wear_detailed_delta</string>
