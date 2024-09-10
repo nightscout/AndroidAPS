@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="key_danars_address" translatable="false">danars_address</string>
+    <string name="key_danar_bt_name" translatable="false">danar_bt_name</string>
     <string name="key_danars_name" translatable="false">danars_name</string>
     <string name="key_danar_password" translatable="false">danar_password</string>
     <string name="key_danars_password" translatable="false">danars_password</string>
@@ -13,7 +13,7 @@
     <string name="key_rs_logcanulachange" translatable="false">rs_logcanulachange</string>
     <string name="key_rs_loginsulinchange" translatable="false">rs_loginsulinchange</string>
     <string name="key_rs_last_clear_key_request" translatable="false">rs_last_clear_key_request</string>
-    <string name="key_danar_bt_name" translatable="false">danar_bt_name</string>
+    <string name="key_danar_useextended" translatable="false">danar_useextended</string>
 
     <string name="danars_pairing">Pairing</string>
     <string name="danars_no_device_available">No device found so far</string>

@@ -23,10 +23,11 @@ import androidx.core.app.ActivityCompat
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.Preferences
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.extensions.safeEnable
+import app.aaps.pump.dana.keys.DanaStringKey
 import app.aaps.pump.danars.R
 import app.aaps.pump.danars.databinding.DanarsBlescannerActivityBinding
 import app.aaps.pump.danars.events.EventDanaRSDeviceChange
@@ -35,7 +36,7 @@ import javax.inject.Inject
 
 class BLEScanActivity : TranslatedDaggerAppCompatActivity() {
 
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var blePreCheck: BlePreCheck
     @Inject lateinit var context: Context
     @Inject lateinit var rxBus: RxBus
@@ -157,8 +158,8 @@ class BLEScanActivity : TranslatedDaggerAppCompatActivity() {
             }
 
             override fun onClick(v: View) {
-                sp.putString(app.aaps.pump.dana.R.string.key_danars_address, item.device.address)
-                sp.putString(app.aaps.pump.dana.R.string.key_danars_name, name.text.toString())
+                preferences.put(DanaStringKey.DanaMacAddress, item.device.address)
+                preferences.put(DanaStringKey.DanaRsName, name.text.toString())
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
                     item.device.createBond()
                     rxBus.send(EventDanaRSDeviceChange())

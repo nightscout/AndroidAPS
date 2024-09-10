@@ -27,7 +27,6 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -40,6 +39,8 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.R
 import app.aaps.pump.dana.database.DanaHistoryDatabase
+import app.aaps.pump.dana.keys.DanaBooleanKey
+import app.aaps.pump.dana.keys.DanaIntKey
 import app.aaps.pump.danar.AbstractDanaRPlugin
 import app.aaps.pump.danarv2.services.DanaRv2ExecutionService
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -57,7 +58,6 @@ class DanaRv2Plugin @Inject constructor(
     rh: ResourceHelper,
     constraintChecker: ConstraintsChecker,
     activePlugin: ActivePlugin,
-    sp: SP,
     commandQueue: CommandQueue,
     danaPump: DanaPump,
     private val detailedBolusInfoStorage: DetailedBolusInfoStorage,
@@ -79,7 +79,6 @@ class DanaRv2Plugin @Inject constructor(
     commandQueue,
     rxBus,
     activePlugin,
-    sp,
     dateUtil,
     pumpSync,
     preferences,
@@ -151,7 +150,7 @@ class DanaRv2Plugin @Inject constructor(
         detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger)).value()
         // v2 stores end time for bolus, we need to adjust time
         // default delivery speed is 12 sec/U
-        val preferencesSpeed = sp.getInt(R.string.key_danars_bolusspeed, 0)
+        val preferencesSpeed = preferences.get(DanaIntKey.DanaRsBolusSpeed)
         var speed = 12
         when (preferencesSpeed) {
             0 -> speed = 12
@@ -335,7 +334,7 @@ class DanaRv2Plugin @Inject constructor(
                 .duration(pump.extendedBolusRemainingMinutes)
                 .absolute(pump.extendedBolusAbsoluteRate)
                 .isPercent(false)
-            if (!sp.getBoolean("danar_useextended", false)) result.bolusDelivered(pump.extendedBolusAmount)
+            if (!preferences.get(DanaBooleanKey.DanaRUseExtended)) result.bolusDelivered(pump.extendedBolusAmount)
             aapsLogger.debug(LTag.PUMP, "setExtendedBolus: OK")
             return result
         }

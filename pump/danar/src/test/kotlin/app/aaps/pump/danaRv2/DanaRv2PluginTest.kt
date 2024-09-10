@@ -35,15 +35,15 @@ class DanaRv2PluginTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun prepareMocks() {
-        `when`(preferences.get(DanaStringKey.DanaBtName)).thenReturn("")
-        `when`(sp.getString(app.aaps.pump.dana.R.string.key_danars_address, "")).thenReturn("")
+        `when`(preferences.get(DanaStringKey.DanaRName)).thenReturn("")
+        `when`(preferences.get(DanaStringKey.DanaMacAddress)).thenReturn("")
         `when`(rh.gs(app.aaps.core.ui.R.string.pumplimit)).thenReturn("pump limit")
         `when`(rh.gs(app.aaps.core.ui.R.string.itmustbepositivevalue)).thenReturn("it must be positive value")
         `when`(rh.gs(app.aaps.core.ui.R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
         `when`(rh.gs(app.aaps.core.ui.R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
-        danaPump = DanaPump(aapsLogger, sp, dateUtil, instantiator, decimalFormatter)
+        danaPump = DanaPump(aapsLogger, preferences, dateUtil, instantiator, decimalFormatter)
         danaRv2Plugin = DanaRv2Plugin(
-            aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, activePlugin, sp, commandQueue, danaPump, detailedBolusInfoStorage,
+            aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, activePlugin, commandQueue, danaPump, detailedBolusInfoStorage,
             temporaryBasalStorage, dateUtil, fabricPrivacy, pumpSync, preferences, uiInteraction, danaHistoryDatabase, decimalFormatter, instantiator
         )
     }

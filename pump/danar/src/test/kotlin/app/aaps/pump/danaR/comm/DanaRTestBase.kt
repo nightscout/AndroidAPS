@@ -35,7 +35,7 @@ open class DanaRTestBase : TestBaseWithProfile() {
 
     @BeforeEach
     fun setup() {
-        danaPump = DanaPump(aapsLogger, sp, dateUtil, instantiator, decimalFormatter)
+        danaPump = DanaPump(aapsLogger, preferences, dateUtil, instantiator, decimalFormatter)
         doNothing().`when`(danaRKoreanPlugin).setPluginEnabled(anyObject(), anyBoolean())
         doNothing().`when`(danaRPlugin).setPluginEnabled(anyObject(), anyBoolean())
         doNothing().`when`(danaRKoreanPlugin).setFragmentVisible(anyObject(), anyBoolean())

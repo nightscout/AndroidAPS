@@ -19,7 +19,6 @@ import android.os.SystemClock
 import android.util.Base64
 import androidx.core.app.ActivityCompat
 import app.aaps.core.data.time.T
-import app.aaps.core.interfaces.androidPermissions.AndroidPermission
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
@@ -31,11 +30,13 @@ import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.Preferences
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.notifyAll
 import app.aaps.core.utils.waitMillis
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.R
+import app.aaps.pump.dana.keys.DanaStringKey
 import app.aaps.pump.danars.DanaRSPlugin
 import app.aaps.pump.danars.activities.EnterPinActivity
 import app.aaps.pump.danars.activities.PairingHelperActivity
@@ -66,7 +67,7 @@ class BLEComm @Inject internal constructor(
     private val pumpSync: PumpSync,
     private val dateUtil: DateUtil,
     private val uiInteraction: UiInteraction,
-    private val androidPermission: AndroidPermission
+    private val preferences: Preferences
 ) {
 
     companion object {
@@ -211,7 +212,7 @@ class BLEComm @Inject internal constructor(
     }
 
     private fun removeBond() {
-        sp.getStringOrNull(R.string.key_danars_address, null)?.let { address ->
+        preferences.getIfExists(DanaStringKey.DanaMacAddress)?.let { address ->
             bluetoothAdapter?.getRemoteDevice(address)?.let { device ->
                 try {
                     device::class.java.getMethod("removeBond").invoke(device)

@@ -25,7 +25,6 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -37,6 +36,7 @@ import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.database.DanaHistoryDatabase
+import app.aaps.pump.dana.keys.DanaBooleanKey
 import app.aaps.pump.danar.services.DanaRExecutionService
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -53,7 +53,6 @@ class DanaRPlugin @Inject constructor(
     rh: ResourceHelper,
     constraintsChecker: ConstraintsChecker,
     activePlugin: ActivePlugin,
-    sp: SP,
     commandQueue: CommandQueue,
     danaPump: DanaPump,
     dateUtil: DateUtil,
@@ -73,7 +72,6 @@ class DanaRPlugin @Inject constructor(
     commandQueue,
     rxBus,
     activePlugin,
-    sp,
     dateUtil,
     pumpSync,
     preferences,
@@ -97,7 +95,7 @@ class DanaRPlugin @Inject constructor(
     }
 
     init {
-        useExtendedBoluses = sp.getBoolean(app.aaps.core.utils.R.string.key_danar_useextended, false)
+        useExtendedBoluses = preferences.get(DanaBooleanKey.DanaRUseExtended)
         pumpDescription.fillFor(PumpType.DANA_R)
     }
 
@@ -110,7 +108,7 @@ class DanaRPlugin @Inject constructor(
             .subscribe({
                            if (isEnabled()) {
                                val previousValue = useExtendedBoluses
-                               useExtendedBoluses = sp.getBoolean(app.aaps.core.utils.R.string.key_danar_useextended, false)
+                               useExtendedBoluses = preferences.get(DanaBooleanKey.DanaRUseExtended)
                                if (useExtendedBoluses != previousValue && pumpSync.expectedPumpState().extendedBolus != null) {
                                    executionService?.extendedBolusStop()
                                }

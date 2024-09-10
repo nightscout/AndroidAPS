@@ -54,6 +54,8 @@ import app.aaps.pump.dana.DanaFragment
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.comm.RecordTypes
 import app.aaps.pump.dana.database.DanaHistoryDatabase
+import app.aaps.pump.dana.keys.DanaBooleanKey
+import app.aaps.pump.dana.keys.DanaIntKey
 import app.aaps.pump.dana.keys.DanaStringKey
 import app.aaps.pump.danars.events.EventDanaRSDeviceChange
 import app.aaps.pump.danars.services.DanaRSService
@@ -109,6 +111,8 @@ class DanaRSPlugin @Inject constructor(
     // Make plugin preferences available to AAPS
     init {
         preferences.registerPreferences(DanaStringKey::class.java)
+        preferences.registerPreferences(DanaIntKey::class.java)
+        preferences.registerPreferences(DanaBooleanKey::class.java)
     }
 
     override val pumpDescription
@@ -117,10 +121,9 @@ class DanaRSPlugin @Inject constructor(
     override fun updatePreferenceSummary(pref: Preference) {
         super.updatePreferenceSummary(pref)
 
-        if (pref.key == rh.gs(app.aaps.pump.dana.R.string.key_danars_name)) {
-            val value = sp.getStringOrNull(app.aaps.pump.dana.R.string.key_danars_name, null)
-            pref.summary = value
-                ?: rh.gs(app.aaps.core.ui.R.string.not_set_short)
+        if (pref.key == DanaStringKey.DanaRsName.key) {
+            val value = preferences.getIfExists(DanaStringKey.DanaRsName)
+            pref.summary = value ?: rh.gs(app.aaps.core.ui.R.string.not_set_short)
         }
     }
 
@@ -166,9 +169,9 @@ class DanaRSPlugin @Inject constructor(
     }
 
     fun changePump() {
-        mDeviceAddress = sp.getString(app.aaps.pump.dana.R.string.key_danars_address, "")
-        mDeviceName = sp.getString(app.aaps.pump.dana.R.string.key_danars_name, "")
-        danaPump.serialNumber = sp.getString(app.aaps.pump.dana.R.string.key_danars_name, "")
+        mDeviceAddress = preferences.get(DanaStringKey.DanaMacAddress)
+        mDeviceName = preferences.get(DanaStringKey.DanaRsName)
+        danaPump.serialNumber = preferences.get(DanaStringKey.DanaRsName)
         danaPump.reset()
         commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.device_changed), null)
     }
@@ -304,7 +307,7 @@ class DanaRSPlugin @Inject constructor(
         require(detailedBolusInfo.insulin > 0) { detailedBolusInfo.toString() }
 
         detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger)).value()
-        val preferencesSpeed = sp.getInt(app.aaps.pump.dana.R.string.key_danars_bolusspeed, 0)
+        val preferencesSpeed = preferences.get(DanaIntKey.DanaRsBolusSpeed)
         var speed = 12
         when (preferencesSpeed) {
             0 -> speed = 12

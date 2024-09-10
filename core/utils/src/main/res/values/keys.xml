@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    Keys-->
-    <string name="key_danar_useextended" translatable="false">danar_useextended</string>
     <string name="key_btwatchdog_lastbark" translatable="false">bt_watchdog_last</string>
     <string name="key_gradually_increase_notification_volume" translatable="false">gradually_increase_notification_volume</string>
     <string name="key_quickwizard" translatable="false">QuickWizard</string>

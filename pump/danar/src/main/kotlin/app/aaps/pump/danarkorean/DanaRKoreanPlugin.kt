@@ -25,7 +25,6 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -35,6 +34,7 @@ import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.database.DanaHistoryDatabase
+import app.aaps.pump.dana.keys.DanaBooleanKey
 import app.aaps.pump.danar.AbstractDanaRPlugin
 import app.aaps.pump.danar.R
 import app.aaps.pump.danarkorean.services.DanaRKoreanExecutionService
@@ -53,7 +53,6 @@ class DanaRKoreanPlugin @Inject constructor(
     rh: ResourceHelper,
     constraintChecker: ConstraintsChecker,
     activePlugin: ActivePlugin,
-    sp: SP,
     commandQueue: CommandQueue,
     danaPump: DanaPump,
     dateUtil: DateUtil,
@@ -73,7 +72,6 @@ class DanaRKoreanPlugin @Inject constructor(
     commandQueue,
     rxBus,
     activePlugin,
-    sp,
     dateUtil,
     pumpSync,
     preferences,
@@ -85,7 +83,7 @@ class DanaRKoreanPlugin @Inject constructor(
 
     init {
         pluginDescription.description(app.aaps.pump.dana.R.string.description_pump_dana_r_korean)
-        useExtendedBoluses = sp.getBoolean(app.aaps.core.utils.R.string.key_danar_useextended, false)
+        useExtendedBoluses = preferences.get(DanaBooleanKey.DanaRUseExtended)
         pumpDescription.fillFor(PumpType.DANA_R_KOREAN)
     }
 
@@ -97,7 +95,7 @@ class DanaRKoreanPlugin @Inject constructor(
             .subscribe({
                            if (isEnabled()) {
                                val previousValue = useExtendedBoluses
-                               useExtendedBoluses = sp.getBoolean(app.aaps.core.utils.R.string.key_danar_useextended, false)
+                               useExtendedBoluses = preferences.get(DanaBooleanKey.DanaRUseExtended)
                                if (useExtendedBoluses != previousValue && pumpSync.expectedPumpState().extendedBolus != null) {
                                    executionService?.extendedBolusStop()
                                }

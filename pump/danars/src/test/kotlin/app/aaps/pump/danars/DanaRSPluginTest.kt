@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.pump.dana.database.DanaHistoryDatabase
+import app.aaps.pump.dana.keys.DanaStringKey
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -53,8 +54,8 @@ class DanaRSPluginTest : DanaRSTestBase() {
 
     @BeforeEach
     fun prepareMocks() {
-        Mockito.`when`(sp.getString(app.aaps.pump.dana.R.string.key_danars_name, "")).thenReturn("")
-        Mockito.`when`(sp.getString(app.aaps.pump.dana.R.string.key_danars_address, "")).thenReturn("")
+        Mockito.`when`(preferences.get(DanaStringKey.DanaRsName)).thenReturn("")
+        Mockito.`when`(preferences.get(DanaStringKey.DanaMacAddress)).thenReturn("")
         Mockito.`when`(rh.gs(eq(app.aaps.core.ui.R.string.limitingbasalratio), anyObject(), anyObject())).thenReturn("limitingbasalratio")
         Mockito.`when`(rh.gs(eq(app.aaps.core.ui.R.string.limitingpercentrate), anyObject(), anyObject())).thenReturn("limitingpercentrate")
 

@@ -118,10 +118,10 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         `when`(rh.gs(R.string.objectivenotstarted)).thenReturn("Objective %1\$d not started")
 
         // RS constructor
-        `when`(sp.getString(app.aaps.pump.dana.R.string.key_danars_name, "")).thenReturn("")
-        `when`(sp.getString(app.aaps.pump.dana.R.string.key_danars_address, "")).thenReturn("")
+        `when`(preferences.get(DanaStringKey.DanaRsName)).thenReturn("")
+        `when`(preferences.get(DanaStringKey.DanaMacAddress)).thenReturn("")
         // R
-        `when`(preferences.get(DanaStringKey.DanaBtName)).thenReturn("")
+        `when`(preferences.get(DanaStringKey.DanaRName)).thenReturn("")
 
         //SafetyPlugin
         constraintChecker = ConstraintsCheckerImpl(activePlugin, aapsLogger)
@@ -129,10 +129,10 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         val glucoseStatusProvider = GlucoseStatusProviderImpl(aapsLogger, iobCobCalculator, dateUtil, decimalFormatter)
 
         insightDbHelper = InsightDbHelper(insightDatabaseDao)
-        danaPump = DanaPump(aapsLogger, sp, dateUtil, instantiator, decimalFormatter)
+        danaPump = DanaPump(aapsLogger, preferences, dateUtil, instantiator, decimalFormatter)
         objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, rh, activePlugin, sp, config)
         danaRPlugin = DanaRPlugin(
-            aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, activePlugin, sp, commandQueue, danaPump, dateUtil, fabricPrivacy, pumpSync,
+            aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, activePlugin, commandQueue, danaPump, dateUtil, fabricPrivacy, pumpSync,
             preferences, uiInteraction, danaHistoryDatabase, decimalFormatter, instantiator
         )
         danaRSPlugin =

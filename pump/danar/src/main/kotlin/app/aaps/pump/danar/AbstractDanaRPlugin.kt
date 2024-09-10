@@ -28,7 +28,6 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
 import app.aaps.core.interfaces.rx.events.EventDismissNotification
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -39,6 +38,8 @@ import app.aaps.pump.dana.DanaFragment
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.comm.RecordTypes
 import app.aaps.pump.dana.database.DanaHistoryDatabase
+import app.aaps.pump.dana.keys.DanaBooleanKey
+import app.aaps.pump.dana.keys.DanaIntKey
 import app.aaps.pump.dana.keys.DanaStringKey
 import app.aaps.pump.danar.services.AbstractDanaRExecutionService
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -60,7 +61,6 @@ abstract class AbstractDanaRPlugin protected constructor(
     commandQueue: CommandQueue,
     protected var rxBus: RxBus,
     protected var activePlugin: ActivePlugin,
-    protected var sp: SP,
     protected var dateUtil: DateUtil,
     protected var pumpSync: PumpSync,
     protected val preferences: Preferences,
@@ -89,6 +89,8 @@ abstract class AbstractDanaRPlugin protected constructor(
     // Make plugin preferences available to AAPS
     init {
         preferences.registerPreferences(DanaStringKey::class.java)
+        preferences.registerPreferences(DanaIntKey::class.java)
+        preferences.registerPreferences(DanaBooleanKey::class.java)
     }
 
     override fun onStart() {
@@ -102,13 +104,13 @@ abstract class AbstractDanaRPlugin protected constructor(
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe { event: EventPreferenceChange ->
-                if (event.isChanged(DanaStringKey.DanaBtName.key)) {
+                if (event.isChanged(DanaStringKey.DanaRName.key)) {
                     danaPump.reset()
                     pumpSync.connectNewPump(true)
                     commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.device_changed), null)
                 }
             }
-        danaPump.serialNumber = preferences.get(DanaStringKey.DanaBtName) // fill at start to allow password reset
+        danaPump.serialNumber = preferences.get(DanaStringKey.DanaRName) // fill at start to allow password reset
     }
 
     override fun onStop() {
@@ -268,12 +270,12 @@ abstract class AbstractDanaRPlugin protected constructor(
                 .duration(danaPump.extendedBolusRemainingMinutes)
                 .absolute(danaPump.extendedBolusAbsoluteRate)
                 .isPercent(false)
-            if (!sp.getBoolean("danar_useextended", false)) result.bolusDelivered(danaPump.extendedBolusAmount)
+            if (!preferences.get(DanaBooleanKey.DanaRUseExtended)) result.bolusDelivered(danaPump.extendedBolusAmount)
             pumpSync.syncExtendedBolusWithPumpId(
                 danaPump.extendedBolusStart,
                 danaPump.extendedBolusAmount,
                 danaPump.extendedBolusDuration,
-                sp.getBoolean("danar_useextended", false),
+                preferences.get(DanaBooleanKey.DanaRUseExtended),
                 danaPump.extendedBolusStart,
                 pumpDescription.pumpType,
                 serialNumber()
