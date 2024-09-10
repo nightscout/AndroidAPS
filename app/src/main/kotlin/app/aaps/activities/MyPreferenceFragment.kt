@@ -19,7 +19,6 @@ import app.aaps.R
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
@@ -35,12 +34,12 @@ import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventRebuildTabs
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
-import app.aaps.core.keys.IntentKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.validators.DefaultEditTextValidator
 import app.aaps.core.validators.EditTextValidator
@@ -75,7 +74,6 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var config: Config
     @Inject lateinit var passwordCheck: PasswordCheck
-    @Inject lateinit var nsSettingStatus: NSSettingsStatus
 
     @Inject lateinit var automationPlugin: AutomationPlugin
     @Inject lateinit var autotunePlugin: AutotunePlugin
@@ -186,8 +184,15 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         }
         checkForBiometricFallback(key)
 
+        preprocessCustomVisibility(preferenceScreen)
         updatePrefSummary(findPreference(key))
         preprocessPreferences()
+    }
+
+    // Update preferences with calculated visibility
+    private fun preprocessCustomVisibility(p: Preference?) {
+        if (p is AdaptiveClickPreference) p.calculatedVisibility?.let { p.isVisible = it.invoke() }
+        if (p is PreferenceGroup) for (i in 0 until p.preferenceCount) preprocessCustomVisibility(p.getPreference(i))
     }
 
     private fun preprocessPreferences() {
@@ -278,79 +283,37 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     }
 
     private fun updatePrefSummary(pref: Preference?) {
-        if (pref is ListPreference) {
-            pref.setSummary(pref.entry)
-            // Preferences
-            if (pref.getKey() == IntKey.ProtectionTypeSettings.key) {
-                val pass: Preference? = findPreference(StringKey.ProtectionSettingsPassword.key)
-                val usePassword = pref.value == CUSTOM_PASSWORD.ordinal.toString()
-                pass?.let { it.isVisible = usePassword }
-                val pin: Preference? = findPreference(StringKey.ProtectionSettingsPin.key)
-                val usePin = pref.value == CUSTOM_PIN.ordinal.toString()
-                pin?.let { it.isVisible = usePin }
+        pref ?: return
+        val keyDefinition = pref.key?.let { preferences.getIfExists(it) }
+        when (keyDefinition) {
+            is IntKey,
+            is DoubleKey -> {
+                if (pref is EditTextPreference && pref.text != null) pref.summary = pref.text
+                if (pref is ListPreference) pref.summary = pref.entry
             }
-            // Application
-            if (pref.getKey() == IntKey.ProtectionTypeApplication.key) {
-                val pass: Preference? = findPreference(StringKey.ProtectionApplicationPassword.key)
-                val usePassword = pref.value == CUSTOM_PASSWORD.ordinal.toString()
-                pass?.let { it.isVisible = usePassword }
-                val pin: Preference? = findPreference(StringKey.ProtectionApplicationPin.key)
-                val usePin = pref.value == CUSTOM_PIN.ordinal.toString()
-                pin?.let { it.isVisible = usePin }
-            }
-            // Bolus
-            if (pref.getKey() == IntKey.ProtectionTypeBolus.key) {
-                val pass: Preference? = findPreference(StringKey.ProtectionBolusPassword.key)
-                val usePassword = pref.value == CUSTOM_PASSWORD.ordinal.toString()
-                pass?.let { it.isVisible = usePassword }
-                val pin: Preference? = findPreference(StringKey.ProtectionBolusPin.key)
-                val usePin = pref.value == CUSTOM_PIN.ordinal.toString()
-                pin?.let { it.isVisible = usePin }
-            }
-        }
-        if (pref is EditTextPreference) {
-            if (pref.getKey().contains("password") || pref.getKey().contains("pin") || pref.getKey().contains("secret") || pref.getKey().contains("token")) {
-                pref.setSummary("******")
-            } else if (pref.text != null) {
-                pref.setSummary(pref.text)
-            }
-        }
 
-        for (plugin in activePlugin.getPluginsList()) {
-            pref?.let { it.key?.let { plugin.updatePreferenceSummary(pref) } }
-        }
-
-        val hmacPasswords = arrayOf(
-            StringKey.ProtectionBolusPassword.key,
-            StringKey.ProtectionMasterPassword.key,
-            StringKey.ProtectionApplicationPassword.key,
-            StringKey.ProtectionSettingsPassword.key,
-            StringKey.ProtectionBolusPin.key,
-            StringKey.ProtectionApplicationPin.key,
-            StringKey.ProtectionSettingsPin.key
-        )
-
-        if (pref is Preference && (pref.key != null) && (hmacPasswords.contains(pref.key))) {
-            if (sp.getString(pref.key, "").startsWith("hmac:")) {
-                pref.summary = "******"
-            } else {
-                if (pref.key.contains("pin")) {
-                    pref.summary = rh.gs(app.aaps.core.ui.R.string.pin_not_set)
-                } else {
-                    pref.summary = rh.gs(app.aaps.core.ui.R.string.password_not_set)
+            is StringKey -> {
+                val value = sp.getString(pref.key, "")
+                when {
+                    // We use Preference and custom editor instead of EditTextPreference
+                    // to hash password while it is saved and never have to show it, even hashed
+                    (keyDefinition.isPin || keyDefinition.isPassword) && value.isNotEmpty() -> pref.summary = "******"
+                    keyDefinition.isPin                                                     -> pref.summary = rh.gs(app.aaps.core.ui.R.string.pin_not_set)
+                    keyDefinition.isPassword                                                -> pref.summary = rh.gs(app.aaps.core.ui.R.string.password_not_set)
+                    pref is EditTextPreference && value.isNotEmpty()                        -> pref.summary = value
+                    pref is ListPreference                                                  -> pref.summary = pref.entry
                 }
             }
-        }
-        pref?.let { adjustUnitDependentPrefs(it) }
-    }
 
-    private fun adjustUnitDependentPrefs(pref: Preference) { // convert preferences values to current units
-        if (pref.key != null && preferences.isUnitDependent(pref.key) && pref is EditTextPreference) {
-            val value = profileUtil.valueInCurrentUnitsDetect(SafeParse.stringToDouble(pref.text)).toString()
-            val precision = if (profileUtil.units == GlucoseUnit.MGDL) 0 else 1
-            val converted = BigDecimal(value).setScale(precision, RoundingMode.HALF_UP)
-            pref.summary = converted.toPlainString()
+            is UnitDoubleKey -> {
+                // convert preferences values to current units
+                val value = profileUtil.valueInCurrentUnitsDetect(preferences.get(keyDefinition)).toString()
+                val precision = if (profileUtil.units == GlucoseUnit.MGDL) 0 else 1
+                val converted = BigDecimal(value).setScale(precision, RoundingMode.HALF_UP)
+                pref.summary = converted.toPlainString()
+            }
         }
+        for (plugin in activePlugin.getPluginsList()) pref.key?.let { plugin.updatePreferenceSummary(pref) }
     }
 
     private fun initSummary(p: Preference, isSinglePreference: Boolean) {
@@ -366,20 +329,6 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             updatePrefSummary(p)
         }
     }
-
-    // We use Preference and custom editor instead of EditTextPreference
-    // to hash password while it is saved and never have to show it, even hashed
-
-    override fun onPreferenceTreeClick(preference: Preference): Boolean =
-        when (preference.key) {
-            // NSClient copy settings
-            IntentKey.OverviewCopySettingsFromNs.key -> {
-                nsSettingStatus.copyStatusLightsNsSettings(context)
-                true
-            }
-
-            else                                     -> super.onPreferenceTreeClick(preference)
-        }
 
     fun setFilter(filter: String) {
         this.filter = filter
@@ -508,14 +457,16 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
                                         onPreferenceClickListener = {
                                             passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.settings_password, StringKey.ProtectionSettingsPassword.key)
                                             true
-                                        })
+                                        },
+                                        calculatedVisibility = { preferences.get(IntKey.ProtectionTypeSettings) == CUSTOM_PASSWORD.ordinal })
             )
             addPreference(
                 AdaptiveClickPreference(ctx = context, stringKey = StringKey.ProtectionSettingsPin, title = app.aaps.core.ui.R.string.settings_pin,
                                         onPreferenceClickListener = {
                                             passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.settings_pin, StringKey.ProtectionSettingsPin.key, pinInput = true)
                                             true
-                                        })
+                                        },
+                                        calculatedVisibility = { preferences.get(IntKey.ProtectionTypeSettings) == CUSTOM_PIN.ordinal })
             )
             addPreference(AdaptiveListIntPreference(ctx = context, intKey = IntKey.ProtectionTypeApplication, title = app.aaps.core.ui.R.string.application_protection, entries = protectionTypeEntries, entryValues = protectionTypeValues))
             addPreference(
@@ -523,14 +474,16 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
                                         onPreferenceClickListener = {
                                             passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.application_password, StringKey.ProtectionApplicationPassword.key)
                                             true
-                                        })
+                                        },
+                                        calculatedVisibility = { preferences.get(IntKey.ProtectionTypeApplication) == CUSTOM_PASSWORD.ordinal })
             )
             addPreference(
                 AdaptiveClickPreference(ctx = context, stringKey = StringKey.ProtectionApplicationPin, title = app.aaps.core.ui.R.string.application_pin,
                                         onPreferenceClickListener = {
                                             passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.application_pin, StringKey.ProtectionApplicationPin.key, pinInput = true)
                                             true
-                                        })
+                                        },
+                                        calculatedVisibility = { preferences.get(IntKey.ProtectionTypeApplication) == CUSTOM_PIN.ordinal })
             )
             addPreference(AdaptiveListIntPreference(ctx = context, intKey = IntKey.ProtectionTypeBolus, title = app.aaps.core.ui.R.string.bolus_protection, entries = protectionTypeEntries, entryValues = protectionTypeValues))
             addPreference(
@@ -538,14 +491,16 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
                                         onPreferenceClickListener = {
                                             passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.bolus_password, StringKey.ProtectionBolusPassword.key)
                                             true
-                                        })
+                                        },
+                                        calculatedVisibility = { preferences.get(IntKey.ProtectionTypeBolus) == CUSTOM_PASSWORD.ordinal })
             )
             addPreference(
                 AdaptiveClickPreference(ctx = context, stringKey = StringKey.ProtectionBolusPin, title = app.aaps.core.ui.R.string.bolus_pin,
                                         onPreferenceClickListener = {
                                             passwordCheck.setPassword(requireContext(), app.aaps.core.ui.R.string.bolus_pin, StringKey.ProtectionBolusPin.key, pinInput = true)
                                             true
-                                        })
+                                        },
+                                        calculatedVisibility = { preferences.get(IntKey.ProtectionTypeBolus) == CUSTOM_PIN.ordinal })
             )
             addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.ProtectionTimeout, title = app.aaps.core.ui.R.string.protection_timeout_title, summary = app.aaps.core.ui.R.string.protection_timeout_summary))
         }

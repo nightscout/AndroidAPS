@@ -18,6 +18,7 @@ class AdaptiveClickPreference(
     @StringRes summary: Int? = null,
     @StringRes title: Int?,
     onPreferenceClickListener: OnPreferenceClickListener? = null,
+    val calculatedVisibility: (() -> Boolean)? = null
 ) : Preference(ctx, attrs) {
 
     private val preferenceKey: StringPreferenceKey
@@ -57,6 +58,7 @@ class AdaptiveClickPreference(
             if (sharedPrefs.getBoolean(it.key, false))
                 isVisible = false
         }
+        calculatedVisibility?.let { isVisible = it.invoke() }
         setDefaultValue(preferenceKey.defaultValue)
     }
 

@@ -9,7 +9,9 @@ enum class StringKey(
     override val showInPumpControlMode: Boolean = true,
     override val dependency: BooleanPreferenceKey? = null,
     override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false
+    override val hideParentScreenIfHidden: Boolean = false,
+    val isPassword: Boolean = false,
+    val isPin: Boolean = false
 ) : StringPreferenceKey {
 
     GeneralUnits("units", "mg/dl"),
@@ -18,16 +20,18 @@ enum class StringKey(
     GeneralSkin("skin", ""),
     GeneralDarkMode("use_dark_mode", "dark", defaultedBySM = true),
 
-    ProtectionMasterPassword("master_password", ""),
-    ProtectionSettingsPassword("settings_password", ""),
-    ProtectionSettingsPin("settings_pin", ""),
-    ProtectionApplicationPassword("application_password", ""),
-    ProtectionApplicationPin("application_pin", ""),
-    ProtectionBolusPassword("bolus_password", ""),
-    ProtectionBolusPin("bolus_pin", ""),
+    ProtectionMasterPassword("master_password", "", isPassword = true),
+    ProtectionSettingsPassword("settings_password", "", isPassword = true),
+    ProtectionSettingsPin("settings_pin", "", isPin = true),
+    ProtectionApplicationPassword("application_password", "", isPassword = true),
+    ProtectionApplicationPin("application_pin", "", isPin = true),
+    ProtectionBolusPassword("bolus_password", "", isPassword = true),
+    ProtectionBolusPin("bolus_pin", "", isPin = true),
+
+    OverviewCopySettingsFromNs(key = "statuslights_copy_ns", "", dependency = BooleanKey.OverviewShowStatusLights),
 
     SafetyAge("age", "adult"),
-    LoopApsMode("aps_mode", "open" /* ApsMode.OPEN.name */),
+    LoopApsMode("aps_mode", "OPEN" /* ApsMode.OPEN.name */),
     MaintenanceEmail("maintenance_logs_email", "logs@aaps.app", defaultedBySM = true),
     MaintenanceIdentification("email_for_crash_report", ""),
     AutomationLocation("location", "PASSIVE", hideParentScreenIfHidden = true),
@@ -38,9 +42,9 @@ enum class StringKey(
     VirtualPumpType("virtualpump_type", "Generic AAPS"),
 
     NsClientUrl("nsclientinternal_url", ""),
-    NsClientApiSecret("nsclientinternal_api_secret", ""),
+    NsClientApiSecret("nsclientinternal_api_secret", "", isPassword = true),
     NsClientWifiSsids("ns_wifi_ssids", "", dependency = BooleanKey.NsClientUseWifi),
-    NsClientAccessToken("nsclient_token", ""),
+    NsClientAccessToken("nsclient_token", "", isPassword = true),
     TidepoolUsername("tidepool_username", ""),
-    TidepoolPassword("tidepool_password", ""),
+    TidepoolPassword("tidepool_password", "", isPassword = true),
 }

@@ -100,6 +100,11 @@ class PreferencesImpl @Inject constructor(
             .find { it.key == key }
             ?: error("Key $key not found")
 
+    override fun getIfExists(key: String): PreferenceKey? =
+        prefsList
+            .flatMap { it.enumConstants!!.asIterable() }
+            .find { it.key == key }
+
     override fun getDependingOn(key: String): List<PreferenceKey> =
         mutableListOf<PreferenceKey>().also { list ->
             prefsList.forEach { clazz ->

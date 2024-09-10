@@ -12,6 +12,7 @@ import androidx.preference.PreferenceScreen
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.overview.Overview
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.OverviewMenus
@@ -42,6 +43,7 @@ import app.aaps.core.objects.extensions.store
 import app.aaps.core.objects.extensions.storeBoolean
 import app.aaps.core.objects.extensions.storeString
 import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.validators.preferences.AdaptiveClickPreference
 import app.aaps.core.validators.preferences.AdaptiveDoublePreference
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
 import app.aaps.core.validators.preferences.AdaptiveIntentPreference
@@ -75,7 +77,8 @@ class OverviewPlugin @Inject constructor(
     private val overviewMenus: OverviewMenus,
     private val context: Context,
     private val constraintsChecker: ConstraintsChecker,
-    private val uiInteraction: UiInteraction
+    private val uiInteraction: UiInteraction,
+    private val nsSettingStatus: NSSettingsStatus
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -304,7 +307,11 @@ class OverviewPlugin @Inject constructor(
                 addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewResCritical, title = R.string.statuslights_res_critical))
                 addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewBattWarning, title = R.string.statuslights_bat_warning))
                 addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewBattCritical, title = R.string.statuslights_bat_critical))
-                addPreference(AdaptiveIntentPreference(ctx = context, intentKey = IntentKey.OverviewCopySettingsFromNs, title = R.string.statuslights_copy_ns))
+                addPreference(AdaptiveClickPreference(ctx = context, stringKey = StringKey.OverviewCopySettingsFromNs, title = R.string.statuslights_copy_ns,
+                                                      onPreferenceClickListener = {
+                                                          nsSettingStatus.copyStatusLightsNsSettings(context)
+                                                          true
+                                                      }))
             })
             addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewBolusPercentage, dialogMessage = R.string.deliverpartofboluswizard, title = app.aaps.core.ui.R.string.partialboluswizard))
             addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewResetBolusPercentageTime, dialogMessage = R.string.deliver_part_of_boluswizard_reset_time, title = app.aaps.core.ui.R.string.partialboluswizard_reset_time))

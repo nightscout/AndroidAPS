@@ -173,6 +173,13 @@ interface Preferences {
     fun get(key: String): PreferenceKey
 
     /**
+     * Find [PreferenceKey] definition
+     * @param key string representation of key
+     * @return [PreferenceKey] or null
+     */
+    fun getIfExists(key: String): PreferenceKey?
+
+    /**
      * Find all [PreferenceKey] which have `dependency` or `negativeDependency`
      * @param key string representation of key
      * @return list of [PreferenceKey]
