@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Autotune-->
     <string name="openapsma_no_glucose_data">Nema dostupnih podataka o glukozi</string>
     <string name="description_ama">Stanje algoritma iz 2017.</string>
     <string name="description_smb">Najnoviji algoritam za napredne korisnike</string>
