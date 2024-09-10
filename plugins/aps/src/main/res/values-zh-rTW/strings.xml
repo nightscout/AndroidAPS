@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Autotune-->
     <string name="dynisf_adjust_sensitivity">啟用基於TDD的靈敏度比率，用於調整基礎率和血糖目標</string>
     <string name="dynisf_adjust_sensitivity_summary">使用最近24小時TDD/7天TDD計算靈敏度比率，用於增加或減少基礎率，並在啟用這些選項時調整血糖目標，與Autosens的方式相同。建議從關閉此選項開始</string>
     <string name="dyn_isf_adjust_title" formatted="false">動態ISF調整係數%</string>
