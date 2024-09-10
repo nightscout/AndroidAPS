@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Autotune-->
     <string name="dynisf_adjust_sensitivity">Habilitar la relación de sensibilidad basada en TDD para modificar las basales y el objetivo de glucosa</string>
     <string name="dynisf_adjust_sensitivity_summary">Utiliza las últimas 24h TDD/7D TDD para calcular el factor de sensibilidad utilizado para aumentar o disminuir la tasa basal, y también ajusta el objetivo de glucosa si estas opciones están activadas, de la misma forma que lo hace Autosens. Se recomienda comenzar con esta opción desactivada</string>
     <string name="dyn_isf_adjust_title" formatted="false">Factor de ajuste de ISF Dinámico %</string>
