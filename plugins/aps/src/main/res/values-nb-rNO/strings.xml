@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Autotune-->
     <string name="dynisf_adjust_sensitivity">Aktiver TDD-basert sensitivitetsberegning for justering av basal og blodsukkermål</string>
     <string name="dynisf_adjust_sensitivity_summary">Bruker de siste 24t TDD/7D TDD til å beregne sensitivitet som grunnlag til å øke eller redusere basaldosen, samt justere blodsukkermål hvis disse valgene er aktivert, på samme måte som Autosens gjør. Det er anbefalt å starte med dette valget slått av</string>
     <string name="dyn_isf_adjust_title" formatted="false">Dynamisk ISF justeringsfaktor %</string>
