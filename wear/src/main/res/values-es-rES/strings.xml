@@ -53,6 +53,10 @@
     <string name="pref_3_hours">3 horas</string>
     <string name="pref_4_hours">4 horas</string>
     <string name="pref_5_hours">5 horas</string>
+    <string name="pref_1_min">deshabilitado</string>
+    <string name="pref_5_min">5 min</string>
+    <string name="pref_10_min">10 min</string>
+    <string name="pref_15_min">15 min</string>
     <string name="pref_input_design">Diseño de entrada</string>
     <string name="pref_default">Por defecto</string>
     <string name="pref_quick_righty">Rápido a la derecha</string>
@@ -204,6 +208,7 @@
     <string name="old_warning">¡antiguo!</string>
     <string name="error">!err!</string>
     <string name="pref_heartRateSampling">Ritmo cardíaco</string>
+    <string name="pref_heartRateSmoothing">Suavizado de RC</string>
     <string name="pref_stepsSampling">Habilitar contador de pasos</string>
     <string name="tile_tempt_1">Objetivo temporal 1</string>
     <string name="tile_tempt_2">Objetivo temporal 2</string>
