@@ -103,7 +103,6 @@
     <string name="danar_bt_name_title">מכשיר בלוטות\' DanaR</string>
     <string name="danars_password_title">סיסמת משאבה (v1 בלבד)</string>
     <string name="danar_password_title">סיסמת משאבה</string>
-    <string name="danar_useextended_title">השתמש בבולוס ממושך של &gt;200%%</string>
     <string name="bolusspeed">מהירות בולוס</string>
     <string name="selectedpump">בחרו משאבה</string>
     <string name="rs_loginsulinchange_title">רשום החלפת מכל</string>
