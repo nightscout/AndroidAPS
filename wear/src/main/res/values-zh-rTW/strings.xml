@@ -35,9 +35,9 @@
     <string name="pref_show_phone_battery">顯示手機電池</string>
     <string name="pref_show_rig_battery">顯示裝置電池</string>
     <string name="pref_show_basal_rate">顯示基礎率</string>
-    <string name="pref_show_loop_status">顯示循環狀態</string>
+    <string name="pref_show_loop_status">l</string>
     <string name="pref_show_bg">顯示血糖指數</string>
-    <string name="pref_show_bgi">顯示血糖指數</string>
+    <string name="pref_show_bgi">顯示血糖影響</string>
     <string name="pref_show_direction_arrow">顯示方向箭頭</string>
     <string name="pref_show_ago">顯示時間</string>
     <string name="pref_show_temp_basal">顯示臨時基礎率</string>
@@ -53,6 +53,10 @@
     <string name="pref_3_hours">3 小時</string>
     <string name="pref_4_hours">4 小時</string>
     <string name="pref_5_hours">5 小時</string>
+    <string name="pref_1_min">停用</string>
+    <string name="pref_5_min">5 分鐘</string>
+    <string name="pref_10_min">10 分鐘</string>
+    <string name="pref_15_min">15 分鐘</string>
     <string name="pref_input_design">輸入設計</string>
     <string name="pref_default">預設</string>
     <string name="pref_quick_righty">快速右手模式</string>
@@ -204,6 +208,7 @@
     <string name="old_warning">！舊！</string>
     <string name="error">！錯誤！</string>
     <string name="pref_heartRateSampling">心率</string>
+    <string name="pref_heartRateSmoothing">心率平滑</string>
     <string name="pref_stepsSampling">啟用步數計數</string>
     <string name="tile_tempt_1">臨時目標 1</string>
     <string name="tile_tempt_2">臨時目標 2</string>
