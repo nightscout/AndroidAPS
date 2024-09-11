@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Autotune-->
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="oaps_shortname">OAPS</string>
@@ -11,4 +12,5 @@
     <!--    Loop -->
     <!-- Autotune -->
     <string name="autotune_compare_profile">Profilok összehasonlítása</string>
+    <!--    autoISF -->
 </resources>
