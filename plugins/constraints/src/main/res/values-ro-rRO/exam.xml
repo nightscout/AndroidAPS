@@ -68,7 +68,6 @@
     <string name="basaltest_havingregularhighlow">Când aveţi frecvent valori crescute sau scăzute ale glicemiei.</string>
     <string name="basaltest_weekly">Cel puţin o dată pe săptămână.</string>
     <string name="basaltest_fixed">Odată setate și validate, aceste valori nu ar trebui să se modifice în timp.</string>
-    <string name="basaltest_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#androidaps-settings</string>
     <string name="prerequisites_label">Cerinţe preliminare</string>
     <string name="prerequisites_what">Ce este esențial pentru crearea și utilizarea AAPS?</string>
     <string name="prerequisites_determinedcorrectprofile">Profil validat (ratele bazale, IC, ISF, DIA).</string>
