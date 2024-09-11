@@ -68,7 +68,6 @@
     <string name="basaltest_havingregularhighlow">Quando passar por frequente glicose alta ou baixa.</string>
     <string name="basaltest_weekly">Pelo menos uma vez por semana.</string>
     <string name="basaltest_fixed">Uma vez definido e validado, estes valores não devem mudar ao longo do tempo.</string>
-    <string name="basaltest_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#androidaps-settings</string>
     <string name="prerequisites_label">Pré-requisitos</string>
     <string name="prerequisites_what">O que é essencial para configurar e utilizar a AndroidAPS?</string>
     <string name="prerequisites_determinedcorrectprofile">Informações do perfil validadas (Basal, I: HC, FSI, DAI).</string>
