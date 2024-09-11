@@ -230,7 +230,7 @@ class DanaRExecutionService : AbstractDanaRExecutionService() {
         if (stopPressed) return false
         danaPump.bolusingTreatment = t
         danaPump.bolusDone = false
-        val preferencesSpeed = preferences.get(DanaIntKey.DanaRsBolusSpeed)
+        val preferencesSpeed = preferences.get(DanaIntKey.DanaBolusSpeed)
         val start: MessageBase = if (preferencesSpeed == 0) MsgBolusStart(injector, amount) else MsgBolusStartWithSpeed(injector, amount, preferencesSpeed)
         danaPump.bolusStopped = false
         danaPump.bolusStopForced = false

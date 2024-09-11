@@ -2,9 +2,7 @@ package app.aaps.plugins.sync.tidepool
 
 import android.content.Context
 import android.text.Spanned
-import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
 import app.aaps.core.data.configuration.Constants
@@ -27,12 +25,11 @@ import app.aaps.core.interfaces.sync.Tidepool
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.IntentKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.core.validators.DefaultEditTextValidator
 import app.aaps.core.validators.EditTextValidator
-import app.aaps.core.validators.preferences.AdaptiveIntentPreference
+import app.aaps.core.validators.preferences.AdaptiveClickPreference
 import app.aaps.core.validators.preferences.AdaptiveStringPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
@@ -143,18 +140,6 @@ class TidepoolPlugin @Inject constructor(
         super.onStop()
     }
 
-    override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
-        super.preprocessPreferences(preferenceFragment)
-
-        val tidepoolTestLogin: Preference? = preferenceFragment.findPreference(IntentKey.TidepoolTestLogin.key)
-        tidepoolTestLogin?.setOnPreferenceClickListener {
-            preferenceFragment.context?.let {
-                tidepoolUploader.testLogin(it)
-            }
-            false
-        }
-    }
-
     private fun doUpload() =
         when (tidepoolUploader.connectionStatus) {
             TidepoolUploader.ConnectionStatus.DISCONNECTED -> tidepoolUploader.doLogin(true)
@@ -217,7 +202,13 @@ class TidepoolPlugin @Inject constructor(
                     validatorParams = DefaultEditTextValidator.Parameters(testType = EditTextValidator.TEST_MIN_LENGTH, minLength = 1)
                 )
             )
-            addPreference(AdaptiveIntentPreference(ctx = context, intentKey = IntentKey.TidepoolTestLogin, title = R.string.title_tidepool_test_login))
+            addPreference(
+                AdaptiveClickPreference(ctx = context, stringKey = StringKey.TidepoolTestLogin, title = R.string.title_tidepool_test_login,
+                                        onPreferenceClickListener = {
+                                            tidepoolUploader.testLogin(preferenceManager.context)
+                                            true
+                                        })
+            )
             addPreference(preferenceManager.createPreferenceScreen(context).apply {
                 key = "tidepool_connection_options"
                 title = rh.gs(R.string.connection_settings_title)

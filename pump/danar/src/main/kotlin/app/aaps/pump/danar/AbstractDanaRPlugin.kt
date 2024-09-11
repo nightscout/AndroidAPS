@@ -40,6 +40,7 @@ import app.aaps.pump.dana.comm.RecordTypes
 import app.aaps.pump.dana.database.DanaHistoryDatabase
 import app.aaps.pump.dana.keys.DanaBooleanKey
 import app.aaps.pump.dana.keys.DanaIntKey
+import app.aaps.pump.dana.keys.DanaIntentKey
 import app.aaps.pump.dana.keys.DanaStringKey
 import app.aaps.pump.danar.services.AbstractDanaRExecutionService
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -75,14 +76,13 @@ abstract class AbstractDanaRPlugin protected constructor(
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_danars_128)
         .pluginName(app.aaps.pump.dana.R.string.danarspump)
         .shortName(app.aaps.pump.dana.R.string.danarpump_shortname)
-        .preferencesId(R.xml.pref_danar)
+        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(app.aaps.pump.dana.R.string.description_pump_dana_r),
     aapsLogger, rh, commandQueue
 ), Pump, Dana, PluginConstraints, OwnDatabasePlugin {
 
     protected var executionService: AbstractDanaRExecutionService? = null
     protected var disposable = CompositeDisposable()
-    protected var useExtendedBoluses = false
     override var pumpDescription = PumpDescription()
         protected set
 
@@ -91,6 +91,7 @@ abstract class AbstractDanaRPlugin protected constructor(
         preferences.registerPreferences(DanaStringKey::class.java)
         preferences.registerPreferences(DanaIntKey::class.java)
         preferences.registerPreferences(DanaBooleanKey::class.java)
+        preferences.registerPreferences(DanaIntentKey::class.java)
     }
 
     override fun onStart() {

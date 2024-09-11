@@ -25,6 +25,7 @@ class AdaptiveIntPreference(
     @StringRes dialogMessage: Int? = null,
     @StringRes summary: Int? = null,
     @StringRes title: Int?,
+    validatorParams: DefaultEditTextValidator.Parameters? = null
 ) : EditTextPreference(ctx, attrs) {
 
     private val validatorParameters: DefaultEditTextValidator.Parameters
@@ -70,7 +71,8 @@ class AdaptiveIntPreference(
             if (sharedPrefs.getBoolean(it.key, false))
                 isVisible = false
         }
-        validatorParameters = obtainValidatorParameters(attrs)
+        if (validatorParams != null) validatorParameters = validatorParams
+        else validatorParameters = obtainValidatorParameters(attrs)
         setOnBindEditTextListener { editText ->
             validator = DefaultEditTextValidator(editText, validatorParameters, context)
             if (preferenceKey.min < 0)

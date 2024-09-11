@@ -19,6 +19,6 @@ enum class DanaIntKey(
     override val hideParentScreenIfHidden: Boolean = false
 ) : IntPreferenceKey {
 
-    DanaRPassword("danar_password", -2),
-    DanaRsBolusSpeed("danars_bolusspeed", 0),
+    DanaRPassword("danar_password", 0),
+    DanaBolusSpeed("danars_bolusspeed", 0),
 }

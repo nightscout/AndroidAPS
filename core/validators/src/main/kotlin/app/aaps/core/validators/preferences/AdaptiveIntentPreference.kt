@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import androidx.annotation.StringRes
 import androidx.preference.Preference
 import app.aaps.core.keys.IntentKey
+import app.aaps.core.keys.IntentPreferenceKey
 import app.aaps.core.keys.Preferences
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
@@ -14,7 +15,7 @@ import javax.inject.Inject
 class AdaptiveIntentPreference(
     ctx: Context,
     attrs: AttributeSet? = null,
-    intentKey: IntentKey?,
+    intentKey: IntentPreferenceKey?,
     intent: Intent? = null,
     @StringRes summary: Int? = null,
     @StringRes title: Int? = null,
@@ -34,7 +35,7 @@ class AdaptiveIntentPreference(
         title?.let { this.title = context.getString(it) }
         this.intent = intent
 
-        val preferenceKey = intentKey ?: preferences.get(key) as IntentKey
+        val preferenceKey = intentKey ?: preferences.get(key) as IntentPreferenceKey
         if (preferences.simpleMode && preferenceKey.defaultedBySM) isVisible = false
         if (preferences.apsMode && !preferenceKey.showInApsMode) {
             isVisible = false; isEnabled = false
@@ -58,7 +59,7 @@ class AdaptiveIntentPreference(
     override fun onAttached() {
         super.onAttached()
         // PreferenceScreen is final so we cannot extend and modify behavior
-        val preferenceKey = preferences.get(key) as IntentKey
+        val preferenceKey = preferences.get(key) as IntentPreferenceKey
         if (preferenceKey.hideParentScreenIfHidden) {
             parent?.isVisible = isVisible
             parent?.isEnabled = isEnabled

@@ -331,10 +331,7 @@ class LoopPlugin @Inject constructor(
                                 0
                             ) && carbsSuggestionsSuspendedUntil < System.currentTimeMillis() && !treatmentTimeThreshold(-15)
                         ) {
-                            if (sp.getBoolean(
-                                    app.aaps.core.utils.R.string.key_enable_carbs_required_alert_local,
-                                    true
-                                ) && !sp.getBoolean(app.aaps.core.ui.R.string.key_raise_notifications_as_android_notifications, true)
+                            if (preferences.get(BooleanKey.AlertCarbsRequired) && !sp.getBoolean(app.aaps.core.ui.R.string.key_raise_notifications_as_android_notifications, true)
                             ) {
                                 val carbReqLocal = Notification(Notification.CARBS_REQUIRED, resultAfterConstraints.carbsRequiredText, Notification.NORMAL)
                                 rxBus.send(EventNewNotification(carbReqLocal))
@@ -349,10 +346,7 @@ class LoopPlugin @Inject constructor(
                                     listValues = listOf()
                                 ).subscribe()
                             }
-                            if (sp.getBoolean(
-                                    app.aaps.core.utils.R.string.key_enable_carbs_required_alert_local,
-                                    true
-                                ) && sp.getBoolean(app.aaps.core.ui.R.string.key_raise_notifications_as_android_notifications, true)
+                            if (preferences.get(BooleanKey.AlertCarbsRequired) && sp.getBoolean(app.aaps.core.ui.R.string.key_raise_notifications_as_android_notifications, true)
                             ) {
                                 val intentAction5m = Intent(context, CarbSuggestionReceiver::class.java)
                                 intentAction5m.putExtra("ignoreDuration", 5)

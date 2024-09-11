@@ -1,6 +1,9 @@
-package app.aaps.core.keys
+package app.aaps.pump.dana.keys
 
-enum class IntentKey(
+import app.aaps.core.keys.BooleanPreferenceKey
+import app.aaps.core.keys.IntentPreferenceKey
+
+enum class DanaIntentKey(
     override val key: String,
     override val defaultedBySM: Boolean = false,
     override val showInApsMode: Boolean = true,
@@ -11,8 +14,5 @@ enum class IntentKey(
     override val hideParentScreenIfHidden: Boolean = false
 ) : IntentPreferenceKey {
 
-    ApsLinkToDocs(key = "link_to_docs"),
-    SmsOtpSetup(key = "smscommunicator_otp_setup", dependency = BooleanKey.SmsAllowRemoteCommands),
-    OverviewQuickWizardSettings(key = "overview_quickwizard_settings"),
-    XdripInfo(key = "xdrip_info"),
+    DanaRsBtSelector(key = "dana_rs_bt_selector")
 }

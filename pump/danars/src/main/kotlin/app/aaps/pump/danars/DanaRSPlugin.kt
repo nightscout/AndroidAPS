@@ -7,6 +7,9 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import android.text.format.DateFormat
 import androidx.preference.Preference
+import androidx.preference.PreferenceCategory
+import androidx.preference.PreferenceManager
+import androidx.preference.PreferenceScreen
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
@@ -50,13 +53,21 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.toast.ToastUtils
+import app.aaps.core.validators.DefaultEditTextValidator
+import app.aaps.core.validators.EditTextValidator
+import app.aaps.core.validators.preferences.AdaptiveIntentPreference
+import app.aaps.core.validators.preferences.AdaptiveListIntPreference
+import app.aaps.core.validators.preferences.AdaptiveStringPreference
+import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.pump.dana.DanaFragment
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.comm.RecordTypes
 import app.aaps.pump.dana.database.DanaHistoryDatabase
 import app.aaps.pump.dana.keys.DanaBooleanKey
 import app.aaps.pump.dana.keys.DanaIntKey
+import app.aaps.pump.dana.keys.DanaIntentKey
 import app.aaps.pump.dana.keys.DanaStringKey
+import app.aaps.pump.danars.activities.BLEScanActivity
 import app.aaps.pump.danars.events.EventDanaRSDeviceChange
 import app.aaps.pump.danars.services.DanaRSService
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -98,7 +109,7 @@ class DanaRSPlugin @Inject constructor(
         .pluginIcon2(app.aaps.core.ui.R.drawable.ic_danars_128)
         .pluginName(app.aaps.pump.dana.R.string.danarspump)
         .shortName(app.aaps.pump.dana.R.string.danarspump_shortname)
-        .preferencesId(R.xml.pref_danars)
+        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(app.aaps.pump.dana.R.string.description_pump_dana_rs),
     aapsLogger, rh, commandQueue
 ), Pump, Dana, PluginConstraints, OwnDatabasePlugin {
@@ -113,6 +124,7 @@ class DanaRSPlugin @Inject constructor(
         preferences.registerPreferences(DanaStringKey::class.java)
         preferences.registerPreferences(DanaIntKey::class.java)
         preferences.registerPreferences(DanaBooleanKey::class.java)
+        preferences.registerPreferences(DanaIntentKey::class.java)
     }
 
     override val pumpDescription
@@ -307,7 +319,7 @@ class DanaRSPlugin @Inject constructor(
         require(detailedBolusInfo.insulin > 0) { detailedBolusInfo.toString() }
 
         detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger)).value()
-        val preferencesSpeed = preferences.get(DanaIntKey.DanaRsBolusSpeed)
+        val preferencesSpeed = preferences.get(DanaIntKey.DanaBolusSpeed)
         var speed = 12
         when (preferencesSpeed) {
             0 -> speed = 12
@@ -662,4 +674,36 @@ class DanaRSPlugin @Inject constructor(
     }
 
     override fun clearAllTables() = danaHistoryDatabase.clearAllTables()
+
+    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
+        if (requiredKey != null) return
+
+        val speedEntries = arrayOf<CharSequence>("12 s/U", "30 s/U", "60 s/U")
+        val speedValues = arrayOf<CharSequence>("0", "1", "2")
+
+        val category = PreferenceCategory(context)
+        parent.addPreference(category)
+        category.apply {
+            key = "danars_settings"
+            title = rh.gs(app.aaps.pump.dana.R.string.danarspump)
+            initialExpandedChildrenCount = 0
+            addPreference(
+                AdaptiveIntentPreference(ctx = context, intentKey = DanaIntentKey.DanaRsBtSelector, title = app.aaps.pump.dana.R.string.selectedpump,
+                                         intent = Intent(context, BLEScanActivity::class.java))
+            )
+            addPreference(
+                AdaptiveStringPreference(
+                    ctx = context, stringKey = DanaStringKey.DanaRsPassword, title = app.aaps.pump.dana.R.string.danars_password_title,
+                    validatorParams = DefaultEditTextValidator.Parameters(
+                        testType = EditTextValidator.TEST_REGEXP,
+                        customRegexp = rh.gs(app.aaps.core.validators.R.string.fourhexanumber),
+                        testErrorString = rh.gs(app.aaps.core.validators.R.string.error_mustbe4hexadidits)
+                    )
+                )
+            )
+            addPreference(AdaptiveListIntPreference(ctx = context, intKey = DanaIntKey.DanaBolusSpeed, title = app.aaps.pump.dana.R.string.bolusspeed, dialogTitle = app.aaps.pump.dana.R.string.bolusspeed, entries = speedEntries, entryValues = speedValues))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = DanaBooleanKey.DanaRsLogInsulinChange, title = app.aaps.pump.dana.R.string.rs_loginsulinchange_title, summary = app.aaps.pump.dana.R.string.rs_loginsulinchange_summary))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = DanaBooleanKey.DanaRsLogCannulaChange, title = app.aaps.pump.dana.R.string.rs_logcanulachange_title, summary = app.aaps.pump.dana.R.string.rs_logcanulachange_summary))
+        }
+    }
 }
