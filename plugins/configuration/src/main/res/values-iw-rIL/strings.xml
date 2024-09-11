@@ -106,7 +106,7 @@
     <string name="restartingapp">יוצא מ-AAPS כדי להחיל הגדרות.</string>
     <string name="ue_exported">רשומות המשתמש יוצאו</string>
     <string name="protection">הגנה בסיסמאות</string>
-    <string name="master_password_missing">הסיסמה הראשית לא הוגדרה!\n\nנא להגדירה בהעדפות (%1$s&#8594;%2$s)</string>
+    <string name="master_password_missing">הסיסמה הראשית לא הוגדרה!\n\nנא להגדירה בהעדפות (%1$s)</string>
     <!--    Maintenance-->
     <string name="maintenance">תחזוקה</string>
     <string name="maintenance_shortname">תחזוקה</string>
