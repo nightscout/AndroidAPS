@@ -106,7 +106,6 @@
     <string name="restartingapp">Afslutter applikationen for at anvende indstillinger.</string>
     <string name="ue_exported">Brugerindtastninger exporteret</string>
     <string name="protection">Beskyttelse</string>
-    <string name="master_password_missing">Hovedadgangskode er ikke angivet!\n\nAngiv venligst din hovedadgangskode i præferencer (%1$s &#8594; %2$s)</string>
     <!--    Maintenance-->
     <string name="maintenance">Vedligeholdelse</string>
     <string name="maintenance_shortname">MAINT</string>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Autotune-->
     <string name="dynisf_adjust_sensitivity">Включить коэффициент чувствительности на основе суточной дозировки инсулина TDD для изменения базальной скорости и целевых значений гликемии</string>
     <string name="dynisf_adjust_sensitivity_summary">Если эти опции включены, AAPS использует последние 24 часа TDD/7D TDD для расчета коэффициента чувствительности, на основе которого производится увеличение или снижение скорости базала, а также коррекция целевой гликемии, как и при работе Autosens. Рекомендуется начинать при выключенной опции</string>
     <string name="dyn_isf_adjust_title" formatted="false">Коэффициент регулировки динамического диапазона чувствительности ISF %</string>
@@ -10,6 +11,7 @@
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Понизить чувствительность для temptargets > = 100]]></string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Динамический ISF</string>
+    <string name="openaps_auto_isf">Auto ISF</string>
     <string name="smb_interval_summary">Как часто SMB будут подаваться в минутах</string>
     <string name="resistance_lowers_target_title">Резистентность понижает цель</string>
     <string name="resistance_lowers_target_summary">При обнаружении резистентности целевой уровень гликемии понижается</string>
@@ -19,6 +21,7 @@
     <string name="openapsma_no_glucose_data">Данные гликемии недоступны</string>
     <string name="openaps_no_as_data">Данные autosens недоступны</string>
     <string name="dynisf_shortname">ДинISF</string>
+    <string name="autoisf_shortname">AUTOISF</string>
     <string name="executing">выполнение</string>
     <string name="openapsama">Помощник болюса OpenAPS AMA</string>
     <string name="array_of_elements">Массив %1$d элементов. \nActual актуальная величина:</string>
@@ -26,6 +29,7 @@
     <string name="description_ama">Состояние алгоритма в 2017 году</string>
     <string name="description_smb">Самый новый алгоритм для опытных пользователей</string>
     <string name="description_smb_dynamic_isf">Последний алгоритм для опытных пользователей с динамическим/автоматическим ISF</string>
+    <string name="description_auto_isf">Новейший алгоритм для опытных пользователей с динамическим изменением чувствительности к инсулину ISF</string>
     <string name="openapsama_bolus_snooze_dia_divisor">Делитель продолжительности действия инсулина при болюсе</string>
     <string name="openapsma_run">выполнить сейчас</string>
     <string name="openapsma_last_run_label">Предыдущее выполнение</string>
@@ -162,4 +166,30 @@
     <string name="autotune_profile_invalid">Неверный профиль</string>
     <string name="not_available_full">Недоступно</string>
     <string name="pump_disconnected">Помпа отключена</string>
+    <!--    autoISF -->
+    <string name="half_basal_exercise_target_title">Половина дозы базального инсулина при ВЦ Нагрузка</string>
+    <string name="half_basal_exercise_target_summary" formatted="false">Установливается как число, например, 160 означает, что при ВЦ 160 мг/дл и настройке \"Высокая ВЦ повышает чувствительность =true\", активируется 50% базальной скорости (120 = 75%; 140 = 60%).</string>
+    <string name="autoISF_settings_title">Настройки AutoISF</string>
+    <string name="autoISF_settings_summary">АвтоISF позволяет адаптировать фактор чувствительности (ISF) к различных вариантам изменения гликемии\n\nОн также может изменять настройки микроболюсов SMB</string>
+    <string name="acce_ISF_settings_title">настройки acce_ISF</string>
+    <string name="acce_ISF_settings_summary">Настройка acce_ISF: изменять ISF для ускорения/замедления гликемии</string>
+    <string name="enableautoISFwithcob">Включить dura_ISF при наличии активных углеводов COB</string>
+    <string name="enableautoISFwithcob_summary">Включить dura_ISF, когда имеются активные углеводы COB</string>
+    <string name="bg_ISF_settings_title">настройки bg_ISF</string>
+    <string name="bg_ISF_settings_summary">Настройки BG_ISF: ISF зависит от уровня гликемии по заранее определенному многоугольнику</string>
+    <string name="enable_postprandial_ISF_always_summary">Всегда включать адаптивный постпрандиальный ISF независимо от времени недавнего приема пищи.</string>
+    <string name="pp_ISF_settings_title">Настройки pp_ISF</string>
+    <string name="pp_ISF_settings_summary">Настройки pp_ISF: коэффициент чувствительности ISF для постпрандиального (после еды) подъема уровня глюкозы</string>
+    <string name="dura_ISF_settings_title">настройки dura_ISF</string>
+    <string name="dura_ISF_settings_summary">настройки dura_ISF при выходе ГК на плато выше целеввого диапазона</string>
+    <string name="smb_delivery_settings_title">Настройки введения микроболюсов SMB</string>
+    <string name="smb_delivery_settings_summary">Набор параметров для увеличения фактического размера микроболюсов SMB, которые могут быть применены при усилении ISF, т.е. при низких значениях ISF.\n\nИСПОЛЬЗОВАТЬ С ОСТОРОЖНОСТЬЮ</string>
+    <string name="full_loop_settings_title">Параметры полного цикла</string>
+    <string name="full_loop_settings_summary">Параметры полного цикла: настройки порога активного инсулина для ограничения накопления IOB</string>
+    <string name="use_autoISF_extensions_title">Включить расширенный функционал чувствительности AutoISF</string>
+    <string name="use_autoISF_extensions_summary">К ним относятся модуляция ISF из-за недавних изменений ГК. альтернативные средства поддержки микроболюсов SMB и поддержка полного замкнутого цикла</string>
+    <string name="openapsama_enable_autoISF">Включить адаптивную чувствительность ISF в зависимости от поведения ГК</string>
+    <string name="openapsama_autoISF_max_summary">Значение по умолчанию: 1.0 \n Это множитель предела autoISF, который, в свою очередь определяет, насколько низко он может опустить ISF.\n\nПРЕДУПРЕЖДЕНИЕ: Будьте предельно внимательны при использовании значений выше 2.5</string>
+    <string name="openapsama_autoISF_min_summary">Значение по умолчанию: 1.0 \n Это множитель нижнего предела autoISF, который, в свою очередь, определяет, насколько высоко он может поднять ISF.</string>
+    <string name="openapsama_dura_ISF_weight_summary" formatted="false">Значение по умолчанию: 0.0\n Ээто скорость, с которой autoISF увеличивается в час, при условии, что ГК в два раза выше целевой. При значении 1.0 величина ISF снизится до 50% после 1 часа работы с ГК, в два раза превышающим цель.\n\n При значении 0.0 эффект автоматической настройки ISF фактически отключен.</string>
 </resources>

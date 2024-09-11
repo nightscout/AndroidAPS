@@ -68,7 +68,7 @@
     <string name="basaltest_havingregularhighlow">當經常出現高或低血糖時。</string>
     <string name="basaltest_weekly">每週至少一次。</string>
     <string name="basaltest_fixed">設置並驗證後，這些值應該不會隨時間變化。</string>
-    <string name="basaltest_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#androidaps-settings</string>
+    <string name="basaltest_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#aaps-settings</string>
     <string name="prerequisites_label">前置條件</string>
     <string name="prerequisites_what">設置和使用AAPS的必要條件是什麼？</string>
     <string name="prerequisites_determinedcorrectprofile">已驗證的個人設置訊息（基礎、IC、ISF、DIA）。</string>

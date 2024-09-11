@@ -106,7 +106,6 @@
     <string name="restartingapp">A sair da aplicação para aplicar as definições.</string>
     <string name="ue_exported">Registos do utilizador exportadas</string>
     <string name="protection">Protecção</string>
-    <string name="master_password_missing">A Senha Mestre não está definida!\n\nPor favor, configure Senha Mestre em Preferências (%1$s &#8594; %2$s)</string>
     <!--    Maintenance-->
     <string name="maintenance">Manutenção</string>
     <string name="maintenance_shortname">MANU</string>

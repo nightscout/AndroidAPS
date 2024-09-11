@@ -106,7 +106,6 @@
     <string name="restartingapp">Se iese din aplicație în vederea aplicării setărilor.</string>
     <string name="ue_exported">Înregistrările de la Utilizator exportate</string>
     <string name="protection">Protecţie</string>
-    <string name="master_password_missing">Parola principală nu este setată!\n\nVă rugăm să vă setaţi parola principală în Preferinţe (%1$s &#8594; %2$s)</string>
     <!--    Maintenance-->
     <string name="maintenance">Mentenanță</string>
     <string name="maintenance_shortname">MENTN</string>

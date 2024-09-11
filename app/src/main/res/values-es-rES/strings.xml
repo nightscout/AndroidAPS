@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
-    <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
-    <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="nav_preferences_plugin">Preferencias de %1$s</string>
     <string name="nav_refreshtreatments">Actualizar los tratamientos desde Nightscout</string>
     <string name="nav_exit">Salir</string>

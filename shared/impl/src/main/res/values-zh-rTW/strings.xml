@@ -16,7 +16,7 @@
     <string name="cwf_comment_uploader_battery">手機電池電量 (%)</string>
     <string name="cwf_comment_rig_battery">全域循環電池電量 (%)</string>
     <string name="cwf_comment_basalRate">基礎率</string>
-    <string name="cwf_comment_bgi">血糖指數值</string>
+    <string name="cwf_comment_bgi">血糖影響變化率</string>
     <string name="cwf_comment_time">時間（HH:MM 或 HH:MM:SS）</string>
     <string name="cwf_comment_hour">小時（HH）</string>
     <string name="cwf_comment_minute">分鐘（MM）</string>

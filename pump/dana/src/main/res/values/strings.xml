@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="key_danars_pairingkey" translatable="false">danars_pairing_key_</string>
+    <string name="key_danars_v3_randompairingkey" translatable="false">danars_v3_randompairing_key_</string>
+    <string name="key_danars_v3_pairingkey" translatable="false">danars_v3_pairing_key_</string>
+    <string name="key_danars_v3_randomsynckey" translatable="false">danars_v3_randomsync_key_</string>
+    <string name="key_dana_ble5_pairingkey" translatable="false">dana_ble5_pairingkey</string>
+    <string name="key_rs_last_clear_key_request" translatable="false">rs_last_clear_key_request</string>
+
     <string name="danars_pairing">Pairing</string>
     <string name="danars_no_device_available">No device found so far</string>
     <string name="danars_pairingok">Pairing OK</string>

@@ -103,7 +103,6 @@
     <string name="danar_bt_name_title">다나R 블루투스</string>
     <string name="danars_password_title">펌프 비밀번호 (v1 전용)</string>
     <string name="danar_password_title">펌프 비밀번호</string>
-    <string name="danar_useextended_title">200%%이상 주입 위해 확장 Bolus 사용</string>
     <string name="bolusspeed">Bolus 속도</string>
     <string name="selectedpump">선택된 펌프</string>
     <string name="rs_loginsulinchange_title">주사기 교체 기록</string>

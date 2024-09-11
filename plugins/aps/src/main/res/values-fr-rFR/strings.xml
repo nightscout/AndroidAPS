@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Autotune-->
     <string name="dynisf_adjust_sensitivity">Activer le ratio de sensibilité basé sur DTQ pour la modification du basal et la cible des glycémies</string>
     <string name="dynisf_adjust_sensitivity_summary">Utilise le dernier DTQ 24h/DTQ 7j pour calculer le ratio de sensibilité utilisé pour augmenter ou diminuer le taux de basal et ajuster aussi la cible de glycémie si ces options sont activées, de la même manière que Autosens. Il est recommandé de commencer avec cette option désactivée</string>
     <string name="dyn_isf_adjust_title" formatted="false">Facteur d\'ajustement Si dynamique %</string>
@@ -10,6 +11,7 @@
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Diminue la Sensibilité pour les cibles temporaires < 100]]></string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">SI dynamique</string>
+    <string name="openaps_auto_isf">Auto ISF</string>
     <string name="smb_interval_summary">Fréquence des SMB en min</string>
     <string name="resistance_lowers_target_title">Résistance diminue la cible</string>
     <string name="resistance_lowers_target_summary">Quand une résistance est détectée, baisse de la glycémie cible</string>
@@ -19,6 +21,7 @@
     <string name="openapsma_no_glucose_data">Pas de glycémies disponibles</string>
     <string name="openaps_no_as_data">Pas de données Autosens disponibles</string>
     <string name="dynisf_shortname">DynSI</string>
+    <string name="autoisf_shortname">AutoISF</string>
     <string name="executing">Exécution en cours</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Tableau de %1$d éléments.\nValeur Actuelle :</string>
@@ -26,6 +29,7 @@
     <string name="description_ama">État de l’algorithme en 2017</string>
     <string name="description_smb">Algorithme le plus récent pour les utilisateurs avancés</string>
     <string name="description_smb_dynamic_isf">Algorithme le plus récent pour les utilisateurs avancés avec SI dynamique/automatique</string>
+    <string name="description_auto_isf">Algorithme le plus récent pour les utilisateurs avancés avec les extensions AutoISF</string>
     <string name="openapsama_bolus_snooze_dia_divisor">Bolus snooze diviseur de DAI</string>
     <string name="openapsma_run">Exécuter maintenant</string>
     <string name="openapsma_last_run_label">Dernière exécution</string>
@@ -162,4 +166,8 @@
     <string name="autotune_profile_invalid">Profil invalide</string>
     <string name="not_available_full">Non disponible</string>
     <string name="pump_disconnected">Pompe déconnectée</string>
+    <!--    autoISF -->
+    <string name="autoISF_settings_title">Paramètres AutoISF</string>
+    <string name="enableautoISFwithcob">Activer dura_ISF avec les GA</string>
+    <string name="enableautoISFwithcob_summary">Activer dura_ISF tant que des GA sont actifs</string>
 </resources>

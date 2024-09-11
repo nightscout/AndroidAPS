@@ -106,8 +106,8 @@
     <string name="description_xdrip">將資料傳送到 xDrip+</string>
     <string name="xdrip_status_detailed_iob_title">顯示詳細的 IOB</string>
     <string name="xdrip_status_detailed_iob_summary">在手錶表盤上將 IOB 分解為注射和基礎 IOB</string>
-    <string name="xdrip_status_show_bgi_title">顯示血糖指數</string>
-    <string name="xdrip_status_show_bgi_summary">在狀態行中添加血糖指數</string>
+    <string name="xdrip_status_show_bgi_title">顯示血糖變化率</string>
+    <string name="xdrip_status_show_bgi_summary">在狀態行中添加血糖變化率</string>
     <string name="xdrip_status_settings">xDrip+ 狀態行進階</string>
     <string name="disabled_loop">循環已停用</string>
     <string name="xdrip_send_status_title">將狀態行傳送到 xDrip+</string>

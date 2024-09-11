@@ -106,7 +106,6 @@
     <string name="restartingapp">Zamykanie aplikacji w celu wprowadzenia ustawień.</string>
     <string name="ue_exported">Wyeksportowano wpisy użytkownika</string>
     <string name="protection">Z ochroną</string>
-    <string name="master_password_missing">Hasło główne nie jest ustawione!\n\nProszę ustawić swoje hasło główne w preferencjach (%1$s &#8594; %2$s)</string>
     <!--    Maintenance-->
     <string name="maintenance">Konserwacja</string>
     <string name="maintenance_shortname">MAINT</string>

@@ -103,7 +103,6 @@
     <string name="danar_bt_name_title">Dana R Bluetooth Pump</string>
     <string name="danars_password_title">Pumplösenord (endast v1)</string>
     <string name="danar_password_title">Pumplösenord</string>
-    <string name="danar_useextended_title">Använd förlängd bolus för &gt;200%% temp basal</string>
     <string name="bolusspeed">Bolushastighet</string>
     <string name="selectedpump">Vald pump</string>
     <string name="rs_loginsulinchange_title">Logga reservoarbyten</string>

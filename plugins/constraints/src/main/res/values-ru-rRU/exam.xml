@@ -68,7 +68,7 @@
     <string name="basaltest_havingregularhighlow">При частом высоком или низком уровне глюкозы в крови.</string>
     <string name="basaltest_weekly">Хотя бы один раз в неделю.</string>
     <string name="basaltest_fixed">После установки и проверки, эти значения не должны меняться со временем.</string>
-    <string name="basaltest_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#androidaps-settings</string>
+    <string name="basaltest_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#aaps-settings</string>
     <string name="prerequisites_label">Предварительные требования</string>
     <string name="prerequisites_what">Что необходимо для настройки и использования AAPS?</string>
     <string name="prerequisites_determinedcorrectprofile">Проверенные данные профиля (базал, углеводный коэффициент IC, фактор чувствительности к инсулину ISF, длительность действия инсулина DIA).</string>
