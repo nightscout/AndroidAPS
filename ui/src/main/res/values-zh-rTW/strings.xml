@@ -118,8 +118,8 @@
     <string name="motol_default_profile">預設設定檔</string>
     <string name="current_profile">當前設定檔</string>
     <string name="available_profile">可用設定檔</string>
-    <string name="format_with_tdd">年齡：%1$d 每日總劑量：%2$.0f U</string>
-    <string name="format_with_tdd_and_pct">年齡：%1$d 每日總劑量：%2$.0f U %3$d%%</string>
+    <string name="format_with_tdd">時間：%1$d 每日總劑量：%2$.0f U</string>
+    <string name="format_with_tdd_and_pct">時間：%1$d 每日總劑量：%2$.0f U %3$d%%</string>
     <string name="format_with_weight">年齡：%1$d 體重：%2$.0f kg</string>
     <string name="dpv_default_profile">DPV 預設設定檔</string>
     <string name="invalid_pct">無效的百分比輸入</string>
