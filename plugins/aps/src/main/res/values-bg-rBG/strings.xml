@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Autotune-->
     <string name="high_temptarget_raises_sensitivity_title">Високите временни цели да вдигат ли чувствителността?</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Да вдигам ли чувствителността при цели над 5.6]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Ниските цели да свалят ли чувствителността ?</string>
@@ -151,4 +152,5 @@
     <string name="autotune_update_local_profile_message">Да се обнови ли %1$s профил с Autotune профил?</string>
     <string name="autotune_revert_local_profile_message">Сменете профил %1$s с началния профил?</string>
     <string name="autotune_profile_invalid">Невалиден профил</string>
+    <!--    autoISF -->
 </resources>
