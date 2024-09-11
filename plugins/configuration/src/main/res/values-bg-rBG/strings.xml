@@ -106,7 +106,6 @@
     <string name="restartingapp">Рестартиране за да се приложат новите настройки.</string>
     <string name="ue_exported">Потребителските настройки икспортирани</string>
     <string name="protection">Защита</string>
-    <string name="master_password_missing">Главната парола не е зададена!\n\nМоля, настройте Вашата главна парола в Предпочитания (%1$s &#8594; %2$s)</string>
     <!--    Maintenance-->
     <string name="maintenance">Поддръжка</string>
     <string name="maintenance_shortname">ПОДДР</string>
