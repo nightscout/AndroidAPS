@@ -106,6 +106,7 @@
     <string name="restartingapp">Ukončuji aplikaci, aby se nastavení projevilo.</string>
     <string name="ue_exported">Uživatelské záznamy exportovány</string>
     <string name="protection">Ochrana</string>
+    <string name="master_password_missing">Hlavní heslo není nastaveno!\n\nNastavte si hlavní heslo v Nastavení (%1$s)</string>
     <!--    Maintenance-->
     <string name="maintenance">Údržba</string>
     <string name="maintenance_shortname">ÚDRŽBA</string>
