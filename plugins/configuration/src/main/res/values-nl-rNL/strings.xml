@@ -106,7 +106,6 @@
     <string name="restartingapp">Sluiten van applicatie om instellingen bij te werken.</string>
     <string name="ue_exported">Gebruikers invoer geëxporteerd</string>
     <string name="protection">Beveiliging</string>
-    <string name="master_password_missing">Masterwachtwoord is niet ingesteld!\n\nStel een masterwachtwoord in in Instellingen (%1$s &#8594; %2$s)</string>
     <!--    Maintenance-->
     <string name="maintenance">Onderhoud</string>
     <string name="maintenance_shortname">ONDH</string>
