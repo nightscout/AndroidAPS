@@ -106,7 +106,6 @@
     <string name="restartingapp">설정을 적용하기위해 앱을 종료합니다.</string>
     <string name="ue_exported">사용자 입력 사항들이 저장됨</string>
     <string name="protection">보안</string>
-    <string name="master_password_missing">마스터 비밀번호가 설정되지 않았습니다 !\n\n마스터 암호를 설정에서 설정하십시오 (%1$s &#8594; %2$s)</string>
     <!--    Maintenance-->
     <string name="maintenance">정비</string>
     <string name="maintenance_shortname">MAINT</string>
