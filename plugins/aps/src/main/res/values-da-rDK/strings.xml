@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Autotune-->
     <string name="high_temptarget_raises_sensitivity_title">Høj midlertidig basal øger sensitivitet</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Hæv følsomheden for midlertidige basaler >= 100]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Lav midlertidig basal sænker sensitivitet</string>
@@ -152,4 +153,5 @@
     <string name="autotune_update_local_profile_message">Opdater %1$s profil med Autotune profil?</string>
     <string name="autotune_revert_local_profile_message">Gendan %1$s profil med Input-profilen?</string>
     <string name="autotune_profile_invalid">Profil ugyldig</string>
+    <!--    autoISF -->
 </resources>

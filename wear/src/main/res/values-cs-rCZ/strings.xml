@@ -53,6 +53,10 @@
     <string name="pref_3_hours">3 hodiny</string>
     <string name="pref_4_hours">4 hodiny</string>
     <string name="pref_5_hours">5 hodin</string>
+    <string name="pref_1_min">zakázáno</string>
+    <string name="pref_5_min">5 min</string>
+    <string name="pref_10_min">10 min</string>
+    <string name="pref_15_min">15 min</string>
     <string name="pref_input_design">Design zadávání</string>
     <string name="pref_default">Výchozí</string>
     <string name="pref_quick_righty">Rychle zprava</string>
@@ -204,6 +208,7 @@
     <string name="old_warning">!starý!</string>
     <string name="error">!chyba!</string>
     <string name="pref_heartRateSampling">Tepová frekvence</string>
+    <string name="pref_heartRateSmoothing">Vyhlazování HR</string>
     <string name="pref_stepsSampling">Povolit počet kroků</string>
     <string name="tile_tempt_1">Dočasný cíl 1</string>
     <string name="tile_tempt_2">Dočasný cíl 2</string>

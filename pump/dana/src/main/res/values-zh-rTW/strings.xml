@@ -103,7 +103,7 @@
     <string name="danar_bt_name_title">DanaR 藍牙設備</string>
     <string name="danars_password_title">幫浦密碼（僅限 v1）</string>
     <string name="danar_password_title">幫浦密碼</string>
-    <string name="danar_useextended_title">對於 &gt;200%% 使用延長注射</string>
+    <string name="danar_useextended_title">對於 &gt;200% 使用延長注射</string>
     <string name="bolusspeed">注射速度</string>
     <string name="selectedpump">選擇的幫浦</string>
     <string name="rs_loginsulinchange_title">記錄儲液器更換</string>

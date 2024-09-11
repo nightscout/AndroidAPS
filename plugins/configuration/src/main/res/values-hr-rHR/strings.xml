@@ -32,7 +32,6 @@
     <string name="setting_imported">Postavke su uvezene</string>
     <string name="filenotfound">Datoteka nije pronađena</string>
     <string name="protection">Zaštita</string>
-    <string name="master_password_missing">Glavna lozinka nije postavljena!\n\nMolimo postavite svoju glavnu lozinku u postavkama (%1$s &#8594; %2$s)</string>
     <!--    Maintenance-->
     <string name="database_cleanup">Čišćenje baze podataka</string>
     <string name="reset_db_confirm">Stvarno želiš resetirati bazu?</string>

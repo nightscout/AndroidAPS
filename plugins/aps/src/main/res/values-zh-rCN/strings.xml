@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Autotune-->
     <string name="high_temptarget_raises_sensitivity_title">高临时目标增加灵敏度</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[当临时目标 >=100 mg/dl (5.5 mmol/l) 时提高灵敏度]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">低临时目标降低灵敏度</string>
@@ -133,4 +134,5 @@
     <string name="autotune_update_local_profile_message">用 Autotune 配置文件更新 %1$s 配置文件？</string>
     <string name="autotune_revert_local_profile_message">使用输入配置文件还原 %1$s 配置文件？</string>
     <string name="autotune_profile_invalid">配置文件无效</string>
+    <!--    autoISF -->
 </resources>

@@ -106,7 +106,6 @@
     <string name="restartingapp">App wird beendet, um neue Einstellungen zu laden.</string>
     <string name="ue_exported">Benutzereinträge exportiert</string>
     <string name="protection">Schutz</string>
-    <string name="master_password_missing">Das Master-Passwort ist nicht festgelegt!\n\nLege Dein Master-Passwort bitte in den Einstellungen fest (%1$s &#8594; %2$s)</string>
     <!--    Maintenance-->
     <string name="maintenance">Wartung</string>
     <string name="maintenance_shortname">WRTNG</string>

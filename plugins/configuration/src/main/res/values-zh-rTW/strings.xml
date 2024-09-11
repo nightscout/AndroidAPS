@@ -106,7 +106,7 @@
     <string name="restartingapp">退出應用程式以應用設定。</string>
     <string name="ue_exported">用戶條目已匯出</string>
     <string name="protection">保護</string>
-    <string name="master_password_missing">未設置主密碼！\n\n請在偏好設定中設置您的主密碼（%1$s → %2$s）</string>
+    <string name="master_password_missing">未設置主密碼！\n\n請在偏好設定中設置您的主密碼（%1$s）</string>
     <!--    Maintenance-->
     <string name="maintenance">維護</string>
     <string name="maintenance_shortname">維護</string>

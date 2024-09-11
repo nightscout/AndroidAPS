@@ -106,7 +106,6 @@
     <string name="restartingapp">Uždarant aplikaciją, taikyti nustatymus.</string>
     <string name="ue_exported">Naudotojo įrašai eksportuoti</string>
     <string name="protection">Apsauga</string>
-    <string name="master_password_missing">Pagrindinis slaptažodis nėra nustatytas!\n\nPrašome nustatyti savo pagrindinį slaptažodį Nustatymuose(%1$s &#8594; %2$s)</string>
     <!--    Maintenance-->
     <string name="maintenance">Servisas</string>
     <string name="maintenance_shortname">Serv</string>

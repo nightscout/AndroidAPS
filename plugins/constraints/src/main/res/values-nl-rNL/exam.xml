@@ -68,7 +68,6 @@
     <string name="basaltest_havingregularhighlow">Wanneer je vaak hoge of lage bloedglucoses hebt.</string>
     <string name="basaltest_weekly">Minstens één keer per week.</string>
     <string name="basaltest_fixed">Eenmaal ingesteld en gevalideerd, hoeven deze waarden niet veranderd te worden in de loop der tijd.</string>
-    <string name="basaltest_hint1">https://wiki.aaps.app/nl/latest/Getting-Started/FAQ.html#androidaps-instellingen</string>
     <string name="prerequisites_label">Vereisten</string>
     <string name="prerequisites_what">Wat is minimaal nodig om AAPS in te stellen en te gebruiken?</string>
     <string name="prerequisites_determinedcorrectprofile">Goed geteste profielgegevens (Basaal, KH-ratio, ISF, DIA).</string>

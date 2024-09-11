@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Autotune-->
     <string name="dynisf_adjust_sensitivity">Povoliť, aby citlivosť založená na CDD mohla upravovať bazál a cieľovú glykémiu</string>
     <string name="dynisf_adjust_sensitivity_summary">K výpočtu citlivosti použitej pre zvýšenie, alebo zníženie bazálu sa používa CDD za posledných 24 h / 7 D a tiež upravuje cieľovú glykémiu, pokiaľ je táto možnosť povolená, rovnako, ako to robí Autosens. Túto možnosť je doporučené na začiatok vypnúť.</string>
     <string name="dyn_isf_adjust_title" formatted="false">Korekčný faktor pre DynamicISF v %</string>
@@ -162,4 +163,5 @@
     <string name="autotune_profile_invalid">Neplatný profil</string>
     <string name="not_available_full">Nedostupný</string>
     <string name="pump_disconnected">Pumpa odpojená</string>
+    <!--    autoISF -->
 </resources>

@@ -68,7 +68,7 @@
     <string name="basaltest_havingregularhighlow">כאשר חווים רמת סוכר גבוהה או נמוכה לעיתים קרובות.</string>
     <string name="basaltest_weekly">לפחות פעם אחת בשבוע.</string>
     <string name="basaltest_fixed">לאחר שהוגדרו ואומתו, ערכים אלה אינם צריכים להשתנות לאורך הזמן.</string>
-    <string name="basaltest_hint1">https://wiki.aaps.app/he/latest/Getting-Started/FAQ.html#androidaps-settings</string>
+    <string name="basaltest_hint1">https://wiki.aaps.app/he/latest/Getting-Started/FAQ.html#aaps</string>
     <string name="prerequisites_label">דרישות מקדימות</string>
     <string name="prerequisites_what">מה חיוני להגדרה ולשימוש ב-AndroidAPS?</string>
     <string name="prerequisites_determinedcorrectprofile">הגדרת פרופיל אישי (מינון בזאלי-Basal, יחס אינסולין\\פחמימה- IC, יחס תיקון-ISF, משך פעילות אינסולין-DIA).</string>

@@ -68,7 +68,6 @@
     <string name="basaltest_havingregularhighlow">자주 고혈당 또는 저혈당을 경험할 때</string>
     <string name="basaltest_weekly">적어도 일주일에 한 번</string>
     <string name="basaltest_fixed">한 번 설정하고 확인하면, 이 값은 계속 변하면 안됨.</string>
-    <string name="basaltest_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#androidaps-settings</string>
     <string name="prerequisites_label">기본 준비사항</string>
     <string name="prerequisites_what">AAPS를 설정하고 사용하기 위해 필수적인 것은 무엇입니까?</string>
     <string name="prerequisites_determinedcorrectprofile">유효한 프로파일 정보 (Basal, IC, ISF, DIA).</string>

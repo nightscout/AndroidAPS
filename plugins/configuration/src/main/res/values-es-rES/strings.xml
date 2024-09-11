@@ -106,7 +106,7 @@
     <string name="restartingapp">Saliendo de la aplicación para aplicar los ajustes.</string>
     <string name="ue_exported">Entradas de usuario exportadas</string>
     <string name="protection">Protección</string>
-    <string name="master_password_missing">¡La contraseña maestra no está configurada!\n\nPor favor, configure su contraseña maestra en Preferencias (%1$s &#8594; %2$s)</string>
+    <string name="master_password_missing">¡La contraseña maestra no está configurada!\n\nPor favor, configure su contraseña maestra dentro de las Preferencias (%1$s)</string>
     <!--    Maintenance-->
     <string name="maintenance">Mantenimiento</string>
     <string name="maintenance_shortname">MANT</string>

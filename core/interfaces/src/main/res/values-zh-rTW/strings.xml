@@ -54,7 +54,7 @@
     <string name="pref_show_basal_rate">顯示基礎率</string>
     <string name="pref_show_loop_status">顯示循環狀態</string>
     <string name="pref_show_bg">顯示 BG</string>
-    <string name="pref_show_bgi">顯示 BGI</string>
+    <string name="pref_show_bgi">顯示血糖變化率</string>
     <string name="pref_show_direction_arrow">顯示方向箭頭</string>
     <string name="pref_show_ago">顯示前</string>
     <string name="pref_show_week_number">顯示週數</string>

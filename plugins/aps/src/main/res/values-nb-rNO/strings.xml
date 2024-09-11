@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Autotune-->
     <string name="dynisf_adjust_sensitivity">Aktiver TDD-basert sensitivitetsberegning for justering av basal og blodsukkermål</string>
     <string name="dynisf_adjust_sensitivity_summary">Bruker de siste 24t TDD/7D TDD til å beregne sensitivitet som grunnlag til å øke eller redusere basaldosen, samt justere blodsukkermål hvis disse valgene er aktivert, på samme måte som Autosens gjør. Det er anbefalt å starte med dette valget slått av</string>
     <string name="dyn_isf_adjust_title" formatted="false">Dynamisk ISF justeringsfaktor %</string>
@@ -10,6 +11,7 @@
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Reduser sensitiviteten for midlertidig mål < 5,6]]></string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamisk ISF</string>
+    <string name="openaps_auto_isf">AutoISF</string>
     <string name="smb_interval_summary">Minste antall minutter mellom hver SMB</string>
     <string name="resistance_lowers_target_title">Resistens reduserer målverdi</string>
     <string name="resistance_lowers_target_summary">Hvis det oppdages resistens, vil målverdi for blodsukkeret bli redusert</string>
@@ -19,6 +21,7 @@
     <string name="openapsma_no_glucose_data">Ingen BS data tilgjengelig</string>
     <string name="openaps_no_as_data">Ingen data tilgjengelig for autosens</string>
     <string name="dynisf_shortname">DISF</string>
+    <string name="autoisf_shortname">AUTOISF</string>
     <string name="executing">Utfører</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Liste med %1$d elementer.\nFaktisk verdi:</string>
@@ -26,6 +29,7 @@
     <string name="description_ama">Slik algoritmen var definert i 2017</string>
     <string name="description_smb">Siste utgave av algoritmen for avanserte brukere</string>
     <string name="description_smb_dynamic_isf">Nyeste algoritme for avanserte brukere med dynamisk/automatisk ISF</string>
+    <string name="description_auto_isf">Nyeste algoritme for avanserte brukere med utvidelsen AutoISF</string>
     <string name="openapsama_bolus_snooze_dia_divisor">DIA divisor for slumring av bolus</string>
     <string name="openapsma_run">Utfør nå</string>
     <string name="openapsma_last_run_label">Siste beregning</string>
@@ -162,4 +166,57 @@
     <string name="autotune_profile_invalid">Ugyldig profil</string>
     <string name="not_available_full">Ikke tilgjengelig</string>
     <string name="pump_disconnected">Pumpe frakoblet</string>
+    <!--    autoISF -->
+    <string name="half_basal_exercise_target_title">Halv basal treningsmålverdi</string>
+    <string name="half_basal_exercise_target_summary" formatted="false">Sett til et tall, f.eks. 160, noe som betyr at når midlertidig mål er 160 mg/dL (~8.9 mmol/l) og høy midlertidig mål øker sensitiviteten=sant, settes 50% basal på dette nivået (120 = 75%; 140 = 60%).</string>
+    <string name="autoISF_settings_title">AutoISF-innstillinger</string>
+    <string name="autoISF_settings_summary">AutoISF gjør det mulig å tilpasse insulinsensitivitetsfaktoren (ISF) i ulike scenarier av glukoseadferd\n\nDet kan også tilpasse SMB leveringsinnstillinger</string>
+    <string name="acce_ISF_settings_title">acce_ISF-innstillinger</string>
+    <string name="acce_ISF_settings_summary">acce_ISF-innstillinger: juster ISF for akselerasjon/bremsing av blodglukose</string>
+    <string name="enableautoISFwithcob">Aktiver dura_ISF med COB</string>
+    <string name="enableautoISFwithcob_summary">Aktiver dura_ISF når COB (karbohydrater ombord) er aktiv</string>
+    <string name="bg_ISF_settings_title">bg_ISF-innstillinger</string>
+    <string name="bg_ISF_settings_summary">bg_ISF-innstillinger: ISF avhengig av blodsukkernivå i henhold til en forhåndsdefinert polygon</string>
+    <string name="enable_postprandial_ISF_always_summary">Aktiver postprandial ISF-tilpasning til enhver tid uavhengig av når siste måltid ble inntatt.</string>
+    <string name="pp_ISF_settings_title">pp_ISF-innstillinger</string>
+    <string name="pp_ISF_settings_summary">pp_ISF-innstillinger: ISF for postprandial (etter måltid) glukosestigning</string>
+    <string name="dura_ISF_settings_title">dura_ISF-innstillinger</string>
+    <string name="dura_ISF_settings_summary">dura_ISF-innstillinger: ISF for blodsukkerplatå over målet</string>
+    <string name="smb_delivery_settings_title">SMB leveringsinnstillinger</string>
+    <string name="smb_delivery_settings_summary">Sett med alternativer for å øke den faktiske SMB-størrelsen som kan leveres i situasjoner der ISF ble styrket, f.eks. ganske lavt ISF-tall.\n\nBRUK MED FORSIKTIGHET</string>
+    <string name="full_loop_settings_title">Full Loop-innstillinger</string>
+    <string name="full_loop_settings_summary">Full Loop-innstillinger: Juster iobTH for å begrense oppbygging av IOB</string>
+    <string name="use_autoISF_extensions_title">Aktiver utvidede AutoISF-funksjoner</string>
+    <string name="use_autoISF_extensions_summary">Disse inkluderer ISF-modulasjon grunnet nylig bg oppførsel, alternative SMB aktiveringsfunksjoner og støtte for fullstendig lukket loop</string>
+    <string name="openapsama_enable_autoISF">Aktiver ISF-tilpasning etter glukoseoppførsel</string>
+    <string name="openapsama_autoISF_max_summary">Standardverdi: 1.0\nDette er en multiplikatorbegrensning for AutoISF for å sette en grense for hvor høy AutoISF-forholdet kan være, som igjen bestemmer hvor lavt det kan justere ISF.\n\nADVARSEL: Vær ekstremt forsiktig når du bruker verdier over 2.5</string>
+    <string name="openapsama_autoISF_min_summary">Standardverdi: 1.0\nDette er en multiplikatorbegrensning for AutoISF for å sette en grense for hvor lav AutoISF-forholdet kan være, som igjen bestemmer hvor høyt det kan justere ISF.</string>
+    <string name="openapsama_dura_ISF_weight_summary" formatted="false">Standardverdi: 0.0\nDette er hastigheten som autoISF vokser med per time, forutsatt at BS er dobbelt så høyt som målet. Med en verdi på 1.0 vil den redusere ISF til 50% etter 1 time med BS på dobbelt så høyt som målet.\n\nMed 0.0 er effekten av AutoISF effektivt deaktivert.</string>
+    <string name="openapsama_lower_ISFrange_weight_summary">Standardverdi: 0.0\nDette er vekten som brukes på polygonet som tilpasser ISF hvis glukosen er under målet. \n\nMed 0.0 er effekten effektivt deaktivert.</string>
+    <string name="openapsama_higher_ISFrange_weight_summary">Standardverdi: 0.0\nDette er vekten som brukes på polygonet som tilpasser ISF hvis glukosen er over målet. \n\nMed 0.0 er effekten effektivt deaktivert.</string>
+    <string name="openapsama_pp_ISF_weight_summary">Standardverdi: 0.0\nDette er vekten som brukes på den lineære hellingen mens glukosen stiger og tilpasses ISF. \n\nMed 0.0 er dette bidraget effektivt deaktivert.</string>
+    <string name="openapsama_bgAccel_ISF_weight_summary">Standardverdi: 0.0\nDette er vekten som brukes mens glukosen akselererer og som styrker ISF. \n\nMed 0.0 er dette bidraget effektivt deaktivert.</string>
+    <string name="openapsama_bgBrake_ISF_weight_summary">Standardverdi: 0.0\nDette er vekten som brukes mens glukose bremser og som svekker ISF. \n\nMed 0.0 er dette bidraget effektivt deaktivert.</string>
+    <string name="openapsama_autoISF_max">Maksimal AutoISF-forhold\n(autoISF_max)</string>
+    <string name="openapsama_autoISF_min">Minimal AutoISF-forhold\n(autoISF_min)</string>
+    <string name="openapsama_lower_ISFrange_weight">nedre ISF-områdevekting\n(lower_ISFrange_weight)</string>
+    <string name="openapsama_higher_ISFrange_weight">høyere ISF-områdevekting\n(higher_ISFrange_weight)</string>
+    <string name="openapsama_pp_ISF_weight">postprandial ISF-vekting\n(pp_ISF_weight)</string>
+    <string name="openapsama_bgAccel_ISF_weight">Vekting mens BS akselererer\n(bgAccel_ISF_weight)</string>
+    <string name="openapsama_bgBrake_ISF_weight">Vekting mens BS bremser\n(bgBrake_ISF_weight)</string>
+    <string name="openapsama_dura_ISF_weight">dura_ISF-vekting\n(dura_ISF_weight)</string>
+    <string name="openapsama_smb_delivery_ratio">fast SMB-leveringsforhold\n(smb_delivery_ratio)</string>
+    <string name="openapsama_smb_delivery_ratio_min">variabel SMB leveringsforhold, nedre ende\n(smb_delivery_ratio_min)</string>
+    <string name="openapsama_smb_delivery_ratio_max">variabel SMB-leveringsforhold, øvre ende\n(smb_delivery_ratio_max)</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range">variabel SMB leveringsforhold, kartlagt glukoseområde\n(smb_delivery_ratio_bg_range)</string>
+    <string name="openapsama_smb_max_range_extension">SMB/UAM maksimal rekkeviddeforlengelse\n(smb_max_range_extension)</string>
+    <string name="openapsama_smb_delivery_ratio_summary">Standardverdi: 0.5 Dette er en annen viktig OpenAPS sikkerhetsgrense, og angir hvilken andel av den totale insulin som kreves kan leveres som SMB. Dette er for å forhindre at personer kommer inn i farlig territorium ved å sette SMB-forespørsler fra omsorgspersonens telefon samtidig. Øk denne eksperimentelle verdien sakte og med forsiktighet.</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">Standardverdi: 0.5 Dette er den nedre enden av et lineært økende forhold i stedet for fiksverdien ovenfor.</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">Standardverdi: 0.5 Dette er den øvre enden av et lineært økende forhold i stedet for fiksverdien ovenfor.</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range_summary">Standardverdi: 0. Det lineært økende SMB-leveringsforholdet er kartlagt til glukoseområdet [target_bg, target_bg+bg_range].\nVed target_bg er SMB-forholdet smb_delivery_ratio_min, ved target_bg+bg_range er det smb_delivery_ratio_max.\nMed 0 er det lineært økende SMB-forholdet deaktivert og den faste smb_delivery_ratio brukes.</string>
+    <string name="openapsama_smb_max_range_extension_summary">Standardverdi: 1 Dette er en annen viktig OpenAPS sikkerhetsgrense, og angir med hvilken faktor du kan overstige de vanlige 120 maxSMB/maxUAM-minuttene. Øk denne eksperimentelle verdien sakte og med forsiktighet.</string>
+    <string name="enableSMB_EvenOn_OddOff_always">Aktiver alternativ aktivering av SMB avhengig av om aktiv målverdi er et partall</string>
+    <string name="enableSMB_EvenOn_OddOff_always_summary">\naktivert ...\nhvis aktivt mål (mmol/L) har partall desimal\neller aktivt mål (mg/dL) er partall\n\ndeaktivert ellers</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Standardverdi: 100%\nMed 100% er denne funksjonen effektivt deaktivert.</string>
+    <string name="openapsama_iob_threshold_percent">Prosentandel av maxIOB over hvor SMB er deaktivert\n(iob_threshold_percent)</string>
 </resources>

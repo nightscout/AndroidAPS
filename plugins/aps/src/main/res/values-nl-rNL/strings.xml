@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Autotune-->
     <string name="dynisf_adjust_sensitivity">Inschakelen van TDD gebaseerde gevoeligheid ratio voor basaal en glucose doel aanpassingen</string>
     <string name="dynisf_adjust_sensitivity_summary">Gebruikt de laatste 24u TDD/7D om de gevoeligheid te berekenen voor het verhogen of verlagen van de basaalstand en past het glucosedoel aan als deze opties zijn ingeschakeld, op dezelfde manier als Autosens dat doet. Advies is om te starten met deze optie uitgeschakeld</string>
     <string name="dyn_isf_adjust_title" formatted="false">DynamicISF Aanpassing Factor %</string>
@@ -162,4 +163,5 @@
     <string name="autotune_profile_invalid">Profiel ongeldig</string>
     <string name="not_available_full">Niet beschikbaar</string>
     <string name="pump_disconnected">Pomp niet verbonden</string>
+    <!--    autoISF -->
 </resources>

@@ -8,5 +8,4 @@
     <string name="description_pump_dana_r">Integracija za DANA Diabecare R pumpe</string>
     <string name="description_pump_dana_r_korean">Integracija DANA Diabecare R pumpe Korejskog porijekla</string>
     <string name="danar_bt_name_title">DanaR Bluetooth uređaj</string>
-    <string name="danar_useextended_title">Koristi produženi bolus za &gt;200%%</string>
 </resources>

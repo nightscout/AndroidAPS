@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Autotune-->
     <string name="dynisf_adjust_sensitivity">Basal 및 혈당 목표 수정을 위한 TDD 기반 민감도 비율 활성화</string>
     <string name="dynisf_adjust_sensitivity_summary">지난 24시간 TDD/7일 TDD를 사용하여 Basal 증가 또는 감소에 사용되는 민감도 비율을 계산하고, 이 옵션이 활성화된 경우 Autosens와 동일한 방식으로 혈당 목표도 조정합니다. 이 옵션을 끈 상태에서 시작하는 것이 좋습니다.</string>
     <string name="high_temptarget_raises_sensitivity_title">높은 임시목표는 민감도를 올립니다.</string>
@@ -154,4 +155,5 @@
     <string name="autotune_update_local_profile_message">Autotune 프로파일에서 %1$s 프로파일을 업데이트 하시겠습니까?</string>
     <string name="autotune_revert_local_profile_message">입력 프로파일과 함께 %1$s 프로파일을 되돌리시겠습니까?</string>
     <string name="autotune_profile_invalid">프로파일이 잘못되었습니다</string>
+    <!--    autoISF -->
 </resources>

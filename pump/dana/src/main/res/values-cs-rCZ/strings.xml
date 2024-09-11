@@ -103,7 +103,7 @@
     <string name="danar_bt_name_title">DanaR Bluetooth zařízení</string>
     <string name="danars_password_title">Heslo pumpy (pouze v1)</string>
     <string name="danar_password_title">Heslo k pumpě</string>
-    <string name="danar_useextended_title">Použít prodloužené bolusy pro &gt;200%%</string>
+    <string name="danar_useextended_title">Použít prodloužené bolusy pro &gt;200%</string>
     <string name="bolusspeed">Rychlost bolusu</string>
     <string name="selectedpump">Vybraná pumpa</string>
     <string name="rs_loginsulinchange_title">Zaznamenat výměnu zásobníku</string>

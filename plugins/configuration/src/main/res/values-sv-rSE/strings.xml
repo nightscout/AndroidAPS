@@ -106,7 +106,6 @@
     <string name="restartingapp">Avslutar appen för att inställningarna ska läsas in.</string>
     <string name="ue_exported">Användarposter exporterade</string>
     <string name="protection">Skydd</string>
-    <string name="master_password_missing">Huvudlösenord har inte angetts.\n\nAnge huvudlösenord i Inställningar (%1$s &#8594; %2$s)</string>
     <!--    Maintenance-->
     <string name="maintenance">Underhåll</string>
     <string name="maintenance_shortname">UH</string>

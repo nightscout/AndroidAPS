@@ -68,7 +68,6 @@
     <string name="basaltest_havingregularhighlow">Sık sık yüksek veya düşük kan şekeri yaşarken.</string>
     <string name="basaltest_weekly">Haftada en az bir kez.</string>
     <string name="basaltest_fixed">Bir kez ayarlanıp onaylandıktan sonra bu değerler zaman içinde değişmemelidir.</string>
-    <string name="basaltest_hint1">https://wiki.aaps.app/tr/latest/Getting-Started/FAQ.html#androidaps-settings</string>
     <string name="prerequisites_label">Önkoşullar</string>
     <string name="prerequisites_what">AAPS\'yi kurmak ve kullanmak için gerekenler nelerdir?</string>
     <string name="prerequisites_determinedcorrectprofile">Doğrulanmış profil bilgileri (Basal, IC, ISF, DIA).</string>

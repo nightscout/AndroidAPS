@@ -68,7 +68,6 @@
     <string name="basaltest_havingregularhighlow">Όταν βιώνετε συχνά υψηλά ή χαμηλά επίπεδα γλυκόζης στο αίμα.</string>
     <string name="basaltest_weekly">Τουλάχιστον μία φορά την εβδομάδα.</string>
     <string name="basaltest_fixed">Μόλις ρυθμιστούν και επικυρωθούν, οι τιμές αυτές δεν θα πρέπει να μεταβάλλονται με την πάροδο του χρόνου.</string>
-    <string name="basaltest_hint1">https://wiki.aaps.app/el/latest/Getting-Started/FAQ.html#androidaps-settings</string>
     <string name="prerequisites_label">Προϋποθέσεις</string>
     <string name="prerequisites_what">Τι είναι ουσιώδες για τη ρύθμιση και τη χρήση του AAPS;</string>
     <string name="prerequisites_determinedcorrectprofile">Έγκυρες πληροφορίες προφίλ (Βασικός, IC, ISF, DIA).</string>

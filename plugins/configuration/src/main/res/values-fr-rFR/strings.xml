@@ -107,7 +107,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="restartingapp">Sortir de l’application pour appliquer les nouveaux paramètres.</string>
     <string name="ue_exported">Entrées utilisateur exportées</string>
     <string name="protection">Protection</string>
-    <string name="master_password_missing">Le mot de passe principal n\'est pas défini !\n\nVeuillez définir votre mot de passe principal dans les préférences (%1$s &#8594; %2$s)</string>
     <!--    Maintenance-->
     <string name="maintenance">Maintenance</string>
     <string name="maintenance_shortname">MAINT</string>
