@@ -103,7 +103,6 @@
     <string name="danar_bt_name_title">丹纳R 蓝牙设备</string>
     <string name="danars_password_title">泵密码 (仅v1)</string>
     <string name="danar_password_title">泵密码</string>
-    <string name="danar_useextended_title">当建议剂量大于200%时，启用扩展剂量(方波)进行增补。</string>
     <string name="bolusspeed">大剂量输注速度</string>
     <string name="selectedpump">已选择的泵</string>
     <string name="rs_loginsulinchange_title">记录储药器更换</string>
