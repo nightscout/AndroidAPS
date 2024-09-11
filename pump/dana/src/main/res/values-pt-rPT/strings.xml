@@ -103,7 +103,6 @@
     <string name="danar_bt_name_title">Dispositivo Bluetooth DanaR</string>
     <string name="danars_password_title">Senha da bomba (apenas v1)</string>
     <string name="danar_password_title">Senha da bomba</string>
-    <string name="danar_useextended_title">Utilizar bólus estendido por &gt;200%%</string>
     <string name="bolusspeed">Velocidade Bólus</string>
     <string name="selectedpump">Bomba seleccionada</string>
     <string name="rs_loginsulinchange_title">Registar mudança de reservatório</string>
