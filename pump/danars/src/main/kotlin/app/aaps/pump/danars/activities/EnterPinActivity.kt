@@ -6,13 +6,14 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.Preferences
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.utils.hexStringToByteArray
 import app.aaps.core.validators.DefaultEditTextValidator
 import app.aaps.core.validators.EditTextValidator
+import app.aaps.pump.dana.keys.DanaString2Key
 import app.aaps.pump.danars.DanaRSPlugin
 import app.aaps.pump.danars.databinding.DanarsEnterPinActivityBinding
 import app.aaps.pump.danars.services.BLEComm
@@ -25,7 +26,7 @@ class EnterPinActivity : TranslatedDaggerAppCompatActivity() {
 
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var danaRSPlugin: DanaRSPlugin
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var bleComm: BLEComm
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var rh: ResourceHelper
@@ -88,12 +89,12 @@ class EnterPinActivity : TranslatedDaggerAppCompatActivity() {
         for (i in pairingKey.indices)
             pairingKeyCheckSum = pairingKeyCheckSum xor pairingKey[i]
 
-        sp.putString(rh.gs(app.aaps.pump.dana.R.string.key_danars_v3_pairingkey) + danaRSPlugin.mDeviceName, Base64.encodeToString(pairingKey, Base64.DEFAULT))
+        preferences.put(DanaString2Key.DanaRsV3ParingKey, danaRSPlugin.mDeviceName, Base64.encodeToString(pairingKey, Base64.DEFAULT))
 
         for (i in randomPairingKey.indices)
             pairingKeyCheckSum = pairingKeyCheckSum xor randomPairingKey[i]
 
-        sp.putString(rh.gs(app.aaps.pump.dana.R.string.key_danars_v3_randompairingkey) + danaRSPlugin.mDeviceName, Base64.encodeToString(randomPairingKey, Base64.DEFAULT))
+        preferences.put(DanaString2Key.DanaRsV3RandomParingKey, danaRSPlugin.mDeviceName, Base64.encodeToString(randomPairingKey, Base64.DEFAULT))
 
         return checksum[0] == pairingKeyCheckSum
     }

@@ -68,7 +68,6 @@ class DanaRSPluginTest : DanaRSTestBase() {
                 rh,
                 constraintChecker,
                 profileFunction,
-                sp,
                 commandQueue,
                 danaPump,
                 pumpSync,

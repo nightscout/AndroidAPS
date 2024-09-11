@@ -15,8 +15,10 @@ import app.aaps.core.keys.DoublePreferenceKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.IntPreferenceKey
 import app.aaps.core.keys.IntentKey
+import app.aaps.core.keys.LongPreferenceKey
 import app.aaps.core.keys.PreferenceKey
 import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.String2PreferenceKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.StringPreferenceKey
 import app.aaps.core.keys.UnitDoubleKey
@@ -76,6 +78,17 @@ class PreferencesImpl @Inject constructor(
         sp.putString(key.key, value)
     }
 
+    override fun get(key: String2PreferenceKey, appendix: String): String =
+        if (simpleMode && key.defaultedBySM) key.defaultValue
+        else sp.getString(key.key + key.delimiter + appendix, key.defaultValue)
+
+    override fun getIfExists(key: String2PreferenceKey, appendix: String): String? =
+        if (sp.contains(key.key + key.delimiter + appendix)) sp.getString(key.key + key.delimiter + appendix, key.defaultValue) else null
+
+    override fun put(key: String2PreferenceKey, appendix: String, value: String) {
+        sp.putString(key.key + key.delimiter + appendix, value)
+    }
+
     override fun get(key: DoublePreferenceKey): Double =
         if (simpleMode && key.calculatedBySM) calculatePreference(key)
         else if (simpleMode && key.defaultedBySM) key.defaultValue
@@ -112,8 +125,25 @@ class PreferencesImpl @Inject constructor(
         sp.putInt(key.key, value)
     }
 
+    override fun get(key: LongPreferenceKey): Long =
+        if (!config.isEngineeringMode() && key.engineeringModeOnly) key.defaultValue
+        else if (simpleMode && key.defaultedBySM) calculatedDefaultValue(key)
+        else if (key.engineeringModeOnly && !config.isEngineeringMode()) calculatedDefaultValue(key)
+        else sp.getLong(key.key, calculatedDefaultValue(key))
+
+    override fun getIfExists(key: LongPreferenceKey): Long? =
+        if (sp.contains(key.key)) sp.getLong(key.key, calculatedDefaultValue(key)) else null
+
+    override fun put(key: LongPreferenceKey, value: Long) {
+        sp.putLong(key.key, value)
+    }
+
     override fun remove(key: PreferenceKey) {
         sp.remove(key.key)
+    }
+
+    override fun remove(key: String2PreferenceKey, appendix: String) {
+        sp.remove(key.key + key.delimiter + appendix)
     }
 
     override fun isUnitDependent(key: String): Boolean =
@@ -151,6 +181,13 @@ class PreferencesImpl @Inject constructor(
                         else                                                                  -> 24
                     }
 
+                else                  -> error("Unsupported default value calculation")
+            }
+        else key.defaultValue
+
+    private fun calculatedDefaultValue(key: LongPreferenceKey): Long =
+        if (key.calculatedDefaultValue)
+            when (key) {
                 else                  -> error("Unsupported default value calculation")
             }
         else key.defaultValue

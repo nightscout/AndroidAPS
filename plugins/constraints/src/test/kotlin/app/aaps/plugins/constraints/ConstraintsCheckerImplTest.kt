@@ -138,7 +138,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         danaRSPlugin =
             DanaRSPlugin(
                 aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, profileFunction,
-                sp, commandQueue, danaPump, pumpSync, preferences, detailedBolusInfoStorage, temporaryBasalStorage,
+                commandQueue, danaPump, pumpSync, preferences, detailedBolusInfoStorage, temporaryBasalStorage,
                 fabricPrivacy, dateUtil, uiInteraction, danaHistoryDatabase, decimalFormatter, instantiator
             )
         insightPlugin = InsightPlugin(

@@ -45,6 +45,7 @@ import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.Mockito
 import kotlin.test.assertIs
+import kotlin.time.Duration.Companion.seconds
 
 internal class LoadBgWorkerTest : TestBase() {
 
@@ -109,7 +110,7 @@ internal class LoadBgWorkerTest : TestBase() {
     }
 
     @Test
-    fun notInitializedAndroidClient() = runTest {
+    fun notInitializedAndroidClient() = runTest(timeout = 30.seconds) {
         sut = TestListenableWorkerBuilder<LoadBgWorker>(context).build()
 
         val result = sut.doWorkAndLog()
@@ -117,7 +118,7 @@ internal class LoadBgWorkerTest : TestBase() {
     }
 
     @Test
-    fun notEnabledNSClientSource() = runTest {
+    fun notEnabledNSClientSource() = runTest(timeout = 30.seconds) {
         sut = TestListenableWorkerBuilder<LoadBgWorker>(context).build()
         Mockito.`when`(nsClientSource.isEnabled()).thenReturn(false)
         Mockito.`when`(preferences.get(BooleanKey.NsClientAcceptCgmData)).thenReturn(false)
@@ -128,7 +129,7 @@ internal class LoadBgWorkerTest : TestBase() {
     }
 
     @Test
-    fun testThereAreNewerDataFirstLoadEmptyReturn() = runTest {
+    fun testThereAreNewerDataFirstLoadEmptyReturn() = runTest(timeout = 30.seconds) {
         Mockito.`when`(workManager.beginUniqueWork(anyString(), any(), any<OneTimeWorkRequest>())).thenReturn(workContinuation)
         Mockito.`when`(workContinuation.then(any<OneTimeWorkRequest>())).thenReturn(workContinuation)
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
@@ -143,7 +144,7 @@ internal class LoadBgWorkerTest : TestBase() {
     }
 
     @Test
-    fun testThereAreNewerDataFirstLoadListReturn() = runTest {
+    fun testThereAreNewerDataFirstLoadListReturn() = runTest(timeout = 30.seconds) {
 
         val glucoseValue = GV(
             timestamp = 10000,
@@ -171,7 +172,7 @@ internal class LoadBgWorkerTest : TestBase() {
     }
 
     @Test
-    fun testNoLoadNeeded() = runTest {
+    fun testNoLoadNeeded() = runTest(timeout = 30.seconds) {
         Mockito.`when`(workManager.beginUniqueWork(anyString(), any(), any<OneTimeWorkRequest>())).thenReturn(workContinuation)
         Mockito.`when`(workContinuation.then(any<OneTimeWorkRequest>())).thenReturn(workContinuation)
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient

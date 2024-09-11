@@ -63,7 +63,6 @@ class DanaRsPacketBolusSetStepBolusStartTest : DanaRSTestBase() {
                 rh,
                 constraintChecker,
                 profileFunction,
-                sp,
                 commandQueue,
                 danaPump,
                 pumpSync,

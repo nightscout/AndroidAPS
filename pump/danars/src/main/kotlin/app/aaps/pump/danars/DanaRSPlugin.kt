@@ -44,7 +44,6 @@ import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
 import app.aaps.core.interfaces.rx.events.EventDismissNotification
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -66,6 +65,8 @@ import app.aaps.pump.dana.database.DanaHistoryDatabase
 import app.aaps.pump.dana.keys.DanaBooleanKey
 import app.aaps.pump.dana.keys.DanaIntKey
 import app.aaps.pump.dana.keys.DanaIntentKey
+import app.aaps.pump.dana.keys.DanaLongKey
+import app.aaps.pump.dana.keys.DanaString2Key
 import app.aaps.pump.dana.keys.DanaStringKey
 import app.aaps.pump.danars.activities.BLEScanActivity
 import app.aaps.pump.danars.events.EventDanaRSDeviceChange
@@ -88,7 +89,6 @@ class DanaRSPlugin @Inject constructor(
     rh: ResourceHelper,
     private val constraintChecker: ConstraintsChecker,
     private val profileFunction: ProfileFunction,
-    private val sp: SP,
     commandQueue: CommandQueue,
     private val danaPump: DanaPump,
     private val pumpSync: PumpSync,
@@ -125,6 +125,8 @@ class DanaRSPlugin @Inject constructor(
         preferences.registerPreferences(DanaIntKey::class.java)
         preferences.registerPreferences(DanaBooleanKey::class.java)
         preferences.registerPreferences(DanaIntentKey::class.java)
+        preferences.registerPreferences(DanaString2Key::class.java)
+        preferences.registerPreferences(DanaLongKey::class.java)
     }
 
     override val pumpDescription
@@ -666,11 +668,11 @@ class DanaRSPlugin @Inject constructor(
     override fun canHandleDST(): Boolean = false
     override fun clearPairing() {
         aapsLogger.debug(LTag.PUMPCOMM, "Pairing keys cleared")
-        sp.remove(rh.gs(app.aaps.pump.dana.R.string.key_danars_pairingkey) + mDeviceName)
-        sp.remove(rh.gs(app.aaps.pump.dana.R.string.key_danars_v3_randompairingkey) + mDeviceName)
-        sp.remove(rh.gs(app.aaps.pump.dana.R.string.key_danars_v3_pairingkey) + mDeviceName)
-        sp.remove(rh.gs(app.aaps.pump.dana.R.string.key_danars_v3_randomsynckey) + mDeviceName)
-        sp.remove(rh.gs(app.aaps.pump.dana.R.string.key_dana_ble5_pairingkey) + mDeviceName)
+        preferences.remove(DanaString2Key.DanaRsParingKey, mDeviceName)
+        preferences.remove(DanaString2Key.DanaRsV3RandomParingKey, mDeviceName)
+        preferences.remove(DanaString2Key.DanaRsV3ParingKey, mDeviceName)
+        preferences.remove(DanaString2Key.DanaRsV3RandomSyncKey, mDeviceName)
+        preferences.remove(DanaString2Key.DanaRsBle5PairingKey, mDeviceName)
     }
 
     override fun clearAllTables() = danaHistoryDatabase.clearAllTables()
@@ -688,8 +690,10 @@ class DanaRSPlugin @Inject constructor(
             title = rh.gs(app.aaps.pump.dana.R.string.danarspump)
             initialExpandedChildrenCount = 0
             addPreference(
-                AdaptiveIntentPreference(ctx = context, intentKey = DanaIntentKey.DanaRsBtSelector, title = app.aaps.pump.dana.R.string.selectedpump,
-                                         intent = Intent(context, BLEScanActivity::class.java))
+                AdaptiveIntentPreference(
+                    ctx = context, intentKey = DanaIntentKey.DanaRsBtSelector, title = app.aaps.pump.dana.R.string.selectedpump,
+                    intent = Intent(context, BLEScanActivity::class.java)
+                )
             )
             addPreference(
                 AdaptiveStringPreference(
@@ -701,7 +705,16 @@ class DanaRSPlugin @Inject constructor(
                     )
                 )
             )
-            addPreference(AdaptiveListIntPreference(ctx = context, intKey = DanaIntKey.DanaBolusSpeed, title = app.aaps.pump.dana.R.string.bolusspeed, dialogTitle = app.aaps.pump.dana.R.string.bolusspeed, entries = speedEntries, entryValues = speedValues))
+            addPreference(
+                AdaptiveListIntPreference(
+                    ctx = context,
+                    intKey = DanaIntKey.DanaBolusSpeed,
+                    title = app.aaps.pump.dana.R.string.bolusspeed,
+                    dialogTitle = app.aaps.pump.dana.R.string.bolusspeed,
+                    entries = speedEntries,
+                    entryValues = speedValues
+                )
+            )
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = DanaBooleanKey.DanaRsLogInsulinChange, title = app.aaps.pump.dana.R.string.rs_loginsulinchange_title, summary = app.aaps.pump.dana.R.string.rs_loginsulinchange_summary))
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = DanaBooleanKey.DanaRsLogCannulaChange, title = app.aaps.pump.dana.R.string.rs_logcanulachange_title, summary = app.aaps.pump.dana.R.string.rs_logcanulachange_summary))
         }

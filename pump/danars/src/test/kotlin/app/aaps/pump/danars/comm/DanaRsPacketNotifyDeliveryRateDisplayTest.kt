@@ -67,7 +67,6 @@ class DanaRsPacketNotifyDeliveryRateDisplayTest : DanaRSTestBase() {
                 rh,
                 constraintChecker,
                 profileFunction,
-                sp,
                 commandQueue,
                 danaPump,
                 pumpSync,
