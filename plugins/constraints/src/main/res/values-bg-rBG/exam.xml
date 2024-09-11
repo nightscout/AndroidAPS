@@ -68,7 +68,6 @@
     <string name="basaltest_havingregularhighlow">При чести високи или ниски нива на кръвната захар.</string>
     <string name="basaltest_weekly">Поне веднъж седмично.</string>
     <string name="basaltest_fixed">Веднъж зададени и потвърдени, тези стойности не трябва да се променят с течение на времето.</string>
-    <string name="basaltest_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#androidaps-settings</string>
     <string name="prerequisites_label">Предпоставки</string>
     <string name="prerequisites_what">Какво е важно за настройка и използване на AAPS?</string>
     <string name="prerequisites_determinedcorrectprofile">Валидна информация за профила (Базал, IC, ISF, DIA).</string>
