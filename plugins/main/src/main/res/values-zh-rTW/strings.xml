@@ -165,7 +165,7 @@
     <string name="tools">工具</string>
     <string name="nav_history_browser">歷史瀏覽器</string>
     <string name="sensor_label">傳感器</string>
-    <string name="age_label">年齡：</string>
+    <string name="age_label">時間：</string>
     <string name="level_label">等級：</string>
     <string name="insulin_label">胰島素</string>
     <string name="pb_label">幫浦電池</string>
