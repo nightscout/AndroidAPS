@@ -106,7 +106,6 @@
     <string name="restartingapp">Ayarları uygulamak için uygulamadan çıkılıyor.</string>
     <string name="ue_exported">Kullanıcı Girişleri dışa aktarıldı</string>
     <string name="protection">Güvenlik</string>
-    <string name="master_password_missing">Ana parola belirlenmedi!\n\nLütfen Ana parolanızı Tercihler\'de belirleyin (%1$s &#8594; %2$s)</string>
     <!--    Maintenance-->
     <string name="maintenance">Bakım</string>
     <string name="maintenance_shortname">BAKIM</string>
