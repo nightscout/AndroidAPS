@@ -8,6 +8,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.core.ui.toast.ToastUtils
@@ -94,7 +95,12 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
     private fun dismissAutoDlg() {
         val fragment = childFragmentManager.findFragmentByTag("autoDlg")
         if (fragment is DialogFragment) {
-            fragment.dismiss()
+            try {
+                fragment.dismiss()
+            } catch (e: IllegalStateException) {
+                // dialog not running yet
+                aapsLogger.error("Unhandled exception", e)
+            }
         }
     }
 

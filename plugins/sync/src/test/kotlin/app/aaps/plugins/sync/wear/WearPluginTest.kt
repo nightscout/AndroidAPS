@@ -1,7 +1,7 @@
 package app.aaps.plugins.sync.wear
 
 import android.content.SharedPreferences
-import app.aaps.core.validators.AdaptiveSwitchPreference
+import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.tidepool.utils.RateLimit
 import app.aaps.plugins.sync.wear.wearintegration.DataHandlerMobile
 import app.aaps.plugins.sync.wear.wearintegration.DataLayerListenerServiceMobileHelper

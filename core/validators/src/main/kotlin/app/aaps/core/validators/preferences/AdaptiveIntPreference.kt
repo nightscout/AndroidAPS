@@ -1,4 +1,4 @@
-package app.aaps.core.validators
+package app.aaps.core.validators.preferences
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -12,6 +12,9 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.keys.IntPreferenceKey
 import app.aaps.core.keys.Preferences
+import app.aaps.core.validators.DefaultEditTextValidator
+import app.aaps.core.validators.EditTextValidator
+import app.aaps.core.validators.R
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
@@ -22,6 +25,7 @@ class AdaptiveIntPreference(
     @StringRes dialogMessage: Int? = null,
     @StringRes summary: Int? = null,
     @StringRes title: Int?,
+    validatorParams: DefaultEditTextValidator.Parameters? = null
 ) : EditTextPreference(ctx, attrs) {
 
     private val validatorParameters: DefaultEditTextValidator.Parameters
@@ -39,7 +43,7 @@ class AdaptiveIntPreference(
     init {
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
 
-        intKey?.let { key = context.getString(it.key) }
+        intKey?.let { key = it.key }
         dialogMessage?.let { setDialogMessage(it) }
         summary?.let { setSummary(it) }
         title?.let { dialogTitle = context.getString(it) }
@@ -60,14 +64,15 @@ class AdaptiveIntPreference(
             isVisible = false; isEnabled = false
         }
         preferenceKey.dependency?.let {
-            if (!sharedPrefs.getBoolean(context.getString(it.key), false))
+            if (!sharedPrefs.getBoolean(it.key, false))
                 isVisible = false
         }
         preferenceKey.negativeDependency?.let {
-            if (sharedPrefs.getBoolean(context.getString(it.key), false))
+            if (sharedPrefs.getBoolean(it.key, false))
                 isVisible = false
         }
-        validatorParameters = obtainValidatorParameters(attrs)
+        if (validatorParams != null) validatorParameters = validatorParams
+        else validatorParameters = obtainValidatorParameters(attrs)
         setOnBindEditTextListener { editText ->
             validator = DefaultEditTextValidator(editText, validatorParameters, context)
             if (preferenceKey.min < 0)

@@ -28,7 +28,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuCompat
 import androidx.core.view.MenuProvider
-import androidx.viewpager2.widget.ViewPager2
 import app.aaps.activities.HistoryBrowseActivity
 import app.aaps.activities.PreferencesActivity
 import app.aaps.core.data.ue.Action
@@ -133,7 +132,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         }
 
         // initialize screen wake lock
-        processPreferenceChange(EventPreferenceChange(BooleanKey.OverviewKeepScreenOn.key, rh))
+        processPreferenceChange(EventPreferenceChange(BooleanKey.OverviewKeepScreenOn.key))
 
         disposable += rxBus
             .toObservable(EventRebuildTabs::class.java)
@@ -299,7 +298,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             androidPermission.notifyForBtConnectPermission(this)
         }
         passwordResetCheck(this)
-        if (sp.getString(app.aaps.core.utils.R.string.key_master_password, "") == "")
+        if (preferences.get(StringKey.ProtectionMasterPassword) == "")
             rxBus.send(EventNewNotification(Notification(Notification.MASTER_PASSWORD_NOT_SET, rh.gs(R.string.master_password_not_set), Notification.NORMAL)))
     }
 
@@ -334,8 +333,8 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     }
 
     private fun processPreferenceChange(ev: EventPreferenceChange) {
-        if (ev.isChanged(BooleanKey.OverviewKeepScreenOn.key, rh)) setWakeLock()
-        if (ev.isChanged(rh.gs(StringKey.GeneralSkin.key))) recreate()
+        if (ev.isChanged(BooleanKey.OverviewKeepScreenOn.key)) setWakeLock()
+        if (ev.isChanged(StringKey.GeneralSkin.key)) recreate()
     }
 
     private fun setupViews() {
@@ -485,7 +484,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         val passwordReset = File(fileListProvider.ensureExtraDirExists(), "PasswordReset")
         if (passwordReset.exists()) {
             val sn = activePlugin.activePump.serialNumber()
-            sp.putString(app.aaps.core.utils.R.string.key_master_password, cryptoUtil.hashPassword(sn))
+            preferences.put(StringKey.ProtectionMasterPassword, cryptoUtil.hashPassword(sn))
             passwordReset.delete()
             ToastUtils.okToast(context, context.getString(app.aaps.core.ui.R.string.password_set))
         }

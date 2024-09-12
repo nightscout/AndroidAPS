@@ -1,7 +1,7 @@
 package app.aaps.core.keys
 
 enum class IntentKey(
-    override val key: Int,
+    override val key: String,
     override val defaultedBySM: Boolean = false,
     override val showInApsMode: Boolean = true,
     override val showInNsClientMode: Boolean = true,
@@ -9,12 +9,10 @@ enum class IntentKey(
     override val dependency: BooleanPreferenceKey? = null,
     override val negativeDependency: BooleanPreferenceKey? = null,
     override val hideParentScreenIfHidden: Boolean = false
-) : PreferenceKey {
+) : IntentPreferenceKey {
 
-    ApsLinkToDocs(key = R.string.key_openaps_link_to_docs),
-    SmsOtpSetup(key = R.string.key_smscommunicator_otp_setup, dependency = BooleanKey.SmsAllowRemoteCommands),
-    OverviewQuickWizardSettings(key = R.string.key_overview_quick_wizard_settings),
-    OverviewCopySettingsFromNs(key = R.string.key_statuslights_copy_ns, dependency = BooleanKey.OverviewShowStatusLights),
-    TidepoolTestLogin(key = R.string.key_tidepool_test_login),
-    XdripInfo(key = R.string.key_xdrip_info),
+    ApsLinkToDocs(key = "link_to_docs"),
+    SmsOtpSetup(key = "smscommunicator_otp_setup", dependency = BooleanKey.SmsAllowRemoteCommands),
+    OverviewQuickWizardSettings(key = "overview_quickwizard_settings"),
+    XdripInfo(key = "xdrip_info"),
 }

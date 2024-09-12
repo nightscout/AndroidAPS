@@ -1,4 +1,4 @@
-package app.aaps.core.validators
+package app.aaps.core.validators.preferences
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -11,6 +11,9 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.keys.DoublePreferenceKey
 import app.aaps.core.keys.Preferences
+import app.aaps.core.validators.DefaultEditTextValidator
+import app.aaps.core.validators.EditTextValidator
+import app.aaps.core.validators.R
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
@@ -36,7 +39,7 @@ class AdaptiveDoublePreference(
     init {
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
 
-        doubleKey?.let { key = context.getString(it.key) }
+        doubleKey?.let { key = it.key }
         dialogMessage?.let { setDialogMessage(it) }
         title?.let { dialogTitle = context.getString(it) }
         title?.let { this.title = context.getString(it) }
@@ -55,11 +58,11 @@ class AdaptiveDoublePreference(
             isVisible = false; isEnabled = false
         }
         preferenceKey.dependency?.let {
-            if (!sharedPrefs.getBoolean(context.getString(it.key), false))
+            if (!sharedPrefs.getBoolean(it.key, false))
                 isVisible = false
         }
         preferenceKey.negativeDependency?.let {
-            if (sharedPrefs.getBoolean(context.getString(it.key), false))
+            if (sharedPrefs.getBoolean(it.key, false))
                 isVisible = false
         }
         validatorParameters = obtainValidatorParameters(attrs)

@@ -68,7 +68,6 @@
     <string name="basaltest_havingregularhighlow">W przypadku częstego występowania wysokiego lub niskiego stężenia glukozy we krwi.</string>
     <string name="basaltest_weekly">Co najmniej raz w tygodniu.</string>
     <string name="basaltest_fixed">Po ustawieniu i zweryfikowaniu wartości te nie powinny zmieniać się w czasie.</string>
-    <string name="basaltest_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#androidaps-settings</string>
     <string name="prerequisites_label">Wymagania wstępne</string>
     <string name="prerequisites_what">Co jest niezbędne do ustawienia i używania AAPS?</string>
     <string name="prerequisites_determinedcorrectprofile">Sprawdzone informacje profilowe (Basal, IC, ISF, DIA).</string>

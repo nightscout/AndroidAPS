@@ -113,7 +113,7 @@ import javax.inject.Singleton
                                        else ToastUtils.infoToast(context, rh.gs(R.string.equil_error))
                                    }
                                })
-                           } else if (event.isChanged(rh.gs(app.aaps.core.keys.R.string.key_equil_maxbolus))) {
+                           } else if (event.isChanged(rh.gs(R.string.key_equil_maxbolus))) {
                                val data = preferences.get(DoubleKey.EquilMaxBolus)
                                commandQueue.customCommand(CmdSettingSet(data), object : Callback() {
                                    override fun run() {

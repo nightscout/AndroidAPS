@@ -4,8 +4,8 @@ import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import app.aaps.core.interfaces.aps.Sensitivity
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.validators.AdaptiveDoublePreference
-import app.aaps.core.validators.AdaptiveIntPreference
+import app.aaps.core.validators.preferences.AdaptiveDoublePreference
+import app.aaps.core.validators.preferences.AdaptiveIntPreference
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach

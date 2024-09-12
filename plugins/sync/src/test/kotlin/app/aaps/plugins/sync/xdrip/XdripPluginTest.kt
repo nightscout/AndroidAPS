@@ -3,8 +3,8 @@ package app.aaps.plugins.sync.xdrip
 import android.content.SharedPreferences
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.keys.AdaptiveIntentPreference
-import app.aaps.core.validators.AdaptiveSwitchPreference
+import app.aaps.core.validators.preferences.AdaptiveIntentPreference
+import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.tidepool.utils.RateLimit
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat

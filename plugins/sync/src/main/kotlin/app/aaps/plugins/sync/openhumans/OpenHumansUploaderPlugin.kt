@@ -34,8 +34,7 @@ import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.Preferences
-import app.aaps.core.validators.AdaptiveSwitchPreference
-import app.aaps.core.validators.extensions.stringKey
+import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.openhumans.delegates.OHAppIDDelegate
 import app.aaps.plugins.sync.openhumans.delegates.OHCounterDelegate
@@ -112,7 +111,7 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
     }
 
     private fun onSharedPreferenceChanged(event: EventPreferenceChange) {
-        if (event.changedKey in arrayOf(BooleanKey.OpenHumansWifiOnly.stringKey(rh), BooleanKey.OpenHumansChargingOnly.stringKey(rh)) && openHumansState != null) scheduleWorker(true)
+        if (event.changedKey in arrayOf(BooleanKey.OpenHumansWifiOnly.key, BooleanKey.OpenHumansChargingOnly.key) && openHumansState != null) scheduleWorker(true)
     }
 
     suspend fun login(bearerToken: String) = withContext(Dispatchers.IO) {

@@ -13,14 +13,14 @@ import app.aaps.core.interfaces.profiling.Profiler
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.core.keys.AdaptiveListPreference
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.objects.constraints.ConstraintObject
-import app.aaps.core.validators.AdaptiveDoublePreference
-import app.aaps.core.validators.AdaptiveIntPreference
+import app.aaps.core.validators.preferences.AdaptiveDoublePreference
+import app.aaps.core.validators.preferences.AdaptiveIntPreference
+import app.aaps.core.validators.preferences.AdaptiveListPreference
 import app.aaps.plugins.aps.openAPSAMA.DetermineBasalAMA
 import app.aaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import app.aaps.plugins.aps.openAPSSMB.DetermineBasalSMB
@@ -73,6 +73,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
             }
         }
     }
+
     @BeforeEach
     fun prepare() {
         `when`(rh.gs(app.aaps.plugins.constraints.R.string.hardlimit)).thenReturn("hard limit")
@@ -93,13 +94,12 @@ class SafetyPluginTest : TestBaseWithProfile() {
         `when`(rh.gs(app.aaps.plugins.constraints.R.string.closed_loop_disabled_on_dev_branch)).thenReturn("Running dev version. Closed loop is disabled.")
         `when`(rh.gs(app.aaps.plugins.constraints.R.string.smbalwaysdisabled)).thenReturn("SMB always and after carbs disabled because active BG source doesn\\'t support advanced filtering")
         `when`(rh.gs(app.aaps.plugins.constraints.R.string.smbnotallowedinopenloopmode)).thenReturn("SMB not allowed in open loop mode")
-        `when`(rh.gs(app.aaps.core.keys.R.string.key_child)).thenReturn("child")
         `when`(rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend)).thenReturn("Low Glucose Suspend")
 
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         `when`(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
         `when`(config.APS).thenReturn(true)
-        safetyPlugin = SafetyPlugin(aapsLogger, rh, sp, preferences, constraintChecker, activePlugin, hardLimits, config, persistenceLayer, dateUtil, uiInteraction, decimalFormatter)
+        safetyPlugin = SafetyPlugin(aapsLogger, rh, preferences, constraintChecker, activePlugin, hardLimits, config, persistenceLayer, dateUtil, uiInteraction, decimalFormatter)
         openAPSSMBPlugin =
             OpenAPSSMBPlugin(
                 injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, profileUtil, config, activePlugin, iobCobCalculator,
@@ -316,14 +316,14 @@ Safety: Limiting max basal rate to 500.00 U/h because of pump limit
         d = ConstraintObject(Double.MAX_VALUE, aapsLogger)
         val a = openAPSAMAPlugin.applyMaxIOBConstraints(d)
         assertThat(a.value()).isWithin(0.01).of(1.5)
-        assertThat(d.getReasons()).isEqualTo("OpenAPSAMA: Limiting IOB to 1.5 U because of max value in preferences\nOpenAPSAMA: Limiting IOB to 7.0 U because of hard limit")
+        assertThat(d.getReasons()).isEqualTo("OpenAPSAMA: Limiting IOB to 1.5 U because of max value in preferences\nOpenAPSAMA: Limiting IOB to 5.0 U because of hard limit")
         assertThat(d.getMostLimitedReasons()).isEqualTo("OpenAPSAMA: Limiting IOB to 1.5 U because of max value in preferences")
 
         // Apply all limits
         d = ConstraintObject(Double.MAX_VALUE, aapsLogger)
         val s = openAPSSMBPlugin.applyMaxIOBConstraints(d)
         assertThat(s.value()).isWithin(0.01).of(3.0)
-        assertThat(d.getReasons()).isEqualTo("OpenAPSSMB: Limiting IOB to 3.0 U because of max value in preferences\nOpenAPSSMB: Limiting IOB to 22.0 U because of hard limit")
+        assertThat(d.getReasons()).isEqualTo("OpenAPSSMB: Limiting IOB to 3.0 U because of max value in preferences\nOpenAPSSMB: Limiting IOB to 13.0 U because of hard limit")
         assertThat(d.getMostLimitedReasons()).isEqualTo("OpenAPSSMB: Limiting IOB to 3.0 U because of max value in preferences")
     }
 

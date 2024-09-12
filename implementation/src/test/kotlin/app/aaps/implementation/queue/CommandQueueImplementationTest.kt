@@ -25,6 +25,7 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.implementation.queue.commands.CommandBolus
 import app.aaps.implementation.queue.commands.CommandCancelExtendedBolus
@@ -70,6 +71,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         activePlugin: ActivePlugin,
         context: Context,
         sp: SP,
+        preferences: Preferences,
         config: Config,
         dateUtil: DateUtil,
         fabricPrivacy: FabricPrivacy,
@@ -80,7 +82,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         instantiator: Instantiator
     ) : CommandQueueImplementation(
         injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker, profileFunction,
-        activePlugin, context, sp, config, dateUtil, fabricPrivacy, androidPermission,
+        activePlugin, context, sp, preferences, config, dateUtil, fabricPrivacy, androidPermission,
         uiInteraction, persistenceLayer, decimalFormatter, instantiator
     ) {
 
@@ -165,7 +167,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     fun prepare() {
         commandQueue = CommandQueueMocked(
             injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker, profileFunction, activePlugin, context,
-            sp, config, dateUtil, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter, instantiator
+            sp, preferences, config, dateUtil, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter, instantiator
         )
         testPumpPlugin.pumpDescription.basalMinimumRate = 0.1
 
@@ -199,7 +201,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     fun commandIsPickedUp() {
         val commandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh,
-            constraintChecker, profileFunction, activePlugin, context, sp,
+            constraintChecker, profileFunction, activePlugin, context, sp, preferences,
             config, dateUtil, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter, instantiator
         )
         val handler = mock(Handler::class.java)

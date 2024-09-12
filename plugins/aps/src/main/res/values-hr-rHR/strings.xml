@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Autotune-->
     <string name="openapsma_no_glucose_data">Nema dostupnih podataka o glukozi</string>
     <string name="description_ama">Stanje algoritma iz 2017.</string>
     <string name="description_smb">Najnoviji algoritam za napredne korisnike</string>
@@ -52,4 +53,5 @@
     <string name="autotune_update_local_profile_message">Želite li ažurirati %1$s profil pomoću Autotune profila?</string>
     <string name="autotune_revert_local_profile_message">Vratiti profil %1$s s profilom unosa?</string>
     <string name="autotune_profile_invalid">Profil nije valjan</string>
+    <!--    autoISF -->
 </resources>

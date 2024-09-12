@@ -4,9 +4,9 @@ import android.content.SharedPreferences
 import app.aaps.core.interfaces.logging.LoggerUtils
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
-import app.aaps.core.validators.AdaptiveIntPreference
-import app.aaps.core.validators.AdaptiveStringPreference
-import app.aaps.core.validators.AdaptiveSwitchPreference
+import app.aaps.core.validators.preferences.AdaptiveIntPreference
+import app.aaps.core.validators.preferences.AdaptiveStringPreference
+import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.configuration.maintenance.MaintenancePlugin
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat

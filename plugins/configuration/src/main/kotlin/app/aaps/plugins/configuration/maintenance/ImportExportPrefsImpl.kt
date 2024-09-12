@@ -48,6 +48,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.dialogs.TwoMessagesAlertDialog
@@ -148,7 +149,7 @@ class ImportExportPrefsImpl @Inject constructor(
         val n6 = Settings.Global.getString(context.contentResolver, "device_name")
 
         // name provided (hopefully) by user
-        val patientName = sp.getString(app.aaps.core.utils.R.string.key_patient_name, "")
+        val patientName = preferences.get(StringKey.GeneralPatientName)
         val defaultPatientName = rh.gs(app.aaps.core.ui.R.string.patient_name_default)
 
         // name we detect from OS
@@ -157,7 +158,7 @@ class ImportExportPrefsImpl @Inject constructor(
     }
 
     private fun askForMasterPass(activity: FragmentActivity, @StringRes canceledMsg: Int, then: ((password: String) -> Unit)) {
-        passwordCheck.queryPassword(activity, app.aaps.core.ui.R.string.master_password, app.aaps.core.utils.R.string.key_master_password, { password ->
+        passwordCheck.queryPassword(activity, app.aaps.core.ui.R.string.master_password, StringKey.ProtectionMasterPassword.key, { password ->
             then(password)
         }, {
                                         ToastUtils.warnToast(activity, rh.gs(canceledMsg))
@@ -169,7 +170,7 @@ class ImportExportPrefsImpl @Inject constructor(
         activity: FragmentActivity, @StringRes canceledMsg: Int, @StringRes passwordName: Int, @StringRes passwordExplanation: Int?,
         @StringRes passwordWarning: Int?, then: ((password: String) -> Unit)
     ) {
-        passwordCheck.queryAnyPassword(activity, passwordName, app.aaps.core.utils.R.string.key_master_password, passwordExplanation, passwordWarning, { password ->
+        passwordCheck.queryAnyPassword(activity, passwordName, StringKey.ProtectionMasterPassword.key, passwordExplanation, passwordWarning, { password ->
             then(password)
         }, {
                                            ToastUtils.warnToast(activity, rh.gs(canceledMsg))
@@ -182,16 +183,11 @@ class ImportExportPrefsImpl @Inject constructor(
     }
 
     private fun assureMasterPasswordSet(activity: FragmentActivity, @StringRes wrongPwdTitle: Int): Boolean {
-        if (!sp.contains(app.aaps.core.utils.R.string.key_master_password) || (sp.getString(app.aaps.core.utils.R.string.key_master_password, "") == "")) {
-            WarningDialog.showWarning(activity,
-                                      rh.gs(wrongPwdTitle),
-                                      rh.gs(R.string.master_password_missing, rh.gs(R.string.configbuilder_general), rh.gs(R.string.protection)),
-                                      R.string.nav_preferences, {
-                                          val intent = Intent(activity, uiInteraction.preferencesActivity).apply {
-                                              putExtra(UiInteraction.XML_ID, uiInteraction.prefGeneral)
-                                          }
-                                          activity.startActivity(intent)
-                                      })
+        if (preferences.getIfExists(StringKey.ProtectionMasterPassword).isNullOrEmpty()) {
+            WarningDialog.showWarning(
+                activity, rh.gs(wrongPwdTitle), rh.gs(R.string.master_password_missing, rh.gs(R.string.protection)), R.string.nav_preferences,
+                { activity.startActivity(Intent(activity, uiInteraction.preferencesActivity).putExtra(UiInteraction.PREFERENCE, UiInteraction.Preferences.PROTECTION)) }
+            )
             return false
         }
         return true

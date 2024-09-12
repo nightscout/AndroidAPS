@@ -2,12 +2,13 @@ package app.aaps.plugins.sync.tidepool
 
 import android.content.SharedPreferences
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.keys.AdaptiveIntentPreference
-import app.aaps.core.validators.AdaptiveDoublePreference
-import app.aaps.core.validators.AdaptiveIntPreference
-import app.aaps.core.validators.AdaptiveStringPreference
-import app.aaps.core.validators.AdaptiveSwitchPreference
-import app.aaps.core.validators.AdaptiveUnitPreference
+import app.aaps.core.validators.preferences.AdaptiveClickPreference
+import app.aaps.core.validators.preferences.AdaptiveDoublePreference
+import app.aaps.core.validators.preferences.AdaptiveIntPreference
+import app.aaps.core.validators.preferences.AdaptiveIntentPreference
+import app.aaps.core.validators.preferences.AdaptiveStringPreference
+import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
+import app.aaps.core.validators.preferences.AdaptiveUnitPreference
 import app.aaps.plugins.sync.nsclient.ReceiverDelegate
 import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
 import app.aaps.plugins.sync.tidepool.comm.UploadChunk
@@ -57,6 +58,10 @@ class TidepoolPluginTest : TestBaseWithProfile() {
                 it.config = config
             }
             if (it is AdaptiveStringPreference) {
+                it.preferences = preferences
+                it.sharedPrefs = sharedPrefs
+            }
+            if (it is AdaptiveClickPreference) {
                 it.preferences = preferences
                 it.sharedPrefs = sharedPrefs
             }

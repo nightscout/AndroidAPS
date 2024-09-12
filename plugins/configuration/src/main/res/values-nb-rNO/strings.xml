@@ -106,7 +106,7 @@
     <string name="restartingapp">Avslutter appen for å aktivere innstillinger.</string>
     <string name="ue_exported">Brukeroppføringer er eksportert</string>
     <string name="protection">Beskyttelse</string>
-    <string name="master_password_missing">Hovedpassord er ikke definert!\n\nAngi hovedpassord i innstillinger (%1$s &#8594; %2$s)</string>
+    <string name="master_password_missing">Hovedpassord er ikke definert!\n\nAngi hovedpassord i innstillinger (%1$s)</string>
     <!--    Maintenance-->
     <string name="maintenance">Vedlikehold</string>
     <string name="maintenance_shortname">VEDL</string>

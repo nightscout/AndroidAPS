@@ -23,6 +23,7 @@ import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.R
 import app.aaps.pump.dana.events.EventDanaRNewStatus
+import app.aaps.pump.dana.keys.DanaIntKey
 import app.aaps.pump.danar.SerialIOThread
 import app.aaps.pump.danar.comm.MessageBase
 import app.aaps.pump.danar.comm.MsgBolusStart
@@ -288,7 +289,7 @@ class DanaRv2ExecutionService : AbstractDanaRExecutionService() {
         rxBus.send(EventPumpStatusChanged(rh.gs(R.string.startingbolus)))
         danaPump.bolusingTreatment = t
         danaPump.bolusDone = false
-        val preferencesSpeed = sp.getInt(R.string.key_danars_bolusspeed, 0)
+        val preferencesSpeed = preferences.get(DanaIntKey.DanaBolusSpeed)
         val start: MessageBase = if (preferencesSpeed == 0) MsgBolusStart(injector, amount) else MsgBolusStartWithSpeed(injector, amount, preferencesSpeed)
         danaPump.bolusStopped = false
         danaPump.bolusStopForced = false

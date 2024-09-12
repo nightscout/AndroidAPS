@@ -11,7 +11,6 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
-import app.aaps.core.validators.extensions.stringKey
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsShared.events.EventConnectivityOptionChanged
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -57,16 +56,16 @@ class ReceiverDelegate @Inject constructor(
 
     private fun onPreferenceChange(ev: EventPreferenceChange) {
         when {
-            ev.isChanged(BooleanKey.NsClientUseWifi.stringKey(rh)) ||
-                ev.isChanged(BooleanKey.NsClientUseCellular.stringKey(rh)) ||
-                ev.isChanged(StringKey.NsClientWifiSsids.stringKey(rh)) ||
-                ev.isChanged(BooleanKey.NsClientUseRoaming.stringKey(rh))   -> {
+            ev.isChanged(BooleanKey.NsClientUseWifi.key) ||
+                ev.isChanged(BooleanKey.NsClientUseCellular.key) ||
+                ev.isChanged(StringKey.NsClientWifiSsids.key) ||
+                ev.isChanged(BooleanKey.NsClientUseRoaming.key)   -> {
                 receiverStatusStore.updateNetworkStatus()
                 receiverStatusStore.lastNetworkEvent?.let { onNetworkChange(it) }
             }
 
-            ev.isChanged(BooleanKey.NsClientUseOnCharging.stringKey(rh)) ||
-                ev.isChanged(BooleanKey.NsClientUseOnBattery.stringKey(rh)) -> {
+            ev.isChanged(BooleanKey.NsClientUseOnCharging.key) ||
+                ev.isChanged(BooleanKey.NsClientUseOnBattery.key) -> {
                 receiverStatusStore.broadcastChargingState()
             }
         }

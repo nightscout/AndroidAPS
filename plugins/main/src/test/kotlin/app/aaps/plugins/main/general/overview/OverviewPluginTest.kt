@@ -2,15 +2,17 @@ package app.aaps.plugins.main.general.overview
 
 import android.app.Activity
 import android.content.SharedPreferences
+import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.OverviewMenus
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.keys.AdaptiveIntentPreference
-import app.aaps.core.validators.AdaptiveDoublePreference
-import app.aaps.core.validators.AdaptiveIntPreference
-import app.aaps.core.validators.AdaptiveStringPreference
-import app.aaps.core.validators.AdaptiveSwitchPreference
-import app.aaps.core.validators.AdaptiveUnitPreference
+import app.aaps.core.validators.preferences.AdaptiveClickPreference
+import app.aaps.core.validators.preferences.AdaptiveDoublePreference
+import app.aaps.core.validators.preferences.AdaptiveIntPreference
+import app.aaps.core.validators.preferences.AdaptiveIntentPreference
+import app.aaps.core.validators.preferences.AdaptiveStringPreference
+import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
+import app.aaps.core.validators.preferences.AdaptiveUnitPreference
 import app.aaps.plugins.main.general.overview.notifications.NotificationStore
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
@@ -26,6 +28,7 @@ class OverviewPluginTest : TestBaseWithProfile() {
     @Mock lateinit var notificationStore: NotificationStore
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var sharedPrefs: SharedPreferences
+    @Mock lateinit var nsSettingsStatus: NSSettingsStatus
 
     private lateinit var overviewPlugin: OverviewPlugin
 
@@ -60,13 +63,17 @@ class OverviewPluginTest : TestBaseWithProfile() {
                 it.sharedPrefs = sharedPrefs
                 it.config = config
             }
+            if (it is AdaptiveClickPreference) {
+                it.preferences = preferences
+                it.sharedPrefs = sharedPrefs
+            }
         }
     }
 
     @BeforeEach fun prepare() {
         overviewPlugin = OverviewPlugin(
             injector, notificationStore, fabricPrivacy, rxBus, sp, preferences,
-            aapsLogger, aapsSchedulers, rh, overviewData, overviewMenus, context, constraintsChecker, uiInteraction
+            aapsLogger, aapsSchedulers, rh, overviewData, overviewMenus, context, constraintsChecker, uiInteraction, nsSettingsStatus
         )
         Mockito.`when`(uiInteraction.quickWizardListActivity).thenReturn(Activity::class.java)
     }

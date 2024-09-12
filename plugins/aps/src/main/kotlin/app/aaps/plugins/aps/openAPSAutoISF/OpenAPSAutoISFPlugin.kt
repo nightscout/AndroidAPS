@@ -43,7 +43,6 @@ import app.aaps.core.interfaces.rx.events.EventAPSCalculationFinished
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.Round
-import app.aaps.core.keys.AdaptiveIntentPreference
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
@@ -60,10 +59,11 @@ import app.aaps.core.objects.extensions.store
 import app.aaps.core.objects.extensions.target
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.utils.MidnightUtils
-import app.aaps.core.validators.AdaptiveDoublePreference
-import app.aaps.core.validators.AdaptiveIntPreference
-import app.aaps.core.validators.AdaptiveSwitchPreference
-import app.aaps.core.validators.AdaptiveUnitPreference
+import app.aaps.core.validators.preferences.AdaptiveDoublePreference
+import app.aaps.core.validators.preferences.AdaptiveIntPreference
+import app.aaps.core.validators.preferences.AdaptiveIntentPreference
+import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
+import app.aaps.core.validators.preferences.AdaptiveUnitPreference
 import app.aaps.plugins.aps.OpenAPSFragment
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
@@ -175,12 +175,13 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         super.preprocessPreferences(preferenceFragment)
         val smbAlwaysEnabled = preferences.get(BooleanKey.ApsUseSmbAlways)
         val advancedFiltering = activePlugin.activeBgSource.advancedFilteringSupported()
-        preferenceFragment.findPreference<SwitchPreference>(rh.gs(app.aaps.core.keys.R.string.key_openaps_allow_smb_with_COB))?.isVisible = !smbAlwaysEnabled || !advancedFiltering
-        preferenceFragment.findPreference<SwitchPreference>(rh.gs(app.aaps.core.keys.R.string.key_openaps_allow_smb_with_low_temp_target))?.isVisible = !smbAlwaysEnabled || !advancedFiltering
-        preferenceFragment.findPreference<SwitchPreference>(rh.gs(app.aaps.core.keys.R.string.key_openaps_enable_smb_after_carbs))?.isVisible = !smbAlwaysEnabled || !advancedFiltering
+        preferenceFragment.findPreference<SwitchPreference>(BooleanKey.ApsUseSmbWithCob.key)?.isVisible = !smbAlwaysEnabled || !advancedFiltering
+        preferenceFragment.findPreference<SwitchPreference>(BooleanKey.ApsUseSmbWithLowTt.key)?.isVisible = !smbAlwaysEnabled || !advancedFiltering
+        preferenceFragment.findPreference<SwitchPreference>(BooleanKey.ApsUseSmbAfterCarbs.key)?.isVisible = !smbAlwaysEnabled || !advancedFiltering
     }
 
     private val dynIsfCache = LongSparseArray<Double>()
+
     @Synchronized
     private fun calculateVariableIsf(timestamp: Long, bg: Double?): Pair<String, Double?> {
         val profile = profileFunction.getProfile(timestamp)
@@ -490,13 +491,13 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
 
     override fun configuration(): JSONObject =
         JSONObject()
-            .put(BooleanKey.ApsUseDynamicSensitivity, preferences, rh)
-            .put(IntKey.ApsDynIsfAdjustmentFactor, preferences, rh)
+            .put(BooleanKey.ApsUseDynamicSensitivity, preferences)
+            .put(IntKey.ApsDynIsfAdjustmentFactor, preferences)
 
     override fun applyConfiguration(configuration: JSONObject) {
         configuration
-            .store(BooleanKey.ApsUseDynamicSensitivity, preferences, rh)
-            .store(IntKey.ApsDynIsfAdjustmentFactor, preferences, rh)
+            .store(BooleanKey.ApsUseDynamicSensitivity, preferences)
+            .store(IntKey.ApsDynIsfAdjustmentFactor, preferences)
     }
 
     // Rounds value to 'digits' decimal places
@@ -672,15 +673,15 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         var dura_ISF = 1.0
         val weightISF: Double = dura_ISF_weight
         when {
-            dura05 < 10.0                                      -> {
+            dura05 < 10.0      -> {
                 consoleError.add("dura_ISF by-passed; bg is only $dura05 m at level $avg05")
             }
 
-            avg05 <= target_bg                                 -> {
+            avg05 <= target_bg -> {
                 consoleError.add("dura_ISF by-passed; avg. glucose $avg05 below target $target_bg")
             }
 
-            else                                               -> {
+            else               -> {
                 // fight the resistance at high levels
                 val dura05Weight = dura05 / 60
                 val avg05Weight = weightISF / target_bg
@@ -705,7 +706,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
     }
 
     fun interpolate(xdata: Double): Double {   // interpolate ISF behaviour based on polygons defining nonlinear functions defined by value pairs for ...
-            //  ...         <----------------------  glucose  ---------------------->
+        //  ...         <----------------------  glucose  ---------------------->
         val polyX = arrayOf(50.0, 60.0, 80.0, 90.0, 100.0, 110.0, 150.0, 180.0, 200.0)
         val polyY = arrayOf(-0.5, -0.5, -0.3, -0.2, 0.0, 0.0, 0.5, 0.7, 0.7)
         val polymax: Int = polyX.size - 1
@@ -764,8 +765,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         }
         newVal = if (xdata > 100) {
             newVal * higher_ISFrange_weight
-        }
-        else {
+        } else {
             newVal * lower_ISFrange_weight
         }
         return newVal
@@ -817,7 +817,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
             val msgTail: String
             val msgEven: String
             if (profile.out_units == "mmol/L") {
-                evenTarget = round(target * 10.0 , 0).toInt() % 2 == 0
+                evenTarget = round(target * 10.0, 0).toInt() % 2 == 0
                 target = round(target, 1)
                 msgUnits = "has"
                 msgTail = "decimal"

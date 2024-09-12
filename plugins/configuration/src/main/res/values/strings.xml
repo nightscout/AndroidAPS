@@ -110,7 +110,7 @@
     <string name="restartingapp">Exiting application to apply settings.</string>
     <string name="ue_exported">User Entries exported</string>
     <string name="protection">Protection</string>
-    <string name="master_password_missing">Master password is not set!\n\nPlease set your Master password in Preferences (%1$s &#8594; %2$s)</string>
+    <string name="master_password_missing">Master password is not set!\n\nPlease set your Master password in Preferences (%1$s)</string>
 
 
     <!--    Maintenance-->

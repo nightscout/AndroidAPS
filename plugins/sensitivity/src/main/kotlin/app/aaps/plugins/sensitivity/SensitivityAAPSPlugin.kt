@@ -24,8 +24,8 @@ import app.aaps.core.objects.extensions.put
 import app.aaps.core.objects.extensions.store
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.core.utils.Percentile
-import app.aaps.core.validators.AdaptiveDoublePreference
-import app.aaps.core.validators.AdaptiveIntPreference
+import app.aaps.core.validators.preferences.AdaptiveDoublePreference
+import app.aaps.core.validators.preferences.AdaptiveIntPreference
 import app.aaps.plugins.sensitivity.extensions.isPSEvent5minBack
 import app.aaps.plugins.sensitivity.extensions.isTherapyEventEvent5minBack
 import org.json.JSONObject
@@ -150,17 +150,17 @@ class SensitivityAAPSPlugin @Inject constructor(
 
     override fun configuration(): JSONObject =
         JSONObject()
-            .put(IntKey.AutosensPeriod, preferences, rh)
-            .put(DoubleKey.AbsorptionMaxTime, preferences, rh)
-            .put(DoubleKey.AutosensMin, preferences, rh)
-            .put(DoubleKey.AutosensMin, preferences, rh)
+            .put(IntKey.AutosensPeriod, preferences)
+            .put(DoubleKey.AbsorptionMaxTime, preferences)
+            .put(DoubleKey.AutosensMin, preferences)
+            .put(DoubleKey.AutosensMin, preferences)
 
     override fun applyConfiguration(configuration: JSONObject) {
         configuration
-            .store(IntKey.AutosensPeriod, preferences, rh)
-            .store(DoubleKey.AutosensMin, preferences, rh)
-            .store(DoubleKey.AutosensMax, preferences, rh)
-            .store(DoubleKey.AbsorptionMaxTime, preferences, rh)
+            .store(IntKey.AutosensPeriod, preferences)
+            .store(DoubleKey.AutosensMin, preferences)
+            .store(DoubleKey.AutosensMax, preferences)
+            .store(DoubleKey.AbsorptionMaxTime, preferences)
     }
 
     override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {

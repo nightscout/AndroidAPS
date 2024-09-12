@@ -32,7 +32,6 @@ import app.aaps.core.nssdk.localmodel.devicestatus.NSDeviceStatus
 import app.aaps.core.utils.JsonHelper.safeGetString
 import app.aaps.core.utils.JsonHelper.safeGetStringAllowNull
 import app.aaps.core.utils.receivers.DataWorkerStorage
-import app.aaps.core.validators.extensions.stringKey
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsShared.NSAlarmObject
 import app.aaps.plugins.sync.nsShared.NsIncomingDataProcessor
@@ -142,8 +141,8 @@ class NSClientService : DaggerService() {
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event: EventPreferenceChange ->
-                           if (event.isChanged(StringKey.NsClientUrl.stringKey(rh)) ||
-                               event.isChanged(StringKey.NsClientApiSecret.stringKey(rh)) ||
+                           if (event.isChanged(StringKey.NsClientUrl.key) ||
+                               event.isChanged(StringKey.NsClientApiSecret.key) ||
                                event.isChanged(rh.gs(R.string.key_ns_paused))
                            ) {
                                latestDateInReceivedData = 0

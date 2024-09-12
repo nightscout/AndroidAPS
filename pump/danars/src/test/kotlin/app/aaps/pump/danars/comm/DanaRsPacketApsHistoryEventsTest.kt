@@ -31,7 +31,7 @@ class DanaRsPacketApsHistoryEventsTest : DanaRSTestBase() {
                 it.danaPump = danaPump
                 it.detailedBolusInfoStorage = detailedBolusInfoStorage
                 it.temporaryBasalStorage = temporaryBasalStorage
-                it.sp = sp
+                it.preferences = preferences
             }
         }
     }

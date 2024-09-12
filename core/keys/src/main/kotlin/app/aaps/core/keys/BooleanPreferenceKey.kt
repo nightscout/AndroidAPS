@@ -13,7 +13,7 @@ interface BooleanPreferenceKey : PreferenceKey {
     val calculatedDefaultValue: Boolean
 
     /**
-     * Visible in engineering mode only
+     * Visible in engineering mode only, otherwise `defaultValue`
      */
     val engineeringModeOnly: Boolean
 }

@@ -11,9 +11,11 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.keys.Preferences
+import app.aaps.pump.dana.keys.DanaIntKey
+import app.aaps.pump.dana.keys.DanaStringKey
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.json.JSONArray
@@ -32,7 +34,7 @@ import kotlin.math.roundToLong
 @Singleton
 class DanaPump @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val sp: SP,
+    private val preferences: Preferences,
     private val dateUtil: DateUtil,
     private val instantiator: Instantiator,
     private val decimalFormatter: DecimalFormatter
@@ -384,11 +386,11 @@ class DanaPump @Inject constructor(
     }
 
     val isPasswordOK: Boolean
-        get() = password == sp.getInt(R.string.key_danar_password, -2)
+        get() = password == preferences.get(DanaIntKey.DanaRPassword)
 
     val isRSPasswordOK: Boolean
         get() = rsPassword.equals(
-            sp.getString(R.string.key_danars_password, ""),
+            preferences.get(DanaStringKey.DanaRsPassword),
             ignoreCase = true
         ) || ignoreUserPassword
 

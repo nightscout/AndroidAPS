@@ -20,8 +20,8 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
-import app.aaps.core.validators.AdaptiveIntPreference
-import app.aaps.core.validators.AdaptiveSwitchPreference
+import app.aaps.core.validators.preferences.AdaptiveIntPreference
+import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
@@ -100,9 +100,9 @@ class GarminPlugin @Inject constructor(
 
     private fun onPreferenceChange(event: EventPreferenceChange) {
         when (event.changedKey) {
-            "communication_debug_mode"                                                         -> setupGarminMessenger()
-            rh.gs(BooleanKey.GarminLocalHttpServer.key), rh.gs(IntKey.GarminLocalHttpPort.key) -> setupHttpServer()
-            "garmin_aaps_key"                                                                  -> sendPhoneAppMessage()
+            "communication_debug_mode"                                           -> setupGarminMessenger()
+            BooleanKey.GarminLocalHttpServer.key, IntKey.GarminLocalHttpPort.key -> setupHttpServer()
+            "garmin_aaps_key"                                                    -> sendPhoneAppMessage()
         }
     }
 

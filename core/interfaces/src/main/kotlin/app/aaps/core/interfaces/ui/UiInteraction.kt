@@ -22,14 +22,23 @@ interface UiInteraction {
     val myPreferenceFragment: Class<*>
     val quickWizardListActivity: Class<*>
 
-    val prefGeneral: Int
-
     companion object {
 
         const val PLUGIN_NAME = "PluginName"
-        const val PREFERENCE_SCREEN = "PreferenceScreen"
-        const val XML_ID = "Id"
+
+        /**
+         * Preference from [Preferences]
+         */
+        const val PREFERENCE = "Preference"
     }
+
+    enum class Preferences { PROTECTION }
+
+    /**
+     * Arrays for preferences
+     */
+    val unitsEntries: Array<CharSequence>
+    val unitsValues: Array<CharSequence>
 
     /**
      * Show ErrorHelperActivity and start alarm

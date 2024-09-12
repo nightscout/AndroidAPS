@@ -27,14 +27,15 @@ import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventBTChange
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.Preferences
 import app.aaps.core.ui.toast.ToastUtils.errorToast
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.R
 import app.aaps.pump.dana.comm.RecordTypes
+import app.aaps.pump.dana.keys.DanaStringKey
 import app.aaps.pump.danar.SerialIOThread
 import app.aaps.pump.danar.comm.MessageBase
 import app.aaps.pump.danar.comm.MsgBolusStop
@@ -67,7 +68,7 @@ abstract class AbstractDanaRExecutionService : DaggerService() {
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var context: Context
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var danaPump: DanaPump
@@ -162,7 +163,7 @@ abstract class AbstractDanaRExecutionService : DaggerService() {
     }
 
     protected fun getBTSocketForSelectedPump() {
-        mDevName = sp.getString(R.string.key_danar_bt_name, "")
+        mDevName = preferences.get(DanaStringKey.DanaRName)
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
             val bluetoothAdapter = (context.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager).adapter
             if (bluetoothAdapter != null) {

@@ -44,7 +44,6 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.AdaptiveIntentPreference
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntentKey
 import app.aaps.core.keys.Preferences
@@ -53,7 +52,8 @@ import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.extensions.toStringShort
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.HtmlHelper
-import app.aaps.core.validators.AdaptiveSwitchPreference
+import app.aaps.core.validators.preferences.AdaptiveIntentPreference
+import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsclient.extensions.toJson
 import app.aaps.plugins.sync.xdrip.events.EventXdripUpdateGUI

@@ -17,7 +17,7 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.extensions.put
 import app.aaps.core.objects.extensions.store
-import app.aaps.core.validators.AdaptiveIntPreference
+import app.aaps.core.validators.preferences.AdaptiveIntPreference
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -43,11 +43,11 @@ class InsulinOrefFreePeakPlugin @Inject constructor(
 
     override fun configuration(): JSONObject =
         JSONObject()
-            .put(IntKey.InsulinOrefPeak, preferences, rh)
+            .put(IntKey.InsulinOrefPeak, preferences)
 
     override fun applyConfiguration(configuration: JSONObject) {
         configuration
-            .store(IntKey.InsulinOrefPeak, preferences, rh)
+            .store(IntKey.InsulinOrefPeak, preferences)
     }
 
     override fun commentStandardText(): String {

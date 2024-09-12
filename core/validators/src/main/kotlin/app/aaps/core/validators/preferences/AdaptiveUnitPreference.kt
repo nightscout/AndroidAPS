@@ -1,4 +1,4 @@
-package app.aaps.core.validators
+package app.aaps.core.validators.preferences
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -8,45 +8,44 @@ import androidx.annotation.StringRes
 import androidx.preference.EditTextPreference
 import androidx.preference.PreferenceViewHolder
 import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.keys.Preferences
-import app.aaps.core.keys.StringPreferenceKey
+import app.aaps.core.keys.UnitDoublePreferenceKey
+import app.aaps.core.validators.DefaultEditTextValidator
+import app.aaps.core.validators.EditTextValidator
+import app.aaps.core.validators.R
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
-class AdaptiveStringPreference(
+class AdaptiveUnitPreference(
     ctx: Context,
     attrs: AttributeSet? = null,
-    stringKey: StringPreferenceKey? = null,
+    unitKey: UnitDoublePreferenceKey? = null,
     @StringRes dialogMessage: Int? = null,
-    @StringRes summary: Int? = null,
     @StringRes title: Int?,
-    validatorParams: DefaultEditTextValidator.Parameters? = null,
 ) : EditTextPreference(ctx, attrs) {
 
     private val validatorParameters: DefaultEditTextValidator.Parameters
     private var validator: DefaultEditTextValidator? = null
-    private val preferenceKey: StringPreferenceKey
+    private val preferenceKey: UnitDoublePreferenceKey
 
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var sharedPrefs: SharedPreferences
 
     // Inflater constructor
-    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, stringKey = null, title = null)
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, unitKey = null, title = null)
 
     init {
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
 
-        stringKey?.let { key = context.getString(it.key) }
+        unitKey?.let { key = it.key }
         dialogMessage?.let { setDialogMessage(it) }
-        summary?.let { setSummary(it) }
         title?.let { dialogTitle = context.getString(it) }
         title?.let { this.title = context.getString(it) }
 
-        preferenceKey = stringKey ?: preferences.get(key) as StringPreferenceKey
-        if (preferences.simpleMode && preferenceKey.defaultedBySM) {
-            isVisible = false; isEnabled = false
-        }
+        preferenceKey = unitKey ?: preferences.get(key) as UnitDoublePreferenceKey
+        if (preferences.simpleMode && preferenceKey.defaultedBySM) isVisible = false
         if (preferences.apsMode && !preferenceKey.showInApsMode) {
             isVisible = false; isEnabled = false
         }
@@ -57,22 +56,17 @@ class AdaptiveStringPreference(
             isVisible = false; isEnabled = false
         }
         preferenceKey.dependency?.let {
-            if (!sharedPrefs.getBoolean(context.getString(it.key), false))
+            if (!sharedPrefs.getBoolean(it.key, false))
                 isVisible = false
         }
         preferenceKey.negativeDependency?.let {
-            if (sharedPrefs.getBoolean(context.getString(it.key), false))
+            if (sharedPrefs.getBoolean(it.key, false))
                 isVisible = false
         }
-        validatorParameters = validatorParams ?: obtainValidatorParameters(attrs)
+        validatorParameters = obtainValidatorParameters(attrs)
         setOnBindEditTextListener { editText ->
             validator = DefaultEditTextValidator(editText, validatorParameters, context)
-            editText.setSelectAllOnFocus(true)
-            editText.setSingleLine()
-            when (validatorParameters.testType) {
-                EditTextValidator.TEST_EMAIL     -> editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
-                EditTextValidator.TEST_HTTPS_URL -> editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI
-            }
+            editText.inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
         }
         setOnPreferenceChangeListener { _, _ -> validator?.testValidity(false) ?: true }
         setDefaultValue(preferenceKey.defaultValue)
@@ -96,14 +90,33 @@ class AdaptiveStringPreference(
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.FormEditText, 0, 0)
         return DefaultEditTextValidator.Parameters(
             emptyAllowed = typedArray.getBoolean(R.styleable.FormEditText_emptyAllowed, false),
-            testType = typedArray.getInt(R.styleable.FormEditText_testType, EditTextValidator.TEST_NOCHECK),
+            testType = EditTextValidator.TEST_BG_RANGE,
             testErrorString = typedArray.getString(R.styleable.FormEditText_testErrorString),
             classType = typedArray.getString(R.styleable.FormEditText_classType),
             customRegexp = typedArray.getString(R.styleable.FormEditText_customRegexp),
             emptyErrorStringDef = typedArray.getString(R.styleable.FormEditText_emptyErrorString),
             customFormat = typedArray.getString(R.styleable.FormEditText_customFormat)
-        ).also {
+        ).also { params ->
+            params.minMgdl = preferenceKey.minMgdl
+            params.maxMgdl = preferenceKey.maxMgdl
             typedArray.recycle()
         }
     }
+
+    override fun onSetInitialValue(defaultValue: Any?) {
+        text = profileUtil.fromMgdlToUnits(
+            try {
+                SafeParse.stringToDouble(getPersistedString(defaultValue as String?))
+            } catch (ignored: Exception) {
+                getPersistedFloat(preferenceKey.defaultValue.toFloat()).toDouble()
+            }, profileUtil.units
+        ).toString()
+    }
+
+    override fun persistString(value: String?): Boolean =
+        try {
+            super.persistString(profileUtil.convertToMgdl(SafeParse.stringToDouble(value, preferenceKey.defaultValue), profileUtil.units).toString())
+        } catch (ignored: Exception) {
+            false
+        }
 }

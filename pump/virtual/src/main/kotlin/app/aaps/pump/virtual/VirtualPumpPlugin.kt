@@ -41,14 +41,14 @@ import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.AdaptiveListPreference
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
 import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.plannedRemainingMinutes
 import app.aaps.core.utils.fabric.InstanceId
-import app.aaps.core.validators.AdaptiveSwitchPreference
+import app.aaps.core.validators.preferences.AdaptiveListPreference
+import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.pump.virtual.events.EventVirtualPumpUpdateGui
 import app.aaps.pump.virtual.extensions.toText
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -124,7 +124,7 @@ open class VirtualPumpPlugin @Inject constructor(
         disposable += rxBus
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ event: EventPreferenceChange -> if (event.isChanged(rh.gs(StringKey.VirtualPumpType.key))) refreshConfiguration() }, fabricPrivacy::logException)
+            .subscribe({ event: EventPreferenceChange -> if (event.isChanged(StringKey.VirtualPumpType.key)) refreshConfiguration() }, fabricPrivacy::logException)
         refreshConfiguration()
     }
 

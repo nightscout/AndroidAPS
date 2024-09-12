@@ -404,8 +404,8 @@ class EquilBLE @Inject constructor(
     private var scanCallback: ScanCallback = object : ScanCallback() {
         override fun onScanResult(callbackType: Int, result: ScanResult) {
             super.onScanResult(callbackType, result)
-            val name = result.device.name
-            if (name.isNotEmpty()) {
+            val name: String? = result.device.name
+            if (name?.isNotEmpty() == true) {
                 try {
                     bleHandler.post { equilManager?.decodeData(result.scanRecord!!.bytes) }
                     stopScan()

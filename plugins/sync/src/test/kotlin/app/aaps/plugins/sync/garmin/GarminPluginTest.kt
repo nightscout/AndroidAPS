@@ -8,8 +8,8 @@ import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.interfaces.rx.events.EventNewBG
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
-import app.aaps.core.validators.AdaptiveIntPreference
-import app.aaps.core.validators.AdaptiveSwitchPreference
+import app.aaps.core.validators.preferences.AdaptiveIntPreference
+import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth
 import org.junit.jupiter.api.AfterEach

@@ -1,4 +1,5 @@
 <resources>
+    <string name="key_equil_maxbolus" translatable="false">equil_maxbolus</string>
     <string name="key_equil_mac_address" translatable="false">pref_equil_mac_address</string>
     <string name="key_equil_devices" translatable="false">key_equil_devices</string>
     <string name="key_equil_password" translatable="false">key_equil_password</string>

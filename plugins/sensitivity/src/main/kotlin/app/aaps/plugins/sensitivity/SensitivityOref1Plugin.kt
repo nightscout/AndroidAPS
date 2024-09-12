@@ -25,7 +25,7 @@ import app.aaps.core.objects.extensions.put
 import app.aaps.core.objects.extensions.store
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.core.utils.Percentile
-import app.aaps.core.validators.AdaptiveDoublePreference
+import app.aaps.core.validators.preferences.AdaptiveDoublePreference
 import app.aaps.plugins.sensitivity.extensions.isPSEvent5minBack
 import app.aaps.plugins.sensitivity.extensions.isTherapyEventEvent5minBack
 import org.json.JSONObject
@@ -214,17 +214,17 @@ class SensitivityOref1Plugin @Inject constructor(
 
     override fun configuration(): JSONObject =
         JSONObject()
-            .put(DoubleKey.ApsSmbMin5MinCarbsImpact, preferences, rh)
-            .put(DoubleKey.AbsorptionCutOff, preferences, rh)
-            .put(DoubleKey.AutosensMin, preferences, rh)
-            .put(DoubleKey.AutosensMax, preferences, rh)
+            .put(DoubleKey.ApsSmbMin5MinCarbsImpact, preferences)
+            .put(DoubleKey.AbsorptionCutOff, preferences)
+            .put(DoubleKey.AutosensMin, preferences)
+            .put(DoubleKey.AutosensMax, preferences)
 
     override fun applyConfiguration(configuration: JSONObject) {
         configuration
-            .store(DoubleKey.ApsSmbMin5MinCarbsImpact, preferences, rh)
-            .store(DoubleKey.AbsorptionCutOff, preferences, rh)
-            .store(DoubleKey.AutosensMin, preferences, rh)
-            .store(DoubleKey.AutosensMax, preferences, rh)
+            .store(DoubleKey.ApsSmbMin5MinCarbsImpact, preferences)
+            .store(DoubleKey.AbsorptionCutOff, preferences)
+            .store(DoubleKey.AutosensMin, preferences)
+            .store(DoubleKey.AutosensMax, preferences)
     }
 
     override val id: SensitivityType

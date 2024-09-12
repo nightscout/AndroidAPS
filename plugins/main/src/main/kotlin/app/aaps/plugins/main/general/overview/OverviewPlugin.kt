@@ -12,6 +12,7 @@ import androidx.preference.PreferenceScreen
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.overview.Overview
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.OverviewMenus
@@ -29,7 +30,6 @@ import app.aaps.core.interfaces.rx.events.EventUpdateOverviewCalcProgress
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.AdaptiveIntentPreference
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
@@ -43,10 +43,12 @@ import app.aaps.core.objects.extensions.store
 import app.aaps.core.objects.extensions.storeBoolean
 import app.aaps.core.objects.extensions.storeString
 import app.aaps.core.ui.dialogs.OKDialog
-import app.aaps.core.validators.AdaptiveDoublePreference
-import app.aaps.core.validators.AdaptiveIntPreference
-import app.aaps.core.validators.AdaptiveSwitchPreference
-import app.aaps.core.validators.AdaptiveUnitPreference
+import app.aaps.core.validators.preferences.AdaptiveClickPreference
+import app.aaps.core.validators.preferences.AdaptiveDoublePreference
+import app.aaps.core.validators.preferences.AdaptiveIntPreference
+import app.aaps.core.validators.preferences.AdaptiveIntentPreference
+import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
+import app.aaps.core.validators.preferences.AdaptiveUnitPreference
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.general.overview.notifications.NotificationStore
 import app.aaps.plugins.main.general.overview.notifications.NotificationWithAction
@@ -75,7 +77,8 @@ class OverviewPlugin @Inject constructor(
     private val overviewMenus: OverviewMenus,
     private val context: Context,
     private val constraintsChecker: ConstraintsChecker,
-    private val uiInteraction: UiInteraction
+    private val uiInteraction: UiInteraction,
+    private val nsSettingStatus: NSSettingsStatus
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -165,61 +168,61 @@ class OverviewPlugin @Inject constructor(
 
     override fun configuration(): JSONObject =
         JSONObject()
-            .put(StringKey.GeneralUnits, preferences, rh)
+            .put(StringKey.GeneralUnits, preferences)
             .putString(app.aaps.core.utils.R.string.key_quickwizard, sp, rh)
-            .put(IntKey.OverviewEatingSoonDuration, preferences, rh)
-            .put(UnitDoubleKey.OverviewEatingSoonTarget, preferences, rh)
-            .put(IntKey.OverviewActivityDuration, preferences, rh)
-            .put(UnitDoubleKey.OverviewActivityTarget, preferences, rh)
-            .put(IntKey.OverviewHypoDuration, preferences, rh)
-            .put(UnitDoubleKey.OverviewHypoTarget, preferences, rh)
-            .put(UnitDoubleKey.OverviewLowMark, preferences, rh)
-            .put(UnitDoubleKey.OverviewHighMark, preferences, rh)
-            .put(IntKey.OverviewCageWarning, preferences, rh)
-            .put(IntKey.OverviewCageCritical, preferences, rh)
-            .put(IntKey.OverviewIageWarning, preferences, rh)
-            .put(IntKey.OverviewIageCritical, preferences, rh)
-            .put(IntKey.OverviewSageWarning, preferences, rh)
-            .put(IntKey.OverviewSageCritical, preferences, rh)
-            .put(IntKey.OverviewSbatWarning, preferences, rh)
-            .put(IntKey.OverviewSbatCritical, preferences, rh)
-            .put(IntKey.OverviewBageWarning, preferences, rh)
-            .put(IntKey.OverviewBageCritical, preferences, rh)
-            .put(IntKey.OverviewResWarning, preferences, rh)
-            .put(IntKey.OverviewResCritical, preferences, rh)
-            .put(IntKey.OverviewBattWarning, preferences, rh)
-            .put(IntKey.OverviewBattCritical, preferences, rh)
-            .put(IntKey.OverviewBolusPercentage, preferences, rh)
+            .put(IntKey.OverviewEatingSoonDuration, preferences)
+            .put(UnitDoubleKey.OverviewEatingSoonTarget, preferences)
+            .put(IntKey.OverviewActivityDuration, preferences)
+            .put(UnitDoubleKey.OverviewActivityTarget, preferences)
+            .put(IntKey.OverviewHypoDuration, preferences)
+            .put(UnitDoubleKey.OverviewHypoTarget, preferences)
+            .put(UnitDoubleKey.OverviewLowMark, preferences)
+            .put(UnitDoubleKey.OverviewHighMark, preferences)
+            .put(IntKey.OverviewCageWarning, preferences)
+            .put(IntKey.OverviewCageCritical, preferences)
+            .put(IntKey.OverviewIageWarning, preferences)
+            .put(IntKey.OverviewIageCritical, preferences)
+            .put(IntKey.OverviewSageWarning, preferences)
+            .put(IntKey.OverviewSageCritical, preferences)
+            .put(IntKey.OverviewSbatWarning, preferences)
+            .put(IntKey.OverviewSbatCritical, preferences)
+            .put(IntKey.OverviewBageWarning, preferences)
+            .put(IntKey.OverviewBageCritical, preferences)
+            .put(IntKey.OverviewResWarning, preferences)
+            .put(IntKey.OverviewResCritical, preferences)
+            .put(IntKey.OverviewBattWarning, preferences)
+            .put(IntKey.OverviewBattCritical, preferences)
+            .put(IntKey.OverviewBolusPercentage, preferences)
             .put(rh.gs(app.aaps.core.utils.R.string.key_used_autosens_on_main_phone), constraintsChecker.isAutosensModeEnabled().value())
 
     override fun applyConfiguration(configuration: JSONObject) {
         val previousUnits = preferences.getIfExists(StringKey.GeneralUnits) ?: "old"
         configuration
-            .store(StringKey.GeneralUnits, preferences, rh)
+            .store(StringKey.GeneralUnits, preferences)
             .storeString(app.aaps.core.utils.R.string.key_quickwizard, sp, rh)
-            .store(IntKey.OverviewEatingSoonDuration, preferences, rh)
-            .store(UnitDoubleKey.OverviewEatingSoonTarget, preferences, rh)
-            .store(IntKey.OverviewActivityDuration, preferences, rh)
-            .store(UnitDoubleKey.OverviewActivityTarget, preferences, rh)
-            .store(IntKey.OverviewHypoDuration, preferences, rh)
-            .store(UnitDoubleKey.OverviewHypoTarget, preferences, rh)
-            .store(UnitDoubleKey.OverviewLowMark, preferences, rh)
-            .store(UnitDoubleKey.OverviewHighMark, preferences, rh)
-            .store(IntKey.OverviewCageWarning, preferences, rh)
-            .store(IntKey.OverviewCageCritical, preferences, rh)
-            .store(IntKey.OverviewIageWarning, preferences, rh)
-            .store(IntKey.OverviewIageCritical, preferences, rh)
-            .store(IntKey.OverviewSageWarning, preferences, rh)
-            .store(IntKey.OverviewSageCritical, preferences, rh)
-            .store(IntKey.OverviewSbatWarning, preferences, rh)
-            .store(IntKey.OverviewSbatCritical, preferences, rh)
-            .store(IntKey.OverviewBageWarning, preferences, rh)
-            .store(IntKey.OverviewBageCritical, preferences, rh)
-            .store(IntKey.OverviewResWarning, preferences, rh)
-            .store(IntKey.OverviewResCritical, preferences, rh)
-            .store(IntKey.OverviewBattWarning, preferences, rh)
-            .store(IntKey.OverviewBattCritical, preferences, rh)
-            .store(IntKey.OverviewBolusPercentage, preferences, rh)
+            .store(IntKey.OverviewEatingSoonDuration, preferences)
+            .store(UnitDoubleKey.OverviewEatingSoonTarget, preferences)
+            .store(IntKey.OverviewActivityDuration, preferences)
+            .store(UnitDoubleKey.OverviewActivityTarget, preferences)
+            .store(IntKey.OverviewHypoDuration, preferences)
+            .store(UnitDoubleKey.OverviewHypoTarget, preferences)
+            .store(UnitDoubleKey.OverviewLowMark, preferences)
+            .store(UnitDoubleKey.OverviewHighMark, preferences)
+            .store(IntKey.OverviewCageWarning, preferences)
+            .store(IntKey.OverviewCageCritical, preferences)
+            .store(IntKey.OverviewIageWarning, preferences)
+            .store(IntKey.OverviewIageCritical, preferences)
+            .store(IntKey.OverviewSageWarning, preferences)
+            .store(IntKey.OverviewSageCritical, preferences)
+            .store(IntKey.OverviewSbatWarning, preferences)
+            .store(IntKey.OverviewSbatCritical, preferences)
+            .store(IntKey.OverviewBageWarning, preferences)
+            .store(IntKey.OverviewBageCritical, preferences)
+            .store(IntKey.OverviewResWarning, preferences)
+            .store(IntKey.OverviewResCritical, preferences)
+            .store(IntKey.OverviewBattWarning, preferences)
+            .store(IntKey.OverviewBattCritical, preferences)
+            .store(IntKey.OverviewBolusPercentage, preferences)
             .storeBoolean(app.aaps.core.utils.R.string.key_used_autosens_on_main_phone, sp, rh)
 
         val newUnits = preferences.getIfExists(StringKey.GeneralUnits) ?: "new"
@@ -304,7 +307,11 @@ class OverviewPlugin @Inject constructor(
                 addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewResCritical, title = R.string.statuslights_res_critical))
                 addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewBattWarning, title = R.string.statuslights_bat_warning))
                 addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewBattCritical, title = R.string.statuslights_bat_critical))
-                addPreference(AdaptiveIntentPreference(ctx = context, intentKey = IntentKey.OverviewCopySettingsFromNs, title = R.string.statuslights_copy_ns))
+                addPreference(AdaptiveClickPreference(ctx = context, stringKey = StringKey.OverviewCopySettingsFromNs, title = R.string.statuslights_copy_ns,
+                                                      onPreferenceClickListener = {
+                                                          nsSettingStatus.copyStatusLightsNsSettings(context)
+                                                          true
+                                                      }))
             })
             addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewBolusPercentage, dialogMessage = R.string.deliverpartofboluswizard, title = app.aaps.core.ui.R.string.partialboluswizard))
             addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewResetBolusPercentageTime, dialogMessage = R.string.deliver_part_of_boluswizard_reset_time, title = app.aaps.core.ui.R.string.partialboluswizard_reset_time))

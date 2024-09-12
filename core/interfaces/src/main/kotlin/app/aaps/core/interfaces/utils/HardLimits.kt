@@ -46,4 +46,8 @@ interface HardLimits {
 
     fun verifyHardLimits(value: Double, valueName: Int, lowLimit: Double, highLimit: Double): Double
 
+    fun ageEntries(): Array<CharSequence>
+    fun ageEntryValues(): Array<CharSequence>
+
+    enum class AgeType { CHILD, TEENAGE, ADULT, RESISTANT_ADULT, PREGNANT }
 }

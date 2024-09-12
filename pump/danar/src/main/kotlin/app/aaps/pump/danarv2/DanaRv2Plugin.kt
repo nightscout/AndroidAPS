@@ -1,10 +1,18 @@
 package app.aaps.pump.danarv2
 
+import android.Manifest
+import android.bluetooth.BluetoothManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.IBinder
+import androidx.core.app.ActivityCompat
+import androidx.preference.PreferenceCategory
+import androidx.preference.PreferenceManager
+import androidx.preference.PreferenceScreen
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T.Companion.mins
@@ -27,7 +35,6 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -35,13 +42,24 @@ import app.aaps.core.interfaces.utils.Round.ceilTo
 import app.aaps.core.interfaces.utils.Round.floorTo
 import app.aaps.core.interfaces.utils.Round.roundTo
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.core.ui.toast.ToastUtils
+import app.aaps.core.validators.DefaultEditTextValidator
+import app.aaps.core.validators.EditTextValidator
+import app.aaps.core.validators.preferences.AdaptiveIntPreference
+import app.aaps.core.validators.preferences.AdaptiveListIntPreference
+import app.aaps.core.validators.preferences.AdaptiveListPreference
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.R
 import app.aaps.pump.dana.database.DanaHistoryDatabase
+import app.aaps.pump.dana.keys.DanaBooleanKey
+import app.aaps.pump.dana.keys.DanaIntKey
+import app.aaps.pump.dana.keys.DanaStringKey
 import app.aaps.pump.danar.AbstractDanaRPlugin
 import app.aaps.pump.danarv2.services.DanaRv2ExecutionService
 import io.reactivex.rxjava3.kotlin.plusAssign
+import java.util.Vector
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
@@ -56,7 +74,6 @@ class DanaRv2Plugin @Inject constructor(
     rh: ResourceHelper,
     constraintChecker: ConstraintsChecker,
     activePlugin: ActivePlugin,
-    sp: SP,
     commandQueue: CommandQueue,
     danaPump: DanaPump,
     private val detailedBolusInfoStorage: DetailedBolusInfoStorage,
@@ -64,6 +81,7 @@ class DanaRv2Plugin @Inject constructor(
     dateUtil: DateUtil,
     private val fabricPrivacy: FabricPrivacy,
     pumpSync: PumpSync,
+    preferences: Preferences,
     uiInteraction: UiInteraction,
     danaHistoryDatabase: DanaHistoryDatabase,
     decimalFormatter: DecimalFormatter,
@@ -77,9 +95,9 @@ class DanaRv2Plugin @Inject constructor(
     commandQueue,
     rxBus,
     activePlugin,
-    sp,
     dateUtil,
     pumpSync,
+    preferences,
     uiInteraction,
     danaHistoryDatabase,
     decimalFormatter,
@@ -101,7 +119,6 @@ class DanaRv2Plugin @Inject constructor(
 
     init {
         pluginDescription.description(R.string.description_pump_dana_r_v2)
-        useExtendedBoluses = false
         pumpDescription.fillFor(PumpType.DANA_RV2)
     }
 
@@ -124,8 +141,6 @@ class DanaRv2Plugin @Inject constructor(
     override val name: String
         // Plugin base interface
         get() = rh.gs(R.string.danarv2pump)
-    override val preferencesId: Int
-        get() = app.aaps.pump.danar.R.xml.pref_danarv2
     override val isFakingTempsByExtendedBoluses: Boolean
         get() = false
 
@@ -148,7 +163,7 @@ class DanaRv2Plugin @Inject constructor(
         detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger)).value()
         // v2 stores end time for bolus, we need to adjust time
         // default delivery speed is 12 sec/U
-        val preferencesSpeed = sp.getInt(R.string.key_danars_bolusspeed, 0)
+        val preferencesSpeed = preferences.get(DanaIntKey.DanaBolusSpeed)
         var speed = 12
         when (preferencesSpeed) {
             0 -> speed = 12
@@ -332,7 +347,7 @@ class DanaRv2Plugin @Inject constructor(
                 .duration(pump.extendedBolusRemainingMinutes)
                 .absolute(pump.extendedBolusAbsoluteRate)
                 .isPercent(false)
-            if (!sp.getBoolean("danar_useextended", false)) result.bolusDelivered(pump.extendedBolusAmount)
+            if (!preferences.get(DanaBooleanKey.DanaRUseExtended)) result.bolusDelivered(pump.extendedBolusAmount)
             aapsLogger.debug(LTag.PUMP, "setExtendedBolus: OK")
             return result
         }
@@ -362,4 +377,41 @@ class DanaRv2Plugin @Inject constructor(
 
     override fun setUserOptions(): PumpEnactResult =
         executionService?.setUserOptions() ?: error("Execution service is null")
+
+    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
+        if (requiredKey != null) return
+
+        var entries = emptyArray<CharSequence>()
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
+            val devices = Vector<CharSequence>()
+            (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter?.let { bta ->
+                for (dev in bta.bondedDevices)
+                    dev.name?.let { name -> devices.add(name) }
+            }
+            entries = devices.toTypedArray()
+        } else ToastUtils.errorToast(context, context.getString(app.aaps.core.ui.R.string.need_connect_permission))
+
+        val speedEntries = arrayOf<CharSequence>("12 s/U", "30 s/U", "60 s/U")
+        val speedValues = arrayOf<CharSequence>("0", "1", "2")
+
+        val category = PreferenceCategory(context)
+        parent.addPreference(category)
+        category.apply {
+            key = "danar_v2_settings"
+            title = rh.gs(R.string.danar_pump_settings)
+            initialExpandedChildrenCount = 0
+            addPreference(AdaptiveListPreference(ctx = context, stringKey = DanaStringKey.DanaRName, title = R.string.danar_bt_name_title, dialogTitle = R.string.danar_bt_name_title, entries = entries, entryValues = entries))
+            addPreference(
+                AdaptiveIntPreference(
+                    ctx = context, intKey = DanaIntKey.DanaRPassword, title = R.string.danar_password_title,
+                    validatorParams = DefaultEditTextValidator.Parameters(
+                        testType = EditTextValidator.TEST_REGEXP,
+                        customRegexp = rh.gs(app.aaps.core.validators.R.string.fourdigitnumber),
+                        testErrorString = rh.gs(app.aaps.core.validators.R.string.error_mustbe4digitnumber)
+                    )
+                )
+            )
+            addPreference(AdaptiveListIntPreference(ctx = context, intKey = DanaIntKey.DanaBolusSpeed, title = R.string.bolusspeed, dialogTitle = R.string.bolusspeed, entries = speedEntries, entryValues = speedValues))
+        }
+    }
 }

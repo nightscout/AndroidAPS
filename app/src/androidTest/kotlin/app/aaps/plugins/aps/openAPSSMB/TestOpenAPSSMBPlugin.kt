@@ -120,9 +120,9 @@ open class TestOpenAPSSMBPlugin @Inject constructor(
         super.preprocessPreferences(preferenceFragment)
         val smbAlwaysEnabled = preferences.get(BooleanKey.ApsUseSmbAlways)
         val advancedFiltering = activePlugin.activeBgSource.advancedFilteringSupported()
-        preferenceFragment.findPreference<SwitchPreference>(rh.gs(app.aaps.core.keys.R.string.key_openaps_allow_smb_with_COB))?.isVisible = !smbAlwaysEnabled || !advancedFiltering
-        preferenceFragment.findPreference<SwitchPreference>(rh.gs(app.aaps.core.keys.R.string.key_openaps_allow_smb_with_low_temp_target))?.isVisible = !smbAlwaysEnabled || !advancedFiltering
-        preferenceFragment.findPreference<SwitchPreference>(rh.gs(app.aaps.core.keys.R.string.key_openaps_enable_smb_after_carbs))?.isVisible = !smbAlwaysEnabled || !advancedFiltering
+        preferenceFragment.findPreference<SwitchPreference>(BooleanKey.ApsUseSmbWithCob.key)?.isVisible = !smbAlwaysEnabled || !advancedFiltering
+        preferenceFragment.findPreference<SwitchPreference>(BooleanKey.ApsUseSmbWithLowTt.key)?.isVisible = !smbAlwaysEnabled || !advancedFiltering
+        preferenceFragment.findPreference<SwitchPreference>(BooleanKey.ApsUseSmbAfterCarbs.key)?.isVisible = !smbAlwaysEnabled || !advancedFiltering
     }
 
     override fun invoke(initiator: String, tempBasalFallback: Boolean) {

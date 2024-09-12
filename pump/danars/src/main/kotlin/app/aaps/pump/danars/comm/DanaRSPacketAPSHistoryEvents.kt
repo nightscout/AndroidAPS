@@ -9,9 +9,10 @@ import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.Preferences
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.R
+import app.aaps.pump.dana.keys.DanaBooleanKey
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.encryption.BleEncryption
 import org.joda.time.DateTime
@@ -28,7 +29,7 @@ open class DanaRSPacketAPSHistoryEvents(
     @Inject lateinit var danaPump: DanaPump
     @Inject lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Inject lateinit var temporaryBasalStorage: TemporaryBasalStorage
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var pumpSync: PumpSync
 
     companion object {
@@ -287,7 +288,7 @@ open class DanaRSPacketAPSHistoryEvents(
             }
 
             DanaPump.HistoryEntry.REFILL              -> {
-                if (sp.getBoolean(R.string.key_rs_loginsulinchange, true)) {
+                if (preferences.get(DanaBooleanKey.DanaRsLogInsulinChange)) {
                     val newRecord = pumpSync.insertTherapyEventIfNewWithTimestamp(
                         timestamp = datetime,
                         type = TE.Type.INSULIN_CHANGE,
@@ -335,7 +336,7 @@ open class DanaRSPacketAPSHistoryEvents(
             }
 
             DanaPump.HistoryEntry.PRIME_CANNULA       -> {
-                if (sp.getBoolean(R.string.key_rs_logcanulachange, true)) {
+                if (preferences.get(DanaBooleanKey.DanaRsLogCannulaChange)) {
                     val newRecord = pumpSync.insertTherapyEventIfNewWithTimestamp(
                         timestamp = datetime,
                         type = TE.Type.CANNULA_CHANGE,

@@ -42,7 +42,7 @@ class ThemeSwitcherPlugin @Inject constructor(
         disposable += rxBus
             .toObservable(EventPreferenceChange::class.java)
             .subscribe {
-                if (it.isChanged(rh.gs(StringKey.GeneralDarkMode.key))) {
+                if (it.isChanged(StringKey.GeneralDarkMode.key)) {
                     setThemeMode()
                     rxBus.send(EventThemeSwitch())
                 }

@@ -34,22 +34,13 @@ class HardLimitsImpl @Inject constructor(
 
     private val disposable = CompositeDisposable()
 
-    companion object {
-
-        private const val CHILD = 0
-        private const val TEENAGE = 1
-        private const val ADULT = 2
-        private const val RESISTANT_ADULT = 3
-        private const val PREGNANT = 4
-    }
-
     private fun loadAge(): Int = when (preferences.get(StringKey.SafetyAge)) {
-        rh.gs(app.aaps.core.keys.R.string.key_child)          -> CHILD
-        rh.gs(app.aaps.core.keys.R.string.key_teenage)        -> TEENAGE
-        rh.gs(app.aaps.core.keys.R.string.key_adult)          -> ADULT
-        rh.gs(app.aaps.core.keys.R.string.key_resistantadult) -> RESISTANT_ADULT
-        rh.gs(app.aaps.core.keys.R.string.key_pregnant)       -> PREGNANT
-        else                                                  -> ADULT
+        ageEntryValues()[HardLimits.AgeType.CHILD.ordinal]           -> HardLimits.AgeType.CHILD.ordinal
+        ageEntryValues()[HardLimits.AgeType.TEENAGE.ordinal]         -> HardLimits.AgeType.TEENAGE.ordinal
+        ageEntryValues()[HardLimits.AgeType.ADULT.ordinal]           -> HardLimits.AgeType.ADULT.ordinal
+        ageEntryValues()[HardLimits.AgeType.RESISTANT_ADULT.ordinal] -> HardLimits.AgeType.RESISTANT_ADULT.ordinal
+        ageEntryValues()[HardLimits.AgeType.PREGNANT.ordinal]        -> HardLimits.AgeType.PREGNANT.ordinal
+        else                                                         -> HardLimits.AgeType.ADULT.ordinal
     }
 
     override fun maxBolus(): Double = HardLimits.MAX_BOLUS[loadAge()]
@@ -89,4 +80,20 @@ class HardLimitsImpl @Inject constructor(
         }
         return newValue
     }
+
+    override fun ageEntries() = arrayOf<CharSequence>(
+        rh.gs(app.aaps.core.ui.R.string.child),
+        rh.gs(app.aaps.core.ui.R.string.teenage),
+        rh.gs(app.aaps.core.ui.R.string.adult),
+        rh.gs(app.aaps.core.ui.R.string.resistant_adult),
+        rh.gs(app.aaps.core.ui.R.string.pregnant),
+    )
+
+    override fun ageEntryValues() = arrayOf<CharSequence>(
+        "child",
+        "teenage",
+        "adult",
+        "resistantadult",
+        "pregnant"
+    )
 }

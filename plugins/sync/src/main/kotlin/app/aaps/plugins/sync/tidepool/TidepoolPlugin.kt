@@ -2,9 +2,7 @@ package app.aaps.plugins.sync.tidepool
 
 import android.content.Context
 import android.text.Spanned
-import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
 import app.aaps.core.data.configuration.Constants
@@ -26,16 +24,14 @@ import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.interfaces.sync.Tidepool
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.AdaptiveIntentPreference
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.IntentKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.utils.HtmlHelper
-import app.aaps.core.validators.AdaptiveStringPreference
-import app.aaps.core.validators.AdaptiveSwitchPreference
 import app.aaps.core.validators.DefaultEditTextValidator
 import app.aaps.core.validators.EditTextValidator
-import app.aaps.core.validators.extensions.stringKey
+import app.aaps.core.validators.preferences.AdaptiveClickPreference
+import app.aaps.core.validators.preferences.AdaptiveStringPreference
+import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsShared.events.EventConnectivityOptionChanged
 import app.aaps.plugins.sync.nsclient.ReceiverDelegate
@@ -131,9 +127,9 @@ class TidepoolPlugin @Inject constructor(
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event ->
-                           if (event.isChanged(BooleanKey.TidepoolUseTestServers.stringKey(rh))
-                               || event.isChanged(StringKey.TidepoolUsername.stringKey(rh))
-                               || event.isChanged(StringKey.TidepoolPassword.stringKey(rh))
+                           if (event.isChanged(BooleanKey.TidepoolUseTestServers.key)
+                               || event.isChanged(StringKey.TidepoolUsername.key)
+                               || event.isChanged(StringKey.TidepoolPassword.key)
                            )
                                tidepoolUploader.resetInstance()
                        }, fabricPrivacy::logException)
@@ -142,18 +138,6 @@ class TidepoolPlugin @Inject constructor(
     override fun onStop() {
         disposable.clear()
         super.onStop()
-    }
-
-    override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
-        super.preprocessPreferences(preferenceFragment)
-
-        val tidepoolTestLogin: Preference? = preferenceFragment.findPreference(IntentKey.TidepoolTestLogin.stringKey(rh))
-        tidepoolTestLogin?.setOnPreferenceClickListener {
-            preferenceFragment.context?.let {
-                tidepoolUploader.testLogin(it)
-            }
-            false
-        }
     }
 
     private fun doUpload() =
@@ -218,7 +202,13 @@ class TidepoolPlugin @Inject constructor(
                     validatorParams = DefaultEditTextValidator.Parameters(testType = EditTextValidator.TEST_MIN_LENGTH, minLength = 1)
                 )
             )
-            addPreference(AdaptiveIntentPreference(ctx = context, intentKey = IntentKey.TidepoolTestLogin, title = R.string.title_tidepool_test_login))
+            addPreference(
+                AdaptiveClickPreference(ctx = context, stringKey = StringKey.TidepoolTestLogin, title = R.string.title_tidepool_test_login,
+                                        onPreferenceClickListener = {
+                                            tidepoolUploader.testLogin(preferenceManager.context)
+                                            true
+                                        })
+            )
             addPreference(preferenceManager.createPreferenceScreen(context).apply {
                 key = "tidepool_connection_options"
                 title = rh.gs(R.string.connection_settings_title)

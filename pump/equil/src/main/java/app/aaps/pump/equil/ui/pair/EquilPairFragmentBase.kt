@@ -120,7 +120,12 @@ abstract class EquilPairFragmentBase : DaggerFragment() {
         if (activity == null) return
         val fragment = childFragmentManager.findFragmentByTag("loading")
         if (fragment is LoadingDlg) {
-            fragment.dismiss()
+            try {
+                fragment.dismiss()
+            } catch (e: IllegalStateException) {
+                // dialog not running yet
+                aapsLogger.error("Unhandled exception", e)
+            }
         }
     }
 }

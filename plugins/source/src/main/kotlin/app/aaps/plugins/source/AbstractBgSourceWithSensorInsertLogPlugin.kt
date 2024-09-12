@@ -10,7 +10,7 @@ import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.validators.AdaptiveSwitchPreference
+import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 
 abstract class AbstractBgSourceWithSensorInsertLogPlugin(
     pluginDescription: PluginDescription,

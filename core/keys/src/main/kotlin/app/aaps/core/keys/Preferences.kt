@@ -75,6 +75,35 @@ interface Preferences {
     fun put(key: StringPreferenceKey, value: String)
 
     /**
+     * Get [String] value from [android.content.SharedPreferences]
+     * In SimpleMode return default value
+     * In FullMode return value from [android.content.SharedPreferences]
+     *
+     * @param key [String2PreferenceKey] enum
+     * @param appendix appendix to compose final key as key + delimiter + appendix
+     * @return value
+     */
+    fun get(key: String2PreferenceKey, appendix: String): String
+
+    /**
+     * Get [String] value from [android.content.SharedPreferences] or null if doesn't exist
+     *
+     * @param key [String2PreferenceKey] enum
+     * @param appendix appendix to compose final key as key + delimiter + appendix
+     * @return value or null
+     */
+    fun getIfExists(key: String2PreferenceKey, appendix: String): String?
+
+    /**
+     * Update [String] value in [android.content.SharedPreferences]
+     *
+     * @param key [String2PreferenceKey] enum
+     * @param appendix appendix to compose final key as key + delimiter + appendix
+     * @param value value
+     */
+    fun put(key: String2PreferenceKey, appendix: String, value: String)
+
+    /**
      * Get [Double] value from [android.content.SharedPreferences]
      * In SimpleMode return default value
      * In FullMode return value from [android.content.SharedPreferences]
@@ -153,11 +182,45 @@ interface Preferences {
     fun put(key: IntPreferenceKey, value: Int)
 
     /**
+     * Get [Long] value from [android.content.SharedPreferences]
+     * In SimpleMode return default value
+     * In FullMode return value from [android.content.SharedPreferences]
+     *
+     * @param key [LongPreferenceKey] enum
+     * @return value
+     */
+    fun get(key: LongPreferenceKey): Long
+
+    /**
+     * Get [Long] value from [android.content.SharedPreferences] or null if doesn't exist
+     *
+     * @param key [LongPreferenceKey] enum
+     * @return value or null
+     */
+    fun getIfExists(key: LongPreferenceKey): Long?
+
+    /**
+     * Update [Long] value in [android.content.SharedPreferences]
+     *
+     * @param key [LongPreferenceKey] enum
+     * @param value value
+     */
+    fun put(key: LongPreferenceKey, value: Long)
+
+    /**
      * Remove value from [android.content.SharedPreferences]
      *
      * @param key [PreferenceKey] enum
      */
     fun remove(key: PreferenceKey)
+
+    /**
+     * Remove value from [android.content.SharedPreferences]
+     *
+     * @param key [PreferenceKey] enum
+     * @param appendix appendix to compose final key as key + delimiter + appendix
+     */
+    fun remove(key: String2PreferenceKey, appendix: String)
 
     /**
      * @param key string representation of key
@@ -171,6 +234,13 @@ interface Preferences {
      * @return [PreferenceKey]
      */
     fun get(key: String): PreferenceKey
+
+    /**
+     * Find [PreferenceKey] definition
+     * @param key string representation of key
+     * @return [PreferenceKey] or null
+     */
+    fun getIfExists(key: String): PreferenceKey?
 
     /**
      * Find all [PreferenceKey] which have `dependency` or `negativeDependency`

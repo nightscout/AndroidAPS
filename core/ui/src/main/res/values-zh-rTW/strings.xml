@@ -421,7 +421,7 @@
     <string name="bolus_advisor">注射顧問</string>
     <string name="bolus_advisor_message">您的血糖過高。建議不要立即用餐，等待血糖恢復正常。您想現在進行修正注射，並提醒您何時用餐嗎？這種情況下不會記錄碳水化合物，當我們提醒您時，您必須再次使用嚮導。</string>
     <string name="cobvsiob">COB 對 IOB</string>
-    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! 檢測到碳水化合物吸收緩慢：%2$d%% 的時間。請再次檢查您的計算。COB 可能被高估，因此可能會注射更多的胰島素 !!!!!</font>]]></string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! 檢測到碳水化合物吸收緩慢：%2$d%% 的時間。請再次檢查您的計算。COB 可能被高估，因此可能會導致給予過多的胰島素 (建議取消計算機中的COB後再重新計算)!!!!!</font>]]></string>
     <string name="partialboluswizard">傳送一部分的注射嚮導結果 [%]</string>
     <string name="partialboluswizard_reset_time">舊血糖時間閾值 [分鐘]</string>
     <string name="bolus_constraint_applied_warn">注射限制已套用：%1$.2f U 至 %2$.2f U</string>

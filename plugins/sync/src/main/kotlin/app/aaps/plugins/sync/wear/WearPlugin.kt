@@ -25,7 +25,7 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.Preferences
-import app.aaps.core.validators.AdaptiveSwitchPreference
+import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.wear.wearintegration.DataHandlerMobile
 import app.aaps.plugins.sync.wear.wearintegration.DataLayerListenerServiceMobileHelper

@@ -3,11 +3,11 @@ package app.aaps
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
-import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.CurrentTemp
 import app.aaps.core.interfaces.aps.GlucoseStatus
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.aps.MealData
 import app.aaps.core.interfaces.aps.OapsProfile
 import app.aaps.core.interfaces.aps.OapsProfileAutoIsf
@@ -18,20 +18,20 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.storage.Storage
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.DoubleKey
-import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
 import app.aaps.core.utils.JsonHelper
 import app.aaps.di.TestApplication
 import app.aaps.plugins.aps.openAPSAMA.DetermineBasalAMA
 import app.aaps.plugins.aps.openAPSAMA.DetermineBasalAdapterAMAJS
 import app.aaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
+import app.aaps.plugins.aps.openAPSAutoISF.DetermineBasalAutoISF
 import app.aaps.plugins.aps.openAPSSMB.DetermineBasalAdapterSMBJS
 import app.aaps.plugins.aps.openAPSSMB.DetermineBasalSMB
 import app.aaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
-import app.aaps.plugins.aps.openAPSSMBDynamicISF.DetermineBasalAdapterSMBDynamicISFJS
-import app.aaps.plugins.aps.openAPSAutoISF.DetermineBasalAutoISF
 import app.aaps.plugins.aps.openAPSSMBAutoISF.DetermineBasalAdapterAutoISFJS
+import app.aaps.plugins.aps.openAPSSMBDynamicISF.DetermineBasalAdapterSMBDynamicISFJS
 import app.aaps.plugins.aps.utils.ScriptReader
 import com.google.common.truth.Truth.assertThat
 import dagger.android.HasAndroidInjector
@@ -92,17 +92,17 @@ class ReplayApsResultsTest @Inject constructor() {
             val output = JSONObject(outputString)
             aapsLogger.info(LTag.CORE, "***** File: $filename *****")
             when (algorithm) {
-                OpenAPSSMBPlugin::class.simpleName      -> smbs++
-                "OpenAPSSMBAutoISFPlugin"               -> autoisfs++
-                "OpenAPSSMBDynamicISFPlugin"            -> dynisfs++
-                OpenAPSAMAPlugin::class.simpleName      -> amas++
+                OpenAPSSMBPlugin::class.simpleName -> smbs++
+                "OpenAPSSMBAutoISFPlugin"          -> autoisfs++
+                "OpenAPSSMBDynamicISFPlugin"       -> dynisfs++
+                OpenAPSAMAPlugin::class.simpleName -> amas++
             }
             when (algorithm) {
-                OpenAPSSMBPlugin::class.simpleName      -> testOpenAPSSMB(filename, input, output, injector)
-                "OpenAPSSMBAutoISFPlugin"               -> testOpenAPSSMBAutoISF(filename, input, output, injector)
-                "OpenAPSSMBDynamicISFPlugin"            -> testOpenAPSSMBDynamicISF(filename, input, output, injector)
-                OpenAPSAMAPlugin::class.simpleName      -> testOpenAPSAMA(filename, input, output, injector)
-                else                                    -> error("Unsupported")
+                OpenAPSSMBPlugin::class.simpleName -> testOpenAPSSMB(filename, input, output, injector)
+                "OpenAPSSMBAutoISFPlugin"          -> testOpenAPSSMBAutoISF(filename, input, output, injector)
+                "OpenAPSSMBDynamicISFPlugin"       -> testOpenAPSSMBDynamicISF(filename, input, output, injector)
+                OpenAPSAMAPlugin::class.simpleName -> testOpenAPSAMA(filename, input, output, injector)
+                else                               -> error("Unsupported")
             }
         }
         aapsLogger.info(LTag.CORE, "\n**********\nAMA: $amas\nSMB: $smbs\nDynISFs: $dynisfs\nAutoISFs: $autoisfs\nJS time: $jsTime\nKT time: $ktTime\n**********")
@@ -143,9 +143,9 @@ class ReplayApsResultsTest @Inject constructor() {
         // Pass to DetermineBasalSMB
 
         if (determineBasalResult.profile.optString("out_units") == "mmol/L")
-            sp.putString(app.aaps.core.keys.R.string.key_units, GlucoseUnit.MMOL.asText)
+            preferences.put(StringKey.GeneralUnits, GlucoseUnit.MMOL.asText)
         else
-            sp.putString(app.aaps.core.keys.R.string.key_units, GlucoseUnit.MGDL.asText)
+            preferences.put(StringKey.GeneralUnits, GlucoseUnit.MGDL.asText)
 
         val startKt = System.currentTimeMillis()
         val glucoseStatus = GlucoseStatus(
@@ -307,9 +307,9 @@ class ReplayApsResultsTest @Inject constructor() {
         // Pass to DetermineBasalSMBDynamicISF
 
         if (determineBasalResult.profile.optString("out_units") == "mmol/L")
-            sp.putString(app.aaps.core.keys.R.string.key_units, GlucoseUnit.MMOL.asText)
+            preferences.put(StringKey.GeneralUnits, GlucoseUnit.MMOL.asText)
         else
-            sp.putString(app.aaps.core.keys.R.string.key_units, GlucoseUnit.MGDL.asText)
+            preferences.put(StringKey.GeneralUnits, GlucoseUnit.MGDL.asText)
 
         val startKt = System.currentTimeMillis()
         val glucoseStatus = GlucoseStatus(
@@ -466,9 +466,9 @@ class ReplayApsResultsTest @Inject constructor() {
         // Pass to DetermineBasalSMBDynamicISF
 
         if (determineBasalResult.profile.optString("out_units") == "mmol/L")
-            sp.putString(app.aaps.core.keys.R.string.key_units, GlucoseUnit.MMOL.asText)
+            preferences.put(StringKey.GeneralUnits, GlucoseUnit.MMOL.asText)
         else
-            sp.putString(app.aaps.core.keys.R.string.key_units, GlucoseUnit.MGDL.asText)
+            preferences.put(StringKey.GeneralUnits, GlucoseUnit.MGDL.asText)
 
         val startKt = System.currentTimeMillis()
         val glucoseStatus = GlucoseStatus(
@@ -624,9 +624,9 @@ class ReplayApsResultsTest @Inject constructor() {
         // Pass to DetermineBasalSMB
 
         if (determineBasalResult.profile.optString("out_units") == "mmol/L")
-            sp.putString(app.aaps.core.keys.R.string.key_units, GlucoseUnit.MMOL.asText)
+            preferences.put(StringKey.GeneralUnits, GlucoseUnit.MMOL.asText)
         else
-            sp.putString(app.aaps.core.keys.R.string.key_units, GlucoseUnit.MGDL.asText)
+            preferences.put(StringKey.GeneralUnits, GlucoseUnit.MGDL.asText)
 
         val startKt = System.currentTimeMillis()
         val glucoseStatus = GlucoseStatus(
@@ -747,7 +747,7 @@ class ReplayApsResultsTest @Inject constructor() {
             microBolusAllowed = determineBasalResult.microBolusAllowed,
             currentTime = currentTime,
             flatBGsDetected = determineBasalResult.flatBGsDetected,
-            autoIsfMode =  true, //preferences.get(BooleanKey.ApsUseAutoIsf),
+            autoIsfMode = true, //preferences.get(BooleanKey.ApsUseAutoIsf),
             iob_threshold_percent = preferences.get(IntKey.ApsAutoIsfIobThPercent),
             smb_max_range_extension = preferences.get(DoubleKey.ApsAutoIsfSmbMaxRangeExtension),
             profile_percentage = profile.profile_percentage, // 100,

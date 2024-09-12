@@ -119,19 +119,19 @@ class IobCobCalculatorPlugin @Inject constructor(
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event ->
-                           if (event.isChanged(rh.gs(IntKey.AutosensPeriod.key)) ||
-                               event.isChanged(rh.gs(StringKey.SafetyAge.key)) ||
-                               event.isChanged(rh.gs(DoubleKey.AbsorptionMaxTime.key)) ||
-                               event.isChanged(rh.gs(DoubleKey.ApsAmaMin5MinCarbsImpact.key)) ||
-                               event.isChanged(rh.gs(DoubleKey.ApsSmbMin5MinCarbsImpact.key)) ||
-                               event.isChanged(rh.gs(DoubleKey.AbsorptionCutOff.key)) ||
-                               event.isChanged(rh.gs(DoubleKey.AutosensMax.key)) ||
-                               event.isChanged(rh.gs(DoubleKey.AutosensMin.key)) ||
-                               event.isChanged(rh.gs(IntKey.InsulinOrefPeak.key))
+                           if (event.isChanged(IntKey.AutosensPeriod.key) ||
+                               event.isChanged(StringKey.SafetyAge.key) ||
+                               event.isChanged(DoubleKey.AbsorptionMaxTime.key) ||
+                               event.isChanged(DoubleKey.ApsAmaMin5MinCarbsImpact.key) ||
+                               event.isChanged(DoubleKey.ApsSmbMin5MinCarbsImpact.key) ||
+                               event.isChanged(DoubleKey.AbsorptionCutOff.key) ||
+                               event.isChanged(DoubleKey.AutosensMax.key) ||
+                               event.isChanged(DoubleKey.AutosensMin.key) ||
+                               event.isChanged(IntKey.InsulinOrefPeak.key)
                            ) {
                                resetDataAndRunCalculation("onEventPreferenceChange", event)
                            }
-                           if (event.isChanged(rh.gs(StringKey.GeneralUnits.key))) {
+                           if (event.isChanged(StringKey.GeneralUnits.key)) {
                                overviewData.reset()
                                rxBus.send(EventNewHistoryData(0, false))
                            }

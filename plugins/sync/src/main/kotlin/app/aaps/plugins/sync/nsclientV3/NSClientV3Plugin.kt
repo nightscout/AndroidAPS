@@ -58,12 +58,11 @@ import app.aaps.core.keys.StringKey
 import app.aaps.core.nssdk.NSAndroidClientImpl
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.remotemodel.LastModified
-import app.aaps.core.validators.AdaptiveIntPreference
-import app.aaps.core.validators.AdaptiveStringPreference
-import app.aaps.core.validators.AdaptiveSwitchPreference
 import app.aaps.core.validators.DefaultEditTextValidator
 import app.aaps.core.validators.EditTextValidator
-import app.aaps.core.validators.extensions.stringKey
+import app.aaps.core.validators.preferences.AdaptiveIntPreference
+import app.aaps.core.validators.preferences.AdaptiveStringPreference
+import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsShared.NSClientFragment
 import app.aaps.plugins.sync.nsShared.events.EventConnectivityOptionChanged
@@ -132,7 +131,7 @@ class NSClientV3Plugin @Inject constructor(
     aapsLogger, rh
 ) {
 
-    @Suppress("PropertyName")
+    @Suppress("PrivatePropertyName")
     private val JOB_NAME: String = this::class.java.simpleName
 
     companion object {
@@ -222,12 +221,12 @@ class NSClientV3Plugin @Inject constructor(
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ ev ->
-                           if (ev.isChanged(StringKey.NsClientAccessToken.stringKey(rh)) ||
-                               ev.isChanged(StringKey.NsClientUrl.stringKey(rh)) ||
-                               ev.isChanged(BooleanKey.NsClient3UseWs.stringKey(rh)) ||
+                           if (ev.isChanged(StringKey.NsClientAccessToken.key) ||
+                               ev.isChanged(StringKey.NsClientUrl.key) ||
+                               ev.isChanged(BooleanKey.NsClient3UseWs.key) ||
                                ev.isChanged(rh.gs(R.string.key_ns_paused)) ||
-                               ev.isChanged(BooleanKey.NsClientNotificationsFromAlarms.stringKey(rh)) ||
-                               ev.isChanged(BooleanKey.NsClientNotificationsFromAnnouncements.stringKey(rh))
+                               ev.isChanged(BooleanKey.NsClientNotificationsFromAlarms.key) ||
+                               ev.isChanged(BooleanKey.NsClientNotificationsFromAnnouncements.key)
                            ) {
                                stopService()
                                nsAndroidClient = null

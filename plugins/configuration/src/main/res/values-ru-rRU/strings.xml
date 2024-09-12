@@ -106,7 +106,6 @@
     <string name="restartingapp">выход из приложения для применения настроек</string>
     <string name="ue_exported">Записи пользователя экспортированы</string>
     <string name="protection">Защита</string>
-    <string name="master_password_missing">Не задан главный пароль!\n\nЗадайте главный пароль в настройках (%1$s &#8594; %2$s)</string>
     <!--    Maintenance-->
     <string name="maintenance">Обслуживание</string>
     <string name="maintenance_shortname">ОБСЛУЖ</string>

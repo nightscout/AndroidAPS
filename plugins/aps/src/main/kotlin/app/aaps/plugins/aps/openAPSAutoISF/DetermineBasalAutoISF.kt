@@ -1037,9 +1037,6 @@ class DetermineBasalAutoISF @Inject constructor(
             insulinReq = round(insulinReq, 3)
             rT.insulinReq = insulinReq
             //console.error(iob_data.lastBolusTime);
-            // minutes since last bolus
-            val lastBolusAge = round((systemTime - iob_data.lastBolusTime) / 60000.0, 1)
-            //console.error(lastBolusAge);
             //console.error(profile.temptargetSet, target_bg, rT.COB);
             // only allow microboluses with COB or low temp targets, or within DIA hours of a bolus
             val maxBolus: Double
@@ -1099,19 +1096,24 @@ class DetermineBasalAutoISF @Inject constructor(
                 }
                 rT.reason.append(". ")
 
+                // seconds since last bolus
+                val lastBolusAge = (systemTime - iob_data.lastBolusTime) / 1000.0
+                //console.error(lastBolusAge);
                 // allow SMBIntervals between 1 and 10 minutes
-                val SMBInterval = min(10, max(1, profile.SMBInterval))
-                val nextBolusMins = round(SMBInterval - lastBolusAge, 0)
-                val nextBolusSeconds = round((SMBInterval - lastBolusAge) * 60, 0) % 60
+                val SMBInterval = min(10, max(1, profile.SMBInterval)) * 60.0   // in seconds
                 //console.error(naive_eventualBG, insulinReq, worstCaseInsulinReq, durationReq);
-                consoleError.add("naive_eventualBG $naive_eventualBG,${durationReq}m ${smbLowTempReq}U/h temp needed; last bolus ${lastBolusAge}m ago; maxBolus: $maxBolus")
-                if (lastBolusAge > SMBInterval) {
+                consoleError.add("naive_eventualBG $naive_eventualBG,${durationReq}m ${smbLowTempReq}U/h temp needed; last bolus ${round(lastBolusAge/60.0,1)}m ago; maxBolus: $maxBolus")
+                if (lastBolusAge > SMBInterval - 6.0) {   // 6s tolerance
                     if (microBolus > 0) {
                         rT.units = microBolus
                         rT.reason.append("Microbolusing ${microBolus}U. ")
                     }
                 } else {
-                    rT.reason.append("Waiting " + nextBolusMins + "m " + nextBolusSeconds + "s to microbolus again. ")
+                    val nextBolusMins = (SMBInterval-lastBolusAge) / 60.0
+                    val nextBolusSeconds = (SMBInterval - lastBolusAge) % 60
+                    val waitingSeconds = round(nextBolusSeconds,0) % 60
+                    val waitingMins = round(nextBolusMins-waitingSeconds/60.0, 0)
+                    rT.reason.append( "Waiting ${waitingMins.withoutZeros()}m ${waitingSeconds.withoutZeros()}s to microbolus again.")
                 }
                 //rT.reason += ". ";
 

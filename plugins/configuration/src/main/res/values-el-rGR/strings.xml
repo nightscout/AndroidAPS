@@ -106,7 +106,6 @@
     <string name="restartingapp">Έξοδος από το application για την εφαρμογή των ρυθμίσεων</string>
     <string name="ue_exported">Καταχωρήσεις χρηστών που εξάγονται</string>
     <string name="protection">Προστασία</string>
-    <string name="master_password_missing">Ο κύριος κωδικός πρόσβασης δεν έχει οριστεί!\n\nΠαρακαλώ ορίστε τον Κύριο κωδικό πρόσβασής σας στις Προτιμήσεις (%1$s &#8594; %2$s)</string>
     <!--    Maintenance-->
     <string name="maintenance">Συντήρηση</string>
     <string name="maintenance_shortname">ΣΥΝΤΗΡ</string>

@@ -103,7 +103,6 @@
     <string name="danar_bt_name_title">DanaR Bluetooth enhed</string>
     <string name="danars_password_title">Pumpe kodeord (kun v1)</string>
     <string name="danar_password_title">Pumpe kodeord</string>
-    <string name="danar_useextended_title">Brug forlængede bolusser til &gt;200%%</string>
     <string name="bolusspeed">Bolus hastighed</string>
     <string name="selectedpump">Valgt pumpe</string>
     <string name="rs_loginsulinchange_title">Log reservoir ændring</string>

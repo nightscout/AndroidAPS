@@ -2,10 +2,10 @@ package app.aaps.plugins.aps.openAPSSMBDynamicISF
 
 import androidx.annotation.VisibleForTesting
 import app.aaps.core.data.aps.SMBDefaults
-import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.aps.DetermineBasalAdapter
 import app.aaps.core.interfaces.aps.GlucoseStatus
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.aps.MealData
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -238,13 +238,8 @@ class DetermineBasalAdapterSMBDynamicISFJS(private val scriptReader: ScriptReade
         this.profile.put("current_basal_safety_multiplier", preferences.get(DoubleKey.ApsMaxCurrentBasalMultiplier))
         this.profile.put("lgsThreshold", profileUtil.convertToMgdlDetect(preferences.get(UnitDoubleKey.ApsLgsThreshold)))
 
-        //mProfile.put("high_temptarget_raises_sensitivity", SP.getBoolean(R.string.key_high_temptarget_raises_sensitivity, SMBDefaults.high_temptarget_raises_sensitivity));
-        this.profile.put(
-            "high_temptarget_raises_sensitivity",
-            sp.getBoolean(app.aaps.core.utils.R.string.key_high_temptarget_raises_sensitivity, SMBDefaults.high_temptarget_raises_sensitivity)
-        )
-        //mProfile.put("low_temptarget_lowers_sensitivity", SP.getBoolean(R.string.key_low_temptarget_lowers_sensitivity, SMBDefaults.low_temptarget_lowers_sensitivity));
-        this.profile.put("low_temptarget_lowers_sensitivity", sp.getBoolean(app.aaps.core.utils.R.string.key_low_temptarget_lowers_sensitivity, SMBDefaults.low_temptarget_lowers_sensitivity))
+        this.profile.put("high_temptarget_raises_sensitivity", preferences.get(BooleanKey.ApsAutoIsfHighTtRaisesSens.key))
+        this.profile.put("low_temptarget_lowers_sensitivity", preferences.get(BooleanKey.ApsAutoIsfLowTtLowersSens.key))
         this.profile.put("sensitivity_raises_target", preferences.get(BooleanKey.ApsSensitivityRaisesTarget))
         this.profile.put("resistance_lowers_target", preferences.get(BooleanKey.ApsResistanceLowersTarget))
         this.profile.put("adv_target_adjustments", SMBDefaults.adv_target_adjustments)

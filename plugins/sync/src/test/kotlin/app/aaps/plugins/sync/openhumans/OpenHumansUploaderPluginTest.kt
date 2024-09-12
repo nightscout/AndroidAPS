@@ -2,7 +2,7 @@ package app.aaps.plugins.sync.openhumans
 
 import android.content.SharedPreferences
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.validators.AdaptiveSwitchPreference
+import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.openhumans.delegates.OHAppIDDelegate
 import app.aaps.plugins.sync.openhumans.delegates.OHCounterDelegate
 import app.aaps.plugins.sync.openhumans.delegates.OHStateDelegate

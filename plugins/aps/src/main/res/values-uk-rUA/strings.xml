@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Autotune-->
     <string name="constraints">Обмеження</string>
     <!--    Verify if needed in safety-->
     <!--    Autotune   -->
@@ -39,4 +40,5 @@
     <string name="autotune_update_local_profile_message">Оновити профіль %1$s з профілем Autotune?</string>
     <string name="autotune_revert_local_profile_message">Відновити профіль %1$s з Вхідним профілем?</string>
     <string name="autotune_profile_invalid">Недійсний профіль</string>
+    <!--    autoISF -->
 </resources>

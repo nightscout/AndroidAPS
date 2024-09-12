@@ -1,42 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    Keys-->
-    <string name="key_danar_useextended" translatable="false">danar_useextended</string>
-    <string name="key_btwatchdog" translatable="false">bt_watchdog</string>
     <string name="key_btwatchdog_lastbark" translatable="false">bt_watchdog_last</string>
-    <string name="key_gradually_increase_notification_volume" translatable="false">gradually_increase_notification_volume</string>
     <string name="key_quickwizard" translatable="false">QuickWizard</string>
     <string name="key_units_mgdl" translatable="false">units_mgdl</string>
-    <string name="key_bgsource_upload_settings" translatable="false">bgsource_upload_settings</string>
-    <string name="key_localalert_settings" translatable="false">localalert_settings</string>
-    <string name="key_configbuilder_general_settings" translatable="false">configbuilder_general_settings</string>
-    <string name="key_virtualpump_settings" translatable="false">virtualpump_settings</string>
-    <string name="key_pump_settings" translatable="false">pump_settings</string>
-    <string name="key_tidepool_settings" translatable="false">tidepool_settings</string>
-    <string name="key_absorption_settings" translatable="false">absorption_settings</string>
-    <string name="key_overview_settings" translatable="false">overview_settings</string>
     <string name="key_medtronic_settings" translatable="false">medtronic_settings</string>
-    <string name="key_danars_settings" translatable="false">danars_settings</string>
     <string name="key_insight_local_settings" translatable="false">insight_local_settings</string>
-    <string name="key_dexcom_settings" translatable="false">dexcom_settings</string>
     <string name="key_active_pump_change_timestamp" translatable="false">active_pump_change_timestamp</string>
     <string name="key_active_pump_type" translatable="false">active_pump_type</string>
     <string name="key_active_pump_serial_number" translatable="false">active_pump_serial_number</string>
     <string name="key_app_expiration" translatable="false">app_expiration</string>
-    <string name="key_enable_pump_unreachable_alert" translatable="false">enable_pump_unreachable_alert</string>
     <string name="key_next_pump_disconnected_alarm" translatable="false">nextPumpDisconnectedAlarm</string>
     <string name="key_next_missed_reading_alarm" translatable="false">nextMissedReadingsAlarm</string>
-    <string name="key_enable_missed_bg_readings_alert" translatable="false">enable_missed_bg_readings</string>
-    <string name="key_enable_carbs_required_alert_local" translatable="false">enable_carbs_required_alert_local</string>
     <string name="key_rangetodisplay" translatable="false">rangetodisplay</string>
     <string name="key_local_profile_last_change" translatable="false">local_profile_last_change</string>
     <string name="key_objectiveuseprofileswitch" translatable="false">ObjectivesProfileSwitchUsed</string>
     <string name="key_objectiveusetemptarget" translatable="false">ObjectivesTempTargetUsed</string>
     <string name="key_objectiveusedisconnect" translatable="false">ObjectivesDisconnectUsed</string>
     <string name="key_objectiveusereconnect" translatable="false">ObjectivesReconnectUsed</string>
-    <string name="key_patient_name" translatable="false">patient_name</string>
-    <string name="key_high_temptarget_raises_sensitivity" translatable="false">high_temptarget_raises_sensitivity</string>
-    <string name="key_low_temptarget_lowers_sensitivity" translatable="false">low_temptarget_lowers_sensitivity</string>
     <string name="key_wear_detailediob" translatable="false">wear_detailediob</string>
     <string name="key_wear_showbgi" translatable="false">wear_showbgi</string>
     <string name="key_wear_detailed_delta" translatable="false">wear_detailed_delta</string>
@@ -46,16 +27,6 @@
     <string name="key_objectives_bg_is_available_in_ns" translatable="false">ObjectivesbgIsAvailableInNS</string>
     <string name="key_objectives_pump_status_is_available_in_ns" translatable="false">ObjectivespumpStatusIsAvailableInNS</string>
     <string name="key_snoozed_to" translatable="false">snoozedTo</string>
-    <string name="key_master_password" translatable="false">master_password</string>
-    <string name="key_settings_password" translatable="false">settings_password</string>
-    <string name="key_settings_pin" translatable="false">settings_pin</string>
-    <string name="key_application_password" translatable="false">application_password</string>
-    <string name="key_application_pin" translatable="false">application_pin</string>
-    <string name="key_bolus_password" translatable="false">bolus_password</string>
-    <string name="key_bolus_pin" translatable="false">bolus_pin</string>
-    <string name="key_settings_protection" translatable="false">settings_protection</string>
-    <string name="key_application_protection" translatable="false">application_protection</string>
-    <string name="key_bolus_protection" translatable="false">bolus_protection</string>
     <string name="key_objectiveuseloop" translatable="false">ObjectivesLoopUsed</string>
     <string name="key_ObjectivesmanualEnacts" translatable="false">ObjectivesmanualEnacts</string>
     <string name="key_objectiveuseactions" translatable="false">ObjectivesActionsUsed</string>
