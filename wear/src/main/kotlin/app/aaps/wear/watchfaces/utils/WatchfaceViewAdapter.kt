@@ -60,7 +60,7 @@ class WatchfaceViewAdapter(
     val iob1 = ds?.iob1 ?: cU?.iob1
     val iob2 = ds?.iob2 ?: cU?.iob2
     val chart = bC?.chart ?: bC?.chart ?: ds?.chart ?: cU?.chart
-    val status = aL?.status ?: bC?.status ?: bC?.status ?: nC?.status
+    val status = aL?.status ?: bC?.status ?: bC?.status ?: nC?.status ?: cU?.status
     val timePeriod = ds?.timePeriod ?: aL?.timePeriod ?: nC?.timePeriod ?: bC?.timePeriod ?: cU?.timePeriod
     val dayName = ds?.dayName ?: cU?.dayName
     val mainMenuTap = ds?.mainMenuTap
