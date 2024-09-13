@@ -9,7 +9,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.Preferences
 
-fun fromCarbs(t: CA, bg: Double, isAAPSOrWeighted: Boolean, profileFunction: ProfileFunction, aapsLogger: AAPSLogger, dateUtil: DateUtil, preferences: Preferences): AutosensData.CarbsInPast {
+fun fromCarbs(t: CA, isAAPSOrWeighted: Boolean, profileFunction: ProfileFunction, aapsLogger: AAPSLogger, dateUtil: DateUtil, preferences: Preferences): AutosensData.CarbsInPast {
     val time = t.timestamp
     val carbs = t.amount
     val remaining = t.amount
@@ -17,7 +17,7 @@ fun fromCarbs(t: CA, bg: Double, isAAPSOrWeighted: Boolean, profileFunction: Pro
     val profile = profileFunction.getProfile(t.timestamp)
     if (isAAPSOrWeighted && profile != null) {
         val maxAbsorptionHours = preferences.get(DoubleKey.AbsorptionMaxTime)
-        val sens = profile.getIsfMgdl(t.timestamp, bg, "fromCarbs")
+        val sens = profile.getIsfMgdlForCarbs(t.timestamp, "fromCarbs")
         val ic = profile.getIc(t.timestamp)
         min5minCarbImpact = t.amount / (maxAbsorptionHours * 60 / 5) * sens / ic
         aapsLogger.debug(

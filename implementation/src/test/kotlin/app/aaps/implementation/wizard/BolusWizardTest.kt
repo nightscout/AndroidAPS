@@ -51,7 +51,7 @@ class BolusWizardTest : TestBaseWithProfile() {
         val profile = Mockito.mock(Profile::class.java)
         Mockito.`when`(profile.getTargetLowMgdl()).thenReturn(targetLow)
         Mockito.`when`(profile.getTargetLowMgdl()).thenReturn(targetHigh)
-        Mockito.`when`(profile.getIsfMgdl(any())).thenReturn(insulinSensitivityFactor)
+        Mockito.`when`(profile.getIsfMgdlForCarbs(any(), any())).thenReturn(insulinSensitivityFactor)
         Mockito.`when`(profile.getIc()).thenReturn(insulinToCarbRatio)
 
         Mockito.`when`(iobCobCalculator.calculateIobFromBolus()).thenReturn(IobTotal(System.currentTimeMillis()))

@@ -44,14 +44,11 @@ interface APS : ConfigExportImport {
     /**
      * Calculate ISF to specified timestamp
      * @param timestamp time
-     * @param bg glycemia
-     * @param multiplier Multiplier from profile switch. Algorithm can take it into a count or ignore
-     * @param timeShift Time shift from profile switch. Algorithm can take it into a count or ignore
      * @return isf or null if not available
      *
      * Remember calculation must be as fast as possible. It's called very often
      */
-    fun getIsfMgdl(timestamp: Long, bg: Double, multiplier: Double, timeShift: Int, caller: String): Double? = error("Not implemented")
+    fun getAverageIsfMgdl(timestamp: Long, caller: String): Double? = error("Not implemented")
 
     /**
      * Calculate current IC

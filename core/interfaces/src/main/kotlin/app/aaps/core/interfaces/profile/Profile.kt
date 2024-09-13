@@ -75,9 +75,9 @@ interface Profile {
     fun getProfileIsfMgdl(): Double
 
     /**
-     * ISF value according to timestamp in MGDL
+     * ISF value according to timestamp in MGDL for use in Wizard and COB calculations
      */
-    fun getIsfMgdl(timestamp: Long, bg: Double, caller: String): Double
+    fun getIsfMgdlForCarbs(timestamp: Long, caller: String): Double
 
     /**
      * Average target value according to "now" in MGDL

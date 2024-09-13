@@ -85,9 +85,9 @@ class ProfileSealedTest : TestBase() {
         c[Calendar.MINUTE] = 0
         c[Calendar.SECOND] = 0
         c[Calendar.MILLISECOND] = 0
-        assertThat(p.getIsfMgdl(c.timeInMillis, 100.0, "test")).isWithin(0.01).of(108.0)
+        assertThat(p.getIsfMgdlForCarbs(c.timeInMillis, "test")).isWithin(0.01).of(108.0)
         c[Calendar.HOUR_OF_DAY] = 2
-        assertThat(p.getIsfMgdl(c.timeInMillis, 100.0, "test")).isWithin(0.01).of(111.6)
+        assertThat(p.getIsfMgdlForCarbs(c.timeInMillis, "test")).isWithin(0.01).of(111.6)
 //        assertThat(p.getIsfTimeFromMidnight(2 * 60 * 60)).isWithin(0.01).of(110.0)
         assertThat(p.getIsfList(rh, dateUtil).replace(".", ",")).isEqualTo(
             """
@@ -134,7 +134,7 @@ class ProfileSealedTest : TestBase() {
         assertThat(p.getBasal(c.timeInMillis)).isWithin(0.01).of(0.05)
         assertThat(p.percentageBasalSum()).isWithin(0.01).of(1.2)
         assertThat(p.getIc(c.timeInMillis)).isWithin(0.01).of(60.0)
-        assertThat(p.getIsfMgdl(c.timeInMillis, 100.0, "test")).isWithin(0.01).of(223.2)
+        assertThat(p.getIsfMgdlForCarbs(c.timeInMillis, "test")).isWithin(0.01).of(223.2)
 
         // Test timeshift functionality
         p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(okProfile), dateUtil)!!, activePlugin)

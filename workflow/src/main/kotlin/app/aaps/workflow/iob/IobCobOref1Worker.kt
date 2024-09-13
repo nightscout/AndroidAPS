@@ -127,7 +127,7 @@ class IobCobOref1Worker(
                 autosensData.bg = bg
                 delta = bg - bucketedData[i + 1].recalculated
                 avgDelta = (bg - bucketedData[i + 3].recalculated) / 3
-                val sens = profile.getIsfMgdl(bgTime, bg, "iobCobOref1Worker")
+                val sens = profile.getIsfMgdlForCarbs(bgTime, "iobCobOref1Worker")
                 val iob = data.iobCobCalculator.calculateFromTreatmentsAndTemps(bgTime, profile)
                 val bgi = -iob.activity * sens * 5
                 val deviation = delta - bgi
@@ -191,7 +191,7 @@ class IobCobOref1Worker(
                 for (recentCarbTreatment in recentCarbTreatments) {
                     autosensData.carbsFromBolus += recentCarbTreatment.amount
                     val isAAPSOrWeighted = activePlugin.activeSensitivity.isMinCarbsAbsorptionDynamic
-                    autosensData.activeCarbsList.add(fromCarbs(recentCarbTreatment, bg, isAAPSOrWeighted, profileFunction, aapsLogger, dateUtil, preferences))
+                    autosensData.activeCarbsList.add(fromCarbs(recentCarbTreatment, isAAPSOrWeighted, profileFunction, aapsLogger, dateUtil, preferences))
                     autosensData.pastSensitivity += "[" + decimalFormatter.to0Decimal(recentCarbTreatment.amount) + "g]"
                 }
 

@@ -1160,6 +1160,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val profile = profileFunction.getProfile()
         val request = loop.lastRun?.request
         val isfMgdl = profile?.getProfileIsfMgdl()
+        val isfForCarbs =  profile?.getIsfMgdlForCarbs(dateUtil.now(), "Overview")
         val variableSens =
             if (config.APS) request?.variableSens ?: 0.0
             else if (config.NSCLIENT) processedDeviceStatusData.getAPSResult()?.variableSens ?: 0.0
@@ -1169,9 +1170,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (variableSens != isfMgdl && variableSens != 0.0 && isfMgdl != null) {
             var text = if (ratioUsed != 1.0 && ratioUsed != lastAutosensData?.autosensResult?.ratio) String.format(Locale.getDefault(), "%.0f%%\n", ratioUsed * 100) else ""
             text += String.format(
-                Locale.getDefault(), "%1$.1f→%2$.1f",
+                Locale.getDefault(), "%1$.1f→%2$.1f (%3$.1f)",
                 profileUtil.fromMgdlToUnits(isfMgdl, profileFunction.getUnits()),
-                profileUtil.fromMgdlToUnits(variableSens, profileFunction.getUnits())
+                profileUtil.fromMgdlToUnits(variableSens, profileFunction.getUnits()),
+                profileUtil.fromMgdlToUnits(isfForCarbs ?: 0.0, profileFunction.getUnits())
             )
             binding.infoLayout.variableSensitivity.text = text
             binding.infoLayout.variableSensitivity.visibility = View.VISIBLE

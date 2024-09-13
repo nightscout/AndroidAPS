@@ -284,7 +284,7 @@ class Widget : AppWidgetProvider() {
 
         // Show variable sensitivity
         val request = loop.lastRun?.request
-        val isfMgdl = profileFunction.getProfile()?.getIsfMgdl("Widget")
+        val isfMgdl = profileFunction.getProfile()?.getProfileIsfMgdl()
         val variableSens =
             if (config.APS) request?.variableSens ?: 0.0
             else if (config.NSCLIENT) processedDeviceStatusData.getAPSResult()?.variableSens ?: 0.0
