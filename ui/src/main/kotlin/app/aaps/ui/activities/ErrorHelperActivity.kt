@@ -5,6 +5,7 @@ import app.aaps.core.data.model.TE
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
@@ -22,6 +23,7 @@ class ErrorHelperActivity : TranslatedDaggerAppCompatActivity() {
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var config: Config
 
     private val disposable = CompositeDisposable()
 
@@ -35,7 +37,7 @@ class ErrorHelperActivity : TranslatedDaggerAppCompatActivity() {
         errorDialog.title = intent.getStringExtra(AlarmSoundService.TITLE) ?: ""
         errorDialog.show(supportFragmentManager, "Error")
 
-        if (preferences.get(BooleanKey.NsClientCreateAnnouncementsFromErrors))
+        if (preferences.get(BooleanKey.NsClientCreateAnnouncementsFromErrors) && config.APS)
             disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
                 therapyEvent = TE.asAnnouncement(intent.getStringExtra(AlarmSoundService.STATUS) ?: ""),
                 timestamp = dateUtil.now(),

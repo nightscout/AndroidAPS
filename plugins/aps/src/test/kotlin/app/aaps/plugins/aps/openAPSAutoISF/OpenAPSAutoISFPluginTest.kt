@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.profiling.Profiler
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
@@ -33,6 +34,7 @@ class OpenAPSAutoISFPluginTest : TestBaseWithProfile() {
     @Mock lateinit var sharedPrefs: SharedPreferences
     @Mock lateinit var bgQualityCheck: BgQualityCheck
     @Mock lateinit var profiler: Profiler
+    @Mock lateinit var uiInteraction: UiInteraction
     private lateinit var openAPSAutoISFPlugin: OpenAPSAutoISFPlugin
 
     init {
@@ -69,7 +71,7 @@ class OpenAPSAutoISFPluginTest : TestBaseWithProfile() {
         openAPSAutoISFPlugin = OpenAPSAutoISFPlugin(
             injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, profileUtil, config, activePlugin,
             iobCobCalculator, hardLimits, preferences, dateUtil, processedTbrEbData, persistenceLayer, glucoseStatusProvider,
-            bgQualityCheck, determineBasalSMB, profiler
+            bgQualityCheck, uiInteraction, determineBasalSMB, profiler
         )
     }
 

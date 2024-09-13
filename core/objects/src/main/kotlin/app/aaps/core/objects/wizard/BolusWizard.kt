@@ -209,7 +209,7 @@ class BolusWizard @Inject constructor(
         this.positiveIOBOnly = positiveIOBOnly
 
         // Insulin from BG
-        sens = profileUtil.fromMgdlToUnits(profile.getIsfMgdl("BolusWizard"))
+        sens = profileUtil.fromMgdlToUnits(profile.getIsfMgdlForCarbs(dateUtil.now(), "BolusWizard"))
         targetBGLow = profileUtil.fromMgdlToUnits(profile.getTargetLowMgdl())
         targetBGHigh = profileUtil.fromMgdlToUnits(profile.getTargetHighMgdl())
         if (useTT && tempTarget != null) {

@@ -336,7 +336,7 @@ class LoopPlugin @Inject constructor(
                                 val carbReqLocal = Notification(Notification.CARBS_REQUIRED, resultAfterConstraints.carbsRequiredText, Notification.NORMAL)
                                 rxBus.send(EventNewNotification(carbReqLocal))
                             }
-                            if (preferences.get(BooleanKey.NsClientCreateAnnouncementsFromCarbsReq)) {
+                            if (preferences.get(BooleanKey.NsClientCreateAnnouncementsFromCarbsReq) && config.APS) {
                                 disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
                                     therapyEvent = TE.asAnnouncement(resultAfterConstraints.carbsRequiredText),
                                     timestamp = dateUtil.now(),

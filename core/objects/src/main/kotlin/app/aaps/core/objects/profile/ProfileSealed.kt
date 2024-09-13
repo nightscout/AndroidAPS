@@ -268,17 +268,15 @@ sealed class ProfileSealed(
 
     override fun getProfileIsfMgdl(): Double =
         toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(), 100.0 / percentage, timeshift), units)
+
     override fun getIsfMgdl(caller: String): Double =
         if (aps?.supportsDynamicIsf() ?: error("APS not defined"))
             aps.getIsfMgdl(100.0 / percentage, timeshift, caller) ?: toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(), 100.0 / percentage, timeshift), units)
         else getProfileIsfMgdl()
 
-    override fun getIsfMgdl(timestamp: Long, bg: Double, caller: String): Double =
+    override fun getIsfMgdlForCarbs(timestamp: Long, caller: String): Double =
         if (aps?.supportsDynamicIsf() ?: error("APS not defined"))
-            aps.getIsfMgdl(timestamp, bg, 100.0 / percentage, timeshift, caller) ?: toMgdl(
-                isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), 100.0 / percentage, timeshift),
-                units
-            )
+            aps.getAverageIsfMgdl(timestamp, caller) ?: toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), 100.0 / percentage, timeshift), units)
         else toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), 100.0 / percentage, timeshift), units)
 
     override fun getTargetMgdl(): Double = toMgdl(targetBlocks.targetBlockValueBySeconds(MidnightUtils.secondsFromMidnight(), timeshift), units)
