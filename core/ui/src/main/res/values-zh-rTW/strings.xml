@@ -136,7 +136,7 @@
     <string name="a11y_inrange">在範圍內</string>
     <string name="a11y_low">低</string>
     <string name="average">平均</string>
-    <string name="tir">目標範圍內時間(TIR)</string>
+    <string name="tir">目標範圍內的時間占比(TIR)</string>
     <string name="none"><![CDATA[<無>]]></string>
     <string name="remove_label">移除</string>
     <string name="activate_profile">啟用設定檔</string>
@@ -473,7 +473,7 @@
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">已點擊連線到幫浦</string>
     <string name="reservoir_value">%1$.0f / %2$d U</string>
     <string name="daily_units">每日單位</string>
-    <string name="pump_icon">幫浦圖標</string>
+    <string name="pump_icon">幫浦圖示</string>
     <string name="view_profile">查看設定檔</string>
     <string name="pump_history">幫浦歷史</string>
     <string name="stats">統計</string>
