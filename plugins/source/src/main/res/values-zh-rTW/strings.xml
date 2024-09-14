@@ -2,7 +2,7 @@
 <resources>
     <!-- Source -->
     <string name="ns_client_bg">NSClient 血糖</string>
-    <string name="ns_client_bg_short">NS 血糖值</string>
+    <string name="ns_client_bg_short">NS 血糖</string>
     <string name="description_source_ns_client">從 Nightscout 下載血糖資料</string>
     <string name="source_xdrip">xDrip+ 血糖值</string>
     <string name="description_source_xdrip">接收來自 xDrip+ 的血糖值。</string>
