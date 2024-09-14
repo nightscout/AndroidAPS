@@ -51,6 +51,7 @@
     <string name="extended_bolus">בולוס ממושך</string>
     <string name="paused">מושהה</string>
     <string name="tdd_total">מינון יומי מצטבר כולל</string>
+    <string name="tdd_old_data">נתונים ישנים</string>
     <string name="goingtodeliver">עומד להזריק %1$.2f יח\'</string>
     <string name="waitingforpump">ממתין למשאבה</string>
     <string name="androidaps_start">הופעל AndroidAPS</string>
@@ -167,6 +168,8 @@
     <string name="virtualpump_uploadstatus_title">שלח את סטטוס המשאבה לנייטסקאוט או ל-Tidepool</string>
     <string name="suspendloop_label">השבתת \\ השהיית לולאה</string>
     <string name="iob_label">אינסולין פעיל בגוף (IOB)</string>
+    <string name="loopstatus_targets">ערכי מטרה:</string>
+    <string name="loopstatus_OAPS_result">תוצאות OAPS:</string>
     <string name="nav_export">ייצוא הגדרות</string>
     <!--    Protection-->
     <string name="wrongpassword">סיסמה שגויה</string>
@@ -336,6 +339,7 @@
     <string name="uel_export_settings">ייצוא הגדרות</string>
     <string name="uel_import_settings">ייבוא הגדרות</string>
     <string name="uel_reset_databases">איפוס מסדי נתונים</string>
+    <string name="uel_reset_aps_results">איפוס תוצאות APS</string>
     <string name="uel_cleanup_databases">ניקיון מסדי נתונים</string>
     <string name="uel_export_databases">ייצוא מסדי נתונים</string>
     <string name="uel_import_databases">ייבוא מסדי נתונים</string>
@@ -418,6 +422,8 @@
     <string name="bolus_recorded_only">בולוס רשום בלבד (לא מוזרק על ידי המשאבה)</string>
     <string name="advisoralarm">הפעל התראה כשצריכים לאכול</string>
     <string name="no_action_selected">לא נבחרה פעולה, דבר לא יתבצע.</string>
+    <string name="carb_equal_zero_no_action">פחמ\' = 0. לא נעשתה פעולה!</string>
+    <string name="wizard_no_insulin_required">לא נדרש אינסולין!</string>
     <string name="wizard_no_actual_bg">אין נתוני סוכר לביסוס חישוב!</string>
     <string name="wizard_no_active_profile">לא הופעל פרופיל!</string>
     <string name="wizard_no_cob">הפחמימות הפעילות לא ידועות! חסרות קריאות סוכר או שאותחל היישום לאחרונה?</string>
