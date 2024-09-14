@@ -21,7 +21,7 @@ class CarbsDataPoint(
     override val paintStyle: Paint.Style = Paint.Style.FILL // not used
 
     override fun color(context: Context?): Int {
-        return if (data.isValid) rh.gac(context, app.aaps.core.ui.R.attr.cobColor) else rh.gac(context, app.aaps.core.ui.R.attr.alarmColor)
+        return if (data.isValid && data.amount > 0) rh.gac(context, app.aaps.core.ui.R.attr.cobColor) else rh.gac(context, app.aaps.core.ui.R.attr.alarmColor)
     }
 
     override fun setY(y: Double) {

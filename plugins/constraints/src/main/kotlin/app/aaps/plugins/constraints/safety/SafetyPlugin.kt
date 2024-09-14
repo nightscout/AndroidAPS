@@ -166,7 +166,6 @@ class SafetyPlugin @Inject constructor(
     }
 
     override fun applyCarbsConstraints(carbs: Constraint<Int>): Constraint<Int> {
-        carbs.setIfGreater(0, rh.gs(R.string.limitingcarbs, 0, rh.gs(app.aaps.core.ui.R.string.itmustbepositivevalue)), this)
         val maxCarbs = preferences.get(IntKey.SafetyMaxCarbs)
         carbs.setIfSmaller(maxCarbs, rh.gs(R.string.limitingcarbs, maxCarbs, rh.gs(R.string.maxvalueinpreferences)), this)
         return carbs

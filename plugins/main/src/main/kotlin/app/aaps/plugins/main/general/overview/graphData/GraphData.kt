@@ -171,7 +171,7 @@ import kotlin.math.max
     fun addCob(useForScale: Boolean, scale: Double) {
         if (useForScale) {
             maxY = overviewData.maxCobValueFound
-            minY = 0.0
+            minY = -overviewData.maxCobValueFound
         }
         overviewData.cobScale.multiplier = maxY * scale / overviewData.maxCobValueFound
         addSeries(overviewData.cobSeries as FixedLineGraphSeries<ScaledDataPoint>)
