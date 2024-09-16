@@ -78,7 +78,7 @@
     <string name="danar_glucose_units">血糖單位</string>
     <string name="danar_shutdown">關閉 [小時]</string>
     <string name="danar_low_reservoir">低儲液器 [單位]</string>
-    <string name="danar_save_user_options">將選項保存到幫浦</string>
+    <string name="danar_save_user_options">將選項儲存到幫浦</string>
     <string name="description_pump_dana_r">DANA Diabecare R 幫浦的幫浦整合</string>
     <string name="description_pump_dana_r_korean">國產 DANA Diabecare R 幫浦的幫浦整合</string>
     <string name="description_pump_dana_r_v2">帶升級韌體的 DANA Diabecare R 幫浦的幫浦整合</string>
