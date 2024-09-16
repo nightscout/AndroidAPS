@@ -75,7 +75,7 @@
     <string name="configbuilder_smoothing_description">選擇平滑算法</string>
     <string name="configbuilder_sensitivity">靈敏度檢測</string>
     <string name="configbuilder_sensitivity_description">應使用哪個靈敏度算法？</string>
-    <string name="config_builder_shortname">CONF</string>
+    <string name="config_builder_shortname">組態</string>
     <string name="description_config_builder">用於配置活動外掛</string>
     <string name="allow_hardware_pump_text">注意：如果您啟用並連線到硬體幫浦，AAPS將從檔案中複製基礎設置到幫浦，覆蓋幫浦上存儲的現有基礎率。請確保您在AAPS中具有正確的基礎設置。如果您不確定或不想覆蓋幫浦上的基礎設置，請按取消並在稍後重複切換到幫浦。</string>
     <string name="a11y_open_settings">打開設置</string>
