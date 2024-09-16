@@ -6,7 +6,7 @@
     <string name="medtronic_serial_number">幫浦序號</string>
     <string name="medtronic_pump_type">幫浦型號</string>
     <string name="medtronic_pump_frequency">幫浦頻率</string>
-    <string name="medtronic_pump_bolus_delay">胰島素注射延遲 (秒)</string>
+    <string name="medtronic_pump_bolus_delay">胰島素注射延後 (秒)</string>
     <string name="medtronic_pump_max_bolus">幫浦最大注射量 (U)</string>
     <string name="medtronic_pump_max_basal">幫浦最大基礎率 (U/h)</string>
     <string name="medtronic_pump_encoding">Medtronic 編碼</string>
