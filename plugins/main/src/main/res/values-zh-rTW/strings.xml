@@ -129,7 +129,7 @@
     <string name="follow_system_theme">使用系統預設主題</string>
     <!-- Profile -->
     <string name="localprofile">設定檔</string>
-    <string name="localprofile_shortname">LP</string>
+    <string name="localprofile_shortname">設定</string>
     <string name="description_profile_local">定義一個可離線使用的配置。</string>
     <string name="a11y_add_new_to_list">添加新項到列表</string>
     <string name="do_you_want_switch_profile">您是否要切換設定檔，並放棄對當前設定檔所做的更改？</string>
