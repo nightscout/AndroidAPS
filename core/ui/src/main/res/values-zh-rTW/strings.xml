@@ -23,7 +23,7 @@
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="save">儲存</string>
-    <string name="snooze">延遲提醒</string>
+    <string name="snooze">延後提醒</string>
     <string name="virtual_pump">虛擬幫浦</string>
     <string name="constraints">限制</string>
     <string name="superbolus">超級注射</string>
