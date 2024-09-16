@@ -65,7 +65,7 @@
     <string name="diaconn_g8_pumpalarm_intensity_middle">中</string>
     <string name="diaconn_g8_pumpalarm_intensity_high">高</string>
     <string name="diaconn_g8_screentimeout">LCD 開啟時間 [秒]</string>
-    <string name="diaconn_g8_saveuseroptions">保存選項至幫浦</string>
+    <string name="diaconn_g8_saveuseroptions">儲存選項至幫浦</string>
     <string name="diaconn_g8_language">語言</string>
     <string name="diaconn_g8_bolus_speed">注射速度</string>
     <string name="diaconn_g8_pumplang_chiness">中文</string>
