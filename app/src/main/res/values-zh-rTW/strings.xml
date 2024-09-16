@@ -4,12 +4,12 @@
     <string name="nav_refreshtreatments">從 NS 重新整理治療</string>
     <string name="nav_exit">退出</string>
     <string name="delta">增量</string>
-    <string name="profile_label">個人設置</string>
+    <string name="profile_label">設定檔</string>
     <string name="save">儲存</string>
-    <string name="reloadprofile">重新載入個人設置</string>
+    <string name="reloadprofile">重新載入設定檔</string>
     <string name="correctionbous">修正</string>
     <string name="ns_upload_only">(停用此功能有危險) 只上傳到 NS</string>
-    <string name="ns_upload_only_summary">僅上傳到 NS (停用同步)。除非選擇像 xDrip+ 這樣的本地來源，否則對 SGV 無效。使用 NS-Profiles 時，對個人設置無效。\n!!! 警告 !!! 停用此選項可能會導致故障和胰島素過量，如果您的任何組件 (AAPS、NS、xDrip+) 配置錯誤。請仔細觀察 AAPS 顯示的資料是否與幫浦狀態匹配！</string>
+    <string name="ns_upload_only_summary">僅上傳到 NS (停用同步)。除非選擇像 xDrip+ 這樣的本地來源，否則對 SGV 無效。使用 NS-Profiles 時，對設定檔無效。\n!!! 警告 !!! 停用此選項可能會導致故障和胰島素過量，如果您的任何組件 (AAPS、NS、xDrip+) 配置錯誤。請仔細觀察 AAPS 顯示的資料是否與幫浦狀態匹配！</string>
     <string name="wear">WearOS手錶</string>
     <string name="nav_about">關於</string>
     <string name="smscommunicator_missingphonestatepermission">缺少電話狀態權限</string>
@@ -29,14 +29,14 @@
     <string name="sort_items">排序項目</string>
     <string name="error_adding_treatment_title">治療資料不完整</string>
     <string name="error_adding_treatment_message">治療 (胰島素: %1$.2f, 碳水化合物: %2$d, 在: %3$s) 無法添加到治療中。請檢查並手動添加適當的記錄。</string>
-    <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d 小時), 延遲: %3$d 分鐘</string>
+    <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d 小時), 延後: %3$d 分鐘</string>
     <string name="profile_total">== ∑  %1$s 單位</string>
     <string name="unitsnosemicolon">單位</string>
     <string name="show_removed">顯示已移除</string>
     <string name="clearqueueconfirm">清除佇列？佇列中的所有資料將丟失！</string>
     <string name="chartmenu">圖表選單</string>
     <string name="authorizationfailed">授權失敗</string>
-    <string name="copytolocalprofile_invalid">無法建立個人設置。個人設置無效。</string>
+    <string name="copytolocalprofile_invalid">無法建立設定檔。設定檔無效。</string>
     <string name="clear_filter">清除篩選器</string>
     <string name="cannula">套管</string>
     <string name="email_address">電子郵件地址</string>
