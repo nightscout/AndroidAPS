@@ -5,7 +5,7 @@
     <string name="string_a004">阻塞\n貼片已停用並停止胰島素供應。請立即更換貼片。</string>
     <string name="string_a005">檢查失敗\n貼片已停用。請立即更換貼片。</string>
     <string name="string_a007">溫度不適宜\n胰島素供應或“啟動貼片”過程已停止。避免極端溫度。</string>
-    <string name="string_a016">針頭插入錯誤\n檢查旋鈕位置並點擊“重試”。</string>
+    <string name="string_a016">針頭植入錯誤\n檢查旋鈕位置並點擊“重試”。</string>
     <string name="string_a018">貼片電池錯誤\n貼片已停用並停止胰島素供應。請立即更換貼片。</string>
     <string name="string_a019">貼片電池錯誤\n貼片已停用並停止胰島素供應。請立即更換貼片。</string>
     <string name="string_a020">貼片啟動錯誤\n“啟動貼片”過程已過期。點擊“確認”以停用當前貼片。請立即更換貼片。</string>
