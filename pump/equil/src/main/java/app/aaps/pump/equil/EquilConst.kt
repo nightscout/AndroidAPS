@@ -19,7 +19,5 @@ object EquilConst {
         val EQUIL_ALARM_INSULIN_5 = R.string.key_equil_alarm_insulin_5
         val EQUIL_BASAL_SET = R.string.key_equil_basal_set
         val EQUIL_STATE = R.string.key_equil_state
-        val EQUIL_ALARM_BATTERY = R.string.key_equil_alarm_battery
-        val EQUIL_ALARM_INSULIN = R.string.key_equil_alarm_insulin
     }
 }

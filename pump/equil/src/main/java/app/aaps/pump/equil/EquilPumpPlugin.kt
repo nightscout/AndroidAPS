@@ -5,6 +5,9 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.SystemClock
 import android.text.format.DateFormat
+import androidx.preference.PreferenceCategory
+import androidx.preference.PreferenceManager
+import androidx.preference.PreferenceScreen
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
@@ -35,15 +38,19 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.pump.equil.data.AlarmMode
+import app.aaps.core.validators.preferences.AdaptiveDoublePreference
+import app.aaps.core.validators.preferences.AdaptiveListIntPreference
+import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.pump.equil.data.BolusProfile
 import app.aaps.pump.equil.data.RunMode
 import app.aaps.pump.equil.driver.definition.ActivationProgress
 import app.aaps.pump.equil.driver.definition.BasalSchedule
 import app.aaps.pump.equil.events.EventEquilDataChanged
+import app.aaps.pump.equil.keys.EquilBooleanKey
+import app.aaps.pump.equil.keys.EquilDoubleKey
+import app.aaps.pump.equil.keys.EquilIntKey
 import app.aaps.pump.equil.manager.EquilManager
 import app.aaps.pump.equil.manager.command.BaseCmd
 import app.aaps.pump.equil.manager.command.CmdAlarmSet
@@ -83,7 +90,7 @@ import javax.inject.Singleton
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_equil_128)
         .pluginName(R.string.equil_name)
         .shortName(R.string.equil_name_short)
-        .preferencesId(R.xml.pref_equil)
+        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.equil_pump_description), aapsLogger, rh, commandQueue
 ), Pump {
 
@@ -94,6 +101,13 @@ import javax.inject.Singleton
     private val disposable = CompositeDisposable()
     val handler = Handler(HandlerThread(this::class.java.simpleName + "Handler").also { it.start() }.looper)
     private lateinit var statusChecker: Runnable
+
+    init {
+        preferences.registerPreferences(EquilIntKey::class.java)
+        preferences.registerPreferences(EquilDoubleKey::class.java)
+        preferences.registerPreferences(EquilBooleanKey::class.java)
+    }
+
     override fun onStart() {
         super.onStart()
         handler.postDelayed(statusChecker, STATUS_CHECK_INTERVAL_MILLIS)
@@ -105,16 +119,16 @@ import javax.inject.Singleton
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event ->
-                           if (event.isChanged(rh.gs(R.string.key_equil_tone))) {
-                               val mode = AlarmMode.fromInt(sp.getString(R.string.key_equil_tone, "3").toInt())
-                               commandQueue.customCommand(CmdAlarmSet(mode.command), object : Callback() {
+                           if (event.isChanged(EquilIntKey.EquilTone.key)) {
+                               val mode = preferences.get(EquilIntKey.EquilTone)
+                               commandQueue.customCommand(CmdAlarmSet(mode), object : Callback() {
                                    override fun run() {
                                        if (result.success) ToastUtils.infoToast(context, rh.gs(R.string.equil_pump_updated))
                                        else ToastUtils.infoToast(context, rh.gs(R.string.equil_error))
                                    }
                                })
-                           } else if (event.isChanged(rh.gs(R.string.key_equil_maxbolus))) {
-                               val data = preferences.get(DoubleKey.EquilMaxBolus)
+                           } else if (event.isChanged(EquilDoubleKey.EquilMaxBolus.key)) {
+                               val data = preferences.get(EquilDoubleKey.EquilMaxBolus)
                                commandQueue.customCommand(CmdSettingSet(data), object : Callback() {
                                    override fun run() {
                                        if (result.success) ToastUtils.infoToast(context, rh.gs(R.string.equil_pump_updated))
@@ -203,8 +217,8 @@ import javax.inject.Singleton
             aapsLogger.error("deliverTreatment: Invalid input: neither carbs nor insulin are set in treatment")
             return instantiator.providePumpEnactResult().success(false).enacted(false).bolusDelivered(0.0).comment("Invalid input")
         }
-        val maxBolus = preferences.get(DoubleKey.EquilMaxBolus)
-        if (detailedBolusInfo.insulin > preferences.get(DoubleKey.EquilMaxBolus)) {
+        val maxBolus = preferences.get(EquilDoubleKey.EquilMaxBolus)
+        if (detailedBolusInfo.insulin > maxBolus) {
             val formattedValue = "%.2f".format(maxBolus)
             val comment = rh.gs(R.string.equil_maxbolus_tips, formattedValue)
             return instantiator.providePumpEnactResult().success(false).enacted(false).bolusDelivered(0.0).comment(comment)
@@ -431,8 +445,8 @@ import javax.inject.Singleton
     private fun playAlarm() {
         val battery = equilManager.battery
         val insulin = equilManager.currentInsulin
-        val alarmBattery = sp.getBoolean(EquilConst.Prefs.EQUIL_ALARM_BATTERY, true)
-        val alarmInsulin = sp.getBoolean(EquilConst.Prefs.EQUIL_ALARM_INSULIN, true)
+        val alarmBattery = preferences.get(EquilBooleanKey.EquilAlarmBattery)
+        val alarmInsulin = preferences.get(EquilBooleanKey.EquilAlarmInsulin)
         if (battery <= 10 && alarmBattery) {
             val alarmBattery10 = sp.getBoolean(EquilConst.Prefs.Equil_ALARM_BATTERY_10, false)
             if (!alarmBattery10) {
@@ -480,6 +494,38 @@ import javax.inject.Singleton
         fun toDuration(dateTime: DateTime?): Duration {
             requireNotNull(dateTime) { "dateTime can not be null" }
             return Duration(dateTime.toLocalTime().millisOfDay.toLong())
+        }
+    }
+
+    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
+        if (requiredKey != null) return
+
+        val toneEntries = arrayOf<CharSequence>(
+            rh.gs(R.string.equil_tone_mode_mute),
+            rh.gs(R.string.equil_tone_mode_tone),
+            rh.gs(R.string.equil_tone_mode_shake),
+            rh.gs(R.string.equil_tone_mode_tone_and_shake)
+        )
+        val toneValues = arrayOf<CharSequence>("0", "1", "2", "3")
+
+        val category = PreferenceCategory(context)
+        parent.addPreference(category)
+        category.apply {
+            key = "equil_settings"
+            title = rh.gs(R.string.equil_settings)
+            initialExpandedChildrenCount = 0
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = EquilBooleanKey.EquilAlarmBattery, title = R.string.equil_settings_alarm_battery))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = EquilBooleanKey.EquilAlarmInsulin, title = R.string.equil_settings_alarm_insulin))
+            addPreference(
+                AdaptiveListIntPreference(
+                    ctx = context,
+                    intKey = EquilIntKey.EquilTone,
+                    title = R.string.equil_tone,
+                    entries = toneEntries,
+                    entryValues = toneValues
+                )
+            )
+            addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = EquilDoubleKey.EquilMaxBolus, title = app.aaps.core.ui.R.string.max_bolus_title))
         }
     }
 }
