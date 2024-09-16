@@ -52,7 +52,7 @@
     <string name="alarm_base_fault">底座故障</string>
     <string name="alarm_battery_out">電池耗盡</string>
     <string name="alarm_no_calibration">無校準</string>
-    <string name="pump_time_update_failed">更新幫浦時區失敗，請延遲訊息並手動重新整理。</string>
+    <string name="pump_time_update_failed">更新幫浦時區失敗，請延後訊息並手動重新整理。</string>
     <string name="bolus_error">胰島素劑量錯誤</string>
     <!-- wizard-->
     <string name="retry">重試</string>
@@ -123,7 +123,7 @@
     <string name="daily_max_insulin_title">每日最大胰島素 [單位]</string>
     <string name="daily_max_insulin_summary">指定每日允許的最大胰島素單位。如果超過，幫浦將暫停。</string>
     <string name="scan_on_connection_error_title">重新掃描以便修正連線錯誤</string>
-    <string name="scan_on_connection_error_summary">警告：只有在連線有問題時才啟用。如果啟用，此驅動程式會在嘗試重新連接到幫浦之前再次掃描幫浦。請確保位置權限設置為“始終允許”。</string>
+    <string name="scan_on_connection_error_summary">警告：只有在連線有問題時才啟用。如果啟用，此驅動程式會在嘗試重新連線到幫浦之前再次掃描幫浦。請確保位置權限設置為“始終允許”。</string>
     <!-- treatment state-->
     <string name="getting_pump_status">獲取幫浦狀態</string>
     <string name="getting_bolus_status">獲取胰島素劑量狀態</string>
