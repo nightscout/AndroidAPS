@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="dia_whatmeansdia">什麼是關於DIA的真實訊息？</string>
+    <string name="dia_whatmeansdia">DIA 有哪些實際的情況？</string>
     <string name="dia_label_exam">胰島素作用時間 (DIA)</string>
     <string name="dia_profile">您應該在您的設定檔中設置DIA的值。</string>
     <string name="dia_minimumis5h">允許的最小值是5小時。</string>
@@ -165,7 +165,7 @@
     <string name="extendedcarbs_handling">您可以使用e-碳水化合物（延長碳水化合物）做什麼？</string>
     <string name="extendedcarbs_future">計劃未來的碳水化合物攝入，可能分配在一個時間段內（類似於分配在一個時間段內的延長注射）。</string>
     <string name="extendedcarbs_free">記錄您想要隱藏在AAPS之外的「免費」運動碳水化合物。</string>
-    <string name="extendedcarbs_fat">e-碳水化合物（分配在未來）可以幫助AAPS處理高脂肪/蛋白質餐。</string>
+    <string name="extendedcarbs_fat">延長碳水化合物（緩慢釋放）可以幫助AAPS處理高脂肪/蛋白質餐。</string>
     <string name="extendedcarbs_rescue">記錄您用於治療低血糖的救援碳水化合物。</string>
     <string name="extendedcarbs_hint1">https://wiki.aaps.app/en/latest/Usage/Extended-Carbs.html</string>
     <string name="nsclient_label">遠端監控</string>
