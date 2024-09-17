@@ -121,7 +121,7 @@
     <string name="notconfigured">未配置</string>
     <string name="loopsuspended">循環已暫停</string>
     <string name="trend_arrow">趨勢箭頭</string>
-    <string name="a11y_autosens_label">自動感應</string>
+    <string name="a11y_autosens_label">自動感應(autosens)</string>
     <string name="required">需要</string>
     <string name="a11y_arrow_double_down">快速下降</string>
     <string name="a11y_arrow_single_down">下降</string>
