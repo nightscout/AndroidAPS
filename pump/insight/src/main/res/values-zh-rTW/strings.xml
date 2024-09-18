@@ -13,7 +13,7 @@
     <string name="stopped">已停止</string>
     <string name="operating_mode">運行模式</string>
     <string name="description_pump_insight_local">Accu-Chek Insight 幫浦整合</string>
-    <string name="not_inserted">未插入</string>
+    <string name="not_inserted">未植入</string>
     <string name="tdd_bolus">TDD 注射</string>
     <string name="tdd_basal">TDD 基礎率</string>
     <string name="tbr_formatter">%1$d%% 持續 %2$d / %3$d 分鐘</string>
@@ -61,7 +61,7 @@
     <string name="log_alerts">記錄警報</string>
     <string name="enable_tbr_emulation">啟用臨時基礎率模擬</string>
     <string name="enable_tbr_emulation_summary">使用延長胰島素注射代替臨時基礎率以繞過 250%% 限制</string>
-    <string name="disconnect_delay">斷線延遲 [秒]</string>
+    <string name="disconnect_delay">斷線延後 [秒]</string>
     <string name="max_recovery_duration">最大恢復持續時間 [秒]</string>
     <string name="min_recovery_duration">最小恢復持續時間 [秒]</string>
     <string name="pump_alert">幫浦警報</string>

@@ -2,9 +2,9 @@
 <resources>
     <!-- PhoneChecker -->
     <!-- DST Helper -->
-    <string name="dst_in_24h_warning">24小時內或更短時間內將進行日光節約時間變更</string>
-    <string name="dst_loop_disabled_warning">日光節約時間變更在3小時內 - 已停用閉環</string>
-    <string name="dst_loop_disabled_error">日光節約時間 (DST) 變更在3小時內發生。閉環暫時停用，將在DST變更後3小時自動重新啟用</string>
+    <string name="dst_in_24h_warning">24小時內或更短時間內將進行夏令時間變更</string>
+    <string name="dst_loop_disabled_warning">夏令時間變更在3小時內 - 已停用閉環</string>
+    <string name="dst_loop_disabled_error">夏令時間 (DST) 變更在3小時內發生。閉環暫時停用，將在DST變更後3小時自動重新啟用</string>
     <!-- Storage constraint -->
     <string name="disk_full">請釋放至少 %1$d MB 的內部儲存空間！已停用循環！</string>
     <!-- Version Checker -->
@@ -39,7 +39,7 @@
     <string name="not_completed_yet">尚未完成</string>
     <string name="time_elapsed">已過時間</string>
     <string name="maxiobset">最大IOB設置正確</string>
-    <string name="hasbgdata">從選定源可獲取BG</string>
+    <string name="hasbgdata">從選定源可獲取血糖</string>
     <string name="synchaswritepermission">同步服務具有寫入權限</string>
     <string name="loopenabled">循環已啟用</string>
     <string name="apsselected">已選擇APS</string>

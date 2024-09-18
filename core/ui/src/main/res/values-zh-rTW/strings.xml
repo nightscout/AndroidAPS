@@ -23,7 +23,7 @@
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="save">儲存</string>
-    <string name="snooze">延遲提醒</string>
+    <string name="snooze">延後提醒</string>
     <string name="virtual_pump">虛擬幫浦</string>
     <string name="constraints">限制</string>
     <string name="superbolus">超級注射</string>
@@ -121,7 +121,7 @@
     <string name="notconfigured">未配置</string>
     <string name="loopsuspended">循環已暫停</string>
     <string name="trend_arrow">趨勢箭頭</string>
-    <string name="a11y_autosens_label">自動感應</string>
+    <string name="a11y_autosens_label">自動感應(autosens)</string>
     <string name="required">需要</string>
     <string name="a11y_arrow_double_down">快速下降</string>
     <string name="a11y_arrow_single_down">下降</string>
@@ -136,7 +136,7 @@
     <string name="a11y_inrange">在範圍內</string>
     <string name="a11y_low">低</string>
     <string name="average">平均</string>
-    <string name="tir">TIR</string>
+    <string name="tir">目標範圍內的時間占比(TIR)</string>
     <string name="none"><![CDATA[<無>]]></string>
     <string name="remove_label">移除</string>
     <string name="activate_profile">啟用設定檔</string>
@@ -263,7 +263,7 @@
     <string name="expweight">指數加權 TDD</string>
     <string name="basalrate">基礎率</string>
     <string name="bolus">注射</string>
-    <string name="tdd">TDD</string>
+    <string name="tdd">每日總劑量(TDD)</string>
     <string name="ratio">比率</string>
     <string name="amount_days">天數</string>
     <string name="weight">權重</string>
@@ -473,7 +473,7 @@
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">已點擊連線到幫浦</string>
     <string name="reservoir_value">%1$.0f / %2$d U</string>
     <string name="daily_units">每日單位</string>
-    <string name="pump_icon">幫浦圖標</string>
+    <string name="pump_icon">幫浦圖示</string>
     <string name="view_profile">查看設定檔</string>
     <string name="pump_history">幫浦歷史</string>
     <string name="stats">統計</string>

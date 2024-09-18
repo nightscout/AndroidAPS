@@ -20,7 +20,7 @@
     <string name="setup_data_upload">要設定資料上傳，請點擊「下一步」。</string>
     <string name="consent">同意</string>
     <string name="terms_of_use">使用條款</string>
-    <string name="please_read__information">請仔細閱讀以下信息並接受使用條款以繼續。</string>
+    <string name="please_read__information">請仔細閱讀以下訊息並接受使用條款以繼續。</string>
     <string name="info_openhumans">這是一個開源工具，將您的資料複製到 Open Humans。我們不保留與第三方共享您的資料的權利，除非獲得您的明確授權。項目和應用收到的資料通過隨機用戶ID識別，並且只有在您授權該過程後，才會安全地傳輸到 Open Humans 帳戶。您可以隨時通過 www.openhumans.org 停止上傳並刪除上傳的資料。</string>
     <string name="data_uploaded">資料已上傳</string>
     <string name="glucose_values">血糖值</string>
@@ -28,7 +28,7 @@
     <string name="extended_boluses">延長注射</string>
     <string name="carbohydrates">碳水化合物</string>
     <string name="careportal_events">Careportal 事件（不包括備註）</string>
-    <string name="profile_switches">個人設置切換</string>
+    <string name="profile_switches">設定檔切換</string>
     <string name="total_daily_doses">每日總劑量</string>
     <string name="temporary_basal_rates">臨時基礎速率</string>
     <string name="temporary_targets">臨時目標</string>

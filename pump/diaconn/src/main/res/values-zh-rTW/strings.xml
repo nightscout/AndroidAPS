@@ -45,7 +45,7 @@
     <string name="diaconn_g8_useextended_title">對 &gt;200% 的注射使用延長注射</string>
     <string name="diaconn_g8_visualizeextendedaspercentage_title">將延長注射顯示為百分比</string>
     <string name="diaconn_g8_bluetooth_status">藍牙狀態</string>
-    <string name="diagonn_g8_tdd_label">TDD</string>
+    <string name="diagonn_g8_tdd_label">每日總劑量(TDD)</string>
     <string name="bolus_step">注射步進</string>
     <string name="basal_step">基礎步進</string>
     <string name="pump_firmware_label">韌體</string>
@@ -65,7 +65,7 @@
     <string name="diaconn_g8_pumpalarm_intensity_middle">中</string>
     <string name="diaconn_g8_pumpalarm_intensity_high">高</string>
     <string name="diaconn_g8_screentimeout">LCD 開啟時間 [秒]</string>
-    <string name="diaconn_g8_saveuseroptions">保存選項至幫浦</string>
+    <string name="diaconn_g8_saveuseroptions">儲存選項至幫浦</string>
     <string name="diaconn_g8_language">語言</string>
     <string name="diaconn_g8_bolus_speed">注射速度</string>
     <string name="diaconn_g8_pumplang_chiness">中文</string>
