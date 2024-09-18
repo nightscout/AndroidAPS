@@ -167,7 +167,13 @@
     <string name="not_available_full">Non disponible</string>
     <string name="pump_disconnected">Pompe déconnectée</string>
     <!--    autoISF -->
+    <string name="half_basal_exercise_target_title">Cible pour exercice avec basale/2</string>
+    <string name="half_basal_exercise_target_summary" formatted="false">Définir un nombre, par ex. 160, ce qui signifie que lorsque la cible temp = 160 mg/dL et que la Sensibilité augmente avec Cible Temp haute est activé, 50% de la basale est injectée dans ce cas (75%  pour une cible à 120 ; 60% pour une cible à 140).</string>
     <string name="autoISF_settings_title">Paramètres AutoISF</string>
+    <string name="autoISF_settings_summary">AutoISF permet d\'adapter la Sensibilité à l\'Insuline (SI) dans divers scénarios de comportement glycémique.\n\nIl peut également adapter les paramètres d\'injection des SMB</string>
+    <string name="acce_ISF_settings_summary">Paramètres d\'acce_ISF : ajuste SI en fonction de l\'accélération ou de la décélération de la glycémie</string>
     <string name="enableautoISFwithcob">Activer dura_ISF avec les GA</string>
     <string name="enableautoISFwithcob_summary">Activer dura_ISF tant que des GA sont actifs</string>
+    <string name="pp_ISF_settings_title">Réglages de pp_ISF</string>
+    <string name="dura_ISF_settings_summary">Paramètres dura_ISF : SI pour un plateau glycémique au-dessus de la cible</string>
 </resources>
