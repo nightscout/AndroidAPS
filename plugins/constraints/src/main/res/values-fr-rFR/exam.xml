@@ -68,6 +68,7 @@
     <string name="basaltest_havingregularhighlow">Lorsque la glycémie est souvent élevée ou faible.</string>
     <string name="basaltest_weekly">Au moins 1 fois par semaine.</string>
     <string name="basaltest_fixed">Une fois définies et validées, ces valeurs ne doivent pas changer avec le temps.</string>
+    <string name="basaltest_hint1">https://wiki.aaps.app/fr/latest/Getting-Started/FAQ.html#aaps-settings</string>
     <string name="prerequisites_label">Conditions préalables</string>
     <string name="prerequisites_what">Qu\'est-ce qui est essentiel pour mettre en place et utiliser AAPS ?</string>
     <string name="prerequisites_determinedcorrectprofile">Informations de profil validées (Basal, G/I, SI, DAI).</string>
