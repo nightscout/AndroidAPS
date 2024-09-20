@@ -183,7 +183,8 @@ data class UserEntry(
         Food,               //From Food plugin
         ConfigBuilder,      //From ConfigBuilder Plugin
         Overview,           //From OverViewPlugin
-        Stats,               //From Stat Activity
+        Ottai,              //From Ottai plugin
+        Stats,              //From Stat Activity
         Aaps,               // MainApp
         BgFragment,
         Garmin,

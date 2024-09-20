@@ -50,5 +50,8 @@ interface Intents {
 
         // Broadcast status
         const val AAPS_BROADCAST = "info.nightscout.androidaps.status"
+        // Patched Ottai App -> AAPS
+        const val OTTAI_APP = "info.nightscout.androidaps.action.OTTAI_APP"
+
     }
 }

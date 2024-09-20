@@ -103,6 +103,7 @@ data class GlucoseValue(
         AIDEX,
         RANDOM,
         UNKNOWN,
+        OTTAI,
 
         IOB_PREDICTION,
         A_COB_PREDICTION,

@@ -67,7 +67,8 @@ enum class Sources {
     Food,               //From Food plugin
     ConfigBuilder,      //From ConfigBuilder Plugin
     Overview,           //From OverViewPlugin
-    Stats,               //From Stat Activity
+    Ottai,              //From Ottai Plugin
+    Stats,              //From Stat Activity
     Aaps,               // MainApp
     BgFragment,
     Garmin,
