@@ -187,4 +187,7 @@
     <string name="full_loop_settings_title">Paramètres Boucle Complète</string>
     <string name="full_loop_settings_summary">Paramètres Boucle Complète : Ajustez la limite IA pour éviter trop d\'insuline </string>
     <string name="use_autoISF_extensions_title">Activer les fonctionnalités étendues d\'AutoISF</string>
+    <string name="use_autoISF_extensions_summary">Celles-ci incluent l\'ajustement de la SI en fonction des glycémies récentes, des paramètres SMB complémentaires et la prise en charge de la boucle fermée complète</string>
+    <string name="openapsama_enable_autoISF">Activer l\'ajustement de la SI en fonction de la glycémie</string>
+    <string name="openapsama_autoISF_max_summary">Valeur par défaut: 1.0\nCe paramètre défini l\'agressivité maximale de la SI.\n\nATTENTION: Soyez extrêmement prudent lorsque vous utilisez des valeurs supérieures à 2.5</string>
 </resources>
