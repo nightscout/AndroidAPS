@@ -7,7 +7,7 @@
     <string name="combov2_pump_terminated_connection">幫浦終止了連線</string>
     <string name="combov2_warning">Combo 警告</string>
     <string name="combov2_error">Combo 錯誤</string>
-    <string name="combov2_warning_4">致電熱線以獲取更新</string>
+    <string name="combov2_warning_4">致電客服專線以獲取更新</string>
     <string name="combov2_warning_10">藍牙故障；重新配對</string>
     <string name="combov2_error_1">儲液器空</string>
     <string name="combov2_error_2">電池空</string>
@@ -115,8 +115,8 @@
     <string name="combov2_short_status_battery_state">電池：%s</string>
     <string name="combov2_automatic_reservoir_entry">自動檢測並自動輸入胰島素儲液器更換</string>
     <string name="combov2_automatic_battery_entry">自動檢測並自動輸入電池更換</string>
-    <string name="combov2_note_reservoir_change">儲液器更換由 combov2 驅動程式自動插入</string>
-    <string name="combov2_note_battery_change">電池更換由 combov2 驅動程式自動插入</string>
+    <string name="combov2_note_reservoir_change">儲液器更換由 combov2 驅動程式自動植入</string>
+    <string name="combov2_note_battery_change">電池更換由 combov2 驅動程式自動植入</string>
     <string name="combov2_timezone_changed">時區已更改</string>
     <string name="combov2_datetime_changed">日期和/或時間已更改</string>
     <string name="combov2_dst_started">夏令時間 (DST) 已開始</string>

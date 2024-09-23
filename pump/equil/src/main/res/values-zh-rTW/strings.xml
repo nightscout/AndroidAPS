@@ -73,7 +73,7 @@
     <string name="equil_common_cmd_suspend_delivery">暫停輸送</string>
     <string name="equil_common_cmd_resume_delivery">恢復輸送</string>
     <string name="equil_common_cmd_pair">配對Equil</string>
-    <string name="equil_common_cmd_insert_cannula">插入套管</string>
+    <string name="equil_common_cmd_insert_cannula">植入套管</string>
     <string name="equil_common_cmd_unpair">取消配對Equil</string>
     <string name="equil_common_cmd_alarm">警報</string>
     <string name="equil_common_cmd_set_extended_bolus">設定延長注射</string>

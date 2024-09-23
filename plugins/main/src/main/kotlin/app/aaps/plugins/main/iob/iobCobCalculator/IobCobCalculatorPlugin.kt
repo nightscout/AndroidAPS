@@ -353,7 +353,7 @@ class IobCobCalculatorPlugin @Inject constructor(
         val absorptionTimeAgo = now - (maxAbsorptionHours * T.hours(1).msecs()).toLong()
         persistenceLayer.getCarbsFromTimeToTimeExpanded(absorptionTimeAgo + 1, now, true)
             .forEach {
-                if (it.amount > 0) {
+                if (it.amount != 0.0) {
                     result.carbs += it.amount
                     if (it.timestamp > result.lastCarbTime) result.lastCarbTime = it.timestamp
                 }

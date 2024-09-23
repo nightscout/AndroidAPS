@@ -282,14 +282,8 @@ Safety: Limiting max basal rate to 500.00 U/h because of pump limit
         // No limit by default
         `when`(preferences.get(IntKey.SafetyMaxCarbs)).thenReturn(48)
 
-        // Negative carbs not allowed
-        var i: Constraint<Int> = ConstraintObject(-22, aapsLogger)
-        safetyPlugin.applyCarbsConstraints(i)
-        assertThat(i.value()).isEqualTo(0)
-        assertThat(i.getReasons()).isEqualTo("Safety: Limiting carbs to 0 g because of it must be positive value")
-
         // Apply all limits
-        i = safetyPlugin.applyCarbsConstraints(ConstraintObject(Int.MAX_VALUE, aapsLogger))
+        val i = safetyPlugin.applyCarbsConstraints(ConstraintObject(Int.MAX_VALUE, aapsLogger))
         assertThat(i.value()).isEqualTo(48)
         assertThat(i.getReasons()).isEqualTo("Safety: Limiting carbs to 48 g because of max value in preferences")
     }

@@ -83,9 +83,8 @@ class EopatchPumpPlugin @Inject constructor(
 
     private val mDisposables = CompositeDisposable()
 
-    private var mPumpType: PumpType = PumpType.EOFLOW_EOPATCH2
     private var mLastDataTime: Long = 0
-    private val mPumpDescription = PumpDescription().fillFor(mPumpType)
+    override val pumpDescription = PumpDescription().fillFor(PumpType.EOFLOW_EOPATCH2)
 
     override fun onStart() {
         super.onStart()
@@ -550,9 +549,6 @@ class EopatchPumpPlugin @Inject constructor(
     override fun serialNumber(): String {
         return patchManager.patchConfig.patchSerialNumber
     }
-
-    override val pumpDescription: PumpDescription
-        get() = mPumpDescription
 
     override fun shortStatus(veryShort: Boolean): String {
         if (patchManager.isActivated) {

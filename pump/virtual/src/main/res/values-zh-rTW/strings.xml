@@ -4,7 +4,7 @@
     <string name="virtual_pump_type">虛擬幫浦類型</string>
     <string name="virtual_pump_definition">幫浦定義</string>
     <string name="virtual_pump_pump_def">注射：增量=%1$s\n延長注射：[每次=%2$s，持續時間=%3$s分鐘-%4$s小時]\n基礎率：每次=%5$s\nTBR：%6$s（由%7$s），持續時間=%8$s分鐘-%9$s小時\n%10$s</string>
-    <string name="virtual_pump_shortname">VPUMP</string>
+    <string name="virtual_pump_shortname">虛擬</string>
     <string name="description_pump_virtual">用於尚未有驅動程式的幫浦整合（開環）</string>
     <string name="virtual_pump_label">虛擬幫浦</string>
     <string name="virtualpump_settings">虛擬幫浦設定</string>

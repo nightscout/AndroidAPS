@@ -31,6 +31,8 @@ dependencies {
     implementation(project(":core:validators"))
     implementation(project(":core:keys"))
 
+    testImplementation(project(":shared:tests"))
+
     api(Libs.AndroidX.fragment)
     api(Libs.AndroidX.navigationFragment)
 

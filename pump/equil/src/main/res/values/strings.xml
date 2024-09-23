@@ -1,5 +1,4 @@
 <resources>
-    <string name="key_equil_maxbolus" translatable="false">equil_maxbolus</string>
     <string name="key_equil_mac_address" translatable="false">pref_equil_mac_address</string>
     <string name="key_equil_devices" translatable="false">key_equil_devices</string>
     <string name="key_equil_password" translatable="false">key_equil_password</string>
@@ -9,9 +8,6 @@
     <string name="key_equil_basal_set" translatable="false">key_equil_basal_set</string>
     <string name="key_equil_state" translatable="false">key_equil_state1</string>
     <string name="key_equil_pair_password" translatable="false">key_equil_pair_password</string>
-    <string name="key_equil_alarm_battery" translatable="false">key_equil_alarm_battery</string>
-    <string name="key_equil_alarm_insulin" translatable="false">key_equil_alarm_insulin</string>
-    <string name="key_equil_tone" translatable="false">equil_tone</string>
 
 
     <string name="equil_name">Equil 5.3</string>

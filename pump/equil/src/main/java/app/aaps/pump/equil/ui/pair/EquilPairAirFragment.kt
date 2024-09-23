@@ -11,8 +11,8 @@ import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.pump.equil.EquilConst
 import app.aaps.pump.equil.R
-import app.aaps.pump.equil.data.AlarmMode
 import app.aaps.pump.equil.driver.definition.BasalSchedule
+import app.aaps.pump.equil.keys.EquilIntKey
 import app.aaps.pump.equil.manager.command.CmdAlarmSet
 import app.aaps.pump.equil.manager.command.CmdBasalSet
 import app.aaps.pump.equil.manager.command.CmdDevicesGet
@@ -105,8 +105,8 @@ class EquilPairAirFragment : EquilPairFragmentBase() {
 
     private fun setAlarmMode() {
         showLoading()
-        val mode = AlarmMode.fromInt(sp.getString(R.string.key_equil_tone, "3").toInt())
-        commandQueue.customCommand(CmdAlarmSet(mode.command), object : Callback() {
+        val mode = preferences.get(EquilIntKey.EquilTone)
+        commandQueue.customCommand(CmdAlarmSet(mode), object : Callback() {
             override fun run() {
                 if (activity == null) return
                 if (result.success) {

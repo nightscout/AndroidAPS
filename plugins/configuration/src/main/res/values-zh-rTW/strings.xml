@@ -54,7 +54,7 @@
     <string name="error_asking_for_permissions">請求權限時出錯</string>
     <string name="alert_dialog_permission_battery_optimization_failed">此設備似乎不支援電池優化白名單 - 您可能會遇到效能問題。</string>
     <!--    ConfigBuilder-->
-    <string name="config_builder">建構設定檔</string>
+    <string name="config_builder">組態建置工具</string>
     <string name="configbuilder_pump">幫浦</string>
     <string name="configbuilder_pump_description">您想用AAPS使用哪個幫浦？</string>
     <string name="configbuilder_profile">檔案</string>
@@ -75,7 +75,7 @@
     <string name="configbuilder_smoothing_description">選擇平滑算法</string>
     <string name="configbuilder_sensitivity">靈敏度檢測</string>
     <string name="configbuilder_sensitivity_description">應使用哪個靈敏度算法？</string>
-    <string name="config_builder_shortname">CONF</string>
+    <string name="config_builder_shortname">組態</string>
     <string name="description_config_builder">用於配置活動外掛</string>
     <string name="allow_hardware_pump_text">注意：如果您啟用並連線到硬體幫浦，AAPS將從檔案中複製基礎設置到幫浦，覆蓋幫浦上存儲的現有基礎率。請確保您在AAPS中具有正確的基礎設置。如果您不確定或不想覆蓋幫浦上的基礎設置，請按取消並在稍後重複切換到幫浦。</string>
     <string name="a11y_open_settings">打開設置</string>
@@ -138,7 +138,7 @@
     <string name="metadata_warning_old_export">匯入的偏好設定已經有 %1$s 天了！也許您有更更新的偏好設定，或者您選擇了錯誤的文件？請記住定期匯出偏好設定！</string>
     <string name="metadata_warning_date_format">日期時間格式無效！</string>
     <string name="metadata_warning_different_version">偏好設定來自應用程式的不同小版本。如果您是升級後匯入，這是可以的，但請在匯入後檢查偏好設定是否仍然正確！</string>
-    <string name="metadata_urgent_different_version">偏好設定來自應用程式的不同主要版本。主要版本差異很大，偏好設定可能不兼容！請在匯入後確保偏好設定仍然正確！</string>
+    <string name="metadata_urgent_different_version">偏好設定來自應用程式的不同主要版本。主要版本差異很大，偏好設定可能不相容！請在匯入後確保偏好設定仍然正確！</string>
     <string name="prefdecrypt_settings_tampered">設定文件被篡改</string>
     <string name="prefdecrypt_settings_secure">設定文件安全</string>
     <string name="prefdecrypt_settings_unencrypted">使用不安全的未加密設定格式</string>

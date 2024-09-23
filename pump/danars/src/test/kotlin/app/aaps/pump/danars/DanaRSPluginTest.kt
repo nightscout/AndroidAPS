@@ -30,7 +30,7 @@ import org.mockito.Mockito
 @Suppress("SpellCheckingInspection")
 class DanaRSPluginTest : DanaRSTestBase() {
 
-    @Mock lateinit var sharedPrefs: SharedPreferences
+    @Mock lateinit var sharedPreferences: SharedPreferences
     @Mock lateinit var constraintChecker: ConstraintsChecker
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
@@ -45,43 +45,43 @@ class DanaRSPluginTest : DanaRSTestBase() {
             if (it is AdaptiveDoublePreference) {
                 it.profileUtil = profileUtil
                 it.preferences = preferences
-                it.sharedPrefs = sharedPrefs
+                it.sharedPrefs = sharedPreferences
             }
             if (it is AdaptiveIntPreference) {
                 it.profileUtil = profileUtil
                 it.preferences = preferences
-                it.sharedPrefs = sharedPrefs
+                it.sharedPrefs = sharedPreferences
                 it.config = config
             }
             if (it is AdaptiveIntentPreference) {
                 it.preferences = preferences
-                it.sharedPrefs = sharedPrefs
+                it.sharedPrefs = sharedPreferences
             }
             if (it is AdaptiveUnitPreference) {
                 it.profileUtil = profileUtil
                 it.preferences = preferences
-                it.sharedPrefs = sharedPrefs
+                it.sharedPrefs = sharedPreferences
             }
             if (it is AdaptiveSwitchPreference) {
                 it.preferences = preferences
-                it.sharedPrefs = sharedPrefs
+                it.sharedPrefs = sharedPreferences
                 it.config = config
             }
             if (it is AdaptiveStringPreference) {
                 it.preferences = preferences
-                it.sharedPrefs = sharedPrefs
+                it.sharedPrefs = sharedPreferences
             }
             if (it is AdaptiveListPreference) {
                 it.preferences = preferences
-                it.sharedPrefs = sharedPrefs
+                it.sharedPrefs = sharedPreferences
             }
             if (it is AdaptiveListIntPreference) {
                 it.preferences = preferences
-                it.sharedPrefs = sharedPrefs
+                it.sharedPrefs = sharedPreferences
             }
             if (it is AdaptiveClickPreference) {
                 it.preferences = preferences
-                it.sharedPrefs = sharedPrefs
+                it.sharedPrefs = sharedPreferences
             }
         }
     }

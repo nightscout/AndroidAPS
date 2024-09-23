@@ -17,7 +17,7 @@
     <string name="omnipod_common_error_set_basal_failed">設定基礎率檔案失敗。</string>
     <string name="omnipod_common_error_bolus_did_not_succeed">胰島素劑量設置失敗。</string>
     <string name="omnipod_common_error_failed_to_set_profile_empty_profile">設定基礎率檔案失敗：收到空檔案。請確保啟動了您的基礎率檔案。</string>
-    <string name="omnipod_common_error_set_initial_basal_schedule_no_profile">沒有活躍的基礎率檔案。請確保啟動了您的基礎率檔案。</string>
+    <string name="omnipod_common_error_set_initial_basal_schedule_no_profile">沒有啟動的基礎率檔案。請確保啟動了您的基礎率檔案。</string>
     <string name="omnipod_common_error_unsupported_custom_command">不支援的自訂命令：%1$s</string>
     <string name="omnipod_common_error_failed_to_refresh_status">重新整理狀態失敗</string>
     <string name="omnipod_common_error_failed_to_refresh_status_on_startup">啟動時重新整理狀態失敗</string>
@@ -26,7 +26,7 @@
     <string name="omnipod_common_error_failed_to_set_time">設定時間失敗</string>
     <string name="omnipod_common_error_failed_to_resume_delivery">恢復輸送失敗</string>
     <string name="omnipod_common_error_failed_to_initialize_pod">初始化 Pod 失敗</string>
-    <string name="omnipod_common_error_failed_to_insert_cannula">插入套管失敗</string>
+    <string name="omnipod_common_error_failed_to_insert_cannula">植入套管失敗</string>
     <string name="omnipod_common_error_pod_fault_activation_time_exceeded">Pod 的啟動時間已超過。此 Pod 無法再啟動。</string>
     <string name="omnipod_common_error_failed_to_verify_activation_progress">驗證啟動進度失敗。請重試。</string>
     <string name="omnipod_common_error_pod_suspended">Pod 已暫停</string>
@@ -39,7 +39,7 @@
     <string name="omnipod_common_confirmation_expiration_alerts_updated">警報配置已在 Pod 中更新。</string>
     <string name="omnipod_common_confirmation_time_on_pod_updated">Pod 上的時間已更新。</string>
     <string name="omnipod_common_confirmation_suspended_delivery">所有胰島素輸送已暫停。</string>
-    <string name="omnipod_common_confirmation_silenced_alerts">活躍的警報已靜音。</string>
+    <string name="omnipod_common_confirmation_silenced_alerts">啟動的警報已靜音。</string>
     <string name="omnipod_common_confirmation_delivery_resumed">胰島素輸送已恢復。</string>
     <!-- Omnipod - Overview -->
     <string name="omnipod_common_overview_button_set_time">設定時間</string>
@@ -80,12 +80,12 @@
     <string name="omnipod_common_pod_activation_wizard_start_pod_activation_title">填充 Pod</string>
     <string name="omnipod_common_pod_activation_wizard_initialize_pod_title">初始化 Pod</string>
     <string name="omnipod_common_pod_activation_wizard_attach_pod_title">連線 Pod</string>
-    <string name="omnipod_common_pod_activation_wizard_attach_pod_text">準備注射部位。取下 Pod 的針頭蓋和黏膠背襯，並將 Pod 連線到注射部位。\n\n如果套管突出，請按 <b>取消</b> 並丟棄您的 Pod。\n\n按 <b>下一步</b> 插入套管並開始基礎輸送。</string>
-    <string name="omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">當您按 <b>確定</b> 時，將插入套管。請確保已將 Pod 連線到注射部位。</string>
-    <string name="omnipod_common_pod_activation_wizard_insert_cannula_title">插入套管</string>
-    <string name="omnipod_common_pod_activation_wizard_insert_cannula_text">嘗試設置初始基礎排程並插入套管。\n\n當套管成功插入時，您可以按 <b>下一步</b>。</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_text">準備注射部位。取下 Pod 的針頭蓋和黏膠背襯，並將 Pod 連線到注射部位。\n\n如果套管突出，請按 <b>取消</b> 並丟棄您的 Pod。\n\n按 <b>下一步</b> 植入套管並開始基礎輸送。</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">當您按 <b>確定</b> 時，將植入套管。請確保已將 Pod 連線到注射部位。</string>
+    <string name="omnipod_common_pod_activation_wizard_insert_cannula_title">植入套管</string>
+    <string name="omnipod_common_pod_activation_wizard_insert_cannula_text">嘗試設置初始基礎排程並植入套管。\n\n當套管成功植入時，您可以按 <b>下一步</b>。</string>
     <string name="omnipod_common_pod_activation_wizard_pod_activated_title">Pod 已啟動</string>
-    <string name="omnipod_common_pod_activation_wizard_pod_activated_text">新的 Pod 現在已啟動。\n\n您的基礎排程已設定並且套管已插入。\n\n請確認套管已正確插入，如果您認為未插入，請更換您的 Pod。</string>
+    <string name="omnipod_common_pod_activation_wizard_pod_activated_text">新的 Pod 現在已啟動。\n\n您的基礎排程已設定並且套管已植入。\n\n請確認套管已正確植入，如果您認為未植入，請更換您的 Pod。</string>
     <!-- Omnipod - Pod Deactivation Wizard -->
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">停用 Pod</string>
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">按 <b>下一步</b> 停用 Pod。\n\n<b>注意：</b> 這將暫停所有胰島素輸送並停用 Pod。</string>
@@ -99,7 +99,7 @@
     <string name="omnipod_common_pod_deactivation_wizard_discard_pod">丟棄 Pod</string>
     <!-- Omnipod - Preferences -->
     <string name="omnipod_common_preferences_bolus_beeps_enabled">啟用胰島素劑量時，發出嗶聲</string>
-    <string name="omnipod_common_preferences_basal_beeps_enabled">啟用個人設置基礎時，發出嗶聲</string>
+    <string name="omnipod_common_preferences_basal_beeps_enabled">啟用設定檔基礎時，發出嗶聲</string>
     <string name="omnipod_common_preferences_smb_beeps_enabled">啟用 SMB 時，發出嗶聲</string>
     <string name="omnipod_common_preferences_tbr_beeps_enabled">啟用臨時基礎率時，發出嗶聲</string>
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">在 Omnipod 標籤中顯示暫停輸送按鈕</string>
@@ -123,13 +123,13 @@
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">無可用的 Pod</string>
     <string name="omnipod_common_pod_status_waiting_for_activation">設置進行中（等待 Pod 啟動）</string>
-    <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">設置進行中（等待插入套管）</string>
+    <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">設置進行中（等待植入套管）</string>
     <string name="omnipod_common_pod_status_running">運行中</string>
     <string name="omnipod_common_pod_status_normal">正常</string>
     <string name="omnipod_common_pod_status_suspended">暫停</string>
     <string name="omnipod_common_pod_status_pod_fault">Pod 故障</string>
     <string name="omnipod_common_pod_status_activation_time_exceeded">啟動時間已超過</string>
-    <string name="omnipod_common_pod_status_inactive">不活躍</string>
+    <string name="omnipod_common_pod_status_inactive">無啟動</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Pod 故障：%1$03d %2$s</string>
     <!-- Omnipod - Commands -->
     <string name="omnipod_common_cmd_deactivate_pod">停用 Pod</string>
@@ -149,7 +149,7 @@
     <string name="omnipod_common_cmd_resume_delivery">恢復輸送</string>
     <string name="omnipod_common_cmd_unknown_entry">未知項目</string>
     <string name="omnipod_common_cmd_initialize_pod">初始化 Pod</string>
-    <string name="omnipod_common_cmd_insert_cannula">插入套管</string>
+    <string name="omnipod_common_cmd_insert_cannula">植入套管</string>
     <string name="omnipod_common_cmd_read_pulse_log">讀取脈衝日誌</string>
     <string name="omnipod_common_cmd_set_fake_suspended_tbr">設置假的臨時基礎，因為 Pod 已暫停</string>
     <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">取消因 Pod 暫停而設置的假的臨時基礎</string>
