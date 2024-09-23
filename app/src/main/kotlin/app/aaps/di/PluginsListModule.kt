@@ -435,6 +435,12 @@ abstract class PluginsListModule {
     @Binds
     @AllConfigs
     @IntoMap
+    @IntKey(471)
+    abstract fun bindPatchedOttaiPlugin(plugin: OttaiPlugin): PluginBase
+
+    @Binds
+    @AllConfigs
+    @IntoMap
     @IntKey(473)
     abstract fun bindIntelligoPlugin(plugin: IntelligoPlugin): PluginBase
 
@@ -443,12 +449,6 @@ abstract class PluginsListModule {
     @IntoMap
     @IntKey(475)
     abstract fun bindRandomBgPlugin(plugin: RandomBgPlugin): PluginBase
-
-    @Binds
-    @AllConfigs
-    @IntoMap
-    @IntKey(476)
-    abstract fun bindPatchedOttaiPlugin(plugin: OttaiPlugin): PluginBase
 
     @Binds
     @AllConfigs
