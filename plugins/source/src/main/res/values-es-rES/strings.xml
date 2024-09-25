@@ -37,4 +37,5 @@
     <string name="dexcom_log_ns_sensor_change_summary">Crear evento \"Cambio de sensor\" en Nightscout automáticamente al iniciar el sensor</string>
     <string name="direction">dirección</string>
     <string name="bg_generation_interval_minutes">Intervalo de generación de BG en minutos</string>
+    <!-- Patched Syai Tag App -->
 </resources>
