@@ -37,4 +37,5 @@
     <string name="dexcom_log_ns_sensor_change_summary">在傳感器啟動時自動在 NS 中建立「傳感器更換」事件</string>
     <string name="direction">方向</string>
     <string name="bg_generation_interval_minutes">血糖生成間隔（分鐘）</string>
+    <!-- Patched Syai Tag App -->
 </resources>
