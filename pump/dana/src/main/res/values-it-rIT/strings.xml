@@ -103,6 +103,7 @@
     <string name="danar_bt_name_title">Dispositivo Bluetooth DanaR</string>
     <string name="danars_password_title">Password micro (solo v1)</string>
     <string name="danar_password_title">Password micro</string>
+    <string name="danar_useextended_title">Usa boli estesi per &gt;200%</string>
     <string name="bolusspeed">Velocità bolo</string>
     <string name="selectedpump">Micro selezionato</string>
     <string name="rs_loginsulinchange_title">Registra cambio serbatorio</string>
