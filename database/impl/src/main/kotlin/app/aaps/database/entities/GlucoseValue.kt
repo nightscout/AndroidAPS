@@ -103,6 +103,7 @@ data class GlucoseValue(
         AIDEX,
         RANDOM,
         UNKNOWN,
+        SYAI_TAG,
 
         IOB_PREDICTION,
         A_COB_PREDICTION,

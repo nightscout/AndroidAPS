@@ -40,6 +40,7 @@ fun GlucoseValue.SourceSensor.fromDb(): SourceSensor =
         GlucoseValue.SourceSensor.AIDEX                     -> SourceSensor.AIDEX
         GlucoseValue.SourceSensor.RANDOM                    -> SourceSensor.RANDOM
         GlucoseValue.SourceSensor.UNKNOWN                   -> SourceSensor.UNKNOWN
+        GlucoseValue.SourceSensor.SYAI_TAG                  -> SourceSensor.SYAI_TAG
 
         GlucoseValue.SourceSensor.IOB_PREDICTION            -> SourceSensor.IOB_PREDICTION
         GlucoseValue.SourceSensor.A_COB_PREDICTION          -> SourceSensor.A_COB_PREDICTION
@@ -85,6 +86,7 @@ fun SourceSensor.toDb(): GlucoseValue.SourceSensor =
         SourceSensor.AIDEX                     -> GlucoseValue.SourceSensor.AIDEX
         SourceSensor.RANDOM                    -> GlucoseValue.SourceSensor.RANDOM
         SourceSensor.UNKNOWN                   -> GlucoseValue.SourceSensor.UNKNOWN
+        SourceSensor.SYAI_TAG                  -> GlucoseValue.SourceSensor.SYAI_TAG
 
         SourceSensor.IOB_PREDICTION            -> GlucoseValue.SourceSensor.IOB_PREDICTION
         SourceSensor.A_COB_PREDICTION          -> GlucoseValue.SourceSensor.A_COB_PREDICTION

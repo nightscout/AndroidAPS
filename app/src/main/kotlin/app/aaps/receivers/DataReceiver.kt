@@ -19,6 +19,7 @@ import app.aaps.plugins.source.EversensePlugin
 import app.aaps.plugins.source.GlimpPlugin
 import app.aaps.plugins.source.MM640gPlugin
 import app.aaps.plugins.source.PoctechPlugin
+import app.aaps.plugins.source.SyaiTagPlugin
 import app.aaps.plugins.source.TomatoPlugin
 import app.aaps.plugins.source.XdripSourcePlugin
 import dagger.android.DaggerBroadcastReceiver
@@ -63,6 +64,13 @@ open class DataReceiver : DaggerBroadcastReceiver() {
 
             Intents.NS_EMULATOR                       ->
                 OneTimeWorkRequest.Builder(MM640gPlugin.MM640gWorker::class.java)
+                    .setInputData(Data.Builder().also {
+                        it.copyString("collection", bundle)
+                        it.copyString("data", bundle)
+                    }.build()).build()
+
+            Intents.SYAI_TAG_APP                       ->
+                OneTimeWorkRequest.Builder(SyaiTagPlugin.SyaiTagWorker::class.java)
                     .setInputData(Data.Builder().also {
                         it.copyString("collection", bundle)
                         it.copyString("data", bundle)
