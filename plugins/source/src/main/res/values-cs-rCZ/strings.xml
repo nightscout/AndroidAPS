@@ -38,4 +38,6 @@
     <string name="direction">směr</string>
     <string name="bg_generation_interval_minutes">Interval generování glykémie v minutách</string>
     <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai Tag</string>
+    <string name="description_source_patched_syai_tag_app">Příjem glykémií z aplikace Syai Tag.</string>
 </resources>
