@@ -73,6 +73,7 @@ enum class Sources {
     BgFragment,
     Garmin,
     Database,           // for PersistenceLayer
-    Unknown             //if necessary
+    Unknown,             //if necessary
+    SyaiTag
     ;
 }

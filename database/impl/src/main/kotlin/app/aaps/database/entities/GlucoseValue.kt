@@ -104,6 +104,7 @@ data class GlucoseValue(
         RANDOM,
         UNKNOWN,
         OTTAI,
+        SYAI_TAG,
 
         IOB_PREDICTION,
         A_COB_PREDICTION,

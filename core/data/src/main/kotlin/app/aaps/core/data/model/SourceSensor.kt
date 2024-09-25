@@ -35,6 +35,7 @@ enum class SourceSensor(val text: String) {
     OTTAI("Ottai"),
     EVERSENSE("Eversense"),
     AIDEX("GlucoRx Aidex"),
+    SYAI_TAG("Syai Tag"),
     RANDOM("Random"),
     UNKNOWN("Unknown"),
 
