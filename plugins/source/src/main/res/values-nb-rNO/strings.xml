@@ -37,4 +37,5 @@
     <string name="dexcom_log_ns_sensor_change_summary">Opprett hendelse \"Sensorbytte\" automatisk i NS ved start av sensoren</string>
     <string name="direction">retning</string>
     <string name="bg_generation_interval_minutes">BS-genereringsintervall i minutter</string>
+    <!-- Patched Syai Tag App -->
 </resources>
