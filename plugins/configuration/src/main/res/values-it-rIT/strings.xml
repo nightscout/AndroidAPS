@@ -106,6 +106,7 @@
     <string name="restartingapp">Uscita dall\'applicazione per applicare le impostazioni.</string>
     <string name="ue_exported">Voci utente esportate</string>
     <string name="protection">Protezione</string>
+    <string name="master_password_missing">La password master non è impostata!\n\nImposta la tua password master in Preferenze (%1$s)</string>
     <!--    Maintenance-->
     <string name="maintenance">Manutenzione</string>
     <string name="maintenance_shortname">MANUT</string>
