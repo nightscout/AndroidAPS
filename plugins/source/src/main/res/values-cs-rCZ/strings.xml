@@ -37,4 +37,5 @@
     <string name="dexcom_log_ns_sensor_change_summary">Vytvořit událost \"Výměna senzoru\" v NS automaticky po spuštění senzoru</string>
     <string name="direction">směr</string>
     <string name="bg_generation_interval_minutes">Interval generování glykémie v minutách</string>
+    <!-- Patched Syai Tag App -->
 </resources>
