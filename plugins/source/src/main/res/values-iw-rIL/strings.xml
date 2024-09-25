@@ -36,4 +36,5 @@
     <string name="dexcom_log_ns_sensor_change_title">רישום החלפת סנסור בנייטסקאוט</string>
     <string name="dexcom_log_ns_sensor_change_summary">רישום אירוע \"החלפת סנסור\" בנייטסקאוט אוטומטית בעת הפעלת החיישן</string>
     <string name="direction">כיוון</string>
+    <!-- Patched Syai Tag App -->
 </resources>
