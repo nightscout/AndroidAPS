@@ -41,6 +41,7 @@ import app.aaps.plugins.source.GlunovoPlugin
 import app.aaps.plugins.source.IntelligoPlugin
 import app.aaps.plugins.source.MM640gPlugin
 import app.aaps.plugins.source.NSClientSourcePlugin
+import app.aaps.plugins.source.OttaiPlugin
 import app.aaps.plugins.source.PoctechPlugin
 import app.aaps.plugins.source.RandomBgPlugin
 import app.aaps.plugins.source.SyaiTagPlugin
@@ -431,6 +432,12 @@ abstract class PluginsListModule {
     @IntoMap
     @IntKey(470)
     abstract fun bindGlunovoPlugin(plugin: GlunovoPlugin): PluginBase
+
+    @Binds
+    @AllConfigs
+    @IntoMap
+    @IntKey(471)
+    abstract fun bindPatchedOttaiPlugin(plugin: OttaiPlugin): PluginBase
 
     @Binds
     @AllConfigs
