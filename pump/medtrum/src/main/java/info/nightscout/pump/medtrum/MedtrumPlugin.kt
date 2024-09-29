@@ -520,7 +520,8 @@ import kotlin.math.abs
         return medtrumPump.pumpSNFromSP.toString(radix = 16)
     }
 
-    override val pumpDescription: PumpDescription = PumpDescription().fillFor(medtrumPump.pumpType())
+    override val pumpDescription: PumpDescription
+        get() = PumpDescription().fillFor(medtrumPump.pumpType())
 
     override fun shortStatus(veryShort: Boolean): String {
         var ret = ""
