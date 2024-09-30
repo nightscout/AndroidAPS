@@ -211,7 +211,8 @@
         android:layout_marginTop="0px"
         android:maxLines="1"
         android:textSize="23px"
-        tools:text="E xU/h  IOB: x (x+x)" />
+        tools:text="E xU/h  IOB: x (x+x)"
+        android:visibility="gone" />
 
 
     <TextView

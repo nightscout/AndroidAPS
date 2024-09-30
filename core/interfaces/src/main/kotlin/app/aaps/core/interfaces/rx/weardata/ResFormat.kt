@@ -1,6 +1,6 @@
 package app.aaps.core.interfaces.rx.weardata
 
-const val CUSTOM_VERSION = "1.0"
+const val CUSTOM_VERSION = "2.0"
 
 enum class ResFormat(val extension: String) {
     UNKNOWN(""),
