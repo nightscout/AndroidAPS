@@ -98,6 +98,10 @@
                 <action android:name="com.fanqies.tomatofn.BgEstimate" />
                 <!-- Receiver from GlucoRx Aidex -->
                 <action android:name="com.microtechmd.cgms.aidex.action.BgEstimate" />
+                <!-- Receiver from patched Ottai app -->
+                <action android:name="info.nightscout.androidaps.action.OTTAI_APP" />
+                <!-- Receiver from patched Syai Tag app -->
+                <action android:name="info.nightscout.androidaps.action.SYAI_TAG_APP" />
             </intent-filter>
         </receiver>
 
