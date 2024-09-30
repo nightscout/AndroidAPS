@@ -63,7 +63,7 @@
     <string name="openapssmb_max_iob_summary">在OpenAPS上下文中，這個值稱為最大IOB\n如果當前IOB大於此值，OpenAPS將不會增加更多胰島素</string>
     <string name="enable_uam">啟用UAM</string>
     <string name="enable_smb">啟用SMB</string>
-    <string name="enable_smb_summary">使用超微量注射(SMB)來取代臨時基礎率，以便更快地作用</string>
+    <string name="enable_smb_summary">使用超微量注射(SMB) 來取代臨時基礎率，以便加快作用速度</string>
     <string name="enable_uam_summary">偵測未輸入的餐點</string>
     <string name="enable_smb_always">始終啟用SMB</string>
     <string name="enable_smb_always_summary">始終啟用SMB，獨立於注射。僅適用於具有良好資料過濾的血糖來源，如G5</string>
