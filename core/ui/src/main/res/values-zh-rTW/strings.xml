@@ -159,7 +159,7 @@
     <string name="stoptemptarget">停止臨時目標</string>
     <string name="closedloop">閉環</string>
     <string name="openloop">開環</string>
-    <string name="lowglucosesuspend">低血糖暫停</string>
+    <string name="lowglucosesuspend">低血糖暫停(LGS)</string>
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
