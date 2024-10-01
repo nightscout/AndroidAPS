@@ -153,7 +153,7 @@
     <string name="autotune_result">結果：%1$s</string>
     <string name="autotune_param">參數</string>
     <string name="autotune_percent">%</string>
-    <string name="autotune_missing">缺失</string>
+    <string name="autotune_missing">缺少</string>
     <string name="autotune_run">執行自動調整</string>
     <string name="autotune_check_input_profile_button">檢查輸入檔案</string>
     <string name="autotune_compare_profile">比較檔案</string>
@@ -197,8 +197,7 @@
     <string name="openapsama_pp_ISF_weight_summary">預設值：0.0\n這是應用於葡萄糖上升時的線性斜率的權重，用來調整 ISF。\n\n當設置為 0.0 時，這部分貢獻實際上是停用的。\"</string>
     <string name="openapsama_bgAccel_ISF_weight_summary">預設值：0.0\n這是應用於葡萄糖加速時的權重，用來加強 ISF。\n\n當設置為 0.0 時，這部分貢獻實際上是停用的。</string>
     <string name="openapsama_bgBrake_ISF_weight_summary">預設值：0.0\n這是應用於葡萄糖減速時的權重，用來削弱 ISF。\n\n當設置為 0.0 時，這部分貢獻實際上是停用的。</string>
-    <string name="openapsama_autoISF_max">最大自動ISF比率
-(autoISF_max)</string>
+    <string name="openapsama_autoISF_max">最大自動ISF比率\n(autoISF_max)</string>
     <string name="openapsama_autoISF_min">最小自動ISF比率\n(autoISF_min)</string>
     <string name="openapsama_lower_ISFrange_weight">較低的 ISF 範圍權重\n(lower_ISFrange_weight)</string>
     <string name="openapsama_higher_ISFrange_weight">較高的 ISF 範圍的權重\n(higher_ISFrange_weight)</string>
@@ -219,5 +218,5 @@
     <string name="enableSMB_EvenOn_OddOff_always">啟用根據活動目標是偶數的情況下啟用SMB的替代啟動</string>
     <string name="enableSMB_EvenOn_OddOff_always_summary">\n啟用 ...\n如果活動目標 (mmol/L) 是偶數小數\n或活動目標 (mg/dL) 是偶數\n\n否則停用</string>
     <string name="openapsama_iob_threshold_percent_summary" formatted="false">預設值：100%\n設置為 100% 時，此功能實際上是被停用的。</string>
-    <string name="openapsama_iob_threshold_percent">SMB 啟用期間 maxIOB 之上個百分比\n(iob_threshold_percent)</string>
+    <string name="openapsama_iob_threshold_percent">當超過最大活性胰島素百分比時，超微量注射將被停用\n（iob_threshold_percent）</string>
 </resources>
