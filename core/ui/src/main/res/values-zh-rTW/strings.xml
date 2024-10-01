@@ -40,7 +40,7 @@
     <string name="ue_export_to_csv">匯出使用者輸入到 Excel (csv)</string>
     <string name="confirm">確認</string>
     <string name="pump">幫浦</string>
-    <string name="missed_bg_readings">遺失的血糖讀數</string>
+    <string name="missed_bg_readings">遺失血糖讀數</string>
     <string name="treatments_iob_label_string">IOB：</string>
     <string name="mute5min">靜音 5 分鐘</string>
     <string name="mute">靜音</string>
