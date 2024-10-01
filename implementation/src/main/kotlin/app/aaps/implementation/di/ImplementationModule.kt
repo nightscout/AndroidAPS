@@ -12,6 +12,7 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.profiling.Profiler
 import app.aaps.core.interfaces.protection.PasswordCheck
+import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
@@ -46,6 +47,7 @@ import app.aaps.implementation.profile.ProfileFunctionImpl
 import app.aaps.implementation.profile.ProfileStoreObject
 import app.aaps.implementation.profile.ProfileUtilImpl
 import app.aaps.implementation.profiling.ProfilerImpl
+import app.aaps.implementation.protection.ExportPasswordDataStoreImpl
 import app.aaps.implementation.protection.PasswordCheckImpl
 import app.aaps.implementation.protection.ProtectionCheckImpl
 import app.aaps.implementation.pump.BlePreCheckImpl
@@ -101,6 +103,7 @@ abstract class ImplementationModule {
         @Binds fun bindTranslator(translatorImpl: TranslatorImpl): Translator
         @Binds fun bindProtectionCheck(protectionCheckImpl: ProtectionCheckImpl): ProtectionCheck
         @Binds fun bindPasswordCheck(passwordCheckImpl: PasswordCheckImpl): PasswordCheck
+        @Binds fun bindExportPasswordCheck(exportPasswordDataStoreImpl: ExportPasswordDataStoreImpl): ExportPasswordDataStore
         @Binds fun bindLoggerUtils(loggerUtilsImpl: LoggerUtilsImpl): LoggerUtils
         @Binds fun bindProfiler(profilerImpl: ProfilerImpl): Profiler
         @Binds fun bindWarnColors(warnColorsImpl: WarnColorsImpl): WarnColors

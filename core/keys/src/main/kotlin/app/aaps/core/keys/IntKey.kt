@@ -59,6 +59,8 @@ enum class IntKey(
 
     AutotuneDefaultTuneDays("autotune_default_tune_days", 5, 1, 30),
 
+    AutoExportPasswordExpiryDays("auto_export_password_expiry_days", 7, 1, 90),
+
     SmsRemoteBolusDistance("smscommunicator_remotebolusmindistance", 15, 3, 60),
 
     BgSourceRandomInterval("randombg_interval_min", 5, 1, 15, defaultedBySM = true),

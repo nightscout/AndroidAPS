@@ -89,6 +89,7 @@
     <string name="removerecord">Remove record</string>
     <string name="loopisdisabled">Loop is disabled</string>
     <string name="alarm">Alarm</string>
+    <string name="exportsettings">Export Settings</string>
     <string name="disableloop">Disable loop</string>
     <string name="enableloop">Enable loop</string>
     <string name="resumeloop">Resume loop</string>

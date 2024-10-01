@@ -6,6 +6,8 @@
     <string name="automation_missing_task_name">Please enter a task name.</string>
     <string name="automation_missing_trigger">Please specify at least one trigger.</string>
     <string name="automation_missing_action">Please specify at least one action.</string>
+    <string name="exportsettings_message">Settings Export: %1$s</string>
+    <string name="export_settings_short">Export:</string>
     <string name="alarm_message">Alarm: %1$s</string>
     <string name="alarm_short">Alarm:</string>
     <string name="message_short">Msg:</string>

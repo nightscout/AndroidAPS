@@ -235,7 +235,7 @@ class MaintenancePlugin @Inject constructor(
     }
 
     override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
-        if (requiredKey != null && requiredKey != "data_choice_setting") return
+        if (requiredKey != null && !(requiredKey == "data_choice_setting" || requiredKey == "export_settings_automation")) return
         val category = PreferenceCategory(context)
         parent.addPreference(category)
         category.apply {
@@ -253,7 +253,22 @@ class MaintenancePlugin @Inject constructor(
                 key = "data_choice_setting"
                 title = rh.gs(R.string.data_choices)
                 addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.MaintenanceEnableFabric, title = R.string.fabric_upload))
-                addPreference(AdaptiveStringPreference(ctx = context, stringKey = StringKey.MaintenanceIdentification, summary = R.string.summary_email_for_crash_report, title = R.string.identification))
+                addPreference(AdaptiveStringPreference(ctx = context, stringKey = StringKey.MaintenanceIdentification, title = R.string.identification))
+            })
+
+            addPreference(preferenceManager.createPreferenceScreen(context).apply {
+                key = "export_settings_automation"
+                title = rh.gs(R.string.export_settings_automation)
+                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.MaintenanceEnableExportSettingsAutomation,
+                    title = R.string.export_settings_automation,
+                    summary = R.string.export_settings_automation_summary
+                    )
+                )
+                addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.AutoExportPasswordExpiryDays,
+                    title = R.string.export_settings_automation_password_expiry,
+                    summary = R.string.export_settings_automation_password_expiry_summary
+                    )
+                )
             })
         }
     }

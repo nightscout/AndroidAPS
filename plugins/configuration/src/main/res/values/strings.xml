@@ -47,6 +47,10 @@
     <string name="readstatus">Read status</string>
     <string name="data_choices">Data Choices</string>
     <string name="fabric_upload">Fabric Upload</string>
+    <string name="export_settings_automation">Export Settings Automation</string>
+    <string name="export_settings_automation_summary">Enable this will store your password in the app store on your phone</string>
+    <string name="export_settings_automation_password_expiry">Password expiry</string>
+    <string name="export_settings_automation_password_expiry_summary">Number of days after which the password will expire when not used:\n</string>
     <string name="allow_automated_crash_reporting">Allow automated crash reporting and feature usage data to be sent to the developers via the fabric.io service.</string>
     <string name="summary_email_for_crash_report">This identification will attached to crash reports so we can contact you in urgent cases. It\'s optional.</string>
     <string name="identification">Identification (email, FB or Discord nick etc)</string>
