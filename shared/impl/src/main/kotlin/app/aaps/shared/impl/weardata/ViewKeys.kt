@@ -22,6 +22,7 @@ enum class ViewKeys(val key: String, @StringRes val comment: Int) {
     RIG_BATTERY("rig_battery", R.string.cwf_comment_rig_battery),
     BASALRATE("basalRate", R.string.cwf_comment_basalRate),
     BGI("bgi", R.string.cwf_comment_bgi),
+    STATUS("status", R.string.cwf_comment_status),
     TIME("time", R.string.cwf_comment_time),
     HOUR("hour", R.string.cwf_comment_hour),
     MINUTE("minute", R.string.cwf_comment_minute),

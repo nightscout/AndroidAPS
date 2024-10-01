@@ -26,11 +26,9 @@ import app.aaps.core.ui.extensions.toVisibilityKeepSpace
 import app.aaps.wear.R
 import app.aaps.wear.data.RawDisplayData
 import app.aaps.wear.events.EventWearPreferenceChange
-import app.aaps.wear.heartrate.HeartRateListener
 import app.aaps.wear.interaction.menus.MainMenuActivity
 import app.aaps.wear.interaction.utils.Persistence
 import app.aaps.wear.interaction.utils.WearUtil
-import app.aaps.wear.wearStepCount.StepCountListener
 import com.ustwo.clockwise.common.WatchFaceTime
 import com.ustwo.clockwise.common.WatchMode
 import com.ustwo.clockwise.common.WatchShape

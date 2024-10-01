@@ -393,6 +393,7 @@ class CustomWatchface : BaseWatchFace() {
         RIG_BATTERY(ViewKeys.RIG_BATTERY.key, R.id.rig_battery, R.string.key_show_rig_battery),
         BASALRATE(ViewKeys.BASALRATE.key, R.id.basalRate, R.string.key_show_temp_basal),
         BGI(ViewKeys.BGI.key, R.id.bgi, R.string.key_show_bgi),
+        STATUS(ViewKeys.STATUS.key, R.id.status, R.string.key_show_external_status),
         TIME(ViewKeys.TIME.key, R.id.time),
         HOUR(ViewKeys.HOUR.key, R.id.hour),
         MINUTE(ViewKeys.MINUTE.key, R.id.minute),

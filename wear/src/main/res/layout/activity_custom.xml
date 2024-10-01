@@ -202,6 +202,19 @@
         tools:text="bgi" />
 
 
+
+    <TextView
+        android:id="@+id/status"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:maxLines="1"
+        android:textSize="23px"
+        tools:text="E xU/h  IOB: x (x+x)"
+        android:visibility="gone" />
+
+
     <TextView
         android:id="@+id/time"
         android:layout_width="0px"
