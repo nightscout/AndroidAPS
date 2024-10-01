@@ -122,6 +122,8 @@
     <string name="hourly_max_insulin_summary">Zadajte maximálny povolený počet jednotiek inzulínu za hodinu. Pokiaľ budú prekročené, pumpa bude pozastavená.</string>
     <string name="daily_max_insulin_title">Denný maximálny inzulín</string>
     <string name="daily_max_insulin_summary">Zadajte maximálny povolený počet jednotiek inzulínu za deň. Pokiaľ budú prekročené, pumpa bude pozastavená.</string>
+    <string name="scan_on_connection_error_title">Vykonať skenovanie pri chybách pripojenia</string>
+    <string name="scan_on_connection_error_summary">VAROVANIE: Povoľte iba pokiaľ máte problémy s pripojením. Pokiaľ je to povolené, skenuje pumpu znovu pred pokusom o opätovné pripojenie k pumpe. Uistite sa, že máte oprávnanie k polohe nastavené na \"Vždy povolené\"</string>
     <!-- treatment state-->
     <string name="getting_pump_status">Načítavam stav pumpy</string>
     <string name="getting_bolus_status">Načítavam stav bolusov</string>
