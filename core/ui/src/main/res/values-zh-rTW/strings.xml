@@ -432,7 +432,7 @@
     <string name="wizard_no_insulin_required">不需要胰島素！</string>
     <string name="wizard_no_actual_bg">沒有最近的血糖值可用於計算！</string>
     <string name="wizard_no_active_profile">未設置活動設定檔！</string>
-    <string name="wizard_no_cob">未知的 COB！血糖讀數丟失或最近的應用程式重啟？</string>
+    <string name="wizard_no_cob">未知的 COB！缺少血糖讀數或最近的應用程式重啟？</string>
     <string name="wizard_carbs_constraint">碳水化合物限制違規！</string>
     <string name="wizard_explain_calc">計算（IC：%1$.1f，ISF：%2$.1f）</string>
     <string name="wizard_explain_carbs">碳水化合物：%1$.2fU</string>
