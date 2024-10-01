@@ -194,4 +194,21 @@
     <string name="openapsama_dura_ISF_weight_summary" formatted="false">Значение по умолчанию: 0.0\n Ээто скорость, с которой autoISF увеличивается в час, при условии, что ГК в два раза выше целевой. При значении 1.0 величина ISF снизится до 50% после 1 часа работы с ГК, в два раза превышающим цель.\n\n При значении 0.0 эффект автоматической настройки ISF фактически отключен.</string>
     <string name="openapsama_lower_ISFrange_weight_summary">Значение по умолчанию: 0.0\nЭто нагрузка, прилагаемая к многоугольнику адаптации ISF при ГК ниже цели. \n\nПри 0.0 нагрузка отключена.</string>
     <string name="openapsama_higher_ISFrange_weight_summary">Значение по умолчанию: 0.0\nЭто нагрузка, прилагаемая к многоугольнику адаптации ISF если ГК выше цели. \n\nПри 0.0 нагрузка отключена.</string>
+    <string name="openapsama_pp_ISF_weight_summary">По умолчанию: 0.0\nЭто нагрузка, применяемая к линейному наклону при росте ГК, адаптирующая ISF. \n\nПри значении 0.0 не играет роли.</string>
+    <string name="openapsama_bgAccel_ISF_weight_summary">По умолчанию: 0.0\nЭто нагрузка, применяемая при ускорении изменения ГК и усиливающая ISF. \n\nПри значении 0.0 не играет роли.</string>
+    <string name="openapsama_bgBrake_ISF_weight_summary">По умолчанию: 0.0\nЭто нагрузка, применяемая при изменении замедления ГК и ослабляющая ISF. \n\nПри значении 0.0 не играет роли.</string>
+    <string name="openapsama_autoISF_max">Макс. коэффициент autoISF\n(autoISF_max)</string>
+    <string name="openapsama_autoISF_min">Мин. коэффициент autoISF\n(autoISF_min)</string>
+    <string name="openapsama_lower_ISFrange_weight">Нагрузка диапазона ISF ниже цели\n(lower_ISFrange_weight)</string>
+    <string name="openapsama_higher_ISFrange_weight">Нагрузка диапазона ISF выше цели\n(higher_ISFrange_weight)</string>
+    <string name="openapsama_pp_ISF_weight">Изменяющая ISF после еды нагрузка\n(pp_ISF_weight)</string>
+    <string name="openapsama_bgAccel_ISF_weight">Нагрузка при ускорения изменения ГК\n(bgAccel_ISF_weight)</string>
+    <string name="openapsama_bgBrake_ISF_weight">Нагрузка при замедлении изменений ГК\n(bgBrake_ISF_weight)</string>
+    <string name="openapsama_dura_ISF_weight">Нагрузка ISF при застое ГК\n(dura_ISF_weight)</string>
+    <string name="openapsama_smb_delivery_ratio">Фикс. коэффициент ввода микроболюсов SMB\n(smb_delivery_ratio)</string>
+    <string name="openapsama_smb_delivery_ratio_min">Нижняя граница переменного коэффициента ввода микроболюсов SMB\n(smb_delivery_ratio_min)</string>
+    <string name="openapsama_smb_delivery_ratio_max">Верхняя граница переменного коэффициента ввода микроболюсов SMB\n(smb_delivery_ratio_max)</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range">Диапазон ГК переменного коэффициента ввода микроболюсов SMB\n(smb_delivery_ratio_bg_range)</string>
+    <string name="openapsama_smb_max_range_extension">Увеличение макс. диапазона SMB/UAM\n(smb_max_range_extension)</string>
+    <string name="enableSMB_EvenOn_OddOff_always">Включить альтернативную активацию микроболюсов SMB при активной цели ГК выраженной целым числом</string>
 </resources>
