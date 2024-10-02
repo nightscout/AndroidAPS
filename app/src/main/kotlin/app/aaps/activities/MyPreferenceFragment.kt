@@ -367,10 +367,10 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             "Slovak",
             "Swedish",
             "Turkish",
-            "Chinese",
-            "Chinese Simplified",
+            "Chinese, Traditional",
+            "Chinese, Simplified",
         )
-        val languageValues = arrayOf<CharSequence>("default", "en", "af", "bg", "cs", "de", "dk", "fr", "nl", "es", "el", "ga", "it", "ko", "lt", "nb", "pl", "pt", "pt_BR", "ro", "ru", "sk", "sv", "tr", "zh", "zh-CN")
+        val languageValues = arrayOf<CharSequence>("default", "en", "af", "bg", "cs", "de", "dk", "fr", "nl", "es", "el", "ga", "it", "ko", "lt", "nb", "pl", "pt", "pt_BR", "ro", "ru", "sk", "sv", "tr", "zh_TW", "zh_CN")
         assert(languageEntries.size == languageValues.size)
 
         val skinEntries = Vector<CharSequence>()
