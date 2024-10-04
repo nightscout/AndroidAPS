@@ -6,4 +6,6 @@
     <string name="description_source_eversense">Preuzimajte vrednosti GUK iz zakrpljene aplikacije Eversense.</string>
     <string name="description_source_glimp">Preuzimajte vrednosti GUK od Glimp-a.</string>
     <string name="description_source_mm640g">Preuzimajte vrednosti GUK od 600SeriesAndroidUploader-a.</string>
+    <!-- Patched Ottai App -->
+    <!-- Patched Syai Tag App -->
 </resources>

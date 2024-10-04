@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- SMS Communicator & OTP Authenticator -->
-    <string name="smscommunicator">SMS 通訊器</string>
+    <string name="smscommunicator">SMS 簡訊</string>
     <string name="smscommunicator_shortname">SMS</string>
     <string name="description_sms_communicator">使用SMS命令遠端控制AAPS。</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">來自驗證器應用的代碼：%1$s 加上PIN碼</string>
@@ -92,7 +92,7 @@
     <string name="smscommunicator_message_body">無效的訊息內容</string>
     <string name="smscommunicator_report_pump_unreachable_summary">當幫浦無法使用事件觸發時發送SMS</string>
     <string name="smscommunicator_pump_unreachable">報告幫浦無法使用</string>
-    <string name="smscommunicator_set_lgs_reply_with_code">要將循環模式切換為LGS（低血糖維持）請回覆代碼 %1$s</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">要將循環模式切換為LGS（低血糖暫停）請回覆代碼 %1$s</string>
     <string name="smscommunicator_set_closed_loop_reply_with_code">要將循環模式切換為閉環請回覆代碼 %1$s</string>
     <string name="smscommunicator_current_loop_mode">當前循環模式：%1$s</string>
     <string name="wrong_format">錯誤的格式</string>
@@ -157,7 +157,7 @@
     <string name="ic_dynamic_label">您的算法可以提供IC的動態計算。下面的值僅在缺少資料時用作後備</string>
     <!-- Actions -->
     <string name="actions">手動操作</string>
-    <string name="description_actions">一些快速訪問常用功能的按鈕</string>
+    <string name="description_actions">一些快速查看常用功能的按鈕</string>
     <string name="actions_shortname">操作</string>
     <string name="tempbasal_button">臨時基礎速率</string>
     <string name="extended_bolus_button">延長注射</string>
@@ -191,10 +191,10 @@
     <string name="statuslights_bat_warning">幫浦電池等級警告閾值 [%]</string>
     <string name="statuslights_bat_critical">幫浦電池等級臨界閾值 [%]</string>
     <string name="statuslights_copy_ns">從NS複製設置</string>
-    <string name="graph_scale_6h">6小時</string>
-    <string name="graph_scale_12h">12小時</string>
-    <string name="graph_scale_18h">18小時</string>
-    <string name="graph_scale_24h">24小時</string>
+    <string name="graph_scale_6h">6h</string>
+    <string name="graph_scale_12h">12h</string>
+    <string name="graph_scale_18h">18h</string>
+    <string name="graph_scale_24h">24h</string>
     <string name="graph_long_scale_6h">6小時</string>
     <string name="graph_long_scale_12h">12小時</string>
     <string name="graph_long_scale_18h">18小時</string>
@@ -293,7 +293,7 @@
     <string name="variable_sensitivity_shortname">可變敏感度</string>
     <string name="graph_scale">圖表比例</string>
     <string name="graph_menu_divider_header">圖表</string>
-    <string name="temp_basal_overview_short_name">臨時：</string>
+    <string name="temp_basal_overview_short_name">T:</string>
     <!-- Skins -->
     <string name="classic_description">原始外觀</string>
     <string name="lowres_description">低解析度外觀</string>

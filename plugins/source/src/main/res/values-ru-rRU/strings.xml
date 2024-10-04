@@ -37,4 +37,10 @@
     <string name="dexcom_log_ns_sensor_change_summary">Автоматически создать событие \"Замена сенсора\" в NS при запуске сенсора</string>
     <string name="direction">направление</string>
     <string name="bg_generation_interval_minutes">Интервал генерации ГК в мин</string>
+    <!-- Patched Ottai App -->
+    <string name="ottai_app">Ottai</string>
+    <string name="description_source_patched_ottai_app">Получать данные о ГК от приложения Ottai.</string>
+    <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai Tag</string>
+    <string name="description_source_patched_syai_tag_app">Получать уровень ГК из приложения Syai Tag.</string>
 </resources>

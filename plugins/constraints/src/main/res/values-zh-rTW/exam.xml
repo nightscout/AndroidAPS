@@ -162,7 +162,7 @@
     <string name="breadgrams_calc">如果血糖水平超出可接受範圍（過低或過高），注射計算機可以用來提供碳水化合物或胰島素的修正建議。</string>
     <string name="breadgrams_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="extendedcarbs_label">展延碳水化合物</string>
-    <string name="extendedcarbs_handling">您可以使用e-碳水化合物（延長碳水化合物）做什麼？</string>
+    <string name="extendedcarbs_handling">您可以使用延長碳水化合物(extended carbs) 做什麼？</string>
     <string name="extendedcarbs_future">計劃未來的碳水化合物攝入，可能分配在一個時間段內（類似於分配在一個時間段內的延長注射）。</string>
     <string name="extendedcarbs_free">記錄您想要隱藏在AAPS之外的「免費」運動碳水化合物。</string>
     <string name="extendedcarbs_fat">延長碳水化合物（緩慢釋放）可以幫助AAPS處理高脂肪/蛋白質餐。</string>

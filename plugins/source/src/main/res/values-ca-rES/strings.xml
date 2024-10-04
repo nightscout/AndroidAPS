@@ -18,4 +18,6 @@
     <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">Rebre valors de glucèmia de l\'app Tomato (dispositiu MiaoMiao)</string>
     <string name="bgsource_upload">Configuració enviament dades glucèmia</string>
+    <!-- Patched Ottai App -->
+    <!-- Patched Syai Tag App -->
 </resources>

@@ -200,6 +200,7 @@
     <string name="graph_long_scale_18h">18 часов</string>
     <string name="graph_long_scale_24h">24 часа</string>
     <string name="a11y_graph">график</string>
+    <string name="a11y_graph_scale">выберите масштаб графика</string>
     <string name="a11y_graph_scale_6h">масштаб шкалы 6 часов</string>
     <string name="a11y_graph_scale_12h">масштаб шкалы 12 часов</string>
     <string name="a11y_graph_scale_18h">масштаб шкалы 18 часов</string>

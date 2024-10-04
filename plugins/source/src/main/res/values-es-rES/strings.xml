@@ -37,4 +37,10 @@
     <string name="dexcom_log_ns_sensor_change_summary">Crear evento \"Cambio de sensor\" en Nightscout automáticamente al iniciar el sensor</string>
     <string name="direction">dirección</string>
     <string name="bg_generation_interval_minutes">Intervalo de generación de BG en minutos</string>
+    <!-- Patched Ottai App -->
+    <string name="ottai_app">Ottai</string>
+    <string name="description_source_patched_ottai_app">Recibir datos de glucosa de la aplicación Ottai</string>
+    <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai Tag</string>
+    <string name="description_source_patched_syai_tag_app">Recibir datos de glucosa de la aplicación Syai Tag</string>
 </resources>

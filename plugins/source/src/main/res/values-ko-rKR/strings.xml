@@ -36,4 +36,6 @@
     <string name="dexcom_log_ns_sensor_change_title">NS에 센서서 교체 기록하기</string>
     <string name="dexcom_log_ns_sensor_change_summary">센서 교체시 NS에 자동으로 \"센서 교체\" 이벤트를 생성합니다</string>
     <string name="direction">방향</string>
+    <!-- Patched Ottai App -->
+    <!-- Patched Syai Tag App -->
 </resources>

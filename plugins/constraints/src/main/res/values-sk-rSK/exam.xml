@@ -68,6 +68,7 @@
     <string name="basaltest_havingregularhighlow">Pri častom výskyte vysokej, alebo nízkej hladiny glykémie v krvi.</string>
     <string name="basaltest_weekly">Minimálne raz týždenne.</string>
     <string name="basaltest_fixed">Akonáhle sú tieto hodnoty nastavené a overené, nemali by sa časom meniť.</string>
+    <string name="basaltest_hint1">https://androidaps.readthedocs.io/cs/latest/Getting-Started/FAQ.html#aaps-settings</string>
     <string name="prerequisites_label">Požiadavky</string>
     <string name="prerequisites_what">Čo je nevyhnutné pre nastavenie a používanie AAPS?</string>
     <string name="prerequisites_determinedcorrectprofile">Overené informácie o profile (Bazál, IC, ISF, DIA).</string>

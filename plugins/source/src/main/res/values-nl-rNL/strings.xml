@@ -37,4 +37,6 @@
     <string name="dexcom_log_ns_sensor_change_summary">Maak automatisch een gebeurtenis \"Sensor Change\" in NS wanneer de sensor start</string>
     <string name="direction">richting</string>
     <string name="bg_generation_interval_minutes">Interval BG generatie minuten</string>
+    <!-- Patched Ottai App -->
+    <!-- Patched Syai Tag App -->
 </resources>

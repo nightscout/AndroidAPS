@@ -17,6 +17,7 @@
     <string name="cwf_comment_rig_battery">Global loop-batteri (%)</string>
     <string name="cwf_comment_basalRate">Basaldose</string>
     <string name="cwf_comment_bgi">BGI-verdi</string>
+    <string name="cwf_comment_status">Status syntese</string>
     <string name="cwf_comment_time">Tid (TT:MM eller TT:MM:SS)</string>
     <string name="cwf_comment_hour">Time (TT)</string>
     <string name="cwf_comment_minute">Minutt (MM)</string>

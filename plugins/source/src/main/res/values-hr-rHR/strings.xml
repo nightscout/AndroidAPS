@@ -10,4 +10,6 @@
     <string name="description_source_intelligo">Primite vrijednosti iz aplikacije Intelligo</string>
     <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">Primite vrijednosti GK od GlucoRx Aidex CGMS.</string>
+    <!-- Patched Ottai App -->
+    <!-- Patched Syai Tag App -->
 </resources>

@@ -7,7 +7,7 @@
     <string name="dyn_isf_adjust_summary" formatted="false">動態ISF的調整係數。設置超過100％以進行更積極的矯正劑量，設置低於100％以進行較不積極的矯正。</string>
     <string name="high_temptarget_raises_sensitivity_title">高臨時目標提高敏感度</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[對於臨時目標>= 100，提高靈敏度]]></string>
-    <string name="low_temptarget_lowers_sensitivity_title">低溫度目標降低靈敏度</string>
+    <string name="low_temptarget_lowers_sensitivity_title">低臨時目標降低靈敏度</string>
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[對於溫度目標< 100，降低靈敏度]]></string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">動態ISF</string>
@@ -63,14 +63,14 @@
     <string name="openapssmb_max_iob_summary">在OpenAPS上下文中，這個值稱為最大IOB\n如果當前IOB大於此值，OpenAPS將不會增加更多胰島素</string>
     <string name="enable_uam">啟用UAM</string>
     <string name="enable_smb">啟用SMB</string>
-    <string name="enable_smb_summary">使用超微量注射(SMB)來取代臨時基礎率，以便更快地作用</string>
+    <string name="enable_smb_summary">使用超微量注射(SMB) 來取代臨時基礎率，以便加快作用速度</string>
     <string name="enable_uam_summary">偵測未輸入的餐點</string>
     <string name="enable_smb_always">始終啟用SMB</string>
     <string name="enable_smb_always_summary">始終啟用SMB，獨立於注射。僅適用於具有良好資料過濾的血糖來源，如G5</string>
     <string name="enable_smb_after_carbs">在碳水化合物後啟用SMB</string>
     <string name="enable_smb_after_carbs_summary">在碳水化合物後6小時啟用SMB，即使COB為0。僅適用於具有良好資料過濾的血糖來源，如G5</string>
-    <string name="enable_smb_with_cob">在COB存在時啟用SMB</string>
-    <string name="enable_smb_with_cob_summary">在COB啟動時啟用SMB。</string>
+    <string name="enable_smb_with_cob">有COB時啟用SMB</string>
+    <string name="enable_smb_with_cob_summary">在體內仍有碳水存在時啟用SMB。</string>
     <string name="enable_smb_with_temp_target">在有臨時目標時啟用SMB</string>
     <string name="enable_smb_with_temp_target_summary">有臨時目標時啟用SMB（即將用餐，運動）</string>
     <string name="enable_smb_with_high_temp_target">在高臨時目標時啟用SMB</string>
@@ -100,7 +100,7 @@
     <string name="run_now">立即執行</string>
     <string name="smb_frequency_exceeded">在過去3分鐘內已經進行了一次注射，跳過SMB</string>
     <string name="pump_not_initialized">幫浦未初始化！</string>
-    <string name="loop_shortname">LOOP</string>
+    <string name="loop_shortname">∞</string>
     <string name="description_loop">啟用或停用觸發循環。</string>
     <string name="no_aps_selected">未選擇或提供結果的APS</string>
     <string name="ignore5m">忽略5分鐘</string>
@@ -153,7 +153,7 @@
     <string name="autotune_result">結果：%1$s</string>
     <string name="autotune_param">參數</string>
     <string name="autotune_percent">%</string>
-    <string name="autotune_missing">缺失</string>
+    <string name="autotune_missing">缺少</string>
     <string name="autotune_run">執行自動調整</string>
     <string name="autotune_check_input_profile_button">檢查輸入檔案</string>
     <string name="autotune_compare_profile">比較檔案</string>
@@ -197,8 +197,7 @@
     <string name="openapsama_pp_ISF_weight_summary">預設值：0.0\n這是應用於葡萄糖上升時的線性斜率的權重，用來調整 ISF。\n\n當設置為 0.0 時，這部分貢獻實際上是停用的。\"</string>
     <string name="openapsama_bgAccel_ISF_weight_summary">預設值：0.0\n這是應用於葡萄糖加速時的權重，用來加強 ISF。\n\n當設置為 0.0 時，這部分貢獻實際上是停用的。</string>
     <string name="openapsama_bgBrake_ISF_weight_summary">預設值：0.0\n這是應用於葡萄糖減速時的權重，用來削弱 ISF。\n\n當設置為 0.0 時，這部分貢獻實際上是停用的。</string>
-    <string name="openapsama_autoISF_max">最大自動ISF比率
-(autoISF_max)</string>
+    <string name="openapsama_autoISF_max">最大自動ISF比率\n(autoISF_max)</string>
     <string name="openapsama_autoISF_min">最小自動ISF比率\n(autoISF_min)</string>
     <string name="openapsama_lower_ISFrange_weight">較低的 ISF 範圍權重\n(lower_ISFrange_weight)</string>
     <string name="openapsama_higher_ISFrange_weight">較高的 ISF 範圍的權重\n(higher_ISFrange_weight)</string>
@@ -219,5 +218,5 @@
     <string name="enableSMB_EvenOn_OddOff_always">啟用根據活動目標是偶數的情況下啟用SMB的替代啟動</string>
     <string name="enableSMB_EvenOn_OddOff_always_summary">\n啟用 ...\n如果活動目標 (mmol/L) 是偶數小數\n或活動目標 (mg/dL) 是偶數\n\n否則停用</string>
     <string name="openapsama_iob_threshold_percent_summary" formatted="false">預設值：100%\n設置為 100% 時，此功能實際上是被停用的。</string>
-    <string name="openapsama_iob_threshold_percent">SMB 啟用期間 maxIOB 之上個百分比\n(iob_threshold_percent)</string>
+    <string name="openapsama_iob_threshold_percent">當超過最大活性胰島素百分比時，超微量注射將被停用\n（iob_threshold_percent）</string>
 </resources>

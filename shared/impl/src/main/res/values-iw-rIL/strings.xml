@@ -17,6 +17,7 @@
     <string name="cwf_comment_rig_battery">סוללת לופ גלובאלי (%)</string>
     <string name="cwf_comment_basalRate">מינון בזאלי</string>
     <string name="cwf_comment_bgi">השפעת רמת הסוכר בדם</string>
+    <string name="cwf_comment_status">יצירת סטטוס</string>
     <string name="cwf_comment_time">זמן (שעות:דקות או שעות:דקות:שניות)</string>
     <string name="cwf_comment_hour">שעה (HH)</string>
     <string name="cwf_comment_minute">דקה (MM)</string>

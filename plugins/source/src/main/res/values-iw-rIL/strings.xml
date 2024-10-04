@@ -36,4 +36,10 @@
     <string name="dexcom_log_ns_sensor_change_title">רישום החלפת סנסור בנייטסקאוט</string>
     <string name="dexcom_log_ns_sensor_change_summary">רישום אירוע \"החלפת סנסור\" בנייטסקאוט אוטומטית בעת הפעלת החיישן</string>
     <string name="direction">כיוון</string>
+    <!-- Patched Ottai App -->
+    <string name="ottai_app">Ottai</string>
+    <string name="description_source_patched_ottai_app">קבלת ערכי סוכר מיישומון Ottai.</string>
+    <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai Tag</string>
+    <string name="description_source_patched_syai_tag_app">קבלת ערכי סוכר מיישומון Syai Tag.</string>
 </resources>

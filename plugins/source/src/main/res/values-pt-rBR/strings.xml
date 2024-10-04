@@ -36,4 +36,6 @@
     <string name="dexcom_log_ns_sensor_change_title">Registrar mudança de sensor no NS</string>
     <string name="dexcom_log_ns_sensor_change_summary">Criar evento \"Mudança de Sensor\" no NS automaticamente ao iniciar o sensor.</string>
     <string name="direction">direção</string>
+    <!-- Patched Ottai App -->
+    <!-- Patched Syai Tag App -->
 </resources>

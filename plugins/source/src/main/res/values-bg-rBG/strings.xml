@@ -36,4 +36,6 @@
     <string name="dexcom_log_ns_sensor_change_title">Записвай смяната на сензор в NS</string>
     <string name="dexcom_log_ns_sensor_change_summary">Създаване на събитие \"Смяна на сеснзор\" в NS автоматично при старт на сензор</string>
     <string name="direction">Посока</string>
+    <!-- Patched Ottai App -->
+    <!-- Patched Syai Tag App -->
 </resources>

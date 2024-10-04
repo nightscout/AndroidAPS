@@ -37,4 +37,6 @@
     <string name="dexcom_log_ns_sensor_change_summary">Sensör başlangıcında otomatik olarak NS\'de \"Sensör Değişimi\" olayı oluştur</string>
     <string name="direction">yön</string>
     <string name="bg_generation_interval_minutes">KŞ belirleme aralıkları (dk.)</string>
+    <!-- Patched Ottai App -->
+    <!-- Patched Syai Tag App -->
 </resources>
