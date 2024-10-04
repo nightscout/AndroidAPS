@@ -139,6 +139,8 @@ class ComboV2Plugin @Inject constructor(
     private var pumpCoroutineScopeJob = SupervisorJob()
     private var pumpCoroutineScope = CoroutineScope(Dispatchers.Default + pumpCoroutineScopeJob)
 
+    private val _pumpDescription = PumpDescription()
+
     // The internal SP is the one that will be mainly used by the driver.
     // The AAPS main SP is updated when the pump state store is created
     // and when the driver disconnects (to update the nonce value).
@@ -277,6 +279,7 @@ class ComboV2Plugin @Inject constructor(
 
     init {
         ComboCtlLogger.backend = AAPSComboCtlLogger(aapsLogger)
+        _pumpDescription.fillFor(PumpType.ACCU_CHEK_COMBO)
     }
 
     override fun onStart() {
@@ -1196,7 +1199,7 @@ class ComboV2Plugin @Inject constructor(
 
         val percentage = absoluteRate / baseBasalRate * 100
         val roundedPercentage = ((absoluteRate / baseBasalRate * 10).roundToInt() * 10)
-        val limitedPercentage = min(roundedPercentage, pumpDescription.maxTempPercent)
+        val limitedPercentage = min(roundedPercentage, _pumpDescription.maxTempPercent)
 
         aapsLogger.debug(LTag.PUMP, "Calculated percentage of $percentage% out of absolute rate $absoluteRate; rounded to: $roundedPercentage%; limited to: $limitedPercentage%")
 
@@ -1229,7 +1232,7 @@ class ComboV2Plugin @Inject constructor(
         pumpEnactResult.isPercent = true
 
         val roundedPercentage = ((percent + 5) / 10) * 10
-        val limitedPercentage = min(roundedPercentage, pumpDescription.maxTempPercent)
+        val limitedPercentage = min(roundedPercentage, _pumpDescription.maxTempPercent)
         aapsLogger.debug(LTag.PUMP, "Got percentage of $percent%; rounded to: $roundedPercentage%; limited to: $limitedPercentage%")
 
         val cctlTbrType = when (tbrType) {
@@ -1452,7 +1455,8 @@ class ComboV2Plugin @Inject constructor(
             rh.gs(R.string.combov2_not_paired)
     }
 
-    override val pumpDescription: PumpDescription = PumpDescription().fillFor(PumpType.ACCU_CHEK_COMBO)
+    override val pumpDescription: PumpDescription
+        get() = _pumpDescription
 
     override fun shortStatus(veryShort: Boolean): String {
         val lines = mutableListOf<String>()

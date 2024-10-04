@@ -107,7 +107,7 @@ class InsightPlugin @Inject constructor(
     aapsLogger, rh, commandQueue
 ), Pump, Insight, PluginConstraints, InsightConnectionService.StateCallback, OwnDatabasePlugin {
 
-    override val pumpDescription: PumpDescription = PumpDescription().fillFor(PumpType.ACCU_CHEK_INSIGHT)
+    override val pumpDescription: PumpDescription = PumpDescription().also { it.fillFor(PumpType.ACCU_CHEK_INSIGHT) }
     private val _bolusLock: Any = arrayOfNulls<Any>(0)
     var lastBolusAmount = 0.0
         private set

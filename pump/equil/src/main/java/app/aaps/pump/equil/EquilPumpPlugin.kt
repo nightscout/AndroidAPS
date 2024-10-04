@@ -94,7 +94,8 @@ import javax.inject.Singleton
         .description(R.string.equil_pump_description), aapsLogger, rh, commandQueue
 ), Pump {
 
-    override val pumpDescription: PumpDescription = PumpDescription().fillFor(PumpType.EQUIL)
+    override val pumpDescription: PumpDescription
+    private val pumpType = PumpType.EQUIL
     private val bolusProfile: BolusProfile = BolusProfile()
 
     private val disposable = CompositeDisposable()
@@ -141,6 +142,7 @@ import javax.inject.Singleton
     var tempActivationProgress = ActivationProgress.NONE
 
     init {
+        pumpDescription = PumpDescription().fillFor(pumpType)
         statusChecker = Runnable {
             if (commandQueue.size() == 0 && commandQueue.performing() == null) {
                 if (equilManager.isActivationCompleted) commandQueue.customCommand(CmdStatusGet(), null)
