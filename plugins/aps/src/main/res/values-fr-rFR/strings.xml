@@ -190,4 +190,9 @@
     <string name="use_autoISF_extensions_summary">Celles-ci incluent l\'ajustement de la SI en fonction des glycémies récentes, des paramètres SMB complémentaires et la prise en charge de la boucle fermée complète</string>
     <string name="openapsama_enable_autoISF">Activer l\'ajustement de la SI en fonction de la glycémie</string>
     <string name="openapsama_autoISF_max_summary">Valeur par défaut: 1.0\nCe paramètre définit l\'agressivité maximale de la SI.\n\nATTENTION: Soyez extrêmement prudent lorsque vous utilisez des valeurs supérieures à 2.5</string>
+    <string name="openapsama_autoISF_max">Ratio max autoISF\n(autoISF_max)</string>
+    <string name="openapsama_autoISF_min">Ratio min autoISF\n(autoISF_min)</string>
+    <string name="openapsama_smb_max_range_extension_summary">Valeur par défaut : 1 Ceci est une autre clé de sécurité OpenAPS. Elle spécifie par quel facteur vous pouvez dépasser les 120 minutes régulières maxSMB/maxUAM. Augmentez lentement et avec prudence cette valeur expérimentale.</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Valeur par défaut : 100%\nAvec 100%, cette fonctionnalité est effectivement désactivée.</string>
+    <string name="openapsama_iob_threshold_percent">Pourcentage de maxIA au-dessus duquel les SMB sont désactivés\n(iob_threshold_percent)</string>
 </resources>
