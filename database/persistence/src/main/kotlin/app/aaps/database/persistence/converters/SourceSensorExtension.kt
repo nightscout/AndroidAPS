@@ -16,9 +16,8 @@ fun GlucoseValue.SourceSensor.fromDb(): SourceSensor =
         GlucoseValue.SourceSensor.DEXCOM_G4_NET_XBRIDGE     -> SourceSensor.DEXCOM_G4_NET_XBRIDGE
         GlucoseValue.SourceSensor.DEXCOM_G4_NET_CLASSIC     -> SourceSensor.DEXCOM_G4_NET_CLASSIC
         GlucoseValue.SourceSensor.DEXCOM_G5_XDRIP           -> SourceSensor.DEXCOM_G5_XDRIP
-        GlucoseValue.SourceSensor.DEXCOM_G6_NATIVE_XDRIP    -> SourceSensor.DEXCOM_G6_NATIVE_XDRIP
         GlucoseValue.SourceSensor.DEXCOM_G5_NATIVE_XDRIP    -> SourceSensor.DEXCOM_G5_NATIVE_XDRIP
-        GlucoseValue.SourceSensor.DEXCOM_G6_G5_NATIVE_XDRIP -> SourceSensor.DEXCOM_G6_G5_NATIVE_XDRIP
+        GlucoseValue.SourceSensor.DEXCOM_G6_NATIVE_XDRIP    -> SourceSensor.DEXCOM_G6_NATIVE_XDRIP
         GlucoseValue.SourceSensor.DEXCOM_G7_NATIVE_XDRIP    -> SourceSensor.DEXCOM_G7_NATIVE_XDRIP
         GlucoseValue.SourceSensor.LIBRE_1_OTHER             -> SourceSensor.LIBRE_1_OTHER
         GlucoseValue.SourceSensor.LIBRE_1_NET               -> SourceSensor.LIBRE_1_NET
@@ -63,9 +62,8 @@ fun SourceSensor.toDb(): GlucoseValue.SourceSensor =
         SourceSensor.DEXCOM_G4_NET_XBRIDGE     -> GlucoseValue.SourceSensor.DEXCOM_G4_NET_XBRIDGE
         SourceSensor.DEXCOM_G4_NET_CLASSIC     -> GlucoseValue.SourceSensor.DEXCOM_G4_NET_CLASSIC
         SourceSensor.DEXCOM_G5_XDRIP           -> GlucoseValue.SourceSensor.DEXCOM_G5_XDRIP
-        SourceSensor.DEXCOM_G6_NATIVE_XDRIP    -> GlucoseValue.SourceSensor.DEXCOM_G6_NATIVE_XDRIP
         SourceSensor.DEXCOM_G5_NATIVE_XDRIP    -> GlucoseValue.SourceSensor.DEXCOM_G5_NATIVE_XDRIP
-        SourceSensor.DEXCOM_G6_G5_NATIVE_XDRIP -> GlucoseValue.SourceSensor.DEXCOM_G6_G5_NATIVE_XDRIP
+        SourceSensor.DEXCOM_G6_NATIVE_XDRIP    -> GlucoseValue.SourceSensor.DEXCOM_G6_NATIVE_XDRIP
         SourceSensor.DEXCOM_G7_NATIVE_XDRIP    -> GlucoseValue.SourceSensor.DEXCOM_G7_NATIVE_XDRIP
         SourceSensor.LIBRE_1_OTHER             -> GlucoseValue.SourceSensor.LIBRE_1_OTHER
         SourceSensor.LIBRE_1_NET               -> GlucoseValue.SourceSensor.LIBRE_1_NET
