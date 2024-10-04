@@ -39,6 +39,7 @@ enum class StringKey(
     AutomationLocation("location", "PASSIVE", hideParentScreenIfHidden = true),
 
     SmsAllowedNumbers("smscommunicator_allowednumbers", ""),
+    SmsReveiverNumber("sms_communicator_reveiver_number", ""),
     SmsOtpPassword("smscommunicator_otp_password", "", dependency = BooleanKey.SmsAllowRemoteCommands),
 
     VirtualPumpType("virtualpump_type", "Generic AAPS"),

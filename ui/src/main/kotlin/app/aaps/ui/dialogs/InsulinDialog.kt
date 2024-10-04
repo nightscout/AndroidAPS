@@ -205,7 +205,9 @@ class InsulinDialog : DialogFragmentWithDate() {
                 rh.gs(app.aaps.core.ui.R.string.bolus) + ": " + decimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump.pumpDescription.bolusStep)
                     .formatColor(context, rh, app.aaps.core.ui.R.attr.bolusColor)
             )
-            if (recordOnlyChecked)
+            if(1)
+                actions.add(rh.gs(app.aaps.core.ui.R.string.sms_bolus + "insulinDialog.kt").formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
+            else if (recordOnlyChecked)
                 actions.add(rh.gs(app.aaps.core.ui.R.string.bolus_recorded_only).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
             if (abs(insulinAfterConstraints - insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
                 actions.add(
