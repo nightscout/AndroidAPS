@@ -7,7 +7,7 @@
     <string name="objectivenotfinished">目標 %1$d 未完成</string>
     <string name="objectives_0_objective">設置可視化和監控，分析基礎速率和比率</string>
     <string name="objectives_0_gate">驗證在Nightscout中可用的血糖資料，並上傳幫浦胰島素資料</string>
-    <string name="objectives_0_learned">您已完成AAPS生態系統的基本設置。Nightscout對於AAPS運行不是必需的，但對於報告或監控其他患者非常有用。如果您僅使用Nightscout來為自己報告，則不必一直連線到NS。您可以設置僅在家庭WiFi上傳，節省電池。</string>
+    <string name="objectives_0_learned">您已完成AAPS生態系統的基本設置。Nightscout對於AAPS運作雖然不是必需的，但對於產生報告或監控其他患者非常有用。如果您僅使用Nightscout來為自己產生報告，可以不必一直連線到NS。您可以設置僅在家庭WiFi上傳，以節省電池用量。</string>
     <string name="objectives_openloop_objective">開環模式啟動</string>
     <string name="objectives_openloop_gate">在開環模式下運行幾天，手動執行多次臨時基礎速率。設置和使用臨時和預設臨時目標（例如，活動或低血糖治療碳水化合物）</string>
     <string name="objectives_openloop_learned">如果您沒有相容的幫浦或者尚未準備好閉環，開環模式裡面有一些建議可以使用。</string>
@@ -16,11 +16,11 @@
     <string name="objectives_maxbasal">執行動作以滿足建議</string>
     <string name="objectives_maxbasal_learned">注意安全功能，必要時調整安全參數。</string>
     <string name="objectives_maxiobzero_objective">開始關閉循環，並啟用低血糖暫停功能</string>
-    <string name="objectives_maxiobzero_gate">在最大IOB=0的情況下運行閉環幾天，而不會有太多低血糖事件。在簡單模式下，這個值根據Wiki中的建議計算，不需要設置。</string>
+    <string name="objectives_maxiobzero_gate">在最大IOB=0的情況下運行閉環幾天，確保沒有太多低血糖發生。在簡單模式下，這個值根據Wiki中的建議計算，不需要設置。</string>
     <string name="objectives_maxiobzero_learned">將MaxIOB設置為零可防止低血糖，且不會增加超過基礎速率的胰島素（除非IOB為負）。</string>
     <string name="objectives_maxiob_objective">調整閉環，將最大IOB提高到0以上，並逐步降低血糖目標</string>
     <string name="objectives_maxiob_gate">運行幾天，並至少一晚沒有低血糖警報，然後再降低血糖目標</string>
-    <string name="objectives_maxiob_learned">隨著孩子的成長，更新MaxIOB。不允許系統給您超過食物能覆蓋的胰島素，設置過高的值不是一件好事。</string>
+    <string name="objectives_maxiob_learned">隨著孩子的成長，更新MaxIOB。防止系統給您超過食物能覆蓋的胰島素，設置過高的值不是一件好事。</string>
     <string name="objectives_autosens_objective">如有需要，調整基礎速率和比率，然後啟用自動感應</string>
     <string name="objectives_autosens_gate">成功進行一周的白天循環，並定期輸入碳水化合物。在簡單模式下，自動感應預設啟用。</string>
     <string name="objectives_autosens_learned">如果您的自動感應結果未在100%上下波動，您的設定檔可能是錯誤的。</string>
