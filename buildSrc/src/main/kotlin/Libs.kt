@@ -138,7 +138,7 @@ object Libs {
 
     object Logging {
 
-        const val slf4jApi = "org.slf4j:slf4j-api:2.0.7"
+        const val slf4jApi = "org.slf4j:slf4j-api:2.0.16"
         const val logbackAndroid = "com.github.tony19:logback-android:3.0.0"
     }
 
