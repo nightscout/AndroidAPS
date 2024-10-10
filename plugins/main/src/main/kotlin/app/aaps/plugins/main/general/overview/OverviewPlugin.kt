@@ -45,6 +45,7 @@ import app.aaps.core.validators.preferences.AdaptiveClickPreference
 import app.aaps.core.validators.preferences.AdaptiveDoublePreference
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
 import app.aaps.core.validators.preferences.AdaptiveIntentPreference
+import app.aaps.core.validators.preferences.AdaptiveStringPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.core.validators.preferences.AdaptiveUnitPreference
 import app.aaps.plugins.main.R
@@ -286,7 +287,9 @@ class OverviewPlugin @Inject constructor(
                                                       }))
             })
             addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewBolusPercentage, dialogMessage = R.string.deliverpartofboluswizard, title = app.aaps.core.ui.R.string.partialboluswizard))
-            addPreference(AdaptiveIntPreference(ctx = context, intKey = StringKey.SmsReveiverNumber, dialogMessage = R.string.sms_receiver_number_dialog, title = app.aaps.core.ui.R.string.sms_receiver_number))
+            addPreference(AdaptiveStringPreference(ctx = context, stringKey = StringKey.SmsReceiverNumber, dialogMessage = R.string.sms_receiver_number_dialog, title = app.aaps.core.ui.R.string.sms_receiver_number))
+
+
             addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewResetBolusPercentageTime, dialogMessage = R.string.deliver_part_of_boluswizard_reset_time, title = app.aaps.core.ui.R.string.partialboluswizard_reset_time))
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.OverviewUseBolusAdvisor, summary = R.string.enable_bolus_advisor_summary, title = R.string.enable_bolus_advisor))
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.OverviewUseBolusReminder, summary = R.string.enablebolusreminder_summary, title = R.string.enablebolusreminder))

@@ -26,6 +26,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.SafeParse
+import app.aaps.core.keys.StringKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.formatColor
 import app.aaps.core.ui.dialogs.OKDialog
@@ -105,8 +106,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
         super.onViewCreated(view, savedInstanceState)
 
         if (config.NSCLIENT) {
-            binding.recordOnly.isChecked = true
-            binding.recordOnly.isEnabled = false
+            binding.recordOnly.isChecked = preferences.get(StringKey.SmsReceiverNumber).isNullOrBlank()
         }
         val maxCarbs = constraintChecker.getMaxCarbsAllowed().value().toDouble()
         val maxInsulin = constraintChecker.getMaxBolusAllowed().value()
@@ -141,6 +141,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
         val pumpDescription = activePlugin.activePump.pumpDescription
         val insulin = SafeParse.stringToDouble(binding.insulin.text)
         val carbs = SafeParse.stringToInt(binding.carbs.text)
+        val phoneNumber = preferences.get(StringKey.SmsReceiverNumber)
         val recordOnlyChecked = binding.recordOnly.isChecked
         val actions: LinkedList<String?> = LinkedList()
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(insulin, aapsLogger)).value()
@@ -154,8 +155,8 @@ class TreatmentDialog : DialogFragmentWithDate() {
                         app.aaps.core.ui.R.attr.bolusColor
                     )
             )
-            if(1)
-                actions.add(rh.gs(app.aaps.core.ui.R.string.sms_bolus + "treatmentDialog.kt").formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
+            if(true)
+                actions.add((rh.gs(app.aaps.core.ui.R.string.sms_bolus)+"treatmentDialog.kt").formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
             else if (recordOnlyChecked)
                 actions.add(rh.gs(app.aaps.core.ui.R.string.bolus_recorded_only).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
             if (abs(insulinAfterConstraints - insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))

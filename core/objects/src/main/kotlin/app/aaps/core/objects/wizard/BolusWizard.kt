@@ -372,8 +372,8 @@ class BolusWizard @Inject constructor(
             )
         if (config.NSCLIENT && insulinAfterConstraints > 0)
             // TODO: check phone number
-            if(1)
-                actions.add(rh.gs(app.aaps.core.ui.R.string.sms_bolus + "bolusWizard.kt").formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
+            if(true)
+                actions.add((rh.gs(app.aaps.core.ui.R.string.sms_bolus)+"bolusWizard.kt").formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
             else
                 actions.add(rh.gs(app.aaps.core.ui.R.string.bolus_recorded_only).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
         if (useAlarm && !advisor && carbs > 0 && carbTime > 0)
