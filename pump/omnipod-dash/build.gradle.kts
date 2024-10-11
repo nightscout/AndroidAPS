@@ -2,6 +2,7 @@ plugins {
     id("com.android.library")
     id("kotlin-android")
     id("kotlin-kapt")
+    id("com.google.devtools.ksp")
     id("android-module-dependencies")
     id("test-module-dependencies")
     id("jacoco-module-dependencies")
@@ -11,11 +12,9 @@ android {
 
     namespace = "info.nightscout.androidaps.plugins.pump.omnipod.dash"
     defaultConfig {
-        kapt {
-            arguments {
-                arg("room.incremental", "true")
-                arg("room.schemaLocation", "$projectDir/schemas")
-            }
+        ksp {
+            arg("room.incremental", "true")
+            arg("room.schemaLocation", "$projectDir/schemas")
         }
     }
 }
@@ -40,7 +39,7 @@ dependencies {
     testImplementation(project(":shared:tests"))
     testImplementation(Libs.commonCodecs)
 
-    kapt(Libs.Dagger.compiler)
-    kapt(Libs.Dagger.androidProcessor)
-    kapt(Libs.AndroidX.Room.compiler)
+    ksp(Libs.Dagger.compiler)
+    ksp(Libs.Dagger.androidProcessor)
+    ksp(Libs.AndroidX.Room.compiler)
 }

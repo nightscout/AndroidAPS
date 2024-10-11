@@ -6,6 +6,7 @@ plugins {
     id("com.android.application")
     id("kotlin-android")
     id("kotlin-kapt")
+    id("com.google.devtools.ksp")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
     id("android-app-dependencies")
@@ -221,13 +222,13 @@ dependencies {
     androidTestImplementation(Libs.jsonAssert)
 
 
-    kaptAndroidTest(Libs.Dagger.androidProcessor)
+    kspAndroidTest(Libs.Dagger.androidProcessor)
 
     /* Dagger2 - We are going to use dagger.android which includes
      * support for Activity and fragment injection so we need to include
      * the following dependencies */
-    kapt(Libs.Dagger.androidProcessor)
-    kapt(Libs.Dagger.compiler)
+    ksp(Libs.Dagger.androidProcessor)
+    ksp(Libs.Dagger.compiler)
 
     // MainApp
     api(Libs.Rx.rxDogTag)

@@ -3,7 +3,7 @@ object Libs {
 
     object Kotlin {
 
-        const val kotlin = "2.0.0"
+        const val kotlin = "2.0.21"
 
         const val stdlibJdk8 = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin"
         const val reflect = "org.jetbrains.kotlin:kotlin-reflect:$kotlin"
@@ -115,7 +115,7 @@ object Libs {
 
     object Dagger {
 
-        private const val version = "2.48.1"
+        private const val version = "2.52"
         const val dagger = "com.google.dagger:dagger:$version"
         const val android = "com.google.dagger:dagger-android:$version"
         const val androidProcessor = "com.google.dagger:dagger-android-processor:$version"
