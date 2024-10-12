@@ -37,4 +37,5 @@ interface PasswordCheck {
         context: Context, @StringRes labelId: Int, preference: String, @StringRes passwordExplanation: Int?,
         @StringRes passwordWarning: Int?, ok: ((String) -> Unit)?, cancel: (() -> Unit)? = null
     )
+
 }
