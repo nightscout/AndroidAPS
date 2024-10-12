@@ -3,6 +3,7 @@ package app.aaps.plugins.configuration.maintenance.formats
 import app.aaps.core.interfaces.maintenance.PrefMetadata
 import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
 import app.aaps.core.interfaces.maintenance.PrefsStatus
+import app.aaps.core.interfaces.protection.SecureEncrypt
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.storage.Storage
 import app.aaps.core.objects.crypto.CryptoUtil
@@ -33,8 +34,9 @@ class EncryptedPrefsFormat @Inject constructor(
     private var storage: Storage
 ) : PrefsFormat {
 
-    companion object {
+    @Inject lateinit var secureEncrypt: SecureEncrypt
 
+    companion object {
         private const val KEY_CONSCIENCE = "if you remove/change this, please make sure you know the consequences!"
         private val FORMAT_TEST_REGEX = Regex("(\"format\"\\s*:\\s*\"aaps_[^\"]*\")")
     }
@@ -87,7 +89,20 @@ class EncryptedPrefsFormat @Inject constructor(
             if (encrypted) {
                 val salt = cryptoUtil.mineSalt()
                 val rawContent = content.toString()
-                val contentAttempt = cryptoUtil.encrypt(masterPassword!!, salt, rawContent)
+                //val contentAttempt = cryptoUtil.encrypt(masterPassword!!, salt, rawContent)
+
+                var masterPasswordUnencrypted = masterPassword
+                if (secureEncrypt.isValidDataString(masterPassword)) {
+                    // Password contains valid data string so assuming this is a valid encrypted password
+                    val decryptionResult = secureEncrypt.decrypt(masterPassword!!)
+                    if (decryptionResult.isNotEmpty()) {
+                        // Password could be decrypted
+                        masterPasswordUnencrypted = decryptionResult
+                    }
+                }
+
+                val contentAttempt = cryptoUtil.encrypt(masterPasswordUnencrypted!!, salt, rawContent)
+
                 if (contentAttempt != null) {
                     encodedContent = contentAttempt
                     security.put("algorithm", "v1")

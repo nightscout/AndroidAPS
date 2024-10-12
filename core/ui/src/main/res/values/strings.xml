@@ -89,6 +89,7 @@
     <string name="removerecord">Remove record</string>
     <string name="loopisdisabled">Loop is disabled</string>
     <string name="alarm">Alarm</string>
+    <string name="exportsettings">Export Settings</string>
     <string name="disableloop">Disable loop</string>
     <string name="enableloop">Enable loop</string>
     <string name="resumeloop">Resume loop</string>
@@ -536,6 +537,13 @@
 
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">You will be asked for master password, which is needed to decrypt imported preferences.</string>
+
+    <!-- <unattende_export> -->
+    <string name="export_ok">OK</string>
+    <string name="export_warning">Warning</string>
+    <string name="export_expired">Expired</string>
+    <string name="export_disabled">Disabled</string>
+    <string name="export_failed">Failed</string>
 
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">decrement %1$s by %2$s</string>
