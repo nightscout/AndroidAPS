@@ -36,4 +36,6 @@
     <string name="dexcom_log_ns_sensor_change_title">Καταγραφή αλλαγής αισθητήρα σε NS</string>
     <string name="dexcom_log_ns_sensor_change_summary">Δημιουργία συμβάντος \"Αλλαγή αισθητήρα\" στο NS αυτόματα κατά την έναρξη του αισθητήρα</string>
     <string name="direction">κατεύθυνση</string>
+    <!-- Patched Ottai App -->
+    <!-- Patched Syai Tag App -->
 </resources>

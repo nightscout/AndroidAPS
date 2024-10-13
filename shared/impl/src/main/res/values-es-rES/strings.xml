@@ -17,6 +17,7 @@
     <string name="cwf_comment_rig_battery">Batería global del lazo (%)</string>
     <string name="cwf_comment_basalRate">Tasa Basal</string>
     <string name="cwf_comment_bgi">Valor BGI</string>
+    <string name="cwf_comment_status">Estado de síntesis</string>
     <string name="cwf_comment_time">Tiempo (HH:MM o HH:MM:SS)</string>
     <string name="cwf_comment_hour">Hora (HH)</string>
     <string name="cwf_comment_minute">Minuto (MM)</string>

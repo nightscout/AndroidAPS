@@ -136,6 +136,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
             .shortName(R.string.omnipod_dash_name_short)
             .preferencesId(R.xml.omnipod_dash_preferences)
             .description(R.string.omnipod_dash_pump_description)
+
+        private val pumpDescription = PumpDescription().fillFor(PumpType.OMNIPOD_DASH)
     }
 
     init {
@@ -1029,7 +1031,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         return pumpJson
     }
 
-    override val pumpDescription: PumpDescription = PumpDescription().fillFor(PumpType.OMNIPOD_DASH)
+    override val pumpDescription: PumpDescription = Companion.pumpDescription
 
     override fun manufacturer(): ManufacturerType {
         return ManufacturerType.Insulet

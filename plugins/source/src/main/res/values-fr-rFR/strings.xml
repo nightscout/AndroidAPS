@@ -37,4 +37,6 @@
     <string name="dexcom_log_ns_sensor_change_summary">Créer automatiquement un événement \"Changement de capteur\" dans NS au démarrage du capteur</string>
     <string name="direction">direction</string>
     <string name="bg_generation_interval_minutes">Interval de temps entre les glycémies (min)</string>
+    <!-- Patched Ottai App -->
+    <!-- Patched Syai Tag App -->
 </resources>

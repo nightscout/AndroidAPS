@@ -20,4 +20,6 @@
     <string name="aidex_short">Aidex动泰</string>
     <string name="description_source_aidex">从GlucoRx Aidex动泰持续葡萄糖监测系统接收血糖值。</string>
     <string name="bgsource_upload">血糖上传设置</string>
+    <!-- Patched Ottai App -->
+    <!-- Patched Syai Tag App -->
 </resources>

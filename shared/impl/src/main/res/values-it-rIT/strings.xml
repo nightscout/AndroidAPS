@@ -17,6 +17,7 @@
     <string name="cwf_comment_rig_battery">Batteria globale loop (%)</string>
     <string name="cwf_comment_basalRate">Velocità basale</string>
     <string name="cwf_comment_bgi">Valore BGI</string>
+    <string name="cwf_comment_status">Sintesi dello stato</string>
     <string name="cwf_comment_time">Tempo (HH:MM o HH:MM:SS)</string>
     <string name="cwf_comment_hour">Ora (HH)</string>
     <string name="cwf_comment_minute">Minuto (MM)</string>

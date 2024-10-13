@@ -36,4 +36,6 @@
     <string name="dexcom_log_ns_sensor_change_title">Registruoti sensoriaus keitimą NS</string>
     <string name="dexcom_log_ns_sensor_change_summary">Sukurti įvykį \"Sensoriaus keitimas\" NS automatiškai, startavus sensorių</string>
     <string name="direction">kryptis</string>
+    <!-- Patched Ottai App -->
+    <!-- Patched Syai Tag App -->
 </resources>

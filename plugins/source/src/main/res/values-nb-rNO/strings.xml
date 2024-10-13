@@ -37,4 +37,10 @@
     <string name="dexcom_log_ns_sensor_change_summary">Opprett hendelse \"Sensorbytte\" automatisk i NS ved start av sensoren</string>
     <string name="direction">retning</string>
     <string name="bg_generation_interval_minutes">BS-genereringsintervall i minutter</string>
+    <!-- Patched Ottai App -->
+    <string name="ottai_app">Ottai</string>
+    <string name="description_source_patched_ottai_app">Motta glukosedata fra appen Ottai.</string>
+    <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai Tag</string>
+    <string name="description_source_patched_syai_tag_app">Motta glukosedata fra appen Syai Tag.</string>
 </resources>

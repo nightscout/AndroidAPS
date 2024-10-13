@@ -53,6 +53,10 @@
     <string name="pref_3_hours">3 hodiny</string>
     <string name="pref_4_hours">4 hodiny</string>
     <string name="pref_5_hours">5 hodín</string>
+    <string name="pref_1_min">vypnuté</string>
+    <string name="pref_5_min">5 min</string>
+    <string name="pref_10_min">10 min</string>
+    <string name="pref_15_min">15 min</string>
     <string name="pref_input_design">Vložte dizajn</string>
     <string name="pref_default">Štandardný</string>
     <string name="pref_quick_righty">Rýchlo vpravo</string>
@@ -204,6 +208,7 @@
     <string name="old_warning">!starý!</string>
     <string name="error">!chyba!</string>
     <string name="pref_heartRateSampling">Tepová frekvencia</string>
+    <string name="pref_heartRateSmoothing">Vyhladzovanie HR</string>
     <string name="pref_stepsSampling">Povoliť počítanie krokov</string>
     <string name="tile_tempt_1">Dočasný cieľ 1</string>
     <string name="tile_tempt_2">Dočasný cieľ 2</string>
@@ -217,4 +222,14 @@
     <string name="datalayer_notification_text">AAPS pracuje v popredí. Ak chcete skryť oznámenia, prejdite do Vývojárskych nastavení, Oznámenia aplikácií, Povolené aplikácie v hodinkách, vyberte AAPS, vypnite oznámenia o dátovej vrstve v popredí.</string>
     <string name="on">ZAP</string>
     <string name="off">VYP</string>
+    <string name="complication_full_status">Kompletný stav</string>
+    <string name="complication_full_status_flipped">Kompletní stav (opačne)</string>
+    <string name="complication_blood_glucose">Glykémia</string>
+    <string name="complication_br_cob_iob">Bazál, COB &amp; IOB</string>
+    <string name="complication_cob_iob">COB &amp; IOB</string>
+    <string name="complication_cob_icon">Ikona COB</string>
+    <string name="complication_cob_detailed">Detailný COB</string>
+    <string name="complication_iob_icon">Ikona IOB</string>
+    <string name="complication_iob_detailed">Detailný IOB</string>
+    <string name="complication_uploader_phone_battery">Batéria telefónu/uploadera</string>
 </resources>

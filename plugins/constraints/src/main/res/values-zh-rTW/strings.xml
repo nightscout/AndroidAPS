@@ -39,12 +39,12 @@
     <string name="not_completed_yet">尚未完成</string>
     <string name="time_elapsed">已過時間</string>
     <string name="maxiobset">最大IOB設置正確</string>
-    <string name="hasbgdata">從選定源可獲取血糖</string>
+    <string name="hasbgdata">從選定的來源可獲取血糖</string>
     <string name="synchaswritepermission">同步服務具有寫入權限</string>
     <string name="loopenabled">循環已啟用</string>
     <string name="apsselected">已選擇APS</string>
     <string name="closedmodeenabled">閉環模式已啟用</string>
-    <string name="objectives_shortname">OBJ</string>
+    <string name="objectives_shortname">目標</string>
     <string name="description_objectives">學習計劃</string>
     <string name="doyouwantresetstart">您想要重置目標開始嗎？您可能會失去進度。</string>
     <string name="objectives_next_button">下一步</string>

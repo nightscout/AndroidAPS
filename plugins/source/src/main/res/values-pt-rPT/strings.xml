@@ -18,4 +18,6 @@
     <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">Receber valores de Glicose da app Tomato (dispositivo MiaoMiao)</string>
     <string name="bgsource_upload">Definições de Envio da Glicose</string>
+    <!-- Patched Ottai App -->
+    <!-- Patched Syai Tag App -->
 </resources>

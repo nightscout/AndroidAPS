@@ -40,7 +40,7 @@
     <string name="ue_export_to_csv">匯出使用者輸入到 Excel (csv)</string>
     <string name="confirm">確認</string>
     <string name="pump">幫浦</string>
-    <string name="missed_bg_readings">遺失的血糖讀數</string>
+    <string name="missed_bg_readings">遺失血糖讀數</string>
     <string name="treatments_iob_label_string">IOB：</string>
     <string name="mute5min">靜音 5 分鐘</string>
     <string name="mute">靜音</string>
@@ -159,7 +159,7 @@
     <string name="stoptemptarget">停止臨時目標</string>
     <string name="closedloop">閉環</string>
     <string name="openloop">開環</string>
-    <string name="lowglucosesuspend">低血糖暫停</string>
+    <string name="lowglucosesuspend">低血糖暫停(LGS)</string>
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
@@ -432,7 +432,7 @@
     <string name="wizard_no_insulin_required">不需要胰島素！</string>
     <string name="wizard_no_actual_bg">沒有最近的血糖值可用於計算！</string>
     <string name="wizard_no_active_profile">未設置活動設定檔！</string>
-    <string name="wizard_no_cob">未知的 COB！血糖讀數丟失或最近的應用程式重啟？</string>
+    <string name="wizard_no_cob">未知的 COB！缺少血糖讀數或最近的應用程式重啟？</string>
     <string name="wizard_carbs_constraint">碳水化合物限制違規！</string>
     <string name="wizard_explain_calc">計算（IC：%1$.1f，ISF：%2$.1f）</string>
     <string name="wizard_explain_carbs">碳水化合物：%1$.2fU</string>

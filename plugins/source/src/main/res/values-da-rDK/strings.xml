@@ -36,4 +36,6 @@
     <string name="dexcom_log_ns_sensor_change_title">Log sensorændring til NS</string>
     <string name="dexcom_log_ns_sensor_change_summary">Opret begivenhed \"Sensorskift\" i NS automatisk ved start af sensor</string>
     <string name="direction">retning</string>
+    <!-- Patched Ottai App -->
+    <!-- Patched Syai Tag App -->
 </resources>

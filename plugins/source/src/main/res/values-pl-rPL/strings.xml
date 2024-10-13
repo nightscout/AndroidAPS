@@ -36,4 +36,6 @@
     <string name="dexcom_log_ns_sensor_change_title">Zapisz zmianę sensora w dzienniku NS</string>
     <string name="dexcom_log_ns_sensor_change_summary">Automatycznie utwórz zdarzenie \"Zmiana Sensora\" w Nightscout przy uruchomieniu sensora</string>
     <string name="direction">kierunek</string>
+    <!-- Patched Ottai App -->
+    <!-- Patched Syai Tag App -->
 </resources>

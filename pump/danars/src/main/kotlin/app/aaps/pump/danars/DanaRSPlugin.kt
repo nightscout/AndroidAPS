@@ -129,7 +129,8 @@ class DanaRSPlugin @Inject constructor(
         preferences.registerPreferences(DanaLongKey::class.java)
     }
 
-    override val pumpDescription = PumpDescription().fillFor(danaPump.pumpType())
+    override val pumpDescription
+        get() = PumpDescription().fillFor(danaPump.pumpType())
 
     override fun updatePreferenceSummary(pref: Preference) {
         super.updatePreferenceSummary(pref)

@@ -17,6 +17,7 @@
     <string name="cwf_comment_rig_battery">Batéria uzavretého okruhu (%)</string>
     <string name="cwf_comment_basalRate">Bazálna dávka</string>
     <string name="cwf_comment_bgi">Hodnota BGI</string>
+    <string name="cwf_comment_status">Stav syntézie</string>
     <string name="cwf_comment_time">Čas (HH:MM alebo HH:MM:SS)</string>
     <string name="cwf_comment_hour">Hodiny (HH)</string>
     <string name="cwf_comment_minute">Minúty (MM)</string>

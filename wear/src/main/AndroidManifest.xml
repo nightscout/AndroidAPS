@@ -30,28 +30,6 @@
             android:value="@integer/google_play_services_version" />
 
         <service
-            android:name=".watchfaces.BigChartWatchface"
-            android:allowEmbedded="true"
-            android:exported="false"
-            android:label="@string/label_watchface_big_chart"
-            android:permission="android.permission.BIND_WALLPAPER">
-            <meta-data
-                android:name="android.service.wallpaper"
-                android:resource="@xml/watch_face" />
-            <meta-data
-                android:name="com.google.android.wearable.watchface.preview"
-                android:resource="@drawable/watchface_bigchart" />
-            <meta-data
-                android:name="com.google.android.wearable.watchface.wearableConfigurationAction"
-                android:value="watch_face_configuration_bigchart" />
-
-            <intent-filter>
-                <action android:name="android.service.wallpaper.WallpaperService" />
-                <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
-            </intent-filter>
-        </service>
-
-        <service
             android:name=".watchfaces.AapsLargeWatchface"
             android:allowEmbedded="true"
             android:exported="false"
@@ -544,7 +522,6 @@
             android:exported="true">
             <intent-filter>
                 <!-- action-name must be equal with name of xml-resource where the configuration is describe -->
-                <action android:name="watch_face_configuration_bigchart" />
                 <action android:name="watch_face_configuration_circle" />
                 <action android:name="watch_face_configuration_custom" />
                 <action android:name="watch_face_configuration_digitalstyle" />

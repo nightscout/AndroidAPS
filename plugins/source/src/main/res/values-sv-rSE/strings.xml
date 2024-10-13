@@ -37,4 +37,6 @@ Eversense-appen.</string>
     <string name="dexcom_log_ns_sensor_change_title">Logga sensorbyte till Nightscout</string>
     <string name="dexcom_log_ns_sensor_change_summary">Logga automatiskt ett sensorbyte i NS när en sensor startas</string>
     <string name="direction">riktning</string>
+    <!-- Patched Ottai App -->
+    <!-- Patched Syai Tag App -->
 </resources>

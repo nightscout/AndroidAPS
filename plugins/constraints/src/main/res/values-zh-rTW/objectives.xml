@@ -9,7 +9,7 @@
     <string name="objectives_0_gate">驗證在Nightscout中可用的血糖資料，並上傳幫浦胰島素資料</string>
     <string name="objectives_0_learned">您已完成AAPS生態系統的基本設置。Nightscout對於AAPS運行不是必需的，但對於報告或監控其他患者非常有用。如果您僅使用Nightscout來為自己報告，則不必一直連線到NS。您可以設置僅在家庭WiFi上傳，節省電池。</string>
     <string name="objectives_openloop_objective">開環模式啟動</string>
-    <string name="objectives_openloop_gate">在開環模式下運行幾天，手動執行許多臨時基礎速率。設置和使用臨時和預設臨時目標（例如，活動或低血糖治療碳水化合物）</string>
+    <string name="objectives_openloop_gate">在開環模式下運行幾天，手動執行多次臨時基礎速率。設置和使用臨時和預設臨時目標（例如，活動或低血糖治療碳水化合物）</string>
     <string name="objectives_openloop_learned">如果您沒有相容的幫浦或者尚未準備好閉環，開環模式裡面有一些建議可以使用。</string>
     <string name="objectives_maxbasal_objective">了解您的開環，包括其臨時基礎速率建議</string>
     <string name="objectives_maxbasal_gate">根據經驗，決定應設置的最大基礎速率，並在幫浦和偏好設定中設置。在簡單模式下，這個值根據Wiki中的建議計算，不需要設置。</string>
@@ -28,7 +28,7 @@
     <string name="objectives_smb_gate">您必須閱讀Wiki並提高MaxIOB以使SMB正常工作！一個好的開始是MaxIOB=平均餐前注射+3倍的每日最大基礎速率。在簡單模式下，這個值根據Wiki中的建議計算，不需要設置。</string>
     <string name="objectives_smb_learned">使用 SMB 是你的目標，Oref1 演算法也是為了幫助你進行注射設計的。你不應該為食物注射全部的劑量，只要打一部分，剩下的由 AAPS 來補足。這樣可以留出更多空間，避免碳水估算錯誤。另外，你知道嗎？你可以設定注射計算器的百分比，來減少注射的劑量。</string>
     <string name="objectives_auto_objective">啟用自動化</string>
-    <string name="objectives_auto_gate">閱讀有關自動化如何工作的文檔。設置您的第一個簡單規則。讓AAPS僅顯示通知而不是行動。當您確定自動化在正確的時間觸發時，用實際行動替換通知。(https://wiki.aaps.app/en/latest/Usage/Automation.html)</string>
+    <string name="objectives_auto_gate">閱讀有關自動化如何工作的文檔。設置您的第一個簡單規則。讓AAPS僅顯示通知而不是動作。當您確定自動化在正確的時間觸發時，用實際動作替換通知。(https://wiki.aaps.app/en/latest/Usage/Automation.html)</string>
     <string name="objectives_auto_learned">自動化可以是好的僕人，但壞的主人。不要過度使用它。不要試圖替代基本算法。使用僅訊息測試規則，然後再使用它。這取決於順序。</string>
     <string name="objectives_bgavailableinns">血糖在Nightscout或Tidepool中可用</string>
     <string name="objectives_pumpstatusavailableinns">幫浦狀態在Nightscout或Tidepool中可用</string>
@@ -37,12 +37,12 @@
     <string name="objectives_usage_objective">學習如何控制AAPS</string>
     <string name="objectives_usage_gate">在AAPS中執行不同操作</string>
     <string name="objectives_usage_learned">您已學會處理AAPS的基本操作。主控件在首頁總覽螢幕上可通過點擊或長按查看，更多控件在操作螢幕上。您應該知道如何將外掛螢幕放到頂部可滾動選單，或讓它顯示在左上角的已啟用外掛列表中。</string>
-    <string name="objectives_useprofileswitch">將個人配置檔設為90%持續10分鐘 (長按首頁首頁總覽左上角的配置檔名稱)</string>
+    <string name="objectives_useprofileswitch">將個人配置檔設為90%持續10分鐘 (長按首頁總覽左上角的配置檔名稱)</string>
     <string name="objectives_usedisconnectpump">模擬淋浴。中斷幫浦連線1小時（長按開環）</string>
     <string name="objectives_usereconnectpump">... 並以同樣方式重新連線</string>
     <string name="objectives_usetemptarget">建立持續10分鐘的自定義臨時目標（長按當前目標）</string>
-    <string name="objectives_useactions">在組態建置工具中啟用動作外掛，使其可見並顯示其內容在頂部選單</string>
-    <string name="objectives_useloop">顯示循環外掛的內容</string>
+    <string name="objectives_useactions">在組態建置工具中勾選啟用外掛，讓他可以顯示頁籤在頂部選單</string>
+    <string name="objectives_useloop">在組態設定工具中勾選循環，顯示循環外掛的內容</string>
     <string name="objectives_usescale">通過長按血糖圖使用縮放功能</string>
     <string name="objectives_exam_objective">證明您的知識</string>
     <string name="objectives_exam_gate">研究問題。每個問題有四個可能的答案。可能有不止一個正確答案。請檢查所有正確的並選擇驗證。</string>
@@ -58,7 +58,7 @@
     <string name="objectives_exam_learned_profileswitch4">編輯設定檔本身不足以進行更改。您仍然需要進行設定檔切換以啟用更改。</string>
     <string name="objectives_exam_learned_exercise">您應該在運動開始前至少1小時減少體內的胰島素量，選擇低於100%的設定檔。</string>
     <string name="objectives_exam_learned_exercise2">在運動前至少1小時設置更高的臨時目標有助於減少體內的胰島素量。</string>
-    <string name="objectives_exam_learned_noisycgm">當您無法信任CGM值時，不應無人值守使用循環。</string>
+    <string name="objectives_exam_learned_noisycgm">當您無法信任CGM值時，不應該在無人看守時使用循環。</string>
     <string name="objectives_exam_learned_pumpdisconnect">AAPS必須知道幫浦未連線以正確計算IOB。</string>
     <string name="objectives_exam_learned_insulin">知道幫浦中使用的是哪種胰島素是必要的，因為這會影響IOB計算。</string>
     <string name="objectives_exam_learned_sensitivity">敏感性檢測是算法的一部分，允許胰島素劑量適應不同情況。</string>
@@ -68,7 +68,7 @@
     <string name="objectives_exam_learned_iob">如果您分析AAPS是否對您有效，觀看IOB圖表可以給您很多有用的訊息。</string>
     <string name="objectives_exam_learned_cob">COB計算取決於ISF和IC之間的關係。增加ISF或減少IC會導致吸收時間變長。但設定檔切換中的百分比同時改變兩個值，吸收時間不受影響。</string>
     <string name="objectives_exam_learned_breadgrams">僅允許使用克作為碳水化合物輸入單位。</string>
-    <string name="objectives_exam_learned_ecarbs">E-碳水化合物是幫浦世界中延長注射的替代品。</string>
+    <string name="objectives_exam_learned_ecarbs">延長碳水化合物是幫浦世界中延長注射的替代品。</string>
     <string name="objectives_exam_learned_nsclient">遠端監控和控制是可能的，但不是所有功能都必須遠端可用。</string>
     <string name="answerdisabledto">回答停用至：%1$s</string>
     <string name="wronganswer">答案錯誤！</string>

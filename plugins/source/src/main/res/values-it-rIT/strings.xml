@@ -37,4 +37,8 @@
     <string name="dexcom_log_ns_sensor_change_summary">Crea evento \"Cambio Sensore\" in NS all\'avvio del sensore</string>
     <string name="direction">direzione</string>
     <string name="bg_generation_interval_minutes">Minuti intervallo generazione glicemia</string>
+    <!-- Patched Ottai App -->
+    <string name="ottai_app">Ottai</string>
+    <string name="description_source_patched_ottai_app">Ricevi dati di glucosio dall\'app Ottai.</string>
+    <!-- Patched Syai Tag App -->
 </resources>

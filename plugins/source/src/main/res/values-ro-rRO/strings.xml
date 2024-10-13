@@ -36,4 +36,6 @@
     <string name="dexcom_log_ns_sensor_change_title">Înregistrează schimbarea senzorului în NS</string>
     <string name="dexcom_log_ns_sensor_change_summary">Crează eveniment ”Schimbare Senzor” în NS la pornirea senzorului</string>
     <string name="direction">direcție</string>
+    <!-- Patched Ottai App -->
+    <!-- Patched Syai Tag App -->
 </resources>
