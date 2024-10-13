@@ -188,7 +188,7 @@
 
     <!--    autoISF -->
     <string name="half_basal_exercise_target_title">Half basal exercise target</string>
-    <string name="half_basal_exercise_target_summary" formatted="false">Set to a number, e.g. 160, which means when temp target is 160 mg/dL and High temptarget raises sensitivity=true, run 50% basal at this level (120 = 75%; 140 = 60%).</string>
+    <string name="half_basal_exercise_target_summary">Set to a number, e.g. 160, which means when temp target is 160 mg/dL and High temptarget raises sensitivity=true, run 50%% basal at this level (120 = 75%%; 140 = 60%%).</string>
     <string name="autoISF_settings_title">AutoISF settings</string>
     <string name="autoISF_settings_summary">AutoISF allows to adapt the insulin sensitivity factor (ISF) in various scenarios of glucose behaviour\n\nIt can also adapt SMB delivery settings</string>
     <string name="acce_ISF_settings_title">acce_ISF settings</string>
@@ -197,7 +197,6 @@
     <string name="enableautoISFwithcob_summary">Enable dura_ISF when there is COB active</string>
     <string name="bg_ISF_settings_title">bg_ISF settings</string>
     <string name="bg_ISF_settings_summary">bg_ISF settings: ISF depending on blood glucose level according to a predefined polygon</string>
-    <string name="enable_postprandial_ISF_always_summary">Enable the postprandial ISF adaptation all the time regardless of when the last meal was taken.</string>
     <string name="pp_ISF_settings_title">pp_ISF settings</string>
     <string name="pp_ISF_settings_summary">pp_ISF settings: ISF for postprandial (after meal) glucose rise</string>
     <string name="dura_ISF_settings_title">dura_ISF settings</string>
@@ -209,14 +208,14 @@
     <string name="use_autoISF_extensions_title">Enable AutoISF extended functionalities</string>
     <string name="use_autoISF_extensions_summary">These include ISF modulation due to recent bg behaviour, alternative SMB enablers and support for Full Closed Loop</string>
     <string name="openapsama_enable_autoISF">Enable ISF adaptation by glucose behaviour</string>
-    <string name="openapsama_autoISF_max_summary">Default value: 1.0\nThis is a multiplier cap for autoISF to set a limit on how high the autoISF ratio can be, which in turn determines how low it can adjust ISF.\n\nWARNING: Be extremely careful when using values above 2.5</string>
-    <string name="openapsama_autoISF_min_summary">Default value: 1.0\nThis is a multiplier cap for autoISF to set a limit on how low the autoISF ratio can be, which in turn determines how high it can adjust ISF.</string>
-    <string name="openapsama_dura_ISF_weight_summary" formatted="false">Default value: 0.0\nThis is the rate at which autoISF grows per hour assuming bg is twice the target. With a value of 1.0 it will have reduced ISF to 50% after 1 hour of bg at twice the target.\n\nWith 0.0 the effect of autoISF is effectively disabled.</string>
-    <string name="openapsama_lower_ISFrange_weight_summary">Default value: 0.0\nThis is the weight applied to the polygon which adapts ISF if glucose is below target. \n\nWith 0.0 the effect is effectively disabled.</string>
-    <string name="openapsama_higher_ISFrange_weight_summary">Default value: 0.0\nThis is the weight applied to the polygon which adapts ISF if glucose is above target. \n\nWith 0.0 the effect is effectively disabled.</string>
-    <string name="openapsama_pp_ISF_weight_summary">Default value: 0.0\nThis is the weight applied to the linear slope while glucose rises and which adapts ISF. \n\nWith 0.0 this contribution is effectively disabled.</string>
-    <string name="openapsama_bgAccel_ISF_weight_summary">Default value: 0.0\nThis is the weight applied while glucose accelerates and which strengthens ISF. \n\nWith 0.0 this contribution is effectively disabled.</string>
-    <string name="openapsama_bgBrake_ISF_weight_summary">Default value: 0.0\nThis is the weight applied while glucose decelerates and which weakens ISF. \n\nWith 0.0 this contribution is effectively disabled.</string>
+    <string name="openapsama_autoISF_max_summary">Similar to autosens_max this defines how strong ISF can become.\n\nThe default value 1.0 effectively shuts off this effect.\n\nWARNING: Be extremely careful when using values above 2.5</string>
+    <string name="openapsama_autoISF_min_summary">Similar to autosens_min this defines how weak ISF can become.\n\nThe default value 1.0 effectively shuts off this effect.</string>
+    <string name="openapsama_dura_ISF_weight_summary">This is the weight applied during longer lasting, elevated glucose plateaus and which strengthens ISF thereby potentially increasing insulin delivery.\n\nThe default value 0.0 effectively shuts off this effect.</string>
+    <string name="openapsama_lower_ISFrange_weight_summary">This is the weight applied while glucose is below target and which weakens ISF thereby potentially reducing insulin delivery.\n\nThe default value 0.0 effectively shuts off this effect.</string>
+    <string name="openapsama_higher_ISFrange_weight_summary">This is the weight applied while glucose is above target and which strengthens ISF thereby potentially increasing insulin delivery.\n\nThe default value 0.0 effectively shuts off this effect.</string>
+    <string name="openapsama_pp_ISF_weight_summary">This is the weight applied while glucose is rising and which strengthens ISF thereby potentially increasing insulin delivery.\n\nThe default value 0.0 effectively shuts off this effect.</string>
+    <string name="openapsama_bgAccel_ISF_weight_summary">This is the weight applied while glucose accelerates and which strengthens ISF thereby potentially increasing insulin delivery.\n\nThe default value 0.0 effectively shuts off this effect.</string>
+    <string name="openapsama_bgBrake_ISF_weight_summary">This is the weight applied while glucose decelerates and which weakens ISF thereby potentially reducing insulin delivery.\n\nThe default value 0.0 effectively shuts off this effect.</string>
     <string name="openapsama_autoISF_max">Max autoISF ratio\n(autoISF_max)</string>
     <string name="openapsama_autoISF_min">Min autoISF ratio\n(autoISF_min)</string>
     <string name="openapsama_lower_ISFrange_weight">lower ISF-range weight\n(lower_ISFrange_weight)</string>
@@ -237,7 +236,7 @@
     <string name="openapsama_smb_max_range_extension_summary">Default value: 1 This is another key OpenAPS safety cap, and specifies by what factor you can exceed the regular 120 maxSMB/maxUAM minutes. Increase this experimental value slowly and with caution.</string>
     <string name="enableSMB_EvenOn_OddOff_always">Enable alternative activation of SMB depending on active target being even number</string>
     <string name="enableSMB_EvenOn_OddOff_always_summary">\nenabled ...\nif active target(mmol/L) has even decimal\nor active target(mg/dL) is even number\n\ndisabled otherwise</string>
-    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Default value: 100%\nWith 100% this feature is effectively disabled.</string>
-    <string name="openapsama_iob_threshold_percent">Percentage of maxIOB above which SMBs are disabled\n(iob_threshold_percent)</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Percentage of maxIOB above which SMBs are disabled.\nDefault value: 100%\nWith 100% this feature is effectively disabled.</string>
+    <string name="openapsama_iob_threshold_percent">maxIOB threshold percent for SMB\n(iob_threshold_percent)</string>
 
 </resources>
