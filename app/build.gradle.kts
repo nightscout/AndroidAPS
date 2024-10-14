@@ -166,8 +166,6 @@ allprojects {
 }
 
 dependencies {
-    wearApp(project(":wear"))
-
     // in order to use internet"s versions you"d need to enable Jetifier again
     // https://github.com/nightscout/graphview.git
     // https://github.com/nightscout/iconify.git
