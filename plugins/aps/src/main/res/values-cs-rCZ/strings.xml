@@ -168,7 +168,6 @@
     <string name="pump_disconnected">Pumpa odpojena</string>
     <!--    autoISF -->
     <string name="half_basal_exercise_target_title">Poloviční bazál při cíli Aktivita</string>
-    <string name="half_basal_exercise_target_summary" formatted="false">Nastaven na hodnotu, např. 160, což znamená, že je-li dočasný cíl 160 mg/dL (8,9 mmol) a možnost „Vysoký dočasný cíl zvyšuje senzititivu“ je povolená, spustí se při této hodnotě 50% bazál (120 = 75 %; 140 = 60 %).</string>
     <string name="autoISF_settings_title">Nastavení AutoISF</string>
     <string name="autoISF_settings_summary">AutoISF umožňuje upravit citlivost na inzulín (ISF) v různých scénářích chování glykémie.\n\nMůže také upravit nastavení SMB.</string>
     <string name="acce_ISF_settings_title">Nastavení acce_ISF</string>
@@ -177,7 +176,6 @@
     <string name="enableautoISFwithcob_summary">Povolit dura_ISF, když jsou aktivní COB</string>
     <string name="bg_ISF_settings_title">Nastavení bg_ISF</string>
     <string name="bg_ISF_settings_summary">Nastavení bg_ISF: ISF v závislosti na glykémii podle předem definovaného polygonu</string>
-    <string name="enable_postprandial_ISF_always_summary">Povolit postprandiální úpravu ISF vždy, bez ohledu na to, kdy bylo snědeno poslední jídlo.</string>
     <string name="pp_ISF_settings_title">Nastavení pp_ISF</string>
     <string name="pp_ISF_settings_summary">Nastavení pp_ISF: ISF pro postprandiální vzestup glykémie (po jídle)</string>
     <string name="dura_ISF_settings_title">Nastavení dura_ISF</string>
@@ -189,14 +187,6 @@
     <string name="use_autoISF_extensions_title">Povolit rozšířené funkce AutoISF</string>
     <string name="use_autoISF_extensions_summary">Patří sem úprava ISF s ohledem na nedávný vývoj glykémie, alternativní parametry pro aktivaci SMB a podpora Plně uzavřené smyčky</string>
     <string name="openapsama_enable_autoISF">Povolit úpravu ISF s ohledem na vývoj glykémie</string>
-    <string name="openapsama_autoISF_max_summary">Výchozí hodnota: 1.0\nToto je bezpečnostní nastavení pro autoISF a představuje limit pro maximální hodnotu autoISF, která určuje, jak nízkou hodnotu ISF lze nastavit.\n\VAROVÁNÍ: Buďte extrémně opatrní při používání hodnot nad 2.5.</string>
-    <string name="openapsama_autoISF_min_summary">Výchozí hodnota: 1.0\nToto je bezpečnostní nastavení pro autoISF a představuje limit pro to, nakolik lze snížit autoISF, což určuje také horní limit pro úpravu ISF.</string>
-    <string name="openapsama_dura_ISF_weight_summary" formatted="false">Výchozí hodnota: 0.0\nToto je rychlost, jakou autoISF roste za hodinu za předpokladu, že glykémie je dvakrát vyšší než cílová glykémie. Při hodnotě 1.0 sníží citlivost na 50 % po 1 hodině glykémie, která je dvojnásobkem cíle.\n\nPři hodnotě 0.0 je funkce autoISF zcela zakázána.</string>
-    <string name="openapsama_lower_ISFrange_weight_summary">Výchozí hodnota: 0.0\nToto je váha aplikovaná na polygon, který přizpůsobí ISF, pokud je glykémie nižší než cílová glykémie. \n\nPři hodnotě 0.0 je tato funkce zakázána.</string>
-    <string name="openapsama_higher_ISFrange_weight_summary">Výchozí hodnota: 0.0\nToto je váha aplikovaná na polygon, který přizpůsobí ISF, pokud je glykémie vyšší než cílová glykémie. \n\nPři hodnotě 0.0 je tato funkce zakázána.</string>
-    <string name="openapsama_pp_ISF_weight_summary">Výchozí hodnota: 0.0\nToto je váha aplikovaná na lineární sklon při vzestupu glykémie, který přizpůsobuje ISF. \n\nPři hodnotě 0.0 je tato funkce zakázána.</string>
-    <string name="openapsama_bgAccel_ISF_weight_summary">Výchozí hodnota: 0.0\nToto je váha aplikovaná v situaci, kdy glykémie akceleruje, a snižuje ISF. \n\nPři hodnotě 0.0 je tato funkce zakázána.</string>
-    <string name="openapsama_bgBrake_ISF_weight_summary">Výchozí hodnota: 0.0\nToto je váha aplikovaná v situaci, kdy glykémie zpomaluje, a zvyšuje ISF. \n\nPři hodnotě 0.0 je tato funkce zakázána.</string>
     <string name="openapsama_autoISF_max">Max. autoISF\n(autoISF_max)</string>
     <string name="openapsama_autoISF_min">Min. autoISF\n(autoISF_min)</string>
     <string name="openapsama_lower_ISFrange_weight">váha nižího rozsahu ISF\n(lower_ISFrange_weight)</string>
@@ -217,6 +207,4 @@
     <string name="openapsama_smb_max_range_extension_summary">Výchozí hodnota: 1 Toto je další bezpečnostní limit OpenAPS a specifikuje, nakolik můžete překročit standardní limit 120 minut pro maxSMB/maxUAM. Zvyšuje tuto experimentální hodnotu pomalu a opatrně.</string>
     <string name="enableSMB_EvenOn_OddOff_always">Povolit alternativní aktivaci SMB v závislosti na tom, zda je aktivní cíl sudé číslo</string>
     <string name="enableSMB_EvenOn_OddOff_always_summary">\npovoleno...\nmá-li aktivní cíl (mmol/L) sudé číslo za desetinou čárkou\nnebo je-li hodnota aktivního cíle (mg/dL) sudé číslo\n\n\jinak zakázáno</string>
-    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Výchozí hodnota: 100 %\nPři hodnotě 100 % je tato funkce zakázána.</string>
-    <string name="openapsama_iob_threshold_percent">Procentuální hodnota maxIOB, nad kterou budou SMB zakázány\n(iob_threshold_percent)</string>
 </resources>
