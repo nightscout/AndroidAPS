@@ -168,7 +168,6 @@
     <string name="pump_disconnected">Bomba desconectada</string>
     <!--    autoISF -->
     <string name="half_basal_exercise_target_title">Basal media con objetivo actividad</string>
-    <string name="half_basal_exercise_target_summary" formatted="false">Establecer un número, por ejemplo, 160. Significa que cuando el objetivo temporal es 160 mg/dL y tenemos habilitado \"Objetivo temporal alto aumenta la sensibilidad\", ejecuta el 50% de la basal en ese nivel (120 = 75%; 140 = 60%).</string>
     <string name="autoISF_settings_title">Ajustes de AutoISF</string>
     <string name="autoISF_settings_summary">AutoISF permite adaptar el factor de sensibilidad a la insulina (ISF) en varios escenarios de comportamiento de la glucosa\n\nTambién puede adaptar la configuración de entrega de SMBs</string>
     <string name="acce_ISF_settings_title">Ajustes de acce_ISF</string>
@@ -177,7 +176,6 @@
     <string name="enableautoISFwithcob_summary">Habilitar dura_ISF cuando hay carbohidratos activos (COB)</string>
     <string name="bg_ISF_settings_title">Ajustes de bg_ISF</string>
     <string name="bg_ISF_settings_summary">Ajustes de bg_ISF: ISF en función al nivel de la glucosa en sangre de acuerdo con un patrón predefinido</string>
-    <string name="enable_postprandial_ISF_always_summary">Habilitar la adaptación de ISF postprandial todo el tiempo, independientemente de cuándo te tomaste la última comida.</string>
     <string name="pp_ISF_settings_title">Ajustes de pp_ISF</string>
     <string name="pp_ISF_settings_summary">Ajustes de pp_ISF: ISF para el aumento de la glucosa postprandial (después de comer)</string>
     <string name="dura_ISF_settings_title">Ajustes de dura_ISF</string>
@@ -189,14 +187,6 @@
     <string name="use_autoISF_extensions_title">Habilitar las funcionalidades extendidas de AutoISF</string>
     <string name="use_autoISF_extensions_summary">Estos incluyen la modulación del ISF en función al comportamiento reciente de la glucosa, habilitadores de SMB alternativos y soporte para el Lazo Cerrado Completo</string>
     <string name="openapsama_enable_autoISF">Habilitar la adaptación del ISF en función al comportamiento de la glucosa</string>
-    <string name="openapsama_autoISF_max_summary">Valor predeterminado: 1.0\nEsto es un multiplicador máximo para que AutoISF establezca un límite sobre qué tan alto puede ser el ratio de AutoISF, que a su vez, determinará qué tan bajo puede se puede ajustar el ISF.\n\nADVERTENCIA: Ten especial cuidado si vas a configurar valores por encima de 2.5</string>
-    <string name="openapsama_autoISF_min_summary">Valor predeterminado: 1.0\nEste es un límite multiplicador para que AutoISF establezca un límite sobre qué tan bajo puede ser el índice de AutoISF, lo que a su vez determina qué tan alto puede ajustar el ISF.</string>
-    <string name="openapsama_dura_ISF_weight_summary" formatted="false">Valor predeterminado: 0.0\nEsta es la tasa a la que crece AutoISF por hora, suponiendo que la glucosa es el doble del objetivo. Con un valor de 1.0, habrá reducido el ISF al 50% después de 1 hora con la glucosa al doble del objetivo.\n\nCon un valor de 0.0, este ajuste estará deshabilitado.</string>
-    <string name="openapsama_lower_ISFrange_weight_summary">Valor predeterminado: 0.0\nEste es el peso que aplica al polígono, que adapta el ISF si la glucosa está por debajo del objetivo. \n\nCon un valor de 0.0, este ajuste estará deshabilitado.</string>
-    <string name="openapsama_higher_ISFrange_weight_summary">Valor predeterminado: 0.0\nEste es el peso que aplica al polígono, que adapta el ISF si la glucosa está por encima del objetivo. \n\nCon un valor de 0.0, este ajuste estará deshabilitado.</string>
-    <string name="openapsama_pp_ISF_weight_summary">Valor predeterminado: 0.0\nEste es el peso que se aplica a la pendiente lineal mientras la glucosa aumenta y adapta el ISF. \n\nCon un valor de 0.0, este ajuste estará deshabilitado.</string>
-    <string name="openapsama_bgAccel_ISF_weight_summary">Valor predeterminado: 0.0\nEste es el peso aplicado mientras la glucosa aumenta rápidamente y que refuerza el ISF. \n\nCon un valor de 0.0, este ajuste estará deshabilitado.</string>
-    <string name="openapsama_bgBrake_ISF_weight_summary">Valor predeterminado: 0.0\nEste es el peso que se aplica mientras la glucosa desacelera y que debilita el ISF. \n\nCon un valor de 0.0, este ajuste estará deshabilitado.</string>
     <string name="openapsama_autoISF_max">Ratio máximo de AutoISF\n(autoISF_max)</string>
     <string name="openapsama_autoISF_min">Ratio mínimo de AutoISF\n(autoISF_min)</string>
     <string name="openapsama_lower_ISFrange_weight">Menor peso del rango ISF\n(lower_ISFrange_weight)</string>
@@ -217,6 +207,4 @@
     <string name="openapsama_smb_max_range_extension_summary">Valor por defecto: 1. Este es otro limitador máximo de seguridad clave de OpenAPS y especifica por que factor puedes exceder los 120 minutos maxSMB/maxUAM normales. Nota: Aumenta este valor experimental lentamente y con precaución.</string>
     <string name="enableSMB_EvenOn_OddOff_always">Habilitar la activación alternativa de SMBs en función a que el valor del objetivo temporal activo sea un número \"par\"</string>
     <string name="enableSMB_EvenOn_OddOff_always_summary">\nHabilitado ...\nsi el objetivo temporal activo (mmol/L) tiene un decimal par \no el objetivo temporal activo (mg/dL) es un número par\n\ndeshabilitado en cualquier otro caso</string>
-    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Valor por defecto: 100%\nCon un valor de 100% esta característica estará operativamente desactivada</string>
-    <string name="openapsama_iob_threshold_percent">Porcentaje de maxIOB que tras superarlo, se desactivan automáticamente los SMBs\n(iob_threshold_percent)</string>
 </resources>
