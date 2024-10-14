@@ -190,6 +190,12 @@
     <string name="openapsama_enable_autoISF">Aktiver ISF-tilpasning etter glukoseoppførsel</string>
     <string name="openapsama_autoISF_max_summary">På samme måte som autosens_max definerer dette hvor sterk ISF kan bli.\n\nStandardverdien 1 skrur effekten effektivt av.\n\nADVARSEL: Vær ekstremt forsiktig når du bruker verdier over 2.5</string>
     <string name="openapsama_autoISF_min_summary">På samme måte som autosens_min definerer dette hvor svak ISF kan bli.\n\nStandardverdien 1.0 demper effektivt denne effekten.</string>
+    <string name="openapsama_dura_ISF_weight_summary">Dette er vekten som tillegges over lengre forhøyet glukoseplatåer og som styrker ISF og dermed potensielt øker insulinleveransen.\n\nStandardverdien 0.0 skrur effektivt av denne effekten.</string>
+    <string name="openapsama_lower_ISFrange_weight_summary">Dette er vekten som tillegges når glukosen er under målet og svekker ISF og dermed potensielt reduserer insulinleveransen.\n\nStandardverdien 0.0 skrur effektivt av denne effekten.</string>
+    <string name="openapsama_higher_ISFrange_weight_summary">Dette er vekten som tillegges når glukosen er over målet og styrker ISF og dermed potensielt øker insulinleveransen.\n\nStandardverdien 0.0 skrur effektivt av denne effekten.</string>
+    <string name="openapsama_pp_ISF_weight_summary">Dette er vekten som tillegges når glukosen stiger og som styrker ISF og dermed potensielt øker insulinleveransen.\n\nStandardverdien 0.0 skrur effektivt av denne effekten.</string>
+    <string name="openapsama_bgAccel_ISF_weight_summary">Dette er vekten som tillegges når glukosen akselererer og som styrker ISF og dermed potensielt øker insulinleveransen.\n\nStandardverdien 0.0 skrur effektivt av denne effekten.</string>
+    <string name="openapsama_bgBrake_ISF_weight_summary">Dette er vekten som tillegges når glukosen er deakselererer og svekker ISF og dermed potensielt reduserer insulinleveransen.\n\nStandardverdien 0.0 skrur effektivt av denne effekten.</string>
     <string name="openapsama_autoISF_max">Maksimal AutoISF-forhold\n(autoISF_max)</string>
     <string name="openapsama_autoISF_min">Minimal AutoISF-forhold\n(autoISF_min)</string>
     <string name="openapsama_lower_ISFrange_weight">nedre ISF-områdevekting\n(lower_ISFrange_weight)</string>
@@ -210,4 +216,6 @@
     <string name="openapsama_smb_max_range_extension_summary">Standardverdi: 1 Dette er en annen viktig OpenAPS sikkerhetsgrense, og angir med hvilken faktor du kan overstige de vanlige 120 maxSMB/maxUAM-minuttene. Øk denne eksperimentelle verdien sakte og med forsiktighet.</string>
     <string name="enableSMB_EvenOn_OddOff_always">Aktiver alternativ aktivering av SMB avhengig av om aktiv målverdi er et partall</string>
     <string name="enableSMB_EvenOn_OddOff_always_summary">\naktivert ...\nhvis aktivt mål (mmol/L) har partall desimal\neller aktivt mål (mg/dL) er partall\n\ndeaktivert ellers</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Prosentandel av maxIOB over for når SMB\'er er deaktivert.\nStandardverdi: 100 %\nMed 100 % er denne funksjonen er effektivt deaktivert.</string>
+    <string name="openapsama_iob_threshold_percent">maxIOB terskelprosent for SMB\n(iob_threshold_percent)</string>
 </resources>
