@@ -168,6 +168,7 @@
     <string name="pump_disconnected">幫浦已中斷連線</string>
     <!--    autoISF -->
     <string name="half_basal_exercise_target_title">半基礎運動目標</string>
+    <string name="half_basal_exercise_target_summary">設定為一個數字，例如 160，這表示當臨時目標為 160 mg/dL 且高臨時目標提高敏感性=true時，在此水平運行 50% 的基礎率（120 = 75%；140 = 60%）。</string>
     <string name="autoISF_settings_title">自動ISF設定</string>
     <string name="autoISF_settings_summary">AutoISF 允許在各種葡萄糖行為情境中調整胰島素敏感性因子 (ISF)\n\n它還可以調整SMB輸送設定</string>
     <string name="acce_ISF_settings_title">acce_ISF設定</string>
@@ -187,6 +188,14 @@
     <string name="use_autoISF_extensions_title">啟用 AutoISF 擴展功能</string>
     <string name="use_autoISF_extensions_summary">這些包括最近的血糖行為所導致的ISF調整，替代的SMB啟用程式以及對完全閉環的支援</string>
     <string name="openapsama_enable_autoISF">啟用根據血糖變化進行的 ISF 調整</string>
+    <string name="openapsama_autoISF_max_summary">類似於 autosens_max，這個設定定義了 ISF（胰島素敏感因子）的強度。\n\n預設值 1.0 實際上會關閉這個效果。\n\n警告：使用超過 2.5 的數值時務必非常謹慎。</string>
+    <string name="openapsama_autoISF_min_summary">類似於 autosens_min，這個設定定義了 ISF（胰島素敏感因子）的最弱程度。\n\n預設值 1.0 實際上會關閉這個效果。</string>
+    <string name="openapsama_dura_ISF_weight_summary">這是針對長時間高血糖平台期間所應用的權重，並加強 ISF（胰島素敏感因子），因此可能增加胰島素的釋放量。\n\n預設值 0.0 實際上會關閉這個效果。</string>
+    <string name="openapsama_lower_ISFrange_weight_summary">這是當血糖低於目標時所應用的權重，會削弱 ISF（胰島素敏感因子），因此可能減少胰島素的釋放量。\n\n預設值 0.0 實際上會關閉這個效果。</string>
+    <string name="openapsama_higher_ISFrange_weight_summary">這是當血糖高於目標時所應用的權重，會加強 ISF（胰島素敏感因子），因此可能增加胰島素的釋放量。\n\n預設值 0.0 實際上會關閉這個效果。</string>
+    <string name="openapsama_pp_ISF_weight_summary">這是當血糖上升時所應用的權重，會加強 ISF（胰島素敏感因子），因此可能增加胰島素的釋放量。\n\n預設值 0.0 實際上會關閉這個效果。</string>
+    <string name="openapsama_bgAccel_ISF_weight_summary">這是當血糖加速上升時所應用的權重，會加強 ISF（胰島素敏感因子），因此可能增加胰島素的釋放量。\n\n預設值 0.0 實際上會關閉這個效果。</string>
+    <string name="openapsama_bgBrake_ISF_weight_summary">這是當血糖減速時所應用的權重，會削弱 ISF（胰島素敏感因子），因此可能減少胰島素的釋放量。\n\n預設值 0.0 實際上會關閉這個效果。</string>
     <string name="openapsama_autoISF_max">最大自動ISF比率\n(autoISF_max)</string>
     <string name="openapsama_autoISF_min">最小自動ISF比率\n(autoISF_min)</string>
     <string name="openapsama_lower_ISFrange_weight">較低的 ISF 範圍權重\n(lower_ISFrange_weight)</string>
@@ -207,4 +216,6 @@
     <string name="openapsama_smb_max_range_extension_summary">預設值：1 這是另一個重要的 OpenAPS 安全上限，指定了可以超過正常 120 maxSMB/maxUAM 分鐘的倍數。請慢慢地且謹慎地增加這個實驗值。</string>
     <string name="enableSMB_EvenOn_OddOff_always">啟用根據活動目標是偶數的情況下啟用SMB的替代啟動</string>
     <string name="enableSMB_EvenOn_OddOff_always_summary">\n啟用 ...\n如果活動目標 (mmol/L) 是偶數小數\n或活動目標 (mg/dL) 是偶數\n\n否則停用</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">當 maxIOB 的百分比超過此數值時，SMBs（小量胰島素注射）將被停用。\n預設值：100%\n設定為 100% 時，這個功能實際上會被關閉。</string>
+    <string name="openapsama_iob_threshold_percent">SMB 的 maxIOB 門檻值百分比設定\n(iob_threshold_percent)</string>
 </resources>
