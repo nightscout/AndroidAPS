@@ -135,11 +135,11 @@ class SecureEncryptImpl @Inject constructor(
                 .build()
             val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore")
             keyGenerator.init(keyGenParameterSpec)
+            // Return newly generated key
             return keyGenerator.generateKey()
-        } else {
-            // Alias exists in KeyStore: retrieve key
-            return retrieveSecretKeyFromKeyStore(keyAlias)
         }
+        // Else: Alias exists in KeyStore: retrieve existing key
+        return retrieveSecretKeyFromKeyStore(keyAlias)
     }
 
     /***
@@ -210,15 +210,13 @@ class SecureEncryptImpl @Inject constructor(
      */
     private fun stringToClassEncryptedData(dataString: String): ClassEncryptedData
     {
+        var classEncryptedData = ClassEncryptedData(isValid = false, keyStoreAlias = "", ivHexString = "", encryptedDataHexString = "")
         if (isValidDataString(dataString)) {
             val data = dataString.split(HEX_STRING_SEPARATOR)
-            return if (data.size == 4)
-                ClassEncryptedData(isValid = true, keyStoreAlias = data[1], ivHexString = data[2], encryptedDataHexString = data[3])
-            else
-                ClassEncryptedData(isValid = false, keyStoreAlias = "", ivHexString = "", encryptedDataHexString = "")
+            if (data.size == 4)
+                classEncryptedData = ClassEncryptedData(isValid = true, keyStoreAlias = data[1], ivHexString = data[2], encryptedDataHexString = data[3])
         }
-        else
-            return ClassEncryptedData(isValid = false, keyStoreAlias = "", ivHexString = "", encryptedDataHexString = "")
+        return classEncryptedData
     }
 
     /***
