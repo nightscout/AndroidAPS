@@ -47,7 +47,7 @@ class ExportPasswordDataStoreImpl @Inject constructor(
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var secureEncrypt: SecureEncrypt
 
-    // TODO: Remove for release (Debug only!)
+    // Remove for release? (Debug only!)
     @Inject lateinit var fileListProvider: FileListProvider
 
     companion object {
@@ -96,7 +96,7 @@ class ExportPasswordDataStoreImpl @Inject constructor(
         // Use fixed defaults for password validity window, optional overrule defaults from prefs:
         // passwordValidityWindow = (sp.getLong(IntKey.AutoExportPasswordExpiryDays.key.....
 
-        // TODO: To be removed for final PR/release?
+        // To be removed for final PR/release...
         // START
         if (config.isEngineeringMode() && config.isDev()) {
             // Enable debug mode when file 'DebugUnattendedExport' exists
@@ -153,7 +153,6 @@ class ExportPasswordDataStoreImpl @Inject constructor(
         with(passwordData) {
             if (password.isNotEmpty()) {  // And not expired
                 log.debug(LTag.CORE, "$MODULE: getPasswordFromDataStore")
-                // return Triple(true, passwordData.password, passwordData.isAboutToExpire)
                 return Triple(password, isExpired, isAboutToExpire)
             }
         }
@@ -180,13 +179,11 @@ class ExportPasswordDataStoreImpl @Inject constructor(
 
         // Write setting to android datastore and return password
         fun updatePrefString(name: String)  = runBlocking {
-            val preferencesKeyPassword = stringPreferencesKey("$name.key")
-            val preferencesKeyTimestamp = stringPreferencesKey("$name.ts")
             context.dataStore.edit { settings ->
                 // Clear password as string value
-                settings[preferencesKeyPassword] = ""
-                settings[preferencesKeyTimestamp] = "0"
-            }[preferencesKeyPassword].toString()
+                settings[stringPreferencesKey("$name.key")] = ""    // Password
+                settings[stringPreferencesKey("$name.ts")] = "0"    // Timestamp
+            }[stringPreferencesKey("$name.key")].toString()         // Return updated password
         }
 
         // Clear password stored in DataStore

@@ -502,10 +502,10 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
      * clear password stored in datastore if file exists
      */
         private fun exportPasswordResetCheck(context: Context) {
-        val exportPasswordReset = File(fileListProvider.ensureExtraDirExists(), "ExportPasswordReset")
-        if (exportPasswordReset.exists()) {
+        val fh = File(fileListProvider.ensureExtraDirExists(), "ExportPasswordReset")
+        if (fh.exists()) {
             exportPasswordDataStore.clearPasswordDataStore(context)
-            exportPasswordReset.delete()
+            fh.delete()
             ToastUtils.okToast(context, context.getString(app.aaps.core.ui.R.string.datastore_password_cleared))
         }
     }

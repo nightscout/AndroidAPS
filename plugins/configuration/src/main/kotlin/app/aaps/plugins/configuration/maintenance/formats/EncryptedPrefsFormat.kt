@@ -89,7 +89,6 @@ class EncryptedPrefsFormat @Inject constructor(
             if (encrypted) {
                 val salt = cryptoUtil.mineSalt()
                 val rawContent = content.toString()
-                //val contentAttempt = cryptoUtil.encrypt(masterPassword!!, salt, rawContent)
 
                 var masterPasswordUnencrypted = masterPassword
                 if (secureEncrypt.isValidDataString(masterPassword)) {
