@@ -25,7 +25,6 @@ buildscript {
 plugins {
     id("org.jlleitschuh.gradle.ktlint") version "12.1.1"
     id("com.savvasdalkitsis.module-dependency-graph") version "0.12"
-    id("kotlin-kapt")
     id("com.google.devtools.ksp") version "2.0.21-1.0.25" apply false
 }
 
