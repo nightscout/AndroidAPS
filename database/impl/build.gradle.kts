@@ -32,7 +32,7 @@ dependencies {
     api(Libs.Rx.rxAndroid)
     api(Libs.Rx.rxKotlin)
 
-    api(Libs.Google.gson)
+    api(libs.com.google.code.gson)
 
     api(Libs.AndroidX.Room.room)
     api(Libs.AndroidX.Room.runtime)

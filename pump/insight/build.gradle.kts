@@ -29,7 +29,7 @@ dependencies {
     implementation(project(":pump:pump-common"))
     testImplementation(project(":shared:tests"))
 
-    api(Libs.Google.Android.material)
+    api(libs.com.google.android.material)
     api(Libs.AndroidX.Room.room)
     api(Libs.AndroidX.Room.runtime)
     api(Libs.AndroidX.Room.rxJava3)

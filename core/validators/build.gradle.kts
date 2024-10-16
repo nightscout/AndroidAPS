@@ -19,7 +19,7 @@ dependencies {
 
     api(Libs.Dagger.android)
     api(Libs.Dagger.androidSupport)
-    api(Libs.Google.Android.material)
+    api(libs.com.google.android.material)
 
     kapt(Libs.Dagger.compiler)
     kapt(Libs.Dagger.androidProcessor)

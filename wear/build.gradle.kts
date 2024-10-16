@@ -113,9 +113,9 @@ dependencies {
 
     testImplementation(project(":shared:tests"))
 
-    compileOnly(Libs.Google.Android.Wearable.wearable)
-    implementation(Libs.Google.Android.Wearable.wearableSupport)
-    implementation(Libs.Google.Android.PlayServices.wearable)
+    compileOnly(libs.com.google.android.wearable)
+    implementation(libs.com.google.android.wearable.support)
+    implementation(libs.com.google.android.gms.playservices.wearable)
     implementation(files("${rootDir}/wear/libs/ustwo-clockwise-debug.aar"))
     implementation(files("${rootDir}/wear/libs/wearpreferenceactivity-0.5.0.aar"))
     implementation(files("${rootDir}/wear/libs/hellocharts-library-1.5.8.aar"))

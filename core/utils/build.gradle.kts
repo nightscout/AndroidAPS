@@ -17,17 +17,17 @@ dependencies {
     api(Libs.jodaTimeAndroid)
 
     //Firebase
-    api(platform(Libs.Google.Firebase.firebaseBom))
-    api(Libs.Google.Firebase.analytics)
-    api(Libs.Google.Firebase.crashlytics)
+    api(platform(libs.com.google.firebase.bom))
+    api(libs.com.google.firebase.analytics)
+    api(libs.com.google.firebase.crashlytics)
     // StatsActivity not in use now
-    // api(Libs.Google.Firebase.messaging)
-    // api(Libs.Google.Firebase.auth)
-    // api(Libs.Google.Firebase.database)
+    // api(libs.com.google.firebase.messaging)
+    // api(libs.com.google.firebase.auth)
+    // api(libs.com.google.firebase.database)
 
     //CryptoUtil
     api(Libs.spongycastleCore)
-    api(Libs.Google.tinkAndroid)
+    api(libs.com.google.crypto.tink)
 
     //WorkManager
     api(Libs.AndroidX.Work.runtimeKtx) // DataWorkerStorage

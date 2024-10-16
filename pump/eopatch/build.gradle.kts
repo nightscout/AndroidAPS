@@ -22,7 +22,7 @@ dependencies {
     implementation(project(":core:ui"))
     implementation(project(":pump:eopatch-core"))
 
-    api(Libs.Google.guava)
+    api(libs.com.google.guava)
 
     //RxAndroidBle
     api(Libs.Rx.rxAndroid)

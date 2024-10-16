@@ -27,7 +27,7 @@ dependencies {
     testImplementation(project(":pump:virtual"))
 
     api(Libs.AndroidX.constraintLayout)
-    api(Libs.Google.Android.PlayServices.location)
+    api(libs.com.google.android.gms.playservices.location)
     api(Libs.Kotlin.reflect)
 
     kapt(Libs.Dagger.compiler)

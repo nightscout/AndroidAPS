@@ -18,7 +18,7 @@ dependencies {
     implementation(project(":core:ui"))
 
     api(Libs.xstream)
-    api(Libs.Google.gson)
+    api(libs.com.google.code.gson)
 
     kapt(Libs.Dagger.compiler)
     kapt(Libs.Dagger.androidProcessor)

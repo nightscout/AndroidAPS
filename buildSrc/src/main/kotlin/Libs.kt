@@ -79,38 +79,7 @@ object Libs {
 
     object Google {
 
-        object Android {
-            object PlayServices {
-
-                const val measurementApi = "com.google.android.gms:play-services-measurement-api:21.4.0"
-                const val wearable = "com.google.android.gms:play-services-wearable:18.1.0"
-                const val location = "com.google.android.gms:play-services-location:21.0.1"
-            }
-
-            object Wearable {
-
-                const val wearable = "com.google.android.wearable:wearable:2.9.0"
-                const val wearableSupport = "com.google.android.support:wearable:2.9.0"
-            }
-
-            const val material = "com.google.android.material:material:1.10.0"
-            const val flexbox = "com.google.android.flexbox:flexbox:3.0.0"
-        }
-
-        object Firebase {
-
-            const val firebaseBom = "com.google.firebase:firebase-bom:32.4.0"
-            const val analytics = "com.google.firebase:firebase-analytics-ktx"
-            const val crashlytics = "com.google.firebase:firebase-crashlytics-ktx"
-            const val messaging = "com.google.firebase:firebase-messaging-ktx"
-            const val auth = "com.google.firebase:firebase-auth-ktx"
-            const val database = "com.google.firebase:firebase-database-ktx"
-        }
-
         const val truth = "com.google.truth:truth:1.1.5"
-        const val gson = "com.google.code.gson:gson:2.10.1"
-        const val guava = "com.google.guava:guava:32.1.3-jre"
-        const val tinkAndroid = "com.google.crypto.tink:tink-android:1.10.0"
     }
 
     object Dagger {

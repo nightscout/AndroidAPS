@@ -24,8 +24,8 @@ dependencies {
     testImplementation(project(":shared:impl"))
 
     api(Libs.Kotlin.stdlibJdk8)
-    api(Libs.Google.Android.material)
-    api(Libs.Google.guava)
+    api(libs.com.google.android.material)
+    api(libs.com.google.guava)
     api(Libs.AndroidX.activity)
     api(Libs.AndroidX.appCompat)
 

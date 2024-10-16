@@ -37,17 +37,17 @@ dependencies {
     api(Libs.AndroidX.browser)
     api(Libs.AndroidX.Work.runtimeKtx)
     api(Libs.AndroidX.gridLayout)
-    api(Libs.Google.Android.material)
+    api(libs.com.google.android.material)
 
     // NSClient, Tidepool
     api(Libs.socketIo)
     api(Libs.Squareup.Okhttp3.loggingInterceptor)
     api(Libs.Squareup.Retrofit2.adapterRxJava3)
     api(Libs.Squareup.Retrofit2.converterGson)
-    api(Libs.Google.gson)
+    api(libs.com.google.code.gson)
 
     // DataLayerListenerService
-    api(Libs.Google.Android.PlayServices.wearable)
+    api(libs.com.google.android.gms.playservices.wearable)
 
     // Garmin
     api(Libs.connectiqSdk)
