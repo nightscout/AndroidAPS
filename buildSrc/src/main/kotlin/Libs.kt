@@ -1,31 +1,6 @@
 @Suppress("SpellCheckingInspection")
 object Libs {
 
-    object Kotlin {
-
-        const val kotlin = "2.0.0"
-
-        const val stdlibJdk8 = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin"
-        const val reflect = "org.jetbrains.kotlin:kotlin-reflect:$kotlin"
-    }
-
-    object KotlinX {
-
-        private const val serialization = "1.6.0"
-        private const val coroutinesVersion = "1.7.3"
-
-        const val serializationJson = "org.jetbrains.kotlinx:kotlinx-serialization-json:$serialization"
-        const val serializationProtobuf = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf:$serialization"
-        const val serializationCore = "org.jetbrains.kotlinx:kotlinx-serialization-core:$serialization"
-        const val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
-        const val coroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
-        const val coroutinesRx3 = "org.jetbrains.kotlinx:kotlinx-coroutines-rx3:$coroutinesVersion"
-        const val coroutinesGuava = "org.jetbrains.kotlinx:kotlinx-coroutines-guava:$coroutinesVersion"
-        const val coroutinesPlayServices = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$coroutinesVersion"
-        const val coroutinesTest = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
-        const val datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.4.1"
-    }
-
     object AndroidX {
 
         const val core = "androidx.core:core-ktx:1.12.0"
@@ -56,17 +31,6 @@ object Libs {
             const val uiAutomator = "androidx.test.uiautomator:uiautomator:2.2.0"
         }
 
-        object Room {
-
-            private const val roomVersion = "2.5.2"
-
-            const val room = "androidx.room:room-ktx:$roomVersion"
-            const val compiler = "androidx.room:room-compiler:$roomVersion"
-            const val runtime = "androidx.room:room-runtime:$roomVersion"
-            const val rxJava3 = "androidx.room:room-rxjava3:$roomVersion"
-            const val testing = "androidx.room:room-testing:$roomVersion"
-        }
-
         object Wear {
 
             const val wear = "androidx.wear:wear:1.3.0"
@@ -80,24 +44,6 @@ object Libs {
     object Google {
 
         const val truth = "com.google.truth:truth:1.1.5"
-    }
-
-    object Dagger {
-
-        private const val version = "2.48.1"
-        const val dagger = "com.google.dagger:dagger:$version"
-        const val android = "com.google.dagger:dagger-android:$version"
-        const val androidProcessor = "com.google.dagger:dagger-android-processor:$version"
-        const val androidSupport = "com.google.dagger:dagger-android-support:$version"
-        const val compiler = "com.google.dagger:dagger-compiler:$version"
-    }
-
-    object Rx {
-
-        const val rxDogTag = "com.uber.rxdogtag2:rxdogtag:2.0.2"
-        const val rxJava = "io.reactivex.rxjava3:rxjava:3.1.7"
-        const val rxKotlin = "io.reactivex.rxjava3:rxkotlin:3.0.1"
-        const val rxAndroid = "io.reactivex.rxjava3:rxandroid:3.0.2"
     }
 
     object Apache {
@@ -127,30 +73,6 @@ object Libs {
         const val core = "org.mockito:mockito-core:$mockitoVersion"
         const val jupiter = "org.mockito:mockito-junit-jupiter:$mockitoVersion"
         const val kotlin = "org.mockito.kotlin:mockito-kotlin:5.1.0"
-    }
-
-    object Squareup {
-        object Retrofit2 {
-
-            private const val retrofitVersion = "2.9.0"
-
-            const val retrofit = "com.squareup.retrofit2:retrofit:$retrofitVersion"
-            const val adapterRxJava3 = "com.squareup.retrofit2:adapter-rxjava3:$retrofitVersion"
-            const val converterGson = "com.squareup.retrofit2:converter-gson:$retrofitVersion"
-        }
-
-        object Okhttp3 {
-
-            private const val okhttpVersion = "4.12.0"
-
-            const val okhttp = "com.squareup.okhttp3:okhttp:$okhttpVersion"
-            const val loggingInterceptor = "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
-        }
-    }
-
-    object Mozilla {
-
-        const val rhino = "org.mozilla:rhino:1.7.14"
     }
 
     const val spongycastleCore = "com.madgag.spongycastle:core:1.58.0.0"

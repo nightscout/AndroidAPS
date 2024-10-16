@@ -219,16 +219,16 @@ dependencies {
     androidTestImplementation(Libs.jsonAssert)
 
 
-    kaptAndroidTest(Libs.Dagger.androidProcessor)
+    kaptAndroidTest(libs.com.google.dagger.android.processor)
 
     /* Dagger2 - We are going to use dagger.android which includes
      * support for Activity and fragment injection so we need to include
      * the following dependencies */
-    kapt(Libs.Dagger.androidProcessor)
-    kapt(Libs.Dagger.compiler)
+    kapt(libs.com.google.dagger.android.processor)
+    kapt(libs.com.google.dagger.compiler)
 
     // MainApp
-    api(Libs.Rx.rxDogTag)
+    api(libs.com.uber.rxdogtag2.rxdogtag)
 }
 
 println("-------------------")

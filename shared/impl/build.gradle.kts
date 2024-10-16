@@ -25,10 +25,10 @@ dependencies {
 
     api(Libs.androidSvg)
 
-    api(Libs.Rx.rxAndroid)
+    api(libs.io.reactivex.rxjava3.rxandroid)
     api(Libs.jodaTimeAndroid)
 
-    api(Libs.Dagger.androidSupport)
-    kapt(Libs.Dagger.compiler)
-    kapt(Libs.Dagger.androidProcessor)
+    api(libs.com.google.dagger.android.support)
+    kapt(libs.com.google.dagger.compiler)
+    kapt(libs.com.google.dagger.android.processor)
 }

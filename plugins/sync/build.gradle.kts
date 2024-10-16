@@ -23,7 +23,7 @@ dependencies {
     implementation(project(":shared:impl"))
 
 
-    testImplementation(Libs.KotlinX.coroutinesTest)
+    testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(Libs.AndroidX.Work.testing)
 
     testImplementation(project(":shared:tests"))
@@ -32,8 +32,8 @@ dependencies {
     androidTestImplementation(project(":shared:tests"))
 
     // OpenHuman
-    api(Libs.Squareup.Okhttp3.okhttp)
-    api(Libs.Squareup.Retrofit2.retrofit)
+    api(libs.com.squareup.okhttp3.okhttp)
+    api(libs.com.squareup.retrofit2.retrofit)
     api(Libs.AndroidX.browser)
     api(Libs.AndroidX.Work.runtimeKtx)
     api(Libs.AndroidX.gridLayout)
@@ -41,9 +41,9 @@ dependencies {
 
     // NSClient, Tidepool
     api(Libs.socketIo)
-    api(Libs.Squareup.Okhttp3.loggingInterceptor)
-    api(Libs.Squareup.Retrofit2.adapterRxJava3)
-    api(Libs.Squareup.Retrofit2.converterGson)
+    api(libs.com.squareup.okhttp3.logging.interceptor)
+    api(libs.com.squareup.retrofit2.adapter.rxjava3)
+    api(libs.com.squareup.retrofit2.converter.gson)
     api(libs.com.google.code.gson)
 
     // DataLayerListenerService
@@ -53,6 +53,6 @@ dependencies {
     api(Libs.connectiqSdk)
     androidTestImplementation(Libs.connectiqSdk)
 
-    kapt(Libs.Dagger.compiler)
-    kapt(Libs.Dagger.androidProcessor)
+    kapt(libs.com.google.dagger.compiler)
+    kapt(libs.com.google.dagger.android.processor)
 }

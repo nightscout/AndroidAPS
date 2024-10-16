@@ -45,6 +45,6 @@ dependencies {
     // Food
     api(Libs.AndroidX.Work.runtimeKtx)
 
-    kapt(Libs.Dagger.compiler)
-    kapt(Libs.Dagger.androidProcessor)
+    kapt(libs.com.google.dagger.compiler)
+    kapt(libs.com.google.dagger.android.processor)
 }

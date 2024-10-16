@@ -25,10 +25,10 @@ dependencies {
     api(libs.com.google.guava)
 
     //RxAndroidBle
-    api(Libs.Rx.rxAndroid)
+    api(libs.io.reactivex.rxjava3.rxandroid)
     api(Libs.rxandroidBle)
     api(Libs.rx3ReplayingShare)
 
-    kapt(Libs.Dagger.compiler)
-    kapt(Libs.Dagger.androidProcessor)
+    kapt(libs.com.google.dagger.compiler)
+    kapt(libs.com.google.dagger.android.processor)
 }

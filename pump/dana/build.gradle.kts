@@ -28,15 +28,15 @@ dependencies {
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
 
-    api(Libs.AndroidX.Room.room)
-    api(Libs.AndroidX.Room.runtime)
-    api(Libs.AndroidX.Room.rxJava3)
-    kapt(Libs.AndroidX.Room.compiler)
+    api(libs.androidx.room)
+    api(libs.androidx.room.runtime)
+    api(libs.androidx.room.rxjava3)
+    kapt(libs.androidx.room.compiler)
 
     testImplementation(project(":shared:tests"))
     testImplementation(project(":core:objects"))
     // create profile from json
 
-    kapt(Libs.Dagger.compiler)
-    kapt(Libs.Dagger.androidProcessor)
+    kapt(libs.com.google.dagger.compiler)
+    kapt(libs.com.google.dagger.android.processor)
 }

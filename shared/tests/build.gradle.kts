@@ -22,9 +22,9 @@ dependencies {
     implementation(project(":shared:impl"))
 
 
-    api(Libs.Mockito.jupiter)
-    api(Libs.Mockito.kotlin)
-    api(Libs.JUnit.jupiterApi)
+    api(libs.org.mockito.junit.jupiter)
+    api(libs.org.mockito.kotlin)
+    api(libs.org.mockito.junit.jupiter)
 
-    kapt(Libs.Dagger.compiler)
+    kapt(libs.com.google.dagger.compiler)
 }

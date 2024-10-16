@@ -30,10 +30,10 @@ dependencies {
     api(kotlin("reflect"))
 
     // APS (it should be androidTestImplementation but it doesn't work)
-    api(Libs.Mozilla.rhino)
+    api(libs.org.mozilla.rhino)
 
     //Logger
     api(Libs.Logging.slf4jApi)
 
-    kapt(Libs.Dagger.androidProcessor)
+    kapt(libs.com.google.dagger.android.processor)
 }

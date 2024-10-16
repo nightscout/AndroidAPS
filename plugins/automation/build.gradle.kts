@@ -28,8 +28,8 @@ dependencies {
 
     api(Libs.AndroidX.constraintLayout)
     api(libs.com.google.android.gms.playservices.location)
-    api(Libs.Kotlin.reflect)
+    api(libs.kotlin.reflect)
 
-    kapt(Libs.Dagger.compiler)
-    kapt(Libs.Dagger.androidProcessor)
+    kapt(libs.com.google.dagger.compiler)
+    kapt(libs.com.google.dagger.android.processor)
 }

@@ -20,6 +20,6 @@ dependencies {
 
     api(libs.com.google.android.material)
 
-    api(Libs.Dagger.android)
-    api(Libs.Dagger.androidSupport)
+    api(libs.com.google.dagger.android)
+    api(libs.com.google.dagger.android.support)
 }

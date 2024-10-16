@@ -30,6 +30,6 @@ dependencies {
     api(Libs.Logging.slf4jApi)
     api(Libs.Logging.logbackAndroid)
 
-    kapt(Libs.Dagger.compiler)
-    kapt(Libs.Dagger.androidProcessor)
+    kapt(libs.com.google.dagger.compiler)
+    kapt(libs.com.google.dagger.android.processor)
 }

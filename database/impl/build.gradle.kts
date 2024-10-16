@@ -25,24 +25,24 @@ android {
 }
 
 dependencies {
-    api(Libs.Kotlin.stdlibJdk8)
-    api(Libs.Kotlin.reflect)
+    api(libs.kotlin.stdlib.jdk8)
+    api(libs.kotlin.reflect)
     api(Libs.AndroidX.core)
 
-    api(Libs.Rx.rxAndroid)
-    api(Libs.Rx.rxKotlin)
+    api(libs.io.reactivex.rxjava3.rxandroid)
+    api(libs.io.reactivex.rxjava3.rxkotlin)
 
     api(libs.com.google.code.gson)
 
-    api(Libs.AndroidX.Room.room)
-    api(Libs.AndroidX.Room.runtime)
-    api(Libs.AndroidX.Room.rxJava3)
+    api(libs.androidx.room)
+    api(libs.androidx.room.runtime)
+    api(libs.androidx.room.rxjava3)
 
-    api(Libs.Dagger.android)
-    api(Libs.Dagger.androidSupport)
+    api(libs.com.google.dagger.android)
+    api(libs.com.google.dagger.android.support)
 
-    androidTestImplementation(Libs.AndroidX.Room.testing)
+    androidTestImplementation(libs.androidx.room.testing)
 
-    kapt(Libs.Dagger.compiler)
-    kapt(Libs.AndroidX.Room.compiler)
+    kapt(libs.com.google.dagger.compiler)
+    kapt(libs.androidx.room.compiler)
 }

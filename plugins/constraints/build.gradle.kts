@@ -34,6 +34,6 @@ dependencies {
     // Phone checker
     api(Libs.rootBeer)
 
-    kapt(Libs.Dagger.compiler)
-    kapt(Libs.Dagger.androidProcessor)
+    kapt(libs.com.google.dagger.compiler)
+    kapt(libs.com.google.dagger.android.processor)
 }

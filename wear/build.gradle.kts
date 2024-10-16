@@ -120,13 +120,13 @@ dependencies {
     implementation(files("${rootDir}/wear/libs/wearpreferenceactivity-0.5.0.aar"))
     implementation(files("${rootDir}/wear/libs/hellocharts-library-1.5.8.aar"))
 
-    implementation(Libs.KotlinX.coroutinesCore)
-    implementation(Libs.KotlinX.coroutinesAndroid)
-    implementation(Libs.KotlinX.coroutinesGuava)
-    implementation(Libs.KotlinX.coroutinesPlayServices)
-    implementation(Libs.KotlinX.datetime)
-    implementation(Libs.Kotlin.stdlibJdk8)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.coroutines.guava)
+    implementation(libs.kotlinx.coroutines.play.services)
+    implementation(libs.kotlinx.datetime)
+    implementation(libs.kotlin.stdlib.jdk8)
 
-    kapt(Libs.Dagger.androidProcessor)
-    kapt(Libs.Dagger.compiler)
+    kapt(libs.com.google.dagger.android.processor)
+    kapt(libs.com.google.dagger.compiler)
 }

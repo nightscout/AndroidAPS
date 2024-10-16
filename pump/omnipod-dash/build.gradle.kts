@@ -31,16 +31,16 @@ dependencies {
     implementation(project(":pump:pump-common"))
     implementation(project(":pump:omnipod-common"))
 
-    api(Libs.AndroidX.Room.room)
-    api(Libs.AndroidX.Room.runtime)
-    api(Libs.AndroidX.Room.rxJava3)
+    api(libs.androidx.room)
+    api(libs.androidx.room.runtime)
+    api(libs.androidx.room.rxjava3)
     api(Libs.kulid)
 
     androidTestImplementation(project(":shared:tests"))
     testImplementation(project(":shared:tests"))
     testImplementation(Libs.commonCodecs)
 
-    kapt(Libs.Dagger.compiler)
-    kapt(Libs.Dagger.androidProcessor)
-    kapt(Libs.AndroidX.Room.compiler)
+    kapt(libs.com.google.dagger.compiler)
+    kapt(libs.com.google.dagger.android.processor)
+    kapt(libs.androidx.room.compiler)
 }
