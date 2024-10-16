@@ -1,4 +1,5 @@
 import org.gradle.api.JavaVersion
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 object Versions {
 
@@ -13,6 +14,7 @@ object Versions {
     const val wearMinSdk = 26
     const val wearTargetSdk = 29
 
-    val javaVersion = JavaVersion.VERSION_11
+    val javaVersion = JavaVersion.VERSION_21
+    val jvmTarget = JvmTarget.JVM_21
     const val jacoco = "0.8.11"
 }

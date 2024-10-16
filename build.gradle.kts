@@ -39,7 +39,7 @@ allprojects {
             freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
             freeCompilerArgs.add("-opt-in=kotlin.ExperimentalUnsignedTypes")
             freeCompilerArgs.add("-Xjvm-default=all") //Support @JvmDefault
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget.set(Versions.jvmTarget)
         }
     }
     gradle.projectsEvaluated {
