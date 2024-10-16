@@ -6,6 +6,7 @@ plugins {
     id("com.android.application")
     id("kotlin-android")
     id("kotlin-kapt")
+    id("com.google.devtools.ksp")
     id("android-app-dependencies")
     id("test-app-dependencies")
     id("jacoco-app-dependencies")
@@ -127,6 +128,6 @@ dependencies {
     implementation(Libs.KotlinX.datetime)
     implementation(Libs.Kotlin.stdlibJdk8)
 
-    kapt(Libs.Dagger.androidProcessor)
-    kapt(Libs.Dagger.compiler)
+    ksp(Libs.Dagger.androidProcessor)
+    ksp(Libs.Dagger.compiler)
 }

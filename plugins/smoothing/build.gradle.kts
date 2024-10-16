@@ -2,6 +2,7 @@ plugins {
     id("com.android.library")
     id("kotlin-android")
     id("kotlin-kapt")
+    id("com.google.devtools.ksp")
     id("android-module-dependencies")
     id("test-module-dependencies")
     id("jacoco-module-dependencies")
@@ -17,6 +18,6 @@ dependencies {
     implementation(project(":core:interfaces"))
     implementation(project(":core:ui"))
 
-    kapt(Libs.Dagger.compiler)
-    kapt(Libs.Dagger.androidProcessor)
+    ksp(Libs.Dagger.compiler)
+    ksp(Libs.Dagger.androidProcessor)
 }
