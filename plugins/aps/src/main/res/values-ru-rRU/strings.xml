@@ -168,6 +168,7 @@
     <string name="pump_disconnected">Помпа отключена</string>
     <!--    autoISF -->
     <string name="half_basal_exercise_target_title">Половина дозы базального инсулина при ВЦ Нагрузка</string>
+    <string name="half_basal_exercise_target_summary">Установливается как число, например, 160 означает, что при ВЦ 160 мг/дл и настройке \"Высокая ВЦ повышает чувствительность =true\", активируется 50% базальной скорости (120 = 75%; 140 = 60%).</string>
     <string name="autoISF_settings_title">Настройки AutoISF</string>
     <string name="autoISF_settings_summary">АвтоISF позволяет адаптировать фактор чувствительности (ISF) к различных вариантам изменения гликемии\n\nОн также может изменять настройки микроболюсов SMB</string>
     <string name="acce_ISF_settings_title">настройки acce_ISF</string>
@@ -187,6 +188,7 @@
     <string name="use_autoISF_extensions_title">Включить расширенный функционал чувствительности AutoISF</string>
     <string name="use_autoISF_extensions_summary">К ним относятся модуляция ISF из-за недавних изменений ГК. альтернативные средства поддержки микроболюсов SMB и поддержка полного замкнутого цикла</string>
     <string name="openapsama_enable_autoISF">Включить адаптивную чувствительность ISF в зависимости от поведения ГК</string>
+    <string name="openapsama_autoISF_max_summary">Аналогично autosense_max определяет, насколько сильным может стать ISF. Значение 1.0 по умолчанию его отключает. Предупреждение: Будьте предельно осторожны при использовании значений выше 2.5</string>
     <string name="openapsama_autoISF_max">Макс. коэффициент autoISF\n(autoISF_max)</string>
     <string name="openapsama_autoISF_min">Мин. коэффициент autoISF\n(autoISF_min)</string>
     <string name="openapsama_lower_ISFrange_weight">Нагрузка диапазона ISF ниже цели\n(lower_ISFrange_weight)</string>
