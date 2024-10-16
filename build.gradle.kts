@@ -9,22 +9,22 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:8.7.1")
-        classpath("com.google.gms:google-services:4.4.2")
-        classpath("com.google.firebase:firebase-crashlytics-gradle:3.0.2")
+        classpath(libs.com.android.tools.build)
+        classpath(libs.com.google.gms)
+        classpath(libs.com.google.firebase)
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
 
-        classpath(kotlin("gradle-plugin", version = Libs.Kotlin.kotlin))
-        classpath(kotlin("allopen", version = Libs.Kotlin.kotlin))
-        classpath(kotlin("serialization", version = Libs.Kotlin.kotlin))
+        classpath(libs.kotlin.gradlePlugin)
+        classpath(libs.kotlin.allopen)
+        classpath(libs.kotlin.serialization)
     }
 }
 
 plugins {
-    id("org.jlleitschuh.gradle.ktlint") version "12.1.1"
-    id("com.savvasdalkitsis.module-dependency-graph") version "0.12"
+    alias(libs.plugins.klint)
+    alias(libs.plugins.moduleDependencyGraph)
 }
 
 allprojects {

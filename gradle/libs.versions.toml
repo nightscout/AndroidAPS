@@ -1,0 +1,19 @@
+# libs.versions.toml
+[versions]
+gradlePlugin = "8.7.1"
+googleServices = "4.4.2"
+kotlin = "2.0.21"
+
+[plugins]
+android-library = { id = "com.android.library" }
+klint = { id = "org.jlleitschuh.gradle.ktlint", version = "12.1.1" }
+moduleDependencyGraph = { id = "com.savvasdalkitsis.module-dependency-graph", version = "0.12" }
+
+
+[libraries]
+com-android-tools-build = { group = "com.android.tools.build", name = "gradle", version.ref = "gradlePlugin" }
+com-google-gms = { group = "com.google.gms", name = "google-services", version.ref = "googleServices" }
+com-google-firebase = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version = "3.0.2" }
+kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlin-allopen = { module = "org.jetbrains.kotlin:kotlin-allopen", version.ref = "kotlin" }
+kotlin-serialization = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin" }

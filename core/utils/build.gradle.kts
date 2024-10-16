@@ -1,7 +1,7 @@
 plugins {
-    id("com.android.library")
+    alias(libs.plugins.android.library)
     id("kotlin-android")
-    id("kotlin-allopen")
+    kotlin("plugin.allopen")
     id("android-module-dependencies")
     id("all-open-dependencies")
     id("test-module-dependencies")
