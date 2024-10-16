@@ -69,8 +69,9 @@ data class GlucoseValue(
 
     enum class SourceSensor {
         DEXCOM_NATIVE_UNKNOWN,
-        DEXCOM_G6_NATIVE,
         DEXCOM_G5_NATIVE,
+        DEXCOM_G6_NATIVE,
+        DEXCOM_G7_NATIVE,
         DEXCOM_G4_WIXEL,
         DEXCOM_G4_XBRIDGE,
         DEXCOM_G4_NATIVE,

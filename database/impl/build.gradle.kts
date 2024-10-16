@@ -1,8 +1,8 @@
 plugins {
-    id("com.android.library")
+    alias(libs.plugins.android.library)
     id("kotlin-android")
     id("kotlin-kapt")
-    id("kotlin-allopen")
+    kotlin("plugin.allopen")
     id("android-module-dependencies")
     id("test-module-dependencies")
     id("jacoco-module-dependencies")
@@ -32,7 +32,7 @@ dependencies {
     api(Libs.Rx.rxAndroid)
     api(Libs.Rx.rxKotlin)
 
-    api(Libs.Google.gson)
+    api(libs.com.google.code.gson)
 
     api(Libs.AndroidX.Room.room)
     api(Libs.AndroidX.Room.runtime)

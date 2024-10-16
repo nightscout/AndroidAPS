@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.library")
+    alias(libs.plugins.android.library)
     id("kotlin-android")
     id("kotlin-kapt")
     id("android-module-dependencies")
@@ -18,7 +18,7 @@ dependencies {
     implementation(project(":core:ui"))
 
     api(Libs.xstream)
-    api(Libs.Google.gson)
+    api(libs.com.google.code.gson)
 
     kapt(Libs.Dagger.compiler)
     kapt(Libs.Dagger.androidProcessor)

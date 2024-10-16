@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.library")
+    alias(libs.plugins.android.library)
     id("kotlin-android")
     id("kotlin-kapt")
     id("android-module-dependencies")
@@ -30,7 +30,7 @@ dependencies {
     testImplementation(project(":shared:tests"))
 
     api(Libs.AndroidX.appCompat)
-    api(Libs.Google.Android.material)
+    api(libs.com.google.android.material)
 
     // Actions
     api(Libs.AndroidX.gridLayout)
@@ -40,7 +40,7 @@ dependencies {
     api(Libs.qrGen)
 
     // Overview
-    api(Libs.Google.Android.flexbox)
+    api(libs.com.google.android.flexbox)
 
     // Food
     api(Libs.AndroidX.Work.runtimeKtx)

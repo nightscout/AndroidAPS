@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.library")
+    alias(libs.plugins.android.library)
     id("kotlin-android")
     id("kotlinx-serialization")
     id("android-module-dependencies")
@@ -17,7 +17,7 @@ dependencies {
     api(Libs.Squareup.Retrofit2.converterGson)
     api(Libs.Squareup.Okhttp3.okhttp)
     api(Libs.Squareup.Okhttp3.loggingInterceptor)
-    api(Libs.Google.gson)
+    api(libs.com.google.code.gson)
     api(Libs.jodaTimeAndroid)
     api(Libs.Rx.rxKotlin)
 

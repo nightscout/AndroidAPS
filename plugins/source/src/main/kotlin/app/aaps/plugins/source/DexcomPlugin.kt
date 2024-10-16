@@ -94,8 +94,9 @@ class DexcomPlugin @Inject constructor(
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
             try {
                 val sourceSensor = when (bundle.getString("sensorType") ?: "") {
-                    "G6" -> SourceSensor.DEXCOM_G6_NATIVE
                     "G5" -> SourceSensor.DEXCOM_G5_NATIVE
+                    "G6" -> SourceSensor.DEXCOM_G6_NATIVE
+                    "G7" -> SourceSensor.DEXCOM_G7_NATIVE
                     else -> SourceSensor.DEXCOM_NATIVE_UNKNOWN
                 }
                 val calibrations = mutableListOf<PersistenceLayer.Calibration>()

@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.library")
+    alias(libs.plugins.android.library)
     id("kotlin-android")
     id("kotlin-kapt")
     id("android-module-dependencies")
@@ -22,7 +22,7 @@ dependencies {
     implementation(project(":core:ui"))
     implementation(project(":pump:eopatch-core"))
 
-    api(Libs.Google.guava)
+    api(libs.com.google.guava)
 
     //RxAndroidBle
     api(Libs.Rx.rxAndroid)

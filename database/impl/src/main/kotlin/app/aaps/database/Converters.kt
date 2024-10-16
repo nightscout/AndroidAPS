@@ -60,7 +60,12 @@ class Converters {
     fun fromSourceSensor(sourceSensor: GlucoseValue.SourceSensor?) = sourceSensor?.name
 
     @TypeConverter
-    fun toSourceSensor(sourceSensor: String?) = sourceSensor?.let { GlucoseValue.SourceSensor.valueOf(it) }
+    fun toSourceSensor(sourceSensor: String?): GlucoseValue.SourceSensor? {
+        return sourceSensor?.let {
+            GlucoseValue.SourceSensor.entries.firstOrNull {
+                enumValue -> enumValue.name == it } ?: GlucoseValue.SourceSensor.UNKNOWN
+        }
+    }
 
     @TypeConverter
     fun fromTBRType(tbrType: TemporaryBasal.Type?) = tbrType?.name

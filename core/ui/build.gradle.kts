@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.library")
+    alias(libs.plugins.android.library)
     id("kotlin-android")
     id("android-module-dependencies")
 }
@@ -18,7 +18,7 @@ dependencies {
     api(Libs.AndroidX.gridLayout)
 
 
-    api(Libs.Google.Android.material)
+    api(libs.com.google.android.material)
 
     api(Libs.Dagger.android)
     api(Libs.Dagger.androidSupport)
