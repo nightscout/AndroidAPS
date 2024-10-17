@@ -168,7 +168,7 @@
     <string name="pump_disconnected">Micro disconnesso</string>
     <!--    autoISF -->
     <string name="half_basal_exercise_target_title">Obiettivo Di Esercizio Metà Basale</string>
-    <string name="half_basal_exercise_target_summary">Impostare un numero, ad esempio 160, significa che quando il target temporaneo è 160 mg/dL e l\'opzione aumenta la sensibilità se rileva sensibilità è attivo, esegue il 50% della basale a questo livello (120 = 75%; 140 = 60%).</string>
+    <string name="half_basal_exercise_target_summary">Impostare un numero, ad esempio 160, significa che quando il target temporaneo è 160 mg/dL e l\'opzione aumenta la sensibilità se rileva sensibilità è attivo, esegue il 50%% della basale a questo livello (120 = 75%%; 140 = 60%%).</string>
     <string name="autoISF_settings_title">Impostazioni AutoISF</string>
     <string name="autoISF_settings_summary">AutoISF consente di adattare il fattore di sensibilità all\'insulina (ISF) in vari scenari di comportamento glicemico\n\nPuò anche adattare le impostazioni di erogazione SMB</string>
     <string name="acce_ISF_settings_title">impostazioni acce_ISF</string>
