@@ -20,16 +20,17 @@ dependencies {
     implementation(project(":core:data"))
 
 
-    api(Libs.AndroidX.appCompat)
-    api(Libs.AndroidX.preference)
+    api(libs.androidx.appcompat)
+    api(libs.androidx.preference)
 
-    api(Libs.KotlinX.serializationJson)
-    api(Libs.KotlinX.serializationProtobuf)
+    api(platform(libs.kotlinx.serialization.bom))
+    api(libs.kotlinx.serialization.json)
+    api(libs.kotlinx.serialization.protobuf)
 
-    api(Libs.Apache.commonsLang3)
-    api(Libs.jodaTimeAndroid)
+    api(libs.org.apache.commons.lang3)
+    api(libs.net.danlew.android.joda)
 
     //RxBus
-    api(Libs.Rx.rxKotlin)
-    testImplementation(Libs.Rx.rxAndroid)
+    api(libs.io.reactivex.rxjava3.rxkotlin)
+    testImplementation(libs.io.reactivex.rxjava3.rxandroid)
 }

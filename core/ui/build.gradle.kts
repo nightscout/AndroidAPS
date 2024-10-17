@@ -12,14 +12,14 @@ android {
 }
 
 dependencies {
-    api(Libs.AndroidX.core)
-    api(Libs.AndroidX.appCompat)
-    api(Libs.AndroidX.preference)
-    api(Libs.AndroidX.gridLayout)
+    api(libs.androidx.core)
+    api(libs.androidx.appcompat)
+    api(libs.androidx.preference)
+    api(libs.androidx.gridlayout)
 
 
     api(libs.com.google.android.material)
 
-    api(Libs.Dagger.android)
-    api(Libs.Dagger.androidSupport)
+    api(libs.com.google.dagger.android)
+    api(libs.com.google.dagger.android.support)
 }

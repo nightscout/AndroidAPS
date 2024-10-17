@@ -29,15 +29,15 @@ dependencies {
     implementation(project(":core:ui"))
     implementation(project(":shared:impl"))
 
-    api(Libs.AndroidX.Room.room)
-    api(Libs.AndroidX.Room.runtime)
-    api(Libs.AndroidX.Room.rxJava3)
-    kapt(Libs.AndroidX.Room.compiler)
+    api(libs.androidx.room)
+    api(libs.androidx.room.runtime)
+    api(libs.androidx.room.rxjava3)
+    kapt(libs.androidx.room.compiler)
 
-    api(Libs.Squareup.Okhttp3.okhttp)
-    api(Libs.Squareup.Retrofit2.retrofit)
-    api(Libs.Squareup.Retrofit2.converterGson)
+    api(libs.com.squareup.okhttp3.okhttp)
+    api(libs.com.squareup.retrofit2.retrofit)
+    api(libs.com.squareup.retrofit2.converter.gson)
 
-    kapt(Libs.Dagger.compiler)
-    kapt(Libs.Dagger.androidProcessor)
+    kapt(libs.com.google.dagger.compiler)
+    kapt(libs.com.google.dagger.android.processor)
 }

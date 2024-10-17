@@ -32,19 +32,19 @@ dependencies {
     implementation(project(":pump:pump-common"))
     implementation(project(":pump:rileylink"))
 
-    api(Libs.AndroidX.Room.room)
-    api(Libs.AndroidX.Room.runtime)
-    api(Libs.AndroidX.Room.rxJava3)
+    api(libs.androidx.room)
+    api(libs.androidx.room.runtime)
+    api(libs.androidx.room.rxjava3)
 
     androidTestImplementation(project(":shared:tests"))
     // optional - Test helpers
-    testImplementation(Libs.AndroidX.Room.testing)
+    testImplementation(libs.androidx.room.testing)
     testImplementation(project(":implementation"))
     testImplementation(project(":shared:impl"))
     testImplementation(project(":shared:tests"))
 
 
-    kapt(Libs.Dagger.compiler)
-    kapt(Libs.Dagger.androidProcessor)
-    kapt(Libs.AndroidX.Room.compiler)
+    kapt(libs.com.google.dagger.compiler)
+    kapt(libs.com.google.dagger.android.processor)
+    kapt(libs.androidx.room.compiler)
 }

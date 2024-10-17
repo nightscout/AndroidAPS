@@ -24,16 +24,16 @@ dependencies {
     testImplementation(project(":pump:virtual"))
     testImplementation(project(":shared:tests"))
 
-    api(Libs.AndroidX.appCompat)
-    api(Libs.AndroidX.swipeRefreshLayout)
-    api(Libs.AndroidX.gridLayout)
+    api(libs.androidx.appcompat)
+    api(libs.androidx.swiperefreshlayout)
+    api(libs.androidx.gridlayout)
     api(kotlin("reflect"))
 
     // APS (it should be androidTestImplementation but it doesn't work)
-    api(Libs.Mozilla.rhino)
+    api(libs.org.mozilla.rhino)
 
     //Logger
-    api(Libs.Logging.slf4jApi)
+    api(libs.org.slf4j.api)
 
-    kapt(Libs.Dagger.androidProcessor)
+    kapt(libs.com.google.dagger.android.processor)
 }

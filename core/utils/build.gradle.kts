@@ -14,7 +14,7 @@ android {
 
 dependencies {
 
-    api(Libs.jodaTimeAndroid)
+    api(libs.net.danlew.android.joda)
 
     //Firebase
     api(platform(libs.com.google.firebase.bom))
@@ -26,12 +26,12 @@ dependencies {
     // api(libs.com.google.firebase.database)
 
     //CryptoUtil
-    api(Libs.spongycastleCore)
+    api(libs.com.madgag.spongycastle)
     api(libs.com.google.crypto.tink)
 
     //WorkManager
-    api(Libs.AndroidX.Work.runtimeKtx) // DataWorkerStorage
+    api(libs.androidx.work.runtime) // DataWorkerStorage
 
-    api(Libs.Dagger.android)
-    api(Libs.Dagger.androidSupport)
+    api(libs.com.google.dagger.android)
+    api(libs.com.google.dagger.android.support)
 }

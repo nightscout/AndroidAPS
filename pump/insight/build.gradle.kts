@@ -30,11 +30,11 @@ dependencies {
     testImplementation(project(":shared:tests"))
 
     api(libs.com.google.android.material)
-    api(Libs.AndroidX.Room.room)
-    api(Libs.AndroidX.Room.runtime)
-    api(Libs.AndroidX.Room.rxJava3)
+    api(libs.androidx.room)
+    api(libs.androidx.room.runtime)
+    api(libs.androidx.room.rxjava3)
 
-    kapt(Libs.AndroidX.Room.compiler)
-    kapt(Libs.Dagger.compiler)
-    kapt(Libs.Dagger.androidProcessor)
+    kapt(libs.androidx.room.compiler)
+    kapt(libs.com.google.dagger.compiler)
+    kapt(libs.com.google.dagger.android.processor)
 }

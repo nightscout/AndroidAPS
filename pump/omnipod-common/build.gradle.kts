@@ -17,11 +17,11 @@ dependencies {
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
 
-    api(Libs.AndroidX.constraintLayout)
-    api(Libs.AndroidX.fragment)
-    api(Libs.AndroidX.navigationFragment)
+    api(libs.androidx.constraintlayout)
+    api(libs.androidx.fragment)
+    api(libs.androidx.navigation.fragment)
     api(libs.com.google.android.material)
 
-    kapt(Libs.Dagger.compiler)
-    kapt(Libs.Dagger.androidProcessor)
+    kapt(libs.com.google.dagger.compiler)
+    kapt(libs.com.google.dagger.android.processor)
 }

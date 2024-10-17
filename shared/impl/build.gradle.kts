@@ -20,15 +20,15 @@ dependencies {
     implementation(project(":core:keys"))
 
     //Logger
-    api(Libs.Logging.slf4jApi)
-    api(Libs.Logging.logbackAndroid)
+    api(libs.org.slf4j.api)
+    api(libs.com.github.tony19.logback.android)
 
-    api(Libs.androidSvg)
+    api(libs.com.caverock.androidsvg)
 
-    api(Libs.Rx.rxAndroid)
-    api(Libs.jodaTimeAndroid)
+    api(libs.io.reactivex.rxjava3.rxandroid)
+    api(libs.net.danlew.android.joda)
 
-    api(Libs.Dagger.androidSupport)
-    kapt(Libs.Dagger.compiler)
-    kapt(Libs.Dagger.androidProcessor)
+    api(libs.com.google.dagger.android.support)
+    kapt(libs.com.google.dagger.compiler)
+    kapt(libs.com.google.dagger.android.processor)
 }

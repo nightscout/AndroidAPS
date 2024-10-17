@@ -99,7 +99,7 @@ class MedtrumActivity : MedtrumBaseActivity<ActivityMedtrumBinding>() {
         })
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         processIntent(intent)
     }

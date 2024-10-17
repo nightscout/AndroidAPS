@@ -27,10 +27,10 @@ dependencies {
     testImplementation(project(":shared:tests"))
 
     //WorkManager
-    api(Libs.AndroidX.Work.runtimeKtx)
+    api(libs.androidx.work.runtime)
     // Maintenance
-    api(Libs.AndroidX.gridLayout)
+    api(libs.androidx.gridlayout)
 
-    kapt(Libs.Dagger.compiler)
-    kapt(Libs.Dagger.androidProcessor)
+    kapt(libs.com.google.dagger.compiler)
+    kapt(libs.com.google.dagger.android.processor)
 }

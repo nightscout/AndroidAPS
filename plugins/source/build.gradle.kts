@@ -23,10 +23,10 @@ dependencies {
     implementation(project(":core:validators"))
     implementation(project(":shared:impl"))
 
-    testImplementation(Libs.AndroidX.Work.testing)
+    testImplementation(libs.androidx.work.testing)
 
     testImplementation(project(":shared:tests"))
 
-    kapt(Libs.Dagger.compiler)
-    kapt(Libs.Dagger.androidProcessor)
+    kapt(libs.com.google.dagger.compiler)
+    kapt(libs.com.google.dagger.android.processor)
 }

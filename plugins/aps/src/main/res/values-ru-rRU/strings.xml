@@ -168,7 +168,7 @@
     <string name="pump_disconnected">Помпа отключена</string>
     <!--    autoISF -->
     <string name="half_basal_exercise_target_title">Половина дозы базального инсулина при ВЦ Нагрузка</string>
-    <string name="half_basal_exercise_target_summary" formatted="false">Установливается как число, например, 160 означает, что при ВЦ 160 мг/дл и настройке \"Высокая ВЦ повышает чувствительность =true\", активируется 50% базальной скорости (120 = 75%; 140 = 60%).</string>
+    <string name="half_basal_exercise_target_summary">Установливается как число, например, 160 означает, что при ВЦ 160 мг/дл и настройке \"Высокая ВЦ повышает чувствительность =true\", активируется 50% базальной скорости (120 = 75%; 140 = 60%).</string>
     <string name="autoISF_settings_title">Настройки AutoISF</string>
     <string name="autoISF_settings_summary">АвтоISF позволяет адаптировать фактор чувствительности (ISF) к различных вариантам изменения гликемии\n\nОн также может изменять настройки микроболюсов SMB</string>
     <string name="acce_ISF_settings_title">настройки acce_ISF</string>
@@ -177,7 +177,6 @@
     <string name="enableautoISFwithcob_summary">Включить dura_ISF, когда имеются активные углеводы COB</string>
     <string name="bg_ISF_settings_title">настройки bg_ISF</string>
     <string name="bg_ISF_settings_summary">Настройки BG_ISF: ISF зависит от уровня гликемии по заранее определенному многоугольнику</string>
-    <string name="enable_postprandial_ISF_always_summary">Всегда включать адаптивный постпрандиальный ISF независимо от времени недавнего приема пищи.</string>
     <string name="pp_ISF_settings_title">Настройки pp_ISF</string>
     <string name="pp_ISF_settings_summary">Настройки pp_ISF: коэффициент чувствительности ISF для постпрандиального (после еды) подъема уровня глюкозы</string>
     <string name="dura_ISF_settings_title">настройки dura_ISF</string>
@@ -189,14 +188,7 @@
     <string name="use_autoISF_extensions_title">Включить расширенный функционал чувствительности AutoISF</string>
     <string name="use_autoISF_extensions_summary">К ним относятся модуляция ISF из-за недавних изменений ГК. альтернативные средства поддержки микроболюсов SMB и поддержка полного замкнутого цикла</string>
     <string name="openapsama_enable_autoISF">Включить адаптивную чувствительность ISF в зависимости от поведения ГК</string>
-    <string name="openapsama_autoISF_max_summary">Значение по умолчанию: 1.0 \n Это множитель предела autoISF, который, в свою очередь определяет, насколько низко он может опустить ISF.\n\nПРЕДУПРЕЖДЕНИЕ: Будьте предельно внимательны при использовании значений выше 2.5</string>
-    <string name="openapsama_autoISF_min_summary">Значение по умолчанию: 1.0 \n Это множитель нижнего предела autoISF, который, в свою очередь, определяет, насколько высоко он может поднять ISF.</string>
-    <string name="openapsama_dura_ISF_weight_summary" formatted="false">Значение по умолчанию: 0.0\n Ээто скорость, с которой autoISF увеличивается в час, при условии, что ГК в два раза выше целевой. При значении 1.0 величина ISF снизится до 50% после 1 часа работы с ГК, в два раза превышающим цель.\n\n При значении 0.0 эффект автоматической настройки ISF фактически отключен.</string>
-    <string name="openapsama_lower_ISFrange_weight_summary">Значение по умолчанию: 0.0\nЭто нагрузка, прилагаемая к многоугольнику адаптации ISF при ГК ниже цели. \n\nПри 0.0 нагрузка отключена.</string>
-    <string name="openapsama_higher_ISFrange_weight_summary">Значение по умолчанию: 0.0\nЭто нагрузка, прилагаемая к многоугольнику адаптации ISF если ГК выше цели. \n\nПри 0.0 нагрузка отключена.</string>
-    <string name="openapsama_pp_ISF_weight_summary">По умолчанию: 0.0\nЭто нагрузка, применяемая к линейному наклону при росте ГК, адаптирующая ISF. \n\nПри значении 0.0 не играет роли.</string>
-    <string name="openapsama_bgAccel_ISF_weight_summary">По умолчанию: 0.0\nЭто нагрузка, применяемая при ускорении изменения ГК и усиливающая ISF. \n\nПри значении 0.0 не играет роли.</string>
-    <string name="openapsama_bgBrake_ISF_weight_summary">По умолчанию: 0.0\nЭто нагрузка, применяемая при изменении замедления ГК и ослабляющая ISF. \n\nПри значении 0.0 не играет роли.</string>
+    <string name="openapsama_autoISF_max_summary">Аналогично autosense_max определяет, насколько сильным может стать ISF. Значение 1.0 по умолчанию его отключает. Предупреждение: Будьте предельно осторожны при использовании значений выше 2.5</string>
     <string name="openapsama_autoISF_max">Макс. коэффициент autoISF\n(autoISF_max)</string>
     <string name="openapsama_autoISF_min">Мин. коэффициент autoISF\n(autoISF_min)</string>
     <string name="openapsama_lower_ISFrange_weight">Нагрузка диапазона ISF ниже цели\n(lower_ISFrange_weight)</string>

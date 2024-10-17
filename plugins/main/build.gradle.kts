@@ -29,22 +29,22 @@ dependencies {
     testImplementation(project(":plugins:insulin"))
     testImplementation(project(":shared:tests"))
 
-    api(Libs.AndroidX.appCompat)
+    api(libs.androidx.appcompat)
     api(libs.com.google.android.material)
 
     // Actions
-    api(Libs.AndroidX.gridLayout)
+    api(libs.androidx.gridlayout)
 
     //SmsCommunicator
-    api(Libs.javaOtp)
-    api(Libs.qrGen)
+    api(libs.com.eatthepath.java.otp)
+    api(libs.com.github.kenglxn.qrgen.android)
 
     // Overview
     api(libs.com.google.android.flexbox)
 
     // Food
-    api(Libs.AndroidX.Work.runtimeKtx)
+    api(libs.androidx.work.runtime)
 
-    kapt(Libs.Dagger.compiler)
-    kapt(Libs.Dagger.androidProcessor)
+    kapt(libs.com.google.dagger.compiler)
+    kapt(libs.com.google.dagger.android.processor)
 }

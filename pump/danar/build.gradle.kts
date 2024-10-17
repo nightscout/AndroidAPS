@@ -21,11 +21,11 @@ dependencies {
     implementation(project(":core:validators"))
     implementation(project(":pump:dana"))
 
-    api(Libs.AndroidX.media3)
+    api(libs.androidx.media3.common)
 
     testImplementation(project(":shared:tests"))
     testImplementation(project(":core:objects"))
 
-    kapt(Libs.Dagger.compiler)
-    kapt(Libs.Dagger.androidProcessor)
+    kapt(libs.com.google.dagger.compiler)
+    kapt(libs.com.google.dagger.android.processor)
 }

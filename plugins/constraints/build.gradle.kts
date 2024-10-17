@@ -32,8 +32,8 @@ dependencies {
     testImplementation(project(":shared:tests"))
 
     // Phone checker
-    api(Libs.rootBeer)
+    api(libs.com.scottyab.rootbeer.lib)
 
-    kapt(Libs.Dagger.compiler)
-    kapt(Libs.Dagger.androidProcessor)
+    kapt(libs.com.google.dagger.compiler)
+    kapt(libs.com.google.dagger.android.processor)
 }
