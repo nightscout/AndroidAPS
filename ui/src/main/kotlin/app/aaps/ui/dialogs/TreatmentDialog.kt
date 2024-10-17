@@ -26,6 +26,8 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.SafeParse
+import app.aaps.core.interfaces.smsCommunicator.Sms
+import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.keys.StringKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.formatColor
@@ -45,6 +47,7 @@ import kotlin.math.abs
 
 class TreatmentDialog : DialogFragmentWithDate() {
 
+    @Inject lateinit var smsCommunicator: SmsCommunicator
     @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var activePlugin: ActivePlugin
@@ -155,10 +158,11 @@ class TreatmentDialog : DialogFragmentWithDate() {
                         app.aaps.core.ui.R.attr.bolusColor
                     )
             )
-            if(true)
-                actions.add((rh.gs(app.aaps.core.ui.R.string.sms_bolus)+"treatmentDialog.kt").formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
-            else if (recordOnlyChecked)
+            if (recordOnlyChecked)
                 actions.add(rh.gs(app.aaps.core.ui.R.string.bolus_recorded_only).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
+            else if(phoneNumber.isNullOrBlank())
+                actions.add(rh.gs(app.aaps.core.ui.R.string.sms_bolus).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
+
             if (abs(insulinAfterConstraints - insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
                 actions.add(
                     rh.gs(app.aaps.core.ui.R.string.bolus_constraint_applied_warn, insulin, insulinAfterConstraints).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor)
@@ -202,6 +206,8 @@ class TreatmentDialog : DialogFragmentWithDate() {
                                 source = Sources.TreatmentDialog,
                                 note = if (carbsAfterConstraints != 0) rh.gs(app.aaps.core.ui.R.string.record) else ""
                             ).subscribe()
+                    } else if(phoneNumber.isNullOrBlank()){
+                        smsCommunicator.sendSMS(Sms(phoneNumber, rh.gs(app.aaps.core.ui.R.string.bolus) + " " + detailedBolusInfo.insulin))
                     } else {
                         if (detailedBolusInfo.insulin > 0) {
                             uel.log(

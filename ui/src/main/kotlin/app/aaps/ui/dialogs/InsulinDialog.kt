@@ -30,6 +30,8 @@ import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.smsCommunicator.Sms
+import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.SafeParse
@@ -59,6 +61,7 @@ import kotlin.math.max
 
 class InsulinDialog : DialogFragmentWithDate() {
 
+    @Inject lateinit var smsCommunicator: SmsCommunicator
     @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
@@ -197,7 +200,7 @@ class InsulinDialog : DialogFragmentWithDate() {
         val actions: LinkedList<String?> = LinkedList()
         val units = profileFunction.getUnits()
         val unitLabel = if (units == GlucoseUnit.MMOL) rh.gs(app.aaps.core.ui.R.string.mmol) else rh.gs(app.aaps.core.ui.R.string.mgdl)
-        val smsNumber = preferences.get(StringKey.SmsReceiverNumber)
+        val phoneNumber = preferences.get(StringKey.SmsReceiverNumber)
         val recordOnlyChecked = binding.recordOnly.isChecked
         val eatingSoonChecked = binding.startEatingSoonTt.isChecked
 
@@ -206,10 +209,10 @@ class InsulinDialog : DialogFragmentWithDate() {
                 rh.gs(app.aaps.core.ui.R.string.bolus) + ": " + decimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump.pumpDescription.bolusStep)
                     .formatColor(context, rh, app.aaps.core.ui.R.attr.bolusColor)
             )
-            if(true)
-                actions.add((rh.gs(app.aaps.core.ui.R.string.sms_bolus)+"insulinDialog.kt").formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
-            else if (recordOnlyChecked)
+            if (recordOnlyChecked)
                 actions.add(rh.gs(app.aaps.core.ui.R.string.bolus_recorded_only).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
+            else if(!phoneNumber.isNullOrBlank())
+                actions.add((rh.gs(app.aaps.core.ui.R.string.sms_bolus)+"insulinDialog.kt").formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
             if (abs(insulinAfterConstraints - insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
                 actions.add(
                     rh.gs(app.aaps.core.ui.R.string.bolus_constraint_applied_warn, insulin, insulinAfterConstraints).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor)
@@ -272,6 +275,8 @@ class InsulinDialog : DialogFragmentWithDate() {
                             ).subscribe()
                             if (timeOffset == 0)
                                 automation.removeAutomationEventBolusReminder()
+                        } else if(!phoneNumber.isNullOrBlank()){
+                            smsCommunicator.sendSMS(Sms(phoneNumber, rh.gs(app.aaps.core.ui.R.string.bolus) + " " + detailedBolusInfo.insulin))
                         } else {
                             uel.log(
                                 Action.BOLUS, Sources.InsulinDialog,
