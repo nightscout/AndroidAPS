@@ -168,6 +168,7 @@
     <string name="pump_disconnected">Micro disconnesso</string>
     <!--    autoISF -->
     <string name="half_basal_exercise_target_title">Obiettivo Di Esercizio Metà Basale</string>
+    <string name="half_basal_exercise_target_summary">Impostare un numero, ad esempio 160, significa che quando il target temporaneo è 160 mg/dL e l\'opzione aumenta la sensibilità se rileva sensibilità è attivo, esegue il 50% della basale a questo livello (120 = 75%; 140 = 60%).</string>
     <string name="autoISF_settings_title">Impostazioni AutoISF</string>
     <string name="autoISF_settings_summary">AutoISF consente di adattare il fattore di sensibilità all\'insulina (ISF) in vari scenari di comportamento glicemico\n\nPuò anche adattare le impostazioni di erogazione SMB</string>
     <string name="acce_ISF_settings_title">impostazioni acce_ISF</string>
@@ -187,6 +188,14 @@
     <string name="use_autoISF_extensions_title">Abilita le funzionalità avanzate di AutoISF</string>
     <string name="use_autoISF_extensions_summary">Questi includono la modulazione ISF dovuta al comportamento recente della glicemia, abilitatori SMB alternativi e il supporto per Full Closed Loop</string>
     <string name="openapsama_enable_autoISF">Abilita l\'adattamento ISF in base al comportamento del glucosio</string>
+    <string name="openapsama_autoISF_max_summary">Simile a autosens_max questo definisce quanto forte ISF può diventare.\n\nIl valore predefinito 1.0 disattiva in modo efficace questo effetto.\n\nATTENZIONE: Fai molta attenzione quando usi valori superiori a 2,5</string>
+    <string name="openapsama_autoISF_min_summary">Simile a autosens_min questo definisce quanto debole ISF possa diventare.\n\nIl valore predefinito 1.0 disattiva efficacemente questo effetto.</string>
+    <string name="openapsama_dura_ISF_weight_summary">Questo è il peso applicato durante eventi di glucosio alto di lunga durata e che rafforza ISF aumentando così potenzialmente la somministrazione di insulina.\n\nIl valore predefinito 0.0 disattiva efficacemente questo effetto.</string>
+    <string name="openapsama_lower_ISFrange_weight_summary">Questo è il peso applicato mentre il glucosio è al di sotto del target e che indebolisce ISF riducendo potenzialmente la somministrazione di insulina.\n\nIl valore predefinito 0.0 disattiva efficacemente questo effetto.</string>
+    <string name="openapsama_higher_ISFrange_weight_summary">Questo è il peso applicato mentre il glucosio è superiore all’obiettivo e che rafforza l’ISF aumentando potenzialmente la somministrazione di insulina.\n\nIl valore predefinito 0.0 disattiva efficacemente questo effetto.</string>
+    <string name="openapsama_pp_ISF_weight_summary">Questo è il peso applicato mentre il glucosio sta aumentando e che rafforza ISF aumentando potenzialmente la somministrazione di insulina.\n\nIl valore predefinito 0.0 disattiva efficacemente questo effetto.</string>
+    <string name="openapsama_bgAccel_ISF_weight_summary">Questo è il peso applicato mentre il glucosio accelera e che rafforza ISF aumentando potenzialmente la somministrazione di insulina.\n\nIl valore predefinito 0.0 disattiva efficacemente questo effetto.</string>
+    <string name="openapsama_bgBrake_ISF_weight_summary">Questo è il peso applicato mentre il glucosio decelera e che indebolisce ISF riducendo potenzialmente la somministrazione di insulina.\n\nIl valore predefinito 0.0 disattiva efficacemente questo effetto.</string>
     <string name="openapsama_autoISF_max">Rapporto max autoISF\n(autoISF_max)</string>
     <string name="openapsama_autoISF_min">Rapporto min autoISF\n(autoISF_min)</string>
     <string name="openapsama_lower_ISFrange_weight">livello inferiore all\'intervallo ISF\n(lower_ISFrange_weight)</string>
@@ -207,4 +216,6 @@
     <string name="openapsama_smb_max_range_extension_summary">Valore predefinito: 1 Questo è un altro parametro chiave della sicurezza OpenAPS, che specifica per quale fattore è possibile superare i soliti 120 minuti maxSMB/maxUAM. Aumentare lentamente questo valore sperimentale con cautela.</string>
     <string name="enableSMB_EvenOn_OddOff_always">Abilita l\'attivazione alternativa di SMB a seconda che il target attivo sia un numero pari</string>
     <string name="enableSMB_EvenOn_OddOff_always_summary">\nenabled ...\nif il target attivo(mmol/L) ha una cifra decimale pari\no il bersaglio attivo(mg/dL) è un numero pari\n\nnon abilitato altrimenti</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Percentuale di maxIOB al di sopra del quale gli SMB sono disabilitati.\nValore predefinito: 100%\nCon 100% questa funzione è effettivamente disabilitata.</string>
+    <string name="openapsama_iob_threshold_percent">soglia maxIOB percentuale per SMB\n(iob_threshold_percent)</string>
 </resources>
