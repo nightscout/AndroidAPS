@@ -168,7 +168,7 @@
     <string name="pump_disconnected">Помпа отключена</string>
     <!--    autoISF -->
     <string name="half_basal_exercise_target_title">Половина дозы базального инсулина при ВЦ Нагрузка</string>
-    <string name="half_basal_exercise_target_summary">Установливается как число, например, 160 означает, что при ВЦ 160 мг/дл и настройке \"Высокая ВЦ повышает чувствительность =true\", активируется 50% базальной скорости (120 = 75%; 140 = 60%).</string>
+    <string name="half_basal_exercise_target_summary">Установливается как число, например, 160 означает, что при ВЦ 160 мг/дл и настройке \"Высокая ВЦ повышает чувствительность =true\", активируется 50% базальной скорости (120 = 75%%; 140 = 60%%).</string>
     <string name="autoISF_settings_title">Настройки AutoISF</string>
     <string name="autoISF_settings_summary">АвтоISF позволяет адаптировать фактор чувствительности (ISF) к различных вариантам изменения гликемии\n\nОн также может изменять настройки микроболюсов SMB</string>
     <string name="acce_ISF_settings_title">настройки acce_ISF</string>
