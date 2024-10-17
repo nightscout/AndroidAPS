@@ -11,5 +11,5 @@ android {
 }
 
 dependencies {
-    api(Libs.AndroidX.core)
+    api(libs.androidx.core)
 }

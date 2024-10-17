@@ -23,7 +23,7 @@ dependencies {
     implementation(project(":core:validators"))
     implementation(project(":shared:impl"))
 
-    testImplementation(Libs.AndroidX.Work.testing)
+    testImplementation(libs.androidx.work.testing)
 
     testImplementation(project(":shared:tests"))
 

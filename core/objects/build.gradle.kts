@@ -26,14 +26,14 @@ dependencies {
     api(libs.kotlin.stdlib.jdk8)
     api(libs.com.google.android.material)
     api(libs.com.google.guava)
-    api(Libs.AndroidX.activity)
-    api(Libs.AndroidX.appCompat)
+    api(libs.androidx.activity)
+    api(libs.androidx.appcompat)
 
     api(libs.com.google.dagger.android)
     api(libs.com.google.dagger.android.support)
 
     //WorkManager
-    api(Libs.AndroidX.Work.runtimeKtx)  // DataWorkerStorage
+    api(libs.androidx.work.runtime)  // DataWorkerStorage
 
     kapt(libs.com.google.dagger.compiler)
     kapt(libs.com.google.dagger.android.processor)

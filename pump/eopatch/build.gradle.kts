@@ -26,8 +26,8 @@ dependencies {
 
     //RxAndroidBle
     api(libs.io.reactivex.rxjava3.rxandroid)
-    api(Libs.rxandroidBle)
-    api(Libs.rx3ReplayingShare)
+    api(libs.com.polidea.rxandroidble3)
+    api(libs.com.jakewharton.rx3.replaying.share)
 
     kapt(libs.com.google.dagger.compiler)
     kapt(libs.com.google.dagger.android.processor)

@@ -18,10 +18,10 @@ dependencies {
     api(libs.com.squareup.okhttp3.okhttp)
     api(libs.com.squareup.okhttp3.logging.interceptor)
     api(libs.com.google.code.gson)
-    api(Libs.jodaTimeAndroid)
+    api(libs.net.danlew.android.joda)
     api(libs.io.reactivex.rxjava3.rxkotlin)
 
-    api(Libs.AndroidX.core)
+    api(libs.androidx.core)
     api(libs.kotlin.stdlib.jdk8)
 
     api(platform(libs.kotlinx.coroutines.bom))

@@ -17,7 +17,7 @@ dependencies {
     implementation(project(":core:utils"))
     implementation(project(":core:ui"))
 
-    api(Libs.xstream)
+    api(libs.com.thoughtworks.xstream)
     api(libs.com.google.code.gson)
 
     kapt(libs.com.google.dagger.compiler)

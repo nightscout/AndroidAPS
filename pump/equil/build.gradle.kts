@@ -33,8 +33,8 @@ dependencies {
 
     testImplementation(project(":shared:tests"))
 
-    api(Libs.AndroidX.fragment)
-    api(Libs.AndroidX.navigationFragment)
+    api(libs.androidx.fragment)
+    api(libs.androidx.navigation.fragment)
 
     api(libs.androidx.room)
     api(libs.androidx.room.runtime)

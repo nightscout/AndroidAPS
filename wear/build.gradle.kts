@@ -103,13 +103,13 @@ dependencies {
     implementation(project(":core:keys"))
     implementation(project(":core:ui"))
 
-    implementation(Libs.AndroidX.appCompat)
-    implementation(Libs.AndroidX.core)
-    implementation(Libs.AndroidX.legacySupport)
-    implementation(Libs.AndroidX.preference)
-    implementation(Libs.AndroidX.Wear.wear)
-    implementation(Libs.AndroidX.Wear.tiles)
-    implementation(Libs.AndroidX.constraintLayout)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.core)
+    implementation(libs.androidx.legacy.support)
+    implementation(libs.androidx.preference)
+    implementation(libs.androidx.wear)
+    implementation(libs.androidx.wear.tiles)
+    implementation(libs.androidx.constraintlayout)
 
     testImplementation(project(":shared:tests"))
 

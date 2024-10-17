@@ -34,11 +34,11 @@ dependencies {
     api(libs.androidx.room)
     api(libs.androidx.room.runtime)
     api(libs.androidx.room.rxjava3)
-    api(Libs.kulid)
+    api(libs.com.github.guepardoapps.kulid)
 
     androidTestImplementation(project(":shared:tests"))
     testImplementation(project(":shared:tests"))
-    testImplementation(Libs.commonCodecs)
+    testImplementation(libs.commons.codec)
 
     kapt(libs.com.google.dagger.compiler)
     kapt(libs.com.google.dagger.android.processor)

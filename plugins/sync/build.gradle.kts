@@ -24,7 +24,7 @@ dependencies {
 
 
     testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(Libs.AndroidX.Work.testing)
+    testImplementation(libs.androidx.work.testing)
 
     testImplementation(project(":shared:tests"))
     testImplementation(project(":implementation"))
@@ -34,13 +34,13 @@ dependencies {
     // OpenHuman
     api(libs.com.squareup.okhttp3.okhttp)
     api(libs.com.squareup.retrofit2.retrofit)
-    api(Libs.AndroidX.browser)
-    api(Libs.AndroidX.Work.runtimeKtx)
-    api(Libs.AndroidX.gridLayout)
+    api(libs.androidx.browser)
+    api(libs.androidx.work.runtime)
+    api(libs.androidx.gridlayout)
     api(libs.com.google.android.material)
 
     // NSClient, Tidepool
-    api(Libs.socketIo)
+    api(libs.io.socket.client)
     api(libs.com.squareup.okhttp3.logging.interceptor)
     api(libs.com.squareup.retrofit2.adapter.rxjava3)
     api(libs.com.squareup.retrofit2.converter.gson)
@@ -50,8 +50,8 @@ dependencies {
     api(libs.com.google.android.gms.playservices.wearable)
 
     // Garmin
-    api(Libs.connectiqSdk)
-    androidTestImplementation(Libs.connectiqSdk)
+    api(libs.com.garmin.connectiq) { artifact { type = "aar" } }
+    androidTestImplementation(libs.com.garmin.connectiq) { artifact { type = "aar" } }
 
     kapt(libs.com.google.dagger.compiler)
     kapt(libs.com.google.dagger.android.processor)

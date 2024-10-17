@@ -23,9 +23,9 @@ dependencies {
     api(platform(libs.kotlinx.coroutines.bom))
     api(libs.kotlinx.coroutines.core)
     api(libs.kotlinx.datetime)
-    api(Libs.AndroidX.core)
+    api(libs.androidx.core)
 
     testImplementation(kotlin("test"))
-    testImplementation(Libs.kotlinTestRunner)
+    testImplementation(libs.io.kotlintest.runner.junit5)
     testRuntimeOnly(libs.org.junit.jupiter.engine)
 }

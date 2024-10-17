@@ -27,7 +27,7 @@ android {
 dependencies {
     api(libs.kotlin.stdlib.jdk8)
     api(libs.kotlin.reflect)
-    api(Libs.AndroidX.core)
+    api(libs.androidx.core)
 
     api(libs.io.reactivex.rxjava3.rxandroid)
     api(libs.io.reactivex.rxjava3.rxkotlin)

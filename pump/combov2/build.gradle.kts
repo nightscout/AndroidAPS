@@ -23,7 +23,7 @@ dependencies {
     implementation(project(":core:utils"))
     implementation(project(":pump:combov2:comboctl"))
 
-    api(Libs.AndroidX.lifecycleViewmodel)
+    api(libs.androidx.lifecycle.viewmodel)
     api(libs.kotlinx.datetime)
 
     // This is necessary to avoid errors like these which otherwise come up often at runtime:
