@@ -92,7 +92,7 @@ org-mozilla-rhino = { group = "org.mozilla", name = "rhino", version = "1.7.14" 
 org-mockito-android = { group = "org.mockito", name = "mockito-android", version.ref = "mockito" }
 org-mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
 org-mockito-junit-jupiter = { group = "org.mockito", name = "mockito-junit-jupiter", version.ref = "mockito" }
-org-mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version = "5.1.0" }
+org-mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version = "5.4.0" }
 
 org-junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit" }
 org-junit-jupiter-api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junit" }
