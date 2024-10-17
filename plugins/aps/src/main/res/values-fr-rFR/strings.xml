@@ -168,7 +168,6 @@
     <string name="pump_disconnected">Pompe déconnectée</string>
     <!--    autoISF -->
     <string name="half_basal_exercise_target_title">Cible pour exercice avec basale/2</string>
-    <string name="half_basal_exercise_target_summary" formatted="false">Définir un nombre, par ex. 160, ce qui signifie que lorsque la cible temp = 160 mg/dL et que la Sensibilité augmente avec Cible Temp haute est activé, 50% de la basale est injectée dans ce cas (75%  pour une cible à 120 ; 60% pour une cible à 140).</string>
     <string name="autoISF_settings_title">Paramètres AutoISF</string>
     <string name="autoISF_settings_summary">AutoISF permet d\'adapter la Sensibilité à l\'Insuline (SI) dans divers scénarios de comportement glycémique.\n\nIl peut également adapter les paramètres d\'injection des SMB</string>
     <string name="acce_ISF_settings_title">Paramètres acce_ISF</string>
@@ -177,7 +176,6 @@
     <string name="enableautoISFwithcob_summary">Activer dura_ISF tant que des GA sont actifs</string>
     <string name="bg_ISF_settings_title">Paramètres bg_ISF</string>
     <string name="bg_ISF_settings_summary">Paramètres bg_ISF : SI en fonction de la glycémie selon un polygone prédéfini</string>
-    <string name="enable_postprandial_ISF_always_summary">Activer l\'adaptation de la SI postprandiale tout le temps, quelque soit le moment où le dernier repas a été pris.</string>
     <string name="pp_ISF_settings_title">Réglages de pp_ISF</string>
     <string name="pp_ISF_settings_summary">Paramètres pp_ISF : SI pour la montée de la glycémie postprandiale (après le repas)</string>
     <string name="dura_ISF_settings_title">Paramètres dura_ISF</string>
@@ -189,5 +187,7 @@
     <string name="use_autoISF_extensions_title">Activer les fonctionnalités étendues d\'AutoISF</string>
     <string name="use_autoISF_extensions_summary">Celles-ci incluent l\'ajustement de la SI en fonction des glycémies récentes, des paramètres SMB complémentaires et la prise en charge de la boucle fermée complète</string>
     <string name="openapsama_enable_autoISF">Activer l\'ajustement de la SI en fonction de la glycémie</string>
-    <string name="openapsama_autoISF_max_summary">Valeur par défaut: 1.0\nCe paramètre définit l\'agressivité maximale de la SI.\n\nATTENTION: Soyez extrêmement prudent lorsque vous utilisez des valeurs supérieures à 2.5</string>
+    <string name="openapsama_autoISF_max">Ratio max autoISF\n(autoISF_max)</string>
+    <string name="openapsama_autoISF_min">Ratio min autoISF\n(autoISF_min)</string>
+    <string name="openapsama_smb_max_range_extension_summary">Valeur par défaut : 1 Ceci est une autre clé de sécurité OpenAPS. Elle spécifie par quel facteur vous pouvez dépasser les 120 minutes régulières maxSMB/maxUAM. Augmentez lentement et avec prudence cette valeur expérimentale.</string>
 </resources>
