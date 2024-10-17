@@ -27,5 +27,5 @@ dependencies {
 
     testImplementation(kotlin("test"))
     testImplementation(Libs.kotlinTestRunner)
-    testRuntimeOnly(Libs.JUnit.jupiterEngine)
+    testRuntimeOnly(libs.org.junit.jupiter.engine)
 }

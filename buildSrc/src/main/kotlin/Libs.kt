@@ -59,7 +59,7 @@ object Libs {
 
     object JUnit {
 
-        private const val junitVersion = "5.10.0"
+        private const val junitVersion = "5.10.1"
 
         const val jupiter = "org.junit.jupiter:junit-jupiter:$junitVersion"
         const val jupiterApi = "org.junit.jupiter:junit-jupiter-api:$junitVersion"
@@ -67,7 +67,7 @@ object Libs {
     }
 
     object Mockito {
-        private const val mockitoVersion = "5.6.0"
+        private const val mockitoVersion = "5.10.0"
 
         const val android = "org.mockito:mockito-android:$mockitoVersion"
         const val core = "org.mockito:mockito-core:$mockitoVersion"

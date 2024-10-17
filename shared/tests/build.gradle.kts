@@ -24,7 +24,7 @@ dependencies {
 
     api(libs.org.mockito.junit.jupiter)
     api(libs.org.mockito.kotlin)
-    api(libs.org.mockito.junit.jupiter)
+    api(libs.org.junit.jupiter.api)
 
     kapt(libs.com.google.dagger.compiler)
 }
