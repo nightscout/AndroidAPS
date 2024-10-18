@@ -198,14 +198,12 @@ class ExportPasswordDataStoreImpl @Inject constructor(
 
         // Write encrypted password key and timestamp to the local phone's android datastore and return password
         fun updatePrefString(name: String, str: String)  = runBlocking {
-            val preferencesKeyPassword = stringPreferencesKey("$name.key")
-            val preferencesKeyTimestamp = stringPreferencesKey("$name.ts")
             context.dataStore.edit { settings ->
                 // If current password is empty, update to new timestamp "now" or else leave it
-                settings[preferencesKeyTimestamp] = dateUtil.now().toString()
+                settings[stringPreferencesKey("$name.ts")] = dateUtil.now().toString()
                 // Update password as string value
-                settings[preferencesKeyPassword] = str
-            }[preferencesKeyPassword].toString()
+                settings[stringPreferencesKey("$name.key")] = str
+            }[stringPreferencesKey("$name.key")].toString()
         }
 
         // Update DataStore & return password string
@@ -224,11 +222,9 @@ class ExportPasswordDataStoreImpl @Inject constructor(
 
         runBlocking {
             val keyName = PASSWORD_PREFERENCE_NAME
-            val preferencesKeyVal = stringPreferencesKey("$keyName.key")
-            val preferencesKeyTs = stringPreferencesKey("$keyName.ts")
             context.dataStore.edit { settings ->
-                passwordStr = settings[preferencesKeyVal] ?:""
-                timestampStr = (settings[preferencesKeyTs] ?:"")
+                passwordStr = settings[stringPreferencesKey("$keyName.key")] ?:""
+                timestampStr = (settings[stringPreferencesKey("$keyName.ts")] ?:"")
             }
         }
 
