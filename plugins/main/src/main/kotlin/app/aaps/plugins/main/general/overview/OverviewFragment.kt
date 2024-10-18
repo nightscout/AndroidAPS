@@ -585,10 +585,14 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 (profile != null && preferences.get(BooleanKey.OverviewShowCarbsButton)).toVisibility()
             binding.buttonsLayout.treatmentButton.visibility = (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null
                 && preferences.get(BooleanKey.OverviewShowTreatmentButton)).toVisibility()
-            binding.buttonsLayout.wizardButton.visibility = (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null
+            if (config.APS) { binding.buttonsLayout.wizardButton.visibility = (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null
                 && preferences.get(BooleanKey.OverviewShowWizardButton)).toVisibility()
+            } else {
+                binding.buttonsLayout.wizardButton.visibility =
+                    (profile != null && preferences.get(BooleanKey.OverviewShowWizardButton)).toVisibility()
+            }
             binding.buttonsLayout.insulinButton.visibility = (profile != null && preferences.get(BooleanKey.OverviewShowInsulinButton)).toVisibility()
-            if (loop.isDisconnected || !pump.isInitialized() || pump.isSuspended()) {
+            if (config.APS && (loop.isDisconnected || !pump.isInitialized() || pump.isSuspended())) {
                 setRibbon(
                     binding.buttonsLayout.insulinButton,
                     app.aaps.core.ui.R.attr.ribbonTextWarningColor,
