@@ -14,11 +14,8 @@ import java.util.Optional
 
 class TriggerPodChange(injector: HasAndroidInjector) : Trigger(injector) {
 
-    private constructor(injector: HasAndroidInjector, triggerPodChange: TriggerPodChange) : this(injector) {
-    }
-
     override fun shouldRun(): Boolean {
-        val maxMinutesSinceCannulaChange: Double = 6.0
+        val maxMinutesSinceCannulaChange = 6.0
 
         val therapyEventPodChange = persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.CANNULA_CHANGE)
         if (therapyEventPodChange == null) {
@@ -26,7 +23,7 @@ class TriggerPodChange(injector: HasAndroidInjector) : Trigger(injector) {
             return false
         }
 
-        val currentPodChangeMinutes = therapyEventPodChange?.timestamp?.let { timestamp ->
+        val currentPodChangeMinutes = therapyEventPodChange.timestamp?.let { timestamp ->
             (dateUtil.now() - timestamp) / (60 * 1000.0)
         }?.toDouble() ?: 0.0
 
@@ -43,7 +40,6 @@ class TriggerPodChange(injector: HasAndroidInjector) : Trigger(injector) {
         JSONObject()
 
     override fun fromJSON(data: String): Trigger {
-        val d = JSONObject(data)
         return this
     }
 
@@ -61,7 +57,7 @@ class TriggerPodChange(injector: HasAndroidInjector) : Trigger(injector) {
         }
     }
 
-    override fun duplicate(): Trigger = TriggerPodChange(injector, this)
+    override fun duplicate(): Trigger = TriggerPodChange(injector)
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
