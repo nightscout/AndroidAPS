@@ -10,6 +10,7 @@ interface FileListProvider {
     fun ensureExportDirExists(): File
     fun ensureExtraDirExists(): File
     fun ensureResultDirExists(): File
+    fun ensureAapsLogsDirExists(): File
     fun newExportFile(): File
     fun newExportCsvFile(): File
     fun newResultFile(): File
