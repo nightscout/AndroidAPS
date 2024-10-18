@@ -47,6 +47,8 @@
     <string name="readstatus">Read status</string>
     <string name="data_choices">Data Choices</string>
     <string name="fabric_upload">Fabric Upload</string>
+    <string name="unattended_settings_export">Unattended Settings Export</string>
+    <string name="unattended_settings_export_summary">Enabling this will securely store your password on your phone</string>
     <string name="allow_automated_crash_reporting">Allow automated crash reporting and feature usage data to be sent to the developers via the fabric.io service.</string>
     <string name="summary_email_for_crash_report">This identification will attached to crash reports so we can contact you in urgent cases. It\'s optional.</string>
     <string name="identification">Identification (email, FB or Discord nick etc)</string>
@@ -105,6 +107,7 @@
     <string name="different_password_used">This file was exported and encrypted with different master password. Provide old master password to decrypt file.</string>
     <string name="master_password_will_be_replaced">As a result of successful import current master password WILL BE REPLACED with that old master password!</string>
     <string name="exported">Preferences exported</string>
+    <string name="exported_failed">Preferences export failed!</string>
     <string name="filenotfound">File not found</string>
     <string name="goto_main_try_again">Please go back to main screen and try again.</string>
     <string name="restartingapp">Exiting application to apply settings.</string>

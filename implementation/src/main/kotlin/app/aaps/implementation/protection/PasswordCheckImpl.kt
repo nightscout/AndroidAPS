@@ -11,7 +11,9 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.StringRes
+import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.protection.PasswordCheck
+import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.objects.R
 import app.aaps.core.objects.crypto.CryptoUtil
@@ -23,6 +25,7 @@ import javax.inject.Inject
 
 @Reusable
 class PasswordCheckImpl @Inject constructor(
+    private var log: AAPSLogger,
     private val sp: SP,
     private val cryptoUtil: CryptoUtil
 ) : PasswordCheck {
@@ -30,6 +33,8 @@ class PasswordCheckImpl @Inject constructor(
     // since androidx.autofill.HintConstants are not available
     @Suppress("PrivatePropertyName")
     private val AUTOFILL_HINT_NEW_PASSWORD = "newPassword"
+
+    @Inject lateinit var exportPasswordDataStore: ExportPasswordDataStore
 
     /**
     Asks for "managed" kind of password, checking if it is valid.
@@ -123,6 +128,7 @@ class PasswordCheckImpl @Inject constructor(
                     ToastUtils.errorToast(context, context.getString(msg))
                 } else if (enteredPassword.isNotEmpty()) {
                     sp.putString(preference, cryptoUtil.hashPassword(enteredPassword))
+                    exportPasswordDataStore.clearPasswordDataStore(context)
                     val msg = if (pinInput) app.aaps.core.ui.R.string.pin_set else app.aaps.core.ui.R.string.password_set
                     ToastUtils.okToast(context, context.getString(msg))
                     ok?.invoke(enteredPassword)
@@ -213,4 +219,5 @@ class PasswordCheckImpl @Inject constructor(
             }
         }
     }
+
 }
