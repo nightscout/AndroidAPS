@@ -127,7 +127,7 @@ com-madgag-spongycastle = { group = "com.madgag.spongycastle", name = "core", ve
 com-caverock-androidsvg = { group = "com.caverock", name = "androidsvg", version = "1.4" }
 net-danlew-android-joda = { group = "net.danlew", name = "android.joda", version = "2.13.0" }
 joda-time = { group = "joda-time", name = "joda-time", version = "2.13.0" }
-org-json = { group = "org.json", name = "json", version = "20230618" }
+org-json = { group = "org.json", name = "json", version = "20240303" }
 org-skyscreamer-jsonassert = { group = "org.skyscreamer", name = "jsonassert", version = "1.5.3" }
 com-scottyab-rootbeer-lib = { group = "com.scottyab", name = "rootbeer-lib", version = "0.1.1" }
 com-eatthepath-java-otp = { group = "com.eatthepath", name = "java-otp", version = "0.4.0" }
