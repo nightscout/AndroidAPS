@@ -1,5 +1,6 @@
 # libs.versions.toml
 [versions]
+datastorePreferences = "1.0.0"
 gradlePlugin = "8.7.1"
 googleServices = "4.4.2"
 kotlin = "2.0.21"
@@ -21,6 +22,7 @@ moduleDependencyGraph = { id = "com.savvasdalkitsis.module-dependency-graph", ve
 
 
 [libraries]
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 com-android-tools-build = { group = "com.android.tools.build", name = "gradle", version.ref = "gradlePlugin" }
 com-google-gms = { group = "com.google.gms", name = "google-services", version.ref = "googleServices" }
 
