@@ -1,6 +1,6 @@
 # libs.versions.toml
 [versions]
-datastorePreferences = "1.0.0"
+datastorePreferences = "1.1.1"
 gradlePlugin = "8.7.1"
 googleServices = "4.4.2"
 kotlin = "2.0.21"
