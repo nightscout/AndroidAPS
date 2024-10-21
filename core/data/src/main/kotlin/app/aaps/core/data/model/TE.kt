@@ -91,6 +91,7 @@ data class TE(
         PUMP_STOPPED("Pump Stopped"),
         PUMP_STARTED("Pump Started"),
         PUMP_PAUSED("Pump Paused"),
+        SETTINGS_EXPORT("Settings Export"),
         WAKING_UP("Waking Up"),
         SICKNESS("Sickness"),
         STRESS("Stress"),

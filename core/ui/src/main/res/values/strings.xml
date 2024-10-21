@@ -216,10 +216,12 @@
     <string name="careportal_bgcheck">BG Check</string>
     <string name="careportal_mbg">Manual BG or Calibration</string>
     <string name="careportal_announcement">Announcement</string>
+    <string name="careportal_settings_export">Settings Export</string>
     <string name="careportal_note">Note</string>
     <string name="careportal_question">Question</string>
     <string name="careportal_exercise">Exercise</string>
     <string name="careportal_announcement_message">Announcement : %1$s</string>
+    <string name="careportal_settings_export_message">Settings Export : %1$s</string>
     <string name="careportal_note_message">Note : %1$s</string>
     <string name="careportal_question_message">Question : %1$s</string>
     <string name="careportal_exercise_message">Exercise : %1$s</string>
@@ -252,6 +254,7 @@
     <string name="activity">Activity</string>
     <string name="wear">Wear</string>
     <string name="automation">Automation</string>
+    <string name="settingsexport">Settings Export</string>
     <string name="custom">Custom</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>

@@ -16,7 +16,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventNewNotification
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.objects.extensions.asAnnouncement
+import app.aaps.core.objects.extensions.asSettingsExport
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputString
@@ -100,7 +100,8 @@ class ActionSettingsExport(injector: HasAndroidInjector) : Action(injector) {
         }
 
         disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
-            therapyEvent = TE.asAnnouncement(text.value),
+            // therapyEvent = TE.asAnnouncement(text.value),
+            therapyEvent = TE.asSettingsExport(text.value),
             timestamp = dateUtil.now(),
             action = app.aaps.core.data.ue.Action.EXPORT_SETTINGS,
             source = Sources.Automation,

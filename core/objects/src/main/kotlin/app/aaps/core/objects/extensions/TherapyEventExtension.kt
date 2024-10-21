@@ -20,3 +20,19 @@ fun TE.Companion.asAnnouncement(error: String, pumpId: Long? = null, pumpType: P
             pumpSerial = pumpSerial
         )
     )
+
+fun TE.Companion.asSettingsExport(error: String, pumpId: Long? = null, pumpType: PumpType? = null, pumpSerial: String? = null): TE =
+    TE(
+        timestamp = System.currentTimeMillis(),
+        type = TE.Type.SETTINGS_EXPORT,
+        duration = 0, note = error,
+        enteredBy = "AAPS",
+        glucose = null,
+        glucoseType = null,
+        glucoseUnit = GlucoseUnit.MGDL,
+        ids = IDs(
+            pumpId = pumpId,
+            pumpType = pumpType,
+            pumpSerial = pumpSerial
+        )
+    )
