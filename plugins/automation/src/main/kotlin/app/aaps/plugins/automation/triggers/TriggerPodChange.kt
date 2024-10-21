@@ -15,24 +15,18 @@ import java.util.Optional
 class TriggerPodChange(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun shouldRun(): Boolean {
-        val maxMinutesSinceCannulaChange = 6.0
-
-        val therapyEventPodChange = persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.CANNULA_CHANGE)
-        if (therapyEventPodChange == null) {
-            aapsLogger.debug(LTag.AUTOMATION, "NOT ready for execution (1): " + friendlyDescription())
+        val eventLastSettingsExport = persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SETTINGS_EXPORT)
+        val eventLastPodChange = persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.CANNULA_CHANGE)
+        if (eventLastPodChange == null || eventLastSettingsExport == null) {
+            aapsLogger.debug(LTag.AUTOMATION, "NOT ready for execution (no events): " + friendlyDescription())
             return false
         }
-
-        val currentPodChangeMinutes = therapyEventPodChange.timestamp?.let { timestamp ->
-            (dateUtil.now() - timestamp) / (60 * 1000.0)
-        }?.toDouble() ?: 0.0
-
-        if (Comparator.Compare.IS_LESSER.check(currentPodChangeMinutes, maxMinutesSinceCannulaChange)) {
+        // Check if settings export was done since last Pod change
+        if (Comparator.Compare.IS_LESSER.check(eventLastSettingsExport.timestamp, eventLastPodChange.timestamp)) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true
         }
-
-        aapsLogger.debug(LTag.AUTOMATION, "NOT ready for execution (2): " + friendlyDescription())
+        aapsLogger.debug(LTag.AUTOMATION, "NOT ready for execution: " + friendlyDescription())
         return false
     }
 
