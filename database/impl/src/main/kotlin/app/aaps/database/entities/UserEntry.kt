@@ -136,6 +136,7 @@ data class UserEntry(
         Exercise,
         Question,
         Announcement,
+        SettingsExport,
         Actions,            //From Actions plugin
         Automation,         //From Automation plugin
         Autotune,           //From Autotune plugin

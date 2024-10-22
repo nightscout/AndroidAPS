@@ -87,6 +87,7 @@ data class TherapyEvent(
         TEMPORARY_BASAL_END,
 
         // Not supported by NS
+        SETTINGS_EXPORT,
         TUBE_CHANGE,
         FALLING_ASLEEP,
         BATTERY_EMPTY,

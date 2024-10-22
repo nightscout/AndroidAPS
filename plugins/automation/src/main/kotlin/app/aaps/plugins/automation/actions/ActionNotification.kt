@@ -5,6 +5,7 @@ import androidx.annotation.DrawableRes
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.notifications.NotificationUserMessage
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -38,7 +39,7 @@ class ActionNotification(injector: HasAndroidInjector) : Action(injector) {
     @DrawableRes override fun icon(): Int = R.drawable.ic_notifications
 
     override fun doAction(callback: Callback) {
-        val notification = NotificationUserMessage(text.value)
+        val notification = NotificationUserMessage(text.value, Notification.URGENT)
         rxBus.send(EventNewNotification(notification))
         disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
             therapyEvent = TE.asAnnouncement(text.value),

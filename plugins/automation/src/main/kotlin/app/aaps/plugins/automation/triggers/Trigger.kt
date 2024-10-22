@@ -96,6 +96,7 @@ abstract class Trigger(val injector: HasAndroidInjector) {
                 TriggerBTDevice::class.java.simpleName           -> TriggerBTDevice(injector).fromJSON(data.toString())
                 TriggerSensorAge::class.java.simpleName          -> TriggerSensorAge(injector).fromJSON(data.toString())
                 TriggerCannulaAge::class.java.simpleName         -> TriggerCannulaAge(injector).fromJSON(data.toString())
+                TriggerPodChange::class.java.simpleName          -> TriggerPodChange(injector).fromJSON(data.toString())
                 TriggerInsulinAge::class.java.simpleName         -> TriggerInsulinAge(injector).fromJSON(data.toString())
                 TriggerReservoirLevel::class.java.simpleName     -> TriggerReservoirLevel(injector).fromJSON(data.toString())
                 TriggerPumpBatteryAge::class.java.simpleName     -> TriggerPumpBatteryAge(injector).fromJSON(data.toString())
