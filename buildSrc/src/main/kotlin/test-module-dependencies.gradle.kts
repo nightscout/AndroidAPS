@@ -10,8 +10,8 @@ plugins {
 // I was not successfull to implement it
 dependencies {
     testImplementation(kotlin("test"))
-    testImplementation("org.junit.jupiter:junit-jupiter:5.11.2")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.2")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.11.3")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.3")
     testImplementation("org.json:json:20230618")
     testImplementation("org.mockito:mockito-junit-jupiter:5.14.2")
     testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
