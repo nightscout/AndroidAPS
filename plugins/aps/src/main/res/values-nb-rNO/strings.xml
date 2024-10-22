@@ -168,7 +168,7 @@
     <string name="pump_disconnected">Pumpe frakoblet</string>
     <!--    autoISF -->
     <string name="half_basal_exercise_target_title">Halv basal treningsmålverdi</string>
-    <string name="half_basal_exercise_target_summary">Sett til et tall, f.eks. 160, noe som betyr at når midlertidig mål er 160 mg/dL (~8.9 mmol/l) og høy midlertidig mål øker sensitiviteten=sant, settes 50% basal på dette nivået (120 = 75%; 140 = 60%%).</string>
+    <string name="half_basal_exercise_target_summary">Sett til et tall, f.eks. 160, noe som betyr at når midlertidig mål er 160 mg/dL (~8.9 mmol/l) og høy midlertidig mål øker sensitiviteten=sant, settes 50%% basal på dette nivået (120 = 75%%; 140 = 60%%).</string>
     <string name="autoISF_settings_title">AutoISF-innstillinger</string>
     <string name="autoISF_settings_summary">AutoISF gjør det mulig å tilpasse insulinsensitivitetsfaktoren (ISF) i ulike scenarier av glukoseadferd\n\nDet kan også tilpasse SMB leveringsinnstillinger</string>
     <string name="acce_ISF_settings_title">acce_ISF-innstillinger</string>
