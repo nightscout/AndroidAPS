@@ -41,4 +41,6 @@
     <string name="ottai_app">Ottai</string>
     <string name="description_source_patched_ottai_app">Ricevi dati di glucosio dall\'app Ottai.</string>
     <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai Tag</string>
+    <string name="description_source_patched_syai_tag_app">Ricevi dati di glucosio dall\'app Ottai.</string>
 </resources>
