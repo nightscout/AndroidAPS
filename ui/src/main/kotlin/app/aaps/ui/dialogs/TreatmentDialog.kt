@@ -23,11 +23,11 @@ import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.smsCommunicator.Sms
+import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.SafeParse
-import app.aaps.core.interfaces.smsCommunicator.Sms
-import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.keys.StringKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.formatColor
@@ -161,8 +161,11 @@ class TreatmentDialog : DialogFragmentWithDate() {
             if (recordOnlyChecked)
                 actions.add(rh.gs(app.aaps.core.ui.R.string.bolus_recorded_only).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
             else if (!phoneNumber.isNullOrBlank())
-                actions.add((rh.gs(
-                    app.aaps.core.ui.R.string.sms_bolus_notification)+"treatmentdialog.kt").formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
+                actions.add(
+                    rh.gs(
+                        app.aaps.core.ui.R.string.sms_bolus_notification
+                    ).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor)
+                )
 
             if (abs(insulinAfterConstraints - insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
                 actions.add(
@@ -194,12 +197,15 @@ class TreatmentDialog : DialogFragmentWithDate() {
                     detailedBolusInfo.context = context
                     if (recordOnlyChecked) {
                         if (detailedBolusInfo.insulin > 0)
-                            disposable += persistenceLayer.insertOrUpdateBolus(
-                                bolus = detailedBolusInfo.createBolus(),
-                                action = action,
-                                source = Sources.TreatmentDialog,
-                                note = if (insulinAfterConstraints != 0.0) rh.gs(app.aaps.core.ui.R.string.record) else ""
-                            ).subscribe()
+                            if (!phoneNumber.isNullOrBlank())
+                                smsCommunicator.sendSMS(Sms(phoneNumber, rh.gs(app.aaps.core.ui.R.string.bolus) + " " + detailedBolusInfo.insulin))
+                            else
+                                disposable += persistenceLayer.insertOrUpdateBolus(
+                                    bolus = detailedBolusInfo.createBolus(),
+                                    action = action,
+                                    source = Sources.TreatmentDialog,
+                                    note = if (insulinAfterConstraints != 0.0) rh.gs(app.aaps.core.ui.R.string.record) else ""
+                                ).subscribe()
                         if (detailedBolusInfo.carbs > 0)
                             disposable += persistenceLayer.insertOrUpdateCarbs(
                                 carbs = detailedBolusInfo.createCarbs(),
@@ -207,8 +213,6 @@ class TreatmentDialog : DialogFragmentWithDate() {
                                 source = Sources.TreatmentDialog,
                                 note = if (carbsAfterConstraints != 0) rh.gs(app.aaps.core.ui.R.string.record) else ""
                             ).subscribe()
-                    } else if(phoneNumber.isNullOrBlank()){
-                        smsCommunicator.sendSMS(Sms(phoneNumber, rh.gs(app.aaps.core.ui.R.string.bolus) + " " + detailedBolusInfo.insulin))
                     } else {
                         if (detailedBolusInfo.insulin > 0) {
                             uel.log(
