@@ -17,6 +17,7 @@
     <string name="cwf_comment_rig_battery">Global döngü pili (%)</string>
     <string name="cwf_comment_basalRate">Bazal Oranı</string>
     <string name="cwf_comment_bgi">KŞ etkisi değeri</string>
+    <string name="cwf_comment_status">Durum Sentezi</string>
     <string name="cwf_comment_time">Saat (SS:DD veya SS:DD:SS)</string>
     <string name="cwf_comment_hour">Saat (SS)</string>
     <string name="cwf_comment_minute">Dakika (DD)</string>
