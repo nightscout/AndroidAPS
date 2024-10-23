@@ -43,6 +43,7 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.formatColor
 import app.aaps.core.objects.extensions.highValueToUnitsToString
@@ -52,6 +53,8 @@ import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.core.utils.JsonHelper
 import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.smsCommunicator.Sms
+import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import java.util.Calendar
 import java.util.LinkedList
 import javax.inject.Inject
@@ -63,6 +66,7 @@ class BolusWizard @Inject constructor(
     val injector: HasAndroidInjector
 ) {
 
+    @Inject lateinit var smsCommunicator: SmsCommunicator
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var rxBus: RxBus
@@ -86,9 +90,12 @@ class BolusWizard @Inject constructor(
     @Inject lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
 
     var timeStamp: Long
+    // var phoneNumber: String
 
     init {
         injector.androidInjector().inject(this)
+        // TODO: why this@BolusWizar.phoneNumber not visible in scoped DetailedBolusInfo().apply
+        // phoneNumber = preferences.get(StringKey.SmsReceiverNumber)
         timeStamp = dateUtil.now()
     }
 
@@ -330,7 +337,7 @@ class BolusWizard @Inject constructor(
     }
 
     private fun confirmMessageAfterConstraints(context: Context, advisor: Boolean, quickWizardEntry: QuickWizardEntry? = null): Spanned {
-
+        var phoneNumber = preferences.get(StringKey.SmsReceiverNumber)
         val actions: LinkedList<String> = LinkedList()
         if (insulinAfterConstraints > 0) {
             val pct = if (percentageCorrection != 100) " ($percentageCorrection%)" else ""
@@ -371,9 +378,8 @@ class BolusWizard @Inject constructor(
                     .formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor)
             )
         if (config.NSCLIENT && insulinAfterConstraints > 0)
-            // TODO: check phone number
-            if(true)
-                actions.add((rh.gs(app.aaps.core.ui.R.string.sms_bolus)+"bolusWizard.kt").formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
+            if(config.NSCLIENT && !phoneNumber.isNullOrBlank())
+                actions.add((rh.gs(app.aaps.core.ui.R.string.sms_bolus_notification)+"bolusWizard.kt").formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
             else
                 actions.add(rh.gs(app.aaps.core.ui.R.string.bolus_recorded_only).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
         if (useAlarm && !advisor && carbs > 0 && carbTime > 0)
@@ -542,15 +548,22 @@ class BolusWizard @Inject constructor(
                                 ValueWithUnit.Minute(carbTime).takeIf { carbTime != 0 }
                             ).filterNotNull()
                         )
-                        commandQueue.bolus(this, object : Callback() {
-                            override fun run() {
-                                if (!result.success) {
-                                    uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
+                        var phoneNumber = preferences.get(StringKey.SmsReceiverNumber)
+                        if (config.NSCLIENT && !phoneNumber.isNullOrBlank()) {
+                            rh.gs(app.aaps.core.ui.R.string.sms_bolus_notification).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor)
+                            smsCommunicator.sendSMS(Sms(phoneNumber, rh.gs(app.aaps.core.ui.R.string.bolus) + " " + insulin))
+                        } else if (!config.APS)
+                            commandQueue.bolus(this, object : Callback() {
+                                override fun run() {
+                                    if (!result.success) {
+                                        uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
+                                    }
                                 }
-                            }
-                        })
+                            })
                     }
-                    bolusCalculatorResult?.let { persistenceLayer.insertOrUpdateBolusCalculatorResult(it).blockingGet() }
+                    bolusCalculatorResult?.let {
+                        persistenceLayer.insertOrUpdateBolusCalculatorResult(it).blockingGet()
+                    }
                 }
                 if (useAlarm && carbs > 0 && carbTime > 0) {
                     automation.scheduleTimeToEatReminder(T.mins(carbTime.toLong()).secs().toInt())

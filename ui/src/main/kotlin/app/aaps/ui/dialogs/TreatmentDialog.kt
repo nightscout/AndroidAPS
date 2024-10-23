@@ -160,8 +160,9 @@ class TreatmentDialog : DialogFragmentWithDate() {
             )
             if (recordOnlyChecked)
                 actions.add(rh.gs(app.aaps.core.ui.R.string.bolus_recorded_only).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
-            else if(phoneNumber.isNullOrBlank())
-                actions.add(rh.gs(app.aaps.core.ui.R.string.sms_bolus).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
+            else if (!phoneNumber.isNullOrBlank())
+                actions.add((rh.gs(
+                    app.aaps.core.ui.R.string.sms_bolus_notification)+"treatmentdialog.kt").formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
 
             if (abs(insulinAfterConstraints - insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
                 actions.add(
