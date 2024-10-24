@@ -28,4 +28,5 @@
     <string name="pin_cleared">PIN byl vymazán!</string>
     <string name="password_hint">Zadejte heslo</string>
     <string name="pin_hint">Zadejte PIN</string>
+    <string name="master_password_not_set">Hlavní heslo není nastaveno</string>
 </resources>
