@@ -72,7 +72,7 @@
     <string name="two_hours">2 小時</string>
     <string name="result_insulin_carbs">結果：%1$s %2$s</string>
     <string name="missing_carbs">缺少 %1$d g</string>
-    <string name="a11y_current_bg">當前血糖</string>
+    <string name="a11y_current_bg">目前血糖</string>
     <string name="carb_time_label">碳水化合物時間</string>
     <string name="a11y_set_carb_timer">設定碳水化合物計時器提醒</string>
     <string name="show_calculation">顯示計算</string>
@@ -116,7 +116,7 @@
     <string name="compare_profile">比較設定檔</string>
     <string name="nav_profile_helper">設定檔助手</string>
     <string name="motol_default_profile">預設設定檔</string>
-    <string name="current_profile">當前設定檔</string>
+    <string name="current_profile">目前設定檔</string>
     <string name="available_profile">可用設定檔</string>
     <string name="format_with_tdd">時間：%1$d 每日總劑量：%2$.0f U</string>
     <string name="format_with_tdd_and_pct">時間：%1$d 每日總劑量：%2$.0f U %3$d%%</string>
