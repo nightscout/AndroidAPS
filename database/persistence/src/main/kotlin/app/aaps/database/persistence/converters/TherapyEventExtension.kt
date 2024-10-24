@@ -6,6 +6,7 @@ import app.aaps.database.entities.TherapyEvent
 fun TherapyEvent.Type.fromDb(): TE.Type = when (this) {
     TherapyEvent.Type.CANNULA_CHANGE          -> TE.Type.CANNULA_CHANGE
     TherapyEvent.Type.INSULIN_CHANGE          -> TE.Type.INSULIN_CHANGE
+    TherapyEvent.Type.SETTINGS_EXPORT         -> TE.Type.SETTINGS_EXPORT
     TherapyEvent.Type.PUMP_BATTERY_CHANGE     -> TE.Type.PUMP_BATTERY_CHANGE
     TherapyEvent.Type.SENSOR_CHANGE           -> TE.Type.SENSOR_CHANGE
     TherapyEvent.Type.SENSOR_STARTED          -> TE.Type.SENSOR_STARTED
@@ -53,6 +54,7 @@ fun TherapyEvent.Type.fromDb(): TE.Type = when (this) {
 fun TE.Type.toDb(): TherapyEvent.Type = when (this) {
     TE.Type.CANNULA_CHANGE          -> TherapyEvent.Type.CANNULA_CHANGE
     TE.Type.INSULIN_CHANGE          -> TherapyEvent.Type.INSULIN_CHANGE
+    TE.Type.SETTINGS_EXPORT         -> TherapyEvent.Type.SETTINGS_EXPORT
     TE.Type.PUMP_BATTERY_CHANGE     -> TherapyEvent.Type.PUMP_BATTERY_CHANGE
     TE.Type.SENSOR_CHANGE           -> TherapyEvent.Type.SENSOR_CHANGE
     TE.Type.SENSOR_STARTED          -> TherapyEvent.Type.SENSOR_STARTED

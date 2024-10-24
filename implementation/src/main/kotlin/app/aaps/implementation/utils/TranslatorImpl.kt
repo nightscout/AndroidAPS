@@ -136,6 +136,7 @@ class TranslatorImpl @Inject internal constructor(
         TE.Type.BOLUS_WIZARD            -> rh.gs(app.aaps.core.ui.R.string.boluswizard)
         TE.Type.COMBO_BOLUS             -> rh.gs(app.aaps.core.ui.R.string.careportal_combobolus)
         TE.Type.ANNOUNCEMENT            -> rh.gs(app.aaps.core.ui.R.string.careportal_announcement)
+        TE.Type.SETTINGS_EXPORT         -> rh.gs(app.aaps.core.ui.R.string.careportal_settings_export)
         TE.Type.NOTE                    -> rh.gs(app.aaps.core.ui.R.string.careportal_note)
         TE.Type.QUESTION                -> rh.gs(app.aaps.core.ui.R.string.careportal_question)
         TE.Type.EXERCISE                -> rh.gs(app.aaps.core.ui.R.string.careportal_exercise)
@@ -288,6 +289,7 @@ class TranslatorImpl @Inject internal constructor(
         Sources.Aaps                               -> TODO()
         */
         Sources.Automation -> rh.gs(app.aaps.core.ui.R.string.automation)
+        Sources.SettingsExport -> rh.gs(app.aaps.core.ui.R.string.settingsexport)
         Sources.Autotune   -> rh.gs(app.aaps.core.ui.R.string.autotune)
         Sources.Loop       -> rh.gs(app.aaps.core.ui.R.string.loop)
         Sources.NSClient   -> rh.gs(app.aaps.core.ui.R.string.ns)

@@ -43,6 +43,7 @@ import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.events.EventAppExit
@@ -108,6 +109,8 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var fileListProvider: FileListProvider
     @Inject lateinit var cryptoUtil: CryptoUtil
+    @Inject lateinit var exportPasswordDataStore: ExportPasswordDataStore
+
 
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private var pluginPreferencesMenuItem: MenuItem? = null
@@ -298,6 +301,8 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             androidPermission.notifyForBtConnectPermission(this)
         }
         passwordResetCheck(this)
+        exportPasswordResetCheck(this)
+
         if (preferences.get(StringKey.ProtectionMasterPassword) == "")
             rxBus.send(EventNewNotification(Notification(Notification.MASTER_PASSWORD_NOT_SET, rh.gs(app.aaps.core.ui.R.string.master_password_not_set), Notification.NORMAL)))
     }
@@ -481,12 +486,28 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
      * reset password to SN of active pump if file exists
      */
     private fun passwordResetCheck(context: Context) {
-        val passwordReset = File(fileListProvider.ensureExtraDirExists(), "PasswordReset")
-        if (passwordReset.exists()) {
+        val fh = File(fileListProvider.ensureExtraDirExists(), "PasswordReset")
+        if (fh.exists()) {
             val sn = activePlugin.activePump.serialNumber()
             preferences.put(StringKey.ProtectionMasterPassword, cryptoUtil.hashPassword(sn))
-            passwordReset.delete()
+            fh.delete()
+            // Also clear any stored password
+            exportPasswordDataStore.clearPasswordDataStore(context)
             ToastUtils.okToast(context, context.getString(app.aaps.core.ui.R.string.password_set))
         }
     }
+
+    /**
+     * Check for existing ExportPasswordReset file and
+     * clear password stored in datastore if file exists
+     */
+        private fun exportPasswordResetCheck(context: Context) {
+        val fh = File(fileListProvider.ensureExtraDirExists(), "ExportPasswordReset")
+        if (fh.exists()) {
+            exportPasswordDataStore.clearPasswordDataStore(context)
+            fh.delete()
+            ToastUtils.okToast(context, context.getString(app.aaps.core.ui.R.string.datastore_password_cleared))
+        }
+    }
+
 }

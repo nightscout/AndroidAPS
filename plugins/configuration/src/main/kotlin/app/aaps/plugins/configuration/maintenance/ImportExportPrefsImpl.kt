@@ -34,6 +34,7 @@ import app.aaps.core.interfaces.maintenance.PrefMetadata
 import app.aaps.core.interfaces.maintenance.PrefsFile
 import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
 import app.aaps.core.interfaces.protection.PasswordCheck
+import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
@@ -88,6 +89,7 @@ class ImportExportPrefsImpl @Inject constructor(
     private val config: Config,
     private val rxBus: RxBus,
     private val passwordCheck: PasswordCheck,
+    private val exportPasswordDataStore: ExportPasswordDataStore,
     private val androidPermission: AndroidPermission,
     private val encryptedPrefsFormat: EncryptedPrefsFormat,
     private val prefFileList: FileListProvider,
@@ -161,8 +163,8 @@ class ImportExportPrefsImpl @Inject constructor(
         passwordCheck.queryPassword(activity, app.aaps.core.ui.R.string.master_password, StringKey.ProtectionMasterPassword.key, { password ->
             then(password)
         }, {
-                                        ToastUtils.warnToast(activity, rh.gs(canceledMsg))
-                                    })
+                ToastUtils.warnToast(activity, rh.gs(canceledMsg))
+            })
     }
 
     @Suppress("SameParameterValue")
@@ -173,8 +175,8 @@ class ImportExportPrefsImpl @Inject constructor(
         passwordCheck.queryAnyPassword(activity, passwordName, StringKey.ProtectionMasterPassword.key, passwordExplanation, passwordWarning, { password ->
             then(password)
         }, {
-                                           ToastUtils.warnToast(activity, rh.gs(canceledMsg))
-                                       })
+               ToastUtils.warnToast(activity, rh.gs(canceledMsg))
+           })
     }
 
     @Suppress("SameParameterValue")
@@ -188,19 +190,40 @@ class ImportExportPrefsImpl @Inject constructor(
                 activity, rh.gs(wrongPwdTitle), rh.gs(R.string.master_password_missing, rh.gs(R.string.protection)), R.string.nav_preferences,
                 { activity.startActivity(Intent(activity, uiInteraction.preferencesActivity).putExtra(UiInteraction.PREFERENCE, UiInteraction.Preferences.PROTECTION)) }
             )
+            exportPasswordDataStore.clearPasswordDataStore(context)
             return false
         }
         return true
     }
 
+    /***
+     * Ask to confirm export unless a valid password is already available
+     */
     private fun askToConfirmExport(activity: FragmentActivity, fileToExport: File, then: ((password: String) -> Unit)) {
-        if (!assureMasterPasswordSet(activity, app.aaps.core.ui.R.string.nav_export)) return
+        if (!assureMasterPasswordSet(activity, app.aaps.core.ui.R.string.nav_export)) {
+            return
+        }
 
+        // Get password from datastore
+        val (password, isExpired, isAboutToExpire) = exportPasswordDataStore.getPasswordFromDataStore(context)
+        if (password.isNotEmpty() && !(isExpired || isAboutToExpire)) {
+            // We have an (encrypted) password in the phones DataStore that is not expired or about to expire (third)
+            then(password)
+            return // No need to ask.
+        }
+
+        // Make sure stored password is properly reset
+        exportPasswordDataStore.clearPasswordDataStore((context))
+
+        // Ask for entering password and store when successfully entered
         TwoMessagesAlertDialog.showAlert(
             activity, rh.gs(app.aaps.core.ui.R.string.nav_export),
             rh.gs(R.string.export_to) + " " + fileToExport.name + " ?",
             rh.gs(R.string.password_preferences_encrypt_prompt), {
-                askForMasterPassIfNeeded(activity, R.string.preferences_export_canceled, then)
+                askForMasterPassIfNeeded(activity, R.string.preferences_export_canceled)
+                { password ->
+                    then(exportPasswordDataStore.putPasswordToDataStore(context, password))
+                }
             }, null, R.drawable.ic_header_export
         )
     }
@@ -242,46 +265,51 @@ class ImportExportPrefsImpl @Inject constructor(
         }
     }
 
-    private fun exportSharedPreferences(activity: FragmentActivity) {
+    /**
+     * Save preferences to file
+     */
+    private fun savePreferences(newFile: File, password: String): Boolean {
+        var resultOk = false // Assume result was not OK unless acknowledged
 
+        try {
+            val entries: MutableMap<String, String> = mutableMapOf()
+            for ((key, value) in sp.getAll()) {
+                entries[key] = value.toString()
+            }
+            val prefs = Prefs(entries, prepareMetadata(context))
+            encryptedPrefsFormat.savePreferences(newFile, prefs, password)
+            resultOk = true // Assuming export was executed successfully (or it would have thrown an exception)
+
+        } catch (e: FileNotFoundException) {
+            log.error(LTag.CORE, "Unhandled exception: filenotfound", e)
+        } catch (e: IOException) {
+            log.error(LTag.CORE, "Unhandled exception: IOexception", e)
+        } catch (e: PrefFileNotFoundError) {
+            log.error(LTag.CORE, "File system exception: Pref File not found, export canceled", e)
+        } catch (e: PrefIOError) {
+            log.error(LTag.CORE, "File system exception: PrefIOError, export canceled", e)
+        }
+        log.debug(LTag.CORE, "savePreferences: $resultOk")
+        return resultOk
+    }
+
+    private fun exportSharedPreferences(activity: FragmentActivity) {
         prefFileList.ensureExportDirExists()
         val newFile = prefFileList.newExportFile()
 
         askToConfirmExport(activity, newFile) { password ->
-            try {
-                val entries: MutableMap<String, String> = mutableMapOf()
-                for ((key, value) in sp.getAll()) {
-                    entries[key] = value.toString()
-                }
-
-                val prefs = Prefs(entries, prepareMetadata(activity))
-
-                encryptedPrefsFormat.savePreferences(newFile, prefs, password)
-
+            if (savePreferences(newFile, password))
                 ToastUtils.okToast(activity, rh.gs(R.string.exported))
-            } catch (e: FileNotFoundException) {
-                ToastUtils.errorToast(activity, rh.gs(R.string.filenotfound) + " " + newFile)
-                log.error(LTag.CORE, "Unhandled exception", e)
-            } catch (e: IOException) {
-                ToastUtils.errorToast(activity, e.message)
-                log.error(LTag.CORE, "Unhandled exception", e)
-            } catch (e: PrefFileNotFoundError) {
-                ToastUtils.Long.errorToast(
-                    activity, rh.gs(R.string.preferences_export_canceled)
-                        + "\n\n" + rh.gs(R.string.filenotfound)
-                        + ": " + e.message
-                        + "\n\n" + rh.gs(R.string.need_storage_permission)
-                )
-                log.error(LTag.CORE, "File system exception", e)
-            } catch (e: PrefIOError) {
-                ToastUtils.Long.errorToast(
-                    activity, rh.gs(R.string.preferences_export_canceled)
-                        + "\n\n" + rh.gs(R.string.need_storage_permission)
-                        + ": " + e.message
-                )
-                log.error(LTag.CORE, "File system exception", e)
-            }
+            else
+                ToastUtils.okToast(activity, rh.gs(R.string.exported_failed))
         }
+    }
+
+    override fun exportSharedPreferencesNonInteractive(context: Context, password: String): Boolean {
+        prefFileList.ensureExportDirExists()
+        val newFile = prefFileList.newExportFile()
+
+        return savePreferences(newFile, password)
     }
 
     override fun importSharedPreferences(fragment: Fragment) {
