@@ -85,5 +85,6 @@
     <string name="failedretrievetime">Failed retrieve time</string>
     <string name="requirementnotmet">Objective requirements not met</string>
     <string name="what_i_ve_learned">What I\'ve learned:</string>
+    <string name="verify_master_password">Verify you know master password</string>
 
 </resources>

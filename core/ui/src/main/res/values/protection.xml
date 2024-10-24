@@ -30,4 +30,5 @@
     <string name="password_hint">Enter password here</string>
     <string name="pin_hint">Enter PIN here</string>
 
+    <string name="master_password_not_set">Master password not set</string>
 </resources>
