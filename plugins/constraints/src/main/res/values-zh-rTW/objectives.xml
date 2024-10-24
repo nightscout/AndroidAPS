@@ -83,4 +83,5 @@
     <string name="failedretrievetime">無法獲取時間</string>
     <string name="requirementnotmet">未滿足目標要求</string>
     <string name="what_i_ve_learned">我學到了什麼：</string>
+    <string name="verify_master_password">驗證你的主密碼</string>
 </resources>
