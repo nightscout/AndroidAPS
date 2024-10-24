@@ -40,7 +40,7 @@
     <string name="objectives_useprofileswitch">將個人配置檔設為90%持續10分鐘 (長按首頁總覽左上角的配置檔名稱)</string>
     <string name="objectives_usedisconnectpump">模擬淋浴。中斷幫浦連線1小時（長按開環）</string>
     <string name="objectives_usereconnectpump">... 並以同樣方式重新連線</string>
-    <string name="objectives_usetemptarget">建立持續10分鐘的自定義臨時目標（長按當前目標）</string>
+    <string name="objectives_usetemptarget">建立持續10分鐘的自定義臨時目標（長按目前目標）</string>
     <string name="objectives_useactions">在組態建置工具中勾選啟用外掛，讓他可以顯示頁籤在頂部選單</string>
     <string name="objectives_useloop">在組態設定工具中勾選循環，顯示循環外掛的內容</string>
     <string name="objectives_usescale">通過長按血糖圖使用縮放功能</string>
@@ -54,14 +54,14 @@
     <string name="objectives_exam_learned_ic">您已學會IC值的含義及其如何影響覆蓋碳水化合物所需的胰島素量。</string>
     <string name="objectives_exam_learned_hypott">低血糖臨時目標僅用於防止低血糖後的過度修正，通常這時有疊加的負IOB。應評估額外措施以防止未來再次發生這種情況。</string>
     <string name="objectives_exam_learned_profileswitch">使用百分比不會影響目標血糖，但基礎速率、ISF和IC會調整以提供更多的胰島素（超過100%%）或更少的胰島素（低於100%%）。</string>
-    <string name="objectives_exam_learned_profileswitchtime">通過在設定檔切換中使用時間偏移，您可以將晝夜節律設定檔適應不規則情況，如晚起床。</string>
+    <string name="objectives_exam_learned_profileswitchtime">通過在設定檔切換中使用時間偏移，您可以將日夜節律設定檔適應不規則情況，如晚起床。</string>
     <string name="objectives_exam_learned_profileswitch4">編輯設定檔本身不足以進行更改。您仍然需要進行設定檔切換以啟用更改。</string>
     <string name="objectives_exam_learned_exercise">您應該在運動開始前至少1小時減少體內的胰島素量，選擇低於100%的設定檔。</string>
     <string name="objectives_exam_learned_exercise2">在運動前至少1小時設置更高的臨時目標有助於減少體內的胰島素量。</string>
     <string name="objectives_exam_learned_noisycgm">當您無法信任CGM值時，不應該在無人看守時使用循環。</string>
     <string name="objectives_exam_learned_pumpdisconnect">AAPS必須知道幫浦未連線以正確計算IOB。</string>
     <string name="objectives_exam_learned_insulin">知道幫浦中使用的是哪種胰島素是必要的，因為這會影響IOB計算。</string>
-    <string name="objectives_exam_learned_sensitivity">敏感性檢測是算法的一部分，允許胰島素劑量適應不同情況。</string>
+    <string name="objectives_exam_learned_sensitivity">敏感性偵測是算法的一部分，允許胰島素劑量適應不同情況。</string>
     <string name="objectives_exam_learned_objectives">您的目標進度與其他設置一起存儲，應該備份。</string>
     <string name="objectives_exam_learned_objectives2">始終將匯出的設置和生成的APK儲存在手機之外的地方。手機可能遺失、損壞等。好的存放地點可以是任何手機可查看的雲端。在這種情況下，您可以在另一個設備上幾分鐘內恢復AAPS。好的做法是將使用的主密碼存放在安全的地方。沒有它，您的備份無用。這同樣適用於簽章密鑰（.jks文件）和構建AAPS所用的密碼。其餘的並不重要 - 它們可以隨時從互聯網上下載。</string>
     <string name="objectives_exam_learned_wrongcarbs">如果您向AAPS輸入了錯誤的訊息或與現實不符，盡快解決。這可能導致過量注射。應該盡可能告知AAPS碳水化合物、胰島素等的最佳方式。</string>
