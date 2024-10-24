@@ -27,6 +27,7 @@
     <string name="description_ama">2017\'da algoritmanın durumu</string>
     <string name="description_smb">İleri düzey kullanıcılar için en yeni algoritma</string>
     <string name="description_smb_dynamic_isf">Dinamik/otomatik İDF ile ileri düzey kullanıcılar için en yeni algoritma</string>
+    <string name="description_auto_isf">İleri düzey kullanıcılar için OtoİDF eklentili en son algoritma</string>
     <string name="openapsama_bolus_snooze_dia_divisor">Bolus erteleme ies bölen</string>
     <string name="openapsma_run">Şimdi Çalıştır</string>
     <string name="openapsma_last_run_label">Son Çalıştırma</string>

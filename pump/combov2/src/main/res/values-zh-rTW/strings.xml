@@ -24,7 +24,7 @@
     <string name="combov2_pair_with_pump_title">與幫浦配對</string>
     <string name="combov2_unpair_pump_title">取消幫浦配對</string>
     <string name="combov2_driver_state_label">驅動狀態</string>
-    <string name="combov2_current_activity_label">當前活動</string>
+    <string name="combov2_current_activity_label">目前活動</string>
     <string name="bluetooth_address">藍牙地址</string>
     <string name="combov2_start_pairing">開始配對</string>
     <string name="combov2_pairing_in_progress">Combo 配對進行中</string>
@@ -55,8 +55,8 @@
     <string name="combov2_pairing_finishing">完成配對</string>
     <string name="combov2_no_connection_for_n_mins">無連線達 %1$d 分鐘</string>
     <string name="combov2_less_than_one_minute_ago">不到 1 分鐘前</string>
-    <string name="combov2_setting_current_pump_time">設定當前幫浦時間</string>
-    <string name="combov2_setting_current_pump_date">設定當前幫浦日期</string>
+    <string name="combov2_setting_current_pump_time">設定目前幫浦時間</string>
+    <string name="combov2_setting_current_pump_date">設定目前幫浦日期</string>
     <string name="combov2_not_initialized">未初始化</string>
     <string name="combov2_checking_pump">正在檢查幫浦</string>
     <string name="combov2_ready">準備就緒</string>
@@ -82,8 +82,8 @@
     <string name="combov2_bolus_cancelled">注射已取消</string>
     <string name="combov2_bolus_delivery_failed">注射失敗。似乎沒有注射成功。為確保無誤，請檢查幫浦以避免雙重注射，然後重新注射。為防止錯誤，不會自動重試注射。</string>
     <string name="combov2_bolus_not_delivered">注射未完成</string>
-    <string name="combov2_cannot_access_pump_data">無法訪問幫浦資料；必須重新配對幫浦</string>
-    <string name="combov2_unaccounted_bolus_detected_cancelling_bolus">檢測到未計入的注射。為安全起見，取消注射。</string>
+    <string name="combov2_cannot_access_pump_data">無法查看幫浦資料；必須重新配對幫浦</string>
+    <string name="combov2_unaccounted_bolus_detected_cancelling_bolus">偵測到未計入的注射。為安全起見，取消注射。</string>
     <string name="combov2_incorrect_active_basal_profile">活動基礎速率配置錯誤；必須是配置 1 為活動配置，而不是配置 %1$d</string>
     <string name="combov2_unrecognized_alert">未識別的 Combo 警報</string>
     <string name="combov2_combo_alert">Combo 警報</string>
@@ -102,7 +102,7 @@
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">如果基礎速率為零，則無法設定絕對臨時基礎率</string>
     <string name="combov2_pair_with_pump_summary">將 AndroidAPS 和 Android 與目前未配對的 Accu-Chek Combo 幫浦配對</string>
     <string name="combov2_unpair_pump_summary">將 AndroidAPS 和 Android 與目前配對的 Accu-Chek Combo 幫浦取消配對</string>
-    <string name="combov2_unknown_tbr_detected">檢測到未知的臨時基礎率並已停止；百分比：%1$d%%；剩餘持續時間：%2$s</string>
+    <string name="combov2_unknown_tbr_detected">偵測到未知的臨時基礎率並已停止；百分比：%1$d%%；剩餘持續時間：%2$s</string>
     <string name="combov2_connection_error">連線錯誤：%1$s</string>
     <string name="combov2_short_status_last_connection">最後連線：%1$d 分鐘前</string>
     <string name="combov2_short_status_alert">警報：%s</string>
@@ -113,8 +113,8 @@
     <string name="combov2_short_status_battery_state_low">低</string>
     <string name="combov2_short_status_battery_state_full">滿</string>
     <string name="combov2_short_status_battery_state">電池：%s</string>
-    <string name="combov2_automatic_reservoir_entry">自動檢測並自動輸入胰島素儲液器更換</string>
-    <string name="combov2_automatic_battery_entry">自動檢測並自動輸入電池更換</string>
+    <string name="combov2_automatic_reservoir_entry">自動偵測並自動輸入胰島素儲液器更換</string>
+    <string name="combov2_automatic_battery_entry">自動偵測並自動輸入電池更換</string>
     <string name="combov2_note_reservoir_change">儲液器更換由 combov2 驅動程式自動植入</string>
     <string name="combov2_note_battery_change">電池更換由 combov2 驅動程式自動植入</string>
     <string name="combov2_timezone_changed">時區已更改</string>

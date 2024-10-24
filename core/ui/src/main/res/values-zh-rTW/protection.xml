@@ -28,4 +28,5 @@
     <string name="pin_cleared">PIN 碼已清除！</string>
     <string name="password_hint">在此輸入密碼</string>
     <string name="pin_hint">在此輸入 PIN 碼</string>
+    <string name="master_password_not_set">未設置主密碼</string>
 </resources>

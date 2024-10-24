@@ -12,7 +12,7 @@
     <string name="very_old_version">非常舊的版本</string>
     <string name="application_expired">應用已過期</string>
     <string name="new_version_warning">至少 %1$d 天未檢查新版本！%2$d 天後回退到LGS，%3$d 天後將停用循環。請恢復網路連線！</string>
-    <string name="running_invalid_version">檢測到您正在運行無效版本。已停用循環！</string>
+    <string name="running_invalid_version">偵測到您正在運行無效版本。已停用循環！</string>
     <string name="versionavailable">版本 %1$s 可用</string>
     <string name="version_expire">版本 %1$s 將於 %2$s 過期</string>
     <!-- Signature verifier -->

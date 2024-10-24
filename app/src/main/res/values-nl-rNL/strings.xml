@@ -50,5 +50,4 @@
     <string name="sort_label">Sorteren</string>
     <string name="search">Zoeken</string>
     <string name="simple_mode">Eenvoudige modus</string>
-    <string name="master_password_not_set">Hoofdwachtwoord niet ingesteld</string>
 </resources>

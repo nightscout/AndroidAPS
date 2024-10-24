@@ -12,7 +12,7 @@
     <string name="absorption_max_time_title">餐食最大吸收時間 [小時]</string>
     <string name="absorption_max_time_summary">預計餐食中的所有碳水化合物將被吸收的時間（以小時計）</string>
     <string name="openapsama_autosens_period">自動敏感度間隔 [小時]</string>
-    <string name="openapsama_autosens_period_summary">過去敏感度檢測的時間（碳水化合物吸收時間不包括在內）</string>
+    <string name="openapsama_autosens_period_summary">過去敏感度偵測的時間（碳水化合物吸收時間不包括在內）</string>
     <string name="openapsama_autosens_max_summary">預設值：1.2\n這是自動敏感度（以及即將推出的自動調整）比率的上限，設定了20％的最大限制，決定了自動敏感度可以調整的基礎速率上限、ISF的下限以及血糖目標的下限。</string>
     <string name="openapsama_autosens_min_summary">預設值：0.7\n自動敏感度安全限制的另一端，設置了自動敏感度可以調整的基礎速率下限、ISF的上限和血糖目標的上限。</string>
     <string name="openapsama_autosens_max">最大自動敏感度比率</string>

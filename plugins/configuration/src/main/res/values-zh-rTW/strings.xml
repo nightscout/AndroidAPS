@@ -24,7 +24,7 @@
     <string name="need_whitelisting">%1$s需要電池優化白名單以達到最佳效能</string>
     <string name="storedsettingsfound">找到已存儲的設定</string>
     <string name="master_password_summary">主密碼用於備份加密和覆蓋應用程式中的安全設置。請記住它或將其存放在安全的地方。</string>
-    <string name="current_master_password">當前主密碼</string>
+    <string name="current_master_password">目前主密碼</string>
     <string name="common_values">使用您通常吃的最大食物的值\n</string>
     <string name="syncinfotext">將資料同步到雲端。您現在可以跳過此部分，但在設置Nightscout或Tidepool客戶端之前，您將無法完成目標。</string>
     <string name="status">狀態：</string>
@@ -35,7 +35,7 @@
     <string name="doprofileswitch">切換檔案</string>
     <string name="exitwizard">跳過設定嚮導</string>
     <string name="setupwizard_loop_description">按下面的按鈕啟用AAPS建議/進行基礎變更</string>
-    <string name="setupwizard_sensitivity_description">靈敏度外掛用於靈敏度檢測和COB計算。更多資訊請查看：</string>
+    <string name="setupwizard_sensitivity_description">靈敏度外掛用於靈敏度偵測和COB計算。更多資訊請查看：</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="setupwizard_aps_description">從可用的算法中選擇一個。它們按從舊到新的順序排列。較新的算法通常更強大和更積極。因此，如果您是新手循環用戶，可能會從AMA開始，而不是最新的。請勿忘記閱讀OpenAPS文檔並在使用前進行配置。</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">請在下方配置您的RileyLink。選擇RileyLink後，一旦RileyLink狀態顯示為“已連線”，即可繼續設置。這可能需要一分鐘。\n</string>
@@ -73,7 +73,7 @@
     <string name="configbuilder_bgsource_description">AAPS應從哪裡獲取資料？</string>
     <string name="configbuilder_smoothing">平滑處理</string>
     <string name="configbuilder_smoothing_description">選擇平滑算法</string>
-    <string name="configbuilder_sensitivity">靈敏度檢測</string>
+    <string name="configbuilder_sensitivity">靈敏度偵測</string>
     <string name="configbuilder_sensitivity_description">應使用哪個靈敏度算法？</string>
     <string name="config_builder_shortname">組態</string>
     <string name="description_config_builder">用於配置活動外掛</string>
@@ -99,7 +99,7 @@
     <string name="setting_imported">設定已匯入</string>
     <string name="old_master_password">舊主密碼</string>
     <string name="different_password_used">此文件是用不同的主密碼匯出和加密的。請提供舊主密碼以解密文件。</string>
-    <string name="master_password_will_be_replaced">成功匯入後當前主密碼將被替換為舊主密碼！</string>
+    <string name="master_password_will_be_replaced">成功匯入後目前主密碼將被替換為舊主密碼！</string>
     <string name="exported">偏好設定已匯出</string>
     <string name="filenotfound">文件未找到</string>
     <string name="goto_main_try_again">請返回主畫面並重試。</string>
@@ -132,9 +132,9 @@
     <string name="exported_less_than_hour_ago">於不到一小時前匯出</string>
     <string name="in_directory" comment="placeholder is for exported file path">在目錄：%1$s</string>
     <string name="preferences_import_list_title">選擇要匯入的文件</string>
-    <string name="metadata_warning_different_flavour">偏好設定是用不同版本的AAPS (%1$s) 建立的，而您當前的版本是：%2$s。\n\n某些設定可能丟失或無效 - 請在匯入後檢查並更新您的偏好設定。</string>
+    <string name="metadata_warning_different_flavour">偏好設定是用不同版本的AAPS (%1$s) 建立的，而您目前的版本是：%2$s。\n\n某些設定可能丟失或無效 - 請在匯入後檢查並更新您的偏好設定。</string>
     <string name="metadata_warning_different_device">偏好設定是在不同的設備上建立的。如果您是從舊手機或不同手機匯入，這是可以的，但請確保匯入的偏好設定是正確的！</string>
-    <string name="metadata_warning_outdated_format">您正在使用舊版AAPS中的過時格式，這是不安全的！僅在無法使用當前JSON格式的匯出時作為最後的手段。</string>
+    <string name="metadata_warning_outdated_format">您正在使用舊版AAPS中的過時格式，這是不安全的！僅在無法使用目前JSON格式的匯出時作為最後的手段。</string>
     <string name="metadata_warning_old_export">匯入的偏好設定已經有 %1$s 天了！也許您有更更新的偏好設定，或者您選擇了錯誤的文件？請記住定期匯出偏好設定！</string>
     <string name="metadata_warning_date_format">日期時間格式無效！</string>
     <string name="metadata_warning_different_version">偏好設定來自應用程式的不同小版本。如果您是升級後匯入，這是可以的，但請在匯入後檢查偏好設定是否仍然正確！</string>

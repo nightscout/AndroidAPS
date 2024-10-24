@@ -83,4 +83,5 @@
     <string name="failedretrievetime">Fallo tiempo de recuperación</string>
     <string name="requirementnotmet">No se cumplen los requisitos de objetivo</string>
     <string name="what_i_ve_learned">Lo que he aprendido:</string>
+    <string name="verify_master_password">Verifica que conoces la contraseña maestra</string>
 </resources>

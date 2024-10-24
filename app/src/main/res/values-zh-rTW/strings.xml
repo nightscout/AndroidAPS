@@ -21,7 +21,7 @@
     <string name="localalertsettings_title">本地警報</string>
     <string name="enable_missed_bg_readings_alert">如果沒有接收到血糖資料，則發出警報</string>
     <string name="enable_pump_unreachable_alert">幫浦無法用時發出警報</string>
-    <string name="pump_unreachable_threshold">幫浦無法用時的閾值 [分鐘]</string>
+    <string name="pump_unreachable_threshold">幫浦無法用時的門檻值 [分鐘]</string>
     <string name="enable_carbs_req_alert">需要碳水化合物時發出警報</string>
     <string name="open_navigation">開啟導覽</string>
     <string name="close_navigation">關閉導覽</string>
@@ -40,7 +40,7 @@
     <string name="clear_filter">清除篩選器</string>
     <string name="cannula">套管</string>
     <string name="email_address">電子郵件地址</string>
-    <string name="remove_bg_readings">移除血糖讀數</string>
+    <string name="remove_bg_readings">移除血糖讀取值</string>
     <string name="identification_not_set">開發模式下未設置識別</string>
     <string name="a11y_dialog">對話視窗</string>
     <!-- WEAR OS-->
@@ -50,5 +50,4 @@
     <string name="sort_label">排序</string>
     <string name="search">搜尋</string>
     <string name="simple_mode">簡易模式</string>
-    <string name="master_password_not_set">未設置主密碼</string>
 </resources>

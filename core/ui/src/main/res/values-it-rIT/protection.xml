@@ -28,4 +28,5 @@
     <string name="pin_cleared">PIN eliminato!</string>
     <string name="password_hint">Inserisci qui la password</string>
     <string name="pin_hint">Inserisci PIN</string>
+    <string name="master_password_not_set">Password principale non impostata</string>
 </resources>

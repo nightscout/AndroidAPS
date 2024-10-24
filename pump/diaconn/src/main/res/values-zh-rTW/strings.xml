@@ -85,10 +85,10 @@
     <string name="apsIncarnationNo">aps_incarnation_no</string>
     <string name="pumpserialno">幫浦序列號</string>
     <string name="diaconn_g8_loginsulinchange_title">記錄儲液盒更換</string>
-    <string name="diaconn_g8_loginsulinchange_summary">當在歷史紀錄中檢測到時，添加 “胰島素更換” 事件至 careportal</string>
+    <string name="diaconn_g8_loginsulinchange_summary">當在歷史紀錄中偵測到時，添加 “胰島素更換” 事件至 careportal</string>
     <string name="diaconn_g8_logcanulachange_title">記錄針頭更換</string>
-    <string name="diaconn_g8_logcanulachange_summary">當在歷史紀錄中檢測到時，添加 “站點更換” 事件至 careportal</string>
-    <string name="diaconn_g8_logbatterychange_summary">當在歷史紀錄中檢測到時，添加 “電池更換” 事件至 careportal</string>
+    <string name="diaconn_g8_logcanulachange_summary">當在歷史紀錄中偵測到時，添加 “站點更換” 事件至 careportal</string>
+    <string name="diaconn_g8_logbatterychange_summary">當在歷史紀錄中偵測到時，添加 “電池更換” 事件至 careportal</string>
     <string name="diaconn_g8_logbatterychange_title">記錄電池更換</string>
     <string name="diaconn_g8_logsyncinprogress">同步進行中</string>
     <string name="diaconn_g8_loginsulinshorage">胰島素短缺</string>
@@ -145,7 +145,7 @@
     <string name="diaconn_g8_errorcode_15">基礎速率設置完成後，才能進行基礎速率注射。</string>
     <string name="diaconn_g8_errotpreceivedyet">命令未送達。請再試一次。</string>
     <string name="diaconn_g8_logtubechange_title">記錄管道更換</string>
-    <string name="diaconn_g8_logtubechange_summary">當在歷史紀錄中檢測到時，添加 “管道更換” 事件至備註</string>
+    <string name="diaconn_g8_logtubechange_summary">當在歷史紀錄中偵測到時，添加 “管道更換” 事件至備註</string>
     <string name="diaconn_g8_logtempstart">臨時基礎速率開始</string>
     <string name="diaconn_g8_errorcode_32">在 LGS 運行期間，限制注射</string>
     <string name="diaconn_g8_errorcode_33">LGS 狀態為開啟，拒絕開啟命令。</string>

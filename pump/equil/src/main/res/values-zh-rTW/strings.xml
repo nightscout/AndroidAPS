@@ -109,9 +109,9 @@
     <string name="equil_none">無</string>
     <string name="equil_history_item1">儲液盒-胰島素水平低</string>
     <string name="equil_history_item2">儲液盒-胰島素水平空</string>
-    <string name="equil_history_item3">檢測到輸液堵塞</string>
-    <string name="equil_history_item4">檢測到馬達反轉</string>
-    <string name="equil_history_item5">檢測到馬達故障</string>
+    <string name="equil_history_item3">偵測到輸液堵塞</string>
+    <string name="equil_history_item4">偵測到馬達反轉</string>
+    <string name="equil_history_item5">偵測到馬達故障</string>
     <string name="equil_history_item6">注射暫停開始</string>
     <string name="equil_history_item7">注射已暫停</string>
     <string name="equil_history_item8">即將自動關閉</string>
@@ -151,7 +151,7 @@
         <item quantity="other">%1$d 天</item>
     </plurals>
     <string name="equil_support_error">韌體版本過低。不支援</string>
-    <string name="equil_password_tips">請為配對Equil v5.3幫浦設定新密碼，此密碼也將用於將來取消與當前幫浦的配對，請務必記住它。密碼規則：必須為4個字符，從ABCDEF0123456789中選擇。</string>
+    <string name="equil_password_tips">請為配對Equil v5.3幫浦設定新密碼，此密碼也將用於將來取消與目前幫浦的配對，請務必記住它。密碼規則：必須為4個字符，從ABCDEF0123456789中選擇。</string>
     <string name="delete">刪除</string>
     <string name="equil_set_pair_password">設定配對密碼</string>
     <string name="equil_hint1">安裝幫浦到底座後，選擇是否從駐留針頭中排除空氣。</string>
