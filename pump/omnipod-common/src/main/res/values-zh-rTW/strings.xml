@@ -103,7 +103,7 @@
     <string name="omnipod_common_preferences_smb_beeps_enabled">啟用 SMB 時，發出嗶聲</string>
     <string name="omnipod_common_preferences_tbr_beeps_enabled">啟用臨時基礎率時，發出嗶聲</string>
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">在 Omnipod 標籤中顯示暫停輸送按鈕</string>
-    <string name="omnipod_common_preferences_time_change_enabled">啟用 DST/時區檢測</string>
+    <string name="omnipod_common_preferences_time_change_enabled">啟用 DST/時區偵測</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">啟用到期提醒</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">啟用時，當到達指定時間時，Pod 將發出嗶聲提醒</string>
     <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">到期前幾小時提醒（72 小時）</string>
