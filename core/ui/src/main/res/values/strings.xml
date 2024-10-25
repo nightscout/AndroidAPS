@@ -541,12 +541,20 @@
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">You will be asked for master password, which is needed to decrypt imported preferences.</string>
 
-    <!-- <unattende_export> -->
+    <!-- <unattended_export> -->
     <string name="export_ok">OK</string>
     <string name="export_warning">Warning</string>
     <string name="export_expired">Expired</string>
     <string name="export_disabled">Disabled</string>
     <string name="export_failed">Failed</string>
+    <string name="export_alert">ALERT</string>
+
+    <!-- <unattended_export result messages> -->
+    <string name="export_result_message_exported">Settings exported</string>
+    <string name="export_result_message_failed">Settings export FAILED!</string>
+    <string name="export_result_message_about_to_expire">Settings exported: password about to expire soon. Export manually and (re)enter password.</string>
+    <string name="export_result_message_expired">Settings export canceled: password expired. Export manually and (re)enter!</string>
+    <string name="export_result_message_disabled">Warning (automation): Settings export not enabled!</string>
 
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">decrement %1$s by %2$s</string>
