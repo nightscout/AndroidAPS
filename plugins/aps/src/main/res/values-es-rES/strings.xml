@@ -168,7 +168,7 @@
     <string name="pump_disconnected">Bomba desconectada</string>
     <!--    autoISF -->
     <string name="half_basal_exercise_target_title">Basal media con objetivo actividad</string>
-    <string name="half_basal_exercise_target_summary">Establecer un número, por ejemplo, 160. Significa que cuando el objetivo temporal es 160 mg/dL y tenemos habilitado \"Objetivo temporal alto aumenta la sensibilidad\", ejecuta el 50% de la basal en ese nivel (120 = 75%; 140 = 60%).</string>
+    <string name="half_basal_exercise_target_summary">Establecer un número, por ejemplo, 160. Significa que cuando el objetivo temporal es 160 mg/dL y tenemos habilitado \"Objetivo temporal alto aumenta la sensibilidad\", ejecuta el 50%% de la basal en ese nivel (120 = 75%%; 140 = 60%%).</string>
     <string name="autoISF_settings_title">Ajustes de AutoISF</string>
     <string name="autoISF_settings_summary">AutoISF permite adaptar el factor de sensibilidad a la insulina (ISF) en varios escenarios de comportamiento de la glucosa\n\nTambién puede adaptar la configuración de entrega de SMBs</string>
     <string name="acce_ISF_settings_title">Ajustes de acce_ISF</string>

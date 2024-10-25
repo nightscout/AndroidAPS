@@ -168,7 +168,7 @@
     <string name="pump_disconnected">幫浦已中斷連線</string>
     <!--    autoISF -->
     <string name="half_basal_exercise_target_title">半基礎運動目標</string>
-    <string name="half_basal_exercise_target_summary">設定為一個數字，例如 160，這表示當臨時目標為 160 mg/dL 且高臨時目標提高敏感性=true時，在此水平運行 50% 的基礎率（120 = 75%；140 = 60%）。</string>
+    <string name="half_basal_exercise_target_summary">設定為一個數字，例如 160，這表示當臨時目標為 160 mg/dL 且高臨時目標提高敏感性=true時，在此水平運行 50%% 的基礎率（120 = 75%%；140 = 60%%）。</string>
     <string name="autoISF_settings_title">自動ISF設定</string>
     <string name="autoISF_settings_summary">AutoISF 允許在各種葡萄糖行為情境中調整胰島素敏感性因子 (ISF)\n\n它還可以調整SMB輸送設定</string>
     <string name="acce_ISF_settings_title">acce_ISF設定</string>
