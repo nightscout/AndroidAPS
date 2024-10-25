@@ -168,7 +168,7 @@
     <string name="pump_disconnected">Pumpa odpojena</string>
     <!--    autoISF -->
     <string name="half_basal_exercise_target_title">Poloviční bazál při cíli Aktivita</string>
-    <string name="half_basal_exercise_target_summary">Nastaven na hodnotu, např. 160, což znamená, že je-li dočasný cíl 160 mg/dL (8,9 mmol) a možnost „Vysoký dočasný cíl zvyšuje senzititivu“ je povolená, spustí se při této hodnotě 50% bazál (120 = 75%; 140 = 60%).</string>
+    <string name="half_basal_exercise_target_summary">Nastaven na hodnotu, např. 160, což znamená, že je-li dočasný cíl 160 mg/dL (8,9 mmol) a možnost „Vysoký dočasný cíl zvyšuje senzititivu“ je povolená, spustí se při této hodnotě 50%% bazál (120 = 75%%; 140 = 60%%).</string>
     <string name="autoISF_settings_title">Nastavení AutoISF</string>
     <string name="autoISF_settings_summary">AutoISF umožňuje upravit citlivost na inzulín (ISF) v různých scénářích chování glykémie.\n\nMůže také upravit nastavení SMB.</string>
     <string name="acce_ISF_settings_title">Nastavení acce_ISF</string>
