@@ -50,5 +50,4 @@
     <string name="sort_label">Ordenar</string>
     <string name="search">Buscar</string>
     <string name="simple_mode">Modo simple</string>
-    <string name="master_password_not_set">Contraseña maestra no establecida</string>
 </resources>

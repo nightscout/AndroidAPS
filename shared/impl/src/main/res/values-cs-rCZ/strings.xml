@@ -17,6 +17,7 @@
     <string name="cwf_comment_rig_battery">Baterie smyčky (%)</string>
     <string name="cwf_comment_basalRate">Bazální dávka</string>
     <string name="cwf_comment_bgi">Hodnota BGI</string>
+    <string name="cwf_comment_status">Syntéza stavů</string>
     <string name="cwf_comment_time">Čas (HH:MM nebo HH:MM:SS)</string>
     <string name="cwf_comment_hour">Hodiny (HH)</string>
     <string name="cwf_comment_minute">Minuty (MM)</string>

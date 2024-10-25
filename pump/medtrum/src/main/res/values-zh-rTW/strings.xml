@@ -91,7 +91,7 @@
     <string name="activating_complete">新貼片已啟動。剩餘 %.2f 單位。</string>
     <string name="can_export_settings">您可以匯出設定以便稍後恢復此貼片會話。</string>
     <string name="press_OK_to_return">按 <b>確定</b> 返回主畫面。</string>
-    <string name="deactivate_sure">您確定要停用當前貼片嗎？</string>
+    <string name="deactivate_sure">您確定要停用目前貼片嗎？</string>
     <string name="cancel_sure">您確定要取消啟動嗎？</string>
     <string name="medtrum_deactivate_pump_confirm">您確定嗎？此操作無法撤銷！！</string>
     <string name="press_next_or_cancel">按 <b>下一步</b> 停用或按 <b>取消</b> 返回主畫面。</string>

@@ -75,7 +75,7 @@
     <string name="deltacompared">%3$s %1$s %2$s</string>
     <string name="deltalabel">血糖差異</string>
     <string name="deltalabel_u">血糖差異 [%1$s]</string>
-    <string name="currentlocation">當前位置</string>
+    <string name="currentlocation">目前位置</string>
     <string name="location">位置</string>
     <string name="latitude_short">緯度：</string>
     <string name="longitude_short">經度：</string>
@@ -134,5 +134,5 @@
     <string name="autotune_run_without_autoswitch">自動調整運行無檔案切換</string>
     <string name="autotune_run_with_autoswitch">自動調整運行並自動切換檔案</string>
     <string name="autotune_run_with_error">上次自動調整運行時出錯</string>
-    <string name="autotune_run_cancelled">檢測到另一個自動調整運行，運行已取消</string>
+    <string name="autotune_run_cancelled">偵測到另一個自動調整運行，運行已取消</string>
 </resources>

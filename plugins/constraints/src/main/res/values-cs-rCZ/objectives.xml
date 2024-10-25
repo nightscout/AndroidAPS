@@ -83,4 +83,5 @@
     <string name="failedretrievetime">Nepodařilo se načíst čas</string>
     <string name="requirementnotmet">Požadavky cíle nejsou splněny</string>
     <string name="what_i_ve_learned">Co jsem se naučil:</string>
+    <string name="verify_master_password">Ověřte, zda znáte hlavní heslo</string>
 </resources>

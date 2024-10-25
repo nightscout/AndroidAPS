@@ -26,7 +26,7 @@
     <string name="pref_others_settings">Diğer</string>
     <string name="pref_complication_settings">Komplikasyon</string>
     <string name="pref_show_date">Tarihi Göster</string>
-    <string name="pref_show_iob">IOB\'yi göster</string>
+    <string name="pref_show_iob">AİNS göster</string>
     <string name="pref_show_detailed_iob">Ayrıntılı AİNS göster</string>
     <string name="pref_show_cob">AKRB göster</string>
     <string name="pref_show_delta">Deltayı göster</string>
@@ -217,4 +217,7 @@
     <string name="datalayer_notification_text">AAPS ön planda çalışıyor. Bildirimi gizlemek için Geliştirici seçenekleri, Uygulama bildirimleri, İzin verilen saat uygulamaları\'na gidin, AAPS\'yi seçin, Veri Katmanı Ön Plan Hizmet Kanalı bildirimini kapatın.</string>
     <string name="on">AÇIK</string>
     <string name="off">KAPALI</string>
+    <string name="complication_br_cob_iob">Nabız, AKRB &amp; AİNS</string>
+    <string name="complication_cob_iob">AKRB &amp; AİNS</string>
+    <string name="complication_cob_icon">AKRB simgesi</string>
 </resources>
