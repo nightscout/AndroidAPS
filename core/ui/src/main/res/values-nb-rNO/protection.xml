@@ -28,4 +28,5 @@
     <string name="pin_cleared">PIN-kode fjernet!</string>
     <string name="password_hint">Skriv inn passordet</string>
     <string name="pin_hint">Skriv inn PIN-koden</string>
+    <string name="master_password_not_set">Hovedpassord ikke satt</string>
 </resources>

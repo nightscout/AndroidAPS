@@ -40,7 +40,7 @@
     <string name="ue_export_to_csv">匯出使用者輸入到 Excel (csv)</string>
     <string name="confirm">確認</string>
     <string name="pump">幫浦</string>
-    <string name="missed_bg_readings">遺失血糖讀數</string>
+    <string name="missed_bg_readings">遺失血糖讀取值</string>
     <string name="treatments_iob_label_string">IOB：</string>
     <string name="mute5min">靜音 5 分鐘</string>
     <string name="mute">靜音</string>
@@ -376,7 +376,7 @@
     <string name="profile_dia">設定檔 DIA 值</string>
     <string name="profile_sensitivity_value">設定檔敏感度值</string>
     <string name="profile_max_daily_basal_value">最大設定檔基礎率值</string>
-    <string name="current_basal_value">當前基礎率值</string>
+    <string name="current_basal_value">目前基礎率值</string>
     <string name="profile_carbs_ratio_value">設定檔碳水化合物比率值</string>
     <string name="valuelimitedto">%1$.2f 限制為 %2$.2f</string>
     <string name="valueoutofrange">»%1$s« 超出硬限制範圍</string>
@@ -421,9 +421,9 @@
     <string name="bolus_advisor">注射顧問</string>
     <string name="bolus_advisor_message">您的血糖過高。建議不要立即用餐，等待血糖恢復正常。您想現在進行修正注射，並提醒您何時用餐嗎？這種情況下不會記錄碳水化合物，當我們提醒您時，您必須再次使用嚮導。</string>
     <string name="cobvsiob">COB 對 IOB</string>
-    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! 檢測到碳水化合物吸收緩慢：%2$d%% 的時間。請再次檢查您的計算。COB 可能被高估，因此可能會導致給予過多的胰島素 (建議取消計算機中的COB後再重新計算)!!!!!</font>]]></string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! 偵測到碳水化合物吸收緩慢：%2$d%% 的時間。請再次檢查您的計算。COB 可能被高估，因此可能會導致給予過多的胰島素 (建議取消計算機中的COB後再重新計算)!!!!!</font>]]></string>
     <string name="partialboluswizard">傳送一部分的注射嚮導結果 [%]</string>
-    <string name="partialboluswizard_reset_time">舊血糖時間閾值 [分鐘]</string>
+    <string name="partialboluswizard_reset_time">舊血糖時間門檻值 [分鐘]</string>
     <string name="bolus_constraint_applied_warn">注射限制已套用：%1$.2f U 至 %2$.2f U</string>
     <string name="bolus_recorded_only">僅記錄注射（不由幫浦傳送）</string>
     <string name="advisoralarm">當到達用餐時間時提醒我</string>
@@ -432,7 +432,7 @@
     <string name="wizard_no_insulin_required">不需要胰島素！</string>
     <string name="wizard_no_actual_bg">沒有最近的血糖值可用於計算！</string>
     <string name="wizard_no_active_profile">未設置活動設定檔！</string>
-    <string name="wizard_no_cob">未知的 COB！缺少血糖讀數或最近的應用程式重啟？</string>
+    <string name="wizard_no_cob">未知的 COB！缺少血糖讀取值或最近的應用程式重啟？</string>
     <string name="wizard_carbs_constraint">碳水化合物限制違規！</string>
     <string name="wizard_explain_calc">計算（IC：%1$.1f，ISF：%2$.1f）</string>
     <string name="wizard_explain_carbs">碳水化合物：%1$.2fU</string>

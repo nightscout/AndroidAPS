@@ -83,4 +83,5 @@
     <string name="failedretrievetime">Impossibile recuperare l\'ora</string>
     <string name="requirementnotmet">Requisiti obiettivo non soddisfatti</string>
     <string name="what_i_ve_learned">Cosa ho imparato:</string>
+    <string name="verify_master_password">Verifica che tu sappia la password principale</string>
 </resources>

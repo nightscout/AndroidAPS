@@ -50,5 +50,4 @@
     <string name="sort_label">Trier</string>
     <string name="search">Chercher</string>
     <string name="simple_mode">Mode simple</string>
-    <string name="master_password_not_set">Mot de passe maître non défini</string>
 </resources>

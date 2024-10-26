@@ -38,7 +38,7 @@
     <string name="objectives2_easyrestore">如果您的手機損壞或遺失，有簡便的方法可以在沒有備份的情況下遠端恢復您的設定。</string>
     <string name="objectives_hint1">https://wiki.aaps.app/en/latest/Usage/ExportImportSettings.html</string>
     <string name="objectives_hint2">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
-    <string name="noisycgm_label">干擾的CGM讀數</string>
+    <string name="noisycgm_label">干擾的CGM讀取值</string>
     <string name="noisycgm_whattodo">如果CGM資料干擾，應該怎麼做？</string>
     <string name="noisycgm_nothing">什麼也不做 - AAPS會處理。</string>
     <string name="noisycgm_pause">停用閉環以避免可能的過量或劑量不足。</string>

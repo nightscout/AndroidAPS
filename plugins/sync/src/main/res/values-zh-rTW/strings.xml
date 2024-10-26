@@ -72,8 +72,8 @@
     <string name="ns_alarm_options">警報選項</string>
     <string name="ns_alarms">從 NS 警報建立通知</string>
     <string name="ns_announcements">從 NS 公告建立通知</string>
-    <string name="ns_alarm_stale_data_value_label">陳舊資料閾值 [分鐘]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">緊急陳舊資料閾值 [分鐘]</string>
+    <string name="ns_alarm_stale_data_value_label">陳舊資料門檻值 [分鐘]</string>
+    <string name="ns_alarm_urgent_stale_data_value_label">緊急陳舊資料門檻值 [分鐘]</string>
     <string name="ns_log_app_started_event">將應用啟動記錄到 NS</string>
     <string name="copy_existing_values">複製現有設置（如果存在）？</string>
     <string name="ns_use_ws_title">連線到 Websockets</string>

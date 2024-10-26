@@ -50,5 +50,4 @@
     <string name="sort_label">Seřadit</string>
     <string name="search">Hledat</string>
     <string name="simple_mode">Zjednodušený režim</string>
-    <string name="master_password_not_set">Hlavní heslo není nastaveno</string>
 </resources>

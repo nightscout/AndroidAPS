@@ -83,4 +83,5 @@
     <string name="failedretrievetime">Feil ved henting av tid</string>
     <string name="requirementnotmet">Læringmålets krav er ikke oppfylt</string>
     <string name="what_i_ve_learned">Jeg har lært:</string>
+    <string name="verify_master_password">Verifiser at du kjenner hovedpassordet</string>
 </resources>

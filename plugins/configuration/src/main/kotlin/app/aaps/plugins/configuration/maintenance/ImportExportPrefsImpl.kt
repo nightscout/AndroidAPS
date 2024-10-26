@@ -136,7 +136,7 @@ class ImportExportPrefsImpl @Inject constructor(
     private fun detectUserName(context: Context): String {
         // based on https://medium.com/@pribble88/how-to-get-an-android-device-nickname-4b4700b3068c
         val n1 = Settings.System.getString(context.contentResolver, "bluetooth_name")
-        val n2 = Settings.Secure.getString(context.contentResolver, "bluetooth_name")
+        val n2 = if (context.applicationContext.applicationInfo.targetSdkVersion <= Build.VERSION_CODES.S) Settings.Secure.getString(context.contentResolver, "bluetooth_name") else null
         val n3 = try {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
                 (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter?.name
