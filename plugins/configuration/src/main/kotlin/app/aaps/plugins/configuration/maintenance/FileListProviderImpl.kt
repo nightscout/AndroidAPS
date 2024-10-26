@@ -53,7 +53,6 @@ class FileListProviderImpl @Inject constructor(
     private val aapsLogsPath = File(path, "AAPS" + File.separator + "aapsLogs")
     override val resultPath = File(path, "AAPS" + File.separator + "results")
 
-
     companion object {
 
         private const val IMPORT_AGE_NOT_YET_OLD_DAYS = 60
