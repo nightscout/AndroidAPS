@@ -42,7 +42,6 @@ class WatchfaceViewAdapter(
     val rigBattery = ds?.rigBattery ?: cU?.rigBattery
     val basalRate = ds?.basalRate ?: cU?.basalRate
     val bgi = ds?.bgi ?: cU?.bgi
-    val AAPSv2 = ds?.AAPSv2 ?: cU?.AAPSv2
     val cob1 = ds?.cob1 ?: cU?.cob1
     val cob2 = ds?.cob2 ?: cU?.cob2
     val time = cU?.time
