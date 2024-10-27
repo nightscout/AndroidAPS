@@ -527,8 +527,21 @@ class CustomWatchface : BaseWatchFace() {
                 )
                 view.setTextColor(dynData?.getFontColorStep() ?: cwf.getColor(viewJson.optString(JsonKeys.FONTCOLOR.key)))
                 view.isAllCaps = viewJson.optBoolean(JsonKeys.ALLCAPS.key)
-                if (viewJson.has(JsonKeys.TEXTVALUE.key))
-                    view.text = viewJson.optString(JsonKeys.TEXTVALUE.key)
+                if (viewJson.has(JsonKeys.TEXTVALUE.key) || viewJson.has(JsonKeys.DYNVALUE.key) || (dynData?.stepTextValue ?: 0) > 0) {
+                    if (viewJson.has(JsonKeys.DYNVALUE.key)) {
+                        dynData?.getDynValue(viewJson.optBoolean(JsonKeys.DYNVALUE.key, false))?.let {
+                            try {   // try - catch block if wrong format provided not consistant with double values, to avoid crash
+                                view.text = String.format(cwf.context.resources.configuration.locales[0] ,dynData?.getTextValueStep() ?: viewJson.optString(JsonKeys.TEXTVALUE.key, "%.0f"), it )
+                            } catch(e: Exception) {
+                                view.text = String.format(cwf.context.resources.configuration.locales[0] , "%.0f", it )
+                            }
+                        } ?: apply {
+                            view.text = dynData?.getTextValueStep() ?: viewJson.optString(JsonKeys.TEXTVALUE.key)
+                        }
+                    } else {
+                        view.text = dynData?.getTextValueStep() ?: viewJson.optString(JsonKeys.TEXTVALUE.key)
+                    }
+                }
                 (dynData?.getDrawable() ?: textDrawable())?.let {
                     if (viewJson.has(JsonKeys.COLOR.key) || (dynData?.stepColor ?: 0) > 0)           // Note only works on bitmap (png or jpg)  not for svg files
                         it.colorFilter = cwf.changeDrawableColor(dynData?.getColorStep() ?: cwf.getColor(viewJson.optString(JsonKeys.COLOR.key)))
@@ -715,14 +728,14 @@ class CustomWatchface : BaseWatchFace() {
         MONTH(ViewKeys.MONTH.key, 1.0, 12.0),
         WEEKNUMBER(ViewKeys.WEEKNUMBER.key, 1.0, 53.0);
 
-        fun dynValue(dataValue: Double, dataRange: DataRange, valueRange: DataRange): Int = when {
+        fun dynValue(dataValue: Double, dataRange: DataRange, valueRange: DataRange): Double = when {
             dataValue < dataRange.minData -> dataRange.minData
             dataValue > dataRange.maxData -> dataRange.maxData
             else                          -> dataValue
         }.let {
             if (dataRange.minData != dataRange.maxData)
-                (valueRange.minData + (it - dataRange.minData) * (valueRange.maxData - valueRange.minData) / (dataRange.maxData - dataRange.minData)).toInt()
-            else it.toInt()
+                valueRange.minData + (it - dataRange.minData) * (valueRange.maxData - valueRange.minData) / (dataRange.maxData - dataRange.minData)
+            else it
         }
 
         fun stepValue(dataValue: Double, range: DataRange, step: Int): Int = step(dataValue, range, step)
@@ -747,9 +760,11 @@ class CustomWatchface : BaseWatchFace() {
         private val dynLeftOffset = mutableMapOf<Int, Int>()
         private val dynTopOffset = mutableMapOf<Int, Int>()
         private val dynRotationOffset = mutableMapOf<Int, Int>()
+        private val dynTextValue = mutableMapOf<Int, String>()
         private var dataRange: DataRange? = null
         private var topRange: DataRange? = null
         private var leftRange: DataRange? = null
+        private var dynRange: DataRange? = null
         private var rotationRange: DataRange? = null
         val stepDraw: Int
             get() = dynDrawable.size - 1
@@ -765,6 +780,8 @@ class CustomWatchface : BaseWatchFace() {
             get() = dynTopOffset[0]?.let { dynTopOffset.size - 1 } ?: dynTopOffset.size
         val stepRotationOffset: Int
             get() = dynRotationOffset[0]?.let { dynRotationOffset.size - 1 } ?: dynRotationOffset.size
+        val stepTextValue: Int
+            get() = dynTextValue[0]?.let { dynTextValue.size - 1 } ?: dynTextValue.size
 
         val dataValue: Double?
             get() = when (valueMap) {
@@ -798,7 +815,7 @@ class CustomWatchface : BaseWatchFace() {
             }
         } ?: 0
 
-        fun getRotationOffset(): Int = dataRange?.let { dataRange -> rotationRange?.let { rotRange -> dataValue?.let { valueMap.dynValue(it, dataRange, rotRange) } ?: rotRange.invalidData } } ?: 0
+        fun getRotationOffset(): Int = dataRange?.let { dataRange -> rotationRange?.let { rotRange -> dataValue?.let { valueMap.dynValue(it, dataRange, rotRange).toInt() } ?: rotRange.invalidData } } ?: 0
         fun getDrawable() = dataRange?.let { dataRange -> dataValue?.let { dynDrawable[valueMap.stepValue(it, dataRange, stepDraw)] } ?: dynDrawable[0] }
         fun getFontColorStep() = getIntValue(dynFontColor, stepFontColor)
         fun getTextSizeStep() = getIntValue(dynTextSize, stepTextSize)
@@ -806,6 +823,17 @@ class CustomWatchface : BaseWatchFace() {
         fun getTopOffsetStep() = getIntValue(dynTopOffset, stepTopOffset)
         fun getLeftOffsetStep() = getIntValue(dynLeftOffset, stepLeftOffset)
         fun getRotationOffsetStep() = getIntValue(dynRotationOffset, stepRotationOffset)
+        fun getTextValueStep() = dataRange?.let { dataRange -> dataValue?.let { dynTextValue[valueMap.stepValue(it, dataRange, stepTextValue)] } ?: dynTextValue[0] }
+        fun getDynValue(range: Boolean): Double? =
+            if (range)
+                dataRange?.let { dataRange ->
+                    dynRange?.let { dynRange ->
+                        dataValue?.let { (valueMap.dynValue(it, dataRange, dynRange)) }
+                            ?: (dynRange.invalidData.toDouble())
+                    }
+                } ?: dataValue
+            else
+                dataValue
 
         private fun getIntValue(dynMap: MutableMap<Int, Int>, step: Int) =
             if (step > 0) dataRange?.let { dataRange -> dataValue?.let { dynMap[valueMap.stepValue(it, dataRange, step)] } ?: dynMap[0] ?: dynMap[1] } else null
@@ -813,6 +841,7 @@ class CustomWatchface : BaseWatchFace() {
         private fun load() {
             DataRange(dataJson.optDouble(JsonKeys.MINDATA.key, valueMap.min), dataJson.optDouble(JsonKeys.MAXDATA.key, valueMap.max)).let { defaultRange ->
                 dataRange = defaultRange
+                dynRange = parseDataRange(dataJson.optJSONObject(JsonKeys.DYNVALUE.key), defaultRange)
                 topRange = parseDataRange(dataJson.optJSONObject(JsonKeys.TOPOFFSET.key), defaultRange)
                 leftRange = parseDataRange(dataJson.optJSONObject(JsonKeys.LEFTOFFSET.key), defaultRange)
                 rotationRange = parseDataRange(dataJson.optJSONObject(JsonKeys.ROTATIONOFFSET.key), defaultRange)
@@ -824,6 +853,7 @@ class CustomWatchface : BaseWatchFace() {
             getIntSteps(dynLeftOffset, JsonKeys.LEFTOFFSET.key, JsonKeys.INVALIDLEFTOFFSET.key)
             getIntSteps(dynTopOffset, JsonKeys.TOPOFFSET.key, JsonKeys.INVALIDTOPOFFSET.key)
             getIntSteps(dynRotationOffset, JsonKeys.ROTATIONOFFSET.key, JsonKeys.INVALIDROTATIONOFFSET.key)
+            getStringSteps(dynTextValue, JsonKeys.TEXTVALUE.key, JsonKeys.INVALIDTEXTVALUE.key)
         }
 
         private fun getDrawableSteps(dynMap: MutableMap<Int, Drawable?>, key: String, invalidKey: String) {
@@ -852,6 +882,16 @@ class CustomWatchface : BaseWatchFace() {
             var idx = 1
             while (dataJson.has("${key}$idx")) {
                 dynMap[idx] = dataJson.optInt("${key}$idx", 22)
+                idx++
+            }
+        }
+
+        private fun getStringSteps(dynMap: MutableMap<Int, String>, key: String, invalidKey: String) {
+            if (dataJson.has(invalidKey))
+                dynMap[0] = dataJson.optString(invalidKey)
+            var idx = 1
+            while (dataJson.has("${key}$idx")) {
+                dynMap[idx] = dataJson.optString("${key}$idx")
                 idx++
             }
         }
