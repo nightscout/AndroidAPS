@@ -414,11 +414,4 @@
         android:src="@drawable/second_hand"
         tools:ignore="UseAppTint" />
 
-    <!--   FLAGs   -->
-    <View
-        android:id="@+id/AAPSv2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
-
 </FrameLayout>
