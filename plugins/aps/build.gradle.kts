@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
+    alias(libs.plugins.ksp)
     id("kotlin-android")
-    id("kotlin-kapt")
     id("android-module-dependencies")
     id("test-module-dependencies")
     id("jacoco-module-dependencies")
@@ -35,5 +35,5 @@ dependencies {
     //Logger
     api(libs.org.slf4j.api)
 
-    kapt(libs.com.google.dagger.android.processor)
+    ksp(libs.com.google.dagger.android.processor)
 }

@@ -24,6 +24,7 @@ buildscript {
 plugins {
     alias(libs.plugins.klint)
     alias(libs.plugins.moduleDependencyGraph)
+    alias(libs.plugins.ksp)
 }
 
 allprojects {

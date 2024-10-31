@@ -3,9 +3,9 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 plugins {
+    alias(libs.plugins.ksp)
     id("com.android.application")
     id("kotlin-android")
-    id("kotlin-kapt")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
     id("android-app-dependencies")
@@ -219,13 +219,13 @@ dependencies {
     androidTestImplementation(libs.org.skyscreamer.jsonassert)
 
 
-    kaptAndroidTest(libs.com.google.dagger.android.processor)
+    kspAndroidTest(libs.com.google.dagger.android.processor)
 
     /* Dagger2 - We are going to use dagger.android which includes
      * support for Activity and fragment injection so we need to include
      * the following dependencies */
-    kapt(libs.com.google.dagger.android.processor)
-    kapt(libs.com.google.dagger.compiler)
+    ksp(libs.com.google.dagger.android.processor)
+    ksp(libs.com.google.dagger.compiler)
 
     // MainApp
     api(libs.com.uber.rxdogtag2.rxdogtag)
