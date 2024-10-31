@@ -280,14 +280,14 @@ class DetermineBasalAMA @Inject constructor(
         IOBpredBGs = IOBpredBGs.map { min(401.0, max(39.0, it)) }.toMutableList()
         for (i in IOBpredBGs.size - 1 downTo 13) {
             if (IOBpredBGs[i - 1] != IOBpredBGs[i]) break
-            else IOBpredBGs.removeLast()
+            else IOBpredBGs.removeAt(IOBpredBGs.lastIndex)
         }
         rT.predBGs?.IOB = IOBpredBGs.map { it.toInt() }
         if (meal_data.mealCOB > 0) {
             aCOBpredBGs = aCOBpredBGs.map { min(401.0, max(39.0, it)) }.toMutableList()
             for (i in aCOBpredBGs.size - 1 downTo 13) {
                 if (aCOBpredBGs[i - 1] != aCOBpredBGs[i]) break
-                else aCOBpredBGs.removeLast()
+                else aCOBpredBGs.removeAt(aCOBpredBGs.lastIndex)
             }
             rT.predBGs?.aCOB = aCOBpredBGs.map { it.toInt() }
         }
@@ -295,7 +295,7 @@ class DetermineBasalAMA @Inject constructor(
             COBpredBGs = COBpredBGs.map { min(401.0, max(39.0, it)) }.toMutableList()
             for (i in COBpredBGs.size - 1 downTo 13) {
                 if (COBpredBGs[i - 1] != COBpredBGs[i]) break
-                else COBpredBGs.removeLast()
+                else COBpredBGs.removeAt(COBpredBGs.lastIndex)
             }
             rT.predBGs?.COB = COBpredBGs.map { it.toInt() }
             eventualBG = max(eventualBG, round(COBpredBGs[COBpredBGs.size - 1], 0))
