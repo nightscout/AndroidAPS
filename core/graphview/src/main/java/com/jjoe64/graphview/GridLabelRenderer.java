@@ -762,7 +762,7 @@ public class GridLabelRenderer {
         }
         if (labelSizeChanged) {
             // redraw
-            ViewCompat.postInvalidateOnAnimation(mGraphView);
+            mGraphView.postInvalidateOnAnimation();
             return;
         }
 
