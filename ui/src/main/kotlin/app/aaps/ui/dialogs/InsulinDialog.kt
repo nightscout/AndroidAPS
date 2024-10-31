@@ -131,9 +131,9 @@ class InsulinDialog : DialogFragmentWithDate() {
         val pump = activePlugin.activePump
         if (config.NSCLIENT) {
             // If SmsAllowRemoteCommands is True, then user might use either SMS command or record only, otherwise hardcode record_only option
-            val allow_sms = preferences.get(BooleanKey.SmsAllowRemoteCommands)
-            binding.recordOnly.isEnabled = allow_sms
-            binding.recordOnly.isChecked = if (allow_sms) preferences.get(StringKey.SmsReceiverNumber).isNullOrBlank() else true
+            val allowSms = preferences.get(BooleanKey.SmsAllowRemoteCommands)
+            binding.recordOnly.isEnabled = allowSms
+            binding.recordOnly.isChecked = preferences.get(StringKey.SmsReceiverNumber).isNullOrBlank()
         }
         val maxInsulin = constraintChecker.getMaxBolusAllowed().value()
 

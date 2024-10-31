@@ -94,7 +94,7 @@ class BolusWizard @Inject constructor(
 
     init {
         injector.androidInjector().inject(this)
-        // TODO: why this@BolusWizar.phoneNumber not visible in scoped DetailedBolusInfo().apply
+        // why this@BolusWizar.phoneNumber not visible in scoped DetailedBolusInfo().apply
         // phoneNumber = preferences.get(StringKey.SmsReceiverNumber)
         timeStamp = dateUtil.now()
     }
