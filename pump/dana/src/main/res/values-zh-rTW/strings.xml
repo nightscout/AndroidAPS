@@ -33,7 +33,7 @@
     <string name="basalmax">基礎速率最大值</string>
     <string name="dailymax">每日最大值</string>
     <string name="bloodsugarmeasurementalert">血糖測量提醒</string>
-    <string name="remaininsulinalert">剩餘胰島素量提醒</string>
+    <string name="remaininsulinalert">剩餘胰島素容量提醒</string>
     <string name="missedbolus">遺漏的注射</string>
     <string name="invalidpairing">無效的配對資訊。請求新的配對</string>
     <string name="gettingpumpstatus">獲取幫浦狀態</string>
@@ -43,7 +43,7 @@
     <string name="gettingpumpsettings">獲取幫浦設定</string>
     <string name="gettingpumptime">獲取幫浦時間</string>
     <string name="largetimedifftitle">時間差異過大</string>
-    <string name="largetimediff">時間差異過大：\n幫浦時間超過 1.5 小時不準確。\n請手動調整幫浦上的時間並確保從幫浦讀取歷史記錄不會導致意外行為。\n如果可能，在更改時間之前從幫浦中移除歷史記錄，或者在最後一個錯誤的歷史記錄條目後停用閉環一個 DIA，但最少停用一個 DIA。</string>
+    <string name="largetimediff">時間差異過大：\n幫浦時間超過 1.5 小時不準確。\n請手動調整幫浦上的時間並確保從幫浦讀取歷史紀錄不會導致意外行為。\n如果可能，在更改時間之前從幫浦中移除歷史紀錄，或者在最後一個錯誤的歷史紀錄條目後停用閉環一個 DIA，但最少停用一個 DIA。</string>
     <string name="pairfirst">請將您的幫浦與您的手機配對！</string>
     <string name="approachingdailylimit">接近每日胰島素限制</string>
     <string name="startingbolus">開始注射</string>
@@ -106,10 +106,10 @@
     <string name="danar_useextended_title">對於 &gt;200% 使用延長注射</string>
     <string name="bolusspeed">注射速度</string>
     <string name="selectedpump">選擇的幫浦</string>
-    <string name="rs_loginsulinchange_title">記錄儲液器更換</string>
-    <string name="rs_loginsulinchange_summary">當在歷史記錄中偵測到時，向 careportal 添加“胰島素更換”事件</string>
-    <string name="rs_logcanulachange_title">記錄注射部位更換</string>
-    <string name="rs_logcanulachange_summary">當在歷史記錄中偵測到時，向 careportal 添加“注射部位更換”事件</string>
+    <string name="rs_loginsulinchange_title">紀錄儲液器更換</string>
+    <string name="rs_loginsulinchange_summary">當在歷史紀錄中偵測到時，向 careportal 添加“胰島素更換”事件</string>
+    <string name="rs_logcanulachange_title">紀錄注射部位更換</string>
+    <string name="rs_logcanulachange_summary">當在歷史紀錄中偵測到時，向 careportal 添加“注射部位更換”事件</string>
     <string name="pin1">PIN1</string>
     <string name="pin2">PIN2</string>
     <string name="press_ok_on_the_pump">在幫浦上按下 OK\n並輸入顯示的兩個數字\n按下減號按鈕以保持幫浦顯示開啟，直到輸入完成。</string>
