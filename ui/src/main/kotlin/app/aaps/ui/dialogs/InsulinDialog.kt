@@ -35,6 +35,7 @@ import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.SafeParse
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
@@ -129,7 +130,10 @@ class InsulinDialog : DialogFragmentWithDate() {
 
         val pump = activePlugin.activePump
         if (config.NSCLIENT) {
-            binding.recordOnly.isChecked = preferences.get(StringKey.SmsReceiverNumber).isNullOrBlank()
+            // If SmsAllowRemoteCommands is True, then user might use either SMS command or record only, otherwise hardcode record_only option
+            val allow_sms = preferences.get(BooleanKey.SmsAllowRemoteCommands)
+            binding.recordOnly.isEnabled = allow_sms
+            binding.recordOnly.isChecked = if (allow_sms) preferences.get(StringKey.SmsReceiverNumber).isNullOrBlank() else true
         }
         val maxInsulin = constraintChecker.getMaxBolusAllowed().value()
 
@@ -211,7 +215,7 @@ class InsulinDialog : DialogFragmentWithDate() {
             )
             if (recordOnlyChecked)
                 actions.add(rh.gs(app.aaps.core.ui.R.string.bolus_recorded_only).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
-            else if(!phoneNumber.isNullOrBlank())
+            else if (preferences.get(BooleanKey.SmsAllowRemoteCommands) && !phoneNumber.isNullOrBlank())
                 actions.add(rh.gs(app.aaps.core.ui.R.string.sms_bolus_notification).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
 
             if (abs(insulinAfterConstraints - insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
@@ -276,7 +280,7 @@ class InsulinDialog : DialogFragmentWithDate() {
                             ).subscribe()
                             if (timeOffset == 0)
                                 automation.removeAutomationEventBolusReminder()
-                        } else if(!phoneNumber.isNullOrBlank()){
+                        } else if (preferences.get(BooleanKey.SmsAllowRemoteCommands) && !phoneNumber.isNullOrBlank()) {
                             smsCommunicator.sendSMS(Sms(phoneNumber, rh.gs(app.aaps.core.ui.R.string.bolus) + " " + detailedBolusInfo.insulin))
                         } else {
                             uel.log(

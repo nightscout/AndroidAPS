@@ -378,7 +378,7 @@ class BolusWizard @Inject constructor(
                     .formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor)
             )
         if (config.NSCLIENT && insulinAfterConstraints > 0)
-            if (!phoneNumber.isNullOrBlank())
+            if (preferences.get(BooleanKey.SmsAllowRemoteCommands) && !phoneNumber.isNullOrBlank())
                 actions.add(rh.gs(app.aaps.core.ui.R.string.sms_bolus_notification).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
             else
                 actions.add(rh.gs(app.aaps.core.ui.R.string.bolus_recorded_only).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
@@ -549,7 +549,7 @@ class BolusWizard @Inject constructor(
                             ).filterNotNull()
                         )
                         var phoneNumber = preferences.get(StringKey.SmsReceiverNumber)
-                        if (!phoneNumber.isNullOrBlank()) {
+                        if (preferences.get(BooleanKey.SmsAllowRemoteCommands) && !phoneNumber.isNullOrBlank()) {
                             rh.gs(app.aaps.core.ui.R.string.sms_bolus_notification).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor)
                             smsCommunicator.sendSMS(Sms(phoneNumber, rh.gs(app.aaps.core.ui.R.string.bolus) + " " + insulin))
                         } else if (!config.APS)

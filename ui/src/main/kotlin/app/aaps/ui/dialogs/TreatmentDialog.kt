@@ -28,6 +28,7 @@ import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.SafeParse
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.formatColor
@@ -160,7 +161,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
             )
             if (recordOnlyChecked)
                 actions.add(rh.gs(app.aaps.core.ui.R.string.bolus_recorded_only).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
-            else if (!phoneNumber.isNullOrBlank())
+            else if (preferences.get(BooleanKey.SmsAllowRemoteCommands) && !phoneNumber.isNullOrBlank())
                 actions.add(
                     rh.gs(
                         app.aaps.core.ui.R.string.sms_bolus_notification
@@ -197,7 +198,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
                     detailedBolusInfo.context = context
                     if (recordOnlyChecked) {
                         if (detailedBolusInfo.insulin > 0)
-                            if (!phoneNumber.isNullOrBlank())
+                            if (preferences.get(BooleanKey.SmsAllowRemoteCommands) && !phoneNumber.isNullOrBlank())
                                 smsCommunicator.sendSMS(Sms(phoneNumber, rh.gs(app.aaps.core.ui.R.string.bolus) + " " + detailedBolusInfo.insulin))
                             else
                                 disposable += persistenceLayer.insertOrUpdateBolus(

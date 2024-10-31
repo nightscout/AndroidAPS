@@ -287,7 +287,6 @@ class OverviewPlugin @Inject constructor(
                                                       }))
             })
             addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewBolusPercentage, dialogMessage = R.string.deliverpartofboluswizard, title = app.aaps.core.ui.R.string.partialboluswizard))
-            addPreference(AdaptiveStringPreference(ctx = context, stringKey = StringKey.SmsReceiverNumber, dialogMessage = R.string.sms_receiver_number_dialog, title = app.aaps.core.ui.R.string.sms_receiver_number))
 
 
             addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewResetBolusPercentageTime, dialogMessage = R.string.deliver_part_of_boluswizard_reset_time, title = app.aaps.core.ui.R.string.partialboluswizard_reset_time))

@@ -2,7 +2,6 @@
 <resources>
 
     <!-- SMS Communicator & OTP Authenticator -->
-
     <string name="smscommunicator">SMS Communicator</string>
     <string name="smscommunicator_shortname">SMS</string>
     <string name="description_sms_communicator">Remote control AAPS using SMS commands.</string>
@@ -186,7 +185,7 @@
     <string name="statuslights_patch_pump_age">patch pump age</string>
     <string name="patch_pump">Patch pump</string>
 
-    <!-- Overview -->
+    <!-- Overview Preferences -->
     <string name="show_statuslights">Show status lights on home screen</string>
     <string name="statuslights_cage_warning">Threshold warning cannula age [h]</string>
     <string name="statuslights_cage_critical">Threshold critical cannula age [h]</string>
@@ -268,7 +267,6 @@
     <string name="short_tabtitles">Shorten tab titles</string>
     <string name="overview_show_notes_field_in_dialogs_title">Show notes field in treatment dialogs</string>
     <string name="deliverpartofboluswizard">Bolus wizard performs calculation but only this part of calculated insulin is delivered. Useful with SMB algorithm.</string>
-    <string name="sms_receiver_number_dialog">If number is provided, insulin and calculator buttons will be able to send SMS command to inject bolus. Note that you still need to confirm it and reply with security token/code. Note that you need to enabled SMS control of AAPS phone to use this function.</string>
     <string name="deliver_part_of_boluswizard_reset_time">Deliver full bolus (100%) if glycemia is older than</string>
     <string name="enable_bolus_advisor">Enable bolus advisor</string>
     <string name="enable_bolus_advisor_summary">Use reminder to start eating later instead of wizard result during high glycemia ("pre-bolus")</string>
