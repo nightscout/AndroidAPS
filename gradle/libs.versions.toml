@@ -78,7 +78,7 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 androidx-biometric = { group = "androidx.biometric", name = "biometric", version = "1.1.0" }
 androidx-browser = { group = "androidx.browser", name = "browser", version = "1.8.0" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version = "2.2.0" }
-androidx-core = { group = "androidx.core", name = "core-ktx", version = "1.13.1" }
+androidx-core = { group = "androidx.core", name = "core-ktx", version = "1.15.0" }
 androidx-fragment = { group = "androidx.fragment", name = "fragment-ktx", version = "1.8.4" }
 androidx-gridlayout = { group = "androidx.gridlayout", name = "gridlayout", version = "1.0.0" }
 androidx-legacy-support = { group = "androidx.legacy", name = "legacy-support-v13", version = "1.0.0" }
