@@ -87,7 +87,7 @@ class ObjectivesFragment : DaggerFragment() {
         binding.fake.setOnClickListener { updateGUI() }
         binding.reset.setOnClickListener {
             objectivesPlugin.reset()
-            binding.recyclerview.adapter?.notifyDataSetChanged()
+            updateGUI()
             scrollToCurrentObjective()
         }
         scrollToCurrentObjective()
@@ -100,9 +100,7 @@ class ObjectivesFragment : DaggerFragment() {
         disposable += rxBus
             .toObservable(EventObjectivesUpdateGui::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe({
-                           binding.recyclerview.adapter?.notifyDataSetChanged()
-                       }, fabricPrivacy::logException)
+            .subscribe({ updateGUI() }, fabricPrivacy::logException)
     }
 
     @Synchronized
@@ -372,6 +370,7 @@ class ObjectivesFragment : DaggerFragment() {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateGUI() {
         activity?.runOnUiThread { objectivesAdapter.notifyDataSetChanged() }
     }

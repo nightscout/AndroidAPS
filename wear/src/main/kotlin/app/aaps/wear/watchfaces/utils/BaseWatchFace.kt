@@ -223,14 +223,12 @@ abstract class BaseWatchFace : WatchFace() {
         return (System.currentTimeMillis() - singleBg.timeStamp).toDouble()
     }
 
-    private fun readingAge(shortString: Boolean): String {
+    private fun readingAge(): String {
         if (singleBg.timeStamp == 0L) {
-            return if (shortString) "--" else "-- Minute ago"
+            return "--"
         }
         val minutesAgo = floor(timeSince() / (1000 * 60)).toInt()
-        return if (minutesAgo == 1) {
-            minutesAgo.toString() + if (shortString) "'" else " Minute ago"
-        } else minutesAgo.toString() + if (shortString) "'" else " Minutes ago"
+        return minutesAgo.toString() + "'"
     }
 
     override fun onDestroy() {
@@ -301,14 +299,9 @@ abstract class BaseWatchFace : WatchFace() {
         binding.iob1?.text = if (detailedIob) status.iobSum else getString(R.string.activity_IOB)
         binding.iob2?.text = if (detailedIob) status.iobDetail else status.iobSum
         binding.timestamp.visibility = sp.getBoolean(R.string.key_show_ago, true).toVisibility()
-        binding.timestamp.text = readingAge(binding.AAPSv2 != null || sp.getBoolean(R.string.key_show_external_status, true))
+        binding.timestamp.text = readingAge()
         binding.uploaderBattery?.visibility = sp.getBoolean(R.string.key_show_uploader_battery, true).toVisibility()
-        binding.uploaderBattery?.text =
-            when {
-                binding.AAPSv2 != null                                 -> status.battery + "%"
-                sp.getBoolean(R.string.key_show_external_status, true) -> "U: ${status.battery}%"
-                else                                                   -> "Uploader: ${status.battery}%"
-            }
+        binding.uploaderBattery?.text = status.battery + "%"
         binding.rigBattery?.visibility = sp.getBoolean(R.string.key_show_rig_battery, false).toVisibility()
         binding.rigBattery?.text = status.rigBattery
         binding.basalRate?.text = status.currentBasal
