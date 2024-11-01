@@ -190,12 +190,13 @@
     <string name="openapsama_enable_autoISF">Включить адаптивную чувствительность ISF в зависимости от поведения ГК</string>
     <string name="openapsama_autoISF_max_summary">Аналогично autosense_max определяет, насколько сильным может стать ISF. Значение 1.0 по умолчанию его отключает. Предупреждение: Будьте предельно осторожны при использовании значений выше 2.5</string>
     <string name="openapsama_autoISF_min_summary">Подобно autosens_min определяет насколько слабой может стать чувствительность ISF.\n\nЗначение по умолчанию 1.0 отключает этот эффект.</string>
+    <string name="openapsama_dura_ISF_weight_summary">Это вес, применяемый при длительных повышениях уровня глюкозы, который усиливает ISF, потенциально увеличивая подачу инсулина.\n\П Значение по умолчанию 0,0 отключает этот эффект.</string>
     <string name="openapsama_autoISF_max">Макс. коэффициент autoISF\n(autoISF_max)</string>
     <string name="openapsama_autoISF_min">Мин. коэффициент autoISF\n(autoISF_min)</string>
     <string name="openapsama_lower_ISFrange_weight">Нагрузка диапазона ISF ниже цели\n(lower_ISFrange_weight)</string>
     <string name="openapsama_higher_ISFrange_weight">Нагрузка диапазона ISF выше цели\n(higher_ISFrange_weight)</string>
     <string name="openapsama_pp_ISF_weight">Изменяющая ISF после еды нагрузка\n(pp_ISF_weight)</string>
-    <string name="openapsama_bgAccel_ISF_weight">Нагрузка при ускорения изменения ГК\n(bgAccel_ISF_weight)</string>
+    <string name="openapsama_bgAccel_ISF_weight">Нагрузка при ускорении изменения ГК\n(bgAccel_ISF_weight)</string>
     <string name="openapsama_bgBrake_ISF_weight">Нагрузка при замедлении изменений ГК\n(bgBrake_ISF_weight)</string>
     <string name="openapsama_dura_ISF_weight">Нагрузка ISF при застое ГК\n(dura_ISF_weight)</string>
     <string name="openapsama_smb_delivery_ratio">Фикс. коэффициент ввода микроболюсов SMB\n(smb_delivery_ratio)</string>
