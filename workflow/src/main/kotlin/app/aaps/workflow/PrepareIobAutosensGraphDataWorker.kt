@@ -177,7 +177,7 @@ class PrepareIobAutosensGraphDataWorker(
             if (autosensData != null) {
                 val cob = autosensData.cob.toInt()
                 if (cob != lastCob) {
-                    if (autosensData.carbsFromBolus > 0) cobArray.add(ScaledDataPoint(time, lastCob.toDouble(), data.overviewData.cobScale))
+                    if (autosensData.carbsFromBolus != 0.0) cobArray.add(ScaledDataPoint(time, lastCob.toDouble(), data.overviewData.cobScale))
                     cobArray.add(ScaledDataPoint(time, cob.toDouble(), data.overviewData.cobScale))
                     data.overviewData.maxCobValueFound = max(data.overviewData.maxCobValueFound, cob.toDouble())
                     lastCob = cob
