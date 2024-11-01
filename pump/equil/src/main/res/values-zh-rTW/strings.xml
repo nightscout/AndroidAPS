@@ -13,7 +13,7 @@
     <string name="equil_finish">完成</string>
     <string name="equil_next">下一步</string>
     <string name="equil_hint_dressing">此操作將停止胰島素輸送並使幫浦的活塞回縮到底部！</string>
-    <string name="equil_history">歷史記錄</string>
+    <string name="equil_history">歷史紀錄</string>
     <string name="equil_insulin_reservoir">胰島素儲液盒</string>
     <string name="equil_mode">運行模式</string>
     <string name="equil_mode_running">運行中</string>
@@ -107,8 +107,8 @@
     <string name="equil_tab_equil">Equil歷史</string>
     <string name="equil_password_error">Equil配對密碼錯誤</string>
     <string name="equil_none">無</string>
-    <string name="equil_history_item1">儲液盒-胰島素水平低</string>
-    <string name="equil_history_item2">儲液盒-胰島素水平空</string>
+    <string name="equil_history_item1">儲液盒-胰島素容易過低</string>
+    <string name="equil_history_item2">儲液盒-胰島素已無容量</string>
     <string name="equil_history_item3">偵測到輸液堵塞</string>
     <string name="equil_history_item4">偵測到馬達反轉</string>
     <string name="equil_history_item5">偵測到馬達故障</string>
