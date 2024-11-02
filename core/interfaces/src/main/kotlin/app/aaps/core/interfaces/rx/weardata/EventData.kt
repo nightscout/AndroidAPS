@@ -205,7 +205,8 @@ sealed class EventData : Event() {
         val low: Double, // lowLine
         val color: Int = 0,
         val deltaMgdl: Double? = null,
-        val avgDeltaMgdl: Double? = null
+        val avgDeltaMgdl: Double? = null,
+        val id: Int = 0
     ) : EventData(), Comparable<SingleBg> {
 
         override fun equals(other: Any?): Boolean =
@@ -276,7 +277,8 @@ sealed class EventData : Event() {
         val rigBattery: String,
         val openApsStatus: Long,
         val bgi: String,
-        val batteryLevel: Int
+        val batteryLevel: Int,
+        val id: Int = 0
     ) : EventData()
 
     @Serializable
