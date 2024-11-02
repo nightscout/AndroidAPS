@@ -913,8 +913,7 @@ class BigLogInquireResponsePacket(
             val api = retrofit?.create(DiaconnApiService::class.java)
             val pumpLogDto = PumpLogDto(
                 app_uid = appUid,
-                app_version = context.packageManager.safeGetPackageInfo(context.packageName, 0)
-                    .versionName,
+                app_version = context.packageManager.safeGetPackageInfo(context.packageName, 0).versionName ?: "",
                 pump_uid = diaconnG8Pump.pumpUid,
                 pump_version = diaconnG8Pump.pumpVersion,
                 incarnation_num = diaconnG8Pump.pumpIncarnationNum,

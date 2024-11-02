@@ -78,7 +78,7 @@ class NSClientAddUpdateWorker(
                     } ?: aapsLogger.error("Error parsing bolus json $json")
                 }
             }
-            if (carbs > 0) {
+            if (carbs != 0.0) {
                 if (preferences.get(BooleanKey.NsClientAcceptCarbs) || config.NSCLIENT) {
                     CA.fromJson(json)?.let { carb ->
                         storeDataForDb.carbs.add(carb)

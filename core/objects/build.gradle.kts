@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
+    alias(libs.plugins.ksp)
     id("kotlin-android")
-    id("kotlin-kapt")
     id("kotlin-parcelize")
     id("android-module-dependencies")
     id("all-open-dependencies")
@@ -35,6 +35,6 @@ dependencies {
     //WorkManager
     api(libs.androidx.work.runtime)  // DataWorkerStorage
 
-    kapt(libs.com.google.dagger.compiler)
-    kapt(libs.com.google.dagger.android.processor)
+    ksp(libs.com.google.dagger.compiler)
+    ksp(libs.com.google.dagger.android.processor)
 }

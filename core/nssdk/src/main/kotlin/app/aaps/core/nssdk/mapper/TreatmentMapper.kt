@@ -56,7 +56,7 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 isBasalInsulin = isBasalInsulin ?: false
             )
 
-        carbs != null && carbs > 0                                         ->
+        carbs != null && carbs != 0.0                                         ->
             return NSCarbs(
                 date = treatmentTimestamp,
                 device = this.device,

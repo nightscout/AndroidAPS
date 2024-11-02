@@ -1,6 +1,7 @@
 package app.aaps.plugins.sync.nsclientV3.workers
 
 import android.content.Context
+import androidx.work.ExistingWorkPolicy
 import androidx.work.ListenableWorker
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkContinuation
@@ -130,7 +131,7 @@ internal class LoadBgWorkerTest : TestBase() {
 
     @Test
     fun testThereAreNewerDataFirstLoadEmptyReturn() = runTest(timeout = 30.seconds) {
-        Mockito.`when`(workManager.beginUniqueWork(anyString(), any(), any<OneTimeWorkRequest>())).thenReturn(workContinuation)
+        Mockito.`when`(workManager.beginUniqueWork(anyString(), anyObject<ExistingWorkPolicy>(), anyObject<OneTimeWorkRequest>())).thenReturn(workContinuation)
         Mockito.`when`(workContinuation.then(any<OneTimeWorkRequest>())).thenReturn(workContinuation)
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.lastLoadedSrvModified.collections.entries = 0L // first load
@@ -159,7 +160,7 @@ internal class LoadBgWorkerTest : TestBase() {
             )
         )
 
-        Mockito.`when`(workManager.beginUniqueWork(anyString(), any(), any<OneTimeWorkRequest>())).thenReturn(workContinuation)
+        Mockito.`when`(workManager.beginUniqueWork(anyString(), anyObject<ExistingWorkPolicy>(), anyObject<OneTimeWorkRequest>())).thenReturn(workContinuation)
         Mockito.`when`(workContinuation.then(any<OneTimeWorkRequest>())).thenReturn(workContinuation)
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.lastLoadedSrvModified.collections.entries = 0L // first load
@@ -173,7 +174,7 @@ internal class LoadBgWorkerTest : TestBase() {
 
     @Test
     fun testNoLoadNeeded() = runTest(timeout = 30.seconds) {
-        Mockito.`when`(workManager.beginUniqueWork(anyString(), any(), any<OneTimeWorkRequest>())).thenReturn(workContinuation)
+        Mockito.`when`(workManager.beginUniqueWork(anyString(), anyObject<ExistingWorkPolicy>(), anyObject<OneTimeWorkRequest>())).thenReturn(workContinuation)
         Mockito.`when`(workContinuation.then(any<OneTimeWorkRequest>())).thenReturn(workContinuation)
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.firstLoadContinueTimestamp.collections.entries = now - 1000

@@ -3,12 +3,12 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 object Versions {
 
-    const val appVersion = "3.3.0-dev-c"
+    const val appVersion = "3.3.0-dev-d"
     const val versionCode = 1500
 
     const val ndkVersion = "21.1.6352462"
 
-    const val compileSdk = 34
+    const val compileSdk = 35
     const val minSdk = 28
     const val targetSdk = 28
     const val wearMinSdk = 26

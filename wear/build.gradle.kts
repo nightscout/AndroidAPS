@@ -3,9 +3,9 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 plugins {
+    alias(libs.plugins.ksp)
     id("com.android.application")
     id("kotlin-android")
-    id("kotlin-kapt")
     id("android-app-dependencies")
     id("test-app-dependencies")
     id("jacoco-app-dependencies")
@@ -127,6 +127,6 @@ dependencies {
     implementation(libs.kotlinx.datetime)
     implementation(libs.kotlin.stdlib.jdk8)
 
-    kapt(libs.com.google.dagger.android.processor)
-    kapt(libs.com.google.dagger.compiler)
+    ksp(libs.com.google.dagger.android.processor)
+    ksp(libs.com.google.dagger.compiler)
 }

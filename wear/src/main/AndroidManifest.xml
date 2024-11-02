@@ -30,30 +30,6 @@
             android:value="@integer/google_play_services_version" />
 
         <service
-            android:name=".watchfaces.AapsLargeWatchface"
-            android:allowEmbedded="true"
-            android:exported="false"
-            android:label="@string/label_watchface_large"
-            android:permission="android.permission.BIND_WALLPAPER">
-            <meta-data
-                android:name="android.service.wallpaper"
-                android:resource="@xml/watch_face" />
-            <meta-data
-                android:name="com.google.android.wearable.watchface.preview"
-                android:resource="@drawable/watchface_dark" />
-            <meta-data
-                android:name="com.google.android.wearable.watchface.wearableConfigurationAction"
-                android:value="watch_face_configuration_largehome" />
-
-            <intent-filter>
-                <action android:name="android.service.wallpaper.WallpaperService" />
-                <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
-
-                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
-                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
-            </intent-filter>
-        </service>
-        <service
             android:name=".watchfaces.CircleWatchface"
             android:allowEmbedded="true"
             android:exported="false"
@@ -525,7 +501,6 @@
                 <action android:name="watch_face_configuration_circle" />
                 <action android:name="watch_face_configuration_custom" />
                 <action android:name="watch_face_configuration_digitalstyle" />
-                <action android:name="watch_face_configuration_largehome" />
 
                 <category android:name="com.google.android.wearable.watchface.category.WEARABLE_CONFIGURATION" />
                 <category android:name="android.intent.category.DEFAULT" />
