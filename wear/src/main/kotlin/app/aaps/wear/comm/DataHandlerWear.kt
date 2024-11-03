@@ -125,7 +125,7 @@ class DataHandlerWear @Inject constructor(
             .toObservable(EventData.Status::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe {
-                aapsLogger.debug(LTag.WEAR, "Status received from ${it.sourceNodeId}")
+                aapsLogger.debug(LTag.WEAR, "Status${if (it.id == 0) "" else it.id} received from ${it.sourceNodeId}")
                 persistence.store(it)
                 LocalBroadcastManager.getInstance(context).sendBroadcast(Intent(DataLayerListenerServiceWear.INTENT_NEW_DATA))
             }
@@ -133,7 +133,7 @@ class DataHandlerWear @Inject constructor(
             .toObservable(EventData.SingleBg::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe {
-                aapsLogger.debug(LTag.WEAR, "SingleBg received from ${it.sourceNodeId}")
+                aapsLogger.debug(LTag.WEAR, "SingleBg${if (it.id == 0) "" else it.id} received from ${it.sourceNodeId}")
                 persistence.store(it)
             }
         disposable += rxBus
