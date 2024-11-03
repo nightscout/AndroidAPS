@@ -219,7 +219,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
                         if (isTT) {
                             disposable += persistenceLayer.insertAndCancelCurrentTemporaryTarget(
                                 TT(
-                                    timestamp = eventTime + 1000, // Add one sec for proper NSCv1 sync
+                                    timestamp = eventTime + 2000, // Add two sec for proper NSCv1 sync
                                     duration = TimeUnit.MINUTES.toMillis(duration.toLong()),
                                     reason = TT.Reason.ACTIVITY,
                                     lowTarget = profileUtil.convertToMgdl(target, profileFunction.getUnits()),
