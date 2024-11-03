@@ -32,6 +32,44 @@ class RawDisplayData {
         avgDeltaMgdl = null
     )
 
+    var singleBg1 = EventData.SingleBg(
+        timeStamp = 0,
+        sgvString = "---",
+        glucoseUnits = "-",
+        slopeArrow = "--",
+        delta = "--",
+        deltaDetailed = "--",
+        avgDelta = "--",
+        avgDeltaDetailed = "--",
+        sgvLevel = 0,
+        sgv = 0.0,
+        high = 0.0,
+        low = 0.0,
+        color = 0,
+        deltaMgdl = null,
+        avgDeltaMgdl = null,
+        id = 1
+    )
+
+    var singleBg2 = EventData.SingleBg(
+        timeStamp = 0,
+        sgvString = "---",
+        glucoseUnits = "-",
+        slopeArrow = "--",
+        delta = "--",
+        deltaDetailed = "--",
+        avgDelta = "--",
+        avgDeltaDetailed = "--",
+        sgvLevel = 0,
+        sgv = 0.0,
+        high = 0.0,
+        low = 0.0,
+        color = 0,
+        deltaMgdl = null,
+        avgDeltaMgdl = null,
+        id = 2
+    )
+
     // status bundle
     var status = EventData.Status(
         externalStatus = "no status",
@@ -44,6 +82,34 @@ class RawDisplayData {
         openApsStatus = -1,
         bgi = "--",
         batteryLevel = 1
+    )
+
+    var status1 = EventData.Status(
+        externalStatus = "no status",
+        iobSum = "IOB",
+        iobDetail = "-.--",
+        cob = "--g",
+        currentBasal = "-.--U/h",
+        battery = "--",
+        rigBattery = "--",
+        openApsStatus = -1,
+        bgi = "--",
+        batteryLevel = 1,
+        id = 1
+    )
+
+    var status2 = EventData.Status(
+        externalStatus = "no status",
+        iobSum = "IOB",
+        iobDetail = "-.--",
+        cob = "--g",
+        currentBasal = "-.--U/h",
+        battery = "--",
+        rigBattery = "--",
+        openApsStatus = -1,
+        bgi = "--",
+        batteryLevel = 1,
+        id = 2
     )
 
     var graphData = EventData.GraphData(
@@ -62,8 +128,12 @@ class RawDisplayData {
 
     fun updateFromPersistence(persistence: Persistence) {
         persistence.readSingleBg()?.let { singleBg = it }
+        persistence.readSingleBg1()?.let { singleBg1 = it }
+        persistence.readSingleBg2()?.let { singleBg2 = it }
         persistence.readGraphData()?.let { graphData = it }
-        persistence.readStatus()?.let { status = it }
+        persistence.readStatus()?.let {  status = it }
+        persistence.readStatus1()?.let {  status1 = it }
+        persistence.readStatus2()?.let {  status2 = it }
         persistence.readTreatments()?.let { treatmentData = it }
     }
 }
