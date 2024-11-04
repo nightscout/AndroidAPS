@@ -142,7 +142,7 @@ class OpenHumansAPI @Inject constructor(
                 }
 
                 override fun onResponse(call: Call, response: Response) {
-                    it.resume(response, null)
+                    it.resume(response) { cause, _, _ -> ; }
                 }
             })
             it.invokeOnCancellation { call.cancel() }
