@@ -492,6 +492,8 @@
     <string name="close">Luk</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Du vil blive bedt om hovedadgangskode, som er nødvendig for at dekryptere importerede præferencer.</string>
+    <!-- <unattended_export> -->
+    <!-- <unattended_export result messages> -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">fald %1$s af %2$s</string>
     <string name="a11y_plus_button_description">stigning %1$s af %2$s</string>
