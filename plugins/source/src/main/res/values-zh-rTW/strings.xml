@@ -33,7 +33,7 @@
     <string name="do_xdrip_upload_title">將血糖資料發送到 xDrip+</string>
     <string name="do_xdrip_upload_summary">在 xDrip+ 中選擇 640g/Eversense 資料源</string>
     <string name="bgsource_upload">血糖資料上傳設置</string>
-    <string name="dexcom_log_ns_sensor_change_title">記錄傳感器更換到 NS</string>
+    <string name="dexcom_log_ns_sensor_change_title">紀錄傳感器更換到 NS</string>
     <string name="dexcom_log_ns_sensor_change_summary">在傳感器啟動時自動在 NS 中建立「傳感器更換」事件</string>
     <string name="direction">方向</string>
     <string name="bg_generation_interval_minutes">血糖生成間隔（分鐘）</string>
