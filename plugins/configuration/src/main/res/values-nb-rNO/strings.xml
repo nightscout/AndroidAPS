@@ -45,6 +45,8 @@
     <string name="readstatus">Lesestatus</string>
     <string name="data_choices">Datavalg</string>
     <string name="fabric_upload">Send krasjrapporter automatisk</string>
+    <string name="unattended_settings_export">Uovervåket eksport av innstillinger</string>
+    <string name="unattended_settings_export_summary">Aktivering av dette vil lagre ditt passord sikkert på din telefon</string>
     <string name="allow_automated_crash_reporting">Tillat automatisk rapportering av appkrasj og bruksdata til utviklerne via fabrioc.io-tjenesten.</string>
     <string name="summary_email_for_crash_report">Denne e-postadressen vedlegges krasjrapporter slik at vi kan kontakte deg i akutte tilfeller. Det er valgfritt.</string>
     <string name="identification">Identifikasjon (e-post, Facebook eller Discord-nick osv.)</string>
@@ -101,6 +103,7 @@
     <string name="different_password_used">Denne filen ble eksportert og kryptert med et annet hovedpassord. Oppgi det gamle passordet for å dekryptere filen.</string>
     <string name="master_password_will_be_replaced">Som et resultat av vellykket import vil ditt nåværende passord bli ERSTATTET med det gamle passordet!</string>
     <string name="exported">Innstillinger er eksportert</string>
+    <string name="exported_failed">Eksport av innstillinger mislyktes!</string>
     <string name="filenotfound">Fil ikke funnet</string>
     <string name="goto_main_try_again">Gå tilbake til hovedskjermen og prøv på nytt.</string>
     <string name="restartingapp">Avslutter appen for å aktivere innstillinger.</string>
