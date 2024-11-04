@@ -89,6 +89,7 @@
     <string name="removerecord">移除紀錄</string>
     <string name="loopisdisabled">循環已停用</string>
     <string name="alarm">警報</string>
+    <string name="exportsettings">匯出設定</string>
     <string name="disableloop">停用循環</string>
     <string name="enableloop">啟用循環</string>
     <string name="resumeloop">恢復循環</string>
@@ -207,10 +208,12 @@
     <string name="careportal_bgcheck">血糖檢查</string>
     <string name="careportal_mbg">手動血糖或校正</string>
     <string name="careportal_announcement">公告</string>
+    <string name="careportal_settings_export">設定匯出</string>
     <string name="careportal_note">備註</string>
     <string name="careportal_question">問題</string>
     <string name="careportal_exercise">運動</string>
     <string name="careportal_announcement_message">公告：%1$s</string>
+    <string name="careportal_settings_export_message">設定匯出: %1$s</string>
     <string name="careportal_note_message">備註：%1$s</string>
     <string name="careportal_question_message">問題：%1$s</string>
     <string name="careportal_exercise_message">運動：%1$s</string>
@@ -243,6 +246,7 @@
     <string name="activity">活動</string>
     <string name="wear">WearOS手錶</string>
     <string name="automation">自動化</string>
+    <string name="settingsexport">設定匯出</string>
     <string name="custom">自訂</string>
     <string name="loop">循環</string>
     <string name="ns">NS</string>
@@ -507,7 +511,18 @@
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">您將被要求輸入主密碼，這是解密匯入偏好設定所需的。</string>
     <!-- <unattended_export> -->
+    <string name="export_ok">確定</string>
+    <string name="export_warning">警告</string>
+    <string name="export_expired">過期</string>
+    <string name="export_disabled">停用</string>
+    <string name="export_failed">失敗</string>
+    <string name="export_alert">警報</string>
     <!-- <unattended_export result messages> -->
+    <string name="export_result_message_exported">設定已匯出</string>
+    <string name="export_result_message_failed">設定匯出失敗!</string>
+    <string name="export_result_message_about_to_expire">設定已匯出: 密碼即將過期。請手動匯出並（重新）輸入密碼。</string>
+    <string name="export_result_message_expired">設定匯出已取消: 密碼已過期。請手動匯出並（重新）輸入!</string>
+    <string name="export_result_message_disabled">警告（自動化）: 設定匯出未啟用!</string>
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">將 %1$s 減少 %2$s</string>
     <string name="a11y_plus_button_description">將 %1$s 增加 %2$s</string>
