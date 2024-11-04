@@ -68,12 +68,12 @@
     <string name="combov2_setting_tbr_cmddesc">設定 %1$d%% 的臨時基礎速率，持續 %2$d 分鐘</string>
     <string name="combov2_cancelling_tbr">取消正在進行的臨時基礎速率</string>
     <string name="combov2_delivering_bolus_cmddesc">正在注射 %1$.1f U 胰島素</string>
-    <string name="combov2_fetching_tdd_history_cmddesc">正在獲取 TDD 歷史記錄</string>
+    <string name="combov2_fetching_tdd_history_cmddesc">正在獲取 TDD 歷史紀錄</string>
     <string name="combov2_updating_pump_datetime_cmddesc">正在更新幫浦日期時間</string>
     <string name="combov2_updating_pump_status_cmddesc">正在更新幫浦狀態</string>
     <string name="combov2_pairing_pin_failure">PIN 無效。檢查是否有輸入錯誤。如果此情況持續發生，請取消並重試配對。</string>
     <string name="combov2_discovery_duration">發現持續時間（秒）</string>
-    <string name="combov2_verbose_logging">啟用詳細的 Combo 日誌記錄</string>
+    <string name="combov2_verbose_logging">啟用詳細的 Combo 日誌紀錄</string>
     <string name="combov2_getting_basal_profile">正在獲取基礎速率配置；已讀取 %1$d 個因子</string>
     <string name="combov2_setting_basal_profile">正在設定基礎速率配置；已寫入 %1$d 個因子</string>
     <string name="combov2_delivering_bolus">正在注射胰島素（已注射 %1$.1f 中的 %2$.1f U）</string>
