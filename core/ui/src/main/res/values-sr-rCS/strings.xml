@@ -62,6 +62,8 @@
     <!--    Dialogs-->
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Bit ćete upitani za glavnu lozinku, koja će se koristiti za dešifriranje uvezenih postavki.</string>
+    <!-- <unattended_export> -->
+    <!-- <unattended_export result messages> -->
     <!-- NumberPicker -->
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->
