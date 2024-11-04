@@ -506,6 +506,8 @@
     <string name="close">Lukk</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Du må angi et hovedpassord som vil bli brukt for å lese inn og dekryptere innstillinger.</string>
+    <!-- <unattended_export> -->
+    <!-- <unattended_export result messages> -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">reduser %1$s med %2$s</string>
     <string name="a11y_plus_button_description">øk %1$s med %2$s</string>
