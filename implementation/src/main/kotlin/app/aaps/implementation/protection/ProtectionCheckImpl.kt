@@ -1,5 +1,6 @@
 package app.aaps.implementation.protection
 
+import androidx.annotation.UiThread
 import androidx.fragment.app.FragmentActivity
 import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.protection.ProtectionCheck
@@ -82,6 +83,7 @@ class ProtectionCheckImpl @Inject constructor(
         lastAuthorization[protection.ordinal] = dateUtil.now()
     }
 
+    @UiThread
     override fun queryProtection(activity: FragmentActivity, protection: ProtectionCheck.Protection, ok: Runnable?, cancel: Runnable?, fail: Runnable?) {
         if (activeSession(protection)) {
             onOk(protection)
