@@ -19,6 +19,7 @@ enum class Shape {
     MBG,
     BGCHECK,
     ANNOUNCEMENT,
+    SETTINGS_EXPORT,
     OPENAPS_OFFLINE,
     EXERCISE,
     GENERAL,

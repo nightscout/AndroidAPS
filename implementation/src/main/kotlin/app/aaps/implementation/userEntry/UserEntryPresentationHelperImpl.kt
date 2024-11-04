@@ -60,6 +60,7 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         Sources.Exercise            -> R.drawable.ic_cp_exercise
         Sources.Question            -> R.drawable.ic_cp_question
         Sources.Announcement        -> R.drawable.ic_cp_announcement
+        Sources.SettingsExport      -> R.drawable.ic_automation
         Sources.Actions             -> R.drawable.ic_action
         Sources.Automation          -> R.drawable.ic_automation
         Sources.Autotune            -> R.drawable.ic_autotune
