@@ -506,6 +506,8 @@
     <string name="close">Zavrieť</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Budete vyzvaný na zadanie hlavného hesla, ktoré bude použité na dešifrovanie importovaných nastavení.</string>
+    <!-- <unattended_export> -->
+    <!-- <unattended_export result messages> -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">zníženie %1$s o %2$s</string>
     <string name="a11y_plus_button_description">zvýšenie %1$s o %2$s</string>
