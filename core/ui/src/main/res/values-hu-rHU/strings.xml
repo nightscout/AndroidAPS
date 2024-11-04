@@ -125,6 +125,8 @@
     <string name="no">Nem</string>
     <string name="close">Bezár</string>
     <!-- TwoMessagesDialog -->
+    <!-- <unattended_export> -->
+    <!-- <unattended_export result messages> -->
     <!-- NumberPicker -->
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->
