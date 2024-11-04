@@ -82,7 +82,7 @@
     <string name="prerequisites_beanandroiddeveloper">有編程或編輯代碼的經驗。</string>
     <string name="prerequisites_own670g">一個MiniMed 670G幫浦。</string>
     <string name="prerequisites_hint1">https://wiki.aaps.app/en/latest/Module/module.html</string>
-    <string name="prerequisites_smartwatch">一個智慧手錶。</string>
+    <string name="prerequisites_smartwatch">一隻智慧型手錶。</string>
     <string name="prerequisites_supportedcgm">一個受支援的CGM。</string>
     <string name="prerequisites2_label">前置條件</string>
     <string name="prerequisites2_what">設置和使用AAPS的必要條件是什麼？</string>
@@ -136,7 +136,7 @@
     <string name="wronginsulin_careportal">從Nightscout Careportal中刪除胰島素資料以將其從幫浦歷史中移除。</string>
     <string name="wronginsulin_compare">比較AAPS和幫浦歷史中的數值（如果幫浦支援此功能）。</string>
     <string name="wronginsulin_prime">通過注射器/筆或使用注射器進行注射，輸送計算出的「遺失」胰島素的一部分。</string>
-    <string name="wronginsulin_donothing">什麼也不做，允許AAPS修正任何導致的高血糖數值。</string>
+    <string name="wronginsulin_donothing">不採取任何行動，讓 AAPS 來調整，因而產生的高血糖數值</string>
     <string name="cob_label">碳水化合物在體內的總量（COB）</string>
     <string name="cob_question">改變ISF值如何影響AAPS對COB的計算？</string>
     <string name="cob_longer">增加ISF會使計算出的碳水化合物吸收時間變長</string>
@@ -159,7 +159,7 @@
     <string name="breadgrams_grams">估計和紀錄攝入的碳水化合物時應僅使用克。</string>
     <string name="breadgrams_exchange">攝入的碳水化合物可以使用適當的交換系統紀錄（例如DAFNE「CHO」交換或歐洲「麵包單位」）。</string>
     <string name="breadgrams_decay">AAPS使用動態模型來估計碳水化合物吸收並計算COB。</string>
-    <string name="breadgrams_calc">如果血糖水平超出可接受範圍（過低或過高），注射計算機可以用來提供碳水化合物或胰島素的修正建議。</string>
+    <string name="breadgrams_calc">如果血糖數值超出可接受範圍（過低或過高），注射計算機可以用來提供碳水化合物或胰島素的修正建議。</string>
     <string name="breadgrams_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="extendedcarbs_label">展延碳水化合物</string>
     <string name="extendedcarbs_handling">您可以使用延長碳水化合物(extended carbs) 做什麼？</string>
