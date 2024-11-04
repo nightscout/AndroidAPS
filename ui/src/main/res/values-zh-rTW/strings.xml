@@ -39,10 +39,10 @@
     <string name="treatments_wizard_total_label">總計</string>
     <!-- FillDialog -->
     <string name="fill_warning">請確保數量符合您的輸液套件規範！</string>
-    <string name="record_pump_site_change">記錄幫浦位置更換</string>
-    <string name="record_insulin_cartridge_change">記錄胰島素匣更換</string>
+    <string name="record_pump_site_change">紀錄幫浦位置更換</string>
+    <string name="record_insulin_cartridge_change">紀錄胰島素匣更換</string>
     <!-- InsulinDialog -->
-    <string name="do_not_bolus_record_only">不注射，僅記錄</string>
+    <string name="do_not_bolus_record_only">不注射，僅紀錄</string>
     <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">重新使用 %1$d%% %2$小時</string>
     <string name="timeshift_label">時間偏移</string>
@@ -77,7 +77,7 @@
     <string name="a11y_set_carb_timer">設定碳水化合物計時器提醒</string>
     <string name="show_calculation">顯示計算</string>
     <!-- Treatments -->
-    <string name="no_records_available">無可用記錄</string>
+    <string name="no_records_available">無可用紀錄</string>
     <string name="calculation_short">計算</string>
     <string name="treatments_iob_label_string">IOB：</string>
     <string name="treatments_insulin_label_string">胰島素：</string>
@@ -94,8 +94,8 @@
     <string name="profile_changes">設定檔變更</string>
     <string name="tempt_targets">臨時目標</string>
     <string name="carbs_and_bolus">碳水化合物與注射</string>
-    <string name="show_invalidated_records">顯示無效/已移除記錄</string>
-    <string name="hide_invalidated_records">隱藏無效/已移除記錄</string>
+    <string name="show_invalidated_records">顯示無效/已移除紀錄</string>
+    <string name="hide_invalidated_records">隱藏無效/已移除紀錄</string>
     <string name="refresh_from_nightscout">從 Nightscout 重新整理</string>
     <string name="refresheventsfromnightscout">從 NS 重新整理</string>
     <string name="show_invalidated">顯示無效</string>
@@ -105,8 +105,8 @@
     <string name="show_loop">顯示循環</string>
     <string name="user_entry">用戶入口</string>
     <string name="clone_label">複製</string>
-    <string name="show_loop_records">顯示循環記錄</string>
-    <string name="show_hide_records">隱藏循環記錄</string>
+    <string name="show_loop_records">顯示循環紀錄</string>
+    <string name="show_hide_records">隱藏循環紀錄</string>
     <!-- ProfileHelperActivity -->
     <string name="profile1">設定檔 1</string>
     <string name="profile2">設定檔 2</string>
