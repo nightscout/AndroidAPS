@@ -498,6 +498,8 @@
     <string name="close">Schließen</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Du wirst nach dem Master-Passwort gefragt. Mit diesem werden die importierten Einstellungen entschlüsselt.</string>
+    <!-- <unattended_export> -->
+    <!-- <unattended_export result messages> -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">abnehmend %1$s mit %2$s</string>
     <string name="a11y_plus_button_description">zunehmend %1$s mit %2$s</string>
