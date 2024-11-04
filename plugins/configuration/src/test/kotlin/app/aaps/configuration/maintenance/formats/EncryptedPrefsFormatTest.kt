@@ -1,13 +1,16 @@
-package app.aaps.plugins.configuration.maintenance.formats
+package app.aaps.configuration.maintenance.formats
 
 import app.aaps.core.interfaces.maintenance.PrefMetadata
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.objects.crypto.CryptoUtil
+import app.aaps.implementation.protection.SecureEncryptImpl
 import app.aaps.plugins.configuration.maintenance.PrefsMetadataKeyImpl
 import app.aaps.plugins.configuration.maintenance.data.PrefFormatError
 import app.aaps.plugins.configuration.maintenance.data.Prefs
 import app.aaps.plugins.configuration.maintenance.data.PrefsFormat
 import app.aaps.plugins.configuration.maintenance.data.PrefsStatusImpl
+import app.aaps.plugins.configuration.maintenance.formats.EncryptedPrefsFormat
+import app.aaps.plugins.configuration.maintenance.formats.SingleStringStorage
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.TruthJUnit.assume
@@ -79,6 +82,7 @@ open class EncryptedPrefsFormatTest : TestBase() {
     fun preferenceSavingTest() {
         val storage = SingleStringStorage("")
         val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage)
+        encryptedFormat.secureEncrypt = SecureEncryptImpl(aapsLogger, cryptoUtil)
         val prefs = Prefs(
             mapOf(
                 "key1" to "A",
@@ -96,6 +100,7 @@ open class EncryptedPrefsFormatTest : TestBase() {
     fun importExportStabilityTest() {
         val storage = SingleStringStorage("")
         val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage)
+        encryptedFormat.secureEncrypt = SecureEncryptImpl(aapsLogger, cryptoUtil)
         val prefsIn = Prefs(
             mapOf(
                 "testpref1" to "--1--",
