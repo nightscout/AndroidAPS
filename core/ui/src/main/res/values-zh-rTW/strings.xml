@@ -23,7 +23,7 @@
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="save">儲存</string>
-    <string name="snooze">延後提醒</string>
+    <string name="snooze">稍後提醒</string>
     <string name="virtual_pump">虛擬幫浦</string>
     <string name="constraints">限制</string>
     <string name="superbolus">超級注射</string>
@@ -86,7 +86,7 @@
     <string name="virtualpump_resultok">確定</string>
     <string name="pump_time_updated">幫浦時間已更新</string>
     <string name="exit">退出</string>
-    <string name="removerecord">移除記錄</string>
+    <string name="removerecord">移除紀錄</string>
     <string name="loopisdisabled">循環已停用</string>
     <string name="alarm">警報</string>
     <string name="disableloop">停用循環</string>
@@ -246,7 +246,7 @@
     <string name="custom">自訂</string>
     <string name="loop">循環</string>
     <string name="ns">NS</string>
-    <string name="record">記錄</string>
+    <string name="record">紀錄</string>
     <!--    Command-->
     <string name="connectiontimedout">連線逾時</string>
     <!--    PumpEnactResult-->
@@ -419,13 +419,13 @@
     <string name="info">資訊</string>
     <!-- BolusWizard -->
     <string name="bolus_advisor">注射顧問</string>
-    <string name="bolus_advisor_message">您的血糖過高。建議不要立即用餐，等待血糖恢復正常。您想現在進行修正注射，並提醒您何時用餐嗎？這種情況下不會記錄碳水化合物，當我們提醒您時，您必須再次使用嚮導。</string>
+    <string name="bolus_advisor_message">您的血糖過高。建議不要立即用餐，等待血糖恢復正常。您想現在進行修正注射，並提醒您何時用餐嗎？這種情況下不會紀錄碳水化合物，當我們提醒您時，您必須再次使用嚮導。</string>
     <string name="cobvsiob">COB 對 IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! 偵測到碳水化合物吸收緩慢：%2$d%% 的時間。請再次檢查您的計算。COB 可能被高估，因此可能會導致給予過多的胰島素 (建議取消計算機中的COB後再重新計算)!!!!!</font>]]></string>
     <string name="partialboluswizard">傳送一部分的注射嚮導結果 [%]</string>
     <string name="partialboluswizard_reset_time">舊血糖時間門檻值 [分鐘]</string>
     <string name="bolus_constraint_applied_warn">注射限制已套用：%1$.2f U 至 %2$.2f U</string>
-    <string name="bolus_recorded_only">僅記錄注射（不由幫浦傳送）</string>
+    <string name="bolus_recorded_only">僅紀錄注射（不由幫浦傳送）</string>
     <string name="advisoralarm">當到達用餐時間時提醒我</string>
     <string name="no_action_selected">未選擇任何操作，無事發生</string>
     <string name="carb_equal_zero_no_action">碳水化合物 = 0。未採取任何行動！</string>
@@ -506,6 +506,8 @@
     <string name="close">關閉</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">您將被要求輸入主密碼，這是解密匯入偏好設定所需的。</string>
+    <!-- <unattended_export> -->
+    <!-- <unattended_export result messages> -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">將 %1$s 減少 %2$s</string>
     <string name="a11y_plus_button_description">將 %1$s 增加 %2$s</string>
