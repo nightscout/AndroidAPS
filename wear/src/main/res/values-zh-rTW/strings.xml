@@ -67,8 +67,8 @@
     <string name="pref_high">高</string>
     <string name="pref_auto">自動</string>
     <string name="pref_big_numbers">大數字</string>
-    <string name="pref_ring_history">環形歷史記錄</string>
-    <string name="pref_light_ring_history">輕量環形歷史記錄</string>
+    <string name="pref_ring_history">環形歷史紀錄</string>
+    <string name="pref_light_ring_history">輕量環形歷史紀錄</string>
     <string name="pref_animations">動畫</string>
     <string name="pref_wizard_in_menu">選單中的計算機</string>
     <string name="pref_prime_in_menu">選單中的預填充</string>
