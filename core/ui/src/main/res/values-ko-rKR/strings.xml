@@ -497,6 +497,8 @@
     <string name="close">닫기</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">내보낸 preferences를 가져오기 위해서는 마스터 비밀번호가 필요합니다.</string>
+    <!-- <unattended_export> -->
+    <!-- <unattended_export result messages> -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">%1$s을 %2$s만큼 감소하였습니다</string>
     <string name="a11y_plus_button_description">%1$s을 %2$s만큼 증가하였습니다</string>
