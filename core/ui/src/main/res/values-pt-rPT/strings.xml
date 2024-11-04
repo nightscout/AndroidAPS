@@ -454,6 +454,8 @@
     <string name="close">Fechar</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Ser-lhe-á pedida a senha mestra, que será necessária para desencriptar preferências importadas.</string>
+    <!-- <unattended_export> -->
+    <!-- <unattended_export result messages> -->
     <!-- NumberPicker -->
     <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- datetime layout -->
