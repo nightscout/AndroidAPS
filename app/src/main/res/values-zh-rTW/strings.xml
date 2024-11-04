@@ -28,7 +28,7 @@
     <string name="remove_items">移除項目</string>
     <string name="sort_items">排序項目</string>
     <string name="error_adding_treatment_title">治療資料不完整</string>
-    <string name="error_adding_treatment_message">治療 (胰島素: %1$.2f, 碳水化合物: %2$d, 在: %3$s) 無法添加到治療中。請檢查並手動添加適當的記錄。</string>
+    <string name="error_adding_treatment_message">治療 (胰島素: %1$.2f, 碳水化合物: %2$d, 在: %3$s) 無法添加到治療中。請檢查並手動添加適當的紀錄。</string>
     <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d 小時), 延後: %3$d 分鐘</string>
     <string name="profile_total">== ∑  %1$s 單位</string>
     <string name="unitsnosemicolon">單位</string>
