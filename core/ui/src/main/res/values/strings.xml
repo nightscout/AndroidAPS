@@ -89,6 +89,7 @@
     <string name="removerecord">Remove record</string>
     <string name="loopisdisabled">Loop is disabled</string>
     <string name="alarm">Alarm</string>
+    <string name="exportsettings">Export Settings</string>
     <string name="disableloop">Disable loop</string>
     <string name="enableloop">Enable loop</string>
     <string name="resumeloop">Resume loop</string>
@@ -215,10 +216,12 @@
     <string name="careportal_bgcheck">BG Check</string>
     <string name="careportal_mbg">Manual BG or Calibration</string>
     <string name="careportal_announcement">Announcement</string>
+    <string name="careportal_settings_export">Settings Export</string>
     <string name="careportal_note">Note</string>
     <string name="careportal_question">Question</string>
     <string name="careportal_exercise">Exercise</string>
     <string name="careportal_announcement_message">Announcement : %1$s</string>
+    <string name="careportal_settings_export_message">Settings Export : %1$s</string>
     <string name="careportal_note_message">Note : %1$s</string>
     <string name="careportal_question_message">Question : %1$s</string>
     <string name="careportal_exercise_message">Exercise : %1$s</string>
@@ -251,6 +254,7 @@
     <string name="activity">Activity</string>
     <string name="wear">Wear</string>
     <string name="automation">Automation</string>
+    <string name="settingsexport">Settings Export</string>
     <string name="custom">Custom</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
@@ -536,6 +540,21 @@
 
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">You will be asked for master password, which is needed to decrypt imported preferences.</string>
+
+    <!-- <unattended_export> -->
+    <string name="export_ok">OK</string>
+    <string name="export_warning">Warning</string>
+    <string name="export_expired">Expired</string>
+    <string name="export_disabled">Disabled</string>
+    <string name="export_failed">Failed</string>
+    <string name="export_alert">ALERT</string>
+
+    <!-- <unattended_export result messages> -->
+    <string name="export_result_message_exported">Settings exported</string>
+    <string name="export_result_message_failed">Settings export FAILED!</string>
+    <string name="export_result_message_about_to_expire">Settings exported: password about to expire soon. Export manually and (re)enter password.</string>
+    <string name="export_result_message_expired">Settings export canceled: password expired. Export manually and (re)enter!</string>
+    <string name="export_result_message_disabled">Warning (automation): Settings export not enabled!</string>
 
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">decrement %1$s by %2$s</string>
