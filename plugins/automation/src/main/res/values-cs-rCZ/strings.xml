@@ -6,6 +6,8 @@
     <string name="automation_missing_task_name">Zadejte prosím název úlohy.</string>
     <string name="automation_missing_trigger">Prosím zadejte alespoň jednu podmínku.</string>
     <string name="automation_missing_action">Prosím zadejte alespoň jednu akci.</string>
+    <string name="exportsettings_message">Export nastavení: %1$s</string>
+    <string name="export_settings_short">Text v ošetřeních:</string>
     <string name="alarm_message">Alarm: %1$s</string>
     <string name="alarm_short">Alarm:</string>
     <string name="message_short">Zpráva:</string>
@@ -91,6 +93,8 @@
     <string name="triggerSensorAgeDesc">Stáří senzoru %1$s %2$.1f h</string>
     <string name="triggerCannulaAgeLabel">Stáří kanyly</string>
     <string name="triggerCannulaAgeDesc">Stáří kanyly %1$s %2$.1f h</string>
+    <string name="triggerPodChangeLabel">Aktivace Podu</string>
+    <string name="triggerPodChangeDesc">Pod aktivován</string>
     <string name="triggerInsulinAgeLabel">Stáří inzulínu</string>
     <string name="triggerInsulinAgeDesc">Stáří inzulínu %1$s %2$.1f h</string>
     <string name="triggerPumpBatteryAgeLabel">Stáří baterie v pumpě</string>

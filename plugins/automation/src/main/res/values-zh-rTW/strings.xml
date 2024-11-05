@@ -6,6 +6,8 @@
     <string name="automation_missing_task_name">請輸入任務名稱。</string>
     <string name="automation_missing_trigger">請指定至少一個觸發條件。</string>
     <string name="automation_missing_action">請指定至少一個動作。</string>
+    <string name="exportsettings_message">設定匯出: %1$s</string>
+    <string name="export_settings_short">治療中的文字:</string>
     <string name="alarm_message">警報：%1$s</string>
     <string name="alarm_short">警報：</string>
     <string name="message_short">訊息：</string>
@@ -91,6 +93,8 @@
     <string name="triggerSensorAgeDesc">傳感器使用時間 %1$s %2$.1f 小時</string>
     <string name="triggerCannulaAgeLabel">套管使用時間</string>
     <string name="triggerCannulaAgeDesc">套管使用時間 %1$s %2$.1f 小時</string>
+    <string name="triggerPodChangeLabel">幫浦註冊</string>
+    <string name="triggerPodChangeDesc">幫浦已註冊</string>
     <string name="triggerInsulinAgeLabel">胰島素使用時間</string>
     <string name="triggerInsulinAgeDesc">胰島素使用時間 %1$s %2$.1f 小時</string>
     <string name="triggerPumpBatteryAgeLabel">幫浦電池使用時間</string>

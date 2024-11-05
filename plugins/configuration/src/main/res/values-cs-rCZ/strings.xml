@@ -45,6 +45,8 @@
     <string name="readstatus">Načíst status</string>
     <string name="data_choices">Možnosti dat</string>
     <string name="fabric_upload">Odesílání do Fabric</string>
+    <string name="unattended_settings_export">Automatický export nastavení</string>
+    <string name="unattended_settings_export_summary">Povolení této volby bezpečně uloží vaše heslo do telefonu</string>
     <string name="allow_automated_crash_reporting">Automatické odesílání chyb aplikace a statistiky používání vývojářům pomocí služby fabric.io.</string>
     <string name="summary_email_for_crash_report">Tato e-identifikace bude připojena ke zprávám o pádech aplikace, abychom vás mohli kontaktovat v naléhavých případech. Je to dobrovolné.</string>
     <string name="identification">Identifikace (e-mail, jméno na FB nebo Discord atd.)</string>
@@ -101,6 +103,7 @@
     <string name="different_password_used">Tento soubor byl exportován a zašifrován jiným hlavním heslem. Chcete-li dešifrovat soubor, zadejte staré hlavní heslo.</string>
     <string name="master_password_will_be_replaced">V důsledku úspěšného importu bude aktuální hlavní heslo NAHRAZENO tímto starým hlavním heslem!</string>
     <string name="exported">Nastavení exportováno</string>
+    <string name="exported_failed">Export nastavení se nezdařil!</string>
     <string name="filenotfound">Soubor nenalezen</string>
     <string name="goto_main_try_again">Prosím vraťte se zpět na hlavní obrazovku a zkuste to znovu.</string>
     <string name="restartingapp">Ukončuji aplikaci, aby se nastavení projevilo.</string>

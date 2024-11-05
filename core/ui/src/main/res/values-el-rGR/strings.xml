@@ -492,6 +492,8 @@
     <string name="close">Κλείσιμο</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Θα σας ζητηθεί ο βασικός κωδικός πρόσβασης, ο οποίος είναι απαραίτητος για την αποκωδικοποίηση των εισαγώμενων προτιμήσεων.</string>
+    <!-- <unattended_export> -->
+    <!-- <unattended_export result messages> -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">μείωση %1$s κατά %2$s</string>
     <string name="a11y_plus_button_description">αύξηση %1$s κατά %2$s</string>

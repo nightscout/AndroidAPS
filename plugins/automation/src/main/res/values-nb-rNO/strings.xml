@@ -6,6 +6,8 @@
     <string name="automation_missing_task_name">Angi et navn på oppgaven.</string>
     <string name="automation_missing_trigger">Oppgi minst en trigger.</string>
     <string name="automation_missing_action">Oppgi minst en aksjon.</string>
+    <string name="exportsettings_message">Eksporter innstillinger: %1$s</string>
+    <string name="export_settings_short">Tekst i behandlinger:</string>
     <string name="alarm_message">Alarm: %1$s</string>
     <string name="alarm_short">Alarm:</string>
     <string name="message_short">Meld:</string>
@@ -91,6 +93,8 @@
     <string name="triggerSensorAgeDesc">Sensoralder %1$s %2$.1f time</string>
     <string name="triggerCannulaAgeLabel">Kanylealder</string>
     <string name="triggerCannulaAgeDesc">Kanylealder %1$s %2$.1f time</string>
+    <string name="triggerPodChangeLabel">Pod-aktivering</string>
+    <string name="triggerPodChangeDesc">Pod aktivert</string>
     <string name="triggerInsulinAgeLabel">Insulinalder</string>
     <string name="triggerInsulinAgeDesc">Insulinalder %1$s %2$.1f time</string>
     <string name="triggerPumpBatteryAgeLabel">Batterialder for pumpe</string>

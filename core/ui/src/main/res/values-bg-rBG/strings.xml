@@ -492,6 +492,8 @@
     <string name="close">Затвори</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Парола, която е била използвана за криптиране на експортираните настройки.</string>
+    <!-- <unattended_export> -->
+    <!-- <unattended_export result messages> -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">понижение %1$s с %2$s</string>
     <string name="a11y_plus_button_description">увеличение %1$s с %2$s</string>

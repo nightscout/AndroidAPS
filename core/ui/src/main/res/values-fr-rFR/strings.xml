@@ -506,6 +506,8 @@
     <string name="close">Fermer</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Le mot de passe principal vous sera demandé pour décrypter les préférences exportées.</string>
+    <!-- <unattended_export> -->
+    <!-- <unattended_export result messages> -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">réduire %1$s par %2$s</string>
     <string name="a11y_plus_button_description">incrémenter %1$s par %2$s</string>

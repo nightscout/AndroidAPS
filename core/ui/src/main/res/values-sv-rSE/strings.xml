@@ -492,6 +492,8 @@
     <string name="close">Stäng</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Du kommer att bli tillfrågad om huvudlösenordet som sedan kommer att användas för att avkryptera importerade inställningar.</string>
+    <!-- <unattended_export> -->
+    <!-- <unattended_export result messages> -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">minska %1$s med %2$s</string>
     <string name="a11y_plus_button_description">öka %1$s med %2$s</string>

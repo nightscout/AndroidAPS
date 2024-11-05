@@ -89,6 +89,7 @@
     <string name="removerecord">Fjern registrering</string>
     <string name="loopisdisabled">Loop er deaktivert</string>
     <string name="alarm">Alarm</string>
+    <string name="exportsettings">Eksporter innstillinger</string>
     <string name="disableloop">Stans loop</string>
     <string name="enableloop">Aktiver loop</string>
     <string name="resumeloop">Gjenoppta loop</string>
@@ -207,10 +208,12 @@
     <string name="careportal_bgcheck">BS-kontroll</string>
     <string name="careportal_mbg">Manuelt BS eller kalibrering</string>
     <string name="careportal_announcement">Melding</string>
+    <string name="careportal_settings_export">Eksporter innstillinger</string>
     <string name="careportal_note">Merknad</string>
     <string name="careportal_question">Spørsmål</string>
     <string name="careportal_exercise">Trening</string>
     <string name="careportal_announcement_message">Kunngjøring: %1$s</string>
+    <string name="careportal_settings_export_message">Eksporter innstillinger: %1$s</string>
     <string name="careportal_note_message">Notat: %1$s</string>
     <string name="careportal_question_message">Spørsmål: %1$s</string>
     <string name="careportal_exercise_message">Aktivitet: %1$s</string>
@@ -243,6 +246,7 @@
     <string name="activity">Aktivitet</string>
     <string name="wear">Klokke</string>
     <string name="automation">Automatisering</string>
+    <string name="settingsexport">Eksporter innstillinger</string>
     <string name="custom">Egendefinert</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
@@ -506,6 +510,19 @@
     <string name="close">Lukk</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Du må angi et hovedpassord som vil bli brukt for å lese inn og dekryptere innstillinger.</string>
+    <!-- <unattended_export> -->
+    <string name="export_ok">OK</string>
+    <string name="export_warning">Advarsel</string>
+    <string name="export_expired">Utløpt</string>
+    <string name="export_disabled">Deaktivert</string>
+    <string name="export_failed">Mislyktes</string>
+    <string name="export_alert">VARSEL</string>
+    <!-- <unattended_export result messages> -->
+    <string name="export_result_message_exported">Innstillinger eksportert</string>
+    <string name="export_result_message_failed">Eksport av innstillinger MISLYKTES!</string>
+    <string name="export_result_message_about_to_expire">Innstillinger eksportert: passord er i ferd med å utløpe snart. Eksporter manuelt og skriv inn passord på nytt.</string>
+    <string name="export_result_message_expired">Eksport av innstillinger avbrutt: passord utløpt. Eksporter manuelt og skriv inn passord på nytt!</string>
+    <string name="export_result_message_disabled">Advarsel (automatisering): Eksport av innstillinger er ikke aktivert!</string>
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">reduser %1$s med %2$s</string>
     <string name="a11y_plus_button_description">øk %1$s med %2$s</string>

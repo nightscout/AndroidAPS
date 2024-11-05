@@ -258,6 +258,8 @@
     <string name="dismiss">ODBACITI</string>
     <string name="close">Zatvori</string>
     <!-- TwoMessagesDialog -->
+    <!-- <unattended_export> -->
+    <!-- <unattended_export result messages> -->
     <!-- NumberPicker -->
     <string name="you_are_on_allowed_limit">Dosegnuto je dopušteno ograničenje</string>
     <string name="format_hour_minute">%1$dh %2$dm</string>

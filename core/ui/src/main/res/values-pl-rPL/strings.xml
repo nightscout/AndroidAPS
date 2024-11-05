@@ -497,6 +497,8 @@
     <string name="close">Zamknij</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Zostaniesz poproszony o hasło główne, które jest potrzebne do odszyfrowania zaimportowanych ustawień.</string>
+    <!-- <unattended_export> -->
+    <!-- <unattended_export result messages> -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">zmniejszenie %1$s o %2$s</string>
     <string name="a11y_plus_button_description">zwiększenie %1$s o %2$s</string>

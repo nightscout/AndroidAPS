@@ -500,6 +500,8 @@
     <string name="close">סגור</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">אתם תתבקשו למלא סיסמה ראשית שתשמש לפיענוח ההעדפות המיובאות.</string>
+    <!-- <unattended_export> -->
+    <!-- <unattended_export result messages> -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">הפחתת %1$s ב-%2$s</string>
     <string name="a11y_plus_button_description">תוספת %1$s ב-%2$s</string>

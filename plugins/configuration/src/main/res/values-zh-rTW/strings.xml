@@ -45,6 +45,8 @@
     <string name="readstatus">讀取狀態</string>
     <string name="data_choices">資料選擇</string>
     <string name="fabric_upload">Fabric上傳</string>
+    <string name="unattended_settings_export">未監控的設定匯出</string>
+    <string name="unattended_settings_export_summary">啟用此功能將安全儲存您的密碼於手機上</string>
     <string name="allow_automated_crash_reporting">允許通過fabric.io服務發送自動崩潰報告和功能使用資料給開發者。</string>
     <string name="summary_email_for_crash_report">此標識將附加到崩潰報告，以便我們在緊急情況下與您聯繫。這是可選的。</string>
     <string name="identification">標識（電子郵件、FB或Discord暱稱等）</string>
@@ -101,6 +103,7 @@
     <string name="different_password_used">此文件是用不同的主密碼匯出和加密的。請提供舊主密碼以解密文件。</string>
     <string name="master_password_will_be_replaced">成功匯入後目前主密碼將被替換為舊主密碼！</string>
     <string name="exported">偏好設定已匯出</string>
+    <string name="exported_failed">偏好設定匯出失敗!</string>
     <string name="filenotfound">文件未找到</string>
     <string name="goto_main_try_again">請返回主畫面並重試。</string>
     <string name="restartingapp">退出應用程式以應用設定。</string>
@@ -153,7 +156,7 @@
     <!-- Custom Watchface -->
     <string name="wear_import_custom_watchface_title">選擇自定義手錶界面</string>
     <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">請重新啟動您的手機或從系統設置中重新啟動AAPS \n否則Android APS將無法記錄日誌（重要的是跟蹤和驗證算法是否正確運行）！</string>
+    <string name="alert_dialog_storage_permission_text">請重新啟動您的手機或從系統設置中重新啟動AAPS \n否則Android APS將無法紀錄日誌（重要的是跟蹤和驗證算法是否正確運行）！</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">文件格式</string>
     <string name="metadata_label_created_at">建立於</string>

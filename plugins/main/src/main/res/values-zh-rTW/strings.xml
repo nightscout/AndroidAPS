@@ -252,7 +252,7 @@
     <string name="button2">按鈕2</string>
     <string name="button3">按鈕3</string>
     <string name="prefs_range_title">可視化範圍</string>
-    <string name="prefs_range_summary">首頁總覽和智慧手錶中圖表的高低標記</string>
+    <string name="prefs_range_summary">首頁總覽和智慧型手錶中圖表的高低標記</string>
     <string name="low_mark">低標記</string>
     <string name="high_mark">高標記</string>
     <string name="short_tabtitles">縮短標籤標題</string>
