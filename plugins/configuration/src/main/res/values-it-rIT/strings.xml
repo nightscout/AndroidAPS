@@ -45,6 +45,8 @@
     <string name="readstatus">Lettura stato</string>
     <string name="data_choices">Scelta dei dati</string>
     <string name="fabric_upload">Invio a fabric.io</string>
+    <string name="unattended_settings_export">Esportazione Impostazioni Non presidiata</string>
+    <string name="unattended_settings_export_summary">Abilitando questa opzione memorizzerai in modo sicuro la tua password sul tuo telefono</string>
     <string name="allow_automated_crash_reporting">Consenti la segnalazione automatica degli errori e l\'invio dei dati d\'uso delle funzioni dell\'app agli sviluppatori tramite il servizio fabric.io.</string>
     <string name="summary_email_for_crash_report">Questa identificazione verrà allegata ai rapporti sugli arresti anomali in modo che possiamo contattarti in casi urgenti. È facoltativo.</string>
     <string name="identification">Identificazione (email, nick Discord o FB, etc)</string>
@@ -101,6 +103,7 @@
     <string name="different_password_used">Questo file è stato esportato e crittografato con una password master differente. Fornire la password master precedente per decrittare il file.</string>
     <string name="master_password_will_be_replaced">Come risultato dell\'importazione riuscita, la password master corrente VERRÀ SOSTITUITA con la password master precedente contenuta nel file importato!</string>
     <string name="exported">Preferenze esportate</string>
+    <string name="exported_failed">Esportazione delle preferenze fallita!</string>
     <string name="filenotfound">File non trovato</string>
     <string name="goto_main_try_again">Torna alla schermata principale e riprova.</string>
     <string name="restartingapp">Uscita dall\'applicazione per applicare le impostazioni.</string>
