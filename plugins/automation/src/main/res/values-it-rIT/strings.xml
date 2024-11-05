@@ -6,6 +6,8 @@
     <string name="automation_missing_task_name">Inserisci un nome task.</string>
     <string name="automation_missing_trigger">Specifica almeno un trigger.</string>
     <string name="automation_missing_action">Specifica almeno un\'azione.</string>
+    <string name="exportsettings_message">Esportazione Impostazioni: %1$s</string>
+    <string name="export_settings_short">Testo nei trattamenti:</string>
     <string name="alarm_message">Allarme: %1$s</string>
     <string name="alarm_short">Allarme:</string>
     <string name="message_short">Msg:</string>
@@ -91,6 +93,8 @@
     <string name="triggerSensorAgeDesc">Età del sensore %1$s %2$.1f ore</string>
     <string name="triggerCannulaAgeLabel">Età della cannula</string>
     <string name="triggerCannulaAgeDesc">Età della cannula %1$s %2$.1f ore</string>
+    <string name="triggerPodChangeLabel">Attivazione pod</string>
+    <string name="triggerPodChangeDesc">Pod attivato</string>
     <string name="triggerInsulinAgeLabel">Età dell\'insulina</string>
     <string name="triggerInsulinAgeDesc">Età dell\'insulina %1$s %2$.1f ore</string>
     <string name="triggerPumpBatteryAgeLabel">Età della batteria del micro</string>
