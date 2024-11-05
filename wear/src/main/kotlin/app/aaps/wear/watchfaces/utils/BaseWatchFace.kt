@@ -130,6 +130,7 @@ abstract class BaseWatchFace : WatchFace() {
                 simpleUi.updatePreferences()
                 if (event.changedKey != null && event.changedKey == "delta_granularity") rxBus.send(EventWearToMobile(ActionResendData("BaseWatchFace:onSharedPreferenceChanged")))
                 if (layoutSet) setDataFields()
+                updatePreferences()
                 invalidate()
             }
         disposable += rxBus
@@ -290,6 +291,8 @@ abstract class BaseWatchFace : WatchFace() {
             vibrator.vibrate(vibrationPattern, -1)
         }
     }
+
+    open fun updatePreferences() {}
 
     @SuppressLint("SetTextI18n")
     open fun setDataFields() {

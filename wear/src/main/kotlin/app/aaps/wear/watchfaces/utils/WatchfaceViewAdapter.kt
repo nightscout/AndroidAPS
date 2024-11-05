@@ -49,7 +49,7 @@ class WatchfaceViewAdapter(
 
     val timestampExt1 = cU?.timestampExt1
     val sgvExt1 = cU?.sgvExt1
-    val loopExt1 = cU?.loop
+    val loopExt1 = cU?.loopExt1
     val deltaExt1 = cU?.deltaExt1
     val avgDeltaExt1 = cU?.avgDeltaExt1
     val basalRateExt1 = cU?.basalRateExt1
@@ -60,7 +60,7 @@ class WatchfaceViewAdapter(
     val iob2Ext1 = cU?.iob2Ext1
     val statusExt1 = cU?.statusExt1
     val rigBatteryExt1 = cU?.rigBatteryExt1
-    val patientNameExt1 = cU?.patientName
+    val patientNameExt1 = cU?.patientNameExt1
 
     val direction = ds?.direction
     val uploaderBattery = ds?.uploaderBattery ?: cU?.uploaderBattery

@@ -113,6 +113,10 @@ class CustomWatchface : BaseWatchFace() {
         binding.hourHand.rotation = TimeOfDay().hourOfDay * 30f + TimeOfDay().minuteOfHour * 0.5f
     }
 
+    override fun updatePreferences() {
+        persistence.store(defaultWatchface(), true)
+    }
+
     override fun setColorDark() {
         setWatchfaceStyle()
         if ((ViewMap.SGV.dynData?.stepFontColor ?: 0) <= 0)
@@ -234,6 +238,7 @@ class CustomWatchface : BaseWatchFace() {
     }
 
     private fun defaultWatchface(): EventData.ActionSetCustomWatchface {
+        val externalViews = sp.getBoolean(R.string.key_include_external, false)
         val metadata = JSONObject()
             .put(CwfMetadataKey.CWF_NAME.key, getString(app.aaps.core.interfaces.R.string.wear_default_watchface))
             .put(CwfMetadataKey.CWF_FILENAME.key, getString(app.aaps.core.interfaces.R.string.wear_default_watchface))
@@ -241,7 +246,7 @@ class CustomWatchface : BaseWatchFace() {
             .put(CwfMetadataKey.CWF_CREATED_AT.key, dateUtil.dateString(dateUtil.now()))
             .put(CwfMetadataKey.CWF_AUTHOR_VERSION.key, CUSTOM_VERSION)
             .put(CwfMetadataKey.CWF_VERSION.key, CUSTOM_VERSION)
-            .put(CwfMetadataKey.CWF_COMMENT.key, getString(app.aaps.core.interfaces.R.string.default_custom_watchface_comment))
+            .put(CwfMetadataKey.CWF_COMMENT.key, if (externalViews) getString(app.aaps.core.interfaces.R.string.default_custom_watchface_external_comment) else getString(app.aaps.core.interfaces.R.string.default_custom_watchface_comment))
         val json = JSONObject()
             .put(JsonKeys.METADATA.key, metadata)
             .put(JsonKeys.HIGHCOLOR.key, String.format("#%06X", 0xFFFFFF and highColor))
@@ -258,7 +263,7 @@ class CustomWatchface : BaseWatchFace() {
         binding.mainLayout.forEach { view ->
             val params = view.layoutParams as FrameLayout.LayoutParams
             ViewMap.fromId(view.id)?.let {
-                if (!it.external || sp.getBoolean(R.string.pref_include_external, false)) {
+                if (!it.external || externalViews) {
                     if (view is TextView) {
                         json.put(
                             it.key,
@@ -413,8 +418,8 @@ class CustomWatchface : BaseWatchFace() {
         IOB2_EXT1(ViewKeys.IOB2_EXT1.key, R.id.iob2_Ext1, R.string.key_show_iob, external = true),
         COB1(ViewKeys.COB1.key, R.id.cob1, R.string.key_show_cob),
         COB2(ViewKeys.COB2.key, R.id.cob2, R.string.key_show_cob),
-        COB1_EXT1(ViewKeys.COB1.key, R.id.cob1_ext1, R.string.key_show_cob, external = true),
-        COB2_EXT2(ViewKeys.COB2.key, R.id.cob2_ext1, R.string.key_show_cob, external = true),
+        COB1_EXT1(ViewKeys.COB1_EXT1.key, R.id.cob1_ext1, R.string.key_show_cob, external = true),
+        COB2_EXT2(ViewKeys.COB2_EXT1.key, R.id.cob2_ext1, R.string.key_show_cob, external = true),
         DELTA(ViewKeys.DELTA.key, R.id.delta, R.string.key_show_delta),
         DELTA_EXT1(ViewKeys.DELTA_EXT1.key, R.id.delta_ext1, R.string.key_show_delta, external = true),
         AVG_DELTA(ViewKeys.AVG_DELTA.key, R.id.avg_delta, R.string.key_show_avg_delta),
