@@ -156,26 +156,21 @@ class AndroidPermissionImpl @Inject constructor(
 
     @Synchronized override fun notifyForSystemWindowPermissions(activity: FragmentActivity) {
         // Check if Android Q or higher
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-            if (!Settings.canDrawOverlays(activity))
-                activePlugin.activeOverview.addNotification(
-                    id = Notification.PERMISSION_SYSTEM_WINDOW,
-                    text = rh.gs(R.string.need_location_permission),
-                    level = Notification.URGENT,
-                    actionButtonId = R.string.request
-                ) {
-                    // Check if Android Q or higher
-                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-                        // Show alert dialog to the user saying a separate permission is needed
-                        // Launch the settings activity if the user prefers
-                        val intent = Intent(
-                            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                            Uri.parse("package:" + activity.packageName)
-                        )
-                        activity.startActivity(intent)
-                    }
-                }
-            else activePlugin.activeOverview.dismissNotification(Notification.PERMISSION_SYSTEM_WINDOW)
-        }
+        if (!Settings.canDrawOverlays(activity))
+            activePlugin.activeOverview.addNotification(
+                id = Notification.PERMISSION_SYSTEM_WINDOW,
+                text = rh.gs(R.string.need_location_permission),
+                level = Notification.URGENT,
+                actionButtonId = R.string.request
+            ) {
+                // Show alert dialog to the user saying a separate permission is needed
+                // Launch the settings activity if the user prefers
+                val intent = Intent(
+                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:" + activity.packageName)
+                )
+                activity.startActivity(intent)
+            }
+        else activePlugin.activeOverview.dismissNotification(Notification.PERMISSION_SYSTEM_WINDOW)
     }
 }
