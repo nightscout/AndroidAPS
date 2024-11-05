@@ -7,6 +7,7 @@
     <string name="cwf_comment_freetext2">Free text 2</string>
     <string name="cwf_comment_freetext3">Free text 3</string>
     <string name="cwf_comment_freetext4">Free text 4</string>
+    <string name="cwf_comment_patient_name">Patient Name</string>
     <string name="cwf_comment_iob1">IOB label or IOB Sum if detailed</string>
     <string name="cwf_comment_iob2">IOB Sum or (Bolus_IOB|Basal_IOB) if detailed</string>
     <string name="cwf_comment_cob1">COB label</string>

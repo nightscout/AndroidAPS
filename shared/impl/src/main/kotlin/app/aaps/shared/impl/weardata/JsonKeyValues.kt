@@ -20,7 +20,9 @@ enum class JsonKeyValues(val key: String) {
     BOLD_ITALIC("bold_italic"),
     ITALIC("italic"),
     BGCOLOR("bgColor"),
-    SGVLEVEL("sgvLevel"),
+    BGCOLOR_EXT1("bgColor_Ext1"),
+    SGV_LEVEL("sgvLevel"),
+    SGV_LEVEL_EXT1("sgvLevel_Ext1"),
     PREF_UNITS("key_units"),
     PREF_DARK("key_dark"),
     PREF_MATCH_DIVIDER("key_match_divider")

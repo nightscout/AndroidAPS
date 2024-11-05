@@ -278,6 +278,7 @@ sealed class EventData : Event() {
         val openApsStatus: Long,
         val bgi: String,
         val batteryLevel: Int,
+        val patientName: String = "",
         val id: Int = 0
     ) : EventData()
 
