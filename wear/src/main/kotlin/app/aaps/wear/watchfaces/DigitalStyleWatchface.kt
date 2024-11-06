@@ -41,7 +41,7 @@ class DigitalStyleWatchface : BaseWatchFace() {
         binding.sgv.setTextColor(ContextCompat.getColor(this, color))
         binding.direction.setTextColor(ContextCompat.getColor(this, color))
 
-        val colorTime = if (ageLevel == 1) R.color.dark_midColor else R.color.dark_TimestampOld
+        val colorTime = if (ageLevel() == 1) R.color.dark_midColor else R.color.dark_TimestampOld
         binding.timestamp.setTextColor(ContextCompat.getColor(this, colorTime))
 
         val colorBat = if (status.batteryLevel == 1) R.color.dark_midColor else R.color.dark_uploaderBatteryEmpty

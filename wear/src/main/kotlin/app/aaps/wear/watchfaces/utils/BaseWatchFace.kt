@@ -73,7 +73,6 @@ abstract class BaseWatchFace : WatchFace() {
 
     private val displaySize = Point()
 
-    var ageLevel = 1
     var loopLevel = -1
     var loopLevelExt1 = -1
     var highColor = Color.YELLOW
