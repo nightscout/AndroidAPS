@@ -1,7 +1,8 @@
 package app.aaps.plugins.configuration.maintenance
 
 import android.content.Context
-import android.os.Environment
+import android.os.Environment.DIRECTORY_DOCUMENTS
+import android.os.Environment.getExternalStoragePublicDirectory
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.maintenance.PrefMetadata
@@ -44,11 +45,12 @@ class FileListProviderImpl @Inject constructor(
     private val rxBus: RxBus
 ) : FileListProvider {
 
-    private val path = File(Environment.getExternalStorageDirectory().toString())
+    private val path = getExternalStoragePublicDirectory(DIRECTORY_DOCUMENTS)
     private val aapsPath = File(path, "AAPS" + File.separator + "preferences")
     private val exportsPath = File(path, "AAPS" + File.separator + "exports")
     private val tempPath = File(path, "AAPS" + File.separator + "temp")
     private val extraPath = File(path, "AAPS" + File.separator + "extra")
+    private val aapsLogsPath = File(path, "AAPS" + File.separator + "aapsLogs")
     override val resultPath = File(path, "AAPS" + File.separator + "results")
 
     companion object {
@@ -142,6 +144,13 @@ class FileListProviderImpl @Inject constructor(
             resultPath.mkdirs()
         }
         return resultPath
+    }
+
+    override fun ensureAapsLogsDirExists(): File {
+        if (!aapsLogsPath.exists()) {
+            aapsLogsPath.mkdirs()
+        }
+        return aapsLogsPath
     }
 
     override fun newExportFile(): File {
