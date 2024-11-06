@@ -9,9 +9,9 @@ object Versions {
     const val ndkVersion = "21.1.6352462"
 
     const val compileSdk = 35
-    const val minSdk = 29
-    const val targetSdk = 29
-    const val wearMinSdk = 28
+    const val minSdk = 28
+    const val targetSdk = 28
+    const val wearMinSdk = 26
     const val wearTargetSdk = 29
 
     val javaVersion = JavaVersion.VERSION_21

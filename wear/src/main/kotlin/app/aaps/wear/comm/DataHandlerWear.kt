@@ -178,7 +178,8 @@ class DataHandlerWear @Inject constructor(
                 val serialized = it.serialize()
                 if (serialized != sp.getString(R.string.key_quick_wizard_data, "")) {
                     sp.putString(R.string.key_quick_wizard_data, serialized)
-                    TileService.getUpdater(context).requestUpdate(QuickWizardTileService::class.java)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                        TileService.getUpdater(context).requestUpdate(QuickWizardTileService::class.java)
                 }
             }
         disposable += rxBus
@@ -227,7 +228,9 @@ class DataHandlerWear @Inject constructor(
         val vibrate = sp.getBoolean("vibrateOnBolus", true)
         vibratePattern = if (vibrate) longArrayOf(0, 50, 1000) else longArrayOf(0, 1, 1000)
 
-        createBolusProgressChannels()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createBolusProgressChannels()
+        }
         val cancelIntent = Intent(context, DataLayerListenerServiceWear::class.java)
         cancelIntent.action = DataLayerListenerServiceWear.INTENT_CANCEL_BOLUS
         val cancelPendingIntent = PendingIntent.getService(context, 0, cancelIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
@@ -285,15 +288,17 @@ class DataHandlerWear @Inject constructor(
     private fun handleOpenLoopRequest(command: EventData.OpenLoopRequest) {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
-        val name: CharSequence = "AAPS Open Loop"
-        val description = "Open Loop request notification"
-        val channel = NotificationChannel(DataLayerListenerServiceWear.AAPS_NOTIFY_CHANNEL_ID_OPEN_LOOP, name, NotificationManager.IMPORTANCE_HIGH)
-        channel.description = description
-        channel.enableVibration(true)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name: CharSequence = "AAPS Open Loop"
+            val description = "Open Loop request notification"
+            val channel = NotificationChannel(DataLayerListenerServiceWear.AAPS_NOTIFY_CHANNEL_ID_OPEN_LOOP, name, NotificationManager.IMPORTANCE_HIGH)
+            channel.description = description
+            channel.enableVibration(true)
 
-        // Register the channel with the system; you can't change the importance
-        // or other notification behaviors after this
-        context.getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            context.getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
+        }
         @Suppress("DEPRECATION")
         var builder = NotificationCompat.Builder(context, DataLayerListenerServiceWear.AAPS_NOTIFY_CHANNEL_ID_OPEN_LOOP)
             .setSmallIcon(R.drawable.notif_icon)
