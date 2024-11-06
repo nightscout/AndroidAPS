@@ -62,6 +62,21 @@ class WatchfaceViewAdapter(
     val rigBatteryExt1 = cU?.rigBatteryExt1
     val patientNameExt1 = cU?.patientNameExt1
 
+    val timestampExt2 = cU?.timestampExt2
+    val sgvExt2 = cU?.sgvExt2
+    val loopExt2 = cU?.loopExt2
+    val deltaExt2 = cU?.deltaExt2
+    val avgDeltaExt2 = cU?.avgDeltaExt2
+    val basalRateExt2 = cU?.basalRateExt2
+    val bgiExt2 = cU?.bgiExt2
+    val cob1Ext2 = cU?.cob1Ext2
+    val cob2Ext2 = cU?.cob2Ext2
+    val iob1Ext2 = cU?.iob1Ext2
+    val iob2Ext2 = cU?.iob2Ext2
+    val statusExt2 = cU?.statusExt2
+    val rigBatteryExt2 = cU?.rigBatteryExt2
+    val patientNameExt2 = cU?.patientNameExt2
+
     val direction = ds?.direction
     val uploaderBattery = ds?.uploaderBattery ?: cU?.uploaderBattery
 
