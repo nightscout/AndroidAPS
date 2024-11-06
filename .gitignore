@@ -27,3 +27,4 @@ app/pumpcontrol/*
 wear/aapsclient/*
 wear/aapsclient2/*
 wear/pumpcontrol/*
+.kotlin/*

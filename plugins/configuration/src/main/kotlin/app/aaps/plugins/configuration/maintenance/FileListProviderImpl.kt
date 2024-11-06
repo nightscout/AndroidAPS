@@ -44,7 +44,7 @@ class FileListProviderImpl @Inject constructor(
     private val rxBus: RxBus
 ) : FileListProvider {
 
-    private val path = File(Environment.getExternalStorageDirectory().toString())
+    private val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
     private val aapsPath = File(path, "AAPS" + File.separator + "preferences")
     private val exportsPath = File(path, "AAPS" + File.separator + "exports")
     private val tempPath = File(path, "AAPS" + File.separator + "temp")
