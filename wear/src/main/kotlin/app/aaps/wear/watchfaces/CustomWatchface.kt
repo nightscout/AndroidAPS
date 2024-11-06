@@ -121,16 +121,10 @@ class CustomWatchface : BaseWatchFace() {
         setWatchfaceStyle()
         if ((ViewMap.SGV.dynData?.stepFontColor ?: 0) <= 0)
             binding.sgv.setTextColor(bgColor)
-        if ((ViewMap.SGV_EXT1.dynData?.stepFontColor ?: 0) <= 0)
-            binding.sgvExt1.setTextColor(bgcolorExt1)
         if ((ViewMap.DIRECTION.dynData?.stepColor ?: 0) <= 0)
             binding.direction.colorFilter = changeDrawableColor(bgColor)
-        if ((ViewMap.DIRECTION_EXT1.dynData?.stepColor ?: 0) <= 0)
-            binding.directionExt1.colorFilter = changeDrawableColor(bgcolorExt1)
         if (ageLevel() != 1 && (ViewMap.TIMESTAMP.dynData?.stepFontColor ?: 0) <= 0)
             binding.timestamp.setTextColor(ContextCompat.getColor(this, R.color.dark_TimestampOld))
-        if (ageLevel(1) != 1 && (ViewMap.TIMESTAMP_EXT1.dynData?.stepFontColor ?: 0) <= 0)
-            binding.timestampExt1.setTextColor(ContextCompat.getColor(this, R.color.dark_TimestampOld))
         if (status.batteryLevel != 1 && (ViewMap.UPLOADER_BATTERY.dynData?.stepFontColor ?: 0) <= 0)
             binding.uploaderBattery.setTextColor(lowBatColor)
         if ((ViewMap.LOOP.dynData?.stepDraw ?: 0) <= 0)     // Apply automatic background image only if no dynData or no step images
@@ -139,13 +133,20 @@ class CustomWatchface : BaseWatchFace() {
                 1    -> binding.loop.setBackgroundResource(R.drawable.loop_green_25)
                 else -> binding.loop.setBackgroundResource(R.drawable.loop_red_25)
             }
-
+        //Management of External data 1
+        if ((ViewMap.SGV_EXT1.dynData?.stepFontColor ?: 0) <= 0)
+            binding.sgvExt1.setTextColor(bgcolorExt1)
+        if ((ViewMap.DIRECTION_EXT1.dynData?.stepColor ?: 0) <= 0)
+            binding.directionExt1.colorFilter = changeDrawableColor(bgcolorExt1)
+        if (ageLevel(1) != 1 && (ViewMap.TIMESTAMP_EXT1.dynData?.stepFontColor ?: 0) <= 0)
+            binding.timestampExt1.setTextColor(ContextCompat.getColor(this, R.color.dark_TimestampOld))
         if ((ViewMap.LOOP_EXT1.dynData?.stepDraw ?: 0) <= 0)     // Apply automatic background image only if no dynData or no step images
             when (loopLevelExt1) {
                 -1   -> binding.loopExt1.setBackgroundResource(R.drawable.loop_grey_25)
                 1    -> binding.loopExt1.setBackgroundResource(R.drawable.loop_green_25)
                 else -> binding.loopExt1.setBackgroundResource(R.drawable.loop_red_25)
             }
+        //******************************
         setupCharts()
     }
 
@@ -412,29 +413,32 @@ class CustomWatchface : BaseWatchFace() {
         FREETEXT2(ViewKeys.FREETEXT2.key, R.id.freetext2),
         FREETEXT3(ViewKeys.FREETEXT3.key, R.id.freetext3),
         FREETEXT4(ViewKeys.FREETEXT4.key, R.id.freetext4),
-        PATIENT_NAME(ViewKeys.PATIENT_NAME.key, R.id.patient_name, external = true),
         PATIENT_NAME_EXT1(ViewKeys.PATIENT_NAME_EXT1.key, R.id.patient_name_ext1, external = true),
-        IOB1(ViewKeys.IOB1.key, R.id.iob1, R.string.key_show_iob),
-        IOB2(ViewKeys.IOB2.key, R.id.iob2, R.string.key_show_iob),
         IOB1_EXT1(ViewKeys.IOB1_EXT1.key, R.id.iob1_Ext1, R.string.key_show_iob, external = true),
         IOB2_EXT1(ViewKeys.IOB2_EXT1.key, R.id.iob2_Ext1, R.string.key_show_iob, external = true),
-        COB1(ViewKeys.COB1.key, R.id.cob1, R.string.key_show_cob),
-        COB2(ViewKeys.COB2.key, R.id.cob2, R.string.key_show_cob),
         COB1_EXT1(ViewKeys.COB1_EXT1.key, R.id.cob1_ext1, R.string.key_show_cob, external = true),
         COB2_EXT2(ViewKeys.COB2_EXT1.key, R.id.cob2_ext1, R.string.key_show_cob, external = true),
-        DELTA(ViewKeys.DELTA.key, R.id.delta, R.string.key_show_delta),
         DELTA_EXT1(ViewKeys.DELTA_EXT1.key, R.id.delta_ext1, R.string.key_show_delta, external = true),
-        AVG_DELTA(ViewKeys.AVG_DELTA.key, R.id.avg_delta, R.string.key_show_avg_delta),
         AVG_DELTA_EXT1(ViewKeys.AVG_DELTA_EXT1.key, R.id.avg_delta_ext1, R.string.key_show_avg_delta, external = true),
+        BASALRATE_EXT1(ViewKeys.BASALRATE_EXT1.key, R.id.basalRate_ext1, R.string.key_show_temp_basal, external = true),
+        BGI_EXT1(ViewKeys.BGI_EXT1.key, R.id.bgi_ext1, R.string.key_show_bgi, external = true),
+        STATUS_EXT1(ViewKeys.STATUS_EXT1.key, R.id.status_ext1, R.string.key_show_external_status, external = true),
+        LOOP_EXT1(ViewKeys.LOOP_EXT1.key, R.id.loop_ext1, R.string.key_show_external_status, external = true),
+        DIRECTION_EXT1(ViewKeys.DIRECTION_EXT1.key, R.id.direction_ext1, R.string.key_show_direction, external = true),
+        SGV_EXT1(ViewKeys.SGV_EXT1.key, R.id.sgv_ext1, R.string.key_show_bg, external = true),
+        PATIENT_NAME(ViewKeys.PATIENT_NAME.key, R.id.patient_name, external = true),
+        IOB1(ViewKeys.IOB1.key, R.id.iob1, R.string.key_show_iob),
+        IOB2(ViewKeys.IOB2.key, R.id.iob2, R.string.key_show_iob),
+        COB1(ViewKeys.COB1.key, R.id.cob1, R.string.key_show_cob),
+        COB2(ViewKeys.COB2.key, R.id.cob2, R.string.key_show_cob),
+        DELTA(ViewKeys.DELTA.key, R.id.delta, R.string.key_show_delta),
+        AVG_DELTA(ViewKeys.AVG_DELTA.key, R.id.avg_delta, R.string.key_show_avg_delta),
         UPLOADER_BATTERY(ViewKeys.UPLOADER_BATTERY.key, R.id.uploader_battery, R.string.key_show_uploader_battery),
         RIG_BATTERY(ViewKeys.RIG_BATTERY.key, R.id.rig_battery, R.string.key_show_rig_battery),
         RIG_BATTERY_EXT1(ViewKeys.RIG_BATTERY_EXT1.key, R.id.rig_battery_ext1, R.string.key_show_rig_battery),
         BASALRATE(ViewKeys.BASALRATE.key, R.id.basalRate, R.string.key_show_temp_basal),
-        BASALRATE_EXT1(ViewKeys.BASALRATE_EXT1.key, R.id.basalRate_ext1, R.string.key_show_temp_basal, external = true),
         BGI(ViewKeys.BGI.key, R.id.bgi, R.string.key_show_bgi),
-        BGI_EXT1(ViewKeys.BGI_EXT1.key, R.id.bgi_ext1, R.string.key_show_bgi, external = true),
         STATUS(ViewKeys.STATUS.key, R.id.status, R.string.key_show_external_status),
-        STATUS_EXT1(ViewKeys.STATUS_EXT1.key, R.id.status_ext1, R.string.key_show_external_status, external = true),
         TIME(ViewKeys.TIME.key, R.id.time),
         HOUR(ViewKeys.HOUR.key, R.id.hour),
         MINUTE(ViewKeys.MINUTE.key, R.id.minute),
@@ -445,13 +449,10 @@ class CustomWatchface : BaseWatchFace() {
         WEEK_NUMBER(ViewKeys.WEEK_NUMBER.key, R.id.week_number, R.string.key_show_week_number),
         MONTH(ViewKeys.MONTH.key, R.id.month, R.string.key_show_date),
         LOOP(ViewKeys.LOOP.key, R.id.loop, R.string.key_show_external_status),
-        LOOP_EXT1(ViewKeys.LOOP_EXT1.key, R.id.loop_ext1, R.string.key_show_external_status, external = true),
         DIRECTION(ViewKeys.DIRECTION.key, R.id.direction, R.string.key_show_direction),
-        DIRECTION_EXT1(ViewKeys.DIRECTION_EXT1.key, R.id.direction_ext1, R.string.key_show_direction, external = true),
         TIMESTAMP(ViewKeys.TIMESTAMP.key, R.id.timestamp, R.string.key_show_ago),
         TIMESTAMP_EXT1(ViewKeys.TIMESTAMP_EXT1.key, R.id.timestamp_ext1, R.string.key_show_ago),
         SGV(ViewKeys.SGV.key, R.id.sgv, R.string.key_show_bg),
-        SGV_EXT1(ViewKeys.SGV_EXT1.key, R.id.sgv_ext1, R.string.key_show_bg, external = true),
         COVER_PLATE(
             key = ViewKeys.COVER_PLATE.key,
             id = R.id.cover_plate,
@@ -764,26 +765,26 @@ class CustomWatchface : BaseWatchFace() {
     private enum class ValueMap(val key: String, val min: Double, val max: Double) {
         NONE("", 0.0, 0.0),
         SGV(ViewKeys.SGV.key, 39.0, 400.0),
-        SGV_EXT1(ViewKeys.SGV_EXT1.key, 39.0, 400.0),
         SGV_LEVEL(JsonKeyValues.SGV_LEVEL.key, -1.0, 1.0),
-        SGV_LEVEL_EXT1(JsonKeyValues.SGV_LEVEL_EXT1.key, -1.0, 1.0),
         DIRECTION(ViewKeys.DIRECTION.key, 1.0, 7.0),
-        DIRECTION_EXT1(ViewKeys.DIRECTION_EXT1.key, 1.0, 7.0),
         DELTA(ViewKeys.DELTA.key, -25.0, 25.0),
-        DELTA_EXT1(ViewKeys.DELTA_EXT1.key, -25.0, 25.0),
         AVG_DELTA(ViewKeys.AVG_DELTA.key, -25.0, 25.0),
-        AVG_DELTA_EXT1(ViewKeys.AVG_DELTA_EXT1.key, -25.0, 25.0),
         UPLOADER_BATTERY(ViewKeys.UPLOADER_BATTERY.key, 0.0, 100.0),
         RIG_BATTERY(ViewKeys.RIG_BATTERY.key, 0.0, 100.0),
-        RIG_BATTERY_EXT1(ViewKeys.RIG_BATTERY_EXT1.key, 0.0, 100.0),
         TIMESTAMP(ViewKeys.TIMESTAMP.key, 0.0, 60.0),
-        TIMESTAMP_EXT1(ViewKeys.TIMESTAMP_EXT1.key, 0.0, 60.0),
         LOOP(ViewKeys.LOOP.key, 0.0, 28.0),
-        LOOP_EXT1(ViewKeys.LOOP_EXT1.key, 0.0, 28.0),
         DAY(ViewKeys.DAY.key, 1.0, 31.0),
         DAY_NAME(ViewKeys.DAY_NAME.key, 1.0, 7.0),
         MONTH(ViewKeys.MONTH.key, 1.0, 12.0),
-        WEEK_NUMBER(ViewKeys.WEEK_NUMBER.key, 1.0, 53.0);
+        WEEK_NUMBER(ViewKeys.WEEK_NUMBER.key, 1.0, 53.0),
+        SGV_EXT1(ViewKeys.SGV_EXT1.key, 39.0, 400.0),
+        SGV_LEVEL_EXT1(JsonKeyValues.SGV_LEVEL_EXT1.key, -1.0, 1.0),
+        DIRECTION_EXT1(ViewKeys.DIRECTION_EXT1.key, 1.0, 7.0),
+        DELTA_EXT1(ViewKeys.DELTA_EXT1.key, -25.0, 25.0),
+        AVG_DELTA_EXT1(ViewKeys.AVG_DELTA_EXT1.key, -25.0, 25.0),
+        RIG_BATTERY_EXT1(ViewKeys.RIG_BATTERY_EXT1.key, 0.0, 100.0),
+        TIMESTAMP_EXT1(ViewKeys.TIMESTAMP_EXT1.key, 0.0, 60.0),
+        LOOP_EXT1(ViewKeys.LOOP_EXT1.key, 0.0, 28.0);
 
         fun dynValue(dataValue: Double, dataRange: DataRange, valueRange: DataRange): Double = when {
             dataValue < dataRange.minData -> dataRange.minData
@@ -844,26 +845,26 @@ class CustomWatchface : BaseWatchFace() {
             get() = when (valueMap) {
                 ValueMap.NONE             -> 0.0
                 ValueMap.SGV              -> if (cwf.singleBg.sgvString != "---") cwf.singleBg.sgv else null
-                ValueMap.SGV_EXT1         -> if (cwf.singleBgExt1.sgvString != "---") cwf.singleBgExt1.sgv else null
                 ValueMap.SGV_LEVEL        -> if (cwf.singleBg.sgvString != "---") cwf.singleBg.sgvLevel.toDouble() else null
-                ValueMap.SGV_LEVEL_EXT1   -> if (cwf.singleBgExt1.sgvString != "---") cwf.singleBgExt1.sgvLevel.toDouble() else null
                 ValueMap.DIRECTION        -> TrendArrowMap.value()
-                ValueMap.DIRECTION_EXT1   -> TrendArrowMap.valueExt1()
                 ValueMap.DELTA            -> cwf.singleBg.deltaMgdl
-                ValueMap.DELTA_EXT1       -> cwf.singleBgExt1.deltaMgdl
                 ValueMap.AVG_DELTA        -> cwf.singleBg.avgDeltaMgdl
-                ValueMap.AVG_DELTA_EXT1   -> cwf.singleBgExt1.avgDeltaMgdl
                 ValueMap.RIG_BATTERY      -> cwf.status.rigBattery.replace("%", "").toDoubleOrNull()
-                ValueMap.RIG_BATTERY_EXT1 -> cwf.statusExt1.rigBattery.replace("%", "").toDoubleOrNull()
                 ValueMap.UPLOADER_BATTERY -> cwf.status.battery.replace("%", "").toDoubleOrNull()
                 ValueMap.LOOP             -> if (cwf.status.openApsStatus != -1L) ((System.currentTimeMillis() - cwf.status.openApsStatus) / 1000 / 60).toDouble() else null
-                ValueMap.LOOP_EXT1        -> if (cwf.statusExt1.openApsStatus != -1L) ((System.currentTimeMillis() - cwf.statusExt1.openApsStatus) / 1000 / 60).toDouble() else null
                 ValueMap.TIMESTAMP        -> if (cwf.singleBg.timeStamp != 0L) floor(cwf.timeSince() / (1000 * 60)) else null
-                ValueMap.TIMESTAMP_EXT1   -> if (cwf.singleBgExt1.timeStamp != 0L) floor(cwf.timeSince(1) / (1000 * 60)) else null
                 ValueMap.DAY              -> DateTime().dayOfMonth.toDouble()
                 ValueMap.DAY_NAME         -> DateTime().dayOfWeek.toDouble()
                 ValueMap.MONTH            -> DateTime().monthOfYear.toDouble()
                 ValueMap.WEEK_NUMBER      -> DateTime().weekOfWeekyear.toDouble()
+                ValueMap.SGV_EXT1         -> if (cwf.singleBgExt1.sgvString != "---") cwf.singleBgExt1.sgv else null
+                ValueMap.SGV_LEVEL_EXT1   -> if (cwf.singleBgExt1.sgvString != "---") cwf.singleBgExt1.sgvLevel.toDouble() else null
+                ValueMap.DIRECTION_EXT1   -> TrendArrowMap.valueExt1()
+                ValueMap.DELTA_EXT1       -> cwf.singleBgExt1.deltaMgdl
+                ValueMap.AVG_DELTA_EXT1   -> cwf.singleBgExt1.avgDeltaMgdl
+                ValueMap.RIG_BATTERY_EXT1 -> cwf.statusExt1.rigBattery.replace("%", "").toDoubleOrNull()
+                ValueMap.LOOP_EXT1        -> if (cwf.statusExt1.openApsStatus != -1L) ((System.currentTimeMillis() - cwf.statusExt1.openApsStatus) / 1000 / 60).toDouble() else null
+                ValueMap.TIMESTAMP_EXT1   -> if (cwf.singleBgExt1.timeStamp != 0L) floor(cwf.timeSince(1) / (1000 * 60)) else null
             }
 
         fun getTopOffset(): Int = dataRange?.let { dataRange ->
