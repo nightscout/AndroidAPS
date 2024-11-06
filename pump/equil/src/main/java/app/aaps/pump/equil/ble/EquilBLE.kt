@@ -1,5 +1,6 @@
 package app.aaps.pump.equil.ble
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -14,16 +15,20 @@ import android.bluetooth.le.ScanFilter
 import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
 import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
 import android.os.Message
 import android.os.SystemClock
 import android.text.TextUtils
+import androidx.core.app.ActivityCompat
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
+import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.notifyAll
 import app.aaps.pump.equil.EquilConst
 import app.aaps.pump.equil.ble.GattAttributes.characteristicConfigDescriptor
@@ -362,10 +367,17 @@ class EquilBLE @Inject constructor(
         if (startTrue) {
             return
         }
-        val bluetoothLeScanner = bluetoothAdapter?.bluetoothLeScanner
-        if (bluetoothLeScanner != null) {
-            updateCmdStatus(ResolvedResult.NOT_FOUNT)
-            bluetoothLeScanner.startScan(buildScanFilters(), buildScanSettings(), scanCallback)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
+            try {
+                val bluetoothLeScanner = bluetoothAdapter?.bluetoothLeScanner
+                if (bluetoothLeScanner != null) {
+                    updateCmdStatus(ResolvedResult.NOT_FOUNT)
+                    bluetoothLeScanner.startScan(buildScanFilters(), buildScanSettings(), scanCallback)
+                }
+            } catch (ignore: IllegalStateException) {
+            } // ignore BT not on
+        } else {
+            ToastUtils.errorToast(context, context.getString(app.aaps.core.ui.R.string.need_connect_permission))
         }
     }
 
