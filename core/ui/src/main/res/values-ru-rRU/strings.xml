@@ -89,6 +89,7 @@
     <string name="removerecord">Удалить запись</string>
     <string name="loopisdisabled">Цикл не работает</string>
     <string name="alarm">Оповещения об опасности</string>
+    <string name="exportsettings">Настройки экспорта</string>
     <string name="disableloop">Деактивировать цикл</string>
     <string name="enableloop">Активировать цикл</string>
     <string name="resumeloop">Возобновить цикл</string>
@@ -207,10 +208,12 @@
     <string name="careportal_bgcheck">Проверка ГК</string>
     <string name="careportal_mbg">Ввести значение ГК или калибровку</string>
     <string name="careportal_announcement">Оповещение</string>
+    <string name="careportal_settings_export">Экспорт настроек</string>
     <string name="careportal_note">Примечание</string>
     <string name="careportal_question">Вопрос</string>
     <string name="careportal_exercise">Нагрузка</string>
     <string name="careportal_announcement_message">Оповещение: %1$s</string>
+    <string name="careportal_settings_export_message">Экспорт настроек %1$s</string>
     <string name="careportal_note_message">Примечание: %1$s</string>
     <string name="careportal_question_message">Вопрос: %1$s</string>
     <string name="careportal_exercise_message">Нагрузка: %1$s</string>
@@ -243,6 +246,7 @@
     <string name="activity">Нагрузка</string>
     <string name="wear">Смарт-часы Wear</string>
     <string name="automation">Автоматизация</string>
+    <string name="settingsexport">Экспорт настроек</string>
     <string name="custom">Пользовательский</string>
     <string name="loop">Замкнутый цикл</string>
     <string name="ns">NS</string>
@@ -507,7 +511,15 @@
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Вам будет предложено ввести главный пароль, необходимый для расшифровки импортированных настроек.</string>
     <!-- <unattended_export> -->
+    <string name="export_ok">OK</string>
+    <string name="export_warning">Внимание</string>
+    <string name="export_expired">Срок действия истёк</string>
+    <string name="export_disabled">Отключено</string>
+    <string name="export_failed">Сбой</string>
+    <string name="export_alert">ВНИМАНИЕ</string>
     <!-- <unattended_export result messages> -->
+    <string name="export_result_message_exported">Настройки экспортированы</string>
+    <string name="export_result_message_failed">ОШИБКА экспорта настроек!</string>
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">снижение %1$s на %2$s</string>
     <string name="a11y_plus_button_description">увеличение %1$s на %2$s</string>
