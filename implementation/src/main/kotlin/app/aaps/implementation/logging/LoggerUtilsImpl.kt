@@ -12,7 +12,7 @@ import javax.inject.Inject
 @Reusable
 class LoggerUtilsImpl @Inject constructor() : LoggerUtils {
 
-    override var suffix = ".log.zip"
+    override var suffix = ".log"
 
     /**
      * Returns the directory, in which the logs are stored on the system. This is configured in the

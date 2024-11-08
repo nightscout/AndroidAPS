@@ -98,6 +98,7 @@ data class UserEntry(
         DELETE_FUTURE_TREATMENTS,
         EXPORT_SETTINGS,
         IMPORT_SETTINGS,
+        SELECT_DIRECTORY,
         RESET_DATABASES,
         RESET_APS_RESULTS,
         CLEANUP_DATABASES,

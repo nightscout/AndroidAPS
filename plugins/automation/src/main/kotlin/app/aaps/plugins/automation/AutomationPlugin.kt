@@ -58,7 +58,6 @@ import app.aaps.plugins.automation.triggers.TriggerBTDevice
 import app.aaps.plugins.automation.triggers.TriggerBg
 import app.aaps.plugins.automation.triggers.TriggerBolusAgo
 import app.aaps.plugins.automation.triggers.TriggerCOB
-import app.aaps.plugins.automation.triggers.TriggerPodChange
 import app.aaps.plugins.automation.triggers.TriggerCannulaAge
 import app.aaps.plugins.automation.triggers.TriggerConnector
 import app.aaps.plugins.automation.triggers.TriggerDelta
@@ -66,6 +65,7 @@ import app.aaps.plugins.automation.triggers.TriggerHeartRate
 import app.aaps.plugins.automation.triggers.TriggerInsulinAge
 import app.aaps.plugins.automation.triggers.TriggerIob
 import app.aaps.plugins.automation.triggers.TriggerLocation
+import app.aaps.plugins.automation.triggers.TriggerPodChange
 import app.aaps.plugins.automation.triggers.TriggerProfilePercent
 import app.aaps.plugins.automation.triggers.TriggerPumpBatteryAge
 import app.aaps.plugins.automation.triggers.TriggerPumpBatteryLevel
@@ -114,7 +114,7 @@ class AutomationPlugin @Inject constructor(
         .pluginIcon(app.aaps.core.objects.R.drawable.ic_automation)
         .pluginName(R.string.automation)
         .shortName(R.string.automation_short)
-        .showInList(config.APS)
+        .showInList({ config.APS })
         .neverVisible(!config.APS)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.automation_description),
@@ -416,14 +416,13 @@ class AutomationPlugin @Inject constructor(
             TriggerSensorAge(injector),
             TriggerCannulaAge(injector),
             TriggerReservoirLevel(injector)
-            )
+        )
 
         val pump = activePlugin.activePump
 
         if (pump.pumpDescription.isPatchPump) {
             triggers.add(TriggerPodChange(injector))
-        }
-        else {
+        } else {
             triggers.add(TriggerInsulinAge(injector))
         }
         if (pump.pumpDescription.isBatteryReplaceable || pump.isBatteryChangeLoggingEnabled()) {

@@ -1,5 +1,7 @@
 package app.aaps.plugins.configuration.maintenance.formats
 
+import android.content.Context
+import androidx.documentfile.provider.DocumentFile
 import app.aaps.core.interfaces.maintenance.PrefMetadata
 import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
 import app.aaps.core.interfaces.maintenance.PrefsStatus
@@ -20,7 +22,6 @@ import app.aaps.plugins.configuration.maintenance.data.PrefsFormat
 import app.aaps.plugins.configuration.maintenance.data.PrefsStatusImpl
 import org.json.JSONException
 import org.json.JSONObject
-import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.util.LinkedList
@@ -29,9 +30,10 @@ import javax.inject.Singleton
 
 @Singleton
 class EncryptedPrefsFormat @Inject constructor(
-    private var rh: ResourceHelper,
-    private var cryptoUtil: CryptoUtil,
-    private var storage: Storage
+    private val rh: ResourceHelper,
+    private val cryptoUtil: CryptoUtil,
+    private val storage: Storage,
+    private val context: Context
 ) : PrefsFormat {
 
     @Inject lateinit var secureEncrypt: SecureEncrypt
@@ -41,9 +43,9 @@ class EncryptedPrefsFormat @Inject constructor(
         private val FORMAT_TEST_REGEX = Regex("(\"format\"\\s*:\\s*\"aaps_[^\"]*\")")
     }
 
-    override fun isPreferencesFile(file: File, preloadedContents: String?): Boolean {
-        return if (file.absolutePath.endsWith(".json")) {
-            val contents = preloadedContents ?: storage.getFileContents(file)
+    override fun isPreferencesFile(file: DocumentFile, preloadedContents: String?): Boolean {
+        return if (file.name?.endsWith(".json") == true) {
+            val contents = preloadedContents ?: storage.getFileContents(context.contentResolver, file)
             FORMAT_TEST_REGEX.containsMatchIn(contents)
             try {
                 // test valid JSON object
@@ -57,7 +59,7 @@ class EncryptedPrefsFormat @Inject constructor(
         }
     }
 
-    override fun savePreferences(file: File, prefs: Prefs, masterPassword: String?) {
+    override fun savePreferences(file: DocumentFile, prefs: Prefs, masterPassword: String?) {
 
         val container = JSONObject()
         val content = JSONObject()
@@ -79,7 +81,7 @@ class EncryptedPrefsFormat @Inject constructor(
                 meta.put(metaKey.key, metaEntry.value)
             }
 
-            container.put(PrefsMetadataKeyImpl.FILE_FORMAT.key, if (encrypted) PrefsFormat.FORMAT_KEY_ENC else PrefsFormat.FORMAT_KEY_NOENC)
+            container.put(PrefsMetadataKeyImpl.FILE_FORMAT.key, PrefsFormat.FORMAT_KEY_ENC)
             container.put("metadata", meta)
 
             val security = JSONObject()
@@ -125,22 +127,22 @@ class EncryptedPrefsFormat @Inject constructor(
 
             fileContents = fileContents.replace(Regex("(\"file_hash\"\\s*:\\s*\")(--to-be-calculated--)(\")"), "$1$fileHash$3")
 
-            storage.putFileContents(file, fileContents)
+            storage.putFileContents(context.contentResolver, file, fileContents)
 
-        } catch (e: FileNotFoundException) {
-            throw PrefFileNotFoundError(file.absolutePath)
-        } catch (e: IOException) {
-            throw PrefIOError(file.absolutePath)
+        } catch (_: FileNotFoundException) {
+            throw PrefFileNotFoundError(file.name ?: "UNKNOWN")
+        } catch (_: IOException) {
+            throw PrefIOError(file.name ?: "UNKNOWN")
         }
     }
 
-    override fun loadPreferences(file: File, masterPassword: String?): Prefs {
+    override fun loadPreferences(contents: String, masterPassword: String?): Prefs {
 
         val entries: MutableMap<String, String> = mutableMapOf()
         val issues = LinkedList<String>()
         try {
 
-            val jsonBody = storage.getFileContents(file)
+            val jsonBody = contents
             val fileContents = jsonBody.replace(Regex("(?is)(\"file_hash\"\\s*:\\s*\")([^\"]*)(\")"), "$1--to-be-calculated--$3")
             val calculatedFileHash = cryptoUtil.hmac256(fileContents, KEY_CONSCIENCE)
             val container = JSONObject(jsonBody)
@@ -238,9 +240,9 @@ class EncryptedPrefsFormat @Inject constructor(
             return Prefs(entries, metadata)
 
         } catch (e: FileNotFoundException) {
-            throw PrefFileNotFoundError(file.absolutePath)
+            throw PrefFileNotFoundError("")
         } catch (e: IOException) {
-            throw PrefIOError(file.absolutePath)
+            throw PrefIOError("")
         } catch (e: JSONException) {
             throw PrefFormatError("Malformed preferences JSON file: $e")
         }
@@ -261,7 +263,7 @@ class EncryptedPrefsFormat @Inject constructor(
         val metadata: MutableMap<PrefsMetadataKey, PrefMetadata> = mutableMapOf()
         if (container.has(PrefsMetadataKeyImpl.FILE_FORMAT.key) && container.has("security") && container.has("content") && container.has("metadata")) {
             val fileFormat = container.getString(PrefsMetadataKeyImpl.FILE_FORMAT.key)
-            if ((fileFormat != PrefsFormat.FORMAT_KEY_ENC) && (fileFormat != PrefsFormat.FORMAT_KEY_NOENC)) {
+            if ((fileFormat != PrefsFormat.FORMAT_KEY_ENC)) {
                 metadata[PrefsMetadataKeyImpl.FILE_FORMAT] = PrefMetadata(rh.gs(R.string.metadata_format_other), PrefsStatusImpl.ERROR)
             } else {
                 val meta = container.getJSONObject("metadata")

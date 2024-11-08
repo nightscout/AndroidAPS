@@ -20,6 +20,8 @@ enum class StringKey(
     GeneralSkin("skin", ""),
     GeneralDarkMode("use_dark_mode", "dark", defaultedBySM = true),
 
+    AapsDirectoryUri("aaps_directory", ""),
+
     ProtectionMasterPassword("master_password", "", isPassword = true),
     ProtectionSettingsPassword("settings_password", "", isPassword = true),
     ProtectionSettingsPin("settings_pin", "", isPin = true),

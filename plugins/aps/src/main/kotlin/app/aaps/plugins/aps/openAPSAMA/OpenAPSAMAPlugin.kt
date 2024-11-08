@@ -88,7 +88,7 @@ class OpenAPSAMAPlugin @Inject constructor(
         .shortName(R.string.oaps_shortname)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .preferencesVisibleInSimpleMode(false)
-        .showInList(config.APS)
+        .showInList({ config.APS })
         .description(R.string.description_ama),
     aapsLogger, rh
 ), APS, PluginConstraints {

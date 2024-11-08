@@ -1,7 +1,9 @@
 package app.aaps.plugins.configuration.maintenance
 
 import android.content.Context
+import android.net.Uri
 import android.os.Environment
+import androidx.documentfile.provider.DocumentFile
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.maintenance.PrefMetadata
@@ -15,6 +17,7 @@ import app.aaps.core.interfaces.storage.Storage
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
 import app.aaps.plugins.configuration.R
 import app.aaps.plugins.configuration.maintenance.data.PrefMetadataMap
 import app.aaps.plugins.configuration.maintenance.data.PrefsStatusImpl
@@ -44,12 +47,13 @@ class FileListProviderImpl @Inject constructor(
     private val rxBus: RxBus
 ) : FileListProvider {
 
-    private val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
-    private val aapsPath = File(path, "AAPS" + File.separator + "preferences")
-    private val exportsPath = File(path, "AAPS" + File.separator + "exports")
-    private val tempPath = File(path, "AAPS" + File.separator + "temp")
-    private val extraPath = File(path, "AAPS" + File.separator + "extra")
-    override val resultPath = File(path, "AAPS" + File.separator + "results")
+    private val documentsPath get() = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "AAPS")
+    override val resultPath get() = File(documentsPath, File.separator + "results")
+
+    val preferencesPath = "preferences"
+    val exportsPath = "exports"
+    val tempPath = "temp"
+    val extraPath = "extra"
 
     companion object {
 
@@ -64,10 +68,10 @@ class FileListProviderImpl @Inject constructor(
         val prefFiles = mutableListOf<PrefsFile>()
 
         // searching dedicated dir, only for new JSON format
-        aapsPath.walk().filter { it.isFile && it.name.endsWith(".json") }.forEach {
-            val contents = storage.getFileContents(it)
-            if (encryptedPrefsFormat.isPreferencesFile(it, contents)) {
-                prefFiles.add(PrefsFile(it.name, it, aapsPath, metadataFor(contents)))
+        ensurePreferenceDirExists()?.listFiles()?.filter { it.isFile && it.name?.endsWith(".json") == true }?.forEach {
+            val content = storage.getFileContents(context.contentResolver, it)
+            if (encryptedPrefsFormat.isPreferencesFile(it, content)) {
+                prefFiles.add(PrefsFile(it.name ?: "UNKNOWN", content, metadataFor(content)))
             }
         }
 
@@ -85,11 +89,15 @@ class FileListProviderImpl @Inject constructor(
     override fun listCustomWatchfaceFiles(): MutableList<CwfFile> {
         val customWatchfaceFiles = mutableListOf<CwfFile>()
         val customWatchfaceAuthorization = preferences.get().get(BooleanKey.WearCustomWatchfaceAuthorization)
-        exportsPath.walk().filter { it.isFile && it.name.endsWith(ZipWatchfaceFormat.CWF_EXTENSION) }.forEach { file ->
-            ZipWatchfaceFormat.loadCustomWatchface(file.readBytes(), file.name, customWatchfaceAuthorization)?.also { customWatchface ->
-                customWatchfaceFiles.add(customWatchface)
+
+        ensureExportDirExists()?.listFiles()?.filter { it.isFile && it.name?.endsWith(ZipWatchfaceFormat.CWF_EXTENSION) == true }?.forEach {
+            storage.getBinaryFileContents(context.contentResolver, it)?.let { content ->
+                ZipWatchfaceFormat.loadCustomWatchface(content, it?.name ?: "", customWatchfaceAuthorization)?.also { customWatchface ->
+                    customWatchfaceFiles.add(customWatchface)
+                }
             }
         }
+
         if (customWatchfaceFiles.isEmpty()) {
             try {
                 val assetFiles = context.assets.list("") ?: arrayOf()
@@ -113,28 +121,36 @@ class FileListProviderImpl @Inject constructor(
     private fun metadataFor(contents: String): PrefMetadataMap =
         checkMetadata(encryptedPrefsFormat.loadMetadata(contents))
 
-    override fun ensureExportDirExists(): File {
-        if (!aapsPath.exists()) {
-            aapsPath.mkdirs()
-        }
-        if (!exportsPath.exists()) {
-            exportsPath.mkdirs()
-        }
-        return exportsPath
+    override fun ensurePreferenceDirExists(): DocumentFile? {
+        val prefUri = preferences.get().getIfExists(StringKey.AapsDirectoryUri) ?: return null
+        val uri = Uri.parse(prefUri)
+        val baseDir = DocumentFile.fromTreeUri(context, uri)
+        val files = baseDir?.listFiles()
+        return files?.firstOrNull { it.name == preferencesPath } ?: baseDir?.createDirectory(preferencesPath)
     }
 
-    override fun ensureTempDirExists(): File {
-        if (!tempPath.exists()) {
-            tempPath.mkdirs()
-        }
-        return tempPath
+    override fun ensureExportDirExists(): DocumentFile? {
+        val prefUri = preferences.get().getIfExists(StringKey.AapsDirectoryUri) ?: return null
+        val uri = Uri.parse(prefUri)
+        val baseDir = DocumentFile.fromTreeUri(context, uri)
+        val files = baseDir?.listFiles()
+        return files?.firstOrNull { it.name == exportsPath } ?: baseDir?.createDirectory(exportsPath)
     }
 
-    override fun ensureExtraDirExists(): File {
-        if (!extraPath.exists()) {
-            extraPath.mkdirs()
-        }
-        return extraPath
+    override fun ensureTempDirExists(): DocumentFile? {
+        val prefUri = preferences.get().getIfExists(StringKey.AapsDirectoryUri) ?: return null
+        val uri = Uri.parse(prefUri)
+        val baseDir = DocumentFile.fromTreeUri(context, uri)
+        val files = baseDir?.listFiles()
+        return files?.firstOrNull { it.name == tempPath } ?: baseDir?.createDirectory(tempPath)
+    }
+
+    override fun ensureExtraDirExists(): DocumentFile? {
+        val prefUri = preferences.get().getIfExists(StringKey.AapsDirectoryUri) ?: return null
+        val uri = Uri.parse(prefUri)
+        val baseDir = DocumentFile.fromTreeUri(context, uri)
+        val files = baseDir?.listFiles()
+        return files?.firstOrNull { it.name == extraPath } ?: baseDir?.createDirectory(extraPath)
     }
 
     override fun ensureResultDirExists(): File {
@@ -144,24 +160,27 @@ class FileListProviderImpl @Inject constructor(
         return resultPath
     }
 
-    override fun newExportFile(): File {
+    override fun newPreferenceFile(): DocumentFile? {
         val timeLocal = LocalDateTime.now().toString(DateTimeFormat.forPattern("yyyy-MM-dd'_'HHmmss"))
-        return File(aapsPath, timeLocal + "_" + config.get().FLAVOR + ".json")
+        val dir = ensurePreferenceDirExists()
+        return dir?.createFile("application/json", timeLocal + "_" + config.get().FLAVOR)
     }
 
-    override fun newExportCsvFile(): File {
+    override fun newExportCsvFile(): DocumentFile? {
         val timeLocal = LocalDateTime.now().toString(DateTimeFormat.forPattern("yyyy-MM-dd'_'HHmmss"))
-        return File(exportsPath, timeLocal + "_UserEntry.csv")
+        val dir = ensureExportDirExists()
+        return dir?.createFile("application/csv", timeLocal + "_UserEntry")
+    }
+
+    override fun newCwfFile(filename: String, withDate: Boolean): DocumentFile? {
+        val timeLocal = LocalDateTime.now().toString(DateTimeFormat.forPattern("yyyy-MM-dd'_'HHmmss"))
+        val dir = ensureExportDirExists()
+        return dir?.createFile("application/${ZipWatchfaceFormat.CWF_EXTENSION}", if (withDate) "${filename}_$timeLocal" else filename)
     }
 
     override fun newResultFile(): File {
         val timeLocal = LocalDateTime.now().toString(DateTimeFormat.forPattern("yyyy-MM-dd'_'HHmmss"))
         return File(resultPath, "$timeLocal.json")
-    }
-
-    override fun newCwfFile(filename: String, withDate: Boolean): File {
-        val timeLocal = LocalDateTime.now().toString(DateTimeFormat.forPattern("yyyy-MM-dd'_'HHmmss"))
-        return if (withDate) File(exportsPath, "${filename}_$timeLocal${ZipWatchfaceFormat.CWF_EXTENSION}") else File(exportsPath, "${filename}${ZipWatchfaceFormat.CWF_EXTENSION}")
     }
 
     // check metadata for known issues, change their status and add info with explanations

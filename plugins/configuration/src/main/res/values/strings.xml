@@ -97,6 +97,7 @@
     <string name="check_preferences_import_btn">Import</string>
     <string name="check_preferences_import_anyway_btn">Import anyway (DANGEROUS!)</string>
     <string name="import_setting">Import settings</string>
+    <string name="select_aaps_directory">AAPS directory</string>
     <string name="check_preferences_before_import">Please check preferences before importing:</string>
     <string name="check_preferences_cannot_import">Preferences cannot be imported!</string>
     <string name="check_preferences_dangerous_import">Preferences should not be imported!</string>
@@ -179,5 +180,6 @@
     <string name="metadata_format_debug">New debug format (unencrypted)</string>
     <string name="metadata_format_other">Unknown export format</string>
     <string name="reset_aps_results">Reset APS results</string>
+    <string name="browse_for_file">Browse for file</string>
 
 </resources>

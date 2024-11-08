@@ -89,6 +89,7 @@ class TranslatorImpl @Inject internal constructor(
         Action.DELETE_FUTURE_TREATMENTS        -> rh.gs(R.string.uel_delete_future_treatments)
         Action.EXPORT_SETTINGS                 -> rh.gs(R.string.uel_export_settings)
         Action.IMPORT_SETTINGS                 -> rh.gs(R.string.uel_import_settings)
+        Action.SELECT_DIRECTORY                 -> rh.gs(R.string.uel_select_directory)
         Action.RESET_DATABASES                 -> rh.gs(R.string.uel_reset_databases)
         Action.RESET_APS_RESULTS               -> rh.gs(R.string.uel_reset_aps_results)
         Action.CLEANUP_DATABASES               -> rh.gs(R.string.uel_cleanup_databases)

@@ -22,7 +22,7 @@ enum class PrefsMetadataKeyImpl(override val key: String, @DrawableRes override 
         private val keyToEnumMap = HashMap<String, PrefsMetadataKey>()
 
         init {
-            for (value in values()) keyToEnumMap[value.key] = value
+            for (value in PrefsMetadataKeyImpl.entries) keyToEnumMap[value.key] = value
         }
 
         fun fromKey(key: String): PrefsMetadataKey? =
@@ -38,7 +38,6 @@ enum class PrefsMetadataKeyImpl(override val key: String, @DrawableRes override 
         return when (this) {
             FILE_FORMAT -> when (value) {
                 PrefsFormat.FORMAT_KEY_ENC   -> context.getString(R.string.metadata_format_new)
-                PrefsFormat.FORMAT_KEY_NOENC -> context.getString(R.string.metadata_format_debug)
                 else                         -> context.getString(R.string.metadata_format_other)
             }
 

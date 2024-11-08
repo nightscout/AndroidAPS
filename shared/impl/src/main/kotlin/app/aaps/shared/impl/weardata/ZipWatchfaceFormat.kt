@@ -1,5 +1,7 @@
 package app.aaps.shared.impl.weardata
 
+import android.content.ContentResolver
+import androidx.documentfile.provider.DocumentFile
 import app.aaps.core.interfaces.rx.weardata.CwfData
 import app.aaps.core.interfaces.rx.weardata.CwfFile
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
@@ -11,7 +13,6 @@ import org.json.JSONObject
 import java.io.BufferedOutputStream
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
-import java.io.File
 import java.io.FileOutputStream
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
@@ -20,7 +21,7 @@ import java.util.zip.ZipOutputStream
 class ZipWatchfaceFormat {
     companion object {
 
-        const val CWF_EXTENSION = ".zip"
+        const val CWF_EXTENSION = "zip"
         private const val CWF_JSON_FILE = "CustomWatchface.json"
 
         fun loadCustomWatchface(byteArray: ByteArray, zipName: String, authorization: Boolean): CwfFile? {
@@ -70,10 +71,10 @@ class ZipWatchfaceFormat {
             }
         }
 
-        fun saveCustomWatchface(file: File, customWatchface: CwfData) {
+        fun saveCustomWatchface(contentResolver: ContentResolver, file: DocumentFile, customWatchface: CwfData) {
 
             try {
-                val outputStream = FileOutputStream(file)
+                val outputStream = FileOutputStream(contentResolver.openFileDescriptor(file.uri, "w")?.fileDescriptor)
                 val zipOutputStream = ZipOutputStream(BufferedOutputStream(outputStream))
 
                 val jsonEntry = ZipEntry(CWF_JSON_FILE)

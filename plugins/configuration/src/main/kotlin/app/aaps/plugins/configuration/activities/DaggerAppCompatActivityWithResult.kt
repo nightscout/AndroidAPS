@@ -2,6 +2,7 @@ package app.aaps.plugins.configuration.activities
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
@@ -12,6 +13,8 @@ import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventThemeSwitch
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.plugins.configuration.R
@@ -27,6 +30,7 @@ open class DaggerAppCompatActivityWithResult : DaggerAppCompatActivity() {
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var importExportPrefs: ImportExportPrefs
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var preferences: Preferences
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -46,6 +50,13 @@ open class DaggerAppCompatActivityWithResult : DaggerAppCompatActivity() {
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.wrap(newBase))
+    }
+
+    val accessTree = registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
+        uri?.let {
+            contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+            preferences.put(StringKey.AapsDirectoryUri, uri.toString())
+        }
     }
 
     val callForPrefFile = registerForActivityResult(PrefsFileContract()) {

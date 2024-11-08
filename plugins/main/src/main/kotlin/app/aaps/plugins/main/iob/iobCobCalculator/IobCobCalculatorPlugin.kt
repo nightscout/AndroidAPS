@@ -82,7 +82,7 @@ class IobCobCalculatorPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.GENERAL)
         .pluginName(R.string.iob_cob_calculator)
-        .showInList(false)
+        .showInList({ false })
         .neverVisible(true)
         .alwaysEnabled(true),
     aapsLogger, rh

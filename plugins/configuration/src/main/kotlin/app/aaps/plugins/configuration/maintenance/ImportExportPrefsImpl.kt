@@ -11,6 +11,7 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.documentfile.provider.DocumentFile
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.work.ExistingWorkPolicy
@@ -33,8 +34,8 @@ import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.maintenance.PrefMetadata
 import app.aaps.core.interfaces.maintenance.PrefsFile
 import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
-import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.protection.ExportPasswordDataStore
+import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
@@ -70,7 +71,6 @@ import dagger.Reusable
 import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Dispatchers
 import org.json.JSONObject
-import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
 import javax.inject.Inject
@@ -100,9 +100,7 @@ class ImportExportPrefsImpl @Inject constructor(
     private val dataWorkerStorage: DataWorkerStorage
 ) : ImportExportPrefs {
 
-    override fun prefsFileExists(): Boolean {
-        return prefFileList.listPreferenceFiles().size > 0
-    }
+    override fun prefsFileExists(): Boolean = prefFileList.listPreferenceFiles().isNotEmpty()
 
     override fun exportSharedPreferences(f: Fragment) {
         f.activity?.let { exportSharedPreferences(it) }
@@ -143,7 +141,7 @@ class ImportExportPrefsImpl @Inject constructor(
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
                 (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter?.name
             } else null
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
         val n4 = Settings.System.getString(context.contentResolver, "device_name")
@@ -199,7 +197,7 @@ class ImportExportPrefsImpl @Inject constructor(
     /***
      * Ask to confirm export unless a valid password is already available
      */
-    private fun askToConfirmExport(activity: FragmentActivity, fileToExport: File, then: ((password: String) -> Unit)) {
+    private fun askToConfirmExport(activity: FragmentActivity, fileToExport: DocumentFile, then: ((password: String) -> Unit)) {
         if (!assureMasterPasswordSet(activity, app.aaps.core.ui.R.string.nav_export)) {
             return
         }
@@ -252,7 +250,7 @@ class ImportExportPrefsImpl @Inject constructor(
             ) { password ->
 
                 // ...and use it to load & decrypt file again
-                val prefsReloaded = format.loadPreferences(importFile.file, password)
+                val prefsReloaded = format.loadPreferences(importFile.content, password)
                 prefsReloaded.metadata = prefFileList.checkMetadata(prefsReloaded.metadata)
 
                 // import is OK when we do not have errors (warnings are allowed)
@@ -268,7 +266,7 @@ class ImportExportPrefsImpl @Inject constructor(
     /**
      * Save preferences to file
      */
-    private fun savePreferences(newFile: File, password: String): Boolean {
+    private fun savePreferences(newFile: DocumentFile, password: String): Boolean {
         var resultOk = false // Assume result was not OK unless acknowledged
 
         try {
@@ -295,7 +293,7 @@ class ImportExportPrefsImpl @Inject constructor(
 
     private fun exportSharedPreferences(activity: FragmentActivity) {
         prefFileList.ensureExportDirExists()
-        val newFile = prefFileList.newExportFile()
+        val newFile = prefFileList.newPreferenceFile() ?: return
 
         askToConfirmExport(activity, newFile) { password ->
             if (savePreferences(newFile, password))
@@ -307,7 +305,7 @@ class ImportExportPrefsImpl @Inject constructor(
 
     override fun exportSharedPreferencesNonInteractive(context: Context, password: String): Boolean {
         prefFileList.ensureExportDirExists()
-        val newFile = prefFileList.newExportFile()
+        val newFile = prefFileList.newPreferenceFile() ?: return false
 
         return savePreferences(newFile, password)
     }
@@ -349,8 +347,8 @@ class ImportExportPrefsImpl @Inject constructor(
 
     override fun exportCustomWatchface(customWatchface: CwfData, withDate: Boolean) {
         prefFileList.ensureExportDirExists()
-        val newFile = prefFileList.newCwfFile(customWatchface.metadata[CwfMetadataKey.CWF_FILENAME] ?: "", withDate)
-        ZipWatchfaceFormat.saveCustomWatchface(newFile, customWatchface)
+        val newFile = prefFileList.newCwfFile(customWatchface.metadata[CwfMetadataKey.CWF_FILENAME] ?: "", withDate) ?: return
+        ZipWatchfaceFormat.saveCustomWatchface(context.contentResolver, newFile, customWatchface)
     }
 
     override fun importSharedPreferences(activity: FragmentActivity, importFile: PrefsFile) {
@@ -361,7 +359,7 @@ class ImportExportPrefsImpl @Inject constructor(
 
             try {
 
-                val prefsAttempted = format.loadPreferences(importFile.file, password)
+                val prefsAttempted = format.loadPreferences(importFile.content, password)
                 prefsAttempted.metadata = prefFileList.checkMetadata(prefsAttempted.metadata)
 
                 // import is OK when we do not have errors (warnings are allowed)
@@ -436,14 +434,13 @@ class ImportExportPrefsImpl @Inject constructor(
     }
 
     class CsvExportWorker(
-        context: Context,
+        private val context: Context,
         params: WorkerParameters
     ) : LoggingWorker(context, params, Dispatchers.IO) {
 
         @Inject lateinit var injector: HasAndroidInjector
         @Inject lateinit var rh: ResourceHelper
         @Inject lateinit var prefFileList: FileListProvider
-        @Inject lateinit var context: Context
         @Inject lateinit var userEntryPresentationHelper: UserEntryPresentationHelper
         @Inject lateinit var storage: Storage
         @Inject lateinit var persistenceLayer: PersistenceLayer
@@ -451,7 +448,7 @@ class ImportExportPrefsImpl @Inject constructor(
         override suspend fun doWorkAndLog(): Result {
             val entries = persistenceLayer.getUserEntryFilteredDataFromTime(MidnightTime.calc() - T.days(90).msecs()).blockingGet()
             prefFileList.ensureExportDirExists()
-            val newFile = prefFileList.newExportCsvFile()
+            val newFile = prefFileList.newExportCsvFile() ?: return Result.failure()
             var ret = Result.success()
             try {
                 saveCsv(newFile, entries)
@@ -468,14 +465,14 @@ class ImportExportPrefsImpl @Inject constructor(
             return ret
         }
 
-        private fun saveCsv(file: File, userEntries: List<UE>) {
+        private fun saveCsv(file: DocumentFile, userEntries: List<UE>) {
             try {
                 val contents = userEntryPresentationHelper.userEntriesToCsv(userEntries)
-                storage.putFileContents(file, contents)
-            } catch (e: FileNotFoundException) {
-                throw PrefFileNotFoundError(file.absolutePath)
-            } catch (e: IOException) {
-                throw PrefIOError(file.absolutePath)
+                storage.putFileContents(context.contentResolver, file, contents)
+            } catch (_: FileNotFoundException) {
+                throw PrefFileNotFoundError(file.name ?: "UNKNOWN")
+            } catch (_: IOException) {
+                throw PrefIOError(file.name ?: "UNKNOWN")
             }
         }
     }
