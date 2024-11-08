@@ -141,5 +141,5 @@ com-polidea-rxandroidble3 = { group = "com.polidea.rxandroidble3", name = "rxand
 com-jakewharton-rx3-replaying-share = { group = "com.jakewharton.rx3", name = "replaying-share", version = "3.0.0" }
 commons-codec = { group = "commons-codec", name = "commons-codec", version = "1.17.1" }
 com-github-guepardoapps-kulid = { group = "com.github.guepardoapps", name = "kulid", version = "2.0.0.0" }
-com-thoughtworks-xstream = { group = "com.thoughtworks.xstream", name = "xstream", version = "1.4.20" }
+com-thoughtworks-xstream = { group = "com.thoughtworks.xstream", name = "xstream", version = "1.4.21" }
 com-garmin-connectiq = { group = "com.garmin.connectiq", name = "ciq-companion-app-sdk", version = "2.0.3" }
