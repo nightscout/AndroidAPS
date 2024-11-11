@@ -83,4 +83,5 @@
     <string name="failedretrievetime">Vyčítanie času zlyhalo</string>
     <string name="requirementnotmet">Požiadavky cieľa nie sú splnené</string>
     <string name="what_i_ve_learned">Čo som sa naučil:</string>
+    <string name="verify_master_password">Overte, či poznáte hlavné heslo</string>
 </resources>
