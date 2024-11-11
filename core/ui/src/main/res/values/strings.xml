@@ -179,6 +179,7 @@
     <string name="extended_bolus_full">E %1$.2f U/h @%2$s %3$s/%4$s min</string>
     <string name="extended_bolus_medium">%1$.2f U/h %2$s/%3$s\'</string>
     <string name="nav_export">Export settings</string>
+    <string name="location_permission_not_granted">Location permission not granted. Allow in android settings.</string>
 
     <!--    Protection-->
     <string name="wrongpassword">Wrong password</string>
