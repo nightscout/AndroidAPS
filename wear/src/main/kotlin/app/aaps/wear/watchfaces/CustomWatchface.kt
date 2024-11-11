@@ -231,7 +231,8 @@ class CustomWatchface : BaseWatchFace() {
                 basalBackgroundColor = getColor(jsonColor.optString(JsonKeys.BASALBACKGROUNDCOLOR.key), ContextCompat.getColor(this, R.color.basal_dark))
                 basalCenterColor = getColor(jsonColor.optString(JsonKeys.BASALCENTERCOLOR.key), ContextCompat.getColor(this, R.color.basal_light))
                 gridColor = getColor(jsonColor.optString(JsonKeys.GRIDCOLOR.key), Color.WHITE)
-
+                enableExt1 = false
+                enableExt2 = false
                 binding.mainLayout.forEach { view ->
                     ViewMap.fromId(view.id)?.let { viewMap ->
                         when (view) {
@@ -240,6 +241,11 @@ class CustomWatchface : BaseWatchFace() {
                             is lecho.lib.hellocharts.view.LineChartView -> viewMap.customizeGraphView(view)
                             else                                        -> viewMap.customizeViewCommon(view)
                         }
+                        if (viewMap.external == 1 && view.visibility == View.VISIBLE)
+                            enableExt1 = true
+
+                        if (viewMap.external == 2 && view.visibility == View.VISIBLE)
+                            enableExt2 = true
                     }
                 }
                 manageSpecificViews()
@@ -287,7 +293,7 @@ class CustomWatchface : BaseWatchFace() {
         binding.mainLayout.forEach { view ->
             val params = view.layoutParams as FrameLayout.LayoutParams
             ViewMap.fromId(view.id)?.let {
-                if (!it.external || externalViews) {
+                if (it.external == 0 || externalViews) {
                     if (view is TextView) {
                         json.put(
                             it.key,
@@ -413,7 +419,7 @@ class CustomWatchface : BaseWatchFace() {
         val customDrawable: ResFileMap? = null,
         val customHigh: ResFileMap? = null,
         val customLow: ResFileMap? = null,
-        val external: Boolean = false
+        val external: Int = 0
     ) {
         BACKGROUND(
             key = ViewKeys.BACKGROUND.key,
@@ -435,37 +441,37 @@ class CustomWatchface : BaseWatchFace() {
         FREETEXT2(ViewKeys.FREETEXT2.key, R.id.freetext2),
         FREETEXT3(ViewKeys.FREETEXT3.key, R.id.freetext3),
         FREETEXT4(ViewKeys.FREETEXT4.key, R.id.freetext4),
-        PATIENT_NAME_EXT1(ViewKeys.PATIENT_NAME_EXT1.key, R.id.patient_name_ext1, external = true),
-        IOB1_EXT1(ViewKeys.IOB1_EXT1.key, R.id.iob1_Ext1, R.string.key_show_iob, external = true),
-        IOB2_EXT1(ViewKeys.IOB2_EXT1.key, R.id.iob2_Ext1, R.string.key_show_iob, external = true),
-        COB1_EXT1(ViewKeys.COB1_EXT1.key, R.id.cob1_ext1, R.string.key_show_cob, external = true),
-        COB2_EXT1(ViewKeys.COB2_EXT1.key, R.id.cob2_ext1, R.string.key_show_cob, external = true),
-        DELTA_EXT1(ViewKeys.DELTA_EXT1.key, R.id.delta_ext1, R.string.key_show_delta, external = true),
-        AVG_DELTA_EXT1(ViewKeys.AVG_DELTA_EXT1.key, R.id.avg_delta_ext1, R.string.key_show_avg_delta, external = true),
+        PATIENT_NAME_EXT1(ViewKeys.PATIENT_NAME_EXT1.key, R.id.patient_name_ext1, external = 1),
+        IOB1_EXT1(ViewKeys.IOB1_EXT1.key, R.id.iob1_Ext1, R.string.key_show_iob, external = 1),
+        IOB2_EXT1(ViewKeys.IOB2_EXT1.key, R.id.iob2_Ext1, R.string.key_show_iob, external = 1),
+        COB1_EXT1(ViewKeys.COB1_EXT1.key, R.id.cob1_ext1, R.string.key_show_cob, external = 1),
+        COB2_EXT1(ViewKeys.COB2_EXT1.key, R.id.cob2_ext1, R.string.key_show_cob, external = 1),
+        DELTA_EXT1(ViewKeys.DELTA_EXT1.key, R.id.delta_ext1, R.string.key_show_delta, external = 1),
+        AVG_DELTA_EXT1(ViewKeys.AVG_DELTA_EXT1.key, R.id.avg_delta_ext1, R.string.key_show_avg_delta, external = 1),
         RIG_BATTERY_EXT1(ViewKeys.RIG_BATTERY_EXT1.key, R.id.rig_battery_ext1, R.string.key_show_rig_battery),
-        BASALRATE_EXT1(ViewKeys.BASALRATE_EXT1.key, R.id.basalRate_ext1, R.string.key_show_temp_basal, external = true),
-        BGI_EXT1(ViewKeys.BGI_EXT1.key, R.id.bgi_ext1, R.string.key_show_bgi, external = true),
-        STATUS_EXT1(ViewKeys.STATUS_EXT1.key, R.id.status_ext1, R.string.key_show_external_status, external = true),
-        LOOP_EXT1(ViewKeys.LOOP_EXT1.key, R.id.loop_ext1, R.string.key_show_external_status, external = true),
-        DIRECTION_EXT1(ViewKeys.DIRECTION_EXT1.key, R.id.direction_ext1, R.string.key_show_direction, external = true),
-        TIMESTAMP_EXT1(ViewKeys.TIMESTAMP_EXT1.key, R.id.timestamp_ext1, R.string.key_show_ago),
-        SGV_EXT1(ViewKeys.SGV_EXT1.key, R.id.sgv_ext1, R.string.key_show_bg, external = true),
-        PATIENT_NAME_EXT2(ViewKeys.PATIENT_NAME_EXT2.key, R.id.patient_name_ext2, external = true),
-        IOB1_EXT2(ViewKeys.IOB1_EXT2.key, R.id.iob1_Ext2, R.string.key_show_iob, external = true),
-        IOB2_EXT2(ViewKeys.IOB2_EXT2.key, R.id.iob2_Ext2, R.string.key_show_iob, external = true),
-        COB1_EXT2(ViewKeys.COB1_EXT2.key, R.id.cob1_ext2, R.string.key_show_cob, external = true),
-        COB2_EXT2(ViewKeys.COB2_EXT2.key, R.id.cob2_ext2, R.string.key_show_cob, external = true),
-        DELTA_EXT2(ViewKeys.DELTA_EXT2.key, R.id.delta_ext2, R.string.key_show_delta, external = true),
-        AVG_DELTA_EXT2(ViewKeys.AVG_DELTA_EXT2.key, R.id.avg_delta_ext2, R.string.key_show_avg_delta, external = true),
+        BASALRATE_EXT1(ViewKeys.BASALRATE_EXT1.key, R.id.basalRate_ext1, R.string.key_show_temp_basal, external = 1),
+        BGI_EXT1(ViewKeys.BGI_EXT1.key, R.id.bgi_ext1, R.string.key_show_bgi, external = 1),
+        STATUS_EXT1(ViewKeys.STATUS_EXT1.key, R.id.status_ext1, R.string.key_show_external_status, external = 1),
+        LOOP_EXT1(ViewKeys.LOOP_EXT1.key, R.id.loop_ext1, R.string.key_show_external_status, external = 1),
+        DIRECTION_EXT1(ViewKeys.DIRECTION_EXT1.key, R.id.direction_ext1, R.string.key_show_direction, external = 1),
+        TIMESTAMP_EXT1(ViewKeys.TIMESTAMP_EXT1.key, R.id.timestamp_ext1, R.string.key_show_ago, external = 1),
+        SGV_EXT1(ViewKeys.SGV_EXT1.key, R.id.sgv_ext1, R.string.key_show_bg, external = 1),
+        PATIENT_NAME_EXT2(ViewKeys.PATIENT_NAME_EXT2.key, R.id.patient_name_ext2, external = 2),
+        IOB1_EXT2(ViewKeys.IOB1_EXT2.key, R.id.iob1_Ext2, R.string.key_show_iob, external = 2),
+        IOB2_EXT2(ViewKeys.IOB2_EXT2.key, R.id.iob2_Ext2, R.string.key_show_iob, external = 2),
+        COB1_EXT2(ViewKeys.COB1_EXT2.key, R.id.cob1_ext2, R.string.key_show_cob, external = 2),
+        COB2_EXT2(ViewKeys.COB2_EXT2.key, R.id.cob2_ext2, R.string.key_show_cob, external = 2),
+        DELTA_EXT2(ViewKeys.DELTA_EXT2.key, R.id.delta_ext2, R.string.key_show_delta, external = 2),
+        AVG_DELTA_EXT2(ViewKeys.AVG_DELTA_EXT2.key, R.id.avg_delta_ext2, R.string.key_show_avg_delta, external = 2),
         RIG_BATTERY_EXT2(ViewKeys.RIG_BATTERY_EXT2.key, R.id.rig_battery_ext2, R.string.key_show_rig_battery),
-        BASALRATE_EXT2(ViewKeys.BASALRATE_EXT2.key, R.id.basalRate_ext2, R.string.key_show_temp_basal, external = true),
-        BGI_EXT2(ViewKeys.BGI_EXT2.key, R.id.bgi_ext2, R.string.key_show_bgi, external = true),
-        STATUS_EXT2(ViewKeys.STATUS_EXT2.key, R.id.status_ext2, R.string.key_show_external_status, external = true),
-        LOOP_EXT2(ViewKeys.LOOP_EXT2.key, R.id.loop_ext2, R.string.key_show_external_status, external = true),
-        DIRECTION_EXT2(ViewKeys.DIRECTION_EXT2.key, R.id.direction_ext2, R.string.key_show_direction, external = true),
-        SGV_EXT2(ViewKeys.SGV_EXT2.key, R.id.sgv_ext2, R.string.key_show_bg, external = true),
-        TIMESTAMP_EXT2(ViewKeys.TIMESTAMP_EXT2.key, R.id.timestamp_ext2, R.string.key_show_ago),
-        PATIENT_NAME(ViewKeys.PATIENT_NAME.key, R.id.patient_name, external = true),
+        BASALRATE_EXT2(ViewKeys.BASALRATE_EXT2.key, R.id.basalRate_ext2, R.string.key_show_temp_basal, external = 2),
+        BGI_EXT2(ViewKeys.BGI_EXT2.key, R.id.bgi_ext2, R.string.key_show_bgi, external = 2),
+        STATUS_EXT2(ViewKeys.STATUS_EXT2.key, R.id.status_ext2, R.string.key_show_external_status, external = 2),
+        LOOP_EXT2(ViewKeys.LOOP_EXT2.key, R.id.loop_ext2, R.string.key_show_external_status, external = 2),
+        DIRECTION_EXT2(ViewKeys.DIRECTION_EXT2.key, R.id.direction_ext2, R.string.key_show_direction, external = 2),
+        TIMESTAMP_EXT2(ViewKeys.TIMESTAMP_EXT2.key, R.id.timestamp_ext2, R.string.key_show_ago, external = 2),
+        SGV_EXT2(ViewKeys.SGV_EXT2.key, R.id.sgv_ext2, R.string.key_show_bg, external = 2),
+        PATIENT_NAME(ViewKeys.PATIENT_NAME.key, R.id.patient_name),
         IOB1(ViewKeys.IOB1.key, R.id.iob1, R.string.key_show_iob),
         IOB2(ViewKeys.IOB2.key, R.id.iob2, R.string.key_show_iob),
         COB1(ViewKeys.COB1.key, R.id.cob1, R.string.key_show_cob),
