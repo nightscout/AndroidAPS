@@ -19,6 +19,7 @@
     <string name="permission">權限</string>
     <string name="need_system_window_permission">應用程式需要系統窗口權限以顯示通知</string>
     <string name="need_location_permission">應用程式需要位置權限來掃描藍牙和識別WiFi</string>
+    <string name="need_background_location_permission">應用程式需要背景位置權限，以便進行自動化</string>
     <string name="need_storage_permission">應用程式需要存儲權限以便儲存日誌檔案和匯出設定</string>
     <string name="askforpermission">請求權限</string>
     <string name="need_whitelisting">%1$s需要電池優化白名單以達到最佳效能</string>
