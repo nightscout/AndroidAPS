@@ -9,6 +9,7 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -16,6 +17,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.protection.ProtectionCheck
+import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.WarnColors
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -56,6 +58,7 @@ class EquilFragment : DaggerFragment() {
     @Inject lateinit var warnColors: WarnColors
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var blePreCheck: BlePreCheck
     @Inject lateinit var equilPumpPlugin: EquilPumpPlugin
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var uel: UserEntryLogger
@@ -64,7 +67,7 @@ class EquilFragment : DaggerFragment() {
     private var disposable: CompositeDisposable = CompositeDisposable()
 
     private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
-    private lateinit var refreshLoop: Runnable
+    private var refreshLoop: Runnable
 
     private var _binding: EquilFraBinding? = null
 
@@ -219,9 +222,11 @@ class EquilFragment : DaggerFragment() {
             binding.btnResumeDelivery.visibility = View.GONE
             binding.btnSuspendDelivery.visibility = View.GONE
             binding.btnBind.setOnClickListener {
-                val intent = Intent(context, EquilPairActivity::class.java)
-                intent.putExtra(EquilPairActivity.KEY_TYPE, EquilPairActivity.Type.PAIR)
-                startActivity(intent)
+                if (!blePreCheck.prerequisitesCheck(activity as AppCompatActivity)) {
+                    ToastUtils.errorToast(activity, getString(app.aaps.core.ui.R.string.need_connect_permission))
+                } else {
+                    startActivity(Intent(context, EquilPairActivity::class.java).apply { putExtra(EquilPairActivity.KEY_TYPE, EquilPairActivity.Type.PAIR) })
+                }
             }
         }
         binding.imv.setOnClickListener {
@@ -257,7 +262,6 @@ class EquilFragment : DaggerFragment() {
 
         }
     }
-
 
     private fun showSetModeDialog() {
         val runMode = equilManager.runMode
@@ -297,8 +301,6 @@ class EquilFragment : DaggerFragment() {
             binding.tempBasal.text = "-"
         }
     }
-
-
 
     @SuppressLint("SetTextI18n")
     @Synchronized

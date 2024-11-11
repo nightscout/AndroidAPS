@@ -4,14 +4,11 @@ package app.aaps.plugins.automation.services
 
 import android.Manifest
 import android.app.Notification
-import android.app.Service
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
 import android.os.Binder
-import android.os.Bundle
 import android.os.IBinder
 import androidx.core.app.ActivityCompat
 import app.aaps.core.data.time.T
@@ -24,10 +21,12 @@ import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.plugins.automation.events.EventLocationChange
 import com.google.android.gms.location.LocationServices
 import dagger.android.DaggerService
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 
 class LocationService : DaggerService() {
@@ -86,10 +85,10 @@ class LocationService : DaggerService() {
         try {
             aapsLogger.debug("Starting LocationService with ID ${notificationHolder.notificationID} notification ${notificationHolder.notification}")
             startForeground(notificationHolder.notificationID, notificationHolder.notification)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             startForeground(4711, Notification())
         }
-        return Service.START_STICKY
+        return START_STICKY
     }
 
     override fun onCreate() {
@@ -97,66 +96,58 @@ class LocationService : DaggerService() {
         try {
             aapsLogger.debug("Starting LocationService with ID ${notificationHolder.notificationID} notification ${notificationHolder.notification}")
             startForeground(notificationHolder.notificationID, notificationHolder.notification)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             startForeground(4711, Notification())
         }
 
         // Get last location once until we get regular update
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             LocationServices.getFusedLocationProviderClient(this).lastLocation.addOnSuccessListener {
                 lastLocationDataContainer.lastLocation = it
+                initializeLocationManager()
+
+                try {
+                    if (preferences.get(StringKey.AutomationLocation) == "NETWORK") locationManager?.requestLocationUpdates(
+                        LocationManager.NETWORK_PROVIDER,
+                        LOCATION_INTERVAL_ACTIVE,
+                        LOCATION_DISTANCE,
+                        LocationListener(LocationManager.NETWORK_PROVIDER).also { locationListener = it }
+                    )
+                    if (preferences.get(StringKey.AutomationLocation) == "GPS") locationManager?.requestLocationUpdates(
+                        LocationManager.GPS_PROVIDER,
+                        LOCATION_INTERVAL_ACTIVE,
+                        LOCATION_DISTANCE,
+                        LocationListener(LocationManager.GPS_PROVIDER).also { locationListener = it }
+                    )
+                    if (preferences.get(StringKey.AutomationLocation) == "PASSIVE") locationManager?.requestLocationUpdates(
+                        LocationManager.PASSIVE_PROVIDER,
+                        LOCATION_INTERVAL_PASSIVE,
+                        LOCATION_DISTANCE,
+                        LocationListener(LocationManager.PASSIVE_PROVIDER).also { locationListener = it }
+                    )
+                } catch (ex: SecurityException) {
+                    aapsLogger.error(LTag.LOCATION, "fail to request location update, ignore", ex)
+                } catch (ex: IllegalArgumentException) {
+                    aapsLogger.error(LTag.LOCATION, "network provider does not exist", ex)
+                }
             }
+        } else {
+            ToastUtils.errorToast(this, getString(app.aaps.core.ui.R.string.location_permission_not_granted))
         }
 
-        initializeLocationManager()
-
-        try {
-            if (preferences.get(StringKey.AutomationLocation) == "NETWORK") locationManager?.requestLocationUpdates(
-                LocationManager.NETWORK_PROVIDER,
-                LOCATION_INTERVAL_ACTIVE,
-                LOCATION_DISTANCE,
-                LocationListener(LocationManager.NETWORK_PROVIDER).also { locationListener = it }
-            )
-            if (preferences.get(StringKey.AutomationLocation) == "GPS") locationManager?.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER,
-                LOCATION_INTERVAL_ACTIVE,
-                LOCATION_DISTANCE,
-                LocationListener(LocationManager.GPS_PROVIDER).also { locationListener = it }
-            )
-            if (preferences.get(StringKey.AutomationLocation) == "PASSIVE") locationManager?.requestLocationUpdates(
-                LocationManager.PASSIVE_PROVIDER,
-                LOCATION_INTERVAL_PASSIVE,
-                LOCATION_DISTANCE,
-                LocationListener(LocationManager.PASSIVE_PROVIDER).also { locationListener = it }
-            )
-        } catch (ex: SecurityException) {
-            aapsLogger.error(LTag.LOCATION, "fail to request location update, ignore", ex)
-        } catch (ex: IllegalArgumentException) {
-            aapsLogger.error(LTag.LOCATION, "network provider does not exist", ex)
-        }
-        disposable.add(
-            rxBus
-                .toObservable(EventAppExit::class.java)
-                .observeOn(aapsSchedulers.io)
-                .subscribe({
-                               aapsLogger.debug(LTag.LOCATION, "EventAppExit received")
-                               stopSelf()
-                           }, fabricPrivacy::logException)
-        )
+        disposable += rxBus
+            .toObservable(EventAppExit::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({
+                           aapsLogger.debug(LTag.LOCATION, "EventAppExit received")
+                           stopSelf()
+                       }, fabricPrivacy::logException)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         try {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return
             }
             locationListener?.let { locationManager?.removeUpdates(it) }
@@ -169,7 +160,7 @@ class LocationService : DaggerService() {
     private fun initializeLocationManager() {
         aapsLogger.debug(LTag.LOCATION, "initializeLocationManager - Provider: " + preferences.get(StringKey.AutomationLocation))
         if (locationManager == null) {
-            locationManager = applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            locationManager = applicationContext.getSystemService(LOCATION_SERVICE) as LocationManager
         }
     }
 }

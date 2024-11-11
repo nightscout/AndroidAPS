@@ -1,6 +1,7 @@
 package app.aaps.pump.equil.ui.pair
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
@@ -31,6 +32,7 @@ import androidx.navigation.fragment.findNavController
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.ui.extensions.runOnUiThread
+import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.pump.equil.EquilConst
 import app.aaps.pump.equil.R
 import app.aaps.pump.equil.ble.GattAttributes
@@ -114,6 +116,7 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
         equilPasswordText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
+
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 s?.let {
                     if (validate(s.toString()) && validateNumber(devicesNameText.text.toString())) {
@@ -127,12 +130,14 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
         devicesNameText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
+
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 s?.let {
                     if (validate(equilPasswordText.text.toString()) && validateNumber(s.toString())) {
                     }
                 }
             }
+
             override fun afterTextChanged(s: Editable?) {
             }
         })
@@ -158,6 +163,7 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
         buttonNext.alpha = 0.3f
         buttonNext.isClickable = false
     }
+
     private fun validateNumber(email: String): Boolean {
         val emailPattern = rh.gs(R.string.sixhexanumber)
         val pattern = Pattern.compile(emailPattern)
@@ -203,9 +209,13 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
                     ParcelUuid.fromString(GattAttributes.SERVICE_RADIO)
                 ).build()
             )
+        } else {
+            ToastUtils.errorToast(activity, getString(app.aaps.core.ui.R.string.need_connect_permission))
+            activity?.finish()
         }
     }
 
+    @SuppressLint("MissingPermission") // activity should be finished without permissions
     private fun startLeDeviceScan() {
         if (bleScanner == null) {
             aapsLogger.error(LTag.PUMPBTCOMM, "startLeDeviceScan failed: bleScanner is null")
@@ -214,12 +224,11 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
         scanning = true
         progressPair.visibility = View.VISIBLE
         handler.postDelayed(stopScanAfterTimeoutRunnable, SCAN_PERIOD_MILLIS)
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || activity?.let { ActivityCompat.checkSelfPermission(it, Manifest.permission.BLUETOOTH_SCAN) } == PackageManager.PERMISSION_GRANTED) {
-            bleScanner?.startScan(filters, settings, bleScanCallback)
-            aapsLogger.debug(LTag.PUMPCOMM, "startLeDeviceScan: Scanning Start")
-        }
+        bleScanner?.startScan(filters, settings, bleScanCallback)
+        aapsLogger.debug(LTag.PUMPCOMM, "startLeDeviceScan: Scanning Start")
     }
 
+    @SuppressLint("MissingPermission") // activity should be finished without permissions
     private val bleScanCallback: ScanCallback = object : ScanCallback() {
         override fun onScanResult(callbackType: Int, scanRecord: ScanResult) {
             aapsLogger.debug(LTag.PUMPBTCOMM, scanRecord.toString())

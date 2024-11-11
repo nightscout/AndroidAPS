@@ -32,7 +32,6 @@ import app.aaps.activities.HistoryBrowseActivity
 import app.aaps.activities.PreferencesActivity
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.interfaces.androidPermissions.AndroidPermission
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -92,7 +91,6 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     private val disposable = CompositeDisposable()
 
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var androidPermission: AndroidPermission
     @Inject lateinit var sp: SP
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var versionCheckerUtils: VersionCheckerUtils

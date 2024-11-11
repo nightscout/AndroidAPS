@@ -33,11 +33,11 @@ com-google-dagger-android-support = { group = "com.google.dagger", name = "dagge
 
 com-google-firebase-gradle = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version = "3.0.2" }
 com-google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version = "33.5.1" }
-com-google-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
-com-google-firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx" }
-com-google-firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging-ktx" }
-com-google-firebase-auth = { group = "com.google.firebase", name = "firebase-auth-ktx" }
-com-google-firebase-database = { group = "com.google.firebase", name = "firebase-database-ktx" }
+com-google-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
+com-google-firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
+com-google-firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
+com-google-firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
+com-google-firebase-database = { group = "com.google.firebase", name = "firebase-database" }
 com-google-android-gms-playservices-measurement = { group = "com.google.android.gms", name = "play-services-measurement-api", version = "22.1.2" }
 com-google-android-gms-playservices-wearable = { group = "com.google.android.gms", name = "play-services-wearable", version = "18.2.0" }
 com-google-android-gms-playservices-location = { group = "com.google.android.gms", name = "play-services-location", version = "21.3.0" }

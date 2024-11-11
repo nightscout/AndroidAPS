@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
+import app.aaps.core.interfaces.androidPermissions.AndroidPermission
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
@@ -14,6 +15,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventThemeSwitch
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.locale.LocaleHelper
+import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.plugins.configuration.R
 import app.aaps.plugins.configuration.maintenance.CustomWatchfaceFileContract
 import app.aaps.plugins.configuration.maintenance.PrefsFileContract
@@ -27,6 +29,7 @@ open class DaggerAppCompatActivityWithResult : DaggerAppCompatActivity() {
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var importExportPrefs: ImportExportPrefs
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var androidPermission: AndroidPermission
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -63,15 +66,21 @@ open class DaggerAppCompatActivityWithResult : DaggerAppCompatActivity() {
     val requestMultiplePermissions = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
         permissions.entries.forEach {
             aapsLogger.info(LTag.CORE, "Permission ${it.key} ${it.value}")
-            if (it.value)
-                if (ActivityCompat.checkSelfPermission(this, it.key) == PackageManager.PERMISSION_GRANTED) {
-                    when (it.key) {
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE ->
-                            //show dialog after permission is granted
-                            OKDialog.show(this, "", rh.gs(R.string.alert_dialog_storage_permission_text))
-                        //  ignore the rest
+            when (it.key) {
+                Manifest.permission.WRITE_EXTERNAL_STORAGE     ->
+                    if (it.value && ActivityCompat.checkSelfPermission(this, it.key) == PackageManager.PERMISSION_GRANTED) {
+                        //show dialog after permission is granted
+                        OKDialog.show(this, "", rh.gs(R.string.alert_dialog_storage_permission_text))
                     }
-                }
+
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION ->
+                    if (!it.value || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        androidPermission.notifyForLocationPermissions(this)
+                        ToastUtils.errorToast(this, getString(app.aaps.core.ui.R.string.location_permission_not_granted))
+                    }
+            }
         }
         updateButtons()
     }
