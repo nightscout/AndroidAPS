@@ -60,7 +60,10 @@ class BLEScanActivity : TranslatedDaggerAppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
-        blePreCheck.prerequisitesCheck(this)
+        if (!blePreCheck.prerequisitesCheck(this)) {
+            ToastUtils.errorToast(this, getString(app.aaps.core.ui.R.string.need_connect_permission))
+            finish()
+        }
 
         listAdapter = ListAdapter()
         binding.bleScannerListview.emptyView = binding.bleScannerNoDevice

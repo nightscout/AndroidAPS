@@ -19,6 +19,7 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.UE
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
@@ -51,6 +52,7 @@ import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.objects.extensions.asSettingsExport
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.dialogs.TwoMessagesAlertDialog
@@ -69,6 +71,8 @@ import app.aaps.plugins.configuration.maintenance.formats.EncryptedPrefsFormat
 import app.aaps.shared.impl.weardata.ZipWatchfaceFormat
 import dagger.Reusable
 import dagger.android.HasAndroidInjector
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.Dispatchers
 import org.json.JSONObject
 import java.io.FileNotFoundException
@@ -87,6 +91,7 @@ class ImportExportPrefsImpl @Inject constructor(
     private val sp: SP,
     private val preferences: Preferences,
     private val config: Config,
+    private val persistenceLayer: PersistenceLayer,
     private val rxBus: RxBus,
     private val passwordCheck: PasswordCheck,
     private val exportPasswordDataStore: ExportPasswordDataStore,
@@ -101,6 +106,7 @@ class ImportExportPrefsImpl @Inject constructor(
 ) : ImportExportPrefs {
 
     override fun prefsFileExists(): Boolean = prefFileList.listPreferenceFiles().isNotEmpty()
+    private val disposable = CompositeDisposable()
 
     override fun exportSharedPreferences(f: Fragment) {
         f.activity?.let { exportSharedPreferences(it) }
@@ -296,10 +302,24 @@ class ImportExportPrefsImpl @Inject constructor(
         val newFile = prefFileList.newPreferenceFile() ?: return
 
         askToConfirmExport(activity, newFile) { password ->
-            if (savePreferences(newFile, password))
-                ToastUtils.okToast(activity, rh.gs(R.string.exported))
+            // Save preferences
+            val exportResultMessage = if (savePreferences(newFile, password))
+                rh.gs(R.string.exported)
             else
-                ToastUtils.okToast(activity, rh.gs(R.string.exported_failed))
+                rh.gs(R.string.exported_failed)
+
+            // Send toast alert to overview
+            ToastUtils.okToast(activity, exportResultMessage)
+
+            // Register this event
+            disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
+                therapyEvent = TE.asSettingsExport(error = exportResultMessage),
+                timestamp = dateUtil.now(),
+                action = Action.EXPORT_SETTINGS, // Signal export was done....
+                source = Sources.Automation,
+                note = "Manual: $exportResultMessage",
+                listValues = listOf()
+            ).subscribe()
         }
     }
 
@@ -307,6 +327,7 @@ class ImportExportPrefsImpl @Inject constructor(
         prefFileList.ensureExportDirExists()
         val newFile = prefFileList.newPreferenceFile() ?: return false
 
+        // Registering export settings event already done by automation
         return savePreferences(newFile, password)
     }
 

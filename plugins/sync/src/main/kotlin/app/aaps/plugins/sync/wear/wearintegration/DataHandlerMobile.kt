@@ -65,6 +65,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.convertedToAbsolute
@@ -1012,7 +1013,7 @@ class DataHandlerMobile @Inject constructor(
         val openApsStatus =
             if (config.APS) loop.lastRun?.let { if (it.lastTBREnact != 0L) it.lastTBREnact else -1 } ?: -1
             else processedDeviceStatusData.openApsTimestamp
-
+        val patientName = preferences.get(StringKey.GeneralPatientName)
         rxBus.send(
             EventMobileToWear(
                 EventData.Status(
@@ -1025,7 +1026,8 @@ class DataHandlerMobile @Inject constructor(
                     rigBattery = rigBattery,
                     openApsStatus = openApsStatus,
                     bgi = bgiString,
-                    batteryLevel = if (phoneBattery >= 30) 1 else 0
+                    batteryLevel = if (phoneBattery >= 30) 1 else 0,
+                    patientName = patientName
                 )
             )
         )
@@ -1049,6 +1051,7 @@ class DataHandlerMobile @Inject constructor(
                         openApsStatus = status.openApsStatus,
                         bgi = status.bgi,
                         batteryLevel = status.batteryLevel,
+                        patientName = status.patientName,
                         id = extId
                     )
             )

@@ -181,6 +181,18 @@ class SWDefinition @Inject constructor(
             .visibility { androidPermission.permissionNotGranted(activity, Manifest.permission.ACCESS_FINE_LOCATION) }
             .validator { !androidPermission.permissionNotGranted(activity, Manifest.permission.ACCESS_FINE_LOCATION) }
 
+    private val screenPermissionLocation
+        get() = SWScreen(injector, R.string.permission)
+            .skippable(false)
+            .add(SWInfoText(injector).label(rh.gs(R.string.need_background_location_permission)))
+            .add(SWBreak(injector))
+            .add(SWButton(injector)
+                     .text(R.string.askforpermission)
+                     .visibility { androidPermission.permissionNotGranted(activity, Manifest.permission.ACCESS_BACKGROUND_LOCATION) }
+                     .action { androidPermission.askForPermission(activity, Manifest.permission.ACCESS_BACKGROUND_LOCATION) })
+            .visibility { androidPermission.permissionNotGranted(activity, Manifest.permission.ACCESS_BACKGROUND_LOCATION) }
+            .validator { !androidPermission.permissionNotGranted(activity, Manifest.permission.ACCESS_BACKGROUND_LOCATION) }
+
     private val screenPermissionStore
         get() = SWScreen(injector, R.string.permission)
             .skippable(false)
@@ -408,6 +420,7 @@ class SWDefinition @Inject constructor(
             .add(if (isRunningTest()) null else screenPermissionBattery) // cannot mock ask battery optimization
             .add(screenPermissionWindow)
             .add(screenPermissionBt)
+            .add(screenPermissionLocation)
             .add(screenPermissionStore)
             .add(screenMasterPassword)
             .add(screenImport)
@@ -434,6 +447,7 @@ class SWDefinition @Inject constructor(
             .add(if (isRunningTest()) null else screenPermissionBattery) // cannot mock ask battery optimization
             .add(screenPermissionWindow)
             .add(screenPermissionBt)
+            .add(screenPermissionLocation)
             .add(screenPermissionStore)
             .add(screenMasterPassword)
             .add(screenImport)
