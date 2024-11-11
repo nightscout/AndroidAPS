@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="alert_r7_description">數量：<b>%1$d%%</b>\n持續時間：<b>%2$s 小時</b></string>
-    <string name="alert_w31_description">卡匣內容：<b>%1$s U</b></string>
+    <string name="alert_r7_description"><![CDATA[數量：<b>%1$d%%</b>\n持續時間：<b>%2$s 小時</b>]]></string>
+    <string name="alert_w31_description"><![CDATA[卡匣內容：<b>%1$s U</b>]]></string>
     <string name="alert_w32_description">更換電池。</string>
     <string name="alert_w33_description">設定時間/日期。</string>
     <string name="alert_w34_description">聯絡Accu-Chek支援。</string>
-    <string name="alert_w36_description">數量：<b>%1$d%%</b><br/>持續時間：<b>%2$s 小時</b></string>
-    <string name="alert_w38_description">設定：<b>%1$s U</b><br/>已輸送：<b>%2$s U</b></string>
+    <string name="alert_w36_description"><![CDATA[數量：<b>%1$d%%</b><br/>持續時間：<b>%2$s 小時</b>]]></string>
+    <string name="alert_w38_description"><![CDATA[設定：<b>%1$s U</b><br/>已輸送：<b>%2$s U</b>]]></string>
     <string name="alert_m20_description">插入卡匣。</string>
     <string name="alert_m21_description">更換卡匣。</string>
     <string name="alert_m22_description">更換電池。</string>
