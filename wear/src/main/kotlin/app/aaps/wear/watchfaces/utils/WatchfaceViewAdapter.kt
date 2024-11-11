@@ -34,26 +34,59 @@ class WatchfaceViewAdapter(
 
     // Optional attributes
     val sgv = ds?.sgv ?: cU?.sgv
-    val direction = ds?.direction
     val loop = cU?.loop
     val delta = ds?.delta ?: cU?.delta
     val avgDelta = ds?.avgDelta ?: cU?.avgDelta
-    val uploaderBattery = ds?.uploaderBattery ?: cU?.uploaderBattery
-    val rigBattery = ds?.rigBattery ?: cU?.rigBattery
     val basalRate = ds?.basalRate ?: cU?.basalRate
     val bgi = ds?.bgi ?: cU?.bgi
     val cob1 = ds?.cob1 ?: cU?.cob1
     val cob2 = ds?.cob2 ?: cU?.cob2
+    val iob1 = ds?.iob1 ?: cU?.iob1
+    val iob2 = ds?.iob2 ?: cU?.iob2
+    val status = cU?.status
+    val rigBattery = ds?.rigBattery ?: cU?.rigBattery
+    val patientName = cU?.patientName
+
+    val timestampExt1 = cU?.timestampExt1
+    val sgvExt1 = cU?.sgvExt1
+    val loopExt1 = cU?.loopExt1
+    val deltaExt1 = cU?.deltaExt1
+    val avgDeltaExt1 = cU?.avgDeltaExt1
+    val basalRateExt1 = cU?.basalRateExt1
+    val bgiExt1 = cU?.bgiExt1
+    val cob1Ext1 = cU?.cob1Ext1
+    val cob2Ext1 = cU?.cob2Ext1
+    val iob1Ext1 = cU?.iob1Ext1
+    val iob2Ext1 = cU?.iob2Ext1
+    val statusExt1 = cU?.statusExt1
+    val rigBatteryExt1 = cU?.rigBatteryExt1
+    val patientNameExt1 = cU?.patientNameExt1
+
+    val timestampExt2 = cU?.timestampExt2
+    val sgvExt2 = cU?.sgvExt2
+    val loopExt2 = cU?.loopExt2
+    val deltaExt2 = cU?.deltaExt2
+    val avgDeltaExt2 = cU?.avgDeltaExt2
+    val basalRateExt2 = cU?.basalRateExt2
+    val bgiExt2 = cU?.bgiExt2
+    val cob1Ext2 = cU?.cob1Ext2
+    val cob2Ext2 = cU?.cob2Ext2
+    val iob1Ext2 = cU?.iob1Ext2
+    val iob2Ext2 = cU?.iob2Ext2
+    val statusExt2 = cU?.statusExt2
+    val rigBatteryExt2 = cU?.rigBatteryExt2
+    val patientNameExt2 = cU?.patientNameExt2
+
+    val direction = ds?.direction
+    val uploaderBattery = ds?.uploaderBattery ?: cU?.uploaderBattery
+
     val time = cU?.time
     val second = cU?.second
     val minute = ds?.minute ?: cU?.minute
     val hour = ds?.hour ?: cU?.hour
     val day = ds?.day ?: cU?.day
     val month = ds?.month ?: cU?.month
-    val iob1 = ds?.iob1 ?: cU?.iob1
-    val iob2 = ds?.iob2 ?: cU?.iob2
     val chart = ds?.chart ?: cU?.chart
-    val status = cU?.status
     val timePeriod = ds?.timePeriod ?: cU?.timePeriod
     val dayName = ds?.dayName ?: cU?.dayName
     val mainMenuTap = ds?.mainMenuTap

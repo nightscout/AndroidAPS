@@ -75,6 +75,20 @@ class CustomWatchface : BaseWatchFace() {
             -1L  -> lowColor
             else -> midColor
         }
+    private val bgcolorExt1: Int
+        get() = when (singleBgExt1.sgvLevel) {
+            1L   -> highColor
+            0L   -> midColor
+            -1L  -> lowColor
+            else -> midColor
+        }
+    private val bgcolorExt2: Int
+        get() = when (singleBgExt2.sgvLevel) {
+            1L   -> highColor
+            0L   -> midColor
+            -1L  -> lowColor
+            else -> midColor
+        }
 
     @Suppress("DEPRECATION")
     override fun inflateLayout(inflater: LayoutInflater): ViewBinding {
@@ -96,7 +110,9 @@ class CustomWatchface : BaseWatchFace() {
 
     override fun setDataFields() {
         super.setDataFields()
-        binding.direction2.setImageDrawable(TrendArrowMap.drawable())
+        binding.direction.setImageDrawable(TrendArrowMap.drawable())
+        binding.directionExt1.setImageDrawable(TrendArrowMap.drawableExt1())
+        binding.directionExt2.setImageDrawable(TrendArrowMap.drawableExt2())
         // rotate the second hand.
         binding.secondHand.rotation = TimeOfDay().secondOfMinute * 6f
         // rotate the minute hand.
@@ -105,13 +121,17 @@ class CustomWatchface : BaseWatchFace() {
         binding.hourHand.rotation = TimeOfDay().hourOfDay * 30f + TimeOfDay().minuteOfHour * 0.5f
     }
 
+    override fun updatePreferences() {
+        persistence.store(defaultWatchface(), true)
+    }
+
     override fun setColorDark() {
         setWatchfaceStyle()
         if ((ViewMap.SGV.dynData?.stepFontColor ?: 0) <= 0)
             binding.sgv.setTextColor(bgColor)
         if ((ViewMap.DIRECTION.dynData?.stepColor ?: 0) <= 0)
-            binding.direction2.colorFilter = changeDrawableColor(bgColor)
-        if (ageLevel != 1 && (ViewMap.TIMESTAMP.dynData?.stepFontColor ?: 0) <= 0)
+            binding.direction.colorFilter = changeDrawableColor(bgColor)
+        if (ageLevel() != 1 && (ViewMap.TIMESTAMP.dynData?.stepFontColor ?: 0) <= 0)
             binding.timestamp.setTextColor(ContextCompat.getColor(this, R.color.dark_TimestampOld))
         if (status.batteryLevel != 1 && (ViewMap.UPLOADER_BATTERY.dynData?.stepFontColor ?: 0) <= 0)
             binding.uploaderBattery.setTextColor(lowBatColor)
@@ -121,7 +141,33 @@ class CustomWatchface : BaseWatchFace() {
                 1    -> binding.loop.setBackgroundResource(R.drawable.loop_green_25)
                 else -> binding.loop.setBackgroundResource(R.drawable.loop_red_25)
             }
-
+        //Management of External data 1
+        if ((ViewMap.SGV_EXT1.dynData?.stepFontColor ?: 0) <= 0)
+            binding.sgvExt1.setTextColor(bgcolorExt1)
+        if ((ViewMap.DIRECTION_EXT1.dynData?.stepColor ?: 0) <= 0)
+            binding.directionExt1.colorFilter = changeDrawableColor(bgcolorExt1)
+        if (ageLevel(id = 1) != 1 && (ViewMap.TIMESTAMP_EXT1.dynData?.stepFontColor ?: 0) <= 0)
+            binding.timestampExt1.setTextColor(ContextCompat.getColor(this, R.color.dark_TimestampOld))
+        if ((ViewMap.LOOP_EXT1.dynData?.stepDraw ?: 0) <= 0)     // Apply automatic background image only if no dynData or no step images
+            when (loopLevelExt1) {
+                -1   -> binding.loopExt1.setBackgroundResource(R.drawable.loop_grey_25)
+                1    -> binding.loopExt1.setBackgroundResource(R.drawable.loop_green_25)
+                else -> binding.loopExt1.setBackgroundResource(R.drawable.loop_red_25)
+            }
+        //Management of External data 2
+        if ((ViewMap.SGV_EXT2.dynData?.stepFontColor ?: 0) <= 0)
+            binding.sgvExt2.setTextColor(bgcolorExt2)
+        if ((ViewMap.DIRECTION_EXT2.dynData?.stepColor ?: 0) <= 0)
+            binding.directionExt2.colorFilter = changeDrawableColor(bgcolorExt2)
+        if (ageLevel(id = 2) != 1 && (ViewMap.TIMESTAMP_EXT2.dynData?.stepFontColor ?: 0) <= 0)
+            binding.timestampExt2.setTextColor(ContextCompat.getColor(this, R.color.dark_TimestampOld))
+        if ((ViewMap.LOOP_EXT2.dynData?.stepDraw ?: 0) <= 0)     // Apply automatic background image only if no dynData or no step images
+            when (loopLevelExt2) {
+                -1   -> binding.loopExt2.setBackgroundResource(R.drawable.loop_grey_25)
+                1    -> binding.loopExt2.setBackgroundResource(R.drawable.loop_green_25)
+                else -> binding.loopExt2.setBackgroundResource(R.drawable.loop_red_25)
+            }
+        //******************************
         setupCharts()
     }
 
@@ -216,6 +262,7 @@ class CustomWatchface : BaseWatchFace() {
     }
 
     private fun defaultWatchface(): EventData.ActionSetCustomWatchface {
+        val externalViews = sp.getBoolean(R.string.key_include_external, false)
         val metadata = JSONObject()
             .put(CwfMetadataKey.CWF_NAME.key, getString(app.aaps.core.interfaces.R.string.wear_default_watchface))
             .put(CwfMetadataKey.CWF_FILENAME.key, getString(app.aaps.core.interfaces.R.string.wear_default_watchface))
@@ -223,7 +270,7 @@ class CustomWatchface : BaseWatchFace() {
             .put(CwfMetadataKey.CWF_CREATED_AT.key, dateUtil.dateString(dateUtil.now()))
             .put(CwfMetadataKey.CWF_AUTHOR_VERSION.key, CUSTOM_VERSION)
             .put(CwfMetadataKey.CWF_VERSION.key, CUSTOM_VERSION)
-            .put(CwfMetadataKey.CWF_COMMENT.key, getString(app.aaps.core.interfaces.R.string.default_custom_watchface_comment))
+            .put(CwfMetadataKey.CWF_COMMENT.key, if (externalViews) getString(app.aaps.core.interfaces.R.string.default_custom_watchface_external_comment) else getString(app.aaps.core.interfaces.R.string.default_custom_watchface_comment))
         val json = JSONObject()
             .put(JsonKeys.METADATA.key, metadata)
             .put(JsonKeys.HIGHCOLOR.key, String.format("#%06X", 0xFFFFFF and highColor))
@@ -240,33 +287,35 @@ class CustomWatchface : BaseWatchFace() {
         binding.mainLayout.forEach { view ->
             val params = view.layoutParams as FrameLayout.LayoutParams
             ViewMap.fromId(view.id)?.let {
-                if (view is TextView) {
-                    json.put(
-                        it.key,
-                        JSONObject()
-                            .put(JsonKeys.WIDTH.key, (params.width / zoomFactor).toInt())
-                            .put(JsonKeys.HEIGHT.key, (params.height / zoomFactor).toInt())
-                            .put(JsonKeys.TOPMARGIN.key, (params.topMargin / zoomFactor).toInt())
-                            .put(JsonKeys.LEFTMARGIN.key, (params.leftMargin / zoomFactor).toInt())
-                            .put(JsonKeys.ROTATION.key, view.rotation.toInt())
-                            .put(JsonKeys.VISIBILITY.key, getVisibility(view.visibility))
-                            .put(JsonKeys.TEXTSIZE.key, view.textSize.toInt())
-                            .put(JsonKeys.GRAVITY.key, GravityMap.key(view.gravity))
-                            .put(JsonKeys.FONT.key, FontMap.key())
-                            .put(JsonKeys.FONTSTYLE.key, StyleMap.key(view.typeface.style))
-                            .put(JsonKeys.FONTCOLOR.key, String.format("#%06X", 0xFFFFFF and view.currentTextColor))
-                    )
-                }
-                if (view is ImageView || view is lecho.lib.hellocharts.view.LineChartView) {
-                    json.put(
-                        it.key,
-                        JSONObject()
-                            .put(JsonKeys.WIDTH.key, (params.width / zoomFactor).toInt())
-                            .put(JsonKeys.HEIGHT.key, (params.height / zoomFactor).toInt())
-                            .put(JsonKeys.TOPMARGIN.key, (params.topMargin / zoomFactor).toInt())
-                            .put(JsonKeys.LEFTMARGIN.key, (params.leftMargin / zoomFactor).toInt())
-                            .put(JsonKeys.VISIBILITY.key, getVisibility(view.visibility))
-                    )
+                if (!it.external || externalViews) {
+                    if (view is TextView) {
+                        json.put(
+                            it.key,
+                            JSONObject()
+                                .put(JsonKeys.WIDTH.key, (params.width / zoomFactor).toInt())
+                                .put(JsonKeys.HEIGHT.key, (params.height / zoomFactor).toInt())
+                                .put(JsonKeys.TOPMARGIN.key, (params.topMargin / zoomFactor).toInt())
+                                .put(JsonKeys.LEFTMARGIN.key, (params.leftMargin / zoomFactor).toInt())
+                                .put(JsonKeys.ROTATION.key, view.rotation.toInt())
+                                .put(JsonKeys.VISIBILITY.key, getVisibility(view.visibility))
+                                .put(JsonKeys.TEXTSIZE.key, view.textSize.toInt())
+                                .put(JsonKeys.GRAVITY.key, GravityMap.key(view.gravity))
+                                .put(JsonKeys.FONT.key, FontMap.key())
+                                .put(JsonKeys.FONTSTYLE.key, StyleMap.key(view.typeface.style))
+                                .put(JsonKeys.FONTCOLOR.key, String.format("#%06X", 0xFFFFFF and view.currentTextColor))
+                        )
+                    }
+                    if (view is ImageView || view is lecho.lib.hellocharts.view.LineChartView) {
+                        json.put(
+                            it.key,
+                            JSONObject()
+                                .put(JsonKeys.WIDTH.key, (params.width / zoomFactor).toInt())
+                                .put(JsonKeys.HEIGHT.key, (params.height / zoomFactor).toInt())
+                                .put(JsonKeys.TOPMARGIN.key, (params.topMargin / zoomFactor).toInt())
+                                .put(JsonKeys.LEFTMARGIN.key, (params.leftMargin / zoomFactor).toInt())
+                                .put(JsonKeys.VISIBILITY.key, getVisibility(view.visibility))
+                        )
+                    }
                 }
             }
         }
@@ -332,14 +381,17 @@ class CustomWatchface : BaseWatchFace() {
     }
 
     private fun getColor(color: String, defaultColor: Int = Color.GRAY): Int =
-        if (color == JsonKeyValues.BGCOLOR.key)
-            bgColor
-        else
-            try {
-                Color.parseColor(color)
-            } catch (e: Exception) {
-                defaultColor
-            }
+        when (color) {
+            JsonKeyValues.BGCOLOR.key      -> bgColor
+            JsonKeyValues.BGCOLOR_EXT1.key -> bgcolorExt1
+            JsonKeyValues.BGCOLOR_EXT2.key -> bgcolorExt2
+            else                           ->
+                try {
+                    Color.parseColor(color)
+                } catch (e: Exception) {
+                    defaultColor
+                }
+        }
 
     private fun manageSpecificViews() {
         //Background should fill all the watchface and must be visible
@@ -360,9 +412,9 @@ class CustomWatchface : BaseWatchFace() {
         @IdRes val defaultDrawable: Int? = null,
         val customDrawable: ResFileMap? = null,
         val customHigh: ResFileMap? = null,
-        val customLow: ResFileMap? = null
+        val customLow: ResFileMap? = null,
+        val external: Boolean = false
     ) {
-
         BACKGROUND(
             key = ViewKeys.BACKGROUND.key,
             id = R.id.background,
@@ -383,6 +435,37 @@ class CustomWatchface : BaseWatchFace() {
         FREETEXT2(ViewKeys.FREETEXT2.key, R.id.freetext2),
         FREETEXT3(ViewKeys.FREETEXT3.key, R.id.freetext3),
         FREETEXT4(ViewKeys.FREETEXT4.key, R.id.freetext4),
+        PATIENT_NAME_EXT1(ViewKeys.PATIENT_NAME_EXT1.key, R.id.patient_name_ext1, external = true),
+        IOB1_EXT1(ViewKeys.IOB1_EXT1.key, R.id.iob1_Ext1, R.string.key_show_iob, external = true),
+        IOB2_EXT1(ViewKeys.IOB2_EXT1.key, R.id.iob2_Ext1, R.string.key_show_iob, external = true),
+        COB1_EXT1(ViewKeys.COB1_EXT1.key, R.id.cob1_ext1, R.string.key_show_cob, external = true),
+        COB2_EXT1(ViewKeys.COB2_EXT1.key, R.id.cob2_ext1, R.string.key_show_cob, external = true),
+        DELTA_EXT1(ViewKeys.DELTA_EXT1.key, R.id.delta_ext1, R.string.key_show_delta, external = true),
+        AVG_DELTA_EXT1(ViewKeys.AVG_DELTA_EXT1.key, R.id.avg_delta_ext1, R.string.key_show_avg_delta, external = true),
+        RIG_BATTERY_EXT1(ViewKeys.RIG_BATTERY_EXT1.key, R.id.rig_battery_ext1, R.string.key_show_rig_battery),
+        BASALRATE_EXT1(ViewKeys.BASALRATE_EXT1.key, R.id.basalRate_ext1, R.string.key_show_temp_basal, external = true),
+        BGI_EXT1(ViewKeys.BGI_EXT1.key, R.id.bgi_ext1, R.string.key_show_bgi, external = true),
+        STATUS_EXT1(ViewKeys.STATUS_EXT1.key, R.id.status_ext1, R.string.key_show_external_status, external = true),
+        LOOP_EXT1(ViewKeys.LOOP_EXT1.key, R.id.loop_ext1, R.string.key_show_external_status, external = true),
+        DIRECTION_EXT1(ViewKeys.DIRECTION_EXT1.key, R.id.direction_ext1, R.string.key_show_direction, external = true),
+        TIMESTAMP_EXT1(ViewKeys.TIMESTAMP_EXT1.key, R.id.timestamp_ext1, R.string.key_show_ago),
+        SGV_EXT1(ViewKeys.SGV_EXT1.key, R.id.sgv_ext1, R.string.key_show_bg, external = true),
+        PATIENT_NAME_EXT2(ViewKeys.PATIENT_NAME_EXT2.key, R.id.patient_name_ext2, external = true),
+        IOB1_EXT2(ViewKeys.IOB1_EXT2.key, R.id.iob1_Ext2, R.string.key_show_iob, external = true),
+        IOB2_EXT2(ViewKeys.IOB2_EXT2.key, R.id.iob2_Ext2, R.string.key_show_iob, external = true),
+        COB1_EXT2(ViewKeys.COB1_EXT2.key, R.id.cob1_ext2, R.string.key_show_cob, external = true),
+        COB2_EXT2(ViewKeys.COB2_EXT2.key, R.id.cob2_ext2, R.string.key_show_cob, external = true),
+        DELTA_EXT2(ViewKeys.DELTA_EXT2.key, R.id.delta_ext2, R.string.key_show_delta, external = true),
+        AVG_DELTA_EXT2(ViewKeys.AVG_DELTA_EXT2.key, R.id.avg_delta_ext2, R.string.key_show_avg_delta, external = true),
+        RIG_BATTERY_EXT2(ViewKeys.RIG_BATTERY_EXT2.key, R.id.rig_battery_ext2, R.string.key_show_rig_battery),
+        BASALRATE_EXT2(ViewKeys.BASALRATE_EXT2.key, R.id.basalRate_ext2, R.string.key_show_temp_basal, external = true),
+        BGI_EXT2(ViewKeys.BGI_EXT2.key, R.id.bgi_ext2, R.string.key_show_bgi, external = true),
+        STATUS_EXT2(ViewKeys.STATUS_EXT2.key, R.id.status_ext2, R.string.key_show_external_status, external = true),
+        LOOP_EXT2(ViewKeys.LOOP_EXT2.key, R.id.loop_ext2, R.string.key_show_external_status, external = true),
+        DIRECTION_EXT2(ViewKeys.DIRECTION_EXT2.key, R.id.direction_ext2, R.string.key_show_direction, external = true),
+        SGV_EXT2(ViewKeys.SGV_EXT2.key, R.id.sgv_ext2, R.string.key_show_bg, external = true),
+        TIMESTAMP_EXT2(ViewKeys.TIMESTAMP_EXT2.key, R.id.timestamp_ext2, R.string.key_show_ago),
+        PATIENT_NAME(ViewKeys.PATIENT_NAME.key, R.id.patient_name, external = true),
         IOB1(ViewKeys.IOB1.key, R.id.iob1, R.string.key_show_iob),
         IOB2(ViewKeys.IOB2.key, R.id.iob2, R.string.key_show_iob),
         COB1(ViewKeys.COB1.key, R.id.cob1, R.string.key_show_cob),
@@ -401,10 +484,10 @@ class CustomWatchface : BaseWatchFace() {
         TIMEPERIOD(ViewKeys.TIMEPERIOD.key, R.id.timePeriod),
         DAY_NAME(ViewKeys.DAY_NAME.key, R.id.day_name, R.string.key_show_date),
         DAY(ViewKeys.DAY.key, R.id.day, R.string.key_show_date),
-        WEEKNUMBER(ViewKeys.WEEKNUMBER.key, R.id.week_number, R.string.key_show_week_number),
+        WEEK_NUMBER(ViewKeys.WEEK_NUMBER.key, R.id.week_number, R.string.key_show_week_number),
         MONTH(ViewKeys.MONTH.key, R.id.month, R.string.key_show_date),
         LOOP(ViewKeys.LOOP.key, R.id.loop, R.string.key_show_external_status),
-        DIRECTION(ViewKeys.DIRECTION.key, R.id.direction2, R.string.key_show_direction),
+        DIRECTION(ViewKeys.DIRECTION.key, R.id.direction, R.string.key_show_direction),
         TIMESTAMP(ViewKeys.TIMESTAMP.key, R.id.timestamp, R.string.key_show_ago),
         SGV(ViewKeys.SGV.key, R.id.sgv, R.string.key_show_bg),
         COVER_PLATE(
@@ -614,6 +697,10 @@ class CustomWatchface : BaseWatchFace() {
 
             fun drawable() = entries.firstOrNull { it.symbol == it.cwf.singleBg.slopeArrow }?.arrowCustom ?: NONE.arrowCustom
             fun value() = entries.firstOrNull { it.symbol == it.cwf.singleBg.slopeArrow }?.dynValue ?: NONE.dynValue
+            fun drawableExt1() = entries.firstOrNull { it.symbol == it.cwf.singleBgExt1.slopeArrow }?.arrowCustom ?: NONE.arrowCustom
+            fun valueExt1() = entries.firstOrNull { it.symbol == it.cwf.singleBgExt1.slopeArrow }?.dynValue ?: NONE.dynValue
+            fun drawableExt2() = entries.firstOrNull { it.symbol == it.cwf.singleBgExt2.slopeArrow }?.arrowCustom ?: NONE.arrowCustom
+            fun valueExt2() = entries.firstOrNull { it.symbol == it.cwf.singleBgExt2.slopeArrow }?.dynValue ?: NONE.dynValue
         }
 
         lateinit var cwf: CustomWatchface
@@ -715,7 +802,7 @@ class CustomWatchface : BaseWatchFace() {
     private enum class ValueMap(val key: String, val min: Double, val max: Double) {
         NONE("", 0.0, 0.0),
         SGV(ViewKeys.SGV.key, 39.0, 400.0),
-        SGVLEVEL(JsonKeyValues.SGVLEVEL.key, -1.0, 1.0),
+        SGV_LEVEL(JsonKeyValues.SGV_LEVEL.key, -1.0, 1.0),
         DIRECTION(ViewKeys.DIRECTION.key, 1.0, 7.0),
         DELTA(ViewKeys.DELTA.key, -25.0, 25.0),
         AVG_DELTA(ViewKeys.AVG_DELTA.key, -25.0, 25.0),
@@ -726,7 +813,23 @@ class CustomWatchface : BaseWatchFace() {
         DAY(ViewKeys.DAY.key, 1.0, 31.0),
         DAY_NAME(ViewKeys.DAY_NAME.key, 1.0, 7.0),
         MONTH(ViewKeys.MONTH.key, 1.0, 12.0),
-        WEEKNUMBER(ViewKeys.WEEKNUMBER.key, 1.0, 53.0);
+        WEEK_NUMBER(ViewKeys.WEEK_NUMBER.key, 1.0, 53.0),
+        SGV_EXT1(ViewKeys.SGV_EXT1.key, 39.0, 400.0),
+        SGV_LEVEL_EXT1(JsonKeyValues.SGV_LEVEL_EXT1.key, -1.0, 1.0),
+        DIRECTION_EXT1(ViewKeys.DIRECTION_EXT1.key, 1.0, 7.0),
+        DELTA_EXT1(ViewKeys.DELTA_EXT1.key, -25.0, 25.0),
+        AVG_DELTA_EXT1(ViewKeys.AVG_DELTA_EXT1.key, -25.0, 25.0),
+        RIG_BATTERY_EXT1(ViewKeys.RIG_BATTERY_EXT1.key, 0.0, 100.0),
+        TIMESTAMP_EXT1(ViewKeys.TIMESTAMP_EXT1.key, 0.0, 60.0),
+        LOOP_EXT1(ViewKeys.LOOP_EXT1.key, 0.0, 28.0),
+        SGV_EXT2(ViewKeys.SGV_EXT2.key, 39.0, 400.0),
+        SGV_LEVEL_EXT2(JsonKeyValues.SGV_LEVEL_EXT2.key, -1.0, 1.0),
+        DIRECTION_EXT2(ViewKeys.DIRECTION_EXT2.key, 1.0, 7.0),
+        DELTA_EXT2(ViewKeys.DELTA_EXT2.key, -25.0, 25.0),
+        AVG_DELTA_EXT2(ViewKeys.AVG_DELTA_EXT2.key, -25.0, 25.0),
+        RIG_BATTERY_EXT2(ViewKeys.RIG_BATTERY_EXT2.key, 0.0, 100.0),
+        TIMESTAMP_EXT2(ViewKeys.TIMESTAMP_EXT2.key, 0.0, 60.0),
+        LOOP_EXT2(ViewKeys.LOOP_EXT2.key, 0.0, 28.0);
 
         fun dynValue(dataValue: Double, dataRange: DataRange, valueRange: DataRange): Double = when {
             dataValue < dataRange.minData -> dataRange.minData
@@ -747,7 +850,7 @@ class CustomWatchface : BaseWatchFace() {
 
         companion object {
 
-            fun fromKey(key: String) = values().firstOrNull { it.key == key } ?: NONE
+            fun fromKey(key: String) = entries.firstOrNull { it.key == key } ?: NONE
         }
     }
 
@@ -787,7 +890,7 @@ class CustomWatchface : BaseWatchFace() {
             get() = when (valueMap) {
                 ValueMap.NONE             -> 0.0
                 ValueMap.SGV              -> if (cwf.singleBg.sgvString != "---") cwf.singleBg.sgv else null
-                ValueMap.SGVLEVEL         -> if (cwf.singleBg.sgvString != "---") cwf.singleBg.sgvLevel.toDouble() else null
+                ValueMap.SGV_LEVEL        -> if (cwf.singleBg.sgvString != "---") cwf.singleBg.sgvLevel.toDouble() else null
                 ValueMap.DIRECTION        -> TrendArrowMap.value()
                 ValueMap.DELTA            -> cwf.singleBg.deltaMgdl
                 ValueMap.AVG_DELTA        -> cwf.singleBg.avgDeltaMgdl
@@ -798,7 +901,23 @@ class CustomWatchface : BaseWatchFace() {
                 ValueMap.DAY              -> DateTime().dayOfMonth.toDouble()
                 ValueMap.DAY_NAME         -> DateTime().dayOfWeek.toDouble()
                 ValueMap.MONTH            -> DateTime().monthOfYear.toDouble()
-                ValueMap.WEEKNUMBER       -> DateTime().weekOfWeekyear.toDouble()
+                ValueMap.WEEK_NUMBER      -> DateTime().weekOfWeekyear.toDouble()
+                ValueMap.SGV_EXT1         -> if (cwf.singleBgExt1.sgvString != "---") cwf.singleBgExt1.sgv else null
+                ValueMap.SGV_LEVEL_EXT1   -> if (cwf.singleBgExt1.sgvString != "---") cwf.singleBgExt1.sgvLevel.toDouble() else null
+                ValueMap.DIRECTION_EXT1   -> TrendArrowMap.valueExt1()
+                ValueMap.DELTA_EXT1       -> cwf.singleBgExt1.deltaMgdl
+                ValueMap.AVG_DELTA_EXT1   -> cwf.singleBgExt1.avgDeltaMgdl
+                ValueMap.RIG_BATTERY_EXT1 -> cwf.statusExt1.rigBattery.replace("%", "").toDoubleOrNull()
+                ValueMap.LOOP_EXT1        -> if (cwf.statusExt1.openApsStatus != -1L) ((System.currentTimeMillis() - cwf.statusExt1.openApsStatus) / 1000 / 60).toDouble() else null
+                ValueMap.TIMESTAMP_EXT1   -> if (cwf.singleBgExt1.timeStamp != 0L) floor(cwf.timeSince(1) / (1000 * 60)) else null
+                ValueMap.SGV_EXT2         -> if (cwf.singleBgExt2.sgvString != "---") cwf.singleBgExt2.sgv else null
+                ValueMap.SGV_LEVEL_EXT2   -> if (cwf.singleBgExt2.sgvString != "---") cwf.singleBgExt2.sgvLevel.toDouble() else null
+                ValueMap.DIRECTION_EXT2   -> TrendArrowMap.valueExt2()
+                ValueMap.DELTA_EXT2       -> cwf.singleBgExt2.deltaMgdl
+                ValueMap.AVG_DELTA_EXT2   -> cwf.singleBgExt2.avgDeltaMgdl
+                ValueMap.RIG_BATTERY_EXT2 -> cwf.statusExt2.rigBattery.replace("%", "").toDoubleOrNull()
+                ValueMap.LOOP_EXT2        -> if (cwf.statusExt2.openApsStatus != -1L) ((System.currentTimeMillis() - cwf.statusExt2.openApsStatus) / 1000 / 60).toDouble() else null
+                ValueMap.TIMESTAMP_EXT2   -> if (cwf.singleBgExt2.timeStamp != 0L) floor(cwf.timeSince(2) / (1000 * 60)) else null
             }
 
         fun getTopOffset(): Int = dataRange?.let { dataRange ->

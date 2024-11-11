@@ -81,7 +81,8 @@ class RawDisplayData {
         rigBattery = "--",
         openApsStatus = -1,
         bgi = "--",
-        batteryLevel = 1
+        batteryLevel = 1,
+        patientName = ""
     )
 
     var status1 = EventData.Status(
@@ -95,6 +96,7 @@ class RawDisplayData {
         openApsStatus = -1,
         bgi = "--",
         batteryLevel = 1,
+        patientName = "",
         id = 1
     )
 
@@ -109,6 +111,7 @@ class RawDisplayData {
         openApsStatus = -1,
         bgi = "--",
         batteryLevel = 1,
+        patientName = "",
         id = 2
     )
 

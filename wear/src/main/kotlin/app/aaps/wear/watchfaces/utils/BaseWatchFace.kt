@@ -44,11 +44,11 @@ import kotlin.math.floor
  * Updated by andrew-warrington on 02-Jan-2018.
  * Refactored by dlvoy on 2019-11-2019
  * Refactored by MilosKozak 24/04/2022
+ * Updated by Philoul to manage external data 06/11/2024
  */
 
 abstract class BaseWatchFace : WatchFace() {
 
-    @Inject lateinit var wearUtil: WearUtil
     @Inject lateinit var persistence: Persistence
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus
@@ -62,6 +62,10 @@ abstract class BaseWatchFace : WatchFace() {
 
     protected val singleBg get() = rawData.singleBg
     protected val status get() = rawData.status
+    protected val singleBgExt1 get() = rawData.singleBg1
+    protected val statusExt1 get() = rawData.status1
+    protected val singleBgExt2 get() = rawData.singleBg2
+    protected val statusExt2 get() = rawData.status2
     private val treatmentData get() = rawData.treatmentData
     private val graphData get() = rawData.graphData
 
@@ -69,8 +73,9 @@ abstract class BaseWatchFace : WatchFace() {
 
     private val displaySize = Point()
 
-    var ageLevel = 1
     var loopLevel = -1
+    var loopLevelExt1 = -1
+    var loopLevelExt2 = -1
     var highColor = Color.YELLOW
     var lowColor = Color.RED
     var midColor = Color.WHITE
@@ -87,6 +92,8 @@ abstract class BaseWatchFace : WatchFace() {
     var enableSecond = false
     var detailedIob = false
     var externalStatus = ""
+    var externalStatusExt1 = ""
+    var externalStatusExt2 = ""
     var dayNameFormat = "E"
     var monthFormat = "MMM"
     val showSecond: Boolean
@@ -124,6 +131,7 @@ abstract class BaseWatchFace : WatchFace() {
                 simpleUi.updatePreferences()
                 if (event.changedKey != null && event.changedKey == "delta_granularity") rxBus.send(EventWearToMobile(ActionResendData("BaseWatchFace:onSharedPreferenceChanged")))
                 if (layoutSet) setDataFields()
+                updatePreferences()
                 invalidate()
             }
         disposable += rxBus
@@ -216,18 +224,27 @@ abstract class BaseWatchFace : WatchFace() {
         missedReadingAlert()
     }
 
-    fun ageLevel(): Int =
-        if (timeSince() <= 1000 * 60 * 12) 1 else 0
+    fun ageLevel(id: Int = 0): Int =
+        if (timeSince(id) <= 1000 * 60 * 12) 1 else 0
 
-    fun timeSince(): Double {
-        return (System.currentTimeMillis() - singleBg.timeStamp).toDouble()
+    fun timeSince(id: Int = 0): Double {
+        return when (id) {
+            1    -> (System.currentTimeMillis() - singleBgExt1.timeStamp).toDouble()
+            2    -> (System.currentTimeMillis() - singleBgExt2.timeStamp).toDouble()
+            else -> (System.currentTimeMillis() - singleBg.timeStamp).toDouble()
+        }
     }
 
-    private fun readingAge(): String {
-        if (singleBg.timeStamp == 0L) {
+    private fun readingAge(id: Int = 0): String {
+        val localBg = when (id) {
+            1 ->  singleBgExt1
+            2 ->  singleBgExt2
+            else -> singleBg
+        }
+        if (localBg.timeStamp == 0L) {
             return "--"
         }
-        val minutesAgo = floor(timeSince() / (1000 * 60)).toInt()
+        val minutesAgo = floor(timeSince(id) / (1000 * 60)).toInt()
         return minutesAgo.toString() + "'"
     }
 
@@ -276,15 +293,19 @@ abstract class BaseWatchFace : WatchFace() {
         }
     }
 
+    open fun updatePreferences() {
+        //Override within CustomWatchface
+    }
+
     @SuppressLint("SetTextI18n")
     open fun setDataFields() {
         detailedIob = sp.getBoolean(R.string.key_show_detailed_iob, false)
         val showBgi = sp.getBoolean(R.string.key_show_bgi, false)
         val detailedDelta = sp.getBoolean(R.string.key_show_detailed_delta, false)
         setDateAndTime()
+        binding.patientName?.text = status.patientName
         binding.sgv?.text = singleBg.sgvString
         binding.sgv?.visibility = sp.getBoolean(R.string.key_show_bg, true).toVisibilityKeepSpace()
-        strikeThroughSgvIfNeeded()
         binding.direction?.text = "${singleBg.slopeArrow}\uFE0E"
         binding.direction?.visibility = sp.getBoolean(R.string.key_show_direction, true).toVisibility()
         binding.delta?.text = if (detailedDelta) singleBg.deltaDetailed else singleBg.delta
@@ -292,11 +313,11 @@ abstract class BaseWatchFace : WatchFace() {
         binding.avgDelta?.text = if (detailedDelta) singleBg.avgDeltaDetailed else singleBg.avgDelta
         binding.avgDelta?.visibility = sp.getBoolean(R.string.key_show_avg_delta, true).toVisibility()
         binding.cob1?.visibility = sp.getBoolean(R.string.key_show_cob, true).toVisibility()
-        binding.cob2?.text = status.cob
         binding.cob2?.visibility = sp.getBoolean(R.string.key_show_cob, true).toVisibility()
+        binding.cob2?.text = status.cob
         binding.iob1?.visibility = sp.getBoolean(R.string.key_show_iob, true).toVisibility()
-        binding.iob2?.visibility = sp.getBoolean(R.string.key_show_iob, true).toVisibility()
         binding.iob1?.text = if (detailedIob) status.iobSum else getString(R.string.activity_IOB)
+        binding.iob2?.visibility = sp.getBoolean(R.string.key_show_iob, true).toVisibility()
         binding.iob2?.text = if (detailedIob) status.iobDetail else status.iobSum
         binding.timestamp.visibility = sp.getBoolean(R.string.key_show_ago, true).toVisibility()
         binding.timestamp.text = readingAge()
@@ -304,10 +325,10 @@ abstract class BaseWatchFace : WatchFace() {
         binding.uploaderBattery?.text = status.battery + "%"
         binding.rigBattery?.visibility = sp.getBoolean(R.string.key_show_rig_battery, false).toVisibility()
         binding.rigBattery?.text = status.rigBattery
-        binding.basalRate?.text = status.currentBasal
         binding.basalRate?.visibility = sp.getBoolean(R.string.key_show_temp_basal, true).toVisibility()
-        binding.bgi?.text = status.bgi
+        binding.basalRate?.text = status.currentBasal
         binding.bgi?.visibility = showBgi.toVisibility()
+        binding.bgi?.text = status.bgi
         val iobString =
             if (detailedIob) "${status.iobSum} ${status.iobDetail}"
             else status.iobSum + getString(R.string.units_short)
@@ -333,6 +354,104 @@ abstract class BaseWatchFace : WatchFace() {
             binding.loop?.text = "-"
             binding.loop?.setBackgroundResource(R.drawable.loop_grey_25)
         }
+        //Management of External data 1
+        binding.patientNameExt1?.text = statusExt1.patientName
+        binding.sgvExt1?.text = singleBgExt1.sgvString
+        binding.sgvExt1?.visibility = sp.getBoolean(R.string.key_show_bg, true).toVisibilityKeepSpace()
+        binding.deltaExt1?.text = if (detailedDelta) singleBgExt1.deltaDetailed else singleBgExt1.delta
+        binding.deltaExt1?.visibility = sp.getBoolean(R.string.key_show_delta, true).toVisibility()
+        binding.avgDeltaExt1?.text = if (detailedDelta) singleBgExt1.avgDeltaDetailed else singleBgExt1.avgDelta
+        binding.avgDeltaExt1?.visibility = sp.getBoolean(R.string.key_show_avg_delta, true).toVisibility()
+        binding.cob1Ext1?.visibility = sp.getBoolean(R.string.key_show_cob, true).toVisibility()
+        binding.cob2Ext1?.visibility = sp.getBoolean(R.string.key_show_cob, true).toVisibility()
+        binding.cob2Ext1?.text = statusExt1.cob
+        binding.iob1Ext1?.visibility = sp.getBoolean(R.string.key_show_iob, true).toVisibility()
+        binding.iob1Ext1?.text = if (detailedIob) statusExt1.iobSum else getString(R.string.activity_IOB)
+        binding.iob2Ext1?.visibility = sp.getBoolean(R.string.key_show_iob, true).toVisibility()
+        binding.iob2Ext1?.text = if (detailedIob) statusExt1.iobDetail else statusExt1.iobSum
+        binding.timestampExt1?.visibility = sp.getBoolean(R.string.key_show_ago, true).toVisibility()
+        binding.timestampExt1?.text = readingAge(id = 1)
+        binding.rigBatteryExt1?.visibility = sp.getBoolean(R.string.key_show_rig_battery, false).toVisibility()
+        binding.rigBatteryExt1?.text = statusExt1.rigBattery
+        binding.basalRateExt1?.visibility = sp.getBoolean(R.string.key_show_temp_basal, true).toVisibility()
+        binding.basalRateExt1?.text = statusExt1.currentBasal
+        binding.bgiExt1?.visibility = showBgi.toVisibility()
+        binding.bgiExt1?.text = statusExt1.bgi
+        val iobStringExt1 =
+            if (detailedIob) "${statusExt1.iobSum} ${statusExt1.iobDetail}"
+            else statusExt1.iobSum + getString(R.string.units_short)
+        externalStatusExt1 = if (showBgi)
+            "${statusExt1.externalStatus} ${iobStringExt1} ${statusExt1.bgi}"
+        else
+            "${statusExt1.externalStatus} ${iobStringExt1}"
+        binding.statusExt1?.text = externalStatusExt1
+        binding.statusExt1?.visibility = sp.getBoolean(R.string.key_show_external_status, true).toVisibility()
+        binding.loopExt1?.visibility = sp.getBoolean(R.string.key_show_external_status, true).toVisibility()
+        if (statusExt1.openApsStatus != -1L) {
+            val minutes = ((System.currentTimeMillis() - statusExt1.openApsStatus) / 1000 / 60).toInt()
+            binding.loopExt1?.text = "$minutes'"
+            if (minutes > 14) {
+                loopLevelExt1 = 0
+                binding.loopExt1?.setBackgroundResource(R.drawable.loop_red_25)
+            } else {
+                loopLevelExt1 = 1
+                binding.loopExt1?.setBackgroundResource(R.drawable.loop_green_25)
+            }
+        } else {
+            loopLevelExt1 = -1
+            binding.loopExt1?.text = "-"
+            binding.loopExt1?.setBackgroundResource(R.drawable.loop_grey_25)
+        }
+        //Management of External data 2
+        binding.patientNameExt2?.text = statusExt2.patientName
+        binding.sgvExt2?.text = singleBgExt2.sgvString
+        binding.sgvExt2?.visibility = sp.getBoolean(R.string.key_show_bg, true).toVisibilityKeepSpace()
+        binding.deltaExt2?.text = if (detailedDelta) singleBgExt2.deltaDetailed else singleBgExt2.delta
+        binding.deltaExt2?.visibility = sp.getBoolean(R.string.key_show_delta, true).toVisibility()
+        binding.avgDeltaExt2?.text = if (detailedDelta) singleBgExt2.avgDeltaDetailed else singleBgExt2.avgDelta
+        binding.avgDeltaExt2?.visibility = sp.getBoolean(R.string.key_show_avg_delta, true).toVisibility()
+        binding.cob1Ext2?.visibility = sp.getBoolean(R.string.key_show_cob, true).toVisibility()
+        binding.cob2Ext2?.visibility = sp.getBoolean(R.string.key_show_cob, true).toVisibility()
+        binding.cob2Ext2?.text = statusExt2.cob
+        binding.iob1Ext2?.visibility = sp.getBoolean(R.string.key_show_iob, true).toVisibility()
+        binding.iob1Ext2?.text = if (detailedIob) statusExt2.iobSum else getString(R.string.activity_IOB)
+        binding.iob2Ext2?.visibility = sp.getBoolean(R.string.key_show_iob, true).toVisibility()
+        binding.iob2Ext2?.text = if (detailedIob) statusExt2.iobDetail else statusExt2.iobSum
+        binding.timestampExt2?.visibility = sp.getBoolean(R.string.key_show_ago, true).toVisibility()
+        binding.timestampExt2?.text = readingAge(id = 2)
+        binding.rigBatteryExt2?.visibility = sp.getBoolean(R.string.key_show_rig_battery, false).toVisibility()
+        binding.rigBatteryExt2?.text = statusExt2.rigBattery
+        binding.basalRateExt2?.visibility = sp.getBoolean(R.string.key_show_temp_basal, true).toVisibility()
+        binding.basalRateExt2?.text = statusExt2.currentBasal
+        binding.bgiExt2?.visibility = showBgi.toVisibility()
+        binding.bgiExt2?.text = statusExt2.bgi
+        val iobStringExt2 =
+            if (detailedIob) "${statusExt2.iobSum} ${statusExt2.iobDetail}"
+            else statusExt2.iobSum + getString(R.string.units_short)
+        externalStatusExt2 = if (showBgi)
+            "${statusExt2.externalStatus} ${iobStringExt2} ${statusExt2.bgi}"
+        else
+            "${statusExt2.externalStatus} ${iobStringExt2}"
+        binding.statusExt2?.text = externalStatusExt2
+        binding.statusExt2?.visibility = sp.getBoolean(R.string.key_show_external_status, true).toVisibility()
+        binding.loopExt2?.visibility = sp.getBoolean(R.string.key_show_external_status, true).toVisibility()
+        if (statusExt2.openApsStatus != -1L) {
+            val minutes = ((System.currentTimeMillis() - statusExt2.openApsStatus) / 1000 / 60).toInt()
+            binding.loopExt2?.text = "$minutes'"
+            if (minutes > 14) {
+                loopLevelExt2 = 0
+                binding.loopExt2?.setBackgroundResource(R.drawable.loop_red_25)
+            } else {
+                loopLevelExt2 = 1
+                binding.loopExt2?.setBackgroundResource(R.drawable.loop_green_25)
+            }
+        } else {
+            loopLevelExt2 = -1
+            binding.loopExt2?.text = "-"
+            binding.loopExt2?.setBackgroundResource(R.drawable.loop_grey_25)
+        }
+        //************************************************************************
+        strikeThroughSgvIfNeeded()
         setColor()
     }
 
@@ -380,6 +499,14 @@ abstract class BaseWatchFace : WatchFace() {
     private fun strikeThroughSgvIfNeeded() {
         binding.sgv?.let { mSgv ->
             if (ageLevel() <= 0 && singleBg.timeStamp > 0) mSgv.paintFlags = mSgv.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+            else mSgv.paintFlags = mSgv.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+        }
+        binding.sgvExt1?.let { mSgv ->
+            if (ageLevel(id = 1) <= 0 && singleBgExt1.timeStamp > 0) mSgv.paintFlags = mSgv.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+            else mSgv.paintFlags = mSgv.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+        }
+        binding.sgvExt2?.let { mSgv ->
+            if (ageLevel(id = 2) <= 0 && singleBgExt2.timeStamp > 0) mSgv.paintFlags = mSgv.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             else mSgv.paintFlags = mSgv.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
         }
     }
