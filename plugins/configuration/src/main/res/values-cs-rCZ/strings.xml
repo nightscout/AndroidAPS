@@ -19,6 +19,7 @@
     <string name="permission">Povolení</string>
     <string name="need_system_window_permission">Pro oznámení vyžaduje aplikace oprávnění systémového okna</string>
     <string name="need_location_permission">Aplikace potřebuje oprávnění k přístupu k poloze kvůli skenování BT a WiFi identifikaci</string>
+    <string name="need_background_location_permission">Aplikace potřebuje na pozadí oprávnění k přístupu k poloze zařízení kvůli automatizacím</string>
     <string name="need_storage_permission">Aby bylo možné nahrávat logy a exportovat nastavení, je nutné pro aplikaci povolit oprávnění přístupu k úložišti</string>
     <string name="askforpermission">Získat povolení</string>
     <string name="need_whitelisting">%1$s potřebuje vypnout optimalizace baterie pro optimální výkon</string>
