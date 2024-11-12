@@ -60,7 +60,7 @@ class SafetyPlugin @Inject constructor(
         .mainType(PluginType.CONSTRAINTS)
         .neverVisible(true)
         .alwaysEnabled(true)
-        .showInList(false)
+        .showInList({ false })
         .pluginName(R.string.safety)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN),
     aapsLogger, rh

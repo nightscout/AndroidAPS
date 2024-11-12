@@ -16,7 +16,6 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import kotlinx.coroutines.runBlocking
-import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -33,7 +32,7 @@ import javax.inject.Singleton
  * - The actual password is not stored, only a secret "key" containing encrypted data and parameters.
  * - The secret "key" is used for secure access to the password in the "Android KeyStore"
  *
- * Dependancy: Class SecureEncrypt
+ * Dependency: Class SecureEncrypt
  *
  */
 
@@ -100,8 +99,8 @@ class ExportPasswordDataStoreImpl @Inject constructor(
         // START
         if (config.isEngineeringMode() && config.isDev()) {
             // Enable debug mode when file 'DebugUnattendedExport' exists
-            val debug = File(fileListProvider.ensureExtraDirExists(), "DebugUnattendedExport").exists()
-            val debugDev = File(fileListProvider.ensureExtraDirExists(), "DebugUnattendedExportDev").exists()
+            val debug = fileListProvider.ensureExtraDirExists()?.findFile("DebugUnattendedExport") != null
+            val debugDev = fileListProvider.ensureExtraDirExists()?.findFile("DebugUnattendedExportDev") != null
             if (debugDev) {
                 log.warn(LTag.CORE, "$MODULE: ExportPasswordDataStore running DEBUG(DEV) mode!")
                 /*** Debug/testing mode ***/
@@ -111,13 +110,13 @@ class ExportPasswordDataStoreImpl @Inject constructor(
             else if (debug) {
                 log.warn(LTag.CORE, "$MODULE: ExportPasswordDataStore running DEBUG mode!")
                 /*** Debug mode ***/
-                passwordValidityWindow = 2 * 24 * 3600 * 1000L           // 2 Days (including grace periodee)
+                passwordValidityWindow = 2 * 24 * 3600 * 1000L           // 2 Days (including grace period)
                 passwordExpiryGracePeriod     = passwordValidityWindow/2 // Grace period 1 days
             }
         }
         // END
 
-        log.info(LTag.CORE, "$MODULE: ExportPasswordDataStore is enabled: $exportPasswordStoreIsEnabled, expiry msecs=$passwordValidityWindow")
+        log.info(LTag.CORE, "$MODULE: ExportPasswordDataStore is enabled: $exportPasswordStoreIsEnabled, expiry millis=$passwordValidityWindow")
         return exportPasswordStoreIsEnabled
     }
 

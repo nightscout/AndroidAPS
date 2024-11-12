@@ -73,10 +73,10 @@ class PrefImportListActivity : TranslatedDaggerAppCompatActivity() {
         override fun onBindViewHolder(holder: PrefFileViewHolder, position: Int) {
             val prefFile = prefFileList[position]
             with(holder.maintenanceImportListItemBinding) {
-                filelistName.text = prefFile.file.name
+                filelistName.text = prefFile.name
                 filelistName.tag = prefFile
 
-                filelistDir.text = rh.gs(R.string.in_directory, prefFile.file.parentFile?.absolutePath)
+//                filelistDir.text = rh.gs(R.string.in_directory, prefFile.file.parentFile?.absolutePath)
 
                 metalineName.visibility = View.VISIBLE
                 metaDateTimeIcon.visibility = View.VISIBLE

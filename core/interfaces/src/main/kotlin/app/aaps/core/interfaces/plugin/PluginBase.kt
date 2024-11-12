@@ -104,7 +104,7 @@ abstract class PluginBase(
     }
 
     fun showInList(type: PluginType): Boolean {
-        if (pluginDescription.mainType == type) return pluginDescription.showInList && specialShowInListCondition()
+        if (pluginDescription.mainType == type) return pluginDescription.showInList.invoke() && specialShowInListCondition()
         return false
     }
 

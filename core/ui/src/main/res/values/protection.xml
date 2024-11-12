@@ -32,4 +32,5 @@
     <string name="pin_hint">Enter PIN here</string>
 
     <string name="master_password_not_set">Master password not set</string>
+    <string name="aaps_directory_not_selected">AAPS directory not selected</string>
 </resources>

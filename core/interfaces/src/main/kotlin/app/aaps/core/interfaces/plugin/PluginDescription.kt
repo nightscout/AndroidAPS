@@ -24,7 +24,7 @@ open class PluginDescription {
     var alwaysVisible = false
     var neverVisible = false
     var alwaysEnabled = false
-    var showInList = true
+    var showInList = { true }
     var pluginName = -1
     var shortName = -1
     var description = -1
@@ -42,7 +42,7 @@ open class PluginDescription {
     fun alwaysEnabled(alwaysEnabled: Boolean): PluginDescription = this.also { it.alwaysEnabled = alwaysEnabled }
     fun alwaysVisible(alwaysVisible: Boolean): PluginDescription = this.also { it.alwaysVisible = alwaysVisible }
     fun neverVisible(neverVisible: Boolean): PluginDescription = this.also { it.neverVisible = neverVisible }
-    fun showInList(showInList: Boolean): PluginDescription = this.also { it.showInList = showInList }
+    fun showInList(showInList: () -> Boolean): PluginDescription = this.also { it.showInList = showInList }
     fun pluginIcon(pluginIcon: Int): PluginDescription = this.also { it.pluginIcon = pluginIcon }
     fun pluginIcon2(pluginIcon2: Int): PluginDescription = this.also { it.pluginIcon2 = pluginIcon2 }
     fun pluginName(pluginName: Int): PluginDescription = this.also { it.pluginName = pluginName }

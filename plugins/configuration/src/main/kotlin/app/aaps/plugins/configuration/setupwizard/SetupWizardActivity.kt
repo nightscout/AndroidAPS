@@ -19,7 +19,6 @@ import app.aaps.core.interfaces.rx.events.EventSWUpdate
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.Preferences
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.locale.LocaleHelper.update
 import app.aaps.plugins.configuration.R
@@ -37,7 +36,6 @@ class SetupWizardActivity : DaggerAppCompatActivityWithResult() {
 
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var swDefinition: SWDefinition
-    @Inject lateinit var preferences: Preferences
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var uiInteraction: UiInteraction

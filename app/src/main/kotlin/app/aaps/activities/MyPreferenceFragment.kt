@@ -41,6 +41,7 @@ import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.utils.extensions.safeGetSerializable
 import app.aaps.core.validators.DefaultEditTextValidator
 import app.aaps.core.validators.EditTextValidator
 import app.aaps.core.validators.preferences.AdaptiveClickPreference
@@ -94,8 +95,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     override fun setArguments(args: Bundle?) {
         super.setArguments(args)
         pluginName = args?.getString(UiInteraction.PLUGIN_NAME)
-        @Suppress("DEPRECATION")
-        customPreference = args?.getSerializable(UiInteraction.PREFERENCE) as UiInteraction.Preferences?
+        customPreference = args?.safeGetSerializable(UiInteraction.PREFERENCE, UiInteraction.Preferences::class.java)
         filter = args?.getString("filter") ?: ""
     }
 
@@ -127,8 +127,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         (savedInstanceState ?: arguments)?.let { bundle ->
             pluginName = bundle.getString(UiInteraction.PLUGIN_NAME)
-            @Suppress("DEPRECATION")
-            customPreference = bundle.getSerializable(UiInteraction.PREFERENCE) as UiInteraction.Preferences?
+            customPreference = bundle.safeGetSerializable(UiInteraction.PREFERENCE, UiInteraction.Preferences::class.java)
             filter = bundle.getString(FILTER, "")
         }
         if (pluginName != null) {

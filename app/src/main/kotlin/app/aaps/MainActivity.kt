@@ -57,7 +57,6 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.ui.UIRunnable
@@ -70,6 +69,7 @@ import app.aaps.plugins.configuration.activities.DaggerAppCompatActivityWithResu
 import app.aaps.plugins.configuration.activities.SingleFragmentActivity
 import app.aaps.plugins.configuration.setupwizard.SetupWizardActivity
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
+import app.aaps.plugins.main.general.overview.notifications.NotificationWithAction
 import app.aaps.ui.activities.ProfileHelperActivity
 import app.aaps.ui.activities.StatsActivity
 import app.aaps.ui.activities.TreatmentsActivity
@@ -81,7 +81,6 @@ import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.FontAwesomeModule
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import java.io.File
 import java.util.Locale
 import javax.inject.Inject
 import kotlin.system.exitProcess
@@ -92,7 +91,6 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
 
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var sp: SP
-    @Inject lateinit var preferences: Preferences
     @Inject lateinit var versionCheckerUtils: VersionCheckerUtils
     @Inject lateinit var smsCommunicator: SmsCommunicator
     @Inject lateinit var loop: Loop
@@ -108,7 +106,6 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     @Inject lateinit var fileListProvider: FileListProvider
     @Inject lateinit var cryptoUtil: CryptoUtil
     @Inject lateinit var exportPasswordDataStore: ExportPasswordDataStore
-
 
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private var pluginPreferencesMenuItem: MenuItem? = null
@@ -302,7 +299,25 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         exportPasswordResetCheck(this)
 
         if (preferences.get(StringKey.ProtectionMasterPassword) == "")
-            rxBus.send(EventNewNotification(Notification(Notification.MASTER_PASSWORD_NOT_SET, rh.gs(app.aaps.core.ui.R.string.master_password_not_set), Notification.NORMAL)))
+            rxBus.send(
+                EventNewNotification(
+                    NotificationWithAction(this, Notification.MASTER_PASSWORD_NOT_SET, rh.gs(app.aaps.core.ui.R.string.master_password_not_set), Notification.NORMAL)
+                        .action(R.string.set, Runnable {
+                            startActivity(
+                                Intent(this@MainActivity, PreferencesActivity::class.java)
+                                    .setAction("info.nightscout.androidaps.MainActivity")
+                                    .putExtra(UiInteraction.PREFERENCE, UiInteraction.Preferences.PROTECTION)
+                            )
+                        })
+                )
+            )
+        if (preferences.getIfExists(StringKey.AapsDirectoryUri).isNullOrEmpty())
+            rxBus.send(
+                EventNewNotification(
+                    NotificationWithAction(this, Notification.AAPS_DIR_NOT_SELECTED, rh.gs(app.aaps.core.ui.R.string.aaps_directory_not_selected), Notification.IMPORTANCE_HIGH)
+                        .action(R.string.select, Runnable { accessTree.launch(null) })
+                )
+            )
     }
 
     private fun startWizard(): Boolean =
@@ -484,8 +499,8 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
      * reset password to SN of active pump if file exists
      */
     private fun passwordResetCheck(context: Context) {
-        val fh = File(fileListProvider.ensureExtraDirExists(), "PasswordReset")
-        if (fh.exists()) {
+        val fh = fileListProvider.ensureExtraDirExists()?.findFile("PasswordReset")
+        if (fh?.exists() == true) {
             val sn = activePlugin.activePump.serialNumber()
             preferences.put(StringKey.ProtectionMasterPassword, cryptoUtil.hashPassword(sn))
             fh.delete()
@@ -499,9 +514,9 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
      * Check for existing ExportPasswordReset file and
      * clear password stored in datastore if file exists
      */
-        private fun exportPasswordResetCheck(context: Context) {
-        val fh = File(fileListProvider.ensureExtraDirExists(), "ExportPasswordReset")
-        if (fh.exists()) {
+    private fun exportPasswordResetCheck(context: Context) {
+        val fh = fileListProvider.ensureExtraDirExists()?.findFile("ExportPasswordReset")
+        if (fh?.exists() == true) {
             exportPasswordDataStore.clearPasswordDataStore(context)
             fh.delete()
             ToastUtils.okToast(context, context.getString(app.aaps.core.ui.R.string.datastore_password_cleared))

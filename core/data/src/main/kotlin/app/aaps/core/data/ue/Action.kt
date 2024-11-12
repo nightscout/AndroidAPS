@@ -73,6 +73,7 @@ enum class Action(val colorGroup: ColorGroup) {
     DELETE_FUTURE_TREATMENTS(ColorGroup.Aaps),
     EXPORT_SETTINGS(ColorGroup.Aaps),
     IMPORT_SETTINGS(ColorGroup.Aaps),
+    SELECT_DIRECTORY(ColorGroup.Aaps),
     RESET_DATABASES(ColorGroup.Aaps),
     RESET_APS_RESULTS(ColorGroup.Aaps),
     CLEANUP_DATABASES(ColorGroup.Aaps),

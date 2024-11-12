@@ -77,6 +77,7 @@ fun UserEntry.Action.fromDb(): Action =
         UserEntry.Action.DELETE_FUTURE_TREATMENTS        -> Action.DELETE_FUTURE_TREATMENTS
         UserEntry.Action.EXPORT_SETTINGS                 -> Action.EXPORT_SETTINGS
         UserEntry.Action.IMPORT_SETTINGS                 -> Action.IMPORT_SETTINGS
+        UserEntry.Action.SELECT_DIRECTORY                -> Action.SELECT_DIRECTORY
         UserEntry.Action.RESET_DATABASES                 -> Action.RESET_DATABASES
         UserEntry.Action.RESET_APS_RESULTS               -> Action.RESET_APS_RESULTS
         UserEntry.Action.CLEANUP_DATABASES               -> Action.CLEANUP_DATABASES
@@ -168,6 +169,7 @@ fun Action.toDb(): UserEntry.Action =
         Action.DELETE_FUTURE_TREATMENTS        -> UserEntry.Action.DELETE_FUTURE_TREATMENTS
         Action.EXPORT_SETTINGS                 -> UserEntry.Action.EXPORT_SETTINGS
         Action.IMPORT_SETTINGS                 -> UserEntry.Action.IMPORT_SETTINGS
+        Action.SELECT_DIRECTORY                -> UserEntry.Action.SELECT_DIRECTORY
         Action.RESET_DATABASES                 -> UserEntry.Action.RESET_DATABASES
         Action.RESET_APS_RESULTS               -> UserEntry.Action.RESET_APS_RESULTS
         Action.CLEANUP_DATABASES               -> UserEntry.Action.CLEANUP_DATABASES
