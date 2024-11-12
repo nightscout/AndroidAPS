@@ -150,8 +150,6 @@
     <string name="prefdecrypt_issue_wrong_algorithm">지원되지 않는 또는 명시되지 않은 암호화 알고리즘!</string>
     <!-- Custom Watchface -->
     <string name="wear_import_custom_watchface_title">사용자 지정 워치페이스 선택하기</string>
-    <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">폰을 다시시작하거나 시스템 설정에서 AAPS를 다시 시작하십시오 \n그렇지 않으면 Android APS에 로그 기록이 남지 않습니다 (알고리즘이 올바르게 작동하는지 확인하기 위해 로그가 중요합니다)!</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">파일 형식</string>
     <string name="metadata_label_created_at">생성 일자</string>
