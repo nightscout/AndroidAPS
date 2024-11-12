@@ -178,6 +178,7 @@
     <string name="extended_bolus_full">F %1$.2f E/t @%2$s %3$s/%4$s min</string>
     <string name="extended_bolus_medium">%1$.2f E/t %2$s/%3$s\'</string>
     <string name="nav_export">Eksporter innstillinger</string>
+    <string name="location_permission_not_granted">Lokasjonstillatelse er ikke gitt. Tillat i android-innstillinger.</string>
     <!--    Protection-->
     <string name="wrongpassword">Feil passord</string>
     <string name="wrongpin">Feil PIN-kode</string>
@@ -348,6 +349,7 @@
     <string name="delete_future_treatments">Slett behandlinger i fremtiden</string>
     <string name="uel_export_settings">EKSPORTER INNSTILLINGER</string>
     <string name="uel_import_settings">IMPORTER INNSTILLINGER</string>
+    <string name="uel_select_directory">VELG MAPPE</string>
     <string name="uel_reset_databases">TILBAKESTILL DATABASER</string>
     <string name="uel_reset_aps_results">TILBAKESTILL APS-RESULTATER</string>
     <string name="uel_cleanup_databases">OPPRYDDING I DATABASER</string>
