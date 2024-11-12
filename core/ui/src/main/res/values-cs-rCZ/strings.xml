@@ -349,6 +349,7 @@
     <string name="delete_future_treatments">Odstranit ošetření v budoucnu</string>
     <string name="uel_export_settings">EXPORTOVAT NASTAVENÍ</string>
     <string name="uel_import_settings">IMPORTOVAT NASTAVENÍ</string>
+    <string name="uel_select_directory">VYBERTE ADRESÁŘ</string>
     <string name="uel_reset_databases">RESETOVAT DATABÁZE</string>
     <string name="uel_reset_aps_results">RESETOVAT VÝSLEDKY APS</string>
     <string name="uel_cleanup_databases">VYČISTIT DATABÁZE</string>
