@@ -177,6 +177,7 @@
     <string name="extended_bolus_full">E %1$.2f U/h @%2$s %3$s/%4$s min</string>
     <string name="extended_bolus_medium">%1$.2f U/h %2$s/%3$s\'</string>
     <string name="nav_export">Exportar ajustes</string>
+    <string name="location_permission_not_granted">Permiso de ubicación no concedido. Permitir en la configuración de Android.</string>
     <!--    Protection-->
     <string name="wrongpassword">Contraseña incorrecta</string>
     <string name="wrongpin">Pin erróneo</string>
@@ -344,6 +345,7 @@
     <string name="delete_future_treatments">Eliminar tratamientos futuros</string>
     <string name="uel_export_settings">EXPORTAR AJUSTES</string>
     <string name="uel_import_settings">IMPORTAR AJUSTES</string>
+    <string name="uel_select_directory">SELECCIONAR DIRECTORIO</string>
     <string name="uel_reset_databases">RESTABLECER BASES DE DATOS</string>
     <string name="uel_reset_aps_results">RESTABLECER RESULTADOS DE APS</string>
     <string name="uel_cleanup_databases">LIMPIAR BASE DE DATOS</string>
