@@ -228,7 +228,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     }
 
     private fun addPreferencesIfEnabled(p: PluginBase, rootKey: String?, enabled: Boolean = true) {
-        if (preferences.simpleMode && !p.pluginDescription.preferencesVisibleInSimpleMode) return
+        if (preferences.simpleMode && !p.pluginDescription.preferencesVisibleInSimpleMode && !config.isDev()) return
         if (enabled && p.isEnabled() && p.preferencesId == PluginDescription.PREFERENCE_SCREEN)
             addPreferencesFromScreen(p, rootKey)
         if (enabled && p.isEnabled() && p.preferencesId > 0)

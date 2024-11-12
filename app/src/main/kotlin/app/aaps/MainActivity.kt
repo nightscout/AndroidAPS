@@ -67,6 +67,7 @@ import app.aaps.core.utils.isRunningRealPumpTest
 import app.aaps.databinding.ActivityMainBinding
 import app.aaps.plugins.configuration.activities.DaggerAppCompatActivityWithResult
 import app.aaps.plugins.configuration.activities.SingleFragmentActivity
+import app.aaps.plugins.configuration.maintenance.MaintenancePlugin
 import app.aaps.plugins.configuration.setupwizard.SetupWizardActivity
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import app.aaps.plugins.main.general.overview.notifications.NotificationWithAction
@@ -298,6 +299,18 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         passwordResetCheck(this)
         exportPasswordResetCheck(this)
 
+        // check if identification is set
+        if (config.isDev() && preferences.get(StringKey.MaintenanceIdentification).isBlank())
+            rxBus.send(EventNewNotification(
+                NotificationWithAction(this, Notification.IDENTIFICATION_NOT_SET, rh.gs(R.string.identification_not_set), Notification.INFO)
+                    .action(R.string.set, Runnable {
+                        startActivity(
+                            Intent(this@MainActivity, PreferencesActivity::class.java)
+                                .setAction("info.nightscout.androidaps.MainActivity")
+                                .putExtra(UiInteraction.PLUGIN_NAME, MaintenancePlugin::class.java.simpleName)
+                        )
+                    })
+            ))
         if (preferences.get(StringKey.ProtectionMasterPassword) == "")
             rxBus.send(
                 EventNewNotification(
