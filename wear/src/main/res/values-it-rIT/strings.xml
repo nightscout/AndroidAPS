@@ -156,6 +156,7 @@
     <string name="pref_simplify_ui_sum">Mostra solo tempo e BG</string>
     <string name="pref_vibrate_hourly">Vibra a ogni ora</string>
     <string name="pref_show_weeknumber">Mostra numero settimana</string>
+    <string name="pref_include_external">Includi viste esterne nel modello</string>
     <string name="custom_pref_show_seconds">Mostra secondi</string>
     <string name="digitalstyle_pref_your_style">Il tuo stile:</string>
     <string name="digitalstyle_style_none">nessuno stile</string>
