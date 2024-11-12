@@ -19,7 +19,7 @@ jobs:
       - run:
           name: Create avd
           command: |
-            echo "no" | /opt/android-sdk/cmdline-tools/latest/bin/avdmanager --verbose create avd -n citest -k "system-images;android-29;google_apis_playstore;x86" --force
+            echo "no" | /opt/android-sdk/cmdline-tools/latest/bin/avdmanager --verbose create avd -n citest -k "system-images;android-30;google_apis_playstore;x86" --force
 
       - run:
           name: Launch emulator
