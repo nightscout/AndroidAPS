@@ -69,6 +69,7 @@ import app.aaps.plugins.configuration.activities.DaggerAppCompatActivityWithResu
 import app.aaps.plugins.configuration.activities.SingleFragmentActivity
 import app.aaps.plugins.configuration.setupwizard.SetupWizardActivity
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
+import app.aaps.plugins.main.general.overview.notifications.NotificationWithAction
 import app.aaps.ui.activities.ProfileHelperActivity
 import app.aaps.ui.activities.StatsActivity
 import app.aaps.ui.activities.TreatmentsActivity
@@ -105,7 +106,6 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     @Inject lateinit var fileListProvider: FileListProvider
     @Inject lateinit var cryptoUtil: CryptoUtil
     @Inject lateinit var exportPasswordDataStore: ExportPasswordDataStore
-
 
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private var pluginPreferencesMenuItem: MenuItem? = null
@@ -299,7 +299,25 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         exportPasswordResetCheck(this)
 
         if (preferences.get(StringKey.ProtectionMasterPassword) == "")
-            rxBus.send(EventNewNotification(Notification(Notification.MASTER_PASSWORD_NOT_SET, rh.gs(app.aaps.core.ui.R.string.master_password_not_set), Notification.NORMAL)))
+            rxBus.send(
+                EventNewNotification(
+                    NotificationWithAction(this, Notification.MASTER_PASSWORD_NOT_SET, rh.gs(app.aaps.core.ui.R.string.master_password_not_set), Notification.NORMAL)
+                        .action(R.string.set, Runnable {
+                            startActivity(
+                                Intent(this@MainActivity, PreferencesActivity::class.java)
+                                    .setAction("info.nightscout.androidaps.MainActivity")
+                                    .putExtra(UiInteraction.PREFERENCE, UiInteraction.Preferences.PROTECTION)
+                            )
+                        })
+                )
+            )
+        if (preferences.getIfExists(StringKey.AapsDirectoryUri).isNullOrEmpty())
+            rxBus.send(
+                EventNewNotification(
+                    NotificationWithAction(this, Notification.AAPS_DIR_NOT_SELECTED, rh.gs(app.aaps.core.ui.R.string.aaps_directory_not_selected), Notification.IMPORTANCE_HIGH)
+                        .action(R.string.select, Runnable { accessTree.launch(null) })
+                )
+            )
     }
 
     private fun startWizard(): Boolean =
@@ -496,7 +514,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
      * Check for existing ExportPasswordReset file and
      * clear password stored in datastore if file exists
      */
-        private fun exportPasswordResetCheck(context: Context) {
+    private fun exportPasswordResetCheck(context: Context) {
         val fh = fileListProvider.ensureExtraDirExists()?.findFile("ExportPasswordReset")
         if (fh?.exists() == true) {
             exportPasswordDataStore.clearPasswordDataStore(context)

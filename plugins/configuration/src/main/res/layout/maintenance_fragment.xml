@@ -140,7 +140,7 @@
                         android:drawableTop="@drawable/ic_directory"
                         android:paddingStart="0dp"
                         android:paddingEnd="0dp"
-                        android:text="@string/select_aaps_directory"
+                        android:text="@string/aaps_directory"
                         android:textSize="11sp"
                         app:layout_column="0"
                         app:layout_columnWeight="1"

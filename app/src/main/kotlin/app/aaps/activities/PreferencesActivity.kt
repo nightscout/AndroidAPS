@@ -10,12 +10,14 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceScreen
 import app.aaps.R
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.utils.extensions.safeGetSerializableExtra
 import app.aaps.databinding.ActivityPreferencesBinding
 import app.aaps.plugins.configuration.activities.DaggerAppCompatActivityWithResult
 
 class PreferencesActivity : DaggerAppCompatActivityWithResult(), PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
 
     private var pluginName: String? = null
+    private var customPreference: UiInteraction.Preferences? = null
     private var myPreferenceFragment: MyPreferenceFragment? = null
     private var searchView: SearchView? = null
 
@@ -31,8 +33,10 @@ class PreferencesActivity : DaggerAppCompatActivityWithResult(), PreferenceFragm
         supportActionBar?.setDisplayShowHomeEnabled(true)
         myPreferenceFragment = MyPreferenceFragment()
         pluginName = intent.getStringExtra(UiInteraction.PLUGIN_NAME)
+        customPreference = intent?.safeGetSerializableExtra(UiInteraction.PREFERENCE, UiInteraction.Preferences::class.java)
         myPreferenceFragment?.arguments = Bundle().also {
             it.putString(UiInteraction.PLUGIN_NAME, pluginName)
+            it.putSerializable(UiInteraction.PREFERENCE, customPreference)
         }
         if (savedInstanceState == null)
             @Suppress("CommitTransaction")

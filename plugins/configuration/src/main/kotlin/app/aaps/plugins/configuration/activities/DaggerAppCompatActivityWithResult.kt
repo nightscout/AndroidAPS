@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventAAPSDirectorySelected
 import app.aaps.core.interfaces.rx.events.EventThemeSwitch
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
@@ -59,6 +60,7 @@ open class DaggerAppCompatActivityWithResult : DaggerAppCompatActivity() {
         uri?.let {
             contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
             preferences.put(StringKey.AapsDirectoryUri, uri.toString())
+            rxBus.send(EventAAPSDirectorySelected(uri.path ?: "UNKNOWN"))
         }
     }
 
@@ -85,7 +87,11 @@ open class DaggerAppCompatActivityWithResult : DaggerAppCompatActivity() {
                     }
 
                 Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION ->
+                if (!it.value || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    androidPermission.notifyForLocationPermissions(this)
+                    ToastUtils.errorToast(this, getString(app.aaps.core.ui.R.string.location_permission_not_granted))
+                }
                 Manifest.permission.ACCESS_BACKGROUND_LOCATION ->
                     if (!it.value || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                         androidPermission.notifyForLocationPermissions(this)
