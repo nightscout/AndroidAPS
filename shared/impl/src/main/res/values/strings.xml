@@ -19,7 +19,7 @@
     <string name="cwf_comment_status_ext">Status synthesis (from AAPSClient or AAPSClient2)</string>
     <string name="cwf_comment_loop_ext">Loop status and ago (from AAPSClient or AAPSClient2)</string>
     <string name="cwf_comment_direction_ext">Direction arrow (from AAPSClient or AAPSClient2)</string>
-    <string name="cwf_comment_timestamp_ext">Mintutes ago for last received BG (from AAPSClient or AAPSClient2)</string>
+    <string name="cwf_comment_timestamp_ext">Minutes ago for last received BG (from AAPSClient or AAPSClient2)</string>
     <string name="cwf_comment_sgv_ext">BG value (from AAPSClient or AAPSClient2)</string>
     <string name="cwf_comment_patient_name">Patient Name</string>
     <string name="cwf_comment_iob1">IOB label or IOB Sum if detailed</string>
