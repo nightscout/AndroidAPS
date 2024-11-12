@@ -30,4 +30,5 @@
     <string name="password_hint">Zadejte heslo</string>
     <string name="pin_hint">Zadejte PIN</string>
     <string name="master_password_not_set">Hlavní heslo není nastaveno</string>
+    <string name="aaps_directory_not_selected">Nebyl vybrán adresář AAPS</string>
 </resources>
