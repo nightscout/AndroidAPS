@@ -167,9 +167,6 @@
     <!-- Custom Watchface -->
     <string name="wear_import_custom_watchface_title">Select Custom Watchface</string>
 
-    <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">Please reboot your phone or restart AAPS from the System Settings \notherwise Android APS will not have logging (important to track and verify that the algorithms are working correctly)!</string>
-
     <!-- Maintenance -->
     <string name="metadata_label_format">File format</string>
     <string name="metadata_label_created_at">Created at</string>
@@ -182,6 +179,5 @@
     <string name="metadata_format_debug">New debug format (unencrypted)</string>
     <string name="metadata_format_other">Unknown export format</string>
     <string name="reset_aps_results">Reset APS results</string>
-    <string name="browse_for_file">Browse for file</string>
 
 </resources>
