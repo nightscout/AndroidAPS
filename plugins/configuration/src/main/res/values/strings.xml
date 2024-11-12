@@ -179,6 +179,5 @@
     <string name="metadata_format_debug">New debug format (unencrypted)</string>
     <string name="metadata_format_other">Unknown export format</string>
     <string name="reset_aps_results">Reset APS results</string>
-    <string name="browse_for_file">Browse for file</string>
 
 </resources>
