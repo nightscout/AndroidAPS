@@ -19,6 +19,7 @@
     <string name="permission">Autorizzazione</string>
     <string name="need_system_window_permission">L\'applicazione richiede l\'autorizzazione \"finestra di sistema\" per le notifiche</string>
     <string name="need_location_permission">L\'applicazione richiede l\'accesso alla posizione per la scansione bluetooth e l\'identificazione WiFi</string>
+    <string name="need_background_location_permission">L\'applicazione necessita dei permessi di localizzazione in background per le automazioni</string>
     <string name="need_storage_permission">L\'applicazione richiede l\'accesso alla memoria per memorizzare i file di log ed esportare le impostazioni</string>
     <string name="askforpermission">Chiedi l\'autorizzazione</string>
     <string name="need_whitelisting">%1$s necessita della whitelist per l\'ottimizzazione della batteria per avere prestazioni adeguate</string>
@@ -93,6 +94,8 @@
     <string name="check_preferences_import_btn">Importa</string>
     <string name="check_preferences_import_anyway_btn">Importa comunque (PERICOLOSO!)</string>
     <string name="import_setting">Importa impostazioni</string>
+    <string name="aaps_directory">Directory AAPS</string>
+    <string name="select_aaps_directory">Selezionare la directory AAPS per memorizzare esportazioni, configurazioni ecc.</string>
     <string name="check_preferences_before_import">Controlla le preferenze prima dell\'importazione:</string>
     <string name="check_preferences_cannot_import">Le preferenze non possono essere importate!</string>
     <string name="check_preferences_dangerous_import">Le preferenze non dovrebbero essere importate!</string>
@@ -169,4 +172,5 @@
     <string name="metadata_format_debug">Nuovo formato di debug (non crittografato)</string>
     <string name="metadata_format_other">Formato esportazione sconosciuto</string>
     <string name="reset_aps_results">Resetta i risultati di APS</string>
+    <string name="browse_for_file">Sfoglia files</string>
 </resources>
