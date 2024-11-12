@@ -104,7 +104,8 @@ class UploadChunk @Inject constructor(
             }
         persistenceLayer.getCarbsFromTimeToTimeExpanded(start, end, true)
             .forEach { carb ->
-                result.add(WizardElement(carb, dateUtil))
+                if (carb.amount > 0)
+                    result.add(WizardElement(carb, dateUtil))
             }
         return result
     }
