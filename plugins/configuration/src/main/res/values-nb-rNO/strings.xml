@@ -19,6 +19,7 @@
     <string name="permission">Tillatelse</string>
     <string name="need_system_window_permission">App trenger tillatelse til å bruke varslinger for å vise meldinger</string>
     <string name="need_location_permission">App trenger tilgang til posisjon for å søke etter Bluetooth og Wifi-enheter</string>
+    <string name="need_background_location_permission">Appen trenger bakgrunnsposisjonstillatelser for automasjoner</string>
     <string name="need_storage_permission">App trenger tilgang til lagring for lagre loggfiler og eksportere innstillinger</string>
     <string name="askforpermission">Spør om tillatelse</string>
     <string name="need_whitelisting">%1$s trenger tillatelse til å omgå batterisparefunksjonene slik at appen fungerer tilfredsstillende</string>
@@ -93,6 +94,8 @@
     <string name="check_preferences_import_btn">Importer</string>
     <string name="check_preferences_import_anyway_btn">Importer uansett (FARLIG!)</string>
     <string name="import_setting">Importer innstillinger</string>
+    <string name="aaps_directory">AAPS-mappe</string>
+    <string name="select_aaps_directory">Velg AAPS-mappe for lagring av eksport av innstillinger, konfigurasjoner etc.</string>
     <string name="check_preferences_before_import">Vennligst sjekk innstillingene før du importerer:</string>
     <string name="check_preferences_cannot_import">Innstillingene kan ikke importeres!</string>
     <string name="check_preferences_dangerous_import">Innstillingene bør ikke importeres!</string>
