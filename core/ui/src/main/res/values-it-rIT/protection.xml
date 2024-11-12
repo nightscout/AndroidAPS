@@ -30,4 +30,5 @@
     <string name="password_hint">Inserisci qui la password</string>
     <string name="pin_hint">Inserisci PIN</string>
     <string name="master_password_not_set">Password principale non impostata</string>
+    <string name="aaps_directory_not_selected">Directory AAPS non selezionata</string>
 </resources>
