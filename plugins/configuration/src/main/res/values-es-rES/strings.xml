@@ -19,6 +19,7 @@
     <string name="permission">Permiso</string>
     <string name="need_system_window_permission">La aplicación necesita permisos del sistema para poder mostrar notificaciones sobre otras aplicaciones</string>
     <string name="need_location_permission">La aplicación necesita permiso de ubicación para poder buscar dispositivos Bluetooth y redes WiFi</string>
+    <string name="need_background_location_permission">La aplicación necesita el permiso de ubicación en segundo plano para las automatizaciones</string>
     <string name="need_storage_permission">La aplicación necesita permiso de almacenamiento para poder almacenar los archivos de registro y exportar las configuraciones</string>
     <string name="askforpermission">Pedir permiso</string>
     <string name="need_whitelisting">%1$s necesita añadir la optimización de la batería a la lista blanca, para obtener un rendimiento adecuado</string>
@@ -91,6 +92,8 @@
     <string name="check_preferences_import_btn">Importar</string>
     <string name="check_preferences_import_anyway_btn">Importar de todos modos (¡PELIGROSO!)</string>
     <string name="import_setting">Importar ajustes</string>
+    <string name="aaps_directory">Directorio AAPS</string>
+    <string name="select_aaps_directory">Selecciona el directorio de AAPS para almacenar exportaciones, configuraciones, etc.</string>
     <string name="check_preferences_before_import">Por favor, comprueba los ajustes antes de importar:</string>
     <string name="check_preferences_cannot_import">¡Las preferencias no se pueden importar!</string>
     <string name="check_preferences_dangerous_import">¡Las preferencias no se deben importar!</string>
@@ -166,4 +169,5 @@
     <string name="metadata_format_debug">Nuevo formato de depuración (sin cifrar)</string>
     <string name="metadata_format_other">Formato de exportación desconocido</string>
     <string name="reset_aps_results">Restablecer resultados de APS</string>
+    <string name="browse_for_file">Examinar archivos</string>
 </resources>
