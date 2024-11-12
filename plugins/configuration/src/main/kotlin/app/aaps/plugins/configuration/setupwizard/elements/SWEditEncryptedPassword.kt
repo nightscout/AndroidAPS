@@ -27,7 +27,7 @@ class SWEditEncryptedPassword(injector: HasAndroidInjector, private val cryptoUt
 
     override fun generateDialog(layout: LinearLayout) {
         val context = layout.context
-        val isPasswordSet = preferences.getIfExists(StringKey.ProtectionMasterPassword).isNullOrEmpty()
+        val isPasswordSet = preferences.getIfExists(StringKey.ProtectionMasterPassword).isNullOrEmpty().not()
 
         button = Button(context)
         button?.setText(app.aaps.core.ui.R.string.unlock_settings)
