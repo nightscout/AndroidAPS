@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -130,14 +131,16 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
                 .show(supportFragmentManager, "history_date_picker")
         }
 
-        val dm = DisplayMetrics()
-        @Suppress("DEPRECATION")
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R)
-            display?.getRealMetrics(dm)
-        else
-            windowManager.defaultDisplay.getMetrics(dm)
+        val wm = windowManager.currentWindowMetrics
 
-        axisWidth = if (dm.densityDpi <= 120) 3 else if (dm.densityDpi <= 160) 10 else if (dm.densityDpi <= 320) 35 else if (dm.densityDpi <= 420) 50 else if (dm.densityDpi <= 560) 70 else 80
+        axisWidth = when {
+            resources.displayMetrics.density <= 120 -> 3
+            resources.displayMetrics.density <= 160 -> 10
+            resources.displayMetrics.density <= 320 -> 35
+            resources.displayMetrics.density <= 420 -> 50
+            resources.displayMetrics.density <= 560 -> 70
+            else              -> 80
+        }
         binding.bgGraph.gridLabelRenderer?.gridColor = rh.gac(this, app.aaps.core.ui.R.attr.graphGrid)
         binding.bgGraph.gridLabelRenderer?.reloadStyles()
         binding.bgGraph.gridLabelRenderer?.labelVerticalWidth = axisWidth

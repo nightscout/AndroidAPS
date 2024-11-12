@@ -9,7 +9,6 @@ import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.AnimationDrawable
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
@@ -19,6 +18,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnLongClickListener
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.view.WindowMetrics
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -159,7 +160,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     private var smallWidth = false
     private var smallHeight = false
-    private lateinit var dm: DisplayMetrics
     private var axisWidth: Int = 0
     private lateinit var refreshLoop: Runnable
     private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
@@ -175,24 +175,21 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     // onDestroyView.
     private val binding get() = _binding!!
 
+    //@SuppressLint("NewApi")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         OverviewFragmentBinding.inflate(inflater, container, false).also {
             _binding = it
-            //check screen width
-            dm = DisplayMetrics()
-            @Suppress("DEPRECATION")
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-                activity?.display?.getRealMetrics(dm)
-            else
-                activity?.windowManager?.defaultDisplay?.getMetrics(dm)
         }.root
 
+    //@SuppressLint("NewApi")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         // pre-process landscape mode
-        val screenWidth = dm.widthPixels
-        val screenHeight = dm.heightPixels
+        //check screen width
+        val wm = requireActivity().windowManager.currentWindowMetrics
+        val screenWidth = wm.bounds.width()
+        val screenHeight = wm.bounds.height()
         smallWidth = screenWidth <= Constants.SMALL_WIDTH
         smallHeight = screenHeight <= Constants.SMALL_HEIGHT
         val landscape = screenHeight < screenWidth
@@ -202,7 +199,14 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
         binding.notifications.setHasFixedSize(false)
         binding.notifications.layoutManager = LinearLayoutManager(view.context)
-        axisWidth = if (dm.densityDpi <= 120) 3 else if (dm.densityDpi <= 160) 10 else if (dm.densityDpi <= 320) 35 else if (dm.densityDpi <= 420) 50 else if (dm.densityDpi <= 560) 70 else 80
+        axisWidth = when {
+            resources.displayMetrics.density <= 120 -> 3
+            resources.displayMetrics.density <= 160 -> 10
+            resources.displayMetrics.density <= 320 -> 35
+            resources.displayMetrics.density <= 420 -> 50
+            resources.displayMetrics.density <= 560 -> 70
+            else              -> 80
+        }
         binding.graphsLayout.bgGraph.gridLabelRenderer?.gridColor = rh.gac(context, app.aaps.core.ui.R.attr.graphGrid)
         binding.graphsLayout.bgGraph.gridLabelRenderer?.reloadStyles()
         binding.graphsLayout.bgGraph.gridLabelRenderer?.labelVerticalWidth = axisWidth
@@ -663,11 +667,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val closedLoopEnabled = constraintChecker.isClosedLoopAllowed()
 
         fun apsModeSetA11yLabel(stringRes: Int) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                binding.infoLayout.apsMode.stateDescription = rh.gs(stringRes)
-            } else {
-                binding.infoLayout.apsMode.contentDescription = rh.gs(app.aaps.core.ui.R.string.aps_mode_title) + " " + rh.gs(stringRes)
-            }
+            binding.infoLayout.apsMode.stateDescription = rh.gs(stringRes)
         }
 
         runOnUiThread {

@@ -192,8 +192,8 @@ class SWDefinition @Inject constructor(
             .add(SWBreak(injector))
             .add(SWButton(injector)
                      .text(R.string.askforpermission)
-                     .visibility { androidPermission.permissionNotGranted(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) }
-                     .action { androidPermission.askForPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) })
+                     .visibility { androidPermission.permissionNotGranted(activity, Manifest.permission.READ_EXTERNAL_STORAGE) }
+                     .action { androidPermission.askForPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) })
             .add(SWBreak(injector))
             .add(SWInfoText(injector).label(rh.gs(R.string.select_aaps_directory)))
             .add(SWBreak(injector))
@@ -204,15 +204,15 @@ class SWDefinition @Inject constructor(
             .add(SWBreak(injector))
             .add(SWEventListener(injector, EventAAPSDirectorySelected ::class.java).label(app.aaps.core.ui.R.string.settings).initialStatus(preferences.get(StringKey.AapsDirectoryUri)))
             .add(SWBreak(injector))
-            .visibility { androidPermission.permissionNotGranted(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) || preferences.getIfExists(StringKey.AapsDirectoryUri) == null }
-            .validator { !androidPermission.permissionNotGranted(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) && preferences.getIfExists(StringKey.AapsDirectoryUri) != null}
+            .visibility { androidPermission.permissionNotGranted(activity, Manifest.permission.READ_EXTERNAL_STORAGE) || preferences.getIfExists(StringKey.AapsDirectoryUri) == null }
+            .validator { !androidPermission.permissionNotGranted(activity, Manifest.permission.READ_EXTERNAL_STORAGE) && preferences.getIfExists(StringKey.AapsDirectoryUri) != null}
 
     private val screenImport
         get() = SWScreen(injector, R.string.import_setting)
             .add(SWInfoText(injector).label(R.string.storedsettingsfound))
             .add(SWBreak(injector))
             .add(SWButton(injector).text(R.string.import_setting).action { importExportPrefs.importSharedPreferences(activity) })
-            .visibility { importExportPrefs.prefsFileExists() && !androidPermission.permissionNotGranted(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) }
+            .visibility { importExportPrefs.prefsFileExists() && !androidPermission.permissionNotGranted(activity, Manifest.permission.READ_EXTERNAL_STORAGE) }
 
     private val screenNsClient
         get() = SWScreen(injector, R.string.configbuilder_sync)

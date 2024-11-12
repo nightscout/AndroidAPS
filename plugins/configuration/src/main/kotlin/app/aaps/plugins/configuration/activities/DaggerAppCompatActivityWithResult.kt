@@ -80,12 +80,6 @@ open class DaggerAppCompatActivityWithResult : DaggerAppCompatActivity() {
         permissions.entries.forEach {
             aapsLogger.info(LTag.CORE, "Permission ${it.key} ${it.value}")
             when (it.key) {
-                Manifest.permission.WRITE_EXTERNAL_STORAGE     ->
-                    if (it.value && ActivityCompat.checkSelfPermission(this, it.key) == PackageManager.PERMISSION_GRANTED) {
-                        //show dialog after permission is granted
-                        OKDialog.show(this, "", rh.gs(R.string.alert_dialog_storage_permission_text))
-                    }
-
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION ->
                 if (!it.value || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

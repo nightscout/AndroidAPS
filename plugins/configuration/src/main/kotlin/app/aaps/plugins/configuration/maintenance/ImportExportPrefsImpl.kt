@@ -114,11 +114,11 @@ class ImportExportPrefsImpl @Inject constructor(
 
     override fun verifyStoragePermissions(fragment: Fragment, onGranted: Runnable) {
         fragment.context?.let { ctx ->
-            val permission = ContextCompat.checkSelfPermission(ctx, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            val permission = ContextCompat.checkSelfPermission(ctx, Manifest.permission.READ_EXTERNAL_STORAGE)
             if (permission != PackageManager.PERMISSION_GRANTED) {
                 // We don't have permission so prompt the user
                 fragment.activity?.let {
-                    androidPermission.askForPermission(it, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                    androidPermission.askForPermission(it, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE))
                 }
             } else onGranted.run()
         }
