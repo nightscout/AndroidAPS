@@ -114,7 +114,6 @@
     <string name="bg_label">血糖</string>
     <string name="calibration">校正</string>
     <string name="alarminxmin">在 %1$d 分鐘內運行警報</string>
-    <string name="treatmentdeliveryerror">注射報告錯誤。請手動檢查實際送達量</string>
     <string name="bolus_reminder">注射提醒</string>
     <string name="duration_label">持續時間</string>
     <string name="shortgramm">g</string>
