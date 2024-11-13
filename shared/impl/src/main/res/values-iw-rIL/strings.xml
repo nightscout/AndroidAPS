@@ -7,6 +7,7 @@
     <string name="cwf_comment_freetext2">טקסט חופשי 2</string>
     <string name="cwf_comment_freetext3">טקסט חופשי 3</string>
     <string name="cwf_comment_freetext4">טקסט חופשי 4</string>
+    <string name="cwf_comment_timestamp_ext">דקות מאז קבלת נתוני סוכר (מ-AAPSClient או AAPSClient2)</string>
     <string name="cwf_comment_iob1">תווית האינסולין הפעיל או סכום האינסולין הפעיל אם מפורט</string>
     <string name="cwf_comment_iob2">סכום אינסולין פעיל או (בולוס פעיל|באזלי פעיל) אם מפורט</string>
     <string name="cwf_comment_cob1">תווית הפחמימות הפעילות</string>
