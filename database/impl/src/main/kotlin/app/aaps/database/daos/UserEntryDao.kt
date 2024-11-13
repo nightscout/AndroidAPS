@@ -17,10 +17,10 @@ interface UserEntryDao {
     @Query("DELETE FROM $TABLE_USER_ENTRY WHERE timestamp < :than")
     fun deleteOlderThan(than: Long): Int
 
-    @Query("SELECT * FROM $TABLE_USER_ENTRY WHERE timestamp >= :timestamp ORDER BY id DESC")
+    @Query("SELECT * FROM $TABLE_USER_ENTRY WHERE timestamp >= :timestamp ORDER BY timestamp DESC")
     fun getUserEntryDataFromTime(timestamp: Long): Single<List<UserEntry>>
 
-    @Query("SELECT * FROM $TABLE_USER_ENTRY WHERE unlikely(timestamp >= :timestamp) AND likely(source != :excludeSource) ORDER BY id DESC")
+    @Query("SELECT * FROM $TABLE_USER_ENTRY WHERE unlikely(timestamp >= :timestamp) AND likely(source != :excludeSource) ORDER BY timestamp DESC")
     fun getUserEntryFilteredDataFromTime(excludeSource: Sources, timestamp: Long): Single<List<UserEntry>>
 
 }
