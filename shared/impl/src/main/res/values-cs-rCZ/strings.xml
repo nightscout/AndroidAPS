@@ -19,7 +19,7 @@
     <string name="cwf_comment_status_ext">Syntéza stavu (z AAPSClient nebo AAPSClient2)</string>
     <string name="cwf_comment_loop_ext">Stav smyčky a čas posledního spuštění (z AAPSClient nebo AAPSClient2)</string>
     <string name="cwf_comment_direction_ext">Trendová šipka (z AAPSClient nebo AAPSClient2)</string>
-    <string name="cwf_comment_timestamp_ext">Poslední přijatá hodnota glykémie (z AAPSClient nebo AAPSClient2)</string>
+    <string name="cwf_comment_timestamp_ext">Stáří poslední přijaté hodnoty glykémie [min] (z AAPSClient nebo AAPSClient2)</string>
     <string name="cwf_comment_sgv_ext">Hodonota glykémie (z AAPSClient nebo AAPSClient2)</string>
     <string name="cwf_comment_patient_name">Jméno pacienta</string>
     <string name="cwf_comment_iob1">Štítek IOB nebo suma IOB při zapnutých detailech</string>
