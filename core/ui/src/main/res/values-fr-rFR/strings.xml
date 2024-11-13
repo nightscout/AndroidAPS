@@ -113,7 +113,6 @@
     <string name="bg_label">Gly</string>
     <string name="calibration">Étalonnage</string>
     <string name="alarminxmin">Alerter dans %1$d min</string>
-    <string name="treatmentdeliveryerror">Erreur lors du Bolus. Vérifiez manuellement la quantité réellement injectée</string>
     <string name="bolus_reminder">Rappel bolus</string>
     <string name="duration_label">Durée</string>
     <string name="shortgramm">g</string>
