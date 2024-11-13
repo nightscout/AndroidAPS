@@ -114,7 +114,6 @@
     <string name="bg_label">Gly</string>
     <string name="calibration">Kalibrace</string>
     <string name="alarminxmin">Spustit alarm za %1$d min</string>
-    <string name="treatmentdeliveryerror">Podání bolusu skončilo chybou. Ručně zkontrolujte, kolik inzulinu se skutečně vydalo.</string>
     <string name="bolus_reminder">Připomenutí bolusu</string>
     <string name="duration_label">Trvání</string>
     <string name="shortgramm">g</string>
