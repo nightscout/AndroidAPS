@@ -113,7 +113,6 @@
     <string name="bg_label">Gl</string>
     <string name="calibration">Calibrare</string>
     <string name="alarminxmin">Rulează alarma în %1$d min</string>
-    <string name="treatmentdeliveryerror">Bolus a raportat o eroare. Verifică manual cantitatea livrată</string>
     <string name="bolus_reminder">Memento bolus</string>
     <string name="duration_label">Durată</string>
     <string name="shortgramm">g</string>
