@@ -113,7 +113,6 @@
     <string name="bg_label">혈당</string>
     <string name="calibration">보정</string>
     <string name="alarminxmin">%1$d분 뒤 알람 울림</string>
-    <string name="treatmentdeliveryerror">Bolus가 오류를 보고했습니다. 수동으로 실제 투여된 양을 확인합니다.</string>
     <string name="bolus_reminder">BOLUS 알림</string>
     <string name="duration_label">기간</string>
     <string name="shortgramm">g</string>
