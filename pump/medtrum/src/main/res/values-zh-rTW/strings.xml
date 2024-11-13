@@ -129,4 +129,5 @@
     <string name="getting_bolus_status">獲取胰島素劑量狀態</string>
     <string name="getting_temp_basal_status">獲取臨時基礎率狀態</string>
     <string name="setting_pump_settings">設定使用者選項</string>
+    <!-- bolus-->
 </resources>
