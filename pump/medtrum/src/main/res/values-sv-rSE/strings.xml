@@ -111,4 +111,5 @@
     <string name="getting_bolus_status">Hämtar bolus-status</string>
     <string name="getting_temp_basal_status">Hämtar status för tillfällig basal</string>
     <string name="setting_pump_settings">Ställer in användaralternativ</string>
+    <!-- bolus-->
 </resources>
