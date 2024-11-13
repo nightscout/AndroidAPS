@@ -397,10 +397,9 @@ import kotlin.math.abs
         result.success = connectionOK && abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep
         result.bolusDelivered = t.insulin
         if (!result.success) {
-            // Note: There are no error codes
-            result.comment = "failed"
+            result.comment(medtrumPump.bolusErrorReason ?: rh.gs(R.string.bolus_error_reason_pump_error))
         } else {
-            result.comment = "ok"
+            result.comment(app.aaps.core.ui.R.string.ok)
         }
         aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Success: ${result.success} Asked: ${detailedBolusInfo.insulin} Delivered: ${result.bolusDelivered}")
         return result
