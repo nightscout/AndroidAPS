@@ -19,6 +19,7 @@
     <string name="permission">Autorizzazione</string>
     <string name="need_system_window_permission">L\'applicazione richiede l\'autorizzazione \"finestra di sistema\" per le notifiche</string>
     <string name="need_location_permission">L\'applicazione richiede l\'accesso alla posizione per la scansione bluetooth e l\'identificazione WiFi</string>
+    <string name="need_background_location_permission">L\'applicazione necessita dei permessi di localizzazione in background per le automazioni</string>
     <string name="need_storage_permission">L\'applicazione richiede l\'accesso alla memoria per memorizzare i file di log ed esportare le impostazioni</string>
     <string name="askforpermission">Chiedi l\'autorizzazione</string>
     <string name="need_whitelisting">%1$s necessita della whitelist per l\'ottimizzazione della batteria per avere prestazioni adeguate</string>
@@ -45,6 +46,8 @@
     <string name="readstatus">Lettura stato</string>
     <string name="data_choices">Scelta dei dati</string>
     <string name="fabric_upload">Invio a fabric.io</string>
+    <string name="unattended_settings_export">Esportazione Impostazioni Non presidiata</string>
+    <string name="unattended_settings_export_summary">Abilitando questa opzione memorizzerai in modo sicuro la tua password sul tuo telefono</string>
     <string name="allow_automated_crash_reporting">Consenti la segnalazione automatica degli errori e l\'invio dei dati d\'uso delle funzioni dell\'app agli sviluppatori tramite il servizio fabric.io.</string>
     <string name="summary_email_for_crash_report">Questa identificazione verrà allegata ai rapporti sugli arresti anomali in modo che possiamo contattarti in casi urgenti. È facoltativo.</string>
     <string name="identification">Identificazione (email, nick Discord o FB, etc)</string>
@@ -91,6 +94,8 @@
     <string name="check_preferences_import_btn">Importa</string>
     <string name="check_preferences_import_anyway_btn">Importa comunque (PERICOLOSO!)</string>
     <string name="import_setting">Importa impostazioni</string>
+    <string name="aaps_directory">Directory AAPS</string>
+    <string name="select_aaps_directory">Selezionare la directory AAPS per memorizzare esportazioni, configurazioni ecc.</string>
     <string name="check_preferences_before_import">Controlla le preferenze prima dell\'importazione:</string>
     <string name="check_preferences_cannot_import">Le preferenze non possono essere importate!</string>
     <string name="check_preferences_dangerous_import">Le preferenze non dovrebbero essere importate!</string>
@@ -101,6 +106,7 @@
     <string name="different_password_used">Questo file è stato esportato e crittografato con una password master differente. Fornire la password master precedente per decrittare il file.</string>
     <string name="master_password_will_be_replaced">Come risultato dell\'importazione riuscita, la password master corrente VERRÀ SOSTITUITA con la password master precedente contenuta nel file importato!</string>
     <string name="exported">Preferenze esportate</string>
+    <string name="exported_failed">Esportazione delle preferenze fallita!</string>
     <string name="filenotfound">File non trovato</string>
     <string name="goto_main_try_again">Torna alla schermata principale e riprova.</string>
     <string name="restartingapp">Uscita dall\'applicazione per applicare le impostazioni.</string>
@@ -152,8 +158,6 @@
     <string name="prefdecrypt_issue_wrong_algorithm">Algoritmo di crittografia non supportato o non specificato!</string>
     <!-- Custom Watchface -->
     <string name="wear_import_custom_watchface_title">Seleziona watchface personalizzata</string>
-    <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">Riavvia il tuo telefono oppure fai ripartire AndroidAPS dalle impostazioni di sistema \naltrimenti Android APS non farà il log (è importante monitorare e verificare che gli algoritmi stiano funzionando correttamente)!</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">Formato file</string>
     <string name="metadata_label_created_at">Creato:</string>

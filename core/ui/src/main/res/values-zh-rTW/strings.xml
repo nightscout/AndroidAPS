@@ -178,6 +178,7 @@
     <string name="extended_bolus_full">E %1$.2f U/h @%2$s %3$s/%4$s 分鐘</string>
     <string name="extended_bolus_medium">%1$.2f U/h %2$s/%3$s 分</string>
     <string name="nav_export">匯出設定</string>
+    <string name="location_permission_not_granted">位置權限未獲授權。請在 Android 設定中允許。</string>
     <!--    Protection-->
     <string name="wrongpassword">密碼錯誤</string>
     <string name="wrongpin">PIN 碼錯誤</string>

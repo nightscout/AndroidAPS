@@ -60,6 +60,7 @@
     <string name="pref_show_week_number">Mostra numeri della settimana</string>
     <string name="pref_show_date">Mostra la data</string>
     <string name="default_custom_watchface_comment">Watchface predefinita, puoi fare click sul tasto ESPORTA WATCHFACE per generare un template</string>
+    <string name="default_custom_watchface_external_comment">La watchface predefinita include le viste esterne per i follower, è possibile fare clic sul pulsante ESPORTA WATCHFACE per generare un modello</string>
     <string name="wear_default_watchface">Watchface predefinita</string>
     <string name="wear_more_watchfaces">Più quadranti</string>
 </resources>

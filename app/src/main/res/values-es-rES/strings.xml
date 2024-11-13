@@ -50,4 +50,6 @@
     <string name="sort_label">Ordenar</string>
     <string name="search">Buscar</string>
     <string name="simple_mode">Modo simple</string>
+    <string name="select">Seleccionar</string>
+    <string name="set">Establecer</string>
 </resources>

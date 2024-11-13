@@ -89,6 +89,7 @@
     <string name="removerecord">Odstrániť záznam</string>
     <string name="loopisdisabled">Uzavretý okruh je deaktivovaný</string>
     <string name="alarm">Alarm</string>
+    <string name="exportsettings">Export nastavení</string>
     <string name="disableloop">Deaktivovať uzavretý okruh</string>
     <string name="enableloop">Aktivovať uzavretý okruh</string>
     <string name="resumeloop">Pokračovať v uzavretom okruhu</string>
@@ -207,10 +208,12 @@
     <string name="careportal_bgcheck">Kontrola glykémie</string>
     <string name="careportal_mbg">Ručné meranie, alebo kalibrácia</string>
     <string name="careportal_announcement">Oznámenie</string>
+    <string name="careportal_settings_export">Export nastavení</string>
     <string name="careportal_note">Poznámka</string>
     <string name="careportal_question">Otázka</string>
     <string name="careportal_exercise">Pohyb</string>
     <string name="careportal_announcement_message">Oznámenie: %1$s</string>
+    <string name="careportal_settings_export_message">Export nastavení: %1$s</string>
     <string name="careportal_note_message">Poznámka : %1$s</string>
     <string name="careportal_question_message">Otázka: %1$s</string>
     <string name="careportal_exercise_message">Cvičenie : %1$s</string>
@@ -243,6 +246,7 @@
     <string name="activity">Aktivita</string>
     <string name="wear">Wear</string>
     <string name="automation">Automatizácia</string>
+    <string name="settingsexport">Export nastavení</string>
     <string name="custom">Voliteľný</string>
     <string name="loop">Uzavretý okruh</string>
     <string name="ns">NS</string>
@@ -507,7 +511,18 @@
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Budete vyzvaný na zadanie hlavného hesla, ktoré bude použité na dešifrovanie importovaných nastavení.</string>
     <!-- <unattended_export> -->
+    <string name="export_ok">OK</string>
+    <string name="export_warning">Varovanie</string>
+    <string name="export_expired">Expirované</string>
+    <string name="export_disabled">Vypnuté</string>
+    <string name="export_failed">Chyba</string>
+    <string name="export_alert">VÝSTRAHA</string>
     <!-- <unattended_export result messages> -->
+    <string name="export_result_message_exported">Nastavenia exportované</string>
+    <string name="export_result_message_failed">Nastavenia NIE SÚ správne exportované!</string>
+    <string name="export_result_message_about_to_expire">Nastavenia exportované: heslo čoskoro vyprší. Exportujte ručne a (znovu) zadajte heslo.</string>
+    <string name="export_result_message_expired">Export nastavení zrušený: heslo vypršalo. Exportujte ručne a (znovu) zadajte heslo!</string>
+    <string name="export_result_message_disabled">Varovanie (automatika): Nie je povolený export nastavení!</string>
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">zníženie %1$s o %2$s</string>
     <string name="a11y_plus_button_description">zvýšenie %1$s o %2$s</string>

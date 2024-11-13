@@ -178,6 +178,7 @@
     <string name="extended_bolus_full">E %1$.2f U/h @%2$s %3$s/%4$s min</string>
     <string name="extended_bolus_medium">%1$.2f U/h %2$s/%3$s\'</string>
     <string name="nav_export">Exportovat nastavení</string>
+    <string name="location_permission_not_granted">Oprávnění k přístupu k poloze zařízení nebylo uděleno. Povolte v nastavení systému Android.</string>
     <!--    Protection-->
     <string name="wrongpassword">Chybné heslo</string>
     <string name="wrongpin">Nesprávný PIN</string>
@@ -348,6 +349,7 @@
     <string name="delete_future_treatments">Odstranit ošetření v budoucnu</string>
     <string name="uel_export_settings">EXPORTOVAT NASTAVENÍ</string>
     <string name="uel_import_settings">IMPORTOVAT NASTAVENÍ</string>
+    <string name="uel_select_directory">VYBERTE ADRESÁŘ</string>
     <string name="uel_reset_databases">RESETOVAT DATABÁZE</string>
     <string name="uel_reset_aps_results">RESETOVAT VÝSLEDKY APS</string>
     <string name="uel_cleanup_databases">VYČISTIT DATABÁZE</string>

@@ -6,6 +6,8 @@
     <string name="automation_missing_task_name">Introduzca un nombre de tarea.</string>
     <string name="automation_missing_trigger">Por favor, especifique al menos un iniciador.</string>
     <string name="automation_missing_action">Por favor, especifique al menos una acción.</string>
+    <string name="exportsettings_message">Exportación de configuraciones: %1$s</string>
+    <string name="export_settings_short">Texto en tratamientos:</string>
     <string name="alarm_message">Alarma: %1$s</string>
     <string name="alarm_short">Alarma:</string>
     <string name="message_short">Msj:</string>
@@ -91,6 +93,8 @@
     <string name="triggerSensorAgeDesc">Edad del sensor %1$s %2$.1f hora</string>
     <string name="triggerCannulaAgeLabel">Edad de la cánula</string>
     <string name="triggerCannulaAgeDesc">Edad de la cánula %1$s %2$.1f hora</string>
+    <string name="triggerPodChangeLabel">Activación del POD</string>
+    <string name="triggerPodChangeDesc">POD activado</string>
     <string name="triggerInsulinAgeLabel">Edad de la insulina</string>
     <string name="triggerInsulinAgeDesc">Edad de la insulina %1$s %2$.1f hour</string>
     <string name="triggerPumpBatteryAgeLabel">Edad de la batería de la bomba</string>

@@ -45,6 +45,8 @@
     <string name="readstatus">Načítať stav</string>
     <string name="data_choices">Možnosti dát</string>
     <string name="fabric_upload">Odosielanie do Fabric</string>
+    <string name="unattended_settings_export">Automatický export nastavení</string>
+    <string name="unattended_settings_export_summary">Povolenie tejto voľby bezpečne uloží vaše heslo do telefónu</string>
     <string name="allow_automated_crash_reporting">Automatické odosielanie chýb aplikácie a štatistiky používania vývojárom pomocou služby fabric.io.</string>
     <string name="summary_email_for_crash_report">Táto identifikácia bude priložená ku správam o zlyhaniach, aby sme Vás mohli v naliehavých prípadoch kontaktovať. Je to voliteľné.</string>
     <string name="identification">Identifikácia (E-mail, prezývka FB, alebo Discord atď.)</string>
@@ -101,6 +103,7 @@
     <string name="different_password_used">Tento súbor bol exportovaný a zašifrovaný iným hlavným heslom. Pre dešifrovanie súboru použite staré hlavné heslo.</string>
     <string name="master_password_will_be_replaced">V dôsledku úspešného importu bude aktuálne hlavné heslo NAHRADENÉ týmto starým hlavným heslom!</string>
     <string name="exported">Nastavenie exportované</string>
+    <string name="exported_failed">Export nastavení se zlyhal!</string>
     <string name="filenotfound">Súbor nenájdený</string>
     <string name="goto_main_try_again">Prosím, vráťte se späť na hlavnú obrazovku a skúste to znovu.</string>
     <string name="restartingapp">Zatváram aplikáciu, aby sa aplikovali nové nastavenia.</string>
@@ -152,8 +155,6 @@
     <string name="prefdecrypt_issue_wrong_algorithm">Nepodporovaný alebo neurčený šifrovací algoritmus!</string>
     <!-- Custom Watchface -->
     <string name="wear_import_custom_watchface_title">Vyberte vlastný ciferník</string>
-    <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">Prosím reštartujte Váš telefón, alebo reštartujte AndroidAPS z nastavení \nv opačnom prípade AndroidAPS nebude mocť zaznamenávať logy (dôležité kvôli sledovaniu a overovaniu, že algoritmus pracuje správne)!</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">Formát súboru</string>
     <string name="metadata_label_created_at">Vytvorené</string>

@@ -19,6 +19,7 @@
     <string name="permission">權限</string>
     <string name="need_system_window_permission">應用程式需要系統窗口權限以顯示通知</string>
     <string name="need_location_permission">應用程式需要位置權限來掃描藍牙和識別WiFi</string>
+    <string name="need_background_location_permission">應用程式需要背景位置權限，以便進行自動化</string>
     <string name="need_storage_permission">應用程式需要存儲權限以便儲存日誌檔案和匯出設定</string>
     <string name="askforpermission">請求權限</string>
     <string name="need_whitelisting">%1$s需要電池優化白名單以達到最佳效能</string>
@@ -155,8 +156,6 @@
     <string name="prefdecrypt_issue_wrong_algorithm">不支援或未指定的加密算法！</string>
     <!-- Custom Watchface -->
     <string name="wear_import_custom_watchface_title">選擇自定義手錶界面</string>
-    <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">請重新啟動您的手機或從系統設置中重新啟動AAPS \n否則Android APS將無法紀錄日誌（重要的是跟蹤和驗證算法是否正確運行）！</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">文件格式</string>
     <string name="metadata_label_created_at">建立於</string>

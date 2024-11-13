@@ -42,7 +42,7 @@
     <string name="record_pump_site_change">Registra cambio posizione cannula</string>
     <string name="record_insulin_cartridge_change">Registra cambio cartuccia insulina</string>
     <!-- InsulinDialog -->
-    <string name="do_not_bolus_record_only">No bolo, solo record</string>
+    <string name="do_not_bolus_record_only">Non fare il bolo, solo registrazione</string>
     <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Riusa %1$d%% %2$dh</string>
     <string name="timeshift_label">Time shift</string>

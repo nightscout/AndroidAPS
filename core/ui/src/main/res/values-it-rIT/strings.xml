@@ -89,6 +89,7 @@
     <string name="removerecord">Rimuovi record</string>
     <string name="loopisdisabled">Il loop è disabilitato</string>
     <string name="alarm">Allarme</string>
+    <string name="exportsettings">Esporta impostazioni</string>
     <string name="disableloop">Disabilita loop</string>
     <string name="enableloop">Abilita loop</string>
     <string name="resumeloop">Riprendi loop</string>
@@ -177,6 +178,7 @@
     <string name="extended_bolus_full">E %1$.2f U/h @%2$s %3$s/%4$s min</string>
     <string name="extended_bolus_medium">%1$.2f U/h %2$s/%3$s\'</string>
     <string name="nav_export">Esporta impostazioni</string>
+    <string name="location_permission_not_granted">Permessi posizione non concessi. Consenti nelle impostazioni Android.</string>
     <!--    Protection-->
     <string name="wrongpassword">Password errata</string>
     <string name="wrongpin">PIN errato</string>
@@ -207,10 +209,12 @@
     <string name="careportal_bgcheck">Controllo BG</string>
     <string name="careportal_mbg">BG manuale o Calibrazione</string>
     <string name="careportal_announcement">Avviso</string>
+    <string name="careportal_settings_export">Esportazione Impostazioni</string>
     <string name="careportal_note">Nota</string>
     <string name="careportal_question">Domanda</string>
     <string name="careportal_exercise">Esercizio fisico</string>
     <string name="careportal_announcement_message">Avviso: %1$s</string>
+    <string name="careportal_settings_export_message">Esportazione Impostazioni: %1$s</string>
     <string name="careportal_note_message">Nota : %1$s</string>
     <string name="careportal_question_message">Domanda : %1$s</string>
     <string name="careportal_exercise_message">Esercizio : %1$s</string>
@@ -243,6 +247,7 @@
     <string name="activity">Attività</string>
     <string name="wear">Smartwatch</string>
     <string name="automation">Automazione</string>
+    <string name="settingsexport">Esportazione Impostazioni</string>
     <string name="custom">Personalizzato</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
@@ -344,6 +349,7 @@
     <string name="delete_future_treatments">Elimina trattamenti futuri</string>
     <string name="uel_export_settings">ESPORTA IMPOSTAZIONI</string>
     <string name="uel_import_settings">IMPORTA IMPOSTAZIONI</string>
+    <string name="uel_select_directory">SELEZIONA CARTELLA</string>
     <string name="uel_reset_databases">RESETTA DATABASE</string>
     <string name="uel_reset_aps_results">RESETTA RISULTATI APS</string>
     <string name="uel_cleanup_databases">PULIZIA DATABASE</string>
@@ -507,7 +513,18 @@
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Ti verrà chiesta la password master, che è necessaria per decrittare le preferenze importate.</string>
     <!-- <unattended_export> -->
+    <string name="export_ok">OK</string>
+    <string name="export_warning">Avviso</string>
+    <string name="export_expired">Scaduto</string>
+    <string name="export_disabled">Disabilitato</string>
+    <string name="export_failed">Fallito</string>
+    <string name="export_alert">SEGNALAZIONE</string>
     <!-- <unattended_export result messages> -->
+    <string name="export_result_message_exported">Impostazioni esportate</string>
+    <string name="export_result_message_failed">Esportazione Impostazioni FALLITA!</string>
+    <string name="export_result_message_about_to_expire">Impostazioni esportate: la password sta per scadere presto. Esporta manualmente e (re)inserisci la password.</string>
+    <string name="export_result_message_expired">Esportazione impostazioni annullata: password scaduta. Esporta manualmente e (re)inserisci!</string>
+    <string name="export_result_message_disabled">Attenzione (automazione): Esportazione impostazioni non abilitata!</string>
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">decremento %1$s di %2$s</string>
     <string name="a11y_plus_button_description">incremento %1$s di %2$s</string>

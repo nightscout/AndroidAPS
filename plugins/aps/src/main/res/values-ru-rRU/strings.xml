@@ -191,6 +191,10 @@
     <string name="openapsama_autoISF_max_summary">Аналогично autosense_max определяет, насколько сильным может стать ISF. Значение 1.0 по умолчанию его отключает. Предупреждение: Будьте предельно осторожны при использовании значений выше 2.5</string>
     <string name="openapsama_autoISF_min_summary">Подобно autosens_min определяет насколько слабой может стать чувствительность ISF.\n\nЗначение по умолчанию 1.0 отключает этот эффект.</string>
     <string name="openapsama_dura_ISF_weight_summary">Это вес, применяемый при длительных повышениях уровня глюкозы, который усиливает ISF, потенциально увеличивая подачу инсулина.\n\П Значение по умолчанию 0,0 отключает этот эффект.</string>
+    <string name="openapsama_lower_ISFrange_weight_summary">Это вектор, который ослабляет ISF при гликемии ниже цели и потенциально уменьшает подачу инсулина.\n\n Значение по умолчанию 0,0 отключает этот эффект.</string>
+    <string name="openapsama_higher_ISFrange_weight_summary">Это вектор, который усиливает ISF при гликемии выше цели и потенциально увеличивает подачу инсулина.\n\n Значение по умолчанию 0,0 отключает этот эффект.</string>
+    <string name="openapsama_pp_ISF_weight_summary">Это вектор, который усиливает ISF при подъеме гликемии и потенциально увеличивает подачу инсулина.\n\n Значение по умолчанию 0,0 отключает этот эффект.</string>
+    <string name="openapsama_bgAccel_ISF_weight_summary">Это вектор, который усиливает ISF при ускорении повышения гликемии и потенциально увеличивает подачу инсулина.\n\n Значение по умолчанию 0,0 отключает этот эффект.</string>
     <string name="openapsama_autoISF_max">Макс. коэффициент autoISF\n(autoISF_max)</string>
     <string name="openapsama_autoISF_min">Мин. коэффициент autoISF\n(autoISF_min)</string>
     <string name="openapsama_lower_ISFrange_weight">Нагрузка диапазона ISF ниже цели\n(lower_ISFrange_weight)</string>
@@ -204,5 +208,6 @@
     <string name="openapsama_smb_delivery_ratio_max">Верхняя граница переменного коэффициента ввода микроболюсов SMB\n(smb_delivery_ratio_max)</string>
     <string name="openapsama_smb_delivery_ratio_bg_range">Диапазон ГК переменного коэффициента ввода микроболюсов SMB\n(smb_delivery_ratio_bg_range)</string>
     <string name="openapsama_smb_max_range_extension">Увеличение макс. диапазона SMB/UAM\n(smb_max_range_extension)</string>
+    <string name="openapsama_smb_delivery_ratio_summary">Значение по умолчанию: 0,5 Это еще один ключ безопасности OpenAPS, который указывает, какая доля всего требуемого инсулина может быть подана в виде микроболюсов SMB. Он создан для того, чтобы не допустить одновременной отправки запросов на SMB с телефона попечителей. Увеличивать эту экспериментальную величину медленно и с осторожностью.</string>
     <string name="enableSMB_EvenOn_OddOff_always">Включить альтернативную активацию микроболюсов SMB при активной цели ГК выраженной целым числом</string>
 </resources>

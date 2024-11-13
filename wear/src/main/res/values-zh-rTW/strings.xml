@@ -156,6 +156,7 @@
     <string name="pref_simplify_ui_sum">僅顯示時間和血糖</string>
     <string name="pref_vibrate_hourly">每小時震動</string>
     <string name="pref_show_weeknumber">顯示週數</string>
+    <string name="pref_include_external">在模板中包含外部視圖</string>
     <string name="custom_pref_show_seconds">顯示秒數</string>
     <string name="digitalstyle_pref_your_style">您的風格：</string>
     <string name="digitalstyle_style_none">無風格</string>

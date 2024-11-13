@@ -89,6 +89,7 @@
     <string name="removerecord">Eliminar registro</string>
     <string name="loopisdisabled">Lazo desactivado</string>
     <string name="alarm">Alarma</string>
+    <string name="exportsettings">Exportar ajustes</string>
     <string name="disableloop">Desactivar lazo</string>
     <string name="enableloop">Activar lazo</string>
     <string name="resumeloop">Reanudar el lazo</string>
@@ -177,6 +178,7 @@
     <string name="extended_bolus_full">E %1$.2f U/h @%2$s %3$s/%4$s min</string>
     <string name="extended_bolus_medium">%1$.2f U/h %2$s/%3$s\'</string>
     <string name="nav_export">Exportar ajustes</string>
+    <string name="location_permission_not_granted">Permiso de ubicación no concedido. Permitir en la configuración de Android.</string>
     <!--    Protection-->
     <string name="wrongpassword">Contraseña incorrecta</string>
     <string name="wrongpin">Pin erróneo</string>
@@ -207,10 +209,12 @@
     <string name="careportal_bgcheck">Medir glucosa</string>
     <string name="careportal_mbg">Calibración o BG Manual</string>
     <string name="careportal_announcement">Aviso</string>
+    <string name="careportal_settings_export">Exportación de configuraciones</string>
     <string name="careportal_note">Nota</string>
     <string name="careportal_question">Pregunta</string>
     <string name="careportal_exercise">Ejercicio</string>
     <string name="careportal_announcement_message">Anuncio: %1$s</string>
+    <string name="careportal_settings_export_message">Exportación de configuraciones: %1$s</string>
     <string name="careportal_note_message">Nota : %1$s</string>
     <string name="careportal_question_message">Pregunta : %1$s</string>
     <string name="careportal_exercise_message">Ejercicio : %1$s</string>
@@ -243,6 +247,7 @@
     <string name="activity">Actividad</string>
     <string name="wear">Reloj</string>
     <string name="automation">Automatización</string>
+    <string name="settingsexport">Exportación de configuraciones</string>
     <string name="custom">Personalizado</string>
     <string name="loop">Lazo</string>
     <string name="ns">NS</string>
@@ -344,6 +349,7 @@
     <string name="delete_future_treatments">Eliminar tratamientos futuros</string>
     <string name="uel_export_settings">EXPORTAR AJUSTES</string>
     <string name="uel_import_settings">IMPORTAR AJUSTES</string>
+    <string name="uel_select_directory">SELECCIONAR DIRECTORIO</string>
     <string name="uel_reset_databases">RESTABLECER BASES DE DATOS</string>
     <string name="uel_reset_aps_results">RESTABLECER RESULTADOS DE APS</string>
     <string name="uel_cleanup_databases">LIMPIAR BASE DE DATOS</string>
@@ -507,7 +513,18 @@
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Se te solicitará la contraseña maestra, ya que es necesaria para descifrar las perferencias importadas</string>
     <!-- <unattended_export> -->
+    <string name="export_ok">OK</string>
+    <string name="export_warning">Advertencia</string>
+    <string name="export_expired">Expirado</string>
+    <string name="export_disabled">Desactivado</string>
+    <string name="export_failed">Fallido</string>
+    <string name="export_alert">ALERTA</string>
     <!-- <unattended_export result messages> -->
+    <string name="export_result_message_exported">Ajustes exportados</string>
+    <string name="export_result_message_failed">¡Exportación de configuraciónes FALLIDA!</string>
+    <string name="export_result_message_about_to_expire">Configuración exportada: la contraseña expirará pronto. Exporta manualmente y (re)introduce la contraseña.</string>
+    <string name="export_result_message_expired">Exportación de ajustes cancelada: contraseña caducada. Exporta manualmente y (re)introduzca!</string>
+    <string name="export_result_message_disabled">Advertencia (automatización): Exportación de configuración no activada!</string>
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">decremento %1$s por %2$s</string>
     <string name="a11y_plus_button_description">incremento %1$s por %2$s</string>
