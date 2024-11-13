@@ -129,4 +129,5 @@
     <string name="getting_bolus_status">Obteneniendo el estado del bolo</string>
     <string name="getting_temp_basal_status">Obteniendo el estado de la basal temporal</string>
     <string name="setting_pump_settings">Configurar las opciones del usuario</string>
+    <!-- bolus-->
 </resources>
