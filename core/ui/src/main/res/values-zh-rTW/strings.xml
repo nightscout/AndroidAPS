@@ -348,6 +348,7 @@
     <string name="delete_future_treatments">刪除未來治療</string>
     <string name="uel_export_settings">匯出設定</string>
     <string name="uel_import_settings">匯入設定</string>
+    <string name="uel_select_directory">選擇目錄</string>
     <string name="uel_reset_databases">重置資料庫</string>
     <string name="uel_reset_aps_results">重置 APS 結果</string>
     <string name="uel_cleanup_databases">清理資料庫</string>
