@@ -145,7 +145,7 @@ class IobCobOrefWorker @Inject internal constructor(
                         // try {
                         while (past < 12) {
                             val ad = autosensDataTable.valueAt(initialIndex + past)
-                            aapsLogger.debug(LTag.AUTOSENS) { ">>>>> past=" + past + " ad=" + ad?.toString() }
+                            aapsLogger.debug(LTag.AUTOSENS) { ">>>>> past=$past ad=$ad" }
                             // if (ad == null) {
                             //     aapsLogger.debug(LTag.AUTOSENS, autosensDataTable.toString())
                             //     aapsLogger.debug(LTag.AUTOSENS, bucketedData.toString())
@@ -186,7 +186,8 @@ class IobCobOrefWorker @Inject internal constructor(
                 for (recentCarbTreatment in recentCarbTreatments) {
                     autosensData.carbsFromBolus += recentCarbTreatment.amount
                     val isAAPSOrWeighted = activePlugin.activeSensitivity.isMinCarbsAbsorptionDynamic
-                    autosensData.activeCarbsList.add(fromCarbs(recentCarbTreatment, isAAPSOrWeighted, profileFunction, aapsLogger, dateUtil, preferences))
+                    if (recentCarbTreatment.amount > 0)
+                        autosensData.activeCarbsList.add(fromCarbs(recentCarbTreatment, isAAPSOrWeighted, profileFunction, aapsLogger, dateUtil, preferences))
                     autosensData.pastSensitivity += "[" + decimalFormatter.to0Decimal(recentCarbTreatment.amount) + "g]"
                 }
 
