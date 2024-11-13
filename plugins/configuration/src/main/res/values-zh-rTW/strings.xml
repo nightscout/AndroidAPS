@@ -94,6 +94,8 @@
     <string name="check_preferences_import_btn">匯入</string>
     <string name="check_preferences_import_anyway_btn">仍然匯入（危險！）</string>
     <string name="import_setting">匯入設定</string>
+    <string name="aaps_directory">AAPS 目錄</string>
+    <string name="select_aaps_directory">選擇 AAPS 目錄來儲存匯出檔案、設定檔等。</string>
     <string name="check_preferences_before_import">請在匯入前檢查偏好設定：</string>
     <string name="check_preferences_cannot_import">無法匯入偏好設定！</string>
     <string name="check_preferences_dangerous_import">不應匯入偏好設定！</string>
