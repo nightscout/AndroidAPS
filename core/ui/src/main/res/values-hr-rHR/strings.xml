@@ -67,7 +67,6 @@
     <string name="bg_label">GUK</string>
     <string name="calibration">Kalibracija</string>
     <string name="alarminxmin">Uključi alarm za %1$d min</string>
-    <string name="treatmentdeliveryerror">Bolus je prijavio pogrešku. Ručno provjerite stvarni isporučeni iznos</string>
     <string name="bolus_reminder">Podsjetnik za bolus</string>
     <string name="duration_label">Trajanje</string>
     <string name="shortgramm">g</string>
