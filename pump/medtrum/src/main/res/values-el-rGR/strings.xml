@@ -112,4 +112,5 @@
     <string name="getting_bolus_status">Φόρτωση κατάστασης bolus</string>
     <string name="getting_temp_basal_status">Λήψη κατάστασης Προσ Ρυθμού</string>
     <string name="setting_pump_settings">Ρύθμιση επιλογών χρήστη</string>
+    <!-- bolus-->
 </resources>
