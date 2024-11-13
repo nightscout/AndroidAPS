@@ -91,6 +91,8 @@
     <string name="check_preferences_import_btn">ייבוא</string>
     <string name="check_preferences_import_anyway_btn">ייבא בכל מקרה (מסוכן!)</string>
     <string name="import_setting">ייבוא הגדרות</string>
+    <string name="aaps_directory">תיקיית AAPS</string>
+    <string name="select_aaps_directory">בחרו את התיקייה בה יישמרו הקבצים המיוצאים</string>
     <string name="check_preferences_before_import">בדקו את ההעדפות לפני ביצוע הייבוא:</string>
     <string name="check_preferences_cannot_import">ההעדפות לא ניתנות לייבוא!</string>
     <string name="check_preferences_dangerous_import">אין לייבא העדפות אלה!</string>
