@@ -112,7 +112,6 @@
     <string name="bg_label">BG</string>
     <string name="calibration">Kalibrering</string>
     <string name="alarminxmin">Larma om %1$d min</string>
-    <string name="treatmentdeliveryerror">Ett fel rapporterades under bolus. Vänligen kontrollera pumpen manuellt</string>
     <string name="bolus_reminder">Boluspåminnelse</string>
     <string name="duration_label">Duration</string>
     <string name="shortgramm">g</string>
