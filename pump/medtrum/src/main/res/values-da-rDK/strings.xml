@@ -112,4 +112,5 @@
     <string name="getting_bolus_status">Henter bolusstatus</string>
     <string name="getting_temp_basal_status">Henter midlertidig basalstatus</string>
     <string name="setting_pump_settings">Indstiller brugerindstillinger</string>
+    <!-- bolus-->
 </resources>
