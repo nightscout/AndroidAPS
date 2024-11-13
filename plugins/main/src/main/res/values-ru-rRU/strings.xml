@@ -257,7 +257,7 @@
     <string name="high_mark">Отметка ВЫСОКИЙ</string>
     <string name="short_tabtitles">Сокращенные наименования вкладок</string>
     <string name="overview_show_notes_field_in_dialogs_title">Показать поле примечаний в диалогах терапии</string>
-    <string name="deliverpartofboluswizard">Мастер болюса выполняет расчет, но подается только эта часть рекомендуемого инсулина. Полезно с алгоритмом SMB.</string>
+    <string name="deliverpartofboluswizard">Помощник болюса выполняет расчет, но подается только эта часть рекомендуемого инсулина. Полезно с алгоритмом SMB.</string>
     <string name="deliver_part_of_boluswizard_reset_time">Подать полный болюс (100%), если гликемия старше</string>
     <string name="enable_bolus_advisor">Вкл помощник болюса</string>
     <string name="enable_bolus_advisor_summary">Воспользуйтесь напоминанием, чтобы начать есть позже, вместо того, чтобы задействовать помощник болюса на высоких значениях ГК (\"пре-болюс\")</string>
