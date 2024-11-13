@@ -114,7 +114,6 @@
     <string name="bg_label">BS</string>
     <string name="calibration">Kalibrering</string>
     <string name="alarminxmin">Aktiver alarm om %1$d min</string>
-    <string name="treatmentdeliveryerror">Det er registrert en feil med boluslevering. Sjekk manuelt om den er levert og hvor mye</string>
     <string name="bolus_reminder">Bolus-påminnelse</string>
     <string name="duration_label">Varighet</string>
     <string name="shortgramm">g</string>
