@@ -113,7 +113,6 @@
     <string name="bg_label">BG</string>
     <string name="calibration">Kalibracja</string>
     <string name="alarminxmin">Uruchom alarm za %1$d min</string>
-    <string name="treatmentdeliveryerror">Błąd podczas podawania bolusa. Sprawdź ręcznie rzeczywiście dostarczoną ilość</string>
     <string name="bolus_reminder">Przypomnienie bolusa</string>
     <string name="duration_label">Czas trwania</string>
     <string name="shortgramm">g</string>
