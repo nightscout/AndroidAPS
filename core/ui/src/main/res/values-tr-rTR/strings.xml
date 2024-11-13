@@ -113,7 +113,6 @@
     <string name="bg_label">KŞ</string>
     <string name="calibration">Kalibrasyon</string>
     <string name="alarminxmin">Alarmı %1$d dakika içinde çalıştır</string>
-    <string name="treatmentdeliveryerror">Bolus bir hata bildirdi. Gerçek teslim edilen miktarı manuel olarak kontrol edin</string>
     <string name="bolus_reminder">Bolus hatırlatıcısı</string>
     <string name="duration_label">Süre</string>
     <string name="shortgramm">gr</string>
