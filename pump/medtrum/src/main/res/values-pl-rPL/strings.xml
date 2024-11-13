@@ -124,4 +124,5 @@
     <string name="getting_bolus_status">Uzyskanie statusu bolusa</string>
     <string name="getting_temp_basal_status">Uzyskiwanie statusu bazy tymczasowej</string>
     <string name="setting_pump_settings">Ustawienie opcji użytkownika</string>
+    <!-- bolus-->
 </resources>
