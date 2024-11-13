@@ -129,4 +129,5 @@
     <string name="getting_bolus_status">Nahrávám stav bolusu</string>
     <string name="getting_temp_basal_status">Nahrávám stav dočasného bazálu</string>
     <string name="setting_pump_settings">Nastavení uživatelských voleb</string>
+    <!-- bolus-->
 </resources>
