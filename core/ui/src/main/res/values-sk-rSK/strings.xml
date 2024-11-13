@@ -114,7 +114,6 @@
     <string name="bg_label">Glykémia</string>
     <string name="calibration">Kalibrácia</string>
     <string name="alarminxmin">Spustiť výstrahu za %1$d min</string>
-    <string name="treatmentdeliveryerror">Bolus zaznamenal chybu. Overte prosím manuálne reálne podané množstvo</string>
     <string name="bolus_reminder">Pripomenutie bolusu</string>
     <string name="duration_label">Trvanie</string>
     <string name="shortgramm">g</string>
