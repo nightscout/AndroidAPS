@@ -114,6 +114,7 @@
     <string name="bg_label">BG</string>
     <string name="calibration">Calibrazione</string>
     <string name="alarminxmin">Esegui allarme in %1$d min</string>
+    <string name="treatmentdeliveryerror">Segnalato errore sul bolo. Controlla manualmente la reale quantità erogata</string>
     <string name="bolus_reminder">Promemoria bolo</string>
     <string name="duration_label">Durata</string>
     <string name="shortgramm">g</string>
