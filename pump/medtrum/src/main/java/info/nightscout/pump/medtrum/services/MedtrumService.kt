@@ -315,6 +315,8 @@ class MedtrumService : DaggerService(), BLECommCallback {
         } else {
             aapsLogger.error(LTag.PUMPCOMM, "Failed to load events")
         }
+        // Update ui text to getting pump status (indicating syncing records is finished)
+        rxBus.send(EventPumpStatusChanged(rh.gs(R.string.getting_pump_status)))
         return result
     }
 
@@ -352,8 +354,10 @@ class MedtrumService : DaggerService(), BLECommCallback {
         val insulin = detailedBolusInfo.insulin
         medtrumPump.bolusDone = false
         medtrumPump.bolusStopped = false
+        medtrumPump.bolusErrorReason = null
 
         if (!sendBolusCommand(insulin)) {
+            medtrumPump.bolusErrorReason = rh.gs(R.string.bolus_error_reason_unable_to_send_command)
             aapsLogger.error(LTag.PUMPCOMM, "Failed to set bolus")
             commandQueue.readStatus(rh.gs(R.string.bolus_error), null) // make sure if anything is delivered (which is highly unlikely at this point) we get it
             medtrumPump.bolusDone = true
@@ -414,14 +418,17 @@ class MedtrumService : DaggerService(), BLECommCallback {
     private fun canSetBolus(): Boolean {
         if (!isConnected) {
             aapsLogger.warn(LTag.PUMPCOMM, "Pump not connected, not setting bolus")
+            medtrumPump.bolusErrorReason = rh.gs(R.string.bolus_error_reason_not_connected)
             return false
         }
         if (BolusProgressData.stopPressed) {
             aapsLogger.warn(LTag.PUMPCOMM, "Bolus stop pressed, not setting bolus")
+            medtrumPump.bolusErrorReason = rh.gs(R.string.bolus_error_reason_user)
             return false
         }
         if (!medtrumPump.bolusDone) {
             aapsLogger.warn(LTag.PUMPCOMM, "Bolus already in progress, not setting new one")
+            medtrumPump.bolusErrorReason = rh.gs(R.string.bolus_error_reason_already_in_progress)
             return false
         }
         return true
@@ -454,6 +461,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
                     connectionRetryCounter++
                 } else {
                     communicationLost = true
+                    medtrumPump.bolusErrorReason = rh.gs(R.string.bolus_error_reason_communication_lost)
                     aapsLogger.warn(LTag.PUMPCOMM, "Retry connection failed, communication stopped")
                     disconnect("Communication stopped")
                 }
@@ -494,6 +502,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
     fun stopBolus() {
         aapsLogger.debug(LTag.PUMPCOMM, "bolusStop >>>>> @ " + if (medtrumPump.bolusingTreatment == null) "" else medtrumPump.bolusingTreatment?.insulin)
+        medtrumPump.bolusErrorReason = rh.gs(R.string.bolus_error_reason_user)
         if (isConnected) {
             var success = sendPacketAndGetResponse(CancelBolusPacket(injector))
             val timeout = System.currentTimeMillis() + T.secs(30).msecs()
@@ -563,6 +572,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
         var failureCount = 0
         if (medtrumPump.syncedSequenceNumber < medtrumPump.currentSequenceNumber) {
             for (sequence in (medtrumPump.syncedSequenceNumber + 1)..medtrumPump.currentSequenceNumber) {
+                rxBus.send(EventPumpStatusChanged(rh.gs(R.string.syncing_records, (medtrumPump.currentSequenceNumber - sequence + 1))))
                 val packet = GetRecordPacket(injector, sequence)
                 result = sendPacketAndGetResponse(packet, COMMAND_SYNC_TIMEOUT_SEC)
                 if (!result && packet.failed) {

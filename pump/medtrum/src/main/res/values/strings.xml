@@ -162,8 +162,16 @@
 
     <!-- treatment state-->
     <string name="getting_pump_status">Getting pump status</string>
+    <string name="syncing_records">Syncing records, %1$d left</string>
     <string name="getting_bolus_status">Getting bolus status</string>
     <string name="getting_temp_basal_status">Getting temporary basal status</string>
     <string name="setting_pump_settings">Setting user options</string>
 
+    <!-- bolus-->
+    <string name="bolus_error_reason_user">Bolus cancelled by user</string>
+    <string name="bolus_error_reason_not_connected">Pump not connected</string>
+    <string name="bolus_error_reason_already_in_progress">Bolus already in progress</string>
+    <string name="bolus_error_reason_unable_to_send_command">Unable to send bolus command</string>
+    <string name="bolus_error_reason_communication_lost">Timeout getting bolus status</string>
+    <string name="bolus_error_reason_pump_error">Pump error</string>
 </resources>
