@@ -19,7 +19,6 @@
     <string name="cwf_comment_status_ext">Sintesi di stato (da AAPSClient o AAPSClient2)</string>
     <string name="cwf_comment_loop_ext">Stato loop e età (da AAPSClient o AAPSClient2)</string>
     <string name="cwf_comment_direction_ext">Freccia di direzione (da AAPSClient o AAPSClient2)</string>
-    <string name="cwf_comment_timestamp_ext">Mintuti fa per l\'ultima BG ricevuta (da AAPSClient o AAPSClient2)</string>
     <string name="cwf_comment_sgv_ext">Valore glicemia (da AAPSClient o AAPSClient2)</string>
     <string name="cwf_comment_patient_name">Nome del Paziente</string>
     <string name="cwf_comment_iob1">Etichetta IOB o somma IOB se in dettaglio</string>
