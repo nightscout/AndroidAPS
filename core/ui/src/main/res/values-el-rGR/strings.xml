@@ -112,7 +112,6 @@
     <string name="bg_label">BG</string>
     <string name="calibration">Καλιμπράρισμα</string>
     <string name="alarminxmin">Εκτέλεση συναγερμού σε %1$d λεπτά</string>
-    <string name="treatmentdeliveryerror">Το Bolus ανέφερε ένα σφάλμα. Ελέγξτε χειροκίνητα την ποσότητα που έχει πραγματικά χορηγηθεί</string>
     <string name="bolus_reminder">Υπενθύμιση Bolus</string>
     <string name="duration_label">Διάρκεια</string>
     <string name="shortgramm">g</string>
