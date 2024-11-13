@@ -114,7 +114,6 @@
     <string name="bg_label">ГК</string>
     <string name="calibration">калибровка</string>
     <string name="alarminxmin">Напомнить через %1$d мин</string>
-    <string name="treatmentdeliveryerror">Возможна ошибка в подаче болюса. Проверьте реальное количество поданного инсулина</string>
     <string name="bolus_reminder">Напоминание о болюсе</string>
     <string name="duration_label">Длительность действия</string>
     <string name="shortgramm">грамм</string>
