@@ -7,6 +7,10 @@
     <string name="cwf_comment_freetext2">Свободный текст 2</string>
     <string name="cwf_comment_freetext3">Свободный текст 3</string>
     <string name="cwf_comment_freetext4">Свободный текст 4</string>
+    <string name="cwf_comment_basalRate_ext">Базальная скорость (с AAPSClient или AAPSClient2)</string>
+    <string name="cwf_comment_status_ext">Обобщенный статус (с AAPSClient или AAPSClient2)</string>
+    <string name="cwf_comment_sgv_ext">Значение ГК(с AAPSClient или AAPSClient2)</string>
+    <string name="cwf_comment_patient_name">Имя пациента</string>
     <string name="cwf_comment_iob1">Метка IOB, или общего IOB для подробного отображения</string>
     <string name="cwf_comment_iob2">Общий IOB, или (IOB_болюса|IOB_базы) для подробного отображения</string>
     <string name="cwf_comment_cob1">Метка COB</string>
@@ -17,6 +21,7 @@
     <string name="cwf_comment_rig_battery">Заряд системы ИПЖ (%)</string>
     <string name="cwf_comment_basalRate">Базальная скорость</string>
     <string name="cwf_comment_bgi">Значение ГКИ</string>
+    <string name="cwf_comment_status">Обобщенный статус</string>
     <string name="cwf_comment_time">Время (ЧЧ:ММ или ЧЧ:ММ:СС)</string>
     <string name="cwf_comment_hour">Часы (ЧЧ)</string>
     <string name="cwf_comment_minute">Минуты (ММ)</string>
