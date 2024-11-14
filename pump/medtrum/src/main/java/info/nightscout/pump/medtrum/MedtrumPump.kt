@@ -250,10 +250,13 @@ class MedtrumPump @Inject constructor(
             _bolusAmountToBeDelivered = value
             sp.putDouble(R.string.key_bolus_amount_to_be_delivered, value)
         }
+
+    
     var bolusingTreatment: EventOverviewBolusProgress.Treatment? = null // actually delivered treatment
     var bolusProgressLastTimeStamp: Long = 0 // timestamp of last bolus progress message
     var bolusStopped = false // bolus stopped by user
     var bolusDone = true // Bolus completed or stopped on pump, initialize as true as to don't show bolus on init
+    var bolusErrorReason: String? = null
 
     private val _bolusAmountDelivered = MutableStateFlow(0.0)
     val bolusAmountDeliveredFlow: StateFlow<Double> = _bolusAmountDelivered

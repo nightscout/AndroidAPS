@@ -114,7 +114,7 @@
     <string name="bg_label">BG</string>
     <string name="calibration">Calibration</string>
     <string name="alarminxmin">Run alarm in %1$d min</string>
-    <string name="treatmentdeliveryerror">Bolus reported an error. Manually check real delivered amount</string>
+    <string name="treatmentdeliveryerror">Bolus reported an error. Manually check real delivered insulin and carb amount</string>
     <string name="bolus_reminder">Bolus reminder</string>
     <string name="duration_label">Duration</string>
     <string name="shortgramm">g</string>
