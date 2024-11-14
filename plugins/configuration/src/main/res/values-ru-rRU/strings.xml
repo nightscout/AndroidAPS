@@ -91,6 +91,8 @@
     <string name="check_preferences_import_btn">Импортировать</string>
     <string name="check_preferences_import_anyway_btn">Импортировать в любом случае (ОПАСНО!)</string>
     <string name="import_setting">Импортировать настройки</string>
+    <string name="aaps_directory">Папка AAPS</string>
+    <string name="select_aaps_directory">Выберите папку AAPS для хранения экспорта настроек, конфигураций и т. д.</string>
     <string name="check_preferences_before_import">Проверьте настройки перед импортом:</string>
     <string name="check_preferences_cannot_import">Не удается импортировать настройки!</string>
     <string name="check_preferences_dangerous_import">Не следует импортировать настройки!</string>
@@ -101,6 +103,7 @@
     <string name="different_password_used">Этот файл был экспортирован и зашифрован с использованием другого главного пароля. Укажите старый главный пароль для расшифровки файла.</string>
     <string name="master_password_will_be_replaced">В результате успешного импорта текущий главный пароль БУДЕТ ЗАМЕНЁН на старый главный пароль!</string>
     <string name="exported">настройки экспортированы</string>
+    <string name="exported_failed">Не удалось экспортировать настройки!</string>
     <string name="filenotfound">файл не найден</string>
     <string name="goto_main_try_again">Вернитесь на главный экран и повторите попытку.</string>
     <string name="restartingapp">выход из приложения для применения настроек</string>
