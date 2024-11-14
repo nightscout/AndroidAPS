@@ -114,6 +114,7 @@
     <string name="bg_label">血糖</string>
     <string name="calibration">校正</string>
     <string name="alarminxmin">在 %1$d 分鐘內運行警報</string>
+    <string name="treatmentdeliveryerror">注射錯誤報告。請檢查實際注射的胰島素和碳水化合物量</string>
     <string name="bolus_reminder">注射提醒</string>
     <string name="duration_label">持續時間</string>
     <string name="shortgramm">g</string>
