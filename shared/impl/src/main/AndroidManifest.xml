@@ -6,6 +6,18 @@
             <action android:name="android.intent.action.MAIN" />
         </intent>
         <intent>
+            <action android:name="info.nightscout.client.NEW_TREATMENT" />
+        </intent>
+        <intent>
+            <action android:name="info.nightscout.client.NEW_DEVICESTATUS" />
+        </intent>
+        <intent>
+            <action android:name="info.nightscout.client.NEW_PROFILE" />
+        </intent>
+        <intent>
+            <action android:name="info.nightscout.client.NEW_SGV" />
+        </intent>
+        <intent>
             <action android:name="com.eveningoutpost.dexdrip.NewCalibration" />
         </intent>
     </queries>
