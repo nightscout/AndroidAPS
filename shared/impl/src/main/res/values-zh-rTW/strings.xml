@@ -19,6 +19,7 @@
     <string name="cwf_comment_status_ext">狀態綜合（來自 AAPSClient 或 AAPSClient2）</string>
     <string name="cwf_comment_loop_ext">循環狀態和時間（來自 AAPSClient 或 AAPSClient2）</string>
     <string name="cwf_comment_direction_ext">方向箭頭（來自 AAPSClient 或 AAPSClient2）</string>
+    <string name="cwf_comment_timestamp_ext">最後接收到的血糖數值是幾分鐘前（來自 AAPSClient 或 AAPSClient2）</string>
     <string name="cwf_comment_sgv_ext">血糖值（來自 AAPSClient 或 AAPSClient2）</string>
     <string name="cwf_comment_patient_name">患者姓名</string>
     <string name="cwf_comment_iob1">IOB 標籤或詳細資料時的 IOB 總和</string>
