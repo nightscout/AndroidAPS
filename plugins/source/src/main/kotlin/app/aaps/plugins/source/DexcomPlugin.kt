@@ -30,7 +30,6 @@ import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
-import app.aaps.shared.impl.extensions.safeGetInstalledPackages
 import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
@@ -186,23 +185,8 @@ class DexcomPlugin @Inject constructor(
         }
     }
 
-    override fun findDexcomPackageName(): String? {
-        val packageManager = context.packageManager
-        for (packageInfo in packageManager.safeGetInstalledPackages(0)) {
-            if (PACKAGE_NAMES.contains(packageInfo.packageName)) return packageInfo.packageName
-        }
-        return null
-    }
-
     companion object {
 
-        private val PACKAGE_NAMES = arrayOf(
-            "com.dexcom.cgm.region1.mgdl", "com.dexcom.cgm.region1.mmol",
-            "com.dexcom.cgm.region2.mgdl", "com.dexcom.cgm.region2.mmol",
-            "com.dexcom.g6.region1.mmol", "com.dexcom.g6.region2.mgdl",
-            "com.dexcom.g6.region3.mgdl", "com.dexcom.g6.region3.mmol",
-            "com.dexcom.g6", "com.dexcom.g7"
-        )
         const val PERMISSION = "com.dexcom.cgm.EXTERNAL_PERMISSION"
     }
 }

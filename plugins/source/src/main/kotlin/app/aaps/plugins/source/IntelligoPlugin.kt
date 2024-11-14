@@ -2,11 +2,9 @@ package app.aaps.plugins.source
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Handler
 import android.os.HandlerThread
-import android.util.Log
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.GlucoseUnit
@@ -24,7 +22,6 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.shared.impl.extensions.safeGetInstalledPackages
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -86,15 +83,6 @@ class IntelligoPlugin @Inject constructor(
     @SuppressLint("CheckResult")
     private fun handleNewData() {
         if (!isEnabled()) return
-
-        for (pack in context.packageManager.safeGetInstalledPackages(PackageManager.GET_PROVIDERS)) {
-            val providers = pack.providers
-            if (providers != null) {
-                for (provider in providers) {
-                    Log.d("Example", "provider: " + provider.authority)
-                }
-            }
-        }
 
         context.contentResolver.query(contentUri, null, null, null, null)?.let { cr ->
             val glucoseValues = mutableListOf<GV>()

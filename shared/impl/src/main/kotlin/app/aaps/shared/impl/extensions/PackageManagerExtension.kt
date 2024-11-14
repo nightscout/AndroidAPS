@@ -6,20 +6,13 @@ import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 
 /**
- * Safe version of getInstalledPackages depending on Android version running
- */
-fun PackageManager.safeGetInstalledPackages(flags: Int): List<PackageInfo> =
-    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) getInstalledPackages(PackageManager.PackageInfoFlags.of(flags.toLong()))
-    else @Suppress("DEPRECATION") getInstalledPackages(flags)
-
-/**
  * Safe version of queryBroadcastReceivers depending on Android version running
  */
-fun PackageManager.safeQueryBroadcastReceivers(intent: Intent, flags: Int): List<ResolveInfo> =
+fun PackageManager.safeQueryBroadcastReceivers(intent: Intent, flags: Long): List<ResolveInfo> =
     try {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) queryBroadcastReceivers(intent, PackageManager.ResolveInfoFlags.of(flags.toLong()))
-        else @Suppress("DEPRECATION") queryBroadcastReceivers(intent, flags)
-    } catch (ignored: Exception) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) queryBroadcastReceivers(intent, PackageManager.ResolveInfoFlags.of(flags))
+        else @Suppress("DEPRECATION") queryBroadcastReceivers(intent, flags.toInt())
+    } catch (_: Exception) {
         emptyList()
     }
 

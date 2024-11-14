@@ -283,7 +283,7 @@ class XdripPlugin @Inject constructor(
             aapsLogger.debug(rh.gs(R.string.xdrip_not_installed))
             false
         } else {
-            ToastUtils.errorToast(context, R.string.calibration_sent)
+            ToastUtils.infoToast(context, R.string.calibration_sent)
             aapsLogger.debug(rh.gs(R.string.calibration_sent))
             true
         }

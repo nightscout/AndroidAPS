@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest>
-
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <queries>
+        <package android:name="com.eveningoutpost.dexdrip" />
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+        </intent>
+        <intent>
+            <action android:name="com.eveningoutpost.dexdrip.NewCalibration" />
+        </intent>
+    </queries>
 </manifest>
