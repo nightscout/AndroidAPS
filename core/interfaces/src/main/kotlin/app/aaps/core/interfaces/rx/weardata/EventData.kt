@@ -104,6 +104,12 @@ sealed class EventData : Event() {
     data class ActionQuickWizardPreCheck(val guid: String) : EventData()
 
     @Serializable
+    data class ActionUserActionPreCheck(val id: Int, val title: String) : EventData()
+
+    @Serializable
+    data class ActionUserActionConfirmed(val id: Int, val title: String) : EventData()
+
+    @Serializable
     data class ActionHeartRate(
         val duration: Long,
         val timestamp: Long,
@@ -308,6 +314,18 @@ sealed class EventData : Event() {
             val carbs: Int,
             val validFrom: Int,
             val validTo: Int
+        ) : EventData()
+    }
+
+    @Serializable
+    data class UserAction(
+        val entries: ArrayList<UserActionEntry>
+    ) : EventData() {
+
+        @Serializable
+        data class UserActionEntry(
+            val id: Int,
+            val title: String
         ) : EventData()
     }
 

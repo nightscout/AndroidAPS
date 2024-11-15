@@ -10,7 +10,7 @@ import app.aaps.plugins.automation.AutomationPlugin
 import app.aaps.plugins.automation.actions.Action
 import app.aaps.plugins.automation.databinding.AutomationDialogChooseActionBinding
 import app.aaps.plugins.automation.events.EventAutomationAddAction
-import app.aaps.plugins.automation.events.EventAutomationUpdateGui
+import app.aaps.core.interfaces.rx.events.EventAutomationUpdateGui
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 import kotlin.reflect.full.primaryConstructor

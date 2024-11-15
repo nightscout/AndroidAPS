@@ -40,7 +40,7 @@ import app.aaps.plugins.automation.databinding.AutomationEventItemBinding
 import app.aaps.plugins.automation.databinding.AutomationFragmentBinding
 import app.aaps.plugins.automation.dialogs.EditEventDialog
 import app.aaps.plugins.automation.events.EventAutomationDataChanged
-import app.aaps.plugins.automation.events.EventAutomationUpdateGui
+import app.aaps.core.interfaces.rx.events.EventAutomationUpdateGui
 import app.aaps.plugins.automation.triggers.TriggerConnector
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment

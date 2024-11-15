@@ -22,7 +22,7 @@ import app.aaps.plugins.automation.databinding.AutomationDialogEventBinding
 import app.aaps.plugins.automation.events.EventAutomationAddAction
 import app.aaps.plugins.automation.events.EventAutomationDataChanged
 import app.aaps.plugins.automation.events.EventAutomationUpdateAction
-import app.aaps.plugins.automation.events.EventAutomationUpdateGui
+import app.aaps.core.interfaces.rx.events.EventAutomationUpdateGui
 import app.aaps.plugins.automation.events.EventAutomationUpdateTrigger
 import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
