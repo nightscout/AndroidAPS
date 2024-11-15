@@ -29,6 +29,7 @@
     <!-- AAPSClient sms -->
     <string name="sms_receiver_number_dialog">If number is provided, insulin and calculator buttons will be able to send SMS command to inject bolus. Note that you still need to confirm it and reply with security token/code. Note that you need to enabled SMS control of AAPS phone to use this function.</string>
     <string name="client_allow_sms">Allow AAPSClient to send SMS with bolus command</string>
+    <string name="client_allow_sms_warning">"Use this functionality with caution. Before enabling make sure that IOB and BG is synchronized between AAPS and AAPSClient. Some users reported issue with that. Use it at your own risk, every time you shall check IOB and BG before issuing a bolus. You can do that by sending 'BG' command."</string>
     <!-- WEAR OS-->
     <string name="remove_selected_items">Remove selected items</string>
     <string name="count_selected">%1$d selected</string>

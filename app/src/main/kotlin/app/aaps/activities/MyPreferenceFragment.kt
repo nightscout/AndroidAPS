@@ -407,7 +407,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
                     summary = app.aaps.plugins.main.R.string.theme_switcher_summary
                 )
             )
-            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.SmsAllowRemoteCommands, title = R.string.client_allow_sms))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.SmsAllowRemoteCommands, summary = R.string.client_allow_sms_warning, title = R.string.client_allow_sms))
             addPreference(AdaptiveStringPreference(ctx = context, stringKey = StringKey.SmsReceiverNumber, dialogMessage = R.string.sms_receiver_number_dialog, title = app.aaps.core.ui.R.string.sms_receiver_number))
         }
     }
