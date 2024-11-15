@@ -206,6 +206,7 @@ class MedtrumViewModel @Inject constructor(
     }
 
     fun initializePatchStep(step: PatchStep) {
+        aapsLogger.info(LTag.PUMP, "initializePatchStep: $step")
         mInitPatchStep = prepareStep(step)
     }
 
