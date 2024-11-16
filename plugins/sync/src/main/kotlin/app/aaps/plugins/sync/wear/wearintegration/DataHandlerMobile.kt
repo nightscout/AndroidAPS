@@ -530,13 +530,13 @@ class DataHandlerMobile @Inject constructor(
                         )
                     )
                 } else {
-                    // todo sendError("automation rules updated, please refresh")
+                    sendError(rh.gs(R.string.user_action_not_available))
                 }
             } ?:apply {
-                // todo: sendError("Automation not available")
+                sendError(rh.gs(R.string.user_action_not_available))
             }
         } else {
-            // todo: sendError("Automation not available")
+            sendError(rh.gs(app.aaps.core.ui.R.string.wizard_pump_not_available))
         }
     }
 
@@ -906,18 +906,20 @@ class DataHandlerMobile @Inject constructor(
         sendStatus(from)
     }
 
-    private fun AutomationEvent.toWear(): EventData.UserAction.UserActionEntry =
+    private fun AutomationEvent.toWear(now: Long): EventData.UserAction.UserActionEntry =
         EventData.UserAction.UserActionEntry(
+            timeStamp = now,
             id = hashCode(),
             title = title
         )
 
     fun sendUserActions() {
+        val now = System.currentTimeMillis()
         val events = automation.userEvents()
         rxBus.send(
             EventMobileToWear(
                 EventData.UserAction(
-                    ArrayList(events.filter { it.isEnabled && it.canRun() }.map { it.toWear() })
+                    ArrayList(events.filter { it.isEnabled && it.canRun() }.map { it.toWear(now) })
                 )
             )
         )
