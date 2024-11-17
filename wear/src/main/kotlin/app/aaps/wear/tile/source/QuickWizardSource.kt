@@ -59,7 +59,7 @@ class QuickWizardSource @Inject constructor(private val context: Context, privat
         }
 
         val validWithin = 60
-        //aapsLogger.info(LTag.WEAR, "User Action getValidTill: sfm$sfm till$validTill d=${(validTill - sfm + validWithin) * 1000L}")
+        //aapsLogger.info(LTag.WEAR, "getValidTill: sfm$sfm till$validTill d=${(validTill - sfm + validWithin) * 1000L}")
         return (validTill - sfm + validWithin) * 1000L
     }
 
