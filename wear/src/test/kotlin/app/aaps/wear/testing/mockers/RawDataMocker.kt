@@ -5,7 +5,9 @@ import app.aaps.core.interfaces.rx.weardata.EventData.SingleBg
 import app.aaps.core.interfaces.utils.SafeParse.stringToDouble
 import app.aaps.wear.WearTestBase
 import app.aaps.wear.data.RawDisplayData
+import kotlinx.serialization.InternalSerializationApi
 
+@InternalSerializationApi
 class RawDataMocker {
 
     fun rawSgv(sgv: String?, m: Int, deltaString: String): RawDisplayData {
@@ -22,93 +24,107 @@ class RawDataMocker {
                 else              -> "\u21c8"
             }
 
-        raw.singleBg = SingleBg(
-            WearTestBase.backInTime(0, 0, m, 0),
-            sgv!!,
-            "",
-            d,
-            deltaString,
-            deltaString,
-            "",
-            "",
-            0,
-            0.0,
-            0.0,
-            0.0,
-            0
+        raw.singleBg = arrayOf<SingleBg>(
+            SingleBg(
+                0,
+                WearTestBase.backInTime(0, 0, m, 0),
+                sgv!!,
+                "",
+                d,
+                deltaString,
+                deltaString,
+                "",
+                "",
+                0,
+                0.0,
+                0.0,
+                0.0,
+                0
+            )
         )
         return raw
     }
 
     fun rawDelta(m: Int, delta: String): RawDisplayData {
         val raw = RawDisplayData()
-        raw.singleBg = SingleBg(
-            WearTestBase.backInTime(0, 0, m, 0),
-            "",
-            "",
-            "",
-            delta,
-            delta,
-            "",
-            "",
-            0,
-            0.0,
-            0.0,
-            0.0,
-            0
+        raw.singleBg = arrayOf<SingleBg>(
+            SingleBg(
+                0,
+                WearTestBase.backInTime(0, 0, m, 0),
+                "",
+                "",
+                "",
+                delta,
+                delta,
+                "",
+                "",
+                0,
+                0.0,
+                0.0,
+                0.0,
+                0
+            )
         )
         return raw
     }
 
     fun rawCobIobBr(cob: String, iob: String, br: String): RawDisplayData {
         val raw = RawDisplayData()
-        raw.status = EventData.Status(
-            "",
-            iob,
-            "",
-            cob,
-            br,
-            "",
-            "",
-            0L,
-            "",
-            0
+        raw.status = arrayOf<EventData.Status>(
+            EventData.Status(
+                0,
+                "",
+                iob,
+                "",
+                cob,
+                br,
+                "",
+                "",
+                0L,
+                "",
+                0
+            )
         )
         return raw
     }
 
     fun rawIob(iob: String, iob2: String): RawDisplayData {
         val raw = RawDisplayData()
-        raw.status = EventData.Status(
-            "",
-            iob,
-            iob2,
-            "",
-            "",
-            "",
-            "",
-            0L,
-            "",
-            0
+        raw.status = arrayOf<EventData.Status>(
+            EventData.Status(
+                0,
+                "",
+                iob,
+                iob2,
+                "",
+                "",
+                "",
+                "",
+                0L,
+                "",
+                0
+            )
         )
         return raw
     }
 
     fun rawCob(cob: String?): RawDisplayData {
         val raw = RawDisplayData()
-        raw.status = EventData.Status(
-            "",
-            "",
-            "",
-            cob!!,
-            "",
-            "",
-            "",
-            0L,
-            "",
-            0
+        raw.status = arrayOf<EventData.Status>(
+            EventData.Status(
+                0,
+                "",
+                "",
+                "",
+                cob!!,
+                "",
+                "",
+                "",
+                0L,
+                "",
+                0
+            )
         )
         return raw
     }
-
 }

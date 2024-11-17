@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import app.aaps.core.interfaces.rx.weardata.EventData
+import kotlinx.serialization.InternalSerializationApi
 
+@InternalSerializationApi
 class IntentWearToMobile(context: Context, command: String) : Intent(context, DataLayerListenerServiceWear::class.java) {
     init {
         action = DataLayerListenerServiceWear.INTENT_WEAR_TO_MOBILE
@@ -14,6 +16,5 @@ class IntentWearToMobile(context: Context, command: String) : Intent(context, Da
         })
     }
 
-    @Suppress("unused")
     constructor(context: Context, command: EventData) : this(context, command.serialize())
 }

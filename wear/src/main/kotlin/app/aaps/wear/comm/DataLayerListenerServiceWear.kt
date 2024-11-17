@@ -26,8 +26,6 @@ import app.aaps.wear.wearStepCount.StepCountListener
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.CapabilityClient
 import com.google.android.gms.wearable.CapabilityInfo
-import com.google.android.gms.wearable.DataEvent
-import com.google.android.gms.wearable.DataEventBuffer
 import com.google.android.gms.wearable.DataMap
 import com.google.android.gms.wearable.MessageEvent
 import com.google.android.gms.wearable.Node
@@ -45,6 +43,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.InternalSerializationApi
 import javax.inject.Inject
 
 class DataLayerListenerServiceWear : WearableListenerService() {
@@ -64,12 +63,15 @@ class DataLayerListenerServiceWear : WearableListenerService() {
     private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
     private val disposable = CompositeDisposable()
+    @InternalSerializationApi
     private var heartRateListener: HeartRateListener? = null
+    @InternalSerializationApi
     private var stepCountListener: StepCountListener? = null
 
     private val rxPath get() = getString(app.aaps.core.interfaces.R.string.path_rx_bridge)
     private val rxDataPath get() = getString(app.aaps.core.interfaces.R.string.path_rx_data_bridge)
 
+    @InternalSerializationApi
     @ExperimentalSerializationApi
     override fun onCreate() {
         AndroidInjection.inject(this)
@@ -93,11 +95,11 @@ class DataLayerListenerServiceWear : WearableListenerService() {
             .observeOn(aapsSchedulers.main)
             .subscribe { event: EventWearPreferenceChange ->
                 if (event.changedKey == getString(R.string.key_heart_rate_sampling)) updateHeartRateListener()
-                if (event.changedKey == getString(R.string.key_steps_sampling)) updatestepsCountListener()
+                if (event.changedKey == getString(R.string.key_steps_sampling)) updateStepsCountListener()
             }
 
         updateHeartRateListener()
-        updatestepsCountListener()
+        updateStepsCountListener()
     }
 
     override fun onCapabilityChanged(p0: CapabilityInfo) {
@@ -112,27 +114,7 @@ class DataLayerListenerServiceWear : WearableListenerService() {
         disposable.clear()
     }
 
-    override fun onDataChanged(dataEvents: DataEventBuffer) {
-        //aapsLogger.debug(LTag.WEAR, "onDataChanged")
-
-        dataEvents.forEach { event ->
-            if (event.type == DataEvent.TYPE_CHANGED) {
-                val path = event.dataItem.uri.path
-
-                aapsLogger.debug(LTag.WEAR, "onDataChanged: Path: $path, EventDataItem=${event.dataItem}")
-                try {
-                    @Suppress("ControlFlowWithEmptyBody", "UNUSED_EXPRESSION")
-                    when (path) {
-                    }
-                } catch (exception: Exception) {
-                    aapsLogger.error(LTag.WEAR, "onDataChanged failed", exception)
-                }
-            }
-        }
-        super.onDataChanged(dataEvents)
-    }
-
-    @ExperimentalSerializationApi
+    @InternalSerializationApi
     override fun onMessageReceived(messageEvent: MessageEvent) {
         super.onMessageReceived(messageEvent)
 
@@ -159,6 +141,7 @@ class DataLayerListenerServiceWear : WearableListenerService() {
         }
     }
 
+    @InternalSerializationApi
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         when (intent?.action) {
 
@@ -190,6 +173,7 @@ class DataLayerListenerServiceWear : WearableListenerService() {
     }
 
 
+    @InternalSerializationApi
     private fun updateHeartRateListener() {
         if (sp.getBoolean(R.string.key_heart_rate_sampling, false)) {
             if (heartRateListener == null) {
@@ -205,7 +189,8 @@ class DataLayerListenerServiceWear : WearableListenerService() {
         }
     }
 
-    private fun updatestepsCountListener() {
+    @InternalSerializationApi
+    private fun updateStepsCountListener() {
         if (sp.getBoolean(R.string.key_steps_sampling, false)) {
             if (stepCountListener == null) {
                 stepCountListener = StepCountListener(

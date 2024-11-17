@@ -31,6 +31,7 @@ import app.aaps.wear.interaction.utils.Inevitable
 import app.aaps.wear.interaction.utils.Persistence
 import app.aaps.wear.interaction.utils.WearUtil
 import dagger.android.AndroidInjection
+import kotlinx.serialization.InternalSerializationApi
 import javax.inject.Inject
 
 /**
@@ -55,6 +56,7 @@ abstract class BaseComplicationProviderService : ComplicationProviderService() {
     }
 
     private var localBroadcastManager: LocalBroadcastManager? = null
+    @InternalSerializationApi
     private var messageReceiver: MessageReceiver? = null
 
     //==============================================================================================
@@ -164,6 +166,7 @@ abstract class BaseComplicationProviderService : ComplicationProviderService() {
      * You can continue sending data for the active complicationId until onComplicationDeactivated()
      * is called.
      */
+    @InternalSerializationApi
     override fun onComplicationActivated(
         complicationId: Int, dataType: Int, complicationManager: ComplicationManager
     ) {
@@ -189,6 +192,7 @@ abstract class BaseComplicationProviderService : ComplicationProviderService() {
      *   4. You triggered an update from your own class via the
      *       ProviderUpdateRequester.requestUpdate() method.
      */
+    @InternalSerializationApi
     override fun onComplicationUpdate(
         complicationId: Int, dataType: Int, complicationManager: ComplicationManager
     ) {
@@ -206,7 +210,7 @@ abstract class BaseComplicationProviderService : ComplicationProviderService() {
         // store what is currently rendered in 'SGV since' field, to detect if it was changed and need update
         persistence.putString(
             Persistence.KEY_LAST_SHOWN_SINCE_VALUE,
-            displayFormat.shortTimeSince(raw.singleBg.timeStamp)
+            displayFormat.shortTimeSince(raw.singleBg[0].timeStamp)
         )
 
         // by each render we clear stale flag to ensure it is re-rendered at next refresh detection round
@@ -220,12 +224,12 @@ abstract class BaseComplicationProviderService : ComplicationProviderService() {
                 buildNoSyncComplicationData(dataType, raw, complicationPendingIntent, infoToast, persistence.whenDataUpdated())
             }
 
-            wearUtil.msSince(raw.singleBg.timeStamp) > Constants.STALE_MS        -> {
+            wearUtil.msSince(raw.singleBg[0].timeStamp) > Constants.STALE_MS        -> {
                 // data arriving from phone AAPS, but it is outdated (uploader/NS/xDrip/Sensor error)
                 val infoToast = getTapWarningSinceIntent(
-                    applicationContext, thisProvider, complicationId, ComplicationAction.WARNING_OLD, raw.singleBg.timeStamp
+                    applicationContext, thisProvider, complicationId, ComplicationAction.WARNING_OLD, raw.singleBg[0].timeStamp
                 )
-                buildOutdatedComplicationData(dataType, raw, complicationPendingIntent, infoToast, raw.singleBg.timeStamp)
+                buildOutdatedComplicationData(dataType, raw, complicationPendingIntent, infoToast, raw.singleBg[0].timeStamp)
             }
 
             else                                                                 -> {
@@ -245,6 +249,7 @@ abstract class BaseComplicationProviderService : ComplicationProviderService() {
     /*
      * Called when the complication has been deactivated.
      */
+    @InternalSerializationApi
     override fun onComplicationDeactivated(complicationId: Int) {
         aapsLogger.warn(LTag.WEAR, "onComplicationDeactivated(): $complicationId")
         persistence.removeFromSet(Persistence.KEY_COMPLICATIONS, "complication_$complicationId")
@@ -258,6 +263,7 @@ abstract class BaseComplicationProviderService : ComplicationProviderService() {
     /*
      * Schedule check for field update
      */
+    @InternalSerializationApi
     private fun checkIfUpdateNeeded() {
         aapsLogger.warn(LTag.WEAR, "Pending check if update needed - " + persistence.getString(Persistence.KEY_COMPLICATIONS, ""))
         inevitable.task(TASK_ID_REFRESH_COMPLICATION, 15 * Constants.SECOND_IN_MS) {
@@ -274,13 +280,14 @@ abstract class BaseComplicationProviderService : ComplicationProviderService() {
      * Check if displayed since field (field that shows how old, in minutes, is reading)
      * is up-to-date or need to be changed (a minute or more elapsed)
      */
+    @InternalSerializationApi
     private fun requestUpdateIfSinceChanged() {
         val raw = RawDisplayData()
         raw.updateFromPersistence(persistence)
         val lastSince = persistence.getString(Persistence.KEY_LAST_SHOWN_SINCE_VALUE, "-")
-        val calcSince = displayFormat.shortTimeSince(raw.singleBg.timeStamp)
+        val calcSince = displayFormat.shortTimeSince(raw.singleBg[0].timeStamp)
         val isStale = (wearUtil.msSince(persistence.whenDataUpdated()) > Constants.STALE_MS
-            || wearUtil.msSince(raw.singleBg.timeStamp) > Constants.STALE_MS)
+            || wearUtil.msSince(raw.singleBg[0].timeStamp) > Constants.STALE_MS)
         val staleWasRefreshed = persistence.getBoolean(Persistence.KEY_STALE_REPORTED, false)
         val sinceWasChanged = lastSince != calcSince
         if (sinceWasChanged || isStale && !staleWasRefreshed) {
@@ -357,6 +364,7 @@ abstract class BaseComplicationProviderService : ComplicationProviderService() {
     /*
      * Listen to broadcast --> new data was stored by ListenerService to Persistence
      */
+    @InternalSerializationApi
     inner class MessageReceiver : BroadcastReceiver() {
 
         override fun onReceive(context: Context, intent: Intent) {
@@ -364,6 +372,7 @@ abstract class BaseComplicationProviderService : ComplicationProviderService() {
         }
     }
 
+    @InternalSerializationApi
     private fun updateAll() {
         val complications = persistence.getSetOf(Persistence.KEY_COMPLICATIONS)
         if (complications.isNotEmpty()) {

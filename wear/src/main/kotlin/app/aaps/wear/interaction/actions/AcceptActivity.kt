@@ -21,6 +21,7 @@ import app.aaps.wear.comm.DataLayerListenerServiceWear
 import app.aaps.wear.comm.IntentCancelNotification
 import app.aaps.wear.comm.IntentWearToMobile
 import app.aaps.wear.nondeprecated.GridPagerAdapterNonDeprecated
+import kotlinx.serialization.InternalSerializationApi
 import kotlin.math.roundToInt
 
 class AcceptActivity : ViewSelectorActivity() {
@@ -56,6 +57,7 @@ class AcceptActivity : ViewSelectorActivity() {
         override fun getColumnCount(arg0: Int): Int = 2
         override fun getRowCount(): Int = 1
 
+        @InternalSerializationApi
         override fun instantiateItem(container: ViewGroup, row: Int, col: Int): View = when (col) {
             0    -> {
                 val view = LayoutInflater.from(applicationContext).inflate(R.layout.action_confirm_text, container, false)

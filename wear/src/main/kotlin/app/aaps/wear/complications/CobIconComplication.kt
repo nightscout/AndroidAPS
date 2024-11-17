@@ -9,17 +9,19 @@ import android.support.wearable.complications.ComplicationText
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.wear.R
 import app.aaps.wear.data.RawDisplayData
+import kotlinx.serialization.InternalSerializationApi
 
 /*
  * Created by dlvoy on 2019-11-12
  */
 class CobIconComplication : BaseComplicationProviderService() {
 
+    @InternalSerializationApi
     override fun buildComplicationData(dataType: Int, raw: RawDisplayData, complicationPendingIntent: PendingIntent): ComplicationData? {
         var complicationData: ComplicationData? = null
         if (dataType == ComplicationData.TYPE_SHORT_TEXT) {
             val builder = ComplicationData.Builder(ComplicationData.TYPE_SHORT_TEXT)
-                .setShortText(ComplicationText.plainText(raw.status.cob))
+                .setShortText(ComplicationText.plainText(raw.status[0].cob))
                 .setIcon(Icon.createWithResource(this, R.drawable.ic_carbs))
                 .setBurnInProtectionIcon(Icon.createWithResource(this, R.drawable.ic_carbs))
                 .setTapAction(complicationPendingIntent)

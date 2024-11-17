@@ -14,9 +14,11 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.wear.comm.IntentWearToMobile
 import io.reactivex.rxjava3.disposables.Disposable
+import kotlinx.serialization.InternalSerializationApi
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToLong
 
+@InternalSerializationApi
 class StepCountListener(
     private val ctx: Context,
     private val aapsLogger: AAPSLogger,

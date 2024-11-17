@@ -8,6 +8,7 @@ import android.support.wearable.complications.ComplicationText
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.wear.data.RawDisplayData
 import dagger.android.AndroidInjection
+import kotlinx.serialization.InternalSerializationApi
 
 /*
  * Created by dlvoy on 2019-11-12
@@ -20,13 +21,14 @@ class SgvComplication : BaseComplicationProviderService() {
         super.onCreate()
     }
 
+    @InternalSerializationApi
     override fun buildComplicationData(dataType: Int, raw: RawDisplayData, complicationPendingIntent: PendingIntent): ComplicationData? {
         var complicationData: ComplicationData? = null
         when (dataType) {
             ComplicationData.TYPE_SHORT_TEXT -> {
                 val builder = ComplicationData.Builder(ComplicationData.TYPE_SHORT_TEXT)
-                    .setShortText(ComplicationText.plainText(raw.singleBg.sgvString + raw.singleBg.slopeArrow + "\uFE0E"))
-                    .setShortTitle(ComplicationText.plainText(displayFormat.shortTrend(raw)))
+                    .setShortText(ComplicationText.plainText(raw.singleBg[0].sgvString + raw.singleBg[0].slopeArrow + "\uFE0E"))
+                    .setShortTitle(ComplicationText.plainText(displayFormat.shortTrend(raw, 0)))
                     .setTapAction(complicationPendingIntent)
                 complicationData = builder.build()
             }

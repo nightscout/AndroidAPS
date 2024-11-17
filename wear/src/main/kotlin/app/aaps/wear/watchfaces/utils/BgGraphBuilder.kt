@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.rx.weardata.EventData.TreatmentData.Basal
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.wear.R
+import kotlinx.serialization.InternalSerializationApi
 import lecho.lib.hellocharts.model.Axis
 import lecho.lib.hellocharts.model.AxisValue
 import lecho.lib.hellocharts.model.Line
@@ -19,6 +20,7 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToLong
 
+@InternalSerializationApi
 class BgGraphBuilder(
     private val sp: SP,
     private val dateUtil: DateUtil,
@@ -51,7 +53,7 @@ class BgGraphBuilder(
     private val predictionEndTime: Long
         get() {
             var maxPredictionDate = System.currentTimeMillis()
-            for ((timeStamp) in predictionsList) {
+            for ((_, timeStamp) in predictionsList) {
                 if (maxPredictionDate < timeStamp) {
                     maxPredictionDate = timeStamp
                 }
@@ -99,7 +101,7 @@ class BgGraphBuilder(
         lines.add(highValuesLine())
         var minChart = lowMark
         var maxChart = highMark
-        for ((_, _, _, _, _, _, _, _, _, sgv) in bgDataList) {
+        for ((_, _, _, _, _, _, _, _, _, _, sgv) in bgDataList) {
             if (sgv > maxChart) maxChart = sgv
             if (sgv < minChart) minChart = sgv
         }
@@ -215,7 +217,7 @@ class BgGraphBuilder(
 
     private fun addPredictionLines(lines: MutableList<Line>) {
         val values: MutableMap<Int, MutableList<PointValue>> = HashMap()
-        for ((timeStamp, _, _, _, _, _, _, _, _, sgv, _, _, color) in predictionsList) {
+        for ((_, timeStamp, _, _, _, _, _, _, _, _, sgv, _, _, color) in predictionsList) {
             if (timeStamp <= predictionEndTime) {
                 val value = min(sgv, UPPER_CUTOFF_SGV)
                 if (!values.containsKey(color)) {
@@ -280,7 +282,7 @@ class BgGraphBuilder(
     }
 
     private fun addBgReadingValues() {
-        for ((timeStamp, _, _, _, _, _, _, _, _, sgv) in bgDataList) {
+        for ((_, timeStamp, _, _, _, _, _, _, _, _, sgv) in bgDataList) {
             if (timeStamp > startingTime) {
                 when {
                     sgv >= 450      -> highValues.add(PointValue(fuzz(timeStamp), 450.toFloat()))

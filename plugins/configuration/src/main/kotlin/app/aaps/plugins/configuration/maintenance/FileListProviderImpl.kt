@@ -25,6 +25,7 @@ import app.aaps.plugins.configuration.maintenance.formats.EncryptedPrefsFormat
 import app.aaps.shared.impl.weardata.ZipWatchfaceFormat
 import dagger.Lazy
 import dagger.Reusable
+import kotlinx.serialization.InternalSerializationApi
 import org.joda.time.DateTime
 import org.joda.time.Days
 import org.joda.time.Hours
@@ -86,6 +87,7 @@ class FileListProviderImpl @Inject constructor(
         return filtered
     }
 
+    @InternalSerializationApi
     override fun listCustomWatchfaceFiles(): MutableList<CwfFile> {
         val customWatchfaceFiles = mutableListOf<CwfFile>()
         val customWatchfaceAuthorization = preferences.get().get(BooleanKey.WearCustomWatchfaceAuthorization)
@@ -110,7 +112,7 @@ class FileListProviderImpl @Inject constructor(
                         }
                     }
                 }
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 // Handle any exceptions that may occur while accessing assets
             }
         }
@@ -213,7 +215,7 @@ class FileListProviderImpl @Inject constructor(
                     createdAt.status = PrefsStatusImpl.WARN
                     createdAt.info = rh.gs(R.string.metadata_warning_old_export, daysOld.toString())
                 }
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 createdAt.status = PrefsStatusImpl.WARN
                 createdAt.info = rh.gs(R.string.metadata_warning_date_format)
             }

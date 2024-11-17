@@ -12,9 +12,11 @@ import app.aaps.wear.interaction.actions.TempTargetActivity
 import app.aaps.wear.interaction.actions.TreatmentActivity
 import app.aaps.wear.interaction.actions.WizardActivity
 import app.aaps.wear.interaction.utils.MenuListActivity
+import kotlinx.serialization.InternalSerializationApi
 
 class MainMenuActivity : MenuListActivity() {
 
+    @InternalSerializationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         setTitle(R.string.label_actions_activity)
         super.onCreate(savedInstanceState)
@@ -40,6 +42,7 @@ class MainMenuActivity : MenuListActivity() {
             }
         }
 
+    @InternalSerializationApi
     override fun doAction(position: String) {
         when (position) {
             getString(R.string.menu_settings)         -> startActivity(Intent(this, PreferenceMenuActivity::class.java).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })

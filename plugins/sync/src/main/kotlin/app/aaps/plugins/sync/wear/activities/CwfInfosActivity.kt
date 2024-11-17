@@ -33,6 +33,7 @@ import app.aaps.shared.impl.weardata.ZipWatchfaceFormat
 import app.aaps.shared.impl.weardata.toDrawable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.serialization.InternalSerializationApi
 import org.json.JSONObject
 import javax.inject.Inject
 
@@ -44,12 +45,14 @@ class CwfInfosActivity : TranslatedDaggerAppCompatActivity() {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var aapsLogger: AAPSLogger
+    @InternalSerializationApi
     @Inject lateinit var wearPlugin: WearPlugin
     @Inject lateinit var versionCheckerUtils: VersionCheckerUtils
 
     private val disposable = CompositeDisposable()
     private lateinit var binding: CwfInfosActivityBinding
 
+    @InternalSerializationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = CwfInfosActivityBinding.inflate(layoutInflater)
@@ -68,6 +71,7 @@ class CwfInfosActivity : TranslatedDaggerAppCompatActivity() {
         disposable.clear()
     }
 
+    @InternalSerializationApi
     override fun onResume() {
         super.onResume()
         disposable += rxBus
@@ -85,6 +89,7 @@ class CwfInfosActivity : TranslatedDaggerAppCompatActivity() {
         updateGui()
     }
 
+    @InternalSerializationApi
     private fun updateGui() {
         wearPlugin.savedCustomWatchface?.let {
             val cwfAuthorization = preferences.get(BooleanKey.WearCustomWatchfaceAuthorization)

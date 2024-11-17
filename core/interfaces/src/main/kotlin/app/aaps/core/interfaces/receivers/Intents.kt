@@ -5,6 +5,9 @@ interface Intents {
 
     companion object {
 
+        // AAPS -> AAPS
+        const val AAPS_CLIENT_WEAR_DATA = "app.aaps.aapsclient.weardata"
+
         // AAPS -> Xdrip
         const val ACTION_NEW_TREATMENT = "info.nightscout.client.NEW_TREATMENT"
         const val ACTION_NEW_PROFILE = "info.nightscout.client.NEW_PROFILE"

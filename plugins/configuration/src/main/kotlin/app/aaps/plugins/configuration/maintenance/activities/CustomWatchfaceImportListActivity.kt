@@ -11,7 +11,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventMobileDataToWear
+import app.aaps.core.interfaces.rx.events.EventMobileToWearWatchface
 import app.aaps.core.interfaces.rx.weardata.CUSTOM_VERSION
 import app.aaps.core.interfaces.rx.weardata.CwfFile
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey.CWF_AUTHOR
@@ -77,7 +77,7 @@ class CustomWatchfaceImportListActivity : TranslatedDaggerAppCompatActivity() {
 
                         val i = Intent()
                         setResult(FragmentActivity.RESULT_OK, i)
-                        rxBus.send(EventMobileDataToWear(customWatchfaceFile.zipByteArray))
+                        rxBus.send(EventMobileToWearWatchface(customWatchfaceFile.zipByteArray))
                         finish()
                     }
                 }

@@ -14,6 +14,7 @@ import app.aaps.wear.R
 import app.aaps.wear.interaction.utils.EditPlusMinusViewAdapter
 import app.aaps.wear.interaction.utils.PlusMinusEditText
 import app.aaps.wear.nondeprecated.GridPagerAdapterNonDeprecated
+import kotlinx.serialization.InternalSerializationApi
 import java.text.DecimalFormat
 
 class TempTargetActivity : ViewSelectorActivity() {
@@ -46,6 +47,7 @@ class TempTargetActivity : ViewSelectorActivity() {
             return 1
         }
 
+        @InternalSerializationApi
         override fun instantiateItem(container: ViewGroup, row: Int, col: Int): View = when {
             col == 0                    -> {
                 val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, false)

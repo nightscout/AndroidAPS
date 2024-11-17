@@ -86,6 +86,7 @@ import app.aaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import app.aaps.plugins.aps.loop.extensions.json
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.serialization.InternalSerializationApi
 import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -139,6 +140,7 @@ class LoopPlugin @Inject constructor(
 
     private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
+    @InternalSerializationApi
     override fun onStart() {
         createNotificationChannel()
         super.onStart()
@@ -170,7 +172,7 @@ class LoopPlugin @Inject constructor(
         return try {
             val pump = activePlugin.activePump
             pump.pumpDescription.isTempBasalCapable
-        } catch (ignored: Exception) {
+        } catch (_: Exception) {
             // may fail during initialization
             true
         }
@@ -230,6 +232,7 @@ class LoopPlugin @Inject constructor(
     }
 
     @Synchronized
+    @InternalSerializationApi
     override fun invoke(initiator: String, allowNotification: Boolean, tempBasalFallback: Boolean) {
         try {
             aapsLogger.debug(LTag.APS, "invoke from $initiator")
@@ -340,7 +343,7 @@ class LoopPlugin @Inject constructor(
                                 disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
                                     therapyEvent = TE.asAnnouncement(resultAfterConstraints.carbsRequiredText),
                                     timestamp = dateUtil.now(),
-                                    action = app.aaps.core.data.ue.Action.TREATMENT,
+                                    action = Action.TREATMENT,
                                     source = Sources.Loop,
                                     note = resultAfterConstraints.carbsRequiredText,
                                     listValues = listOf()
@@ -473,11 +476,13 @@ class LoopPlugin @Inject constructor(
         }
     }
 
+    @InternalSerializationApi
     override fun disableCarbSuggestions(durationMinutes: Int) {
         carbsSuggestionsSuspendedUntil = System.currentTimeMillis() + durationMinutes * 60 * 1000
         dismissSuggestion()
     }
 
+    @InternalSerializationApi
     private fun presentSuggestion(builder: NotificationCompat.Builder) {
         // Creates an explicit intent for an Activity in your app
         val resultIntent = Intent(context, uiInteraction.mainActivity)
@@ -502,6 +507,7 @@ class LoopPlugin @Inject constructor(
         sendToWear()
     }
 
+    @InternalSerializationApi
     private fun dismissSuggestion() {
         // dismiss notifications
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -509,6 +515,7 @@ class LoopPlugin @Inject constructor(
         rxBus.send(EventMobileToWear(EventData.CancelNotification(dateUtil.now())))
     }
 
+    @InternalSerializationApi
     private fun sendToWear() {
         lastRun?.let {
             rxBus.send(
@@ -784,7 +791,7 @@ class LoopPlugin @Inject constructor(
             val calcIob = iobCobCalculator.calculateIobArrayInDia(profile)
             if (calcIob.isNotEmpty()) {
                 iob = calcIob[0].json(dateUtil)
-                iob?.put("time", dateUtil.toISOString(dateUtil.now()))
+                iob.put("time", dateUtil.toISOString(dateUtil.now()))
             }
         }
         persistenceLayer.insertDeviceStatus(

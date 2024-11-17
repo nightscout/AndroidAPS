@@ -49,6 +49,7 @@ import app.aaps.shared.impl.weardata.toTypeface
 import app.aaps.wear.R
 import app.aaps.wear.databinding.ActivityCustomBinding
 import app.aaps.wear.watchfaces.utils.BaseWatchFace
+import kotlinx.serialization.InternalSerializationApi
 import org.joda.time.DateTime
 import org.joda.time.TimeOfDay
 import org.json.JSONObject
@@ -57,6 +58,7 @@ import javax.inject.Inject
 import kotlin.math.floor
 
 @SuppressLint("UseCompatLoadingForDrawables")
+@InternalSerializationApi
 class CustomWatchface : BaseWatchFace() {
 
     @Inject lateinit var context: Context
@@ -68,22 +70,8 @@ class CustomWatchface : BaseWatchFace() {
     private var resDataMap: CwfResDataMap = mutableMapOf()
     private var json = JSONObject()
     private var jsonString = ""
-    private val bgColor: Int
-        get() = when (singleBg.sgvLevel) {
-            1L   -> highColor
-            0L   -> midColor
-            -1L  -> lowColor
-            else -> midColor
-        }
-    private val bgcolorExt1: Int
-        get() = when (singleBgExt1.sgvLevel) {
-            1L   -> highColor
-            0L   -> midColor
-            -1L  -> lowColor
-            else -> midColor
-        }
-    private val bgcolorExt2: Int
-        get() = when (singleBgExt2.sgvLevel) {
+    private fun bgColor(dataSet: Int): Int
+         = when (singleBg[dataSet].sgvLevel) {
             1L   -> highColor
             0L   -> midColor
             -1L  -> lowColor
@@ -128,12 +116,12 @@ class CustomWatchface : BaseWatchFace() {
     override fun setColorDark() {
         setWatchfaceStyle()
         if ((ViewMap.SGV.dynData?.stepFontColor ?: 0) <= 0)
-            binding.sgv.setTextColor(bgColor)
+            binding.sgv.setTextColor(bgColor(0))
         if ((ViewMap.DIRECTION.dynData?.stepColor ?: 0) <= 0)
-            binding.direction.colorFilter = changeDrawableColor(bgColor)
+            binding.direction.colorFilter = changeDrawableColor(bgColor(0))
         if (ageLevel() != 1 && (ViewMap.TIMESTAMP.dynData?.stepFontColor ?: 0) <= 0)
             binding.timestamp.setTextColor(ContextCompat.getColor(this, R.color.dark_TimestampOld))
-        if (status.batteryLevel != 1 && (ViewMap.UPLOADER_BATTERY.dynData?.stepFontColor ?: 0) <= 0)
+        if (status[0].batteryLevel != 1 && (ViewMap.UPLOADER_BATTERY.dynData?.stepFontColor ?: 0) <= 0)
             binding.uploaderBattery.setTextColor(lowBatColor)
         if ((ViewMap.LOOP.dynData?.stepDraw ?: 0) <= 0)     // Apply automatic background image only if no dynData or no step images
             when (loopLevel) {
@@ -143,9 +131,9 @@ class CustomWatchface : BaseWatchFace() {
             }
         //Management of External data 1
         if ((ViewMap.SGV_EXT1.dynData?.stepFontColor ?: 0) <= 0)
-            binding.sgvExt1.setTextColor(bgcolorExt1)
+            binding.sgvExt1.setTextColor(bgColor(1))
         if ((ViewMap.DIRECTION_EXT1.dynData?.stepColor ?: 0) <= 0)
-            binding.directionExt1.colorFilter = changeDrawableColor(bgcolorExt1)
+            binding.directionExt1.colorFilter = changeDrawableColor(bgColor(1))
         if (ageLevel(id = 1) != 1 && (ViewMap.TIMESTAMP_EXT1.dynData?.stepFontColor ?: 0) <= 0)
             binding.timestampExt1.setTextColor(ContextCompat.getColor(this, R.color.dark_TimestampOld))
         if ((ViewMap.LOOP_EXT1.dynData?.stepDraw ?: 0) <= 0)     // Apply automatic background image only if no dynData or no step images
@@ -156,9 +144,9 @@ class CustomWatchface : BaseWatchFace() {
             }
         //Management of External data 2
         if ((ViewMap.SGV_EXT2.dynData?.stepFontColor ?: 0) <= 0)
-            binding.sgvExt2.setTextColor(bgcolorExt2)
+            binding.sgvExt2.setTextColor(bgColor(2))
         if ((ViewMap.DIRECTION_EXT2.dynData?.stepColor ?: 0) <= 0)
-            binding.directionExt2.colorFilter = changeDrawableColor(bgcolorExt2)
+            binding.directionExt2.colorFilter = changeDrawableColor(bgColor(2))
         if (ageLevel(id = 2) != 1 && (ViewMap.TIMESTAMP_EXT2.dynData?.stepFontColor ?: 0) <= 0)
             binding.timestampExt2.setTextColor(ContextCompat.getColor(this, R.color.dark_TimestampOld))
         if ((ViewMap.LOOP_EXT2.dynData?.stepDraw ?: 0) <= 0)     // Apply automatic background image only if no dynData or no step images
@@ -249,7 +237,7 @@ class CustomWatchface : BaseWatchFace() {
                     }
                 }
                 manageSpecificViews()
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 aapsLogger.debug(LTag.WEAR, "Crash during Custom watch load")
                 persistence.store(defaultWatchface(), false) // relaod correct values to avoid crash of watchface
             }
@@ -388,13 +376,13 @@ class CustomWatchface : BaseWatchFace() {
 
     private fun getColor(color: String, defaultColor: Int = Color.GRAY): Int =
         when (color) {
-            JsonKeyValues.BGCOLOR.key      -> bgColor
-            JsonKeyValues.BGCOLOR_EXT1.key -> bgcolorExt1
-            JsonKeyValues.BGCOLOR_EXT2.key -> bgcolorExt2
+            JsonKeyValues.BGCOLOR.key      -> bgColor(0)
+            JsonKeyValues.BGCOLOR_EXT1.key -> bgColor(1)
+            JsonKeyValues.BGCOLOR_EXT2.key -> bgColor(2)
             else                           ->
                 try {
                     Color.parseColor(color)
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                     defaultColor
                 }
         }
@@ -566,7 +554,7 @@ class CustomWatchface : BaseWatchFace() {
             get() = field ?: customLow?.let { cd -> cwf.resDataMap[cd.fileName]?.toDrawable(cwf.resources).also { lowCustom = it } }
         var textDrawable: Drawable? = null
         val drawable: Drawable?
-            get() = dynData?.getDrawable() ?: when (cwf.singleBg.sgvLevel) {
+            get() = dynData?.getDrawable() ?: when (cwf.singleBg[0].sgvLevel) {
                 1L   -> highCustom ?: rangeCustom
                 0L   -> rangeCustom
                 -1L  -> lowCustom ?: rangeCustom
@@ -621,7 +609,7 @@ class CustomWatchface : BaseWatchFace() {
                         dynData?.getDynValue(viewJson.optBoolean(JsonKeys.DYNVALUE.key, false))?.let {
                             try {   // try - catch block if wrong format provided not consistant with double values, to avoid crash
                                 view.text = String.format(cwf.context.resources.configuration.locales[0] ,dynData?.getTextValueStep() ?: viewJson.optString(JsonKeys.TEXTVALUE.key, "%.0f"), it )
-                            } catch(e: Exception) {
+                            } catch(_: Exception) {
                                 view.text = String.format(cwf.context.resources.configuration.locales[0] , "%.0f", it )
                             }
                         } ?: apply {
@@ -701,12 +689,12 @@ class CustomWatchface : BaseWatchFace() {
 
             }
 
-            fun drawable() = entries.firstOrNull { it.symbol == it.cwf.singleBg.slopeArrow }?.arrowCustom ?: NONE.arrowCustom
-            fun value() = entries.firstOrNull { it.symbol == it.cwf.singleBg.slopeArrow }?.dynValue ?: NONE.dynValue
-            fun drawableExt1() = entries.firstOrNull { it.symbol == it.cwf.singleBgExt1.slopeArrow }?.arrowCustom ?: NONE.arrowCustom
-            fun valueExt1() = entries.firstOrNull { it.symbol == it.cwf.singleBgExt1.slopeArrow }?.dynValue ?: NONE.dynValue
-            fun drawableExt2() = entries.firstOrNull { it.symbol == it.cwf.singleBgExt2.slopeArrow }?.arrowCustom ?: NONE.arrowCustom
-            fun valueExt2() = entries.firstOrNull { it.symbol == it.cwf.singleBgExt2.slopeArrow }?.dynValue ?: NONE.dynValue
+            fun drawable() = entries.firstOrNull { it.symbol == it.cwf.singleBg[0].slopeArrow }?.arrowCustom ?: NONE.arrowCustom
+            fun value() = entries.firstOrNull { it.symbol == it.cwf.singleBg[0].slopeArrow }?.dynValue ?: NONE.dynValue
+            fun drawableExt1() = entries.firstOrNull { it.symbol == it.cwf.singleBg[1].slopeArrow }?.arrowCustom ?: NONE.arrowCustom
+            fun valueExt1() = entries.firstOrNull { it.symbol == it.cwf.singleBg[1].slopeArrow }?.dynValue ?: NONE.dynValue
+            fun drawableExt2() = entries.firstOrNull { it.symbol == it.cwf.singleBg[2].slopeArrow }?.arrowCustom ?: NONE.arrowCustom
+            fun valueExt2() = entries.firstOrNull { it.symbol == it.cwf.singleBg[2].slopeArrow }?.dynValue ?: NONE.dynValue
         }
 
         lateinit var cwf: CustomWatchface
@@ -895,35 +883,35 @@ class CustomWatchface : BaseWatchFace() {
         val dataValue: Double?
             get() = when (valueMap) {
                 ValueMap.NONE             -> 0.0
-                ValueMap.SGV              -> if (cwf.singleBg.sgvString != "---") cwf.singleBg.sgv else null
-                ValueMap.SGV_LEVEL        -> if (cwf.singleBg.sgvString != "---") cwf.singleBg.sgvLevel.toDouble() else null
+                ValueMap.SGV              -> if (cwf.singleBg[0].sgvString != "---") cwf.singleBg[0].sgv else null
+                ValueMap.SGV_LEVEL        -> if (cwf.singleBg[0].sgvString != "---") cwf.singleBg[0].sgvLevel.toDouble() else null
                 ValueMap.DIRECTION        -> TrendArrowMap.value()
-                ValueMap.DELTA            -> cwf.singleBg.deltaMgdl
-                ValueMap.AVG_DELTA        -> cwf.singleBg.avgDeltaMgdl
-                ValueMap.RIG_BATTERY      -> cwf.status.rigBattery.replace("%", "").toDoubleOrNull()
-                ValueMap.UPLOADER_BATTERY -> cwf.status.battery.replace("%", "").toDoubleOrNull()
-                ValueMap.LOOP             -> if (cwf.status.openApsStatus != -1L) ((System.currentTimeMillis() - cwf.status.openApsStatus) / 1000 / 60).toDouble() else null
-                ValueMap.TIMESTAMP        -> if (cwf.singleBg.timeStamp != 0L) floor(cwf.timeSince() / (1000 * 60)) else null
+                ValueMap.DELTA            -> cwf.singleBg[0].deltaMgdl
+                ValueMap.AVG_DELTA        -> cwf.singleBg[0].avgDeltaMgdl
+                ValueMap.RIG_BATTERY      -> cwf.status[0].rigBattery.replace("%", "").toDoubleOrNull()
+                ValueMap.UPLOADER_BATTERY -> cwf.status[0].battery.replace("%", "").toDoubleOrNull()
+                ValueMap.LOOP             -> if (cwf.status[0].openApsStatus != -1L) ((System.currentTimeMillis() - cwf.status[0].openApsStatus) / 1000 / 60).toDouble() else null
+                ValueMap.TIMESTAMP        -> if (cwf.singleBg[0].timeStamp != 0L) floor(cwf.timeSince() / (1000 * 60)) else null
                 ValueMap.DAY              -> DateTime().dayOfMonth.toDouble()
                 ValueMap.DAY_NAME         -> DateTime().dayOfWeek.toDouble()
                 ValueMap.MONTH            -> DateTime().monthOfYear.toDouble()
                 ValueMap.WEEK_NUMBER      -> DateTime().weekOfWeekyear.toDouble()
-                ValueMap.SGV_EXT1         -> if (cwf.singleBgExt1.sgvString != "---") cwf.singleBgExt1.sgv else null
-                ValueMap.SGV_LEVEL_EXT1   -> if (cwf.singleBgExt1.sgvString != "---") cwf.singleBgExt1.sgvLevel.toDouble() else null
+                ValueMap.SGV_EXT1         -> if (cwf.singleBg[1].sgvString != "---") cwf.singleBg[1].sgv else null
+                ValueMap.SGV_LEVEL_EXT1   -> if (cwf.singleBg[1].sgvString != "---") cwf.singleBg[1].sgvLevel.toDouble() else null
                 ValueMap.DIRECTION_EXT1   -> TrendArrowMap.valueExt1()
-                ValueMap.DELTA_EXT1       -> cwf.singleBgExt1.deltaMgdl
-                ValueMap.AVG_DELTA_EXT1   -> cwf.singleBgExt1.avgDeltaMgdl
-                ValueMap.RIG_BATTERY_EXT1 -> cwf.statusExt1.rigBattery.replace("%", "").toDoubleOrNull()
-                ValueMap.LOOP_EXT1        -> if (cwf.statusExt1.openApsStatus != -1L) ((System.currentTimeMillis() - cwf.statusExt1.openApsStatus) / 1000 / 60).toDouble() else null
-                ValueMap.TIMESTAMP_EXT1   -> if (cwf.singleBgExt1.timeStamp != 0L) floor(cwf.timeSince(1) / (1000 * 60)) else null
-                ValueMap.SGV_EXT2         -> if (cwf.singleBgExt2.sgvString != "---") cwf.singleBgExt2.sgv else null
-                ValueMap.SGV_LEVEL_EXT2   -> if (cwf.singleBgExt2.sgvString != "---") cwf.singleBgExt2.sgvLevel.toDouble() else null
+                ValueMap.DELTA_EXT1       -> cwf.singleBg[1].deltaMgdl
+                ValueMap.AVG_DELTA_EXT1   -> cwf.singleBg[1].avgDeltaMgdl
+                ValueMap.RIG_BATTERY_EXT1 -> cwf.status[1].rigBattery.replace("%", "").toDoubleOrNull()
+                ValueMap.LOOP_EXT1        -> if (cwf.status[1].openApsStatus != -1L) ((System.currentTimeMillis() - cwf.status[1].openApsStatus) / 1000 / 60).toDouble() else null
+                ValueMap.TIMESTAMP_EXT1   -> if (cwf.singleBg[1].timeStamp != 0L) floor(cwf.timeSince(1) / (1000 * 60)) else null
+                ValueMap.SGV_EXT2         -> if (cwf.singleBg[2].sgvString != "---") cwf.singleBg[2].sgv else null
+                ValueMap.SGV_LEVEL_EXT2   -> if (cwf.singleBg[2].sgvString != "---") cwf.singleBg[2].sgvLevel.toDouble() else null
                 ValueMap.DIRECTION_EXT2   -> TrendArrowMap.valueExt2()
-                ValueMap.DELTA_EXT2       -> cwf.singleBgExt2.deltaMgdl
-                ValueMap.AVG_DELTA_EXT2   -> cwf.singleBgExt2.avgDeltaMgdl
-                ValueMap.RIG_BATTERY_EXT2 -> cwf.statusExt2.rigBattery.replace("%", "").toDoubleOrNull()
-                ValueMap.LOOP_EXT2        -> if (cwf.statusExt2.openApsStatus != -1L) ((System.currentTimeMillis() - cwf.statusExt2.openApsStatus) / 1000 / 60).toDouble() else null
-                ValueMap.TIMESTAMP_EXT2   -> if (cwf.singleBgExt2.timeStamp != 0L) floor(cwf.timeSince(2) / (1000 * 60)) else null
+                ValueMap.DELTA_EXT2       -> cwf.singleBg[2].deltaMgdl
+                ValueMap.AVG_DELTA_EXT2   -> cwf.singleBg[2].avgDeltaMgdl
+                ValueMap.RIG_BATTERY_EXT2 -> cwf.status[2].rigBattery.replace("%", "").toDoubleOrNull()
+                ValueMap.LOOP_EXT2        -> if (cwf.status[2].openApsStatus != -1L) ((System.currentTimeMillis() - cwf.status[2].openApsStatus) / 1000 / 60).toDouble() else null
+                ValueMap.TIMESTAMP_EXT2   -> if (cwf.singleBg[2].timeStamp != 0L) floor(cwf.timeSince(2) / (1000 * 60)) else null
             }
 
         fun getTopOffset(): Int = dataRange?.let { dataRange ->
@@ -983,7 +971,7 @@ class CustomWatchface : BaseWatchFace() {
 
         private fun getDrawableSteps(dynMap: MutableMap<Int, Drawable?>, key: String, invalidKey: String) {
             if (dataJson.has(invalidKey))
-                dynMap[0] = dataJson.optString(invalidKey)?.let { cwf.resDataMap[it]?.toDrawable(cwf.resources, width, height) }
+                dynMap[0] = dataJson.optString(invalidKey).let { cwf.resDataMap[it]?.toDrawable(cwf.resources, width, height) }
             var idx = 1
             while (dataJson.has("${key}$idx")) {
                 cwf.resDataMap[dataJson.optString("${key}$idx")]?.toDrawable(cwf.resources, width, height).also { dynMap[idx] = it }

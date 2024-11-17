@@ -11,6 +11,7 @@ import app.aaps.wear.R
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.disposables.Disposable
+import kotlinx.serialization.InternalSerializationApi
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -22,6 +23,7 @@ import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import java.util.concurrent.TimeUnit
 
+@InternalSerializationApi
 internal class HeartRateListenerTest {
 
     private val aapsLogger = AAPSLoggerTest()
