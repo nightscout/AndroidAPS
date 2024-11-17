@@ -196,11 +196,11 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         binding.notifications.setHasFixedSize(false)
         binding.notifications.layoutManager = LinearLayoutManager(view.context)
         axisWidth = when {
-            resources.displayMetrics.density <= 120 -> 3
-            resources.displayMetrics.density <= 160 -> 10
-            resources.displayMetrics.density <= 320 -> 35
-            resources.displayMetrics.density <= 420 -> 50
-            resources.displayMetrics.density <= 560 -> 70
+            resources.displayMetrics.densityDpi <= 120 -> 3
+            resources.displayMetrics.densityDpi <= 160 -> 10
+            resources.displayMetrics.densityDpi <= 320 -> 35
+            resources.displayMetrics.densityDpi <= 420 -> 50
+            resources.displayMetrics.densityDpi <= 560 -> 70
             else                                    -> 80
         }
         binding.graphsLayout.bgGraph.gridLabelRenderer?.gridColor = rh.gac(context, app.aaps.core.ui.R.attr.graphGrid)
