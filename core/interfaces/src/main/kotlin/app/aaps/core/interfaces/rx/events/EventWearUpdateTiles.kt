@@ -1,3 +1,3 @@
 package app.aaps.core.interfaces.rx.events
 
-class EventAutomationUpdateGui : Event()
+class EventWearUpdateTiles() : Event()

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventWearUpdateTiles
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.core.ui.toast.ToastUtils
@@ -22,7 +23,7 @@ import app.aaps.plugins.automation.databinding.AutomationDialogEventBinding
 import app.aaps.plugins.automation.events.EventAutomationAddAction
 import app.aaps.plugins.automation.events.EventAutomationDataChanged
 import app.aaps.plugins.automation.events.EventAutomationUpdateAction
-import app.aaps.core.interfaces.rx.events.EventAutomationUpdateGui
+import app.aaps.plugins.automation.events.EventAutomationUpdateGui
 import app.aaps.plugins.automation.events.EventAutomationUpdateTrigger
 import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -153,6 +154,7 @@ class EditEventDialog : BaseDialog() {
             automationPlugin.set(event, position)
 
         rxBus.send(EventAutomationDataChanged())
+        rxBus.send(EventWearUpdateTiles())
         return true
     }
 

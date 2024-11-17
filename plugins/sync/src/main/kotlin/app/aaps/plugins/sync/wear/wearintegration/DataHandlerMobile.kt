@@ -530,10 +530,10 @@ class DataHandlerMobile @Inject constructor(
                         )
                     )
                 } else {
-                    sendError(rh.gs(R.string.user_action_not_available))
+                    sendError(rh.gs(R.string.user_action_not_available, command.title))
                 }
             } ?:apply {
-                sendError(rh.gs(R.string.user_action_not_available))
+                sendError(rh.gs(R.string.user_action_not_available, command.title))
             }
         } else {
             sendError(rh.gs(app.aaps.core.ui.R.string.wizard_pump_not_available))
