@@ -17,7 +17,6 @@
     <string name="exit">Izađi</string>
     <string name="iob">IOB</string>
     <string name="bg_label">GUK</string>
-    <string name="treatmentdeliveryerror">Bolus je prijavio grešku. Ručno proverite stvarnu isporučenu količinu</string>
     <string name="duration_label">Trajanje</string>
     <string name="profile">Profil</string>
     <string name="overview_treatment_label">Tretman</string>

@@ -95,7 +95,7 @@
     <string name="equil_password_title">幫浦密碼</string>
     <string name="equil_settings">設定</string>
     <string name="equil_settings_alarm_battery">低電量警報</string>
-    <string name="equil_settings_alarm_insulin">低胰島素儲存警報</string>
+    <string name="equil_settings_alarm_insulin">胰島素劑量不足警報</string>
     <string name="equil_init_insulin_error">儲液盒初始化未完成</string>
     <string name="equil_history_group_all">全部</string>
     <string name="equil_history_group_pair">配對</string>

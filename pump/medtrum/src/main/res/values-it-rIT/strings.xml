@@ -126,7 +126,15 @@
     <string name="scan_on_connection_error_summary">ATTENZIONE: Abilitare solo in caso di problemi di connessione. Se abilitato, il driver esegue una scansione della pompa prima di tentare di riconnettersi ad essa. Assicurati di avere impostato il permesso di Posizione su \"Consenti sempre\"</string>
     <!-- treatment state-->
     <string name="getting_pump_status">Ricezione stato micro</string>
+    <string name="syncing_records">Sincronizzazione record, %1$d rimasti</string>
     <string name="getting_bolus_status">Ricezione stato bolo</string>
     <string name="getting_temp_basal_status">Ricezione stato basale temporanea</string>
     <string name="setting_pump_settings">Impostazione opzioni utente</string>
+    <!-- bolus-->
+    <string name="bolus_error_reason_user">Bolo annullato dall\'utente</string>
+    <string name="bolus_error_reason_not_connected">Microinfusore non connesso</string>
+    <string name="bolus_error_reason_already_in_progress">Bolo già in corso</string>
+    <string name="bolus_error_reason_unable_to_send_command">Impossibile inviare il comando bolo</string>
+    <string name="bolus_error_reason_communication_lost">Timeout per ottenere lo stato del bolo</string>
+    <string name="bolus_error_reason_pump_error">Errore Microinfusore</string>
 </resources>

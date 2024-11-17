@@ -112,7 +112,6 @@
     <string name="bg_label">GLIC</string>
     <string name="calibration">Calibração</string>
     <string name="alarminxmin">Executar alarme em %1$d min</string>
-    <string name="treatmentdeliveryerror">Ocorreu um erro de bólus. Verifique manualmente a quantidade administrada</string>
     <string name="bolus_reminder">Lembrete de bólus</string>
     <string name="duration_label">Duração</string>
     <string name="shortgramm">g</string>

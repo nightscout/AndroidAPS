@@ -110,4 +110,5 @@
     <string name="getting_bolus_status">Erhalte Bolus Status</string>
     <string name="getting_temp_basal_status">Erhalte temporären Basalstatus</string>
     <string name="setting_pump_settings">Benutzeroptionen einstellen</string>
+    <!-- bolus-->
 </resources>

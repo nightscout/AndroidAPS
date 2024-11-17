@@ -110,4 +110,5 @@
     <string name="getting_bolus_status">Получава болус статус</string>
     <string name="getting_temp_basal_status">Получава статус на временен базал</string>
     <string name="setting_pump_settings">Задава потребителски настройки</string>
+    <!-- bolus-->
 </resources>

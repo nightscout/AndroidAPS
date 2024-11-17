@@ -113,7 +113,6 @@
     <string name="bg_label">BG</string>
     <string name="calibration">כיול</string>
     <string name="alarminxmin">הפעל התראה בעוד %1$d דקות</string>
-    <string name="treatmentdeliveryerror">דווחה שגיאה בבולוס. נא לבדוק את הכמות שהוזרקה באופן ידני</string>
     <string name="bolus_reminder">תזכורת בולוס</string>
     <string name="duration_label">משך</string>
     <string name="shortgramm">גר\'</string>
@@ -338,6 +337,7 @@
     <string name="delete_future_treatments">מחק טיפולים עתידיים</string>
     <string name="uel_export_settings">ייצוא הגדרות</string>
     <string name="uel_import_settings">ייבוא הגדרות</string>
+    <string name="uel_select_directory">בחר תיקייה</string>
     <string name="uel_reset_databases">איפוס מסדי נתונים</string>
     <string name="uel_reset_aps_results">איפוס תוצאות APS</string>
     <string name="uel_cleanup_databases">ניקיון מסדי נתונים</string>

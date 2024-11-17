@@ -114,7 +114,7 @@
     <string name="bg_label">血糖</string>
     <string name="calibration">校正</string>
     <string name="alarminxmin">在 %1$d 分鐘內運行警報</string>
-    <string name="treatmentdeliveryerror">注射報告錯誤。請手動檢查實際送達量</string>
+    <string name="treatmentdeliveryerror">注射錯誤報告。請檢查實際注射的胰島素和碳水化合物量</string>
     <string name="bolus_reminder">注射提醒</string>
     <string name="duration_label">持續時間</string>
     <string name="shortgramm">g</string>
@@ -349,6 +349,7 @@
     <string name="delete_future_treatments">刪除未來治療</string>
     <string name="uel_export_settings">匯出設定</string>
     <string name="uel_import_settings">匯入設定</string>
+    <string name="uel_select_directory">選擇目錄</string>
     <string name="uel_reset_databases">重置資料庫</string>
     <string name="uel_reset_aps_results">重置 APS 結果</string>
     <string name="uel_cleanup_databases">清理資料庫</string>

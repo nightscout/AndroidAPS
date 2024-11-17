@@ -126,7 +126,15 @@
     <string name="scan_on_connection_error_summary">VAROVÁNÍ: Povolte pouze pokud máte problémy s připojením. Pokud je povoleno, skenuje pumpu znovu před pokusem o opětovné připojení k pumpě. Ujistěte se, že máte oprávnění k poloze nastaveno na \"Vždy povoleno\" </string>
     <!-- treatment state-->
     <string name="getting_pump_status">Nahrávám stav pumpy</string>
+    <string name="syncing_records">Synchronizace záznamů, %1$d zbývá</string>
     <string name="getting_bolus_status">Nahrávám stav bolusu</string>
     <string name="getting_temp_basal_status">Nahrávám stav dočasného bazálu</string>
     <string name="setting_pump_settings">Nastavení uživatelských voleb</string>
+    <!-- bolus-->
+    <string name="bolus_error_reason_user">Bolus zrušen uživatelem</string>
+    <string name="bolus_error_reason_not_connected">Pumpa není připojena</string>
+    <string name="bolus_error_reason_already_in_progress">Bolus již probíhá</string>
+    <string name="bolus_error_reason_unable_to_send_command">Příkaz bolusu nelze odeslat</string>
+    <string name="bolus_error_reason_communication_lost">Vypršel časový limit pro získání stavu bolusu</string>
+    <string name="bolus_error_reason_pump_error">Chyba pumpy</string>
 </resources>

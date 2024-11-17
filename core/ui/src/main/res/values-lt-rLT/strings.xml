@@ -112,7 +112,6 @@
     <string name="bg_label">Glikemija</string>
     <string name="calibration">Kalibravimas</string>
     <string name="alarminxmin">Pranešti po %1$d min</string>
-    <string name="treatmentdeliveryerror">Boluso suleidimo klaida. Patikrinkite faktiškai suleistą kiekį</string>
     <string name="bolus_reminder">Priminimas apie bolusą</string>
     <string name="duration_label">Trukmė</string>
     <string name="shortgramm">g</string>

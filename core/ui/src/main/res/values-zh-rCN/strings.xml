@@ -104,7 +104,6 @@
     <string name="bg_label">血糖</string>
     <string name="calibration">校准</string>
     <string name="alarminxmin">在 %1$d 分钟内运行提醒</string>
-    <string name="treatmentdeliveryerror">大剂量输注报告了一个错误。请手动检查真实输注量</string>
     <string name="bolus_reminder">大剂量提醒</string>
     <string name="duration_label">持续时间</string>
     <string name="shortgramm">克</string>

@@ -50,4 +50,6 @@
     <string name="sort_label">排序</string>
     <string name="search">搜尋</string>
     <string name="simple_mode">簡易模式</string>
+    <string name="select">選擇</string>
+    <string name="set">設定</string>
 </resources>

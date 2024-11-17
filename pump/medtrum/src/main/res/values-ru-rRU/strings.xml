@@ -129,4 +129,6 @@
     <string name="getting_bolus_status">Получение статуса болюса</string>
     <string name="getting_temp_basal_status">Получение статуса ВБС</string>
     <string name="setting_pump_settings">Настройка параметров пользователя</string>
+    <!-- bolus-->
+    <string name="bolus_error_reason_pump_error">Ошибка помпы</string>
 </resources>

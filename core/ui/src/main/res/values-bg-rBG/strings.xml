@@ -112,7 +112,6 @@
     <string name="bg_label">КЗ</string>
     <string name="calibration">Калибрация</string>
     <string name="alarminxmin">Аларма след %1$d мин</string>
-    <string name="treatmentdeliveryerror">Грешка в болуса. Сам провери истинската стойност на доставения инсулин</string>
     <string name="bolus_reminder">Болус подсещане</string>
     <string name="duration_label">Продължителност</string>
     <string name="shortgramm">гр.</string>

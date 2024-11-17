@@ -114,7 +114,7 @@
     <string name="bg_label">BG</string>
     <string name="calibration">Calibración</string>
     <string name="alarminxmin">Ejecutar alarma en %1$d min</string>
-    <string name="treatmentdeliveryerror">El bolo reportó un error. Comprueba manualmente la cantidad real de insulina entregada</string>
+    <string name="treatmentdeliveryerror">El bolo reportó un error. Comprueba manualmente la cantidad real de insulina entregada y la cantidad de carbohidratos</string>
     <string name="bolus_reminder">Recordatorio de bolo</string>
     <string name="duration_label">Duración</string>
     <string name="shortgramm">g</string>

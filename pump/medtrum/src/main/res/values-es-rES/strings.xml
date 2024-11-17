@@ -126,7 +126,15 @@
     <string name="scan_on_connection_error_summary">ADVERTENCIA: Habilitar sólo si tienes problemas de conexión. Si se habilita, el controlador escanea la bomba de nuevo antes de intentar reconectarse con la bomba. Asegúrate de tener permiso de ubicación establecido en \"Permitir siempre\" </string>
     <!-- treatment state-->
     <string name="getting_pump_status">Obteniendo el estado de la bomba</string>
+    <string name="syncing_records">Sincronizando registros, quedan %1$d</string>
     <string name="getting_bolus_status">Obteneniendo el estado del bolo</string>
     <string name="getting_temp_basal_status">Obteniendo el estado de la basal temporal</string>
     <string name="setting_pump_settings">Configurar las opciones del usuario</string>
+    <!-- bolus-->
+    <string name="bolus_error_reason_user">Bolo cancelado por el usuario</string>
+    <string name="bolus_error_reason_not_connected">Bomba no conectada</string>
+    <string name="bolus_error_reason_already_in_progress">Bolo en progreso</string>
+    <string name="bolus_error_reason_unable_to_send_command">No se pudo enviar el comando del bolo</string>
+    <string name="bolus_error_reason_communication_lost">Tiempo de espera para obtener el estado del bolo</string>
+    <string name="bolus_error_reason_pump_error">Error de bomba</string>
 </resources>

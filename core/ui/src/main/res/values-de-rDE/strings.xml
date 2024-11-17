@@ -113,7 +113,6 @@
     <string name="bg_label">BZ</string>
     <string name="calibration">Kalibrierung</string>
     <string name="alarminxmin">Alarm in %1$d Min.</string>
-    <string name="treatmentdeliveryerror">Fehlermeldung Bolusabgabe. Prüfe manuell die tatsächlich abgegebene Menge.</string>
     <string name="bolus_reminder">Bolus-Erinnerung</string>
     <string name="duration_label">Dauer</string>
     <string name="shortgramm">g</string>

@@ -19,6 +19,7 @@
     <string name="cwf_comment_status_ext">Statussyntese (fra AAPSClient eller AAPSClient2)</string>
     <string name="cwf_comment_loop_ext">Loopstatus og tid siden (fra AAPSClient eller AAPSClient2)</string>
     <string name="cwf_comment_direction_ext">Retningspil (fra AAPSClient eller AAPSClient2)</string>
+    <string name="cwf_comment_timestamp_ext">Minutter siden sist mottatt BS (fra AAPSClient eller AAPSClient2)</string>
     <string name="cwf_comment_sgv_ext">BS-verdi (fra AAPSClient eller AAPSClient2)</string>
     <string name="cwf_comment_patient_name">Pasientnavn</string>
     <string name="cwf_comment_iob1">IOB-merkelapp eller IOB-sum hvis angitt</string>

@@ -15,4 +15,5 @@
     <string name="scan_on_connection_error_title">סריקה בשגיאת חיבור</string>
     <string name="scan_on_connection_error_summary">אזהרה: הפעילו רק אם נתקלתם בבעיות תקשורת. אם הפונקציה מופעלת, מנהל ההתקן יסרוק שוב את המשאבה לפני שינסה להתחבר אליה מחדש. ודאו שיש לכם הרשאת מיקום שמוגדרת ל\"אפשר תמיד\" </string>
     <!-- treatment state-->
+    <!-- bolus-->
 </resources>

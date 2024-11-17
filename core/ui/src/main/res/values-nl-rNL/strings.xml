@@ -113,7 +113,6 @@
     <string name="bg_label">BG</string>
     <string name="calibration">Kalibratie</string>
     <string name="alarminxmin">Start alarm over %1$d min</string>
-    <string name="treatmentdeliveryerror">Bolus fout geconstateerd. Controleer de daadwerkelijk toegediende hoeveelheid</string>
     <string name="bolus_reminder">Bolus herinnering</string>
     <string name="duration_label">Tijdsduur</string>
     <string name="shortgramm">g</string>

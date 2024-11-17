@@ -126,7 +126,15 @@
     <string name="scan_on_connection_error_summary">警告：只有在連線有問題時才啟用。如果啟用，此驅動程式會在嘗試重新連線到幫浦之前再次掃描幫浦。請確保位置權限設置為“始終允許”。</string>
     <!-- treatment state-->
     <string name="getting_pump_status">獲取幫浦狀態</string>
+    <string name="syncing_records">同步記錄中，還剩 %1$d</string>
     <string name="getting_bolus_status">獲取胰島素劑量狀態</string>
     <string name="getting_temp_basal_status">獲取臨時基礎率狀態</string>
     <string name="setting_pump_settings">設定使用者選項</string>
+    <!-- bolus-->
+    <string name="bolus_error_reason_user">注射已由用戶取消</string>
+    <string name="bolus_error_reason_not_connected">幫浦未連線</string>
+    <string name="bolus_error_reason_already_in_progress">注射已在進行中</string>
+    <string name="bolus_error_reason_unable_to_send_command">無法發送注射指令</string>
+    <string name="bolus_error_reason_communication_lost">獲取注射狀態逾時</string>
+    <string name="bolus_error_reason_pump_error">幫浦錯誤</string>
 </resources>

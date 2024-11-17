@@ -30,4 +30,5 @@
     <string name="password_hint">在此輸入密碼</string>
     <string name="pin_hint">在此輸入 PIN 碼</string>
     <string name="master_password_not_set">未設置主密碼</string>
+    <string name="aaps_directory_not_selected">未選擇 AAPS 目錄</string>
 </resources>
