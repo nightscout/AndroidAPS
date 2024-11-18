@@ -21,7 +21,6 @@
     <string name="need_location_permission">App trenger tilgang til posisjon for å søke etter Bluetooth og Wifi-enheter</string>
     <string name="need_background_location_permission">Appen trenger bakgrunnsposisjonstillatelser for automasjoner</string>
     <string name="need_storage_permission">App trenger tilgang til lagring for lagre loggfiler og eksportere innstillinger</string>
-    <string name="need_wear_data_permission">Applikasjonen trenger tillatelse til å sende klokkedata til AAPS</string>
     <string name="askforpermission">Spør om tillatelse</string>
     <string name="need_whitelisting">%1$s trenger tillatelse til å omgå batterisparefunksjonene slik at appen fungerer tilfredsstillende</string>
     <string name="storedsettingsfound">Lagrede innstillinger funnet</string>
