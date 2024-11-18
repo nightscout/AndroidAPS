@@ -153,6 +153,8 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">ע\' מטרה</string>
     <string name="basal_short">בזאלי</string>
+    <string name="isf_dynamic_label">האלגוריתם שלכם יכול לספק חישוב דינמי של רגישות לאינסולין. הערכים הבאים יהיו בשימוש רק במקרה של מחסור במידע</string>
+    <string name="ic_dynamic_label">האלגוריתם שלכם יכול לספק חישוב דינמי של יחס פחמימות לאינסולין. הערכים הבאים יהיו בשימוש רק במקרה של מחסור במידע</string>
     <!-- Actions -->
     <string name="actions">פעולות</string>
     <string name="description_actions">לחצנים לגישה מהירה לפונקציות שימושיות</string>
@@ -189,8 +191,20 @@
     <string name="statuslights_bat_warning">סף התראה של רמת הסוללה [%]</string>
     <string name="statuslights_bat_critical">סף התראה קריטית של רמת הסוללה [%]</string>
     <string name="statuslights_copy_ns">העתקת הגדרות מ-Nightscout</string>
+    <string name="graph_scale_6h">6 שע\'</string>
+    <string name="graph_scale_12h">12 שע\'</string>
+    <string name="graph_scale_18h">18 שע\'</string>
+    <string name="graph_scale_24h">24 שע\'</string>
+    <string name="graph_long_scale_6h">6 שעות</string>
+    <string name="graph_long_scale_12h">12 שעות</string>
+    <string name="graph_long_scale_18h">18 שעות</string>
+    <string name="graph_long_scale_24h">24 שעות</string>
     <string name="a11y_graph">גרף</string>
     <string name="a11y_graph_scale">בחר קנה מידה של הגרף</string>
+    <string name="a11y_graph_scale_6h">קנה מידת הגרף 6 שעות</string>
+    <string name="a11y_graph_scale_12h">קנה מידת הגרף 12 שעות</string>
+    <string name="a11y_graph_scale_18h">קנה מידת הגרף 18 שעות</string>
+    <string name="a11y_graph_scale_24h">קנה מידת הגרף 24 שעות</string>
     <string name="a11y_insulin_label">אינסולין</string>
     <string name="chart_menu">תפריט הגרף</string>
     <string name="a11y_bg_quality">איכות נתוני סוכר</string>
@@ -260,6 +274,7 @@
     <string name="overview_show_deviation_slope">שיפוע הסטייה</string>
     <string name="overview_show_activity">פעילות</string>
     <string name="overview_show_bgi">השפעת הסוכר בדם</string>
+    <string name="overview_show_sensitivity">שינוי ברגישות</string>
     <string name="overview_show_deviations">סטיות</string>
     <string name="overview_show_cob">פחמימות פעילות</string>
     <string name="overview_show_iob">אניסולין פעיל</string>
@@ -275,9 +290,11 @@
     <string name="devslope_shortname">שיפוע</string>
     <string name="treatments_shortname">TREAT</string>
     <string name="heartRate_shortname">דופק</string>
+    <string name="sensitivity_shortname">רגישות%</string>
     <string name="variable_sensitivity_shortname">רג\' משתנה</string>
     <string name="graph_scale">קנה מידה של הגרף</string>
     <string name="graph_menu_divider_header">גרף</string>
+    <string name="temp_basal_overview_short_name">T:</string>
     <!-- Skins -->
     <string name="classic_description">סקין מקורי</string>
     <string name="lowres_description">סקין רזולוציה נמוכה</string>
