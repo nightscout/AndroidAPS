@@ -133,6 +133,7 @@
     <string name="wizard_result">מחשבון: %1$s\n אינס\': %2$.2f יח\'\nפחמ\': %3$d גר\'</string>
     <string name="quick_wizard_not_available">האשף המהיר שנבחר אינו זמין, נא לרענן את האריח</string>
     <string name="quick_wizard_message">אשף מהיר: %1$s\n אינס\': %2$.2f יח\'\nפחמ\': %3$d גר\'</string>
+    <string name="user_action_not_available">פעולת המשתמש %1$s אינה זמינה יותר, בבקשה רעננו את האריח</string>
     <string name="wear_action_tempt_preset_error">תצורה לא ידועה של מטרה זמנית: %1$s</string>
     <string name="wear_action_tempt_cancel_message">מבטל ערך מטרה זמני נוכחי</string>
     <string name="wear_action_tempt_unit_error">יחידות המידה שונות בין הטלפון והשעון!</string>
@@ -146,6 +147,8 @@
     <string name="wear_settings">הגדרות Wear</string>
     <string name="wearcontrol_title">שליטה מהשעון</string>
     <string name="wearcontrol_summary">הגדירו ערכי מטרה זמניים וציינו טיפולים מהשעון.</string>
+    <string name="wear_broadcast_data">שדר נתונים</string>
+    <string name="wear_broadcast_data_summary">שדר נתונים ל-AAPS או ל-AAPSClient</string>
     <string name="wear_wizard_settings_summary">חישובים הכלולים בתוצאת האשף:</string>
     <string name="wear_general_settings">הגדרות כלליות</string>
     <string name="wear_notifysmb_title">דיווח על SMB</string>
