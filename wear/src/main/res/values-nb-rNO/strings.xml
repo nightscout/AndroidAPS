@@ -11,6 +11,7 @@
     <string name="label_actions_tile">AAPS(Handlinger)</string>
     <string name="label_temp_target_tile">AAPS(Midl. Mål)</string>
     <string name="label_quick_wizard_tile">AAPS(Hurtigknapp)</string>
+    <string name="label_user_action_tile">AAPS(Brukerhandling)</string>
     <string name="label_warning_sync">Ingen data!</string>
     <string name="label_warning_old">Gamle data!</string>
     <string name="label_warning_since">Siden %1$s</string>
@@ -98,6 +99,7 @@
     <string name="action_duration">Varighet</string>
     <string name="action_tempt_confirmation">Midlertidig mål forespurt</string>
     <string name="action_quick_wizard_confirmation">Hurtigknapp forespurt</string>
+    <string name="action_user_action_confirmation">Brukerhandling forespurt</string>
     <string name="action_treatment_confirmation">Behandling forespurt</string>
     <string name="action_bolus_confirmation">Bolus forespurt</string>
     <string name="action_wizard_confirmation">Beregning forespurt</string>
