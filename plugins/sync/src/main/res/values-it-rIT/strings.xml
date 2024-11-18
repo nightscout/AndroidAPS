@@ -133,6 +133,7 @@
     <string name="wizard_result">Calc. Wizard:\nInsulina: %1$.2fU\nCHO: %2$dg</string>
     <string name="quick_wizard_not_available">Il calcolo rapido selezionato non è più disponibile, aggiorna il riquadro</string>
     <string name="quick_wizard_message">QuickWizard: %1$s\nInsulina: %2$.2fU\nCHO: %3$dg</string>
+    <string name="user_action_not_available">L\'azione utente selezionata %1$s non è più disponibile, aggiorna la tua casella</string>
     <string name="wear_action_tempt_preset_error">Preset sconosciuto target temporaneo: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Cancellare i target temporanei in esecuzione?</string>
     <string name="wear_action_tempt_unit_error">Differenti unità usate su smartwatch e telefono!</string>
@@ -146,6 +147,8 @@
     <string name="wear_settings">Impostazioni smartwatch</string>
     <string name="wearcontrol_title">Controlli da smartwatch</string>
     <string name="wearcontrol_summary">Imposta Target temporanei e inserisci trattamenti dallo smartwatch.</string>
+    <string name="wear_broadcast_data">Dati trasmissione</string>
+    <string name="wear_broadcast_data_summary">Trasmetti i dati ad AAPS o AAPSClient</string>
     <string name="wear_wizard_settings_summary">Calcoli inclusi nel risultato del Calcolatore:</string>
     <string name="wear_general_settings">Impostazioni generali</string>
     <string name="wear_notifysmb_title">Notifica SMB</string>
