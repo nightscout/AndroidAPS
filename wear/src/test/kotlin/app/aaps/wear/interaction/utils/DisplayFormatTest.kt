@@ -5,7 +5,6 @@ import app.aaps.wear.WearTestBase
 import app.aaps.wear.data.RawDisplayData
 import app.aaps.wear.testing.mockers.RawDataMocker
 import com.google.common.truth.Truth.assertThat
-import kotlinx.serialization.InternalSerializationApi
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
@@ -14,7 +13,6 @@ import org.mockito.Mockito
  * This test covers DisplayFormat class (directly)
  * but also SmallestDoubleString - due to carefully chosen input data to format
  */
-@InternalSerializationApi
 class DisplayFormatTest : WearTestBase() {
 
     private lateinit var displayFormat: DisplayFormat

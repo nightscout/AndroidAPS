@@ -9,14 +9,12 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.wear.data.RawDisplayData
 import app.aaps.wear.interaction.utils.DisplayFormat
 import app.aaps.wear.interaction.utils.SmallestDoubleString
-import kotlinx.serialization.InternalSerializationApi
 
 /*
  * Created by dlvoy on 2019-11-12
  */
 class CobIobComplication : BaseComplicationProviderService() {
 
-    @InternalSerializationApi
     override fun buildComplicationData(dataType: Int, raw: RawDisplayData, complicationPendingIntent: PendingIntent): ComplicationData? {
         var complicationData: ComplicationData? = null
         if (dataType == ComplicationData.TYPE_SHORT_TEXT) {

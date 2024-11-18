@@ -31,7 +31,6 @@ import app.aaps.wear.interaction.utils.Inevitable
 import app.aaps.wear.interaction.utils.Persistence
 import app.aaps.wear.interaction.utils.WearUtil
 import dagger.android.AndroidInjection
-import kotlinx.serialization.InternalSerializationApi
 import javax.inject.Inject
 
 /**
@@ -56,7 +55,6 @@ abstract class BaseComplicationProviderService : ComplicationProviderService() {
     }
 
     private var localBroadcastManager: LocalBroadcastManager? = null
-    @InternalSerializationApi
     private var messageReceiver: MessageReceiver? = null
 
     //==============================================================================================
@@ -166,7 +164,6 @@ abstract class BaseComplicationProviderService : ComplicationProviderService() {
      * You can continue sending data for the active complicationId until onComplicationDeactivated()
      * is called.
      */
-    @InternalSerializationApi
     override fun onComplicationActivated(
         complicationId: Int, dataType: Int, complicationManager: ComplicationManager
     ) {
@@ -192,7 +189,6 @@ abstract class BaseComplicationProviderService : ComplicationProviderService() {
      *   4. You triggered an update from your own class via the
      *       ProviderUpdateRequester.requestUpdate() method.
      */
-    @InternalSerializationApi
     override fun onComplicationUpdate(
         complicationId: Int, dataType: Int, complicationManager: ComplicationManager
     ) {
@@ -224,7 +220,7 @@ abstract class BaseComplicationProviderService : ComplicationProviderService() {
                 buildNoSyncComplicationData(dataType, raw, complicationPendingIntent, infoToast, persistence.whenDataUpdated())
             }
 
-            wearUtil.msSince(raw.singleBg[0].timeStamp) > Constants.STALE_MS        -> {
+            wearUtil.msSince(raw.singleBg[0].timeStamp) > Constants.STALE_MS     -> {
                 // data arriving from phone AAPS, but it is outdated (uploader/NS/xDrip/Sensor error)
                 val infoToast = getTapWarningSinceIntent(
                     applicationContext, thisProvider, complicationId, ComplicationAction.WARNING_OLD, raw.singleBg[0].timeStamp
@@ -249,7 +245,6 @@ abstract class BaseComplicationProviderService : ComplicationProviderService() {
     /*
      * Called when the complication has been deactivated.
      */
-    @InternalSerializationApi
     override fun onComplicationDeactivated(complicationId: Int) {
         aapsLogger.warn(LTag.WEAR, "onComplicationDeactivated(): $complicationId")
         persistence.removeFromSet(Persistence.KEY_COMPLICATIONS, "complication_$complicationId")
@@ -263,7 +258,6 @@ abstract class BaseComplicationProviderService : ComplicationProviderService() {
     /*
      * Schedule check for field update
      */
-    @InternalSerializationApi
     private fun checkIfUpdateNeeded() {
         aapsLogger.warn(LTag.WEAR, "Pending check if update needed - " + persistence.getString(Persistence.KEY_COMPLICATIONS, ""))
         inevitable.task(TASK_ID_REFRESH_COMPLICATION, 15 * Constants.SECOND_IN_MS) {
@@ -280,7 +274,6 @@ abstract class BaseComplicationProviderService : ComplicationProviderService() {
      * Check if displayed since field (field that shows how old, in minutes, is reading)
      * is up-to-date or need to be changed (a minute or more elapsed)
      */
-    @InternalSerializationApi
     private fun requestUpdateIfSinceChanged() {
         val raw = RawDisplayData()
         raw.updateFromPersistence(persistence)
@@ -364,7 +357,6 @@ abstract class BaseComplicationProviderService : ComplicationProviderService() {
     /*
      * Listen to broadcast --> new data was stored by ListenerService to Persistence
      */
-    @InternalSerializationApi
     inner class MessageReceiver : BroadcastReceiver() {
 
         override fun onReceive(context: Context, intent: Intent) {
@@ -372,7 +364,6 @@ abstract class BaseComplicationProviderService : ComplicationProviderService() {
         }
     }
 
-    @InternalSerializationApi
     private fun updateAll() {
         val complications = persistence.getSetOf(Persistence.KEY_COMPLICATIONS)
         if (complications.isNotEmpty()) {

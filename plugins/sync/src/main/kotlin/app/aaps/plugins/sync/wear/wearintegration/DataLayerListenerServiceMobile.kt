@@ -41,7 +41,6 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.InternalSerializationApi
 import javax.inject.Inject
 
 class DataLayerListenerServiceMobile : WearableListenerService() {
@@ -52,7 +51,6 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
     @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var loop: Loop
-    @InternalSerializationApi
     @Inject lateinit var wearPlugin: WearPlugin
     @Inject lateinit var sp: SP
     @Inject lateinit var config: Config
@@ -78,7 +76,6 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
     private val rxPath get() = getString(app.aaps.core.interfaces.R.string.path_rx_bridge)
     private val rxWatchfacePath get() = getString(app.aaps.core.interfaces.R.string.path_rx_data_bridge)
 
-    @InternalSerializationApi
     override fun onCreate() {
         AndroidInjection.inject(this)
         super.onCreate()
@@ -94,7 +91,6 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
             .subscribe { sendMessage(rxWatchfacePath, it.payload) }
     }
 
-    @InternalSerializationApi
     override fun onCapabilityChanged(p0: CapabilityInfo) {
         super.onCapabilityChanged(p0)
         handler.post { updateTranscriptionCapability() }
@@ -107,7 +103,6 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
         scope.cancel()
     }
 
-    @InternalSerializationApi
     @ExperimentalSerializationApi
     override fun onMessageReceived(messageEvent: MessageEvent) {
         super.onMessageReceived(messageEvent)
@@ -131,7 +126,6 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
 
     private var transcriptionNodeId: String? = null
 
-    @InternalSerializationApi
     private fun updateTranscriptionCapability() {
         try {
             val capabilityInfo: CapabilityInfo = Tasks.await(
@@ -155,7 +149,6 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
         nodes.firstOrNull { it.isNearby } ?: nodes.firstOrNull()
 
     @Suppress("unused")
-    @InternalSerializationApi
     private fun sendData(path: String, vararg params: DataMap) {
         if (wearPlugin.isEnabled()) {
             scope.launch {

@@ -11,7 +11,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.android.HasAndroidInjector
 import kotlinx.datetime.Clock
-import kotlinx.serialization.InternalSerializationApi
 
 @Suppress("unused")
 @Module(
@@ -28,9 +27,7 @@ open class WearModule {
     interface AppBindings {
 
         @Binds fun bindPreferences(preferencesImpl: PreferencesImpl): Preferences
-        @InternalSerializationApi
         @Binds fun bindContext(aaps: WearApp): Context
-        @InternalSerializationApi
         @Binds fun bindInjector(aaps: WearApp): HasAndroidInjector
     }
 

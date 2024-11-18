@@ -15,10 +15,8 @@ import app.aaps.wear.di.DaggerWearComponent
 import app.aaps.wear.events.EventWearPreferenceChange
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
-import kotlinx.serialization.InternalSerializationApi
 import javax.inject.Inject
 
-@InternalSerializationApi
 class WearApp : DaggerApplication(), OnSharedPreferenceChangeListener {
 
     @Inject lateinit var aapsLogger: AAPSLogger

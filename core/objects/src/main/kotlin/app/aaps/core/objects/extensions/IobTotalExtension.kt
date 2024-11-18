@@ -53,7 +53,7 @@ fun IobTotal.json(dateUtil: DateUtil): JSONObject {
         json.put("basaliob", basaliob)
         json.put("activity", activity)
         json.put("time", dateUtil.toISOString(time))
-    } catch (ignored: JSONException) {
+    } catch (_: JSONException) {
     }
     return json
 }
@@ -83,7 +83,7 @@ fun IobTotal.determineBasalJson(dateUtil: DateUtil): JSONObject {
             val iwzt = iobWithZeroTemp!!.determineBasalJson(dateUtil)
             json.put("iobWithZeroTemp", iwzt)
         }
-    } catch (ignored: JSONException) {
+    } catch (_: JSONException) {
     }
     return json
 }

@@ -10,7 +10,6 @@ import app.aaps.wear.data.RawDisplayData
 import app.aaps.wear.interaction.utils.DisplayFormat
 import app.aaps.wear.interaction.utils.SmallestDoubleString
 import dagger.android.AndroidInjection
-import kotlinx.serialization.InternalSerializationApi
 import kotlin.math.max
 
 /*
@@ -24,7 +23,6 @@ class BrCobIobComplication : BaseComplicationProviderService() {
         super.onCreate()
     }
 
-    @InternalSerializationApi
     override fun buildComplicationData(dataType: Int, raw: RawDisplayData, complicationPendingIntent: PendingIntent): ComplicationData? {
         var complicationData: ComplicationData? = null
         if (dataType == ComplicationData.TYPE_SHORT_TEXT) {

@@ -37,12 +37,10 @@ import app.aaps.wear.tile.UserActionTileService
 import com.google.android.gms.wearable.WearableListenerService
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import kotlinx.serialization.InternalSerializationApi
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-@InternalSerializationApi
 class DataHandlerWear @Inject constructor(
     private val context: Context,
     private val rxBus: RxBus,

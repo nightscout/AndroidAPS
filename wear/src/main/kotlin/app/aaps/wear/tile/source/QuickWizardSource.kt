@@ -10,7 +10,6 @@ import app.aaps.wear.R
 import app.aaps.wear.interaction.actions.BackgroundActionActivity
 import app.aaps.wear.tile.Action
 import app.aaps.wear.tile.TileSource
-import kotlinx.serialization.InternalSerializationApi
 import java.util.Calendar
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -18,7 +17,6 @@ import javax.inject.Singleton
 @Singleton
 class QuickWizardSource @Inject constructor(private val context: Context, private val sp: SP, private val aapsLogger: AAPSLogger) : TileSource {
 
-    @InternalSerializationApi
     override fun getSelectedActions(): List<Action> {
         val quickList = mutableListOf<Action>()
         val quickMap = getQuickWizardData(sp)
@@ -45,7 +43,6 @@ class QuickWizardSource @Inject constructor(private val context: Context, privat
         return quickList
     }
 
-    @InternalSerializationApi
     override fun getValidFor(): Long? {
         val quickMap = getQuickWizardData(sp)
         if (quickMap.entries.isEmpty()) return null
@@ -66,7 +63,6 @@ class QuickWizardSource @Inject constructor(private val context: Context, privat
         return (validTill - sfm + validWithin) * 1000L
     }
 
-    @InternalSerializationApi
     private fun getQuickWizardData(sp: SP): EventData.QuickWizard =
         EventData.deserialize(sp.getString(R.string.key_quick_wizard_data, EventData.QuickWizard(arrayListOf()).serialize())) as EventData.QuickWizard
 

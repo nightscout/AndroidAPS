@@ -9,7 +9,6 @@ import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.shared.impl.weardata.ResFileMap
-import kotlinx.serialization.InternalSerializationApi
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -84,7 +83,6 @@ open class Persistence @Inject constructor(
         putString(key, joinSet(set, "|"))
     }
 
-    @InternalSerializationApi
     fun readSingleBg(array: Array<EventData.SingleBg>): Array<EventData.SingleBg> {
         try {
             var s = sp.getStringOrNull(BG_DATA_PERSISTENCE_KEY, null)
@@ -108,7 +106,6 @@ open class Persistence @Inject constructor(
         return array
     }
 
-    @InternalSerializationApi
     fun readStatus(array: Array<EventData.Status>): Array<EventData.Status> {
         try {
             var s = sp.getStringOrNull(STATUS_PERSISTENCE_KEY, null)
@@ -132,7 +129,6 @@ open class Persistence @Inject constructor(
         return array
     }
 
-    @InternalSerializationApi
     fun readTreatments(): EventData.TreatmentData? {
         try {
             val s = sp.getStringOrNull(TREATMENT_PERSISTENCE_KEY, null)
@@ -146,7 +142,6 @@ open class Persistence @Inject constructor(
         return null
     }
 
-    @InternalSerializationApi
     fun readGraphData(): EventData.GraphData? {
         try {
             val s = sp.getStringOrNull(GRAPH_DATA_PERSISTENCE_KEY, null)
@@ -160,7 +155,6 @@ open class Persistence @Inject constructor(
         return null
     }
 
-    @InternalSerializationApi
     fun readCustomWatchface(isDefault: Boolean = false): EventData.ActionSetCustomWatchface? {
         try {
             var s = sp.getStringOrNull(if (isDefault) CUSTOM_DEFAULT_WATCHFACE else CUSTOM_WATCHFACE, null)
@@ -184,7 +178,6 @@ open class Persistence @Inject constructor(
         CwfData(json, metadata, simplifiedData)
     }
 
-    @InternalSerializationApi
     fun readSimplifiedCwf(isDefault: Boolean = false): EventData.ActionSetCustomWatchface? {
         try {
             var s = sp.getStringOrNull(if (isDefault) CUSTOM_DEFAULT_WATCHFACE else CUSTOM_WATCHFACE, null)
@@ -205,7 +198,6 @@ open class Persistence @Inject constructor(
         return null
     }
 
-    @InternalSerializationApi
     fun store(singleBg: EventData.SingleBg) {
 
         when(singleBg.dataset) {
@@ -227,19 +219,16 @@ open class Persistence @Inject constructor(
         }
     }
 
-    @InternalSerializationApi
     fun store(graphData: EventData.GraphData) {
         putString(GRAPH_DATA_PERSISTENCE_KEY, graphData.serialize())
         aapsLogger.debug(LTag.WEAR, "Stored Graph data: $graphData")
     }
 
-    @InternalSerializationApi
     fun store(treatmentData: EventData.TreatmentData) {
         putString(TREATMENT_PERSISTENCE_KEY, treatmentData.serialize())
         aapsLogger.debug(LTag.WEAR, "Stored Treatments data: $treatmentData")
     }
 
-    @InternalSerializationApi
     fun store(status: EventData.Status) {
         when (status.dataset) {
             0 -> {
@@ -259,13 +248,11 @@ open class Persistence @Inject constructor(
         }
     }
 
-    @InternalSerializationApi
     fun store(customWatchface: EventData.ActionSetCustomWatchface, isDefault: Boolean = false) {
         putString(if (isDefault) CUSTOM_DEFAULT_WATCHFACE else CUSTOM_WATCHFACE, customWatchface.serialize())
         aapsLogger.debug(LTag.WEAR, "Stored Custom Watchface ${customWatchface.customWatchfaceData} ${isDefault}: $customWatchface")
     }
 
-    @InternalSerializationApi
     fun store(customWatchface: EventData.ActionUpdateCustomWatchface) {
         readCustomWatchface()?.let { savedCwData ->
             if (customWatchface.customWatchfaceData.metadata[CwfMetadataKey.CWF_NAME] == savedCwData.customWatchfaceData.metadata[CwfMetadataKey.CWF_NAME] &&
@@ -281,7 +268,6 @@ open class Persistence @Inject constructor(
         }
     }
 
-    @InternalSerializationApi
     fun setDefaultWatchface() {
         readCustomWatchface(true)?.let { store(it) }
         aapsLogger.debug(LTag.WEAR, "Custom Watchface reset to default")

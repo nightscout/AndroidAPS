@@ -200,7 +200,7 @@ class CareDialog : DialogFragmentWithDate() {
         if (options == UiInteraction.EventType.NOTE || options == UiInteraction.EventType.EXERCISE) {
             actions.add(rh.gs(app.aaps.core.ui.R.string.duration_label) + ": " + rh.gs(app.aaps.core.ui.R.string.format_mins, binding.duration.value.toInt()))
             therapyEvent.duration = T.mins(binding.duration.value.toLong()).msecs()
-            valuesWithUnit.add(ValueWithUnit.Minute(binding.duration.value.toInt()).takeIf { !binding.duration.value.equals(0.0) })
+            valuesWithUnit.add(ValueWithUnit.Minute(binding.duration.value.toInt()).takeIf { binding.duration.value != 0.0 })
         }
         val notes = binding.notesLayout.notes.text.toString()
         if (notes.isNotEmpty()) {

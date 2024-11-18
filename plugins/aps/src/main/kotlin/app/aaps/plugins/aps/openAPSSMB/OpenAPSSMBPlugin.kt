@@ -169,7 +169,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
     override fun specialEnableCondition(): Boolean {
         return try {
             activePlugin.activePump.pumpDescription.isTempBasalCapable
-        } catch (ignored: Exception) {
+        } catch (_: Exception) {
             // may fail during initialization
             true
         }

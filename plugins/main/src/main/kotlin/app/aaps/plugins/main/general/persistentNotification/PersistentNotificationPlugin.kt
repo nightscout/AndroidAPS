@@ -64,7 +64,7 @@ class PersistentNotificationPlugin @Inject constructor(
         .pluginName(R.string.ongoingnotificaction)
         .enableByDefault(true)
         .alwaysEnabled(true)
-        .showInList({ false })
+        .showInList { false }
         .description(R.string.description_persistent_notification),
     aapsLogger, rh
 ) {

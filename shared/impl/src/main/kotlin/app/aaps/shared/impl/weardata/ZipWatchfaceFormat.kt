@@ -66,7 +66,7 @@ class ZipWatchfaceFormat {
                 else
                     null
 
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 return null     // mainly IOException
             }
         }

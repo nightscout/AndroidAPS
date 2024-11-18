@@ -43,7 +43,6 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.InternalSerializationApi
 import javax.inject.Inject
 
 class DataLayerListenerServiceWear : WearableListenerService() {
@@ -63,15 +62,12 @@ class DataLayerListenerServiceWear : WearableListenerService() {
     private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
     private val disposable = CompositeDisposable()
-    @InternalSerializationApi
     private var heartRateListener: HeartRateListener? = null
-    @InternalSerializationApi
     private var stepCountListener: StepCountListener? = null
 
     private val rxPath get() = getString(app.aaps.core.interfaces.R.string.path_rx_bridge)
     private val rxDataPath get() = getString(app.aaps.core.interfaces.R.string.path_rx_data_bridge)
 
-    @InternalSerializationApi
     @ExperimentalSerializationApi
     override fun onCreate() {
         AndroidInjection.inject(this)
@@ -114,7 +110,6 @@ class DataLayerListenerServiceWear : WearableListenerService() {
         disposable.clear()
     }
 
-    @InternalSerializationApi
     override fun onMessageReceived(messageEvent: MessageEvent) {
         super.onMessageReceived(messageEvent)
 
@@ -141,7 +136,6 @@ class DataLayerListenerServiceWear : WearableListenerService() {
         }
     }
 
-    @InternalSerializationApi
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         when (intent?.action) {
 
@@ -172,8 +166,6 @@ class DataLayerListenerServiceWear : WearableListenerService() {
         startForeground(FOREGROUND_NOTIF_ID, notification)
     }
 
-
-    @InternalSerializationApi
     private fun updateHeartRateListener() {
         if (sp.getBoolean(R.string.key_heart_rate_sampling, false)) {
             if (heartRateListener == null) {
@@ -189,7 +181,6 @@ class DataLayerListenerServiceWear : WearableListenerService() {
         }
     }
 
-    @InternalSerializationApi
     private fun updateStepsCountListener() {
         if (sp.getBoolean(R.string.key_steps_sampling, false)) {
             if (stepCountListener == null) {

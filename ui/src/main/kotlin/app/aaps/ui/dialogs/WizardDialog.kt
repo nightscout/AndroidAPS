@@ -308,7 +308,7 @@ class WizardDialog : DaggerDialogFragment() {
         _binding = null
     }
 
-    private fun onCheckedChanged(buttonView: CompoundButton, @Suppress("UNUSED_PARAMETER") state: Boolean) {
+    private fun onCheckedChanged(buttonView: CompoundButton, @Suppress("unused") state: Boolean) {
         saveCheckedStates()
         binding.ttCheckbox.isEnabled = binding.bgCheckbox.isChecked && persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()) != null
         binding.ttCheckboxIcon.visibility = binding.ttCheckbox.isEnabled.toVisibility()

@@ -146,7 +146,7 @@ class SensitivityOref1Plugin @Inject constructor(
             if (deviations.size < deviationCategory[i]) {
                 val pad = ((1 - deviations.size.toDouble() / deviationCategory[i]) * 18).roundToInt()
                 aapsLogger.debug(LTag.AUTOSENS, "Adding $pad more zero deviations")
-                for (d in 0 until pad) {
+                (0 until pad).forEach {
                     deviations.add(0.0)
                 }
             }

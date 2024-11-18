@@ -35,7 +35,6 @@ import com.ustwo.clockwise.wearable.WatchFace
 import dagger.android.AndroidInjection
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import kotlinx.serialization.InternalSerializationApi
 import javax.inject.Inject
 import kotlin.math.floor
 
@@ -47,7 +46,6 @@ import kotlin.math.floor
  * Updated by Philoul to manage external data 06/11/2024
  */
 
-@InternalSerializationApi
 abstract class BaseWatchFace : WatchFace() {
 
     @Inject lateinit var persistence: Persistence

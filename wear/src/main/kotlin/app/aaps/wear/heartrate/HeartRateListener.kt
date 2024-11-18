@@ -16,7 +16,6 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.wear.R
 import app.aaps.wear.comm.IntentWearToMobile
 import io.reactivex.rxjava3.disposables.Disposable
-import kotlinx.serialization.InternalSerializationApi
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
@@ -42,7 +41,6 @@ import kotlin.math.roundToInt
  * ignores such time unless we don't get good values for more than 90% of time. Since
  * heart rate doesn't change so fast this should be good enough.
  */
-@InternalSerializationApi
 class HeartRateListener(
     private val ctx: Context,
     private val aapsLogger: AAPSLogger,
@@ -88,7 +86,6 @@ class HeartRateListener(
     val currentHeartRateBpm get() = sampler.currentBpm?.roundToInt()
 
     @VisibleForTesting
-    @InternalSerializationApi
     var sendHeartRate: (EventData.ActionHeartRate) -> Unit = { hr -> ctx.startService(IntentWearToMobile(ctx, hr)) }
 
     override fun isDisposed() = schedule == null
@@ -100,13 +97,11 @@ class HeartRateListener(
     }
 
     /** Sends currently sampled value to the phone. Executed every [samplingIntervalMillis]. */
-    @InternalSerializationApi
     private fun send() {
         send(System.currentTimeMillis())
     }
 
     @VisibleForTesting
-    @InternalSerializationApi
     fun send(timestampMillis: Long) {
         sampler.getAndReset(timestampMillis)?.let { hr ->
             aapsLogger.info(LTag.WEAR, "Send heart rate $hr")
@@ -143,7 +138,6 @@ class HeartRateListener(
 
     private class Sampler(timestampMillis: Long, val sp: SP) {
 
-        @InternalSerializationApi
         private val actionHeartRatehistory: MutableList<EventData.ActionHeartRate> = ArrayList()
         private val averageHistory
             get() = sp.getInt(R.string.key_heart_rate_smoothing, 1)
@@ -175,7 +169,6 @@ class HeartRateListener(
         }
 
         /** Gets the current sampled value and resets the samplers clock to the given timestamp. */
-        @InternalSerializationApi
         fun getAndReset(timestampMillis: Long): EventData.ActionHeartRate? {
             lock.withLock {
                 fix(timestampMillis)
@@ -203,7 +196,6 @@ class HeartRateListener(
             }
         }
 
-        @InternalSerializationApi
         fun averageHeartrate(duration: Long, timestamp: Long, device: String): EventData.ActionHeartRate? {
             lock.withLock {
                 cleanActionHeartRatehistory(timestamp)  // clean oldest values from memory
@@ -224,12 +216,11 @@ class HeartRateListener(
             }
         }
 
-        @InternalSerializationApi
-        fun cleanActionHeartRatehistory (timestamp: Long) {
+        fun cleanActionHeartRatehistory(timestamp: Long) {
             val iterator = actionHeartRatehistory.iterator()
-            while(iterator.hasNext()){
+            while (iterator.hasNext()) {
                 val hr = iterator.next()
-                if(hr.timestamp < timestamp - (maxAverage - 1) * 62000L){   // keep in memory the max duration + 2s marging for each min
+                if (hr.timestamp < timestamp - (maxAverage - 1) * 62000L) {   // keep in memory the max duration + 2s marging for each min
                     iterator.remove()
                 }
             }

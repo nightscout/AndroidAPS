@@ -13,9 +13,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.wear.R
 import app.aaps.wear.databinding.ActivityDigitalstyleBinding
 import app.aaps.wear.watchfaces.utils.BaseWatchFace
-import kotlinx.serialization.InternalSerializationApi
 
-@InternalSerializationApi
 class DigitalStyleWatchface : BaseWatchFace() {
 
     private lateinit var binding: ActivityDigitalstyleBinding

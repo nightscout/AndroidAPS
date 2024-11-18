@@ -5,7 +5,6 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.wear.R
 import app.aaps.wear.data.RawDisplayData
 import app.aaps.wear.interaction.utils.Pair.Companion.create
-import kotlinx.serialization.InternalSerializationApi
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.max
@@ -60,7 +59,6 @@ class DisplayFormat @Inject internal constructor() {
         }
     }
 
-    @InternalSerializationApi
     fun shortTrend(raw: RawDisplayData, dataSet: Int): String {
         var minutes = "--"
         val rawDelta = if (sp.getBoolean(R.string.key_show_detailed_delta, false)) raw.singleBg[dataSet].deltaDetailed else raw.singleBg[dataSet].delta
@@ -80,13 +78,11 @@ class DisplayFormat @Inject internal constructor() {
         return "$minutes $shortDelta"
     }
 
-    @InternalSerializationApi
     fun longGlucoseLine(raw: RawDisplayData, dataSet: Int): String {
         val rawDelta = if (sp.getBoolean(R.string.key_show_detailed_delta, false)) raw.singleBg[dataSet].deltaDetailed else raw.singleBg[dataSet].delta
         return raw.singleBg[dataSet].sgvString + raw.singleBg[dataSet].slopeArrow + " " + deltaSymbol() + SmallestDoubleString(rawDelta).minimise(8) + " (" + shortTimeSince(raw.singleBg[dataSet].timeStamp) + ")"
     }
 
-    @InternalSerializationApi
     fun longDetailsLine(raw: RawDisplayData, dataSet: Int): String {
         val sepLong = "  " + verticalSeparatorSymbol() + "  "
         val sepShort = " " + verticalSeparatorSymbol() + " "
@@ -116,7 +112,6 @@ class DisplayFormat @Inject internal constructor() {
         return line
     }
 
-    @InternalSerializationApi
     fun detailedIob(raw: RawDisplayData, dataSet: Int): Pair<String, String> {
         val iob1 = SmallestDoubleString(raw.status[dataSet].iobSum, SmallestDoubleString.Units.USE).minimise(MAX_FIELD_LEN_SHORT)
         var iob2 = ""
@@ -135,7 +130,6 @@ class DisplayFormat @Inject internal constructor() {
         return create(iob1, iob2)
     }
 
-    @InternalSerializationApi
     fun detailedCob(raw: RawDisplayData, dataSet: Int): Pair<String, String> {
         val cobMini = SmallestDoubleString(raw.status[dataSet].cob, SmallestDoubleString.Units.USE)
         var cob2 = ""

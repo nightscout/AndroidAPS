@@ -5,9 +5,7 @@ import app.aaps.core.interfaces.rx.weardata.EventData.SingleBg
 import app.aaps.core.interfaces.utils.SafeParse.stringToDouble
 import app.aaps.wear.WearTestBase
 import app.aaps.wear.data.RawDisplayData
-import kotlinx.serialization.InternalSerializationApi
 
-@InternalSerializationApi
 class RawDataMocker {
 
     fun rawSgv(sgv: String?, m: Int, deltaString: String): RawDisplayData {

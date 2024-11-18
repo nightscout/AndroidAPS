@@ -7,7 +7,6 @@ import app.aaps.core.interfaces.rx.weardata.EventData.TreatmentData.Basal
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.wear.R
-import kotlinx.serialization.InternalSerializationApi
 import lecho.lib.hellocharts.model.Axis
 import lecho.lib.hellocharts.model.AxisValue
 import lecho.lib.hellocharts.model.Line
@@ -20,7 +19,6 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToLong
 
-@InternalSerializationApi
 class BgGraphBuilder(
     private val sp: SP,
     private val dateUtil: DateUtil,

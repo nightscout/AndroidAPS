@@ -14,7 +14,6 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
-import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.extensions.valueToUnits
 import app.aaps.core.utils.JsonHelper.safeGetInt
 import app.aaps.core.utils.JsonHelper.safeGetString
@@ -160,7 +159,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
             percentage,
             true,
             useCOB() == YES,
-            uIOB, //allways use or don't both bolus
+            uIOB, //always use or don't both bolus
             uIOB, // & basal IOB
             superBolus,
             useTempTarget() == YES,

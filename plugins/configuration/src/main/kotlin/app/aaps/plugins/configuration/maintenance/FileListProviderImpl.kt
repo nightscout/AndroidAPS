@@ -25,7 +25,6 @@ import app.aaps.plugins.configuration.maintenance.formats.EncryptedPrefsFormat
 import app.aaps.shared.impl.weardata.ZipWatchfaceFormat
 import dagger.Lazy
 import dagger.Reusable
-import kotlinx.serialization.InternalSerializationApi
 import org.joda.time.DateTime
 import org.joda.time.Days
 import org.joda.time.Hours
@@ -87,7 +86,6 @@ class FileListProviderImpl @Inject constructor(
         return filtered
     }
 
-    @InternalSerializationApi
     override fun listCustomWatchfaceFiles(): MutableList<CwfFile> {
         val customWatchfaceFiles = mutableListOf<CwfFile>()
         val customWatchfaceAuthorization = preferences.get().get(BooleanKey.WearCustomWatchfaceAuthorization)

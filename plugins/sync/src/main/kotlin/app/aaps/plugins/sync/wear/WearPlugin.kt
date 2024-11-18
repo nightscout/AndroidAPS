@@ -39,12 +39,10 @@ import app.aaps.plugins.sync.wear.wearintegration.DataLayerListenerServiceMobile
 import app.aaps.shared.impl.extensions.safeQueryBroadcastReceivers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import kotlinx.serialization.InternalSerializationApi
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-@InternalSerializationApi
 class WearPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
@@ -74,7 +72,6 @@ class WearPlugin @Inject constructor(
     var connectedDevice = "---"
     var savedCustomWatchface: CwfData? = null
 
-    @InternalSerializationApi
     override fun onStart() {
         super.onStart()
         dataLayerListenerServiceMobileHelper.startService(context)
@@ -139,7 +136,6 @@ class WearPlugin @Inject constructor(
             }
     }
 
-    @InternalSerializationApi
     fun checkCustomWatchfacePreferences() {
         savedCustomWatchface?.let { cwf ->
             val cwfAuthorization = preferences.get(BooleanKey.WearCustomWatchfaceAuthorization)

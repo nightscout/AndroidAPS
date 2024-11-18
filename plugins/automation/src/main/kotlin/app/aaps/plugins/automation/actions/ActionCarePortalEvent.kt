@@ -39,10 +39,6 @@ class ActionCarePortalEvent(injector: HasAndroidInjector) : Action(injector) {
     var cpEvent = InputCarePortalMenu(rh)
     private var valuesWithUnit = mutableListOf<ValueWithUnit?>()
 
-    private constructor(injector: HasAndroidInjector, actionCPEvent: ActionCarePortalEvent) : this(injector) {
-        cpEvent = InputCarePortalMenu(rh, actionCPEvent.cpEvent.value)
-    }
-
     override fun friendlyName(): Int = app.aaps.core.ui.R.string.careportal
     override fun shortDescription(): String = rh.gs(cpEvent.value.stringResWithValue, note.value)
 

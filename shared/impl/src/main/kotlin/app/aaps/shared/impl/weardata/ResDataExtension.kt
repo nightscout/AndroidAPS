@@ -32,7 +32,7 @@ fun ResData.toDrawable(resources: Resources, width: Int? = null, height: Int? = 
 
             else                         -> null
         }
-    } catch (e: Exception) {
+    } catch (_: Exception) {
         return null
     }
 }
@@ -62,7 +62,7 @@ fun ResData.toTypeface(): Typeface? {
 
             }
         }
-    } catch (e: Exception) {
+    } catch (_: Exception) {
         return null
     }
 }

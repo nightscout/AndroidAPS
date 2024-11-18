@@ -34,7 +34,6 @@ import com.ustwo.clockwise.wearable.WatchFace
 import dagger.android.AndroidInjection
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import kotlinx.serialization.InternalSerializationApi
 import java.util.*
 import javax.inject.Inject
 import kotlin.math.ceil
@@ -54,11 +53,8 @@ class CircleWatchface : WatchFace() {
 
     private val rawData = RawDisplayData()
 
-    @InternalSerializationApi
     private val singleBg get() = rawData.singleBg
-    @InternalSerializationApi
     private val status get() = rawData.status
-    @InternalSerializationApi
     private val graphData get() = rawData.graphData
 
     companion object {
@@ -90,7 +86,6 @@ class CircleWatchface : WatchFace() {
     private var sgvTapTime: Long = 0
 
     @SuppressLint("InflateParams")
-    @InternalSerializationApi
     override fun onCreate() {
         AndroidInjection.inject(this)
         super.onCreate()
@@ -138,7 +133,6 @@ class CircleWatchface : WatchFace() {
     }
 
     @Synchronized
-    @InternalSerializationApi
     override fun onDraw(canvas: Canvas) {
         aapsLogger.debug(LTag.WEAR, "start onDraw")
         canvas.drawColor(backgroundColor)
@@ -148,7 +142,6 @@ class CircleWatchface : WatchFace() {
     }
 
     @Synchronized
-    @InternalSerializationApi
     private fun prepareLayout() {
         aapsLogger.debug(LTag.WEAR, "start startPrepareLayout")
 
@@ -216,7 +209,6 @@ class CircleWatchface : WatchFace() {
         myLayout?.layout(0, 0, myLayout?.measuredWidth ?: 0, myLayout?.measuredHeight ?: 0)
     }
 
-    @InternalSerializationApi
     private val minutes: String
         get() {
             var minutes = "--'"
@@ -250,7 +242,6 @@ class CircleWatchface : WatchFace() {
     }
 
     @Synchronized
-    @InternalSerializationApi
     private fun prepareDrawTime() {
         aapsLogger.debug(LTag.WEAR, "start prepareDrawTime")
         val hour = Calendar.getInstance()[Calendar.HOUR_OF_DAY] % 12
@@ -282,7 +273,6 @@ class CircleWatchface : WatchFace() {
         return bBegin in aBegin..aEnd || aBegin <= bBegin && bEnd > 360 && bEnd % 360 > aBegin || aBegin in bBegin..bEnd || bBegin <= aBegin && aEnd > 360 && aEnd % 360 > bBegin
     }
 
-    @InternalSerializationApi
     override fun onTimeChanged(oldTime: WatchFaceTime, newTime: WatchFaceTime) {
         if (oldTime.hasMinuteChanged(newTime)) {
             val powerManager = getSystemService(POWER_SERVICE) as PowerManager
@@ -309,7 +299,6 @@ class CircleWatchface : WatchFace() {
     val textColor: Int
         get() = if (sp.getBoolean(R.string.key_dark, true)) Color.WHITE else Color.BLACK
 
-    @InternalSerializationApi
     private fun drawOtherStuff(canvas: Canvas) {
         aapsLogger.debug(LTag.WEAR, "start onDrawOtherStuff. bgDataList.size(): " + bgDataList.size)
         if (sp.getBoolean(R.string.key_show_ring_history, false)) {
@@ -332,7 +321,6 @@ class CircleWatchface : WatchFace() {
     }
 
     @Synchronized
-    @InternalSerializationApi
     fun addToWatchSet() {
         bgDataList.clear()
         if (!sp.getBoolean(R.string.key_show_ring_history, false)) return
@@ -391,7 +379,6 @@ class CircleWatchface : WatchFace() {
         }
     }
 
-    @InternalSerializationApi
     private fun addReadingSoft(canvas: Canvas, entry: SingleBg) {
         aapsLogger.debug(LTag.WEAR, "addReadingSoft")
         var color = Color.LTGRAY
@@ -406,7 +393,6 @@ class CircleWatchface : WatchFace() {
         addArch(canvas, (offset + .8f) * offsetMultiplier + 10, backgroundColor, 360f)
     }
 
-    @InternalSerializationApi
     private fun addReading(canvas: Canvas, entry: SingleBg) {
         aapsLogger.debug(LTag.WEAR, "addReading")
         var color = Color.LTGRAY

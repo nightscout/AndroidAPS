@@ -9,7 +9,6 @@ import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.wear.comm.DataLayerListenerServiceWear
 import dagger.android.DaggerActivity
-import kotlinx.serialization.InternalSerializationApi
 import javax.inject.Inject
 
 class BackgroundActionActivity : DaggerActivity() {
@@ -17,7 +16,6 @@ class BackgroundActionActivity : DaggerActivity() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus
 
-    @InternalSerializationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         intent.extras?.getString(DataLayerListenerServiceWear.KEY_ACTION)?.let { action ->

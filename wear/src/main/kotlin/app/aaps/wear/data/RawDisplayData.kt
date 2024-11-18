@@ -2,7 +2,6 @@ package app.aaps.wear.data
 
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.wear.interaction.utils.Persistence
-import kotlinx.serialization.InternalSerializationApi
 
 /**
  * Holds bunch of data model variables and lists that arrive from phone app and are due to be
@@ -15,7 +14,6 @@ import kotlinx.serialization.InternalSerializationApi
  */
 class RawDisplayData {
 
-    @InternalSerializationApi
     var singleBg = arrayOf<EventData.SingleBg>(
         EventData.SingleBg(
             dataset = 0,
@@ -72,7 +70,6 @@ class RawDisplayData {
     )
 
     // status bundle
-    @InternalSerializationApi
     var status = arrayOf<EventData.Status>(
         EventData.Status(
             dataset = 0,
@@ -116,12 +113,10 @@ class RawDisplayData {
         )
     )
 
-    @InternalSerializationApi
     var graphData = EventData.GraphData(
         entries = ArrayList()
     )
 
-    @InternalSerializationApi
     var treatmentData = EventData.TreatmentData(
         temps = ArrayList(),
         basals = ArrayList(),
@@ -129,11 +124,9 @@ class RawDisplayData {
         predictions = ArrayList()
     )
 
-    @InternalSerializationApi
     fun toDebugString(): String =
         "DisplayRawData{singleBg=$singleBg, status=$status, graphData=$graphData, treatmentData=$treatmentData}"
 
-    @InternalSerializationApi
     fun updateFromPersistence(persistence: Persistence) {
         persistence.readSingleBg(singleBg).let { singleBg = it }
         persistence.readGraphData()?.let { graphData = it }

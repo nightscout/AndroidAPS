@@ -153,7 +153,7 @@ class AutotunePrep @Inject constructor(
                 glucoseData.add(glucose[i])
             }
         }
-        if (glucose.isEmpty() || glucoseData.size == 0) {
+        if (glucose.isEmpty() || glucoseData.isEmpty()) {
             //aapsLogger.debug(LTag.AUTOTUNE, "No BG value received")
             if (verbose)
                 log("No BG value received")
@@ -167,13 +167,13 @@ class AutotunePrep @Inject constructor(
         // IOBInputs are for iob calculation (done here in AutotuneIob Class)
         //val boluses = 0
         //val maxCarbs = 0
-        if (treatments.size == 0) {
+        if (treatments.isEmpty()) {
             //aapsLogger.debug(LTag.AUTOTUNE, "No Carbs entries")
             if (verbose)
                 log("No Carbs entries")
             //return null
         }
-        if (autotuneIob.boluses.size == 0) {
+        if (autotuneIob.boluses.isEmpty) {
             //aapsLogger.debug(LTag.AUTOTUNE, "No treatment received")
             if (verbose)
                 log("No treatment received")
@@ -238,7 +238,7 @@ class AutotunePrep @Inject constructor(
 
             // As we're processing each data point, go through the treatment.carbs and see if any of them are older than
             // the current BG data point.  If so, add those carbs to COB.
-            val treatment = if (treatments.size > 0) treatments[treatments.size - 1] else null
+            val treatment = if (treatments.isNotEmpty()) treatments[treatments.size - 1] else null
             var myCarbs = 0.0
             if (treatment != null) {
                 if (treatment.timestamp < bgTime) {

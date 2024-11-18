@@ -82,7 +82,7 @@ class IobCobCalculatorPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.GENERAL)
         .pluginName(R.string.iob_cob_calculator)
-        .showInList({ false })
+        .showInList { false }
         .neverVisible(true)
         .alwaysEnabled(true),
     aapsLogger, rh
@@ -319,7 +319,7 @@ class IobCobCalculatorPlugin @Inject constructor(
             aapsLogger.debug(LTag.AUTOSENS, "AUTOSENSDATA is waiting for calculation thread: $reason")
             try {
                 thread?.join(5000)
-            } catch (ignored: InterruptedException) {
+            } catch (_: InterruptedException) {
             }
             aapsLogger.debug(LTag.AUTOSENS, "AUTOSENSDATA finished waiting for calculation thread: $reason")
         }

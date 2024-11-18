@@ -49,7 +49,6 @@ import app.aaps.shared.impl.weardata.toTypeface
 import app.aaps.wear.R
 import app.aaps.wear.databinding.ActivityCustomBinding
 import app.aaps.wear.watchfaces.utils.BaseWatchFace
-import kotlinx.serialization.InternalSerializationApi
 import org.joda.time.DateTime
 import org.joda.time.TimeOfDay
 import org.json.JSONObject
@@ -58,7 +57,6 @@ import javax.inject.Inject
 import kotlin.math.floor
 
 @SuppressLint("UseCompatLoadingForDrawables")
-@InternalSerializationApi
 class CustomWatchface : BaseWatchFace() {
 
     @Inject lateinit var context: Context
@@ -70,13 +68,12 @@ class CustomWatchface : BaseWatchFace() {
     private var resDataMap: CwfResDataMap = mutableMapOf()
     private var json = JSONObject()
     private var jsonString = ""
-    private fun bgColor(dataSet: Int): Int
-         = when (singleBg[dataSet].sgvLevel) {
-            1L   -> highColor
-            0L   -> midColor
-            -1L  -> lowColor
-            else -> midColor
-        }
+    private fun bgColor(dataSet: Int): Int = when (singleBg[dataSet].sgvLevel) {
+        1L   -> highColor
+        0L   -> midColor
+        -1L  -> lowColor
+        else -> midColor
+    }
 
     @Suppress("DEPRECATION")
     override fun inflateLayout(inflater: LayoutInflater): ViewBinding {
@@ -409,6 +406,7 @@ class CustomWatchface : BaseWatchFace() {
         val customLow: ResFileMap? = null,
         val external: Int = 0
     ) {
+
         BACKGROUND(
             key = ViewKeys.BACKGROUND.key,
             id = R.id.background,
@@ -563,8 +561,7 @@ class CustomWatchface : BaseWatchFace() {
         var twinView: ViewMap? = null
             get() = field ?: viewJson?.let { viewJson -> ViewMap.fromKey(viewJson.optString(JsonKeys.TWINVIEW.key)).also { twinView = it } }
 
-        fun visibility(): Boolean = this.pref?.let { cwf.sp.getBoolean(it, true) }
-            ?: true
+        fun visibility(): Boolean = this.pref?.let { cwf.sp.getBoolean(it, true) } != false
 
         fun textDrawable(): Drawable? = textDrawable
             ?: cwf.resDataMap[viewJson?.optString(JsonKeys.BACKGROUND.key)]?.toDrawable(cwf.resources, width, height)?.also { textDrawable = it }
@@ -608,9 +605,9 @@ class CustomWatchface : BaseWatchFace() {
                     if (viewJson.has(JsonKeys.DYNVALUE.key)) {
                         dynData?.getDynValue(viewJson.optBoolean(JsonKeys.DYNVALUE.key, false))?.let {
                             try {   // try - catch block if wrong format provided not consistant with double values, to avoid crash
-                                view.text = String.format(cwf.context.resources.configuration.locales[0] ,dynData?.getTextValueStep() ?: viewJson.optString(JsonKeys.TEXTVALUE.key, "%.0f"), it )
-                            } catch(_: Exception) {
-                                view.text = String.format(cwf.context.resources.configuration.locales[0] , "%.0f", it )
+                                view.text = String.format(cwf.context.resources.configuration.locales[0], dynData?.getTextValueStep() ?: viewJson.optString(JsonKeys.TEXTVALUE.key, "%.0f"), it)
+                            } catch (_: Exception) {
+                                view.text = String.format(cwf.context.resources.configuration.locales[0], "%.0f", it)
                             }
                         } ?: apply {
                             view.text = dynData?.getTextValueStep() ?: viewJson.optString(JsonKeys.TEXTVALUE.key)

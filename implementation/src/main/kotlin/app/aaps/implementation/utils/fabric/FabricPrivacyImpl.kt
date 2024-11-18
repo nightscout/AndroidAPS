@@ -12,7 +12,6 @@ import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.ktx.Firebase
 import dagger.Reusable
-import kotlinx.serialization.InternalSerializationApi
 import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.io.ObjectInputStream
@@ -103,7 +102,6 @@ class FabricPrivacyImpl @Inject constructor(
         return sp.getBoolean(BooleanKey.MaintenanceEnableFabric.key, BooleanKey.MaintenanceEnableFabric.defaultValue)
     }
 
-    @InternalSerializationApi
     override fun logWearException(wearException: EventData.WearException) {
         aapsLogger.debug(LTag.WEAR, "logWearException")
         FirebaseCrashlytics.getInstance().apply {

@@ -29,12 +29,10 @@ import app.aaps.shared.impl.weardata.toDrawable
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import kotlinx.serialization.InternalSerializationApi
 import javax.inject.Inject
 
 class WearFragment : DaggerFragment() {
 
-    @InternalSerializationApi
     @Inject lateinit var wearPlugin: WearPlugin
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsSchedulers: AapsSchedulers
@@ -60,7 +58,6 @@ class WearFragment : DaggerFragment() {
         return binding.root
     }
 
-    @InternalSerializationApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.resend.setOnClickListener { rxBus.send(EventData.ActionResendData("WearFragment")) }
@@ -83,7 +80,6 @@ class WearFragment : DaggerFragment() {
         }
     }
 
-    @InternalSerializationApi
     override fun onResume() {
         super.onResume()
         disposable += rxBus
@@ -113,7 +109,6 @@ class WearFragment : DaggerFragment() {
         _binding = null
     }
 
-    @InternalSerializationApi
     private fun updateGui() {
         _binding ?: return
         wearPlugin.savedCustomWatchface?.let {
@@ -130,7 +125,6 @@ class WearFragment : DaggerFragment() {
         binding.customWatchfaceLayout.visibility = (wearPlugin.connectedDevice != rh.gs(R.string.no_watch_connected)).toVisibility()
     }
 
-    @InternalSerializationApi
     private fun loadCustom(cwf: CwfData) {
         wearPlugin.savedCustomWatchface = cwf
     }

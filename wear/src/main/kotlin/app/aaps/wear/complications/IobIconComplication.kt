@@ -11,14 +11,12 @@ import app.aaps.wear.R
 import app.aaps.wear.data.RawDisplayData
 import app.aaps.wear.interaction.utils.DisplayFormat
 import app.aaps.wear.interaction.utils.SmallestDoubleString
-import kotlinx.serialization.InternalSerializationApi
 
 /*
  * Created by dlvoy on 2019-11-12
  */
 class IobIconComplication : BaseComplicationProviderService() {
 
-    @InternalSerializationApi
     override fun buildComplicationData(dataType: Int, raw: RawDisplayData, complicationPendingIntent: PendingIntent): ComplicationData? {
         var complicationData: ComplicationData? = null
         if (dataType == ComplicationData.TYPE_SHORT_TEXT) {

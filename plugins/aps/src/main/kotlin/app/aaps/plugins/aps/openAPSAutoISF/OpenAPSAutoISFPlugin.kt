@@ -194,7 +194,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         return config.isEngineeringMode() && config.isDev() &&
             try {
                 activePlugin.activePump.pumpDescription.isTempBasalCapable
-            } catch (ignored: Exception) {
+            } catch (_: Exception) {
                 // may fail during initialization
                 true
             }
@@ -217,7 +217,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
     private val dynIsfCache = LongSparseArray<Double>()
 
     @Synchronized
-    private fun calculateVariableIsf(timestamp: Long, bg: Double?): Pair<String, Double?> {
+    private fun calculateVariableIsf(timestamp: Long, @Suppress("SameParameterValue") bg: Double?): Pair<String, Double?> {
         val profile = profileFunction.getProfile(timestamp)
         if (profile == null) return Pair("OFF", null)
         if (!preferences.get(BooleanKey.ApsUseDynamicSensitivity)) return Pair("OFF", null)

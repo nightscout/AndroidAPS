@@ -97,15 +97,11 @@ class OpenAPSFragment : DaggerFragment(), MenuProvider {
         disposable += rxBus
             .toObservable(EventOpenAPSUpdateGui::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe({
-                           updateGUI()
-                       }, fabricPrivacy::logException)
+            .subscribe({ updateGUI() }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventResetOpenAPSGui::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe({
-                           resetGUI(it.text)
-                       }, fabricPrivacy::logException)
+            .subscribe({ resetGUI(it.text) }, fabricPrivacy::logException)
 
         updateGUI()
     }

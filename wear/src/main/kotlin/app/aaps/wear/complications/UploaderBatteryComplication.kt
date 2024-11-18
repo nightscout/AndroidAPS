@@ -10,7 +10,6 @@ import androidx.annotation.DrawableRes
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.wear.R
 import app.aaps.wear.data.RawDisplayData
-import kotlinx.serialization.InternalSerializationApi
 import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
@@ -20,7 +19,6 @@ import kotlin.math.min
  */
 class UploaderBatteryComplication : BaseComplicationProviderService() {
 
-    @InternalSerializationApi
     override fun buildComplicationData(dataType: Int, raw: RawDisplayData, complicationPendingIntent: PendingIntent): ComplicationData? {
         var complicationData: ComplicationData? = null
         @DrawableRes var batteryIcon = R.drawable.ic_battery_unknown

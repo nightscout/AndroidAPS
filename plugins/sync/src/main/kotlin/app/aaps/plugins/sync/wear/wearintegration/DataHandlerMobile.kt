@@ -84,7 +84,6 @@ import app.aaps.plugins.sync.R
 import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import kotlinx.serialization.InternalSerializationApi
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -98,7 +97,6 @@ import kotlin.math.abs
 import kotlin.math.min
 
 @Singleton
-@InternalSerializationApi
 class DataHandlerMobile @Inject constructor(
     aapsSchedulers: AapsSchedulers,
     private val injector: HasAndroidInjector,
@@ -534,7 +532,7 @@ class DataHandlerMobile @Inject constructor(
                 } else {
                     sendError(rh.gs(R.string.user_action_not_available, command.title))
                 }
-            } ?:apply {
+            } ?: apply {
                 sendError(rh.gs(R.string.user_action_not_available, command.title))
             }
         } else {
@@ -1354,10 +1352,10 @@ class DataHandlerMobile @Inject constructor(
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
 
             val action = when {
-                amount == 0.0 -> Action.CARBS
-                carbs == 0 -> Action.BOLUS
+                amount == 0.0     -> Action.CARBS
+                carbs == 0        -> Action.BOLUS
                 carbsDuration > 0 -> Action.EXTENDED_CARBS
-                else -> Action.TREATMENT
+                else              -> Action.TREATMENT
             }
             uel.log(
                 action = action, source = Sources.Wear,

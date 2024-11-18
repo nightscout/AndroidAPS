@@ -13,7 +13,6 @@ import app.aaps.wear.R
 import app.aaps.wear.interaction.utils.EditPlusMinusViewAdapter
 import app.aaps.wear.interaction.utils.PlusMinusEditText
 import app.aaps.wear.nondeprecated.GridPagerAdapterNonDeprecated
-import kotlinx.serialization.InternalSerializationApi
 import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
@@ -39,7 +38,6 @@ class BolusActivity : ViewSelectorActivity() {
         val increment2 = (preferences.get(DoubleKey.OverviewInsulinButtonIncrement2) * 10).roundToInt() / 10.0
         val stepValues = listOf(0.1, increment1, increment2)
 
-        @InternalSerializationApi
         override fun instantiateItem(container: ViewGroup, row: Int, col: Int): View = when (col) {
             0    -> {
                 val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, true)

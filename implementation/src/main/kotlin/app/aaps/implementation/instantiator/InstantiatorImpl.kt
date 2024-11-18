@@ -10,7 +10,6 @@ import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.Preferences
@@ -29,7 +28,6 @@ class InstantiatorImpl @Inject constructor(
     private val dateUtil: DateUtil,
     private val rh: ResourceHelper,
     private val aapsLogger: AAPSLogger,
-    private val sp: SP,
     private val preferences: Preferences,
     private val activePlugin: ActivePlugin,
     private val config: Config,

@@ -2,7 +2,6 @@ package app.aaps.core.interfaces.rx.weardata
 
 import com.google.common.truth.Truth.assertThat
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.InternalSerializationApi
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -11,7 +10,6 @@ import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.quality.Strictness
 
 @ExperimentalSerializationApi
-@InternalSerializationApi
 @ExtendWith(MockitoExtension::class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class EventDataTest {

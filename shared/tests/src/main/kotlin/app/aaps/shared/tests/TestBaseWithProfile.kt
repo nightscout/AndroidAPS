@@ -238,7 +238,7 @@ open class TestBaseWithProfile : TestBase() {
             val arg3 = invocation.getArgument<String?>(3)
             String.format(rh.gs(string), arg1, arg2, arg3)
         }.`when`(rh).gs(anyInt(), anyString(), anyInt(), anyString())
-        instantiator = InstantiatorImpl(injector, dateUtil, rh, aapsLogger, sp, preferences, activePlugin, config, rxBus, hardLimits)
+        instantiator = InstantiatorImpl(injector, dateUtil, rh, aapsLogger, preferences, activePlugin, config, rxBus, hardLimits)
     }
 
     fun getValidProfileStore(): ProfileStore {

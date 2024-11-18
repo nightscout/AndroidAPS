@@ -8,7 +8,6 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.wear.R
 import app.aaps.wear.interaction.actions.BackgroundActionActivity
 import app.aaps.wear.interaction.actions.TempTargetActivity
-import kotlinx.serialization.InternalSerializationApi
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -17,7 +16,6 @@ class TempTargetSource @Inject constructor(context: Context, sp: SP, aapsLogger:
 
     override val preferencePrefix = "tile_tempt_"
 
-    @InternalSerializationApi
     override fun getActions(resources: Resources): List<StaticAction> {
         val message = resources.getString(R.string.action_tempt_confirmation)
         return listOf(
@@ -70,7 +68,6 @@ class TempTargetSource @Inject constructor(context: Context, sp: SP, aapsLogger:
         )
     }
 
-    @InternalSerializationApi
     override fun getResourceReferences(resources: Resources): List<Int> {
         return getActions(resources).map { it.iconRes }
     }

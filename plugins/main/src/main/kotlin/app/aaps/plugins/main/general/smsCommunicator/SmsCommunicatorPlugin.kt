@@ -198,7 +198,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     override fun updatePreferenceSummary(pref: Preference) {
         super.updatePreferenceSummary(pref)
         if (pref is EditTextPreference) {
-            if (pref.getKey().contains(StringKey.SmsAllowedNumbers.key) && (TextUtils.isEmpty(pref.text?.trim { it <= ' ' }))) {
+            if (pref.key.contains(StringKey.SmsAllowedNumbers.key) && (TextUtils.isEmpty(pref.text?.trim { it <= ' ' }))) {
                 pref.setSummary(rh.gs(R.string.smscommunicator_allowednumbers_summary))
             }
         }
@@ -1236,7 +1236,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 rxBus.send(EventNewNotification(notification))
                 false
             }
-        } catch (e: SecurityException) {
+        } catch (_: SecurityException) {
             val notification = Notification(Notification.MISSING_SMS_PERMISSION, rh.gs(app.aaps.core.ui.R.string.smscommunicator_missingsmspermission), Notification.NORMAL)
             rxBus.send(EventNewNotification(notification))
             return false
@@ -1269,7 +1269,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 knownNumbers.add(cleaned)
             }
             knownNumbers.size > 1
-        } ?: false
+        } == true
     }
 
     private fun getApsModeText(): String =
