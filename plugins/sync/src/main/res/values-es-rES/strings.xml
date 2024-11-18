@@ -133,6 +133,7 @@
     <string name="wizard_result">Calc. Asistente:\nInsulina: %1$.2fU\nCarbohidratos: %2$dg</string>
     <string name="quick_wizard_not_available">El asistente rápido seleccionado ya no está disponible, por favor actualice su tarjeta</string>
     <string name="quick_wizard_message">Asistente Rápido: %1$s\nInsulina: %2$.2fU\nCarbohidratos: %3$dg</string>
+    <string name="user_action_not_available">La acción del usuario solicitada %1$s ya no está disponible, por favor, actualiza tu tarjeta</string>
     <string name="wear_action_tempt_preset_error">Objetivo Temporal preestablecido desconocido: %1$s</string>
     <string name="wear_action_tempt_cancel_message">¿Cancelar la ejecución del objetivo temporal?</string>
     <string name="wear_action_tempt_unit_error">¡Diferentes unidades usadas en el reloj y en el teléfono!</string>
@@ -146,6 +147,8 @@
     <string name="wear_settings">Ajustes del reloj</string>
     <string name="wearcontrol_title">Control desde el reloj</string>
     <string name="wearcontrol_summary">Establece objetivos temporales (OT) y añade tratamientos desde el reloj</string>
+    <string name="wear_broadcast_data">Transmisión de datos</string>
+    <string name="wear_broadcast_data_summary">Transmitir datos a AAPS o AAPSClient</string>
     <string name="wear_wizard_settings_summary">Cálculos incluidos en el resultado del asistente:</string>
     <string name="wear_general_settings">Configuración general</string>
     <string name="wear_notifysmb_title">Notificar los SMB</string>
