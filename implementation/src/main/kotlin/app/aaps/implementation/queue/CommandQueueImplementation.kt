@@ -74,6 +74,7 @@ import app.aaps.implementation.queue.commands.CommandUpdateTime
 import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.serialization.InternalSerializationApi
 import java.util.LinkedList
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -173,7 +174,7 @@ class CommandQueueImplementation @Inject constructor(
     @Synchronized
     fun isLastScheduled(type: CommandType): Boolean {
         synchronized(queue) {
-            if (queue.size > 0 && queue[queue.size - 1].commandType == type) {
+            if (queue.isNotEmpty() && queue[queue.size - 1].commandType == type) {
                 return true
             }
         }
@@ -258,6 +259,7 @@ class CommandQueueImplementation @Inject constructor(
     }
 
     // returns true if command is queued
+    @InternalSerializationApi
     @Synchronized
     override fun bolus(detailedBolusInfo: DetailedBolusInfo, callback: Callback?): Boolean {
         // Check if pump store carbs

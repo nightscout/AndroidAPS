@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.rx.weardata.EventData.ActionPumpStatus
 import app.aaps.core.interfaces.rx.weardata.EventData.ActionTddStatus
 import app.aaps.wear.R
 import app.aaps.wear.interaction.utils.MenuListActivity
+import kotlinx.serialization.InternalSerializationApi
 
 class StatusMenuActivity : MenuListActivity() {
 
@@ -22,6 +23,7 @@ class StatusMenuActivity : MenuListActivity() {
             add(MenuItem(R.drawable.ic_tdd, getString(R.string.status_tdd)))
         }
 
+    @InternalSerializationApi
     override fun doAction(position: String) {
         when (position) {
             getString(R.string.status_pump) -> rxBus.send(EventWearToMobile(ActionPumpStatus(System.currentTimeMillis())))

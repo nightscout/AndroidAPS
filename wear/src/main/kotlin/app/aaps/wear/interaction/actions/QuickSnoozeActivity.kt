@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.shared.impl.extensions.safeGetPackageInfo
 import app.aaps.wear.R
 import dagger.android.DaggerActivity
+import kotlinx.serialization.InternalSerializationApi
 import javax.inject.Inject
 
 /**
@@ -21,6 +22,7 @@ class QuickSnoozeActivity : DaggerActivity() {
 
     @Inject lateinit var rxBus: RxBus
 
+    @InternalSerializationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Toast.makeText(this, R.string.sending_snooze, Toast.LENGTH_LONG).show()
@@ -46,7 +48,7 @@ class QuickSnoozeActivity : DaggerActivity() {
     private fun isPackageExisted(targetPackage: String): Boolean {
         try {
             packageManager.safeGetPackageInfo(targetPackage, 0)
-        } catch (e: PackageManager.NameNotFoundException) {
+        } catch (_: PackageManager.NameNotFoundException) {
             return false
         }
         return true

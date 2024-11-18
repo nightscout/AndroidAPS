@@ -7,10 +7,12 @@ import app.aaps.plugins.sync.wear.wearintegration.DataHandlerMobile
 import app.aaps.plugins.sync.wear.wearintegration.DataLayerListenerServiceMobileHelper
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.serialization.InternalSerializationApi
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 
+@InternalSerializationApi
 class WearPluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var sharedPrefs: SharedPreferences
@@ -32,7 +34,7 @@ class WearPluginTest : TestBaseWithProfile() {
 
     @BeforeEach fun prepare() {
         rateLimit = RateLimit(aapsLogger, dateUtil)
-        wearPlugin = WearPlugin(aapsLogger, rh, aapsSchedulers, sp, preferences, fabricPrivacy, rxBus, context, dataHandlerMobile, dataLayerListenerServiceMobileHelper)
+        wearPlugin = WearPlugin(aapsLogger, rh, aapsSchedulers, sp, preferences, fabricPrivacy, rxBus, context, dataHandlerMobile, dataLayerListenerServiceMobileHelper, config)
     }
 
     @Test

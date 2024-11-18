@@ -73,6 +73,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugi
 import info.nightscout.pump.combov2.ComboV2Plugin
 import info.nightscout.pump.diaconn.DiaconnG8Plugin
 import info.nightscout.pump.medtrum.MedtrumPlugin
+import kotlinx.serialization.InternalSerializationApi
 import javax.inject.Qualifier
 
 @Suppress("unused")
@@ -347,6 +348,7 @@ abstract class PluginsListModule {
     @AllConfigs
     @IntoMap
     @IntKey(367)
+    @InternalSerializationApi
     abstract fun bindWearPlugin(plugin: WearPlugin): PluginBase
 
     @Binds

@@ -17,6 +17,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.wear.R
 import com.ustwo.clockwise.common.WatchMode
 import com.ustwo.clockwise.wearable.WatchFace
+import kotlinx.serialization.InternalSerializationApi
 import javax.inject.Inject
 
 class SimpleUi @Inject constructor(
@@ -63,6 +64,7 @@ class SimpleUi @Inject constructor(
         else (simplify == "charging" || simplify == "ambient_charging") && isCharging
     }
 
+    @InternalSerializationApi
     fun onDraw(canvas: Canvas, singleBg: EventData.SingleBg) {
         canvas.drawRect(0f, 0f, displaySize.x.toFloat(), displaySize.y.toFloat(), mBackgroundPaint)
         val xHalf = displaySize.x / 2f
@@ -90,6 +92,7 @@ class SimpleUi @Inject constructor(
         }
     }
 
+    @InternalSerializationApi
     private fun isOutdated(singleBg: EventData.SingleBg): Boolean =
         singleBg.timeStamp > 0 && (System.currentTimeMillis() - singleBg.timeStamp) > 1000 * 60 * 12
 

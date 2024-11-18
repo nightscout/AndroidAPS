@@ -23,6 +23,7 @@
     <string name="need_location_permission">Application needs location permission for BT scan and WiFi identification</string>
     <string name="need_background_location_permission">Application needs background location permission for automations</string>
     <string name="need_storage_permission">Application needs storage permission to be able store log files and export settings</string>
+    <string name="need_wear_data_permission">Application needs permission to send wear data to AAPS</string>
     <string name="askforpermission">Ask for permission</string>
     <string name="need_whitelisting">%1$s needs battery optimization whitelisting for proper performance</string>
     <string name="storedsettingsfound">Stored settings found</string>

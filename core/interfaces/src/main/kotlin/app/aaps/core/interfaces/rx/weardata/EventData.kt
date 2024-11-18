@@ -2,6 +2,7 @@ package app.aaps.core.interfaces.rx.weardata
 
 import app.aaps.core.interfaces.rx.events.Event
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.protobuf.ProtoBuf
@@ -16,28 +17,33 @@ sealed class EventData : Event() {
     fun serialize() = Json.encodeToString(serializer(), this)
 
     @ExperimentalSerializationApi
+    @InternalSerializationApi
     fun serializeByte() = ProtoBuf.encodeToByteArray(serializer(), this)
 
     companion object {
 
+        @InternalSerializationApi
         fun deserialize(json: String) = try {
             Json.decodeFromString(serializer(), json)
-        } catch (ignored: Exception) {
+        } catch (_: Exception) {
             Error(System.currentTimeMillis())
         }
 
         @ExperimentalSerializationApi
+        @InternalSerializationApi
         fun deserializeByte(byteArray: ByteArray) = try {
             ProtoBuf.decodeFromByteArray(serializer(), byteArray)
-        } catch (ignored: Exception) {
+        } catch (_: Exception) {
             Error(System.currentTimeMillis())
         }
     }
 
     // Mobile <- Wear
     @Serializable
+    @InternalSerializationApi
     data class ActionPong(val timeStamp: Long, val apiLevel: Int) : EventData()
 
+    @InternalSerializationApi
     @Serializable
     data class WearException(
         val timeStamp: Long,
@@ -61,48 +67,63 @@ sealed class EventData : Event() {
         }
     }
 
+    @InternalSerializationApi
     @Serializable
     data class Error(val timeStamp: Long) : EventData() // ignored
 
+    @InternalSerializationApi
     @Serializable
     data class CancelBolus(val timeStamp: Long) : EventData()
 
+    @InternalSerializationApi
     @Serializable
     data class ActionResendData(val from: String) : EventData()
 
+    @InternalSerializationApi
     @Serializable
     data class ActionPumpStatus(val timeStamp: Long) : EventData()
 
+    @InternalSerializationApi
     @Serializable
     data class ActionLoopStatus(val timeStamp: Long) : EventData()
 
+    @InternalSerializationApi
     @Serializable
     data class ActionTddStatus(val timeStamp: Long) : EventData()
 
+    @InternalSerializationApi
     @Serializable
     data class ActionECarbsPreCheck(val carbs: Int, val carbsTimeShift: Int, val duration: Int) : EventData()
 
+    @InternalSerializationApi
     @Serializable
     data class ActionBolusPreCheck(val insulin: Double, val carbs: Int) : EventData()
 
+    @InternalSerializationApi
     @Serializable
     data class ActionFillPreCheck(val insulin: Double) : EventData()
 
+    @InternalSerializationApi
     @Serializable
     data class ActionFillPresetPreCheck(val button: Int) : EventData()
 
+    @InternalSerializationApi
     @Serializable
     data class ActionProfileSwitchSendInitialData(val timeStamp: Long) : EventData()
 
+    @InternalSerializationApi
     @Serializable
     data class ActionProfileSwitchPreCheck(val timeShift: Int, val percentage: Int) : EventData()
 
+    @InternalSerializationApi
     @Serializable
     data class ActionWizardPreCheck(val carbs: Int, val percentage: Int) : EventData()
 
+    @InternalSerializationApi
     @Serializable
     data class ActionQuickWizardPreCheck(val guid: String) : EventData()
 
+    @InternalSerializationApi
     @Serializable
     data class ActionHeartRate(
         val duration: Long,
@@ -115,6 +136,7 @@ sealed class EventData : Event() {
             "HR ${beatsPerMinute.toInt()} at ${Date(timestamp)} for ${duration / 1000.0}sec $device"
     }
 
+    @InternalSerializationApi
     @Serializable
     data class ActionStepsRate(
         val duration: Long,
@@ -132,6 +154,7 @@ sealed class EventData : Event() {
             "STEPS 5min: $steps5min, 10min: $steps10min, 15min: $steps15min, 30min: $steps30min, 60min: $steps60min, 180min: $steps180min at ${Date(timestamp)} for ${duration / 1000.0}sec $device"
     }
 
+    @InternalSerializationApi
     @Serializable
     data class ActionTempTargetPreCheck(
         val command: TempTargetCommand,
@@ -148,31 +171,40 @@ sealed class EventData : Event() {
 
     // Mobile <- Wear return
 
+    @InternalSerializationApi
     @Serializable
     data class ActionWizardConfirmed(val timeStamp: Long) : EventData()
 
+    @InternalSerializationApi
     @Serializable
     data class ActionTempTargetConfirmed(val isMgdl: Boolean = true, val duration: Int = 0, val low: Double = 0.0, val high: Double = 0.0) : EventData()
 
+    @InternalSerializationApi
     @Serializable
     data class ActionBolusConfirmed(val insulin: Double, val carbs: Int) : EventData()
 
+    @InternalSerializationApi
     @Serializable
     data class ActionECarbsConfirmed(val carbs: Int, val carbsTime: Long, val duration: Int) : EventData()
 
+    @InternalSerializationApi
     @Serializable
     data class ActionFillConfirmed(val insulin: Double) : EventData()
 
+    @InternalSerializationApi
     @Serializable
     data class ActionProfileSwitchConfirmed(val timeShift: Int, val percentage: Int) : EventData()
 
+    @InternalSerializationApi
     @Serializable
     data class OpenLoopRequestConfirmed(val timeStamp: Long) : EventData()
 
     // Mobile -> Wear
+    @InternalSerializationApi
     @Serializable
     data class CancelNotification(val timeStamp: Long) : EventData()
 
+    @InternalSerializationApi
     @Serializable
     data class ActionGetCustomWatchface(
         val customWatchface: ActionSetCustomWatchface,
@@ -180,17 +212,27 @@ sealed class EventData : Event() {
         val withDate: Boolean = true
     ) : EventData()
 
+    @InternalSerializationApi
     @Serializable
     data class ActionPing(val timeStamp: Long) : EventData()
 
+    @InternalSerializationApi
     @Serializable
     data class OpenSettings(val timeStamp: Long) : EventData()
 
+    @InternalSerializationApi
     @Serializable
     data class BolusProgress(val percent: Int, val status: String) : EventData()
 
+    interface EventDataSet {
+
+        var dataset: Int
+    }
+
+    @InternalSerializationApi
     @Serializable
     data class SingleBg(
+        override var dataset: Int,
         var timeStamp: Long,
         val sgvString: String = "---",
         val glucoseUnits: String = "-",
@@ -207,7 +249,7 @@ sealed class EventData : Event() {
         val deltaMgdl: Double? = null,
         val avgDeltaMgdl: Double? = null,
         val id: Int = 0
-    ) : EventData(), Comparable<SingleBg> {
+    ) : EventDataSet, EventData(), Comparable<SingleBg> {
 
         override fun equals(other: Any?): Boolean =
             when {
@@ -227,11 +269,13 @@ sealed class EventData : Event() {
         }
     }
 
+    @InternalSerializationApi
     @Serializable
     data class GraphData(
         val entries: ArrayList<SingleBg>
     ) : EventData()
 
+    @InternalSerializationApi
     @Serializable
     data class TreatmentData(
         val temps: ArrayList<TempBasal>,
@@ -240,6 +284,7 @@ sealed class EventData : Event() {
         val predictions: ArrayList<SingleBg>
     ) : EventData() {
 
+        @InternalSerializationApi
         @Serializable
         data class TempBasal(
             val startTime: Long,
@@ -266,8 +311,10 @@ sealed class EventData : Event() {
         )
     }
 
+    @InternalSerializationApi
     @Serializable
     data class Status(
+        override var dataset: Int,
         val externalStatus: String,
         val iobSum: String,
         val iobDetail: String,
@@ -280,8 +327,9 @@ sealed class EventData : Event() {
         val batteryLevel: Int,
         val patientName: String = "",
         val id: Int = 0
-    ) : EventData()
+    ) : EventData(), EventDataSet
 
+    @InternalSerializationApi
     @Serializable
     data class Preferences(
         val timeStamp: Long,
@@ -296,11 +344,13 @@ sealed class EventData : Event() {
         val carbsButtonIncrement2: Int
     ) : EventData()
 
+    @InternalSerializationApi
     @Serializable
     data class QuickWizard(
         val entries: ArrayList<QuickWizardEntry>
     ) : EventData() {
 
+        @InternalSerializationApi
         @Serializable
         data class QuickWizardEntry(
             val guid: String,
@@ -311,27 +361,35 @@ sealed class EventData : Event() {
         ) : EventData()
     }
 
+    @InternalSerializationApi
     @Serializable
     data class ActionSetCustomWatchface(val customWatchfaceData: CwfData) : EventData()
 
+    @InternalSerializationApi
     @Serializable
     data class ActionUpdateCustomWatchface(val customWatchfaceData: CwfData) : EventData()
 
+    @InternalSerializationApi
     @Serializable
     data class ActionrequestCustomWatchface(val exportFile: Boolean) : EventData()
 
+    @InternalSerializationApi
     @Serializable
     data class ActionrequestSetDefaultWatchface(val timeStamp: Long) : EventData()
 
+    @InternalSerializationApi
     @Serializable
     data class ActionProfileSwitchOpenActivity(val timeShift: Int, val percentage: Int) : EventData()
 
+    @InternalSerializationApi
     @Serializable
     data class OpenLoopRequest(val title: String, val message: String, val returnCommand: EventData?) : EventData()
 
+    @InternalSerializationApi
     @Serializable // returnCommand is sent back to Mobile after confirmation
     data class ConfirmAction(val title: String, val message: String, val returnCommand: EventData?) : EventData()
 
+    @InternalSerializationApi
     @Serializable
     data class SnoozeAlert(val timeStamp: Long) : EventData()
 

@@ -36,10 +36,12 @@ import app.aaps.wear.tile.TempTargetTileService
 import com.google.android.gms.wearable.WearableListenerService
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.serialization.InternalSerializationApi
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
+@InternalSerializationApi
 class DataHandlerWear @Inject constructor(
     private val context: Context,
     private val rxBus: RxBus,
@@ -125,7 +127,7 @@ class DataHandlerWear @Inject constructor(
             .toObservable(EventData.Status::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe {
-                aapsLogger.debug(LTag.WEAR, "Status${if (it.id == 0) "" else it.id} received from ${it.sourceNodeId}")
+                aapsLogger.debug(LTag.WEAR, "Status${it.dataset} received from ${it.sourceNodeId}")
                 persistence.store(it)
                 LocalBroadcastManager.getInstance(context).sendBroadcast(Intent(DataLayerListenerServiceWear.INTENT_NEW_DATA))
             }
@@ -133,7 +135,7 @@ class DataHandlerWear @Inject constructor(
             .toObservable(EventData.SingleBg::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe {
-                aapsLogger.debug(LTag.WEAR, "SingleBg${if (it.id == 0) "" else it.id} received from ${it.sourceNodeId}")
+                aapsLogger.debug(LTag.WEAR, "SingleBg${it.dataset} received from ${it.sourceNodeId}")
                 persistence.store(it)
             }
         disposable += rxBus

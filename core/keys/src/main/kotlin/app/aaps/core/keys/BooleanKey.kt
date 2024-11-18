@@ -111,4 +111,5 @@ enum class BooleanKey(
     WearWizardIob(key = "wearwizard_iob", defaultValue = true, dependency = WearControl, hideParentScreenIfHidden = true),
     WearCustomWatchfaceAuthorization(key = "wear_custom_watchface_autorization", defaultValue = false),
     WearNotifyOnSmb(key = "wear_notifySMB", defaultValue = true),
+    WearBroadcastData(key = "wear_broadcast_data", defaultValue = false),
 }

@@ -26,13 +26,16 @@ import app.aaps.wear.watchfaces.utils.BaseWatchFace
 import app.aaps.wear.wearStepCount.StepCountListener
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import kotlinx.serialization.InternalSerializationApi
 
 @Module
 @Suppress("unused")
 abstract class WearServicesModule {
 
     @ContributesAndroidInjector abstract fun contributesDataLayerListenerService(): DataLayerListenerServiceWear
+    @InternalSerializationApi
     @ContributesAndroidInjector abstract fun contributesHeartRateListenerService(): HeartRateListener
+    @InternalSerializationApi
     @ContributesAndroidInjector abstract fun contributesStepsCountListenerService(): StepCountListener
     @ContributesAndroidInjector abstract fun contributesBaseComplicationProviderService(): BaseComplicationProviderService
     @ContributesAndroidInjector abstract fun contributesBrCobIobComplication(): BrCobIobComplication
@@ -48,9 +51,12 @@ abstract class WearServicesModule {
     @ContributesAndroidInjector abstract fun contributesUploaderBatteryComplication(): UploaderBatteryComplication
     @ContributesAndroidInjector abstract fun contributesWallpaperComplication(): WallpaperComplication
 
+    @InternalSerializationApi
     @ContributesAndroidInjector abstract fun contributesBaseWatchFace(): BaseWatchFace
+    @InternalSerializationApi
     @ContributesAndroidInjector abstract fun contributesDigitalStyleWatchface(): DigitalStyleWatchface
     @ContributesAndroidInjector abstract fun contributesCircleWatchface(): CircleWatchface
+    @InternalSerializationApi
     @ContributesAndroidInjector abstract fun contributesCustomWatchface(): CustomWatchface
 
     @ContributesAndroidInjector abstract fun contributesTileBase(): TileBase

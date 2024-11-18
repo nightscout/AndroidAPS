@@ -1,4 +1,4 @@
-package app.aaps.receivers
+package app.aaps.core.utils.receivers
 
 import android.os.Bundle
 

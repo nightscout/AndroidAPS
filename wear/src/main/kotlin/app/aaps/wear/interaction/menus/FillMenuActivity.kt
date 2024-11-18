@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.wear.R
 import app.aaps.wear.interaction.actions.FillActivity
 import app.aaps.wear.interaction.utils.MenuListActivity
+import kotlinx.serialization.InternalSerializationApi
 
 class FillMenuActivity : MenuListActivity() {
 
@@ -23,6 +24,7 @@ class FillMenuActivity : MenuListActivity() {
             add(MenuItem(R.drawable.ic_canula, getString(R.string.action_free_amount)))
         }
 
+    @InternalSerializationApi
     override fun doAction(position: String) {
         when (position) {
             getString(R.string.action_preset_1)    -> rxBus.send(EventWearToMobile(EventData.ActionFillPresetPreCheck(1)))

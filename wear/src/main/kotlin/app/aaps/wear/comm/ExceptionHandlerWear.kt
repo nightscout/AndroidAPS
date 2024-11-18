@@ -5,6 +5,7 @@ import android.util.Log
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData
+import kotlinx.serialization.InternalSerializationApi
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.ObjectOutputStream
@@ -16,6 +17,7 @@ class ExceptionHandlerWear @Inject constructor(
 
     private var mDefaultUEH: Thread.UncaughtExceptionHandler? = null
 
+    @InternalSerializationApi
     private val mWearUEH = Thread.UncaughtExceptionHandler { thread, ex ->
         Log.d("WEAR", "uncaughtException :" + ex.message)
 
@@ -36,6 +38,7 @@ class ExceptionHandlerWear @Inject constructor(
         mDefaultUEH?.uncaughtException(thread, ex)
     }
 
+    @InternalSerializationApi
     fun register() {
         mDefaultUEH = Thread.getDefaultUncaughtExceptionHandler()
         Thread.setDefaultUncaughtExceptionHandler(mWearUEH)
@@ -55,12 +58,12 @@ class ExceptionHandlerWear @Inject constructor(
         } finally {
             try {
                 oos?.close()
-            } catch (exx: IOException) {
+            } catch (_: IOException) {
                 // Ignore close exception
             }
             try {
                 bos.close()
-            } catch (exx: IOException) {
+            } catch (_: IOException) {
                 // Ignore close exception
             }
         }

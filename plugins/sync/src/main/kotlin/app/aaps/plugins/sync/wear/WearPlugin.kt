@@ -1,13 +1,18 @@
 package app.aaps.plugins.sync.wear
 
 import android.content.Context
+import android.content.Intent
+import android.os.Bundle
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.receivers.Intents
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -27,14 +32,18 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
+import app.aaps.plugins.sync.wear.receivers.WearDataReceiver
 import app.aaps.plugins.sync.wear.wearintegration.DataHandlerMobile
 import app.aaps.plugins.sync.wear.wearintegration.DataLayerListenerServiceMobileHelper
+import app.aaps.shared.impl.extensions.safeQueryBroadcastReceivers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.serialization.InternalSerializationApi
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
+@InternalSerializationApi
 class WearPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
@@ -45,8 +54,8 @@ class WearPlugin @Inject constructor(
     private val rxBus: RxBus,
     private val context: Context,
     private val dataHandlerMobile: DataHandlerMobile,
-    private val dataLayerListenerServiceMobileHelper: DataLayerListenerServiceMobileHelper
-
+    private val dataLayerListenerServiceMobileHelper: DataLayerListenerServiceMobileHelper,
+    private val config: Config
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -64,6 +73,7 @@ class WearPlugin @Inject constructor(
     var connectedDevice = "---"
     var savedCustomWatchface: CwfData? = null
 
+    @InternalSerializationApi
     override fun onStart() {
         super.onStart()
         dataLayerListenerServiceMobileHelper.startService(context)
@@ -112,8 +122,19 @@ class WearPlugin @Inject constructor(
                                }
                            }
                        }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventMobileToWear::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe {
+                // If there is a broadcast selected (ie.
+                //  AAPSClient want pass data to AAPS
+                //  AAPSClient2 want pass data to AAPS or AAPSClient 1
+                // ) do it here as the data is prepared
+                if (config.NSCLIENT && preferences.get(BooleanKey.WearBroadcastData)) broadcastData(it.payload)
+            }
     }
 
+    @InternalSerializationApi
     fun checkCustomWatchfacePreferences() {
         savedCustomWatchface?.let { cwf ->
             val cwfAuthorization = preferences.get(BooleanKey.WearCustomWatchfaceAuthorization)
@@ -143,6 +164,34 @@ class WearPlugin @Inject constructor(
         dataLayerListenerServiceMobileHelper.stopService(context)
     }
 
+    private fun broadcastData(payload: EventData) {
+        // Identify and update source set before broadcast
+        val client = if (config.NSCLIENT1) 1 else if (config.NSCLIENT2) 2 else throw UnsupportedOperationException()
+        var dataToSend = when (payload) {
+            is EventData.SingleBg -> payload.copy().apply { dataset = client }
+            is EventData.Status   -> payload.copy().apply { dataset = client }
+            else                  -> payload
+        }
+        broadcast(
+            Intent(Intents.AAPS_CLIENT_WEAR_DATA)
+                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+                .putExtras(Bundle().apply {
+                    putInt(WearDataReceiver.CLIENT, if (config.NSCLIENT1) 1 else if (config.NSCLIENT2) 2 else throw UnsupportedOperationException())
+                    putString(WearDataReceiver.DATA, dataToSend.serialize())
+                })
+        )
+    }
+
+    private fun broadcast(intent: Intent) {
+        context.packageManager.safeQueryBroadcastReceivers(intent, 0).forEach { resolveInfo ->
+            resolveInfo.activityInfo.packageName?.let {
+                intent.setPackage(it)
+                context.sendBroadcast(intent, WearDataReceiver.PERMISSION)
+                aapsLogger.debug(LTag.WEAR, "Sending broadcast " + intent.action + " to: " + it)
+            }
+        }
+    }
+
     override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
         if (requiredKey != null && requiredKey != "wear_wizard_settings" && requiredKey != "wear_custom_watchface_settings" && requiredKey != "wear_general_settings") return
         val category = PreferenceCategory(context)
@@ -152,6 +201,8 @@ class WearPlugin @Inject constructor(
             title = rh.gs(R.string.wear_settings)
             initialExpandedChildrenCount = 0
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.WearControl, summary = R.string.wearcontrol_summary, title = R.string.wearcontrol_title))
+            if (config.NSCLIENT)
+                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.WearBroadcastData, summary = R.string.wear_broadcast_data_summary, title = R.string.wear_broadcast_data))
             addPreference(preferenceManager.createPreferenceScreen(context).apply {
                 key = "wear_wizard_settings"
                 title = rh.gs(app.aaps.core.ui.R.string.wear_wizard_settings)

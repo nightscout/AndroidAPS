@@ -17,6 +17,7 @@ import app.aaps.wear.R
 import app.aaps.wear.interaction.utils.EditPlusMinusViewAdapter
 import app.aaps.wear.interaction.utils.PlusMinusEditText
 import app.aaps.wear.nondeprecated.GridPagerAdapterNonDeprecated
+import kotlinx.serialization.InternalSerializationApi
 import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
@@ -46,6 +47,7 @@ class TreatmentActivity : ViewSelectorActivity() {
         val incrementCarbs2 = preferences.get(IntKey.OverviewCarbsButtonIncrement2).toDouble()
         val stepValuesCarbs = listOf(1.0, incrementCarbs1, incrementCarbs2)
 
+        @InternalSerializationApi
         override fun instantiateItem(container: ViewGroup, row: Int, col: Int): View = when (col) {
             0    -> {
                 val viewAdapter = EditPlusMinusViewAdapter.getViewAdapter(sp, applicationContext, container, true)

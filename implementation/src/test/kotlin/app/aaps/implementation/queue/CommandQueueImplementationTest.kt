@@ -43,6 +43,7 @@ import app.aaps.implementation.queue.commands.CommandUpdateTime
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import dagger.android.HasAndroidInjector
+import kotlinx.serialization.InternalSerializationApi
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -52,6 +53,7 @@ import org.mockito.Mockito.`when`
 import org.mockito.invocation.InvocationOnMock
 import java.util.Calendar
 
+@InternalSerializationApi
 class CommandQueueImplementationTest : TestBaseWithProfile() {
 
     @Mock lateinit var constraintChecker: ConstraintsChecker

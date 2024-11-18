@@ -28,3 +28,4 @@ wear/aapsclient/*
 wear/aapsclient2/*
 wear/pumpcontrol/*
 .kotlin/*
+/*.log

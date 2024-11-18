@@ -106,6 +106,7 @@ import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.serialization.InternalSerializationApi
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -374,6 +375,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         _binding = null
     }
 
+    @InternalSerializationApi
     override fun onClick(v: View) {
         // try to fix  https://fabric.io/nightscout3/android/apps/info.nightscout.androidaps/issues/5aca7a1536c7b23527eb4be7?time=last-seven-days
         // https://stackoverflow.com/questions/14860239/checking-if-state-is-saved-before-committing-a-fragmenttransaction

@@ -5,6 +5,7 @@ import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
+import kotlinx.serialization.InternalSerializationApi
 import javax.inject.Singleton
 
 @Singleton
@@ -15,6 +16,7 @@ import javax.inject.Singleton
         WearServicesModule::class
     ]
 )
+@InternalSerializationApi
 interface WearComponent : AndroidInjector<WearApp> {
 
     @Component.Builder
