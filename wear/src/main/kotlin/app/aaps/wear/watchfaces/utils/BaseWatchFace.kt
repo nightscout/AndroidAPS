@@ -300,6 +300,7 @@ abstract class BaseWatchFace : WatchFace() {
         binding.avgDelta?.text = if (detailedDelta) singleBg[0].avgDeltaDetailed else singleBg[0].avgDelta
         binding.avgDelta?.visibility = sp.getBoolean(R.string.key_show_avg_delta, true).toVisibility()
         binding.cob1?.visibility = sp.getBoolean(R.string.key_show_cob, true).toVisibility()
+        binding.cob1?.text = getString(R.string.activity_carb)
         binding.cob2?.visibility = sp.getBoolean(R.string.key_show_cob, true).toVisibility()
         binding.cob2?.text = status[0].cob
         binding.iob1?.visibility = sp.getBoolean(R.string.key_show_iob, true).toVisibility()
@@ -351,6 +352,7 @@ abstract class BaseWatchFace : WatchFace() {
             binding.avgDeltaExt1?.text = if (detailedDelta) singleBg[1].avgDeltaDetailed else singleBg[1].avgDelta
             binding.avgDeltaExt1?.visibility = sp.getBoolean(R.string.key_show_avg_delta, true).toVisibility()
             binding.cob1Ext1?.visibility = sp.getBoolean(R.string.key_show_cob, true).toVisibility()
+            binding.cob1Ext1?.text = getString(R.string.activity_carb)
             binding.cob2Ext1?.visibility = sp.getBoolean(R.string.key_show_cob, true).toVisibility()
             binding.cob2Ext1?.text = status[1].cob
             binding.iob1Ext1?.visibility = sp.getBoolean(R.string.key_show_iob, true).toVisibility()
@@ -401,6 +403,7 @@ abstract class BaseWatchFace : WatchFace() {
             binding.avgDeltaExt2?.text = if (detailedDelta) singleBg[2].avgDeltaDetailed else singleBg[2].avgDelta
             binding.avgDeltaExt2?.visibility = sp.getBoolean(R.string.key_show_avg_delta, true).toVisibility()
             binding.cob1Ext2?.visibility = sp.getBoolean(R.string.key_show_cob, true).toVisibility()
+            binding.cob1Ext2?.text = getString(R.string.activity_carb)
             binding.cob2Ext2?.visibility = sp.getBoolean(R.string.key_show_cob, true).toVisibility()
             binding.cob2Ext2?.text = status[2].cob
             binding.iob1Ext2?.visibility = sp.getBoolean(R.string.key_show_iob, true).toVisibility()

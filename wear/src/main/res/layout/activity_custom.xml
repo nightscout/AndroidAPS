@@ -91,7 +91,7 @@
         tools:text="myName" />
 
     <TextView
-        android:id="@+id/iob1_Ext1"
+        android:id="@+id/iob1_ext1"
         android:layout_width="0px"
         android:layout_height="0px"
         android:layout_marginLeft="0px"
@@ -103,7 +103,7 @@
         tools:text="@string/activity_IOB" />
 
     <TextView
-        android:id="@+id/iob2_Ext1"
+        android:id="@+id/iob2_ext1"
         android:layout_width="0px"
         android:layout_height="0px"
         android:layout_marginLeft="0px"
@@ -283,7 +283,7 @@
         tools:text="myName" />
 
     <TextView
-        android:id="@+id/iob1_Ext2"
+        android:id="@+id/iob1_ext2"
         android:layout_width="0px"
         android:layout_height="0px"
         android:layout_marginLeft="0px"
@@ -295,7 +295,7 @@
         tools:text="@string/activity_IOB" />
 
     <TextView
-        android:id="@+id/iob2_Ext2"
+        android:id="@+id/iob2_ext2"
         android:layout_width="0px"
         android:layout_height="0px"
         android:layout_marginLeft="0px"
