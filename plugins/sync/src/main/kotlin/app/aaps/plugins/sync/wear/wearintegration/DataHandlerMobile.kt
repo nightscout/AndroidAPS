@@ -2,6 +2,8 @@ package app.aaps.plugins.sync.wear.wearintegration
 
 import android.app.NotificationManager
 import android.content.Context
+import android.os.Handler
+import android.os.HandlerThread
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.BCR
@@ -24,6 +26,7 @@ import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
+import app.aaps.core.interfaces.automation.AutomationEvent
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -130,6 +133,7 @@ class DataHandlerMobile @Inject constructor(
 
     @Inject lateinit var automation: Automation
     private val disposable = CompositeDisposable()
+    private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
     private var lastBolusWizard: BolusWizard? = null
     private var lastQuickWizardEntry: QuickWizardEntry? = null
@@ -347,6 +351,20 @@ class DataHandlerMobile @Inject constructor(
                            lastQuickWizardEntry = null
                        }, fabricPrivacy::logException)
         disposable += rxBus
+            .toObservable(EventData.ActionUserActionPreCheck::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({
+                           aapsLogger.debug(LTag.WEAR, "ActionUserActionPreCheck received $it from ${it.sourceNodeId}")
+                           handleUserActionPreCheck(it)
+                       }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventData.ActionUserActionConfirmed::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({
+                           aapsLogger.debug(LTag.WEAR, "ActionUserActionConfirmed received $it from ${it.sourceNodeId}")
+                           handleUserActionConfirmed(it)
+                       }, fabricPrivacy::logException)
+        disposable += rxBus
             .toObservable(EventData.SnoozeAlert::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({
@@ -496,6 +514,45 @@ class DataHandlerMobile @Inject constructor(
                 )
             )
         )
+    }
+
+    private fun handleUserActionPreCheck(command: EventData.ActionUserActionPreCheck) {
+        val pump = activePlugin.activePump
+        val profile = profileFunction.getProfile()
+        if (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null) {
+            val events = automation.userEvents()
+            events.find { it.hashCode() == command.id }?.let { event ->
+                if (event.isEnabled && event.canRun()) {
+                    rxBus.send(
+                        EventMobileToWear(
+                            EventData.ConfirmAction(
+                                rh.gs(app.aaps.core.ui.R.string.confirm).uppercase(), command.title,
+                                returnCommand = EventData.ActionUserActionConfirmed(command.id, command.title)
+                            )
+                        )
+                    )
+                } else {
+                    sendError(rh.gs(R.string.user_action_not_available, command.title))
+                }
+            } ?:apply {
+                sendError(rh.gs(R.string.user_action_not_available, command.title))
+            }
+        } else {
+            sendError(rh.gs(app.aaps.core.ui.R.string.wizard_pump_not_available))
+        }
+    }
+
+    private fun handleUserActionConfirmed(command: EventData.ActionUserActionConfirmed) {
+        val pump = activePlugin.activePump
+        val profile = profileFunction.getProfile()
+        if (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null) {
+            val events = automation.userEvents()
+            events.find { it.hashCode() == command.id }?.let { event ->
+                if (event.isEnabled && event.canRun()) {
+                    handler.post { automation.processEvent(event) }
+                }
+            }
+        }
     }
 
     private fun handleQuickWizardPreCheck(command: EventData.ActionQuickWizardPreCheck) {
@@ -838,6 +895,8 @@ class DataHandlerMobile @Inject constructor(
                 )
             )
         )
+        //UserAction
+        sendUserActions()
         // GraphData
         iobCobCalculator.ads.getBucketedDataTableCopy()?.let { bucketedData ->
             rxBus.send(EventMobileToWear(EventData.GraphData(ArrayList(bucketedData.map { getSingleBG(it, null) }))))
@@ -847,6 +906,25 @@ class DataHandlerMobile @Inject constructor(
         // Status
         // Keep status last. Wear start refreshing after status received
         sendStatus(from)
+    }
+
+    private fun AutomationEvent.toWear(now: Long): EventData.UserAction.UserActionEntry =
+        EventData.UserAction.UserActionEntry(
+            timeStamp = now,
+            id = hashCode(),
+            title = title
+        )
+
+    fun sendUserActions() {
+        val now = System.currentTimeMillis()
+        val events = automation.userEvents()
+        rxBus.send(
+            EventMobileToWear(
+                EventData.UserAction(
+                    ArrayList(events.filter { it.isEnabled && it.canRun() }.map { it.toWear(now) })
+                )
+            )
+        )
     }
 
     private fun sendTreatments() {

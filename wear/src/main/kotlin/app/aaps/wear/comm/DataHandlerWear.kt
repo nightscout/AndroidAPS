@@ -33,6 +33,7 @@ import app.aaps.wear.interaction.utils.Persistence
 import app.aaps.wear.tile.ActionsTileService
 import app.aaps.wear.tile.QuickWizardTileService
 import app.aaps.wear.tile.TempTargetTileService
+import app.aaps.wear.tile.UserActionTileService
 import com.google.android.gms.wearable.WearableListenerService
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -181,6 +182,17 @@ class DataHandlerWear @Inject constructor(
                 if (serialized != sp.getString(R.string.key_quick_wizard_data, "")) {
                     sp.putString(R.string.key_quick_wizard_data, serialized)
                     TileService.getUpdater(context).requestUpdate(QuickWizardTileService::class.java)
+                }
+            }
+        disposable += rxBus
+            .toObservable(EventData.UserAction::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe {
+                aapsLogger.debug(LTag.WEAR, "UserAction received from ${it.sourceNodeId}")
+                val serialized = it.serialize()
+                if (serialized != sp.getString(R.string.key_user_action_data, "")) {
+                    sp.putString(R.string.key_user_action_data, serialized)
+                    TileService.getUpdater(context).requestUpdate(UserActionTileService::class.java)
                 }
             }
         disposable += rxBus

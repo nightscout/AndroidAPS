@@ -23,6 +23,7 @@ import app.aaps.core.interfaces.rx.events.EventMobileToWear
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventWearUpdateGui
+import app.aaps.core.interfaces.rx.events.EventWearUpdateTiles
 import app.aaps.core.interfaces.rx.weardata.CwfData
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
 import app.aaps.core.interfaces.rx.weardata.EventData
@@ -111,6 +112,10 @@ class WearPlugin @Inject constructor(
             .toObservable(EventLoopUpdateGui::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ dataHandlerMobile.resendData("EventLoopUpdateGui") }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventWearUpdateTiles::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ dataHandlerMobile.sendUserActions() }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventWearUpdateGui::class.java)
             .observeOn(aapsSchedulers.main)

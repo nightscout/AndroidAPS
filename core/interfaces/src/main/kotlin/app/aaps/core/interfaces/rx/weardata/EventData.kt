@@ -125,6 +125,12 @@ sealed class EventData : Event() {
 
     @InternalSerializationApi
     @Serializable
+    data class ActionUserActionPreCheck(val id: Int, val title: String) : EventData()
+
+    @Serializable
+    data class ActionUserActionConfirmed(val id: Int, val title: String) : EventData()
+
+    @Serializable
     data class ActionHeartRate(
         val duration: Long,
         val timestamp: Long,
@@ -362,6 +368,19 @@ sealed class EventData : Event() {
     }
 
     @InternalSerializationApi
+    @Serializable
+    data class UserAction(
+        val entries: ArrayList<UserActionEntry>
+    ) : EventData() {
+
+        @Serializable
+        data class UserActionEntry(
+            val timeStamp: Long,
+            val id: Int,
+            val title: String
+        ) : EventData()
+    }
+
     @Serializable
     data class ActionSetCustomWatchface(val customWatchfaceData: CwfData) : EventData()
 

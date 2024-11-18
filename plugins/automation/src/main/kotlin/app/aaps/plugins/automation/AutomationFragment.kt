@@ -28,6 +28,7 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventWearUpdateTiles
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.objects.ui.ActionModeHelper
 import app.aaps.core.ui.dialogs.OKDialog
@@ -128,7 +129,10 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener, MenuProvider {
         disposable += rxBus
             .toObservable(EventAutomationDataChanged::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe({ eventListAdapter.notifyDataSetChanged() }, fabricPrivacy::logException)
+            .subscribe({
+                           eventListAdapter.notifyDataSetChanged()
+                           rxBus.send(EventWearUpdateTiles())
+                       }, fabricPrivacy::logException)
         updateGui()
     }
 

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventWearUpdateTiles
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.core.ui.toast.ToastUtils
@@ -153,6 +154,7 @@ class EditEventDialog : BaseDialog() {
             automationPlugin.set(event, position)
 
         rxBus.send(EventAutomationDataChanged())
+        rxBus.send(EventWearUpdateTiles())
         return true
     }
 
