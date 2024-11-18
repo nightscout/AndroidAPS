@@ -11,6 +11,7 @@
     <string name="label_actions_tile">AAPS(Akce)</string>
     <string name="label_temp_target_tile">AAPS(Doč. cíl)</string>
     <string name="label_quick_wizard_tile">AAPS(Rychlý bolus)</string>
+    <string name="label_user_action_tile">AAPS (akce uživatele)</string>
     <string name="label_warning_sync">Žádná data!</string>
     <string name="label_warning_old">Stará data!</string>
     <string name="label_warning_since">Od %1$s</string>
@@ -98,6 +99,7 @@
     <string name="action_duration">Trvání</string>
     <string name="action_tempt_confirmation">Požadován dočasný cíl</string>
     <string name="action_quick_wizard_confirmation">Požadován rychlý bolus</string>
+    <string name="action_user_action_confirmation">Požadována Uživatelská akce</string>
     <string name="action_treatment_confirmation">Požadováno ošetření</string>
     <string name="action_bolus_confirmation">Požadován bolus</string>
     <string name="action_wizard_confirmation">Požadován kalkulátor</string>
