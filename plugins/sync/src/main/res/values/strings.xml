@@ -178,6 +178,7 @@
     <string name="wizard_result">Calc. Wizard:\nInsulin: %1$.2fU\nCarbs: %2$dg</string>
     <string name="quick_wizard_not_available">Selected quickwizard no longer available, please refresh your tile</string>
     <string name="quick_wizard_message">QuickWizard: %1$s\nInsulin: %2$.2fU\nCarbs: %3$dg</string>
+    <string name="user_action_not_available">Selected User Action %1$s is no longer available, please refresh your tile</string>
     <string name="wear_action_tempt_preset_error">Temptarget unknown preset: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Cancelling running Temp-Targets?</string>
     <string name="wear_action_tempt_unit_error">Different units used on watch and phone!</string>
@@ -191,6 +192,8 @@
     <string name="wear_settings">Wear settings</string>
     <string name="wearcontrol_title">Controls from Watch</string>
     <string name="wearcontrol_summary">Set Temp-Targets and enter Treatments from the watch.</string>
+    <string name="wear_broadcast_data">Broadcast data</string>
+    <string name="wear_broadcast_data_summary">Broadcast data to AAPS or AAPSClient</string>
     <string name="wear_wizard_settings_summary">Calculations included in the Wizard result:</string>
     <string name="wear_general_settings">General Settings</string>
     <string name="wear_notifysmb_title">Notify on SMB</string>
