@@ -126,8 +126,15 @@
     <string name="scan_on_connection_error_summary">UYARI: Yalnızca bağlantı sorunlarınız varsa etkinleştirin. Etkinleştirilirse, sürücü pompaya yeniden bağlanmayı denemeden önce pompayı tekrar tarar. Konum izninizin \"Her zaman izin ver\" olarak ayarlandığından emin olun</string>
     <!-- treatment state-->
     <string name="getting_pump_status">Pompa durumu alınıyor</string>
+    <string name="syncing_records">Kayıtlar senkronize ediliyor, %1$d kaldı</string>
     <string name="getting_bolus_status">Bolus durumu alınıyor</string>
     <string name="getting_temp_basal_status">Geçici bazal durumu alınıyor</string>
     <string name="setting_pump_settings">Kullanıcı seçenekleri ayarları</string>
     <!-- bolus-->
+    <string name="bolus_error_reason_user">Bolus kullanıcı tarafından iptal edildi</string>
+    <string name="bolus_error_reason_not_connected">Pompa bağlı değil</string>
+    <string name="bolus_error_reason_already_in_progress">Bolus zaten devam ediyor</string>
+    <string name="bolus_error_reason_unable_to_send_command">Bolus komutu gönderilemiyor</string>
+    <string name="bolus_error_reason_communication_lost">Bolus sırasında zaman aşımı</string>
+    <string name="bolus_error_reason_pump_error">Pompa hatası</string>
 </resources>
