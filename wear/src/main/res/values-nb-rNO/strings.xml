@@ -159,6 +159,7 @@
     <string name="pref_vibrate_hourly">Vibrer hver time</string>
     <string name="pref_show_weeknumber">Vis ukenummer</string>
     <string name="pref_include_external">Inkluder eksterne visninger i mal</string>
+    <string name="pref_switch_external">Bytt ekstern dataer i urskiven</string>
     <string name="custom_pref_show_seconds">Vis sekunder</string>
     <string name="digitalstyle_pref_your_style">Din stil:</string>
     <string name="digitalstyle_style_none">ingen stil</string>
