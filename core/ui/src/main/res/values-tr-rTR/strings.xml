@@ -89,6 +89,7 @@
     <string name="removerecord">Kaydı kaldır</string>
     <string name="loopisdisabled">Döngü devre dışı</string>
     <string name="alarm">Alarm</string>
+    <string name="exportsettings">Dışa aktarma ayarları</string>
     <string name="disableloop">Döngüyü devre dışı bırak</string>
     <string name="enableloop">Döngüyü etkinleştir</string>
     <string name="resumeloop">Döngüyü devam ettir</string>
@@ -113,6 +114,7 @@
     <string name="bg_label">KŞ</string>
     <string name="calibration">Kalibrasyon</string>
     <string name="alarminxmin">Alarmı %1$d dakika içinde çalıştır</string>
+    <string name="treatmentdeliveryerror">Bolus bir hata bildirdi. Gerçek iletilen insülin ve karbonhidrat miktarını manuel olarak kontrol edin</string>
     <string name="bolus_reminder">Bolus hatırlatıcısı</string>
     <string name="duration_label">Süre</string>
     <string name="shortgramm">gr</string>
@@ -176,6 +178,7 @@
     <string name="extended_bolus_full">E %1$.2f Ü/s @%2$s %3$s/%4$s dk</string>
     <string name="extended_bolus_medium">%1$.2f Ü/s %2$s/%3$s\'</string>
     <string name="nav_export">Dışa aktarma ayarları</string>
+    <string name="location_permission_not_granted">Konum izni verilmedi. Android ayarlarında izin verin.</string>
     <!--    Protection-->
     <string name="wrongpassword">Hatalı parola</string>
     <string name="wrongpin">Yanlış PIN</string>
@@ -206,10 +209,12 @@
     <string name="careportal_bgcheck">KŞ Kontrol</string>
     <string name="careportal_mbg">Manuel KŞ veya Kalibrasyon</string>
     <string name="careportal_announcement">Duyuru</string>
+    <string name="careportal_settings_export">Ayarları dışa aktar</string>
     <string name="careportal_note">Not</string>
     <string name="careportal_question">Soru</string>
     <string name="careportal_exercise">Egzersiz</string>
     <string name="careportal_announcement_message">Duyuru : %1$s</string>
+    <string name="careportal_settings_export_message">Ayarlar Dışa Aktarılıyor: %1$s</string>
     <string name="careportal_note_message">Not : %1$s</string>
     <string name="careportal_question_message">Soru : %1$s</string>
     <string name="careportal_exercise_message">Alıştırma : %1$s</string>
@@ -242,6 +247,7 @@
     <string name="activity">Aktivite</string>
     <string name="wear">Wear</string>
     <string name="automation">Otomasyon</string>
+    <string name="settingsexport">Ayarları dışa aktar</string>
     <string name="custom">Özel</string>
     <string name="loop">Döngü</string>
     <string name="ns">NS</string>
@@ -343,6 +349,7 @@
     <string name="delete_future_treatments">İleri tarihli tedavileri sil</string>
     <string name="uel_export_settings">AYARLARI DIŞA AKTAR</string>
     <string name="uel_import_settings">AYARLARI İÇE AKTAR</string>
+    <string name="uel_select_directory">DİZİNİ SEÇİN</string>
     <string name="uel_reset_databases">VERİTABANLARINI SIFIRLA</string>
     <string name="uel_reset_aps_results">APS SONUÇLARINI SIFIRLA</string>
     <string name="uel_cleanup_databases">TEMİZLEME VERİTABANLARI</string>
@@ -506,7 +513,18 @@
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">İçe aktarılan tercihlerin şifresini çözmek için gerekli olan ana parola sorulacaktır.</string>
     <!-- <unattended_export> -->
+    <string name="export_ok">Tamam</string>
+    <string name="export_warning">Uyarı</string>
+    <string name="export_expired">Süresi doldu</string>
+    <string name="export_disabled">Devre dışı</string>
+    <string name="export_failed">Başarısız oldu</string>
+    <string name="export_alert">UYARI</string>
     <!-- <unattended_export result messages> -->
+    <string name="export_result_message_exported">Ayarlar dışa aktarıldı</string>
+    <string name="export_result_message_failed">Ayarları dışa aktama BAŞARISIZ!</string>
+    <string name="export_result_message_about_to_expire">Ayarlar dışa aktarıldı: parola yakında sona erecek. Manuel olarak dışa aktarın ve parolayı (tekrar) girin.</string>
+    <string name="export_result_message_expired">Ayarların dışa aktarımı iptal edildi: parola süresi doldu. Manuel olarak dışa aktarın ve (tekrar) girin!</string>
+    <string name="export_result_message_disabled">Uyarı (otomasyon): Ayarların dışa aktarılması etkin değil!</string>
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">%2$s\'dan %1$s\'a azalma</string>
     <string name="a11y_plus_button_description">%2$s\'dan %1$s\'a artış</string>
