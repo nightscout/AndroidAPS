@@ -19,6 +19,7 @@
     <string name="permission">Yetki</string>
     <string name="need_system_window_permission">Uygulama, bildirimler için sistem iznine ihtiyaç duyuyor</string>
     <string name="need_location_permission">Uygulamanın BT taraması ve WiFi tanımlaması için konum iznine ihtiyacı var</string>
+    <string name="need_background_location_permission">Uygulamanın otomasyonlar için arka plan konum iznine ihtiyacı var</string>
     <string name="need_storage_permission">Uygulamanın, günlük dosyalarını saklayabilmesi ve ayarları dışa aktarabilmesi için depolama iznine ihtiyacı var</string>
     <string name="askforpermission">İzin için sorunuz</string>
     <string name="need_whitelisting">%1$s, düzgün bir şekilde çalışması için pil optimizasyonu yapılmalıdır</string>
@@ -45,6 +46,8 @@
     <string name="readstatus">Durum oku</string>
     <string name="data_choices">Veri seçenekleri</string>
     <string name="fabric_upload">Fabric Upload</string>
+    <string name="unattended_settings_export">Gözetimsiz Ayarlar Dışa Aktarımı</string>
+    <string name="unattended_settings_export_summary">Bunu etkinleştirmek, parolanızı telefonunuzda güvenli bir şekilde saklayacaktır</string>
     <string name="allow_automated_crash_reporting">Geliştiricilere, fabric.io hizmeti aracılığıyla otomatik kilitlenme raporlaması ve özellik kullanım verilerinin gönderilmesine izin verir.</string>
     <string name="summary_email_for_crash_report">Bu kimlik acil durumlarda sizinle iletişim kurabilmemiz için kilitlenme raporlarına eklenecektir. İsteğe bağlıdır.</string>
     <string name="identification">Tanımlama (E-posta, FB veya Discord rumuz vs.)</string>
@@ -91,6 +94,8 @@
     <string name="check_preferences_import_btn">İçe aktarma</string>
     <string name="check_preferences_import_anyway_btn">Yine de içe aktar (TEHLİKELİ!)</string>
     <string name="import_setting">Ayarları içe aktarın</string>
+    <string name="aaps_directory">AAPS dizini</string>
+    <string name="select_aaps_directory">Dışa aktarımı, yapılandırmaları vb. depolamak için AAPS dizinini seçin.</string>
     <string name="check_preferences_before_import">Lütfen içe aktarmadan önce tercihleri kontrol edin:</string>
     <string name="check_preferences_cannot_import">Tercihler içe aktarılamaz!</string>
     <string name="check_preferences_dangerous_import">Tercihler içe aktarılmamalıdır!</string>
@@ -101,6 +106,7 @@
     <string name="different_password_used">Bu dosya dışa aktarılmış ve farklı bir parola ile şifrelenmiş. Dosyanın şifresini çözmek için eski parolayı bulun.</string>
     <string name="master_password_will_be_replaced">Başarılı içe aktarma işleminin sonucu olarak mevcut ana parola, eski ana parola ile DEĞİŞTİRİLECEKTİR!</string>
     <string name="exported">Tercihler dışa aktarıldı</string>
+    <string name="exported_failed">Tercihler dışa aktarılamadı!</string>
     <string name="filenotfound">Dosya bulunamadı</string>
     <string name="goto_main_try_again">Lütfen ana ekrana dönün ve tekrar deneyin.</string>
     <string name="restartingapp">Ayarları uygulamak için uygulamadan çıkılıyor.</string>
