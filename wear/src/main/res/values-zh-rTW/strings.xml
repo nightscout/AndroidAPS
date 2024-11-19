@@ -11,6 +11,7 @@
     <string name="label_actions_tile">AAPS(動作)</string>
     <string name="label_temp_target_tile">AAPS(臨時目標)</string>
     <string name="label_quick_wizard_tile">AAPS(快速嚮導)</string>
+    <string name="label_user_action_tile">AAPS(用戶操作)</string>
     <string name="label_warning_sync">無資料！</string>
     <string name="label_warning_old">資料過舊！</string>
     <string name="label_warning_since">自 %1$s 起</string>
@@ -98,6 +99,7 @@
     <string name="action_duration">持續時間</string>
     <string name="action_tempt_confirmation">已請求臨時目標</string>
     <string name="action_quick_wizard_confirmation">已請求快速嚮導</string>
+    <string name="action_user_action_confirmation">用戶操作請求</string>
     <string name="action_treatment_confirmation">已請求治療</string>
     <string name="action_bolus_confirmation">已請求注射</string>
     <string name="action_wizard_confirmation">已請求計算</string>
@@ -157,6 +159,7 @@
     <string name="pref_vibrate_hourly">每小時震動</string>
     <string name="pref_show_weeknumber">顯示週數</string>
     <string name="pref_include_external">在模板中包含外部視圖</string>
+    <string name="pref_switch_external">切換錶盤顯示的外部資料</string>
     <string name="custom_pref_show_seconds">顯示秒數</string>
     <string name="digitalstyle_pref_your_style">您的風格：</string>
     <string name="digitalstyle_style_none">無風格</string>
