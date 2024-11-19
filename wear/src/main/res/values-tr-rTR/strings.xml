@@ -11,6 +11,7 @@
     <string name="label_actions_tile">AAPS(Eylemler)</string>
     <string name="label_temp_target_tile">AAPS(Geçici Hedef)</string>
     <string name="label_quick_wizard_tile">AAPS(Hızlı Asistan)</string>
+    <string name="label_user_action_tile">AAPS(Kullanıcı Eylemi)</string>
     <string name="label_warning_sync">Veri yok!</string>
     <string name="label_warning_old">Eski veri!</string>
     <string name="label_warning_since">%1$s den beri</string>
@@ -53,6 +54,10 @@
     <string name="pref_3_hours">3 saat</string>
     <string name="pref_4_hours">4 saat</string>
     <string name="pref_5_hours">5 saat</string>
+    <string name="pref_1_min">Devre dışı</string>
+    <string name="pref_5_min">5 dk</string>
+    <string name="pref_10_min">10 dk</string>
+    <string name="pref_15_min">15 dk</string>
     <string name="pref_input_design">Giriş Tasarımı</string>
     <string name="pref_default">Varsayılan</string>
     <string name="pref_quick_righty">Hızlı Sağ</string>
@@ -94,6 +99,7 @@
     <string name="action_duration">Süre</string>
     <string name="action_tempt_confirmation">Geçici hedef talebi</string>
     <string name="action_quick_wizard_confirmation">Hızlı asistan talebi</string>
+    <string name="action_user_action_confirmation">Kullanıcı Eylemi Gerekli</string>
     <string name="action_treatment_confirmation">Tedavi talebi</string>
     <string name="action_bolus_confirmation">Bolus talebi</string>
     <string name="action_wizard_confirmation">Hesaplama talebi</string>
@@ -152,6 +158,7 @@
     <string name="pref_simplify_ui_sum">Yalnızca zamanı ve KŞ\'ni göster</string>
     <string name="pref_vibrate_hourly">Saatlik titreşim</string>
     <string name="pref_show_weeknumber">Hafta numarasını göster</string>
+    <string name="pref_include_external">Şablona harici görünümleri dahil et</string>
     <string name="custom_pref_show_seconds">Saniyeyi göster</string>
     <string name="digitalstyle_pref_your_style">Stilin:</string>
     <string name="digitalstyle_style_none">stil yok</string>
@@ -204,6 +211,7 @@
     <string name="old_warning">!eski!</string>
     <string name="error">!hata!</string>
     <string name="pref_heartRateSampling">Nabız</string>
+    <string name="pref_heartRateSmoothing">Nabız yumuşatma</string>
     <string name="pref_stepsSampling">Adım Saymayı Etkinleştir</string>
     <string name="tile_tempt_1">Geçici Hedef 1</string>
     <string name="tile_tempt_2">Geçici Hedef 2</string>
@@ -217,7 +225,14 @@
     <string name="datalayer_notification_text">AAPS ön planda çalışıyor. Bildirimi gizlemek için Geliştirici seçenekleri, Uygulama bildirimleri, İzin verilen saat uygulamaları\'na gidin, AAPS\'yi seçin, Veri Katmanı Ön Plan Hizmet Kanalı bildirimini kapatın.</string>
     <string name="on">AÇIK</string>
     <string name="off">KAPALI</string>
+    <string name="complication_full_status">Tam durum</string>
+    <string name="complication_full_status_flipped">Tam durum (çevrilmiş)</string>
+    <string name="complication_blood_glucose">Kan Şekeri</string>
     <string name="complication_br_cob_iob">Nabız, AKRB &amp; AİNS</string>
     <string name="complication_cob_iob">AKRB &amp; AİNS</string>
     <string name="complication_cob_icon">AKRB simgesi</string>
+    <string name="complication_cob_detailed">Detaylı AKRB</string>
+    <string name="complication_iob_icon">AİNS simgesi</string>
+    <string name="complication_iob_detailed">Detaylı AiNS</string>
+    <string name="complication_uploader_phone_battery">Yükleyici/Telefon Pili</string>
 </resources>
