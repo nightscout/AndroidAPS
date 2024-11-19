@@ -159,6 +159,7 @@
     <string name="pref_vibrate_hourly">Vibrar cada hora</string>
     <string name="pref_show_weeknumber">Mostrar número de semana</string>
     <string name="pref_include_external">Incluir vistas externas en la plantilla</string>
+    <string name="pref_switch_external">Cambiar datos externos en la esfera del reloj</string>
     <string name="custom_pref_show_seconds">Mostrar segundos</string>
     <string name="digitalstyle_pref_your_style">Tu estilo:</string>
     <string name="digitalstyle_style_none">Sin estilo</string>
