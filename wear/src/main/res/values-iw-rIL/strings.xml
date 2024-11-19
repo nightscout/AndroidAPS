@@ -147,6 +147,7 @@
     <string name="pref_simplify_ui_sum">מציג רק את השעה ואת רמת הסוכר</string>
     <string name="pref_vibrate_hourly">רטט אחת לשעה</string>
     <string name="pref_show_weeknumber">הצג מס\' שבוע</string>
+    <string name="pref_switch_external">החלף נתונים חיצוניים בפני השעון</string>
     <string name="custom_pref_show_seconds">הצג שניות</string>
     <string name="digitalstyle_pref_your_style">הסגנון שלכם:</string>
     <string name="digitalstyle_style_none">ללא סגנון</string>
