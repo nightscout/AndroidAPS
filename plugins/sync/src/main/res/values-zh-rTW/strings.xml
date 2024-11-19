@@ -133,6 +133,7 @@
     <string name="wizard_result">計算嚮導:\n胰島素: %1$.2fU\n碳水化合物: %2$dg</string>
     <string name="quick_wizard_not_available">所選的快速嚮導不再可用，請重新整理您的磁磚</string>
     <string name="quick_wizard_message">快速嚮導: %1$s\n胰島素: %2$.2fU\n碳水化合物: %3$dg</string>
+    <string name="user_action_not_available">選定的用戶操作 %1$s 已不再可用，請重新整理您的面版</string>
     <string name="wear_action_tempt_preset_error">臨時目標未知預設: %1$s</string>
     <string name="wear_action_tempt_cancel_message">取消運行中的臨時目標？</string>
     <string name="wear_action_tempt_unit_error">手錶和手機上使用了不同的單位！</string>
@@ -146,6 +147,8 @@
     <string name="wear_settings">Wear 設定</string>
     <string name="wearcontrol_title">從手錶控制</string>
     <string name="wearcontrol_summary">從手錶設定臨時目標和輸入治療。</string>
+    <string name="wear_broadcast_data">廣播資料</string>
+    <string name="wear_broadcast_data_summary">廣播資料到 AAPS 或 AAPSClient</string>
     <string name="wear_wizard_settings_summary">嚮導結果中包含的計算:</string>
     <string name="wear_general_settings">一般設定</string>
     <string name="wear_notifysmb_title">通知 SMB</string>
