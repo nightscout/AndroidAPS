@@ -159,6 +159,7 @@
     <string name="pref_vibrate_hourly">Vibrate hourly</string>
     <string name="pref_show_weeknumber">Show Week number</string>
     <string name="pref_include_external">Include external views in template</string>
+    <string name="pref_switch_external">Switch external datas in Watchface</string>
     <string name="custom_pref_show_seconds">Show seconds</string>
     <string name="digitalstyle_pref_your_style">Your style:</string>
     <string name="digitalstyle_style_none">no style</string>
@@ -242,6 +243,7 @@
     <string name="key_mid_color" translatable="false">midcolor</string>
     <string name="key_low_color" translatable="false">lowcolor</string>
     <string name="key_include_external" translatable="false">include_external</string>
+    <string name="key_switch_external" translatable="false">switch_external</string>
     <string name="increment">increment</string>
     <string name="decrement">decrement</string>
     <string name="abbreviation_average">avg</string>

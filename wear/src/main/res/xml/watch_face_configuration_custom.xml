@@ -66,6 +66,15 @@
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
 
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/key_switch_external"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
+        android:title="@string/pref_switch_external"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
     <ListPreference
         android:defaultValue="off"
         android:entries="@array/watchface_simplify_ui_name"

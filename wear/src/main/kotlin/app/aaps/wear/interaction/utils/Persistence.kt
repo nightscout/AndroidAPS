@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.shared.impl.weardata.ResFileMap
+import app.aaps.wear.R
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -84,18 +85,19 @@ open class Persistence @Inject constructor(
     }
 
     fun readSingleBg(array: Array<EventData.SingleBg>): Array<EventData.SingleBg> {
+        val switch = sp.getBoolean(R.string.key_switch_external, false)
         try {
             var s = sp.getStringOrNull(BG_DATA_PERSISTENCE_KEY, null)
             //aapsLogger.debug(LTag.WEAR, "Loaded BG data: $s")
             if (s != null) {
                 array[0] = EventData.deserialize(s) as EventData.SingleBg
             }
-             s = sp.getStringOrNull(BG1_DATA_PERSISTENCE_KEY, null)
+             s = sp.getStringOrNull(if (switch) BG2_DATA_PERSISTENCE_KEY else BG1_DATA_PERSISTENCE_KEY, null)
             //aapsLogger.debug(LTag.WEAR, "Loaded BG data: $s")
             if (s != null) {
                 array[1] = EventData.deserialize(s) as EventData.SingleBg
             }
-            s = sp.getStringOrNull(BG2_DATA_PERSISTENCE_KEY, null)
+            s = sp.getStringOrNull(if (switch) BG1_DATA_PERSISTENCE_KEY else BG2_DATA_PERSISTENCE_KEY, null)
             //aapsLogger.debug(LTag.WEAR, "Loaded BG data: $s")
             if (s != null) {
                 array[2] =  EventData.deserialize(s) as EventData.SingleBg
@@ -107,18 +109,19 @@ open class Persistence @Inject constructor(
     }
 
     fun readStatus(array: Array<EventData.Status>): Array<EventData.Status> {
+        val switch = sp.getBoolean(R.string.key_switch_external, false)
         try {
             var s = sp.getStringOrNull(STATUS_PERSISTENCE_KEY, null)
             //aapsLogger.debug(LTag.WEAR, "Loaded Status data: $s")
             if (s != null) {
                 array[0] =  EventData.deserialize(s) as EventData.Status
             }
-            s = sp.getStringOrNull(STATUS1_PERSISTENCE_KEY, null)
+            s = sp.getStringOrNull(if (switch) STATUS2_PERSISTENCE_KEY else STATUS1_PERSISTENCE_KEY, null)
             //aapsLogger.debug(LTag.WEAR, "Loaded Status data: $s")
             if (s != null) {
                 array[1] =  EventData.deserialize(s) as EventData.Status
             }
-            s = sp.getStringOrNull(STATUS2_PERSISTENCE_KEY, null)
+            s = sp.getStringOrNull(if (switch) STATUS1_PERSISTENCE_KEY else STATUS2_PERSISTENCE_KEY, null)
             //aapsLogger.debug(LTag.WEAR, "Loaded Status data: $s")
             if (s != null) {
                 array[2] = EventData.deserialize(s) as EventData.Status
