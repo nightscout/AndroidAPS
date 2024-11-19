@@ -133,6 +133,7 @@
     <string name="wizard_result">Hesap Mak.:\nİnsulin: %1$.2fÜ\nKarb: %2$dg</string>
     <string name="quick_wizard_not_available">Seçili hızlı asistan artık mevcut değil, lütfen kutucuğu yenileyin</string>
     <string name="quick_wizard_message">Hızlı Asistan: %1$s\nİnsülin: %2$.2fU\nKarb: %3$dg</string>
+    <string name="user_action_not_available">Seçili Kullanıcı Eylemi %1$s artık mevcut değil, lütfen kutucuğu yenileyin</string>
     <string name="wear_action_tempt_preset_error">Geiçici hedef bilinmeyen ön ayarı: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Çalışan Geçici-Hedefler iptal edilsin mi?</string>
     <string name="wear_action_tempt_unit_error">Saatte ve telefonda farklı birimler kullanılıyor!</string>
@@ -146,6 +147,8 @@
     <string name="wear_settings">Wear ayarları</string>
     <string name="wearcontrol_title">Saat tarafından kontrol</string>
     <string name="wearcontrol_summary">Tedavileri ve Geçici hedefleri saat tarafından girin.</string>
+    <string name="wear_broadcast_data">Veri yayını</string>
+    <string name="wear_broadcast_data_summary">Verileri AAPS veya AAPSClient\'a yayınla</string>
     <string name="wear_wizard_settings_summary">Sihirbaz sonucuna dahil edilen hesaplamalar:</string>
     <string name="wear_general_settings">Genel Ayarlar</string>
     <string name="wear_notifysmb_title">SMB\'yi bildir</string>
