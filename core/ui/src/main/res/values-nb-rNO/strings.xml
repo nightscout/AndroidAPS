@@ -518,7 +518,7 @@
     <string name="export_expired">Utløpt</string>
     <string name="export_disabled">Deaktivert</string>
     <string name="export_failed">Mislyktes</string>
-    <string name="export_alert">VARSEL</string>
+    <string name="export_alert">Varsel</string>
     <!-- <unattended_export result messages> -->
     <string name="export_result_message_exported">Innstillinger eksportert</string>
     <string name="export_result_message_failed">Eksport av innstillinger MISLYKTES!</string>
