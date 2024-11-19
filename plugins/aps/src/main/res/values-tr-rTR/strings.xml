@@ -11,6 +11,7 @@
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Geçici Hedefler için düşük duyarlılık < 100]]></string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dinamik İDF</string>
+    <string name="openaps_auto_isf">Otomatik İDF</string>
     <string name="smb_interval_summary">Kaç dakikada bir SMB verilebilecek</string>
     <string name="resistance_lowers_target_title">Direnç hedefi düşürür</string>
     <string name="resistance_lowers_target_summary">Direnç tespit edildiğinde KŞ hedefini düşürün</string>
@@ -20,6 +21,7 @@
     <string name="openapsma_no_glucose_data">Glikoz verisi yok</string>
     <string name="openaps_no_as_data">Otoduyarlılık verileri mevcut değil</string>
     <string name="dynisf_shortname">DİNİDF</string>
+    <string name="autoisf_shortname">OTOİDF</string>
     <string name="executing">Yürütülüyor</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">%1$d öğelerin dizisi.\nGerçek değer:</string>
@@ -166,4 +168,55 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="not_available_full">Mevcut değil</string>
     <string name="pump_disconnected">Pompa bağlantısı kesildi</string>
     <!--    autoISF -->
+    <string name="half_basal_exercise_target_title">Yarım bazal egzersiz hedefi</string>
+    <string name="half_basal_exercise_target_summary">Örneğin 160 gibi bir sayıya ayarlayın; bunun anlamı, geçici hedef 160 mg/dL olduğunda ve Yüksek geçici hedef duyarlılığı arttırır= doğru olduğunda, bu seviyede 50%% bazal çalışır (120 = 75%%; 140 = 60%%).</string>
+    <string name="autoISF_settings_title">OtoİDF Ayarları</string>
+    <string name="autoISF_settings_summary">OtoİDF, insülin duyarlılık faktörünün (İDF) glikoz davranışının çeşitli senaryolarına uyarlanmasına olanak tanır\n\nAyrıca SMB iletim ayarlarını da uyarlayabilir</string>
+    <string name="acce_ISF_settings_title">acce_İDF ayarları</string>
+    <string name="acce_ISF_settings_summary">acce_İDF ayarları: İDF\'yi kan şekerinin artışı/düşüşü için ayarlayın</string>
+    <string name="enableautoISFwithcob">dura_İDF\'yi AKRB ile etkinleştirin</string>
+    <string name="enableautoISFwithcob_summary">AKRB aktif olduğunda dura_İDF\'yi etkinleştirin</string>
+    <string name="bg_ISF_settings_title">kş_İDF ayarları</string>
+    <string name="bg_ISF_settings_summary">kş_İDF ayarları: Önceden tanımlanmış bir poligona göre kan şekeri seviyesine bağlı olarak İDF ayarı</string>
+    <string name="pp_ISF_settings_title">pp_İDF ayarları</string>
+    <string name="pp_ISF_settings_summary">pp_İDF ayarları: Yemek sonrası (yemekten sonra) glikoz artışı için İDF</string>
+    <string name="dura_ISF_settings_title">dura_İDF ayarları</string>
+    <string name="dura_ISF_settings_summary">dura_İDF ayarları: Hedefin üzerindeki kan şekeri için İDF</string>
+    <string name="smb_delivery_settings_title">SMB iletim ayarları</string>
+    <string name="smb_delivery_settings_summary">İDF\'nin güçlendirildiği durumlarda (yani oldukça düşük İDF durumu) iletilen SMB değerini artırmaya yönelik seçenekler kümesi.\n\nDİKKATLİ KULLANIN</string>
+    <string name="full_loop_settings_title">Tam Döngü Ayarları</string>
+    <string name="full_loop_settings_summary">Tam Döngü Ayarları: AİNS oluşumunu sınırlamak için iobTH\'ı ayarlayın</string>
+    <string name="use_autoISF_extensions_title">OtoİDF genişletilmiş işlevlerini etkinleştirin</string>
+    <string name="use_autoISF_extensions_summary">Bunlar arasında son kş davranışı nedeniyle İDF modülasyonu, alternatif SMB etkinleştiricileri ve Tam Kapalı Döngü desteği yer almaktadır</string>
+    <string name="openapsama_enable_autoISF">Glikoz davranışıyla İDF adaptasyonunu etkinleştirin</string>
+    <string name="openapsama_autoISF_max_summary">otoduyarlılık_maks\'a benzer şekilde İDF\'nin ne kadar güçlü olabileceğini tanımlar.\n\nVarsayılan değer 1.0 Bu şekilde kapalıdır.\n\nUYARI: 2.5\'in üzerindeki değerleri kullanırken son derece dikkatli olun</string>
+    <string name="openapsama_autoISF_min_summary">otoduyarlılık_min\'e benzer şekilde İDF\'nin ne kadar etkisiz olabileceğini tanımlar.\n\nVarsayılan değer olan 1.0 Bu şekilde kapalıdır.</string>
+    <string name="openapsama_dura_ISF_weight_summary">Daha uzun süreli, yüksek glikoz platoları sırasında uygulanan ve İDF\'yi güçlendirerek potansiyel olarak insülin iletimini artıran ağırlıktır.\n\nVarsayılan değer olan 0,0 Bu şekilde kapalıdır.</string>
+    <string name="openapsama_lower_ISFrange_weight_summary">Glikoz hedefin altındayken uygulanan ve İDF\'yi zayıflatarak insülin iletimini potansiyel olarak azaltan ağırlıktır.\n\nVarsayılan değer olan 0,0 Bu şekilde kapalıdır.</string>
+    <string name="openapsama_higher_ISFrange_weight_summary">Glikoz hedefin üzerindeyken uygulanan ve İDF\'yi güçlendirerek insülin salınımını potansiyel olarak artıran ağırlıktır.\n\nVarsayılan değer olan 0,0 Bu şekilde kapalıdır.</string>
+    <string name="openapsama_pp_ISF_weight_summary">Glikoz yükselirken uygulanan ve İDF\'yi güçlendirerek insülin salınımını potansiyel olarak artıran ağırlıktır.\n\nVarsayılan değer 0,0 bu şekilde kapalıdır.</string>
+    <string name="openapsama_bgAccel_ISF_weight_summary">Kş yükselirken uygulanan ağırlıktır ve İDF\'yi güçlendirerek potansiyel olarak insülin salınımını artırır.\n\nVarsayılan değer 0.0 bu şekilde kapalıdır.</string>
+    <string name="openapsama_bgBrake_ISF_weight_summary">Kş düşerken uygulanan ve İDF\'yi zayıflatarak insülin iletimini potansiyel olarak azaltan ağırlıktır.\n\nVarsayılan değer olan 0,0 bu şekilde kapalıdır.</string>
+    <string name="openapsama_autoISF_max">Maks otoİDF oranı\n(autoISF_max)</string>
+    <string name="openapsama_autoISF_min">Min otoİDF oranı\n(otoİDF_min)</string>
+    <string name="openapsama_lower_ISFrange_weight">alt İDF-aralığı ağırlığı\n(alt_İDF_aralığı_ağırlığı)</string>
+    <string name="openapsama_higher_ISFrange_weight">daha yüksek İDF-aralığı ağırlığı\n(daha_yüksek_İDF_aralığı_ağırlığı)</string>
+    <string name="openapsama_pp_ISF_weight">yemek sonrası İDF-ağırlığı\n(pp_İDF_ağırlığı)</string>
+    <string name="openapsama_bgAccel_ISF_weight">KŞ yükselirken ağırlık\n(kşYüksel_İDF_ağrlığı)</string>
+    <string name="openapsama_bgBrake_ISF_weight">KŞ düşerken ağırlık\n(kşFren_İDF_ağırlığı)</string>
+    <string name="openapsama_dura_ISF_weight">süreç_İDF ağırlığı\n(süreç_İDF_ağırlığı)</string>
+    <string name="openapsama_smb_delivery_ratio">sabit SMB teslimat oranı\n(smb_teslimat_oranı)</string>
+    <string name="openapsama_smb_delivery_ratio_min">değişken SMB iletim oranı, alt uç\n(smb_iletim_oranı_min)</string>
+    <string name="openapsama_smb_delivery_ratio_max">değişken SMB iletim oranı, üst uç\n(smb_iletim_oranı_maks)</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range">değişken SMB iletim oranı, haritalanmış glikoz aralığı\n(smb_iletim_oranı_kş_aralığı)</string>
+    <string name="openapsama_smb_max_range_extension">SMB/UAM maks aralık uzantısı\n(smb_maks_aralık_uzantısı)</string>
+    <string name="openapsama_smb_delivery_ratio_summary">Varsayılan değer: 0,5 Bu, OpenAPS\'in bir diğer önemli güvenlik sınırıdır ve toplam insülin ihtiyacının ne kadarının SMB olarak verilebileceğini belirtir. Aynı anda bakıcının telefonundan SMB istekleri ayarlayarak insanların tehlikeli bölgelere girmesini önlemek içindir. Bu deneysel değeri yavaşça ve dikkatli bir şekilde artırın.</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">Varsayılan değer: 0,5 Bu, yukarıdaki sabit değerden ziyade doğrusal olarak artan bir oranın alt ucudur.</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">Varsayılan değer: 0,5 Bu, yukarıdaki sabit değerden ziyade doğrusal olarak artan bir oranın üst ucudur.</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range_summary">Varsayılan değer: 0. Doğrusal olarak artan SMB iletim oranı glikoz aralığına [hedef_kş, hedef_kş+kş_aralığı] eşlenir.\nHedef_kş\'de SMB oranı smb_iletim_oranı_min, hedef_kş+kş_oranı\'nda smb_iletim_oranı_max olur.\n 0 ile doğrusal olarak artan SMB oranı devre dışı bırakılır ve sabit smb_iletim_oranı kullanılır.</string>
+    <string name="openapsama_smb_max_range_extension_summary">Varsayılan değer: 1 Bu, OpenAPS\'in bir diğer önemli güvenlik sınırıdır ve normalde 120 dakika olan maxSMB/maxUAM süresini hangi faktörle aşabileceğinizi belirtir. Bu deneysel değeri yavaşça ve dikkatli bir şekilde artırın.</string>
+    <string name="enableSMB_EvenOn_OddOff_always">Etkin hedefin çift sayı olmasına bağlı olarak SMB\'nin alternatif aktivasyonunu etkinleştirin</string>
+    <string name="enableSMB_EvenOn_OddOff_always_summary">\netkin ...\neğer aktif hedef (mmol/L) çift ondalık sayıya sahipse\nveya aktif hedef (mg/dL) çift sayıysa\n\ndevredışı</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">SMB\'lerin devre dışı bırakılacağı maksAİNS yüzdesi.\nVarsayılan değer: %100\n Bu özellik %100 değeri ile devre dışıdır.</string>
+    <string name="openapsama_iob_threshold_percent">SMB için maksAINS eşik yüzdesi\n(ains_eşik_yüzdesi)</string>
 </resources>
