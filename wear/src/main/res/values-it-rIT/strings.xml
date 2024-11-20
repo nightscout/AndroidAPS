@@ -11,6 +11,7 @@
     <string name="label_actions_tile">AAPS(azioni)</string>
     <string name="label_temp_target_tile">AAPS(Temp Target)</string>
     <string name="label_quick_wizard_tile">AAPS(Quick Wizard)</string>
+    <string name="label_user_action_tile">AAPS(Azione Utente)</string>
     <string name="label_warning_sync">No dati!</string>
     <string name="label_warning_old">Dati vecchi!</string>
     <string name="label_warning_since">Da %1$s</string>
@@ -98,6 +99,7 @@
     <string name="action_duration">Durata</string>
     <string name="action_tempt_confirmation">Target temporaneo richiesto</string>
     <string name="action_quick_wizard_confirmation">Calcolatore rapido richiesto</string>
+    <string name="action_user_action_confirmation">Azione Utente Richiesta</string>
     <string name="action_treatment_confirmation">Trattamento richiesto</string>
     <string name="action_bolus_confirmation">Bolo richiesto</string>
     <string name="action_wizard_confirmation">Calcolo richiesto</string>

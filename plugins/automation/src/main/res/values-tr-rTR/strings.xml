@@ -6,6 +6,8 @@
     <string name="automation_missing_task_name">Lütfen bir görev adı girin.</string>
     <string name="automation_missing_trigger">Lütfen en az bir tetikleyici belirtin.</string>
     <string name="automation_missing_action">Lütfen en az bir işlem belirtin.</string>
+    <string name="exportsettings_message">Ayarlar Dışa Aktarılıyor: %1$s</string>
+    <string name="export_settings_short">Tedavi metinleri:</string>
     <string name="alarm_message">Alarm: %1$s</string>
     <string name="alarm_short">Alarm:</string>
     <string name="message_short">Msj:</string>
@@ -91,6 +93,8 @@
     <string name="triggerSensorAgeDesc">Sensör yaşı %1$s %2$.1f saat</string>
     <string name="triggerCannulaAgeLabel">Kanül yaşı</string>
     <string name="triggerCannulaAgeDesc">Kanül yaşı %1$s %2$.1f saat</string>
+    <string name="triggerPodChangeLabel">Pod aktivasyonu</string>
+    <string name="triggerPodChangeDesc">Pod Etkinleştirildi</string>
     <string name="triggerInsulinAgeLabel">İnsülin yaşı</string>
     <string name="triggerInsulinAgeDesc">İnsülin yaşı %1$s %2$.1f saat</string>
     <string name="triggerPumpBatteryAgeLabel">Pompa pil yaşı</string>

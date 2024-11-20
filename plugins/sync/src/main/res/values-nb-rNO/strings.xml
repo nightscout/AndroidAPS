@@ -133,6 +133,7 @@
     <string name="wizard_result">Boluskalkulator:\nBolus: %1$.2fE\nKarbo: %2$dg</string>
     <string name="quick_wizard_not_available">Den valgte hurtigknappen er ikke lenger tilgjengelig, oppdater klokkeflis</string>
     <string name="quick_wizard_message">Hurtigknapp: %1$s\nBolus: %2$.2fE\nKarbo: %3$dg</string>
+    <string name="user_action_not_available">Valgt brukerhandling %1$s er ikke lengre tilgjengelig, vennligst last inn flis på nytt</string>
     <string name="wear_action_tempt_preset_error">Ukjent forhåndsinnstilling midlertidig mål: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Avbryt gjeldende midlertidig mål?</string>
     <string name="wear_action_tempt_unit_error">Forskjellige enheter brukt på klokke og telefon!</string>
@@ -146,6 +147,8 @@
     <string name="wear_settings">Klokkeinnstillinger</string>
     <string name="wearcontrol_title">Kontroller fra klokke</string>
     <string name="wearcontrol_summary">Sett midlertidig mål og angi behandlinger fra klokken.</string>
+    <string name="wear_broadcast_data">Kringkast data</string>
+    <string name="wear_broadcast_data_summary">Kringkast data til AAPS eller AAPSClient</string>
     <string name="wear_wizard_settings_summary">Beregninger inkludert i resultatet fra kalkulator:</string>
     <string name="wear_general_settings">Generelle innstillinger</string>
     <string name="wear_notifysmb_title">Varsle ved SMB</string>

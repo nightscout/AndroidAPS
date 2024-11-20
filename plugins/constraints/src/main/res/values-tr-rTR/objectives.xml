@@ -83,4 +83,5 @@
     <string name="failedretrievetime">Geri almada hata</string>
     <string name="requirementnotmet">Görev gereksinimleri karşılanmadı</string>
     <string name="what_i_ve_learned">Ne öğrendim:</string>
+    <string name="verify_master_password">Ana parolayı bildiğinizi doğrulayın</string>
 </resources>

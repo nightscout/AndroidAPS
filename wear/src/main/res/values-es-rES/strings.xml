@@ -11,6 +11,7 @@
     <string name="label_actions_tile">AAPS(Acciones)</string>
     <string name="label_temp_target_tile">AAPS(Objetivo Temporal)</string>
     <string name="label_quick_wizard_tile">AAPS(Asistente Rápido)</string>
+    <string name="label_user_action_tile">AAPS(Acción del usuario)</string>
     <string name="label_warning_sync">Sin datos</string>
     <string name="label_warning_old">Datos antiguos</string>
     <string name="label_warning_since">Desde %1$s</string>
@@ -98,6 +99,7 @@
     <string name="action_duration">Duración</string>
     <string name="action_tempt_confirmation">Objetivo Temporal Solicitado</string>
     <string name="action_quick_wizard_confirmation">Asistente Rápido Solicitado</string>
+    <string name="action_user_action_confirmation">Acción de usuario solicitada</string>
     <string name="action_treatment_confirmation">Tratamiento Solicitado</string>
     <string name="action_bolus_confirmation">Bolo Solicitado</string>
     <string name="action_wizard_confirmation">Calculadora Solicitada</string>
@@ -157,6 +159,7 @@
     <string name="pref_vibrate_hourly">Vibrar cada hora</string>
     <string name="pref_show_weeknumber">Mostrar número de semana</string>
     <string name="pref_include_external">Incluir vistas externas en la plantilla</string>
+    <string name="pref_switch_external">Cambiar datos externos en la esfera del reloj</string>
     <string name="custom_pref_show_seconds">Mostrar segundos</string>
     <string name="digitalstyle_pref_your_style">Tu estilo:</string>
     <string name="digitalstyle_style_none">Sin estilo</string>

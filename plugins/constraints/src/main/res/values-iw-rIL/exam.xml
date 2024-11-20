@@ -103,10 +103,13 @@
     <string name="troubleshooting_wheretoask">איפה אפשר לחפש עזרה לגבי AndroidAPS?</string>
     <string name="troubleshooting_fb">אפשר לבקש עצות בקבוצת הפייסבוק \"AndroidAPS Users\" (אנגלית).</string>
     <string name="troubleshooting_wiki">צריך לקרוא (ולקרוא מחדש) את מסמכי AndroidAPS.</string>
+    <string name="troubleshooting_discord">תוכלו לבקש עצות ולרשום בעיות טכניות או בעיות ב-Discord של AndroidAPS.</string>
+    <string name="troubleshooting_github">ניתן להודיע על בעיות כגון באגים ולבקש בקשות לתכונות חדשות ב-Github.</string>
     <string name="troubleshooting_yourendo">עליכם לשאול את המרפאה\\הרופא האנדוקרינולוג שלכם.</string>
     <string name="troubleshooting_hint1">https://wiki.aaps.app/he/latest/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
     <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
+    <string name="troubleshooting_hint4">https://github.com/nightscout/AndroidAPS/issues</string>
     <string name="insulin_plugins">תוספי אינסולין</string>
     <string name="insulin_ultrarapid">באיזה אינסולין להשתמש עם תוסף האולטרה מהיר?</string>
     <string name="insulin_fiasp">Fiasp®</string>
@@ -147,6 +150,7 @@
     <string name="cob3_longer">הגדרת 150% פרופיל תאריך את משך ספיגת הפחמימות המחושבת</string>
     <string name="cob3_shorter">הגדרת 150% פרופיל תקצר את משך ספיגת הפחמימות המחושבת</string>
     <string name="cob3_no_effect">הגדרת 150% פרופיל לא תשפיע על חישוב משך ספיגת הפחמימות</string>
+    <string name="cob_hint1">https://androidaps.readthedocs.io/he/latest/DailyLifeWithAaps/CobCalculation.html#how-does-aaps-calculate-the-cob-value</string>
     <string name="iob_value">ערך האינסולין הפעיל (IOB) מושפע ממינונים בזאליים זמניים שסופקו.</string>
     <string name="iob_hightemp">מינון בזאלי גבוה לא יינתן כאשר רמת הסוכר נמוכה מערך המטרה.</string>
     <string name="iob_negiob">אינסולין פעיל שלילי לאורך זמן בו לא נעשית פעילות מצביע על כך שהפרופיל חזק מדי, נדרש פחות אינסולין ויש להגדיר זאת בפרופיל.</string>

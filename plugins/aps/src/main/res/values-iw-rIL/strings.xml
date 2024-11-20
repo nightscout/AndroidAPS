@@ -3,6 +3,8 @@
     <!--Autotune-->
     <string name="dynisf_adjust_sensitivity">אפשר יחס רגישות המבוסס על המינון היומי הכולל לשינוי מינון בזאלי וערכי מטרה</string>
     <string name="dynisf_adjust_sensitivity_summary">השתמש במינון יומי כולל של 24 שעות\\7 ימים האחרונים כדי לחשב יחס רגישות לצורך העלאה או הורדה של המינון הבזאלי ובנוסף להתאים את ערך המטרה אם אפשרויות אלו מופעלותת באופן דומה ל-Autosense. מומלץ להתחיל כשאפשרות זו כבויה</string>
+    <string name="dyn_isf_adjust_title" formatted="false">כיוונון פקטור הרגישות הדינאמית %</string>
+    <string name="dyn_isf_adjust_summary" formatted="false">כיוונון פקטור הרגישות הדינאמית. קבעו יותר מ-100% לקבלת תיקונים אגרסיביים יותר ופחות מ-100% לקבלת תיקונים עדינים יותר.</string>
     <string name="high_temptarget_raises_sensitivity_title">ערך מטרה זמני גבוה מעלה את הרגישות</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[הגבר רגישות עבור ערך מטרה זמני >= 100]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">ערך מטרה זמני נמוך מוריד את הרגישות</string>
@@ -19,6 +21,7 @@
     <string name="openapsma_no_glucose_data">אין ערכי סוכר זמינים</string>
     <string name="openaps_no_as_data">אין נתוני Autosens זמינים</string>
     <string name="dynisf_shortname">DynISF</string>
+    <string name="autoisf_shortname">רגישות אוטו\'</string>
     <string name="executing">מבצע</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">מערך של %1$d אלמנטים. \n ערך נוכחי:</string>
@@ -26,6 +29,7 @@
     <string name="description_ama">הישאר עם האלגוריתם של 2017</string>
     <string name="description_smb">האלגוריתם העדכני ביותר, עבור משתמשים מתקדמים בלבד</string>
     <string name="description_smb_dynamic_isf">האלגוריתם העדכני ביותר, נועד למשתמשים מתקדמים עם רגישות (ISF) דינאמית\\אוטומטית</string>
+    <string name="description_auto_isf">האלגוריתם העדכני ביותר, נועד למשתמשים מתקדמים עם ההרחבות השונות של רגישות אוטומטית</string>
     <string name="openapsama_bolus_snooze_dia_divisor">נמנום בולוס - מחלק משך פעילות אינסולין</string>
     <string name="openapsma_run">בצע</string>
     <string name="openapsma_last_run_label">ההפעלה האחרונה</string>
@@ -159,5 +163,13 @@
     <string name="autotune_update_local_profile_message">לעדכן את פרופיל %1$s עם הפרופיל המכוונן אוטומטית?</string>
     <string name="autotune_revert_local_profile_message">להחזיר את פרופיל %1$s אל פרופיל קלט?</string>
     <string name="autotune_profile_invalid">פרופיל לא חוקי</string>
+    <string name="not_available_full">לא זמין</string>
+    <string name="pump_disconnected">המשאבה מנותקת</string>
     <!--    autoISF -->
+    <string name="autoISF_settings_title">הגדרות רגישות אוטומטית</string>
+    <string name="autoISF_settings_summary">רגישות אוטומטית מאפשרת להתאים את יחס הרגישות (ISF) לתרחישים שונים של התנהגות הסוכר\n\nיכול להתאים גם לשימוש עם SMB</string>
+    <string name="openapsama_enable_autoISF">אפשר התאמת רגישות בתגובה להתנהגות רמת הסוכר</string>
+    <string name="openapsama_smb_max_range_extension">הרחבת טווח SMB/UAM מקסימלי \n(smb_max_range_extension)</string>
+    <string name="openapsama_smb_delivery_ratio_summary">ערך ברירת מחדל: 0.5 זוהי מגבלת בטיחות נוספת של OpenAPS המגדירה איזה חלק מסך האינסולין הנדרש יכול להינתן כ-SMB. מגבלה זו נועדה למנוע כפילות הזרקת SMB הנגרמת מפקודות מהמטפל המרוחק בנוסף למכשיר הראשי. יש להגדיל ערך ניסיוני זה בהדרגה ובזהירות.</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">ערך ברירת מחדל: 0.5 זהו הקצה הנמוך של יחס שמתגבר באופן ליניארי ולא ערך קבוע כפי שמצוין לעיל.</string>
 </resources>
