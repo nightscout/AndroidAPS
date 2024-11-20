@@ -341,7 +341,7 @@ class ImportExportPrefsImpl @Inject constructor(
 
         try {
             if (activity is DaggerAppCompatActivityWithResult)
-                activity.callForPrefFile.launch(null)
+                activity.callForPrefFile?.launch(null)
         } catch (e: IllegalArgumentException) {
             // this exception happens on some early implementations of ActivityResult contracts
             // when registered and called for the second time
@@ -357,7 +357,7 @@ class ImportExportPrefsImpl @Inject constructor(
     override fun importCustomWatchface(activity: FragmentActivity) {
         try {
             if (activity is DaggerAppCompatActivityWithResult)
-                activity.callForCustomWatchfaceFile.launch(null)
+                activity.callForCustomWatchfaceFile?.launch(null)
         } catch (e: IllegalArgumentException) {
             // this exception happens on some early implementations of ActivityResult contracts
             // when registered and called for the second time

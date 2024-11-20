@@ -200,7 +200,7 @@ class SWDefinition @Inject constructor(
             .add(SWButton(injector)
                      .text(R.string.aaps_directory)
                      .visibility { preferences.getIfExists(StringKey.AapsDirectoryUri) == null }
-                     .action { (activity as DaggerAppCompatActivityWithResult).accessTree.launch(null) })
+                     .action { (activity as DaggerAppCompatActivityWithResult).accessTree?.launch(null) })
             .add(SWBreak(injector))
             .add(SWEventListener(injector, EventAAPSDirectorySelected ::class.java).label(app.aaps.core.ui.R.string.settings).initialStatus(preferences.get(StringKey.AapsDirectoryUri)))
             .add(SWBreak(injector))
@@ -299,8 +299,7 @@ class SWDefinition @Inject constructor(
             )
             .validator {
                 activePlugin.activeProfileSource.profile?.getDefaultProfile()
-                    ?.let { ProfileSealed.Pure(it, activePlugin).isValid("StartupWizard", activePlugin.activePump, config, rh, rxBus, hardLimits, false).isValid }
-                    ?: false
+                    ?.let { ProfileSealed.Pure(it, activePlugin).isValid("StartupWizard", activePlugin.activePump, config, rh, rxBus, hardLimits, false).isValid } == true
             }
             .visibility { (activePlugin.activeProfileSource as PluginBase).isEnabled() }
 

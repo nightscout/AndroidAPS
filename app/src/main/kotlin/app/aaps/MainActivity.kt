@@ -328,7 +328,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             rxBus.send(
                 EventNewNotification(
                     NotificationWithAction(this, Notification.AAPS_DIR_NOT_SELECTED, rh.gs(app.aaps.core.ui.R.string.aaps_directory_not_selected), Notification.IMPORTANCE_HIGH)
-                        .action(R.string.select, Runnable { accessTree.launch(null) })
+                        .action(R.string.select, Runnable { accessTree?.launch(null) })
                 )
             )
     }

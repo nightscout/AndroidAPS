@@ -49,8 +49,8 @@ class AndroidPermissionImpl @Inject constructor(
         if (test) {
             if (activity is DaggerAppCompatActivityWithResult)
                 try {
-                    activity.requestMultiplePermissions.launch(permissions)
-                } catch (ignored: IllegalStateException) {
+                    activity.requestMultiplePermissions?.launch(permissions)
+                } catch (_: IllegalStateException) {
                     ToastUtils.errorToast(activity, rh.gs(R.string.error_asking_for_permissions))
                 }
         }
@@ -58,11 +58,11 @@ class AndroidPermissionImpl @Inject constructor(
             try {
                 if (activity is DaggerAppCompatActivityWithResult)
                     try {
-                        activity.callForBatteryOptimization.launch(null)
-                    } catch (ignored: IllegalStateException) {
+                        activity.callForBatteryOptimization?.launch(null)
+                    } catch (_: IllegalStateException) {
                         ToastUtils.errorToast(activity, rh.gs(R.string.error_asking_for_permissions))
                     }
-            } catch (e: ActivityNotFoundException) {
+            } catch (_: ActivityNotFoundException) {
                 permissionBatteryOptimizationFailed = true
                 OKDialog.show(activity, rh.gs(R.string.permission), rh.gs(R.string.alert_dialog_permission_battery_optimization_failed)) { activity.recreate() }
             }
