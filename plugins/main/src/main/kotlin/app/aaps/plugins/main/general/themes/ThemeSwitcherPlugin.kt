@@ -31,7 +31,7 @@ class ThemeSwitcherPlugin @Inject constructor(
         .mainType(PluginType.GENERAL)
         .neverVisible(true)
         .alwaysEnabled(true)
-        .showInList({ false })
+        .showInList { false }
         .pluginName(R.string.theme_switcher),
     aapsLogger, rh
 ) {

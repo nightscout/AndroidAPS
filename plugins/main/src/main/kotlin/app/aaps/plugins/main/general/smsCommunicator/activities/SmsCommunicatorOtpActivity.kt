@@ -2,7 +2,6 @@ package app.aaps.plugins.main.general.smsCommunicator.activities
 
 import android.content.ClipData
 import android.content.ClipboardManager
-import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
@@ -98,7 +97,7 @@ class SmsCommunicatorOtpActivity : TranslatedDaggerAppCompatActivity() {
                 rh.gs(R.string.smscommunicator_otp_export_title),
                 rh.gs(R.string.smscommunicator_otp_export_prompt),
                 Runnable {
-                    val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                    val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
                     val clip = ClipData.newPlainText("OTP Secret", otp.provisioningSecret())
                     clipboard.setPrimaryClip(clip)
                     ToastUtils.Long.infoToast(this, rh.gs(R.string.smscommunicator_otp_export_successful))

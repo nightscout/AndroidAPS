@@ -321,9 +321,9 @@ abstract class BaseWatchFace : WatchFace() {
             if (detailedIob) "${status[0].iobSum} ${status[0].iobDetail}"
             else status[0].iobSum + getString(R.string.units_short)
         externalStatus = if (showBgi)
-            "${status[0].externalStatus} ${iobString} ${status[0].bgi}"
+            "${status[0].externalStatus} $iobString ${status[0].bgi}"
         else
-            "${status[0].externalStatus} ${iobString}"
+            "${status[0].externalStatus} $iobString"
         binding.status?.text = externalStatus
         binding.status?.visibility = sp.getBoolean(R.string.key_show_external_status, true).toVisibility()
         binding.loop?.visibility = sp.getBoolean(R.string.key_show_external_status, true).toVisibility()
@@ -371,9 +371,9 @@ abstract class BaseWatchFace : WatchFace() {
                 if (detailedIob) "${status[1].iobSum} ${status[1].iobDetail}"
                 else status[1].iobSum + getString(R.string.units_short)
             externalStatusExt1 = if (showBgi)
-                "${status[1].externalStatus} ${iobStringExt1} ${status[1].bgi}"
+                "${status[1].externalStatus} $iobStringExt1 ${status[1].bgi}"
             else
-                "${status[1].externalStatus} ${iobStringExt1}"
+                "${status[1].externalStatus} $iobStringExt1"
             binding.statusExt1?.text = externalStatusExt1
             binding.statusExt1?.visibility = sp.getBoolean(R.string.key_show_external_status, true).toVisibility()
             binding.loopExt1?.visibility = sp.getBoolean(R.string.key_show_external_status, true).toVisibility()
@@ -422,9 +422,9 @@ abstract class BaseWatchFace : WatchFace() {
                 if (detailedIob) "${status[2].iobSum} ${status[2].iobDetail}"
                 else status[2].iobSum + getString(R.string.units_short)
             externalStatusExt2 = if (showBgi)
-                "${status[2].externalStatus} ${iobStringExt2} ${status[2].bgi}"
+                "${status[2].externalStatus} $iobStringExt2 ${status[2].bgi}"
             else
-                "${status[2].externalStatus} ${iobStringExt2}"
+                "${status[2].externalStatus} $iobStringExt2"
             binding.statusExt2?.text = externalStatusExt2
             binding.statusExt2?.visibility = sp.getBoolean(R.string.key_show_external_status, true).toVisibility()
             binding.loopExt2?.visibility = sp.getBoolean(R.string.key_show_external_status, true).toVisibility()
@@ -534,7 +534,7 @@ abstract class BaseWatchFace : WatchFace() {
         if (simpleUi.isEnabled(currentWatchMode)) {
             return
         }
-        if (binding.chart != null && graphData.entries.size > 0) {
+        if (binding.chart != null && graphData.entries.isNotEmpty()) {
             val timeframe = sp.getInt(R.string.key_chart_time_frame, 3)
             val bgGraphBuilder =
                 if (lowResMode)

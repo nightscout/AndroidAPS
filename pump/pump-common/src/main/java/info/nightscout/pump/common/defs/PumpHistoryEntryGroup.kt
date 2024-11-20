@@ -45,7 +45,7 @@ enum class PumpHistoryEntryGroup(val resourceId: Int, val pumpTypeGroupConfig: P
         fun doTranslation(rh: ResourceHelper) {
             if (translatedList != null) return
             translatedList = ArrayList()
-            for (pumpHistoryEntryGroup in values()) {
+            for (pumpHistoryEntryGroup in PumpHistoryEntryGroup.entries) {
                 pumpHistoryEntryGroup.translated = rh.gs(pumpHistoryEntryGroup.resourceId)
                 (translatedList as ArrayList<PumpHistoryEntryGroup>).add(pumpHistoryEntryGroup)
             }
@@ -59,13 +59,12 @@ enum class PumpHistoryEntryGroup(val resourceId: Int, val pumpTypeGroupConfig: P
         fun getTranslatedList(rh: ResourceHelper, pumpTypeGroupConfig: PumpTypeGroupConfig = PumpTypeGroupConfig.All): List<PumpHistoryEntryGroup> {
             if (translatedList == null) doTranslation(rh)
 
-            val outList: List<PumpHistoryEntryGroup>
-
-            if (pumpTypeGroupConfig == PumpTypeGroupConfig.All) {
-                outList = translatedList!!.filter { pre -> pre.pumpTypeGroupConfig == PumpTypeGroupConfig.All }
-            } else {
-                outList = translatedList!!.filter { pre -> (pre.pumpTypeGroupConfig == PumpTypeGroupConfig.All || pre.pumpTypeGroupConfig == pumpTypeGroupConfig) }
-            }
+            val outList: List<PumpHistoryEntryGroup> =
+                if (pumpTypeGroupConfig == PumpTypeGroupConfig.All) {
+                    translatedList!!.filter { pre -> pre.pumpTypeGroupConfig == PumpTypeGroupConfig.All }
+                } else {
+                    translatedList!!.filter { pre -> (pre.pumpTypeGroupConfig == PumpTypeGroupConfig.All || pre.pumpTypeGroupConfig == pumpTypeGroupConfig) }
+                }
 
             return outList
         }

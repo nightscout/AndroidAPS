@@ -4,9 +4,9 @@ import app.aaps.core.nssdk.localmodel.entry.NsUnits
 
 data class NSBolus(
     override var date: Long?,
-    override val device: String?= null,
+    override val device: String? = null,
     override val identifier: String?,
-    override val units: NsUnits?= null,
+    override val units: NsUnits? = null,
     override val srvModified: Long? = null,
     override val srvCreated: Long? = null,
     override var utcOffset: Long?,
@@ -25,6 +25,7 @@ data class NSBolus(
     val isBasalInsulin: Boolean
 
 ) : NSTreatment {
+
     enum class BolusType {
         NORMAL,
         SMB,
@@ -32,7 +33,7 @@ data class NSBolus(
 
         companion object {
 
-            fun fromString(name: String?) = values().firstOrNull { it.name == name } ?: NORMAL
+            fun fromString(name: String?) = BolusType.entries.firstOrNull { it.name == name } ?: NORMAL
         }
     }
 }

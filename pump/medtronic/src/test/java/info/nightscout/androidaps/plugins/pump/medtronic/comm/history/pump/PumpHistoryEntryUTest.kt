@@ -1,12 +1,11 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump
 
 import app.aaps.core.interfaces.ui.UiInteraction
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicTestBase
-import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.MedtronicPumpHistoryDecoder
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
-import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock

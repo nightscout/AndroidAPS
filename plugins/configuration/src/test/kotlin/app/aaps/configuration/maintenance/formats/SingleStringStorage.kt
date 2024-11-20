@@ -1,4 +1,4 @@
-package app.aaps.plugins.configuration.maintenance.formats
+package app.aaps.configuration.maintenance.formats
 
 import android.content.ContentResolver
 import androidx.documentfile.provider.DocumentFile

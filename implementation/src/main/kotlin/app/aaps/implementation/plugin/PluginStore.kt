@@ -3,7 +3,6 @@ package app.aaps.implementation.plugin
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.Sensitivity
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.constraints.Safety
@@ -25,8 +24,7 @@ import javax.inject.Singleton
 
 @Singleton
 class PluginStore @Inject constructor(
-    private val aapsLogger: AAPSLogger,
-    private val config: Config
+    private val aapsLogger: AAPSLogger
 ) : ActivePlugin {
 
     lateinit var plugins: List<@JvmSuppressWildcards PluginBase>
@@ -74,10 +72,9 @@ class PluginStore @Inject constructor(
     }
 
     override fun verifySelectionInCategories() {
-        var pluginsInCategory: ArrayList<PluginBase>?
 
         // PluginType.APS
-        pluginsInCategory = getSpecificPluginsList(PluginType.APS)
+        var pluginsInCategory = getSpecificPluginsList(PluginType.APS)
         activeAPSStore = getTheOneEnabledInArray(pluginsInCategory, PluginType.APS) as APS?
         if (activeAPSStore == null) {
             activeAPSStore = getDefaultPlugin(PluginType.APS) as APS

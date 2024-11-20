@@ -30,7 +30,6 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.rx.events.EventScale
 import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.Preferences
 import app.aaps.plugins.main.R
 import com.google.gson.Gson
@@ -45,8 +44,7 @@ class OverviewMenusImpl @Inject constructor(
     private val preferences: Preferences,
     private val rxBus: RxBus,
     private val config: Config,
-    private val loop: Loop,
-    private val fabricPrivacy: FabricPrivacy
+    private val loop: Loop
 ) : OverviewMenus {
 
     enum class CharTypeData(
@@ -140,13 +138,13 @@ class OverviewMenusImpl @Inject constructor(
         scaleButton.setCompoundDrawablesWithIntrinsicBounds(
             null,
             null,
-            rh.gd(R.drawable.ic_arrow_drop_down_white_24dp)?.also { it.setTint(rh.gac(scaleButton.context, app.aaps.core.ui.R.attr.defaultTextColor))},
+            rh.gd(R.drawable.ic_arrow_drop_down_white_24dp)?.also { it.setTint(rh.gac(scaleButton.context, app.aaps.core.ui.R.attr.defaultTextColor)) },
             null
         )
         chartButton.setOnClickListener { v: View ->
             var itemRow = 0
             val predictionsAvailable: Boolean = when {
-                config.APS      -> loop.lastRun?.request?.hasPredictions ?: false
+                config.APS      -> loop.lastRun?.request?.hasPredictions == true
                 config.NSCLIENT -> true
                 else            -> false
             }
@@ -233,14 +231,14 @@ class OverviewMenusImpl @Inject constructor(
             scaleButton.setCompoundDrawablesWithIntrinsicBounds(
                 null,
                 null,
-                rh.gd(R.drawable.ic_arrow_drop_up_white_24dp)?.also { it.setTint(rh.gac(v.context, app.aaps.core.ui.R.attr.defaultTextColor))},
+                rh.gd(R.drawable.ic_arrow_drop_up_white_24dp)?.also { it.setTint(rh.gac(v.context, app.aaps.core.ui.R.attr.defaultTextColor)) },
                 null
             )
             popup.setOnDismissListener {
                 scaleButton.setCompoundDrawablesWithIntrinsicBounds(
                     null,
                     null,
-                    rh.gd(R.drawable.ic_arrow_drop_down_white_24dp)?.also { it.setTint(rh.gac(v.context, app.aaps.core.ui.R.attr.defaultTextColor))},
+                    rh.gd(R.drawable.ic_arrow_drop_down_white_24dp)?.also { it.setTint(rh.gac(v.context, app.aaps.core.ui.R.attr.defaultTextColor)) },
                     null
                 )
             }
@@ -314,11 +312,12 @@ class OverviewMenusImpl @Inject constructor(
         for (g in 0 until numOfGraphs) if (settingsCopy[g][type.ordinal]) return g
         return -1
     }
+
     override fun scaleString(rangeToDisplay: Int): String = when (rangeToDisplay) {
-        6   -> rh.gs(R.string.graph_scale_6h)
-        12  -> rh.gs(R.string.graph_scale_12h)
-        18  -> rh.gs(R.string.graph_scale_18h)
-        24  -> rh.gs(R.string.graph_scale_24h)
+        6    -> rh.gs(R.string.graph_scale_6h)
+        12   -> rh.gs(R.string.graph_scale_12h)
+        18   -> rh.gs(R.string.graph_scale_18h)
+        24   -> rh.gs(R.string.graph_scale_24h)
         else -> ""
     }
 

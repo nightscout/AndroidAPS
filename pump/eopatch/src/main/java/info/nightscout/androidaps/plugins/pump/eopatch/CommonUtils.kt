@@ -30,7 +30,7 @@ object CommonUtils {
     }
 
     fun hasText(str: String?): Boolean {
-        return str?.let{hasText(it as CharSequence)}?:false
+        return str?.let{hasText(it as CharSequence)} == true
     }
 
     fun isStringEmpty(cs: CharSequence?): Boolean {

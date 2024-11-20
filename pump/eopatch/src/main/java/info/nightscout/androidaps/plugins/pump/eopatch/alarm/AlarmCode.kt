@@ -69,14 +69,20 @@ enum class AlarmCode(messageResId: Int) {
             || this == A107 || this == A108 || this == A116 || this == A117 || this == A118
 
     companion object {
+
         const val TYPE_ALARM = 'A'
         const val TYPE_ALERT = 'B'
 
+        @Suppress("SpellCheckingInspection")
         private const val SCHEME = "alarmkey"
+
+        @Suppress("SpellCheckingInspection")
         private const val ALARM_KEY_PATH = "alarmkey"
+
+        @Suppress("SpellCheckingInspection")
         private const val QUERY_CODE = "alarmcode"
 
-        private val NAME_MAP = Stream.of(*values())
+        private val NAME_MAP = Stream.of(*AlarmCode.entries.toTypedArray())
             .collect(Collectors.toMap({ obj: AlarmCode -> obj.name }, Function.identity()))
 
         fun fromStringToCode(name: String): AlarmCode? {

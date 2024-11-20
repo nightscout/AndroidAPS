@@ -28,7 +28,7 @@ class BasalPauseReportPacket(injector: HasAndroidInjector) : DiaconnG8Packet(inj
 
         val bufferData = prefixDecode(data)
         status = getByteToInt(bufferData) //(1: pauseed, 2: pause cancel)
-        aapsLogger.debug(LTag.PUMPCOMM, "status --> ${status}")
+        aapsLogger.debug(LTag.PUMPCOMM, "status --> $status")
     }
 
     override fun getFriendlyName(): String {

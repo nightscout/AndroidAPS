@@ -14,7 +14,7 @@ class AAPSLoggerTest : AAPSLogger {
     }
 
     override fun debug(enable: Boolean, tag: LTag, message: String) {
-        println("DEBUG: " + message)
+        println("DEBUG: $message")
     }
 
     override fun debug(tag: LTag, message: String) {
@@ -50,11 +50,11 @@ class AAPSLoggerTest : AAPSLogger {
     }
 
     override fun error(message: String) {
-        println("ERROR: " + message)
+        println("ERROR: $message")
     }
 
     override fun error(message: String, throwable: Throwable) {
-        println("ERROR: " + message + " " + throwable)
+        println("ERROR: $message $throwable")
     }
 
     override fun error(format: String, vararg arguments: Any?) {

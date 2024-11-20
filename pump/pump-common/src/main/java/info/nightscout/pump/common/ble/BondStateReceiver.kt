@@ -12,7 +12,6 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.utils.extensions.safeGetParcelableExtra
 import com.google.gson.Gson
 import dagger.android.DaggerBroadcastReceiver
-import info.nightscout.pump.common.events.EventPumpConnectionParametersChanged
 import javax.inject.Inject
 
 class BondStateReceiver(
@@ -59,10 +58,8 @@ class BondStateReceiver(
                 if (currentDeviceSettings == targetDevice) {
                     if (targetState == 12) {
                         sp.putBoolean(bondedFlag, true)
-                        rxBus.send(EventPumpConnectionParametersChanged())
                     } else if (targetState == 10) {
                         sp.putBoolean(bondedFlag, false)
-                        rxBus.send(EventPumpConnectionParametersChanged())
                     }
                     context.unregisterReceiver(this)
                 } else {

@@ -84,7 +84,7 @@ class AutotunePlugin @Inject constructor(
         .pluginName(app.aaps.core.ui.R.string.autotune)
         .shortName(R.string.autotune_shortname)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
-        .showInList({ config.isEngineeringMode() && config.isDev() })
+        .showInList { config.isEngineeringMode() && config.isDev() }
         .description(R.string.autotune_description),
     aapsLogger, resourceHelper
 ), Autotune {
@@ -185,7 +185,7 @@ class AutotunePlugin @Inject constructor(
                 log("Tune day " + (i + 1) + " of " + daysBack + " (" + currentCalcDay + " of " + calcDays + ")")
                 tunedProfile?.let {
                     autotuneIob.initializeData(from, to, it)  //autotuneIob contains BG and Treatments data from history (<=> query for ns-treatments and ns-entries)
-                    if (autotuneIob.boluses.size == 0) {
+                    if (autotuneIob.boluses.isEmpty()) {
                         result = rh.gs(R.string.autotune_error)
                         log("No basal data on day ${i + 1}")
                         autotuneFS.exportResult(result)

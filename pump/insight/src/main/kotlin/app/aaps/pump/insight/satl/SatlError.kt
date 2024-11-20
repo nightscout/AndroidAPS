@@ -17,6 +17,6 @@ enum class SatlError(val id: Byte) {
 
     companion object {
 
-        fun fromId(id: Byte) = values().firstOrNull { it.id == id } ?: NONE
+        fun fromId(id: Byte) = SatlError.entries.firstOrNull { it.id == id } ?: NONE
     }
 }

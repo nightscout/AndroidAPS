@@ -10,8 +10,9 @@ enum class ModelType(val value: Int) {
     MD8301(98);
 
     companion object {
+
         fun fromValue(value: Int): ModelType {
-            return values().find { it.value == value } ?: INVALID
+            return ModelType.entries.find { it.value == value } ?: INVALID
         }
     }
 }

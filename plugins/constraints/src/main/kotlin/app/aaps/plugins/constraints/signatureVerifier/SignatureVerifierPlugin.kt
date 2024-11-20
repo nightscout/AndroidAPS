@@ -27,7 +27,6 @@ import java.net.URL
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
-import java.util.Arrays
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -37,6 +36,7 @@ import javax.inject.Singleton
  * In case someone decides to leak a ready-to-use APK nonetheless, we can still disable it.
  * Self-compiled APKs with privately held certificates cannot and will not be disabled.
  */
+@Suppress("PrivatePropertyName")
 @Singleton
 class SignatureVerifierPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
@@ -45,11 +45,11 @@ class SignatureVerifierPlugin @Inject constructor(
     private val context: Context,
     private val uiInteraction: UiInteraction
 ) : PluginBase(
-    PluginDescription()
+    pluginDescription = PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
         .neverVisible(true)
         .alwaysEnabled(true)
-        .showInList({ false })
+        .showInList { false }
         .pluginName(R.string.signature_verifier),
     aapsLogger, rh
 ), PluginConstraints {
@@ -116,7 +116,7 @@ class SignatureVerifierPlugin @Inject constructor(
                         val digest = MessageDigest.getInstance("SHA256")
                         val fingerprint = digest.digest(signature.toByteArray())
                         for (cert in revokedCerts!!) {
-                            if (Arrays.equals(cert, fingerprint)) {
+                            if (cert.contentEquals(fingerprint)) {
                                 return true
                             }
                         }
@@ -155,6 +155,7 @@ class SignatureVerifierPlugin @Inject constructor(
         return hashes
     }
 
+    @Suppress("SpellCheckingInspection")
     var map =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!\"§$%&/()=?,.-;:_<>|°^`´\\@€*'#+~{}[]¿¡áéíóúàèìòùöäü`ÁÉÍÓÚÀÈÌÒÙÖÄÜßÆÇÊËÎÏÔŒÛŸæçêëîïôœûÿĆČĐŠŽćđšžñΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡ\u03A2ΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρςστυφχψωϨϩϪϫϬϭϮϯϰϱϲϳϴϵ϶ϷϸϹϺϻϼϽϾϿЀЁЂЃЄЅІЇЈЉЊЋЌЍЎЏАБВГДЕЖЗ"
 

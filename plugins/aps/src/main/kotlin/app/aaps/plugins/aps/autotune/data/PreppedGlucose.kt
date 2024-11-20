@@ -5,7 +5,7 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 
-class PreppedGlucose {
+@Suppress("SpellCheckingInspection") class PreppedGlucose {
 
     var crData: List<CRDatum> = ArrayList()
     var csfGlucoseData: List<BGDatum> = ArrayList()
@@ -38,33 +38,33 @@ class PreppedGlucose {
         isfGlucoseData = ArrayList()
         basalGlucoseData = ArrayList()
         try {
-            crData = JsonCRDataToList(json.getJSONArray("CRData"))
-            csfGlucoseData = JsonGlucoseDataToList(json.getJSONArray("CSFGlucoseData"))
-            isfGlucoseData = JsonGlucoseDataToList(json.getJSONArray("ISFGlucoseData"))
-            basalGlucoseData = JsonGlucoseDataToList(json.getJSONArray("basalGlucoseData"))
-        } catch (e: JSONException) {
+            crData = jsonCRDataToList(json.getJSONArray("CRData"))
+            csfGlucoseData = jsonGlucoseDataToList(json.getJSONArray("CSFGlucoseData"))
+            isfGlucoseData = jsonGlucoseDataToList(json.getJSONArray("ISFGlucoseData"))
+            basalGlucoseData = jsonGlucoseDataToList(json.getJSONArray("basalGlucoseData"))
+        } catch (_: JSONException) {
         }
     }
 
-    private fun JsonGlucoseDataToList(array: JSONArray): List<BGDatum> {
+    private fun jsonGlucoseDataToList(array: JSONArray): List<BGDatum> {
         val bgData: MutableList<BGDatum> = ArrayList()
         for (index in 0 until array.length()) {
             try {
                 val o = array.getJSONObject(index)
                 bgData.add(BGDatum(o, dateUtil))
-            } catch (e: Exception) {
+            } catch (_: Exception) {
             }
         }
         return bgData
     }
 
-    private fun JsonCRDataToList(array: JSONArray): List<CRDatum> {
+    private fun jsonCRDataToList(array: JSONArray): List<CRDatum> {
         val crData: MutableList<CRDatum> = ArrayList()
         for (index in 0 until array.length()) {
             try {
                 val o = array.getJSONObject(index)
                 crData.add(CRDatum(o, dateUtil))
-            } catch (e: Exception) {
+            } catch (_: Exception) {
             }
         }
         return crData
@@ -92,7 +92,7 @@ class PreppedGlucose {
             }
             val diajson = JSONArray()
             val peakjson = JSONArray()
-            if (diaDeviations.size > 0 || peakDeviations.size > 0) {
+            if (diaDeviations.isNotEmpty() || peakDeviations.isNotEmpty()) {
                 for (diad in diaDeviations) {
                     diajson.put(diad.toJSON())
                 }
@@ -104,12 +104,12 @@ class PreppedGlucose {
             json.put("CSFGlucoseData", csfjson)
             json.put("ISFGlucoseData", isfjson)
             json.put("basalGlucoseData", basaljson)
-            if (diaDeviations.size > 0 || peakDeviations.size > 0) {
+            if (diaDeviations.isNotEmpty() || peakDeviations.isNotEmpty()) {
                 json.put("diaDeviations", diajson)
                 json.put("peakDeviations", peakjson)
             }
             jsonString = if (indent != 0) json.toString(indent) else json.toString()
-        } catch (e: JSONException) {
+        } catch (_: JSONException) {
         }
         return jsonString
     }

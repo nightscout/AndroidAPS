@@ -21,7 +21,6 @@ import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
 import info.nightscout.pump.medtrum.comm.enums.ModelType
 import info.nightscout.pump.medtrum.extension.toByteArray
 import info.nightscout.pump.medtrum.extension.toInt
-import info.nightscout.pump.medtrum.util.MedtrumSnUtil
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import java.util.EnumSet
@@ -251,7 +250,6 @@ class MedtrumPump @Inject constructor(
             sp.putDouble(R.string.key_bolus_amount_to_be_delivered, value)
         }
 
-    
     var bolusingTreatment: EventOverviewBolusProgress.Treatment? = null // actually delivered treatment
     var bolusProgressLastTimeStamp: Long = 0 // timestamp of last bolus progress message
     var bolusStopped = false // bolus stopped by user
@@ -411,7 +409,7 @@ class MedtrumPump @Inject constructor(
     fun handleBasalStatusUpdate(basalType: BasalType, basalRate: Double, basalSequence: Int, basalPatchId: Long, basalStartTime: Long, receivedTime: Long) {
         aapsLogger.debug(
             LTag.PUMP,
-            "handleBasalStatusUpdate: basalType: $basalType basalValue: $basalRate basalSequence: $basalSequence basalPatchId: $basalPatchId basalStartTime: $basalStartTime " + "receivedTime: $receivedTime"
+            "handleBasalStatusUpdate: basalType: $basalType basalValue: $basalRate basalSequence: $basalSequence basalPatchId: $basalPatchId basalStartTime: $basalStartTime receivedTime: $receivedTime"
         )
         @Suppress("UNNECESSARY_SAFE_CALL") // Safe call to allow mocks to return null
         val expectedTemporaryBasal = pumpSync.expectedPumpState()?.temporaryBasal
@@ -439,7 +437,7 @@ class MedtrumPump @Inject constructor(
                 )
                 aapsLogger.debug(
                     LTag.PUMPCOMM,
-                    "handleBasalStatusUpdate: ${newRecordInfo(newRecord)}EVENT TEMP_START ($basalType) ${dateUtil.dateAndTimeString(basalStartTime)} ($basalStartTime) " + "Rate: $basalRate Duration: ${duration} temporaryBasalInfo: $temporaryBasalInfo, expectedTemporaryBasal: $expectedTemporaryBasal"
+                    "handleBasalStatusUpdate: ${newRecordInfo(newRecord)}EVENT TEMP_START ($basalType) ${dateUtil.dateAndTimeString(basalStartTime)} ($basalStartTime) " + "Rate: $basalRate Duration: $duration temporaryBasalInfo: $temporaryBasalInfo, expectedTemporaryBasal: $expectedTemporaryBasal"
                 )
             }
 

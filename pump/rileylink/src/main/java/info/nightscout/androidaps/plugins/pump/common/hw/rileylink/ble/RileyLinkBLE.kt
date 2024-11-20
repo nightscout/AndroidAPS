@@ -227,7 +227,7 @@ class RileyLinkBLE @Inject constructor(
                 // Tell Android that we want the notifications
                 bluetoothConnectionGatt?.setCharacteristicNotification(chara, true)
                 val list = chara.descriptors
-                if (list.size > 0) {
+                if (list.isNotEmpty()) {
                     if (gattDebugEnabled) for (i in list.indices) aapsLogger.debug(LTag.PUMPBTCOMM, "Found descriptor: " + list[i].toString())
                     // Tell the remote device to send the notifications
                     mCurrentOperation = DescriptorWriteOperation(aapsLogger, bluetoothConnectionGatt, list[0], BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE)

@@ -728,7 +728,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             if (errorGettingStatus != null) {
                 continue
             }
-            val bolusDeliveringActive = podStateManager.deliveryStatus?.bolusDeliveringActive() ?: false
+            val bolusDeliveringActive = podStateManager.deliveryStatus?.bolusDeliveringActive() == true
 
             if (bolusDeliveringActive) {
                 // delivery not complete yet

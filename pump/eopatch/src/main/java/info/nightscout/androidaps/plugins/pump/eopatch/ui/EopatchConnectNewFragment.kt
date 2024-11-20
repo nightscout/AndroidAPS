@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.pump.eopatch.ui
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import app.aaps.core.ui.toast.ToastUtils
 import info.nightscout.androidaps.plugins.pump.eopatch.R
 import info.nightscout.androidaps.plugins.pump.eopatch.code.PatchStep
 import info.nightscout.androidaps.plugins.pump.eopatch.databinding.FragmentEopatchConnectNewBinding
@@ -12,7 +13,6 @@ import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewM
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel.SetupStep.GET_PATCH_INFO_FAILED
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel.SetupStep.SCAN_FAILED
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel.SetupStep.SELF_TEST_FAILED
-import app.aaps.core.ui.toast.ToastUtils
 
 class EopatchConnectNewFragment : EoBaseFragment<FragmentEopatchConnectNewBinding>() {
 
@@ -25,7 +25,7 @@ class EopatchConnectNewFragment : EoBaseFragment<FragmentEopatchConnectNewBindin
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
-            viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(EopatchViewModel::class.java)
+            viewModel = ViewModelProvider(requireActivity(), viewModelFactory)[EopatchViewModel::class.java]
             viewModel?.apply {
                 setupStep.observe(viewLifecycleOwner) {
                     when (it) {

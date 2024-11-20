@@ -48,14 +48,14 @@ class MessageQueue {
     }
 
     fun nextRequest() {
-        if (messageRequests.size != 0) {
+        if (messageRequests.isNotEmpty()) {
             activeRequest = messageRequests[0]
             messageRequests.removeAt(0)
         }
     }
 
     fun hasPendingMessages(): Boolean {
-        return messageRequests.size != 0
+        return messageRequests.isNotEmpty()
     }
 
     fun reset() {

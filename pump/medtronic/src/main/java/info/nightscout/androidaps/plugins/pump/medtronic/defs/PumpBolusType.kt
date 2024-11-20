@@ -18,6 +18,7 @@ enum class PumpBolusType {
     Multiwave(4, "BOLUS_MULTIWAVE", "AMOUNT=%s;AMOUNT_SQUARE=%s;DURATION=%s");
 
     companion object {
+
         var codeMapping = HashMap<Int, PumpBolusType?>()
 
         fun getByCode(code: Int): PumpBolusType? {
@@ -29,7 +30,7 @@ enum class PumpBolusType {
         }
 
         init {
-            for (pbt in values()) {
+            for (pbt in PumpBolusType.entries) {
                 codeMapping[pbt.code] = pbt
             }
         }

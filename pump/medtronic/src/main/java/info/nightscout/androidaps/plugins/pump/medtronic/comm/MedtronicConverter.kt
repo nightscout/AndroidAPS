@@ -61,14 +61,13 @@ class MedtronicConverter @Inject constructor(
             batteryStatus.batteryStatusType = BatteryStatusDTO.BatteryStatusType.Unknown
         }
         if (rawData.size > 1) {
-            var d: Double? //= null
 
             // if response in 3 bytes then we add additional information
-            d = if (rawData.size == 2) {
+            var d = if (rawData.size == 2) {
                 rawData[1] * 1.0 / 100.0
             } else {
                 ByteUtil.toInt(rawData[1], rawData[2]) * 1.0 / 100.0
-            }
+            } //= null
             batteryStatus.voltage = d
             batteryStatus.extendedDataReceived = true
         }
@@ -87,12 +86,12 @@ class MedtronicConverter @Inject constructor(
             startIdx = 0
         }
         val reqLength = startIdx + 1
-        val value: Double
-        value = if (reqLength >= rawData.size) {
-            rawData[startIdx] / (1.0 * strokes)
-        } else {
-            ByteUtil.toInt(rawData[startIdx], rawData[startIdx + 1]) / (1.0 * strokes)
-        }
+        val value: Double =
+            if (reqLength >= rawData.size) {
+                rawData[startIdx] / (1.0 * strokes)
+            } else {
+                ByteUtil.toInt(rawData[startIdx], rawData[startIdx + 1]) / (1.0 * strokes)
+            }
         aapsLogger.debug(LTag.PUMPCOMM, "Remaining insulin: $value")
         return value
     }
@@ -110,7 +109,7 @@ class MedtronicConverter @Inject constructor(
         val day = ByteUtil.asUINT8(rawContent[6])
         return try {
             LocalDateTime(year, month, day, hours, minutes, seconds)
-        } catch (e: IllegalFieldValueException) {
+        } catch (_: IllegalFieldValueException) {
             aapsLogger.error(
                 LTag.PUMPCOMM, String.format(
                     Locale.ENGLISH, "decodeTime: Failed to parse pump time value: year=%d, month=%d, hours=%d, minutes=%d, seconds=%d",

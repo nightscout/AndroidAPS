@@ -15,7 +15,7 @@ enum class CharacteristicType(val value: String) {
     companion object {
 
         fun byValue(value: String): CharacteristicType =
-            values().firstOrNull { it.value == value }
+            CharacteristicType.entries.firstOrNull { it.value == value }
                 ?: throw IllegalArgumentException("Unknown Characteristic Type: $value")
     }
 }

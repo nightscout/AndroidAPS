@@ -1,6 +1,5 @@
 package info.nightscout.pump.diaconn.service
 
-import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Binder
@@ -128,7 +127,7 @@ class DiaconnG8Service : DaggerService() {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        return Service.START_STICKY
+        return START_STICKY
     }
 
     override fun onDestroy() {

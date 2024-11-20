@@ -23,7 +23,7 @@ class TriggerRecurringTime(injector: HasAndroidInjector) : Trigger(injector) {
     val time = InputTime(rh, dateUtil)
 
     constructor(injector: HasAndroidInjector, triggerRecurringTime: TriggerRecurringTime) : this(injector) {
-        this.time.value = triggerRecurringTime.time.value
+        time.value = triggerRecurringTime.time.value
         if (days.weekdays.size >= 0)
             System.arraycopy(triggerRecurringTime.days.weekdays, 0, days.weekdays, 0, triggerRecurringTime.days.weekdays.size)
     }

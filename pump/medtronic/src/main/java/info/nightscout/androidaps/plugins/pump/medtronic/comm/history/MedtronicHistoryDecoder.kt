@@ -56,7 +56,7 @@ abstract class MedtronicHistoryDecoder<T : MedtronicHistoryEntry?>(
         if (!statisticsEnabled) return
         // unknownOpCodes = HashMap()
         // mapStatistics = HashMap()
-        for (stat in RecordDecodeStatus.values()) {
+        for (stat in RecordDecodeStatus.entries) {
             mapStatistics[stat] = hashMapOf()
             //(mapStatistics as HashMap<RecordDecodeStatus, MutableMap<String, String>>)[stat] = hashMapOf()
         }

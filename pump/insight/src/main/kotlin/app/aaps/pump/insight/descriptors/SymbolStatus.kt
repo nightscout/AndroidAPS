@@ -7,6 +7,6 @@ enum class SymbolStatus(val id: Int) {
 
     companion object {
 
-        fun fromId(id: Int) = values().firstOrNull { it.id == id }
+        fun fromId(id: Int) = SymbolStatus.entries.firstOrNull { it.id == id }
     }
 }

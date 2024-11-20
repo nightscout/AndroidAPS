@@ -1,6 +1,5 @@
 package app.aaps.pump.danars.services
 
-import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Binder
@@ -520,7 +519,7 @@ class DanaRSService : DaggerService() {
             SystemClock.sleep(200)
             sendMessage(DanaRSPacketGeneralSetHistoryUploadMode(injector, 0))
         }
-        result.success = msg?.success() ?: false
+        result.success = msg?.success() == true
         return result
     }
 
@@ -535,7 +534,7 @@ class DanaRSService : DaggerService() {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        return Service.START_STICKY
+        return START_STICKY
     }
 
     private fun waitForWholeMinute() {

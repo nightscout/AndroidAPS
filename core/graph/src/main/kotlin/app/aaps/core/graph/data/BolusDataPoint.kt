@@ -3,7 +3,6 @@ package app.aaps.core.graph.data
 import android.content.Context
 import android.graphics.Paint
 import app.aaps.core.data.model.BS
-import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.Preferences
@@ -13,7 +12,6 @@ class BolusDataPoint(
     val data: BS,
     private val rh: ResourceHelper,
     private val bolusStep: Double,
-    private val profileUtil: ProfileUtil,
     private val preferences: Preferences,
     private val decimalFormatter: DecimalFormatter
 ) : DataPointWithLabelInterface {

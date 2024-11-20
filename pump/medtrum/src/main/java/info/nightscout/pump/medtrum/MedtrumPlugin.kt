@@ -295,11 +295,11 @@ import kotlin.math.abs
         return if (!isInitialized()) {
             true
         } else {
-            medtrumService?.isConnected ?: false
+            medtrumService?.isConnected == true
         }
     }
 
-    override fun isConnecting(): Boolean = medtrumService?.isConnecting ?: false
+    override fun isConnecting(): Boolean = medtrumService?.isConnecting == true
     override fun isHandshakeInProgress(): Boolean = false
 
     override fun finishHandshaking() {
@@ -311,7 +311,7 @@ import kotlin.math.abs
             aapsLogger.debug(LTag.PUMP, "Medtrum connect - reason:$reason")
             if (medtrumService != null) {
                 aapsLogger.debug(LTag.PUMP, "Medtrum connect - Attempt connection!")
-                val success = medtrumService?.connect(reason) ?: false
+                val success = medtrumService?.connect(reason) == true
                 if (!success) ToastUtils.errorToast(context, app.aaps.core.ui.R.string.ble_not_supported_or_not_paired)
             }
         }
@@ -392,7 +392,7 @@ import kotlin.math.abs
         detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger)).value()
         aapsLogger.debug(LTag.PUMP, "deliverTreatment: Delivering bolus: " + detailedBolusInfo.insulin + "U")
         val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == BS.Type.SMB, detailedBolusInfo.id)
-        val connectionOK = medtrumService?.setBolus(detailedBolusInfo, t) ?: false
+        val connectionOK = medtrumService?.setBolus(detailedBolusInfo, t) == true
         val result = instantiator.providePumpEnactResult()
         result.success = connectionOK && abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep
         result.bolusDelivered = t.insulin
@@ -420,7 +420,7 @@ import kotlin.math.abs
         // round rate to pump rate
         val pumpRate = constraintChecker.applyBasalConstraints(ConstraintObject(absoluteRate, aapsLogger), profile).value()
         temporaryBasalStorage.add(PumpSync.PumpState.TemporaryBasal(dateUtil.now(), T.mins(durationInMinutes.toLong()).msecs(), pumpRate, true, tbrType, 0L, 0L))
-        val connectionOK = medtrumService?.setTempBasal(pumpRate, durationInMinutes) ?: false
+        val connectionOK = medtrumService?.setTempBasal(pumpRate, durationInMinutes) == true
         return if (connectionOK
             && medtrumPump.tempBasalInProgress
             && abs(medtrumPump.tempBasalAbsoluteRate - pumpRate) <= 0.05
@@ -452,7 +452,7 @@ import kotlin.math.abs
         if (!isInitialized()) return instantiator.providePumpEnactResult().success(false).enacted(false)
 
         aapsLogger.info(LTag.PUMP, "cancelTempBasal - enforceNew: $enforceNew")
-        val connectionOK = medtrumService?.cancelTempBasal() ?: false
+        val connectionOK = medtrumService?.cancelTempBasal() == true
         return if (connectionOK && !medtrumPump.tempBasalInProgress) {
             instantiator.providePumpEnactResult().success(true).enacted(true).isTempCancel(true)
         } else {
@@ -579,30 +579,30 @@ import kotlin.math.abs
     // Medtrum interface
     override fun loadEvents(): PumpEnactResult {
         if (!isInitialized()) return instantiator.providePumpEnactResult().success(false).enacted(false)
-        val connectionOK = medtrumService?.loadEvents() ?: false
+        val connectionOK = medtrumService?.loadEvents() == true
         return instantiator.providePumpEnactResult().success(connectionOK)
     }
 
     override fun setUserOptions(): PumpEnactResult {
         if (!isInitialized()) return instantiator.providePumpEnactResult().success(false).enacted(false)
-        val connectionOK = medtrumService?.setUserSettings() ?: false
+        val connectionOK = medtrumService?.setUserSettings() == true
         return instantiator.providePumpEnactResult().success(connectionOK)
     }
 
     override fun clearAlarms(): PumpEnactResult {
         if (!isInitialized()) return instantiator.providePumpEnactResult().success(false).enacted(false)
-        val connectionOK = medtrumService?.clearAlarms() ?: false
+        val connectionOK = medtrumService?.clearAlarms() == true
         return instantiator.providePumpEnactResult().success(connectionOK)
     }
 
     override fun deactivate(): PumpEnactResult {
-        val connectionOK = medtrumService?.deactivatePatch() ?: false
+        val connectionOK = medtrumService?.deactivatePatch() == true
         return instantiator.providePumpEnactResult().success(connectionOK)
     }
 
     override fun updateTime(): PumpEnactResult {
         if (!isInitialized()) return instantiator.providePumpEnactResult().success(false).enacted(false)
-        val connectionOK = medtrumService?.updateTimeIfNeeded() ?: false
+        val connectionOK = medtrumService?.updateTimeIfNeeded() == true
         return instantiator.providePumpEnactResult().success(connectionOK)
     }
 }

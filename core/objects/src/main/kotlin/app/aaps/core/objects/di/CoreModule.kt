@@ -17,6 +17,7 @@ import dagger.android.ContributesAndroidInjector
 )
 open class CoreModule {
 
+    @Suppress("unused")
     @Module
     abstract class CoreDataClassesModule {
 

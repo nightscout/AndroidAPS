@@ -1,15 +1,11 @@
 package app.aaps.implementation.protection
 
-import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.objects.crypto.CryptoUtil
+import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
-import app.aaps.core.objects.crypto.CryptoUtil
-import app.aaps.shared.tests.TestBase
-import org.mockito.Mock
-
-class SecureEncryptImplTest: TestBase() {
+class SecureEncryptImplTest : TestBase() {
 
     private val cryptoUtil = CryptoUtil(aapsLogger)
     private val sut = SecureEncryptImpl(aapsLogger, cryptoUtil)
@@ -19,7 +15,7 @@ class SecureEncryptImplTest: TestBase() {
 
     /***
     Test general interface only (as the Android KeyStore is not available or mocked)
-    */
+     */
 
     @Test
     fun encrypt() {

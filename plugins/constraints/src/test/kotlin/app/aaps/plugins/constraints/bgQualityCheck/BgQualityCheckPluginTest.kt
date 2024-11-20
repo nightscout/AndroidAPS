@@ -16,8 +16,6 @@ import app.aaps.core.objects.extensions.fromGv
 import app.aaps.plugins.constraints.R
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
@@ -35,7 +33,6 @@ class BgQualityCheckPluginTest : TestBase() {
 
     private lateinit var plugin: BgQualityCheckPlugin
 
-    private val injector = HasAndroidInjector { AndroidInjector { } }
     private val now = 100000000L
     //private val autosensDataStore = AutosensDataStoreObject()
 

@@ -173,7 +173,7 @@ class DanaRPlugin @Inject constructor(
                 detailedBolusInfo.carbs.toInt(),
                 detailedBolusInfo.carbsTimestamp ?: detailedBolusInfo.timestamp,
                 t
-            ) ?: false
+            ) == true
         val result = instantiator.providePumpEnactResult()
         result.success(connectionOK && abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep)
             .bolusDelivered(t.insulin)

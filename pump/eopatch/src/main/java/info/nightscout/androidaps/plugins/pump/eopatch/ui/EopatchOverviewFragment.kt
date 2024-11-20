@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.ui.toast.ToastUtils
 import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.androidaps.plugins.pump.eopatch.R
 import info.nightscout.androidaps.plugins.pump.eopatch.code.EventType
@@ -17,7 +18,6 @@ import info.nightscout.androidaps.plugins.pump.eopatch.core.code.BolusType
 import info.nightscout.androidaps.plugins.pump.eopatch.databinding.FragmentEopatchOverviewBinding
 import info.nightscout.androidaps.plugins.pump.eopatch.extension.takeOne
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchOverviewViewModel
-import app.aaps.core.ui.toast.ToastUtils
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 
@@ -43,7 +43,7 @@ class EopatchOverviewFragment : EoBaseFragment<FragmentEopatchOverviewBinding>()
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
-            viewmodel = ViewModelProvider(this@EopatchOverviewFragment, viewModelFactory).get(EopatchOverviewViewModel::class.java)
+            viewmodel = ViewModelProvider(this@EopatchOverviewFragment, viewModelFactory)[EopatchOverviewViewModel::class.java]
             viewmodel?.apply {
                 eventHandler.observe(viewLifecycleOwner) { evt ->
                     when (evt.peekContent()) {

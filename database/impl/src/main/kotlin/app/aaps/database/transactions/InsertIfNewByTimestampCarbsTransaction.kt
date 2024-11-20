@@ -1,7 +1,6 @@
 package app.aaps.database.transactions
 
 import app.aaps.database.entities.Carbs
-import app.aaps.database.entities.embedments.InterfaceIDs
 
 /**
  * Creates Carbs if record doesn't exist
@@ -9,20 +8,6 @@ import app.aaps.database.entities.embedments.InterfaceIDs
 class InsertIfNewByTimestampCarbsTransaction(
     private val carbs: Carbs
 ) : Transaction<InsertIfNewByTimestampCarbsTransaction.TransactionResult>() {
-
-    constructor(
-        timestamp: Long,
-        amount: Double,
-        duration: Long,
-        interfaceIDs_backing: InterfaceIDs? = null
-    ) : this(
-        Carbs(
-            timestamp = timestamp,
-            amount = amount,
-            duration = duration,
-            interfaceIDs_backing = interfaceIDs_backing
-        )
-    )
 
     override fun run(): TransactionResult {
         val result = TransactionResult()

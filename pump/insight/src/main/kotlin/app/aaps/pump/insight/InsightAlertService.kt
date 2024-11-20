@@ -37,7 +37,7 @@ import javax.inject.Inject
 class InsightAlertService : DaggerService(), InsightConnectionService.StateCallback {
 
     private val localBinder: LocalBinder = LocalBinder()
-    private val `$alertLock`: Any = arrayOfNulls<Any>(0)
+    private val alertLock = Object()
     val alertLiveData = MutableLiveData<Alert?>()
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var resourceHelper: ResourceHelper
@@ -66,7 +66,7 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
     }
 
     fun ignore(alertType: AlertType?) {
-        synchronized(`$alertLock`) {
+        synchronized(alertLock) {
             if (alertType == null) {
                 ignoreTimestamp = 0
                 ignoreType = null
@@ -125,7 +125,7 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
     private fun queryActiveAlert() {
         while (!Thread.currentThread().isInterrupted) {
             try {
-                synchronized(`$alertLock`) {
+                synchronized(alertLock) {
                     val alert = connectionService!!.requestMessage(GetActiveAlertMessage()).await().alert
                     if (alert == null || alert.alertType == ignoreType && System.currentTimeMillis() - ignoreTimestamp < 10000) {
                         if (connectionRequested) {
@@ -147,7 +147,7 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
                         if (alert.alertStatus == AlertStatus.SNOOZED) stopAlerting() else alert()
                     }
                 }
-            } catch (ignored: InterruptedException) {
+            } catch (_: InterruptedException) {
                 connectionService?.withdrawConnectionRequest(thread as Any)
                 break
             } catch (e: AppLayerErrorException) {
@@ -159,7 +159,7 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
             }
             try {
                 Thread.sleep(1000)
-            } catch (e: InterruptedException) {
+            } catch (_: InterruptedException) {
                 break
             }
         }
@@ -191,7 +191,7 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
     fun mute() {
         Thread(Runnable {
             try {
-                synchronized(`$alertLock`) {
+                synchronized(alertLock) {
                     if (alert == null) return@Runnable
                     alert?.let {
                         it.alertStatus = AlertStatus.SNOOZED
@@ -219,7 +219,7 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
     fun confirm() {
         Thread(Runnable {
             try {
-                synchronized(`$alertLock`) {
+                synchronized(alertLock) {
                     if (alert == null) return@Runnable
                     stopAlerting()
                     alertLiveData.postValue(null)

@@ -335,7 +335,7 @@ class NotificationPacket(val injector: HasAndroidInjector) {
                 medtrumPump.handleNewPatch(patchId, sequence, newPatchStartTime)
             }
         }
-        aapsLogger.debug(LTag.PUMPCOMM, "Last known sequence number: ${medtrumPump.currentSequenceNumber}, patch id: ${patchId}")
+        aapsLogger.debug(LTag.PUMPCOMM, "Last known sequence number: ${medtrumPump.currentSequenceNumber}, patch id: $patchId")
         return offset + SIZE_STORAGE
     }
 
@@ -350,7 +350,7 @@ class NotificationPacket(val injector: HasAndroidInjector) {
         } else if (alarmFlags != 0) {
             // Check each alarm bit
             for (i in 0..3) { // Only the first 3 flags are interesting for us, the rest we will get from the pump state
-                val alarmState = AlarmState.values()[i]
+                val alarmState = AlarmState.entries[i]
                 if ((alarmFlags shr i) and 1 != 0) {
                     // If the alarm bit is set, add the corresponding alarm to activeAlarms
                     if (!medtrumPump.activeAlarms.contains(alarmState)) {

@@ -5,7 +5,6 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.utils.pump.ByteUtil
 import info.nightscout.androidaps.plugins.pump.common.utils.CRC
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
-import java.util.Arrays
 import java.util.Locale
 
 /**
@@ -21,7 +20,7 @@ class RawHistoryPage(private val aapsLogger: AAPSLogger) {
     }
 
     val onlyData: ByteArray
-        get() = Arrays.copyOfRange(data, 0, 1022)
+        get() = data.copyOfRange(0, 1022)
 
     val length: Int
         get() = data.size

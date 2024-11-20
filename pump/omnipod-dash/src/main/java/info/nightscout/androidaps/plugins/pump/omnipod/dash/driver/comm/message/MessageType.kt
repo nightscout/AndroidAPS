@@ -9,7 +9,7 @@ enum class MessageType(val value: Byte) {
     companion object {
 
         fun byValue(value: Byte): MessageType =
-            MessageType.values().firstOrNull { it.value == value }
+            MessageType.entries.firstOrNull { it.value == value }
                 ?: throw IllegalArgumentException("Unknown MessageType: $value")
     }
 }

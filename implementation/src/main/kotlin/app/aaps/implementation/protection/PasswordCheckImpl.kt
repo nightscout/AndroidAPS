@@ -11,9 +11,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.StringRes
-import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.protection.ExportPasswordDataStore
+import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.objects.R
 import app.aaps.core.objects.crypto.CryptoUtil
@@ -25,7 +24,6 @@ import javax.inject.Inject
 
 @Reusable
 class PasswordCheckImpl @Inject constructor(
-    private var log: AAPSLogger,
     private val sp: SP,
     private val cryptoUtil: CryptoUtil
 ) : PasswordCheck {

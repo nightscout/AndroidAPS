@@ -1,7 +1,6 @@
 package app.aaps.plugins.sync.nsclient.services
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.os.Binder
 import android.os.Handler
@@ -124,7 +123,7 @@ class NSClientService : DaggerService() {
     @SuppressLint("WakelockTimeout")
     override fun onCreate() {
         super.onCreate()
-        wakeLock = (getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:NSClientService")
+        wakeLock = (getSystemService(POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:NSClientService")
         wakeLock?.acquire()
         initialize()
         disposable += rxBus
@@ -277,10 +276,10 @@ class NSClientService : DaggerService() {
                     socket.on("urgent_alarm", onUrgentAlarm)
                     socket.on("clear_alarm", onClearAlarm)
                 }
-            } catch (e: URISyntaxException) {
+            } catch (_: URISyntaxException) {
                 rxBus.send(EventNSClientNewLog("● NSCLIENT", "Wrong URL syntax"))
                 rxBus.send(EventNSClientStatus("Wrong URL syntax"))
-            } catch (e: RuntimeException) {
+            } catch (_: RuntimeException) {
                 rxBus.send(EventNSClientNewLog("● NSCLIENT", "Wrong URL syntax"))
                 rxBus.send(EventNSClientStatus("Wrong URL syntax"))
             }
@@ -529,7 +528,7 @@ class NSClientService : DaggerService() {
 
                             val devicestatuses = try {
                                 gson.fromJson(data.getString("devicestatus"), Array<NSDeviceStatus>::class.java)
-                            } catch (unused: Exception) {
+                            } catch (_: Exception) {
                                 emptyArray<NSDeviceStatus>()
                             }
                             if (devicestatuses.isNotEmpty()) {
@@ -588,7 +587,7 @@ class NSClientService : DaggerService() {
             message.put("collection", collection)
             message.put("_id", _id)
             message.put("data", data)
-            socket?.emit("dbUpdate", message, NSUpdateAck("dbUpdate", _id, aapsLogger, rxBus, this, dateUtil, dataWorkerStorage, originalObject))
+            socket?.emit("dbUpdate", message, NSUpdateAck("dbUpdate", _id, aapsLogger, this, dateUtil, dataWorkerStorage, originalObject))
             rxBus.send(
                 EventNSClientNewLog(
                     "► UPDATE $collection", "Sent " + originalObject.javaClass.simpleName + " " +

@@ -34,7 +34,8 @@ enum class MedtronicCommandType(
     var maxRecords: Int = 1,
     var expectedLength: Int = 0,
     var resourceId: Int? = null,
-    var commandParameters: ByteArray? = null) {
+    var commandParameters: ByteArray? = null
+) {
 
     InvalidCommand(code = 0, description = "Invalid Command"),  //
 
@@ -63,17 +64,25 @@ enum class MedtronicCommandType(
     SetRealTimeClock(code = 0x40, description = "Set Pump Time", recordLength = 0, resourceId = R.string.medtronic_cmd_desc_set_time),  //
     GetRealTimeClock(112, description = "Get Pump Time", recordLength = 7, resourceId = R.string.medtronic_cmd_desc_get_time),  // 0x70
     GetBatteryStatus(code = 0x72, description = "Get Battery Status", recordLength = 0, resourceId = R.string.medtronic_cmd_desc_get_battery_status), //
-    GetRemainingInsulin(code = 0x73, description = "Read Remaining Insulin",
-        recordLength = 2, resourceId = R.string.medtronic_cmd_desc_get_remaining_insulin),  // 115
+    GetRemainingInsulin(
+        code = 0x73, description = "Read Remaining Insulin",
+        recordLength = 2, resourceId = R.string.medtronic_cmd_desc_get_remaining_insulin
+    ),  // 115
     SetBolus(code = 0x42, description = "Set Bolus", recordLength = 0, resourceId = R.string.medtronic_cmd_desc_set_bolus),  // 66
 
     // 512
-    ReadTemporaryBasal(code = 0x98, description = "Read Temporary Basal", devices = MedtronicDeviceType.Medtronic_512andHigher,  //
-        recordLength = 5, resourceId = R.string.medtronic_cmd_desc_get_tbr),  // 152
-    SetTemporaryBasal(code = 76, description = "Set Temporay Basal", devices = MedtronicDeviceType.Medtronic_512andHigher, //
-        recordLength = 0, resourceId = R.string.medtronic_cmd_desc_set_tbr),  // 512 Config
-    PumpModel(code = 141, description = "Pump Model", devices = MedtronicDeviceType.Medtronic_512andHigher,   //
-        recordLength = 5, resourceId = R.string.medtronic_cmd_desc_get_model),  // 0x8D
+    ReadTemporaryBasal(
+        code = 0x98, description = "Read Temporary Basal", devices = MedtronicDeviceType.Medtronic_512andHigher,  //
+        recordLength = 5, resourceId = R.string.medtronic_cmd_desc_get_tbr
+    ),  // 152
+    SetTemporaryBasal(
+        code = 76, description = "Set Temporay Basal", devices = MedtronicDeviceType.Medtronic_512andHigher, //
+        recordLength = 0, resourceId = R.string.medtronic_cmd_desc_set_tbr
+    ),  // 512 Config
+    PumpModel(
+        code = 141, description = "Pump Model", devices = MedtronicDeviceType.Medtronic_512andHigher,   //
+        recordLength = 5, resourceId = R.string.medtronic_cmd_desc_get_model
+    ),  // 0x8D
 
     // BGTargets_512(140, "BG Targets", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.Medtronic_512_712,
     // MinimedCommandParameterType.NoParameters), //
@@ -81,35 +90,55 @@ enum class MedtronicCommandType(
     // MinimedCommandParameterType.NoParameters), //
     // Language(134, "Language", MinimedTargetType.PumpConfiguration, MedtronicDeviceType.Medtronic_512andHigher,
     // MinimedCommandParameterType.NoParameters), //
-    Settings_512(code = 145, description = "Configuration", devices = MedtronicDeviceType.Medtronic_512_712,
-        expectedLength = 18, resourceId = R.string.medtronic_cmd_desc_get_settings),  //
+    Settings_512(
+        code = 145, description = "Configuration", devices = MedtronicDeviceType.Medtronic_512_712,
+        expectedLength = 18, resourceId = R.string.medtronic_cmd_desc_get_settings
+    ),  //
 
     // 512 Data
-    GetHistoryData(code = 128, description = "Get History", devices = MedtronicDeviceType.Medtronic_512andHigher,
+    GetHistoryData(
+        code = 128, description = "Get History", devices = MedtronicDeviceType.Medtronic_512andHigher,
         parameterType = MinimedCommandParameterType.SubCommands, recordLength = 1024, maxRecords = 16,
-        expectedLength = 1024, resourceId = R.string.medtronic_cmd_desc_get_history),  // 0x80
-    GetBasalProfileSTD(code = 146, description = "Get Profile Standard", devices = MedtronicDeviceType.Medtronic_512andHigher,  //
-        maxRecords = 3, expectedLength = 192, resourceId = R.string.medtronic_cmd_desc_get_basal_profile),  // 146
-    GetBasalProfileA(code = 147, description = "Get Profile A", devices = MedtronicDeviceType.Medtronic_512andHigher,   //
-        maxRecords = 3, expectedLength = 192, resourceId = R.string.medtronic_cmd_desc_get_basal_profile),
-    GetBasalProfileB(code = 148, description = "Get Profile B", devices = MedtronicDeviceType.Medtronic_512andHigher,   //
-        maxRecords = 3, expectedLength = 192, resourceId = R.string.medtronic_cmd_desc_get_basal_profile),  // 148
-    SetBasalProfileSTD(code = 0x6f, description = "Set Profile Standard", devices = MedtronicDeviceType.Medtronic_512andHigher,   //
-        maxRecords = 3, expectedLength = 192, resourceId = R.string.medtronic_cmd_desc_set_basal_profile),  // 111
-    SetBasalProfileA(code = 0x30, description = "Set Profile A", devices = MedtronicDeviceType.Medtronic_512andHigher,  //
-        maxRecords = 3, expectedLength = 192, resourceId = R.string.medtronic_cmd_desc_set_basal_profile),  // 48
-    SetBasalProfileB(code = 0x31, description = "Set Profile B", devices = MedtronicDeviceType.Medtronic_512andHigher,  //
-        maxRecords = 3, expectedLength = 192, resourceId = R.string.medtronic_cmd_desc_set_basal_profile),  // 49
+        expectedLength = 1024, resourceId = R.string.medtronic_cmd_desc_get_history
+    ),  // 0x80
+    GetBasalProfileSTD(
+        code = 146, description = "Get Profile Standard", devices = MedtronicDeviceType.Medtronic_512andHigher,  //
+        maxRecords = 3, expectedLength = 192, resourceId = R.string.medtronic_cmd_desc_get_basal_profile
+    ),  // 146
+    GetBasalProfileA(
+        code = 147, description = "Get Profile A", devices = MedtronicDeviceType.Medtronic_512andHigher,   //
+        maxRecords = 3, expectedLength = 192, resourceId = R.string.medtronic_cmd_desc_get_basal_profile
+    ),
+    GetBasalProfileB(
+        code = 148, description = "Get Profile B", devices = MedtronicDeviceType.Medtronic_512andHigher,   //
+        maxRecords = 3, expectedLength = 192, resourceId = R.string.medtronic_cmd_desc_get_basal_profile
+    ),  // 148
+    SetBasalProfileSTD(
+        code = 0x6f, description = "Set Profile Standard", devices = MedtronicDeviceType.Medtronic_512andHigher,   //
+        maxRecords = 3, expectedLength = 192, resourceId = R.string.medtronic_cmd_desc_set_basal_profile
+    ),  // 111
+    SetBasalProfileA(
+        code = 0x30, description = "Set Profile A", devices = MedtronicDeviceType.Medtronic_512andHigher,  //
+        maxRecords = 3, expectedLength = 192, resourceId = R.string.medtronic_cmd_desc_set_basal_profile
+    ),  // 48
+    SetBasalProfileB(
+        code = 0x31, description = "Set Profile B", devices = MedtronicDeviceType.Medtronic_512andHigher,  //
+        maxRecords = 3, expectedLength = 192, resourceId = R.string.medtronic_cmd_desc_set_basal_profile
+    ),  // 49
 
     // 515
     PumpStatus(code = 206, description = "Pump Status", devices = MedtronicDeviceType.Medtronic_515andHigher),  // PumpConfiguration
-    Settings(code = 192, description = "Configuration", devices = MedtronicDeviceType.Medtronic_515andHigher,
-        maxRecords = 1, expectedLength = 21, resourceId = R.string.medtronic_cmd_desc_get_settings),  //
+    Settings(
+        code = 192, description = "Configuration", devices = MedtronicDeviceType.Medtronic_515andHigher,
+        maxRecords = 1, expectedLength = 21, resourceId = R.string.medtronic_cmd_desc_get_settings
+    ),  //
 
     // 522
     SensorSettings_522(code = 153, description = "Sensor Configuration", devices = MedtronicDeviceType.Medtronic_522andHigher),  //
-    GlucoseHistory(code = 154, description = "Glucose History", devices = MedtronicDeviceType.Medtronic_522andHigher,
-        MinimedCommandParameterType.SubCommands, recordLength = 1024, maxRecords = 32, expectedLength = 0),  //
+    GlucoseHistory(
+        code = 154, description = "Glucose History", devices = MedtronicDeviceType.Medtronic_522andHigher,
+        MinimedCommandParameterType.SubCommands, recordLength = 1024, maxRecords = 32, expectedLength = 0
+    ),  //
 
     // 523
     SensorSettings(code = 207, description = "Sensor Configuration", devices = MedtronicDeviceType.Medtronic_523andHigher),  //
@@ -156,7 +185,7 @@ enum class MedtronicCommandType(
         }
 
         init {
-            for (medtronicCommandType in values()) {
+            for (medtronicCommandType in MedtronicCommandType.entries) {
                 mapByCode[medtronicCommandType.commandCode] = medtronicCommandType
             }
         }

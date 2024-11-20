@@ -4,7 +4,6 @@ import com.google.common.truth.Truth.assertThat
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.DeliveryStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodStatus
-import org.apache.commons.codec.DecoderException
 import org.apache.commons.codec.binary.Hex
 import org.junit.jupiter.api.Test
 

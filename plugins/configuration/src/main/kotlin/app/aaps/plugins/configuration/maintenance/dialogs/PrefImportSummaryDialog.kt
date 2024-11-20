@@ -79,7 +79,7 @@ object PrefImportSummaryDialog {
             table.addView(rowLayout, idx++)
         }
 
-        if (details.size > 0) {
+        if (details.isNotEmpty()) {
             detailsBtn.visibility = View.VISIBLE
             detailsBtn.setOnClickListener {
                 val detailsLayout = LayoutInflater.from(context).inflate(R.layout.import_summary_details, null)

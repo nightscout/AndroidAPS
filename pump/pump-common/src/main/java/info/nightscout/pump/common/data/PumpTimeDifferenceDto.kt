@@ -6,8 +6,10 @@ import org.joda.time.Seconds
 /**
  * Created by andy on 28/05/2021.
  */
-class PumpTimeDifferenceDto constructor(var localDeviceTime: DateTime,
-                                        var pumpTime: DateTime) {
+class PumpTimeDifferenceDto(
+    var localDeviceTime: DateTime,
+    var pumpTime: DateTime
+) {
 
     var timeDifference = 0
 

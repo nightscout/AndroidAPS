@@ -34,7 +34,7 @@ class PluginDescriptionTest {
     }
 
     @Test fun showInListTest() {
-        val pluginDescription = PluginDescription().showInList({false})
+        val pluginDescription = PluginDescription().showInList { false }
         assertThat(pluginDescription.showInList.invoke()).isFalse()
     }
 

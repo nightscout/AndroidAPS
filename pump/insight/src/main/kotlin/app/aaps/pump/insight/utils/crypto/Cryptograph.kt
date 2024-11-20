@@ -173,8 +173,7 @@ object Cryptograph {
     }
 
     private fun processHeader(header: ByteArray): ByteArray {
-        val byteBuf: ByteBuf
-        byteBuf = ByteBuf(2 + header.size)
+        val byteBuf: ByteBuf = ByteBuf(2 + header.size)
         byteBuf.putShort(header.size.toShort())
         byteBuf.putBytes(header)
         return byteBuf.bytes

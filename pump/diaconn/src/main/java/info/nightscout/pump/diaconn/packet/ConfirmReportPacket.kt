@@ -30,7 +30,7 @@ class ConfirmReportPacket(
 
         val bufferData = prefixDecode(data)
         reqMsgType = getByteToInt(bufferData)
-        aapsLogger.debug(LTag.PUMPCOMM, "Pump Report Confirm reqMsgType --> ${reqMsgType}")
+        aapsLogger.debug(LTag.PUMPCOMM, "Pump Report Confirm reqMsgType --> $reqMsgType")
     }
 
     override fun getFriendlyName(): String {

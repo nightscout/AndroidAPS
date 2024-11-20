@@ -125,8 +125,8 @@ class NSClientPlugin @Inject constructor(
         super.onStop()
     }
 
-    override val hasWritePermission: Boolean get() = nsClientService?.hasWriteAuth ?: false
-    override val connected: Boolean get() = nsClientService?.isConnected ?: false
+    override val hasWritePermission: Boolean get() = nsClientService?.hasWriteAuth == true
+    override val connected: Boolean get() = nsClientService?.isConnected == true
 
     private val mConnection: ServiceConnection = object : ServiceConnection {
         override fun onServiceDisconnected(name: ComponentName) {

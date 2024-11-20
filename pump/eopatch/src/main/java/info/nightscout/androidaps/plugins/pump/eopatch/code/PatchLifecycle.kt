@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.code
 
-enum class PatchLifecycle constructor(val rawValue: Int) {
+enum class PatchLifecycle(val rawValue: Int) {
     SHUTDOWN(1),
     BONDED(2),
     SAFETY_CHECK(3),

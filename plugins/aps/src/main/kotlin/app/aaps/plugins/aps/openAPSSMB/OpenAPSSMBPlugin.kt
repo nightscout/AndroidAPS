@@ -110,7 +110,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
         .shortName(app.aaps.core.ui.R.string.smb_shortname)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .preferencesVisibleInSimpleMode(false)
-        .showInList({ config.APS })
+        .showInList(showInList = { config.APS })
         .description(R.string.description_smb)
         .setDefault(),
     aapsLogger, rh

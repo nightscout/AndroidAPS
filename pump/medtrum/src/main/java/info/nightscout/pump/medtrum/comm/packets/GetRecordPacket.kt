@@ -79,10 +79,12 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
             val recordPatchId = data.copyOfRange(RESP_RECORD_PATCH_ID_START, RESP_RECORD_PATCH_ID_END).toLong()
             val recordSequence = data.copyOfRange(RESP_RECORD_SEQUENCE_START, RESP_RECORD_SEQUENCE_END).toInt()
 
-            aapsLogger.debug(
-                LTag.PUMPCOMM,
-                "GetRecordPacket HandleResponse: Record header: $recordHeader, unknown: $recordUnknown, type: $recordType, serial: $recordSerial, patchId: $recordPatchId, " + "sequence: $recordSequence"
-            )
+            aapsLogger.run {
+                debug(
+                        LTag.PUMPCOMM,
+                        "GetRecordPacket HandleResponse: Record header: $recordHeader, unknown: $recordUnknown, type: $recordType, serial: $recordSerial, patchId: $recordPatchId, sequence: $recordSequence"
+                    )
+            }
 
             if (recordHeader == VALID_HEADER) {
                 when (recordType) {
@@ -240,7 +242,7 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
                 )
                 aapsLogger.error(
                     LTag.PUMPCOMM,
-                    "from record: ${newRecordInfo(newRecord)}EVENT COMBI BOLUS ${dateUtil.dateAndTimeString(bolusStartTime)} ($bolusStartTime) Bolus: ${bolusNormalDelivered}U Extended: ${bolusExtendedDelivered} THIS SHOULD NOT HAPPEN!!!"
+                    "from record: ${newRecordInfo(newRecord)}EVENT COMBI BOLUS ${dateUtil.dateAndTimeString(bolusStartTime)} ($bolusStartTime) Bolus: ${bolusNormalDelivered}U Extended: $bolusExtendedDelivered THIS SHOULD NOT HAPPEN!!!"
                 )
                 if (!newRecord && detailedBolusInfo != null) {
                     // detailedInfo can be from another similar record. Reinsert
@@ -304,7 +306,7 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
                 aapsLogger.debug(
                     LTag.PUMPCOMM,
                     "handleBasalStatusUpdate from record: ${newRecordInfo(newRecord)}EVENT TEMP_SYNC: ($basalType) ${dateUtil.dateAndTimeString(basalStartTime)} ($basalStartTime) " +
-                        "Rate: $basalRate Duration: ${duration}"
+                        "Rate: $basalRate Duration: $duration"
                 )
             }
 
@@ -325,7 +327,7 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
                 aapsLogger.debug(
                     LTag.PUMPCOMM,
                     "handleBasalStatusUpdate from record: ${newRecordInfo(newRecord)}EVENT SUSPEND: ($basalType) ${dateUtil.dateAndTimeString(basalStartTime)} ($basalStartTime) " +
-                        "Rate: $basalRate Duration: ${duration}"
+                        "Rate: $basalRate Duration: $duration"
                 )
             }
 
@@ -393,6 +395,6 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
     }
 
     private fun newRecordInfo(newRecord: Boolean): String {
-        return "${if (newRecord) "**NEW** " else ""}"
+        return if (newRecord) "**NEW** " else ""
     }
 }

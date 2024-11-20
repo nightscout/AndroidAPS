@@ -7,8 +7,8 @@ enum class BolusType(val id: Int, val activeId: Int) {
 
     companion object {
 
-        fun fromActiveId(activeId: Int) = values().firstOrNull { it.activeId == activeId }
-        fun fromId(id: Int) = values().firstOrNull { it.id == id }
+        fun fromActiveId(activeId: Int) = BolusType.entries.firstOrNull { it.activeId == activeId }
+        fun fromId(id: Int) = BolusType.entries.firstOrNull { it.id == id }
 
     }
 }

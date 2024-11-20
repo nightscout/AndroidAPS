@@ -16,6 +16,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.deactiva
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.deactivation.fragment.info.StartPodDeactivationFragment
 import javax.inject.Provider
 
+@Suppress("unused")
 @Module
 abstract class OmnipodWizardModule {
 

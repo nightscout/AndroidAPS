@@ -27,6 +27,7 @@ import info.nightscout.pump.medtrum.comm.packets.StopPatchPacket
 import info.nightscout.pump.medtrum.comm.packets.SubscribePacket
 import info.nightscout.pump.medtrum.comm.packets.SynchronizePacket
 
+@Suppress("unused")
 @Module
 abstract class MedtrumCommModule {
 

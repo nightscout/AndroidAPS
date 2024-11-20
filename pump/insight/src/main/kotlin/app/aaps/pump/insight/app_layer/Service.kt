@@ -10,6 +10,6 @@ enum class Service(val version: Short, var servicePassword: String?, val id: Byt
 
     companion object {
 
-        fun fromId(id: Byte) = values().firstOrNull { it.id == id }
+        fun fromId(id: Byte) = Service.entries.firstOrNull { it.id == id }
     }
 }

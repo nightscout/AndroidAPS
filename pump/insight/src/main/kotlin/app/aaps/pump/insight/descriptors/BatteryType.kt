@@ -7,6 +7,6 @@ enum class BatteryType(val id: Int) {
 
     companion object {
 
-        fun fromId(id: Int) = values().firstOrNull { it.id == id }
+        fun fromId(id: Int) = BatteryType.entries.firstOrNull { it.id == id }
     }
 }

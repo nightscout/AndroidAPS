@@ -23,7 +23,6 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.objects.R
 import app.aaps.core.objects.extensions.convertedToPercent
 import app.aaps.core.objects.extensions.isInProgress
@@ -42,7 +41,6 @@ class OverviewDataImpl @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val profileFunction: ProfileFunction,
     private val persistenceLayer: PersistenceLayer,
-    private val decimalFormatter: DecimalFormatter,
     private val processedTbrEbData: ProcessedTbrEbData
 ) : OverviewData {
 

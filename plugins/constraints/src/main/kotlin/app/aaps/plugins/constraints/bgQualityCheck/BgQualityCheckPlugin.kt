@@ -41,7 +41,7 @@ class BgQualityCheckPlugin @Inject constructor(
         .mainType(PluginType.CONSTRAINTS)
         .neverVisible(true)
         .alwaysEnabled(true)
-        .showInList({ false })
+        .showInList { false }
         .pluginName(R.string.bg_quality),
     aapsLogger, rh
 ), PluginConstraints, BgQualityCheck {

@@ -10,7 +10,6 @@ import app.aaps.core.objects.profile.ProfileSealed
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.pump.medtrum.comm.enums.BasalType
 import info.nightscout.pump.medtrum.comm.enums.ModelType
-import info.nightscout.pump.medtrum.util.MedtrumSnUtil
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito

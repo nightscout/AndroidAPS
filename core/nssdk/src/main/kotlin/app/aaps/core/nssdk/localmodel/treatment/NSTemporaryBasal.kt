@@ -39,7 +39,7 @@ data class NSTemporaryBasal(
 
         companion object {
 
-            fun fromString(name: String?) = values().firstOrNull { it.name == name } ?: NORMAL
+            fun fromString(name: String?) = Type.entries.firstOrNull { it.name == name } ?: NORMAL
         }
     }
 

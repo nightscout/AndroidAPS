@@ -21,7 +21,6 @@ import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Dispatchers
-import java.util.Arrays
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -87,9 +86,9 @@ class EversensePlugin @Inject constructor(
                 val glucoseRecordNumbers = bundle.getIntArray("glucoseRecordNumbers")
                 val glucoseTimestamps = bundle.getLongArray("glucoseTimestamps")
                 if (glucoseLevels != null && glucoseRecordNumbers != null && glucoseTimestamps != null) {
-                    aapsLogger.debug(LTag.BGSOURCE, "glucoseLevels" + Arrays.toString(glucoseLevels))
-                    aapsLogger.debug(LTag.BGSOURCE, "glucoseRecordNumbers" + Arrays.toString(glucoseRecordNumbers))
-                    aapsLogger.debug(LTag.BGSOURCE, "glucoseTimestamps" + Arrays.toString(glucoseTimestamps))
+                    aapsLogger.debug(LTag.BGSOURCE, "glucoseLevels" + glucoseLevels.contentToString())
+                    aapsLogger.debug(LTag.BGSOURCE, "glucoseRecordNumbers" + glucoseRecordNumbers.contentToString())
+                    aapsLogger.debug(LTag.BGSOURCE, "glucoseTimestamps" + glucoseTimestamps.contentToString())
                     for (i in glucoseLevels.indices)
                         glucoseValues += GV(
                             timestamp = glucoseTimestamps[i],
@@ -107,9 +106,9 @@ class EversensePlugin @Inject constructor(
                 val calibrationTimestamps = bundle.getLongArray("calibrationTimestamps")
                 val calibrationRecordNumbers = bundle.getLongArray("calibrationRecordNumbers")
                 if (calibrationGlucoseLevels != null && calibrationTimestamps != null && calibrationRecordNumbers != null) {
-                    aapsLogger.debug(LTag.BGSOURCE, "calibrationGlucoseLevels" + Arrays.toString(calibrationGlucoseLevels))
-                    aapsLogger.debug(LTag.BGSOURCE, "calibrationTimestamps" + Arrays.toString(calibrationTimestamps))
-                    aapsLogger.debug(LTag.BGSOURCE, "calibrationRecordNumbers" + Arrays.toString(calibrationRecordNumbers))
+                    aapsLogger.debug(LTag.BGSOURCE, "calibrationGlucoseLevels" + calibrationGlucoseLevels.contentToString())
+                    aapsLogger.debug(LTag.BGSOURCE, "calibrationTimestamps" + calibrationTimestamps.contentToString())
+                    aapsLogger.debug(LTag.BGSOURCE, "calibrationRecordNumbers" + calibrationRecordNumbers.contentToString())
                     for (i in calibrationGlucoseLevels.indices) {
                         calibrations.add(
                             PersistenceLayer.Calibration(

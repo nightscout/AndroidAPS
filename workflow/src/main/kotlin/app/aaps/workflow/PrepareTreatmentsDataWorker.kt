@@ -68,7 +68,7 @@ class PrepareTreatmentsDataWorker(
         val filteredEps: MutableList<DataPointWithLabelInterface> = ArrayList()
 
         persistenceLayer.getBolusesFromTimeToTime(fromTime, endTime, true)
-            .map { BolusDataPoint(it, rh, activePlugin.activePump.pumpDescription.bolusStep, profileUtil, preferences, decimalFormatter) }
+            .map { BolusDataPoint(it, rh, activePlugin.activePump.pumpDescription.bolusStep, preferences, decimalFormatter) }
             .filter { it.data.type == BS.Type.NORMAL || it.data.type == BS.Type.SMB }
             .forEach {
                 it.y = getNearestBg(data.overviewData, it.x.toLong())
@@ -104,7 +104,7 @@ class PrepareTreatmentsDataWorker(
         // Extended bolus
         if (!activePlugin.activePump.isFakingTempsByExtendedBoluses) {
             persistenceLayer.getExtendedBolusesStartingFromTimeToTime(fromTime, endTime, true)
-                .map { ExtendedBolusDataPoint(it, rh, decimalFormatter) }
+                .map { ExtendedBolusDataPoint(it, rh) }
                 .filter { it.duration != 0L }
                 .forEach {
                     it.y = getNearestBg(data.overviewData, it.x.toLong())

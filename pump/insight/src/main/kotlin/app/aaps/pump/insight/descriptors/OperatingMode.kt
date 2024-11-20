@@ -7,6 +7,6 @@ enum class OperatingMode(val id: Int) {
 
     companion object {
 
-        fun fromId(id: Int) = values().firstOrNull { it.id == id }
+        fun fromId(id: Int) = OperatingMode.entries.firstOrNull { it.id == id }
     }
 }

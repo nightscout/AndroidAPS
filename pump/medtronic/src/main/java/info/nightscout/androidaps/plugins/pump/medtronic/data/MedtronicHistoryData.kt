@@ -154,7 +154,7 @@ class MedtronicHistoryData @Inject constructor(
                 }
             }
             tbrs = preProcessTBRs(tbrs)
-            if (bolusEstimates.size > 0) {
+            if (bolusEstimates.isNotEmpty()) {
                 extendBolusRecords(bolusEstimates, newHistory2)
             }
             newHistory2.addAll(tbrs)
@@ -1125,7 +1125,7 @@ class MedtronicHistoryData @Inject constructor(
         aapsLogger.debug(LTag.PUMP, "SuspendResume Records: $filteredItems")
 
         val outList: MutableList<TempBasalProcessDTO> = mutableListOf()
-        if (filteredItems.size > 0) {
+        if (filteredItems.isNotEmpty()) {
             val filtered2Items: MutableList<PumpHistoryEntry> = mutableListOf()
             if (filteredItems.size % 2 == 0 && filteredItems[0].entryType === PumpHistoryEntryType.ResumePump) {
                 // full resume suspends (S R S R)
@@ -1156,7 +1156,7 @@ class MedtronicHistoryData @Inject constructor(
                     filtered2Items.addAll(filteredItems)
                 }
             }
-            if (filtered2Items.size > 0) {
+            if (filtered2Items.isNotEmpty()) {
                 sort(filtered2Items)
                 filtered2Items.reverse()
                 var i = 0
@@ -1188,7 +1188,7 @@ class MedtronicHistoryData @Inject constructor(
         aapsLogger.debug(LTag.PUMP, "Prime Records: $primeItems")
 
         val outList: MutableList<TempBasalProcessDTO> = ArrayList()
-        if (primeItems.size == 0) return outList
+        if (primeItems.isEmpty()) return outList
         val filteredItems: MutableList<PumpHistoryEntry> = getFilteredItems(
             newHistory,  //
             setOf(
@@ -1248,7 +1248,7 @@ class MedtronicHistoryData @Inject constructor(
         val itemTwo = items[0]
 
         items = getFilteredItems(tempData, PumpHistoryEntryType.NoDeliveryAlarm)
-        if (items.size > 0) {
+        if (items.isNotEmpty()) {
             val tbrProcess = TempBasalProcessDTO(
                 itemOne = items[items.size - 1],
                 aapsLogger = aapsLogger,
@@ -1264,7 +1264,7 @@ class MedtronicHistoryData @Inject constructor(
         }
 
         items = getFilteredItems(tempData, PumpHistoryEntryType.Rewind)
-        if (items.size > 0) {
+        if (items.isNotEmpty()) {
             val tbrProcess = TempBasalProcessDTO(
                 itemOne = items[0],
                 aapsLogger = aapsLogger,
@@ -1294,7 +1294,7 @@ class MedtronicHistoryData @Inject constructor(
                 tddsOut.add(tdd)
             }
         }
-        return if (tddsOut.size == 0) tdds else tddsOut
+        return if (tddsOut.isEmpty()) tdds else tddsOut
     }
 
     private fun tryToGetByLocalTime(aTechDateTime: Long): Long {

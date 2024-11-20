@@ -1,14 +1,12 @@
 package app.aaps.pump.equil.ui.pair
 
 import android.os.Bundle
-import android.os.SystemClock
 import android.view.View
 import android.widget.Button
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.pump.BolusProgressData
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.core.ui.toast.ToastUtils

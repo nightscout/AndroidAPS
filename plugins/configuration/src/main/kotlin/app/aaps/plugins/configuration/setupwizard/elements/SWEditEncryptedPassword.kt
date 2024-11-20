@@ -106,11 +106,6 @@ class SWEditEncryptedPassword(injector: HasAndroidInjector, private val cryptoUt
         return this
     }
 
-    fun validator(validator: (String) -> Boolean): SWEditEncryptedPassword {
-        this.validator = validator
-        return this
-    }
-
     override fun save(value: CharSequence, updateDelay: Long) {
         sp.putString(preference, cryptoUtil.hashPassword(value.toString()))
         scheduleChange(updateDelay)

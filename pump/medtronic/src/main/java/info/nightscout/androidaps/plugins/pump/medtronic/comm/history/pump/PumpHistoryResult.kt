@@ -94,7 +94,7 @@ class PumpHistoryResult(private val aapsLogger: AAPSLogger, searchEntry: PumpHis
      * @return
      */
     val latestEntry: PumpHistoryEntry?
-        get() = if (validEntries.size == 0) null else validEntries[0]
+        get() = if (validEntries.isEmpty()) null else validEntries[0]
 
     // val isSearchRequired: Boolean
     //     get() = searchType != SearchType.None

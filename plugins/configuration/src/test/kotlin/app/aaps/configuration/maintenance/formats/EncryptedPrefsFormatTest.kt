@@ -13,7 +13,6 @@ import app.aaps.plugins.configuration.maintenance.data.Prefs
 import app.aaps.plugins.configuration.maintenance.data.PrefsFormat
 import app.aaps.plugins.configuration.maintenance.data.PrefsStatusImpl
 import app.aaps.plugins.configuration.maintenance.formats.EncryptedPrefsFormat
-import app.aaps.plugins.configuration.maintenance.formats.SingleStringStorage
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.TruthJUnit.assume
@@ -41,7 +40,6 @@ open class EncryptedPrefsFormatTest : TestBase() {
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var context: Context
     @Mock lateinit var contentResolver: ContentResolver
-
 
     private var cryptoUtil: CryptoUtil = CryptoUtil(aapsLogger)
 
@@ -200,7 +198,7 @@ open class EncryptedPrefsFormatTest : TestBase() {
             "}"
 
         val storage = SingleStringStorage(frozenPrefs)
-        val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage,context)
+        val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage, context)
         val prefs = encryptedFormat.loadPreferences(frozenPrefs, "sikret")
 
         assertThat(prefs.values).isEmpty()

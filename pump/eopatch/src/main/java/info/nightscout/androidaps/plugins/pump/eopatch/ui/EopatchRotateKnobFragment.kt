@@ -5,11 +5,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.ViewModelProvider
+import app.aaps.core.ui.toast.ToastUtils
 import info.nightscout.androidaps.plugins.pump.eopatch.R
 import info.nightscout.androidaps.plugins.pump.eopatch.code.PatchStep
 import info.nightscout.androidaps.plugins.pump.eopatch.databinding.FragmentEopatchRotateKnobBinding
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel
-import app.aaps.core.ui.toast.ToastUtils
 
 class EopatchRotateKnobFragment : EoBaseFragment<FragmentEopatchRotateKnobBinding>() {
 
@@ -22,7 +22,7 @@ class EopatchRotateKnobFragment : EoBaseFragment<FragmentEopatchRotateKnobBindin
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
-            viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(EopatchViewModel::class.java)
+            viewModel = ViewModelProvider(requireActivity(), viewModelFactory)[EopatchViewModel::class.java]
             viewModel?.apply {
                 initPatchStep()
 

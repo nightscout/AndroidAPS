@@ -138,7 +138,7 @@ class QueueThread internal constructor(
                             lastCommandTime = System.currentTimeMillis()
                             SystemClock.sleep(100)
                             true
-                        } ?: false
+                        } == true
                         if (cont) {
                             continue
                         }

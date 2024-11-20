@@ -43,8 +43,8 @@ enum class ParameterBlocks(val id: Int, val type: Class<out ParameterBlock?>) {
 
     companion object {
 
-        fun fromType(type: Class<out ParameterBlock?>) = values().firstOrNull { it.type == type }
-        fun fromId(id: Int) = values().firstOrNull { it.id == id }
+        fun fromType(type: Class<out ParameterBlock?>) = ParameterBlocks.entries.firstOrNull { it.type == type }
+        fun fromId(id: Int) = ParameterBlocks.entries.firstOrNull { it.id == id }
 
     }
 }

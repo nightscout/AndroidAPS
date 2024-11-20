@@ -18,7 +18,7 @@ class EopatchWakeUpFragment : EoBaseFragment<FragmentEopatchWakeUpBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
-            viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(EopatchViewModel::class.java)
+            viewModel = ViewModelProvider(requireActivity(), viewModelFactory)[EopatchViewModel::class.java]
             viewModel?.initPatchStep()
         }
     }

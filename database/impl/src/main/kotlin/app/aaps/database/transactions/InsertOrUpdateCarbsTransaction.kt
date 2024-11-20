@@ -1,7 +1,6 @@
 package app.aaps.database.transactions
 
 import app.aaps.database.entities.Carbs
-import app.aaps.database.entities.embedments.InterfaceIDs
 
 /**
  * Creates or updates the Carbs
@@ -9,22 +8,6 @@ import app.aaps.database.entities.embedments.InterfaceIDs
 class InsertOrUpdateCarbsTransaction(
     private val carbs: Carbs
 ) : Transaction<InsertOrUpdateCarbsTransaction.TransactionResult>() {
-
-    constructor(
-        timestamp: Long,
-        amount: Double,
-        duration: Long,
-        notes: String,
-        interfaceIDs_backing: InterfaceIDs? = null
-    ) : this(
-        Carbs(
-            timestamp = timestamp,
-            amount = amount,
-            duration = duration,
-            notes = notes,
-            interfaceIDs_backing = interfaceIDs_backing
-        )
-    )
 
     override fun run(): TransactionResult {
         val result = TransactionResult()

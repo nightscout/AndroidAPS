@@ -68,7 +68,7 @@ class AdaptiveUnitPreference(
             validator = DefaultEditTextValidator(editText, validatorParameters, context)
             editText.inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
         }
-        setOnPreferenceChangeListener { _, _ -> validator?.testValidity(false) ?: true }
+        setOnPreferenceChangeListener { _, _ -> validator?.testValidity(false) != false }
         setDefaultValue(preferenceKey.defaultValue)
     }
 

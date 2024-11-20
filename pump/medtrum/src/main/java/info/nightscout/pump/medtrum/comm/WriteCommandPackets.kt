@@ -1,6 +1,6 @@
 package info.nightscout.pump.medtrum.comm
 
-import CrcUtils.calcCrc8
+import info.nightscout.pump.medtrum.util.CrcUtils.calcCrc8
 
 class WriteCommandPackets(data: ByteArray, sequenceNumber: Int) {
 

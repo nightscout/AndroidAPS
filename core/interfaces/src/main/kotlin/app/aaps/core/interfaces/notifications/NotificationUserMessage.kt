@@ -1,6 +1,6 @@
 package app.aaps.core.interfaces.notifications
 
-class NotificationUserMessage(text: String, notifyLevel:Int = Notification.URGENT) : Notification() {
+class NotificationUserMessage(text: String, notifyLevel: Int = URGENT) : Notification() {
 
     init {
         var hash = text.hashCode()

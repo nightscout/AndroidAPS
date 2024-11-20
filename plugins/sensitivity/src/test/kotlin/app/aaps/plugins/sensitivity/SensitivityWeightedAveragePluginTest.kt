@@ -48,6 +48,7 @@ class SensitivityWeightedAveragePluginTest : TestBaseWithProfile() {
         Mockito.`when`(activePlugin.getPluginsList()).thenReturn(arrayListOf(sensitivityAAPSPlugin))
     }
 
+    @Test
     fun isMinCarbsAbsorptionDynamic() {
         assertThat(sensitivityWeightedAveragePlugin.isMinCarbsAbsorptionDynamic).isTrue()
     }

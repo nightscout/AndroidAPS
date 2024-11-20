@@ -35,7 +35,7 @@ class AppCancelSettingResponsePacket(
             failed = true
             return
         }
-        aapsLogger.debug(LTag.PUMPCOMM, "Result --> ${result}")
+        aapsLogger.debug(LTag.PUMPCOMM, "Result --> $result")
     }
 
     override fun getFriendlyName(): String {

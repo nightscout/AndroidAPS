@@ -53,7 +53,7 @@ class PumpBLEConfigActivity : TranslatedDaggerAppCompatActivity() {
     private var bleScanner: BluetoothLeScanner? = null
     private var deviceListAdapter = LeDeviceListAdapter()
     private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
-    private val bluetoothAdapter: BluetoothAdapter? get() = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
+    private val bluetoothAdapter: BluetoothAdapter? get() = (context.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
     var scanning = false
     private val devicesMap: MutableMap<String, BluetoothDevice> = HashMap()
 

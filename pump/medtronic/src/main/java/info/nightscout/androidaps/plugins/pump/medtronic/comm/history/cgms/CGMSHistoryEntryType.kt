@@ -6,7 +6,7 @@ package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.cgms
  *
  * Author: Andy {andy.rozman@gmail.com}
  */
-enum class CGMSHistoryEntryType(val code: Int, val description: String, val headLength: Int, val dateLength: Int, val bodyLength: Int, dateType: DateType) {
+enum class CGMSHistoryEntryType(val code: Int, val description: String, val headLength: Int, val dateLength: Int, val bodyLength: Int, val dateType: DateType) {
 
     None(0, "None", 1, 0, 0, DateType.None),  //
     DataEnd(0x01, "DataEnd", 1, 0, 0, DateType.PreviousTimeStamp),  //
@@ -36,7 +36,7 @@ enum class CGMSHistoryEntryType(val code: Int, val description: String, val head
             opCodeMap[opCode] ?: UnknownOpCode
 
         init {
-            for (type in values()) {
+            for (type in CGMSHistoryEntryType.entries) {
                 opCodeMap[type.code] = type
             }
         }
@@ -44,7 +44,6 @@ enum class CGMSHistoryEntryType(val code: Int, val description: String, val head
 
     var schemaSet: Boolean = true
     val totalLength: Int = headLength + dateLength + bodyLength
-    val dateType: DateType
 
     fun hasDate(): Boolean {
         return dateType == DateType.MinuteSpecific || dateType == DateType.SecondSpecific
@@ -55,9 +54,5 @@ enum class CGMSHistoryEntryType(val code: Int, val description: String, val head
         MinuteSpecific,  //
         SecondSpecific,  //
         PreviousTimeStamp //
-    }
-
-    init {
-        this.dateType = dateType
     }
 }

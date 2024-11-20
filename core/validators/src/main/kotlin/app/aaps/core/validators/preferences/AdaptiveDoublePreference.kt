@@ -72,7 +72,7 @@ class AdaptiveDoublePreference(
             editText.setSelectAllOnFocus(true)
             editText.setSingleLine()
         }
-        setOnPreferenceChangeListener { _, _ -> validator?.testValidity(false) ?: true }
+        setOnPreferenceChangeListener { _, _ -> validator?.testValidity(false) != false }
         setDefaultValue(preferenceKey.defaultValue)
     }
 

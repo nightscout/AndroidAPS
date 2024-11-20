@@ -39,7 +39,7 @@ class StringLengthPrefixEncoding private constructor() {
         fun formatKeys(keys: Array<String>, payloads: Array<ByteArray>): ByteArray {
             val payloadTotalSize = payloads.fold(0) { acc, i -> acc + i.size }
             val keyTotalSize = keys.fold(0) { acc, i -> acc + i.length }
-            val zeros = payloads.fold(0) { acc, i -> acc + if (i.size == 0) 1 else 0 }
+            val zeros = payloads.fold(0) { acc, i -> acc + if (i.isEmpty()) 1 else 0 }
 
             val bb = ByteBuffer.allocate(2 * (keys.size - zeros) + keyTotalSize + payloadTotalSize)
             for (idx in keys.indices) {

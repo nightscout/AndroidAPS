@@ -31,14 +31,14 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
+import app.aaps.core.ui.dialogs.OKDialog
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.R
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.GattAttributes
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.databinding.RileyLinkBleConfigActivityBinding
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice
-import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
-import app.aaps.core.ui.dialogs.OKDialog
 import org.apache.commons.lang3.StringUtils
 import java.util.Locale
 import javax.inject.Inject
@@ -55,7 +55,7 @@ class RileyLinkBLEConfigActivity : TranslatedDaggerAppCompatActivity() {
     @Inject lateinit var aapsLogger: AAPSLogger
 
     private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
-    private val bluetoothAdapter: BluetoothAdapter? get() = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
+    private val bluetoothAdapter: BluetoothAdapter? get() = (context.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
     private var deviceListAdapter = LeDeviceListAdapter()
     private var settings: ScanSettings? = null
     private var filters: List<ScanFilter>? = null
@@ -85,8 +85,8 @@ class RileyLinkBLEConfigActivity : TranslatedDaggerAppCompatActivity() {
             // stop scanning if still active
             if (scanning) stopLeDeviceScan()
 
-            val bleAddress = (view.findViewById(R.id.riley_link_ble_config_scan_item_device_address) as TextView).text.toString()
-            val deviceName = (view.findViewById(R.id.riley_link_ble_config_scan_item_device_name) as TextView).text.toString()
+            val bleAddress = view.findViewById<TextView>(R.id.riley_link_ble_config_scan_item_device_address)?.text.toString()
+            val deviceName = view.findViewById<TextView>(R.id.riley_link_ble_config_scan_item_device_name)?.text.toString()
             sp.putString(RileyLinkConst.Prefs.RileyLinkAddress, bleAddress)
             sp.putString(RileyLinkConst.Prefs.RileyLinkName, deviceName)
             val rileyLinkPump = activePlugin.activePump as RileyLinkPumpDevice
@@ -179,7 +179,7 @@ class RileyLinkBLEConfigActivity : TranslatedDaggerAppCompatActivity() {
         private fun addDevice(result: ScanResult): Boolean {
             val device = result.device
             val serviceUuids = result.scanRecord?.serviceUuids
-            if (serviceUuids == null || serviceUuids.size == 0) {
+            if (serviceUuids == null || serviceUuids.isEmpty()) {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "Device " + device.address + " has no serviceUuids (Not RileyLink).")
             } else if (serviceUuids.size > 1) {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "Device " + device.address + " has too many serviceUuids (Not RileyLink).")

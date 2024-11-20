@@ -33,7 +33,7 @@ class Nonce {
     }
 
     fun isSmallerThan(greater: Nonce): Boolean {
-        return bigInteger.compareTo(greater.bigInteger) < 0
+        return bigInteger < greater.bigInteger
     }
 
     companion object {

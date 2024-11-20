@@ -5,7 +5,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.
 import java.nio.ByteBuffer
 import java.util.*
 
-class PayloadJoiner(private val firstPacket: ByteArray) {
+class PayloadJoiner(firstPacket: ByteArray) {
 
     var oneExtraPacket: Boolean
     val fullFragments: Int
@@ -31,11 +31,11 @@ class PayloadJoiner(private val firstPacket: ByteArray) {
         }
         expectedIndex++
         when {
-            idx < fullFragments -> {
+            idx < fullFragments                        -> {
                 fragments.add(MiddleBlePacket.parse(packet))
             }
 
-            idx == fullFragments -> {
+            idx == fullFragments                       -> {
                 val lastPacket = LastBlePacket.parse(packet)
                 fragments.add(lastPacket)
                 crc = lastPacket.crc32
@@ -46,7 +46,7 @@ class PayloadJoiner(private val firstPacket: ByteArray) {
                 fragments.add(LastOptionalPlusOneBlePacket.parse(packet))
             }
 
-            idx > fullFragments -> {
+            idx > fullFragments                        -> {
                 throw IncorrectPacketException(packet, idx.toByte())
             }
         }

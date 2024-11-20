@@ -51,7 +51,7 @@ class AuthorizePacket(injector: HasAndroidInjector) : MedtrumPacket(injector) {
             if (medtrumPump.swVersion != swVersion) {
                 medtrumPump.swVersion = swVersion
             }
-            aapsLogger.debug(LTag.PUMPCOMM, "GetDeviceTypeState: deviceType: ${deviceType}, swVersion: ${swVersion}")
+            aapsLogger.debug(LTag.PUMPCOMM, "GetDeviceTypeState: deviceType: ${deviceType}, swVersion: $swVersion")
         }
         return success
     }

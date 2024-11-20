@@ -30,7 +30,7 @@ enum class AlertType(val id: Int, val incId: Int) {
 
     companion object {
 
-        fun fromId(id: Int) = values().firstOrNull { it.id == id }
-        fun fromIncId(incId: Int) = values().firstOrNull { it.incId == incId }
+        fun fromId(id: Int) = AlertType.entries.firstOrNull { it.id == id }
+        fun fromIncId(incId: Int) = AlertType.entries.firstOrNull { it.incId == incId }
     }
 }

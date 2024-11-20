@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ui.dialogs
 
 import android.content.Context
-import android.graphics.Color
 import android.view.Gravity
 import android.view.ViewGroup
 import android.view.WindowManager
@@ -12,7 +11,8 @@ import androidx.appcompat.app.AlertDialog
 
 class ProgressDialogHelper {
     companion object {
-        fun get(context:Context, message:String): AlertDialog {
+
+        fun get(context: Context, message: String): AlertDialog {
             val llPadding = 30
             val linearLayout = LinearLayout(context)
             linearLayout.orientation = LinearLayout.HORIZONTAL
@@ -20,7 +20,8 @@ class ProgressDialogHelper {
             linearLayout.gravity = Gravity.CENTER
             var llParam = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT)
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
             llParam.gravity = Gravity.CENTER
             linearLayout.layoutParams = llParam
 
@@ -31,7 +32,8 @@ class ProgressDialogHelper {
 
             llParam = LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT)
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
             llParam.gravity = Gravity.CENTER
             val tvText = TextView(context)
             tvText.text = message

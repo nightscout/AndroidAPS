@@ -162,7 +162,7 @@ class LoopDialog : DaggerDialogFragment() {
         aapsLogger.debug("UpdateGUI from $from")
         val pumpDescription: PumpDescription = activePlugin.activePump.pumpDescription
         val closedLoopAllowed = constraintChecker.isClosedLoopAllowed(ConstraintObject(true, aapsLogger))
-        val closedLoopAllowed2 = activePlugin.activeObjectives?.isAccomplished(Objectives.MAXIOB_OBJECTIVE) ?: false
+        val closedLoopAllowed2 = activePlugin.activeObjectives?.isAccomplished(Objectives.MAXIOB_OBJECTIVE) == true
         val lgsEnabled = constraintChecker.isLgsAllowed(ConstraintObject(true, aapsLogger))
         val apsMode = ApsMode.fromString(preferences.get(StringKey.LoopApsMode))
         val pump = activePlugin.activePump

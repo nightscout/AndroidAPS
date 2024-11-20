@@ -1,7 +1,5 @@
 package info.nightscout.pump.common.defs
 
-import java.util.Arrays
-
 enum class PumpUpdateFragmentType {
     None,
     PumpStatus,
@@ -12,12 +10,12 @@ enum class PumpUpdateFragmentType {
     ProfileChange,
     TBRCount,
     BolusCount,
-    TreatmentValues(Arrays.asList(Bolus, TBR, TBRCount, BolusCount, ProfileChange)), // Last Bolus, TBR, Profile Change, TBR Count, Bolus Count
+    TreatmentValues(listOf(Bolus, TBR, TBRCount, BolusCount, ProfileChange)), // Last Bolus, TBR, Profile Change, TBR Count, Bolus Count
     Full,
     Configuration,  // Firmware, Errors
     Battery,
     Reservoir,
-    OtherValues(Arrays.asList(Battery, Reservoir)), // Battery, Reservoir
+    OtherValues(listOf(Battery, Reservoir)), // Battery, Reservoir
     Custom_1,
     Custom_2,
     Custom_3,

@@ -15,13 +15,13 @@ class ReceiverStatusStoreImpl @Inject constructor(val context: Context, val rxBu
     override var lastNetworkEvent: EventNetworkChange? = null
 
     override val isWifiConnected: Boolean
-        get() = lastNetworkEvent?.wifiConnected ?: false
+        get() = lastNetworkEvent?.wifiConnected == true
 
     override val isKnownNetworkStatus: Boolean
         get() = lastNetworkEvent != null
 
     override val isConnected: Boolean
-        get() = lastNetworkEvent?.wifiConnected ?: false || lastNetworkEvent?.mobileConnected ?: false
+        get() = lastNetworkEvent?.wifiConnected == true || lastNetworkEvent?.mobileConnected == true
 
     override fun updateNetworkStatus() {
         context.sendBroadcast(Intent(context, NetworkChangeReceiver::class.java))
@@ -30,7 +30,7 @@ class ReceiverStatusStoreImpl @Inject constructor(val context: Context, val rxBu
     override var lastChargingEvent: EventChargingState? = null
 
     override val isCharging: Boolean
-        get() = lastChargingEvent?.isCharging ?: false
+        get() = lastChargingEvent?.isCharging == true
 
     override val batteryLevel: Int
         get() = lastChargingEvent?.batterLevel ?: 0

@@ -2,7 +2,9 @@ package info.nightscout.androidaps.plugins.pump.eopatch.code
 
 import java.util.concurrent.TimeUnit
 
-enum class BolusExDuration constructor(val index: Int, val minute: Int, val hour: Float) {
+@Suppress("unused")
+enum class BolusExDuration(val index: Int, val minute: Int, val hour: Float) {
+
     OFF(0, 0, 0f),
     MINUTE_30(1, 30, 0.5f),
     MINUTE_60(2, 60, 1.0f),
@@ -26,9 +28,10 @@ enum class BolusExDuration constructor(val index: Int, val minute: Int, val hour
     }
 
     companion object {
+
         @JvmStatic
         fun ofRaw(rawValue: Int): BolusExDuration {
-            for (t in values()) {
+            for (t in BolusExDuration.entries) {
                 if (t.minute == rawValue) {
                     return t
                 }

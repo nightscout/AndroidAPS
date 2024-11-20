@@ -1,7 +1,7 @@
 package app.aaps.core.nssdk.localmodel.treatment
 
-import com.google.gson.annotations.SerializedName
 import app.aaps.core.nssdk.localmodel.entry.NsUnits
+import com.google.gson.annotations.SerializedName
 
 data class NSTherapyEvent(
     override var date: Long?,
@@ -35,7 +35,7 @@ data class NSTherapyEvent(
 
         companion object {
 
-            fun fromString(text: String?) = values().firstOrNull { it.text == text }
+            fun fromString(text: String?) = MeterType.entries.firstOrNull { it.text == text }
         }
     }
 }

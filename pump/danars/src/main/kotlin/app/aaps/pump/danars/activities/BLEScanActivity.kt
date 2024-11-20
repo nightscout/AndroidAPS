@@ -44,7 +44,7 @@ class BLEScanActivity : TranslatedDaggerAppCompatActivity() {
 
     private var listAdapter: ListAdapter? = null
     private val devices = ArrayList<BluetoothDeviceItem>()
-    private val bluetoothAdapter: BluetoothAdapter? get() = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
+    private val bluetoothAdapter: BluetoothAdapter? get() = (context.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
     private val bluetoothLeScanner: BluetoothLeScanner? get() = bluetoothAdapter?.bluetoothLeScanner
 
     private lateinit var binding: DanarsBlescannerActivityBinding
@@ -74,40 +74,28 @@ class BLEScanActivity : TranslatedDaggerAppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
-            bluetoothAdapter?.safeEnable()
-            startScan()
-        } else {
-            ToastUtils.errorToast(context, context.getString(app.aaps.core.ui.R.string.need_connect_permission))
-        }
+        bluetoothAdapter?.safeEnable()
+        startScan()
     }
 
     override fun onPause() {
         super.onPause()
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
-            stopScan()
-        }
+        stopScan()
     }
 
+    @SuppressLint("MissingPermission")
     private fun startScan() =
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
-            try {
-                bluetoothLeScanner?.startScan(mBleScanCallback)
-            } catch (ignore: IllegalStateException) {
-            } // ignore BT not on
-        } else {
-            ToastUtils.errorToast(context, context.getString(app.aaps.core.ui.R.string.need_connect_permission))
-        }
+        try {
+            bluetoothLeScanner?.startScan(mBleScanCallback)
+        } catch (_: IllegalStateException) {
+        } // ignore BT not on
 
+    @SuppressLint("MissingPermission")
     private fun stopScan() =
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
-            try {
-                bluetoothLeScanner?.stopScan(mBleScanCallback)
-            } catch (ignore: IllegalStateException) {
-            } // ignore BT not on
-        } else {
-            ToastUtils.errorToast(context, context.getString(app.aaps.core.ui.R.string.need_connect_permission))
-        }
+        try {
+            bluetoothLeScanner?.stopScan(mBleScanCallback)
+        } catch (_: IllegalStateException) {
+        } // ignore BT not on
 
     @SuppressLint("MissingPermission")
     private fun addBleDevice(device: BluetoothDevice?) {

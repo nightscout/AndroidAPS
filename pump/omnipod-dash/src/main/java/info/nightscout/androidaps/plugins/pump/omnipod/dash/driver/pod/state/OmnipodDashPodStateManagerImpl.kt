@@ -66,14 +66,13 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         get() = activationProgress == ActivationProgress.COMPLETED
 
     override val isSuspended: Boolean
-        get() = podState.deliveryStatus?.equals(DeliveryStatus.SUSPENDED)
-            ?: false
+        get() = podState.deliveryStatus?.equals(DeliveryStatus.SUSPENDED) == true
 
     override val isPodKaput: Boolean
         get() = podState.podStatus in arrayOf(PodStatus.ALARM, PodStatus.DEACTIVATED)
 
     override val isPodRunning: Boolean
-        get() = podState.podStatus?.isRunning() ?: false
+        get() = podState.podStatus?.isRunning() == true
 
     override val lastUpdatedSystem: Long
         get() = podState.lastUpdatedSystem
@@ -223,7 +222,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     override val tempBasalActive: Boolean
         get() = !isSuspended && tempBasal?.let {
             it.startTime + it.durationInMinutes * 60 * 1000 > System.currentTimeMillis()
-        } ?: false
+        } == true
 
     override var basalProgram: BasalProgram?
         get() = podState.basalProgram

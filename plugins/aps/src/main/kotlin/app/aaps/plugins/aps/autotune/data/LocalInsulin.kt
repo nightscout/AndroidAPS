@@ -31,9 +31,9 @@ class LocalInsulin(val name: String?, val peak: Int = DEFAULT_PEAK, private val 
             if (t < td) {
                 val tau = tp * (1 - tp / td) / (1 - 2 * tp / td)
                 val a = 2 * tau / td
-                val S = 1 / (1 - a + (1 + a) * exp(-td / tau))
-                result.activityContrib = bolus.amount * (S / tau.pow(2.0)) * t * (1 - t / td) * exp(-t / tau)
-                result.iobContrib = bolus.amount * (1 - S * (1 - a) * ((t.pow(2.0) / (tau * td * (1 - a)) - t / tau - 1) * Math.exp(-t / tau) + 1))
+                val s = 1 / (1 - a + (1 + a) * exp(-td / tau))
+                result.activityContrib = bolus.amount * (s / tau.pow(2.0)) * t * (1 - t / td) * exp(-t / tau)
+                result.iobContrib = bolus.amount * (1 - s * (1 - a) * ((t.pow(2.0) / (tau * td * (1 - a)) - t / tau - 1) * exp(-t / tau) + 1))
             }
         }
         return result

@@ -180,7 +180,7 @@ class DanaRv2Plugin @Inject constructor(
         detailedBolusInfoStorage.add(detailedBolusInfo) // will be picked up on reading history
         val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType === BS.Type.SMB, detailedBolusInfo.id)
         var connectionOK = false
-        if (detailedBolusInfo.insulin > 0 || carbs > 0) connectionOK = executionService?.bolus(detailedBolusInfo.insulin, carbs.toInt(), carbTimeStamp, t) ?: false
+        if (detailedBolusInfo.insulin > 0 || carbs > 0) connectionOK = executionService?.bolus(detailedBolusInfo.insulin, carbs.toInt(), carbTimeStamp, t) == true
         val result = instantiator.providePumpEnactResult()
         result.success(connectionOK && abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep)
             .bolusDelivered(t.insulin)
@@ -278,10 +278,10 @@ class DanaRv2Plugin @Inject constructor(
         }
         temporaryBasalStorage.add(PumpSync.PumpState.TemporaryBasal(dateUtil.now(), mins(durationInMinutes.toLong()).msecs(), percentReq.toDouble(), false, tbrType, 0L, 0L))
         val connectionOK: Boolean = if (durationInMinutes == 15 || durationInMinutes == 30) {
-            executionService?.tempBasalShortDuration(percentReq, durationInMinutes) ?: false
+            executionService?.tempBasalShortDuration(percentReq, durationInMinutes) == true
         } else {
             val durationInHours = max(durationInMinutes / 60, 1)
-            executionService?.tempBasal(percentReq, durationInHours) ?: false
+            executionService?.tempBasal(percentReq, durationInHours) == true
         }
         if (connectionOK && pump.isTempBasalInProgress && pump.tempBasalPercent == percentReq) {
             result.enacted(true).success(true).comment(app.aaps.core.ui.R.string.ok).isTempCancel(false).duration(pump.tempBasalRemainingMin).percent(pump.tempBasalPercent).isPercent(true)
@@ -296,7 +296,7 @@ class DanaRv2Plugin @Inject constructor(
     private fun setHighTempBasalPercent(percent: Int, durationInMinutes: Int): PumpEnactResult {
         val pump = danaPump
         val result = instantiator.providePumpEnactResult()
-        val connectionOK = executionService?.highTempBasal(percent, durationInMinutes) ?: false
+        val connectionOK = executionService?.highTempBasal(percent, durationInMinutes) == true
         if (connectionOK && pump.isTempBasalInProgress && pump.tempBasalPercent == percent) {
             result.enacted(true).success(true).comment(app.aaps.core.ui.R.string.ok).isTempCancel(false).duration(pump.tempBasalRemainingMin).percent(pump.tempBasalPercent).isPercent(true)
             aapsLogger.debug(LTag.PUMP, "setHighTempBasalPercent: OK")
@@ -338,7 +338,7 @@ class DanaRv2Plugin @Inject constructor(
             aapsLogger.debug(LTag.PUMP, "setExtendedBolus: Correct extended bolus already set. Current: " + pump.extendedBolusAmount + " Asked: " + insulinReq)
             return result
         }
-        val connectionOK = executionService?.extendedBolus(insulinReq, durationInHalfHours) ?: false
+        val connectionOK = executionService?.extendedBolus(insulinReq, durationInHalfHours) == true
         if (connectionOK && pump.isExtendedInProgress && abs(pump.extendedBolusAmount - insulinReq) < pumpDescription.extendedBolusStep) {
             result.enacted(true)
                 .success(true)

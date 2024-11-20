@@ -46,7 +46,7 @@ class ObjectivesPlugin @Inject constructor(
         .mainType(PluginType.CONSTRAINTS)
         .fragmentClass(ObjectivesFragment::class.qualifiedName)
         .alwaysEnabled(config.APS)
-        .showInList({ config.APS })
+        .showInList { config.APS }
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_graduation)
         .pluginName(app.aaps.core.ui.R.string.objectives)
         .shortName(R.string.objectives_shortname)

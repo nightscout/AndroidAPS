@@ -52,6 +52,7 @@ import org.apache.commons.lang3.StringUtils
 import java.time.Duration
 import java.time.ZonedDateTime
 import java.util.Date
+import java.util.Locale
 import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -83,7 +84,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     private var disposables: CompositeDisposable = CompositeDisposable()
 
     private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
-    private lateinit var refreshLoop: Runnable
+    private var refreshLoop: Runnable
 
     init {
         refreshLoop = Runnable {
@@ -97,8 +98,6 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     private var _podInfoBinding: OmnipodCommonOverviewPodInfoBinding? = null
     private var _buttonBinding: OmnipodCommonOverviewButtonsBinding? = null
 
-    // These properties are only valid between onCreateView and onDestroyView.
-    val binding get() = _binding!!
     private val bluetoothStatusBinding get() = _bluetoothStatusBinding!!
     private val podInfoBinding get() = _podInfoBinding!!
     private val buttonBinding get() = _buttonBinding!!
@@ -266,7 +265,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
         val connectionSuccessPercentage = podStateManager.connectionSuccessRatio() * 100
         val connectionAttempts = podStateManager.failedConnectionsAfterRetries + podStateManager.successfulConnectionAttemptsAfterRetries
-        val successPercentageString = String.format("%.2f %%", connectionSuccessPercentage)
+        val successPercentageString = String.format(Locale.getDefault(), "%.2f %%", connectionSuccessPercentage)
         val quality =
             "${podStateManager.successfulConnectionAttemptsAfterRetries}/$connectionAttempts :: $successPercentageString"
         bluetoothStatusBinding.omnipodDashBluetoothConnectionQuality.text = quality
@@ -341,7 +340,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 Duration.ofMinutes(MAX_TIME_DEVIATION_MINUTES).minus(
                     it.abs()
                 ).isNegative
-            } ?: false
+            } == true
             podInfoBinding.timeOnPod.setTextColor(
                 rh.gac(
                     context,
@@ -444,7 +443,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             } ?: PLACEHOLDER
         }
 
-        if (errors.size == 0) {
+        if (errors.isEmpty()) {
             podInfoBinding.errors.text = PLACEHOLDER
             podInfoBinding.errors.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor))
         } else {
@@ -655,7 +654,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
         if (!isAutomaticallySilenceAlertsEnabled() &&
             podStateManager.isPodRunning &&
             (
-                podStateManager.activeAlerts!!.size > 0 ||
+                podStateManager.activeAlerts!!.isNotEmpty() ||
                     commandQueue.isCustomCommandInQueue(CommandSilenceAlerts::class.java)
                 )
         ) {

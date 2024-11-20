@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.code
 
-enum class BasalStatus constructor(val rawValue: Int) {
+enum class BasalStatus(val rawValue: Int) {
     STOPPED(0),
     PAUSED(1),     //템프베이젤 주입중
     SUSPENDED(2),  //주입 정지
@@ -15,20 +15,4 @@ enum class BasalStatus constructor(val rawValue: Int) {
 
     val isStopped: Boolean
         get() = this == STOPPED
-
-    companion object {
-        @JvmStatic
-        fun ofRaw(rawValue: Int?): BasalStatus {
-            if (rawValue == null) {
-                return STOPPED
-            }
-
-            for (t in values()) {
-                if (t.rawValue == rawValue) {
-                    return t
-                }
-            }
-            return STOPPED
-        }
-    }
 }

@@ -69,7 +69,7 @@ class TidepoolPluginTest : TestBaseWithProfile() {
     }
 
     @BeforeEach fun prepare() {
-        rateLimit = RateLimit(aapsLogger, dateUtil)
+        rateLimit = RateLimit(dateUtil)
         tidepoolPlugin = TidepoolPlugin(
             aapsLogger, rh, aapsSchedulers, rxBus, context, fabricPrivacy, tidepoolUploader, uploadChunk, sp, rateLimit, receiverDelegate, uiInteraction
         )

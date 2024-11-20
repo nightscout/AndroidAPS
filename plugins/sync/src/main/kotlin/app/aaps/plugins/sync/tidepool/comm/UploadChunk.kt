@@ -160,7 +160,7 @@ class UploadChunk @Inject constructor(
                 selection.add(it)
             }
         }
-        if (selection.size > 0)
+        if (selection.isNotEmpty())
             rxBus.send(EventTidepoolStatus("${selection.size} ProfileSwitches selected for upload"))
         return selection
     }

@@ -1,6 +1,5 @@
 package app.aaps.ui.services
 
-import android.content.Context
 import android.content.Intent
 import android.media.AudioManager
 import android.media.MediaPlayer
@@ -108,7 +107,7 @@ class AlarmSoundService : DaggerService() {
         aapsLogger.debug(LTag.CORE, "onDestroy End")
     }
 
-    private fun getAudioManager() = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+    private fun getAudioManager() = getSystemService(AUDIO_SERVICE) as AudioManager
 
     // TODO replace with VolumeShaper when min API level >= 26
     private val volumeUpdater = object : Runnable {

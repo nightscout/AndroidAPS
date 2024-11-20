@@ -96,11 +96,9 @@ open class Notification {
         const val MAXIMUM_BASAL_VALUE_REPLACED = 39
         const val NS_MALFUNCTION = 40
         const val NEW_VERSION_DETECTED = 41
-        const val SEND_LOGFILES = 42
         const val DEVICE_NOT_PAIRED = 43
         const val MEDTRONIC_PUMP_ALARM = 44
         const val RILEYLINK_CONNECTION = 45
-        const val PERMISSION_PHONE_STATE = 46
         const val INSIGHT_DATE_TIME_UPDATED = 47
         const val INSIGHT_TIMEOUT_DURING_HANDSHAKE = 48
         const val DST_LOOP_DISABLED = 49
@@ -130,7 +128,7 @@ open class Notification {
         const val MDT_INVALID_HISTORY_DATA = 76
         const val IDENTIFICATION_NOT_SET = 77
         const val PERMISSION_BT = 78
-        const val EOELOW_PATCH_ALERTS = 79
+        const val EOFLOW_PATCH_ALERTS = 79
         const val PUMP_SUSPENDED = 80
         const val COMBO_UNKNOWN_TBR = 81
         const val BLUETOOTH_NOT_ENABLED = 82

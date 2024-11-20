@@ -28,7 +28,7 @@ class GetHistoryPageCarelinkMessageBody : CarelinkLongMessageBody {
     }
 
     val frameNumber: Int
-        get() = if (data!!.size > 0) {
+        get() = if (data!!.isNotEmpty()) {
             (data!![0] and 0x7f.toByte()).toInt()
         } else 255
 

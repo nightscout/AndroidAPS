@@ -15,7 +15,7 @@ enum class EapAkaAttributeType(val type: Byte) {
     companion object {
 
         fun byValue(value: Byte): EapAkaAttributeType =
-            EapAkaAttributeType.values().firstOrNull { it.type == value }
+            EapAkaAttributeType.entries.firstOrNull { it.type == value }
                 ?: throw IllegalArgumentException("Unknown EAP-AKA attribute type: $value")
     }
 }
@@ -41,16 +41,21 @@ sealed class EapAkaAttribute {
                 }
                 val type = EapAkaAttributeType.byValue(tail[0])
                 when (type) {
-                    EapAkaAttributeType.AT_RES ->
+                    EapAkaAttributeType.AT_RES               ->
                         ret.add(EapAkaAttributeRes.parse(tail.copyOfRange(2, EapAkaAttributeRes.SIZE)))
-                    EapAkaAttributeType.AT_CUSTOM_IV ->
+
+                    EapAkaAttributeType.AT_CUSTOM_IV         ->
                         ret.add(EapAkaAttributeCustomIV.parse(tail.copyOfRange(2, EapAkaAttributeCustomIV.SIZE)))
-                    EapAkaAttributeType.AT_AUTN ->
+
+                    EapAkaAttributeType.AT_AUTN              ->
                         ret.add(EapAkaAttributeAutn.parse(tail.copyOfRange(2, EapAkaAttributeAutn.SIZE)))
-                    EapAkaAttributeType.AT_AUTS ->
+
+                    EapAkaAttributeType.AT_AUTS              ->
                         ret.add(EapAkaAttributeAuts.parse(tail.copyOfRange(2, EapAkaAttributeAuts.SIZE)))
-                    EapAkaAttributeType.AT_RAND ->
+
+                    EapAkaAttributeType.AT_RAND              ->
                         ret.add(EapAkaAttributeRand.parse(tail.copyOfRange(2, EapAkaAttributeRand.SIZE)))
+
                     EapAkaAttributeType.AT_CLIENT_ERROR_CODE ->
                         ret.add(
                             EapAkaAttributeClientErrorCode.parse(

@@ -6,6 +6,6 @@ enum class CartridgeType(val id: Int) {
 
     companion object {
 
-        fun fromId(id: Int) = values().firstOrNull { it.id == id }
+        fun fromId(id: Int) = CartridgeType.entries.firstOrNull { it.id == id }
     }
 }

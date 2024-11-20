@@ -130,7 +130,7 @@ class InsightFragment : DaggerFragment(), View.OnClickListener {
         }
     }
 
-    protected fun updateGUI() {
+    fun updateGUI() {
         _binding ?: return
         binding.statusItemContainer.removeAllViews()
         if (!insightPlugin.isInitialized()) {
@@ -298,7 +298,7 @@ class InsightFragment : DaggerFragment(), View.OnClickListener {
     }
 
     private fun getLastBolusItem() {
-        if (insightPlugin.lastBolusAmount.equals(0.0) || insightPlugin.lastBolusTimestamp.equals(0L)) {
+        if (insightPlugin.lastBolusAmount.equals(0.0) || insightPlugin.lastBolusTimestamp == 0L) {
             binding.lastBolusLine.visibility = View.GONE
             return
         }
@@ -306,8 +306,7 @@ class InsightFragment : DaggerFragment(), View.OnClickListener {
         val agoMsc = System.currentTimeMillis() - insightPlugin.lastBolusTimestamp
         val bolusMinAgo = agoMsc / 60.0 / 1000.0
         val unit = rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname)
-        val ago: String
-        ago = if (bolusMinAgo < 60) {
+        val ago: String = if (bolusMinAgo < 60) {
             dateUtil.minAgo(rh, insightPlugin.lastBolusTimestamp)
         } else {
             dateUtil.hourAgo(insightPlugin.lastBolusTimestamp, rh)
@@ -317,8 +316,8 @@ class InsightFragment : DaggerFragment(), View.OnClickListener {
 
     private fun getBolusItems() {
         insightPlugin.activeBoluses?.let { activeBoluses ->
-            binding.extendedBolus1Line.visibility = (activeBoluses.size > 0).toVisibility()
-            if (activeBoluses.size > 0)
+            binding.extendedBolus1Line.visibility = activeBoluses.isNotEmpty().toVisibility()
+            if (activeBoluses.isNotEmpty())
                 updateBolusItemView(binding.extendedBolus1, binding.extendedBolus1Label, activeBoluses[0])
             binding.extendedBolus2Line.visibility = (activeBoluses.size > 1).toVisibility()
             if (activeBoluses.size > 1)

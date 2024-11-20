@@ -2,8 +2,6 @@ package info.nightscout.androidaps.plugins.pump.medtronic
 
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.shared.tests.TestBaseWithProfile
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
@@ -55,7 +53,7 @@ open class MedtronicTestBase : TestBaseWithProfile() {
         val data: MutableList<Byte> = ArrayList()
         for (item in elements) {
             var b = if (item > 128) item - 256 else item
-            data.add(b.toByte());
+            data.add(b.toByte())
         }
 
         val entryType = PumpHistoryEntryType.getByCode(data[0])

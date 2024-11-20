@@ -6,7 +6,7 @@ import kotlin.math.min
 
 fun PumpType.baseBasalRange(): String =
     if (baseBasalMaxValue == null) baseBasalMinValue.toString()
-    else baseBasalMinValue.toString() + "-" + baseBasalMaxValue.toString()
+    else "$baseBasalMinValue-$baseBasalMaxValue"
 
 fun PumpType.hasExtendedBasals(): Boolean = baseBasalSpecialSteps != null || specialBolusSize != null
 

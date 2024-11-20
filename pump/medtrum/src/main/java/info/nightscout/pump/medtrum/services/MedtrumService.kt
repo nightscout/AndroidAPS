@@ -1,6 +1,5 @@
 package info.nightscout.pump.medtrum.services
 
-import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Binder
@@ -816,7 +815,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        return Service.START_STICKY
+        return START_STICKY
     }
 
     /**
@@ -844,9 +843,9 @@ class MedtrumService : DaggerService(), BLECommCallback {
     // State class
     private abstract inner class State {
 
-        protected var responseHandled = false
-        protected var responseSuccess = false
-        protected var sendRetryCounter = 0
+        var responseHandled = false
+        var responseSuccess = false
+        var sendRetryCounter = 0
 
         open fun onEnter() {
             // Used when a state is entered

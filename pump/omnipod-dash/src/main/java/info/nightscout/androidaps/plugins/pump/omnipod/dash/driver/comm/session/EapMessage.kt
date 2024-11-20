@@ -17,7 +17,7 @@ enum class EapCode(val code: Byte) {
     companion object {
 
         fun byValue(value: Byte): EapCode =
-            EapCode.values().firstOrNull { it.code == value }
+            EapCode.entries.firstOrNull { it.code == value }
                 ?: throw IllegalArgumentException("Unknown EAP-AKA attribute type: $value")
     }
 }

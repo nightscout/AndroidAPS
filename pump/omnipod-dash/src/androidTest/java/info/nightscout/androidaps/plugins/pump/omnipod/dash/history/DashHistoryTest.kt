@@ -5,7 +5,6 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import app.aaps.shared.tests.AAPSLoggerTest
-import com.github.guepardoapps.kulid.ULID
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.database.DashHistoryDatabase
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.database.HistoryRecordDao

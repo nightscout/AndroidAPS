@@ -148,13 +148,9 @@ class PumpHistoryActivity : TranslatedDaggerAppCompatActivity() {
 
     class TypeList internal constructor(var entryGroup: PumpHistoryEntryGroup) {
 
-        var name: String
+        var name: String = entryGroup.translated!!
         override fun toString(): String {
             return name
-        }
-
-        init {
-            name = entryGroup.translated!!
         }
     }
 
@@ -187,15 +183,9 @@ class PumpHistoryActivity : TranslatedDaggerAppCompatActivity() {
 
         class HistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-            var timeView: TextView
-            var typeView: TextView
-            var valueView: TextView
-
-            init {
-                timeView = itemView.findViewById(R.id.pump_history_time)
-                typeView = itemView.findViewById(R.id.pump_history_source)
-                valueView = itemView.findViewById(R.id.pump_history_description)
-            }
+            var timeView: TextView = itemView.findViewById(R.id.pump_history_time)
+            var typeView: TextView = itemView.findViewById(R.id.pump_history_source)
+            var valueView: TextView = itemView.findViewById(R.id.pump_history_description)
         }
 
     }

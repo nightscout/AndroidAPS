@@ -70,7 +70,7 @@ class DigitalStyleWatchface : BaseWatchFace() {
             val displayFrameColorOpacity = sp.getString(R.string.key_digital_style_frame_color_opacity, "1")
 
             // Load image with shapes
-            val styleDrawableName = "digital_style_bg_" + displayStyle
+            val styleDrawableName = "digital_style_bg_$displayStyle"
             try {
                 mShapesElements.background = ContextCompat.getDrawable(this, resources.getIdentifier(styleDrawableName, "drawable", this.packageName))
             } catch (_: Exception) {

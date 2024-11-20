@@ -77,15 +77,9 @@ abstract class MenuListActivity : DaggerActivity() {
     class MenuAdapter(private val mDataset: List<MenuItem>, private val callback: (ItemViewHolder) -> Unit) : RecyclerView.Adapter<ItemViewHolder>() {
         class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-            val menuContainer: RelativeLayout
-            val actionItem: TextView
-            val actionIcon: ImageView
-
-            init {
-                menuContainer = itemView.findViewById(R.id.menu_container)
-                actionItem = itemView.findViewById(R.id.menuItemText)
-                actionIcon = itemView.findViewById(R.id.menuItemIcon)
-            }
+            val menuContainer: RelativeLayout = itemView.findViewById(R.id.menu_container)
+            val actionItem: TextView = itemView.findViewById(R.id.menuItemText)
+            val actionIcon: ImageView = itemView.findViewById(R.id.menuItemIcon)
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {

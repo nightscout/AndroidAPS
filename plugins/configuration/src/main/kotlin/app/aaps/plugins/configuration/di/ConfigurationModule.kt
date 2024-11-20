@@ -21,6 +21,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
+@Suppress("unused")
 @Module(
     includes = [
         ConfigurationModule.Bindings::class,

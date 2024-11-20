@@ -10,20 +10,17 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.ServiceConnection
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.extensions.safeDisable
 import app.aaps.core.utils.extensions.safeGetParcelableExtra
 import app.aaps.pump.insight.connection_service.InsightConnectionService
@@ -44,8 +41,6 @@ class InsightPairingActivity : DaggerAppCompatActivity(), InsightConnectionServi
     private lateinit var binding: ActivityInsightPairingBinding
     private var scanning = false
     private val deviceAdapter = DeviceAdapter()
-
-    private val PERMISSION_REQUEST_BLUETOOTH = 30242
 
     private var service: InsightConnectionService? = null
     private val serviceConnection: ServiceConnection = object : ServiceConnection {
@@ -69,21 +64,16 @@ class InsightPairingActivity : DaggerAppCompatActivity(), InsightConnectionServi
         super.onCreate(savedInstanceState)
         binding = ActivityInsightPairingBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        blePreCheck.prerequisitesCheck(this)
+        if (!blePreCheck.prerequisitesCheck(this)) {
+            ToastUtils.errorToast(this, getString(app.aaps.core.ui.R.string.need_connect_permission))
+            finish()
+            return
+        }
         binding.yes.setOnClickListener(this)
         binding.no.setOnClickListener(this)
         binding.exit.setOnClickListener(this)
         binding.deviceList.layoutManager = LinearLayoutManager(this)
         binding.deviceList.adapter = deviceAdapter
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            if (ContextCompat.checkSelfPermission(context, "android.permission.BLUETOOTH_CONNECT") != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(context, "android.permission.BLUETOOTH_SCAN") != PackageManager.PERMISSION_GRANTED
-            ) {
-                ActivityCompat.requestPermissions(this, arrayOf("android.permission.BLUETOOTH_SCAN", "android.permission.BLUETOOTH_CONNECT"), PERMISSION_REQUEST_BLUETOOTH)
-                finish()
-                return
-            }
-        }
         bindService(Intent(this, InsightConnectionService::class.java), serviceConnection, BIND_AUTO_CREATE)
     }
 
@@ -214,11 +204,6 @@ class InsightPairingActivity : DaggerAppCompatActivity(), InsightConnectionServi
             }
         }
 
-        fun clear() {
-            bluetoothDevices.clear()
-            notifyDataSetChanged()
-        }
-
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.bluetooth_device, parent, false))
         }
@@ -236,11 +221,7 @@ class InsightPairingActivity : DaggerAppCompatActivity(), InsightConnectionServi
 
         inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-            val deviceName: TextView
-
-            init {
-                deviceName = itemView as TextView
-            }
+            val deviceName: TextView = itemView as TextView
         }
     }
 }

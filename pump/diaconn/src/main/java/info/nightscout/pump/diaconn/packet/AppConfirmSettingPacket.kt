@@ -27,8 +27,8 @@ class AppConfirmSettingPacket(
         buffer.put(reqMsgType)  // 명령코드
         buffer.putInt(otp) //  응답시 전달받은 opt (random 6digit numbner)
 
-        aapsLogger.debug(LTag.PUMPCOMM, "reqMsgType -> ${reqMsgType}")
-        aapsLogger.debug(LTag.PUMPCOMM, "otp -> ${otp}")
+        aapsLogger.debug(LTag.PUMPCOMM, "reqMsgType -> $reqMsgType")
+        aapsLogger.debug(LTag.PUMPCOMM, "otp -> $otp")
 
         return suffixEncode(buffer)
     }

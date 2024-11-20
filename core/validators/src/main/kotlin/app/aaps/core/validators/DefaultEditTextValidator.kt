@@ -6,8 +6,6 @@ import android.text.TextUtils
 import android.text.TextWatcher
 import android.widget.EditText
 import app.aaps.core.interfaces.profile.ProfileUtil
-import com.google.android.material.textfield.TextInputLayout
-import dagger.android.HasAndroidInjector
 import app.aaps.core.validators.validators.AlphaNumericValidator
 import app.aaps.core.validators.validators.AlphaValidator
 import app.aaps.core.validators.validators.AndValidator
@@ -35,6 +33,8 @@ import app.aaps.core.validators.validators.PinStrengthValidator
 import app.aaps.core.validators.validators.RegexpValidator
 import app.aaps.core.validators.validators.Validator
 import app.aaps.core.validators.validators.WebUrlValidator
+import com.google.android.material.textfield.TextInputLayout
+import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
 @Suppress("SpellCheckingInspection")
@@ -273,7 +273,7 @@ class DefaultEditTextValidator : EditTextValidator {
     }
 
     override fun testValidity(showUIError: Boolean): Boolean {
-        val isValid = mValidator?.isValid(editTextView) ?: false
+        val isValid = mValidator?.isValid(editTextView) == true
         if (!isValid && showUIError) {
             showUIError()
         }

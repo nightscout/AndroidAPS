@@ -1,7 +1,6 @@
 package app.aaps.pump.dana.keys
 
 import app.aaps.core.keys.BooleanPreferenceKey
-import app.aaps.core.keys.IntPreferenceKey
 import app.aaps.core.keys.LongPreferenceKey
 
 enum class DanaLongKey(

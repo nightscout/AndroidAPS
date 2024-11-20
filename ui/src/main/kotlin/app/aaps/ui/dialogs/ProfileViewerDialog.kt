@@ -66,7 +66,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
         // load data from bundle
         (savedInstanceState ?: arguments)?.let { bundle ->
             time = bundle.getLong("time", 0)
-            mode = UiInteraction.Mode.values()[bundle.getInt("mode", UiInteraction.Mode.RUNNING_PROFILE.ordinal)]
+            mode = UiInteraction.Mode.entries.toTypedArray()[bundle.getInt("mode", UiInteraction.Mode.RUNNING_PROFILE.ordinal)]
             customProfileJson = bundle.getString("customProfile", "")
             customProfileName = bundle.getString("customProfileName", "")
             if (mode == UiInteraction.Mode.PROFILE_COMPARE)

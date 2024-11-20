@@ -24,7 +24,7 @@ class ProgramBasalCommand private constructor(
     delayUntilNextTenthPulseInUsec: Int
 ) : HeaderEnabledCommand(CommandType.PROGRAM_BASAL, uniqueId, sequenceNumber, multiCommandFlag) {
 
-    private val insulinProgramElements: List<BasalInsulinProgramElement>
+    private val insulinProgramElements: List<BasalInsulinProgramElement> = ArrayList(insulinProgramElements)
     private val programReminder: ProgramReminder
     private val currentInsulinProgramElementIndex: Byte
     private val remainingTenthPulsesInCurrentInsulinProgramElement: Short
@@ -138,7 +138,6 @@ class ProgramBasalCommand private constructor(
     }
 
     init {
-        this.insulinProgramElements = ArrayList(insulinProgramElements)
         this.programReminder = programReminder
         this.currentInsulinProgramElementIndex = currentInsulinProgramElementIndex
         this.remainingTenthPulsesInCurrentInsulinProgramElement = remainingTenthPulsesInCurrentInsulinProgramElement

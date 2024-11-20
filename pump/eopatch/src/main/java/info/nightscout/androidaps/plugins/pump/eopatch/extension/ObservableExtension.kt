@@ -18,7 +18,7 @@ fun <T : Any> Observable<T>.subscribeEmpty(): Disposable = subscribe({}, {}, {})
 
 fun <T : Any> Observable<T>.subscribeEmpty(onSuccess: (T) -> Unit): Disposable = subscribe(onSuccess, {}, {})
 
-fun <T : Any> Observable<T>.subscribeEmpty(onSuccess: (T) -> Unit, onError: (Throwable) -> Unit): Disposable = subscribe(onSuccess, onError, {})
+fun <T : Any> Observable<T>.subscribeEmpty(onSuccess: (T) -> Unit, onError: (Throwable) -> Unit): Disposable = subscribe(onSuccess, onError) {}
 
 fun <T : Any> Observable<T>.subscribeDefault(aapsLogger: AAPSLogger): Disposable = subscribe({ aapsLogger.debug(LTag.PUMP, "onSuccess") }, { aapsLogger.error(LTag.PUMP, "onError", it) }, {
     aapsLogger.debug(LTag.PUMP, "onComplete")
@@ -28,6 +28,6 @@ fun <T : Any> Observable<T>.subscribeDefault(aapsLogger: AAPSLogger, onSuccess: 
     subscribe(onSuccess, { aapsLogger.error(LTag.PUMP, "onError", it) }, { aapsLogger.debug(LTag.PUMP, "onComplete") })
 
 fun <T : Any> Observable<T>.subscribeDefault(aapsLogger: AAPSLogger, onSuccess: (T) -> Unit, onError: (Throwable) -> Unit): Disposable =
-    subscribe(onSuccess, onError, { aapsLogger.debug(LTag.PUMP, "onComplete") })
+    subscribe(onSuccess, onError) { aapsLogger.debug(LTag.PUMP, "onComplete") }
 
 fun <T : Any> Observable<T>.with(): Observable<T> = subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())

@@ -28,7 +28,6 @@ class BlePreCheckImpl @Inject constructor(
 
         private const val PERMISSION_REQUEST_COARSE_LOCATION = 30241 // arbitrary.
         private const val PERMISSION_REQUEST_BLUETOOTH = 30242 // arbitrary.
-        private const val PERMISSION_REQUEST_BACKGROUND_LOCATION = 30243 // arbitrary.
     }
 
     override fun prerequisitesCheck(activity: AppCompatActivity): Boolean {

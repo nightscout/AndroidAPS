@@ -15,7 +15,7 @@ class TrendCalculatorImpl @Inject constructor(
 
     override fun getTrendArrow(autosensDataStore: AutosensDataStore): TrendArrow? {
         val data = autosensDataStore.getBucketedDataTableCopy() ?: return null
-        if (data.size == 0) return null
+        if (data.isEmpty()) return null
         val glucoseValue = data[0]
         return when {
             glucoseValue.value != glucoseValue.recalculated -> calculateDirection(data) // always recalculate after smoothing

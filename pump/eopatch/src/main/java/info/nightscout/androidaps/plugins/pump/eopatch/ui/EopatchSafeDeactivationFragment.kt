@@ -17,7 +17,7 @@ class EopatchSafeDeactivationFragment : EoBaseFragment<FragmentEopatchSafeDeativ
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(EopatchViewModel::class.java).apply {
+        binding.viewModel = ViewModelProvider(requireActivity(), viewModelFactory)[EopatchViewModel::class.java].apply {
             updateExpirationTime()
         }
     }

@@ -30,7 +30,7 @@ class DstHelperPlugin @Inject constructor(
         .mainType(PluginType.CONSTRAINTS)
         .neverVisible(true)
         .alwaysEnabled(true)
-        .showInList({ false })
+        .showInList { false }
         .pluginName(R.string.dst_plugin_name),
     aapsLogger, rh
 ), PluginConstraints {

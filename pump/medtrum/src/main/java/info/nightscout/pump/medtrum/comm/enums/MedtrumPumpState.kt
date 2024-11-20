@@ -33,7 +33,7 @@ enum class MedtrumPumpState(val state: Byte) {
 
     companion object {
 
-        fun fromByte(state: Byte) = values().find { it.state == state }
+        fun fromByte(state: Byte) = MedtrumPumpState.entries.find { it.state == state }
             ?: throw IllegalAccessException("")
     }
 }

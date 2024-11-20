@@ -137,7 +137,7 @@ class PumpHistoryEntry : MedtronicHistoryEntry() {
 
             if (entry.entryType == PumpHistoryEntryType.Bolus) {
                 val otherOne: BolusDTO = entry.decodedData["Object"] as BolusDTO
-                return (thisOne.value.equals(otherOne.value))
+                return (thisOne.value == otherOne.value)
             } else
                 return false
         }

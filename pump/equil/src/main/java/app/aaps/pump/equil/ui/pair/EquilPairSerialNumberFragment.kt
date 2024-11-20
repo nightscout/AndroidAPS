@@ -150,7 +150,7 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
                 serialNumber = devicesNameText.text.toString().trim()
                 if (validateNumber(serialNumber) && validate(password)) {
                     val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm.hideSoftInputFromWindow(equilPasswordText.getWindowToken(), 0)
+                    imm.hideSoftInputFromWindow(equilPasswordText.windowToken, 0)
                     sp.putString(rh.gs(R.string.key_equil_pair_password), password)
                     buttonPair.isClickable = false
                     buttonPair.alpha = 0.3f

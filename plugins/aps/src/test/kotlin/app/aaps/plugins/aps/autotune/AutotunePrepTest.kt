@@ -233,7 +233,7 @@ class AutotunePrepTest : TestBaseWithProfile() {
                 )
             )
         }
-        if (boluses.size == 0)  //Add at least one insulin treatment for tests to avoid return null in categorization
+        if (boluses.isEmpty())  //Add at least one insulin treatment for tests to avoid return null in categorization
             boluses.add(
                 BS(
                     timestamp = startDayTime,
@@ -265,7 +265,7 @@ class AutotunePrepTest : TestBaseWithProfile() {
             val timestamp = JsonHelper.safeGetLong(json, "date")
             list.add(GV(raw = value, noise = 0.0, value = value, timestamp = timestamp, sourceSensor = SourceSensor.UNKNOWN, trendArrow = TrendArrow.FLAT))
         }
-        if (list.size > 0)
+        if (list.isNotEmpty())
             startDayTime = list[list.size - 1].timestamp
         return list
     }

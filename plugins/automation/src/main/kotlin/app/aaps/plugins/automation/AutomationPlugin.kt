@@ -114,7 +114,7 @@ class AutomationPlugin @Inject constructor(
         .pluginIcon(app.aaps.core.objects.R.drawable.ic_automation)
         .pluginName(R.string.automation)
         .shortName(R.string.automation_short)
-        .showInList({ config.APS })
+        .showInList { config.APS }
         .neverVisible(!config.APS)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.automation_description),

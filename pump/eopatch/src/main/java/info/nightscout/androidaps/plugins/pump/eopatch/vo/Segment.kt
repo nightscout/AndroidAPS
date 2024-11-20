@@ -1,12 +1,11 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.vo
 
-internal class JoinedSegment(var index: Int) {
+internal class JoinedSegment(index: Int) {
 
     var no = 0
 
     var startMinute = 0
     var endMinute = 0
-
 
     //BasalSegment
     var doseUnitPerHour = 0f

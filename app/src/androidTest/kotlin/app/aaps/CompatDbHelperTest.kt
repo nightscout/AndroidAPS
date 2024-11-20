@@ -121,7 +121,7 @@ class CompatDbHelperTest @Inject constructor() {
             percentage = 100,
             timeShiftInHours = 0,
             timestamp = dateUtil.now(),
-            action = app.aaps.core.data.ue.Action.PROFILE_SWITCH,
+            action = Action.PROFILE_SWITCH,
             source = Sources.ProfileSwitchDialog,
             note = "Test profile switch",
             listValues = listOf(

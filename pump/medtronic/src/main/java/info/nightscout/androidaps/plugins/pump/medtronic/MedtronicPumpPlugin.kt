@@ -274,9 +274,9 @@ class MedtronicPumpPlugin @Inject constructor(
         if (displayConnectionMessages) aapsLogger.debug(LTag.PUMP, "MedtronicPumpPlugin::isBusy")
         if (isServiceSet) {
             if (isBusy) return true
-            if (busyTimestamps.size > 0) {
+            if (this.busyTimestamps.size > 0) {
                 clearBusyQueue()
-                return busyTimestamps.size > 0
+                return this.busyTimestamps.size > 0
             }
         }
         return false
@@ -284,7 +284,7 @@ class MedtronicPumpPlugin @Inject constructor(
 
     @Synchronized
     private fun clearBusyQueue() {
-        if (busyTimestamps.size == 0) {
+        if (busyTimestamps.isEmpty()) {
             return
         }
         val deleteFromQueue: MutableSet<Long> = HashSet()
@@ -297,7 +297,7 @@ class MedtronicPumpPlugin @Inject constructor(
             busyTimestamps.clear()
             setEnableCustomAction(MedtronicCustomActionType.ClearBolusBlock, false)
         }
-        if (deleteFromQueue.size > 0) {
+        if (deleteFromQueue.isNotEmpty()) {
             busyTimestamps.removeAll(deleteFromQueue)
         }
     }
@@ -786,7 +786,7 @@ class MedtronicPumpPlugin @Inject constructor(
     @Deprecated("Not used, TBRs fixed in history, should be removed.")
     private fun cancelTBRWithTemporaryId() {
         val tbrs: MutableList<PumpDbEntryTBR> = pumpSyncStorage.getTBRs()
-        if (tbrs.size > 0 && medtronicPumpStatus.runningTBRWithTemp != null) {
+        if (tbrs.isNotEmpty() && medtronicPumpStatus.runningTBRWithTemp != null) {
             aapsLogger.info(LTag.PUMP, logPrefix + "cancelTBRWithTemporaryId - TBR items: ${tbrs.size}")
 
             var item: PumpDbEntryTBR? = null
@@ -933,7 +933,7 @@ class MedtronicPumpPlugin @Inject constructor(
         )
         if (debugHistory) aapsLogger.debug(LTag.PUMP, "HST: After task")
         val historyResult = responseTask2?.result as PumpHistoryResult?
-        if (debugHistory) aapsLogger.debug(LTag.PUMP, "HST: History Result: " + historyResult.toString())
+        if (debugHistory) aapsLogger.debug(LTag.PUMP, "HST: History Result: $historyResult")
         val latestEntry = historyResult!!.latestEntry
         if (debugHistory) aapsLogger.debug(LTag.PUMP, logPrefix + "Last entry: " + latestEntry)
         if (latestEntry == null) // no new history to read

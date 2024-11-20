@@ -36,7 +36,7 @@ class XdripPluginTest : TestBaseWithProfile() {
     }
 
     @BeforeEach fun prepare() {
-        rateLimit = RateLimit(aapsLogger, dateUtil)
+        rateLimit = RateLimit(dateUtil)
         xdripPlugin = XdripPlugin(
             preferences, profileFunction, profileUtil, rh, aapsSchedulers, context, fabricPrivacy, loop, iobCobCalculator, processedTbrEbData, rxBus, uiInteraction, dateUtil, aapsLogger, config, decimalFormatter
         )

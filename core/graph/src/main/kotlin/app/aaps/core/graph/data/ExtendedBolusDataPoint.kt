@@ -4,12 +4,10 @@ import android.content.Context
 import android.graphics.Paint
 import app.aaps.core.data.model.EB
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.utils.DecimalFormatter
 
 class ExtendedBolusDataPoint(
     val data: EB,
-    private val rh: ResourceHelper,
-    private val decimalFormatter: DecimalFormatter
+    private val rh: ResourceHelper
 ) : DataPointWithLabelInterface {
 
     private var yValue = 0.0

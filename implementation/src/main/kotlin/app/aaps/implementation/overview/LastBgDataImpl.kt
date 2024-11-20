@@ -34,12 +34,12 @@ class LastBgDataImpl @Inject constructor(
     override fun isLow(): Boolean =
         lastBg()?.let { lastBg ->
             lastBg.valueToUnits(profileFunction.getUnits()) < preferences.get(UnitDoubleKey.OverviewLowMark)
-        } ?: false
+        } == true
 
     override fun isHigh(): Boolean =
         lastBg()?.let { lastBg ->
             lastBg.valueToUnits(profileFunction.getUnits()) > preferences.get(UnitDoubleKey.OverviewHighMark)
-        } ?: false
+        } == true
 
     @ColorInt
     override fun lastBgColor(context: Context?): Int =
@@ -59,5 +59,5 @@ class LastBgDataImpl @Inject constructor(
     override fun isActualBg(): Boolean =
         lastBg()?.let { lastBg ->
             lastBg.timestamp > dateUtil.now() - T.mins(9).msecs()
-        } ?: false
+        } == true
 }

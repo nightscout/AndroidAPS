@@ -10,8 +10,6 @@ open class ServiceTask(val injector: HasAndroidInjector) : Runnable {
 
     @Inject lateinit var activePlugin: ActivePlugin
 
-    var completed = false
-
     init {
         injector.androidInjector().inject(this)
     }

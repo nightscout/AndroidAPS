@@ -154,13 +154,13 @@ class DiaconnG8Plugin @Inject constructor(
     override fun connect(reason: String) {
         aapsLogger.debug(LTag.PUMP, "Diaconn G8 connect from: $reason")
         if (diaconnG8Service != null && mDeviceAddress != "" && mDeviceName != "") {
-            val success = diaconnG8Service?.connect(reason, mDeviceAddress) ?: false
+            val success = diaconnG8Service?.connect(reason, mDeviceAddress) == true
             if (!success) ToastUtils.errorToast(context, app.aaps.core.ui.R.string.ble_not_supported)
         }
     }
 
-    override fun isConnected(): Boolean = diaconnG8Service?.isConnected ?: false
-    override fun isConnecting(): Boolean = diaconnG8Service?.isConnecting ?: false
+    override fun isConnected(): Boolean = diaconnG8Service?.isConnected == true
+    override fun isConnecting(): Boolean = diaconnG8Service?.isConnecting == true
     override fun isHandshakeInProgress(): Boolean = false
 
     override fun disconnect(reason: String) {
@@ -221,7 +221,7 @@ class DiaconnG8Plugin @Inject constructor(
         diaconnG8Pump.basePauseStatus == 1
 
     override fun isBusy(): Boolean =
-        diaconnG8Service?.isConnected ?: false || diaconnG8Service?.isConnecting ?: false
+        diaconnG8Service?.isConnected == true || diaconnG8Service?.isConnecting == true
 
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
         val result = instantiator.providePumpEnactResult()
@@ -286,8 +286,7 @@ class DiaconnG8Plugin @Inject constructor(
         detailedBolusInfoStorage.add(detailedBolusInfo) // will be picked up on reading history
         val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == BS.Type.SMB, detailedBolusInfo.id)
         var connectionOK = false
-        if (detailedBolusInfo.insulin > 0 || carbs > 0) connectionOK = diaconnG8Service?.bolus(detailedBolusInfo.insulin, carbs.toInt(), carbTimeStamp, t)
-            ?: false
+        if (detailedBolusInfo.insulin > 0 || carbs > 0) connectionOK = diaconnG8Service?.bolus(detailedBolusInfo.insulin, carbs.toInt(), carbTimeStamp, t) == true
         val result = instantiator.providePumpEnactResult()
         result.success = connectionOK
         result.bolusDelivered = t.insulin
@@ -351,10 +350,10 @@ class DiaconnG8Plugin @Inject constructor(
             // Convert duration from minutes to hours
             aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Setting temp basal $absoluteAfterConstrain U for $durationInMinutes mins (doLowTemp || doHighTemp)")
             val connectionOK: Boolean = if (durationInMinutes == 15 || durationInMinutes == 30) {
-                diaconnG8Service?.tempBasalShortDuration(absoluteAfterConstrain, durationInMinutes) ?: false
+                diaconnG8Service?.tempBasalShortDuration(absoluteAfterConstrain, durationInMinutes) == true
             } else {
                 val durationInHours = max(durationInMinutes / 60.0, 1.0)
-                diaconnG8Service?.tempBasal(absoluteAfterConstrain, durationInHours) ?: false
+                diaconnG8Service?.tempBasal(absoluteAfterConstrain, durationInHours) == true
             }
 
             if (connectionOK && diaconnG8Pump.isTempBasalInProgress && diaconnG8Pump.tempBasalAbsoluteRate == absoluteAfterConstrain) {
@@ -411,8 +410,7 @@ class DiaconnG8Plugin @Inject constructor(
             aapsLogger.debug(LTag.PUMP, "setExtendedBolus: Correct extended bolus already set. Current: " + diaconnG8Pump.extendedBolusAmount + " Asked: " + insulinAfterConstraint)
             return result
         }
-        val connectionOK = diaconnG8Service?.extendedBolus(insulinAfterConstraint, durationInMinutes)
-            ?: false
+        val connectionOK = diaconnG8Service?.extendedBolus(insulinAfterConstraint, durationInMinutes) == true
 
         if (connectionOK) {
             result.enacted = true
@@ -564,10 +562,6 @@ class DiaconnG8Plugin @Inject constructor(
 
     override fun isBatteryChangeLoggingEnabled(): Boolean {
         return sp.getBoolean(R.string.key_diaconn_g8_logbatterychange, false)
-    }
-
-    fun isInsulinChangeLoggingEnabled(): Boolean {
-        return sp.getBoolean(R.string.key_diaconn_g8_loginsulinchange, false)
     }
 
     @Synchronized

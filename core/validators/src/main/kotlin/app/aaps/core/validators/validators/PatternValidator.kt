@@ -19,7 +19,7 @@ import java.util.regex.Pattern
  *
  * @see RegexpValidator
  */
-open class PatternValidator(_customErrorMessage: String?, val pattern: Pattern) : Validator(_customErrorMessage) {
+open class PatternValidator(customErrorMessage: String?, val pattern: Pattern) : Validator(customErrorMessage) {
 
     override fun isValid(editText: EditText): Boolean {
         return pattern.matcher(editText.text).matches()

@@ -227,7 +227,7 @@ class EncryptedPrefsFormat @Inject constructor(
                     }
                 }
 
-                val issuesStr: String? = if (issues.size > 0) issues.joinToString("\n") else null
+                val issuesStr: String? = if (issues.isNotEmpty()) issues.joinToString("\n") else null
                 val encryptionDescStr = if (encrypted) {
                     if (secure == PrefsStatusImpl.OK) rh.gs(R.string.prefdecrypt_settings_secure) else insecurityReason
                 } else {

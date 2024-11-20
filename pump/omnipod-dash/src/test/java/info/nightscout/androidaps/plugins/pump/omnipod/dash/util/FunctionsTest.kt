@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.util
 
 import app.aaps.core.interfaces.profile.Profile
-import com.google.common.truth.Truth.assertThat
 import app.aaps.core.interfaces.profile.Profile.ProfileValue
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BasalProgram

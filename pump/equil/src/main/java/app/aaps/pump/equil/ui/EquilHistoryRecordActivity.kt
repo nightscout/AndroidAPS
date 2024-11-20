@@ -343,16 +343,9 @@ class EquilHistoryRecordActivity : TranslatedDaggerAppCompatActivity() {
 
         class HistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-            var timeView: TextView
-            var typeView: TextView
-            var valueView: TextView
-
-            // var valueView: TextView
-            init {
-                timeView = itemView.findViewById(R.id.equil_history_time)
-                typeView = itemView.findViewById(R.id.equil_history_source)
-                valueView = itemView.findViewById(R.id.equil_history_description)
-            }
+            var timeView: TextView = itemView.findViewById(R.id.equil_history_time)
+            var typeView: TextView = itemView.findViewById(R.id.equil_history_source)
+            var valueView: TextView = itemView.findViewById(R.id.equil_history_description)
         }
 
     }
@@ -389,7 +382,7 @@ class EquilHistoryRecordActivity : TranslatedDaggerAppCompatActivity() {
 
                 val format2 = dateFormat.format(time2)
                 val format3 = "%.3f".format(
-                    (Math.abs(time - time2) / 1000.0)
+                    (abs(time - time2) / 1000.0)
                         * Utils.decodeSpeedToUS(record.largeRate)
                 )
                 val t = (abs(time - time2) / 1000.0)
@@ -468,14 +461,11 @@ class EquilHistoryRecordActivity : TranslatedDaggerAppCompatActivity() {
 
         class EquilHistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-            var timeView: TextView
-            var typeView: TextView
-            private var descriptionView: TextView
+            var timeView: TextView = itemView.findViewById(R.id.equil_history_time)
+            var typeView: TextView = itemView.findViewById(R.id.equil_history_source)
+            private var descriptionView: TextView = itemView.findViewById(R.id.equil_history_description)
 
             init {
-                timeView = itemView.findViewById(R.id.equil_history_time)
-                typeView = itemView.findViewById(R.id.equil_history_source)
-                descriptionView = itemView.findViewById(R.id.equil_history_description)
                 descriptionView.visibility = View.GONE
 
             }

@@ -33,11 +33,7 @@ class PrepareTemporaryTargetDataWorker(
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var loop: Loop
     @Inject lateinit var rxBus: RxBus
-    private var ctx: Context
-
-    init {
-        ctx = rh.getThemedCtx(context)
-    }
+    private var ctx: Context = rh.getThemedCtx(context)
 
     class PrepareTemporaryTargetData(
         val overviewData: OverviewData

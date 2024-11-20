@@ -161,9 +161,9 @@ class CircleWatchface : WatchFace() {
             if (detailedIob) "${status[0].iobSum} ${status[0].iobDetail}"
             else status[0].iobSum + getString(R.string.units_short)
         val externalStatus = if (showBgi)
-            "${status[0].externalStatus} ${iobString} ${status[0].bgi}"
+            "${status[0].externalStatus} $iobString ${status[0].bgi}"
         else
-            "${status[0].externalStatus} ${iobString}"
+            "${status[0].externalStatus} $iobString"
         var textView = myLayout?.findViewById<TextView>(R.id.statusString)
         if (sp.getBoolean(R.string.key_show_external_status, true)) {
             textView?.visibility = View.VISIBLE
@@ -303,7 +303,7 @@ class CircleWatchface : WatchFace() {
         aapsLogger.debug(LTag.WEAR, "start onDrawOtherStuff. bgDataList.size(): " + bgDataList.size)
         if (sp.getBoolean(R.string.key_show_ring_history, false)) {
             //Perfect low and High indicators
-            if (bgDataList.size > 0) {
+            if (bgDataList.isNotEmpty()) {
                 addIndicator(canvas, 100f, Color.LTGRAY)
                 addIndicator(canvas, bgDataList.iterator().next().low.toFloat(), lowColor)
                 addIndicator(canvas, bgDataList.iterator().next().high.toFloat(), highColor)

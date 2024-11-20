@@ -16,22 +16,19 @@ enum class PacketType(value: Int) {
     );
 
     companion object {
+
         var mapByValue: MutableMap<Byte, PacketType> = HashMap()
 
         fun getByValue(value: Short): PacketType? {
-            return if (mapByValue.containsKey(value.toByte())) mapByValue.get(value.toByte()) else Invalid
+            return if (mapByValue.containsKey(value.toByte())) mapByValue[value.toByte()] else Invalid
         }
 
         init {
-            for (packetType in values()) {
+            for (packetType in PacketType.entries) {
                 mapByValue[packetType.value] = packetType
             }
         }
     }
 
-    val value: Byte
-
-    init {
-        this.value = value.toByte()
-    }
+    val value: Byte = value.toByte()
 }

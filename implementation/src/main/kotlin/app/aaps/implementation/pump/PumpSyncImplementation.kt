@@ -161,7 +161,7 @@ class PumpSyncImplementation @Inject constructor(
             )
         )
         return persistenceLayer.insertBolusWithTempId(bolus)
-            .map { result -> result.inserted.size > 0 }
+            .map { result -> result.inserted.isNotEmpty() }
             .blockingGet()
     }
 
@@ -179,7 +179,7 @@ class PumpSyncImplementation @Inject constructor(
             )
         )
         return persistenceLayer.syncPumpBolusWithTempId(bolus, type)
-            .map { result -> result.updated.size > 0 }
+            .map { result -> result.updated.isNotEmpty() }
             .blockingGet()
     }
 
@@ -196,7 +196,7 @@ class PumpSyncImplementation @Inject constructor(
             )
         )
         return persistenceLayer.syncPumpBolus(bolus, type)
-            .map { result -> result.inserted.size > 0 }
+            .map { result -> result.inserted.isNotEmpty() }
             .blockingGet()
     }
 
@@ -213,7 +213,7 @@ class PumpSyncImplementation @Inject constructor(
             )
         )
         return persistenceLayer.insertPumpCarbsIfNewByTimestamp(carbs)
-            .map { result -> result.inserted.size > 0 }
+            .map { result -> result.inserted.isNotEmpty() }
             .blockingGet()
     }
 
@@ -242,7 +242,7 @@ class PumpSyncImplementation @Inject constructor(
             timestamp = timestamp,
             listValues = listOf(ValueWithUnit.Timestamp(timestamp), ValueWithUnit.TEType(type))
         )
-            .map { result -> result.inserted.size > 0 }
+            .map { result -> result.inserted.isNotEmpty() }
             .blockingGet()
     }
 
@@ -266,12 +266,12 @@ class PumpSyncImplementation @Inject constructor(
         return persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
             therapyEvent = therapyEvent,
             timestamp = timestamp,
-            action = app.aaps.core.data.ue.Action.CAREPORTAL,
+            action = Action.CAREPORTAL,
             source = Sources.Pump,
             note = note,
             listValues = listOf(ValueWithUnit.Timestamp(timestamp), ValueWithUnit.TEType(TE.Type.FINGER_STICK_BG_VALUE))
         )
-            .map { result -> result.inserted.size > 0 }
+            .map { result -> result.inserted.isNotEmpty() }
             .blockingGet()
     }
 
@@ -280,7 +280,7 @@ class PumpSyncImplementation @Inject constructor(
         disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
             therapyEvent = TE.asAnnouncement(error, pumpId, pumpType, pumpSerial),
             timestamp = dateUtil.now(),
-            action = app.aaps.core.data.ue.Action.TREATMENT,
+            action = Action.TREATMENT,
             source = Sources.Pump,
             note = error,
             listValues = listOf()
@@ -315,14 +315,14 @@ class PumpSyncImplementation @Inject constructor(
             )
         )
         return persistenceLayer.syncPumpTemporaryBasal(temporaryBasal, type?.toDbType())
-            .map { result -> result.inserted.size > 0 }
+            .map { result -> result.inserted.isNotEmpty() }
             .blockingGet()
     }
 
     override fun syncStopTemporaryBasalWithPumpId(timestamp: Long, endPumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean {
         if (!confirmActivePump(timestamp, pumpType, pumpSerial)) return false
         return persistenceLayer.syncPumpCancelTemporaryBasalIfAny(timestamp, endPumpId, pumpType, pumpSerial)
-            .map { result -> result.updated.size > 0 }
+            .map { result -> result.updated.isNotEmpty() }
             .blockingGet()
     }
 
@@ -350,7 +350,7 @@ class PumpSyncImplementation @Inject constructor(
             )
         )
         return persistenceLayer.insertTemporaryBasalWithTempId(temporaryBasal)
-            .map { result -> result.inserted.size > 0 }
+            .map { result -> result.inserted.isNotEmpty() }
             .blockingGet()
     }
 
@@ -380,7 +380,7 @@ class PumpSyncImplementation @Inject constructor(
             )
         )
         return persistenceLayer.syncPumpTemporaryBasalWithTempId(temporaryBasal, type?.toDbType())
-            .map { result -> result.updated.size > 0 }
+            .map { result -> result.updated.isNotEmpty() }
             .blockingGet()
     }
 
@@ -391,17 +391,17 @@ class PumpSyncImplementation @Inject constructor(
             source = sources,
             note = null,
             listValues = listOf(ValueWithUnit.Timestamp(timestamp))
-        ).map { result -> result.invalidated.size > 0 }
+        ).map { result -> result.invalidated.isNotEmpty() }
             .blockingGet()
 
     override fun invalidateTemporaryBasalWithPumpId(pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean =
         persistenceLayer.syncPumpInvalidateTemporaryBasalWithPumpId(pumpId, pumpType, pumpSerial)
-            .map { result -> result.invalidated.size > 0 }
+            .map { result -> result.invalidated.isNotEmpty() }
             .blockingGet()
 
     override fun invalidateTemporaryBasalWithTempId(temporaryId: Long): Boolean =
         persistenceLayer.syncPumpInvalidateTemporaryBasalWithTempId(temporaryId)
-            .map { result -> result.invalidated.size > 0 }
+            .map { result -> result.invalidated.isNotEmpty() }
             .blockingGet()
 
     override fun syncExtendedBolusWithPumpId(timestamp: Long, amount: Double, duration: Long, isEmulatingTB: Boolean, pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean {
@@ -418,14 +418,14 @@ class PumpSyncImplementation @Inject constructor(
             )
         )
         return persistenceLayer.syncPumpExtendedBolus(extendedBolus)
-            .map { result -> result.inserted.size > 0 }
+            .map { result -> result.inserted.isNotEmpty() }
             .blockingGet()
     }
 
     override fun syncStopExtendedBolusWithPumpId(timestamp: Long, endPumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean {
         if (!confirmActivePump(timestamp, pumpType, pumpSerial)) return false
         return persistenceLayer.syncPumpStopExtendedBolusWithPumpId(timestamp, endPumpId, pumpType, pumpSerial)
-            .map { result -> result.updated.size > 0 }
+            .map { result -> result.updated.isNotEmpty() }
             .blockingGet()
     }
 
@@ -444,7 +444,7 @@ class PumpSyncImplementation @Inject constructor(
             )
         )
         return persistenceLayer.insertOrUpdateTotalDailyDose(tdd)
-            .map { result -> result.inserted.size > 0 || result.updated.size > 0 }
+            .map { result -> result.inserted.isNotEmpty() || result.updated.isNotEmpty() }
             .blockingGet()
     }
 }

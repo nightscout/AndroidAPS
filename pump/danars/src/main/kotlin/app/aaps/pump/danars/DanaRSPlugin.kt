@@ -193,13 +193,13 @@ class DanaRSPlugin @Inject constructor(
     override fun connect(reason: String) {
         aapsLogger.debug(LTag.PUMP, "RS connect from: $reason")
         if (danaRSService != null && mDeviceAddress != "" && mDeviceName != "") {
-            val success = danaRSService?.connect(reason, mDeviceAddress) ?: false
+            val success = danaRSService?.connect(reason, mDeviceAddress) == true
             if (!success) ToastUtils.errorToast(context, app.aaps.core.ui.R.string.ble_not_supported_or_not_paired)
         }
     }
 
-    override fun isConnected(): Boolean = danaRSService?.isConnected ?: false
-    override fun isConnecting(): Boolean = danaRSService?.isConnecting ?: false
+    override fun isConnected(): Boolean = danaRSService?.isConnected == true
+    override fun isConnecting(): Boolean = danaRSService?.isConnecting == true
     override fun isHandshakeInProgress(): Boolean = false
 
     override fun disconnect(reason: String) {
@@ -263,7 +263,7 @@ class DanaRSPlugin @Inject constructor(
         danaPump.pumpSuspended || danaPump.errorState != DanaPump.ErrorState.NONE
 
     override fun isBusy(): Boolean =
-        danaRSService?.isConnected ?: false || danaRSService?.isConnecting ?: false
+        danaRSService?.isConnected == true || danaRSService?.isConnecting == true
 
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
         val result = instantiator.providePumpEnactResult()
@@ -340,8 +340,7 @@ class DanaRSPlugin @Inject constructor(
         detailedBolusInfoStorage.add(detailedBolusInfo) // will be picked up on reading history
         val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == BS.Type.SMB, detailedBolusInfo.id)
         var connectionOK = false
-        if (detailedBolusInfo.insulin > 0 || carbs > 0) connectionOK = danaRSService?.bolus(detailedBolusInfo.insulin, carbs.toInt(), carbTimeStamp, t)
-            ?: false
+        if (detailedBolusInfo.insulin > 0 || carbs > 0) connectionOK = danaRSService?.bolus(detailedBolusInfo.insulin, carbs.toInt(), carbTimeStamp, t) == true
         val result = instantiator.providePumpEnactResult()
         result.success = connectionOK && abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep
         result.bolusDelivered = t.insulin
@@ -465,11 +464,10 @@ class DanaRSPlugin @Inject constructor(
         }
         temporaryBasalStorage.add(PumpSync.PumpState.TemporaryBasal(dateUtil.now(), T.mins(durationInMinutes.toLong()).msecs(), percent.toDouble(), false, tbrType, 0L, 0L))
         val connectionOK: Boolean = if (durationInMinutes == 15 || durationInMinutes == 30) {
-            danaRSService?.tempBasalShortDuration(percentAfterConstraint, durationInMinutes)
-                ?: false
+            danaRSService?.tempBasalShortDuration(percentAfterConstraint, durationInMinutes) == true
         } else {
             val durationInHours = max(durationInMinutes / 60, 1)
-            danaRSService?.tempBasal(percentAfterConstraint, durationInHours) ?: false
+            danaRSService?.tempBasal(percentAfterConstraint, durationInHours) == true
         }
         if (connectionOK && danaPump.isTempBasalInProgress && danaPump.tempBasalPercent == percentAfterConstraint) {
             result.enacted = true
@@ -491,7 +489,7 @@ class DanaRSPlugin @Inject constructor(
 
     @Synchronized private fun setHighTempBasalPercent(percent: Int): PumpEnactResult {
         val result = instantiator.providePumpEnactResult()
-        val connectionOK = danaRSService?.highTempBasal(percent) ?: false
+        val connectionOK = danaRSService?.highTempBasal(percent) == true
         if (connectionOK && danaPump.isTempBasalInProgress && danaPump.tempBasalPercent == percent) {
             result.enacted = true
             result.success = true
@@ -528,8 +526,7 @@ class DanaRSPlugin @Inject constructor(
             aapsLogger.debug(LTag.PUMP, "setExtendedBolus: Correct extended bolus already set. Current: " + danaPump.extendedBolusAmount + " Asked: " + insulinAfterConstraint)
             return result
         }
-        val connectionOK = danaRSService?.extendedBolus(insulinAfterConstraint, durationInHalfHours)
-            ?: false
+        val connectionOK = danaRSService?.extendedBolus(insulinAfterConstraint, durationInHalfHours) == true
         if (connectionOK && danaPump.isExtendedInProgress && abs(danaPump.extendedBolusAmount - insulinAfterConstraint) < pumpDescription.extendedBolusStep) {
             result.enacted = true
             result.success = true

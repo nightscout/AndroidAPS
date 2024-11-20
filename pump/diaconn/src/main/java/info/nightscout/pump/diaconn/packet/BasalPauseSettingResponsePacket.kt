@@ -38,7 +38,7 @@ class BasalPauseSettingResponsePacket(
         }
 
         diaconnG8Pump.otpNumber = getIntToInt(bufferData)
-        aapsLogger.debug(LTag.PUMPCOMM, "Result --> ${result}")
+        aapsLogger.debug(LTag.PUMPCOMM, "Result --> $result")
         aapsLogger.debug(LTag.PUMPCOMM, "otpNumber --> ${diaconnG8Pump.otpNumber}")
     }
 

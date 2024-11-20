@@ -320,7 +320,7 @@ class NSClientV3Plugin @Inject constructor(
         super.onStop()
     }
 
-    override val hasWritePermission: Boolean get() = nsAndroidClient?.lastStatus?.apiPermissions?.isFull() ?: false
+    override val hasWritePermission: Boolean get() = nsAndroidClient?.lastStatus?.apiPermissions?.isFull() == true
     override val connected: Boolean get() = nsAndroidClient?.lastStatus != null
     private fun addToLog(ev: EventNSClientNewLog) {
         synchronized(listLog) {

@@ -9,6 +9,6 @@ enum class BasalProfile(val id: Int) {
 
     companion object {
 
-        fun fromId(id: Int) = values().firstOrNull { it.id == id }
+        fun fromId(id: Int) = BasalProfile.entries.firstOrNull { it.id == id }
     }
 }

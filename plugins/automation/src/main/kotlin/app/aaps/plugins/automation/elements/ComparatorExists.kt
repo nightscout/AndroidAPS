@@ -24,7 +24,7 @@ class ComparatorExists(private val rh: ResourceHelper, var value: Compare = Comp
 
             fun labels(rh: ResourceHelper): List<String> {
                 val list: MutableList<String> = ArrayList()
-                for (c in values()) list.add(rh.gs(c.stringRes))
+                for (c in Compare.entries) list.add(rh.gs(c.stringRes))
                 return list
             }
         }
@@ -42,7 +42,7 @@ class ComparatorExists(private val rh: ResourceHelper, var value: Compare = Comp
 
                 onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                        value = Compare.values()[position]
+                        value = Compare.entries.toTypedArray()[position]
                     }
 
                     override fun onNothingSelected(parent: AdapterView<*>?) {}

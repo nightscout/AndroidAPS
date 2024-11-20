@@ -31,7 +31,6 @@ import info.nightscout.pump.medtrum.comm.ManufacturerData
 import info.nightscout.pump.medtrum.comm.ReadDataPacket
 import info.nightscout.pump.medtrum.comm.WriteCommandPackets
 import info.nightscout.pump.medtrum.extension.toInt
-import java.util.Arrays
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -440,7 +439,7 @@ class BLEComm @Inject internal constructor(
                                 } else {
                                     characteristic.value = data
                                     characteristic.writeType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
-                                    aapsLogger.debug(LTag.PUMPBTCOMM, "writeCharacteristic: ${Arrays.toString(data)}")
+                                    aapsLogger.debug(LTag.PUMPBTCOMM, "writeCharacteristic: ${data.contentToString()}")
                                     val success = mBluetoothGatt?.writeCharacteristic(characteristic)
                                     if (success != true) {
                                         mCallback?.onSendMessageError("Failed to write characteristic", true)

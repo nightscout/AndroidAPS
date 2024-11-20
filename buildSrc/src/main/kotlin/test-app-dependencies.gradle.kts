@@ -1,5 +1,3 @@
-import gradle.kotlin.dsl.accessors._cb41af676f88d94563fb18deaa5153de.androidTestImplementation
-import gradle.kotlin.dsl.accessors._cb41af676f88d94563fb18deaa5153de.testImplementation
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 

@@ -17,6 +17,6 @@ interface ErosHistoryRecordDao {
     fun byId(id: Long): Maybe<ErosHistoryRecordEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(ErosHistoryRecordEntity: ErosHistoryRecordEntity): Long
+    fun insert(erosHistoryRecordEntity: ErosHistoryRecordEntity): Long
 
 }

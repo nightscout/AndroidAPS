@@ -145,11 +145,10 @@ class DetermineBasalAutoISF @Inject constructor(
         }
     }
 
-
     fun determine_basal(
         glucose_status: GlucoseStatus, currenttemp: CurrentTemp, iob_data_array: Array<IobTotal>, profile: OapsProfileAutoIsf, autosens_data: AutosensResult, meal_data: MealData,
         microBolusAllowed: Boolean, currentTime: Long, flatBGsDetected: Boolean, autoIsfMode: Boolean, loop_wanted_smb: String, profile_percentage: Int, smb_ratio: Double,
-        smb_max_range_extension: Double, iob_threshold_percent: Int,             auto_isf_consoleError: MutableList<String>, auto_isf_consoleLog: MutableList<String>
+        smb_max_range_extension: Double, iob_threshold_percent: Int, auto_isf_consoleError: MutableList<String>, auto_isf_consoleLog: MutableList<String>
     ): RT {
         consoleError.clear()
         consoleLog.clear()
@@ -231,7 +230,7 @@ class DetermineBasalAutoISF @Inject constructor(
             // e.g.: Sensitivity ratio set to 0.8 based on temp target of 120; Adjusting basal from 1.65 to 1.35; ISF from 58.9 to 73.6
             //sensitivityRatio = 2/(2+(target_bg-normalTarget)/40);
             val c = (halfBasalTarget - normalTarget).toDouble()
-            if (c * (c + target_bg-normalTarget) <= 0.0) {
+            if (c * (c + target_bg - normalTarget) <= 0.0) {
                 sensitivityRatio = profile.autosens_max
             } else {
                 sensitivityRatio = c / (c + target_bg - normalTarget)
@@ -318,15 +317,16 @@ class DetermineBasalAutoISF @Inject constructor(
         val iobTHvirtual = iob_threshold_percent * iobTHtolerance / 10000.0 * profile.max_iob * iobTH_reduction_ratio
         var enableSMB = false
         if (microBolusAllowed && loop_wanted_smb != "AAPS") {
-            if ( loop_wanted_smb=="enforced" || loop_wanted_smb=="fullLoop" ) {              // otherwise FL switched SMB off
+            if (loop_wanted_smb == "enforced" || loop_wanted_smb == "fullLoop") {              // otherwise FL switched SMB off
                 enableSMB = true
             }
-        } else { enableSMB = enable_smb(
-            profile,
-            microBolusAllowed,
-            meal_data,
-            target_bg
-        )
+        } else {
+            enableSMB = enable_smb(
+                profile,
+                microBolusAllowed,
+                meal_data,
+                target_bg
+            )
         }
 
         //calculate BG impact: the amount BG "should" be rising or falling based on insulin activity alone
@@ -341,7 +341,6 @@ class DetermineBasalAutoISF @Inject constructor(
                 deviation = round((30 / 5) * (glucose_status.longAvgDelta - bgi))
             }
         }
-
 
         // calculate the naive (bolus calculator math) eventual BG based on net IOB and sensitivity
         val naive_eventualBG =
@@ -522,7 +521,7 @@ class DetermineBasalAutoISF @Inject constructor(
         }
         val acid = max(0.0, meal_data.mealCOB * csf / aci)
         // duration (hours) = duration (5m) * 5 / 60 * 2 (to account for linear decay)
-        consoleError.add("Carb Impact: ${ci} mg/dL per 5m; CI Duration: ${round(cid * 5 / 60 * 2, 1)} hours; remaining CI (~2h peak): ${round(remainingCIpeak, 1)} mg/dL per 5m")
+        consoleError.add(element = "Carb Impact: ${ci} mg/dL per 5m; CI Duration: ${round(cid * 5 / 60 * 2, 1)} hours; remaining CI (~2h peak): ${round(remainingCIpeak, 1)} mg/dL per 5m")
         //console.error("Accel. Carb Impact:",aci,"mg/dL per 5m; ACI Duration:",round(acid*5/60*2,1),"hours");
         var minIOBPredBG = 999.0
         var minCOBPredBG = 999.0
@@ -838,12 +837,12 @@ class DetermineBasalAutoISF @Inject constructor(
             enableSMB = false
         }
         var maxDeltaPercentage = 0.2           // the AAPS default
-        if ( loop_wanted_smb=="fullLoop" ) {   // only if SMB specifically requested, e.g. for full loop
+        if (loop_wanted_smb == "fullLoop") {   // only if SMB specifically requested, e.g. for full loop
             maxDeltaPercentage = 0.3
         }
-        if ( maxDelta > maxDeltaPercentage * bg ) {
-            consoleError.add("maxDelta ${convert_bg(maxDelta)} > ${100*maxDeltaPercentage}% of BG ${convert_bg(bg)} - disabling SMB")
-            rT.reason.append("maxDelta " + convert_bg(maxDelta) + " > " + 100*maxDeltaPercentage + "% of BG " + convert_bg(bg) + ": SMB disabled; ")
+        if (maxDelta > maxDeltaPercentage * bg) {
+            consoleError.add("maxDelta ${convert_bg(maxDelta)} > ${100 * maxDeltaPercentage}% of BG ${convert_bg(bg)} - disabling SMB")
+            rT.reason.append("maxDelta " + convert_bg(maxDelta) + " > " + 100 * maxDeltaPercentage + "% of BG " + convert_bg(bg) + ": SMB disabled; ")
             enableSMB = false
         }
 
@@ -1102,18 +1101,18 @@ class DetermineBasalAutoISF @Inject constructor(
                 // allow SMBIntervals between 1 and 10 minutes
                 val SMBInterval = min(10, max(1, profile.SMBInterval)) * 60.0   // in seconds
                 //console.error(naive_eventualBG, insulinReq, worstCaseInsulinReq, durationReq);
-                consoleError.add("naive_eventualBG $naive_eventualBG,${durationReq}m ${smbLowTempReq}U/h temp needed; last bolus ${round(lastBolusAge/60.0,1)}m ago; maxBolus: $maxBolus")
+                consoleError.add("naive_eventualBG $naive_eventualBG,${durationReq}m ${smbLowTempReq}U/h temp needed; last bolus ${round(lastBolusAge / 60.0, 1)}m ago; maxBolus: $maxBolus")
                 if (lastBolusAge > SMBInterval - 6.0) {   // 6s tolerance
                     if (microBolus > 0) {
                         rT.units = microBolus
                         rT.reason.append("Microbolusing ${microBolus}U. ")
                     }
                 } else {
-                    val nextBolusMins = (SMBInterval-lastBolusAge) / 60.0
+                    val nextBolusMins = (SMBInterval - lastBolusAge) / 60.0
                     val nextBolusSeconds = (SMBInterval - lastBolusAge) % 60
-                    val waitingSeconds = round(nextBolusSeconds,0) % 60
-                    val waitingMins = round(nextBolusMins-waitingSeconds/60.0, 0)
-                    rT.reason.append( "Waiting ${waitingMins.withoutZeros()}m ${waitingSeconds.withoutZeros()}s to microbolus again.")
+                    val waitingSeconds = round(nextBolusSeconds, 0) % 60
+                    val waitingMins = round(nextBolusMins - waitingSeconds / 60.0, 0)
+                    rT.reason.append("Waiting ${waitingMins.withoutZeros()}m ${waitingSeconds.withoutZeros()}s to microbolus again.")
                 }
                 //rT.reason += ". ";
 

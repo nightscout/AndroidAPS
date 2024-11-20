@@ -4,7 +4,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.ResponseType.ActivationResponseType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.byValue
 import java.nio.ByteBuffer
-import java.util.*
 import kotlin.experimental.and
 
 class VersionResponse(
@@ -79,7 +78,7 @@ class VersionResponse(
             ", uniqueIdReceivedInCommand=" + uniqueIdReceivedInCommand +
             ", activationResponseType=" + activationResponseType +
             ", responseType=" + responseType +
-            ", encoded=" + Arrays.toString(encoded) +
+            ", encoded=" + encoded.contentToString() +
             '}'
     }
 }

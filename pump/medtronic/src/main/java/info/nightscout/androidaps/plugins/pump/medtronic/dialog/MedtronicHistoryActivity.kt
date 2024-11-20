@@ -124,13 +124,9 @@ class MedtronicHistoryActivity : DaggerActivity() {
 
     class TypeList internal constructor(var entryGroup: PumpHistoryEntryGroup) {
 
-        var name: String
+        var name: String = entryGroup.translated!!
         override fun toString(): String {
             return name
-        }
-
-        init {
-            name = entryGroup.translated!!
         }
     }
 
@@ -165,16 +161,10 @@ class MedtronicHistoryActivity : DaggerActivity() {
 
         class HistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-            var timeView: TextView
-            var typeView: TextView
-            var valueView: TextView
-
-            init {
-                // cv = (CardView)itemView.findViewById(R.id.rileylink_history_item);
-                timeView = itemView.findViewById(R.id.medtronic_history_time)
-                typeView = itemView.findViewById(R.id.medtronic_history_source)
-                valueView = itemView.findViewById(R.id.medtronic_history_description)
-            }
+            // cv = (CardView)itemView.findViewById(R.id.rileylink_history_item);
+            var timeView: TextView = itemView.findViewById(R.id.medtronic_history_time)
+            var typeView: TextView = itemView.findViewById(R.id.medtronic_history_source)
+            var valueView: TextView = itemView.findViewById(R.id.medtronic_history_description)
         }
 
     }

@@ -158,10 +158,10 @@ class EopatchViewModel @Inject constructor(
         get() = patchConfig.lifecycleEvent.isSubStepRunning
 
     private val initPatchStepIsSafeDeactivation: Boolean
-        get() = mInitPatchStep?.isSafeDeactivation ?: false
+        get() = mInitPatchStep?.isSafeDeactivation == true
 
     private val initPatchStepIsCheckConnection: Boolean
-        get() = mInitPatchStep?.isCheckConnection ?: false
+        get() = mInitPatchStep?.isCheckConnection == true
 
     private var mCommCheckDisposable: Disposable? = null
 

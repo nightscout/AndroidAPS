@@ -259,7 +259,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
     @Synchronized fun withdrawConnectionRequest(lock: Any) {
         if (!connectionRequests.contains(lock)) return
         connectionRequests.remove(lock)
-        if (connectionRequests.size == 0) {
+        if (connectionRequests.isEmpty()) {
             if (state === InsightState.RECOVERING) {
                 recoveryTimer?.interrupt()
                 recoveryTimer = null
@@ -333,13 +333,13 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
                     }
                 }
             }
-            setState(if (connectionRequests.size != 0) InsightState.RECOVERING else InsightState.DISCONNECTED)
+            setState(if (connectionRequests.isNotEmpty()) InsightState.RECOVERING else InsightState.DISCONNECTED)
             if (e is ConnectionFailedException) {
                 cleanup(e.durationOfConnectionAttempt <= 1000)
             } else cleanup(true)
             messageQueue.completeActiveRequest(e)
             messageQueue.completePendingRequests(e)
-            if (connectionRequests.size != 0) {
+            if (connectionRequests.isNotEmpty()) {
                 if (e !is ConnectionFailedException) {
                     connect()
                 } else {
@@ -375,7 +375,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
 
     @Synchronized fun pair(macAddress: String?) {
         check(!pairingDataStorage.paired) { "Pump must be unbonded first." }
-        check(connectionRequests.size != 0) { "A connection lock must be hold for pairing" }
+        check(connectionRequests.isNotEmpty()) { "A connection lock must be hold for pairing" }
         aapsLogger.info(LTag.PUMP, "Pairing initiated")
         cleanup(true)
         pairingDataStorage.macAddress = macAddress

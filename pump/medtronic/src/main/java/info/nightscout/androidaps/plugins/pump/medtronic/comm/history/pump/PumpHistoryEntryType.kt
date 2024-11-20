@@ -160,7 +160,7 @@ enum class PumpHistoryEntryType(
             opCodeMap[opCode] ?: UnknownBasePacket
 
         init {
-            for (type in values()) {
+            for (type in PumpHistoryEntryType.entries) {
                 opCodeMap[type.code] = type
             }
             setSpecialRulesForEntryTypes()

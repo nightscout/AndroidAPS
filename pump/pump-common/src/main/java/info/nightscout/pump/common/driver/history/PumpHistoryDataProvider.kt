@@ -43,7 +43,7 @@ interface PumpHistoryDataProvider {
 
 }
 
-enum class PumpHistoryPeriod constructor(
+enum class PumpHistoryPeriod(
     @StringRes var stringId: Int,
     var isHours: Boolean = false
 ) {

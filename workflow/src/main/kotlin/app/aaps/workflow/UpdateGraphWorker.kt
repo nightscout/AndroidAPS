@@ -26,7 +26,7 @@ class UpdateGraphWorker(
             activePlugin.activeOverview.overviewBus.send(EventUpdateOverviewGraph("UpdateGraphWorker"))
         else
             rxBus.send(EventUpdateOverviewGraph("UpdateGraphWorker"))
-        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.values().find { it.pass == pass } ?: throw InvalidParameterSpecException(), 100, null))
+        rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.entries.find { it.pass == pass } ?: throw InvalidParameterSpecException(), 100, null))
         return Result.success()
     }
 }

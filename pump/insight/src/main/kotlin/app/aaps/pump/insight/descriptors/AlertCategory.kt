@@ -8,6 +8,6 @@ enum class AlertCategory(val id: Int) {
 
     companion object {
 
-        fun fromId(id: Int) = values().firstOrNull { it.id == id }
+        fun fromId(id: Int) = AlertCategory.entries.firstOrNull { it.id == id }
     }
 }

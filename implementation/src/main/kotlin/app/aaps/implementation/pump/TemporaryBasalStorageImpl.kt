@@ -44,7 +44,7 @@ class TemporaryBasalStorageImpl @Inject constructor(
             }
         }
         // If not found, use last record if amount is the same
-        if (store.size > 0) {
+        if (store.isNotEmpty()) {
             val d = store[store.size - 1]
             if (abs(d.rate - rate) < 0.01) {
                 aapsLogger.debug(LTag.PUMP, "Using LAST & removing temporary basal info: $d")

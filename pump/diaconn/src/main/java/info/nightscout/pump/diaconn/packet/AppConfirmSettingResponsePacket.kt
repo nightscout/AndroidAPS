@@ -29,7 +29,7 @@ class AppConfirmSettingResponsePacket(
         } else failed = false
         val bufferData = prefixDecode(data)
         result = getByteToInt(bufferData)
-        aapsLogger.debug(LTag.PUMPCOMM, "Result --> ${result}")
+        aapsLogger.debug(LTag.PUMPCOMM, "Result --> $result")
 
         if (!isSuccSettingResponseResult(result)) {
             diaconnG8Pump.resultErrorCode = result

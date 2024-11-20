@@ -71,7 +71,7 @@ class AlarmRegistry @Inject constructor() : IAlarmRegistry {
                                     sources.add(
                                         Maybe.just(alarmCode)
                                             .observeOn(aapsSchedulers.main)
-                                            .doOnSuccess { rxBus.send(EventDismissNotification(Notification.EOELOW_PATCH_ALERTS + (alarmCode.aeCode + 10000))) }
+                                            .doOnSuccess { rxBus.send(EventDismissNotification(Notification.EOFLOW_PATCH_ALERTS + (alarmCode.aeCode + 10000))) }
                                     )
                                 }
                             }

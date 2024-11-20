@@ -14,7 +14,7 @@ abstract class BRProfileBlock : ParameterBlock() {
                 basalProfileBlock.duration = byteBuf.readUInt16LE()
                 it.add(basalProfileBlock)
             }
-            for (i in 0..23) it.get(i).basalAmount = byteBuf.readUInt16Decimal()
+            for (i in 0..23) it[i].basalAmount = byteBuf.readUInt16Decimal()
             val iterator = it.iterator()
             while (iterator.hasNext()) if (iterator.next().duration == 0) iterator.remove()
         }

@@ -61,7 +61,7 @@ open class WearUtil @Inject constructor(
     }
 
     open fun releaseWakeLock(wl: PowerManager.WakeLock?) {
-        if (debugWakelocks) aapsLogger.debug(LTag.WEAR, "releaseWakeLock: " + wl.toString())
+        if (debugWakelocks) aapsLogger.debug(LTag.WEAR, "releaseWakeLock: $wl")
         if (wl?.isHeld == true) wl.release()
     }
 }

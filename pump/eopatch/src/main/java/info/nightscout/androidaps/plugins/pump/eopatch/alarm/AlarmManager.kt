@@ -162,7 +162,7 @@ class AlarmManager @Inject constructor() : IAlarmManager {
             alarmMsg = resourceHelper.gs(alarmCode.resId, expireTimeString)
         }
         uiInteraction.addNotificationWithAction(
-            id = Notification.EOELOW_PATCH_ALERTS + (alarmCode.aeCode + 10000),
+            id = Notification.EOFLOW_PATCH_ALERTS + (alarmCode.aeCode + 10000),
             text = alarmMsg,
             level = Notification.URGENT,
             buttonText = (alarmCode == B001).takeOne(R.string.string_resume, R.string.confirm),

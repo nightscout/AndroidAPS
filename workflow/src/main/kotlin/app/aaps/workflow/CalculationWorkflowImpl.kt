@@ -47,7 +47,7 @@ class CalculationWorkflowImpl @Inject constructor(
         aapsLogger.debug(LTag.WORKER, "Stopping calculation thread: $from")
         WorkManager.getInstance(context).cancelUniqueWork(job)
         val workStatus = WorkManager.getInstance(context).getWorkInfosForUniqueWork(job).get()
-        while (workStatus.size >= 1 && workStatus[0].state == WorkInfo.State.RUNNING)
+        while (workStatus.isNotEmpty() && workStatus[0].state == WorkInfo.State.RUNNING)
             SystemClock.sleep(100)
         aapsLogger.debug(LTag.WORKER, "Calculation thread stopped: $from")
     }

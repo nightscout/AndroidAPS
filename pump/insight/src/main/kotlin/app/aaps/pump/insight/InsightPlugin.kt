@@ -181,7 +181,7 @@ class InsightPlugin @Inject constructor(
     }
 
     override fun isInitialized(): Boolean {
-        return connectionService?.let { alertService != null && it.isPaired } ?: false
+        return connectionService?.let { alertService != null && it.isPaired } == true
     }
 
     override fun isSuspended(): Boolean {
@@ -1026,14 +1026,14 @@ class InsightPlugin @Inject constructor(
                         service.requestMessage(startMessage).await()
                         while (true) {
                             val newEvents = service.requestMessage(app.aaps.pump.insight.app_layer.history.ReadHistoryEventsMessage()).await().historyEvents
-                            if (newEvents.size == 0) break
+                            if (newEvents.isEmpty()) break
                             historyEvents.addAll(newEvents)
                         }
                     }
                     historyEvents.sort()
                     historyEvents.reverse()
                     if (historyOffset != null) processHistoryEvents(serial, historyEvents)
-                    if (historyEvents.size > 0) {
+                    if (historyEvents.isNotEmpty()) {
                         insightDbHelper.createOrUpdate(
                             InsightHistoryOffset(
                                 serial,

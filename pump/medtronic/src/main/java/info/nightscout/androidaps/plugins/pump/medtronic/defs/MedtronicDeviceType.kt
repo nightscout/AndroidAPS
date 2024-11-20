@@ -53,7 +53,7 @@ enum class MedtronicDeviceType {
             mapByDescription[desc] ?: Unknown_Device
 
         init {
-            for (minimedDeviceType in values()) {
+            for (minimedDeviceType in MedtronicDeviceType.entries) {
                 if (!minimedDeviceType.isFamily && minimedDeviceType.pumpModel != null) {
                     mapByDescription[minimedDeviceType.pumpModel!!] = minimedDeviceType
                 }

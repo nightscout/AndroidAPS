@@ -11,15 +11,12 @@ class LogSuspendReleaseV2 private constructor(
     val data: String,
     val dttm: String,
     typeAndKind: Byte,
-    batteryRemain: Byte,
-    patternType: Byte
+    val batteryRemain: Byte,
+    private val patternType: Byte // 1=기본, 2=생활1, 3=생활2, 4=생활3, 5=닥터1, 6=닥터2
 ) {
 
-    val type: Byte
-    val kind: Byte
-    val batteryRemain: Byte
-    private val patternType // 1=기본, 2=생활1, 3=생활2, 4=생활3, 5=닥터1, 6=닥터2
-        : Byte
+    val type: Byte = PumpLogUtil.getType(typeAndKind)
+    val kind: Byte = PumpLogUtil.getKind(typeAndKind)
 
     override fun toString(): String {
         val sb = StringBuilder("LOG_SUSPEND_RELEASE_V2{")
@@ -61,12 +58,5 @@ class LogSuspendReleaseV2 private constructor(
                 PumpLogUtil.getByte(buffer)
             )
         }
-    }
-
-    init {
-        type = PumpLogUtil.getType(typeAndKind)
-        kind = PumpLogUtil.getKind(typeAndKind)
-        this.batteryRemain = batteryRemain
-        this.patternType = patternType
     }
 }

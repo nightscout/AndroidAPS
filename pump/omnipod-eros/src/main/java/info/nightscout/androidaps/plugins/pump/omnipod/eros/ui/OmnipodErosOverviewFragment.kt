@@ -103,9 +103,6 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
     private var _podInfoBinding: OmnipodCommonOverviewPodInfoBinding? = null
     private var _buttonBinding: OmnipodCommonOverviewButtonsBinding? = null
 
-    // These properties are only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
     private val rileyLinkStatusBinding get() = _rileyLinkStatusBinding!!
     private val podInfoBinding get() = _podInfoBinding!!
     private val buttonBinding get() = _buttonBinding!!
@@ -378,7 +375,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
             }
         }
 
-        if (errors.size == 0) {
+        if (errors.isEmpty()) {
             podInfoBinding.errors.text = PLACEHOLDER
             podInfoBinding.errors.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor))
         } else {
@@ -496,11 +493,8 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
                 val duration = podStateManager.tempBasalDuration
 
                 val minutesRunning = Duration(startTime, now).standardMinutes
-
-                var text: String
                 val textColor: Int
-                text =
-                    rh.gs(
+                var text: String = rh.gs(
                         info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_overview_temp_basal_value,
                         amount,
                         dateUtil.timeString(startTime.millis),

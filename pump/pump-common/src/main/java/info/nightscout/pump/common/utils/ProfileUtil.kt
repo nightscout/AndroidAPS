@@ -27,17 +27,16 @@ object ProfileUtil {
         for (i in entriesCopy.indices) {
             val current = entriesCopy[i]
             val currentTime = current.timeAsSeconds / (60 * 60)
-
-            var lastHour: Int
-            lastHour = if (i + 1 == entriesCopy.size) {
-                24
-            } else {
-                val basalProfileEntry = entriesCopy[i + 1]
-                basalProfileEntry.timeAsSeconds / (60 * 60)
-            }
+            var lastHour: Int =
+                if (i + 1 == entriesCopy.size) {
+                    24
+                } else {
+                    val basalProfileEntry = entriesCopy[i + 1]
+                    basalProfileEntry.timeAsSeconds / (60 * 60)
+                }
 
             // System.out.println("Current time: " + currentTime + " Next Time: " + lastHour);
-            for (j in currentTime until lastHour) {
+            (currentTime until lastHour).forEach { j ->
                 stringBuilder.append(String.format(Locale.ENGLISH, "%.3f", pumpType.determineCorrectBasalSize(current.value)))
                 stringBuilder.append(" ")
             }

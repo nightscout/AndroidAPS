@@ -21,9 +21,9 @@ class Alert {
         if (alertId != alert.alertId) return false
         if (tBRAmount != alert.tBRAmount) return false
         if (tBRDuration != alert.tBRDuration) return false
-        if (java.lang.Double.compare(alert.programmedBolusAmount, programmedBolusAmount) != 0) return false
-        if (java.lang.Double.compare(alert.deliveredBolusAmount, deliveredBolusAmount) != 0) return false
-        if (java.lang.Double.compare(alert.cartridgeAmount, cartridgeAmount) != 0) return false
+        if (alert.programmedBolusAmount.compareTo(programmedBolusAmount) != 0) return false
+        if (alert.deliveredBolusAmount.compareTo(deliveredBolusAmount) != 0) return false
+        if (alert.cartridgeAmount.compareTo(cartridgeAmount) != 0) return false
         if (alertCategory !== alert.alertCategory) return false
         return alertType === alert.alertType && alertStatus === alert.alertStatus
     }

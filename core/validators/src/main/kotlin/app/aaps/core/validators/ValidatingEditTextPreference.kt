@@ -30,7 +30,7 @@ class ValidatingEditTextPreference(ctx: Context, attrs: AttributeSet?) : EditTex
 
     init {
         setOnBindEditTextListener { editText -> validator = DefaultEditTextValidator(editText, validatorParameters, context) }
-        setOnPreferenceChangeListener { _, _ -> validator?.testValidity(false) ?: true }
+        setOnPreferenceChangeListener { _, _ -> validator?.testValidity(false) != false }
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
         if (preferences.simpleMode && !simpleMode) isVisible = false
         if (preferences.apsMode && !apsMode) isVisible = false

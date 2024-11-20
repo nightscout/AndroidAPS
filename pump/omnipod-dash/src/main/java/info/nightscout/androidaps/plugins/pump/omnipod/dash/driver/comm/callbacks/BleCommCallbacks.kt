@@ -204,7 +204,7 @@ class BleCommCallbacks(
     }
 
     fun flushConfirmationQueue() {
-        if (writeQueue.size > 0) {
+        if (writeQueue.isNotEmpty()) {
             aapsLogger.warn(
                 LTag.PUMPBTCOMM,
                 "Write queue should be empty, found: ${writeQueue.size}"

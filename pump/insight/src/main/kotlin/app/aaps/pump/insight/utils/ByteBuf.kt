@@ -7,7 +7,7 @@ import kotlin.experimental.and
 
 class ByteBuf(length: Int) {
 
-    private val _bytes: ByteArray
+    private val _bytes: ByteArray = ByteArray(length)
     var filledSize = 0
         private set
     val bytes: ByteArray
@@ -287,10 +287,6 @@ class ByteBuf(length: Int) {
         fun from(bytes: ByteArray): ByteBuf {
             return from(bytes, bytes.size)
         }
-    }
-
-    init {
-        _bytes = ByteArray(length)
     }
 }
 

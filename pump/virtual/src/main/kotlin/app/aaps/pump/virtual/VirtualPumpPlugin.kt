@@ -166,7 +166,7 @@ open class VirtualPumpPlugin @Inject constructor(
         return instantiator.providePumpEnactResult().success(true).enacted(true)
     }
 
-    override fun isThisProfileSet(profile: Profile): Boolean = pumpSync.expectedPumpState().profile?.isEqual(profile) ?: false
+    override fun isThisProfileSet(profile: Profile): Boolean = pumpSync.expectedPumpState().profile?.isEqual(profile) == true
 
     override fun lastDataTime(): Long = lastDataTime
 
