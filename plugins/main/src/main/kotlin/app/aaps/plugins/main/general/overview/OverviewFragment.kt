@@ -601,7 +601,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             // Automation buttons
             binding.buttonsLayout.userButtonsLayout.removeAllViews()
             val events = automation.userEvents()
-            if (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null)
+            if (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null && !config.showUserActionsOnWatchOnly())
                 for (event in events)
                     if (event.isEnabled && event.canRun()) {
                         context?.let { context ->
