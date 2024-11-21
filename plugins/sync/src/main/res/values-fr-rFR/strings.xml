@@ -146,6 +146,8 @@
     <string name="wear_settings">Paramètres Wear</string>
     <string name="wearcontrol_title">Commandes depuis la montre</string>
     <string name="wearcontrol_summary">Définir les Cibles Temp et entrer les Traitements depuis la montre.</string>
+    <string name="wear_broadcast_data">Diffuser les données</string>
+    <string name="wear_broadcast_data_summary">Diffuser les données à AAPS ou AAPSClient</string>
     <string name="wear_wizard_settings_summary">Calculs inclus dans le résultat de l’Assistant :</string>
     <string name="wear_general_settings">Paramètres généraux</string>
     <string name="wear_notifysmb_title">Notifier en cas de SMB</string>
