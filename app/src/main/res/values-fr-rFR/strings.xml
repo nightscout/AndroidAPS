@@ -50,4 +50,6 @@
     <string name="sort_label">Trier</string>
     <string name="search">Chercher</string>
     <string name="simple_mode">Mode simple</string>
+    <string name="select">Choisir</string>
+    <string name="set">Appliquer</string>
 </resources>
