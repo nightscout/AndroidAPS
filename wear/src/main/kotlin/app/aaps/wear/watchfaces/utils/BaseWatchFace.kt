@@ -126,7 +126,6 @@ abstract class BaseWatchFace : WatchFace() {
             .observeOn(aapsSchedulers.main)
             .subscribe { event: EventWearPreferenceChange ->
                 simpleUi.updatePreferences()
-                if (event.changedKey != null && event.changedKey == "delta_granularity") rxBus.send(EventWearToMobile(ActionResendData("BaseWatchFace:onSharedPreferenceChanged")))
                 if (layoutSet) setDataFields()
                 updatePreferences()
                 invalidate()

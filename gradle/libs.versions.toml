@@ -134,6 +134,7 @@ org-json = { group = "org.json", name = "json", version = "20240303" }
 org-skyscreamer-jsonassert = { group = "org.skyscreamer", name = "jsonassert", version = "1.5.3" }
 com-scottyab-rootbeer-lib = { group = "com.scottyab", name = "rootbeer-lib", version = "0.1.1" }
 com-eatthepath-java-otp = { group = "com.eatthepath", name = "java-otp", version = "0.4.0" }
+com-github-bumptech-glide = { group = "com.github.bumptech.glide", name = "glide", version = "4.16.0" }
 com-github-kenglxn-qrgen-android = { group = "com.github.kenglxn.QRGen", name = "android", version = "3.0.1" }
 io-socket-client = { group = "io.socket", name = "socket.io-client", version = "2.1.1" }
 io-kotlintest-runner-junit5 = { group = "io.kotlintest", name = "kotlintest-runner-junit5", version = "3.4.2" }

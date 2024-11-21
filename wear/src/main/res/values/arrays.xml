@@ -17,20 +17,6 @@
         <item>5</item>
     </string-array>
 
-    <string-array name="delta_granularity">
-        <item>@string/pref_low</item>
-        <item>@string/pref_medium</item>
-        <item>@string/pref_high</item>
-        <item>@string/pref_auto</item>
-    </string-array>
-
-    <string-array name="delta_granularity_values">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-    </string-array>
-
     <string-array name="input_design">
         <item>@string/pref_default</item>
         <item>@string/pref_quick_righty</item>

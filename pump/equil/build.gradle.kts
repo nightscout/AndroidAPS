@@ -33,6 +33,7 @@ dependencies {
 
     api(libs.androidx.fragment)
     api(libs.androidx.navigation.fragment)
+    api(libs.com.github.bumptech.glide)
 
     api(libs.androidx.room)
     api(libs.androidx.room.runtime)
@@ -40,6 +41,4 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     ksp(libs.com.google.dagger.compiler)
     ksp(libs.com.google.dagger.android.processor)
-
-    implementation("com.github.bumptech.glide:glide:4.16.0")
 }
