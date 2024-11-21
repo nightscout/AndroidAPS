@@ -47,6 +47,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="readstatus">Statut de lecture</string>
     <string name="data_choices">Choix de données</string>
     <string name="fabric_upload">Téléchargement Fabric</string>
+    <string name="unattended_settings_export_summary">L\'activation permettra de stocker votre mot de passe en toute sécurité sur votre téléphone</string>
     <string name="allow_automated_crash_reporting">Autoriser l\'envoi automatique des rapports d\'erreur et des données d\'utilisation aux développeurs via le service fabric.io</string>
     <string name="summary_email_for_crash_report">Cette identification sera jointe aux rapports de plantage afin que nous puissions vous contacter en cas d\'urgence. Elle est facultative.</string>
     <string name="identification">Identification (email, FB ou pseudo dans Discord, etc)</string>
@@ -93,6 +94,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="check_preferences_import_btn">Import</string>
     <string name="check_preferences_import_anyway_btn">Importer quand même (DANGEREUX !)</string>
     <string name="import_setting">Importer les paramètres</string>
+    <string name="aaps_directory">Répertoire AAPS</string>
+    <string name="select_aaps_directory">Sélectionnez le répertoire AAPS pour stocker les exports, les configurations, etc.</string>
     <string name="check_preferences_before_import">Veuillez vérifier les préférences avant d\'importer:</string>
     <string name="check_preferences_cannot_import">Les préférences ne peuvent pas être importées !</string>
     <string name="check_preferences_dangerous_import">Les préférences ne doivent pas être importées !</string>
