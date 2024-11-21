@@ -195,6 +195,7 @@
     <string name="openapsama_higher_ISFrange_weight_summary">Il s\'agit du poids appliqué quand la glycémie est au-dessus de la cible et qui renforce la SI pour potentiellement augmenter la quantité d\'insuline injecté.\n\nLa valeur par défaut 0.0 désactive cet effet.</string>
     <string name="openapsama_pp_ISF_weight_summary">Il s\'agit du poids appliqué pendant l\'augmentation de la glycémie et qui renforce la SI pour potentiellement augmenter la quantité d\'insuline injecté.\n\nLa valeur par défaut 0.0 désactive cet effet.</string>
     <string name="openapsama_bgAccel_ISF_weight_summary">C\'est le poids appliqué pendant l\'accélèration de la glycémie et qui renforce la SI pour potentiellement augmenter la quantité d\'insuline injecté.\n\nLa valeur par défaut 0.0 ferme désactive cet effet.</string>
+    <string name="openapsama_bgBrake_ISF_weight_summary">C\'est le poids appliqué lors de la décélération de la glycémie et qui affaiblit la SI en réduisant la quantité d\'insuline injecté.\n\nLa valeur par défaut 0.0 désactive cet effet.</string>
     <string name="openapsama_autoISF_max">Ratio max autoISF\n(autoISF_max)</string>
     <string name="openapsama_autoISF_min">Ratio min autoISF\n(autoISF_min)</string>
     <string name="openapsama_smb_max_range_extension_summary">Valeur par défaut : 1 Ceci est une autre clé de sécurité OpenAPS. Elle spécifie par quel facteur vous pouvez dépasser les 120 minutes régulières maxSMB/maxUAM. Augmentez lentement et avec prudence cette valeur expérimentale.</string>
