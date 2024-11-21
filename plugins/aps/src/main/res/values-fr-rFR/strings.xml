@@ -199,4 +199,5 @@
     <string name="openapsama_autoISF_max">Ratio max autoISF\n(autoISF_max)</string>
     <string name="openapsama_autoISF_min">Ratio min autoISF\n(autoISF_min)</string>
     <string name="openapsama_smb_max_range_extension_summary">Valeur par défaut : 1 Ceci est une autre clé de sécurité OpenAPS. Elle spécifie par quel facteur vous pouvez dépasser les 120 minutes régulières maxSMB/maxUAM. Augmentez lentement et avec prudence cette valeur expérimentale.</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Pourcentage de maxIA au-dessus de laquelle les SMB sont désactivés.\nValeur par défaut : 100%\nAvec 100% cette fonctionnalité est désactivée.</string>
 </resources>
