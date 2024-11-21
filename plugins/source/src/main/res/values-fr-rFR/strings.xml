@@ -38,5 +38,9 @@
     <string name="direction">direction</string>
     <string name="bg_generation_interval_minutes">Interval de temps entre les glycémies (min)</string>
     <!-- Patched Ottai App -->
+    <string name="ottai_app">Ottai</string>
+    <string name="description_source_patched_ottai_app">Recevoir les glycémies de l’application Ottai.</string>
     <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai Tag</string>
+    <string name="description_source_patched_syai_tag_app">Recevoir les glycémies depuis l\'application Syai Tag.</string>
 </resources>
