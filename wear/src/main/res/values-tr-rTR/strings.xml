@@ -159,6 +159,7 @@
     <string name="pref_vibrate_hourly">Saatlik titreşim</string>
     <string name="pref_show_weeknumber">Hafta numarasını göster</string>
     <string name="pref_include_external">Şablona harici görünümleri dahil et</string>
+    <string name="pref_switch_external">Saat arayüzünde harici verileri değiştir</string>
     <string name="custom_pref_show_seconds">Saniyeyi göster</string>
     <string name="digitalstyle_pref_your_style">Stilin:</string>
     <string name="digitalstyle_style_none">stil yok</string>
