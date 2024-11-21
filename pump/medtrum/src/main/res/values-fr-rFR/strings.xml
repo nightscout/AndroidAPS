@@ -126,8 +126,13 @@
     <string name="scan_on_connection_error_summary">AVERTISSEMENT : Activez uniquement en cas de problèmes de connexion. Si activé, le pilote recherche à nouveau la pompe avant de tenter de se reconnecter à la pompe. Assurez-vous d\'avoir défini l\'autorisation d\'emplacement sur \"Toujours autoriser\" </string>
     <!-- treatment state-->
     <string name="getting_pump_status">Mise à jour de l\'état pompe</string>
+    <string name="syncing_records">Synchronisation des enregistrements, %1$d restant</string>
     <string name="getting_bolus_status">Obtenir l\'état du bolus</string>
     <string name="getting_temp_basal_status">Obtenir le statut du basal temporaire</string>
     <string name="setting_pump_settings">Définir les options utilisateur</string>
     <!-- bolus-->
+    <string name="bolus_error_reason_user">Bolus annulé par l\'utilisateur</string>
+    <string name="bolus_error_reason_not_connected">Pompe non connectée</string>
+    <string name="bolus_error_reason_already_in_progress">Bolus déjà en cours</string>
+    <string name="bolus_error_reason_unable_to_send_command">Impossible d\'envoyer la commande bolus</string>
 </resources>
