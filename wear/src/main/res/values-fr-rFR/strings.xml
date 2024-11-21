@@ -11,6 +11,7 @@
     <string name="label_actions_tile">AAPS (Actions)</string>
     <string name="label_temp_target_tile">AAPS(Cible Temp)</string>
     <string name="label_quick_wizard_tile">AAPS(Assistant rapide)</string>
+    <string name="label_user_action_tile">AAPS (Action utilisateur)</string>
     <string name="label_warning_sync">Pas de données !</string>
     <string name="label_warning_old">Données anciennes!</string>
     <string name="label_warning_since">Depuis %1$s</string>
@@ -98,6 +99,7 @@
     <string name="action_duration">Durée</string>
     <string name="action_tempt_confirmation">Cible Temp demandée</string>
     <string name="action_quick_wizard_confirmation">Assistant rapide demandé</string>
+    <string name="action_user_action_confirmation">Action de l\'utilisateur demandée</string>
     <string name="action_treatment_confirmation">Traitement demandé</string>
     <string name="action_bolus_confirmation">Bolus demandé</string>
     <string name="action_wizard_confirmation">Calcul demandé</string>
@@ -156,6 +158,8 @@
     <string name="pref_simplify_ui_sum">Afficher seulement l\'heure et la glycémie</string>
     <string name="pref_vibrate_hourly">Vibrer à l\'heure</string>
     <string name="pref_show_weeknumber">Afficher numéro semaine</string>
+    <string name="pref_include_external">Inclure les vues externes dans le modèle</string>
+    <string name="pref_switch_external">Intervertir les données externes sur le cadran</string>
     <string name="custom_pref_show_seconds">Afficher les secondes</string>
     <string name="digitalstyle_pref_your_style">Style :</string>
     <string name="digitalstyle_style_none">aucun</string>
