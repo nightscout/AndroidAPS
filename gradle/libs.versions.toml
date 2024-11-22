@@ -39,7 +39,7 @@ com-google-firebase-messaging = { group = "com.google.firebase", name = "firebas
 com-google-firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
 com-google-firebase-database = { group = "com.google.firebase", name = "firebase-database" }
 com-google-android-gms-playservices-measurement = { group = "com.google.android.gms", name = "play-services-measurement-api", version = "22.1.2" }
-com-google-android-gms-playservices-wearable = { group = "com.google.android.gms", name = "play-services-wearable", version = "18.2.0" }
+com-google-android-gms-playservices-wearable = { group = "com.google.android.gms", name = "play-services-wearable", version = "19.0.0" }
 com-google-android-gms-playservices-location = { group = "com.google.android.gms", name = "play-services-location", version = "21.3.0" }
 
 com-google-android-material = { group = "com.google.android.material", name = "material", version = "1.12.0" }
