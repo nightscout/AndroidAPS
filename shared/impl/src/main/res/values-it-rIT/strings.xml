@@ -13,6 +13,7 @@
     <string name="cwf_comment_cob2_ext">Valore COB (da AAPSClient o AAPSClient2)</string>
     <string name="cwf_comment_delta_ext">Delta di glicemia breve (da AAPSClient o AAPSClient2)</string>
     <string name="cwf_comment_avg_delta_ext">Delta glicemia media (15min) (da AAPSClient o AAPSClient2)</string>
+    <string name="cwf_comment_temp_target_ext">TempTarget o TempTargetBasso - TempTargetAlto (da AAPSClient o AAPSClient2)</string>
     <string name="cwf_comment_rig_battery_ext">Batteria globale del loop (%) (da AAPSClient o AAPSClient2)</string>
     <string name="cwf_comment_basalRate_ext">Tasso basale (da AAPSClient o AAPSClient2)</string>
     <string name="cwf_comment_bgi_ext">Valore BGI (da AAPSClient o AAPSClient2)</string>
@@ -28,6 +29,7 @@
     <string name="cwf_comment_cob2">Valore COB</string>
     <string name="cwf_comment_delta">Delta BG breve</string>
     <string name="cwf_comment_avg_delta">Delta BG medio (15min)</string>
+    <string name="cwf_comment_temp_target">TempTarget o TempTargetLow - TempTargetAlto</string>
     <string name="cwf_comment_uploader_battery">Batteria telefono (%)</string>
     <string name="cwf_comment_rig_battery">Batteria globale loop (%)</string>
     <string name="cwf_comment_basalRate">Velocità basale</string>
