@@ -294,6 +294,8 @@ sealed class EventData : Event() {
         val bgi: String,
         val batteryLevel: Int,
         val patientName: String = "",
+        val tempTarget: String,
+        val tempTargetLevel: Int,
         val id: Int = 0
     ) : EventData(), EventDataSet
 

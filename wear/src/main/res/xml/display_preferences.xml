@@ -130,6 +130,15 @@
         app:wear_iconOn="@drawable/settings_on" />
 
     <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/key_show_temp_target"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
+        android:title="@string/pref_show_temp_target"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
         android:defaultValue="true"
         android:key="@string/key_show_external_status"
         android:summaryOn="@string/on"

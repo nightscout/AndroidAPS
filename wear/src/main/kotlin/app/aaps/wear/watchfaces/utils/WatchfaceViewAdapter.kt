@@ -37,6 +37,7 @@ class WatchfaceViewAdapter(
     val loop = cU?.loop
     val delta = ds?.delta ?: cU?.delta
     val avgDelta = ds?.avgDelta ?: cU?.avgDelta
+    val tempTarget = cU?.tempTarget
     val basalRate = ds?.basalRate ?: cU?.basalRate
     val bgi = ds?.bgi ?: cU?.bgi
     val cob1 = ds?.cob1 ?: cU?.cob1
@@ -52,6 +53,7 @@ class WatchfaceViewAdapter(
     val loopExt1 = cU?.loopExt1
     val deltaExt1 = cU?.deltaExt1
     val avgDeltaExt1 = cU?.avgDeltaExt1
+    val tempTargetExt1 = cU?.tempTargetExt1
     val basalRateExt1 = cU?.basalRateExt1
     val bgiExt1 = cU?.bgiExt1
     val cob1Ext1 = cU?.cob1Ext1
@@ -67,6 +69,7 @@ class WatchfaceViewAdapter(
     val loopExt2 = cU?.loopExt2
     val deltaExt2 = cU?.deltaExt2
     val avgDeltaExt2 = cU?.avgDeltaExt2
+    val tempTargetExt2 = cU?.tempTargetExt2
     val basalRateExt2 = cU?.basalRateExt2
     val bgiExt2 = cU?.bgiExt2
     val cob1Ext2 = cU?.cob1Ext2
