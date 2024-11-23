@@ -182,28 +182,20 @@ open class OpenAPSSMBPlugin @Inject constructor(
 
     override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
         super.preprocessPreferences(preferenceFragment)
-        val uamEnabled = if (preferences.get(BooleanKey.ApsUseSmb)) {
-            preferences.get(BooleanKey.ApsUseUam)
-        } else {
-            preferences.get(BooleanKey.ApsUseSmb)
-        }
-        val smbAlwaysEnabled = if (preferences.get(BooleanKey.ApsUseSmb)) {
-            preferences.get(BooleanKey.ApsUseSmbAlways)
-        } else {
-            !preferences.get(BooleanKey.ApsUseSmb)
-        }
+
+        val smbEnabled = preferences.get(BooleanKey.ApsUseSmb)
+        val smbAlwaysEnabled = preferences.get(BooleanKey.ApsUseSmbAlways)
+        val uamEnabled = preferences.get(BooleanKey.ApsUseUam)
         val advancedFiltering = activePlugin.activeBgSource.advancedFilteringSupported()
-        val autoSensOrDynIsfSensEnabled = if (preferences.get(BooleanKey.ApsUseDynamicSensitivity)) {
-            preferences.get(BooleanKey.ApsDynIsfAdjustSensitivity)
-        } else {
-            preferences.get(BooleanKey.ApsUseAutosens)
-        }
-        preferenceFragment.findPreference<SwitchPreference>(BooleanKey.ApsUseSmbWithCob.key)?.isVisible = !smbAlwaysEnabled || !advancedFiltering
-        preferenceFragment.findPreference<SwitchPreference>(BooleanKey.ApsUseSmbWithLowTt.key)?.isVisible = !smbAlwaysEnabled || !advancedFiltering
-        preferenceFragment.findPreference<SwitchPreference>(BooleanKey.ApsUseSmbAfterCarbs.key)?.isVisible = !smbAlwaysEnabled || !advancedFiltering
+        val autoSensOrDynIsfSensEnabled = preferences.get(BooleanKey.ApsUseDynamicSensitivity) && preferences.get(BooleanKey.ApsDynIsfAdjustSensitivity) || preferences.get(BooleanKey.ApsUseAutosens)
+
+        preferenceFragment.findPreference<SwitchPreference>(BooleanKey.ApsUseSmbAlways.key)?.isVisible = smbEnabled && advancedFiltering
+        preferenceFragment.findPreference<SwitchPreference>(BooleanKey.ApsUseSmbWithCob.key)?.isVisible = smbEnabled && !smbAlwaysEnabled && advancedFiltering || smbEnabled && !advancedFiltering
+        preferenceFragment.findPreference<SwitchPreference>(BooleanKey.ApsUseSmbWithLowTt.key)?.isVisible = smbEnabled && !smbAlwaysEnabled && advancedFiltering || smbEnabled && !advancedFiltering
+        preferenceFragment.findPreference<SwitchPreference>(BooleanKey.ApsUseSmbAfterCarbs.key)?.isVisible = smbEnabled && !smbAlwaysEnabled && advancedFiltering
         preferenceFragment.findPreference<SwitchPreference>(BooleanKey.ApsResistanceLowersTarget.key)?.isVisible = autoSensOrDynIsfSensEnabled
         preferenceFragment.findPreference<SwitchPreference>(BooleanKey.ApsSensitivityRaisesTarget.key)?.isVisible = autoSensOrDynIsfSensEnabled
-        preferenceFragment.findPreference<AdaptiveIntPreference>(IntKey.ApsUamMaxMinutesOfBasalToLimitSmb.key)?.isVisible = uamEnabled
+        preferenceFragment.findPreference<AdaptiveIntPreference>(IntKey.ApsUamMaxMinutesOfBasalToLimitSmb.key)?.isVisible = smbEnabled && uamEnabled
     }
 
     private val dynIsfCache = LongSparseArray<Double>()
