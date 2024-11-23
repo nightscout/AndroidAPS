@@ -49,6 +49,7 @@
     <string name="pref_show_delta">Vis Delta</string>
     <string name="pref_show_detailed_delta">Vis detaljert Delta</string>
     <string name="pref_show_avgdelta">Vis Gj. snitt Delta</string>
+    <string name="pref_show_tempTarget">Vis midlertidig mål</string>
     <string name="pref_show_phone_battery">Vis telefonbatteri</string>
     <string name="pref_show_rig_battery">Vis riggens batteri</string>
     <string name="pref_show_basal_rate">Vis basaldose</string>
