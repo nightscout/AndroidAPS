@@ -167,6 +167,19 @@
         tools:text="@string/abbreviation_average" />
 
     <TextView
+        android:id="@+id/temp_target_ext1"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:gravity="center"
+        android:textColor="@color/light_grey"
+        android:textSize="23px"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:text="--" />
+
+    <TextView
         android:id="@+id/rig_battery_ext1"
         android:layout_width="0px"
         android:layout_height="0px"
@@ -359,6 +372,19 @@
         tools:text="@string/abbreviation_average" />
 
     <TextView
+        android:id="@+id/temp_target_ext2"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:gravity="center"
+        android:textColor="@color/light_grey"
+        android:textSize="23px"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:text="--" />
+
+    <TextView
         android:id="@+id/rig_battery_ext2"
         android:layout_width="0px"
         android:layout_height="0px"
@@ -543,6 +569,19 @@
         android:textSize="23px"
         android:textStyle="bold"
         tools:text="@string/abbreviation_average" />
+
+    <TextView
+        android:id="@+id/temp_target"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
+        android:gravity="center"
+        android:textColor="@color/light_grey"
+        android:textSize="23px"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:text="--" />
 
 
     <TextView
