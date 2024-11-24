@@ -25,6 +25,9 @@ enum class JsonKeyValues(val key: String) {
     SGV_LEVEL("sgvLevel"),
     SGV_LEVEL_EXT1("sgvLevel_Ext1"),
     SGV_LEVEL_EXT2("sgvLevel_Ext2"),
+    RESERVOIR_LEVEL("reservoirLevel"),
+    RESERVOIR_LEVEL_EXT1("reservoirLevel_Ext1"),
+    RESERVOIR_LEVEL_EXT2("reservoirLevel_Ext2"),
     PREF_UNITS("key_units"),
     PREF_DARK("key_dark"),
     PREF_MATCH_DIVIDER("key_match_divider")

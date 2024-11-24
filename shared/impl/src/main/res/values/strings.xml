@@ -14,6 +14,7 @@
     <string name="cwf_comment_delta_ext">Short BG delta (from AAPSClient or AAPSClient2)</string>
     <string name="cwf_comment_avg_delta_ext">Average BG delta (15min) (from AAPSClient or AAPSClient2)</string>
     <string name="cwf_comment_temp_target_ext">TempTarget or TempTargetLow - TempTargetHigh (from AAPSClient or AAPSClient2)</string>
+    <string name="cwf_comment_reservoir_ext">Reservoir Level (from AAPSClient or AAPSClient2)</string>
     <string name="cwf_comment_rig_battery_ext">Global loop battery (%) (from AAPSClient or AAPSClient2)</string>
     <string name="cwf_comment_basalRate_ext">Basal Rate (from AAPSClient or AAPSClient2)</string>
     <string name="cwf_comment_bgi_ext">BGI value (from AAPSClient or AAPSClient2)</string>
@@ -30,6 +31,7 @@
     <string name="cwf_comment_delta">Short BG delta</string>
     <string name="cwf_comment_avg_delta">Average BG delta (15min)</string>
     <string name="cwf_comment_temp_target">TempTarget or TempTargetLow - TempTargetHigh</string>
+    <string name="cwf_comment_reservoir">Reservoir Level</string>
     <string name="cwf_comment_uploader_battery">Phone battery (%)</string>
     <string name="cwf_comment_rig_battery">Global loop battery (%)</string>
     <string name="cwf_comment_basalRate">Basal Rate</string>

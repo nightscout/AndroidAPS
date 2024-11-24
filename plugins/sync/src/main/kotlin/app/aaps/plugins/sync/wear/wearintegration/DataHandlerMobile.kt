@@ -1114,6 +1114,18 @@ class DataHandlerMobile @Inject constructor(
                     profileUtil.toTargetRangeString(profile.getTargetLowMgdl(), profile.getTargetHighMgdl(), GlucoseUnit.MGDL, units)
             }
         } ?: ""
+        // Reservoir Level
+        val pump = activePlugin.activePump
+        val maxReading = pump.pumpDescription.maxResorvoirReading.toDouble()
+        val reservoir = pump.reservoirLevel.let { if (pump.pumpDescription.isPatchPump && it > maxReading) maxReading else it }
+        val reservoirString = if (reservoir > 0) "${decimalFormatter.to0Decimal(reservoir, rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname))}" else ""
+        val resUrgent = preferences.get(IntKey.OverviewResCritical)
+        val resWarn = preferences.get(IntKey.OverviewResWarning)
+        val reservoirLevel = when {
+            reservoir <= resUrgent -> 2
+            reservoir <= resWarn   -> 1
+            else                   -> 0
+        }
 
         rxBus.send(
             EventMobileToWear(
@@ -1131,7 +1143,10 @@ class DataHandlerMobile @Inject constructor(
                     batteryLevel = if (phoneBattery >= 30) 1 else 0,
                     patientName = patientName,
                     tempTarget = tempTarget,
-                    tempTargetLevel = tempTargetLevel
+                    tempTargetLevel = tempTargetLevel,
+                    reservoirString = reservoirString,
+                    reservoir = reservoir,
+                    reservoirLevel = reservoirLevel
                 )
             )
         )
