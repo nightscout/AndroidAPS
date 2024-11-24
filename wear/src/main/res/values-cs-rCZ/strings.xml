@@ -36,6 +36,8 @@
     <string name="pref_show_phone_battery">Zobrazit stav baterie telefonu</string>
     <string name="pref_show_rig_battery">Zobrazovat kruhový graf baterie</string>
     <string name="pref_show_basal_rate">Zobrazit bazál</string>
+    <string name="pref_show_temp_target">Zobrazit dočasný cíl</string>
+    <string name="pref_show_reservoir_level">Zobrazit stav zásobníku</string>
     <string name="pref_show_loop_status">Zobrazovat stav smyčky</string>
     <string name="pref_show_bg">Zobrazovat glykemii</string>
     <string name="pref_show_bgi">Zobrazovat BGI</string>
@@ -159,6 +161,7 @@
     <string name="pref_vibrate_hourly">Vibrovat každou hodinu</string>
     <string name="pref_show_weeknumber">Zobrazit číslo týdne</string>
     <string name="pref_include_external">Zahrnout do šablony externí zobrazení</string>
+    <string name="pref_switch_external">Přepnout externí data ve watchface</string>
     <string name="custom_pref_show_seconds">Zobrazovat sekundy</string>
     <string name="digitalstyle_pref_your_style">Váš styl:</string>
     <string name="digitalstyle_style_none">bez stylu</string>
