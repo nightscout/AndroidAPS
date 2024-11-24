@@ -83,6 +83,9 @@ abstract class BaseWatchFace : WatchFace() {
     var tempTargetColor = Color.YELLOW
     var tempTargetProfileColor = Color.WHITE
     var tempTargetLoopColor = Color.GREEN
+    var reservoirColor = Color.WHITE
+    var reservoirUrgentColor = Color.RED
+    var reservoirWarningColor = Color.YELLOW
     private var bolusColor = Color.MAGENTA
     private var lowResMode = false
     private var layoutSet = false
@@ -302,7 +305,9 @@ abstract class BaseWatchFace : WatchFace() {
         binding.avgDelta?.text = if (detailedDelta) singleBg[0].avgDeltaDetailed else singleBg[0].avgDelta
         binding.avgDelta?.visibility = sp.getBoolean(R.string.key_show_avg_delta, true).toVisibility()
         binding.tempTarget?.text = status[0].tempTarget
-        binding.tempTarget?.visibility = sp.getBoolean(R.string.key_show_temp_target, false).toVisibility()
+        binding.tempTarget?.visibility = sp.getBoolean(R.string.key_show_temp_target, true).toVisibility()
+        binding.reservoir?.text = status[0].reservoirString
+        binding.reservoir?.visibility = sp.getBoolean(R.string.key_show_reservoir_level, true).toVisibility()
         binding.cob1?.visibility = sp.getBoolean(R.string.key_show_cob, true).toVisibility()
         binding.cob1?.text = getString(R.string.activity_carb)
         binding.cob2?.visibility = sp.getBoolean(R.string.key_show_cob, true).toVisibility()
@@ -357,6 +362,8 @@ abstract class BaseWatchFace : WatchFace() {
             binding.avgDeltaExt1?.visibility = sp.getBoolean(R.string.key_show_avg_delta, true).toVisibility()
             binding.tempTargetExt1?.text = status[1].tempTarget
             binding.tempTargetExt1?.visibility = sp.getBoolean(R.string.key_show_temp_target, false).toVisibility()
+            binding.reservoirExt1?.text = status[1].reservoirString
+            binding.reservoirExt1?.visibility = sp.getBoolean(R.string.key_show_reservoir_level, true).toVisibility()
             binding.cob1Ext1?.visibility = sp.getBoolean(R.string.key_show_cob, true).toVisibility()
             binding.cob1Ext1?.text = getString(R.string.activity_carb)
             binding.cob2Ext1?.visibility = sp.getBoolean(R.string.key_show_cob, true).toVisibility()
@@ -410,6 +417,8 @@ abstract class BaseWatchFace : WatchFace() {
             binding.avgDeltaExt2?.visibility = sp.getBoolean(R.string.key_show_avg_delta, true).toVisibility()
             binding.tempTargetExt2?.text = status[2].tempTarget
             binding.tempTargetExt2?.visibility = sp.getBoolean(R.string.key_show_temp_target, false).toVisibility()
+            binding.reservoirExt2?.text = status[2].reservoirString
+            binding.reservoirExt2?.visibility = sp.getBoolean(R.string.key_show_reservoir_level, true).toVisibility()
             binding.cob1Ext2?.visibility = sp.getBoolean(R.string.key_show_cob, true).toVisibility()
             binding.cob1Ext2?.text = getString(R.string.activity_carb)
             binding.cob2Ext2?.visibility = sp.getBoolean(R.string.key_show_cob, true).toVisibility()
