@@ -14,6 +14,7 @@
     <string name="cwf_comment_delta_ext">Kort BS-delta (fra AAPSClient eller AAPSClient2)</string>
     <string name="cwf_comment_avg_delta_ext">Gjennomsnittlig BS-delta (15min) (fra AAPSClient eller AAPSClient2)</string>
     <string name="cwf_comment_temp_target_ext">Midlertidig mål eller lavt - høyt midlertidig mål (fra AAPSClient eller AAPSClient2) </string>
+    <string name="cwf_comment_reservoir_ext">Reservoarnivå (fra AAPSClient eller AAPSClient2) </string>
     <string name="cwf_comment_rig_battery_ext">Global loop-batteri (%) (fra AAPSClient eller AAPSClient2)</string>
     <string name="cwf_comment_basalRate_ext">Basaldose (fra AAPSClient eller AAPSClient2)</string>
     <string name="cwf_comment_bgi_ext">BGI-verdi (fra AAPSClient eller AAPSClient2)</string>
@@ -30,6 +31,7 @@
     <string name="cwf_comment_delta">Kort BS-delta</string>
     <string name="cwf_comment_avg_delta">Gj.snitt BS-delta (15min)</string>
     <string name="cwf_comment_temp_target">Midlertid mål eller lavt - høyt midlertidig mål </string>
+    <string name="cwf_comment_reservoir">Reservoarnivå</string>
     <string name="cwf_comment_uploader_battery">Telefonbatteri (%)</string>
     <string name="cwf_comment_rig_battery">Global loop-batteri (%)</string>
     <string name="cwf_comment_basalRate">Basaldose</string>
