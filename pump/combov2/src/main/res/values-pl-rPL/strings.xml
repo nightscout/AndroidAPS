@@ -4,7 +4,6 @@
     <string name="combov2_plugin_description">Natywna integracja pompy dla pomp Accu-Chek Combo</string>
     <string name="combov2_could_not_connect">Nie można połączyć się z pompą</string>
     <string name="combov2_not_paired">Nie sparowano z pompą</string>
-    <string name="combov2_pump_terminated_connection">Pompa zakończyła połączenie</string>
     <string name="combov2_warning">Ostrzeżenie Combo</string>
     <string name="combov2_error">Błąd Combo</string>
     <string name="combov2_warning_4">Zalecana wymiana pompy. Zadzwoń na infolinię </string>
@@ -115,8 +114,6 @@ Jeśli po więcej niż ~5 minutach połączenie nie zostanie ustanowione:\n\n
     <string name="combov2_short_status_battery_state">Bat.: %s</string>
     <string name="combov2_automatic_reservoir_entry">Automatyczne wykrywanie i wprowadzanie wpisu o zmianie zasobnika insuliny</string>
     <string name="combov2_automatic_battery_entry">Automatyczne wykrywanie i wprowadzanie wpisu o zmianie baterii</string>
-    <string name="combov2_note_reservoir_change">Zmiana zasobnika insuliny wprowadzona automatycznie przez sterownik combov2</string>
-    <string name="combov2_note_battery_change">Zmiana baterii wprowadzona automatycznie przez sterownik combov2</string>
     <string name="combov2_timezone_changed">Zmieniono strefę czasową</string>
     <string name="combov2_datetime_changed">Zmieniono datę lub/i czas</string>
     <string name="combov2_dst_started">Rozpoczęto czas letni (DST)</string>
