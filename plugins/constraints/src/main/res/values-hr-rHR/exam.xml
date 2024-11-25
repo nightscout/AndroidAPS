@@ -18,7 +18,6 @@
     <string name="sensitivity_adjust">Dodaci za osjetljivost omogućuju AAPS-u da se prilagodi privremenim ili kratkotrajnim promjenama u osjetljivosti na inzulin (na primjer, hormonalne promjene ili problemi s apsorpcijom na mjestu infuzije).</string>
     <string name="wrongcarbs_donothing">Ne poduzimati ništa – AAPS će izvršiti odgovarajuće prilagodbe.</string>
     <string name="wronginsulin_compare">Usporedite vrijednosti u AAPS i povijesti pumpe (ako pumpa to podržava).</string>
-    <string name="wronginsulin_donothing">Ne poduzimajte ništa i dopustite APPS-u da ispravi sve rezultirajuće visoke razine glukoze u krvi.</string>
     <string name="extendedcarbs_free">Za bilježenje \'besplatnih\' ugljikohidrata za vježbanje koje želite sakriti od AAPS-a.</string>
     <string name="extendedcarbs_fat">e-ugljikohidrati (distribuirani u budućnosti) mogu pomoći AAPS-u u rješavanju obroka s visokim udjelom masti/proteina.</string>
     <string name="nsclient_howcanyou">Kako možete nadzirati APPS (na primjer za svoje dijete) na daljinu?</string>
