@@ -104,8 +104,6 @@
     <string name="automation_event">Automatiserings event</string>
     <string name="reorder_label">Omorganisering</string>
     <string name="user_action">Brugerhandling</string>
-    <string name="remove_automation">Fjern automatisering</string>
-    <string name="sort_automation">Sortér automatisering</string>
     <string name="remove_selected_items">Fjern valgte emner</string>
     <string name="count_selected">%1$d valgt</string>
     <string name="system_automation">System automatisering</string>
