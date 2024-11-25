@@ -120,8 +120,6 @@
     <string name="automation_event">自動化事件</string>
     <string name="reorder_label">重新排序</string>
     <string name="user_action">用戶操作</string>
-    <string name="remove_automation">移除自動化</string>
-    <string name="sort_automation">排序自動化</string>
     <string name="remove_selected_items">移除選擇項目</string>
     <string name="count_selected">已選擇 %1$d 項</string>
     <string name="system_automation">系統自動化</string>

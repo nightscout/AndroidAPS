@@ -40,11 +40,9 @@
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">izvezeno prije %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">izvezeno u %1$s</string>
     <string name="exported_less_than_hour_ago">izvezeno prije manje od sat vremena</string>
-    <string name="in_directory" comment="placeholder is for exported file path">u mapi: %1$s</string>
     <string name="preferences_import_list_title">Odaberite datoteku za uvoz</string>
     <string name="metadata_warning_different_flavour">Postavke su stvorene s drugom varijantom AAPS-a (%1$s) dok vi imate: %2$s.\n\nNeke postavke možda nedostaju ili su nevažeće - nakon uvoza provjerite i ažurirajte svoje postavke.</string>
     <string name="metadata_warning_different_device">Postavke su stvorene na drugom uređaju. U redu je ako uvozite sa starijeg/drugog telefona, ali provjerite jesu li uvezene postavke točne!</string>
-    <string name="metadata_warning_outdated_format">Koristite zastarjeli naslijeđeni format iz starih verzija AAPS-a, koji nije siguran! Koristite ga samo u krajnjem slučaju, ako nemate izvoz u trenutnom, JSON formatu.</string>
     <string name="metadata_warning_old_export">Uvezene postavke stare su već %1$s dana! Možda imate ažurnije postavke ili ste odabrali pogrešnu datoteku? Ne zaboravite redovito izvoziti postavke!</string>
     <string name="metadata_warning_date_format">Nevažeći format datuma i vremena!</string>
     <string name="metadata_warning_different_version">Postavke iz različite manje verzije aplikacije. U redu je ako uvozite nakon nadogradnje, ali nakon uvoza provjerite jesu li postavke još uvijek točne!</string>

@@ -3,11 +3,9 @@
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_shortname">EOP2</string>
     <string name="eopatch_pump_description">EOPatch2 / GlucoMen Day 胰島素幫浦整合</string>
-    <string name="category_alerts">警報</string>
     <string name="low_reservoir">儲液盒低警報</string>
     <string name="patch_expiration_reminders">貼片過期提醒</string>
     <string name="patch_buzzer_reminders">貼片嗶器提醒</string>
-    <string name="time_format_a_h_mm">h:mm a</string>
     <string name="eopatch_ble_status">藍牙狀態</string>
     <string name="eopatch_serial_number">序列號</string>
     <string name="eopatch_lot_number">批號</string>
@@ -26,7 +24,6 @@
     <string name="time_1hr">1 小時</string>
     <string name="time_1hr_30min">1 小時 30 分鐘</string>
     <string name="time_2hr">2 小時</string>
-    <string name="all_blank">\u0020</string>
     <string name="patch_safe_deactivation_desc">若要更換新貼片，必須先放棄目前貼片。所有來自貼片的胰島素供應將被取消。</string>
     <string name="patch_discard_complete_title">貼片放棄完成。</string>
     <string name="patch_discard_complete_desc">貼片已停用。\n請放棄貼片。\n移除附在您身上的貼片。</string>
@@ -38,9 +35,6 @@
     <string name="patch_remaining_usage_period">剩餘使用時間</string>
     <string name="patch_finish">完成</string>
     <string name="patch_forced_discard">放棄</string>
-    <string name="patch_comm_error_during_discard_status">放棄貼片時的通訊錯誤</string>
-    <string name="patch_comm_error_during_discard_desc">若要正常停用，請點擊“重試”。\n若要單方面停用，請點擊“放棄”。</string>
-    <string name="patch_comm_error_during_discard_desc_1">若要正常停用，請點擊“重試”。</string>
     <string name="patch_comm_error_during_discard_desc_2">若要單方面停用，請點擊“放棄”。</string>
     <string name="patch_manually_turning_off_alarm_title">手動關閉貼片警報</string>
     <string name="patch_manually_turning_off_alarm_desc_1">若在通訊錯誤期間單方面停用，貼片的警報聲可能無法停止。</string>
@@ -82,8 +76,6 @@
     <string name="patch_expiration_reminder_setting_title">貼片過期提醒</string>
     <string name="patch_activate_reminder_title">貼片啟動提醒</string>
     <string name="patch_activate_reminder_desc">貼片啟動未完成。\n繼續。</string>
-    <string name="patch_communication_check">貼片通訊檢查</string>
-    <string name="patch_communication_check_status_1">檢查貼片通訊…</string>
     <string name="patch_communication_check_helper_1">將您的智慧設備靠近貼片。</string>
     <string name="patch_communication_check_helper_2">請移動到另一個位置並重試。</string>
     <string name="patch_communication_failed">通訊錯誤</string>
@@ -114,7 +106,6 @@
     <string name="retry">重試</string>
     <string name="string_caution_not_remove_needle_cap">[注意] 在進一步指示之前不要移除針頭蓋和膠帶。</string>
     <string name="string_are_you_sure_to_discard_current_patch">您確定要放棄目前貼片嗎？</string>
-    <string name="string_unconfirmed_bolus_info_discard_confirm_message">由於未確認的注射訊息，注射計算無法使用，直至 %s。\n\n您確定要放棄目前貼片嗎？</string>
     <string name="needle_insertion_error_1">針頭植入錯誤。</string>
     <string name="needle_insertion_error_2">檢查旋鈕旋轉後留下的孔洞方向是否正確，然後點擊“重試”。</string>
     <string name="needle_insertion_error_3">點擊“放棄”以停用貼片。</string>
@@ -126,7 +117,6 @@
     <string name="finish">完成</string>
     <string name="string_temp_basal_remained_hhmm">剩餘時間：%1$s:%2$s</string>
     <string name="next">下一步</string>
-    <string name="patch_connection_fail">貼片通訊檢查後重試。</string>
     <string name="string_pause_failed">暫停失敗。</string>
     <string name="string_resume_failed">恢復失敗。</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE, yyyy 年 MMM d 日 hh:mm a</string>

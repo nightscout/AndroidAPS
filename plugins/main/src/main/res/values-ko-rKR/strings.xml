@@ -203,8 +203,6 @@
     <string name="overview_buttons_selection">버튼</string>
     <string name="show_calibration_button_summary">xDrip+에 보정값을 전송하거나, 개방 BYODA 보정창을 엽니다</string>
     <string name="show_cgm_button_summary">xDrip+ 또는 BYODA을 열거나 뒤로가기 버튼을 누르면 AAPS로 돌아갑니다</string>
-    <string name="dexcom_app_not_installed">Dexcom 앱이 설치되지 않았습니다.</string>
-    <string name="dexcom_app_not_detected">Dexcom앱을 지원가능한 버전으로 업데이트하세요.</string>
     <string name="error_starting_cgm">CGM앱을 실행할 수 없습니다. 앱이 설치되어 있는지 확인하세요.</string>
     <string name="not_available_full">알수없음</string>
     <string name="constraints_violation">제한 위반</string>
@@ -282,7 +280,6 @@
     <string name="skin">스킨</string>
     <string name="cannula_usage">사용:</string>
     <!--    Iob-->
-    <string name="send_logfiles">예상치 못한 상황 보고를 위해 오늘의 로그 파일을 개발자에게 전송합니다.</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Loop가 어떤 작동하는지에 대한 간략한 개요를 연속 알림으로 보여줍니다.</string>
     <string name="old_data">오래된 데이터</string>

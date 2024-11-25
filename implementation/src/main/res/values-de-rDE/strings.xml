@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bg_label">BZ</string>
     <string name="executing_right_now">Befehl wird zurzeit ausgeführt</string>
     <string name="basal_value_below_minimum">Wert der Basalrate unter Minimum. Profil nicht gesetzt!</string>
-    <string name="permission">Berechtigung</string>
-    <string name="need_whitelisting">%1$s benötigt eine deaktivierte Akku-Leistungsoptimierung, um korrekt arbeiten zu können</string>
-    <string name="need_location_permission">Die App benötigt die Berechtigung für den Standort, um Bluetooth und WLAN nutzen zu können</string>
-    <string name="need_storage_permission">Die App benötigt Zugriffsrechte für den Speicher um Log-Dateien zu sichern und die Einstellungen zu exportieren.</string>
     <!--       Stats -->
     <string name="veryLow" comment="below 3.1">Sehr niedrig</string>
     <string name="low" comment="3.1-3.9">Niedrig</string>

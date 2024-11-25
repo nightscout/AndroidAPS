@@ -39,8 +39,6 @@
     <string name="nsclient_token_dialog_title">NS-Zugangstoken</string>
     <string name="nsclient_token_dialog_message">Zugriffstoken der auf der NS Admin-Seite generiert wurde (min 17 Zeichen)</string>
     <string name="deliver_now">Jetzt abgeben</string>
-    <string name="clear_queue">Warteschlange leeren</string>
-    <string name="show_queue">Zeige Warteschlange</string>
     <string name="queue">Warteschlange:</string>
     <string name="status">Status:</string>
     <string name="clear_log">Logs leeren</string>
@@ -88,13 +86,7 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Daten zu Tidepool hochladen</string>
-    <string name="tidepool_upload_cgm">CGM Daten hochladen</string>
-    <string name="tidepool_upload_bolus">Behandlungen (Insulin, Kohlenhydrate) hochladen</string>
-    <string name="tidepool_upload_tbr">Temporäre Basalrate hochladen</string>
-    <string name="tidepool_upload_profile">Profilwechsel und temporäre Ziele hochladen</string>
-    <string name="tidepool_upload_bg">BZ-Werte (blutig) hochladen</string>
     <string name="remove_all">Alle entfernen</string>
-    <string name="reset_start">Start zurücksetzen</string>
     <string name="upload_now">Jetzt hochladen</string>
     <string name="not_connected">Nicht verbunden</string>
     <string name="read_only">Nur lesen</string>
@@ -125,7 +117,6 @@
     <string name="wizard_result">Calc. Wizard:\nInsulin: %1$.2fU\nCarbs: %2$dg</string>
     <string name="quick_wizard_not_available">Ausgewählter Quickwizard nicht mehr verfügbar, bitte aktualisiere die Kachel</string>
     <string name="quick_wizard_message">QuickWizard: %1$s\nInsulin: %2$.2fU\nCarbs: %3$dg</string>
-    <string name="wear_action_tempt_preset_error">Temp-Target unbekannte Voreinstellung: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Ausführung des Temp-Targets abbrechen?</string>
     <string name="wear_action_tempt_unit_error">Verschiedene Einheiten werden auf Uhr und Telefon verwendet!</string>
     <string name="wear_action_tempt_zero_message">Zero-Temp-Target - abbrechen des laufenden Temp-Targets?</string>

@@ -14,12 +14,7 @@
     <string name="hypott_exercise">За да коригирате хипо предизвикано от физическа дейност.</string>
     <string name="hypott_0basal">За да предотвратите понижаване на КЗ ако вече е активен 0% временен базал.</string>
     <string name="hypott_hint1">https://wiki.aaps.app/en/latest/Usage/temptarget.html</string>
-    <string name="offlineprofile_whatprofile">Кой профил може да бъде използван и конфигуриран без интернет?</string>
-    <string name="offlineprofile_label">Тема: Offline профил</string>
-    <string name="offlineprofile_nsprofile">NS профил може да бъде използван, но не и да бъде конфигуриран.</string>
-    <string name="offlineprofile_hint1">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html#profile</string>
     <string name="pumpdisconnect_label">Причини да се прилага \"Разкачане на Помпа\" в AAPS</string>
-    <string name="pumpdisconnect_whattodo">Какво трябва да сe направи когато разкачате помпата от тялото?</string>
     <string name="pumpdisconnect_unnecessary">Това не е нужно, инсулин няма да бъде доставен, тъй като помпата е физически разкачена.</string>
     <string name="pumpdisconnect_missinginsulin">Предотвратява AAPS да отчете инсулин, който не е бил доставен, докато помпата е била физически разкачена.</string>
     <string name="pumpdisconnect_notstop">Това няма да спре доставянето на инсулин, ако помпата е закачена на тялото.</string>
@@ -59,9 +54,6 @@
     <string name="exercise_setunchanged">Оставете целевата си кръвна захар непроменена.</string>
     <string name="exercise_15g">Изчакайте, докато кръвната захар падне под целта за хипо и след това изяжте 15 g бързодействащи въглехидрати.</string>
     <string name="exercise_hint1">https://wiki.aaps.app/en/latest/Usage/temptarget.html#activity-temp-target</string>
-    <string name="suspendloop_doigetinsulin">Получавам ли инсулин, когато цикълът е деактивиран/спрян?</string>
-    <string name="suspendloop_yes">Да, базалният инсулин продължава да се доставя.</string>
-    <string name="suspendloop_no">Не, доставката на инсулин е спряна.</string>
     <string name="basaltest_label">Тестване на Базал, ISF и I:C</string>
     <string name="basaltest_when">Кога тези стойности трябва да бъдат потвърдени?</string>
     <string name="basaltest_beforeloop">Преди затваряне на цикъла.</string>
@@ -70,19 +62,11 @@
     <string name="basaltest_fixed">Веднъж зададени и потвърдени, тези стойности не трябва да се променят с течение на времето.</string>
     <string name="prerequisites_label">Предпоставки</string>
     <string name="prerequisites_what">Какво е важно за настройка и използване на AAPS?</string>
-    <string name="prerequisites_determinedcorrectprofile">Валидна информация за профила (Базал, IC, ISF, DIA).</string>
     <string name="prerequisites_computer">Компютър с инсталирано и конфигурирано Android Studio.</string>
-    <string name="prerequisites_phone">Съвместим телефон.</string>
     <string name="prerequisites_pump">Съвместима инсулинова помпа, ако планирате да използвате затворен цикъл.</string>
     <string name="prerequisites_nightscout">Nightscout, за водене на регистър на всички данни и преглед на настройките.</string>
-    <string name="prerequisites_tidepoolaccount">Акаунт в Tidepool.</string>
-    <string name="prerequisites_googleaccount">Акаунт в Google.</string>
-    <string name="prerequisites_githubaccount">Акаунт в Github.</string>
     <string name="prerequisites_beanandroiddeveloper">Опит в програмирането или редактирането на програмен код.</string>
-    <string name="prerequisites_own670g">Помпа MiniMed 670G.</string>
     <string name="prerequisites_hint1">https://wiki.aaps.app/en/latest/Module/module.html</string>
-    <string name="prerequisites_smartwatch">Умен часовник.</string>
-    <string name="prerequisites_supportedcgm">Поддържан CGM.</string>
     <string name="prerequisites2_label">Предпоставки</string>
     <string name="prerequisites2_what">Какво е важно за настройка и използване на AAPS?</string>
     <string name="prerequisites2_profile">Валидна информация за настройка на профил (ISF, съотношение I:C, базални дози, DIA и др.).</string>
@@ -91,11 +75,9 @@
     <string name="prerequisites2_supportedcgm">Поддържан CGM и подходящо приложение за получаване на стойности на кръвната захар на телефона/устройството.</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/en/latest/Module/module.html</string>
     <string name="update_label">Актуализиране на AAPS</string>
-    <string name="whatistrue">Отбележете всички правилни отговори.</string>
     <string name="update_git">Трябва да имате инсталиран и конфигуриран Git на вашия компютър.</string>
     <string name="update_asap">Когато се пуснат актуализирани версии на AAPS, по-ранните версии може да бъдат донякъде ограничени след определено време.</string>
     <string name="update_keys">Трябва да запазите и да отбележите местоположението на вашия  keystoreе и да използвате същия ключ за подписване за актуализации, както при предишната ви инсталация.</string>
-    <string name="update_neverupdate">Никога не актуализирайте, ако системата работи добре.</string>
     <string name="update_askfriend">Ако имате затруднения при изграждането на .apk, можете да инсталирате .apk, което е създадено от приятел.</string>
     <string name="update_hint1">https://wiki.aaps.app/en/latest/Installing-AndroidAPS/Update-to-new-version.html#update-to-a-new-version-or-branch</string>
     <string name="troubleshooting_label">Отстраняване на неизправности</string>
@@ -114,7 +96,6 @@
     <string name="insulin_actrapid">Actrapid®/Humulin R®/\"обикновен\" човешки инсулин.</string>
     <string name="insulin_hint1">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html#insulin</string>
     <string name="sensitivity_label">Плъгини за Чувствителност</string>
-    <string name="sensitivity_which">Отбележете всички правилни отговори.</string>
     <string name="sensitivity_adjust">Плъгините за чувствителност позволяват на AAPS да се коригира за временни или краткотрайни промени в инсулиновата чувствителност (например хормонални промени или проблеми с абсорбцията на мястото на инфузия).</string>
     <string name="sensitivity_edit">Плъгините за чувствителност предоставят на потребителя предложения за промени в базалните дози, съотношенията I:C и ISF, които могат да се използват за редактиране на профил.</string>
     <string name="sensitivity_cannula">Регистрирането на смяна на канюла ще нулира съотношението Autosens обратно на 100%.</string>
@@ -132,7 +113,6 @@
     <string name="wronginsulin_careportal">Изтрийте данните за инсулина от Nightscout Careportal, за да ги премахнете от хронологията на помпата.</string>
     <string name="wronginsulin_compare">Сравнете стойностите в AAPS и историята на помпата (ако помпата поддържа това).</string>
     <string name="wronginsulin_prime">Въведете Болус, пропорционален на вашия изчислен „пропуснат“ инсулин, чрез спринцовка/писалка или с пълнене на сет.</string>
-    <string name="wronginsulin_donothing">Не правете нищо и позволете на APPS да коригира последвалото високо ниво на кръвната захар.</string>
     <string name="cob_label">Активни Въглехидрати (COB)</string>
     <string name="cob_question">Как промяната на стойността на ISF влияе върху изчислението на COB от AAPS?</string>
     <string name="cob_longer">Увеличаването на ISF ще направи изчисленото време за усвояване на въглехидратите по-дълго</string>
@@ -175,7 +155,6 @@
     <string name="isf_decreasingvalue">Намаляване стойностите на ISF ще доведе до доставяне на повече инсулин, за да се коригира надцелевата кръвна глюкоза.</string>
     <string name="isf_noeffect">Повишаването или понижаването на ISF не влияе на доставянето на инсулин, когато нивата на кръвната захар са под целта.</string>
     <string name="isf_preferences">ISF трябва да бъде въведен във вашите AAPS настройки.</string>
-    <string name="isf_profile">Промяната стойността на ISF във вашия профил е достатъчна, за да приложите промяната.</string>
     <string name="isf_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
     <string name="isf_hint2">https://wiki.aaps.app/en/latest/Usage/Profiles.html</string>
     <string name="ic_multiple">Можете да използвате повече от една стойност за съотношението I:C във вашия профил.</string>
@@ -183,9 +162,6 @@
     <string name="ic_label_exam">Съотношение на инсулин към въглехидрати (I:C)</string>
     <string name="ic_increasingvalue">По-високите стойности на I:C водят до по-малко инсулин доставени за дадено количество въглехидрати.</string>
     <string name="ic_decreasingvalue">По-ниските стойности на I:C водят до повече инсулин доставен за дадено количество въглехидрати.</string>
-    <string name="ic_noeffect">Ако имате 0 COB, промяната на съотношението IC ще доведе до различно количество инсулин за коригиране на дадена стойност на КЗ.</string>
-    <string name="ic_different">IC ще бъде различен, ако броите хлебната (разменна) единица като 10 гр или 12 гр.</string>
-    <string name="ic_meaning">Значението на IC е: Колко хлебни (обменни) единици се покриват от 1Е инсулин?</string>
     <string name="ic_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="profileswitch_label">Смяна на профил</string>
     <string name="profileswitch_pctwillchange">При превключване на 90% профил, кои отговори са верни?</string>
@@ -212,12 +188,6 @@
     <string name="profileswitch4_internet">Активирането на промени във вашия Nightscout профил изисква вашият AAPS телефон да има интернет връзка.</string>
     <string name="profileswitch4_sufficient">Редактирането на профили за промяна на стойностите е достатъчно, за да се приложат всички направени промени.</string>
     <string name="profileswitch4_multi">Няколко профила могат да бъдат настроени и избрани, за да се приспособят към променящите се обстоятелства (напр. хормонални промени, работа на смени, начин на живот през делничните дни/почивните дни).</string>
-    <string name="basalhelp_hint1">https://wiki.aaps.app/en/latest/Module/module.html#good-individual-dosage-algorithm-for-your-diabetes-therapy</string>
-    <string name="basalhelp_label">Помощ за базалните дози</string>
-    <string name="basalhelp_where">Къде да отидете за помощ при настройването на базалната скорост и други настройки.</string>
-    <string name="basalhelp_diabetesteam">Вашият диабетен екип</string>
-    <string name="basalhelp_google">Google</string>
-    <string name="basalhelp_facebook">Facebook</string>
     <string name="other_medication_label">Други лекарства. Моля, прочетете изявлението по-долу и поставете отметка в квадратчето, за да приемете декларацията.</string>
     <string name="other_medication_text">AAPS намалява базалните нива или спира доставянето на инсулин, за да повиши кръвната захар. Лекарствата от класа инхибитори на SGLT2 (глифлозини) могат да предотвратят повишаването на кръвната глюкоза и по този начин да предизвикат опасен инсулинов дефицит, водещ до DKA(Diabetic ketoacidosis).
 \nЧесто срещаните марки са: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nС настоящото обещавам, че няма да приемам такива лекарства, когато използвам AAPS или ще деактивирам цикъла, преди да използвам такива лекарства.</string>

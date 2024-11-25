@@ -14,12 +14,7 @@
     <string name="hypott_exercise">At korrigere for hypoglykæmi (Lavt blodsukker) induceret som følge af motion.</string>
     <string name="hypott_0basal">For at undgå lav blodglukose, hvis der allerede er en midlertidig basal på 0%.</string>
     <string name="hypott_hint1">https://wiki.aaps.app/da/latest/Usage/temptarget.html</string>
-    <string name="offlineprofile_whatprofile">Hvilken profil kan bruges og konfigureres offline?</string>
-    <string name="offlineprofile_label">Emne: Offlineprofil</string>
-    <string name="offlineprofile_nsprofile">NS-profil kan bruges, men ikke konfigureres.</string>
-    <string name="offlineprofile_hint1">https://wiki.aaps.app/da/latest/Configuration/Config-Builder.html#profile</string>
     <string name="pumpdisconnect_label">Årsager til anvendelse af \"Afbryd pumpe\" i AAPS</string>
-    <string name="pumpdisconnect_whattodo">Hvad skal man gøre, når man frakobler pumpen fra kroppen?</string>
     <string name="pumpdisconnect_unnecessary">Dette er unødvendigt, da insulin ikke vil blive leveret, hvis pumpen er fysisk afbrudt.</string>
     <string name="pumpdisconnect_missinginsulin">Det forhindrer AAPS i at tage højde for insulin, der ikke blev leveret, mens pumpen er fysisk frakoblet.</string>
     <string name="pumpdisconnect_notstop">Det vil ikke stoppe insulinleveringen, hvis pumpen forbliver forbundet til kroppen.</string>
@@ -59,9 +54,6 @@
     <string name="exercise_setunchanged">Lad dit blodsukker være uændret.</string>
     <string name="exercise_15g">Vent, til blodsukkeret falder under din midlertidige hypo-basal, og spis 15g hurtigt virkende kulhydrater.</string>
     <string name="exercise_hint1">https://wiki.aaps.app/da/latest/Usage/temptarget.html#activity-temp-target</string>
-    <string name="suspendloop_doigetinsulin">Modtager jeg insulin, når Loop er deaktiveret/suspenderet?</string>
-    <string name="suspendloop_yes">Ja, basal insulin fortsætter med at blive levereret.</string>
-    <string name="suspendloop_no">Nej, levering af insulin er stoppet.</string>
     <string name="basaltest_label">Basal, ISF og I:C testning</string>
     <string name="basaltest_when">Hvornår skal disse værdier valideres?</string>
     <string name="basaltest_beforeloop">Før du starter Loop.</string>
@@ -70,19 +62,11 @@
     <string name="basaltest_fixed">Når de er angivet og valideret, skal disse værdier ikke ændres over tid.</string>
     <string name="prerequisites_label">Forudsætninger</string>
     <string name="prerequisites_what">Hvad er afgørende for at opsætte og bruge AAPS?</string>
-    <string name="prerequisites_determinedcorrectprofile">Valideret profilinformationer (Basaler, I:C, ISF, DIA).</string>
     <string name="prerequisites_computer">En computer med Android Studio installeret og konfigureret.</string>
-    <string name="prerequisites_phone">En understøttet telefon.</string>
     <string name="prerequisites_pump">En kompatibel insulinpumpe, hvis du har planer om at køre lukket Loop.</string>
     <string name="prerequisites_nightscout">Nightscout, for at holde en log over alle data og gennemgå indstillinger.</string>
-    <string name="prerequisites_tidepoolaccount">En Tidepool konto.</string>
-    <string name="prerequisites_googleaccount">En Google konto.</string>
-    <string name="prerequisites_githubaccount">En Github konto.</string>
     <string name="prerequisites_beanandroiddeveloper">Erfaring med programmering eller redigering af kode.</string>
-    <string name="prerequisites_own670g">En MiniMed 670G pumpe.</string>
     <string name="prerequisites_hint1">https://wiki.aaps.app/da/latest/Module/module.html</string>
-    <string name="prerequisites_smartwatch">Et Smartwatch.</string>
-    <string name="prerequisites_supportedcgm">En Understøttet CGM.</string>
     <string name="prerequisites2_label">Forudsætninger</string>
     <string name="prerequisites2_what">Hvad er afgørende for at opsætte og bruge AAPS?</string>
     <string name="prerequisites2_profile">Valideret information til at konfigurere en profil (ISF, I:C ratio, basal rate, DIA osv.).</string>
@@ -91,11 +75,9 @@
     <string name="prerequisites2_supportedcgm">En understøttet CGM og relevant app til at modtage blodsukkerværdier på telefonen/enheden.</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/da/latest/Module/module.html</string>
     <string name="update_label">Opdaterer AAPS</string>
-    <string name="whatistrue">Tjek alle de korrekte svar.</string>
     <string name="update_git">Du skal have installeret Git og konfigureret på din computer.</string>
     <string name="update_asap">Når opdaterede versioner af AAPS frigives, kan de tidligere versioner fjernbegrænses efter et bestemt tidspunkt.</string>
     <string name="update_keys">Du skal gemme og notere placeringen af din keystore og bruge det samme kodeord til opdateringer som ved den forrige installation.</string>
-    <string name="update_neverupdate">Opdater aldrig, hvis systemet fungerer godt.</string>
     <string name="update_askfriend">Hvis du har svært ved at bygge apk\'en, kan du installere en apk, der er blevet bygget af en ven.</string>
     <string name="update_hint1">https://wiki.aaps.app/da/latest/Installing-AndroidAPS/Update-to-new-version.html#update-to-a-new-version-or-branch</string>
     <string name="troubleshooting_label">Fejlfinding</string>
@@ -114,7 +96,6 @@
     <string name="insulin_actrapid">Actrapid®/Humalin R®/\"regulært\" humant insulin.</string>
     <string name="insulin_hint1">https://wiki.aaps.app/da/latest/Configuration/Config-Builder.html#insulin</string>
     <string name="sensitivity_label">Sensitivitets plugins</string>
-    <string name="sensitivity_which">Tjek alle de korrekte svar.</string>
     <string name="sensitivity_adjust">Sensitivitetsplugins giver AAPS mulighed for at justere midlertidigt eller kortvarige ændringer i insulin-følsomheden (f.eks. hormonelle ændringer eller problemer med absorption på infusionsstedet).</string>
     <string name="sensitivity_edit">Sensitivitetsplugins giver brugeren forslag til ændringer i basalrater, IC-forhold og ISF, der kan bruges til at redigere profilen.</string>
     <string name="sensitivity_cannula">Notering af cannula-skift vil nulstille Autosens-ratio tilbage til 100%.</string>
@@ -132,7 +113,6 @@
     <string name="wronginsulin_careportal">Slet insulinleveringsdata fra Nightscouts Careportal for at slette det fra pumpehistorikken.</string>
     <string name="wronginsulin_compare">Sammenlign værdier i AAPS og pumpehistorik (hvis pumpen understøtter dette).</string>
     <string name="wronginsulin_prime">Bolus en del af din beregnede \"glemte\" insulin med enten sprøjter / pen eller brug af en kanylefyldning.</string>
-    <string name="wronginsulin_donothing">Gør ingenting, og lad AAPS korrigere eventuelle resulterende højt blodsukker.</string>
     <string name="cob_label">Kulhydrater om bord (COB)</string>
     <string name="cob_question">Hvordan påvirker ændring af ISF-værdien COB-beregningen?</string>
     <string name="cob_longer">Øgning af ISF vil gøre den beregnede kulhydratabsorptionstid længere</string>
@@ -175,7 +155,6 @@
     <string name="isf_decreasingvalue">Reduktion af ISF-værdier fører til mere insulintilførsel for at korrigere for et højt blodsukker.</string>
     <string name="isf_noeffect">Forhøjelse eller sænkning af ISF har ingen effekt på insulinlevering, når blodsukkeret er under målet.</string>
     <string name="isf_preferences">ISF skal indtastes i dine AAPS præferencer.</string>
-    <string name="isf_profile">Ændring af ISF-værdien i din profil er nok til at anvende ændringen.</string>
     <string name="isf_hint1">https://wiki.aaps.app/da/latest/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
     <string name="isf_hint2">https://wiki.aaps.app/da/latest/Usage/Profiles.html</string>
     <string name="ic_multiple">Du kan bruge mere end en værdi for I:C forholdet i din profil.</string>
@@ -183,9 +162,6 @@
     <string name="ic_label_exam">Insulin til kulhydratforhold (I:C ratio)</string>
     <string name="ic_increasingvalue">Højere I:C-forhold fører til mindre insulin, der leveres til en given mængde af kulhydrater.</string>
     <string name="ic_decreasingvalue">Lavere I:C-forhold fører til mindre insulin, der leveres til en given mængde af kulhydrater.</string>
-    <string name="ic_noeffect">Hvis du har 0 COB, vil en ændring af I:C-forholdet føre til en anden mængde af insulin for at rette en given BS-værdi.</string>
-    <string name="ic_different">IC vil være anderledes, hvis du tæller brød (udvekslingsenhed) som 10g eller 12g.</string>
-    <string name="ic_meaning">Betydningen af IC er: Hvor mange brødenheder er dækket af 1IE insulin?</string>
     <string name="ic_hint1">https://wiki.aaps.app/da/latest/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="profileswitch_label">Profilskift</string>
     <string name="profileswitch_pctwillchange">Når et 90% profilskift angives, hvilke svar er så sande?</string>
@@ -212,12 +188,6 @@
     <string name="profileswitch4_internet">Aktivering af ændringer til din Nightscout-profil kræver, at din AAPS-telefon har internetforbindelse.</string>
     <string name="profileswitch4_sufficient">Redigering af profiler til ændring af værdier er tilstrækkelig til at foretage ændringer.</string>
     <string name="profileswitch4_multi">Flere profiler kan oprettes og vælges til at tilpasse til skiftende omstændigheder (f.eks. hormonelle ændringer, skiftende arbejde, hverdags- / weekendlivsstil).</string>
-    <string name="basalhelp_hint1">https://wiki.aaps.app/da/latest/Module/module.html#good-individual-dosage-algorithm-for-your-diabetes-therapy</string>
-    <string name="basalhelp_label">Hjælp til basal rater</string>
-    <string name="basalhelp_where">Hvor man skal opsøge hjælp med at oprette sin basalrate og andre indstillinger.</string>
-    <string name="basalhelp_diabetesteam">Dit diabetes team</string>
-    <string name="basalhelp_google">Google</string>
-    <string name="basalhelp_facebook">Facebook</string>
     <string name="other_medication_label">Anden medicin. Læs venligst erklæringen nedenfor og check boksen for at acceptere den.</string>
     <string name="other_medication_text">AAPS reducerer basalraten eller suspenderer insulintilførslen for at hæve blodsukkeret. Medicin i klassen SGLT-2-hæmmere (glifloziner) kan forhindre øgelsen in blodglukose og kan, af denne årsag, producere et farligt insulinmangel som leder til DKA.
 \nAlmindelige mærkenavne er: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nJeg lover hermed, at jeg ikke tager sådan medicin under brug af AAPS eller vil deaktivere loopet før sådan medicin tages i brug.</string>

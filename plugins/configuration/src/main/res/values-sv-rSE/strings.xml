@@ -45,8 +45,6 @@
     <string name="readstatus">Läs status</string>
     <string name="data_choices">Dataval</string>
     <string name="fabric_upload">Uppladdning till Fabric</string>
-    <string name="allow_automated_crash_reporting">Tillåt automatisk rapportering av appkrascher och användningsinformation till utvecklarna via fabric.io-tjänsten.</string>
-    <string name="summary_email_for_crash_report">Den här mejladressen kommer att bifogas till kraschrapporter så att vi kan kontakta dig i brådskande fall. Det är frivilligt.</string>
     <string name="identification">Identifiering (e-post, FB, Discord-namn etc)</string>
     <string name="request">Begäran</string>
     <string name="apsmode_title">APS-läge</string>
@@ -128,11 +126,9 @@
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exporterades för %1$s sedan</string>
     <string name="exported_at" comment="at placeholder we add export date">exporterades %1$s</string>
     <string name="exported_less_than_hour_ago">exporterades för mindre än timme sedan</string>
-    <string name="in_directory" comment="placeholder is for exported file path">i mappen: %1$s</string>
     <string name="preferences_import_list_title">Välj fil att importera</string>
     <string name="metadata_warning_different_flavour">Inställningar skapades med en annan variant av AAPS (%1$s). Du kör nu: %2$s.\n\nVissa inställningar kan saknas eller är ogiltiga. Efter att du importerat bör du kontrollera och uppdatera inställningarna.</string>
     <string name="metadata_warning_different_device">Inställningar skapades på en annan enhet. Det är OK om du importerar från en äldre eller en annan telefon, men se till att importerade inställningar är korrekta!</string>
-    <string name="metadata_warning_outdated_format">Du använder det gamla formatet (från äldre versioner av AAPS) som inte är säkert. Använd det bara som en sista utväg om du inte har någon export i aktuellt format, JSON.</string>
     <string name="metadata_warning_old_export">Importerade inställningar är %1$s dagar gamla. Du kanske har mer aktuella inställningar eller väljer du fel fil? Kom ihåg att exportera dina inställningar regelbundet!</string>
     <string name="metadata_warning_date_format">Ogiltigt datumformat!</string>
     <string name="metadata_warning_different_version">Inställningarna är sparade i en annan delversion av appen. Det är OK om du importerar efter uppgradering, men kontrollera att inställningarna fortfarande är korrekta efter import!</string>
@@ -159,6 +155,5 @@
     <string name="metadata_label_device_model">Exporterar enhetsmodell</string>
     <string name="metadata_label_encryption">· Filkryptering</string>
     <string name="metadata_format_new">Nytt krypterat format</string>
-    <string name="metadata_format_debug">Nytt debug-format (okrypterat)</string>
     <string name="metadata_format_other">Okänt exportformat</string>
 </resources>

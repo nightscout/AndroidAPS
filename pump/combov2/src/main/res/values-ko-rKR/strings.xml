@@ -4,7 +4,6 @@
     <string name="combov2_plugin_description">Accu-Chek Combo pump를 위한 기본 펌프 통합</string>
     <string name="combov2_could_not_connect">펌프에 연결할 수 없음</string>
     <string name="combov2_not_paired">펌프에 페어링되지 않음</string>
-    <string name="combov2_pump_terminated_connection">펌프 연결 종료됨</string>
     <string name="combov2_warning">Combo 경고</string>
     <string name="combov2_error">Combo 오류</string>
     <string name="combov2_warning_4">업데이트를 위해 hotline에 연락하세요</string>
@@ -115,8 +114,6 @@
     <string name="combov2_short_status_battery_state">배터리: %s</string>
     <string name="combov2_automatic_reservoir_entry">인슐린 레저버 교체를 자동으로 감지하고, 자동으로 입력함</string>
     <string name="combov2_automatic_battery_entry">배터리 교체를 자동으로 감지하고, 자동으로 입력함</string>
-    <string name="combov2_note_reservoir_change">인슐린 레저버 교체가 combov2 드라이버에 의해 자동으로 입력됨</string>
-    <string name="combov2_note_battery_change">배터리 교체가 combov2 드라이버에 의해 자동으로 입력됨</string>
     <string name="combov2_timezone_changed">시간대가 변경됨</string>
     <string name="combov2_datetime_changed">날짜와/또는 시간 변경됨</string>
     <string name="combov2_dst_started">서머타임제(DST)가 시작됨</string>

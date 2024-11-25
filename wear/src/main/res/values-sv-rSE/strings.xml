@@ -2,9 +2,6 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_watchface_large">AAPS (Large)</string>
-    <string name="label_watchface_big_chart">AAPS (BigChart)</string>
-    <string name="label_watchface_no_chart">AAPS (NoChart)</string>
     <string name="label_watchface_circle">AAPS (Circle)</string>
     <string name="label_watchface_digital_style">AAPS (DigitalStyle)</string>
     <string name="label_watchface_custom">AAPS (anpassad)</string>
@@ -18,7 +15,6 @@
     <string name="msg_warning_sync">Inga data har tagits emot sedan %1$s! Kontrollera om AAPS i telefonen skickar data till klockan</string>
     <string name="msg_warning_old">AAPS-data är %1$s gammal. Kontrollera sensorn, xDrip+, NS, AAPS-inställning eller något annat!</string>
     <string name="pref_vibrate_on_bolus">Vibrera vid bolus</string>
-    <string name="pref_units_for_actions">Enheter för åtgärder</string>
     <string name="units_short">U</string>
     <string name="pref_show_date">Visa datum</string>
     <string name="pref_show_iob">Visa IOB</string>
@@ -49,10 +45,6 @@
     <string name="pref_quick_righty">Snabb höger</string>
     <string name="pref_quick_lefty">Snabb vänster</string>
     <string name="pref_modern_sparse">Modern Sparse</string>
-    <string name="pref_low">Låg</string>
-    <string name="pref_medium">Mellan</string>
-    <string name="pref_high">Hög</string>
-    <string name="pref_auto">Auto</string>
     <string name="pref_big_numbers">Stora siffror</string>
     <string name="pref_ring_history">Ringhistorik</string>
     <string name="pref_light_ring_history">Ljus ringhistorik</string>
@@ -106,7 +98,6 @@
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Valfri mängd</string>
     <string name="action_confirm">BEKRÄFTA</string>
     <string name="action_timeshift">tidsförskjutning</string>
-    <string name="action_bolus">Bolus</string>
     <string name="bolus_progress">Bolusförlopp</string>
     <string name="press_to_cancel">tryck för att avbryta</string>
     <string name="cancel_bolus">AVBRYT BOLUS</string>
@@ -175,17 +166,11 @@
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
     <string name="no_tmp_basal_u_h">-.--U/h</string>
-    <string name="uploader_na">U: --%</string>
-    <string name="no_status">S: --</string>
-    <string name="time_stamp_na_min_ago">-- Min. sedan</string>
-    <string name="delta_na">--- mg/dl</string>
-    <string name="no_loop_status">Ingen loop-status</string>
     <string name="cob_000g">000g</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00U</string>
     <string name="snooze_alert">AAPS Snooze-varning</string>
     <string name="sending_snooze">Skickar Snooze till AAPS</string>
-    <string name="short_hour">h</string>
     <string name="week_short">v</string>
     <string name="day_short">d</string>
     <string name="hour_short">h</string>

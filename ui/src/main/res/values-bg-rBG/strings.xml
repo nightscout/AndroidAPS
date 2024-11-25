@@ -79,24 +79,15 @@
     <string name="no_records_available">Няма налични записи</string>
     <string name="calculation_short">Калк</string>
     <string name="treatments_iob_label_string">IOB:</string>
-    <string name="treatments_insulin_label_string">Инсулин:</string>
     <string name="treatments_carbs_label_string">Вълехидрати:</string>
-    <string name="treatments_iobtotal_label_string">Общо IOB:</string>
-    <string name="treatments_iob_activity_total_label_string">Общо активен IOB:</string>
-    <string name="tempbasals_realduration_label_string">Прод.:</string>
     <string name="tempbasals_netratio_label_string">Съотношение:</string>
-    <string name="tempbasals_netinsulin_label_string">Инс:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="treatments_wizard_correction_label">Корекция</string>
     <string name="meal_bolus">Хранене</string>
     <string name="prime">Пълнене</string>
-    <string name="profile_changes">Промени на профила</string>
-    <string name="tempt_targets">Временни цели</string>
     <string name="carbs_and_bolus">Въглехидрати и болус</string>
     <string name="show_invalidated_records">Показване на невалидните/премахнатите записи</string>
     <string name="hide_invalidated_records">Скриване на невалидните/премахнатите записи</string>
-    <string name="refresh_from_nightscout">Обнови от Найтскаут</string>
-    <string name="refresheventsfromnightscout">Презареди от NS</string>
     <string name="show_invalidated">Покажи невалидните</string>
     <string name="hide_invalidated">Скрий невалидните</string>
     <string name="careportal_remove_started_events">Премахни започнатите от AAPS записи</string>
@@ -131,7 +122,5 @@
     <string name="a11y_only_on_phone">само на смартфон</string>
     <string name="quickwizard_settings">Настройки Бърз достъп</string>
     <string name="overview_edit_quickwizard_valid">Валиден:</string>
-    <string name="overview_edit_quickwizard_list_activity_add">Добави</string>
-    <string name="overview_quickwizard_item_edit_button">Редактирай</string>
     <string name="a11y_drag_and_drop_handle">опция \"плъзни и пусни\"</string>
 </resources>

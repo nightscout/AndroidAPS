@@ -104,8 +104,6 @@
     <string name="automation_event">Automatisierungs-Ereignis</string>
     <string name="reorder_label">Umsortieren</string>
     <string name="user_action">Benutzeraktion</string>
-    <string name="remove_automation">Automatisierung entfernen</string>
-    <string name="sort_automation">Automation-Regeln sortieren</string>
     <string name="remove_selected_items">Ausgewähltes Objekt löschen</string>
     <string name="count_selected">%1$d ausgewählt</string>
     <string name="system_automation">System-Automatisierung</string>

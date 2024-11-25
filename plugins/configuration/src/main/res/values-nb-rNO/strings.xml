@@ -48,8 +48,6 @@
     <string name="fabric_upload">Send krasjrapporter automatisk</string>
     <string name="unattended_settings_export">Uovervåket eksport av innstillinger</string>
     <string name="unattended_settings_export_summary">Aktivering av dette vil lagre ditt passord sikkert på din telefon</string>
-    <string name="allow_automated_crash_reporting">Tillat automatisk rapportering av appkrasj og bruksdata til utviklerne via fabrioc.io-tjenesten.</string>
-    <string name="summary_email_for_crash_report">Denne e-postadressen vedlegges krasjrapporter slik at vi kan kontakte deg i akutte tilfeller. Det er valgfritt.</string>
     <string name="identification">Identifikasjon (e-post, Facebook eller Discord-nick osv.)</string>
     <string name="request">Forespørsel</string>
     <string name="apsmode_title">APS modus</string>
@@ -136,11 +134,9 @@
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">eksportert for %1$s siden</string>
     <string name="exported_at" comment="at placeholder we add export date">eksportert den %1$s</string>
     <string name="exported_less_than_hour_ago">eksportert for mindre enn time siden</string>
-    <string name="in_directory" comment="placeholder is for exported file path">i katalogen: %1$s</string>
     <string name="preferences_import_list_title">Velg fil å importere</string>
     <string name="metadata_warning_different_flavour">Innstillinger ble opprettet med en annen utgave av AAPS (%1$s) mens du har: %2$s.\n\nNoen innstillinger kan mangle eller være ugyldige. Etter å ha importert bør du kontrollere og oppdatere innstillingene dine.</string>
     <string name="metadata_warning_different_device">Innstillingene ble opprettet på en annen enhet. Det er OK om du importerer fra en eldre/annen telefon, men kontroller at importerte innstillinger er riktig!</string>
-    <string name="metadata_warning_outdated_format">Du bruker et utgått format fra en gammel versjon av AAPS som ikke er sikkert! Bruk det bare som en siste utvei hvis du ikke har en nyere eksport som benytter JSON formatet.</string>
     <string name="metadata_warning_old_export">Importerte innstillinger er allerede %1$s dager gamle! Kanskje du har flere oppdaterte innstillinger eller du har valgt feil fil? Husk å eksportere innstillinger regelmessig!</string>
     <string name="metadata_warning_date_format">Ugyldig dato-tid format!</string>
     <string name="metadata_warning_different_version">Innstillinger er fra en annen delversjon av appen. Det er OK å importere etter en oppgradering av app, men sjekk at innstillinger fortsatt er korrekte etter importen!</string>
@@ -167,7 +163,7 @@
     <string name="metadata_label_device_model">Eksporterer enhetsmodell</string>
     <string name="metadata_label_encryption">Filkryptering</string>
     <string name="metadata_format_new">Nytt krypteringsformat</string>
-    <string name="metadata_format_debug">Nytt feilsøkingsformat (ukryptert)</string>
     <string name="metadata_format_other">Ukjent eksportformat</string>
     <string name="reset_aps_results">Tilbakestill APS-resultater</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Feil ved tilgang til filsystem. Velg AAPS-mappe riktig.</string>
 </resources>

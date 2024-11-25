@@ -5,11 +5,8 @@
     <string name="diaconn_g8_history_basalhours">Hores basal</string>
     <string name="diaconn_g8_history_bolus">Bolus</string>
     <string name="diaconn_g8_history_dailyinsulin">Insulina diària</string>
-    <string name="diaconn_g8_history_errors">Errors</string>
-    <string name="diaconn_g8_history_prime">Encebar</string>
     <string name="diaconn_g8_history_refill">Reomplir</string>
     <string name="diaconn_g8_history_suspend">Suspendre</string>
-    <string name="diaconn_firmware_version">Versió</string>
     <string name="invalidpairing">Info de sincronització no vàlida. Sol·licitant nova sincronització</string>
     <string name="gettingpumpsettings">Obtenint configuració bomba</string>
     <string name="gettingpumptime">Obtenint hora bomba</string>
@@ -26,13 +23,9 @@
     <string name="speederror">Error de velocitat</string>
     <string name="insulinlimitviolation">Superat el límit d\'insulina</string>
     <string name="boluserrorcode">Demanat: %1$.2fU Lliurat: %2$.2fU Codi error: %3$s</string>
-    <string name="diaconn_g8_valuenotsetproperly">Valor no configurat correctament</string>
     <string name="bolusspeed">Velocitat bolus</string>
     <string name="selectedpump">Bomba seleccionada</string>
-    <string name="diaconn_g8_useextended_title">Utilitzar bolus estesos durant &gt;200%%</string>
-    <string name="diaconn_g8_visualizeextendedaspercentage_title">Visualitzar bolus estesos com %%</string>
     <string name="diaconn_g8_bluetooth_status">Estat Bluetooth</string>
-    <string name="diagonn_g8_tdd_label">TDD</string>
     <string name="bolus_step">Increment bolus</string>
     <string name="basal_step">Increment basal</string>
     <string name="pump_firmware_label">Firmware</string>
@@ -44,7 +37,6 @@
     <string name="diaconn_g8_pumpalarm_intensity_high">alt</string>
     <string name="diaconn_g8_screentimeout">Temps pantalla LCD encesa [second]</string>
     <string name="diaconn_g8_bolus_speed">Velocitat bolus</string>
-    <string name="diaconn_g8_pumpalarm_low">baix</string>
     <string name="diaconn_g8_loginsulinchange_title">Enregistrar canvi de reservori</string>
     <string name="diaconn_g8_loginsulinchange_summary">Afegir event \"Canvi d\'insulina\" al portal de cures quan es detecti a l\'historial</string>
     <string name="diaconn_g8_logcanulachange_summary">Afegir event \"Canvi de cànula\" al portal de cures quan es detecti a l\'historial</string>

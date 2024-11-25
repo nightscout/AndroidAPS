@@ -30,8 +30,6 @@
     <string name="random_bg">Losowa glikemia</string>
     <string name="description_source_random_bg">Generuj losowe odczyty glukozy (wyłącznie do celów demonstracyjnych)</string>
     <string name="random_bg_short">BG</string>
-    <string name="do_xdrip_upload_title">Prześlij glikemię do xDrip+</string>
-    <string name="do_xdrip_upload_summary">W xDrip+ wybierz źródło danych 640g/Eversense</string>
     <string name="bgsource_upload">Ustawienia wysyłania wartości BG (poziomów cukru)</string>
     <string name="dexcom_log_ns_sensor_change_title">Zapisz zmianę sensora w dzienniku NS</string>
     <string name="dexcom_log_ns_sensor_change_summary">Automatycznie utwórz zdarzenie \"Zmiana Sensora\" w Nightscout przy uruchomieniu sensora</string>

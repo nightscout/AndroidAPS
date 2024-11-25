@@ -30,8 +30,6 @@
     <string name="random_bg">Zufalls-BZ</string>
     <string name="description_source_random_bg">Zufalls-BZ: Generiert zufällige Blutzuckerdaten (nur im Demo-Modus)</string>
     <string name="random_bg_short">BZ</string>
-    <string name="do_xdrip_upload_title">Sende BZ-Werte zu xDrip+</string>
-    <string name="do_xdrip_upload_summary">Wähle in xDrip+ 640g/Eversense als Daten-Quelle.</string>
     <string name="bgsource_upload">BZ Upload Einstellungen</string>
     <string name="dexcom_log_ns_sensor_change_title">Speichere Sensor Wechsel in Nightscout</string>
     <string name="dexcom_log_ns_sensor_change_summary">Ereignis \"Sensorwechsel\" bei Sensorstart automatisch in NS erstellen</string>

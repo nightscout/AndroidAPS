@@ -27,8 +27,6 @@
     <string name="ns_client_secret_dialog_title">NS API secret</string>
     <string name="ns_client_secret_dialog_message">Insira NS API secret (min 12 caract.)</string>
     <string name="deliver_now">Administrar agora</string>
-    <string name="clear_queue">Limpar fila de espera</string>
-    <string name="show_queue">Mostrar file de espera</string>
     <string name="queue">Fila de espera:</string>
     <string name="status">Estado:</string>
     <string name="clear_log">Limpar Registo</string>
@@ -72,11 +70,6 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Enviar dados para Tidepool</string>
-    <string name="tidepool_upload_cgm">Enviar dados CGM</string>
-    <string name="tidepool_upload_bolus">Enviar tratamentos (insulina, hidratos)</string>
-    <string name="tidepool_upload_tbr">Enviar basais temporárias</string>
-    <string name="tidepool_upload_profile">Enviar trocas de perfil, alvos temporários</string>
-    <string name="tidepool_upload_bg">Enviar testes Glicose</string>
     <string name="upload_now">Fazer o upload agora</string>
     <!-- Xdrip StatusLine -->
     <string name="xdrip_status_show_bgi_title">Mostrar IG</string>
@@ -94,7 +87,6 @@
     <string name="wizard_result">Calc. Assistente:\nInsulina: %1$.2fU\nHidratos: %2$dg</string>
     <string name="quick_wizard_not_available">O assistente rápido selecionado não está mais disponível, atualize o ecrã</string>
     <string name="quick_wizard_message">Assistente rápido: %1$s\nInsulina: %2$.2fU\nHidratos: %3$dg</string>
-    <string name="wear_action_tempt_preset_error">Predefinição de alvo temporário desconhecido: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Cancelando Alvos Temporários em execução?</string>
     <string name="wear_action_tempt_unit_error">Diferentes unidades usadas no relógio e telefone!</string>
     <string name="wear_action_tempt_zero_message">Alvo-temporário-Zero - cancelar Alvos -Temporários em progresso?</string>

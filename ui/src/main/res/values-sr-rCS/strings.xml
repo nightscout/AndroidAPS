@@ -20,13 +20,8 @@
     <string name="carb_time_label">Vreme ugljenih hidrata</string>
     <!-- Treatments -->
     <string name="treatments_iob_label_string">IOB:</string>
-    <string name="treatments_insulin_label_string">Insulin:</string>
     <string name="treatments_carbs_label_string">Ugljeni hidrati:</string>
-    <string name="treatments_iobtotal_label_string">Ukupno IOB:</string>
-    <string name="treatments_iob_activity_total_label_string">Ukupna aktivnost IOB-a:</string>
-    <string name="tempbasals_realduration_label_string">Trajanje:</string>
     <string name="tempbasals_netratio_label_string">Odnos:</string>
-    <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="treatments_wizard_correction_label">Korekcija</string>
     <string name="meal_bolus">Obrok</string>

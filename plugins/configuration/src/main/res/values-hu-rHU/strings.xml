@@ -35,6 +35,5 @@
     <string name="metadata_label_device_model">Készülékmodell exportálása</string>
     <string name="metadata_label_encryption">Fájltitkosítás</string>
     <string name="metadata_format_new">Új titkosított formátom</string>
-    <string name="metadata_format_debug">Új hibakeresési formátum (nem titkosított)</string>
     <string name="metadata_format_other">Ismeretlen export formátum</string>
 </resources>

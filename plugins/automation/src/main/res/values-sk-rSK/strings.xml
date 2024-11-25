@@ -120,8 +120,6 @@
     <string name="automation_event">Udalosť automatizácie</string>
     <string name="reorder_label">Zmena poradia</string>
     <string name="user_action">Akcia užívateľa</string>
-    <string name="remove_automation">Odstrániť automatizáciu</string>
-    <string name="sort_automation">Zoradiť automatizácie</string>
     <string name="remove_selected_items">Odstrániť vybrané položky</string>
     <string name="count_selected">Vybrané: %1$d</string>
     <string name="system_automation">Automatizácia systému</string>

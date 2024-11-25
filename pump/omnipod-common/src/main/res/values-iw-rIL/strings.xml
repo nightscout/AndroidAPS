@@ -35,7 +35,6 @@
     <string name="omnipod_common_error_unexpected_exception">אירעה שגיאה לא צפויה. נא לדווח! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation">אישור</string>
-    <string name="omnipod_common_confirmation_time_or_timezone_change">שעה ו\\או אזור הזמן השתנו בפוד.</string>
     <string name="omnipod_common_confirmation_expiration_alerts_updated">הגדרת ההתראות בפוד עודכנה.</string>
     <string name="omnipod_common_confirmation_time_on_pod_updated">שעון הפוד עודכן.</string>
     <string name="omnipod_common_confirmation_suspended_delivery">כל הזרקות האינסולין הושהו.</string>
@@ -127,7 +126,6 @@
     <string name="omnipod_common_pod_status_normal">נורמלי</string>
     <string name="omnipod_common_pod_status_suspended">מושהה</string>
     <string name="omnipod_common_pod_status_pod_fault">תקלה בפוד</string>
-    <string name="omnipod_common_pod_status_activation_time_exceeded">חריגת זמן הפעלה</string>
     <string name="omnipod_common_pod_status_inactive">לא פעיל</string>
     <string name="omnipod_common_pod_status_pod_fault_description">תקלת פוד: %1$03d %2$s</string>
     <!-- Omnipod - Commands -->
@@ -153,7 +151,6 @@
     <string name="omnipod_common_cmd_set_fake_suspended_tbr">הגדר בזאלי זמני מזויף כי הפוד מושהה</string>
     <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">בטל בזאלי זמני מזויף שנוצר מפני שהפוד הושהה</string>
     <string name="omnipod_common_cmd_split_tbr">פיצול הבזאלי הזמני עקב כשל לא ודאי בביטול</string>
-    <string name="omnipod_common_cmd_beep_config">הגדרות צפצוף</string>
     <string name="omnipod_common_cmd_play_test_beep">השמע צפצוף ניסיון</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_finish_pairing_reminder">תזכורת לסיום הצימוד</string>

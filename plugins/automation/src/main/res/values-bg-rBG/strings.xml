@@ -104,8 +104,6 @@
     <string name="automation_event">Събитие</string>
     <string name="reorder_label">Подреди</string>
     <string name="user_action">Потребителско действие</string>
-    <string name="remove_automation">Премахване на Автоматизация</string>
-    <string name="sort_automation">Сортиране на автоматизацията</string>
     <string name="remove_selected_items">Премахнете избраните елементи</string>
     <string name="count_selected">%1$d избрани</string>
     <string name="system_automation">Системна автомация</string>

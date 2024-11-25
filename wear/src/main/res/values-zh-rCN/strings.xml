@@ -2,9 +2,6 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_watchface_large">AAPS(大)</string>
-    <string name="label_watchface_big_chart">AAPS(大图)</string>
-    <string name="label_watchface_no_chart">AAPS(无图)</string>
     <string name="label_watchface_circle">AAPS(圆形)</string>
     <string name="label_watchface_digital_style">AAPS(数字风格)</string>
     <string name="label_actions_tile">AAPS(操作)</string>
@@ -17,7 +14,6 @@
     <string name="msg_warning_sync">自 %1$s以来未收到任何数据! 检查手机上的 AAPS 是否发送数据到手表。</string>
     <string name="msg_warning_old">AAPS 数据为 %1$s之前! 请检查传感器， xDrip+， NS， AAPS 配置或其他!</string>
     <string name="pref_vibrate_on_bolus">大剂量时震动</string>
-    <string name="pref_units_for_actions">操作单元</string>
     <string name="pref_show_date">显示日期</string>
     <string name="pref_show_iob">显示 IOB</string>
     <string name="pref_show_cob">显示 COB</string>
@@ -44,10 +40,6 @@
     <string name="pref_quick_righty">快速右对齐</string>
     <string name="pref_quick_lefty">快速左对齐</string>
     <string name="pref_modern_sparse">现代场景</string>
-    <string name="pref_low">低</string>
-    <string name="pref_medium">中等</string>
-    <string name="pref_high">高</string>
-    <string name="pref_auto">自动</string>
     <string name="pref_big_numbers">大数字</string>
     <string name="pref_ring_history">Ring 历史记录</string>
     <string name="pref_light_ring_history">Light Ring历史记录</string>
@@ -101,7 +93,6 @@
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">可用数值</string>
     <string name="action_confirm">确认</string>
     <string name="action_timeshift">时间偏移</string>
-    <string name="action_bolus">大剂量</string>
     <string name="bolus_progress">大剂量进度</string>
     <string name="press_to_cancel">按下以取消</string>
     <string name="cancel_bolus">取消大剂量</string>

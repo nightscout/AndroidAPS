@@ -14,12 +14,7 @@
     <string name="hypott_exercise">Tam, kad būtų koreguojama hipoglikemija, įvykusi dėl fizinio aktyvumo.</string>
     <string name="hypott_0basal">Tam, kad būtų išvengta glikemijos kritimo kai jau nustatyta 0% laikina bazė.</string>
     <string name="hypott_hint1">https://wiki.aaps.app/en/latest/Usage/temptarget.html</string>
-    <string name="offlineprofile_whatprofile">Kuris profilis gali būti naudojamas ir konfigūruojamas neprisijungus prie interneto?</string>
-    <string name="offlineprofile_label">Tema: Vietinis Profilis</string>
-    <string name="offlineprofile_nsprofile">NS profilis gali būti naudojamas, bet ne konfigūruojamas.</string>
-    <string name="offlineprofile_hint1">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html#profile</string>
     <string name="pumpdisconnect_label">Priežastys, kada taikoma AndroidAPS funkcija „Atjungti pompą“</string>
-    <string name="pumpdisconnect_whattodo">Kas vyksta programiškai atjungus pompą?</string>
     <string name="pumpdisconnect_unnecessary">To daryti nereikia, nes insulinas ir taip nebus tiekiamas, jei pompa fiziškai atjungta.</string>
     <string name="pumpdisconnect_missinginsulin">Tai neleidžia AndroidAPS įskaičiuoti insuliną, kuris nebus tiekiamas fiziškai atjungus pompą.</string>
     <string name="pumpdisconnect_notstop">Tai nesustabdys insulino tiekimo, jei pompa liks prijungta prie kūno.</string>
@@ -59,9 +54,6 @@
     <string name="exercise_setunchanged">Palikti glikemijos tikslą nepakeistą.</string>
     <string name="exercise_15g">Palaukti, kol glikemija nukris žemiau Hipo laikino tikslo, tada suvalgyti 15 g greitųjų angliavandenių.</string>
     <string name="exercise_hint1">https://wiki.aaps.app/en/latest/Usage/temptarget.html#activity-temp-target</string>
-    <string name="suspendloop_doigetinsulin">Ar bus leidžiamas insulinas, jei ciklas bus išjungtas/pristabdytas?</string>
-    <string name="suspendloop_yes">Taip, bazė ir toliau bus leidžiama.</string>
-    <string name="suspendloop_no">Ne, insulino tiekimas bus pilnai sustabdytas.</string>
     <string name="basaltest_label">Bazės, JIF ir IA testavimas</string>
     <string name="basaltest_when">Kada šie parametrai turėtų būti patikrinti?</string>
     <string name="basaltest_beforeloop">Prieš pradedant naudoti AAPS.</string>
@@ -70,19 +62,11 @@
     <string name="basaltest_fixed">Vieną kartą nustačius šių parametrų nebereikia keisti.</string>
     <string name="prerequisites_label">Būtinosios sąlygos</string>
     <string name="prerequisites_what">Ko reikia norint įvesti nustatymus ir pradėti naudoti AndroidAPS?</string>
-    <string name="prerequisites_determinedcorrectprofile">Ištestuotų profilio duomenų (bazės, JIF, IA, IVT).</string>
     <string name="prerequisites_computer">Kompiuterio su įdiegta ir sukonfigūruota Android Studio programa.</string>
-    <string name="prerequisites_phone">Tinkamo telefono.</string>
     <string name="prerequisites_pump">Tinkamos insulino pompos, jei ketinate naudoti uždarą ciklą.</string>
     <string name="prerequisites_nightscout">Nightscout, kad galima būtų išsaugoti ir peržiūrėti visų duomenų bei nustatymų istoriją.</string>
-    <string name="prerequisites_tidepoolaccount">Tidepool paskyros.</string>
-    <string name="prerequisites_googleaccount">Google paskyros.</string>
-    <string name="prerequisites_githubaccount">Github paskyros.</string>
     <string name="prerequisites_beanandroiddeveloper">Turėti programavimo ar kodo redagavimo patirties.</string>
-    <string name="prerequisites_own670g">MiniMed 670G pompos.</string>
     <string name="prerequisites_hint1">https://wiki.aaps.app/en/latest/Module/module.html</string>
-    <string name="prerequisites_smartwatch">Išmaniojo laikrodžio.</string>
-    <string name="prerequisites_supportedcgm">Palaikomo NGJ.</string>
     <string name="prerequisites2_label">Būtinosios sąlygos</string>
     <string name="prerequisites2_what">Ko reikia norint įvesti nustatymus ir pradėti naudoti AndroidAPS?</string>
     <string name="prerequisites2_profile">Ištestuotų profilio duomenų (bazės, JIF, IA, IVT).</string>
@@ -91,11 +75,9 @@
     <string name="prerequisites2_supportedcgm">Palaikomo sensoriaus ir tinkamos programėlės glikemijos duomenims registruoti.</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/en/latest/Module/module.html</string>
     <string name="update_label">AAPS naujinimas</string>
-    <string name="whatistrue">Pasirinkite visus teisingus atsakymus.</string>
     <string name="update_git">Git sistema turi būti įdiegta ir sukonfigūruota Jūsų kompiuteryje.</string>
     <string name="update_asap">Išleidus AndroidAPS naujinį, ankstesnių versijų veikimas po tam tikro laiko gali būti nuotoliniu būdu apribotas.</string>
     <string name="update_keys">Turėtumėte išsaugoti ir pasižymėti raktų saugyklos vietą ir atnaujinimams naudoti tą patį pasirašymo raktą, kaip ir ankstesniam diegimui.</string>
-    <string name="update_neverupdate">Jei sistema veikia gerai, jos naujinti nebūtina.</string>
     <string name="update_askfriend">Jei kyla sunkumų kuriant apk failą, galite instaliuoti apk failą, kurį sukūrė draugas.</string>
     <string name="update_hint1">https://wiki.aaps.app/en/latest/Installing-AndroidAPS/Update-to-new-version.html#update-to-a-new-version-or-branch</string>
     <string name="troubleshooting_label">Trikčių šalinimas</string>
@@ -114,7 +96,6 @@
     <string name="insulin_actrapid">Actrapid®/Humulin R®/\"natūralų\" žmogaus insuliną.</string>
     <string name="insulin_hint1">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html#insulin</string>
     <string name="sensitivity_label">Jautrumo įskiepiai</string>
-    <string name="sensitivity_which">Pasirinkite visus teisingus atsakymus.</string>
     <string name="sensitivity_adjust">Jautrumo įskiepiai leidžia AndroidAPS prisitaikyti prie laikinų ar trumpalaikių jautrumo insulinui pokyčių (pavyzdžiui, hormoninių pokyčių ar absorbcijos problemų infuzijos vietoje).</string>
     <string name="sensitivity_edit">Jautrumo įskiepiai pateikia bazės, IA ir JIF pakeitimų pasiūlymus, kuriais remiantis galima redaguoti profilį.</string>
     <string name="sensitivity_cannula">Pažymėjus kateterio keitimą, Autosens santykis vėl bus grąžintas į 100%.</string>
@@ -132,7 +113,6 @@
     <string name="wronginsulin_careportal">Ištrinti insulino suleidimo įrašą per Nightscout Careportal, kad jis būtų pašalintas iš pompos istorijos.</string>
     <string name="wronginsulin_compare">Palyginti įrašus AndroidAPS ir pompos istorijoje (jei tai įmanoma).</string>
     <string name="wronginsulin_prime">Susileisti trūkstamą insulino kiekį švirkštu ar naudojantis infuzinės sistemos užpildymo funkcija.</string>
-    <string name="wronginsulin_donothing">Nieko nedaryti ir leisti AndroidAPS koreguoti padidėjusį gliukozės kiekį kraujyje.</string>
     <string name="cob_label">Aktyvūs angliavandeniai organizme (AAO)</string>
     <string name="cob_question">Kokią įtaką JIF pakeitimas turi AAO apskaičiavimui?</string>
     <string name="cob_longer">JIF padidinimas pailgina sistemos apskaičiuotą angliavandenių įsisavinimo laiką</string>
@@ -176,7 +156,6 @@
     <string name="isf_decreasingvalue">Sumažinus JIF, aukštos glikemijos korekcijai insulino bus leidžiama daugiau.</string>
     <string name="isf_noeffect">JIF padidinimas ar sumažinimas neturi įtakos insulino kiekio apskaičiavimui, jei glikemija žemesnė nei tikslinė.</string>
     <string name="isf_preferences">JIF reikšmė įrašoma AAPS programos bendruose nustatymuose.</string>
-    <string name="isf_profile">Jei profilyje pakeisite JIF vertę, to pakaks, kad pakeitimas įsigaliotų.</string>
     <string name="isf_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
     <string name="isf_hint2">https://wiki.aaps.app/en/latest/Usage/Profiles.html</string>
     <string name="ic_multiple">Galima nustatyti daugiau nei vieną IA reikšmę profilyje.</string>
@@ -184,9 +163,6 @@
     <string name="ic_label_exam">Insulino ir angliavandenių santykis (IA)</string>
     <string name="ic_increasingvalue">Didesnis IA reiškia, kad mažiau insulino reikia tam tikram angliavandenių kiekiui padengti.</string>
     <string name="ic_decreasingvalue">Mažesnis IA reiškia, kad mažiau insulino reikia tam tikram angliavandenių kiekiui padengti.</string>
-    <string name="ic_noeffect">Jei aktyvių angliavandenių kiekis lygus 0, pakeitus IA glikemija bus koreguojama kitokiu insulino kiekiu.</string>
-    <string name="ic_different">IA vertė skirsis priklausomai nuo to, ar duonos vienetui (pakeitimui) skaičiuojate 10g ar 12g angliavandenių.</string>
-    <string name="ic_meaning">IA reiškia: kiek vienas vienetas insulino dengia duonos vienetų (pakeitimų)?</string>
     <string name="ic_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="profileswitch_label">Profilio keitimas</string>
     <string name="profileswitch_pctwillchange">Kurie teiginiai apie 90% profilį yra teisingi?</string>
@@ -213,12 +189,6 @@
     <string name="profileswitch4_internet">Norint aktyvuoti Nightscout profilio pakeitimus, AndroidAPS telefone turi būti interneto ryšys.</string>
     <string name="profileswitch4_sufficient">Užtenka tik redaguoti profilius, kad įsigaliotų visi atlikti pakeitimai.</string>
     <string name="profileswitch4_multi">Galima nustatyti ir pasirinkti kelis profilius, kad jie atitiktų besikeičiančias aplinkybes (pvz., hormoninius pokyčius, pamaininį darbą, darbo dienų/savaitgalių gyvenimo būdą).</string>
-    <string name="basalhelp_hint1">https://wiki.aaps.app/en/latest/Module/module.html#good-individual-dosage-algorithm-for-your-diabetes-therapy</string>
-    <string name="basalhelp_label">Pagalba su valandinėmis bazėmis</string>
-    <string name="basalhelp_where">Kur kreiptis, jei jums reikia pagalbos nustatant bazę ir kitus parametrus.</string>
-    <string name="basalhelp_diabetesteam">Į Jūsų endokrinologą ir diabetologą</string>
-    <string name="basalhelp_google">Google</string>
-    <string name="basalhelp_facebook">Facebook</string>
     <string name="other_medication_label">Kiti vaistai. Prašome perskaityti toliau pateiktą pranešimą ir pažymėti langelį, kad patvirtintumėte sutikimą.</string>
     <string name="other_medication_text">AAPS sumažina bazę ar sustabdo insulino tiekimą, kad neištiktų hipoglikemija. SGLT2 inhibitorių grupės vaistai (gliflozinai) gali neleisti glikemijai padidėti, todėl dėl sistemos veiksmų gali atsirasti pavojingas insulino trūkumas ir diabetinė ketoacidozė.
  \nPrekių ženklų pavadinimai apima: „Invokana®“, „Forxiga®“, „Jardiance®“, „Steglatro®“, „Suglat®“, „Apleway®“, „Deberza®“, „Synjardy®“, „Vokanamet®“, „Xigduo®“.\n\n Pažadu nevartoti tokių vaistų naudodamas AAPS, arba prieš vartojant juos, išjungti uždarą ciklą.</string>

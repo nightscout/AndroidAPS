@@ -7,7 +7,6 @@
     <string name="action_duration">Trajanje</string>
     <string name="action_carbs">Uglj. hidrati</string>
     <string name="action_insulin">Insulin</string>
-    <string name="action_bolus">Bolus</string>
     <string name="status_pump">Pumpa</string>
     <string name="status_loop">Loop</string>
     <string name="activity_IOB">IOB</string>

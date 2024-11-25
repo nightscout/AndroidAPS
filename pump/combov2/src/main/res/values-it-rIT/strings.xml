@@ -4,7 +4,6 @@
     <string name="combov2_plugin_description">Integrazione nativa del microinfusore Accu-Chek Combo</string>
     <string name="combov2_could_not_connect">Impossibile connettersi al micro</string>
     <string name="combov2_not_paired">Non associato ad un micro</string>
-    <string name="combov2_pump_terminated_connection">Il micro ha terminato la connessione</string>
     <string name="combov2_warning">Avviso Combo</string>
     <string name="combov2_error">Errore Combo</string>
     <string name="combov2_warning_4">Chiama il supporto per l\'aggiornamento</string>
@@ -115,8 +114,6 @@ Se non viene stabilita alcuna connessione dopo più di ~5 minuti:\n\n
     <string name="combov2_short_status_battery_state">Batt: %s</string>
     <string name="combov2_automatic_reservoir_entry">Rileva e inserisci automaticamente il cambio serbatoio di insulina</string>
     <string name="combov2_automatic_battery_entry">Rileva e inserisci automaticamente il cambio batteria</string>
-    <string name="combov2_note_reservoir_change">Cambio serbatoio insulina inserito automaticamente dal driver combov2</string>
-    <string name="combov2_note_battery_change">Cambio batteria inserito automaticamente dal driver combov2</string>
     <string name="combov2_timezone_changed">Fuso orario cambiato</string>
     <string name="combov2_datetime_changed">Data e/o ora cambiata</string>
     <string name="combov2_dst_started">Ora legale (DST) iniziata</string>

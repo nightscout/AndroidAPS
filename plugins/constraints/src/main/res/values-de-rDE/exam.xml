@@ -14,12 +14,7 @@
     <string name="hypott_exercise">Um eine Hypo zu korrigieren, die durch Bewegung / Sport entstanden ist.</string>
     <string name="hypott_0basal">Um ein Absinken des Blutzuckers zu verhindern, wenn bereits eine temporäre Basalrate von 0 % läuft.</string>
     <string name="hypott_hint1">https://wiki.aaps.app/de/latest/Usage/temptarget.html</string>
-    <string name="offlineprofile_whatprofile">Welches Profil kann offline verwendet und konfiguriert werden?</string>
-    <string name="offlineprofile_label">Thema: Offline-Profil</string>
-    <string name="offlineprofile_nsprofile">NS-Profil kann verwendet, aber nicht konfiguriert werden.</string>
-    <string name="offlineprofile_hint1">https://wiki.aaps.app/de/latest/Configuration/Config-Builder.html#profile</string>
     <string name="pumpdisconnect_label">Gründe für den Einsatz des Kommandos \"Trenne Pumpe\"</string>
-    <string name="pumpdisconnect_whattodo">Was sollte man tun, wenn man die Pumpe vom Körper trennt?</string>
     <string name="pumpdisconnect_unnecessary">Nichts, da kein Insulin abgegeben wird, wenn die Pumpe physisch getrennt ist.</string>
     <string name="pumpdisconnect_missinginsulin">Es verhindert, dass AAPS Insulin anrechnet, das nicht geliefert wurde, während die Pumpe vom Körper getrennt wurde.</string>
     <string name="pumpdisconnect_notstop">Es wird die Insulinlieferung nicht stoppen, wenn die Pumpe mit Ihrem Körper verbunden bleibt.</string>
@@ -59,9 +54,6 @@
     <string name="exercise_setunchanged">Lasse Dein Blutzuckerziel unverändert.</string>
     <string name="exercise_15g">Warte, bis die Blutglukose unter das temporäre Hypoziel abfällt und esse dann 15 g schnell wirkende Kohlenhydrate.</string>
     <string name="exercise_hint1">https://wiki.aaps.app/de/latest/Usage/temptarget.html#temporare-ziele</string>
-    <string name="suspendloop_doigetinsulin">Bekomme ich Insulin, wenn der Loop deaktiviert/pausiert ist?</string>
-    <string name="suspendloop_yes">Ja, Basalinsulin wird weiter abgegeben.</string>
-    <string name="suspendloop_no">Nein, die Insulinabgabe ist gestoppt.</string>
     <string name="basaltest_label">Basal-, ISF-und I:C-Tests</string>
     <string name="basaltest_when">Wann sollten diese Werte überprüft werden?</string>
     <string name="basaltest_beforeloop">Bevor ich beginne zu loopen.</string>
@@ -70,19 +62,11 @@
     <string name="basaltest_fixed">Einmal gesetzt und überprüft, sollten sich diese Werte im Laufe der Zeit nicht ändern.</string>
     <string name="prerequisites_label">Voraussetzungen</string>
     <string name="prerequisites_what">Was ist wichtig für die Einrichtung und Nutzung von AndroidAPS?</string>
-    <string name="prerequisites_determinedcorrectprofile">Überprüfe die Profil-Einstellungen (Basal, IC, ISF, DIA).</string>
     <string name="prerequisites_computer">Ein Computer mit installiertem und konfiguriertem Android Studio.</string>
-    <string name="prerequisites_phone">Ein unterstütztes Smartphone.</string>
     <string name="prerequisites_pump">Eine kompatible Insulinpumpe, wenn Du einen Closed Loop planst.</string>
     <string name="prerequisites_nightscout">Nightscout, um ein Protokoll aller Daten zu erhalten und Einstellungen zu überprüfen.</string>
-    <string name="prerequisites_tidepoolaccount">Ein Tidepool-Konto.</string>
-    <string name="prerequisites_googleaccount">Ein Google-Konto.</string>
-    <string name="prerequisites_githubaccount">Ein Github-Konto.</string>
     <string name="prerequisites_beanandroiddeveloper">Erfahrung im Programmieren oder Bearbeiten von Codes.</string>
-    <string name="prerequisites_own670g">Eine Medtronic 670G Insulinpumpe.</string>
     <string name="prerequisites_hint1">https://wiki.aaps.app/de/latest/Module/module.html</string>
-    <string name="prerequisites_smartwatch">Eine Smartwatch.</string>
-    <string name="prerequisites_supportedcgm">Ein unterstütztes CGM.</string>
     <string name="prerequisites2_label">Voraussetzungen</string>
     <string name="prerequisites2_what">Was ist wichtig für die Einrichtung und Nutzung von AndroidAPS?</string>
     <string name="prerequisites2_profile">Überprüfte und belastbare Profileinstellungen (ISF, I:C Verhältnis, Basalraten, DIA etc.).</string>
@@ -91,11 +75,9 @@
     <string name="prerequisites2_supportedcgm">Ein unterstütztes CGM und eine passende App, um Blutzuckerwerte auf dem Gerät zu erhalten.</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/de/latest/Module/module.html</string>
     <string name="update_label">Aktualisiere AAPS</string>
-    <string name="whatistrue">Kreuze alle richtigen Antworten an.</string>
     <string name="update_git">Du musst Git auf Deinem Computer installiert und konfiguriert haben.</string>
     <string name="update_asap">Wenn aktualisierte Versionen von AndroidAPS veröffentlicht werden, können die früheren Versionen nach einer bestimmten Zeit aus der Ferne eingeschränkt werden.</string>
     <string name="update_keys">Du solltest den Speicherort des Keystores speichern und immer den gleichen Signaturschlüssel für Updates verwenden wie für die vorherige Installation.</string>
-    <string name="update_neverupdate">Nie updaten, wenn das System stabil läuft.</string>
     <string name="update_askfriend">Wenn Du Schwierigkeiten beim Erstellen der apk hast, kannst Du eine apk installieren, die von einem Freund erstellt wurde.</string>
     <string name="update_hint1">https://wiki.aaps.app/de/latest/Installing-AndroidAPS/Update-to-new-version.html#update-auf-eine-neue-version-oder-branch</string>
     <string name="troubleshooting_label">Problembehandlung</string>
@@ -114,7 +96,6 @@
     <string name="insulin_actrapid">Actrapid®/Humalin R®/\"normales\" Humaninsulin</string>
     <string name="insulin_hint1">https://wiki.aaps.app/de/latest/Configuration/Config-Builder.html#insulin</string>
     <string name="sensitivity_label">Empfindlichkeits-Plugins</string>
-    <string name="sensitivity_which">Kreuze alle richtigen Antworten an.</string>
     <string name="sensitivity_adjust">Empfindlichkeits-Plugins erlauben AndroidAPS vorübergehende oder kurzzeitige Veränderungen der Insulinempfindlichkeit (z. B. hormonelle Veränderungen oder Probleme mit der Absorption an der Infusionsstelle).</string>
     <string name="sensitivity_edit">Sensitivitäts-Plugins liefern dem Benutzer Vorschläge für Änderungen an Basalraten, I:C-Verhältnissen und ISF, die zur Bearbeitung des Profils verwendet werden können.</string>
     <string name="sensitivity_cannula">Das Protokollieren eines Kanülenwechsels setzt das Autosens Verhältnis wieder auf 100% zurück.</string>
@@ -132,7 +113,6 @@
     <string name="wronginsulin_careportal">Lösche Insulindaten im Nightscout careportal, um sie aus der Pumpenhistorie zu entfernen.</string>
     <string name="wronginsulin_compare">Vergleiche die Werte der Historie in AAPS und Deiner Pumpe (wenn die Pumpe diese Funktion bietet).</string>
     <string name="wronginsulin_prime">Gib einen Teil-Bolus des \'nicht erhaltenen\' Insulins mit Spritze / Pen oder durch Befüllen der Kanüle.</string>
-    <string name="wronginsulin_donothing">Unternimm nichts und lass AAPS die entstehenden hohen Glukosewerte korrigieren.</string>
     <string name="cob_label">KH an Board (COB)</string>
     <string name="cob_question">Wie beeinflusst das Ändern des ISF-Wertes die COB-Berechnung?</string>
     <string name="cob_longer">Die Erhöhung des ISF wird die berechnete Kohlenhydratabsorptionszeit verlängern</string>
@@ -175,7 +155,6 @@
     <string name="isf_decreasingvalue">Reduzierte ISF-Werte führen zu einer höheren Insulinabgabe zur Korrektur eines über dem Zielwert liegenden Blutzuckers.</string>
     <string name="isf_noeffect">Das Erhöhen oder Senken des ISF hat keinen Einfluss auf die Insulinabgabe, wenn der Blutzuckerspiegel unter dem Zielwert liegt.</string>
     <string name="isf_preferences">ISF sollte in den AAPS -Einstellungen gesetzt werden.</string>
-    <string name="isf_profile">Wenn Du einen ISF-Wert im Profil änderst, wird dies sofort vom Loop berücksichtigt.</string>
     <string name="isf_hint1">https://wiki.aaps.app/de/latest/Getting-Started/FAQ.html#korrekturfaktor-isf-mg-dl-ie-oder-mmol-l-ie</string>
     <string name="isf_hint2">https://wiki.aaps.app/de/latest/Usage/Profiles.html</string>
     <string name="ic_multiple">Du kannst mehr als einen Wert für das I:C-Verhältnis in Deinem Profil verwenden.</string>
@@ -183,9 +162,6 @@
     <string name="ic_label_exam">Insulin zu Kohlenhydratverhältnis (I:C-Verhältnis)</string>
     <string name="ic_increasingvalue">Ein höheres I:C-Verhältnis bedeutet, dass weniger Insulin für die vorgegebene Menge an KH abgegeben wird.</string>
     <string name="ic_decreasingvalue">Ein niedrigeres I:C-Verhältnis bedeutet, dass weniger Insulin für die vorgegebene Menge an KH abgegeben wird.</string>
-    <string name="ic_noeffect">Das Ändern des IC-Verhältnisses bedeutet, dass bei 0 COB eine andere Menge an Insulin zur Korrektur eines vorgegebenen BZ-Wertes abgegeben wird.</string>
-    <string name="ic_different">Der IC-Wert wird sich unterscheiden, je nachdem, ob Du eine Broteinheit (BE) mit 10g oder mit 12g berechnest.</string>
-    <string name="ic_meaning">IC bedeutet: Anzahl Broteinheiten (BE), die durch eine Einheit Insulin abgedeckt werden</string>
     <string name="ic_hint1">https://wiki.aaps.app/de/latest/Getting-Started/FAQ.html#insulin-kohlenhydrat-verhaltnis-insulin-to-carb-ratio-ic-g-u</string>
     <string name="profileswitch_label">Profilwechsel</string>
     <string name="profileswitch_pctwillchange">Welche Antworten sind bei der Einstellung eines Profilwechsels von 90% wahr?</string>
@@ -212,12 +188,6 @@
     <string name="profileswitch4_internet">Um Änderungen an Deinem Nightscout Profil zu aktivieren, muss Dein AndroidAPS-Smartphone eine Internetverbindung haben.</string>
     <string name="profileswitch4_sufficient">Das Bearbeiten von Profilen zur Änderung von Werten reicht aus, um alle vorgenommenen Änderungen durchzuführen.</string>
     <string name="profileswitch4_multi">Es können mehrere Profile erstellt und ausgewählt werden, um sich verändernden Umständen anzupassen (z.B. hormonelle Veränderungen, Schichtarbeit, Wochentage/Wochenend-Lebensstil).</string>
-    <string name="basalhelp_hint1">https://wiki.aaps.app/de/latest/Module/module.html#gute-individuelle-profileinstellungen-fur-deine-diabetes-therapie</string>
-    <string name="basalhelp_label">Hilfe bei Basalraten</string>
-    <string name="basalhelp_where">Hier finden Sie Hilfe bei der Einrichtung Ihrer Basalrate sowei anderer Einstellungen.</string>
-    <string name="basalhelp_diabetesteam">Dein Diabetes-Team</string>
-    <string name="basalhelp_google">Google</string>
-    <string name="basalhelp_facebook">Facebook</string>
     <string name="other_medication_label">Andere Medikation. Bitte lies die Erklärung unten und markiere dann das Kästchen, um die Erklärung zu akzeptieren.</string>
     <string name="other_medication_text">AAPS reduziert die Basalrate oder stoppt die Insulinzufuhr zur Erhöhung des Blutzuckers. Medikamente aus der Gruppe der SGLT2-Hemmer (Gliflozine) können zu erwartende Blutzuckersteigungen verhindern und damit einen gefährlichen Insulinmangel (DKA) produzieren.
 \nÜbliche Handelsnamen sind: Invokana ®, Forxiga ®, Jardiance ®, Steglatro ®, Suglat ®, Apleway ®, Deberza ®, Synjardy ®, Vokanamet ®, Xigduo ®.\n\nIch versichere, dass ich solche Medikamente bei der Anwendung von AAPS nicht einnehme oder den Loop vor der Verwendung dieser Medikamente deaktivieren werde.</string>

@@ -203,8 +203,6 @@
     <string name="overview_buttons_selection">Schaltflächen</string>
     <string name="show_calibration_button_summary">Sendet eine Kalibierung an xDrip+ oder öffnet den BYODA Kalibrierungs-Dialog.</string>
     <string name="show_cgm_button_summary">Öffnet xDrip+ oder BOYDA, mit der Zurück-Schaltfläche gelangst Du zurück zu AndroidAPS.</string>
-    <string name="dexcom_app_not_installed">Dexcom App ist nicht installiert.</string>
-    <string name="dexcom_app_not_detected">Bitte aktualisiere deine Dexcom App auf eine unterstützte Version</string>
     <string name="error_starting_cgm">CGM-Anwendung konnte nicht geöffnet werden. Stelle sicher, dass diese installiert ist.</string>
     <string name="not_available_full">Nicht verfügbar</string>
     <string name="constraints_violation">Beschränkungen wurden verletzt oder Limit erreicht.</string>
@@ -283,8 +281,6 @@
     <string name="skin">Erscheinungsbild</string>
     <string name="cannula_usage">Abgegeben:</string>
     <!--    Iob-->
-    <string name="send_logfiles">Sende die heutigen Logdateien unter Angabe dieser Uhrzeit an die Entwickler.
-Unerwartetes Verhalten.</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Zeigt eine fortlaufende Benachrichtigung mit einer kurzen Übersicht darüber, was dein Loop derzeit tut</string>
     <string name="old_data">VERALTETE DATEN</string>

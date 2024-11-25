@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bg_label">BG</string>
     <string name="executing_right_now">Kommando udføres lige nu</string>
     <string name="basal_value_below_minimum">Basal værdi under minimum. Profil ikke angivet!</string>
-    <string name="permission">Tilladelse</string>
-    <string name="need_whitelisting">%1$s har brug for batterioptimeringstilladelse for at opnå den rette ydeevne</string>
-    <string name="need_location_permission">Applikationen mangler lokations tilladelse til BT scanning og WIFI identifikation</string>
-    <string name="need_storage_permission">Applikationen mangler lagerstyrings tilladelse for at gemme logfiler og exporteringsindstillinger</string>
     <!--       Stats -->
     <string name="veryLow" comment="below 3.1">Meget lav</string>
     <string name="low" comment="3.1-3.9">Lav</string>

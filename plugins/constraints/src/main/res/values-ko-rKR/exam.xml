@@ -14,12 +14,7 @@
     <string name="hypott_exercise">운동으로 인한 저혈당을 교정하기 위함.</string>
     <string name="hypott_0basal">0% 임시 basal이 이미 적용되고 있는 상황에서 혈당이 낮아지는 것을 방지하기 위함.</string>
     <string name="hypott_hint1">https://wiki.aaps.app/en/latest/Usage/temptarget.html</string>
-    <string name="offlineprofile_whatprofile">어떤 프로파일이 오프라인에서 설정할 수 있습니까?</string>
-    <string name="offlineprofile_label">주제: 오프라인 프로파일</string>
-    <string name="offlineprofile_nsprofile">NS 프로파일이 사용될 수 있지만, 오프라인 상에서 설정할 수는 없습니다.</string>
-    <string name="offlineprofile_hint1">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html#profile</string>
     <string name="pumpdisconnect_label">AAPS에서 \"펌프 연결 해제하기\"를 적용하는 이유</string>
-    <string name="pumpdisconnect_whattodo">본체에서 펌프를 분리할 때는 어떻게 해야합니까?</string>
     <string name="pumpdisconnect_unnecessary">펌프가 물리적으로 연결되어 있지 않을 때에는 인슐린이 주입되지 않으므로 이 기능이 필요하지 않습니다.</string>
     <string name="pumpdisconnect_missinginsulin">이는 펌프가 물리적으로 분리된 상태에서 주입되지 않은 인슐린을 AAPS가 계산하지 않도록 방지합니다.</string>
     <string name="pumpdisconnect_notstop">펌프가 계속 몸에 연결되어 있으면, 인슐린 주입을 중단하지 않습니다.</string>
@@ -59,9 +54,6 @@
     <string name="exercise_setunchanged">임시 목표를 변경하지 않습니다.</string>
     <string name="exercise_15g">\"저혈당 임시 목표\"보다 혈당이 떨어질 때까지 기다린 후 빠르게 반응하는 탄수화물 15g을 섭취합니다.</string>
     <string name="exercise_hint1">https://wiki.aaps.app/en/latest/Usage/temptarget.html#activity-temp-target</string>
-    <string name="suspendloop_doigetinsulin">Loop가 중지/일시중지 되었을때 인슐린이 주입됩니까?</string>
-    <string name="suspendloop_yes">네, Basal 인슐린은 계속 주입됩니다.</string>
-    <string name="suspendloop_no">아니오, 인슐린 주입이 모두 중지됩니다.</string>
     <string name="basaltest_label">Basal, ISF, and I:C 테스트</string>
     <string name="basaltest_when">언제 이 값들을 확인해야할까요?</string>
     <string name="basaltest_beforeloop">Looping을 시작하게 전</string>
@@ -70,19 +62,11 @@
     <string name="basaltest_fixed">한 번 설정하고 확인하면, 이 값은 계속 변하면 안됨.</string>
     <string name="prerequisites_label">기본 준비사항</string>
     <string name="prerequisites_what">AAPS를 설정하고 사용하기 위해 필수적인 것은 무엇입니까?</string>
-    <string name="prerequisites_determinedcorrectprofile">유효한 프로파일 정보 (Basal, IC, ISF, DIA).</string>
     <string name="prerequisites_computer">Android Studio가 설치되고 환경설정된 컴퓨터</string>
-    <string name="prerequisites_phone">지원되는 폰.</string>
     <string name="prerequisites_pump">Closed loop을 사용할 계획이라면 호환되는 인슐린 펌프</string>
     <string name="prerequisites_nightscout">모든 데이터의 log를 보관하고 설정을 검토하기 위한 Nightscout</string>
-    <string name="prerequisites_tidepoolaccount">Tidepool 계정.</string>
-    <string name="prerequisites_googleaccount">구글(Google) 계정.</string>
-    <string name="prerequisites_githubaccount">깃허브(Github) 계정.</string>
     <string name="prerequisites_beanandroiddeveloper">프로그래밍이나 코딩을 해 본 경험</string>
-    <string name="prerequisites_own670g">미니메드(MiniMed) 670G 펌프.</string>
     <string name="prerequisites_hint1">https://wiki.aaps.app/en/latest/Module/module.html</string>
-    <string name="prerequisites_smartwatch">스마트워치.</string>
-    <string name="prerequisites_supportedcgm">지원되는 연속혈당측정기(CGM).</string>
     <string name="prerequisites2_label">기본 준비사항</string>
     <string name="prerequisites2_what">AAPS를 설정하고 사용하기 위해 필수적인 것은 무엇입니까?</string>
     <string name="prerequisites2_profile">프로파일을 설정하기 위해 확인된 정보 (ISF, I:C ratio, basal 양, DIA 등).</string>
@@ -91,11 +75,9 @@
     <string name="prerequisites2_supportedcgm">지원되는 CGM과 핸드폰 또는 장치에 혈당값을 수신하기 위한 적절한 어플.</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/en/latest/Module/module.html</string>
     <string name="update_label">AAPS 업데이트하기</string>
-    <string name="whatistrue">올바른 답변을 모두 체크하세요.</string>
     <string name="update_git">컴퓨터에 Git을 설치하고 환경 설정해야 합니다.</string>
     <string name="update_asap">AAPS의 업데이트 버전이 배포되면, 일정 시간이 지난 후 이전 버전은 원격으로 제한됩니다.</string>
     <string name="update_keys">Keystore의 위치를 저장하고 기록해두어야 이전에 설치할 때 사용했던 동일한 signing key를 업데이트할 때 사용할 수 있습니다.</string>
-    <string name="update_neverupdate">시스템이 잘 작동한다면 절대 업데이트하지마세요.</string>
     <string name="update_askfriend">만약 apk를 만드는 것이 어렵다면, 친구가 만든 apk를 사용하여 설치할 수 있습니다.</string>
     <string name="update_hint1">https://wiki.aaps.app/en/latest/Installing-AndroidAPS/Update-to-new-version.html#update-to-a-new-version-or-branch</string>
     <string name="troubleshooting_label">문제 해결</string>
@@ -114,7 +96,6 @@
     <string name="insulin_actrapid">액트라피드(Actrapid®)/휴말린 R(Humalin R®)/\"보통의\" 인간 인슐린.</string>
     <string name="insulin_hint1">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html#insulin</string>
     <string name="sensitivity_label">민감도 플러그인</string>
-    <string name="sensitivity_which">올바른 답변을 모두 체크하세요.</string>
     <string name="sensitivity_adjust">민감도 플러그인은 AAPS가 일시적 또는 단기적으로 인슐린 민감도를 조절할 수 있도록 합니다 (예를 들어, 호르몬 변화 또는 주입 부위의 흡수 문제).</string>
     <string name="sensitivity_edit">민감도 플러그인은 프로파일을 수정할 때 사용할 수 있도록 basal양, I:C ratio, 그리고 ISF의 제안된 변경 사항을 사용자에게 제공합니다.</string>
     <string name="sensitivity_cannula">삽입관 (캐뉼라) 교체를 입력하면 Autosens 비율이 다시 100%로 재설정됩니다.</string>
@@ -132,7 +113,6 @@
     <string name="wronginsulin_careportal">Nightscout 케어포탈에서 인슐린 데이터를 삭제하여 펌프 기록에서 이를 제거합니다.</string>
     <string name="wronginsulin_compare">AAPS와 펌프 기록을 비교합니다 (펌프가 이 기능을 지원하는 경우).</string>
     <string name="wronginsulin_prime">\"주입되지 않은\" 인슐린양을 계산하여 시린지/펜 또는 prime 기능을 사용하여 인슐린을 주입합니다.</string>
-    <string name="wronginsulin_donothing">특별한 조치를 취하지 않고, AAPS가 결과적으로 발생하는 높은 혈당 수치를 조정할 수 있도록 합니다.</string>
     <string name="cob_label">체내 탄수화물 (COB)</string>
     <string name="cob_question">ISF 값을 변경하는 것이 AAPS에 의한 COB 계산에 어떤 영향을 미칩니까?</string>
     <string name="cob_longer">ISF가 증가하면 계산된 탄소 흡수 시간이 길어집니다</string>
@@ -175,7 +155,6 @@
     <string name="isf_decreasingvalue">ISF 값을 낮추면 목표 혈당보다 높을 때 혈당을 교정하기 위해 더 많은 인슐린을 주입하게 됩니다.</string>
     <string name="isf_noeffect">혈당이 목표보다 낮을 떄 ISF를 높이거나 낮추는 것이 인슐린 주입에 영향을 주지 않습니다.</string>
     <string name="isf_preferences">ISF를 AAPS 설정에 입력해야 합니다.</string>
-    <string name="isf_profile">변경사항을 적용하는데 프로파일에서 ISF 값 변경하는 것으로 충분합니다.</string>
     <string name="isf_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
     <string name="isf_hint2">https://wiki.aaps.app/en/latest/Usage/Profiles.html</string>
     <string name="ic_multiple">프로파일에서 한 개 이상의 I:C ratio를 사용할 수 있습니다.</string>
@@ -183,9 +162,6 @@
     <string name="ic_label_exam">인슐린 대 탄수화물 비율 (I:C ratio)</string>
     <string name="ic_increasingvalue">높은 I:C ratio은 탄수화물 섭취 시 인슐린을 적게 주입하게 합니다.</string>
     <string name="ic_decreasingvalue">낮은 I:C ratio은 탄수화물 섭취 시 인슐린을 적게 주입하게 합니다.</string>
-    <string name="ic_noeffect">COB가 0 인 경우 IC 비율을 변경하면 혈당을 교정하기 위해 다른 양의 인슐린이 주입됩니다.</string>
-    <string name="ic_different">Bread unit (교환 단위)를 10g 또는 12g으로 계산하면 IC 값도 달라지게 됩니다.</string>
-    <string name="ic_meaning">IC의 의미는 다음과 같습니다: 인슐린의 1U로 얼마나 많은 빵 (교환 가능) 유닛이 처리되나요?</string>
     <string name="ic_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="profileswitch_label">프로파일 변경</string>
     <string name="profileswitch_pctwillchange">프로파일을 90%로 변경하였을 떄, 다음중 올바른 답은 무엇입니까?</string>
@@ -212,12 +188,6 @@
     <string name="profileswitch4_internet">Nightscout 프로파일 변경을 활성화하려면 AAPS용 핸드폰에 인터넷이 연결되어 있어야 합니다.</string>
     <string name="profileswitch4_sufficient">변경된 것을 실행하려면, 프로파일에서 변화된 값을 수정하기만 하면 됩니다.</string>
     <string name="profileswitch4_multi">변화하는 상황 (예를들어, 호르몬 변화, 교대 근무, 평일/주말 생활 방식)에 적응하기 위해 여러 개의 프로파일을 만들어서 선택할 수 있습니다.</string>
-    <string name="basalhelp_hint1">https://wiki.aaps.app/en/latest/Module/module.html#good-individual-dosage-algorithm-for-your-diabetes-therapy</string>
-    <string name="basalhelp_label">Basal 양에 대한 도움</string>
-    <string name="basalhelp_where">basal양 및 기타 설정을 변경하는 데 도움을 받을 수 있는 위치입니다.</string>
-    <string name="basalhelp_diabetesteam">의료진</string>
-    <string name="basalhelp_google">구글(Google)</string>
-    <string name="basalhelp_facebook">페이스북(Facebook)</string>
     <string name="other_medication_label">기타 의약품. 아래의 설명을 읽고 내용을 수락하면 상자에 체크 표시를 하십시오.</string>
     <string name="other_medication_text">AAPS는 혈당을 높이기 위하여 basal양을 내리거나 중단합니다. SGLT2 억제제 (글리플로진) 등급의 약물들은 혈당 상승을 방지할 수 있으며, DKA로 이어지는 위험한 인슐린 결핍을 초래할 수 있습니다.
 \n일반적인 브랜드 이름은: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\n 본인은 AAPS를 사용할 때 이러한 약물을 복용하지 않거나, 이러한 약물을 사용하기 전에 루프를 비활성화 할 것을 약속합니다.</string>

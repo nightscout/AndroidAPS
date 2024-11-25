@@ -218,8 +218,6 @@
     <string name="overview_buttons_selection">Knapper</string>
     <string name="show_calibration_button_summary">Sender en kalibrering til xDrip+ eller åpner kalibreringsdialogen i BYODA</string>
     <string name="show_cgm_button_summary">Åpner xDrip+ eller BYODA, tilbake-knappen får deg tilbake til AAPS</string>
-    <string name="dexcom_app_not_installed">Dexcom-appen er ikke installert.</string>
-    <string name="dexcom_app_not_detected">Vennligst oppdater din Dexcom-app til en versjon som støttes</string>
     <string name="error_starting_cgm">Kunne ikke starte CGM-programmet. Kontroller at det er installert.</string>
     <string name="not_available_full">Ikke tilgjengelig</string>
     <string name="constraints_violation">Brudd på begrensninger</string>
@@ -302,7 +300,6 @@
     <string name="skin">Tema</string>
     <string name="cannula_usage">bruk:</string>
     <!--    Iob-->
-    <string name="send_logfiles">Send dagens loggfiler og tidspunkt til utviklere. Uventet situasjon oppstod.</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Viser en konstant melding med en kort oppsummering av hva loop gjør</string>
     <string name="old_data">GAMLE DATA</string>

@@ -68,7 +68,6 @@
     <string name="equil_common_cmd_set_tbr">Angi midlertidig basal</string>
     <string name="equil_common_cmd_cancel_tbr">Avbryt midlertidig basal</string>
     <string name="equil_common_cmd_set_basal_schedule">Angi basalprogram</string>
-    <string name="equil_common_cmd_get_status">Få Equil-status</string>
     <string name="equil_common_cmd_set_time">Angi tid</string>
     <string name="equil_common_cmd_suspend_delivery">Pause tilførselen</string>
     <string name="equil_common_cmd_resume_delivery">Gjenoppta tilførselen</string>
@@ -92,7 +91,6 @@
     <string name="equil_command_connect_no_response">Ingen respons fra pumpen</string>
     <string name="equil_command__unknown">Ukjent tilstand for kommandoen</string>
     <string name="equil_install">Implanter pumpen på kroppen\"</string>
-    <string name="equil_password_title">Pumpepassord</string>
     <string name="equil_settings">Innstillinger</string>
     <string name="equil_settings_alarm_battery">Alarm for lavt batteri</string>
     <string name="equil_settings_alarm_insulin">Alarm for lavt legemiddellager</string>
@@ -101,7 +99,6 @@
     <string name="equil_history_group_pair">Paring</string>
     <string name="equil_history_group_bolus">Boluser</string>
     <string name="equil_history_group_basal">Basaldoser</string>
-    <string name="equil_history_group_prime">Prime</string>
     <string name="equil_history_group_configuration">Konfigurasjoner</string>
     <string name="equil_tab_action">Historisk handling</string>
     <string name="equil_tab_equil">Equil-historikk</string>

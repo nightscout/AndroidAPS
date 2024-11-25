@@ -40,8 +40,6 @@
     <string name="nsclient_token_dialog_title">Атрибут защиты доступа в NS</string>
     <string name="nsclient_token_dialog_message">Атрибут защиты доступа в NS, созданный на странице администратора NS (минимум 17 символов)</string>
     <string name="deliver_now">Подать сейчас</string>
-    <string name="clear_queue">очистка очереди</string>
-    <string name="show_queue">показать очередь</string>
     <string name="queue">очередь</string>
     <string name="status">состояние:</string>
     <string name="clear_log">очистка лога</string>
@@ -89,13 +87,7 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Загружает данные в Tidepool</string>
-    <string name="tidepool_upload_cgm">Загрузить данные мониторинга</string>
-    <string name="tidepool_upload_bolus">Загрузить лечение (инсулин, углеводы)</string>
-    <string name="tidepool_upload_tbr">Загрузить временные базалы</string>
-    <string name="tidepool_upload_profile">Загрузить переключения профиля, временные цели</string>
-    <string name="tidepool_upload_bg">Загрузить тесты ГК</string>
     <string name="remove_all">Удалить всё</string>
-    <string name="reset_start">Перезапустить старт</string>
     <string name="upload_now">Выгрузить (передать данные) сейчас</string>
     <string name="not_connected">Нет подключения</string>
     <string name="read_only">Только чтение</string>
@@ -133,7 +125,6 @@
     <string name="wizard_result">Мастер:\nИнсулин: %1$.2fед\nУгл: %2$dг</string>
     <string name="quick_wizard_not_available">Выбранный мастер быстрого доступа больше недоступен, обновите плитку</string>
     <string name="quick_wizard_message">Мастер: %1$s\nИнсулин: %2$.2fЕд\nУгл: %3$dg</string>
-    <string name="wear_action_tempt_preset_error">Неизвестная конфигурация врем цели: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Отменить ВЦ?</string>
     <string name="wear_action_tempt_unit_error">На часах и телефоне различные единицы измерения!</string>
     <string name="wear_action_tempt_zero_message">Нулевая врем цель - отмена?</string>

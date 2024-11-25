@@ -48,8 +48,6 @@
     <string name="fabric_upload">Fabric上傳</string>
     <string name="unattended_settings_export">未監控的設定匯出</string>
     <string name="unattended_settings_export_summary">啟用此功能將安全儲存您的密碼於手機上</string>
-    <string name="allow_automated_crash_reporting">允許通過fabric.io服務發送自動崩潰報告和功能使用資料給開發者。</string>
-    <string name="summary_email_for_crash_report">此標識將附加到崩潰報告，以便我們在緊急情況下與您聯繫。這是可選的。</string>
     <string name="identification">標識（電子郵件、FB或Discord暱稱等）</string>
     <string name="request">請求</string>
     <string name="apsmode_title">APS模式</string>
@@ -136,11 +134,9 @@
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">於 %1$s 前匯出</string>
     <string name="exported_at" comment="at placeholder we add export date">匯出於 %1$s</string>
     <string name="exported_less_than_hour_ago">於不到一小時前匯出</string>
-    <string name="in_directory" comment="placeholder is for exported file path">在目錄：%1$s</string>
     <string name="preferences_import_list_title">選擇要匯入的文件</string>
     <string name="metadata_warning_different_flavour">偏好設定是用不同版本的AAPS (%1$s) 建立的，而您目前的版本是：%2$s。\n\n某些設定可能丟失或無效 - 請在匯入後檢查並更新您的偏好設定。</string>
     <string name="metadata_warning_different_device">偏好設定是在不同的設備上建立的。如果您是從舊手機或不同手機匯入，這是可以的，但請確保匯入的偏好設定是正確的！</string>
-    <string name="metadata_warning_outdated_format">您正在使用舊版AAPS中的過時格式，這是不安全的！僅在無法使用目前JSON格式的匯出時作為最後的手段。</string>
     <string name="metadata_warning_old_export">匯入的偏好設定已經有 %1$s 天了！也許您有更更新的偏好設定，或者您選擇了錯誤的文件？請記住定期匯出偏好設定！</string>
     <string name="metadata_warning_date_format">日期時間格式無效！</string>
     <string name="metadata_warning_different_version">偏好設定來自應用程式的不同小版本。如果您是升級後匯入，這是可以的，但請在匯入後檢查偏好設定是否仍然正確！</string>
@@ -167,7 +163,6 @@
     <string name="metadata_label_device_model">匯出設備型號</string>
     <string name="metadata_label_encryption">文件加密</string>
     <string name="metadata_format_new">新加密格式</string>
-    <string name="metadata_format_debug">新調試格式（未加密）</string>
     <string name="metadata_format_other">未知的匯出格式</string>
     <string name="reset_aps_results">重置APS結果</string>
 </resources>

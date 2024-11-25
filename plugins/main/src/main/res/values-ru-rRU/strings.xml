@@ -218,8 +218,6 @@
     <string name="overview_buttons_selection">Кнопки</string>
     <string name="show_calibration_button_summary">Отправляет калибровки на xDrip+ или открывает диалоговое окно калибровки BYODA DEXCOM</string>
     <string name="show_cgm_button_summary">Открывает xDrip + или BYODA DEXCOM, кнопка назад возвращает в AAPS</string>
-    <string name="dexcom_app_not_installed">Приложение Dexcom не установлено</string>
-    <string name="dexcom_app_not_detected">Пожалуйста, обновите приложение Dexcom до поддерживаемой версии</string>
     <string name="error_starting_cgm">Не удалось запустить приложения мониторинга СК. Убедитесь, что оно установлено.</string>
     <string name="not_available_full">Недоступно</string>
     <string name="constraints_violation">ограничение нарушено</string>
@@ -302,7 +300,6 @@
     <string name="skin">Тема оформления</string>
     <string name="cannula_usage">применение:</string>
     <!--    Iob-->
-    <string name="send_logfiles">Отправьте файлы сегодняшнего лога разработчикам наряду с этим. Непредвиденная ситуация.</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Показывает текущие уведомления и краткий обзор событий цикла</string>
     <string name="old_data">старые данные</string>

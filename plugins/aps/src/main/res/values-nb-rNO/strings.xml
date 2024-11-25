@@ -171,22 +171,8 @@
     <string name="half_basal_exercise_target_summary">Sett til et tall, f.eks. 160, noe som betyr at når midlertidig mål er 160 mg/dL (~8.9 mmol/l) og høy midlertidig mål øker sensitiviteten=sant, settes 50%% basal på dette nivået (120 = 75%%; 140 = 60%%).</string>
     <string name="autoISF_settings_title">AutoISF-innstillinger</string>
     <string name="autoISF_settings_summary">AutoISF gjør det mulig å tilpasse insulinsensitivitetsfaktoren (ISF) i ulike scenarier av glukoseadferd\n\nDet kan også tilpasse SMB leveringsinnstillinger</string>
-    <string name="acce_ISF_settings_title">acce_ISF-innstillinger</string>
-    <string name="acce_ISF_settings_summary">acce_ISF-innstillinger: juster ISF for akselerasjon/bremsing av blodglukose</string>
-    <string name="enableautoISFwithcob">Aktiver dura_ISF med COB</string>
-    <string name="enableautoISFwithcob_summary">Aktiver dura_ISF når COB (karbohydrater ombord) er aktiv</string>
-    <string name="bg_ISF_settings_title">bg_ISF-innstillinger</string>
-    <string name="bg_ISF_settings_summary">bg_ISF-innstillinger: ISF avhengig av blodsukkernivå i henhold til en forhåndsdefinert polygon</string>
-    <string name="pp_ISF_settings_title">pp_ISF-innstillinger</string>
-    <string name="pp_ISF_settings_summary">pp_ISF-innstillinger: ISF for postprandial (etter måltid) glukosestigning</string>
-    <string name="dura_ISF_settings_title">dura_ISF-innstillinger</string>
-    <string name="dura_ISF_settings_summary">dura_ISF-innstillinger: ISF for blodsukkerplatå over målet</string>
     <string name="smb_delivery_settings_title">SMB leveringsinnstillinger</string>
     <string name="smb_delivery_settings_summary">Sett med alternativer for å øke den faktiske SMB-størrelsen som kan leveres i situasjoner der ISF ble styrket, f.eks. ganske lavt ISF-tall.\n\nBRUK MED FORSIKTIGHET</string>
-    <string name="full_loop_settings_title">Full Loop-innstillinger</string>
-    <string name="full_loop_settings_summary">Full Loop-innstillinger: Juster iobTH for å begrense oppbygging av IOB</string>
-    <string name="use_autoISF_extensions_title">Aktiver utvidede AutoISF-funksjoner</string>
-    <string name="use_autoISF_extensions_summary">Disse inkluderer ISF-modulasjon grunnet nylig bg oppførsel, alternative SMB aktiveringsfunksjoner og støtte for fullstendig lukket loop</string>
     <string name="openapsama_enable_autoISF">Aktiver ISF-tilpasning etter glukoseoppførsel</string>
     <string name="openapsama_autoISF_max_summary">På samme måte som autosens_max definerer dette hvor sterk ISF kan bli.\n\nStandardverdien 1 skrur effekten effektivt av.\n\nADVARSEL: Vær ekstremt forsiktig når du bruker verdier over 2.5</string>
     <string name="openapsama_autoISF_min_summary">På samme måte som autosens_min definerer dette hvor svak ISF kan bli.\n\nStandardverdien 1.0 demper effektivt denne effekten.</string>

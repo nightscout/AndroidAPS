@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bg_label">Glykémia</string>
     <string name="executing_right_now">Príkaz sa práve vykonáva</string>
     <string name="basal_value_below_minimum">Hodnota bazálu pod povoleným minimom. Profil nenastavený!</string>
-    <string name="permission">Povolenie</string>
-    <string name="need_whitelisting">%1$s potrebuje vypnúť optimalizáciu batérie pre optimálny výkon</string>
-    <string name="need_location_permission">Aplikácia vyžaduje oprávnenie polohy, pre vyhľadávanie BT a identifikáciu WiFi</string>
-    <string name="need_storage_permission">Aby bolo možné nahrávať logy a exportovať nastavenia, je nutné pre aplikáciu povoliť oprávnenie prístupu k úložisku</string>
     <!--       Stats -->
     <string name="veryLow" comment="below 3.1">Veľmi nízka</string>
     <string name="low" comment="3.1-3.9">Nízka</string>

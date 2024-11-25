@@ -35,7 +35,6 @@
     <string name="omnipod_common_error_unexpected_exception">发生意外错误。请报告！ (%1$s: %2$s)。</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation">确认</string>
-    <string name="omnipod_common_confirmation_time_or_timezone_change">Pod上的时间及时区已改变。</string>
     <string name="omnipod_common_confirmation_expiration_alerts_updated">警报配置已在 Pod中更新。</string>
     <string name="omnipod_common_confirmation_time_on_pod_updated">Pod上的时间已更新。</string>
     <string name="omnipod_common_confirmation_suspended_delivery">所有胰岛素输注都已暂停。</string>
@@ -121,7 +120,6 @@
     <string name="omnipod_common_pod_status_running">正在运行</string>
     <string name="omnipod_common_pod_status_suspended">已暂停</string>
     <string name="omnipod_common_pod_status_pod_fault">Pod 故障</string>
-    <string name="omnipod_common_pod_status_activation_time_exceeded">激活时间已超过</string>
     <string name="omnipod_common_pod_status_inactive">未启用</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Pod 故障: %1$03d %2$s</string>
     <!-- Omnipod - Commands -->
@@ -147,7 +145,6 @@
     <string name="omnipod_common_cmd_set_fake_suspended_tbr">临时基础率已暂缓设置，由于Pod 已停用。</string>
     <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">取消暂缓的临时基础率，由于Pod 已停用。</string>
     <string name="omnipod_common_cmd_split_tbr">由于取消操作的失败，Split 临时基础率。</string>
-    <string name="omnipod_common_cmd_beep_config">蜂鸣设置</string>
     <string name="omnipod_common_cmd_play_test_beep">播放Beep测试音</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_finish_pairing_reminder">完成配对提醒</string>

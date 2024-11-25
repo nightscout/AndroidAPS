@@ -39,8 +39,6 @@
     <string name="nsclient_token_dialog_title">Token de acesso NS</string>
     <string name="nsclient_token_dialog_message">Token de acesso gerado na página de administração do NS (mínimo de 17 caracteres)</string>
     <string name="deliver_now">Entregar agora</string>
-    <string name="clear_queue">Limpar fila</string>
-    <string name="show_queue">Mostrar fila</string>
     <string name="queue">Fila:</string>
     <string name="status">Status:</string>
     <string name="clear_log">Limpar registros</string>
@@ -88,13 +86,7 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Enviar dados para Tidepool</string>
-    <string name="tidepool_upload_cgm">Enviar dados CGM</string>
-    <string name="tidepool_upload_bolus">Enviar tratamentos (insulina, hidratos)</string>
-    <string name="tidepool_upload_tbr">Enviar basais temporárias</string>
-    <string name="tidepool_upload_profile">Enviar trocas de perfil, alvos temporários</string>
-    <string name="tidepool_upload_bg">Enviar testes Glicemia</string>
     <string name="remove_all">Remover todos</string>
-    <string name="reset_start">Iniciar reinicialização</string>
     <string name="upload_now">Enviar agora</string>
     <string name="not_connected">Não conectado</string>
     <string name="read_only">Somente leitura</string>
@@ -124,7 +116,6 @@
     <string name="wizard_result">Calculadora:\nInsulin: %1$.2fU\nCarbs: %2$dg</string>
     <string name="quick_wizard_not_available">O assistente rápido selecionado não está mais disponível, atualize seu atalho</string>
     <string name="quick_wizard_message">Assistente rápido: %1$s\nInsulin: %2$.2fU\nCarbs: %3$dg</string>
-    <string name="wear_action_tempt_preset_error">Alvo temporário pré-definido desconhecido: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Cancelando Alvos temporários em execução?</string>
     <string name="wear_action_tempt_unit_error">Unidades diferentes usadas no relógio e telefone!</string>
     <string name="wear_action_tempt_zero_message">Desligar alvo temporário - cancelando Alvos temporários atuais?</string>

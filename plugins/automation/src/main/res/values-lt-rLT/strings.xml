@@ -104,8 +104,6 @@
     <string name="automation_event">Automatizuotas įvykis</string>
     <string name="reorder_label">Pertvarkyti</string>
     <string name="user_action">Naudotojo veiksmas</string>
-    <string name="remove_automation">Pašalinti automatizaciją</string>
-    <string name="sort_automation">Rūšiuoti automatizacijas</string>
     <string name="remove_selected_items">Pašalinti pasirinktus elementus</string>
     <string name="count_selected">%1$d pasirinkta</string>
     <string name="system_automation">Sistemos automatizacija</string>

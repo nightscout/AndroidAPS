@@ -79,24 +79,15 @@
     <string name="no_records_available">Nėra įrašų</string>
     <string name="calculation_short">Skaič.</string>
     <string name="treatments_iob_label_string">AIO:</string>
-    <string name="treatments_insulin_label_string">Insulinas:</string>
     <string name="treatments_carbs_label_string">AV:</string>
-    <string name="treatments_iobtotal_label_string">Visas AIO:</string>
-    <string name="treatments_iob_activity_total_label_string">Bendro AIO aktyvumas:</string>
-    <string name="tempbasals_realduration_label_string">Trukmė:</string>
     <string name="tempbasals_netratio_label_string">Santykis:</string>
-    <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">AIO:</string>
     <string name="treatments_wizard_correction_label">Korekcija</string>
     <string name="meal_bolus">Maistas</string>
     <string name="prime">Užpildyti sistemą</string>
-    <string name="profile_changes">Profilio keitimai</string>
-    <string name="tempt_targets">Laikini tikslai</string>
     <string name="carbs_and_bolus">AV ir bolusai</string>
     <string name="show_invalidated_records">Rodyti negaliojančius / ištrintus įrašus</string>
     <string name="hide_invalidated_records">Slėpti negaliojančius / ištrintus įrašus</string>
-    <string name="refresh_from_nightscout">Atnaujinti iš Nightscout</string>
-    <string name="refresheventsfromnightscout">Atnaujinti iš NS</string>
     <string name="show_invalidated">Rodyti negaliojančius</string>
     <string name="hide_invalidated">Slėpti negaliojančius</string>
     <string name="careportal_remove_started_events">Ištrinti AAPS paleidimo žymas</string>
@@ -131,7 +122,5 @@
     <string name="a11y_only_on_phone">tik telefone</string>
     <string name="quickwizard_settings">Greitojo patarėjo nustatymai</string>
     <string name="overview_edit_quickwizard_valid">Galioja:</string>
-    <string name="overview_edit_quickwizard_list_activity_add">Pridėti</string>
-    <string name="overview_quickwizard_item_edit_button">Redaguoti</string>
     <string name="a11y_drag_and_drop_handle">nutempti ir padėti</string>
 </resources>
