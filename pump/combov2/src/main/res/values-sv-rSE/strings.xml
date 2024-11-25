@@ -4,7 +4,6 @@
     <string name="combov2_plugin_description">Inbyggd pumpintegration för Accu-Check Combo-pumpar</string>
     <string name="combov2_could_not_connect">Kunde inte ansluta till pumpen</string>
     <string name="combov2_not_paired">Inte parkopplad till en pump</string>
-    <string name="combov2_pump_terminated_connection">Pumpen avslutade anslutningen</string>
     <string name="combov2_warning">Combo varning</string>
     <string name="combov2_error">Combo fel</string>
     <string name="combov2_warning_4">Ring hotline för uppdatering</string>
@@ -116,8 +115,6 @@ samtidigt för att avbryta parkoppling)\n
     <string name="combov2_short_status_battery_state">Batt.: %s</string>
     <string name="combov2_automatic_reservoir_entry">Auto-detektera och ange byte av insulinreservoar automatiskt</string>
     <string name="combov2_automatic_battery_entry">Auto-detektera och ange byte av batteri automatiskt</string>
-    <string name="combov2_note_reservoir_change">Byte av insulinreservoar infogas automatiskt av combov2-drivrutinen</string>
-    <string name="combov2_note_battery_change">Batteribytet registrerades automatiskt av combov2-drivrutinen</string>
     <string name="combov2_timezone_changed">Tidszon ändrad</string>
     <string name="combov2_datetime_changed">Datum och/eller tid ändrad</string>
     <string name="combov2_dst_started">Sommartid startad</string>
