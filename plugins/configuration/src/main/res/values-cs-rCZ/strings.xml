@@ -165,4 +165,5 @@
     <string name="metadata_format_new">Nový zašifrovaný formát</string>
     <string name="metadata_format_other">Neznámý formát souboru</string>
     <string name="reset_aps_results">Resetovat výsledky APS</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Chyba při přístupu k souborům. Vyberte adresář AAPS.</string>
 </resources>
