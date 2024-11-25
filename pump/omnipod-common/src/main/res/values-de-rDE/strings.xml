@@ -35,7 +35,6 @@
     <string name="omnipod_common_error_unexpected_exception">Es ist ein unerwarteter Fehler aufgetreten. Bitte melden! (%1$s: %2$s)</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation">Bestätigung</string>
-    <string name="omnipod_common_confirmation_time_or_timezone_change">Zeit und/oder Zeitzone auf dem Pod geändert.</string>
     <string name="omnipod_common_confirmation_expiration_alerts_updated">Alarm-Einstellungen auf dem Pod geändert.</string>
     <string name="omnipod_common_confirmation_time_on_pod_updated">Zeit auf dem Pod geändert.</string>
     <string name="omnipod_common_confirmation_suspended_delivery">Insulinabgabe komplett ausgesetzt.</string>
@@ -121,7 +120,6 @@
     <string name="omnipod_common_pod_status_running">In Betrieb</string>
     <string name="omnipod_common_pod_status_suspended">Angehalten</string>
     <string name="omnipod_common_pod_status_pod_fault">Pod-Fehler</string>
-    <string name="omnipod_common_pod_status_activation_time_exceeded">Aktivierungszeit überschritten</string>
     <string name="omnipod_common_pod_status_inactive">Inaktiv</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Pod-Fehler: %1$03d %2$s</string>
     <!-- Omnipod - Commands -->
@@ -147,7 +145,6 @@
     <string name="omnipod_common_cmd_set_fake_suspended_tbr">Fake TBR gesetzt, da der Pod pausiert ist.</string>
     <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Abbruch der Fake TBR. Diese wurde eingestellt, da der Pod pausiert war.</string>
     <string name="omnipod_common_cmd_split_tbr">Temp. Basalrate wegen unbekanntem Fehler bei TBR-Abbruch aufgeteilt</string>
-    <string name="omnipod_common_cmd_beep_config">Piep-Ton Konfiguration</string>
     <string name="omnipod_common_cmd_play_test_beep">Testton abspielen</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_finish_pairing_reminder">Erinnerung Kopplung beendet</string>
