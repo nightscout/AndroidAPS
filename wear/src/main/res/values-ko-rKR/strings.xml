@@ -2,9 +2,6 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_watchface_large">AAPS(대)</string>
-    <string name="label_watchface_big_chart">AAPS(큰차트)</string>
-    <string name="label_watchface_no_chart">AAPS(차트없음)</string>
     <string name="label_watchface_circle">AAPS(원형)</string>
     <string name="label_watchface_digital_style">AAPS(디지털방식)</string>
     <string name="label_watchface_custom">AAPS(Custom)</string>
@@ -18,7 +15,6 @@
     <string name="msg_warning_sync">%1$s 이후 받은 데이터가 없습니다! 폰에서 AAPS가 워치로 데이터를 보냈는지 확인하세요</string>
     <string name="msg_warning_old">AAPS 데이터가 %1$s 오래되었습니다! 센서, xDrip+, NS, AAPS 설정 또는 기타사항을 확인하세요!</string>
     <string name="pref_vibrate_on_bolus">Bolus 주입시 진동</string>
-    <string name="pref_units_for_actions">단위</string>
     <string name="units_short">U</string>
     <string name="pref_display_settings">화면</string>
     <string name="pref_graph_settings">그래프</string>
@@ -58,10 +54,6 @@
     <string name="pref_quick_righty">오른손잡이</string>
     <string name="pref_quick_lefty">왼손잡이</string>
     <string name="pref_modern_sparse">모던스타일</string>
-    <string name="pref_low">저</string>
-    <string name="pref_medium">중</string>
-    <string name="pref_high">고</string>
-    <string name="pref_auto">자동</string>
     <string name="pref_big_numbers">큰 숫자</string>
     <string name="pref_ring_history">원형 이력</string>
     <string name="pref_light_ring_history">연한 원형 이력</string>
@@ -115,7 +107,6 @@
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">양 제한없음</string>
     <string name="action_confirm">확인</string>
     <string name="action_timeshift">시간이동</string>
-    <string name="action_bolus">Bolus</string>
     <string name="bolus_progress">Bolus 주입 중</string>
     <string name="press_to_cancel">눌러서 취소하기</string>
     <string name="cancel_bolus">BOLUS 취소</string>
@@ -184,17 +175,11 @@
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
     <string name="no_tmp_basal_u_h">-.--U/h</string>
-    <string name="uploader_na">U: --%</string>
-    <string name="no_status">S: --</string>
-    <string name="time_stamp_na_min_ago">-- 분전</string>
-    <string name="delta_na">--- mg/dl</string>
-    <string name="no_loop_status">Loop 상태 없음</string>
     <string name="cob_000g">000g</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00U</string>
     <string name="snooze_alert">AAPS Snooze 경고</string>
     <string name="sending_snooze">AAPS에 snooze 보내기</string>
-    <string name="short_hour">h</string>
     <string name="week_short">w</string>
     <string name="day_short">d</string>
     <string name="hour_short">h</string>
