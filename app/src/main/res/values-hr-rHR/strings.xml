@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nav_preferences_plugin">%1$s Postavke</string>
-    <string name="nav_refreshtreatments">Obnovi podatke od NS</string>
     <string name="nav_exit">Izlaz</string>
     <string name="delta">Delta</string>
-    <string name="profile_label">Profil</string>
     <string name="save">Spremi</string>
-    <string name="correctionbous">Korekcija</string>
     <string name="invalid">GREŠKA</string>
     <string name="unitsnosemicolon">Jedinice</string>
     <!-- WEAR OS-->
