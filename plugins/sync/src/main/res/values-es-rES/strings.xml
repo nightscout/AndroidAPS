@@ -40,8 +40,6 @@
     <string name="nsclient_token_dialog_title">Token de acceso de Nightscout</string>
     <string name="nsclient_token_dialog_message">Token de acceso generado en la página de administración de NS (mínimo 17 caracteres)</string>
     <string name="deliver_now">Lanzar ahora</string>
-    <string name="clear_queue">Borrar cola</string>
-    <string name="show_queue">Mostrar cola</string>
     <string name="queue">Cola:</string>
     <string name="status">Estado:</string>
     <string name="clear_log">Borrar log</string>
@@ -89,13 +87,7 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Carga datos a Tidepool</string>
-    <string name="tidepool_upload_cgm">Carga tus datos</string>
-    <string name="tidepool_upload_bolus">Subir tratamientos (insulina, carbohidratos)</string>
-    <string name="tidepool_upload_tbr">Subir basales temporales</string>
-    <string name="tidepool_upload_profile">Subir conmutaciones de perfil, objetivos temps</string>
-    <string name="tidepool_upload_bg">Subir pruebas de glucosa</string>
     <string name="remove_all">Eliminar todos</string>
-    <string name="reset_start">Restablecer inicio</string>
     <string name="upload_now">Subir ahora</string>
     <string name="not_connected">No conectado</string>
     <string name="read_only">Sólo lectura</string>
@@ -134,7 +126,6 @@
     <string name="quick_wizard_not_available">El asistente rápido seleccionado ya no está disponible, por favor actualice su tarjeta</string>
     <string name="quick_wizard_message">Asistente Rápido: %1$s\nInsulina: %2$.2fU\nCarbohidratos: %3$dg</string>
     <string name="user_action_not_available">La acción del usuario solicitada %1$s ya no está disponible, por favor, actualiza tu tarjeta</string>
-    <string name="wear_action_tempt_preset_error">Objetivo Temporal preestablecido desconocido: %1$s</string>
     <string name="wear_action_tempt_cancel_message">¿Cancelar la ejecución del objetivo temporal?</string>
     <string name="wear_action_tempt_unit_error">¡Diferentes unidades usadas en el reloj y en el teléfono!</string>
     <string name="wear_action_tempt_zero_message">Objetivo Temporal Zero - ¿Cancelar el Objetivo Temporal en ejecución?</string>
