@@ -14,12 +14,7 @@
     <string name="hypott_exercise">Pentru corectarea unui episod hipoglicemic indus ca rezultat al exerciţiului fizic.</string>
     <string name="hypott_0basal">Pentru a preveni scăderea glicemiei, dacă este deja în funcţiune o rată bazală temporară de 0% a glicemiei.</string>
     <string name="hypott_hint1">https://wiki.aaps.app/en/latest/Usage/temptarget.html</string>
-    <string name="offlineprofile_whatprofile">Ce profil se va folosi și configura offline?</string>
-    <string name="offlineprofile_label">Subiect: Profil Offline</string>
-    <string name="offlineprofile_nsprofile">Profilul NS poate fi folosit, dar nu modificat.</string>
-    <string name="offlineprofile_hint1">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html#profile</string>
     <string name="pumpdisconnect_label">Motive pentru aplicarea \"Deconectare pompă\" în AAPS</string>
-    <string name="pumpdisconnect_whattodo">Ce trebuie făcut la deconectearea pompei de corpul dumneavoastră?</string>
     <string name="pumpdisconnect_unnecessary">Acest lucru nu este necesar deoarece insulina nu va fi eliberată dacă pompa este deconectată fizic.</string>
     <string name="pumpdisconnect_missinginsulin">Previne contabilizarea de către AAPS a insulinei care nu a fost administrată în timp ce pompa este deconectată fizic.</string>
     <string name="pumpdisconnect_notstop">Nu va opri administrarea insulinei dacă pompa rămâne conectată de corp.</string>
@@ -59,9 +54,6 @@
     <string name="exercise_setunchanged">Lăsaţi valoarea ţintă a glicemiei dumneavoastră neschimbată.</string>
     <string name="exercise_15g">Aşteptaţi până când glicemia scade sub Ținta Temporară de hipoglicemie şi apoi mâncaţi 15 g de carbohidraţi cu acţiune rapidă.</string>
     <string name="exercise_hint1">https://wiki.aaps.app/en/latest/Usage/temptarget.html#activity-temp-target</string>
-    <string name="suspendloop_doigetinsulin">Primesc insulina atunci când bucla închisă este dezactivata/suspendata?</string>
-    <string name="suspendloop_yes">Da, insulina bazală este livrată în continuare.</string>
-    <string name="suspendloop_no">Nu, livrarea de insulină este oprită.</string>
     <string name="basaltest_label">Testare rate bazale, ISF și rație I:C</string>
     <string name="basaltest_when">Când ar trebui să fie validate aceste valori?</string>
     <string name="basaltest_beforeloop">Înainte de a începe folosirea buclei inchise.</string>
@@ -70,19 +62,11 @@
     <string name="basaltest_fixed">Odată setate și validate, aceste valori nu ar trebui să se modifice în timp.</string>
     <string name="prerequisites_label">Cerinţe preliminare</string>
     <string name="prerequisites_what">Ce este esențial pentru crearea și utilizarea AAPS?</string>
-    <string name="prerequisites_determinedcorrectprofile">Profil validat (ratele bazale, IC, ISF, DIA).</string>
     <string name="prerequisites_computer">Un computer cu Android Studio instalat și configurat.</string>
-    <string name="prerequisites_phone">Un telefon compatibil.</string>
     <string name="prerequisites_pump">O pompă de insulină compatibilă dacă intenţionaţi să rulaţi o buclă închisă.</string>
     <string name="prerequisites_nightscout">Nightscout, pentru a păstra un jurnal cu toate datele și pentru evaluarea setărilor.</string>
-    <string name="prerequisites_tidepoolaccount">Un cont Tidepool.</string>
-    <string name="prerequisites_googleaccount">Un cont de Google.</string>
-    <string name="prerequisites_githubaccount">Un cont de Github.</string>
     <string name="prerequisites_beanandroiddeveloper">Experiență în programare sau editare cod.</string>
-    <string name="prerequisites_own670g">O pompă MiniMed 670G.</string>
     <string name="prerequisites_hint1">https://wiki.aaps.app/en/latest/Module/module.html</string>
-    <string name="prerequisites_smartwatch">Un ceas inteligent.</string>
-    <string name="prerequisites_supportedcgm">Un sistem de senzori CGM compatibil.</string>
     <string name="prerequisites2_label">Cerințe preliminare</string>
     <string name="prerequisites2_what">Ce este esențial pentru crearea și utilizarea AAPS?</string>
     <string name="prerequisites2_profile">Informații validate pentru crearea unui profil (ISF, I:C, rate bazale, DIA etc.).</string>
@@ -91,11 +75,9 @@
     <string name="prerequisites2_supportedcgm">Un CGM suportat si o aplicatie corespunzatoare pentru a primi valorile glicemiei pe telefon/dispozitiv.</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/en/latest/Module/module.html</string>
     <string name="update_label">Actualizare AAPS</string>
-    <string name="whatistrue">Bifați toate răspunsurile corecte.</string>
     <string name="update_git">Trebuie să ai Git instalat și configurat pe calculator.</string>
     <string name="update_asap">Când versiunile actualizate ale AAPS sunt lansate, versiunile anterioare pot fi limitate de la distanță după un anumit timp.</string>
     <string name="update_keys">Ar trebui să salvați și să rețineți locația keystore-ului dvs. și să utilizați aceeași cheie de semnare pentru actualizări ca și pentru instalarea anterioară.</string>
-    <string name="update_neverupdate">Nu actualizați niciodată dacă sistemul funcționează corect.</string>
     <string name="update_askfriend">Dacă aveți dificultăți la construirea aplicației, puteți instala o aplicație care a fost construită de un prieten.</string>
     <string name="update_hint1">https://wiki.aaps.app/en/latest/Installing-AndroidAPS/Update-to-new-version.html#update-to-a-new-version-or-branch</string>
     <string name="troubleshooting_label">Depanare</string>
@@ -114,7 +96,6 @@
     <string name="insulin_actrapid">Actrapid®/Humalin R®/insulină umană \"regular\".</string>
     <string name="insulin_hint1">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html#insulin</string>
     <string name="sensitivity_label">Plugin-uri de sensibilitate</string>
-    <string name="sensitivity_which">Bifați toate răspunsurile corecte.</string>
     <string name="sensitivity_adjust">Plugin-urile de sensibilitate permit AAPS să se ajusteze pentru modificări temporare sau de scurtă durată ale sensibilității la insulină (de exemplu, modificări hormonale sau probleme cu absorbția la locul perfuziei).</string>
     <string name="sensitivity_edit">Plugin-urile de sensibilitate oferă utilizatorului sugestii pentru modificarea ratelor bazale, raportului I:C și ISF, sugestii care pot fi utilizate pentru a edita profilul.</string>
     <string name="sensitivity_cannula">Înregistrarea unei schimbări de canulă va reseta raportul Autosens înapoi la 100%.</string>
@@ -132,7 +113,6 @@
     <string name="wronginsulin_careportal">Șterge datele despre insulină din Nightscout Careportal pentru a le înlătura din istoricul pompei.</string>
     <string name="wronginsulin_compare">Compară valorile din AAPS cu cele din istoricul pompei (dacă pompa permite asta).</string>
     <string name="wronginsulin_prime">Bolusati o cantitate parțiala de insulina din insulina calculata ca fiind lipsa utilizând seringa/penul sau amorsarea.</string>
-    <string name="wronginsulin_donothing">Nu fă nimic și permite AAPS să corecteze valorile mari ale glicemiei.</string>
     <string name="cob_label">Carbohidrați la bord (COB)</string>
     <string name="cob_question">Cum afectează modificarea valorii ISF calculul COB de către AAPS?</string>
     <string name="cob_longer">Creșterea ISF va mări timpul calculat de absorbție a carbohidraților</string>
@@ -176,7 +156,6 @@
     <string name="isf_decreasingvalue">Reducerea valorilor ISF va duce la administrarea unei cantităţi mai mari de insulină pentru a corecta valorile glicemiei peste valoarea țintă.</string>
     <string name="isf_noeffect">Creşterea sau scăderea ISF nu are efect asupra livrării de insulină atunci când glicemia este sub ţintă.</string>
     <string name="isf_preferences">ISF ar trebui introdus în Preferințele AAPS.</string>
-    <string name="isf_profile">Schimbarea valorii ISF în profil este suficientă pentru a produce efecte.</string>
     <string name="isf_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
     <string name="isf_hint2">https://wiki.aaps.app/en/latest/Usage/Profiles.html</string>
     <string name="ic_multiple">Poți folosi mai mult de o valoare pentru raportul I:C în profilul tău.</string>
@@ -184,9 +163,6 @@
     <string name="ic_label_exam">Raport insulină per carbohidrați (ICR)</string>
     <string name="ic_increasingvalue">Rapoarte ICR mai mari duc la livrarea unei cantintăți de insulină pentru o anumită cantitate de carbohidrați.</string>
     <string name="ic_decreasingvalue">Valorile ICR mai mici conduc la livrarea unei cantități mai mici de insulină pentru o anumită cantitate de carbohidrați.</string>
-    <string name="ic_noeffect">Dacă aveți 0 CoB (carbohidrați activi), schimbarea IC va determina modificarea cantității de insulină livrată pentru a corecta glicemia.</string>
-    <string name="ic_different">Valoarea IC va fi diferita dacă considerați 1BE (unitate de pâine) ca 10g sau 12g glucide.</string>
-    <string name="ic_meaning">IC înseamnă: Câte unități de pâine (BE) sunt acoperite de 1 unitate de insulină?</string>
     <string name="ic_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="profileswitch_label">Schimbare profil</string>
     <string name="profileswitch_pctwillchange">Când specificați o schimbare de profil de 90%, care sunt răspunsurile corecte?</string>
@@ -213,12 +189,6 @@
     <string name="profileswitch4_internet">Activarea modificărilor la profilul Nightscout necesită ca telefonul cu AAPS să aibă o conexiune la internet.</string>
     <string name="profileswitch4_sufficient">Editarea profilurilor pentru a modifica valorile este suficientă pentru a adopta orice modificări făcute.</string>
     <string name="profileswitch4_multi">Profilurile multiple pot fi setate şi selectate pentru a ţine cont de circumstanţele schimbătoare (de exemplu, modificări hormonale, muncă în schimburi, stil de viață în zilele lucrătoare/weekend).</string>
-    <string name="basalhelp_hint1">https://wiki.aaps.app/en/latest/Module/module.html#good-individual-dosage-algorithm-for-your-diabetes-therapy</string>
-    <string name="basalhelp_label">Ajutor cu ratele bazale</string>
-    <string name="basalhelp_where">Unde poți cere ajutor pentru configurarea ratei bazale și a altor setări.</string>
-    <string name="basalhelp_diabetesteam">Medicul dumneavoastră diabetolog</string>
-    <string name="basalhelp_google">Google</string>
-    <string name="basalhelp_facebook">Facebook</string>
     <string name="other_medication_label">Alte medicamente. Citește cu atenție menţiunea de mai jos şi bifează căsuţa pentru a accepta declaraţia.</string>
     <string name="other_medication_text">AAPS reduce ratele bazale și suspendă livrarea de insulină pentru a crește glicemia. Medicamentele din grupa inhibitorilor SGLT2 (gliflozine) pot preveni creșterea glicemiei si, prin urmare, pot mări riscul de cetoacidoză diabetică (DKA).
 \nBranduri comune de astfel de medicamente sunt: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nDeclar pe propria răspundere că nu voi lua asemenea medicamente cât folosesc AAPS sau că voi dezactiva bucla închisă înainte de le folosi.</string>
