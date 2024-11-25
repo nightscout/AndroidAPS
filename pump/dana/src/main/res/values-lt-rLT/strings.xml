@@ -93,7 +93,6 @@
     <string name="danar_disableeasymode">Išjungti pompos EasyUI režimą</string>
     <string name="profile_set_failed">Nepavyko nustatyti bazės profilio</string>
     <string name="danar_bluetooth_status">Bluetooth statusas</string>
-    <string name="danar_iob_label">Pompos AIO</string>
     <string name="firmware_label">Programinė įranga</string>
     <string name="danar_pump_settings">Dana pompos nustatymai</string>
     <string name="time_format_12h">12h</string>
