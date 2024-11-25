@@ -171,22 +171,8 @@
     <string name="half_basal_exercise_target_summary">Establecer un número, por ejemplo, 160. Significa que cuando el objetivo temporal es 160 mg/dL y tenemos habilitado \"Objetivo temporal alto aumenta la sensibilidad\", ejecuta el 50%% de la basal en ese nivel (120 = 75%%; 140 = 60%%).</string>
     <string name="autoISF_settings_title">Ajustes de AutoISF</string>
     <string name="autoISF_settings_summary">AutoISF permite adaptar el factor de sensibilidad a la insulina (ISF) en varios escenarios de comportamiento de la glucosa\n\nTambién puede adaptar la configuración de entrega de SMBs</string>
-    <string name="acce_ISF_settings_title">Ajustes de acce_ISF</string>
-    <string name="acce_ISF_settings_summary">Ajustes de acce_ISF: Ajustar ISF para acelerar/desacelerar la glucosa en sangre</string>
-    <string name="enableautoISFwithcob">Habilitar dura_ISF con COB</string>
-    <string name="enableautoISFwithcob_summary">Habilitar dura_ISF cuando hay carbohidratos activos (COB)</string>
-    <string name="bg_ISF_settings_title">Ajustes de bg_ISF</string>
-    <string name="bg_ISF_settings_summary">Ajustes de bg_ISF: ISF en función al nivel de la glucosa en sangre de acuerdo con un patrón predefinido</string>
-    <string name="pp_ISF_settings_title">Ajustes de pp_ISF</string>
-    <string name="pp_ISF_settings_summary">Ajustes de pp_ISF: ISF para el aumento de la glucosa postprandial (después de comer)</string>
-    <string name="dura_ISF_settings_title">Ajustes de dura_ISF</string>
-    <string name="dura_ISF_settings_summary">Ajustes de dura_ISF: ISF para la \"meseta\" de glucosa en sangre (valores estables altos) por encima del objetivo</string>
     <string name="smb_delivery_settings_title">Ajustes de entrega de SMB</string>
     <string name="smb_delivery_settings_summary">Conjunto de opciones para aumentar el tamaño real del SMB que se puede entregar, en situaciones en las que el ISF se volvió más agresivo, es decir, una valor de ISF bastante bajo.\n\nUSAR CON PRECAUCIÓN</string>
-    <string name="full_loop_settings_title">Ajustes del Lazo Cerrado Completo</string>
-    <string name="full_loop_settings_summary">Ajustes del lazo cerrado completo: Ajuste de iobTH para limitar la acumulación de IOB</string>
-    <string name="use_autoISF_extensions_title">Habilitar las funcionalidades extendidas de AutoISF</string>
-    <string name="use_autoISF_extensions_summary">Estos incluyen la modulación del ISF en función al comportamiento reciente de la glucosa, habilitadores de SMB alternativos y soporte para el Lazo Cerrado Completo</string>
     <string name="openapsama_enable_autoISF">Habilitar la adaptación del ISF en función al comportamiento de la glucosa</string>
     <string name="openapsama_autoISF_max_summary">Similar a autosens_max esto define a qué fuerza puede llegar el ISF.\n\nEl valor predeterminado 1.0 deshabilita esta opción.\n\nADVERTENCIA: Ten mucho cuidado al utilizar valores superiores a 2.5</string>
     <string name="openapsama_autoISF_min_summary">Similar a autosens_min esto define lo débil que puede llegar a ser ISF.\n\nEl valor predeterminado 1.0 deshabilita esta opción.</string>
