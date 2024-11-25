@@ -93,7 +93,6 @@
     <string name="danar_disableeasymode">отключить режим упрощенного интерфейса EasyUI в помпе</string>
     <string name="profile_set_failed">настройка базального профиля не состоялась</string>
     <string name="danar_bluetooth_status">статус блутус</string>
-    <string name="danar_iob_label">активный инсулин на помпе</string>
     <string name="firmware_label">Прошивка</string>
     <string name="danar_pump_settings">Настройки помпы Dana</string>
     <string name="time_format_12h">12 ч</string>
