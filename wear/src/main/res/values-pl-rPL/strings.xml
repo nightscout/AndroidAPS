@@ -2,9 +2,6 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_watchface_large">AAPS(Duży)</string>
-    <string name="label_watchface_big_chart">AAPS(DużyWykres)</string>
-    <string name="label_watchface_no_chart">AAPS(BezWykresu)</string>
     <string name="label_watchface_circle">AAPS(Koło)</string>
     <string name="label_watchface_digital_style">AAPS(StylCyfrowy)</string>
     <string name="label_watchface_custom">AAPS(niestandardowy)</string>
@@ -18,7 +15,6 @@
     <string name="msg_warning_sync">Nie otrzymano danych od %1$s! Sprawdź czy AAPS na telefonie wysyła dane do zegarka</string>
     <string name="msg_warning_old">Dane z AAPS są %1$s stare! Sprawdź swój sensor, xDrip+, NS, konfigurację AAPS i inne ustawienia!</string>
     <string name="pref_vibrate_on_bolus">Wibruj przy Bolusie</string>
-    <string name="pref_units_for_actions">Jednostki dla akcji</string>
     <string name="units_short">U</string>
     <string name="pref_display_settings">Wyświetlanie</string>
     <string name="pref_graph_settings">Wykres</string>
@@ -58,10 +54,6 @@
     <string name="pref_quick_righty">Szybki prawy</string>
     <string name="pref_quick_lefty">Szybki lewy</string>
     <string name="pref_modern_sparse">Minimalistyczny</string>
-    <string name="pref_low">Niska</string>
-    <string name="pref_medium">Średnia</string>
-    <string name="pref_high">Wysoka</string>
-    <string name="pref_auto">Auto</string>
     <string name="pref_big_numbers">Duże Cyfry</string>
     <string name="pref_ring_history">Historia glikemi</string>
     <string name="pref_light_ring_history">Dyskretniejsza historia</string>
@@ -115,7 +107,6 @@
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Podana wartość</string>
     <string name="action_confirm">POTWIERDŹ</string>
     <string name="action_timeshift">przesunięcie czasu</string>
-    <string name="action_bolus">Bolus</string>
     <string name="bolus_progress">Postęp bolusa</string>
     <string name="press_to_cancel">naciśnij aby anulować</string>
     <string name="cancel_bolus">ANULUJ BOLUS</string>
@@ -184,17 +175,11 @@
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
     <string name="no_tmp_basal_u_h">-.--U/h</string>
-    <string name="uploader_na">U: --%</string>
-    <string name="no_status">S: --</string>
-    <string name="time_stamp_na_min_ago">-- Min temu</string>
-    <string name="delta_na">--- mg/dl</string>
-    <string name="no_loop_status">Brak Statusu Pętli</string>
     <string name="cob_000g">000g</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00U</string>
     <string name="snooze_alert">Wycisz Alarm AAPS</string>
     <string name="sending_snooze">Wysyłanie wyciszenia do AAPS</string>
-    <string name="short_hour">h</string>
     <string name="week_short">t</string>
     <string name="day_short">d</string>
     <string name="hour_short">h</string>
