@@ -3,11 +3,9 @@
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_shortname">EOP2</string>
     <string name="eopatch_pump_description">Ολοκλήρωση αντλίας για EOPatch2 / GlucoMen Day</string>
-    <string name="category_alerts">Ειδοποιήσεις</string>
     <string name="low_reservoir">Ειδοποιήσεις χαμηλής δεξαμενής</string>
     <string name="patch_expiration_reminders">Υπενθύμιση λήξης Patch</string>
     <string name="patch_buzzer_reminders">Υπενθυμίσεις βομβητή Patch</string>
-    <string name="time_format_a_h_mm">ω:λλ α</string>
     <string name="eopatch_ble_status">Κατάσταση BLE</string>
     <string name="eopatch_serial_number">Σειριακός Αριθμός</string>
     <string name="eopatch_lot_number">Αριθμός Παρτίδας</string>
@@ -26,7 +24,6 @@
     <string name="time_1hr">1 ώρα</string>
     <string name="time_1hr_30min">1 ώρα 30 λεπτά</string>
     <string name="time_2hr">2 ώρες</string>
-    <string name="all_blank">\u0020</string>
     <string name="patch_safe_deactivation_desc">Για να αλλάξετε σε νέο Patch, το τρέχον Patch πρέπει να απορριφθεί. Θα ακυρωθεί όλη η χορήγηση ινσουλίνης από το Patch.</string>
     <string name="patch_discard_complete_title">Η απόρριψη του patch ολοκληρώθηκε.</string>
     <string name="patch_discard_complete_desc">Το patch πενεργοποιήθηκε.\nΑπορρίψτε το patch.\nΑφαιρέστε το patch που είναι τοποθετημένο στον οργανισμό σας.</string>
@@ -38,9 +35,6 @@
     <string name="patch_remaining_usage_period">Υπολειπόμενος χρόνος</string>
     <string name="patch_finish">Τέλος</string>
     <string name="patch_forced_discard">Απόρριψη</string>
-    <string name="patch_comm_error_during_discard_status">Απόρριψη Patch Σφάλμα επικοινωνίας κατά την απόρριψη </string>
-    <string name="patch_comm_error_during_discard_desc">Για κανονική απενεργοποίηση, πατήστε \'Ξαναδοκιμάστε\'.\nΓια μονομερή απενεργοποίηση πατήστε \'Απόρριψη\'.</string>
-    <string name="patch_comm_error_during_discard_desc_1">Για κανονική απενεργοποίηση, πατήστε \'Επανάληψη\'.</string>
     <string name="patch_comm_error_during_discard_desc_2">Για μονομερή απενεργοποίηση, πατήστε \'Απόρριψη\'.</string>
     <string name="patch_manually_turning_off_alarm_title">Χειροκίνητη απενεργοποίηση του συναγερμού του Patch</string>
     <string name="patch_manually_turning_off_alarm_desc_1">Εάν απενεργοποιηθεί μονομερώς κατά τη διάρκεια ενός σφάλματος επικοινωνίας, το ηχητικό σήμα συναγερμού μπορεί να μην σταματήσει από το Patch.</string>
@@ -82,8 +76,6 @@
     <string name="patch_expiration_reminder_setting_title">Υπενθύμιση λήξης Patch</string>
     <string name="patch_activate_reminder_title">Υπενθύμιση ενεργοποίησης Patch</string>
     <string name="patch_activate_reminder_desc">Η ενεργοποίηση του Patch δεν έχει ολοκληρωθεί.\n Συνέχεια.</string>
-    <string name="patch_communication_check">Έλεγχος επικοινωνίας Patch</string>
-    <string name="patch_communication_check_status_1">Έλεγχος επικοινωνίας Patch…</string>
     <string name="patch_communication_check_helper_1">Φέρτε την έξυπνη συσκευή σας πιο κοντά στο Patch.</string>
     <string name="patch_communication_check_helper_2">Παρακαλώ μετακινήστε σε άλλη τοποθεσία και προσπαθήστε ξανά.</string>
     <string name="patch_communication_failed">Σφάλμα Επικοινωνίας</string>
@@ -114,7 +106,6 @@
     <string name="retry">Επανάληψη</string>
     <string name="string_caution_not_remove_needle_cap">[Προσοχή] ΜΗΝ αφαιρέσετε το καπάκι της βελόνας και την αυτοκόλλητη υποστήριξη μέχρι να λάβετε σχετικές οδηγίες.</string>
     <string name="string_are_you_sure_to_discard_current_patch">Είστε βέβαιοι να απορρίψετε το τρέχον Patch;</string>
-    <string name="string_unconfirmed_bolus_info_discard_confirm_message">Λόγω ανεπιβεβαίωτων πληροφοριών bolus, ο υπολογιστής Bolus δεν μπορεί να χρησιμοποιηθεί μέχρι τις %s.\n\nΕίστε σίγουροι ότι θέλετε να απορρίψετε το τρέχον Patch;</string>
     <string name="needle_insertion_error_1">Σφάλμα εισαγωγής βελόνας.</string>
     <string name="needle_insertion_error_2">Ελέγξτε την κατεύθυνση της οπής αριστερά μετά την ευθεία στροφή του μοχλού και στη συνέχεια πατήστε \'Επανάληψη\'.</string>
     <string name="needle_insertion_error_3">Πατήστε \'Απόρριψη\' για να απενεργοποιήσετε το Patch.</string>
@@ -126,7 +117,6 @@
     <string name="finish">Τέλος</string>
     <string name="string_temp_basal_remained_hhmm">υπολειπόμενος χρόνος: %1$s:%2$s</string>
     <string name="next">Επόμενο</string>
-    <string name="patch_connection_fail">Προσπαθήστε ξανά μετά τον έλεγχο επικοινωνίας Patch.</string>
     <string name="string_pause_failed">Η αναστολή απέτυχε.</string>
     <string name="string_resume_failed">Η συνέχιση απέτυχε.</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE, μ MMM, εεεε ωω:λλ α</string>
