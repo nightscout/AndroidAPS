@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bg_label">BG</string>
     <string name="executing_right_now">Polecenie jest teraz wykonywane</string>
     <string name="basal_value_below_minimum">Wartość bazy poniżej minimum. Nie ustawiono profilu!</string>
-    <string name="permission">Uprawnienia</string>
-    <string name="need_whitelisting">%1$s potrzebuje wyłączenia z optymalizacji baterii, w celu zapewnienia poprawnego działania</string>
-    <string name="need_location_permission">Aplikacja wymaga dostępu do lokalizacji dla zarządzania bluetoothem i identyfikacją Wi-Fi</string>
-    <string name="need_storage_permission">Aplikacja wymaga zgody na zapis do pamięci, aby móc przechować pliki logów i eksportować ustawienia</string>
     <!--       Stats -->
     <string name="veryLow" comment="below 3.1">Bardzo nisko</string>
     <string name="low" comment="3.1-3.9">Niski</string>
