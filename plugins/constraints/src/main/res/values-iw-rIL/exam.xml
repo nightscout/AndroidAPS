@@ -14,12 +14,7 @@
     <string name="hypott_exercise">לתיקון היפו שנגרם ע\"י פעילות גופנית.</string>
     <string name="hypott_0basal">כדי למנוע מרמת הסוכר לרדת במידה ומינון בזאלי זמני 0% כבר פעיל.</string>
     <string name="hypott_hint1">https://wiki.aaps.app/he/latest/Usage/temptarget.html</string>
-    <string name="offlineprofile_whatprofile">באיזה פרופיל אפשר להשתמש ולהגדיר במצב לא מקוון?</string>
-    <string name="offlineprofile_label">פרופיל לא מקוון</string>
-    <string name="offlineprofile_nsprofile">ניתן להשתמש בנייטסקאוט אך לא ניתן להגדירו.</string>
-    <string name="offlineprofile_hint1">https://wiki.aaps.app/he/latest/Configuration/Config-Builder.html#profile</string>
     <string name="pumpdisconnect_label">סיבות להפעלת מצב \"ניתוק משאבה\" ב- AndroidAPS</string>
-    <string name="pumpdisconnect_whattodo">מה צריך לעשות כשמנתקים את המשאבה מהגוף?</string>
     <string name="pumpdisconnect_unnecessary">\"ניתוק משאבה\" אינו הכרחי הואיל ולא יוזרם אינסולין אם המשאבה מנותקת פיזית.</string>
     <string name="pumpdisconnect_missinginsulin">כדי למנוע מ- AndoirdAPS לקחת בחשבון אינסולין שלא הוזרם בעת שהמשאבה היתה מנותקת.</string>
     <string name="pumpdisconnect_notstop">\"ניתוק משאבה\" לא יגרום להפסקת הזרמת האינסולין כל עוד המשאבה מחוברת.</string>
@@ -59,9 +54,6 @@
     <string name="exercise_setunchanged">השאירו את ערך מטרת הסוכר ללא שינוי.</string>
     <string name="exercise_15g">המתינו עד שהגלוקוז בדם יירד מתחת לערך המטרה של היפו ואז אכלו 15 גרם של פחמימות מהירות.</string>
     <string name="exercise_hint1">https://wiki.aaps.app/he/latest/Usage/temptarget.html#activity-temp-target</string>
-    <string name="suspendloop_doigetinsulin">האם אני מקבל\\ת אינסולין כאשר הלולאה מושבתת\\מושהית?</string>
-    <string name="suspendloop_yes">כן, אינסולין בזאלי ממשיך להינתן.</string>
-    <string name="suspendloop_no">לא, אספקת האינסולין נפסקת.</string>
     <string name="basaltest_label">מינון באזלי, יחס תיקון, ויחס פחמימות</string>
     <string name="basaltest_when">מתי יש לוודא את נכונות ערכים אלה?</string>
     <string name="basaltest_beforeloop">לפני שאני מתחיל\\ה לולאה.</string>
@@ -71,19 +63,11 @@
     <string name="basaltest_hint1">https://wiki.aaps.app/he/latest/Getting-Started/FAQ.html#aaps</string>
     <string name="prerequisites_label">דרישות מקדימות</string>
     <string name="prerequisites_what">מה חיוני להגדרה ולשימוש ב-AndroidAPS?</string>
-    <string name="prerequisites_determinedcorrectprofile">הגדרת פרופיל אישי (מינון בזאלי-Basal, יחס אינסולין\\פחמימה- IC, יחס תיקון-ISF, משך פעילות אינסולין-DIA).</string>
     <string name="prerequisites_computer">מחשב עם Android Studio מותקן ומוגדר.</string>
-    <string name="prerequisites_phone">טלפון נתמך.</string>
     <string name="prerequisites_pump">משאבת אינסולין מתאימה אם אתם מתכננים להפעיל לולאה סגורה.</string>
     <string name="prerequisites_nightscout">נייטסקאוט, כדי לשמור יומן של כל הנתונים וסקירה של ההגדרות.</string>
-    <string name="prerequisites_tidepoolaccount">חשבון Tidepool.</string>
-    <string name="prerequisites_googleaccount">חשבון Google.</string>
-    <string name="prerequisites_githubaccount">חשבון Github.</string>
     <string name="prerequisites_beanandroiddeveloper">ניסיון בתכנות או בעריכת קוד.</string>
-    <string name="prerequisites_own670g">משאבת מנימד 670G.</string>
     <string name="prerequisites_hint1">https://wiki.aaps.app/he/latest/Module/module.html</string>
-    <string name="prerequisites_smartwatch">שעון חכם.</string>
-    <string name="prerequisites_supportedcgm">סנסור נתמך.</string>
     <string name="prerequisites2_label">דרישות מקדימות</string>
     <string name="prerequisites2_what">מה חיוני להגדרה ולשימוש ב-AndroidAPS?</string>
     <string name="prerequisites2_profile">מידע מאומת כדי להגדיר פרופיל (יחסי תיקון, יחסי פחמימות, מינונים בזאליים, משך פעילות האינסולין וכו\').</string>
@@ -92,11 +76,9 @@
     <string name="prerequisites2_supportedcgm">חיישן סוכר נתמך ואפליקציה מתאימה לקבלת ערכי הסוכר בטלפון\\התקן.</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/he/latest/Module/module.html</string>
     <string name="update_label">עדכון AAPS</string>
-    <string name="whatistrue">סמנו את כל התשובות הנכונות.</string>
     <string name="update_git">אתם צריכים להתקין ולהגדיר את Git במחשב שלכם.</string>
     <string name="update_asap">כאשר גרסאות מעודכנות של AndroidAPS ישוחררו, ייתכן שהגרסאות הקודמות יוגבלו מרחוק לאחר זמן מסויים.</string>
     <string name="update_keys">עליכם לשמור ולציין את מיקום ה-Keystore שלכם ולהשתמש באותו מפתח חתימה בעדכונים בו השתמשתם להתקנה הקודמת שלכם.</string>
-    <string name="update_neverupdate">לעולם לא לעדכן את האפליקציה אם היא פועלת כראוי.</string>
     <string name="update_askfriend">אם נתקלתם בקושי בבנייה של ה-APK, אתם יכולים להתקין APK שנבנה על ידי חבר.</string>
     <string name="update_hint1">https://wiki.aaps.app/he/latest/Installing-AndroidAPS/Update-to-new-version.html#update-to-a-new-version-or-branch</string>
     <string name="troubleshooting_label">פתרון תקלות</string>
@@ -118,7 +100,6 @@
     <string name="insulin_actrapid">Actrapid®/Humalin R®/ אינסולין אנושי \"רגיל\".</string>
     <string name="insulin_hint1">https://wiki.aaps.app/he/latest/Configuration/Config-Builder.html#insulin</string>
     <string name="sensitivity_label">תוספי רגישות</string>
-    <string name="sensitivity_which">סמנו את כל התשובות הנכונות.</string>
     <string name="sensitivity_adjust">תוספי רגישות מאפשרים ל-AndroidAPS לפצות על שינויים זמניים או קצרים ברגישות לאינסולין (לדוגמה משינויים הורמונליים או בעיות עם קליטה באתר העירוי).</string>
     <string name="sensitivity_edit">תוספי רגישות מספקים למשתמש הצעות לשינויים למינוני הבזאלי, יחסי התיקון והפחמימות, שאיתם ניתן לערוך את הפרופיל.</string>
     <string name="sensitivity_cannula">רישום החלפת צינורית יאפס את היחס של Autosens בחזרה ל-100%.</string>
@@ -136,7 +117,6 @@
     <string name="wronginsulin_careportal">מחקו את נתוני האינסולין מפורטל הטיפולים של נייטסקאוט כדי לסלק אותם מהיסטוריית המשאבה.</string>
     <string name="wronginsulin_compare">השוו את הרשומות שב-AndroidAPS עם היסטוריית המשאבה (אם המשאבה תומכת בכך).</string>
     <string name="wronginsulin_prime">מזריקים בולוס על חלק מהאינסולין המחושב \"שחסר\" עם מזרק\\עט או באמצעות תיחול (Prime).</string>
-    <string name="wronginsulin_donothing">לא לעשות דבר ולאפשר ל-AndroidAPS לתקן כל רמת סוכר גבוהה.</string>
     <string name="cob_label">פחמ\' פעילות</string>
     <string name="cob_question">איך שינויים ביחס התיקון משפיעים על חישוב הפחמימות הפעילות?</string>
     <string name="cob_longer">העלאת ערך יחס התיקון יאריך את משך ספיגת הפחמימות המחושבת</string>
@@ -180,7 +160,6 @@
     <string name="isf_decreasingvalue">הפחתת ערך יחס התיקון (ISF) מובילה למתן יותר אינסולין כדי לתקן רמת סוכר שמעל ערך המטרה.</string>
     <string name="isf_noeffect">העלאת או הורדת יחס התיקון (ISF) אינה משפיעה על מינון האינסולין כאשר רמות הגלוקוז בדם הן מתחת לערך המטרה.</string>
     <string name="isf_preferences">יש להזין את יחס התיקון בהעדפות ב-AndroidAPS.</string>
-    <string name="isf_profile">שינוי ערך ISF בפרופיל שלכם מספיק כדי להחיל את השינוי.</string>
     <string name="isf_hint1">https://wiki.aaps.app/he/latest/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
     <string name="isf_hint2">https://wiki.aaps.app/he/latest/Usage/Profiles.html</string>
     <string name="ic_multiple">ניתן להשתמש ביותר מערך אחד ליחס הפחמימות בפרופיל שלכם.</string>
@@ -188,9 +167,6 @@
     <string name="ic_label_exam">יחס אינסולין לפחמימות (יחס הפחמימות, I:C)</string>
     <string name="ic_increasingvalue">יחס פחמימות גבוה גורם להזרקת פחות אינסולין עבור כל פחמימה.</string>
     <string name="ic_decreasingvalue">יחס פחמימות נמוך גורם להזרקת פחות אינסולין עבור כל פחמימה.</string>
-    <string name="ic_noeffect">כאשר יש 0 פחמ\', שינוי יחס הפחמימות (IC) יוביל למינון שונה של אינסולין כדי לתקן ערך סוכר נתון.</string>
-    <string name="ic_different">יחס הפחמימות (IC) יהיה שונה אם ערך יחידת לחם ייספר כ-10 או 12 גר\'.</string>
-    <string name="ic_meaning">יחס הפחמימות (IC) הוא: כמה יחידות לחם מכוסות ע\"י יחידת אינסולין אחת?</string>
     <string name="ic_hint1">https://wiki.aaps.app/he/latest/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="profileswitch_label">החלפת פרופילים</string>
     <string name="profileswitch_pctwillchange">בעת החלפה לפרופיל 90%, מהם כל ההיגדים הנכונים?</string>
@@ -217,12 +193,6 @@
     <string name="profileswitch4_internet">הפעלת שינויים בפרופיל הנייטסקאוט שלכם דורשת שהמכשיר עליו AndroidAPS מותקן יהיה מחובר לאינטרנט.</string>
     <string name="profileswitch4_sufficient">עריכת פרופילים לצורך שינוי ערכים מספיקה כדי להחיל שינויים כלשהם שבוצעו.</string>
     <string name="profileswitch4_multi">ניתן להגדיר פרופילים מרובים כדי להתאים לנסיבות משתנות (לדוגמה שינויים הורמונליים, עבודת משמרת, ימי חול\\אורח חיים של סופ\"ש).</string>
-    <string name="basalhelp_hint1">https://wiki.aaps.app/he/latest/Module/module.html#good-individual-dosage-algorithm-for-your-diabetes-therapy</string>
-    <string name="basalhelp_label">נושא: עזרה עם מינונים בזאליים</string>
-    <string name="basalhelp_where">לאן אפשר לפנות לעזרה בהגדרת המינון הבזאלי והגדרות אחרות?</string>
-    <string name="basalhelp_diabetesteam">צוות הסוכרת שלכם</string>
-    <string name="basalhelp_google">Google</string>
-    <string name="basalhelp_facebook">Facebook</string>
     <string name="other_medication_label">תרופות אחרות. אנא קראו את ההצהרה להלן ולאחר מכן סמנו את התיבה כדי לאשר את ההצהרה.</string>
     <string name="other_medication_text">אפליקציית AAPS מורידה את המינון הבזאלי כדי להעלות את רמת הגלוקוז בדם. תרופות מקבוצת מעכבי SGLT2 (גליפלוזינים) יכולים למנוע עלייה צפויה בסוכר וייתכן שייצרו חסר אינסולין מסוכן (DKA).
 \nשמותיהם המסחריים מוכרים הם: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nאני מתחייב\\ת שלא לקחת את התרופות הללו תוך שימוש ב-AAPS או שלא אאפשר את הלולאה לפני לקיחת התרופות הנ\"ל.</string>
