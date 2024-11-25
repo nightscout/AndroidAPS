@@ -203,8 +203,6 @@
     <string name="overview_buttons_selection">Πλήκτρα</string>
     <string name="show_calibration_button_summary">Στέλνει καλιμπράρισμα στο xDrip + ή ανοίγει το παράθυρο καλιμπραρίσματος του BYODA</string>
     <string name="show_cgm_button_summary">Ανοίγει το xDrip + ή το BYODA, τα κουμπιά πίσω επιστρέφουν στο AAPS</string>
-    <string name="dexcom_app_not_installed">Η εφαρμογή Dexcom δεν είναι εγκατεστημένη.</string>
-    <string name="dexcom_app_not_detected">Ενημερώστε την εφαρμογή G5 στην υποστηριζόμενη έκδοση</string>
     <string name="error_starting_cgm">Δεν είναι δυνατή η εκκίνηση της εφαρμογής CGM. Βεβαιωθείτε ότι έχει εγκατασταθεί.</string>
     <string name="not_available_full">Μη διαθέσιμο</string>
     <string name="constraints_violation">Παραβίαση Περιορισμών</string>
@@ -282,7 +280,6 @@
     <string name="skin">Θέμα</string>
     <string name="cannula_usage">χρήσιμες συμβουλές:</string>
     <!--    Iob-->
-    <string name="send_logfiles">Στείλτε τα αρχεία καταγραφής της ημέρας στους προγραμματιστές μαζί με αυτή τη φορά. Απροσδόκητη κατάσταση.</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Εμφανίζει μία τρέχουσα ειδοποίηση με σύντομη επισκόπηση του τι κάνει το κύκλωμα τώρα</string>
     <string name="old_data">Παλιά Δεδομένα</string>
