@@ -218,8 +218,6 @@
     <string name="overview_buttons_selection">מקשים</string>
     <string name="show_calibration_button_summary">שולח כיול ל- xDrip או פותח את חלון הכיול של אפליקציית Dexcom</string>
     <string name="show_cgm_button_summary">פותח את xDrip או את דקסקום, לחיצה על אחורה מחזירה ל-AAPS</string>
-    <string name="dexcom_app_not_installed">אפליקציית Dexcom אינה מותקנת.</string>
-    <string name="dexcom_app_not_detected">עדכנו את יישום ה-Dexcom שלכם לגרסה נתמכת</string>
     <string name="error_starting_cgm">לא ניתן היה להפעיל את יישום סנסור. וודא שהוא מותקן.</string>
     <string name="not_available_full">לא זמין</string>
     <string name="constraints_violation">הפרת מגבלות</string>
@@ -303,7 +301,6 @@
     <string name="skin">סקין</string>
     <string name="cannula_usage">שימוש:</string>
     <!--    Iob-->
-    <string name="send_logfiles">שלח קובצי יומן של היום למפתחים יחד עם זמן זה. מצב לא צפוי.</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">מציג הודעה קבועה עם סקירה קצרה של מה שהלולאה שלכם עושה</string>
     <string name="old_data">נתונים ישנים</string>
