@@ -93,7 +93,6 @@
     <string name="danar_disableeasymode">停用幫浦中的 EasyUI 模式</string>
     <string name="profile_set_failed">基礎速率配置設定失敗</string>
     <string name="danar_bluetooth_status">藍牙狀態</string>
-    <string name="danar_iob_label">幫浦 IOB</string>
     <string name="firmware_label">韌體</string>
     <string name="danar_pump_settings">Dana 幫浦設定</string>
     <string name="time_format_12h">12 小時制</string>
