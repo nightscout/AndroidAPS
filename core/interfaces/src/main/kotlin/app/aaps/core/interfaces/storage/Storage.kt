@@ -8,8 +8,11 @@ import java.io.File
 interface Storage {
 
     fun putFileContents(file: File, contents: String)
+    @Throws(SecurityException::class)
     fun putFileContents(contentResolver: ContentResolver, file: DocumentFile, contents: String)
     fun getFileContents(file: File): String
+    @Throws(SecurityException::class)
     fun getFileContents(contentResolver: ContentResolver, file: DocumentFile): String
+    @Throws(SecurityException::class)
     fun getBinaryFileContents(contentResolver: ContentResolver, file: DocumentFile): ByteArray?
 }

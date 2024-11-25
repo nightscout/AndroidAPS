@@ -174,5 +174,6 @@
     <string name="metadata_format_new">New encrypted format</string>
     <string name="metadata_format_other">Unknown export format</string>
     <string name="reset_aps_results">Reset APS results</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Error accessing filesystem. Select AAPS directory properly.</string>
 
 </resources>

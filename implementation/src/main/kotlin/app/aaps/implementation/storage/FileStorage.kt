@@ -17,6 +17,7 @@ class FileStorage @Inject constructor() : Storage {
         return file.readText()
     }
 
+    @Throws(SecurityException::class)
     override fun getFileContents(contentResolver: ContentResolver, file: DocumentFile): String {
         val inputStream = contentResolver.openInputStream(file.uri)
         val reader = BufferedReader(InputStreamReader(inputStream))
