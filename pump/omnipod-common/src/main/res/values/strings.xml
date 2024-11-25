@@ -56,7 +56,6 @@
 
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation">Confirmation</string>
-    <string name="omnipod_common_confirmation_time_or_timezone_change">Time and/or time zone changed on the Pod.</string>
     <string name="omnipod_common_confirmation_expiration_alerts_updated">Alert configuration has been updated in the Pod.</string>
     <string name="omnipod_common_confirmation_time_on_pod_updated">The time on the Pod has been updated.</string>
     <string name="omnipod_common_confirmation_suspended_delivery">All insulin delivery has been suspended.</string>
@@ -157,7 +156,6 @@
     <string name="omnipod_common_pod_status_normal">Normal</string>
     <string name="omnipod_common_pod_status_suspended">Suspended</string>
     <string name="omnipod_common_pod_status_pod_fault">Pod Fault</string>
-    <string name="omnipod_common_pod_status_activation_time_exceeded">Activation time exceeded</string>
     <string name="omnipod_common_pod_status_inactive">Inactive</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Pod Fault: %1$03d %2$s</string>
 
@@ -184,7 +182,6 @@
     <string name="omnipod_common_cmd_set_fake_suspended_tbr">Set fake temporary basal because the Pod is suspended</string>
     <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Cancel fake temporary basal that was created because the Pod was suspended</string>
     <string name="omnipod_common_cmd_split_tbr">Split temporary basal because of uncertain failure in cancellation</string>
-    <string name="omnipod_common_cmd_beep_config">Beep Config</string>
     <string name="omnipod_common_cmd_play_test_beep">Play Test Beep</string>
 
     <!-- Omnipod - Alerts -->
