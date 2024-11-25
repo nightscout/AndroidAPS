@@ -14,12 +14,7 @@
     <string name="hypott_exercise">Corrigir uma hipoglicemia causada por exercícios físicos.</string>
     <string name="hypott_0basal">Prevenir que a glicose fique baixa em uma situação em que já há uma dose basal temporária de 0% ativa.</string>
     <string name="hypott_hint1">https://wiki.aaps.app/en/latest/Usage/temptarget.html</string>
-    <string name="offlineprofile_whatprofile">Qual perfil pode ser usado e configurado offline?</string>
-    <string name="offlineprofile_label">Tópico: Perfil Offline</string>
-    <string name="offlineprofile_nsprofile">Perfil NS pode ser usado, mas não configurado.</string>
-    <string name="offlineprofile_hint1">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html#profile</string>
     <string name="pumpdisconnect_label">Motivos para ativar o modo \"Desconectar bomba\" no AndroidAPS</string>
-    <string name="pumpdisconnect_whattodo">O que fazer quando desconectar a bomba do seu corpo?</string>
     <string name="pumpdisconnect_unnecessary">É um procedimento desnecessário, pois a insulina não é administrada se a bomba estiver fisicamente desconectada.</string>
     <string name="pumpdisconnect_missinginsulin">Isso impede que o AAPS contabilize a insulina que não foi entregue quando a bomba está fisicamente desconectada.</string>
     <string name="pumpdisconnect_notstop">A entrega de insulina não será interrompida se a bomba permanecer conectada ao seu corpo.</string>
@@ -59,9 +54,6 @@
     <string name="exercise_setunchanged">Não altere o seu alvo de glicemia.</string>
     <string name="exercise_15g">Aguarde até que a glicemia fique abaixo do seu alvo temporário de hipoglicemia e coma 15g de carbos de ação rápida.</string>
     <string name="exercise_hint1">https://wiki.aaps.app/en/latest/Usage/temptarget.html#activity-temp-target</string>
-    <string name="suspendloop_doigetinsulin">Eu recebo insulina quando o loop estiver desactivado/suspenso?</string>
-    <string name="suspendloop_yes">Sim, a insulina basal continua sendo administrada.</string>
-    <string name="suspendloop_no">Não, a administração da insulina será interrompida.</string>
     <string name="basaltest_label">Testando a basal, FSI e Relação IC</string>
     <string name="basaltest_when">Quando esses valores deveriam ser avaliados?</string>
     <string name="basaltest_beforeloop">Antes de iniciar o looping.</string>
@@ -70,19 +62,11 @@
     <string name="basaltest_fixed">Uma vez definido e validado, estes valores não deveriam mudar ao longo do tempo.</string>
     <string name="prerequisites_label">Pré-requisitos</string>
     <string name="prerequisites_what">O que é essencial para configurar e usar o AndroidAPS?</string>
-    <string name="prerequisites_determinedcorrectprofile">Informações do perfil validadas (Basal, IC, FSI, DAI).</string>
     <string name="prerequisites_computer">Um computador com o Android Studio instalado e configurado.</string>
-    <string name="prerequisites_phone">Um telefone compatível.</string>
     <string name="prerequisites_pump">Uma bomba de insulina compatível se você pretender usar o loop fechado.</string>
     <string name="prerequisites_nightscout">Nightscout, para manter um registro de todos os dados e revisar configurações.</string>
-    <string name="prerequisites_tidepoolaccount">Uma conta do Tidepool.</string>
-    <string name="prerequisites_googleaccount">Uma conta Google.</string>
-    <string name="prerequisites_githubaccount">Uma conta do Github.</string>
     <string name="prerequisites_beanandroiddeveloper">Experiência na programação ou editação de código.</string>
-    <string name="prerequisites_own670g">Uma bomba MiniMed 670G.</string>
     <string name="prerequisites_hint1">https://wiki.aaps.app/en/latest/Module/module.html</string>
-    <string name="prerequisites_smartwatch">Um Smartwatch.</string>
-    <string name="prerequisites_supportedcgm">Um CGM compatível.</string>
     <string name="prerequisites2_label">Pré-requisitos</string>
     <string name="prerequisites2_what">O que é essencial para configurar e usar o AndroidAPS?</string>
     <string name="prerequisites2_profile">Informações validadas para configurar um perfil (razão FS, I:C, taxas de basal, DAI etc.).</string>
@@ -91,11 +75,9 @@
     <string name="prerequisites2_supportedcgm">Um CGM compatível com um app apropriado para receber os valores de glicose no telefone/dispositivo.</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/en/latest/Module/module.html</string>
     <string name="update_label">Atualizando o AAPS</string>
-    <string name="whatistrue">Marque todas as respostas corretas.</string>
     <string name="update_git">Você precisa ter o Git instalado e configurado no seu computador.</string>
     <string name="update_asap">Quando versões atualizadas do AAPS são lançadas, versões anteriores podem ser limitadas remotamente após um determinado tempo.</string>
     <string name="update_keys">Você deveria salvar e anotar o local da sua chave de assinatura e usar a mesma chave de assinatura das versões anteriores para as atualizações.</string>
-    <string name="update_neverupdate">Nunca atualize se o sistema estiver funcionando bem.</string>
     <string name="update_askfriend">Se você tiver dificuldades criando o apk, você pode instalar um apk que foi criado por um amigo.</string>
     <string name="update_hint1">https://wiki.aaps.app/en/latest/Installing-AndroidAPS/Update-to-new-version.html#update-to-a-new-version-or-branch</string>
     <string name="troubleshooting_label">Resolução de problemas</string>
@@ -114,7 +96,6 @@
     <string name="insulin_actrapid">Actrapid®/Humalin R®/insulina humana regular.</string>
     <string name="insulin_hint1">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html#insulin</string>
     <string name="sensitivity_label">Tópico: Plugins de Sensibilidade</string>
-    <string name="sensitivity_which">Marque todas as respostas corretas.</string>
     <string name="sensitivity_adjust">Plugins de sensibilidade permitem ao AAPS ajustar de forma temporária ou por uma curta duração alterações na sensibilidade à insulina (por exemplo, mudanças hormonais ou problemas com absorção de insulina no local onde ela é aplicada).</string>
     <string name="sensitivity_edit">Os plugins de sensibilidade fornecem ao usuário sugestões de alterações nas taxas basais, relações I:C e ISF, que podem ser usadas para editar o perfil.</string>
     <string name="sensitivity_cannula">Registrar uma troca de cânula irá redefinir a taxa de Autosense de volta para 100%.</string>
@@ -132,7 +113,6 @@
     <string name="wronginsulin_careportal">Exclua dados de insulina do Nightscout Careportal para removê-los do histórico da bomba.</string>
     <string name="wronginsulin_compare">Compare os valores no AndroidAPS e no histórico da bomba de insulina (se a bomba tiver essa opção).</string>
     <string name="wronginsulin_prime">Dê uma porção do bolus calculado não administrado por meio de seringa/caneta ou usando o menu ações -&gt; purgar/preencher.</string>
-    <string name="wronginsulin_donothing">Não faça nada e permita o AAPS corrigir qualquer elevação no nível de glicose.</string>
     <string name="cob_label">Carboidratos Ativos (CA)</string>
     <string name="cob_question">Como a alteração do valor FS afeta o cálculo de CA no AAPS?</string>
     <string name="cob_longer">Aumentar a sensibilidade à insulina (FS) fará com que o calculado do tempo de absorção de carboidratos seja mais longo</string>
@@ -175,7 +155,6 @@
     <string name="isf_decreasingvalue">Reduzir os valores de sensibilidade à insulina (FS) levará a uma maior entrega de insulina para corrigir a glicemia acima da meta.</string>
     <string name="isf_noeffect">Aumentar ou diminuir os valores de sensibilidade à insulina (FS) não afeta a entrega de insulina quando os níveis de glicose no sangue estão abaixo da meta.</string>
     <string name="isf_preferences">O FSI (Fator de Sensibilidade à Insulina) deve ser configurado em Preferências do AAPS.</string>
-    <string name="isf_profile">Alterar o valor do FSI no seu perfil é o suficiente para aplicar a alteração.</string>
     <string name="isf_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
     <string name="isf_hint2">https://wiki.aaps.app/en/latest/Usage/Profiles.html</string>
     <string name="ic_multiple">Você pode definir mais do que um valor para o rácio IC no seu perfil.</string>
@@ -183,9 +162,6 @@
     <string name="ic_label_exam">Tópico: Relação Insulina:Carboidrato (Relação IC)</string>
     <string name="ic_increasingvalue">Rácios IC mais altos levam a menos insulina administrada por uma dada quantidade de carboidratos.</string>
     <string name="ic_decreasingvalue">Rácios IC mais baixos levam a menos insulina administrada por uma dada quantidade de carboidratos.</string>
-    <string name="ic_noeffect">Se tiver 0 CA, alterar a proporção IC irá levar a uma quantidade diferente de insulina para corrigir um determinado valor da glicemia.</string>
-    <string name="ic_different">O IC será diferente se você contar a unidade (de câmbio) de pão como 10g ou 12g.</string>
-    <string name="ic_meaning">O significado do IC é: Quantas unidades (conversão) de pão são cobertas por 1U de insulina?</string>
     <string name="ic_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="profileswitch_label">Tópico: Alternando Perfil</string>
     <string name="profileswitch_pctwillchange">Ao especificar uma mudança de perfil de 90%, quais respostas são verdadeiras?</string>
@@ -212,12 +188,6 @@
     <string name="profileswitch4_internet">Ativar alterações no seu perfil do Nightscout requer que o telefone do AndroidAPS tenha uma conexão com a Internet.</string>
     <string name="profileswitch4_sufficient">Apenas editar os valores nos seus perfis é suficiente para implementar as alterações feitas.</string>
     <string name="profileswitch4_multi">Múltiplos perfis podem ser configurados e selecionados para acomodar mudanças de circunstâncias (por exemplo, alterações hormonais, mudança de trabalho, dias de semana/fim de semana).</string>
-    <string name="basalhelp_hint1">https://wiki.aaps.app/en/latest/Module/module.html#good-individual-dosage-algorithm-for-your-diabetes-therapy</string>
-    <string name="basalhelp_label">Tópico: Ajuda com taxas basais</string>
-    <string name="basalhelp_where">Onde procurar ajuda para configurar sua taxa de basal e outras configurações.</string>
-    <string name="basalhelp_diabetesteam">Sua equipe de diabetes</string>
-    <string name="basalhelp_google">Google</string>
-    <string name="basalhelp_facebook">Facebook</string>
     <string name="other_medication_label">Outros Medicamentos. Por favor, leia a declaração abaixo e depois marque a caixa para aceitar a declaração.</string>
     <string name="other_medication_text">AAPS reduz as taxas basais ou suspende a entrega de insulina para aumentar o açúcar no sangue. Medicamentos da classe inibidores de SGLT2 (gliflozinas) podem impedir aumentos na glicemia e, assim, podem produzir uma perigosa deficiência de insulina levando a DKA. \nNomes comuns de marca são: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®. \n\nEu prometo que não tomarei tais medicamentos ao usar AAPS ou desativarei o loop antes de usar tais medicamentos.</string>
 </resources>
