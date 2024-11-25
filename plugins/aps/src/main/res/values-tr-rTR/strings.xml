@@ -172,22 +172,8 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="half_basal_exercise_target_summary">Örneğin 160 gibi bir sayıya ayarlayın; bunun anlamı, geçici hedef 160 mg/dL olduğunda ve Yüksek geçici hedef duyarlılığı arttırır= doğru olduğunda, bu seviyede 50%% bazal çalışır (120 = 75%%; 140 = 60%%).</string>
     <string name="autoISF_settings_title">OtoİDF Ayarları</string>
     <string name="autoISF_settings_summary">OtoİDF, insülin duyarlılık faktörünün (İDF) glikoz davranışının çeşitli senaryolarına uyarlanmasına olanak tanır\n\nAyrıca SMB iletim ayarlarını da uyarlayabilir</string>
-    <string name="acce_ISF_settings_title">acce_İDF ayarları</string>
-    <string name="acce_ISF_settings_summary">acce_İDF ayarları: İDF\'yi kan şekerinin artışı/düşüşü için ayarlayın</string>
-    <string name="enableautoISFwithcob">dura_İDF\'yi AKRB ile etkinleştirin</string>
-    <string name="enableautoISFwithcob_summary">AKRB aktif olduğunda dura_İDF\'yi etkinleştirin</string>
-    <string name="bg_ISF_settings_title">kş_İDF ayarları</string>
-    <string name="bg_ISF_settings_summary">kş_İDF ayarları: Önceden tanımlanmış bir poligona göre kan şekeri seviyesine bağlı olarak İDF ayarı</string>
-    <string name="pp_ISF_settings_title">pp_İDF ayarları</string>
-    <string name="pp_ISF_settings_summary">pp_İDF ayarları: Yemek sonrası (yemekten sonra) glikoz artışı için İDF</string>
-    <string name="dura_ISF_settings_title">dura_İDF ayarları</string>
-    <string name="dura_ISF_settings_summary">dura_İDF ayarları: Hedefin üzerindeki kan şekeri için İDF</string>
     <string name="smb_delivery_settings_title">SMB iletim ayarları</string>
     <string name="smb_delivery_settings_summary">İDF\'nin güçlendirildiği durumlarda (yani oldukça düşük İDF durumu) iletilen SMB değerini artırmaya yönelik seçenekler kümesi.\n\nDİKKATLİ KULLANIN</string>
-    <string name="full_loop_settings_title">Tam Döngü Ayarları</string>
-    <string name="full_loop_settings_summary">Tam Döngü Ayarları: AİNS oluşumunu sınırlamak için iobTH\'ı ayarlayın</string>
-    <string name="use_autoISF_extensions_title">OtoİDF genişletilmiş işlevlerini etkinleştirin</string>
-    <string name="use_autoISF_extensions_summary">Bunlar arasında son kş davranışı nedeniyle İDF modülasyonu, alternatif SMB etkinleştiricileri ve Tam Kapalı Döngü desteği yer almaktadır</string>
     <string name="openapsama_enable_autoISF">Glikoz davranışıyla İDF adaptasyonunu etkinleştirin</string>
     <string name="openapsama_autoISF_max_summary">otoduyarlılık_maks\'a benzer şekilde İDF\'nin ne kadar güçlü olabileceğini tanımlar.\n\nVarsayılan değer 1.0 Bu şekilde kapalıdır.\n\nUYARI: 2.5\'in üzerindeki değerleri kullanırken son derece dikkatli olun</string>
     <string name="openapsama_autoISF_min_summary">otoduyarlılık_min\'e benzer şekilde İDF\'nin ne kadar etkisiz olabileceğini tanımlar.\n\nVarsayılan değer olan 1.0 Bu şekilde kapalıdır.</string>
