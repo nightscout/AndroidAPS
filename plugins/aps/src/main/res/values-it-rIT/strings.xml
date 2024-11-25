@@ -171,22 +171,8 @@
     <string name="half_basal_exercise_target_summary">Impostare un numero, ad esempio 160, significa che quando il target temporaneo è 160 mg/dL e l\'opzione aumenta la sensibilità se rileva sensibilità è attivo, esegue il 50%% della basale a questo livello (120 = 75%%; 140 = 60%%).</string>
     <string name="autoISF_settings_title">Impostazioni AutoISF</string>
     <string name="autoISF_settings_summary">AutoISF consente di adattare il fattore di sensibilità all\'insulina (ISF) in vari scenari di comportamento glicemico\n\nPuò anche adattare le impostazioni di erogazione SMB</string>
-    <string name="acce_ISF_settings_title">impostazioni acce_ISF</string>
-    <string name="acce_ISF_settings_summary">impostazioni acce_ISF: regola l\'ISF per accelerare/decelerare la glicemia</string>
-    <string name="enableautoISFwithcob">Abilita dura_ISF con COB</string>
-    <string name="enableautoISFwithcob_summary">Abilita dura_ISF quando COB è attivo</string>
-    <string name="bg_ISF_settings_title">Impostazioni bg_ISF</string>
-    <string name="bg_ISF_settings_summary">impostazioni bg_ISF: ISF in base al livello di glucosio nel sangue secondo uno schema predefinito</string>
-    <string name="pp_ISF_settings_title">impostazioni pp_ISF</string>
-    <string name="pp_ISF_settings_summary">Impostazioni pp_ISF: ISF per l\'aumento della glicemia postprandiale (dopo i pasti)</string>
-    <string name="dura_ISF_settings_title">impostazioni dura_ISF</string>
-    <string name="dura_ISF_settings_summary">impostazioni dura_ISF: ISF per la glicemia che si stabilizza al di sopra dell\'obiettivo</string>
     <string name="smb_delivery_settings_title">Impostazioni di erogazione SMB</string>
     <string name="smb_delivery_settings_summary">Insieme di opzioni per aumentare le dimensioni effettive di SMB che possono essere erogate in situazioni in cui ISF è stato rafforzato, cioè con una cifra ISF piuttosto bassa. \n \nUTILIZZARE CON CAUTELA</string>
-    <string name="full_loop_settings_title">Impostazioni Loop Completo</string>
-    <string name="full_loop_settings_summary">Impostazioni del loop completo: Regolare iobTH per limitare l\'accumulo di IOB</string>
-    <string name="use_autoISF_extensions_title">Abilita le funzionalità avanzate di AutoISF</string>
-    <string name="use_autoISF_extensions_summary">Questi includono la modulazione ISF dovuta al comportamento recente della glicemia, abilitatori SMB alternativi e il supporto per Full Closed Loop</string>
     <string name="openapsama_enable_autoISF">Abilita l\'adattamento ISF in base al comportamento del glucosio</string>
     <string name="openapsama_autoISF_max_summary">Simile a autosens_max questo definisce quanto forte ISF può diventare.\n\nIl valore predefinito 1.0 disattiva in modo efficace questo effetto.\n\nATTENZIONE: Fai molta attenzione quando usi valori superiori a 2,5</string>
     <string name="openapsama_autoISF_min_summary">Simile a autosens_min questo definisce quanto debole ISF possa diventare.\n\nIl valore predefinito 1.0 disattiva efficacemente questo effetto.</string>
