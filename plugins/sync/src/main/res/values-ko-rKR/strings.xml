@@ -39,8 +39,6 @@
     <string name="nsclient_token_dialog_title">NS 접근 토큰</string>
     <string name="nsclient_token_dialog_message">NS 관리 페이지에서 생성된 접근 토큰 (최소 17자)</string>
     <string name="deliver_now">즉시전송</string>
-    <string name="clear_queue">대기열 지우기</string>
-    <string name="show_queue">대기열 보여주기</string>
     <string name="queue">대기열:</string>
     <string name="status">상태:</string>
     <string name="clear_log">기록 지우기</string>
@@ -88,13 +86,7 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">데이터를 Tidepool로 업로드</string>
-    <string name="tidepool_upload_cgm">CGM 데이터 업로드</string>
-    <string name="tidepool_upload_bolus">관리정보(인슐린, 탄수화물) 업로드</string>
-    <string name="tidepool_upload_tbr">임시 Basal 업로드</string>
-    <string name="tidepool_upload_profile">프로파일변경, 임시목표 업로드</string>
-    <string name="tidepool_upload_bg">혈당 테스트 업로드</string>
     <string name="remove_all">모두 제거하기</string>
-    <string name="reset_start">기록 초기화하기</string>
     <string name="upload_now">지금 업로드하기</string>
     <string name="not_connected">연결되지 않았습니다</string>
     <string name="read_only">읽기 전용</string>
@@ -124,7 +116,6 @@
     <string name="wizard_result">계산. 마법사:\n인슐린:%1$.2fU\n탄수화물: %2$dg</string>
     <string name="quick_wizard_not_available">선택한 빠른 마법사를 더 이상 사용할 수 없습니다, 타일을 새로고침 하십시오</string>
     <string name="quick_wizard_message">빠른 마법사: %1$s\n인슐린: %2$.2fU\n탄수화물: %3$dg</string>
-    <string name="wear_action_tempt_preset_error">임시 목표 알 수 없는 사전 설정: %1$s</string>
     <string name="wear_action_tempt_cancel_message">임시-목표 실행을 취소하시겠습니까?</string>
     <string name="wear_action_tempt_unit_error">워치와 폰과 다른 단위입니다!</string>
     <string name="wear_action_tempt_zero_message">제로-임시-목표- 임시-목표 실행을 취소하시겠습니까?</string>
