@@ -3,11 +3,9 @@
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_shortname">EOP2</string>
     <string name="eopatch_pump_description">EOPatch2 / GlucoMen Day pompos integracija</string>
-    <string name="category_alerts">Perspėjimai</string>
     <string name="low_reservoir">Senkančio rezervuaro perspėjimai</string>
     <string name="patch_expiration_reminders">Priminimas apie rezervuaro galiojimą</string>
     <string name="patch_buzzer_reminders">Garsinio signalo priminimai</string>
-    <string name="time_format_a_h_mm">val:min</string>
     <string name="eopatch_ble_status">BLE statusas</string>
     <string name="eopatch_serial_number">Serijos nr.</string>
     <string name="eopatch_lot_number">Partijos nr.</string>
@@ -26,7 +24,6 @@
     <string name="time_1hr">1 val</string>
     <string name="time_1hr_30min">1 val 30 min</string>
     <string name="time_2hr">2 val</string>
-    <string name="all_blank">\u0020</string>
     <string name="patch_safe_deactivation_desc">Norėdami aktyvuoti naują rezervuarą, dabartinį turite išjungti. Insulino tiekimas bus nutrauktas.</string>
     <string name="patch_discard_complete_title">Rezervuaras išjungtas.</string>
     <string name="patch_discard_complete_desc">Rezervuaras išjungtas.\nBaikite naudoti rezervuarą.\nPašalinkite pompą nuo kūno.</string>
@@ -38,9 +35,6 @@
     <string name="patch_remaining_usage_period">Liko laiko</string>
     <string name="patch_finish">Užbaigti</string>
     <string name="patch_forced_discard">Išjungti</string>
-    <string name="patch_comm_error_during_discard_status">Ryšio klaida išjungiant rezervuarą </string>
-    <string name="patch_comm_error_during_discard_desc">Įprastam deaktyvavimui spauskite \'Kartoti\'.\nVienpusiam deaktyvavimui spauskite \'Išjungti\'.</string>
-    <string name="patch_comm_error_during_discard_desc_1">Įprastam deaktyvavimui spauskite \'Kartoti\'.</string>
     <string name="patch_comm_error_during_discard_desc_2">Vienpusiam deaktyvavimui spauskite \'Išjungti\'.</string>
     <string name="patch_manually_turning_off_alarm_title">Rankiniu būdu išjungti rezervuaro aliarmus</string>
     <string name="patch_manually_turning_off_alarm_desc_1">Vienpusiškai deaktyvavus, dėl ryšio klaidos rezervuaro aliarmo garsas gali nesustoti.</string>
@@ -82,8 +76,6 @@
     <string name="patch_expiration_reminder_setting_title">Priminimai apie rezervuaro galiojimą</string>
     <string name="patch_activate_reminder_title">Priminimas apie rezervuaro aktyvavimą</string>
     <string name="patch_activate_reminder_desc">Rezervuaro aktyvavimas neužbaigtas.\n Tęsti.</string>
-    <string name="patch_communication_check">Ryšio patikrinimas</string>
-    <string name="patch_communication_check_status_1">Tikrinamas ryšys…</string>
     <string name="patch_communication_check_helper_1">Laikykite telefoną arčiau rezervuaro.</string>
     <string name="patch_communication_check_helper_2">Pakeiskite vietą ir bandykite dar kartą.</string>
     <string name="patch_communication_failed">Ryšio klaida</string>
@@ -114,7 +106,6 @@
     <string name="retry">Kartoti</string>
     <string name="string_caution_not_remove_needle_cap">[Caution] Nenuimkite adatos dangtelio ir pleistro, kol nebus paprašyta.</string>
     <string name="string_are_you_sure_to_discard_current_patch">Ar tikrai išjungti rezervuarą?</string>
-    <string name="string_unconfirmed_bolus_info_discard_confirm_message">Dėl nepatvirtintos boluso informacijos skaičiuotuvo negalima naudoti iki %s.\n\nAr tikrai norite išjungti rezervuarą?</string>
     <string name="needle_insertion_error_1">Adatos įvedimo klaida.</string>
     <string name="needle_insertion_error_2">Įsitikinkite, kad skylė, likusi pasukus svirtelę, yra tiesi ir spauskite \'Kartoti\'.</string>
     <string name="needle_insertion_error_3">Norėdami deaktyvuoti rezervuarą spauskite \'Išjungti\'.</string>
@@ -126,7 +117,6 @@
     <string name="finish">Užbaigti</string>
     <string name="string_temp_basal_remained_hhmm">liko laiko: %1$s:%2$s</string>
     <string name="next">Toliau</string>
-    <string name="patch_connection_fail">Bandykite dar kartą po ryšio patikrinimo.</string>
     <string name="string_pause_failed">Sustabdyti nepavyko.</string>
     <string name="string_resume_failed">Atnaujinti nepavyko.</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE, d MMM, yyyy hh:mm a</string>
