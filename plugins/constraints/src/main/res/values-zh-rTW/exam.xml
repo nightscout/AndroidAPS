@@ -14,12 +14,7 @@
     <string name="hypott_exercise">為了糾正運動引起的低血糖。</string>
     <string name="hypott_0basal">如果已經有0%的臨時基礎速率運行，防止血糖降低。</string>
     <string name="hypott_hint1">https://wiki.aaps.app/en/latest/Usage/temptarget.html</string>
-    <string name="offlineprofile_whatprofile">哪種設定檔可以離線使用和配置？</string>
-    <string name="offlineprofile_label">主題：離線設定檔</string>
-    <string name="offlineprofile_nsprofile">NS設定檔可以使用，但無法配置。</string>
-    <string name="offlineprofile_hint1">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html#profile</string>
     <string name="pumpdisconnect_label">在AAPS中應用「中斷幫浦連線」的原因</string>
-    <string name="pumpdisconnect_whattodo">當從身體上中斷幫浦連線時應該怎麼做？</string>
     <string name="pumpdisconnect_unnecessary">這是不必要的，因為如果幫浦物理上中斷連線，胰島素將不會被輸送。</string>
     <string name="pumpdisconnect_missinginsulin">它防止AAPS計算幫浦物理中斷連線期間未輸送的胰島素。</string>
     <string name="pumpdisconnect_notstop">如果幫浦仍然連線到您的身體，它將不會停止胰島素輸送。</string>
@@ -59,9 +54,6 @@
     <string name="exercise_setunchanged">保持您的血糖目標不變。</string>
     <string name="exercise_15g">等待血糖降至低血糖臨時目標以下，然後攝取15克快速作用的碳水化合物。</string>
     <string name="exercise_hint1">https://wiki.aaps.app/en/latest/Usage/temptarget.html#activity-temp-target</string>
-    <string name="suspendloop_doigetinsulin">在停用/暫停循環時，我會接收到胰島素嗎？</string>
-    <string name="suspendloop_yes">是的，基礎胰島素將繼續輸送。</string>
-    <string name="suspendloop_no">不會，胰島素輸送將停止。</string>
     <string name="basaltest_label">基礎、ISF和I:C測試</string>
     <string name="basaltest_when">什麼時候應該驗證這些值？</string>
     <string name="basaltest_beforeloop">開始循環之前。</string>
@@ -71,19 +63,11 @@
     <string name="basaltest_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#aaps-settings</string>
     <string name="prerequisites_label">前置條件</string>
     <string name="prerequisites_what">設置和使用AAPS的必要條件是什麼？</string>
-    <string name="prerequisites_determinedcorrectprofile">已驗證的設定檔訊息（基礎、IC、ISF、DIA）。</string>
     <string name="prerequisites_computer">一台安裝並配置了Android Studio的電腦。</string>
-    <string name="prerequisites_phone">一部受支援的手機。</string>
     <string name="prerequisites_pump">如果計劃運行閉環，則需要一個相容的胰島素幫浦。</string>
     <string name="prerequisites_nightscout">Nightscout，用於紀錄所有資料並檢查設定。</string>
-    <string name="prerequisites_tidepoolaccount">一個Tidepool帳號。</string>
-    <string name="prerequisites_googleaccount">一個Google帳號。</string>
-    <string name="prerequisites_githubaccount">一個Github帳號。</string>
     <string name="prerequisites_beanandroiddeveloper">有編程或編輯代碼的經驗。</string>
-    <string name="prerequisites_own670g">一個MiniMed 670G幫浦。</string>
     <string name="prerequisites_hint1">https://wiki.aaps.app/en/latest/Module/module.html</string>
-    <string name="prerequisites_smartwatch">一隻智慧型手錶。</string>
-    <string name="prerequisites_supportedcgm">一個受支援的CGM。</string>
     <string name="prerequisites2_label">前置條件</string>
     <string name="prerequisites2_what">設置和使用AAPS的必要條件是什麼？</string>
     <string name="prerequisites2_profile">設定設定檔所需的驗證訊息（ISF、I:C比率、基礎速率、DIA等）。</string>
@@ -92,11 +76,9 @@
     <string name="prerequisites2_supportedcgm">一個受支援的CGM和適當的應用來接收手機/設備上的血糖值。</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/en/latest/Module/module.html</string>
     <string name="update_label">更新AAPS</string>
-    <string name="whatistrue">檢查所有正確的答案。</string>
     <string name="update_git">您需要在您的電腦上安裝並配置Git。</string>
     <string name="update_asap">當AAPS的更新版本釋出時，早期版本可能在指定時間後被遠端限制。</string>
     <string name="update_keys">您應該儲存並紀錄密鑰庫的位置，並使用與之前安裝相同的簽章密鑰進行更新。</string>
-    <string name="update_neverupdate">如果系統運行良好，絕不要更新。</string>
     <string name="update_askfriend">如果您在構建apk時遇到困難，您可以安裝由朋友構建的apk。</string>
     <string name="update_hint1">https://wiki.aaps.app/en/latest/Installing-AndroidAPS/Update-to-new-version.html#update-to-a-new-version-or-branch</string>
     <string name="troubleshooting_label">故障排除</string>
@@ -118,7 +100,6 @@
     <string name="insulin_actrapid">Actrapid®/Humalin R®/「常規」人胰島素。</string>
     <string name="insulin_hint1">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html#insulin</string>
     <string name="sensitivity_label">敏感性外掛</string>
-    <string name="sensitivity_which">檢查所有正確的答案。</string>
     <string name="sensitivity_adjust">敏感性外掛允許AAPS調整因臨時或短期的胰島素敏感性變化（例如荷爾蒙變化或注射部位的吸收問題）。</string>
     <string name="sensitivity_edit">敏感性外掛為用戶提供對基礎速率、I:C比率和ISF的建議變更，可用於編輯設定檔。</string>
     <string name="sensitivity_cannula">紀錄套管更換將重置自動敏感比率至100%。</string>
@@ -136,7 +117,6 @@
     <string name="wronginsulin_careportal">從Nightscout Careportal中刪除胰島素資料以將其從幫浦歷史中移除。</string>
     <string name="wronginsulin_compare">比較AAPS和幫浦歷史中的數值（如果幫浦支援此功能）。</string>
     <string name="wronginsulin_prime">通過注射器/筆或使用注射器進行注射，輸送計算出的「遺失」胰島素的一部分。</string>
-    <string name="wronginsulin_donothing">不採取任何行動，讓 AAPS 來調整，因而產生的高血糖數值</string>
     <string name="cob_label">碳水化合物在體內的總量（COB）</string>
     <string name="cob_question">改變ISF值如何影響AAPS對COB的計算？</string>
     <string name="cob_longer">增加ISF會使計算出的碳水化合物吸收時間變長</string>
@@ -180,7 +160,6 @@
     <string name="isf_decreasingvalue">降低ISF值將導致輸送更多的胰島素來修正高於目標的血糖。</string>
     <string name="isf_noeffect">當血糖數值低於目標時，提高或降低ISF不會影響胰島素輸送。</string>
     <string name="isf_preferences">應在您的AAPS偏好設定中輸入ISF。</string>
-    <string name="isf_profile">在您的設定檔中更改ISF值即可應用更改。</string>
     <string name="isf_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
     <string name="isf_hint2">https://wiki.aaps.app/en/latest/Usage/Profiles.html</string>
     <string name="ic_multiple">您可以在設定檔中使用多個I:C比率值。</string>
@@ -188,9 +167,6 @@
     <string name="ic_label_exam">胰島素與碳水化合物比率 (I:C ratio)</string>
     <string name="ic_increasingvalue">較高的I:C比率會導致對特定量的碳水化合物輸送較少的胰島素。</string>
     <string name="ic_decreasingvalue">較低的I:C比率會導致對特定量的碳水化合物輸送較少的胰島素。</string>
-    <string name="ic_noeffect">如果COB為0，更改IC比率將導致修正特定血糖值的胰島素量不同。</string>
-    <string name="ic_different">如果您計算麵包（交換）單位為10克或12克，IC將有所不同。</string>
-    <string name="ic_meaning">IC的含義是：1單位胰島素覆蓋多少麵包（交換）單位？</string>
     <string name="ic_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="profileswitch_label">設定檔切換</string>
     <string name="profileswitch_pctwillchange">當指定90%的設定檔切換時，哪些答案是正確的？</string>
@@ -217,12 +193,6 @@
     <string name="profileswitch4_internet">啟用對您的Nightscout設定檔的更改需要您的AAPS手機具有網絡連線。</string>
     <string name="profileswitch4_sufficient">編輯設定檔以更改值即可實施所做的更改。</string>
     <string name="profileswitch4_multi">可以設置多個設定檔並選擇以適應變化的情況（例如荷爾蒙變化、輪班工作、工作日/週末生活方式）。</string>
-    <string name="basalhelp_hint1">https://wiki.aaps.app/en/latest/Module/module.html#good-individual-dosage-algorithm-for-your-diabetes-therapy</string>
-    <string name="basalhelp_label">基礎速率幫助</string>
-    <string name="basalhelp_where">尋求幫助設置基礎速率和其他設置的地方。</string>
-    <string name="basalhelp_diabetesteam">您的糖尿病團隊</string>
-    <string name="basalhelp_google">Google</string>
-    <string name="basalhelp_facebook">Facebook</string>
     <string name="other_medication_label">其他藥物。請閱讀以下聲明並勾選框以接受聲明。</string>
     <string name="other_medication_text">AAPS會降低基礎速率或暫停胰島素輸送以提高血糖。SGLT2抑制劑類藥物（格列佛寧）可以防止血糖上升，從而可能導致危險的胰島素缺乏，引起DKA。
 \n常見的品牌名有：Invokana®、Forxiga®、Jardiance®、Steglatro®、Suglat®、Apleway®、Deberza®、Synjardy®、Vokanamet®、Xigduo®。\n\n我在此承諾，在使用AAPS時不會服用此類藥物，或在使用此類藥物之前停用循環。</string>
