@@ -171,22 +171,8 @@
     <string name="half_basal_exercise_target_summary">Nastaven na hodnotu, např. 160, což znamená, že je-li dočasný cíl 160 mg/dL (8,9 mmol) a možnost „Vysoký dočasný cíl zvyšuje senzititivu“ je povolená, spustí se při této hodnotě 50%% bazál (120 = 75%%; 140 = 60%%).</string>
     <string name="autoISF_settings_title">Nastavení AutoISF</string>
     <string name="autoISF_settings_summary">AutoISF umožňuje upravit citlivost na inzulín (ISF) v různých scénářích chování glykémie.\n\nMůže také upravit nastavení SMB.</string>
-    <string name="acce_ISF_settings_title">Nastavení acce_ISF</string>
-    <string name="acce_ISF_settings_summary">Nastavení acce_ISF: upravuje ISF s ohledem na zrychlující/zpomalující změny glykémie</string>
-    <string name="enableautoISFwithcob">Povolit dura_ISF s COB</string>
-    <string name="enableautoISFwithcob_summary">Povolit dura_ISF, když jsou aktivní COB</string>
-    <string name="bg_ISF_settings_title">Nastavení bg_ISF</string>
-    <string name="bg_ISF_settings_summary">Nastavení bg_ISF: ISF v závislosti na glykémii podle předem definovaného polygonu</string>
-    <string name="pp_ISF_settings_title">Nastavení pp_ISF</string>
-    <string name="pp_ISF_settings_summary">Nastavení pp_ISF: ISF pro postprandiální vzestup glykémie (po jídle)</string>
-    <string name="dura_ISF_settings_title">Nastavení dura_ISF</string>
-    <string name="dura_ISF_settings_summary">Nastavení dura_ISF: ISF pro trvale vysokou glykémii nad cílovou hodnotou</string>
     <string name="smb_delivery_settings_title">Nastavení dávkování SMB</string>
     <string name="smb_delivery_settings_summary">Sada možností určených ke zvětšení skutečné velikosti SMB, které lze vydat v situacích, kdy je hodnota ISF nízká , např. poměrně nízká číselná hodnota ISF.\n\POUŽÍVEJTE OPATRNĚ</string>
-    <string name="full_loop_settings_title">Nastavení plně uzavřené smyčky</string>
-    <string name="full_loop_settings_summary">Nastavení plně uzavřené smyčky: Upravte limit iobTH tak, abyste předešli příliš vysokému IOB</string>
-    <string name="use_autoISF_extensions_title">Povolit rozšířené funkce AutoISF</string>
-    <string name="use_autoISF_extensions_summary">Patří sem úprava ISF s ohledem na nedávný vývoj glykémie, alternativní parametry pro aktivaci SMB a podpora Plně uzavřené smyčky</string>
     <string name="openapsama_enable_autoISF">Povolit úpravu ISF s ohledem na vývoj glykémie</string>
     <string name="openapsama_autoISF_max_summary">Podobně jako autosens_max tento parametr definuje, jak silné ISF může být.\n\nVýchozí hodnota 1. tuto funkci zcela vypne.\n\nVAROVÁNÍ: Buďte velmi opatrní, když používáte hodnoty nad 2.5</string>
     <string name="openapsama_autoISF_min_summary">Podobně jako autosens_min tento parametr definuje, jak slabé může být ISF.\n\nVýchozí hodnota 1.0 tuto funkci zcela vypne.</string>
