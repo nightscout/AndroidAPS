@@ -35,7 +35,6 @@
     <string name="omnipod_common_error_unexpected_exception">예상치 못한 오류가 발생하였습니다. 보고 부탁드립니다! (%1$s: %2$s)</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation">확인</string>
-    <string name="omnipod_common_confirmation_time_or_timezone_change">Pod에서 시간과/또는 시간대 변경됨</string>
     <string name="omnipod_common_confirmation_expiration_alerts_updated">Pod에서 경고 설정 업데이트 됨</string>
     <string name="omnipod_common_confirmation_time_on_pod_updated">Pod에서 시간 업데이트 됨</string>
     <string name="omnipod_common_confirmation_suspended_delivery">인슐린 주입이 중지됨</string>
@@ -121,7 +120,6 @@
     <string name="omnipod_common_pod_status_running">실행 중</string>
     <string name="omnipod_common_pod_status_suspended">중지됨</string>
     <string name="omnipod_common_pod_status_pod_fault">Pod 결함</string>
-    <string name="omnipod_common_pod_status_activation_time_exceeded">활성화 시간 초과됨</string>
     <string name="omnipod_common_pod_status_inactive">비활성화됨</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Pod 결함: %1$03d %2$s</string>
     <!-- Omnipod - Commands -->
@@ -147,7 +145,6 @@
     <string name="omnipod_common_cmd_set_fake_suspended_tbr">Pod가 중지되어 속임수 임시 basal 설정하기</string>
     <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Pod가 중지되어 만들었던 속임수 임시 basal 취소하기</string>
     <string name="omnipod_common_cmd_split_tbr">취소 중 명확하지 않은 실패로 인하여 임시 basal 나누기</string>
-    <string name="omnipod_common_cmd_beep_config">신호음 설정</string>
     <string name="omnipod_common_cmd_play_test_beep">테스트 신호음 작동</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_finish_pairing_reminder">연동 알림 종료</string>
