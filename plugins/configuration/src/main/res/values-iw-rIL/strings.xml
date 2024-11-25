@@ -159,4 +159,5 @@
     <string name="metadata_label_encryption">הצפנת קבצים</string>
     <string name="metadata_format_new">פורמט הצפנה חדש</string>
     <string name="metadata_format_other">פורמט ייצוא לא ידוע</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">שגיאה בגישה למערכת הקבצים. אנא בחרו את תיקיית AAPS כראוי.</string>
 </resources>
