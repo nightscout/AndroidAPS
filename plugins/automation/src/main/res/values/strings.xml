@@ -120,8 +120,6 @@
     <string name="automation_event">Automation event</string>
     <string name="reorder_label">Reorder</string>
     <string name="user_action">User action</string>
-    <string name="remove_automation">Remove automation</string>
-    <string name="sort_automation">Sort automation</string>
     <string name="remove_selected_items">Remove selected items</string>
     <string name="count_selected">%1$d selected</string>
     <string name="system_automation">System automation</string>
