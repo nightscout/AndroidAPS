@@ -35,7 +35,6 @@
     <string name="omnipod_common_error_unexpected_exception">Ocorreu um erro inesperado. Por favor, reporte! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation">Confirmação</string>
-    <string name="omnipod_common_confirmation_time_or_timezone_change">Hora e/ou Fuso Horário alterado no Pod.</string>
     <string name="omnipod_common_confirmation_expiration_alerts_updated">Configuração de alerta foi actualizada no Pod.</string>
     <string name="omnipod_common_confirmation_time_on_pod_updated">A hora no Pod foi actualizada.</string>
     <string name="omnipod_common_confirmation_suspended_delivery">Toda administração de insulina foi suspensa.</string>
@@ -122,7 +121,6 @@
     <string name="omnipod_common_pod_status_running">A correr</string>
     <string name="omnipod_common_pod_status_suspended">Suspenso</string>
     <string name="omnipod_common_pod_status_pod_fault">Falha no Pod</string>
-    <string name="omnipod_common_pod_status_activation_time_exceeded">Tempo de activação excedido</string>
     <string name="omnipod_common_pod_status_inactive">Inactivo</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Falha no Pod: %1$03d %2$s</string>
     <!-- Omnipod - Commands -->
@@ -148,7 +146,6 @@
     <string name="omnipod_common_cmd_set_fake_suspended_tbr">Definir falsa basal temporária porque o Pod está suspenso</string>
     <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Cancelar falsa basal temporária que foi criada porque o Pod foi suspenso</string>
     <string name="omnipod_common_cmd_split_tbr">Dividir basal temporária por causa de falha incerta no cancelamento</string>
-    <string name="omnipod_common_cmd_beep_config">Configuração do Beep</string>
     <string name="omnipod_common_cmd_play_test_beep">Reproduzir Teste do Beep</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_finish_pairing_reminder">Lembrete Concluir Emparelhamento</string>
