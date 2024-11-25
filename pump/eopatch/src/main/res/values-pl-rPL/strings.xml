@@ -3,11 +3,9 @@
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_shortname">EOP2</string>
     <string name="eopatch_pump_description">Integracja z pompą EOPatch2 / GlucoMen Day</string>
-    <string name="category_alerts">Alerty</string>
     <string name="low_reservoir">Alarmy niskiego poziomu zbiornika</string>
     <string name="patch_expiration_reminders">Przypomnienie o wygaśnięciu Patcha</string>
     <string name="patch_buzzer_reminders">Alarmy akustyczne pompy</string>
-    <string name="time_format_a_h_mm">H:mm</string>
     <string name="eopatch_ble_status">Status Bluetooth Low Energy</string>
     <string name="eopatch_serial_number">Numer seryjny</string>
     <string name="eopatch_lot_number">Numer partii</string>
@@ -26,7 +24,6 @@
     <string name="time_1hr">1 godz</string>
     <string name="time_1hr_30min">1 godz 30 min</string>
     <string name="time_2hr">2 godz</string>
-    <string name="all_blank">\u0020</string>
     <string name="patch_safe_deactivation_desc">Aby zmienić na nowy Patch, obecny Patch musi zostać zdjęty. Cała podaż insuliny ze starego Patcha zostanie anulowana.</string>
     <string name="patch_discard_complete_title">Usuwanie Patcha zostało zakończone.</string>
     <string name="patch_discard_complete_desc">Patch został zdezaktywowany.\nOdrzuć Patch.\nOdklej plaster z ciała.</string>
@@ -38,9 +35,6 @@
     <string name="patch_remaining_usage_period">Pozostały czas</string>
     <string name="patch_finish">Zakończ</string>
     <string name="patch_forced_discard">Odrzuć</string>
-    <string name="patch_comm_error_during_discard_status">Błąd komunikacji podczas odrzucania Patcha </string>
-    <string name="patch_comm_error_during_discard_desc">Aby dokonać normalnej dezaktywacji, kliknij \'Ponów próbę\'.\nAby dezaktywować jednostronnie, kliknij \'Odrzuć\'.</string>
-    <string name="patch_comm_error_during_discard_desc_1">Aby dokonać normalnej dezaktywacji, kliknij \'Ponów próbę\'.</string>
     <string name="patch_comm_error_during_discard_desc_2">Aby dezaktywować jednostronnie, kliknij \'Odrzuć\'.</string>
     <string name="patch_manually_turning_off_alarm_title">Ręczne wyłączenie alarmu Patcha</string>
     <string name="patch_manually_turning_off_alarm_desc_1">Jeśli z powodu błędu komunikacji pompa zostanie wyłączona jednostronnie, sygnał alarmu na Patchu może nie zostać zatrzymany.</string>
@@ -82,8 +76,6 @@
     <string name="patch_expiration_reminder_setting_title">Przypomnienia o wygaśnięciu Patcha</string>
     <string name="patch_activate_reminder_title">Przypomnienie o aktywacji Patcha</string>
     <string name="patch_activate_reminder_desc">Aktywacja Patcha nie została zakończona.\n Kontynuuj.</string>
-    <string name="patch_communication_check">Sprawdzenie komunikacji z Patchem</string>
-    <string name="patch_communication_check_status_1">Sprawdzanie komunikacji z Patchem…</string>
     <string name="patch_communication_check_helper_1">Przybliż telefon do Patcha.</string>
     <string name="patch_communication_check_helper_2">Przenieś się do innej lokalizacji i spróbuj ponownie.</string>
     <string name="patch_communication_failed">Błąd komunikacji</string>
@@ -114,7 +106,6 @@
     <string name="retry">Ponów</string>
     <string name="string_caution_not_remove_needle_cap">[Caution] NIE zdejmuj osłonki igły i zabezpieczeń samoprzylepnego plastra do czasu uzyskania dalszych instrukcji.</string>
     <string name="string_are_you_sure_to_discard_current_patch">Czy na pewno chcesz odrzucić bieżący Patch?</string>
-    <string name="string_unconfirmed_bolus_info_discard_confirm_message">Ze względu na niepotwierdzone informacje o bolusie, nie można używać kalkulatora bolusa do %s.\n\nCzy na pewno chcesz odrzucić bieżący Patch?</string>
     <string name="needle_insertion_error_1">Błąd wkłuwania igły.</string>
     <string name="needle_insertion_error_2">Sprawdzić czy otwór po obróceniu dźwigni jest prosty i ma prawidłowy kierunek, a następnie kliknij \'Ponów\'.</string>
     <string name="needle_insertion_error_3">Naciśnij \"Odrzuć\", aby dezaktywować Patch.</string>
@@ -126,7 +117,6 @@
     <string name="finish">Zakończ</string>
     <string name="string_temp_basal_remained_hhmm">pozostały czas: %1$s:%2$s</string>
     <string name="next">Dalej</string>
-    <string name="patch_connection_fail">Ponów próbę po sprawdzeniu komunikacji z Patchem.</string>
     <string name="string_pause_failed">Zawieszenie nie powiodło się.</string>
     <string name="string_resume_failed">Wznowienie nie powiodło się.</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE, d MMM, yyyy HH:mm</string>
