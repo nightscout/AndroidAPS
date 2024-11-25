@@ -3,11 +3,9 @@
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_shortname">EOP2</string>
     <string name="eopatch_pump_description">Pumpeintegration til EOPatch2 / GlucoMen Day</string>
-    <string name="category_alerts">Alarmer</string>
     <string name="low_reservoir">Lavt reservoir Alarmer</string>
     <string name="patch_expiration_reminders">Patch Udløbspåmindelser</string>
     <string name="patch_buzzer_reminders">Patch buzzer-påmindelser</string>
-    <string name="time_format_a_h_mm">t:mm a</string>
     <string name="eopatch_ble_status">BLE-status</string>
     <string name="eopatch_serial_number">Serienummer</string>
     <string name="eopatch_lot_number">Lot-nummer</string>
@@ -26,7 +24,6 @@
     <string name="time_1hr">1 t</string>
     <string name="time_1hr_30min">1 t 30 min</string>
     <string name="time_2hr">2 t</string>
-    <string name="all_blank">\u0020</string>
     <string name="patch_safe_deactivation_desc">For at skifte til ny Patch skal den nuværende Patch kasseres. Al insulintilførsel fra Patchen annulleres.</string>
     <string name="patch_discard_complete_title">Bortskaffelse af Patch afsluttet.</string>
     <string name="patch_discard_complete_desc">Patch er blevet deaktiveret.\nKassér Patchen.\nFjern Patchen fastgjort til din krop.</string>
@@ -38,9 +35,6 @@
     <string name="patch_remaining_usage_period">Resterende tid</string>
     <string name="patch_finish">Afslut</string>
     <string name="patch_forced_discard">Kassér</string>
-    <string name="patch_comm_error_during_discard_status">Kassér Patch-Kommunikationsfejl under kassering </string>
-    <string name="patch_comm_error_during_discard_desc">For normal deaktivering skal du trykke på \'Forsøg igen\'.\nFor ensidig deaktivering skal du trykke på \'Kassér\'.</string>
-    <string name="patch_comm_error_during_discard_desc_1">For normal deaktivering skal du trykke på \'Forsøg igen\'.</string>
     <string name="patch_comm_error_during_discard_desc_2">For ensidig deaktivering skal du trykke på \'Kassér\'.</string>
     <string name="patch_manually_turning_off_alarm_title">Slukker manuelt for Patchens alarm</string>
     <string name="patch_manually_turning_off_alarm_desc_1">Hvis deaktiveret ensidigt under en kommunikationsfejl, vil alarmen fra Patchen muligvis ikke stoppe.</string>
@@ -82,8 +76,6 @@
     <string name="patch_expiration_reminder_setting_title">Patch Udløbspåmindelser</string>
     <string name="patch_activate_reminder_title">Patch-aktiveringspåmindelser</string>
     <string name="patch_activate_reminder_desc">Patch-aktivering er ikke blevet fuldført.\n Fortsæt.</string>
-    <string name="patch_communication_check">Patch-kommunikationstjek</string>
-    <string name="patch_communication_check_status_1">Kontrollerer Patch-kommunikation…</string>
     <string name="patch_communication_check_helper_1">Placér din mobil tættere på Patchen.</string>
     <string name="patch_communication_check_helper_2">Gå venligst til en anden lokation og prøv igen.</string>
     <string name="patch_communication_failed">Kommunikationsfejl</string>
@@ -114,7 +106,6 @@
     <string name="retry">Prøv igen</string>
     <string name="string_caution_not_remove_needle_cap">[Caution] Fjern IKKE kanylehætten og bagsiden af klæbemidlet før yderligere instruktion.</string>
     <string name="string_are_you_sure_to_discard_current_patch">Er du sikker på at du vil kassere den nuværende Patch?</string>
-    <string name="string_unconfirmed_bolus_info_discard_confirm_message">Grundet ubekræftet bolusinformation kan Bolus calc ikke bruges før %s.\n\nEr du sikker på at du vil kassere den aktuelle Patch?</string>
     <string name="needle_insertion_error_1">Nålindføringsfejl.</string>
     <string name="needle_insertion_error_2">Kontrollér at retningen af hullet efterladt er lige efter drejningen af håndtaget og tryk derefter på \'Prøv igen\'.</string>
     <string name="needle_insertion_error_3">Tryk på \'Kassér\' for at deaktivere Patch.</string>
@@ -126,7 +117,6 @@
     <string name="finish">Afslut</string>
     <string name="string_temp_basal_remained_hhmm">resterende tid: %1$s:%2$s</string>
     <string name="next">Næste</string>
-    <string name="patch_connection_fail">Prøv igen efter Patch-kommunikationstjek.</string>
     <string name="string_pause_failed">Suspendering mislykkedes.</string>
     <string name="string_resume_failed">Genoptagelse mislykkedes.</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE, d MMM, åååå tt:mm a</string>
