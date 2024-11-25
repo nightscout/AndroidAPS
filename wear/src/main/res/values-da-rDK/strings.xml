@@ -2,9 +2,6 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_watchface_large">AAPS (Stor)</string>
-    <string name="label_watchface_big_chart">AAPS(StorGraf)</string>
-    <string name="label_watchface_no_chart">AAPS(IngenGraf)</string>
     <string name="label_watchface_circle">AAPS(Cirkel)</string>
     <string name="label_watchface_digital_style">AAPS (DigitalStil)</string>
     <string name="label_watchface_custom">AAPS(Brugerdefineret)</string>
@@ -18,7 +15,6 @@
     <string name="msg_warning_sync">Ingen data modtaget siden %1$s! Tjek om AAPS på telefonen sender data til uret</string>
     <string name="msg_warning_old">AAPS data er %1$s gammel! Tjek din sensor, xDrip+, NS, AAPS config eller lign.!</string>
     <string name="pref_vibrate_on_bolus">Vibrér ved bolus</string>
-    <string name="pref_units_for_actions">Enheder for handlinger</string>
     <string name="units_short">IE</string>
     <string name="pref_display_settings">Display</string>
     <string name="pref_graph_settings">Graf</string>
@@ -56,10 +52,6 @@
     <string name="pref_quick_righty">Hurtigt højre</string>
     <string name="pref_quick_lefty">Hurtig venstre</string>
     <string name="pref_modern_sparse">Moderne spreder</string>
-    <string name="pref_low">Lav</string>
-    <string name="pref_medium">Medium</string>
-    <string name="pref_high">Høj</string>
-    <string name="pref_auto">Auto</string>
     <string name="pref_big_numbers">Store Tal</string>
     <string name="pref_ring_history">Ring Historik</string>
     <string name="pref_light_ring_history">Lys Ring Historik</string>
@@ -113,7 +105,6 @@
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Fri mængde</string>
     <string name="action_confirm">BEKRÆFT</string>
     <string name="action_timeshift">tidsforskydning</string>
-    <string name="action_bolus">Bolus</string>
     <string name="bolus_progress">Bolus Fremskridt</string>
     <string name="press_to_cancel">tryk for at annullere</string>
     <string name="cancel_bolus">ANNULLER BOLUS</string>
@@ -182,17 +173,11 @@
     <string name="no_iob_u">--IE</string>
     <string name="no_cob_g">--g</string>
     <string name="no_tmp_basal_u_h">-.--E/t</string>
-    <string name="uploader_na">IE: ---%</string>
-    <string name="no_status">S: --</string>
-    <string name="time_stamp_na_min_ago">-- Minutter siden</string>
-    <string name="delta_na">--- mg/dl</string>
-    <string name="no_loop_status">Ingen Loop Status</string>
     <string name="cob_000g">000g</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00E</string>
     <string name="snooze_alert">AAPS Snooze Alarm</string>
     <string name="sending_snooze">Sender snooze til AAPS</string>
-    <string name="short_hour">t</string>
     <string name="week_short">u</string>
     <string name="day_short">d</string>
     <string name="hour_short">t</string>
