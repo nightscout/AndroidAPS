@@ -39,8 +39,6 @@
     <string name="nsclient_token_dialog_title">NS åtkomstnyckel</string>
     <string name="nsclient_token_dialog_message">Åtkomstnyckel genererad på Nighscouts admin-sida (minst 17 tecken)</string>
     <string name="deliver_now">Synkronisera nu</string>
-    <string name="clear_queue">Töm kö</string>
-    <string name="show_queue">Visa kö</string>
     <string name="queue">Kö:</string>
     <string name="status">Status:</string>
     <string name="clear_log">Töm logg</string>
@@ -88,13 +86,7 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Laddar upp data till Tidepool</string>
-    <string name="tidepool_upload_cgm">Ladda upp CGM-data</string>
-    <string name="tidepool_upload_bolus">Ladda upp behandlingar (insulin, kolhydrater)</string>
-    <string name="tidepool_upload_tbr">Ladda upp temp basaler</string>
-    <string name="tidepool_upload_profile">Ladda upp profilbyten och temp mål</string>
-    <string name="tidepool_upload_bg">Ladda upp BG-test</string>
     <string name="remove_all">Ta bort allt</string>
-    <string name="reset_start">Nollställ start</string>
     <string name="upload_now">Ladda upp nu</string>
     <string name="not_connected">Inte ansluten</string>
     <string name="read_only">Skrivskyddad</string>
@@ -125,7 +117,6 @@
     <string name="wizard_result">Kalkylator:\nInsulin: %1$.2fU\nKolhydrater: %2$dg</string>
     <string name="quick_wizard_not_available">Vald snabbknapp inte längre tillgänglig. Vänligen uppdatera vyn</string>
     <string name="quick_wizard_message">Snabbsteg: %1$s\nInsulin: %2$.2fU\nKolhydrater: %3$dg</string>
-    <string name="wear_action_tempt_preset_error">Tempmål okänd förinställning: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Avbryt temp-mål?</string>
     <string name="wear_action_tempt_unit_error">Olika enheter på klocka och telefon!</string>
     <string name="wear_action_tempt_zero_message">Noll-temp - avbyta nuvarande temp-mål?</string>
