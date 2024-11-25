@@ -165,4 +165,5 @@
     <string name="metadata_format_new">Nuovo formato crittografato</string>
     <string name="metadata_format_other">Formato esportazione sconosciuto</string>
     <string name="reset_aps_results">Resetta i risultati di APS</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Errore nell\'accedere al filesystem. Selezionare correttamente la directory AAPS.</string>
 </resources>
