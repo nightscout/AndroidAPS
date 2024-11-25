@@ -2,9 +2,6 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_watchface_large">AAPS(голям)</string>
-    <string name="label_watchface_big_chart">AAPS(Графика)</string>
-    <string name="label_watchface_no_chart">AAPS(без Графика)</string>
     <string name="label_watchface_circle">AAPS(Кръгъл)</string>
     <string name="label_watchface_digital_style">AAPS (DigitalStyle)</string>
     <string name="label_watchface_custom">AAPS(Персонализиран)</string>
@@ -18,7 +15,6 @@
     <string name="msg_warning_sync">Няма данни от %1$s! Проверете дали AAPS на телефона изпраща данни до часовника</string>
     <string name="msg_warning_old">Данните са %1$s стари! Проверете сензора, xDrip+, NS, AAPS конфигурацията и други!</string>
     <string name="pref_vibrate_on_bolus">Вибрация при болус</string>
-    <string name="pref_units_for_actions">Единици за Действие</string>
     <string name="units_short">Ед.</string>
     <string name="pref_show_date">Покажи дата</string>
     <string name="pref_show_iob">Покажи IOB</string>
@@ -49,10 +45,6 @@
     <string name="pref_quick_righty">Десничар</string>
     <string name="pref_quick_lefty">Левичар</string>
     <string name="pref_modern_sparse">Модерен</string>
-    <string name="pref_low">Ниска</string>
-    <string name="pref_medium">Средна</string>
-    <string name="pref_high">Висока</string>
-    <string name="pref_auto">Автом</string>
     <string name="pref_big_numbers">Големи Цифри</string>
     <string name="pref_ring_history">История</string>
     <string name="pref_light_ring_history">Олекотена история</string>
@@ -106,7 +98,6 @@
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Неограничено кол</string>
     <string name="action_confirm">ПОТВЪРДИ</string>
     <string name="action_timeshift">отместване</string>
-    <string name="action_bolus">Болус</string>
     <string name="bolus_progress">Болус прогрес</string>
     <string name="press_to_cancel">натиснете за отмяна</string>
     <string name="cancel_bolus">СПРИ БОЛУС</string>
@@ -175,17 +166,11 @@
     <string name="no_iob_u">--Е</string>
     <string name="no_cob_g">--гр</string>
     <string name="no_tmp_basal_u_h">-.--Е/ч</string>
-    <string name="uploader_na">Е: --%</string>
-    <string name="no_status">С: --</string>
-    <string name="time_stamp_na_min_ago">-- мин преди</string>
-    <string name="delta_na">--- мг/дл</string>
-    <string name="no_loop_status">Няма наличен статус</string>
     <string name="cob_000g">000гр</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00E</string>
     <string name="snooze_alert">Приглушаване аларма</string>
     <string name="sending_snooze">Изпращам заглушаване до AAPS</string>
-    <string name="short_hour">ч</string>
     <string name="week_short">с</string>
     <string name="day_short">д</string>
     <string name="hour_short">ч</string>
