@@ -4,7 +4,6 @@
     <string name="combov2_plugin_description">Integrare nativă a pompelor Accu-Chek Combo</string>
     <string name="combov2_could_not_connect">Nu se poate conecta la pompă</string>
     <string name="combov2_not_paired">Nu este împerecheat cu pompa</string>
-    <string name="combov2_pump_terminated_connection">Conexiune cu pompă oprită</string>
     <string name="combov2_warning">Avertizare Combo</string>
     <string name="combov2_error">Eroare Combo</string>
     <string name="combov2_warning_4">Apelați linia telefonică pentru actualizare</string>
@@ -116,8 +115,6 @@ Dacă nicio conexiune nu este stabilită după mai mult de ~5 minute:\n\n
     <string name="combov2_short_status_battery_state">Bat.: %s</string>
     <string name="combov2_automatic_reservoir_entry">Autodetectează şi introdu automat schimbarea rezervorului de insulină</string>
     <string name="combov2_automatic_battery_entry">Autodetectează și introdu automat schimbarea bateriei</string>
-    <string name="combov2_note_reservoir_change">Schimbarea rezervorului de insulină, introdusă automat de driverul combov2.</string>
-    <string name="combov2_note_battery_change">Schimbarea bateriei, inserată automat de către driverul combov2</string>
     <string name="combov2_timezone_changed">Fus orar schimbat</string>
     <string name="combov2_datetime_changed">Data și/sau ora schimbate</string>
     <string name="combov2_dst_started">Început ora de vară (DST)</string>
