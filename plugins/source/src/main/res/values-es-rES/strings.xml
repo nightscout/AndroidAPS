@@ -30,8 +30,6 @@
     <string name="random_bg">Glucosa aleatoria</string>
     <string name="description_source_random_bg">Generar datos aleatorios de glucosa (sólo modo Demo)</string>
     <string name="random_bg_short">BG</string>
-    <string name="do_xdrip_upload_title">Enviar datos de glucosa a xDrip+</string>
-    <string name="do_xdrip_upload_summary">En xDrip+, selecciona 640G/Eversense como fuente de datos</string>
     <string name="bgsource_upload">Ajuste de subida de datos de glucosa</string>
     <string name="dexcom_log_ns_sensor_change_title">Registro de cambio de sensor en Nightscout</string>
     <string name="dexcom_log_ns_sensor_change_summary">Crear evento \"Cambio de sensor\" en Nightscout automáticamente al iniciar el sensor</string>
