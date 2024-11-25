@@ -165,4 +165,5 @@
     <string name="metadata_format_new">Nytt krypteringsformat</string>
     <string name="metadata_format_other">Ukjent eksportformat</string>
     <string name="reset_aps_results">Tilbakestill APS-resultater</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Feil ved tilgang til filsystem. Velg AAPS-mappe riktig.</string>
 </resources>
