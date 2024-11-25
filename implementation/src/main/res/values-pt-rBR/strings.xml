@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bg_label">Glicemia</string>
     <string name="executing_right_now">Comando será executado agora</string>
     <string name="basal_value_below_minimum">Valor da basal abaixo do mínimo. Perfil não definido!</string>
-    <string name="permission">Permissão</string>
-    <string name="need_whitelisting">Necessário autorização para otimização de bateria para desempenho adequado.</string>
-    <string name="need_location_permission">O aplicativo precisa de permissão de localização para o procurar Bluetooth e identificação da rede Wi-Fi</string>
-    <string name="need_storage_permission">O aplicativo precisa de permissão de armazenamento para gravar os log files e para exportar configurações</string>
     <!--       Stats -->
     <string name="veryLow" comment="below 3.1">Muito baixo</string>
     <string name="low" comment="3.1-3.9">Baixo</string>
