@@ -28,7 +28,6 @@
     <string name="objectives_smb_gate">(Super Micro Bolus) SMB\'lerın iyi çalışabilmesi için wiki\'yi okumalısınız ve maxIOB\'u yükseltmelisiniz! İyi bir başlangıç için maxIOB = ortalama yemek bolusu + 3 x max günlük bazaldır</string>
     <string name="objectives_smb_learned">SMB\'yi kullanmak sizin hedefinizdir. Oref1 algoritması, boluslarınızda da size yardımcı olmak için tasarlanmıştır. Yemeğiniz için bolusun tamamını değil, sadece bir kısmını vermeli ve gerekirse AAPS\'in size geri kalanını vermesine izin vermelisiniz. Bu şekilde yanlış hesaplanmış karbonhidratlar için daha fazla alanınız olur. Bolus miktarını azaltmak için bolus hesaplayıcı sonucunun bir yüzdesini ayarlayabileceğinizi biliyor muydunuz?</string>
     <string name="objectives_auto_objective">Otomasyonu etkinleştirme</string>
-    <string name="objectives_auto_gate">Otomasyonun nasıl çalıştığına dair dokümanları okuyun. İlk basit kurallarınızı belirleyin. Eylem yerine AAPS\'in yalnızca bildirim göndermesine izin verin. Otomasyonun doğru zamanda tetiklendiğinden emin olduğunuzda, bildirimi gerçek eylemle değiştirin. (https://wiki.aaps.app/tr/latest/Usage/Automation.html)</string>
     <string name="objectives_auto_learned">Otomasyon iyi bir hizmetkar ama kötü bir efendi olabilir. Aşırı kullanmayın. Altta yatan algoritmayı değiştirmeye çalışmayın. Kuralı yalnızca kullanmadan önce mesajla test edin. Onayınıza bağlıdır.</string>
     <string name="objectives_bgavailableinns">KŞ NS veya Tidepool\'da mevcut</string>
     <string name="objectives_pumpstatusavailableinns">Pompa durumu NS veya Tidepool\'da mevcut</string>
@@ -75,10 +74,6 @@
     <string name="unfinshed_button">Tamamlanmayan bir sonraki</string>
     <string name="requestcode">Kod: %1$s</string>
     <string name="objectives_hint">(tüm doğru cevapları kontrol edin)</string>
-    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/tr/latest/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/tr/latest/Getting-Started/Screenshots.html#the-homescreen</string>
-    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/tr/latest/Configuration/Config-Builder.html</string>
-    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/tr/latest/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">İnternete bağlı değil</string>
     <string name="failedretrievetime">Geri almada hata</string>
     <string name="requirementnotmet">Görev gereksinimleri karşılanmadı</string>
