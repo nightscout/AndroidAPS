@@ -83,4 +83,5 @@
     <string name="failedretrievetime">Échec de la récupération de l\'heure</string>
     <string name="requirementnotmet">Exigences de l\'objectif non atteintes</string>
     <string name="what_i_ve_learned">Ce que j\'ai appris :</string>
+    <string name="verify_master_password">Soyez sûr de connaitre votre mot de passe principal</string>
 </resources>
