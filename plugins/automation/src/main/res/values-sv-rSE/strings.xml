@@ -104,8 +104,6 @@
     <string name="automation_event">Automationshändelse</string>
     <string name="reorder_label">Ändra ordning</string>
     <string name="user_action">Användaråtgärd</string>
-    <string name="remove_automation">Ta bort automatisering</string>
-    <string name="sort_automation">Sortera automatisering</string>
     <string name="remove_selected_items">Ta bort valda objekt</string>
     <string name="count_selected">%1$d valda</string>
     <string name="system_automation">Systemautomatisering</string>

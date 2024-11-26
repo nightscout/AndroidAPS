@@ -35,7 +35,6 @@
     <string name="omnipod_common_error_unexpected_exception">Der opstod en uventet fejl. Rapporter venligst! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation">Bekræftelse</string>
-    <string name="omnipod_common_confirmation_time_or_timezone_change">Tid og/eller tidszone ændret på Pod.</string>
     <string name="omnipod_common_confirmation_expiration_alerts_updated">Alarm konfiguration er blevet opdateret i Pod.</string>
     <string name="omnipod_common_confirmation_time_on_pod_updated">Tiden på Pod er blevet opdateret.</string>
     <string name="omnipod_common_confirmation_suspended_delivery">Al insulintilførsel er blevet suspenderet.</string>
@@ -126,7 +125,6 @@
     <string name="omnipod_common_pod_status_running">Kører</string>
     <string name="omnipod_common_pod_status_suspended">Sat på pause</string>
     <string name="omnipod_common_pod_status_pod_fault">Pod fejl</string>
-    <string name="omnipod_common_pod_status_activation_time_exceeded">Aktiveringstid overskredet</string>
     <string name="omnipod_common_pod_status_inactive">Inaktiv</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Pod fejl: %1$03d %2$s</string>
     <!-- Omnipod - Commands -->
@@ -152,7 +150,6 @@
     <string name="omnipod_common_cmd_set_fake_suspended_tbr">Angiv falsk midlertidig basal fordi Pod er suspenderet</string>
     <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Annuller falsk midlertidig basal, der blev oprettet fordi Pod blev suspenderet</string>
     <string name="omnipod_common_cmd_split_tbr">Opdel midlertidig basal på grund af usikker fejl i annullering</string>
-    <string name="omnipod_common_cmd_beep_config">Bip Konfiguration</string>
     <string name="omnipod_common_cmd_play_test_beep">Afspil test bip</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_finish_pairing_reminder">Påmindelse om at afslutte parring</string>

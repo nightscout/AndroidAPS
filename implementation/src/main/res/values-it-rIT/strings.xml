@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bg_label">BG</string>
     <string name="executing_right_now">Il comando sarà eseguito ora</string>
     <string name="basal_value_below_minimum">Valore basale inferiore al minimo. Profilo non impostato!</string>
-    <string name="permission">Autorizzazione</string>
-    <string name="need_whitelisting">%1$s necessita della whitelist per l\'ottimizzazione della batteria per avere prestazioni adeguate</string>
-    <string name="need_location_permission">L\'applicazione richiede l\'accesso alla posizione per la scansione bluetooth e l\'identificazione WiFi</string>
-    <string name="need_storage_permission">L\'applicazione richiede l\'accesso alla memoria per memorizzare i file di log ed esportare le impostazioni</string>
     <!--       Stats -->
     <string name="veryLow" comment="below 3.1">Molto basso</string>
     <string name="low" comment="3.1-3.9">Basso</string>

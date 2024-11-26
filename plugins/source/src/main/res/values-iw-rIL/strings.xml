@@ -30,8 +30,6 @@
     <string name="random_bg">נתוני סוכר אקראיים</string>
     <string name="description_source_random_bg">הפקת נתוני גלוקוז אקראיים (מצב הדגמה בלבד)</string>
     <string name="random_bg_short">נתוני סוכר</string>
-    <string name="do_xdrip_upload_title">שליחת נתוני סוכר אל xDrip+</string>
-    <string name="do_xdrip_upload_summary">ב-+xDrip בחרו 640g/Eversense כמקור נתונים</string>
     <string name="bgsource_upload">הגדרות העלאת ערכי סוכר בדם</string>
     <string name="dexcom_log_ns_sensor_change_title">רישום החלפת סנסור בנייטסקאוט</string>
     <string name="dexcom_log_ns_sensor_change_summary">רישום אירוע \"החלפת סנסור\" בנייטסקאוט אוטומטית בעת הפעלת החיישן</string>

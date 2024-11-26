@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bg_label">血糖</string>
     <string name="executing_right_now">现在命令被执行了</string>
     <string name="basal_value_below_minimum">基础率值低于泵支持的最小值。配置文件没有设定</string>
-    <string name="permission">权限</string>
-    <string name="need_location_permission">应用程序需要定位权限，才能进行蓝牙扫描及WIFI识别。</string>
-    <string name="need_storage_permission">应用程序需要文件存储权限，才能存储日志文件及导出设置。</string>
     <!--       Stats -->
     <string name="veryLow" comment="below 3.1">非常低</string>
     <string name="low" comment="3.1-3.9">低</string>

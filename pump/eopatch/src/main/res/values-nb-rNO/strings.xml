@@ -3,11 +3,9 @@
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_shortname">EOP2</string>
     <string name="eopatch_pump_description">Pumpe-integrasjon for EOPatch2 / GlucoMen Day</string>
-    <string name="category_alerts">Varsler</string>
     <string name="low_reservoir">Lavt reservoar varsler</string>
     <string name="patch_expiration_reminders">Patch utløpspåminnelse</string>
     <string name="patch_buzzer_reminders">Patch Buzzer påminnelser</string>
-    <string name="time_format_a_h_mm">h:mm a</string>
     <string name="eopatch_ble_status">BLE Status</string>
     <string name="eopatch_serial_number">Serienummer</string>
     <string name="eopatch_lot_number">Lot nummer</string>
@@ -26,7 +24,6 @@
     <string name="time_1hr">1 t</string>
     <string name="time_1hr_30min">1 time 30 min</string>
     <string name="time_2hr">2 t</string>
-    <string name="all_blank">\u0020</string>
     <string name="patch_safe_deactivation_desc">For å bytte til nytt depotplaster må det forkastes. All insulinlevering fra depotplaster vil bli kansellert.</string>
     <string name="patch_discard_complete_title">Depotplasteret er forkastet.</string>
     <string name="patch_discard_complete_desc">Depotplasteret er deaktivert.\nForkast depotplasteret.\nFjern depotplasteret fra kroppen din.</string>
@@ -38,9 +35,6 @@
     <string name="patch_remaining_usage_period">Gjenværende tid</string>
     <string name="patch_finish">Fullfør</string>
     <string name="patch_forced_discard">Forkast</string>
-    <string name="patch_comm_error_during_discard_status">Forkast Patch Kommunikasjonsfeil under kassering </string>
-    <string name="patch_comm_error_during_discard_desc">For normal deaktivering, trykk på «Prøv igjen».\nFor aktivering av unilateral betjening, trykk «Discard».</string>
-    <string name="patch_comm_error_during_discard_desc_1">For normal deaktivering, trykk på «Prøv igjen».</string>
     <string name="patch_comm_error_during_discard_desc_2">For unilateral deaktivering, trykk \"Discard\".</string>
     <string name="patch_manually_turning_off_alarm_title">Slå av Patch\'s Alarm manuelt</string>
     <string name="patch_manually_turning_off_alarm_desc_1">Hvis deaktivert unilateralt under en kommunikasjonsfeil, kan det hende at alarmen ikke stopper fra Patch.</string>
@@ -82,8 +76,6 @@
     <string name="patch_expiration_reminder_setting_title">Patch utløpspåminnelse</string>
     <string name="patch_activate_reminder_title">Patch aktiveringspåminnelse</string>
     <string name="patch_activate_reminder_desc">Patch aktiveringen er ikke fullført.\n Fortsett.</string>
-    <string name="patch_communication_check">Patch kommunikasjonskontroll</string>
-    <string name="patch_communication_check_status_1">Kontrollerer Patch kommunikasjon…</string>
     <string name="patch_communication_check_helper_1">Flytt smartenheten din nærmere Patch.</string>
     <string name="patch_communication_check_helper_2">Gå til en annen lokasjon og prøv på nytt.</string>
     <string name="patch_communication_failed">Kommunikasjonsfeil</string>
@@ -114,7 +106,6 @@
     <string name="retry">Prøv igjen</string>
     <string name="string_caution_not_remove_needle_cap">[Caution] IKKE fjern kanylehetten og det selvklebende lokket før du får beskjed.</string>
     <string name="string_are_you_sure_to_discard_current_patch">Er du sikker på at du vil forkaste plasteret?</string>
-    <string name="string_unconfirmed_bolus_info_discard_confirm_message">På grunn av en ubekreftet bolusinformasjon, kan ikke boluskalkulator brukes før %s.\n\nEr du sikker på at du vil forkaste gjeldende plaster?</string>
     <string name="needle_insertion_error_1">Feil ved innsetting av kanyle.</string>
     <string name="needle_insertion_error_2">Sjekk om hullet er rett når du dreier spaken, og trykk på «Prøv på nytt».</string>
     <string name="needle_insertion_error_3">Trykk på \'Discard\' for å deaktivere plasteret.</string>
@@ -126,7 +117,6 @@
     <string name="finish">Fullfør</string>
     <string name="string_temp_basal_remained_hhmm">gjenstående tid: %1$s:%2$s</string>
     <string name="next">Neste</string>
-    <string name="patch_connection_fail">Prøv igjen etter Patch kommunikasjonskontroll.</string>
     <string name="string_pause_failed">Suspendering feilet.</string>
     <string name="string_resume_failed">Gjenopptakelse feilet.</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE, d MMM, yyyy h:mm a</string>

@@ -5,6 +5,7 @@ import app.aaps.core.interfaces.rx.weardata.EventData.SingleBg
 import app.aaps.core.interfaces.utils.SafeParse.stringToDouble
 import app.aaps.wear.WearTestBase
 import app.aaps.wear.data.RawDisplayData
+import kotlin.String
 
 class RawDataMocker {
 
@@ -70,17 +71,23 @@ class RawDataMocker {
         val raw = RawDisplayData()
         raw.status = arrayOf<EventData.Status>(
             EventData.Status(
-                0,
-                "",
-                iob,
-                "",
-                cob,
-                br,
-                "",
-                "",
-                0L,
-                "",
-                0
+                dataset = 0,
+                externalStatus = "",
+                iobSum = iob,
+                iobDetail = "",
+                cob = cob,
+                currentBasal = br,
+                battery = "",
+                rigBattery = "",
+                openApsStatus = 0L,
+                bgi = "",
+                batteryLevel = 0,
+                patientName = "",
+                tempTarget = "",
+                tempTargetLevel = 0,
+                reservoirString = "",
+                reservoir = 0.0,
+                reservoirLevel = 0
             )
         )
         return raw
@@ -90,17 +97,23 @@ class RawDataMocker {
         val raw = RawDisplayData()
         raw.status = arrayOf<EventData.Status>(
             EventData.Status(
-                0,
-                "",
-                iob,
-                iob2,
-                "",
-                "",
-                "",
-                "",
-                0L,
-                "",
-                0
+                dataset = 0,
+                externalStatus = "",
+                iobSum = iob,
+                iobDetail = iob2,
+                cob = "",
+                currentBasal = "",
+                battery = "",
+                rigBattery = "",
+                openApsStatus = 0L,
+                bgi = "",
+                batteryLevel = 0,
+                patientName = "",
+                tempTarget = "",
+                tempTargetLevel = 0,
+                reservoirString = "",
+                reservoir = 0.0,
+                reservoirLevel = 0
             )
         )
         return raw
@@ -110,17 +123,23 @@ class RawDataMocker {
         val raw = RawDisplayData()
         raw.status = arrayOf<EventData.Status>(
             EventData.Status(
-                0,
-                "",
-                "",
-                "",
-                cob!!,
-                "",
-                "",
-                "",
-                0L,
-                "",
-                0
+                dataset = 0,
+                externalStatus = "",
+                iobSum = "",
+                iobDetail = "",
+                cob = cob!!,
+                currentBasal = "",
+                battery = "",
+                rigBattery = "",
+                openApsStatus = 0L,
+                bgi = "",
+                batteryLevel = 0,
+                patientName = "",
+                tempTarget = "",
+                tempTargetLevel = 0,
+                reservoirString = "",
+                reservoir = 0.0,
+                reservoirLevel = 0
             )
         )
         return raw

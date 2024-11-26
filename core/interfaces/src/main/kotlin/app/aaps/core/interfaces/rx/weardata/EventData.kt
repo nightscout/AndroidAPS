@@ -294,7 +294,11 @@ sealed class EventData : Event() {
         val bgi: String,
         val batteryLevel: Int,
         val patientName: String = "",
-        val id: Int = 0
+        val tempTarget: String,
+        val tempTargetLevel: Int,
+        val reservoirString: String,
+        val reservoir: Double,
+        val reservoirLevel: Int
     ) : EventData(), EventDataSet
 
     @Serializable

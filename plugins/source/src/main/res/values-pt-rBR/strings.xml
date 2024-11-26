@@ -30,8 +30,6 @@
     <string name="random_bg">Glicemia aleatória</string>
     <string name="description_source_random_bg">Gerar dados aleatórios de glicemia (apenas no modo de demonstração)</string>
     <string name="random_bg_short">Glicemia</string>
-    <string name="do_xdrip_upload_title">Enviar dados de glicemia para xDrip+</string>
-    <string name="do_xdrip_upload_summary">Selecione 640g/Eversense como fonte no xDrip+</string>
     <string name="bgsource_upload">Configurações de upload de BG</string>
     <string name="dexcom_log_ns_sensor_change_title">Registrar mudança de sensor no NS</string>
     <string name="dexcom_log_ns_sensor_change_summary">Criar evento \"Mudança de Sensor\" no NS automaticamente ao iniciar o sensor.</string>

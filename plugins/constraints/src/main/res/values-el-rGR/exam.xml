@@ -14,12 +14,7 @@
     <string name="hypott_exercise">Για να διορθώσετε μια υπογλυκαιμία που προκαλείται ως αποτέλεσμα της άσκησης.</string>
     <string name="hypott_0basal">Για να αποφευχθεί η χαμηλή γλυκόζη του αίματος, είναι ήδη ο προσωρινός βασικός ρυθμός στο 0% .</string>
     <string name="hypott_hint1">https://wiki.aaps.app/el/latest/Usage/temptarget.html</string>
-    <string name="offlineprofile_whatprofile">Ποιο προφίλ μπορεί να χρησιμοποιηθεί και να διαμορφωθεί χωρίς σύνδεση;</string>
-    <string name="offlineprofile_label">Θέμα: Προφίλ Εκτός Σύνδεσης</string>
-    <string name="offlineprofile_nsprofile">Το προφίλ NS μπορεί να χρησιμοποιηθεί, αλλά όχι να ρυθμιστεί.</string>
-    <string name="offlineprofile_hint1">https://wiki.aaps.app/el/latest/Configuration/Config-Builder.html#profile</string>
     <string name="pumpdisconnect_label">Λόγοι εφαρμογής του \"Αποσυνδέστε την αντλία\" στο AAPS</string>
-    <string name="pumpdisconnect_whattodo">Τι πρέπει να γίνετε όταν αποσυνδέετε την αντλία από το σώμα σας;</string>
     <string name="pumpdisconnect_unnecessary">Αυτό δεν είναι απαραίτητο καθώς η ινσουλίνη δεν θα χορηγηθεί εάν η αντλία είναι φυσικά αποσυνδεδεμένη.</string>
     <string name="pumpdisconnect_missinginsulin">Αποτρέπει το AAPS από το να υπολογίσει την ινσουλίνη που δεν χορηγήθηκε ενώ η αντλία είναι φυσικά αποσυνδεδεμένη.</string>
     <string name="pumpdisconnect_notstop">Δεν θα σταματήσει η χορήγηση ινσουλίνης εάν η αντλία παραμένει συνδεδεμένη στο σώμα σας.</string>
@@ -59,9 +54,6 @@
     <string name="exercise_setunchanged">Αφήστε τον στόχο της γλυκόζης αίματός σας αμετάβλητο.</string>
     <string name="exercise_15g">Περιμένετε μέχρι η γλυκόζη του αίματος να πέσει κάτω από τον στόχο της υπογλυκαιμίας και στη συνέχεια φάτε 15 g υδατανθράκων ταχείας δράσης.</string>
     <string name="exercise_hint1">https://wiki.aaps.app/el/latest/Usage/temptarget.html#activity-temp-target</string>
-    <string name="suspendloop_doigetinsulin">Λαμβάνω ινσουλίνη όταν το κύκλωμα είναι απενεργοποιημένο/αναστολή;</string>
-    <string name="suspendloop_yes">Ναι, ο βασικός ρυθμός συνεχίζει να χορηγείται.</string>
-    <string name="suspendloop_no">Όχι, η χορήγηση ινσουλίνης σταμάτησε.</string>
     <string name="basaltest_label">Δοκιμή Βασικού Ρυθμού, ISF και I:C</string>
     <string name="basaltest_when">Πότε πρέπει να επικυρωθούν αυτές οι τιμές;</string>
     <string name="basaltest_beforeloop">Πριν από την έναρξη του κυκλώματος.</string>
@@ -70,19 +62,11 @@
     <string name="basaltest_fixed">Μόλις ρυθμιστούν και επικυρωθούν, οι τιμές αυτές δεν θα πρέπει να μεταβάλλονται με την πάροδο του χρόνου.</string>
     <string name="prerequisites_label">Προϋποθέσεις</string>
     <string name="prerequisites_what">Τι είναι ουσιώδες για τη ρύθμιση και τη χρήση του AAPS;</string>
-    <string name="prerequisites_determinedcorrectprofile">Έγκυρες πληροφορίες προφίλ (Βασικός, IC, ISF, DIA).</string>
     <string name="prerequisites_computer">Ένας υπολογιστής με εγκατεστημένο και ρυθμισμένο το Android Studio.</string>
-    <string name="prerequisites_phone">Ένα τηλέφωνο που υποστηρίζεται.</string>
     <string name="prerequisites_pump">Μια συμβατή αντλία ινσουλίνης αν σκοπεύετε να τρέξετε ένα κλειστό κύκλωμα.</string>
     <string name="prerequisites_nightscout">Nightscout, για να κρατήσετε ένα αρχείο καταγραφής όλων των δεδομένων και την αναθεώρηση των ρυθμίσεων.</string>
-    <string name="prerequisites_tidepoolaccount">Ένα Tidepool λογαριασμό.</string>
-    <string name="prerequisites_googleaccount">Ένα λογαριασμό Google.</string>
-    <string name="prerequisites_githubaccount">Ένα λογαριασμό Github.</string>
     <string name="prerequisites_beanandroiddeveloper">Εμπειρία στον προγραμματισμό ή την επεξεργασία κώδικα.</string>
-    <string name="prerequisites_own670g">Μία αντλία MiniMed 670G.</string>
     <string name="prerequisites_hint1">https://wiki.aaps.app/el/latest/Module/module.html</string>
-    <string name="prerequisites_smartwatch">Ένα Smartwatch.</string>
-    <string name="prerequisites_supportedcgm">Ένα Υποστηριζόμενο CGM.</string>
     <string name="prerequisites2_label">Προϋποθέσεις</string>
     <string name="prerequisites2_what">Τι είναι απαραίτητο για τη ρύθμιση και τη χρήση του AAPS;</string>
     <string name="prerequisites2_profile">Επικυρωμένες πληροφορίες για τη δημιουργία ενός προφίλ (ISF, λόγος I:C, βασικός ρυθμός, DIA κλπ.).</string>
@@ -91,11 +75,9 @@
     <string name="prerequisites2_supportedcgm">Μια υποστηριζόμενη συσκευή CGM και κατάλληλη εφαρμογή για λήψη τιμών γλυκόζης αίματος στο τηλέφωνο/συσκευή.</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/el/latest/Module/module.html</string>
     <string name="update_label">Ενημέρωση AAPS</string>
-    <string name="whatistrue">Ελέγξτε όλες τις σωστές απαντήσεις.</string>
     <string name="update_git">Πρέπει να έχετε το Git εγκατεστημένο και ρυθμισμένο στον υπολογιστή σας.</string>
     <string name="update_asap">Μετά την κυκλοφορία ενημερωμένων εκδόσεων του AAPS, οι προηγούμενες εκδόσεις μπορεί να μετατρέπονται εξ αποστάσεως σε περιορισμένες μετά από ένα καθορισμένο χρονικό διάστημα.</string>
     <string name="update_keys">Θα πρέπει να αποθηκεύσετε και να σημειώσετε την τοποθεσία του keystore σας και να χρησιμοποιήσετε το ίδιο κλειδί υπογραφής για ενημερώσεις όπως και στην προηγούμενη εγκατάστασή σας.</string>
-    <string name="update_neverupdate">Ποτέ μην αναβαθμίζετε εάν το σύστημα λειτουργεί καλά.</string>
     <string name="update_askfriend">Εάν έχετε δυσκολία στην κατασκευή του apk, μπορείτε να εγκαταστήσετε ένα apk που έχει κατασκευαστεί από έναν φίλο.</string>
     <string name="update_hint1">https://wiki.aaps.app/el/latest/Installing-AndroidAPS/Update-to-new-version.html#update-to-a-new-version-or-branch</string>
     <string name="troubleshooting_label">Αντιμετώπιση προβλημάτων</string>
@@ -114,7 +96,6 @@
     <string name="insulin_actrapid">Actrapid®/Humalin R®/\"regular\" ανθρώπινη ινσουλίνη.</string>
     <string name="insulin_hint1">https://wiki.aaps.app/el/latest/Configuration/Config-Builder.html#insulin</string>
     <string name="sensitivity_label">Πρόσθετα Ευαισθησίας</string>
-    <string name="sensitivity_which">Ελέγξτε όλες τις σωστές απαντήσεις.</string>
     <string name="sensitivity_adjust">Τα πρόσθετα ευαισθησίας επιτρέπουν την προσαρμογή του AAPS σε προσωρινές ή βραχύβιες αλλαγές στην ευαισθησία στην ινσουλίνη (για παράδειγμα ορμονικές αλλαγές ή ζητήματα απορρόφησης στο σημείο έγχυσης).</string>
     <string name="sensitivity_edit">Τα πρόσθετα ευαισθησίας προτείνουν στο χρήστη αλλαγές στον βασικό ρυθμό, τις αναλογίες I:C και ISF και μπορούν να χρησιμοποιηθούν στην επεξεργασία του προφίλ σας.</string>
     <string name="sensitivity_cannula">Η καταγραφή μιας αλλαγής καθετήρα θα επαναφέρει την αναλογία Autosens στο 100%.</string>
@@ -132,7 +113,6 @@
     <string name="wronginsulin_careportal">Διαγράψτε τα δεδομένα ινσουλίνης από το Nightscout Careportal για να τα αφαιρέσετε από το ιστορικό της αντλίας.</string>
     <string name="wronginsulin_compare">Συγκρίνετε τιμές στο AAPS και στο ιστορικό της αντλίας (αν η αντλία το υποστηρίζει).</string>
     <string name="wronginsulin_prime">Χορηγήστε σαν Bolus ένα ποσοστό της υπολογισμένης «χαμένης» ινσουλίνης σας είτε μέσω σύριγγας/πένας είτε με χρήση prime.</string>
-    <string name="wronginsulin_donothing">Μην κάνετε τίποτα και αφήστε το AAPS να διορθώσει τυχόν υψηλά επίπεδα γλυκόζης στο αίμα.</string>
     <string name="cob_label">Ενεργοί Υδατάνθρακες (COB)</string>
     <string name="cob_question">Πώς επηρεάζει η αλλαγή της τιμή ISF τον υπολογισμό των COB που κάνει το AAPS;</string>
     <string name="cob_longer">Η αύξηση της ISF θα κάνει τον υπολογισμένο χρόνο απορρόφησης υδατανθράκων μεγαλύτερο</string>
@@ -175,7 +155,6 @@
     <string name="isf_decreasingvalue">Η μείωση των τιμών ISF θα οδηγήσει σε μεγαλύτερη χορήγηση ινσουλίνης για μια τιμή γλυκόζη στο αίμα υψηλότερη του στόχου.</string>
     <string name="isf_noeffect">Η αύξηση ή η μείωση του ISF δεν επηρεάζει τη χορήγηση ινσουλίνης όταν τα επίπεδα της γλυκόζης στο αίμα είναι κάτω από το στόχο.</string>
     <string name="isf_preferences">Το ISF θα πρέπει να εισαχθεί στις προτιμήσεις του AAPS.</string>
-    <string name="isf_profile">Η αλλαγή της τιμής της ISF στο προφίλ σας είναι αρκετό για να εφαρμόσετε την αλλαγή αυτή.</string>
     <string name="isf_hint1">https://wiki.aaps.app/el/latest/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
     <string name="isf_hint2">https://wiki.aaps.app/el/latest/Usage/Profiles.html</string>
     <string name="ic_multiple">Μπορείτε να χρησιμοποιήσετε περισσότερες από μία τιμές για την αναλογία I:C στο προφίλ σας.</string>
@@ -183,9 +162,6 @@
     <string name="ic_label_exam">Λόγος Ινσουλίνης προς Υδατάνθρακες (αναλογία I:C)</string>
     <string name="ic_increasingvalue">Υψηλή αναλογία I:C οδηγεί σε μικρότερη χορήγηση ινσουλίνης για μια δεδομένη ποσότητα υδατανθράκων.</string>
     <string name="ic_decreasingvalue">Χαμηλή αναλογία I:C οδηγεί σε μικρότερη χορήγηση ινσουλίνης για μια δεδομένη ποσότητα υδατανθράκων.</string>
-    <string name="ic_noeffect">Αν έχετε 0 COB Ενεργούς Υδατ., αλλάζοντας την αναλογία IC θα οδηγήσει σε μια διαφορετική ποσότητα ινσουλίνης για να διορθωθεί μια συγκεκριμένη τιμή BG.</string>
-    <string name="ic_different">Το IC θα είναι διαφορετικό αν υπολογίζετε το ψωμί (ισοδύναμο) ως 10g ή 12g.</string>
-    <string name="ic_meaning">Η έννοια του IC είναι: Πόσες φέτες ψωμί (ισοδύναμα) καλύπτονται από 1 μονάδα ινσουλίνης;</string>
     <string name="ic_hint1">https://wiki.aaps.app/el/latest/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="profileswitch_label">Αλλαγή Προφίλ</string>
     <string name="profileswitch_pctwillchange">Κατά τον καθορισμό μιας αλλαγής προφίλ στο 90% ποιες απαντήσεις είναι αληθείς;</string>
@@ -212,12 +188,6 @@
     <string name="profileswitch4_internet">Η ενεργοποίηση αλλαγών στο προφίλ σας στο Nightscout απαιτεί το τηλέφωνό σας που τρέχει το AAPS να έχει σύνδεση στο διαδίκτυο.</string>
     <string name="profileswitch4_sufficient">Η επεξεργασία προφίλ για να αλλάξετε τις τιμές είναι επαρκής για να ενεργοποιηθούν τυχόν αλλαγές που έγιναν.</string>
     <string name="profileswitch4_multi">Πολλαπλά προφίλ μπορούν να ρυθμιστούν και να επιλέγονται κατάλληλα για να γίνει διαχείριση μεταβαλλόμενων συνθηκών (π.χ., ορμονικές αλλαγές, βάρδιες εργασίας, καθημερινές / Σαββατοκύριακο).</string>
-    <string name="basalhelp_hint1">https://wiki.aaps.app/el/latest/Module/module.html#good-individual-dosage-algorithm-for-your-diabetes-therapy</string>
-    <string name="basalhelp_label">Βοήθεια με τους βασικούς ρυθμούς</string>
-    <string name="basalhelp_where">Πού να πάτε για βοήθεια σχετικά με τη ρύθμιση του βασικού ρυθμού σας και άλλες ρυθμίσεις.</string>
-    <string name="basalhelp_diabetesteam">Στην ομάδα του γιατρού σας</string>
-    <string name="basalhelp_google">Google</string>
-    <string name="basalhelp_facebook">FaceBook</string>
     <string name="other_medication_label">Άλλα Φάρμακα. Παρακαλούμε διαβάστε την παρακάτω δήλωση και ελέγξτε το πλαίσιο για να αποδεχτείτε τη δήλωση.</string>
     <string name="other_medication_text">Το AAPS μειώνει τους βασικούς ρυθμούς ή αναστέλει την χορήγηση ινσουλίνης για να αυξηθεί η γλυκόζη στο αίμα. Τα φάρμακα στην κατηγορία αναστολείς SGLT2 (γλιφλοζίνες) μπορούν να αποτρέψουν την αυξήση της γλυκόζης στο αίμα και συνεπώς, μπορούν να προκαλέσουν επικίνδυνη ανεπάρκεια ινσουλίνης που ενδέχετε να οδηγήσει σε DKA.
 \nΚοινά ονόματά τους είναι τα: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nΕπομένως υπόσχομαι ότι δε θα χρησιμοποιώ το AAPS αν και όσο χρησμοποιώ κάποιο τέτοιο φάρμακο, ή θα απενεργοποιήσω το κλειστό κύκλωμα πριν τη χρήση τέτοιων φαρμάκων.</string>

@@ -39,8 +39,6 @@
     <string name="nsclient_token_dialog_title">Διακριτικό πρόσβασης NS</string>
     <string name="nsclient_token_dialog_message">Διακριτικό πρόσβασης που δημιουργείται στη σελίδα διαχείρισης του NS (ελάχιστο 17 χαρακτήρες)</string>
     <string name="deliver_now">Έγχυση τώρα</string>
-    <string name="clear_queue">Διαγραφή σειράς</string>
-    <string name="show_queue">Δείξε σειρά</string>
     <string name="queue">Σειρά:</string>
     <string name="status">Κατάσταση:</string>
     <string name="clear_log">Διαγραφή αρχείου καταγραφής</string>
@@ -88,13 +86,7 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Αποστολή δεδομένων στο Tidepool</string>
-    <string name="tidepool_upload_cgm">Αποστολή δεδομένων CGM</string>
-    <string name="tidepool_upload_bolus">Αποστολή θεραπειών (ινσουλίνης, υδατανθράκων)</string>
-    <string name="tidepool_upload_tbr">Αποστολή προσωρινών ρυθμών</string>
-    <string name="tidepool_upload_profile">Αποστολή αλλαγών προφίλ, προσωρινών στόχων</string>
-    <string name="tidepool_upload_bg">Αποστολή BG βαθμονομήσεων</string>
     <string name="remove_all">Αφαίρεση όλων</string>
-    <string name="reset_start">Επαναφορά έναρξης</string>
     <string name="upload_now">Ανέβασμα τώρα</string>
     <string name="not_connected">Μη συνδεδεμένο</string>
     <string name="read_only">Μόνο για ανάγνωση</string>
@@ -124,7 +116,6 @@
     <string name="wizard_result">Υπολογισμός. Οδηγός:\nΙνσουλίνη: %1$.2fU\nΥδατάνθρακες: %2$dg</string>
     <string name="quick_wizard_not_available">Ο επιλεγμένος οδηγός δεν είναι πλέον διαθέσιμος, παρακαλώ ανανεώστε το πλακίδιο σας</string>
     <string name="quick_wizard_message">Γρήγορος οδηγός: %1$s\nΙνσουλίνη: %2$.2fU\nΥδατάνθρακες: %3$dg</string>
-    <string name="wear_action_tempt_preset_error">Άγνωστη προεπιλογή προσωρινού στόχου: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Ακύρωση εκτέλεσης προσωρινών στόχων;</string>
     <string name="wear_action_tempt_unit_error">Χρησιμοποιούνται διαφορετικές μονάδες στο ρολόι και το τηλέφωνο!</string>
     <string name="wear_action_tempt_zero_message">Μηδενικός-Προσωρινός-Στόχος - ακύρωση εκτέλεσης Πρισωρινών-Στόχων;</string>

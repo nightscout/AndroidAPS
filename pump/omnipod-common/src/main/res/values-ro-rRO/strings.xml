@@ -35,7 +35,6 @@
     <string name="omnipod_common_error_unexpected_exception">A apărut o eroare neașteptată. Vă rugăm să o raportați! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation">Confirmare</string>
-    <string name="omnipod_common_confirmation_time_or_timezone_change">Timpul și/sau fusul orar s-au schimbat în Pod.</string>
     <string name="omnipod_common_confirmation_expiration_alerts_updated">Setările pentru alarme au fost actualizate în Pod.</string>
     <string name="omnipod_common_confirmation_time_on_pod_updated">Timpul in Pod a fost actualizat.</string>
     <string name="omnipod_common_confirmation_suspended_delivery">Toate livrările de insulină au fost suspendate.</string>
@@ -128,7 +127,6 @@
     <string name="omnipod_common_pod_status_normal">Normal</string>
     <string name="omnipod_common_pod_status_suspended">Suspendat</string>
     <string name="omnipod_common_pod_status_pod_fault">Defecțiune Pod</string>
-    <string name="omnipod_common_pod_status_activation_time_exceeded">Timp de activare depăşit</string>
     <string name="omnipod_common_pod_status_inactive">Inactiv</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Defecțiune Pod: %1$03d %2$s</string>
     <!-- Omnipod - Commands -->
@@ -154,7 +152,6 @@
     <string name="omnipod_common_cmd_set_fake_suspended_tbr">Se setează o bazală temporară falsă deoarece Pod-ul este suspendat</string>
     <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Anulează bazala temporară falsă creată pentru că Pod-ul a fost suspendat</string>
     <string name="omnipod_common_cmd_split_tbr">Împarte bazala temporară din cauza unei erori necunoscute la anulare</string>
-    <string name="omnipod_common_cmd_beep_config">Configurare Beep</string>
     <string name="omnipod_common_cmd_play_test_beep">Redă beep-uri de test</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_finish_pairing_reminder">Finalizare memento împerechere</string>

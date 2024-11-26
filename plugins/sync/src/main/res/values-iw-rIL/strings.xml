@@ -40,8 +40,6 @@
     <string name="nsclient_token_dialog_title">אסימון גישה</string>
     <string name="nsclient_token_dialog_message">אסימון גישה הופק בדף האדמיניסטרטור של NS (לפחות 17 תווים)</string>
     <string name="deliver_now">ספק עכשיו</string>
-    <string name="clear_queue">נקה תור</string>
-    <string name="show_queue">הצג תור</string>
     <string name="queue">תור:</string>
     <string name="status">סטטוס: </string>
     <string name="clear_log">נקה יומן</string>
@@ -89,13 +87,7 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">מעלה נתונים ל-Tidepool</string>
-    <string name="tidepool_upload_cgm">העלאת נתוני סנסור</string>
-    <string name="tidepool_upload_bolus">העלאת טיפולים (אינסולין, פחמימות)</string>
-    <string name="tidepool_upload_tbr">העלאת בזאלים זמניים</string>
-    <string name="tidepool_upload_profile">העלאת החלפת פרופילים, ערכי מטרה זמניים</string>
-    <string name="tidepool_upload_bg">העלאת בדיקות סוכר</string>
     <string name="remove_all">הסר הכל</string>
-    <string name="reset_start">אתחל התחלה</string>
     <string name="upload_now">העלה עכשיו</string>
     <string name="not_connected">לא מחובר</string>
     <string name="read_only">לקריאה בלבד</string>
@@ -134,7 +126,6 @@
     <string name="quick_wizard_not_available">האשף המהיר שנבחר אינו זמין, נא לרענן את האריח</string>
     <string name="quick_wizard_message">אשף מהיר: %1$s\n אינס\': %2$.2f יח\'\nפחמ\': %3$d גר\'</string>
     <string name="user_action_not_available">פעולת המשתמש %1$s אינה זמינה יותר, בבקשה רעננו את האריח</string>
-    <string name="wear_action_tempt_preset_error">תצורה לא ידועה של מטרה זמנית: %1$s</string>
     <string name="wear_action_tempt_cancel_message">מבטל ערך מטרה זמני נוכחי</string>
     <string name="wear_action_tempt_unit_error">יחידות המידה שונות בין הטלפון והשעון!</string>
     <string name="wear_action_tempt_zero_message">Zero-Temp-Target - בוטל, הפעלת ערכי מטרה זמניים?</string>

@@ -18,6 +18,7 @@ import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.plugins.configuration.R
 import app.aaps.plugins.configuration.maintenance.data.PrefMetadataMap
 import app.aaps.plugins.configuration.maintenance.data.PrefsStatusImpl
@@ -67,12 +68,17 @@ class FileListProviderImpl @Inject constructor(
     override fun listPreferenceFiles(): MutableList<PrefsFile> {
         val prefFiles = mutableListOf<PrefsFile>()
 
-        // searching dedicated dir, only for new JSON format
-        ensurePreferenceDirExists()?.listFiles()?.filter { it.isFile && it.name?.endsWith(".json") == true }?.forEach {
-            val content = storage.getFileContents(context.contentResolver, it)
-            if (encryptedPrefsFormat.isPreferencesFile(it, content)) {
-                prefFiles.add(PrefsFile(it.name ?: "UNKNOWN", content, metadataFor(content)))
+        try {
+            // searching dedicated dir, only for new JSON format
+            ensurePreferenceDirExists()?.listFiles()?.filter { it.isFile && it.name?.endsWith(".json") == true }?.forEach {
+                val content = storage.getFileContents(context.contentResolver, it)
+                if (encryptedPrefsFormat.isPreferencesFile(it, content)) {
+                    prefFiles.add(PrefsFile(it.name ?: "UNKNOWN", content, metadataFor(content)))
+                }
             }
+        } catch (_: SecurityException) {
+            ToastUtils.errorToast(context, rh.gs(R.string.error_accessing_filesystem_select_aaps_directory_properly))
+            return mutableListOf()
         }
 
         val filtered = prefFiles
@@ -91,10 +97,15 @@ class FileListProviderImpl @Inject constructor(
         val customWatchfaceAuthorization = preferences.get().get(BooleanKey.WearCustomWatchfaceAuthorization)
 
         ensureExportDirExists()?.listFiles()?.filter { it.isFile && it.name?.endsWith(ZipWatchfaceFormat.CWF_EXTENSION) == true }?.forEach {
-            storage.getBinaryFileContents(context.contentResolver, it)?.let { content ->
-                ZipWatchfaceFormat.loadCustomWatchface(content, it?.name ?: "", customWatchfaceAuthorization)?.also { customWatchface ->
-                    customWatchfaceFiles.add(customWatchface)
+            try {
+                storage.getBinaryFileContents(context.contentResolver, it)?.let { content ->
+                    ZipWatchfaceFormat.loadCustomWatchface(content, it?.name ?: "", customWatchfaceAuthorization)?.also { customWatchface ->
+                        customWatchfaceFiles.add(customWatchface)
+                    }
                 }
+            } catch (_: SecurityException) {
+                ToastUtils.errorToast(context, rh.gs(R.string.error_accessing_filesystem_select_aaps_directory_properly))
+                return mutableListOf()
             }
         }
 

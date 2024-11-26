@@ -30,8 +30,6 @@
     <string name="random_bg">Willekeurige BG</string>
     <string name="description_source_random_bg">Willekeurige BG data genereren (alleen Demo modus)</string>
     <string name="random_bg_short">BG</string>
-    <string name="do_xdrip_upload_title">Verstuur BG data naar xDrip+</string>
-    <string name="do_xdrip_upload_summary">In xDrip+ selecteer 640g/Eversense data bron</string>
     <string name="bgsource_upload">BG upload instellingen</string>
     <string name="dexcom_log_ns_sensor_change_title">Sensorwijziging in NS registreren</string>
     <string name="dexcom_log_ns_sensor_change_summary">Maak automatisch een gebeurtenis \"Sensor Change\" in NS wanneer de sensor start</string>

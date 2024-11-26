@@ -68,7 +68,6 @@
     <string name="equil_common_cmd_set_tbr">Установить временный базал</string>
     <string name="equil_common_cmd_cancel_tbr">Отменить временный базал</string>
     <string name="equil_common_cmd_set_basal_schedule">Задать расписание базала</string>
-    <string name="equil_common_cmd_get_status">Получить статус Equil</string>
     <string name="equil_common_cmd_set_time">Установить время</string>
     <string name="equil_common_cmd_suspend_delivery">Приостановить ввод</string>
     <string name="equil_common_cmd_resume_delivery">Возобновить ввод</string>
@@ -92,7 +91,6 @@
     <string name="equil_command_connect_no_response">Нет ответа от помпы</string>
     <string name="equil_command__unknown">Неизвестный статус команды</string>
     <string name="equil_install">Имплантировать помпу в тело</string>
-    <string name="equil_password_title">Пароль помпы</string>
     <string name="equil_settings">Настройки</string>
     <string name="equil_settings_alarm_battery">Оповещение о низком заряде батареи</string>
     <string name="equil_settings_alarm_insulin">Оповещение о низком запасе инсулина</string>
@@ -101,7 +99,6 @@
     <string name="equil_history_group_pair">Сопряжение</string>
     <string name="equil_history_group_bolus">Болюсы</string>
     <string name="equil_history_group_basal">Базалы</string>
-    <string name="equil_history_group_prime">Заполнение</string>
     <string name="equil_history_group_configuration">Конфигурации</string>
     <string name="equil_tab_action">Действия</string>
     <string name="equil_tab_equil">Журнал Equil</string>

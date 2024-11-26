@@ -40,8 +40,6 @@
     <string name="nsclient_token_dialog_title">Přístupový token NS</string>
     <string name="nsclient_token_dialog_message">Přístupový token vygenerován na stránce pro administraci NS (min. 17 znaků)</string>
     <string name="deliver_now">Odeslat teď</string>
-    <string name="clear_queue">Vymazat frontu</string>
-    <string name="show_queue">Zobrazit frontu</string>
     <string name="queue">Fronta:</string>
     <string name="status">Status:</string>
     <string name="clear_log">Vymazat log</string>
@@ -89,13 +87,7 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Nahrávání dat do Tidepoolu</string>
-    <string name="tidepool_upload_cgm">Nahrávat CGM data</string>
-    <string name="tidepool_upload_bolus">Nahrávat ošetření (inzulín, sacharidy)</string>
-    <string name="tidepool_upload_tbr">Nahrávat dočasné bazály</string>
-    <string name="tidepool_upload_profile">Nahrávat přepnutí profilu, dočasné cíle</string>
-    <string name="tidepool_upload_bg">Nahrávat měření z prstu</string>
     <string name="remove_all">Odstranit vše</string>
-    <string name="reset_start">Resetovat start</string>
     <string name="upload_now">Nahrát nyní</string>
     <string name="not_connected">Nepřipojeno</string>
     <string name="read_only">Jen pro čtení</string>
@@ -134,7 +126,6 @@
     <string name="quick_wizard_not_available">Vybraný rychlý bolus již není k dispozici, obnovte prosím dlaždici</string>
     <string name="quick_wizard_message">Rychlý bolus: %1$s\nInzulín: %2$.2fU\nSacharidy: %3$dg</string>
     <string name="user_action_not_available">Vybraná akce uživatele %1$s již není k dispozici, obnovte prosím svou dlaždici</string>
-    <string name="wear_action_tempt_preset_error">Dočasný cíl neznámá předvolba: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Zrušení běžícího dočasného cíle?</string>
     <string name="wear_action_tempt_unit_error">Různé jednotky používané na hodinkách a telefonu!</string>
     <string name="wear_action_tempt_zero_message">Nulový dočasný cíl - zrušení běžícího dočasného cíle?</string>

@@ -26,6 +26,10 @@
     <color name="dark_uploaderBattery">@color/black</color>
     <color name="dark_uploaderBatteryEmpty">@color/red_600</color>
     <color name="dark_mStatus_home">@color/black</color>
+    <color name="dark_tempTarget_Loop">#77dd77</color>
+    <color name="dark_tempTarget">#f4d700</color>
+    <color name="dark_warning">#ffff00</color>
+    <color name="dark_alarm">#ff4444</color>
 
     <color name="dark_highColor">@color/yellow_A200</color>
     <color name="dark_lowColor">@color/RED</color>

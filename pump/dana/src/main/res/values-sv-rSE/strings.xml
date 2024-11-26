@@ -93,7 +93,6 @@
     <string name="danar_disableeasymode">Inaktivera Easy UI-läget i pumpen</string>
     <string name="profile_set_failed">Lyckades inte sätta basalprofilen</string>
     <string name="danar_bluetooth_status">Bluetoothstatus</string>
-    <string name="danar_iob_label">Pumpens IOB</string>
     <string name="firmware_label">Firmwareversion</string>
     <string name="danar_pump_settings">Dana R pumpinställningar</string>
     <string name="time_format_12h">12 tim</string>

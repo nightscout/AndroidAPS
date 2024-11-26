@@ -93,7 +93,6 @@
     <string name="danar_disableeasymode">Wyłącz tryb EasyUI w pompie</string>
     <string name="profile_set_failed">Ustawienie profilu bazy nie powiodło się</string>
     <string name="danar_bluetooth_status">Status Bluetooth</string>
-    <string name="danar_iob_label">IOB w pompie</string>
     <string name="firmware_label">Firmware</string>
     <string name="danar_pump_settings">Ustawienia pompy Dana</string>
     <string name="time_format_12h">12h</string>

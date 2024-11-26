@@ -93,7 +93,6 @@
     <string name="danar_disableeasymode">EasyUI-Modus in der Pumpe deaktivieren</string>
     <string name="profile_set_failed">Setzen des Basal-Profils fehlgeschlagen</string>
     <string name="danar_bluetooth_status">Bluetooth-Status</string>
-    <string name="danar_iob_label">Pumpen-IOB</string>
     <string name="firmware_label">Firmware</string>
     <string name="danar_pump_settings">Dana Pumpen-Einstellungen</string>
     <string name="time_format_12h">12h</string>

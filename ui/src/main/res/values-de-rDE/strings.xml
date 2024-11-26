@@ -79,24 +79,15 @@
     <string name="no_records_available">Keine Datensätze verfügbar</string>
     <string name="calculation_short">Berech.</string>
     <string name="treatments_iob_label_string">IOB:</string>
-    <string name="treatments_insulin_label_string">Insulin:</string>
     <string name="treatments_carbs_label_string">Kohlenhydrate:</string>
-    <string name="treatments_iobtotal_label_string">Gesamt IOB:</string>
-    <string name="treatments_iob_activity_total_label_string">Ges. IOB Aktivität:</string>
-    <string name="tempbasals_realduration_label_string">Dauer:</string>
     <string name="tempbasals_netratio_label_string">Verhältnis:</string>
-    <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="treatments_wizard_correction_label">Korr</string>
     <string name="meal_bolus">Essensbolus</string>
     <string name="prime">Füllen</string>
-    <string name="profile_changes">Profilwechsel</string>
-    <string name="tempt_targets">Temporäre Ziele</string>
     <string name="carbs_and_bolus">Kohlenhydrate &amp; Bolus</string>
     <string name="show_invalidated_records">Zeige ungültige / gelöschte Einträge</string>
     <string name="hide_invalidated_records">Verberge ungültige / gelöschte Einträge</string>
-    <string name="refresh_from_nightscout">Aktualisiere von Nightscout</string>
-    <string name="refresheventsfromnightscout">Mit NIghtscout-Daten aktualisieren</string>
     <string name="show_invalidated">Zeige Ungültige</string>
     <string name="hide_invalidated">Verstecke Ungültige</string>
     <string name="careportal_remove_started_events">AAPS gestartete Einträge entfernen</string>
@@ -131,7 +122,5 @@
     <string name="a11y_only_on_phone">nur auf Smartphone</string>
     <string name="quickwizard_settings">QuickWizard-Einstellungen</string>
     <string name="overview_edit_quickwizard_valid">Gültigkeit:</string>
-    <string name="overview_edit_quickwizard_list_activity_add">Hinzufügen</string>
-    <string name="overview_quickwizard_item_edit_button">Bearbeiten</string>
     <string name="a11y_drag_and_drop_handle">Drag and Drop Handle</string>
 </resources>

@@ -3,11 +3,9 @@
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_shortname">EOP2</string>
     <string name="eopatch_pump_description">EOPatch2 / GlucoMen Day için Pompa Entegrasyonu</string>
-    <string name="category_alerts">Alarmlar</string>
     <string name="low_reservoir">Düşük rezervuar Uyarısı</string>
     <string name="patch_expiration_reminders">Pompa Süre Sonu Hatırlatıcısı</string>
     <string name="patch_buzzer_reminders">Pompa sesli Hatırlatıcılar</string>
-    <string name="time_format_a_h_mm">h:mm a</string>
     <string name="eopatch_ble_status">BLE Durumu</string>
     <string name="eopatch_serial_number">Seri Numarası</string>
     <string name="eopatch_lot_number">Parti Numarası</string>
@@ -26,7 +24,6 @@
     <string name="time_1hr">1 sa</string>
     <string name="time_1hr_30min">1 sa 30 dk</string>
     <string name="time_2hr">2 sa</string>
-    <string name="all_blank">\u0020</string>
     <string name="patch_safe_deactivation_desc">Yeni pompaya geçmek için mevcut pompa atılmalıdır. Pompadan gelen tüm insülin teslimatları iptal edilecektir.</string>
     <string name="patch_discard_complete_title">Pompa çıkarıldı.</string>
     <string name="patch_discard_complete_desc">Pompa devre dışı bırakıldı.\nPompayı atın.\nVücudunuza bağlı pompayı çıkarın.</string>
@@ -38,9 +35,6 @@
     <string name="patch_remaining_usage_period">Kalan süre</string>
     <string name="patch_finish">Bitti</string>
     <string name="patch_forced_discard">Vazgeç</string>
-    <string name="patch_comm_error_during_discard_status">Pompa çıkarılırken iletişim hatası </string>
-    <string name="patch_comm_error_during_discard_desc">Normal devre dışı bırakma için \'Yeniden Dene\'ye dokunun.\nTek taraflı devre dışı bırakma için \'Çıkar\'a dokunun.</string>
-    <string name="patch_comm_error_during_discard_desc_1">Normal devre dışı bırakma için \'Yeniden Dene\'ye dokunun.</string>
     <string name="patch_comm_error_during_discard_desc_2">Tek taraflı devre dışı bırakma için \'Çıkar\'a dokunun.</string>
     <string name="patch_manually_turning_off_alarm_title">Pompanın alarmını manuel olarak kapatma</string>
     <string name="patch_manually_turning_off_alarm_desc_1">Pompa bir iletişim hatası sırasında tek taraflı olarak devre dışı bırakılırsa, Alarm bip sesi durmayabilir.</string>
@@ -82,8 +76,6 @@
     <string name="patch_expiration_reminder_setting_title">Pompa Süre Sonu Hatırlatıcısı</string>
     <string name="patch_activate_reminder_title">Pompa etkinleştirme Hatırlatıcısı</string>
     <string name="patch_activate_reminder_desc">Pompa aktivasyonu tamamlanmadı.\n Devam edin.</string>
-    <string name="patch_communication_check">Pompa iletişim kontrolü</string>
-    <string name="patch_communication_check_status_1">Pompa iletişimi kontrol ediliyor…</string>
     <string name="patch_communication_check_helper_1">Cihazınızı Pompaya yaklaştırın.</string>
     <string name="patch_communication_check_helper_2">Lütfen başka bir konuma geçin ve tekrar deneyin.</string>
     <string name="patch_communication_failed">Bağlantı Hatası</string>
@@ -114,7 +106,6 @@
     <string name="retry">Tekrar dene</string>
     <string name="string_caution_not_remove_needle_cap">[Caution] Bir sonraki talimata kadar iğne kapağını ve yapışkan arkalığı ÇIKARMAYIN.</string>
     <string name="string_are_you_sure_to_discard_current_patch">Mevcut pompayı çıkarmak istediğinizden emin misiniz?</string>
-    <string name="string_unconfirmed_bolus_info_discard_confirm_message">Onaylanmamış bir bolus bilgisi nedeniyle, Bolus hesap mak. %s\'e kadar kullanılamaz.\n\nGeçerli Pompayı çıkarmak istediğinizden emin misiniz?</string>
     <string name="needle_insertion_error_1">İğne yerleştirme Hatası.</string>
     <string name="needle_insertion_error_2">Kolu çevirdikten sonra kalan deliğin yönünün düz olup olmadığını kontrol edin ve ardından \'Yeniden Dene\'ye dokunun.</string>
     <string name="needle_insertion_error_3">Pompayı devre dışı bırakmak için \'Çıkar\'a dokunun.</string>
@@ -126,7 +117,6 @@
     <string name="finish">Bitti</string>
     <string name="string_temp_basal_remained_hhmm">kalan süre: %1$s:%2$s</string>
     <string name="next">İleri</string>
-    <string name="patch_connection_fail">Pompa iletişim kontrolünden sonra yeniden deneyin.</string>
     <string name="string_pause_failed">Askıya alma başarısız oldu.</string>
     <string name="string_resume_failed">Devam başarısız oldu.</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE, d MMM, aaaa hh:mm a</string>

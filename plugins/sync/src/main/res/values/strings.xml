@@ -59,8 +59,6 @@
     <string name="nsclient_token_dialog_title">NS access token</string>
     <string name="nsclient_token_dialog_message">Access token generated on NS admin page (min 17 chars)</string>
     <string name="deliver_now">Deliver now</string>
-    <string name="clear_queue">Clear queue</string>
-    <string name="show_queue">Show queue</string>
     <string name="queue">Queue:</string>
     <string name="status">Status:</string>
     <string name="clear_log">Clear log</string>
@@ -111,13 +109,7 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Uploads data to Tidepool</string>
-    <string name="tidepool_upload_cgm">Upload CGM data</string>
-    <string name="tidepool_upload_bolus">Upload treatments (insulin, carbs)</string>
-    <string name="tidepool_upload_tbr">Upload temporary basals</string>
-    <string name="tidepool_upload_profile">Upload profile switches, temp targets</string>
-    <string name="tidepool_upload_bg">Upload BG tests</string>
     <string name="remove_all">Remove all</string>
-    <string name="reset_start">Reset start</string>
     <string name="upload_now">Upload now</string>
 
     <string name="not_connected">Not connected</string>
@@ -179,7 +171,6 @@
     <string name="quick_wizard_not_available">Selected quickwizard no longer available, please refresh your tile</string>
     <string name="quick_wizard_message">QuickWizard: %1$s\nInsulin: %2$.2fU\nCarbs: %3$dg</string>
     <string name="user_action_not_available">Selected User Action %1$s is no longer available, please refresh your tile</string>
-    <string name="wear_action_tempt_preset_error">Temptarget unknown preset: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Cancelling running Temp-Targets?</string>
     <string name="wear_action_tempt_unit_error">Different units used on watch and phone!</string>
     <string name="wear_action_tempt_zero_message">Zero-Temp-Target - cancelling running Temp-Targets?</string>

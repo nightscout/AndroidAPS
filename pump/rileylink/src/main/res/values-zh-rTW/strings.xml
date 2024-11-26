@@ -71,8 +71,6 @@
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Medtronic 幫浦</string>
     <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
-    <string name="riley_link_common_yes">是</string>
-    <string name="riley_link_common_no">否</string>
     <!-- RileyLink - Preferences -->
     <string name="riley_link_show_battery_level">顯示 OrangeLink/EmaLink/DiaLink 回報的電池電量</string>
     <string name="riley_link_show_battery_level_summary">不適用於原始 RileyLink。可能不適用於其他 RileyLink 替代品。</string>

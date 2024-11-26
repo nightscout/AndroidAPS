@@ -20,6 +20,8 @@ enum class CwfMetadataKey(val key: String, @StringRes val label: Int, val isPref
     CWF_PREF_WATCH_SHOW_COB("key_show_cob", R.string.pref_show_cob, true),
     CWF_PREF_WATCH_SHOW_DELTA("key_show_delta", R.string.pref_show_delta, true),
     CWF_PREF_WATCH_SHOW_AVG_DELTA("key_show_avg_delta", R.string.pref_show_avgdelta, true),
+    CWF_PREF_WATCH_SHOW_TEMP_TARGET("key_show_temp_target", R.string.pref_show_tempTarget ,true),
+    CWF_PREF_WATCH_SHOW_RESERVOIR_LEVEL("key_show_reservoir_level", R.string.pref_show_reservoir_level ,true),
     CWF_PREF_WATCH_SHOW_UPLOADER_BATTERY("key_show_uploader_battery", R.string.pref_show_phone_battery, true),
     CWF_PREF_WATCH_SHOW_RIG_BATTERY("key_show_rig_battery", R.string.pref_show_rig_battery, true),
     CWF_PREF_WATCH_SHOW_TEMP_BASAL("key_show_temp_basal", R.string.pref_show_basal_rate, true),

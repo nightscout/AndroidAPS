@@ -40,8 +40,6 @@
     <string name="nsclient_token_dialog_title">Token dostępu NS</string>
     <string name="nsclient_token_dialog_message">Token dostępu wygenerowany na stronie administratora w Nightscout (min. 17 znaków)</string>
     <string name="deliver_now">Dostarcz teraz</string>
-    <string name="clear_queue">Wyczyść kolejkę</string>
-    <string name="show_queue">Pokaż kolejkę</string>
     <string name="queue">Kolejka:</string>
     <string name="status">Status:</string>
     <string name="clear_log">Wyczyść log</string>
@@ -89,13 +87,7 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Prześlij dane do Tidepool</string>
-    <string name="tidepool_upload_cgm">Prześlij dane CGM</string>
-    <string name="tidepool_upload_bolus">Prześlij terapię (insulina, węglowodany)</string>
-    <string name="tidepool_upload_tbr">Prześlij bazy tymczasowe</string>
-    <string name="tidepool_upload_profile">Prześlij zmiany profilu, cele tymczasowe</string>
-    <string name="tidepool_upload_bg">Prześlij testowe BG</string>
     <string name="remove_all">Usuń wszystko</string>
-    <string name="reset_start">Resetuj start</string>
     <string name="upload_now">Prześlij teraz</string>
     <string name="not_connected">Nie połączono</string>
     <string name="read_only">Tylko do odczytu</string>
@@ -131,7 +123,6 @@
     <string name="wizard_result">Kalkulator:\nInsulina: %1$.2fU\nWęgle: %2$dg</string>
     <string name="quick_wizard_not_available">Wybrany szybki bolus nie jest już dostępny, odśwież swój kafelek</string>
     <string name="quick_wizard_message">Szybki bolus: %1$s\nInsulina: %2$.2fU\nWęgle: %3$dg</string>
-    <string name="wear_action_tempt_preset_error">Nieznane ustawienie celu tymczasowego: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Anulować bieżący cel tymczasowy?</string>
     <string name="wear_action_tempt_unit_error">Różne jednostki używane na zegarku i telefonie!</string>
     <string name="wear_action_tempt_zero_message">Zerowy cel tymczasowy - anulować bieżący cel tymczasowy?</string>

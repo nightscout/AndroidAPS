@@ -35,7 +35,6 @@
     <string name="omnipod_common_error_unexpected_exception">發生意外錯誤。請回報！（%1$s：%2$s）。</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation">確認</string>
-    <string name="omnipod_common_confirmation_time_or_timezone_change">Pod 上的時間和/或時區已更改。</string>
     <string name="omnipod_common_confirmation_expiration_alerts_updated">警報配置已在 Pod 中更新。</string>
     <string name="omnipod_common_confirmation_time_on_pod_updated">Pod 上的時間已更新。</string>
     <string name="omnipod_common_confirmation_suspended_delivery">所有胰島素輸送已暫停。</string>
@@ -128,7 +127,6 @@
     <string name="omnipod_common_pod_status_normal">正常</string>
     <string name="omnipod_common_pod_status_suspended">暫停</string>
     <string name="omnipod_common_pod_status_pod_fault">Pod 故障</string>
-    <string name="omnipod_common_pod_status_activation_time_exceeded">啟動時間已超過</string>
     <string name="omnipod_common_pod_status_inactive">無啟動</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Pod 故障：%1$03d %2$s</string>
     <!-- Omnipod - Commands -->
@@ -154,7 +152,6 @@
     <string name="omnipod_common_cmd_set_fake_suspended_tbr">設置假的臨時基礎，因為 Pod 已暫停</string>
     <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">取消因 Pod 暫停而設置的假的臨時基礎</string>
     <string name="omnipod_common_cmd_split_tbr">拆分臨時基礎，因為取消時出現不確定故障</string>
-    <string name="omnipod_common_cmd_beep_config">嗶聲配置</string>
     <string name="omnipod_common_cmd_play_test_beep">播放測試嗶聲</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_finish_pairing_reminder">完成配對提醒</string>

@@ -1092,7 +1092,41 @@ class DataHandlerMobile @Inject constructor(
         val openApsStatus =
             if (config.APS) loop.lastRun?.let { if (it.lastTBREnact != 0L) it.lastTBREnact else -1 } ?: -1
             else processedDeviceStatusData.openApsTimestamp
+        // Patient name for followers
         val patientName = preferences.get(StringKey.GeneralPatientName)
+        //temptarget
+        val units = profileFunction.getUnits()
+        var tempTargetLevel = 0
+        val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())?.let { tempTarget ->
+            tempTargetLevel = 2     // Yellow
+            profileUtil.toTargetRangeString(tempTarget.lowTarget, tempTarget.highTarget, GlucoseUnit.MGDL, units)
+        } ?: profileFunction.getProfile()?.let { profile ->
+            // If the target is not the same as set in the profile then oref has overridden it
+            val targetUsed =
+                if (config.APS) loop.lastRun?.constraintsProcessed?.targetBG ?: 0.0
+                else if (config.NSCLIENT) processedDeviceStatusData.getAPSResult()?.targetBG ?: 0.0
+                else 0.0
+
+            if (targetUsed != 0.0 && abs(profile.getTargetMgdl() - targetUsed) > 0.01) {
+                    tempTargetLevel = 1     // Green
+                    profileUtil.toTargetRangeString(targetUsed, targetUsed, GlucoseUnit.MGDL, units)
+            } else {
+                    profileUtil.toTargetRangeString(profile.getTargetLowMgdl(), profile.getTargetHighMgdl(), GlucoseUnit.MGDL, units)
+            }
+        } ?: ""
+        // Reservoir Level
+        val pump = activePlugin.activePump
+        val maxReading = pump.pumpDescription.maxResorvoirReading.toDouble()
+        val reservoir = pump.reservoirLevel.let { if (pump.pumpDescription.isPatchPump && it > maxReading) maxReading else it }
+        val reservoirString = if (reservoir > 0) "${decimalFormatter.to0Decimal(reservoir, rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname))}" else ""
+        val resUrgent = preferences.get(IntKey.OverviewResCritical)
+        val resWarn = preferences.get(IntKey.OverviewResWarning)
+        val reservoirLevel = when {
+            reservoir <= resUrgent -> 2
+            reservoir <= resWarn   -> 1
+            else                   -> 0
+        }
+
         rxBus.send(
             EventMobileToWear(
                 EventData.Status(
@@ -1107,7 +1141,12 @@ class DataHandlerMobile @Inject constructor(
                     openApsStatus = openApsStatus,
                     bgi = bgiString,
                     batteryLevel = if (phoneBattery >= 30) 1 else 0,
-                    patientName = patientName
+                    patientName = patientName,
+                    tempTarget = tempTarget,
+                    tempTargetLevel = tempTargetLevel,
+                    reservoirString = reservoirString,
+                    reservoir = reservoir,
+                    reservoirLevel = reservoirLevel
                 )
             )
         )

@@ -83,7 +83,12 @@ class RawDisplayData {
             openApsStatus = -1,
             bgi = "--",
             batteryLevel = 1,
-            patientName = ""
+            patientName = "",
+            tempTarget = "--",
+            tempTargetLevel = 0,
+            reservoirString = "--",
+            reservoir = 0.0,
+            reservoirLevel = 0
         ), EventData.Status(
             dataset = 1,
             externalStatus = "no status",
@@ -97,6 +102,11 @@ class RawDisplayData {
             bgi = "--",
             batteryLevel = 1,
             patientName = "",
+            tempTarget = "--",
+            tempTargetLevel = 0,
+            reservoirString = "--",
+            reservoir = 0.0,
+            reservoirLevel = 0
         ), EventData.Status(
             dataset = 2,
             externalStatus = "no status",
@@ -110,6 +120,11 @@ class RawDisplayData {
             bgi = "--",
             batteryLevel = 1,
             patientName = "",
+            tempTarget = "--",
+            tempTargetLevel = 0,
+            reservoirString = "--",
+            reservoir = 0.0,
+            reservoirLevel = 0
         )
     )
 

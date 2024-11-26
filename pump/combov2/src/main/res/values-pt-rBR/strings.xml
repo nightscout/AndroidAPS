@@ -4,7 +4,6 @@
     <string name="combov2_plugin_description">Integração nativa para as bombas Accu-Chek Combo</string>
     <string name="combov2_could_not_connect">Não foi possível conectar à bomba</string>
     <string name="combov2_not_paired">Não emparelhado com uma bomba</string>
-    <string name="combov2_pump_terminated_connection">Conexão da bomba encerrada</string>
     <string name="combov2_warning">Alerta da Accu-Chek Combo</string>
     <string name="combov2_error">Erro da Accu-Chek Combo</string>
     <string name="combov2_warning_4">Ligue para a linha de suporte técnico para obter uma atualização</string>
@@ -113,8 +112,6 @@ botão ao mesmo tempo para cancelar o emparelhamento)\n
     <string name="combov2_short_status_battery_state_full">cheio</string>
     <string name="combov2_automatic_reservoir_entry">Detectar automaticamente e inserir alteração de reservatório insulina</string>
     <string name="combov2_automatic_battery_entry">Autodetectar e inserir automaticamente a mudança de bateria</string>
-    <string name="combov2_note_reservoir_change">Alteração de reservatório de insulina inserida automaticamente pelo driver combov2</string>
-    <string name="combov2_note_battery_change">Alteração da bateria inserida automaticamente pelo driver combov2</string>
     <string name="combov2_timezone_changed">Fuso horário alterado</string>
     <string name="combov2_datetime_changed">Data e/ou hora alterada</string>
     <string name="combov2_dst_started">Horário de verão (DST) iniciado</string>

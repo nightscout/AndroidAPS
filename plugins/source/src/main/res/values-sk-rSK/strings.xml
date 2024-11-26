@@ -30,8 +30,6 @@
     <string name="random_bg">Náhodná glykémia</string>
     <string name="description_source_random_bg">Vygeneruj náhodné dáta glykémií (iba Demo režim)</string>
     <string name="random_bg_short">Gly</string>
-    <string name="do_xdrip_upload_title">Odosielať glykémie do xDrip+</string>
-    <string name="do_xdrip_upload_summary">V xDrip+ vyberte zdroj dát 640g/Eversense</string>
     <string name="bgsource_upload">Nastavenie nahrávania glykémie</string>
     <string name="dexcom_log_ns_sensor_change_title">Ulož výmenu senzora do NS</string>
     <string name="dexcom_log_ns_sensor_change_summary">Vytvoriť udalosť \"Výmena senzora\" v NS automaticky pri spustení senzora</string>

@@ -3,11 +3,9 @@
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_shortname">EOP2</string>
     <string name="eopatch_pump_description">EOPatch2 / GlucoMen Day를 위한 펌프 통합</string>
-    <string name="category_alerts">경고</string>
     <string name="low_reservoir">레저버 적음 경고</string>
     <string name="patch_expiration_reminders">패치 만료 알림</string>
     <string name="patch_buzzer_reminders">패치 신호 알림</string>
-    <string name="time_format_a_h_mm">h:mm a</string>
     <string name="eopatch_ble_status">블루투스 상태</string>
     <string name="eopatch_serial_number">시리얼 넘버</string>
     <string name="eopatch_lot_number">Lot 넘버</string>
@@ -26,7 +24,6 @@
     <string name="time_1hr">1 시간</string>
     <string name="time_1hr_30min">1 시간 30 분</string>
     <string name="time_2hr">2 시간</string>
-    <string name="all_blank">\u0020</string>
     <string name="patch_safe_deactivation_desc">새로운 Patch로 변경하기 위해, 현재 Patch는 폐기되어야 합니다. Patch의 모든 인슐린 주입은 취소될 것입니다.</string>
     <string name="patch_discard_complete_title">Patch의 폐기가 완료되었습니다.</string>
     <string name="patch_discard_complete_desc">Patch가 비활성화되었습니다. \nPatch를 폐기하십시오.\n몸에 부착되어 있는 patch를 제거하십시오.</string>
@@ -38,9 +35,6 @@
     <string name="patch_remaining_usage_period">남은 시간</string>
     <string name="patch_finish">종료</string>
     <string name="patch_forced_discard">폐기</string>
-    <string name="patch_comm_error_during_discard_status">폐기 중 patch 폐기 통신 오류가 발생함 </string>
-    <string name="patch_comm_error_during_discard_desc">일반적인 비활성화의 경우, \'재시도\'를 누르세요.\n일방적인 비활성화인 경우, \'폐기\'를 누르세요.</string>
-    <string name="patch_comm_error_during_discard_desc_1">일반적인 비활성화의 경우, \'재시도\'를 누르세요.</string>
     <string name="patch_comm_error_during_discard_desc_2">일방적인 비활성화인 경우, \'폐기\'를 누르세요.</string>
     <string name="patch_manually_turning_off_alarm_title">Patch 알람을 수동으로 끄기</string>
     <string name="patch_manually_turning_off_alarm_desc_1">통신 오류 중 일방적으로 비활성화되었다면, patch에서 알람이 멈추지 않고 울릴 것입니다.</string>
@@ -82,8 +76,6 @@
     <string name="patch_expiration_reminder_setting_title">Patch 만료 알림</string>
     <string name="patch_activate_reminder_title">Patch 활성화 알림</string>
     <string name="patch_activate_reminder_desc">Patch 활성화가 완료되지 않았습니다.\n 계속 진행합니다.</string>
-    <string name="patch_communication_check">Patch 통신 확인</string>
-    <string name="patch_communication_check_status_1">Patch 통신 확인중…</string>
     <string name="patch_communication_check_helper_1">스마트폰을 patch에 가까이 가져오십시오.</string>
     <string name="patch_communication_check_helper_2">다른 장소로 옮겨서 다시 시도해주세요.</string>
     <string name="patch_communication_failed">통신 오류</string>
@@ -114,7 +106,6 @@
     <string name="retry">재시도</string>
     <string name="string_caution_not_remove_needle_cap">[Caution] 추가 지시 전까지 바늘 캡과 접착제 뒷면을 제거하지 마십시오.</string>
     <string name="string_are_you_sure_to_discard_current_patch">현재 patch를 폐기하는 것인 확실합니까?</string>
-    <string name="string_unconfirmed_bolus_info_discard_confirm_message">확인되지 않은 bolus 정보로 인하여, bolus 계산기를 %s까지 사용할 수 없습니다.\n\n현재 patch를 폐기하는 것인 확실합니까?</string>
     <string name="needle_insertion_error_1">바늘 삽입 오류</string>
     <string name="needle_insertion_error_2">레버를 돌리고 레버 제거 부위의 방향이 일직선인지 확인한 뒤 \'재시도\'를 누르세요.</string>
     <string name="needle_insertion_error_3">Patch를 비활성화하기 위해 \'폐기\'를 누르세요.</string>
@@ -126,7 +117,6 @@
     <string name="finish">종료</string>
     <string name="string_temp_basal_remained_hhmm">남은 시간: %1$s:%2$s</string>
     <string name="next">다음</string>
-    <string name="patch_connection_fail">Patch 통신 확인 후 재시도하세요.</string>
     <string name="string_pause_failed">중단 실패함</string>
     <string name="string_resume_failed">재시작 실패함</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE, d MMM, yyyy hh:mm a</string>

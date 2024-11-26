@@ -2,9 +2,6 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_watchface_large">AAPS (Большой)</string>
-    <string name="label_watchface_big_chart">AAPS (Крупный график)</string>
-    <string name="label_watchface_no_chart">AAPS (Без графика)</string>
     <string name="label_watchface_circle">AAPS (круглый)</string>
     <string name="label_watchface_digital_style">AAPS (ЦифровойСтиль)</string>
     <string name="label_watchface_custom">AAPS (настраиваемый)</string>
@@ -18,7 +15,6 @@
     <string name="msg_warning_sync">Нет данных начиная с %1$s! Убедитесь, что AAPS на телефоне отправляет данные на часы</string>
     <string name="msg_warning_old">Данные AAPS отстают на %1$s! Проверьте сенсор, xDrip+, NS, конфигурацию AAPS, другое!</string>
     <string name="pref_vibrate_on_bolus">Вибрировать при болюсе</string>
-    <string name="pref_units_for_actions">Единицы для начала действий</string>
     <string name="units_short">ед</string>
     <string name="pref_display_settings">Экран</string>
     <string name="pref_graph_settings">График</string>
@@ -62,10 +58,6 @@
     <string name="pref_quick_righty">Быстрый правосторонний</string>
     <string name="pref_quick_lefty">Быстрый левосторонний</string>
     <string name="pref_modern_sparse">Современный разреженный</string>
-    <string name="pref_low">Низкий</string>
-    <string name="pref_medium">Средний</string>
-    <string name="pref_high">Высокий</string>
-    <string name="pref_auto">Авто</string>
     <string name="pref_big_numbers">Цифры крупно</string>
     <string name="pref_ring_history">Показывать историю в кольце</string>
     <string name="pref_light_ring_history">Показывать историю в кольце менее подробно</string>
@@ -119,7 +111,6 @@
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Произвольное количество</string>
     <string name="action_confirm">ПОДТВЕРДИТЬ</string>
     <string name="action_timeshift">смещение по времени</string>
-    <string name="action_bolus">Болюс</string>
     <string name="bolus_progress">Вводится болюс</string>
     <string name="press_to_cancel">нажмите для отмены</string>
     <string name="cancel_bolus">ОТМЕНИТЬ БОЛЮС</string>
@@ -189,17 +180,11 @@
     <string name="no_iob_u">--ед</string>
     <string name="no_cob_g">--г</string>
     <string name="no_tmp_basal_u_h">-.--ед/ч</string>
-    <string name="uploader_na">Ед: --%</string>
-    <string name="no_status">Сост: --</string>
-    <string name="time_stamp_na_min_ago">-- Мин. назад</string>
-    <string name="delta_na">--- мг/дл</string>
-    <string name="no_loop_status">Нет статуса</string>
     <string name="cob_000g">000г</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00 ед</string>
     <string name="snooze_alert">Отложить оповещения AAPS</string>
     <string name="sending_snooze">Отправка команды отложить оповещения AAPS</string>
-    <string name="short_hour">ч</string>
     <string name="week_short">н</string>
     <string name="day_short">д</string>
     <string name="hour_short">ч</string>

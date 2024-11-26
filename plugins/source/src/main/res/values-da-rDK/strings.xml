@@ -30,8 +30,6 @@
     <string name="random_bg">Tilfældigt BS</string>
     <string name="description_source_random_bg">Generér tilfældig BS-data (kun demotilstand)</string>
     <string name="random_bg_short">BS</string>
-    <string name="do_xdrip_upload_title">Seng BS data til xDrip+</string>
-    <string name="do_xdrip_upload_summary">I xDrip+, vælg 640g/Eversense som datakilde</string>
     <string name="bgsource_upload">BS upload indstillinger</string>
     <string name="dexcom_log_ns_sensor_change_title">Log sensorændring til NS</string>
     <string name="dexcom_log_ns_sensor_change_summary">Opret begivenhed \"Sensorskift\" i NS automatisk ved start af sensor</string>

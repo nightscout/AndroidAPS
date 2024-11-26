@@ -2,9 +2,6 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_watchface_large">AAPS(μεγάλο)</string>
-    <string name="label_watchface_big_chart">AAPS(μεγαλο_γράφημα)</string>
-    <string name="label_watchface_no_chart">AAPS(χωρίς_γράφημα)</string>
     <string name="label_watchface_circle">AAPS(Κυκλικό)</string>
     <string name="label_watchface_digital_style">AAPS(ψηφιακό)</string>
     <string name="label_watchface_custom">AAPS(προσαρμοσμένα_χαρακτηριστικά)</string>
@@ -18,7 +15,6 @@
     <string name="msg_warning_sync">Δεν ελήφθησαν δεδομένα από τις %1$s! Ελέγξτε αν το AAPS στο τηλέφωνο στέλνει δεδομένα στο ρολόι</string>
     <string name="msg_warning_old">Τα δεδομένα AAPS είναι %1$s παλιά! Ελέγξτε τον αισθητήρα, το xDrip +, το NS, το AAPS ή άλλα!</string>
     <string name="pref_vibrate_on_bolus">Δόνηση στην Δόση Bolus</string>
-    <string name="pref_units_for_actions">Μονάδες για Ενέργειες</string>
     <string name="units_short">U</string>
     <string name="pref_display_settings">Προβολή</string>
     <string name="pref_graph_settings">Γράφημα</string>
@@ -55,10 +51,6 @@
     <string name="pref_quick_righty">Γρήγορα δεξιά</string>
     <string name="pref_quick_lefty">Γρήγορα αριστερά</string>
     <string name="pref_modern_sparse">Σύγχρονο Sparse</string>
-    <string name="pref_low">Χαμηλή</string>
-    <string name="pref_medium">Μέσο</string>
-    <string name="pref_high">Υψηλό</string>
-    <string name="pref_auto">Αυτόματο</string>
     <string name="pref_big_numbers">Μεγάλοι Αριθμοί</string>
     <string name="pref_ring_history">Ιστορικό Ring</string>
     <string name="pref_light_ring_history">Ιστορικό Ελαφρού Ring</string>
@@ -112,7 +104,6 @@
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Ελεύθερη ποσότητα</string>
     <string name="action_confirm">ΕΠΙΒΕΒΑΙΩΣΗ</string>
     <string name="action_timeshift">αλλαγή ώρας</string>
-    <string name="action_bolus">Bolus</string>
     <string name="bolus_progress">Πρόοδος Bolus</string>
     <string name="press_to_cancel">πιέστε για ακύρωση</string>
     <string name="cancel_bolus">ΑΚΥΡΩΣΗ BOLUS</string>
@@ -181,17 +172,11 @@
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
     <string name="no_tmp_basal_u_h">-.--U/ω</string>
-    <string name="uploader_na">U: --%</string>
-    <string name="no_status">S: --</string>
-    <string name="time_stamp_na_min_ago">-- Λεπτά πριν</string>
-    <string name="delta_na">--- mg/dl</string>
-    <string name="no_loop_status">Κατάσταση Χωρίς Κύκλωμα</string>
     <string name="cob_000g">000g</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00U</string>
     <string name="snooze_alert">Αναβολή Ειδοποίησης AAPS</string>
     <string name="sending_snooze">Αποστολή Αναβολής στο AAPS</string>
-    <string name="short_hour">ω</string>
     <string name="week_short">εβδ</string>
     <string name="day_short">ημ</string>
     <string name="hour_short">ω</string>

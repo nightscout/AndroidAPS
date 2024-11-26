@@ -13,6 +13,8 @@
     <string name="cwf_comment_cob2_ext">Hodnota COB (z AAPSClient nebo AAPSClient2)</string>
     <string name="cwf_comment_delta_ext">Krátkodobá delta glykémie (z AAPSClient nebo AAPSClient2)</string>
     <string name="cwf_comment_avg_delta_ext">Průměrná delta glykémie (15min) (z AAPSClient nebo AAPSClient2)</string>
+    <string name="cwf_comment_temp_target_ext">Dočasný cíl nebo DočasnýCílDolní - DočasnýCílHorní (z AAPSClient nebo AAPSClient2)</string>
+    <string name="cwf_comment_reservoir_ext">Stav zásobníku (z AAPSClient nebo AAPSClient2)</string>
     <string name="cwf_comment_rig_battery_ext">Celkový stav baterie smyčky (%) (z AAPSClient nebo AAPSClient2)</string>
     <string name="cwf_comment_basalRate_ext">Bazál (z AAPSClient nebo AAPSClient2)</string>
     <string name="cwf_comment_bgi_ext">Hodnota BGI (z AAPSClient nebo AAPSClient2)</string>
@@ -28,6 +30,8 @@
     <string name="cwf_comment_cob2">Hodnota COB</string>
     <string name="cwf_comment_delta">Krátkodobý průměr</string>
     <string name="cwf_comment_avg_delta">Průměrný rozdíl glykémií (15min)</string>
+    <string name="cwf_comment_temp_target">Dočasný cíl nebo DočasnýCílDolní - DočasnýCílHorní</string>
+    <string name="cwf_comment_reservoir">Stav zásobníku</string>
     <string name="cwf_comment_uploader_battery">Baterie telefonu (%)</string>
     <string name="cwf_comment_rig_battery">Baterie smyčky (%)</string>
     <string name="cwf_comment_basalRate">Bazální dávka</string>

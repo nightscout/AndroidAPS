@@ -120,8 +120,6 @@
     <string name="automation_event">Automasjonshendelse</string>
     <string name="reorder_label">Endre rekkefølge</string>
     <string name="user_action">Brukerhandling</string>
-    <string name="remove_automation">Fjern automatisering</string>
-    <string name="sort_automation">Sorter automatisering</string>
     <string name="remove_selected_items">Fjern valgte elementer</string>
     <string name="count_selected">%1$d valgt</string>
     <string name="system_automation">Systemautomatisering</string>

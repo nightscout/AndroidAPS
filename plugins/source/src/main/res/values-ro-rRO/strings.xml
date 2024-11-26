@@ -30,8 +30,6 @@
     <string name="random_bg">Glicemie aleatoare</string>
     <string name="description_source_random_bg">Generează glicemie aleatoare (doar mod Demo)</string>
     <string name="random_bg_short">Glicemie</string>
-    <string name="do_xdrip_upload_title">Trimite date glicemie la xDrip+</string>
-    <string name="do_xdrip_upload_summary">În xDrip+, selectează 640g/Eversense sursă de date</string>
     <string name="bgsource_upload">Setări înregistrare glicemie</string>
     <string name="dexcom_log_ns_sensor_change_title">Înregistrează schimbarea senzorului în NS</string>
     <string name="dexcom_log_ns_sensor_change_summary">Crează eveniment ”Schimbare Senzor” în NS la pornirea senzorului</string>

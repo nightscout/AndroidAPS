@@ -89,6 +89,7 @@
     <string name="removerecord">Supprimer l\'enregistrement</string>
     <string name="loopisdisabled">La Boucle est désactivée</string>
     <string name="alarm">Alarme</string>
+    <string name="exportsettings">Exporter les paramètres</string>
     <string name="disableloop">Désactiver la Boucle</string>
     <string name="enableloop">Activer la Boucle</string>
     <string name="resumeloop">Reprendre la boucle</string>
@@ -113,6 +114,7 @@
     <string name="bg_label">Gly</string>
     <string name="calibration">Étalonnage</string>
     <string name="alarminxmin">Alerter dans %1$d min</string>
+    <string name="treatmentdeliveryerror">Erreur lors du Bolus. Vérifiez manuellement la quantité réellement injectée ainsi que les glucides actifs</string>
     <string name="bolus_reminder">Rappel bolus</string>
     <string name="duration_label">Durée</string>
     <string name="shortgramm">g</string>
@@ -176,6 +178,7 @@
     <string name="extended_bolus_full">E %1$.2f U/h @%2$s %3$s/%4$s min</string>
     <string name="extended_bolus_medium">%1$.2f U/h %2$s/%3$s\'</string>
     <string name="nav_export">Exporter les paramètres</string>
+    <string name="location_permission_not_granted">Autorisation de localisation non accordée. À autoriser dans les paramètres Android.</string>
     <!--    Protection-->
     <string name="wrongpassword">Mot de passe incorrect</string>
     <string name="wrongpin">Code PIN incorrect</string>
@@ -206,10 +209,12 @@
     <string name="careportal_bgcheck">Contrôle Glycémie</string>
     <string name="careportal_mbg">Gly manuelle/Calib.</string>
     <string name="careportal_announcement">Notification</string>
+    <string name="careportal_settings_export">Export des paramètres</string>
     <string name="careportal_note">Remarque</string>
     <string name="careportal_question">Question</string>
     <string name="careportal_exercise">Activité Physique</string>
     <string name="careportal_announcement_message">Annonce : %1$s</string>
+    <string name="careportal_settings_export_message">Export des paramètres : %1$s</string>
     <string name="careportal_note_message">Note : %1$s</string>
     <string name="careportal_question_message">Question : %1$s</string>
     <string name="careportal_exercise_message">Exercice : %1$s</string>
@@ -242,6 +247,7 @@
     <string name="activity">Activité</string>
     <string name="wear">Montre</string>
     <string name="automation">Automatisation</string>
+    <string name="settingsexport">Export des paramètres</string>
     <string name="custom">Manuel</string>
     <string name="loop">Boucle</string>
     <string name="ns">NS</string>
@@ -343,6 +349,7 @@
     <string name="delete_future_treatments">Supprimer traitements futurs</string>
     <string name="uel_export_settings">PARAMÈTRES EXPORTÉS</string>
     <string name="uel_import_settings">PARAMÈTRES IMPORTÉS</string>
+    <string name="uel_select_directory">SÉLECTIONNEZ LE REPERTOIRE</string>
     <string name="uel_reset_databases">BASE DE DONNÉES RÉINITIALISÉE</string>
     <string name="uel_reset_aps_results">RÉINITIALISER LES RÉSULTATS APS</string>
     <string name="uel_cleanup_databases">SUPPRIMER LES DONNÉES</string>
@@ -506,7 +513,18 @@
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Le mot de passe principal vous sera demandé pour décrypter les préférences exportées.</string>
     <!-- <unattended_export> -->
+    <string name="export_ok">OK</string>
+    <string name="export_warning">Avertissement</string>
+    <string name="export_expired">Expiré</string>
+    <string name="export_disabled">Désactivé</string>
+    <string name="export_failed">Échec</string>
+    <string name="export_alert">ALERTE</string>
     <!-- <unattended_export result messages> -->
+    <string name="export_result_message_exported">Paramètres exportés</string>
+    <string name="export_result_message_failed">Échec de l\'export des paramètres !</string>
+    <string name="export_result_message_about_to_expire">Paramètres exportés : le mot de passe va bientôt expirer. Exportez manuellement et (re)entrez le mot de passe.</string>
+    <string name="export_result_message_expired">L\'export des paramètres a été annulée : le mot de passe a expiré. Exporter manuellement et (re)entrer!</string>
+    <string name="export_result_message_disabled">Avertissement (automatisation): L\'export des paramètres n\'est pas activée !</string>
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">réduire %1$s par %2$s</string>
     <string name="a11y_plus_button_description">incrémenter %1$s par %2$s</string>

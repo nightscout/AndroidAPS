@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.protection.SecureEncrypt
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.storage.Storage
 import app.aaps.core.objects.crypto.CryptoUtil
+import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.hexStringToByteArray
 import app.aaps.core.utils.toHex
 import app.aaps.plugins.configuration.R
@@ -39,24 +40,29 @@ class EncryptedPrefsFormat @Inject constructor(
     @Inject lateinit var secureEncrypt: SecureEncrypt
 
     companion object {
+
         private const val KEY_CONSCIENCE = "if you remove/change this, please make sure you know the consequences!"
         private val FORMAT_TEST_REGEX = Regex("(\"format\"\\s*:\\s*\"aaps_[^\"]*\")")
     }
 
     override fun isPreferencesFile(file: DocumentFile, preloadedContents: String?): Boolean {
         return if (file.name?.endsWith(".json") == true) {
-            val contents = preloadedContents ?: storage.getFileContents(context.contentResolver, file)
-            FORMAT_TEST_REGEX.containsMatchIn(contents)
             try {
-                // test valid JSON object
-                JSONObject(contents)
-                true
-            } catch (e: Exception) {
+                val contents = preloadedContents ?: storage.getFileContents(context.contentResolver, file)
+
+                FORMAT_TEST_REGEX.containsMatchIn(contents)
+                try {
+                    // test valid JSON object
+                    JSONObject(contents)
+                    true
+                } catch (_: Exception) {
+                    false
+                }
+            } catch (_: SecurityException) {
+                ToastUtils.errorToast(context, rh.gs(R.string.error_accessing_filesystem_select_aaps_directory_properly))
                 false
             }
-        } else {
-            false
-        }
+        } else false
     }
 
     override fun savePreferences(file: DocumentFile, prefs: Prefs, masterPassword: String?) {
@@ -133,6 +139,9 @@ class EncryptedPrefsFormat @Inject constructor(
             throw PrefFileNotFoundError(file.name ?: "UNKNOWN")
         } catch (_: IOException) {
             throw PrefIOError(file.name ?: "UNKNOWN")
+        } catch (_: SecurityException) {
+            ToastUtils.errorToast(context, rh.gs(R.string.error_accessing_filesystem_select_aaps_directory_properly))
+            throw PrefFileNotFoundError(file.name ?: "UNKNOWN")
         }
     }
 
@@ -186,7 +195,7 @@ class EncryptedPrefsFormat @Inject constructor(
                                         issues.add(rh.gs(R.string.prefdecrypt_issue_modified))
                                     }
 
-                                } catch (e: JSONException) {
+                                } catch (_: JSONException) {
                                     secure = PrefsStatusImpl.ERROR
                                     issues.add(rh.gs(R.string.prefdecrypt_issue_parsing))
                                 }
@@ -239,9 +248,9 @@ class EncryptedPrefsFormat @Inject constructor(
 
             return Prefs(entries, metadata)
 
-        } catch (e: FileNotFoundException) {
+        } catch (_: FileNotFoundException) {
             throw PrefFileNotFoundError("")
-        } catch (e: IOException) {
+        } catch (_: IOException) {
             throw PrefIOError("")
         } catch (e: JSONException) {
             throw PrefFormatError("Malformed preferences JSON file: $e")
@@ -252,7 +261,7 @@ class EncryptedPrefsFormat @Inject constructor(
         contents?.let {
             return try {
                 loadMetadata(JSONObject(contents))
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 mutableMapOf()
             }
         }

@@ -3,11 +3,9 @@
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_shortname">EOP2</string>
     <string name="eopatch_pump_description">Integrare cu pompă pentru EOPatch2 / GlucoMen Day</string>
-    <string name="category_alerts">Alerte</string>
     <string name="low_reservoir">Alarme de rezervor aproape gol</string>
     <string name="patch_expiration_reminders">Memento de expirare patch</string>
     <string name="patch_buzzer_reminders">Memento audio patch</string>
-    <string name="time_format_a_h_mm">h:mm a</string>
     <string name="eopatch_ble_status">Stare BLE</string>
     <string name="eopatch_serial_number">Număr serial</string>
     <string name="eopatch_lot_number">Număr Lot</string>
@@ -26,7 +24,6 @@
     <string name="time_1hr">1 oră</string>
     <string name="time_1hr_30min">1 oră şi 30 min</string>
     <string name="time_2hr">2 ore</string>
-    <string name="all_blank">\u0020</string>
     <string name="patch_safe_deactivation_desc">Pentru a instala un nou Patch, cel curent trebuie aruncat. Toate eliberările de insulină din actualul Patch vor fi anulate.</string>
     <string name="patch_discard_complete_title">Oprirea Patch-ului este finalizată.</string>
     <string name="patch_discard_complete_desc">Patch a fost dezactivat.\nAruncaţi Patch-ul.\nScoateţi Patch-ul ataşat corpului dumneavoastră.</string>
@@ -38,9 +35,6 @@
     <string name="patch_remaining_usage_period">Timp rămas</string>
     <string name="patch_finish">Finalizare</string>
     <string name="patch_forced_discard">Elimină</string>
-    <string name="patch_comm_error_during_discard_status">Ignorați eroarea de comunicare Patch în timpul renunțării </string>
-    <string name="patch_comm_error_during_discard_desc">Pentru dezactivarea normală, apăsați \'Reîncercați\'.\nPentru dezactivare unilaterală, apăsați \'Discard\'.</string>
-    <string name="patch_comm_error_during_discard_desc_1">Pentru dezactivarea normală, apăsați „Reîncercă”.</string>
     <string name="patch_comm_error_during_discard_desc_2">Pentru dezactivare unilaterală, apăsați „Discard”.</string>
     <string name="patch_manually_turning_off_alarm_title">Oprire manuală a alarmei Patch-ului</string>
     <string name="patch_manually_turning_off_alarm_desc_1">Dacă este dezactivat unilateral în timpul unei erori de comunicare, se poate ca alarma Patch-ului să nu se oprească din sunat.</string>
@@ -83,8 +77,6 @@ prin apăsarea manuală a portului de oprire a alarmei de pe Patch aşa cum se a
     <string name="patch_expiration_reminder_setting_title">Memento de expirare patch</string>
     <string name="patch_activate_reminder_title">Memento de activare patch</string>
     <string name="patch_activate_reminder_desc">Activarea patchului nu este completă..\nContinuă.</string>
-    <string name="patch_communication_check">Verificare comunicare cu patchul</string>
-    <string name="patch_communication_check_status_1">Se verifică comunicarea cu patchul…</string>
     <string name="patch_communication_check_helper_1">Apropiați dispozitivul smart de patch.</string>
     <string name="patch_communication_check_helper_2">Vă rugăm să schimbați locația și să reîncercați.</string>
     <string name="patch_communication_failed">Eroare de comunicare</string>
@@ -115,7 +107,6 @@ prin apăsarea manuală a portului de oprire a alarmei de pe Patch aşa cum se a
     <string name="retry">Încearcă din nou</string>
     <string name="string_caution_not_remove_needle_cap">[Caution] NU scoateţi capacul acului şi suportul adeziv până când nu vi se cere acest lucru.</string>
     <string name="string_are_you_sure_to_discard_current_patch">Sunteți sigur că renunțați la patchul curent?</string>
-    <string name="string_unconfirmed_bolus_info_discard_confirm_message">Din cauza unor informații neconfirmate despre bolus, calculatorul de bolus nu poate fi folosit până la %s.\n\nSunteți sigur că vreți să renunțați la Patch-ul curent?</string>
     <string name="needle_insertion_error_1">Eroare la inserarea acului.</string>
     <string name="needle_insertion_error_2">Verificaţi că direcția orificiului rămas după ce rotiţi pârghia este dreaptă şi apoi apăsaţi \'Reîncearcă\'.</string>
     <string name="needle_insertion_error_3">Atingeți \'Dezactivează\' pentru a dezactiva Patch-ul.</string>
@@ -127,7 +118,6 @@ prin apăsarea manuală a portului de oprire a alarmei de pe Patch aşa cum se a
     <string name="finish">Finalizare</string>
     <string name="string_temp_basal_remained_hhmm">timp rămas: %1$s:%2$s</string>
     <string name="next">Următor</string>
-    <string name="patch_connection_fail">Reîncercați după ce se verifică comunicația cu patchul.</string>
     <string name="string_pause_failed">Suspendarea a eșuat.</string>
     <string name="string_resume_failed">Reluarea a eşuat.</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE, d MMM, yyyy hh:mm a</string>

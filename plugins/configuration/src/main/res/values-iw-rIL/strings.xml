@@ -45,8 +45,6 @@
     <string name="readstatus">קרא סטטוס</string>
     <string name="data_choices">אפשרויות נתונים</string>
     <string name="fabric_upload">העלאה ל-Fabric</string>
-    <string name="allow_automated_crash_reporting">אפשר דיווח אוטומטי על קריסה ושליחת נתוני השימוש למפתחים דרך שירות fabric.io.</string>
-    <string name="summary_email_for_crash_report">אמצעי הזיהוי יצורף לדיווחי קריסה על מנת שנוכל ליצור קשר במקרים דחופים. אין זו חובה.</string>
     <string name="identification">אמצעי זיהוי (מייל, פייסבוק או דיסקורד וכו\')</string>
     <string name="request">בקשה</string>
     <string name="apsmode_title">מצב APS</string>
@@ -131,11 +129,9 @@
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">יוצא לפני %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">יוצא ב-%1$s</string>
     <string name="exported_less_than_hour_ago">יוצא לפני פחות משעה</string>
-    <string name="in_directory" comment="placeholder is for exported file path">בספרייה: %1$s</string>
     <string name="preferences_import_list_title">בחרו קובץ לייבוא</string>
     <string name="metadata_warning_different_flavour">ההעדפות נוצרו בגרסה אחרת של AAPS (%1$s) בעוד גירסתכם %2$s. \n\n חלק מההגדרות עלולות להיות חסרות או בלתי תקינות - לאחר הייבוא נא לבדוק ולעדכן את ההעדפות.</string>
     <string name="metadata_warning_different_device">ההעדפות נוצרו במכשיר אחר. זה בסדר אם ייבאתם אותן ממכשיר ישן או שונה, אך וודאו שההעדפות שהובאו נכונות!</string>
-    <string name="metadata_warning_outdated_format">אתם משתמשים פורמט מיושן מגרסאות ישנות של AAPS, שאינו מאובטח! השתמשו בו רק כמוצא אחרון, אם אין לכם קובץ הגדרות בפורמט העדכני, JSON.</string>
     <string name="metadata_warning_old_export">ההעדפות המיובאות הן כבר בנות %1$s ימים! אולי יש לכם עדפות עדכניות יותר או שבחרתם קובץ לא נכון? זכרו לייצא את ההעדפות באופן סדיר!</string>
     <string name="metadata_warning_date_format">פורמט תאריך ושעה לא חוקי!</string>
     <string name="metadata_warning_different_version">ההעדפות נוצרו בגרסה משנית ישנה של AAPS. זה בסדר אם ייבאתם אותן לאחר שדרוג גרסה, אך וודאו שההעדפות שהובאו נכונות!</string>
@@ -162,6 +158,6 @@
     <string name="metadata_label_device_model">מייצא את דגם המכשיר</string>
     <string name="metadata_label_encryption">הצפנת קבצים</string>
     <string name="metadata_format_new">פורמט הצפנה חדש</string>
-    <string name="metadata_format_debug">פורמט דיבאג חדש (בלתי מוצפן)</string>
     <string name="metadata_format_other">פורמט ייצוא לא ידוע</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">שגיאה בגישה למערכת הקבצים. אנא בחרו את תיקיית AAPS כראוי.</string>
 </resources>

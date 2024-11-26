@@ -218,8 +218,6 @@
     <string name="overview_buttons_selection">按鈕</string>
     <string name="show_calibration_button_summary">向xDrip+發送校準或打開BYODA校準對話框</string>
     <string name="show_cgm_button_summary">打開xDrip+或BYODA，返回按鈕返回AAPS</string>
-    <string name="dexcom_app_not_installed">未安裝Dexcom應用。</string>
-    <string name="dexcom_app_not_detected">請更新您的Dexcom應用到支援的版本</string>
     <string name="error_starting_cgm">無法啟動CGM應用。請確保其已安裝。</string>
     <string name="not_available_full">不可用</string>
     <string name="constraints_violation">約束違反</string>
@@ -302,7 +300,6 @@
     <string name="skin">外觀</string>
     <string name="cannula_usage">使用情況：</string>
     <!--    Iob-->
-    <string name="send_logfiles">將今天的日誌文件與此時間一起發送給開發人員。意外情況。</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">顯示持續通知，簡要概述您的循環正在執行的操作</string>
     <string name="old_data">舊資料</string>

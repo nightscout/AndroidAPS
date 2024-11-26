@@ -45,8 +45,6 @@
     <string name="readstatus">Статус \'чтение\'</string>
     <string name="data_choices">Отбор данных</string>
     <string name="fabric_upload">Загрузка отчета для разработчиков</string>
-    <string name="allow_automated_crash_reporting">Разрешить отправлять сообщения о неполадках и данные об использовании опций разработчикам при помощи сервиса fabric.io.</string>
-    <string name="summary_email_for_crash_report">Эта идентификация будет прикреплена к отчетам о сбоях, чтобы мы могли связаться с вами в экстренных случаях. Это опция.</string>
     <string name="identification">Идентификация (электронная почта, ник в Facebook или Discord и т. п)</string>
     <string name="request">Запрос</string>
     <string name="apsmode_title">Режим APS</string>
@@ -133,11 +131,9 @@
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">экспортировано %1$s назад</string>
     <string name="exported_at" comment="at placeholder we add export date">экспортировано в %1$s</string>
     <string name="exported_less_than_hour_ago">экспортировано менее часа назад</string>
-    <string name="in_directory" comment="placeholder is for exported file path">в каталоге: %1$s</string>
     <string name="preferences_import_list_title">Выберите файл для импорта</string>
     <string name="metadata_warning_different_flavour">Параметры были созданы с другим вариантом AAPS (%1$s) в то время как у вас: %2$s.\n\nНекоторые параметры могут отсутствать или быть недопустимы-после импорта проверьте и обновите параметры.</string>
     <string name="metadata_warning_different_device">Параметры созданы на другом устройстве. Это нормально, если вы импортируете из старого/другого телефона, но убедитесь, что импортированные параметры - верные!</string>
-    <string name="metadata_warning_outdated_format">Вы используете устаревший формат из старых версий AAPS, который не безопасен! Используйте его только в крайнем случае, если у вас нет экспорта в текущем формате JSON.</string>
     <string name="metadata_warning_old_export">Импортируемым параметрам уже %1$s дней! Может быть у вас есть более актуальные параметры или вы выбрали неправильный файл? Не забудьте регулярно экспортировать параметры!</string>
     <string name="metadata_warning_date_format">Недопустимый формат даты и времени!</string>
     <string name="metadata_warning_different_version">Параметры из другой вспомогательной версии приложения. Если импортируете после обновления, это нормально но после импорта проверьте, все ли предпочтения по-прежнему верны!</string>
@@ -164,7 +160,6 @@
     <string name="metadata_label_device_model">Модель экспортируемого устройства</string>
     <string name="metadata_label_encryption">Шифрование файла</string>
     <string name="metadata_format_new">Новый зашифрованный формат</string>
-    <string name="metadata_format_debug">Новый формат отладки (незашифрованный)</string>
     <string name="metadata_format_other">Неизвестный формат экспорта</string>
     <string name="reset_aps_results">Сбросить результаты APS</string>
 </resources>
