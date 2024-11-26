@@ -135,4 +135,6 @@
     <string name="bolus_error_reason_not_connected">Pompe non connectée</string>
     <string name="bolus_error_reason_already_in_progress">Bolus déjà en cours</string>
     <string name="bolus_error_reason_unable_to_send_command">Impossible d\'envoyer la commande bolus</string>
+    <string name="bolus_error_reason_communication_lost">Délai de récupération de l\'état du bolus dépassé</string>
+    <string name="bolus_error_reason_pump_error">Erreur Pompe</string>
 </resources>
