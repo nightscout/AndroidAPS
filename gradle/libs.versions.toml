@@ -17,7 +17,7 @@ datastorePreferences = "1.1.1"
 
 [plugins]
 android-library = { id = "com.android.library" }
-klint = { id = "org.jlleitschuh.gradle.ktlint", version = "12.1.1" }
+klint = { id = "org.jlleitschuh.gradle.ktlint", version = "12.1.2" }
 moduleDependencyGraph = { id = "com.savvasdalkitsis.module-dependency-graph", version = "0.12" }
 ksp = { id = "com.google.devtools.ksp", version = "2.0.21-1.0.28" }
 
