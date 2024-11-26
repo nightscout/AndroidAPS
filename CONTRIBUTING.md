@@ -6,10 +6,10 @@ this guidelines, to make the development and process of change approval as smoot
 General rules
 =============
 
-* There are plenty of ways you can help, some of them are listed on wiki: 
-  https://wiki.aaps.app/en/latest/Getting-Started/How-can-I-help.html
-* If you wish to help with documentation or translating: 
-  https://wiki.aaps.app/en/latest/translations.html
+* There are plenty of ways you can help, some of them are listed on wiki:
+  https://wiki.aaps.app/en/latest/SupportingAaps/HowCanIHelp.html
+* If you wish to help with documentation or translating:
+  https://wiki.aaps.app/en/latest/SupportingAaps/Translations.html
   
 Development guidelines
 ======================
