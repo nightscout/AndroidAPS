@@ -230,7 +230,7 @@ class MaintenancePlugin @Inject constructor(
     }
 
     override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
-        if (requiredKey != null && !(requiredKey == "data_choice_setting" || requiredKey == "enable_unattended_export")) return
+        if (requiredKey != null && !(requiredKey == "data_choice_setting" || requiredKey == "unattended_export_setting")) return
         val category = PreferenceCategory(context)
         parent.addPreference(category)
         category.apply {
@@ -252,7 +252,7 @@ class MaintenancePlugin @Inject constructor(
             })
 
             addPreference(preferenceManager.createPreferenceScreen(context).apply {
-                key = "enable_unattended_export"
+                key = "unattended_export_setting"
                 title = rh.gs(R.string.unattended_settings_export)
                 addPreference(
                     AdaptiveSwitchPreference(
