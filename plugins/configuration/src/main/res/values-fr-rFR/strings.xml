@@ -47,6 +47,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="readstatus">Statut de lecture</string>
     <string name="data_choices">Choix de données</string>
     <string name="fabric_upload">Téléchargement Fabric</string>
+    <string name="unattended_settings_export">Exportation des paramètres sans surveillance</string>
     <string name="unattended_settings_export_summary">L\'activation permettra de stocker votre mot de passe en toute sécurité sur votre téléphone</string>
     <string name="identification">Identification (email, FB ou pseudo dans Discord, etc)</string>
     <string name="request">Demande</string>
@@ -104,6 +105,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="different_password_used">Ce fichier a été exporté et chiffré avec un mot de passe principal différent. Veuillez renseigner votre ancien mot de passe principal pour déchiffrer le fichier.</string>
     <string name="master_password_will_be_replaced">Suite à l\'importation réussie, le mot de place principal actuel SERA REMPLACÉ par cet ancien mot de passe!</string>
     <string name="exported">Préférences exportées</string>
+    <string name="exported_failed">L\'export des préférences a échoué !</string>
     <string name="filenotfound">Fichier introuvable</string>
     <string name="goto_main_try_again">Veuillez retourner à l\'écran principal et réessayer.</string>
     <string name="restartingapp">Sortir de l’application pour appliquer les nouveaux paramètres.</string>
@@ -164,4 +166,5 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="metadata_format_new">Nouveau format chiffré</string>
     <string name="metadata_format_other">Format d\'export inconnu</string>
     <string name="reset_aps_results">Réinitialiser les résultats d\'APS</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Erreur lors de l’accès au fichier. Sélectionnez le répertoire AAPS correctement.</string>
 </resources>
