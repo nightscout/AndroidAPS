@@ -73,6 +73,7 @@ import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.events.EventResetOpenAPSGui
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.floor
@@ -163,7 +164,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
 
     override fun getIsfMgdl(multiplier: Double, timeShift: Int, caller: String): Double? {
         val start = dateUtil.now()
-        val sensitivity = calculateVariableIsf(start, bg = null)
+        val sensitivity = calculateVariableIsf(start)
         if (sensitivity.second == null)
             uiInteraction.addNotificationValidTo(
                 Notification.DYN_ISF_FALLBACK, start,
@@ -171,7 +172,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
             )
         else
             uiInteraction.dismissNotification(Notification.DYN_ISF_FALLBACK)
-        profiler.log(LTag.APS, String.format("getIsfMgdl() %s %f %s %s", sensitivity.first, sensitivity.second, dateUtil.dateAndTimeAndSecondsString(start), caller), start)
+        profiler.log(LTag.APS, String.format(Locale.getDefault(), "getIsfMgdl() %s %f %s %s", sensitivity.first, sensitivity.second, dateUtil.dateAndTimeAndSecondsString(start), caller), start)
         return sensitivity.second?.let { it * multiplier }
     }
 
@@ -217,16 +218,16 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
     private val dynIsfCache = LongSparseArray<Double>()
 
     @Synchronized
-    private fun calculateVariableIsf(timestamp: Long, @Suppress("SameParameterValue") bg: Double?): Pair<String, Double?> {
+    private fun calculateVariableIsf(timestamp: Long): Pair<String, Double?> {
         val profile = profileFunction.getProfile(timestamp)
         if (profile == null) return Pair("OFF", null)
         if (!preferences.get(BooleanKey.ApsUseDynamicSensitivity)) return Pair("OFF", null)
         val result = persistenceLayer.getApsResultCloseTo(timestamp)
-        if (result?.variableSens != null) {
+        if (result?.variableSens != null && result.variableSens != 0.0) {
             aapsLogger.debug("calculateVariableIsf DB  ${dateUtil.dateAndTimeAndSecondsString(timestamp)} ${result.variableSens}")
             return Pair("DB", result.variableSens)
         }
-        val glucose = bg ?: glucoseStatusProvider.glucoseStatusData?.glucose ?: return Pair("GLUC", null)
+        val glucose = glucoseStatusProvider.glucoseStatusData?.glucose ?: return Pair("GLUC", null)
         // Round down to 30 min and use it as a key for caching
         // Add BG to key as it affects calculation
         val key = timestamp - timestamp % T.mins(30).msecs() + glucose.toLong()
