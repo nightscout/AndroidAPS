@@ -28,7 +28,6 @@
     <string name="objectives_smb_gate">Прочтите статью wiki и увеличьте maxIOB, чтобы SMB заработал как положено! Для начала рассчитайте maxIOB = средний болюс на еду + макс. суточная базальная скорость*3</string>
     <string name="objectives_smb_learned">Ваша цель - пользоваться микроболюсами SMB. Алгоритм Oref1 также помогает с болюсами. Следует вводить не полный болюс на еду, а только часть его, позволив AAPS при необходимости ввести остальную часть болюса. Таким образом нивелируются ошибки при подсчете углеводов. Знаете ли вы, что можно установить процент от результата калькулятора болюса, чтобы уменьшить размер болюса?</string>
     <string name="objectives_auto_objective">Включение автоматизации</string>
-    <string name="objectives_auto_gate">Прочтите документацию по автоматизации. Настройте свои первые простые правила. Вместо действия позвольте AAPS только выводить уведомления. Если вы уверены, что автоматизация инициируется в нужное время, замените уведомление реальными действиями. (https://wiki.aaps.app/en/latest/Usage/Automation.html)</string>
     <string name="objectives_auto_learned">Автоматизация может быть хорошим слугой, но плохим хозяином. Не полагайтесь на нее сверх меры. Не пытайтесь заменить лежащий в основе алгоритм. Проверяйте перед использованием.</string>
     <string name="objectives_bgavailableinns">ГК доступна в NS или Tidepool</string>
     <string name="objectives_pumpstatusavailableinns">Статус помпы доступен в NS или Tidepool</string>
@@ -75,10 +74,6 @@
     <string name="unfinshed_button">Следующий незавершенный</string>
     <string name="requestcode">Код запроса: %1$s</string>
     <string name="objectives_hint">(отметьте все правильные ответы)</string>
-    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/ru/latest/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
-    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html</string>
-    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">Нет подключения к Интернету</string>
     <string name="failedretrievetime">Не удалось загрузить время</string>
     <string name="requirementnotmet">Требования к цели не выполнены</string>

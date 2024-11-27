@@ -13,6 +13,8 @@
     <string name="cwf_comment_cob2_ext">Valeur de GA (AAPSClient ou AAPSClient2)</string>
     <string name="cwf_comment_delta_ext">Delta Glycémie (5min) (AAPSClient ou AAPSClient2)</string>
     <string name="cwf_comment_avg_delta_ext">Delta glycémie moyen (15min) (AAPSClient ou AAPSClient2)</string>
+    <string name="cwf_comment_temp_target_ext">CibleTemporaire ou CibleTempBasse - CibleTempHaute (AAPSClient ou AAPSClient2)</string>
+    <string name="cwf_comment_reservoir_ext">Niveau du réservoir (AAPSClient ou AAPSClient2)</string>
     <string name="cwf_comment_rig_battery_ext">Batterie de la boucle globale (%) (AAPSClient ou AAPSClient2)</string>
     <string name="cwf_comment_basalRate_ext">Débit Basal (AAPSClient ou AAPSClient2)</string>
     <string name="cwf_comment_bgi_ext">Valeur IGly (AAPSClient ou AAPSClient2)</string>
@@ -28,6 +30,8 @@
     <string name="cwf_comment_cob2">Valeur de GA</string>
     <string name="cwf_comment_delta">Delta Glycémie (5min)</string>
     <string name="cwf_comment_avg_delta">Delta glycémie moyen (15min)</string>
+    <string name="cwf_comment_temp_target">CibleTemporaire ou CibleTempBasse - CibleTempHaute</string>
+    <string name="cwf_comment_reservoir">Niveau du réservoir</string>
     <string name="cwf_comment_uploader_battery">Batterie du téléphone (%)</string>
     <string name="cwf_comment_rig_battery">Batterie de la boucle globale (%)</string>
     <string name="cwf_comment_basalRate">Débit Basal</string>

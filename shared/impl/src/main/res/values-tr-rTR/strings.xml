@@ -13,6 +13,8 @@
     <string name="cwf_comment_cob2_ext">AKRB değeri (AAPSClient veya AAPSClient2\'den)</string>
     <string name="cwf_comment_delta_ext">Kısa KŞ delta (AAPSClient veya AAPSClient2\'den)</string>
     <string name="cwf_comment_avg_delta_ext">Ortalama KŞ delta (15dk) (AAPSClient veya AAPPSClient2\'den)</string>
+    <string name="cwf_comment_temp_target_ext">GeçiciHedef veya GeçiciHedefDüşük - GeçiciHedefYüksek (AAPSClient veya AAPSClient2\'den)</string>
+    <string name="cwf_comment_reservoir_ext">Rezervuar Seviyesi (AAPSClient veya AAPSClient2\'den)</string>
     <string name="cwf_comment_rig_battery_ext">Döngü pili (%) (AAPSClient veya AAPSClient2\'den)</string>
     <string name="cwf_comment_basalRate_ext">Bazal Oran (AAPSClient veya AAPSClient2\'den)</string>
     <string name="cwf_comment_bgi_ext">KŞ etkisi değeri (AAPSClient veya AAPPSClient2\'den)</string>
@@ -28,6 +30,8 @@
     <string name="cwf_comment_cob2">AKRB değeri</string>
     <string name="cwf_comment_delta">Kısa KŞ delta</string>
     <string name="cwf_comment_avg_delta">Ortalama KŞ delta (15dk)</string>
+    <string name="cwf_comment_temp_target">GeçiciHedef veya GeçiciHedefDüşük - GeçiciHedefYüksek</string>
+    <string name="cwf_comment_reservoir">Rezervuar Seviyesi</string>
     <string name="cwf_comment_uploader_battery">Telefon pili (%)</string>
     <string name="cwf_comment_rig_battery">Global döngü pili (%)</string>
     <string name="cwf_comment_basalRate">Bazal Oranı</string>

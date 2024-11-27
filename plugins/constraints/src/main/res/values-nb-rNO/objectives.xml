@@ -28,7 +28,7 @@
     <string name="objectives_smb_gate">Du må lese wiki og øke din maxIOB for å få SMB til å fungere. Et godt utgangspunkt er å sette maxIOB til gjennomsnittlig måltidsbolus + 3x max daglig basaldose</string>
     <string name="objectives_smb_learned">Bruk av SMB er en målsetting. Oref1 algoritmen ble designet for å hjelpe deg med dine bolusdoseringer. Det anbefales å ikke gi full bolusdose for måltider, men bare en del av den, og la AAPS styre resten om nødvendig. På denne måten får du større fleksibilitet med hensyn på feilberegnede KH. Visste du at du kan angi en prosentandel for boluskalkulatoren som resulterer i redusert bolusstørrelse?</string>
     <string name="objectives_auto_objective">Aktiver Automatisering</string>
-    <string name="objectives_auto_gate">Les dokumentasjonen på hvordan Automatisering virker. La din første regel være enkel. I stedet for å utføre en behandling kan du få AAPS til å vise en melding i stedet når den aktiveres. Da får du kontrollert at Automatisering aktiveres korrekt og du kan erstatte meldingsvarselet med en behandlingskommando. (https://wiki.aaps.app/en/latest/Usage/Automation.html)</string>
+    <string name="objectives_auto_gate">Les dokumentasjonen om hvordan Automatisering virker. La din første regel være enkel. I stedet for å utføre en behandling kan du få AAPS til å vise en melding i stedet når den aktiveres. Da får du kontrollert at Automatisering aktiveres korrekt og du kan erstatte meldingsvarselet med en behandlingskommando. (https://wiki.aaps.app/en/latest/DailyLifeWithAaps/Automations.html)</string>
     <string name="objectives_auto_learned">Automasjon kan være en god tjener, men en dårlig herre. Ikke bruk den over alt. Ikke prøv å erstatte underliggende algoritme. Test regelen med melding kun før bruk. Automatisering har en rekkeølge.</string>
     <string name="objectives_bgavailableinns">BS tilgjengelig i NS og Tidepool</string>
     <string name="objectives_pumpstatusavailableinns">Pumpestatus tilgjengelig i NS og Tidepool</string>
@@ -75,10 +75,10 @@
     <string name="unfinshed_button">Neste ubesvarte</string>
     <string name="requestcode">Be om kode: %1$s</string>
     <string name="objectives_hint">(kontroller alle riktige svar)</string>
-    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
-    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html</string>
-    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
     <string name="notconnected">Ikke koblet til Internett</string>
     <string name="failedretrievetime">Feil ved henting av tid</string>
     <string name="requirementnotmet">Læringmålets krav er ikke oppfylt</string>

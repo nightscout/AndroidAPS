@@ -38,7 +38,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="exitwizard">Ignorer l\'assistant de configuration</string>
     <string name="setupwizard_loop_description">Appuyez sur le bouton ci-dessous pour autoriser AAPS à suggérer/faire des changements de basal</string>
     <string name="setupwizard_sensitivity_description">Le plugin de Sensibilité est utilisé pour la détection de la Sensibilité et de calcul de glucides actifs. Pour plus d’informations visitez :</string>
-    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/fr/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="setupwizard_aps_description">Sélectionnez un des algorithmes disponibles. Ils sont organisés du plus ancien au plus récent. Les algorithmes les plus récents sont habituellement plus puissants et plus agressifs. De ce fait, si vous êtes un nouvel utilisateur, vous devriez probablement démarrer avec AMA au lieu de choisir un algorithme plus récent. N\'oubliez pas de lire la documentation OpenAPS et en faire la configuration avant utilisation.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Veuillez configurer votre RileyLink ci-dessous. Après avoir sélectionné un RileyLink, il sera possible de continuer l\'installation une fois que le statut de RileyLink sera « Connecté ». Cela peut prendre une minute.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Remarque :</b> Vous pouvez continuer l\'installation une fois la pompe configurée.\n</string>
@@ -47,6 +46,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="readstatus">Statut de lecture</string>
     <string name="data_choices">Choix de données</string>
     <string name="fabric_upload">Téléchargement Fabric</string>
+    <string name="unattended_settings_export">Exportation des paramètres sans surveillance</string>
     <string name="unattended_settings_export_summary">L\'activation permettra de stocker votre mot de passe en toute sécurité sur votre téléphone</string>
     <string name="identification">Identification (email, FB ou pseudo dans Discord, etc)</string>
     <string name="request">Demande</string>
@@ -104,6 +104,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="different_password_used">Ce fichier a été exporté et chiffré avec un mot de passe principal différent. Veuillez renseigner votre ancien mot de passe principal pour déchiffrer le fichier.</string>
     <string name="master_password_will_be_replaced">Suite à l\'importation réussie, le mot de place principal actuel SERA REMPLACÉ par cet ancien mot de passe!</string>
     <string name="exported">Préférences exportées</string>
+    <string name="exported_failed">L\'export des préférences a échoué !</string>
     <string name="filenotfound">Fichier introuvable</string>
     <string name="goto_main_try_again">Veuillez retourner à l\'écran principal et réessayer.</string>
     <string name="restartingapp">Sortir de l’application pour appliquer les nouveaux paramètres.</string>
@@ -164,4 +165,5 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="metadata_format_new">Nouveau format chiffré</string>
     <string name="metadata_format_other">Format d\'export inconnu</string>
     <string name="reset_aps_results">Réinitialiser les résultats d\'APS</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Erreur lors de l’accès au fichier. Sélectionnez le répertoire AAPS correctement.</string>
 </resources>
