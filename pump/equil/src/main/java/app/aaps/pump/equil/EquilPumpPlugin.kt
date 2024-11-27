@@ -1,8 +1,6 @@
 package app.aaps.pump.equil
 
 import android.content.Context
-import android.os.Handler
-import android.os.HandlerThread
 import android.os.SystemClock
 import android.text.format.DateFormat
 import androidx.preference.PreferenceCategory
@@ -99,8 +97,7 @@ import javax.inject.Singleton
     private val bolusProfile: BolusProfile = BolusProfile()
 
     private val disposable = CompositeDisposable()
-    val handler = Handler(HandlerThread(this::class.java.simpleName + "Handler").also { it.start() }.looper)
-    private lateinit var statusChecker: Runnable
+    private var statusChecker: Runnable
 
     init {
         preferences.registerPreferences(EquilIntKey::class.java)
@@ -110,7 +107,7 @@ import javax.inject.Singleton
 
     override fun onStart() {
         super.onStart()
-        handler.postDelayed(statusChecker, STATUS_CHECK_INTERVAL_MILLIS)
+        handler?.postDelayed(statusChecker, STATUS_CHECK_INTERVAL_MILLIS)
         disposable += rxBus
             .toObservable(EventEquilDataChanged::class.java)
             .observeOn(aapsSchedulers.io)
@@ -149,7 +146,7 @@ import javax.inject.Singleton
             } else {
                 aapsLogger.debug(LTag.PUMPCOMM, "Skipping Pod status check because command queue is not empty")
             }
-            handler.postDelayed(statusChecker, STATUS_CHECK_INTERVAL_MILLIS)
+            handler?.postDelayed(statusChecker, STATUS_CHECK_INTERVAL_MILLIS)
         }
         PumpEvent.init(rh)
     }
@@ -157,7 +154,6 @@ import javax.inject.Singleton
     override fun onStop() {
         super.onStop()
         aapsLogger.debug(LTag.PUMPCOMM, "EquilPumpPlugin.onStop()")
-        handler.removeCallbacksAndMessages(null)
         disposable.clear()
     }
 

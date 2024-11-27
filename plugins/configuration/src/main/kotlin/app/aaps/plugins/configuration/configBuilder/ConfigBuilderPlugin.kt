@@ -2,7 +2,7 @@ package app.aaps.plugins.configuration.configBuilder
 
 import android.content.Intent
 import android.os.Handler
-import android.os.HandlerThread
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.CheckBox
@@ -76,13 +76,11 @@ class ConfigBuilderPlugin @Inject constructor(
     aapsLogger, rh
 ), ConfigBuilder {
 
-    private val handler = Handler(HandlerThread(this::class.java.simpleName + "Handler").also { it.start() }.looper)
-
     override fun initialize() {
         loadSettings()
         setAlwaysEnabledPluginsEnabled()
         // Wait for MainActivity start
-        handler.postDelayed({ rxBus.send(EventAppInitialized()) }, 5000)
+        Handler(Looper.getMainLooper()).postDelayed({ rxBus.send(EventAppInitialized()) }, 5000)
     }
 
     private fun setAlwaysEnabledPluginsEnabled() {

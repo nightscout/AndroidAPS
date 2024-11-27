@@ -1,8 +1,6 @@
 package app.aaps.plugins.main.general.overview.ui
 
 import android.annotation.SuppressLint
-import android.os.Handler
-import android.os.HandlerThread
 import android.widget.TextView
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
@@ -16,7 +14,11 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
-import app.aaps.core.ui.extensions.runOnUiThread
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -34,7 +36,7 @@ class StatusLightHandler @Inject constructor(
     private val decimalFormatter: DecimalFormatter
 ) {
 
-    private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
+    private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
 
     /**
      * applies the extended statusLight subview on the overview fragment
@@ -68,7 +70,7 @@ class StatusLightHandler @Inject constructor(
                 pump.pumpDescription.maxResorvoirReading.toDouble()
             )
         } else {
-            if (cannulaUsage != null) handleUsage(cannulaUsage, insulinUnit)
+            if (cannulaUsage != null) scope.launch { handleUsage(cannulaUsage, insulinUnit) }
             handleLevel(reservoirLevel, IntKey.OverviewResCritical, IntKey.OverviewResWarning, pump.reservoirLevel, insulinUnit)
         }
         if (!config.NSCLIENT) {
@@ -128,16 +130,14 @@ class StatusLightHandler @Inject constructor(
         }
     }
 
-    private fun handleUsage(view: TextView?, units: String) {
-        handler.post {
-            val therapyEvent = persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.CANNULA_CHANGE)
-            val usage =
-                if (therapyEvent != null) {
-                    tddCalculator.calculateInterval(therapyEvent.timestamp, dateUtil.now(), allowMissingData = false)?.totalAmount ?: 0.0
-                } else 0.0
-            runOnUiThread {
-                view?.text = decimalFormatter.to0Decimal(usage, units)
-            }
+    private suspend fun handleUsage(view: TextView?, units: String) {
+        val therapyEvent = persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.CANNULA_CHANGE)
+        val usage =
+            if (therapyEvent != null) {
+                tddCalculator.calculateInterval(therapyEvent.timestamp, dateUtil.now(), allowMissingData = false)?.totalAmount ?: 0.0
+            } else 0.0
+        withContext(Dispatchers.Main) {
+            view?.text = decimalFormatter.to0Decimal(usage, units)
         }
     }
 

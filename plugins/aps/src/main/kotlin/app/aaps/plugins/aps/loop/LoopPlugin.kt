@@ -137,11 +137,12 @@ class LoopPlugin @Inject constructor(
     override var lastRun: LastRun? = null
     override var closedLoopEnabled: Constraint<Boolean>? = null
 
-    private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
+    private var handler: Handler? = null
 
     override fun onStart() {
         createNotificationChannel()
         super.onStart()
+        handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
         disposable += rxBus
             .toObservable(EventTempTargetChange::class.java)
             .observeOn(aapsSchedulers.io)
@@ -162,7 +163,8 @@ class LoopPlugin @Inject constructor(
 
     override fun onStop() {
         disposable.clear()
-        handler.removeCallbacksAndMessages(null)
+        handler?.removeCallbacksAndMessages(null)
+        handler = null
         super.onStop()
     }
 
@@ -431,7 +433,7 @@ class LoopPlugin @Inject constructor(
                                                 lastRun.lastSMBRequest = lastRun.lastAPSRun
                                                 lastRun.lastSMBEnact = dateUtil.now()
                                             } else {
-                                                handler.postDelayed({ invoke("tempBasalFallback", allowNotification, true) }, 1000)
+                                                handler?.postDelayed({ invoke("tempBasalFallback", allowNotification, true) }, 1000)
                                             }
                                             rxBus.send(EventLoopUpdateGui())
                                         }
