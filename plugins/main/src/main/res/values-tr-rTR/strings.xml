@@ -239,12 +239,6 @@
     <string name="thirdcarbsincrement">Üçüncü karbonhidrat artışı</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">Varsayılan Geçici hedefler</string>
-    <string name="eatingsoon_duration">yakında ye süresi</string>
-    <string name="eatingsoon_target">yakında ye hedefi</string>
-    <string name="activity_duration">aktivite süresi</string>
-    <string name="activity_target">aktivite hedefi</string>
-    <string name="hypo_duration">hipo süresi</string>
-    <string name="hypo_target">hipo hedefi</string>
     <string name="fill_bolus_title">Standart insülin miktarlarını Hazırla/Doldur</string>
     <string name="button1">Buton 1</string>
     <string name="button2">Buton 2</string>
