@@ -224,12 +224,6 @@
     <string name="thirdcarbsincrement">Trzeci stopień przyrostu węglow.</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">Domyślne tymczasowe wartości docelowe</string>
-    <string name="eatingsoon_duration">WkrótcePosiłek czas trwania</string>
-    <string name="eatingsoon_target">WkrótcePosiłek cel</string>
-    <string name="activity_duration">Ćwiczenia czas trwania</string>
-    <string name="activity_target">Ćwiczenia cel</string>
-    <string name="hypo_duration">Hipo czas trwania</string>
-    <string name="hypo_target">Hipo cel</string>
     <string name="fill_bolus_title">Rozpocznij/Wypełnij standardowe ilości insuliny</string>
     <string name="button1">Przycisk 1</string>
     <string name="button2">Przycisk 2</string>
