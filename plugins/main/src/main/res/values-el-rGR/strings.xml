@@ -224,12 +224,6 @@
     <string name="thirdcarbsincrement">Τρίτη αύξηση υδατανθράκων</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">Προκαθορισμένος Στόχος-Προσ Ρυθμού</string>
-    <string name="eatingsoon_duration">Διάρκεια πλησιέστερου γεύματος</string>
-    <string name="eatingsoon_target">στόχος για γεύμα</string>
-    <string name="activity_duration">διάρκεια άσκησης</string>
-    <string name="activity_target">στόχος άσκησης</string>
-    <string name="hypo_duration">διάρκεια υπογλυκαιμίας</string>
-    <string name="hypo_target">στόχος υπογλυκαιμίας</string>
     <string name="fill_bolus_title">Πλήρωση/Γέμισμα στανταρ ποσότητες ινσουλίνης</string>
     <string name="button1">Πλήκτρο 1</string>
     <string name="button2">Πλήκτρο 2</string>
