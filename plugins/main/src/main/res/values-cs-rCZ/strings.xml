@@ -239,12 +239,6 @@
     <string name="thirdcarbsincrement">Třetí přídavek sacharidů</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">Výchozí nastavení dočasných cílů</string>
-    <string name="eatingsoon_duration">Trvání „Před jídlem“</string>
-    <string name="eatingsoon_target">Cíl „Před jídlem“</string>
-    <string name="activity_duration">Trvání aktivity</string>
-    <string name="activity_target">Cíl při aktivitě</string>
-    <string name="hypo_duration">Trvání dočasného cíle při hypoglykémii</string>
-    <string name="hypo_target">Cílová glykémie při hypoglykémii</string>
     <string name="fill_bolus_title">Standardní množství inzulinu pro Plnění/Doplňování</string>
     <string name="button1">Tlačítko 1</string>
     <string name="button2">Tlačítko 2</string>
