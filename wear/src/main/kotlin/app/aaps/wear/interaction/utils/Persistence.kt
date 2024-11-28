@@ -42,6 +42,7 @@ open class Persistence @Inject constructor(
 
         const val CUSTOM_WATCHFACE = "custom_watchface"
         const val CUSTOM_DEFAULT_WATCHFACE = "custom_default_watchface"
+        const val CUSTOM_DEFAULT_WATCHFACE_FULL = "custom_default_watchface_full"
     }
 
     fun getString(key: String, defaultValue: String): String {
@@ -183,14 +184,15 @@ open class Persistence @Inject constructor(
 
     fun readSimplifiedCwf(isDefault: Boolean = false): EventData.ActionSetCustomWatchface? {
         try {
-            var s = sp.getStringOrNull(if (isDefault) CUSTOM_DEFAULT_WATCHFACE else CUSTOM_WATCHFACE, null)
+            val defaultKey = if (sp.getBoolean(R.string.key_include_external, false)) CUSTOM_DEFAULT_WATCHFACE_FULL else CUSTOM_DEFAULT_WATCHFACE
+            var s = sp.getStringOrNull(if (isDefault) defaultKey else CUSTOM_WATCHFACE, null)
             if (s != null) {
                 return (EventData.deserialize(s) as EventData.ActionSetCustomWatchface).let {
                     EventData.ActionSetCustomWatchface(it.customWatchfaceData.simplify() ?: it.customWatchfaceData)
                 }
 
             } else {
-                s = sp.getStringOrNull(CUSTOM_DEFAULT_WATCHFACE, null)
+                s = sp.getStringOrNull(defaultKey, null)
                 if (s != null) {
                     return EventData.deserialize(s) as EventData.ActionSetCustomWatchface
                 }
@@ -251,8 +253,9 @@ open class Persistence @Inject constructor(
         }
     }
 
-    fun store(customWatchface: EventData.ActionSetCustomWatchface, isDefault: Boolean = false) {
+    fun store(customWatchface: EventData.ActionSetCustomWatchface, customWatchfaceFull: EventData.ActionSetCustomWatchface? = null, isDefault: Boolean = false) {
         putString(if (isDefault) CUSTOM_DEFAULT_WATCHFACE else CUSTOM_WATCHFACE, customWatchface.serialize())
+        customWatchfaceFull?.let { putString(CUSTOM_DEFAULT_WATCHFACE_FULL, it.serialize()) }
         aapsLogger.debug(LTag.WEAR, "Stored Custom Watchface ${customWatchface.customWatchfaceData} ${isDefault}: $customWatchface")
     }
 

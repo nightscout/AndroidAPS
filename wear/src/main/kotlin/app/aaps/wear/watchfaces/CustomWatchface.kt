@@ -94,7 +94,7 @@ class CustomWatchface : BaseWatchFace() {
     override fun inflateLayout(inflater: LayoutInflater): ViewBinding {
         binding = ActivityCustomBinding.inflate(inflater)
         setDefaultColors()
-        persistence.store(defaultWatchface(), true)
+        persistence.store(defaultWatchface(false), defaultWatchface(true), true)
         (context.getSystemService(WINDOW_SERVICE) as WindowManager).defaultDisplay.getSize(displaySize)
         zoomFactor = (displaySize.x).toDouble() / templeResolution.toDouble()
         return binding
@@ -119,10 +119,6 @@ class CustomWatchface : BaseWatchFace() {
         binding.minuteHand.rotation = TimeOfDay().minuteOfHour * 6f
         // rotate the hour hand.
         binding.hourHand.rotation = TimeOfDay().hourOfDay * 30f + TimeOfDay().minuteOfHour * 0.5f
-    }
-
-    override fun updatePreferences() {
-        persistence.store(defaultWatchface(), true)
     }
 
     override fun setColorDark() {
@@ -207,7 +203,11 @@ class CustomWatchface : BaseWatchFace() {
     }
 
     private fun setWatchfaceStyle() {
-        val customWatchface = persistence.readCustomWatchface() ?: persistence.readCustomWatchface(true)
+        var customWatchface = persistence.readCustomWatchface() ?: persistence.readCustomWatchface(true)
+        if (customWatchface == null) { // if neither CWF or Default CWF is found within persistence, then force reload of default Layout
+            super.onCreate()
+            customWatchface = persistence.readCustomWatchface(true)
+        }
         customWatchface?.let {
             updatePref(it.customWatchfaceData.metadata)
             try {
@@ -269,7 +269,7 @@ class CustomWatchface : BaseWatchFace() {
                 manageSpecificViews()
             } catch (_: Exception) {
                 aapsLogger.debug(LTag.WEAR, "Crash during Custom watch load")
-                persistence.store(defaultWatchface(), false) // relaod correct values to avoid crash of watchface
+                persistence.store(defaultWatchface(true), isDefault = false) // relaod correct values to avoid crash of watchface
             }
         }
     }
@@ -285,8 +285,7 @@ class CustomWatchface : BaseWatchFace() {
         }
     }
 
-    private fun defaultWatchface(): EventData.ActionSetCustomWatchface {
-        val externalViews = sp.getBoolean(R.string.key_include_external, false)
+    private fun defaultWatchface(externalViews: Boolean): EventData.ActionSetCustomWatchface {
         val metadata = JSONObject()
             .put(CwfMetadataKey.CWF_NAME.key, getString(app.aaps.core.interfaces.R.string.wear_default_watchface))
             .put(CwfMetadataKey.CWF_FILENAME.key, getString(app.aaps.core.interfaces.R.string.wear_default_watchface))
@@ -481,7 +480,7 @@ class CustomWatchface : BaseWatchFace() {
         AVG_DELTA_EXT1(ViewKeys.AVG_DELTA_EXT1.key, R.id.avg_delta_ext1, R.string.key_show_avg_delta, external = 1),
         TEMP_TARGET_EXT1(ViewKeys.TEMP_TARGET_EXT1.key, R.id.temp_target_ext1, R.string.key_show_temp_target, external = 1),
         RESERVOIR_EXT1(ViewKeys.RESERVOIR_EXT1.key, R.id.reservoir_ext1, R.string.key_show_reservoir_level, external = 1),
-        RIG_BATTERY_EXT1(ViewKeys.RIG_BATTERY_EXT1.key, R.id.rig_battery_ext1, R.string.key_show_rig_battery),
+        RIG_BATTERY_EXT1(ViewKeys.RIG_BATTERY_EXT1.key, R.id.rig_battery_ext1, R.string.key_show_rig_battery, external = 1),
         BASALRATE_EXT1(ViewKeys.BASALRATE_EXT1.key, R.id.basalRate_ext1, R.string.key_show_temp_basal, external = 1),
         BGI_EXT1(ViewKeys.BGI_EXT1.key, R.id.bgi_ext1, R.string.key_show_bgi, external = 1),
         STATUS_EXT1(ViewKeys.STATUS_EXT1.key, R.id.status_ext1, R.string.key_show_external_status, external = 1),
@@ -498,7 +497,7 @@ class CustomWatchface : BaseWatchFace() {
         AVG_DELTA_EXT2(ViewKeys.AVG_DELTA_EXT2.key, R.id.avg_delta_ext2, R.string.key_show_avg_delta, external = 2),
         TEMP_TARGET_EXT2(ViewKeys.TEMP_TARGET_EXT2.key, R.id.temp_target_ext2, R.string.key_show_temp_target, external = 2),
         RESERVOIR_EXT2(ViewKeys.RESERVOIR_EXT2.key, R.id.reservoir_ext2, R.string.key_show_reservoir_level, external = 2),
-        RIG_BATTERY_EXT2(ViewKeys.RIG_BATTERY_EXT2.key, R.id.rig_battery_ext2, R.string.key_show_rig_battery),
+        RIG_BATTERY_EXT2(ViewKeys.RIG_BATTERY_EXT2.key, R.id.rig_battery_ext2, R.string.key_show_rig_battery, external = 2),
         BASALRATE_EXT2(ViewKeys.BASALRATE_EXT2.key, R.id.basalRate_ext2, R.string.key_show_temp_basal, external = 2),
         BGI_EXT2(ViewKeys.BGI_EXT2.key, R.id.bgi_ext2, R.string.key_show_bgi, external = 2),
         STATUS_EXT2(ViewKeys.STATUS_EXT2.key, R.id.status_ext2, R.string.key_show_external_status, external = 2),

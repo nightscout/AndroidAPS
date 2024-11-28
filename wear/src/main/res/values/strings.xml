@@ -37,7 +37,7 @@
     <string name="pref_show_rig_battery">Show Rig Battery</string>
     <string name="pref_show_basal_rate">Show Basal Rate</string>
     <string name="pref_show_temp_target">Show Temp Target</string>
-    <string name="pref_show_reservoir_level">Show Reservoir Level Target</string>
+    <string name="pref_show_reservoir_level">Show Reservoir Level</string>
     <string name="pref_show_loop_status">Show Loop Status</string>
     <string name="pref_show_bg">Show BG</string>
     <string name="pref_show_bgi">Show BGI</string>
