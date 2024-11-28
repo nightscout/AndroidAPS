@@ -224,12 +224,6 @@
     <string name="thirdcarbsincrement">Dritte KH-Erhöhung</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">Vordefinierte temporäre Ziele</string>
-    <string name="eatingsoon_duration">Bald essen - Dauer</string>
-    <string name="eatingsoon_target">Bald essen - Ziel</string>
-    <string name="activity_duration">Aktivitätsdauer</string>
-    <string name="activity_target">Aktivitäts-Zielwert</string>
-    <string name="hypo_duration">Hypo-Dauer</string>
-    <string name="hypo_target">Hypo - Zielwert</string>
     <string name="fill_bolus_title">Füll-/Vorfüll-Standardmengen</string>
     <string name="button1">Schaltfläche 1</string>
     <string name="button2">Schaltfläche 2</string>
