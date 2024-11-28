@@ -103,7 +103,7 @@ abstract class PumpPluginAbstract protected constructor(
     }
 
     override fun onStop() {
-        aapsLogger.debug(LTag.PUMP, model().model + " onStop()")
+        aapsLogger.debug(LTag.PUMP, model().model() + " onStop()")
         serviceConnection?.let { serviceConnection ->
             context.unbindService(serviceConnection)
         }
@@ -250,7 +250,7 @@ abstract class PumpPluginAbstract protected constructor(
             extended.put("Version", version)
             try {
                 extended.put("ActiveProfile", profileName)
-            } catch (ignored: Exception) {
+            } catch (_: Exception) {
             }
             val tb = pumpSync.expectedPumpState().temporaryBasal
             if (tb != null) {
@@ -317,7 +317,7 @@ abstract class PumpPluginAbstract protected constructor(
         rxBus.send(EventCustomActionsChanged())
     }
 
-    override fun manufacturer(): ManufacturerType = pumpType.manufacturer ?: ManufacturerType.AAPS
+    override fun manufacturer(): ManufacturerType = pumpType.manufacturer() ?: ManufacturerType.AAPS
     override fun model(): PumpType = pumpType
     override fun canHandleDST(): Boolean = false
 

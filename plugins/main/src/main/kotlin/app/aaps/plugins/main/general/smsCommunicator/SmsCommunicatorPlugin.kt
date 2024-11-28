@@ -634,7 +634,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         if (divided[1].uppercase(Locale.getDefault()) == "STATUS") {
             sendSMS(Sms(receivedSms.phoneNumber, profileName))
         } else if (divided[1].uppercase(Locale.getDefault()) == "LIST") {
-            if (list.isEmpty()) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(app.aaps.core.ui.R.string.invalid_profile)))
+            if (list.isEmpty) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(app.aaps.core.ui.R.string.invalid_profile)))
             else {
                 var reply = ""
                 for (i in list.indices) {
@@ -719,7 +719,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             })
         } else if (divided[1].endsWith("%")) {
             var tempBasalPct = SafeParse.stringToInt(StringUtils.removeEnd(divided[1], "%"))
-            val durationStep = activePlugin.activePump.model().tbrSettings?.durationStep ?: 60
+            val durationStep = activePlugin.activePump.model().tbrSettings()?.durationStep ?: 60
             var duration = 30
             if (divided.size > 2) duration = SafeParse.stringToInt(divided[2])
             val profile = profileFunction.getProfile()
@@ -780,7 +780,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             }
         } else {
             var tempBasal = SafeParse.stringToDouble(divided[1])
-            val durationStep = activePlugin.activePump.model().tbrSettings?.durationStep ?: 60
+            val durationStep = activePlugin.activePump.model().tbrSettings()?.durationStep ?: 60
             var duration = 30
             if (divided.size > 2) duration = SafeParse.stringToInt(divided[2])
             val profile = profileFunction.getProfile()
@@ -1251,7 +1251,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     private fun stripAccents(str: String): String {
         var s = str
         s = Normalizer.normalize(s, Normalizer.Form.NFD)
-        s = s.replace("[\\p{InCombiningDiacriticalMarks}]".toRegex(), "")
+        s = s.replace("\\p{InCombiningDiacriticalMarks}".toRegex(), "")
         s = s.replace("ł", "l") // hack for Polish language (bug in libs)
         return s
     }
