@@ -224,12 +224,6 @@
     <string name="thirdcarbsincrement">3차 탄수화물 증분</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">임시목표 기본값</string>
-    <string name="eatingsoon_duration">식사직전 기간</string>
-    <string name="eatingsoon_target">식사직전 목표</string>
-    <string name="activity_duration">활동 기간</string>
-    <string name="activity_target">활동 목표</string>
-    <string name="hypo_duration">저혈당 기간</string>
-    <string name="hypo_target">저혈당 목표</string>
     <string name="fill_bolus_title">교체/채움 기본 인슐린 양</string>
     <string name="button1">버튼1</string>
     <string name="button2">버튼2</string>
