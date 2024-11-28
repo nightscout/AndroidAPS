@@ -224,12 +224,6 @@
     <string name="thirdcarbsincrement">Trečias angliavandenių kiekio žingsnis</string>
     <string name="cgm">NGJ</string>
     <string name="default_temptargets">Numatyti Laikini Tikslai</string>
-    <string name="eatingsoon_duration">\"Netrukus valgysiu\" trukmė</string>
-    <string name="eatingsoon_target">\"Netrukus valgysiu\" tikslas</string>
-    <string name="activity_duration">\"Aktyvumas\" trukmė</string>
-    <string name="activity_target">\"Aktyvumas\" tikslas</string>
-    <string name="hypo_duration">\"Hipo\" trukmė</string>
-    <string name="hypo_target">\"Hipo\" tikslas</string>
     <string name="fill_bolus_title">Standartiniai insulino kiekiai kateterio/kaniulės užpildymui</string>
     <string name="button1">Mygtukas 1</string>
     <string name="button2">Mygtukas 2</string>
