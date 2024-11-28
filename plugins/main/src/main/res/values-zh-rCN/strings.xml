@@ -211,12 +211,6 @@
     <string name="thirdcarbsincrement">第三碳水化合物增量</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">默认的临时目标</string>
-    <string name="eatingsoon_duration">很快吃饭　持续时间</string>
-    <string name="eatingsoon_target">很快吃饭　临时血糖目标</string>
-    <string name="activity_duration">活动持续时间</string>
-    <string name="activity_target">运动临时目标</string>
-    <string name="hypo_duration">持续时间短</string>
-    <string name="hypo_target">低目标</string>
     <string name="fill_bolus_title">输注/充盈标准胰岛素剂量</string>
     <string name="button1">按钮1</string>
     <string name="button2">按钮2</string>
