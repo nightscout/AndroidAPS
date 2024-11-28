@@ -1037,10 +1037,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
         return pumpDescription.pumpType
     }
 
-    override fun serialNumber(): String {
-        return podStateManager.uniqueId?.toString()
-            ?: "n/a" // TODO i18n
-    }
+    override fun serialNumber(): String =
+        podStateManager.uniqueId?.toString() ?: Constants.PUMP_SERIAL_FOR_FAKE_TBR
 
     override fun shortStatus(veryShort: Boolean): String {
         if (!podStateManager.isActivationCompleted) {
