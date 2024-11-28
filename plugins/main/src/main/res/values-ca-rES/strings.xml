@@ -195,12 +195,6 @@
     <string name="thirdcarbsincrement">3r increment de carbohidrats</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">Objectius temporals per defecte</string>
-    <string name="eatingsoon_duration">Durada \"menjar aviat\"</string>
-    <string name="eatingsoon_target">Objectiu \"menjar aviat\"</string>
-    <string name="activity_duration">Durada esport</string>
-    <string name="activity_target">Objectiu esport</string>
-    <string name="hypo_duration">Durada \"hipo\"</string>
-    <string name="hypo_target">Objectiu \"hipo\"</string>
     <string name="fill_bolus_title">Encebar quantitats d\'insulina estàndard</string>
     <string name="button1">Botó 1</string>
     <string name="button2">Botó 2</string>
