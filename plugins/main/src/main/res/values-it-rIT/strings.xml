@@ -239,6 +239,12 @@
     <string name="thirdcarbsincrement">Terzo incremento di CHO</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">Target temporanei predefiniti</string>
+    <string name="eatingsoon_duration">Durata Pasto a breve (minuti)</string>
+    <string name="eatingsoon_target">Valore target Pasto a breve</string>
+    <string name="activity_duration">Durata Attività (minuti)</string>
+    <string name="activity_target">Valore target Attività</string>
+    <string name="hypo_duration">Durata Ipoglicemia (minuti)</string>
+    <string name="hypo_target">Valore target Ipoglicemia</string>
     <string name="fill_bolus_title">Carica/Riempi: quantità standard di insulina</string>
     <string name="button1">Tasto 1</string>
     <string name="button2">Tasto 2</string>
