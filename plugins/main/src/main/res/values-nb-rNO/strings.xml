@@ -239,12 +239,6 @@
     <string name="thirdcarbsincrement">Tredje økning knapp for karbohydrater</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">Standard midlertidig mål</string>
-    <string name="eatingsoon_duration">Spise snart varighet (min)</string>
-    <string name="eatingsoon_target">Spise snart målverdi</string>
-    <string name="activity_duration">Aktivitet varighet (min)</string>
-    <string name="activity_target">Aktivitet målverdi</string>
-    <string name="hypo_duration">Hypo varighet (min)</string>
-    <string name="hypo_target">Hypo målverdi</string>
     <string name="fill_bolus_title">Standardverdier for påfyll/prime</string>
     <string name="button1">Knapp 1</string>
     <string name="button2">Knapp 2</string>
