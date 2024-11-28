@@ -239,12 +239,6 @@
     <string name="thirdcarbsincrement">Tercer incremento de carbohidratos</string>
     <string name="cgm">MCG</string>
     <string name="default_temptargets">Objetivo temporal por defecto</string>
-    <string name="eatingsoon_duration">Duración OT Comiendo Pronto</string>
-    <string name="eatingsoon_target">Objetivo Comiendo Pronto</string>
-    <string name="activity_duration">Duración OT Actividad</string>
-    <string name="activity_target">Objetivo Actividad</string>
-    <string name="hypo_duration">Duración OT Hipo</string>
-    <string name="hypo_target">Objetivo Hipo</string>
     <string name="fill_bolus_title">Cebar/Llenar la cantidad de insulina estándar</string>
     <string name="button1">Botón 1</string>
     <string name="button2">Botón 2</string>
