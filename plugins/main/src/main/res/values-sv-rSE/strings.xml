@@ -224,12 +224,6 @@
     <string name="thirdcarbsincrement">Tredje snabbknabben för kolhydrater</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">Standardmålvärden</string>
-    <string name="eatingsoon_duration">Äta snart [min]</string>
-    <string name="eatingsoon_target">Mål vid Äta snart</string>
-    <string name="activity_duration">Träning [min]</string>
-    <string name="activity_target">Mål vid träning</string>
-    <string name="hypo_duration">Hypo [min]</string>
-    <string name="hypo_target">Mål vid Hypo</string>
     <string name="fill_bolus_title">Standardvärden för påfyllning/förfyllning </string>
     <string name="button1">Knapp 1</string>
     <string name="button2">Knapp 2</string>
