@@ -2,7 +2,7 @@
 [versions]
 gradlePlugin = "8.7.2"
 googleServices = "4.4.2"
-kotlin = "2.0.21"
+kotlin = "2.1.0"
 wearable = "2.9.0"
 room = "2.6.1"
 dagger = "2.52"
