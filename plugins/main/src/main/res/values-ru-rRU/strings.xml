@@ -239,12 +239,6 @@
     <string name="thirdcarbsincrement">Третий шаг увеличения углеводов</string>
     <string name="cgm">Мониторинг ГК</string>
     <string name="default_temptargets">Временные цели по умолчанию</string>
-    <string name="eatingsoon_duration">продолжительность ожидания приема пищи eatingsoon</string>
-    <string name="eatingsoon_target">целевое значение ГК при ожидаемом приеме пищи eatingsoon</string>
-    <string name="activity_duration">длительность нагрузки</string>
-    <string name="activity_target">целевое значение ГК при физической нагрузке</string>
-    <string name="hypo_duration">длительность гипо</string>
-    <string name="hypo_target">целевое значение ГК при гипо</string>
     <string name="fill_bolus_title">Заполнить стандартное количество инсулина</string>
     <string name="button1">Кнопка 1</string>
     <string name="button2">Кнопка 2</string>
