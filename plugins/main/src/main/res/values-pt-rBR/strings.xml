@@ -224,12 +224,6 @@
     <string name="thirdcarbsincrement">Terceiro incremento hidratos</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">Alvo-Temp padrão</string>
-    <string name="eatingsoon_duration">duração comerbreve</string>
-    <string name="eatingsoon_target">alvo comerbreve</string>
-    <string name="activity_duration">duração da atividade</string>
-    <string name="activity_target">alvo da atividade</string>
-    <string name="hypo_duration">duração hipo</string>
-    <string name="hypo_target">alvo hipo</string>
     <string name="fill_bolus_title">Purgar/Preencher os valores padrões</string>
     <string name="button1">Botão 1</string>
     <string name="button2">Botão 2</string>
