@@ -224,12 +224,6 @@
     <string name="thirdcarbsincrement">Al treilea increment de carbohidrați</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">Ținte-Temporare implicite</string>
-    <string name="eatingsoon_duration">durată mănânc-în-curând</string>
-    <string name="eatingsoon_target">țintă mănânc-în-curând</string>
-    <string name="activity_duration">durată activitate</string>
-    <string name="activity_target">țintă activitate</string>
-    <string name="hypo_duration">durată țintă</string>
-    <string name="hypo_target">țintă hipo</string>
     <string name="fill_bolus_title">Umplere/Amorsare - cantități standard de insulină</string>
     <string name="button1">Buton 1</string>
     <string name="button2">Buton 2</string>
