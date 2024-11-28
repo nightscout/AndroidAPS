@@ -239,12 +239,6 @@
     <string name="thirdcarbsincrement">תוספת פחמימות שלישית</string>
     <string name="cgm">סנסור</string>
     <string name="default_temptargets">ברירות מחדל ערכי מטרה</string>
-    <string name="eatingsoon_duration">משך אוכלים בקרוב</string>
-    <string name="eatingsoon_target">ערך מטרת אוכלים בקרוב</string>
-    <string name="activity_duration">משך פעילות</string>
-    <string name="activity_target">ערך מטרת פעילות</string>
-    <string name="hypo_duration">משך היפו</string>
-    <string name="hypo_target">ערך מטרת היפו</string>
     <string name="fill_bolus_title">מילוי\\תיחול כמויות סטנדרטיות של אינסולין</string>
     <string name="button1">כפתור 1</string>
     <string name="button2">כפתור 2</string>
