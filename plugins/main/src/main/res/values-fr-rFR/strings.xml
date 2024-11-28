@@ -239,12 +239,6 @@
     <string name="thirdcarbsincrement">Troisième incrément de glucides</string>
     <string name="cgm">MGC</string>
     <string name="default_temptargets">Cibles Temporaires par défaut</string>
-    <string name="eatingsoon_duration">durée repas imminent [min]</string>
-    <string name="eatingsoon_target">Cible Glyc. pour le prochain repas</string>
-    <string name="activity_duration">Durée d\'activité</string>
-    <string name="activity_target">Cible Glycémie pour l\'activité</string>
-    <string name="hypo_duration">durée hypo [min]</string>
-    <string name="hypo_target">Cible Glycémie pendant l’hypo</string>
     <string name="fill_bolus_title">Insuline par défaut pour Amorcer/Remplir</string>
     <string name="button1">Bouton 1</string>
     <string name="button2">Bouton 2</string>
