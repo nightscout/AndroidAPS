@@ -33,7 +33,6 @@
     <string name="pref_show_rig_battery">Mostrar batería de la plataforma</string>
     <string name="pref_show_basal_rate">Mostrar la tasa basal</string>
     <string name="pref_show_temp_target">Mostrar Objetivo Temporal</string>
-    <string name="pref_show_reservoir_level">Mostrar el nivel del reservorio</string>
     <string name="pref_show_loop_status">Mostrar estado de bucle</string>
     <string name="pref_show_bg">Mostrar glucosa</string>
     <string name="pref_show_bgi">Mostrar BGI (Índice de glucosa en sangre)</string>
