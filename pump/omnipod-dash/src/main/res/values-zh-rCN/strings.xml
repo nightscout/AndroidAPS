@@ -9,8 +9,6 @@
     <string name="omnipod_dash_history_item_source">来源</string>
     <string name="omnipod_dash_history_item_date">日期</string>
     <string name="omnipod_dash_history_type">类型：</string>
-    <string name="omnipod_dash_history_bolus_value">%1$.2f U</string>
-    <string name="omnipod_dash_history_bolus_value_with_carbs">%1$.2f U, 碳水=%2$.1f 克</string>
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_status">蓝牙状态</string>
     <string name="omnipod_dash_overview_bluetooth_address">蓝牙地址</string>

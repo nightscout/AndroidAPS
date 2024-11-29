@@ -104,8 +104,6 @@
     <string name="automation_event">Evento de automatização</string>
     <string name="reorder_label">Reordenar</string>
     <string name="user_action">Ação do utilizador</string>
-    <string name="remove_automation">Remover automação</string>
-    <string name="sort_automation">Ordenar automação</string>
     <string name="remove_selected_items">Remover itens selecionados</string>
     <string name="count_selected">%1$d selecionados</string>
     <string name="system_automation">Automação do sistema</string>

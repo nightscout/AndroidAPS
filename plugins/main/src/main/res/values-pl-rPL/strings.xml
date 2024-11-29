@@ -203,8 +203,6 @@
     <string name="overview_buttons_selection">Przyciski</string>
     <string name="show_calibration_button_summary">Wysyła kalibrację do xDrip+ lub otwiera dialog kalibracji w Dexcom Patched</string>
     <string name="show_cgm_button_summary">Otwiera xDrip+ lub Dexcom Patched, przycisk \"cofnij\" wraca do AAPS</string>
-    <string name="dexcom_app_not_installed">Apka Dexcom nie jest zainstalowana.</string>
-    <string name="dexcom_app_not_detected">Proszę uaktualnij swoją Apkę Dexcom do wersji wspieranej</string>
     <string name="error_starting_cgm">Nie można uruchomić aplikacji CGM. Upewnij się, że została zainstalowana.</string>
     <string name="not_available_full">Niedostępne</string>
     <string name="constraints_violation">Naruszenie ograniczeń</string>
@@ -282,7 +280,6 @@
     <string name="skin">Motyw</string>
     <string name="cannula_usage">użytkowanie:</string>
     <!--    Iob-->
-    <string name="send_logfiles">Wyślij dzisiejsze pliki logów razem z datą i czasem do programistów. Nieoczekiwana sytuacja.</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Wyświetla bieżące powiadomienia z krótkim omówieniem działania pętli</string>
     <string name="old_data">NIEAKTUALNE DANE</string>

@@ -63,8 +63,6 @@
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Pompa Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
-    <string name="riley_link_common_yes">Taip</string>
-    <string name="riley_link_common_no">Ne</string>
     <!-- RileyLink - Preferences -->
     <string name="riley_link_show_battery_level">Rodyti baterijos įkrovimo lygį, gautą iš OrangeLink/EmaLink/DiaLink</string>
     <string name="riley_link_show_battery_level_summary">NEVEIKIA su originaliu RileyLink. Gali neveikti su kitomis RileyLink alternatyvomis.</string>

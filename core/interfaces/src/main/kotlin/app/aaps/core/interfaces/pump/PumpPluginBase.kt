@@ -17,11 +17,18 @@ abstract class PumpPluginBase(
     val commandQueue: CommandQueue
 ) : PluginBase(pluginDescription, aapsLogger, rh) {
 
-    private val handler = Handler(HandlerThread(this::class.java.simpleName + "Handler").also { it.start() }.looper)
+    var handler: Handler? = null
 
     override fun onStart() {
         super.onStart()
         assert(getType() == PluginType.PUMP)
-        handler.postDelayed({ commandQueue.readStatus(rh.gs(R.string.pump_driver_changed), null) }, 6000)
+        handler = Handler(HandlerThread(this::class.java.simpleName + "Handler").also { it.start() }.looper)
+        handler?.postDelayed({ commandQueue.readStatus(rh.gs(R.string.pump_driver_changed), null) }, 6000)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        handler?.removeCallbacksAndMessages(null)
+        handler = null
     }
 }

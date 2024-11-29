@@ -40,8 +40,6 @@
     <string name="nsclient_token_dialog_title">Jeton d\'accès NS</string>
     <string name="nsclient_token_dialog_message">Jeton d\'accès généré sur la page d\'administration NS (min. 17 caractères)</string>
     <string name="deliver_now">Transmettre maintenant</string>
-    <string name="clear_queue">Vider queue</string>
-    <string name="show_queue">Afficher queue</string>
     <string name="queue">Queue :</string>
     <string name="status">État :</string>
     <string name="clear_log">Effacer le journal</string>
@@ -89,13 +87,7 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Transfère les données vers Tidepool</string>
-    <string name="tidepool_upload_cgm">Transférer les données CGM</string>
-    <string name="tidepool_upload_bolus">Transférer les traitements (insuline, glucides)</string>
-    <string name="tidepool_upload_tbr">Transférer les Basal temporaires</string>
-    <string name="tidepool_upload_profile">Transférer les changements de profils, les objectifs temporaires</string>
-    <string name="tidepool_upload_bg">Transférer les tests de glycémies</string>
     <string name="remove_all">Supprimer tout</string>
-    <string name="reset_start">Réinitialiser le démarrage</string>
     <string name="upload_now">Télécharger maintenant</string>
     <string name="not_connected">Non connecté</string>
     <string name="read_only">Lecture seule</string>
@@ -133,7 +125,7 @@
     <string name="wizard_result">Calc. Assistant :\nInsuline : %1$.2fU\nGlucides : %2$dg</string>
     <string name="quick_wizard_not_available">L\'assistant rapide sélectionné n\'est plus disponible, veuillez actualiser l\'écran</string>
     <string name="quick_wizard_message">Assistant : %1$s\nInsuline : %2$.2fU\nGlucides : %3$dg</string>
-    <string name="wear_action_tempt_preset_error">Préréglage inconnu de la cible temp. : %1$s</string>
+    <string name="user_action_not_available">L\'action utilisateur %1$s n\'est plus disponible, veuillez actualiser vos cartes</string>
     <string name="wear_action_tempt_cancel_message">Annuler l\'exécution des cibles Temp?</string>
     <string name="wear_action_tempt_unit_error">Différentes unités utilisées sur la montre et le téléphone!</string>
     <string name="wear_action_tempt_zero_message">Pas de Cible Temp - annuler la cible temporaire en cours?</string>
@@ -146,6 +138,8 @@
     <string name="wear_settings">Paramètres Wear</string>
     <string name="wearcontrol_title">Commandes depuis la montre</string>
     <string name="wearcontrol_summary">Définir les Cibles Temp et entrer les Traitements depuis la montre.</string>
+    <string name="wear_broadcast_data">Diffuser les données</string>
+    <string name="wear_broadcast_data_summary">Diffuser les données à AAPS ou AAPSClient</string>
     <string name="wear_wizard_settings_summary">Calculs inclus dans le résultat de l’Assistant :</string>
     <string name="wear_general_settings">Paramètres généraux</string>
     <string name="wear_notifysmb_title">Notifier en cas de SMB</string>

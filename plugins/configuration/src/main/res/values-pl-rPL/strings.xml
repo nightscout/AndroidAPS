@@ -36,7 +36,6 @@
     <string name="exitwizard">Pomiń Kreatora konfiguracji</string>
     <string name="setupwizard_loop_description">Naciśnij przycisk poniżej, by umożliwić AAPS sugerowanie/wprowadzenie zmian insuliny bazowej</string>
     <string name="setupwizard_sensitivity_description">Wtyczka wrażliwości używana jest w celu określenia wrażliwości i kalkulacji COB. Więcej informacji na:</string>
-    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="setupwizard_aps_description">Wybierz jeden z dostępnych algorytmów. Ułożone są one od najstarszych do najnowszych. Nowszy algorytm jest zazwyczaj bardziej wydajny i agresywny. Jeśli jesteś nowym użytkownikiem, lepiej zacznij od zaawansowanego asystenta posiłku AMA, a nie od najnowszego algorytmu. Zapoznaj się koniecznie z dokumentacją OpenAPS przed wybraniem odpowiedniego algorytmu i jego konfiguracją.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Proszę skonfigurować RileyLink poniżej. Po wybraniu RileyLink, możliwe będzie kontynuowanie konfiguracji, gdy status RileyLink będzie \"Połączony\". To może zająć minutę.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Uwaga:</b> Możesz kontynuować konfigurację po skonfigurowaniu pompy.\n</string>
@@ -45,8 +44,6 @@
     <string name="readstatus">Odczyt stanu</string>
     <string name="data_choices">Wybór Danych</string>
     <string name="fabric_upload">Przesyłanie danych fabric</string>
-    <string name="allow_automated_crash_reporting">Zezwalaj na automatyczne zgłaszanie awarii i danych o użytkowaniu aplikacji do deweloperów za pośrednictwem usługi fabric.io.</string>
-    <string name="summary_email_for_crash_report">Ten identyfikator zostanie dołączony do raportu o błędzie aby umożliwić kontakt z tobą, w przypadku gdyby zaszła pilna konieczność. Jego podanie jest opcjonalne.</string>
     <string name="identification">Identyfikator (email, nick na FB lub Discordzie itp.)</string>
     <string name="request">Żądanie</string>
     <string name="apsmode_title">Tryb APS</string>
@@ -128,11 +125,9 @@
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">wyeksportowano %1$s temu</string>
     <string name="exported_at" comment="at placeholder we add export date">wyeksportowano w dniu %1$s</string>
     <string name="exported_less_than_hour_ago">wyeksportowano mniej niż godzinę temu</string>
-    <string name="in_directory" comment="placeholder is for exported file path">w katalogu: %1$s</string>
     <string name="preferences_import_list_title">Wybierz plik do zaimportowania</string>
     <string name="metadata_warning_different_flavour">Ustawienia zostały utworzone z innym wariantem AAPS (%1$s) gdy masz %2$s.\n\nNiektóre ustawienia mogą być brakujące lub nieprawidłowe - po zaimportowaniu proszę sprawdzić i zaktualizować swoje ustawienia.</string>
     <string name="metadata_warning_different_device">Preferencje zostały utworzone na innym urządzeniu. Import ze starszego/innego telefonu jest OK, ale upewnij się, że importowane preferencje są poprawne!</string>
-    <string name="metadata_warning_outdated_format">Używasz przestarzałego formatu ze starych wersji AAPS, który nie jest bezpieczny! Używaj go tylko w ostateczności, jeśli nie masz eksportu w aktualnym formacie JSON.</string>
     <string name="metadata_warning_old_export">Zaimportowane ustawienia mają już %1$s dni! Może masz bardziej aktualne ustawienia lub wybierzesz niewłaściwy plik? Pamiętaj o regularnym eksporcie ustawień!</string>
     <string name="metadata_warning_date_format">Niepoprawny format daty i czasu!</string>
     <string name="metadata_warning_different_version">Importujesz ustawienia z innej, nieco starszej wersji aplikacji. Prawdopodobnie to jest OK bo np.: importujesz ustawienia po aktualizacji do nowej wersji, ale sprawdź po zaimportowaniu, czy ustawienia są nadal poprawne!</string>
@@ -159,6 +154,5 @@
     <string name="metadata_label_device_model">Eksportowanie modelu urządzenia</string>
     <string name="metadata_label_encryption">Szyfrowanie pliku</string>
     <string name="metadata_format_new">Nowy zaszyfrowany format</string>
-    <string name="metadata_format_debug">Nowy format testowy (niezaszyfrowany)</string>
     <string name="metadata_format_other">Nieznany format eksportu</string>
 </resources>

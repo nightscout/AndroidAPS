@@ -171,22 +171,8 @@
     <string name="half_basal_exercise_target_summary">設定為一個數字，例如 160，這表示當臨時目標為 160 mg/dL 且高臨時目標提高敏感性=true時，在此數值運作 50%% 的基礎率（120 = 75%%；140 = 60%%）。</string>
     <string name="autoISF_settings_title">自動ISF設定</string>
     <string name="autoISF_settings_summary">AutoISF 允許在各種葡萄糖行為情境中調整胰島素敏感性因子 (ISF)\n\n它還可以調整SMB輸送設定</string>
-    <string name="acce_ISF_settings_title">acce_ISF設定</string>
-    <string name="acce_ISF_settings_summary">acce_ISF 設定：調整 ISF 以加速/減緩血糖變化</string>
-    <string name="enableautoISFwithcob">啟用 dura_ISF 與碳水化合物影響 (COB)</string>
-    <string name="enableautoISFwithcob_summary">當有碳水化合物影響 (COB) 啟動時啟用 dura_ISF</string>
-    <string name="bg_ISF_settings_title">bg_ISF設定</string>
-    <string name="bg_ISF_settings_summary">bg_ISF 設定：根據預定義的多邊形，根據血糖數值調整 ISF</string>
-    <string name="pp_ISF_settings_title">pp_ISF設定</string>
-    <string name="pp_ISF_settings_summary">pp_ISF 設定：用於餐後血糖升高的 ISF</string>
-    <string name="dura_ISF_settings_title">dura_ISF設定</string>
-    <string name="dura_ISF_settings_summary">dura_ISF 設定：針對高於目標的血糖平穩期的 ISF</string>
     <string name="smb_delivery_settings_title">SMB輸送設定</string>
     <string name="smb_delivery_settings_summary">這是一組選項，可以在ISF變強（即ISF數值較低）時，增加實際可輸送的SMB劑量。\n\n請小心使用</string>
-    <string name="full_loop_settings_title">全循環設定</string>
-    <string name="full_loop_settings_summary">全循環設定：調整 iobTH 以限制IOB增加</string>
-    <string name="use_autoISF_extensions_title">啟用 AutoISF 擴展功能</string>
-    <string name="use_autoISF_extensions_summary">這些包括最近的血糖行為所導致的ISF調整，替代的SMB啟用程式以及對完全閉環的支援</string>
     <string name="openapsama_enable_autoISF">啟用根據血糖變化進行的 ISF 調整</string>
     <string name="openapsama_autoISF_max_summary">類似於 autosens_max，這個設定定義了 ISF（胰島素敏感因子）的強度。\n\n預設值 1.0 實際上會關閉這個效果。\n\n警告：使用超過 2.5 的數值時務必非常謹慎。</string>
     <string name="openapsama_autoISF_min_summary">類似於 autosens_min，這個設定定義了 ISF（胰島素敏感因子）的最弱程度。\n\n預設值 1.0 實際上會關閉這個效果。</string>

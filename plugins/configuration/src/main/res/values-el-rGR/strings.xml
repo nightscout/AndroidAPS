@@ -36,7 +36,6 @@
     <string name="exitwizard">Παράλειψη του \"Οδηγού εγκατάστασης\"</string>
     <string name="setupwizard_loop_description">Πατήστε το παρακάτω πλήκτρο για να επιτρέψετε στο AndroidAPS να προτείνει/κάνει αλλαγές στον βασικό ρυθμό</string>
     <string name="setupwizard_sensitivity_description">Η προσθήκη Ευαισθησία χρησιμοποιείται για την ανίχνευση αλλαγών στην ευαισθησία και τον υπολογισμό του COB. Για περισσότερες πληροφορίες εδώ:</string>
-    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/el/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="setupwizard_aps_description">Επιλέξτε έναν από τους διαθέσιμους αλγόριθμους. Ταξινομούνται από το παλαιότερο στον νεότερο. Ένας νεότερος είναι συνήθως καλύτερος και πιο επιθετικός. Επομένως, αν είστε καινούριος στο κλειστό κύκλωμα, θα πρέπει πρώτα να επιλέξετε μόνο το AMA και όχι το τελευταίο. Μην ξεχάσετε να διαβάσετε το εγχειρίδιο του OpenAPS και να κάνετε τις ρυθμίσεις προτού αρχίσετε να το χρησιμοποιείτε.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Παρακαλώ ρυθμίστε τις παραμέτρους του RileyLink σας παρακάτω. Μετά την επιλογή ενός RileyLink, θα είναι δυνατόν να συνεχίσετε την εγκατάσταση μόλις η κατάσταση RileyLink είναι \"Συνδεδεμένο\". Αυτό μπορεί να διαρκέσει ένα λεπτό.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Σημείωση:</b> Μπορείτε να συνεχίσετε τη ρύθμιση μόλις η αντλία έχει ρυθμιστεί.\n</string>
@@ -45,8 +44,6 @@
     <string name="readstatus">Κατάσταση ανάγνωσης</string>
     <string name="data_choices">Επιλογές δεδομένων</string>
     <string name="fabric_upload">Αποστολή δεδομένων στο εργοστάσιο</string>
-    <string name="allow_automated_crash_reporting">Να επιτρέπεται η αυτόματη αποστολή αναφορών σφάλματος και χαρακτηριστικά χρήσης δεδομένων στους προγραμματιστές μέσω του fabric.io. service.</string>
-    <string name="summary_email_for_crash_report">Αυτή η ταυτότητα θα επισυνάπτεται στις αναφορές κρασαρίσματος ώστε να μπορούμε να επικοινωνήσουμε μαζί σας σε επείγουσες περιπτώσεις.</string>
     <string name="identification">Ταυτότητα (email, FB ή Discord κλπ)</string>
     <string name="request">Αίτημα</string>
     <string name="apsmode_title">Λειτουργία APS</string>
@@ -128,11 +125,9 @@
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">εξαγωγή πριν από %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">εξαγωγή στις %1$s</string>
     <string name="exported_less_than_hour_ago">η εξαγωγή έγινε από λιγότερο από μία ώρα πριν</string>
-    <string name="in_directory" comment="placeholder is for exported file path">στον φάκελο: %1$s</string>
     <string name="preferences_import_list_title">Επιλέξτε αρχείο για εισαγωγή</string>
     <string name="metadata_warning_different_flavour">Οι προτιμήσεις δημιουργήθηκαν με διαφορετική έκδοση του AAPS (%1$s) ενώ έχετε: %2$s.\n\nΟρισμένες ρυθμίσεις ενδέχεται να λείπουν ή να μην είναι έγκυρες - μετά την εισαγωγή παρακαλώ ελέγξτε και ενημερώστε τις προτιμήσεις σας.</string>
     <string name="metadata_warning_different_device">Οι προτιμήσεις δημιουργήθηκαν σε διαφορετική συσκευή. Είναι εντάξει αν κάνετε εισαγωγή από παλαιότερο/διαφορετικό τηλέφωνο, αλλά βεβαιωθείτε ότι οι εισαγόμενες προτιμήσεις είναι σωστές!</string>
-    <string name="metadata_warning_outdated_format">Χρησιμοποιείτε μια εξαγωγή με την ξεπερασμένη μορφή παλαιού τύπου από παλιές εκδόσεις του AAPS, η οποία δεν είναι ασφαλής! Χρησιμοποιήστε το μόνο ως έσχατη λύση, αν δεν έχετε μια εξαγωγή σε τρέχουσα μορφή JSON.</string>
     <string name="metadata_warning_old_export">Οι εισαγόμενες προτιμήσεις είναι ήδη %1$s ημέρών! Ίσως έχετε πιο πρόσφατες-ενημερωμένες προτιμήσεις ή επιλέξατε λάθος αρχείο; Θυμηθείτε να εξάγετε τακτικά τις προτιμήσεις σας!</string>
     <string name="metadata_warning_date_format">Μη έγκυρη μορφή ημερομηνίας-ώρας!</string>
     <string name="metadata_warning_different_version">Προτιμήσεις από διαφορετική δευτερεύουσα έκδοση της εφαρμογής. Είναι εντάξει αν εισάγετε μετά από αναβάθμιση, αλλά ελέγξτε μετά την εισαγωγή αν οι προτιμήσεις είναι ακόμα σωστές!</string>
@@ -159,6 +154,5 @@
     <string name="metadata_label_device_model">Εξαγωγή μοντέλου συσκευής</string>
     <string name="metadata_label_encryption">Κρυπτογράφηση αρχείων</string>
     <string name="metadata_format_new">Νέα κρυπτογραφημένη μορφή</string>
-    <string name="metadata_format_debug">Νέα μορφή εντοπισμού σφαλμάτων (μη κρυπτογραφημένη)</string>
     <string name="metadata_format_other">Άγνωστη μορφή εξαγωγής</string>
 </resources>

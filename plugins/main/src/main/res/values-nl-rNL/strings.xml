@@ -217,8 +217,6 @@
     <string name="overview_buttons_selection">Knoppen</string>
     <string name="show_calibration_button_summary">Stuurt een kalibratie naar xDrip+ of open het BYODA kalibratie venster</string>
     <string name="show_cgm_button_summary">Opent xDrip+ of BYODA, terug knop om terug te gaan naar AAPS</string>
-    <string name="dexcom_app_not_installed">Dexcom app is niet geïnstalleerd.</string>
-    <string name="dexcom_app_not_detected">Gelieve Dexcom app naar ondersteunde versie te updaten</string>
     <string name="error_starting_cgm">Kon de CGM applicatie niet starten. Zorg dat deze geïnstalleerd is.</string>
     <string name="not_available_full">Niet beschikbaar</string>
     <string name="constraints_violation">In strijd met beperkingen</string>
@@ -301,7 +299,6 @@
     <string name="skin">Skin</string>
     <string name="cannula_usage">gebruik:</string>
     <!--    Iob-->
-    <string name="send_logfiles">Logboekbestanden van vandaag verzenden aan ontwikkelaars samen met de onverwachte situatie.</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Toont een permanente melding met een beknopt overzicht van hetgeen de Loop momenteel doet</string>
     <string name="old_data">Oude gegevens</string>

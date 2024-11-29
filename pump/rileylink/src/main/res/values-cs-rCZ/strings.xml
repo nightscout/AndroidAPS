@@ -71,8 +71,6 @@
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Pumpa Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
-    <string name="riley_link_common_yes">Ano</string>
-    <string name="riley_link_common_no">Ne</string>
     <!-- RileyLink - Preferences -->
     <string name="riley_link_show_battery_level">Zobrazit úroveň baterie reportovanou OrangeLinkem/EmaLinkem/DiaLinkem</string>
     <string name="riley_link_show_battery_level_summary">NEPRACUJE s původním RileyLinkem. Nemusí pracovat s jinými alternativami RileyLinky.</string>

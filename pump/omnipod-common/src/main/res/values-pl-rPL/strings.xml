@@ -35,7 +35,6 @@
     <string name="omnipod_common_error_unexpected_exception">Wystąpił nieoczekiwany błąd. Proszę zgłosić! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation">Potwierdzenie</string>
-    <string name="omnipod_common_confirmation_time_or_timezone_change">Zmieniono czas i/lub strefę czasową na Podzie.</string>
     <string name="omnipod_common_confirmation_expiration_alerts_updated">Konfiguracja alarmów w Podzie została zaktualizowana.</string>
     <string name="omnipod_common_confirmation_time_on_pod_updated">Czas w Podzie został zaktualizowany.</string>
     <string name="omnipod_common_confirmation_suspended_delivery">Podawanie insuliny zostało całkowicie zawieszone.</string>
@@ -127,7 +126,6 @@
     <string name="omnipod_common_pod_status_normal">Normalny</string>
     <string name="omnipod_common_pod_status_suspended">Wstrzymany</string>
     <string name="omnipod_common_pod_status_pod_fault">Błąd Poda</string>
-    <string name="omnipod_common_pod_status_activation_time_exceeded">Przekroczono czas aktywacji</string>
     <string name="omnipod_common_pod_status_inactive">Nieaktywny</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Błąd Poda: %1$03d %2$s</string>
     <!-- Omnipod - Commands -->
@@ -153,7 +151,6 @@
     <string name="omnipod_common_cmd_set_fake_suspended_tbr">Ustaw fikcyjną tymczasową dawkę bazową, ponieważ Pod jest zawieszony</string>
     <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Anuluj fikcyjną tymczasową dawkę bazową, która została wprowadzona, ponieważ Pod był zawieszony</string>
     <string name="omnipod_common_cmd_split_tbr">Podziel tymczasową dawkę bazową z powodu niepewności w anulowaniu</string>
-    <string name="omnipod_common_cmd_beep_config">Konfiguracja dźwięków</string>
     <string name="omnipod_common_cmd_play_test_beep">Odtwarzaj test dźwięku</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_finish_pairing_reminder">Zakończ przypomnienie parowania</string>

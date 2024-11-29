@@ -2,9 +2,6 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_watchface_large">AAPS(Large)</string>
-    <string name="label_watchface_big_chart">AAPS(BigChart)</string>
-    <string name="label_watchface_no_chart">AAPS(NoChart)</string>
     <string name="label_watchface_circle">AAPS(Circle)</string>
     <string name="label_watchface_digital_style">AAPS(DigitalStyle)</string>
     <string name="label_watchface_custom">AAPS(Custom)</string>
@@ -19,7 +16,6 @@
     <string name="msg_warning_sync">No data received since %1$s! Check if AAPS on the phone sends data to watch</string>
     <string name="msg_warning_old">AAPS data is %1$s old! Check your sensor, xDrip+, NS, AAPS config or other!</string>
     <string name="pref_vibrate_on_bolus">Vibrate on Bolus</string>
-    <string name="pref_units_for_actions">Units for Actions</string>
     <string name="units_short">U</string>
     <string name="pref_display_settings">Display</string>
     <string name="pref_graph_settings">Graph</string>
@@ -65,10 +61,6 @@
     <string name="pref_quick_righty">Quick righty</string>
     <string name="pref_quick_lefty">Quick lefty</string>
     <string name="pref_modern_sparse">Modern Sparse</string>
-    <string name="pref_low">Low</string>
-    <string name="pref_medium">Medium</string>
-    <string name="pref_high">High</string>
-    <string name="pref_auto">Auto</string>
     <string name="pref_big_numbers">Big Numbers</string>
     <string name="pref_ring_history">Ring History</string>
     <string name="pref_light_ring_history">Light Ring History</string>
@@ -123,7 +115,6 @@
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Free amount</string>
     <string name="action_confirm">CONFIRM</string>
     <string name="action_timeshift">timeshift</string>
-    <string name="action_bolus">Bolus</string>
     <string name="bolus_progress">Bolus Progress</string>
     <string name="press_to_cancel">press to cancel</string>
     <string name="cancel_bolus">CANCEL BOLUS</string>
@@ -238,14 +229,7 @@
     <string name="key_dark" translatable="false">dark</string>
     <string name="key_input_design" translatable="false">input_design</string>
     <string name="key_complication_tap_action" translatable="false">complication_tap_action</string>
-    <string name="key_enable_custom_setting" translatable="false">enable_custom_setting</string>
-    <string name="key_digital_watchface" translatable="false">digital_watchface</string>
-    <string name="key_digital_timing" translatable="false">digital_timing</string>
-    <string name="key_analog_watchface" translatable="false">analog_watchface</string>
     <string name="key_show_seconds" translatable="false">show_second</string>
-    <string name="key_high_color" translatable="false">highcolor</string>
-    <string name="key_mid_color" translatable="false">midcolor</string>
-    <string name="key_low_color" translatable="false">lowcolor</string>
     <string name="key_include_external" translatable="false">include_external</string>
     <string name="key_switch_external" translatable="false">switch_external</string>
     <string name="increment">increment</string>
@@ -254,17 +238,11 @@
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
     <string name="no_tmp_basal_u_h">-.--U/h</string>
-    <string name="uploader_na">U: --%</string>
-    <string name="no_status">S: --</string>
-    <string name="time_stamp_na_min_ago">-- Min. ago</string>
-    <string name="delta_na">--- mg/dl</string>
-    <string name="no_loop_status">No Loop Status</string>
     <string name="cob_000g">000g</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00U</string>
     <string name="snooze_alert">AAPS Snooze Alert</string>
     <string name="sending_snooze">Sending Snooze to AAPS</string>
-    <string name="short_hour">h</string>
     <string name="week_short">w</string>
     <string name="day_short">d</string>
     <string name="hour_short">h</string>

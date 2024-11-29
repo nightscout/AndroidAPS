@@ -36,7 +36,6 @@
     <string name="exitwizard">Spring opsætningsguiden over</string>
     <string name="setupwizard_loop_description">Tryk på knappen nedenfor for at aktivere at AAPS foreslår/foretager basale ændringer</string>
     <string name="setupwizard_sensitivity_description">Følsomhedsplugin bruges til detektering af følsomhed og COB beregning. For mere info besøg:</string>
-    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/da/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="setupwizard_aps_description">Vælg en fra tilgængelige algoritmer. De er sorteret fra ældste til nyeste. Nyere algoritme er normalt mere kraftfulde og mere aggressive. Så hvis du er ny looper bør du sandsynligvis starte med AMA og ikke med den nyeste. Glem ikke at læse OpenAPS dokumentationen og konfigurere den før brug.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Konfigurer venligst din RileyLink nedenfor. Når du har valgt en RileyLink, vil det være muligt at fortsætte opsætningen, når RileyLink-status er \"Tilsluttet\". Dette kan tage et minut.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Bemærk:</b> Du kan fortsætte opsætningen, når pumpen er konfigureret.\n</string>
@@ -45,8 +44,6 @@
     <string name="readstatus">Læs status</string>
     <string name="data_choices">Valg Af Data</string>
     <string name="fabric_upload">Fabric Upload</string>
-    <string name="allow_automated_crash_reporting">Tillad automatisk nedbruds rapportering og funktionsbrug data som sendes til udviklerne via fabric.io tjenesten.</string>
-    <string name="summary_email_for_crash_report">Denne identifikation vil blive vedhæftet til nedbrudsrapporter, så vi kan kontakte dig i hastende tilfælde. Det er valgfrit.</string>
     <string name="identification">Identifikation (e-mail, FB eller Discord alias osv.)</string>
     <string name="request">Anmod</string>
     <string name="apsmode_title">APS Tilstand</string>
@@ -129,11 +126,9 @@
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">eksporteret %1$s siden</string>
     <string name="exported_at" comment="at placeholder we add export date">eksporteret ved %1$s</string>
     <string name="exported_less_than_hour_ago">eksporteret for mindre end time siden</string>
-    <string name="in_directory" comment="placeholder is for exported file path">i mappe %1$s</string>
     <string name="preferences_import_list_title">Vælg fil, der skal importeres</string>
     <string name="metadata_warning_different_flavour">Præferencer er oprettet med forskellig variant af AAPS (%1$s) Mens du har: %2$s.\n\nNogle indstillinger mangler eller er ugyldige-efter import, tjek og opdatér dine præferencer.</string>
     <string name="metadata_warning_different_device">Indstillinger er oprettet på en anden enhed. Det er OK, hvis du importerer fra ældre / anden telefon, men sørg for, at importerede præferencer er korrekte!</string>
-    <string name="metadata_warning_outdated_format">Du bruger det forældede ældre format fra gamle versioner af AAPS, som ikke er sikret. Brug kun den som en sidste udvej, hvis du ikke har en eksport i aktuelt, JSON-format.</string>
     <string name="metadata_warning_old_export">Importerede præferencer er allerede %1$s dag(e) gammel! Måske har du flere opdaterede præferencer, eller vælger du den forkerte fil? Husk at eksportere præferencer regelmæssigt!</string>
     <string name="metadata_warning_date_format">Ugyldigt datoformat!</string>
     <string name="metadata_warning_different_version">Indstillinger fra en anden mindre version af applikationen. Det er OK, hvis du importerer efter opgradering, men tjek efter import, hvis indstillingerne stadig er korrekte!</string>
@@ -160,6 +155,5 @@
     <string name="metadata_label_device_model">Eksporterer enhedsmodel</string>
     <string name="metadata_label_encryption">Filkryptering</string>
     <string name="metadata_format_new">Nyt krypteret format</string>
-    <string name="metadata_format_debug">Nyt fejlfindingsformat (ukrypteret)</string>
     <string name="metadata_format_other">Ukendt eksportformat</string>
 </resources>

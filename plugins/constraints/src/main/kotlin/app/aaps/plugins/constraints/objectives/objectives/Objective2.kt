@@ -50,7 +50,6 @@ class Objective2(injector: HasAndroidInjector) : Objective(injector, "exam", R.s
                 .option(Option(R.string.isf_increasingvalue, false))
                 .option(Option(R.string.isf_noeffect, false))
                 .hint(Hint(R.string.isf_hint1))
-                .hint(Hint(R.string.isf_hint2))
                 .learned(Learned(R.string.objectives_exam_learned_isf))
         )
         tasks.add(
@@ -253,6 +252,7 @@ class Objective2(injector: HasAndroidInjector) : Objective(injector, "exam", R.s
                 .option(Option(R.string.breadgrams_decay, true))
                 .option(Option(R.string.breadgrams_calc, true))
                 .hint(Hint(R.string.breadgrams_hint1))
+                .hint(Hint(R.string.breadgrams_hint2))
                 .learned(Learned(R.string.objectives_exam_learned_breadgrams))
         )
         tasks.add(

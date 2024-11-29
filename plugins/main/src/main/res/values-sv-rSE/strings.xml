@@ -203,8 +203,6 @@
     <string name="overview_buttons_selection">Knappar</string>
     <string name="show_calibration_button_summary">Sänder kalibrering till xDrip eller öppnar kalibreringsrutan i Dexcom-appen</string>
     <string name="show_cgm_button_summary">Öppnar xDrip+ eller Dexcom-appen. Bakåtknappen återgår till AAPS</string>
-    <string name="dexcom_app_not_installed">Dexcom-appen är inte installerad.</string>
-    <string name="dexcom_app_not_detected">Vänligen uppdatera din Dexcom-app till en supportad version</string>
     <string name="error_starting_cgm">Kunde inte starta CGM-appen. Kontrollera att den är installerad.</string>
     <string name="not_available_full">Ej tillgängligt</string>
     <string name="constraints_violation">Begränsning nådd</string>
@@ -283,7 +281,6 @@
     <string name="skin">Tema</string>
     <string name="cannula_usage">användning:</string>
     <!--    Iob-->
-    <string name="send_logfiles">Skicka dagens loggfiler till utvecklarna tillsammans med denna datumstämpel. Oväntad situation.</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Visar en konstant avisering med en kort sammanfattning av vad din loop gör</string>
     <string name="old_data">Aktuellt BG saknas!</string>

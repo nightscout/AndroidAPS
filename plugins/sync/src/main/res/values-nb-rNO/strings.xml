@@ -40,8 +40,6 @@
     <string name="nsclient_token_dialog_title">NS tilgangstoken</string>
     <string name="nsclient_token_dialog_message">Tilgangstoken laget på NS admin-side (min 17 tegn)</string>
     <string name="deliver_now">Lever nå</string>
-    <string name="clear_queue">Tøm kø</string>
-    <string name="show_queue">Vis kø</string>
     <string name="queue">Kø:</string>
     <string name="status">Status:</string>
     <string name="clear_log">Tøm logg</string>
@@ -89,13 +87,7 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Laster opp data til Tidepool</string>
-    <string name="tidepool_upload_cgm">Last opp CGM data</string>
-    <string name="tidepool_upload_bolus">Last opp behandlinger (insulin, karbohydrater)</string>
-    <string name="tidepool_upload_tbr">Last opp midl. basaler</string>
-    <string name="tidepool_upload_profile">Last opp profilbytter, midlertidig mål</string>
-    <string name="tidepool_upload_bg">Last opp BS tester</string>
     <string name="remove_all">Fjern alt</string>
-    <string name="reset_start">Tilbakestill start</string>
     <string name="upload_now">Last opp nå</string>
     <string name="not_connected">Ikke tilkoblet</string>
     <string name="read_only">Skrivebeskyttet</string>
@@ -134,7 +126,6 @@
     <string name="quick_wizard_not_available">Den valgte hurtigknappen er ikke lenger tilgjengelig, oppdater klokkeflis</string>
     <string name="quick_wizard_message">Hurtigknapp: %1$s\nBolus: %2$.2fE\nKarbo: %3$dg</string>
     <string name="user_action_not_available">Valgt brukerhandling %1$s er ikke lengre tilgjengelig, vennligst last inn flis på nytt</string>
-    <string name="wear_action_tempt_preset_error">Ukjent forhåndsinnstilling midlertidig mål: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Avbryt gjeldende midlertidig mål?</string>
     <string name="wear_action_tempt_unit_error">Forskjellige enheter brukt på klokke og telefon!</string>
     <string name="wear_action_tempt_zero_message">Null-midl.mål - skal gjeldende midlertidig mål avbrytes?</string>

@@ -40,8 +40,6 @@
     <string name="nsclient_token_dialog_title">NS access token</string>
     <string name="nsclient_token_dialog_message">Access token sukuriamas NS administratoriaus puslapyje (min. 17 simbolių)</string>
     <string name="deliver_now">Suleisti dabar</string>
-    <string name="clear_queue">Išvalyti eilę</string>
-    <string name="show_queue">Rodyti eilę</string>
     <string name="queue">Eilė:</string>
     <string name="status">Statusas:</string>
     <string name="clear_log">Ištrinti įrašą</string>
@@ -89,13 +87,7 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Perduoda duomenis į Tidepool</string>
-    <string name="tidepool_upload_cgm">Perduoti NGJ duomenis</string>
-    <string name="tidepool_upload_bolus">Įkelti terapijas (insulinas, angliavandeniai)</string>
-    <string name="tidepool_upload_tbr">Perkelti laikiną bazę</string>
-    <string name="tidepool_upload_profile">Perduoti profilio pokyčius, laikinas bazes</string>
-    <string name="tidepool_upload_bg">Perduoti gliukomačio testus</string>
     <string name="remove_all">Pašalinti visus</string>
-    <string name="reset_start">Pradėti iš naujo</string>
     <string name="upload_now">Įkelti dabar</string>
     <string name="not_connected">Neprisijungta</string>
     <string name="read_only">Tik skaityti</string>
@@ -127,7 +119,6 @@
     <string name="wizard_result">Wizard asistento skaičiuotuvas:\nInsulinas: %1$.2fU\nAngliavandeniai: %2$dg</string>
     <string name="quick_wizard_not_available">Pasirinktas greitasis patarėjas nebepasiekiamas, atnaujinkite valdiklį</string>
     <string name="quick_wizard_message">QuickWizard asistentas: %1$s\nInsulinas: %2$.2fU\nAngliavandeniai: %3$dg</string>
-    <string name="wear_action_tempt_preset_error">Nežinomas laikino tikslo ruošinys: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Atšaukti laikinus tikslus?</string>
     <string name="wear_action_tempt_unit_error">Laikrodyje ir telefone naudojami skirtingi vienetai!</string>
     <string name="wear_action_tempt_zero_message">Zero-Temp-Target - atšaukti laikinus tikslus?</string>

@@ -35,7 +35,6 @@
     <string name="omnipod_common_error_unexpected_exception">Непредвидена грешка. Моля, докладвайте! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation">Потвърждение</string>
-    <string name="omnipod_common_confirmation_time_or_timezone_change">Време и/или промяна на часовата зона на помпата.</string>
     <string name="omnipod_common_confirmation_expiration_alerts_updated">Конфигурацията на аларма е обновена в Pod.</string>
     <string name="omnipod_common_confirmation_time_on_pod_updated">Времето на Pod е актуализирано.</string>
     <string name="omnipod_common_confirmation_suspended_delivery">Цялата доставка на инсулин е спряна.</string>
@@ -122,7 +121,6 @@
     <string name="omnipod_common_pod_status_running">Изпълнява</string>
     <string name="omnipod_common_pod_status_suspended">Прекратено</string>
     <string name="omnipod_common_pod_status_pod_fault">Грешка в под</string>
-    <string name="omnipod_common_pod_status_activation_time_exceeded">Времето за активация изтече</string>
     <string name="omnipod_common_pod_status_inactive">Неактивен</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Грешка на под: %1$03d %2$s</string>
     <!-- Omnipod - Commands -->
@@ -148,7 +146,6 @@
     <string name="omnipod_common_cmd_set_fake_suspended_tbr">Поставете фалшив временен базал, защото Pod е спряно</string>
     <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Анулират фалшив временен базал, който е създаден, защото Pod е спряно</string>
     <string name="omnipod_common_cmd_split_tbr">Раздели временния базал поради грешка в анулация на предишен</string>
-    <string name="omnipod_common_cmd_beep_config">Конфигуразия на звук</string>
     <string name="omnipod_common_cmd_play_test_beep">Възпроизвеждане на тестов звук</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_finish_pairing_reminder">Край на напомняне за сдвояване</string>

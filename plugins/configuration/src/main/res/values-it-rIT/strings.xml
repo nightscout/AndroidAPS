@@ -37,7 +37,6 @@
     <string name="exitwizard">Salta configurazione guidata</string>
     <string name="setupwizard_loop_description">Premi il tasto in basso per permettere ad AAPS di proporre/fare modifiche alla basale</string>
     <string name="setupwizard_sensitivity_description">Il plugin di sensibilità è usato per il rilevamento della sensibilità all\'insulina e il calcolo di COB. Per ulteriori informazioni visita:</string>
-    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="setupwizard_aps_description">Seleziona uno degli algoritmi disponibili. Sono ordinati dal più vecchio al più recente. L\'algoritmo più recente è solitamente più potente e più aggressivo. Pertanto, se sei un nuovo utente, probabilmente dovresti iniziare con AMA e non con l\'ultimo. Non dimenticare di leggere la documentazione di OpenAPS e di configurarlo prima dell\'uso.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Configura il RileyLink di seguito. Dopo aver selezionato un RileyLink, sarà possibile continuare la configurazione una volta che lo stato del RileyLink sarà \"Connesso\". Questo potrebbe richiedere un minuto.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Nota:</b> Puoi continuare la configurazione una volta che il micro è stato configurato.\n</string>
@@ -48,8 +47,6 @@
     <string name="fabric_upload">Invio a fabric.io</string>
     <string name="unattended_settings_export">Esportazione Impostazioni Non presidiata</string>
     <string name="unattended_settings_export_summary">Abilitando questa opzione memorizzerai in modo sicuro la tua password sul tuo telefono</string>
-    <string name="allow_automated_crash_reporting">Consenti la segnalazione automatica degli errori e l\'invio dei dati d\'uso delle funzioni dell\'app agli sviluppatori tramite il servizio fabric.io.</string>
-    <string name="summary_email_for_crash_report">Questa identificazione verrà allegata ai rapporti sugli arresti anomali in modo che possiamo contattarti in casi urgenti. È facoltativo.</string>
     <string name="identification">Identificazione (email, nick Discord o FB, etc)</string>
     <string name="request">Richiesta</string>
     <string name="apsmode_title">Modalità APS</string>
@@ -136,11 +133,9 @@
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">esportato %1$s fa</string>
     <string name="exported_at" comment="at placeholder we add export date">esportato: %1$s</string>
     <string name="exported_less_than_hour_ago">esportato meno di un\'ora fa</string>
-    <string name="in_directory" comment="placeholder is for exported file path">nella directory: %1$s</string>
     <string name="preferences_import_list_title">Seleziona il file da importare</string>
     <string name="metadata_warning_different_flavour">Le preferenze sono state create con una differente versione di AAPS (%1$s) mentre invece tu hai: %2$s.\n\nAlcune impostazioni potrebbero mancare o non essere valide - dopo l\'importazione controlla e aggiornare le tue preferenze.</string>
     <string name="metadata_warning_different_device">Le preferenze sono state create su un dispositivo diverso. Va bene importarle da un vecchio/diverso telefono, ma assicurati che le preferenze importate siano corrette!</string>
-    <string name="metadata_warning_outdated_format">Stai usando il formato precedente (obsoleto) delle vecchie versioni di APPS, che non è sicuro! Usalo solo come ultima risorsa, se non hai un\'esportazione nel corrente formato JSON.</string>
     <string name="metadata_warning_old_export">Le preferenze importate hanno già %1$s giorni! Forse hai preferenze più aggiornate. Hai scelto il file sbagliato? Ricorda di esportare le preferenze regolarmente!</string>
     <string name="metadata_warning_date_format">Formato data-ora non valido!</string>
     <string name="metadata_warning_different_version">Le preferenze arrivano da una differente versione secondaria dell\'applicazione (minor). Va bene se le stai importando dopo l\'aggiornamento, ma controlla che, dopo l\'importazione, le preferenze siano ancora corrette!</string>
@@ -167,7 +162,7 @@
     <string name="metadata_label_device_model">Esportazione modello dispositivo</string>
     <string name="metadata_label_encryption">Crittografia file</string>
     <string name="metadata_format_new">Nuovo formato crittografato</string>
-    <string name="metadata_format_debug">Nuovo formato di debug (non crittografato)</string>
     <string name="metadata_format_other">Formato esportazione sconosciuto</string>
     <string name="reset_aps_results">Resetta i risultati di APS</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Errore nell\'accedere al filesystem. Selezionare correttamente la directory AAPS.</string>
 </resources>

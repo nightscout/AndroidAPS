@@ -218,8 +218,6 @@
     <string name="overview_buttons_selection">Botones</string>
     <string name="show_calibration_button_summary">Envía una calibración a xDrip+ o abre la pantalla de calibración de Dexcom BYODA</string>
     <string name="show_cgm_button_summary">Abre xDrip+ o Dexcom BYODA. Si pulsas el botón atrás, regresa a AAPS</string>
-    <string name="dexcom_app_not_installed">La aplicación Dexcom no está instalada.</string>
-    <string name="dexcom_app_not_detected">Actualiza tu aplicación de Dexcom a una versión compatible</string>
     <string name="error_starting_cgm">No se pudo iniciar la aplicación CGM. Asegúrate de que está instalada.</string>
     <string name="not_available_full">No disponible</string>
     <string name="constraints_violation">Violación de restricciones</string>
@@ -303,7 +301,6 @@
     <string name="skin">Tema</string>
     <string name="cannula_usage">Uso:</string>
     <!--    Iob-->
-    <string name="send_logfiles">Enviar los archivos de registro de hoy a los desarrolladores. Situación inesperada.</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Muestra una notificación en curso con un breve resumen de lo que está haciendo tu bucle</string>
     <string name="old_data">DATOS CADUCADOS</string>

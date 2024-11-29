@@ -13,6 +13,8 @@
     <string name="cwf_comment_cob2_ext">COB 值（來自 AAPSClient 或 AAPSClient2）</string>
     <string name="cwf_comment_delta_ext">短期血糖變化（來自 AAPSClient 或 AAPSClient2）</string>
     <string name="cwf_comment_avg_delta_ext">平均血糖變化（15 分鐘）（來自 AAPSClient 或 AAPSClient2）</string>
+    <string name="cwf_comment_temp_target_ext">臨時目標或低臨時目標 - 高臨時目標(從AAPSClient 或AAPSClient2)</string>
+    <string name="cwf_comment_reservoir_ext">胰島素儲存量(從AAPSClient 或 AAPSClient2)</string>
     <string name="cwf_comment_rig_battery_ext">全球循環電池（%）（來自 AAPSClient 或 AAPSClient2）</string>
     <string name="cwf_comment_basalRate_ext">基礎率（來自 AAPSClient 或 AAPSClient2）</string>
     <string name="cwf_comment_bgi_ext">BGI 值（來自 AAPSClient 或 AAPSClient2）</string>
@@ -28,6 +30,8 @@
     <string name="cwf_comment_cob2">COB 值</string>
     <string name="cwf_comment_delta">短期血糖變化</string>
     <string name="cwf_comment_avg_delta">平均血糖變化（15 分鐘）</string>
+    <string name="cwf_comment_temp_target">臨時目標或低臨時目標 - 高臨時目標</string>
+    <string name="cwf_comment_reservoir">胰島素儲存量</string>
     <string name="cwf_comment_uploader_battery">手機電池電量 (%)</string>
     <string name="cwf_comment_rig_battery">全域循環電池電量 (%)</string>
     <string name="cwf_comment_basalRate">基礎率</string>

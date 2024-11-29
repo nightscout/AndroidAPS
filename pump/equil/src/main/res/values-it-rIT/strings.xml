@@ -68,7 +68,6 @@
     <string name="equil_common_cmd_set_tbr">Imposta basale temporanea</string>
     <string name="equil_common_cmd_cancel_tbr">Cancella basale temporanea</string>
     <string name="equil_common_cmd_set_basal_schedule">Imposta piano basale</string>
-    <string name="equil_common_cmd_get_status">Ottieni Stato Equil</string>
     <string name="equil_common_cmd_set_time">Imposta ora</string>
     <string name="equil_common_cmd_suspend_delivery">Sospendi erogazione</string>
     <string name="equil_common_cmd_resume_delivery">Riprendi erogazione</string>
@@ -92,7 +91,6 @@
     <string name="equil_command_connect_no_response">Nessuna risposta dal micro</string>
     <string name="equil_command__unknown">Stato sconosciuto per il comando</string>
     <string name="equil_install">Apporre il micro sul corpo</string>
-    <string name="equil_password_title">Password micro</string>
     <string name="equil_settings">Impostazioni</string>
     <string name="equil_settings_alarm_battery">Allarme batteria bassa</string>
     <string name="equil_settings_alarm_insulin">Allarme livello basso insulina</string>
@@ -101,7 +99,6 @@
     <string name="equil_history_group_pair">Accoppiamento</string>
     <string name="equil_history_group_bolus">Boli</string>
     <string name="equil_history_group_basal">Basali</string>
-    <string name="equil_history_group_prime">Riempimento</string>
     <string name="equil_history_group_configuration">Configurazioni</string>
     <string name="equil_tab_action">Cronologia azioni</string>
     <string name="equil_tab_equil">Storico Equil</string>

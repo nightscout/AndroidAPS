@@ -54,7 +54,7 @@ class DiaconnG8Fragment : DaggerFragment() {
     private var disposable: CompositeDisposable = CompositeDisposable()
 
     private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
-    private lateinit var refreshLoop: Runnable
+    private var refreshLoop: Runnable
 
     private var _binding: DiaconnG8FragmentBinding? = null
 

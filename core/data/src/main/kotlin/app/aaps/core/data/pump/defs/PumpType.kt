@@ -4,7 +4,29 @@ package app.aaps.core.data.pump.defs
 /**
  * Description of pump capabilities
  */
-enum class PumpType {
+enum class PumpType(
+    val description: String,
+    private val manufacturer: ManufacturerType? = null,
+    private val model: String = "NONE",
+    private val bolusSize: Double = 0.0,
+    private val specialBolusSize: DoseStepSize? = null,
+    private val extendedBolusSettings: DoseSettings? = null,
+    private val pumpTempBasalType: PumpTempBasalType? = null,
+    private val tbrSettings: DoseSettings? = null,
+    private val specialBasalDurations: Array<Capability> = arrayOf(Capability.BasalRate_Duration15minAllowed, Capability.BasalRate_Duration30minAllowed),
+    private val baseBasalMinValue: Double = 0.01,
+    private val baseBasalMaxValue: Double? = null,
+    private val baseBasalStep: Double = 1.0,
+    private val baseBasalSpecialSteps: DoseStepSize? = null,
+    private val pumpCapability: PumpCapability? = null,
+    val hasCustomUnreachableAlertCheck: Boolean = false,
+    private val isPatchPump: Boolean = false,
+    private val maxReservoirReading: Int = 50,
+    val supportBatteryLevel: Boolean = true,
+    val useHardwareLink: Boolean = false,
+    val source: Source = Source.VirtualPump,
+    private val parent: PumpType? = null
+) {
 
     GENERIC_AAPS(
         description = "Generic AAPS",
@@ -15,7 +37,7 @@ enum class PumpType {
         extendedBolusSettings = DoseSettings(0.05, 30, 8 * 60, 0.05),
         pumpTempBasalType = PumpTempBasalType.Percent,
         tbrSettings = DoseSettings(10.0, 30, 24 * 60, 0.0, 500.0),
-        specialBasalDurations = PumpCapability.BasalRate_Duration15and30minAllowed,
+        specialBasalDurations = arrayOf(Capability.BasalRate_Duration15minAllowed, Capability.BasalRate_Duration30minAllowed),
         baseBasalMinValue = 0.01,
         baseBasalStep = 0.01,
         baseBasalSpecialSteps = null,
@@ -31,7 +53,7 @@ enum class PumpType {
         extendedBolusSettings = DoseSettings(0.05, 30, 24 * 60, 1.0),
         pumpTempBasalType = PumpTempBasalType.Percent,
         tbrSettings = DoseSettings(5.0, 30, 24 * 60, 0.0, 200.0),
-        specialBasalDurations = PumpCapability.BasalRate_Duration30minAllowed,
+        specialBasalDurations = arrayOf(Capability.BasalRate_Duration30minAllowed),
         baseBasalMinValue = 0.05,
         baseBasalStep = 0.05,
         baseBasalSpecialSteps = null,
@@ -47,7 +69,7 @@ enum class PumpType {
         extendedBolusSettings = DoseSettings(0.1, 15, 12 * 60, 0.1),
         pumpTempBasalType = PumpTempBasalType.Percent,
         tbrSettings = DoseSettings(10.0, 15, 12 * 60, 0.0, 500.0),
-        specialBasalDurations = PumpCapability.BasalRate_Duration15and30minAllowed,
+        specialBasalDurations = arrayOf(Capability.BasalRate_Duration15minAllowed, Capability.BasalRate_Duration30minAllowed),
         baseBasalMinValue = 0.01,
         baseBasalStep = 0.01,
         baseBasalSpecialSteps = DoseStepSize.ComboBasal,
@@ -64,7 +86,7 @@ enum class PumpType {
         extendedBolusSettings = DoseSettings(0.1, 15, 12 * 60, 0.1),
         pumpTempBasalType = PumpTempBasalType.Percent,
         tbrSettings = DoseSettings(10.0, 15, 12 * 60, 0.0, 500.0),
-        specialBasalDurations = PumpCapability.BasalRate_Duration15and30minAllowed,
+        specialBasalDurations = arrayOf(Capability.BasalRate_Duration15minAllowed, Capability.BasalRate_Duration30minAllowed),
         baseBasalMinValue = 0.01,
         baseBasalStep = 0.1,
         baseBasalSpecialSteps = null,
@@ -79,7 +101,7 @@ enum class PumpType {
         extendedBolusSettings = DoseSettings(0.05, 15, 24 * 60, 0.05),
         pumpTempBasalType = PumpTempBasalType.Percent,
         tbrSettings = DoseSettings(10.0, 15, 24 * 60, 0.0, 250.0),
-        specialBasalDurations = PumpCapability.BasalRate_Duration15and30minAllowed,
+        specialBasalDurations = arrayOf(Capability.BasalRate_Duration15minAllowed, Capability.BasalRate_Duration30minAllowed),
         baseBasalMinValue = 0.02,
         baseBasalStep = 0.01,
         baseBasalSpecialSteps = null,
@@ -94,7 +116,7 @@ enum class PumpType {
         extendedBolusSettings = DoseSettings(0.01, 15, 24 * 60, 0.05),
         pumpTempBasalType = PumpTempBasalType.Percent,
         tbrSettings = DoseSettings(10.0, 15, 24 * 60, 0.0, 250.0),
-        specialBasalDurations = PumpCapability.BasalRate_Duration15and30minAllowed,
+        specialBasalDurations = arrayOf(Capability.BasalRate_Duration15minAllowed, Capability.BasalRate_Duration30minAllowed),
         baseBasalMinValue = 0.02,
         baseBasalMaxValue = null,
         baseBasalStep = 0.01,
@@ -111,7 +133,7 @@ enum class PumpType {
         extendedBolusSettings = DoseSettings(0.01, 15, 24 * 60, 0.05),
         pumpTempBasalType = PumpTempBasalType.Percent,
         tbrSettings = DoseSettings(10.0, 15, 24 * 60, 0.0, 250.0),
-        specialBasalDurations = PumpCapability.BasalRate_Duration15and30minAllowed,
+        specialBasalDurations = arrayOf(Capability.BasalRate_Duration15minAllowed, Capability.BasalRate_Duration30minAllowed),
         baseBasalMinValue = 0.02,
         baseBasalMaxValue = null,
         baseBasalStep = 0.01,
@@ -128,7 +150,7 @@ enum class PumpType {
         extendedBolusSettings = DoseSettings(0.05, 30, 12 * 60, 0.05),
         pumpTempBasalType = PumpTempBasalType.Percent,
         tbrSettings = DoseSettings(10.0, 30, 24 * 60, 0.0, 300.0),
-        specialBasalDurations = PumpCapability.BasalRate_Duration30minAllowed,
+        specialBasalDurations = arrayOf(Capability.BasalRate_Duration30minAllowed),
         baseBasalMinValue = 0.025,
         baseBasalMaxValue = 5.0,
         baseBasalStep = 0.0,
@@ -145,7 +167,7 @@ enum class PumpType {
         extendedBolusSettings = DoseSettings(0.05, 30, 8 * 60, 0.05),
         pumpTempBasalType = PumpTempBasalType.Percent,
         tbrSettings = DoseSettings(10.0, 60, 24 * 60, 0.0, 200.0),
-        specialBasalDurations = PumpCapability.BasalRate_Duration15and30minNotAllowed,
+        specialBasalDurations = arrayOf(Capability.BasalRate_Duration15minAllowed, Capability.BasalRate_Duration30minAllowed),
         baseBasalMinValue = 0.04,
         baseBasalStep = 0.01,
         baseBasalSpecialSteps = null,
@@ -161,7 +183,7 @@ enum class PumpType {
         extendedBolusSettings = DoseSettings(0.05, 30, 8 * 60, 0.05),
         pumpTempBasalType = PumpTempBasalType.Percent,
         tbrSettings = DoseSettings(10.0, 60, 24 * 60, 0.0, 200.0),
-        specialBasalDurations = PumpCapability.BasalRate_Duration15and30minNotAllowed,
+        specialBasalDurations = arrayOf(Capability.BasalRate_Duration15minAllowed, Capability.BasalRate_Duration30minAllowed),
         baseBasalMinValue = 0.1,
         baseBasalStep = 0.01,
         baseBasalSpecialSteps = null,
@@ -177,7 +199,7 @@ enum class PumpType {
         extendedBolusSettings = DoseSettings(0.05, 30, 8 * 60, 0.05),
         pumpTempBasalType = PumpTempBasalType.Percent,
         tbrSettings = DoseSettings(10.0, 60, 24 * 60, 0.0, 200.0),
-        specialBasalDurations = PumpCapability.BasalRate_Duration15and30minAllowed,
+        specialBasalDurations = arrayOf(Capability.BasalRate_Duration15minAllowed, Capability.BasalRate_Duration30minAllowed),
         baseBasalMinValue = 0.04,
         baseBasalStep = 0.01,
         baseBasalSpecialSteps = null,
@@ -196,7 +218,7 @@ enum class PumpType {
         extendedBolusSettings = DoseSettings(0.05, 30, 8 * 60, 0.05),
         pumpTempBasalType = PumpTempBasalType.Absolute,
         tbrSettings = DoseSettings(0.05, 30, 12 * 60, 0.0, 30.0),
-        specialBasalDurations = PumpCapability.BasalRate_Duration30minAllowed,
+        specialBasalDurations = arrayOf(Capability.BasalRate_Duration30minAllowed),
         baseBasalMinValue = 0.05,
         baseBasalMaxValue = null,
         baseBasalStep = 0.05,
@@ -218,7 +240,7 @@ enum class PumpType {
         extendedBolusSettings = DoseSettings(0.05, 30, 8 * 60, 0.05),
         pumpTempBasalType = PumpTempBasalType.Absolute,
         tbrSettings = DoseSettings(0.05, 30, 12 * 60, 0.0, 30.0),
-        specialBasalDurations = PumpCapability.BasalRate_Duration30minAllowed,
+        specialBasalDurations = arrayOf(Capability.BasalRate_Duration30minAllowed),
         baseBasalMinValue = 0.05,
         baseBasalMaxValue = null,
         baseBasalStep = 0.05,
@@ -238,7 +260,7 @@ enum class PumpType {
         extendedBolusSettings = DoseSettings(0.05, 30, 8 * 60, 0.05),
         pumpTempBasalType = PumpTempBasalType.Absolute,
         tbrSettings = DoseSettings(0.05, 30, 24 * 60, 0.0, 35.0),
-        specialBasalDurations = PumpCapability.BasalRate_Duration30minAllowed,
+        specialBasalDurations = arrayOf(Capability.BasalRate_Duration30minAllowed),
         baseBasalMinValue = 0.05,
         baseBasalStep = 0.05,
         baseBasalSpecialSteps = null,
@@ -264,7 +286,7 @@ enum class PumpType {
         extendedBolusSettings = DoseSettings(0.05, 30, 8 * 60, 0.05),
         pumpTempBasalType = PumpTempBasalType.Absolute,
         tbrSettings = DoseSettings(0.05, 30, 24 * 60, 0.0, 35.0),
-        specialBasalDurations = PumpCapability.BasalRate_Duration30minAllowed,
+        specialBasalDurations = arrayOf(Capability.BasalRate_Duration30minAllowed),
         baseBasalMinValue = 0.025,
         baseBasalStep = 0.025,
         baseBasalSpecialSteps = DoseStepSize.MedtronicVeoBasal,
@@ -281,7 +303,7 @@ enum class PumpType {
         extendedBolusSettings = DoseSettings(0.05, 30, 8 * 60, 0.05),
         pumpTempBasalType = PumpTempBasalType.Absolute,
         tbrSettings = DoseSettings(0.05, 30, 24 * 60, 0.0, 35.0),
-        specialBasalDurations = PumpCapability.BasalRate_Duration30minAllowed,
+        specialBasalDurations = arrayOf(Capability.BasalRate_Duration30minAllowed),
         baseBasalMinValue = 0.025,
         baseBasalStep = 0.025,
         baseBasalSpecialSteps = DoseStepSize.MedtronicVeoBasal,
@@ -297,7 +319,7 @@ enum class PumpType {
         extendedBolusSettings = DoseSettings(0.01, 15, 8 * 60, 0.4),
         pumpTempBasalType = PumpTempBasalType.Percent,
         tbrSettings = DoseSettings(1.0, 15, 8 * 60, 0.0, 250.0),
-        specialBasalDurations = PumpCapability.BasalRate_Duration15and30minAllowed,
+        specialBasalDurations = arrayOf(Capability.BasalRate_Duration15minAllowed, Capability.BasalRate_Duration30minAllowed),
         baseBasalMinValue = 0.1,
         baseBasalStep = 0.001,
         baseBasalSpecialSteps = null,
@@ -316,7 +338,7 @@ enum class PumpType {
         extendedBolusSettings = DoseSettings(0.1, 15, 12 * 60, 0.1),
         pumpTempBasalType = PumpTempBasalType.Percent,
         tbrSettings = DoseSettings(1.0, 15, 24 * 60, 0.0, 500.0),
-        specialBasalDurations = PumpCapability.BasalRate_Duration15and30minAllowed,
+        specialBasalDurations = arrayOf(Capability.BasalRate_Duration15minAllowed, Capability.BasalRate_Duration30minAllowed),
         baseBasalMinValue = 0.02,
         baseBasalMaxValue = 40.0,
         baseBasalStep = 0.01,
@@ -361,7 +383,7 @@ enum class PumpType {
         extendedBolusSettings = DoseSettings(0.05, 10, 5 * 60, 0.05),
         pumpTempBasalType = PumpTempBasalType.Absolute,
         tbrSettings = DoseSettings(0.01, 30, 24 * 60, 0.0, 15.0),
-        specialBasalDurations = PumpCapability.BasalRate_Duration30minAllowed,
+        specialBasalDurations = arrayOf(Capability.BasalRate_Duration30minAllowed),
         baseBasalMinValue = 0.05,
         baseBasalMaxValue = 3.0,
         baseBasalStep = 0.01,
@@ -380,7 +402,7 @@ enum class PumpType {
         extendedBolusSettings = DoseSettings(0.05, 30, 8 * 60, 0.05, 25.0),
         pumpTempBasalType = PumpTempBasalType.Absolute,
         tbrSettings = DoseSettings(0.05, 30, 12 * 60, 0.0, 15.0),
-        specialBasalDurations = PumpCapability.BasalRate_Duration30minAllowed,
+        specialBasalDurations = arrayOf(Capability.BasalRate_Duration30minAllowed),
         baseBasalMinValue = 0.05,
         baseBasalMaxValue = 15.0,
         baseBasalStep = 0.05,
@@ -401,7 +423,7 @@ enum class PumpType {
         extendedBolusSettings = DoseSettings(0.05, 30, 8 * 60, 0.05, 30.0),
         pumpTempBasalType = PumpTempBasalType.Absolute,
         tbrSettings = DoseSettings(0.05, 30, 12 * 60, 0.0, 25.0),
-        specialBasalDurations = PumpCapability.BasalRate_Duration30minAllowed,
+        specialBasalDurations = arrayOf(Capability.BasalRate_Duration30minAllowed),
         baseBasalMinValue = 0.05,
         baseBasalMaxValue = 25.0,
         baseBasalStep = 0.05,
@@ -420,7 +442,7 @@ enum class PumpType {
         extendedBolusSettings = DoseSettings(0.05, 30, 8 * 60, 0.05, 30.0),
         pumpTempBasalType = PumpTempBasalType.Absolute,
         tbrSettings = DoseSettings(0.05, 30, 12 * 60, 0.0, 30.0),
-        specialBasalDurations = PumpCapability.BasalRate_Duration30minAllowed,
+        specialBasalDurations = arrayOf(Capability.BasalRate_Duration30minAllowed),
         baseBasalMinValue = 0.05,
         baseBasalMaxValue = 30.0,
         baseBasalStep = 0.05,
@@ -444,7 +466,7 @@ enum class PumpType {
         extendedBolusSettings = DoseSettings(0.05, 30, 5 * 60, 0.05),
         pumpTempBasalType = PumpTempBasalType.Absolute,
         tbrSettings = DoseSettings(0.05, 30, 24 * 60, 0.0, 35.0),
-        specialBasalDurations = PumpCapability.BasalRate_Duration30minAllowed,
+        specialBasalDurations = arrayOf(Capability.BasalRate_Duration30minAllowed),
         baseBasalMinValue = 0.05,
         baseBasalMaxValue = 3.0,
         baseBasalStep = 0.01,
@@ -454,57 +476,21 @@ enum class PumpType {
         useHardwareLink = true,
     );
 
-    val description: String
-    var manufacturer: ManufacturerType? = null
-        get() = parent?.manufacturer ?: field
-        private set
-    var model: String = "NONE"
-        get() = parent?.model ?: field
-        private set
-    var bolusSize = 0.0
-        get() = parent?.bolusSize ?: field
-    var specialBolusSize: DoseStepSize? = null
-        get() = parent?.specialBolusSize ?: field
-    var extendedBolusSettings: DoseSettings? = null
-        get() = parent?.extendedBolusSettings ?: field
-        private set
-    var pumpTempBasalType: PumpTempBasalType? = null
-        get() = parent?.pumpTempBasalType ?: field
-        private set
-    var tbrSettings: DoseSettings? = null
-        get() = parent?.tbrSettings ?: field
-        private set
-    var specialBasalDurations: PumpCapability? = null
-        get() = parent?.specialBasalDurations ?: field
-        ?: PumpCapability.BasalRate_Duration15and30minNotAllowed
-        private set
-    var baseBasalMinValue = 0.01
-        get() = parent?.baseBasalMinValue ?: field
-        private set
-    var baseBasalMaxValue: Double? = null
-        get() = parent?.baseBasalMaxValue ?: field
-    var baseBasalStep = 1.0
-        get() = parent?.baseBasalStep ?: field
-        private set
-    var baseBasalSpecialSteps: DoseStepSize? = null
-        get() = parent?.baseBasalSpecialSteps ?: field
-    var pumpCapability: PumpCapability? = null
-        get() = parent?.pumpCapability ?: field
-        private set
-    var hasCustomUnreachableAlertCheck = false
-        private set
-    var isPatchPump = false
-        get() = parent?.isPatchPump ?: field
-        private set
-    var maxReservoirReading = 50
-        get() = parent?.maxReservoirReading ?: field
-        private set
-    var supportBatteryLevel = true
-        private set
-    var useHardwareLink = false
-        private set
-    private var parent: PumpType? = null
-    val source: Source
+    fun manufacturer() = parent?.manufacturer ?: manufacturer ?: throw IllegalStateException()
+    fun model() = parent?.model ?: model
+    fun bolusSize() = parent?.bolusSize ?: bolusSize
+    fun specialBolusSize() = parent?.specialBolusSize ?: specialBolusSize
+    fun extendedBolusSettings() = parent?.extendedBolusSettings ?: extendedBolusSettings
+    fun pumpTempBasalType() = parent?.pumpTempBasalType ?: pumpTempBasalType
+    fun tbrSettings() = parent?.tbrSettings ?: tbrSettings
+    fun specialBasalDurations() = parent?.specialBasalDurations ?: specialBasalDurations
+    fun baseBasalMinValue() = parent?.baseBasalMinValue ?: baseBasalMinValue
+    fun baseBasalMaxValue() = parent?.baseBasalMaxValue ?: baseBasalMaxValue
+    fun baseBasalStep() = parent?.baseBasalStep ?: baseBasalStep
+    fun baseBasalSpecialSteps() = parent?.baseBasalSpecialSteps ?: baseBasalSpecialSteps
+    fun pumpCapability() = parent?.pumpCapability ?: pumpCapability
+    fun isPatchPump() = parent?.isPatchPump ?: isPatchPump
+    fun maxReservoirReading() = parent?.maxReservoirReading ?: maxReservoirReading
 
     enum class Source {
         Dana,
@@ -534,57 +520,5 @@ enum class PumpType {
             entries.firstOrNull { it.description == desc } ?: GENERIC_AAPS
 
         fun fromString(name: String?) = entries.firstOrNull { it.name == name }
-    }
-
-    constructor(description: String, model: String, parent: PumpType, pumpCapability: PumpCapability? = null, source: Source? = null) {
-        this.description = description
-        this.parent = parent
-        this.source = source ?: parent.source
-        this.pumpCapability = pumpCapability
-        parent.model = model
-    }
-
-    constructor(
-        description: String,
-        manufacturer: ManufacturerType,
-        model: String,
-        bolusSize: Double = 0.0,
-        specialBolusSize: DoseStepSize? = null,
-        extendedBolusSettings: DoseSettings,
-        pumpTempBasalType: PumpTempBasalType? = null,
-        tbrSettings: DoseSettings,
-        specialBasalDurations: PumpCapability? = null,
-        baseBasalMinValue: Double = 0.01,
-        baseBasalMaxValue: Double? = null,
-        baseBasalStep: Double = 1.0,
-        baseBasalSpecialSteps: DoseStepSize? = null,
-        pumpCapability: PumpCapability,
-        hasCustomUnreachableAlertCheck: Boolean = false,
-        isPatchPump: Boolean = false,
-        maxReservoirReading: Int = 50,
-        supportBatteryLevel: Boolean = true,
-        useHardwareLink: Boolean = false,
-        source: Source = Source.VirtualPump
-    ) {
-        this.description = description
-        this.manufacturer = manufacturer
-        this.model = model
-        this.bolusSize = bolusSize
-        this.specialBolusSize = specialBolusSize
-        this.extendedBolusSettings = extendedBolusSettings
-        this.pumpTempBasalType = pumpTempBasalType
-        this.tbrSettings = tbrSettings
-        this.specialBasalDurations = specialBasalDurations
-        this.baseBasalMinValue = baseBasalMinValue
-        this.baseBasalMaxValue = baseBasalMaxValue
-        this.baseBasalStep = baseBasalStep
-        this.baseBasalSpecialSteps = baseBasalSpecialSteps
-        this.pumpCapability = pumpCapability
-        this.hasCustomUnreachableAlertCheck = hasCustomUnreachableAlertCheck
-        this.isPatchPump = isPatchPump
-        this.maxReservoirReading = maxReservoirReading
-        this.supportBatteryLevel = supportBatteryLevel
-        this.useHardwareLink = useHardwareLink
-        this.source = source
     }
 }

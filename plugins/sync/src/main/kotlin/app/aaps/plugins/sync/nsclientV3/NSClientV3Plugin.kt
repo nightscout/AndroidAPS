@@ -141,7 +141,7 @@ class NSClientV3Plugin @Inject constructor(
 
     private val disposable = CompositeDisposable()
     private lateinit var runLoop: Runnable
-    private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
+    private var handler: Handler? = null
     override val listLog: MutableList<EventNSClientNewLog> = ArrayList()
     override val dataSyncSelector: DataSyncSelector get() = dataSyncSelectorV3
     override val status
@@ -187,6 +187,7 @@ class NSClientV3Plugin @Inject constructor(
 
     override fun onStart() {
         super.onStart()
+        handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
         lastLoadedSrvModified = Json.decodeFromString(
             sp.getString(
@@ -289,14 +290,14 @@ class NSClientV3Plugin @Inject constructor(
                 executeLoop("MAIN_LOOP", forceNew = true)
             else
                 rxBus.send(EventNSClientNewLog("● TICK", ""))
-            handler.postDelayed(runLoop, refreshInterval)
+            handler?.postDelayed(runLoop, refreshInterval)
         }
-        handler.postDelayed(runLoop, T.mins(2).msecs())
+        handler?.postDelayed(runLoop, T.mins(2).msecs())
     }
 
     fun scheduleIrregularExecution(refreshToken: Boolean = false) {
         if (refreshToken) {
-            handler.post { executeLoop("REFRESH TOKEN", forceNew = true) }
+            handler?.post { executeLoop("REFRESH TOKEN", forceNew = true) }
             return
         }
         if (config.NSCLIENT || nsClientSource.isEnabled()) {
@@ -308,13 +309,14 @@ class NSClientV3Plugin @Inject constructor(
                 origin = "1_MIN_OLD_DATA"
                 forceNew = false
             }
-            handler.postDelayed({ executeLoop(origin, forceNew = forceNew) }, toTime - dateUtil.now())
+            handler?.postDelayed({ executeLoop(origin, forceNew = forceNew) }, toTime - dateUtil.now())
             rxBus.send(EventNSClientNewLog("● NEXT", dateUtil.dateAndTimeAndSecondsString(toTime)))
         }
     }
 
     override fun onStop() {
-        handler.removeCallbacksAndMessages(null)
+        handler?.removeCallbacksAndMessages(null)
+        handler = null
         disposable.clear()
         stopService()
         super.onStop()
@@ -356,7 +358,7 @@ class NSClientV3Plugin @Inject constructor(
     private fun stopService() {
         try {
             if (nsClientV3Service != null) context.unbindService(serviceConnection)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             nsClientV3Service = null
         }
     }

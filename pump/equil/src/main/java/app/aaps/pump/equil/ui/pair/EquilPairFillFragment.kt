@@ -67,7 +67,7 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
                     resolvedAt = System.currentTimeMillis(),
                     resolvedStatus = ResolvedResult.SUCCESS
                 )
-                equilPumpPlugin.handler.post {
+                equilPumpPlugin.handler?.post {
                     equilHistoryRecordDao.insert(equilHistoryRecord)
                 }
                 val nextPage = getNextPageActionId()

@@ -791,7 +791,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     }
 
     @Override @NonNull public ManufacturerType manufacturer() {
-        return pumpType.getManufacturer();
+        return pumpType.manufacturer();
     }
 
     @Override @NonNull

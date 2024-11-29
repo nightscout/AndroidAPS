@@ -54,7 +54,7 @@ class SignatureVerifierPlugin @Inject constructor(
     aapsLogger, rh
 ), PluginConstraints {
 
-    private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
+    private var handler: Handler? = null
 
     private val REVOKED_CERTS_URL = "https://raw.githubusercontent.com/nightscout/AndroidAPS/master/app/src/main/assets/revoked_certs.txt"
     private val UPDATE_INTERVAL = TimeUnit.DAYS.toMillis(1)
@@ -64,8 +64,9 @@ class SignatureVerifierPlugin @Inject constructor(
     private var revokedCerts: List<ByteArray>? = null
     override fun onStart() {
         super.onStart()
+        handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
         revokedCertsFile = File(context.filesDir, "revoked_certs.txt")
-        handler.post {
+        handler?.post {
             loadLocalRevokedCerts()
             if (shouldDownloadCerts()) {
                 try {
@@ -79,7 +80,8 @@ class SignatureVerifierPlugin @Inject constructor(
     }
 
     override fun onStop() {
-        handler.removeCallbacksAndMessages(null)
+        handler?.removeCallbacksAndMessages(null)
+        handler = null
         super.onStop()
     }
 
@@ -89,7 +91,7 @@ class SignatureVerifierPlugin @Inject constructor(
             value.set(false)
         }
         if (shouldDownloadCerts()) {
-            handler.post {
+            handler?.post {
                 try {
                     downloadAndSaveRevokedCerts()
                 } catch (e: IOException) {
@@ -203,14 +205,14 @@ class SignatureVerifierPlugin @Inject constructor(
     @Throws(IOException::class)
     private fun readInputStream(inputStream: InputStream): String {
         return try {
-            val baos = ByteArrayOutputStream()
+            val os = ByteArrayOutputStream()
             val buffer = ByteArray(1024)
             var read: Int
             while (inputStream.read(buffer).also { read = it } != -1) {
-                baos.write(buffer, 0, read)
+                os.write(buffer, 0, read)
             }
-            baos.flush()
-            String(baos.toByteArray(), StandardCharsets.UTF_8)
+            os.flush()
+            String(os.toByteArray(), StandardCharsets.UTF_8)
         } finally {
             inputStream.close()
         }

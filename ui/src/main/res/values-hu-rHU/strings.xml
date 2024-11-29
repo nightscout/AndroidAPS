@@ -25,7 +25,6 @@
     <string name="two_hours">2ó</string>
     <string name="missing_carbs">Hiányzik %1$d g</string>
     <!-- Treatments -->
-    <string name="treatments_insulin_label_string">Inzulin:</string>
     <string name="treatments_wizard_correction_label">Korr</string>
     <!-- ProfileHelperActivity -->
     <string name="profile_type">Profil típusa</string>

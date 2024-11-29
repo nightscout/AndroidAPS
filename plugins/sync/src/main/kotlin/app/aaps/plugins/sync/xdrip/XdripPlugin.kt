@@ -108,7 +108,7 @@ class XdripPlugin @Inject constructor(
 
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private val disposable = CompositeDisposable()
-    private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
+    private var handler: Handler? = null
     private val listLog: MutableList<EventXdripNewLog> = ArrayList()
 
     // Not used Sync interface members
@@ -118,6 +118,7 @@ class XdripPlugin @Inject constructor(
 
     override fun onStart() {
         super.onStart()
+        handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
         disposable += rxBus
             .toObservable(EventAppExit::class.java)
             .observeOn(aapsSchedulers.io)
@@ -152,12 +153,13 @@ class XdripPlugin @Inject constructor(
 
     override fun onStop() {
         super.onStop()
-        handler.removeCallbacksAndMessages(null)
+        handler?.removeCallbacksAndMessages(null)
+        handler = null
         disposable.clear()
     }
 
     fun clearLog() {
-        handler.post {
+        handler?.post {
             synchronized(listLog) { listLog.clear() }
             rxBus.send(EventXdripUpdateGUI())
         }
@@ -181,7 +183,7 @@ class XdripPlugin @Inject constructor(
                 for (log in listLog) newTextLog.append(log.toPreparedHtml())
             }
             return HtmlHelper.fromHtml(newTextLog.toString())
-        } catch (e: OutOfMemoryError) {
+        } catch (_: OutOfMemoryError) {
             uiInteraction.showToastAndNotification(context, "Out of memory!\nStop using this phone !!!", app.aaps.core.ui.R.raw.error)
         }
         return HtmlHelper.fromHtml("")

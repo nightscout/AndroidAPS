@@ -48,13 +48,7 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Učitava podatke u Tidepool</string>
-    <string name="tidepool_upload_cgm">Učitajte CGM podatke</string>
-    <string name="tidepool_upload_bolus">Prijenos tretmana (inzulin, ugljikohidrati)</string>
-    <string name="tidepool_upload_tbr">Učitajte privremene bazale</string>
-    <string name="tidepool_upload_profile">Učitajte prekidače profila, privremene ciljeve</string>
-    <string name="tidepool_upload_bg">Učitajte testove glukoze u krvi</string>
     <string name="remove_all">Ukloniti sve</string>
-    <string name="reset_start">Poništi početak</string>
     <string name="upload_now">Pošalji sada</string>
     <!-- Xdrip StatusLine -->
     <string name="xdrip_status_detailed_iob_title">Prikaži detaljan IOB</string>

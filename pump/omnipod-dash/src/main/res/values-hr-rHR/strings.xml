@@ -6,7 +6,6 @@
     <string name="omnipod_dash_history_item_source">Izvor</string>
     <string name="omnipod_dash_history_item_date">Datum</string>
     <string name="omnipod_dash_history_type">Tip:</string>
-    <string name="omnipod_dash_history_bolus_value">%1$.2f U</string>
     <!-- Omnipod Dash - Overview -->
     <!-- Omnipod Dash - Pod Activation Wizard -->
     <!-- Exceptions -->

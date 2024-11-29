@@ -36,7 +36,6 @@
     <string name="exitwizard">De installatiewizard overslaan</string>
     <string name="setupwizard_loop_description">Druk op de knop hieronder om AAPS basaalwijzigingen te laten voorstellen/uitvoeren</string>
     <string name="setupwizard_sensitivity_description">Gevoeligheid plugin wordt gebruikt voor de detectie van de gevoeligheid en COB berekening. Voor meer info bezoek:</string>
-    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/nl/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="setupwizard_aps_description">Selecteer een van beschikbare algoritmen. Ze zijn gesorteerd van oudste naar nieuwste. Nieuwer algoritme is meestal krachtiger en agressiever. Dus als je een nieuwe looper bent, kun je waarschijnlijk beginnen met AMA en niet met de nieuwste. Vergeet niet de OpenAPS-documentatie te lezen en deze vóór gebruik te configureren.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Configureer uw RileyLink hieronder. Na het selecteren van een RileyLink, kun je doorgaan zodra de RileyLink status \"Verbonden\" is. Dit kan even duren.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Opmerking:</b> Je kunt doorgaan zodra de pomp is ingesteld.\n</string>
@@ -45,8 +44,6 @@
     <string name="readstatus">Lees status</string>
     <string name="data_choices">Data Keuzes</string>
     <string name="fabric_upload">Fabric Upload</string>
-    <string name="allow_automated_crash_reporting">Sta automatische crashrapporten en verder gebruik van data toe zodat deze naar de ontwikkelaars via fabric.io kan verzonden worden.</string>
-    <string name="summary_email_for_crash_report">Deze identificatie wordt gekoppeld aan crashrapporten, zodat we contact met je kunnen opnemen in urgente gevallen. Het is optioneel.</string>
     <string name="identification">Identificatie (e-mail, FB, Discord e. d.)</string>
     <string name="request">Verzoek</string>
     <string name="apsmode_title">APS Mode</string>
@@ -129,11 +126,9 @@
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">%1$s geleden geëxporteerd</string>
     <string name="exported_at" comment="at placeholder we add export date">geëxporteerd op %1$s</string>
     <string name="exported_less_than_hour_ago">minder dan een uur geleden geëxporteerd</string>
-    <string name="in_directory" comment="placeholder is for exported file path">in map: %1$s</string>
     <string name="preferences_import_list_title">Kies bestand om te importeren</string>
     <string name="metadata_warning_different_flavour">Instellingen zijn gemaakt met een andere variant van AAPS (%1$s) terwijl je nu: %2$s gebruikt.\n\nEr kunnen instellingen ontbreken of ongeldig zijn - controleer aub jouw instellingen na het importeren en corrigeer ze zonodig.</string>
     <string name="metadata_warning_different_device">Instellingen zijn gemaakt op een ander apparaat. Het is OK als ze zijn geïmporteerd van een oude/andere telefoon, maar zorg ervoor dat de geïmporteerde instellingen correct zijn!</string>
-    <string name="metadata_warning_outdated_format">Je gebruikt de verouderde indeling van een vorige AAPS versie, dit is niet veilig! Gebruik dit alleen als je niet anders kunt, wanneer je geen export hebt met de huidige JSON-indeling.</string>
     <string name="metadata_warning_old_export">Geïmporteerde instellingen zijn al %1$s dagen oud! Misschien heb je een meer recente versie of heb je het verkeerde bestand gekozen? Vergeet niet om regelmatig jouw instellingen te exporteren!</string>
     <string name="metadata_warning_date_format">Ongeldige notatie voor datum/tijd!</string>
     <string name="metadata_warning_different_version">Instellingen zijn afkomstig van een vorige minor versie van de AAPS app. Het is OK als je deze importeert na een app upgrade, maar controleer na importeren dan wel of de instellingen nog steeds correct zijn!</string>
@@ -160,7 +155,6 @@
     <string name="metadata_label_device_model">Modelnaam/nr van exporterend apparaat</string>
     <string name="metadata_label_encryption">Bestandsversleuteling</string>
     <string name="metadata_format_new">Nieuwe versleutelde indeling</string>
-    <string name="metadata_format_debug">Nieuwe debug indeling (onversleuteld)</string>
     <string name="metadata_format_other">Onbekende export indeling</string>
     <string name="reset_aps_results">Reset APS resultaten</string>
 </resources>

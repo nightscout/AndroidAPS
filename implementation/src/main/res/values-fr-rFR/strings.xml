@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bg_label">Gly</string>
     <string name="executing_right_now">Commande exécutée à l\'instant</string>
     <string name="basal_value_below_minimum">Le débit Basal est inférieur au minimum autorisé. Profil non accepté !</string>
-    <string name="permission">Autorisation</string>
-    <string name="need_whitelisting">%1$s a besoin d\'être sur la liste blanche de l\'optimisation de la batterie pour des performances correctes</string>
-    <string name="need_location_permission">L\'application a besoin de l\'autorisation de localisation pour l\'analyse BT et l\'identification WiFi</string>
-    <string name="need_storage_permission">L\'application a besoin d\'une autorisation de stockage pour pouvoir stocker les fichiers journaux et les paramètres d\'exportation</string>
     <!--       Stats -->
     <string name="veryLow" comment="below 3.1">Très bas</string>
     <string name="low" comment="3.1-3.9">Bas</string>

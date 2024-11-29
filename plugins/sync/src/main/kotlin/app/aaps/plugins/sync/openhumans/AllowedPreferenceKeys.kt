@@ -178,11 +178,6 @@ private val allowedKeys = """
     smscommunicator
     smscommunicator_remotecommandsallowed
     tidepool_upload_screen
-    tidepool_upload_cgm
-    tidepool_upload_bolus
-    tidepool_upload_bg
-    tidepool_upload_tbr
-    tidepool_upload_profile
     tidepool_dev_servers
     tidepool_only_while_charging
     tidepool_only_while_unmetered

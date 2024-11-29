@@ -36,7 +36,6 @@
     <string name="exitwizard">Einrichtungsassistenten überspringen</string>
     <string name="setupwizard_loop_description">Drücke die Schaltfläche unten, um AndroidAPS zu erlauben, Basal-Änderungen vorzuschlagen/vorzunehmen</string>
     <string name="setupwizard_sensitivity_description">Das Sensitivitäts-Plugin wird für die Sensitivitäts- und COB-Berechnung verwendet. Für weitere Informationen siehe:</string>
-    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/de/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="setupwizard_aps_description">Wähle einen der verfügbaren Algorithmen aus. Sie sind vom Ältesten zum Neuesten sortiert. Neuere Algorithmen sind meist stärker und aggressiver. Wenn du ein Anfänger bist, solltest du nicht mit dem Neuesten sondern mit AMA starten. Vergiss nicht, die OpenAPS-Dokumentation zu lesen und die entsprechenden Einstellungen vor der Benutzung vorzunehmen.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Bitte konfiguriere Deinen RileyLink unten. Nachdem Du einen RileyLink ausgewählt hast, kannst Du die Installation fortsetzen, sobald der RileyLink-Status \"Verbunden\" ist. Das kann eine Minute dauern.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Hinweis:</b> Du kannst das Setup fortsetzen, sobald die Pumpe initialisiert wurde.\n</string>
@@ -45,8 +44,6 @@
     <string name="readstatus">Status lesen</string>
     <string name="data_choices">Datenübermittlung</string>
     <string name="fabric_upload">Fabric-Upload</string>
-    <string name="allow_automated_crash_reporting">Erlauben, dass automatische Fehler-Berichte und Nutzungsstatistiken an die Entwickler über den Service von Fabric.io gesendet werden</string>
-    <string name="summary_email_for_crash_report">Diese Identifikation wird an Absturzberichte angehängt, so dass wir Dich in dringenden Fällen kontaktieren können. Angabe ist optional.</string>
     <string name="identification">Identifikation (E-Mail, Facebook oder Discord Nickname)</string>
     <string name="request">Anfordern</string>
     <string name="apsmode_title">APS-Modus</string>
@@ -128,11 +125,9 @@
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">Vor %1$s Tagen exportiert</string>
     <string name="exported_at" comment="at placeholder we add export date">am %1$s exportiert</string>
     <string name="exported_less_than_hour_ago">vor weniger als einer Stunde exportiert</string>
-    <string name="in_directory" comment="placeholder is for exported file path">in Verzeichnis: %1$s</string>
     <string name="preferences_import_list_title">Wähle die zu importierende Datei</string>
     <string name="metadata_warning_different_flavour">Einstellungen wurden mit einer anderen Variante von AAPS erstellt (%1$s). Du nutzt: %2$s.\n\nEinige Einstellungen können fehlen oder ungültig sein - überprüfe und aktualisiere Deine Einstellungen nach dem Import .</string>
     <string name="metadata_warning_different_device">Einstellungen wurden auf einem anderen Gerät erstellt. Das ist OK, wenn Du von einem älteren/anderen Handy importierst. Stelle aber sicher, dass die importierten Einstellungen korrekt sind!</string>
-    <string name="metadata_warning_outdated_format">Du verwendest das veraltete Format einer alten AAPS-Version, das nicht sicher ist! Verwende dieses nur als letzte Möglichkeit, wenn Du keinen Export im aktuellen JSON-Format hast.</string>
     <string name="metadata_warning_old_export">Die importierten Einstellungen sind bereits %1$s Tage alt! Hast Du aktuellere Einstellungen oder evtl. die falsche Datei gewählt? Denke daran, die Einstellungen regelmäßig zu exportieren.</string>
     <string name="metadata_warning_date_format">Ungültiges Datums-/Zeitformat!</string>
     <string name="metadata_warning_different_version">Einstellungen stammen aus einer Vorgängerversion (Nebenversion). Du kannst diese importieren, prüfe aber unbedingt nach dem Import, ob diese noch korrekt sind!</string>
@@ -159,6 +154,5 @@
     <string name="metadata_label_device_model">Modell des exportierenden Geräts</string>
     <string name="metadata_label_encryption">Dateiverschlüsselung</string>
     <string name="metadata_format_new">Neues verschlüsseltes Format</string>
-    <string name="metadata_format_debug">Neues Debugformat (unverschlüsselt)</string>
     <string name="metadata_format_other">Unbekanntes Export-Format</string>
 </resources>

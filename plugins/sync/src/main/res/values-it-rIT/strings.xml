@@ -40,8 +40,6 @@
     <string name="nsclient_token_dialog_title">Token di accesso NS</string>
     <string name="nsclient_token_dialog_message">Token di accesso generato sulla pagina admin di NS (min 17 caratteri)</string>
     <string name="deliver_now">Invia ora</string>
-    <string name="clear_queue">Cancella coda</string>
-    <string name="show_queue">Mostra coda</string>
     <string name="queue">Coda:</string>
     <string name="status">Stato:</string>
     <string name="clear_log">Cancella log</string>
@@ -89,13 +87,7 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Carica dati su Tidepool</string>
-    <string name="tidepool_upload_cgm">Carica dati CGM</string>
-    <string name="tidepool_upload_bolus">Carica trattamenti (insulina, CHO)</string>
-    <string name="tidepool_upload_tbr">Carica basali temporanee</string>
-    <string name="tidepool_upload_profile">Carica cambi profilo, target temporanei</string>
-    <string name="tidepool_upload_bg">Carica test BG</string>
     <string name="remove_all">Rimuovi tutto</string>
-    <string name="reset_start">Avvio reset</string>
     <string name="upload_now">Carica adesso</string>
     <string name="not_connected">Non connesso</string>
     <string name="read_only">Sola lettura</string>
@@ -134,7 +126,6 @@
     <string name="quick_wizard_not_available">Il calcolo rapido selezionato non è più disponibile, aggiorna il riquadro</string>
     <string name="quick_wizard_message">QuickWizard: %1$s\nInsulina: %2$.2fU\nCHO: %3$dg</string>
     <string name="user_action_not_available">L\'azione utente selezionata %1$s non è più disponibile, aggiorna la tua casella</string>
-    <string name="wear_action_tempt_preset_error">Preset sconosciuto target temporaneo: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Cancellare i target temporanei in esecuzione?</string>
     <string name="wear_action_tempt_unit_error">Differenti unità usate su smartwatch e telefono!</string>
     <string name="wear_action_tempt_zero_message">Nessuno target temporaneo - cancellare i target temporanei in esecuzione?</string>

@@ -2,9 +2,6 @@
 <resources>
     <!-- PumoCommon - Pump Abstract -->
     <string name="pump_operation_not_supported_by_pump_driver">幫浦或驅動程式不支援此操作。</string>
-    <string name="pump_operation_not_yet_supported_by_pump">幫浦尚未支援此操作。</string>
-    <string name="common_resultok">確定</string>
-    <string name="pump_serial_number">幫浦序列號</string>
     <string name="bolus_delivered_so_far">%1$.2f U / %2$.2f U 已輸送</string>
     <!-- PumpCommon - Pump Status -->
     <string name="pump_status_not_initialized">未初始化</string>
@@ -46,22 +43,7 @@
     <string name="ble_config_scan_scanning">掃描中</string>
     <string name="ble_config_scan_finished">掃描完成</string>
     <string name="ble_config_scan_error">掃描錯誤：%1$d</string>
-    <string name="ble_config_connected_never">從未連線</string>
     <string name="ble_config_remove">移除</string>
-    <!-- BLE Errors -->
-    <string name="ble_error_bt_disabled">藍牙已停用</string>
-    <string name="ble_error_no_bt_adapter">無藍牙適配器</string>
-    <string name="ble_error_configured_pump_not_found">未找到配置的幫浦</string>
-    <string name="ble_error_pump_unreachable">幫浦無法使用</string>
-    <string name="ble_error_failed_to_conn_to_ble_device">連線 BLE 裝置失敗</string>
-    <string name="ble_error_encryption_failed">加密失敗</string>
-    <string name="ble_error_pump_found_unbonded">找到未綁定的幫浦</string>
-    <!-- Pump Error -->
-    <string name="pump_settings_error_basal_profiles_not_enabled">幫浦未啟用基礎率配置。請在幫浦上啟用。</string>
-    <string name="pump_settings_error_incorrect_basal_profile_selected">幫浦上設定的基礎率配置不正確（必須為 %s）。</string>
-    <string name="pump_settings_error_wrong_tbr_type_set">幫浦上設定的臨時基礎率類型錯誤（必須為 %s）。</string>
-    <string name="pump_settings_error_wrong_max_bolus_set">幫浦上設定的最大注射量錯誤（必須為 %1$.2f）。</string>
-    <string name="pump_settings_error_wrong_max_basal_set">幫浦上設定的最大基礎率錯誤（必須為 %1$.2f）。</string>
     <!-- Pump History -->
     <string name="pump_history_type">類型：</string>
     <plurals name="duration_days">

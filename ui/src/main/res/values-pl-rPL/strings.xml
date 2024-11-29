@@ -79,24 +79,15 @@
     <string name="no_records_available">Brak wpisów</string>
     <string name="calculation_short">Kalk</string>
     <string name="treatments_iob_label_string">IOB:</string>
-    <string name="treatments_insulin_label_string">Insulina:</string>
     <string name="treatments_carbs_label_string">Węglow.:</string>
-    <string name="treatments_iobtotal_label_string">Całkowita IOB:</string>
-    <string name="treatments_iob_activity_total_label_string">Aktywna IOB:</string>
-    <string name="tempbasals_realduration_label_string">Czas:</string>
     <string name="tempbasals_netratio_label_string">Iloczyn:</string>
-    <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="treatments_wizard_correction_label">Poprawka</string>
     <string name="meal_bolus">Posiłek</string>
     <string name="prime">Wypełnianie</string>
-    <string name="profile_changes">Zmiany profilu</string>
-    <string name="tempt_targets">Cele tymczasowe</string>
     <string name="carbs_and_bolus">Węglowodany i bolus</string>
     <string name="show_invalidated_records">Pokaż niepoprawne / usunięte wpisy</string>
     <string name="hide_invalidated_records">Ukryj niepoprawne / usunięte wpisy</string>
-    <string name="refresh_from_nightscout">Odśwież z Nightscout</string>
-    <string name="refresheventsfromnightscout">Odśwież z NS</string>
     <string name="show_invalidated">Pokaż niepoprawne</string>
     <string name="hide_invalidated">Ukryj niepoprawne</string>
     <string name="careportal_remove_started_events">Usuń wpisy o uruchomieniu AAPS</string>
@@ -131,7 +122,5 @@
     <string name="a11y_only_on_phone">tylko na telefonie</string>
     <string name="quickwizard_settings">Ustawienia Szybkiego Bolusa</string>
     <string name="overview_edit_quickwizard_valid">Ważny:</string>
-    <string name="overview_edit_quickwizard_list_activity_add">Dodaj</string>
-    <string name="overview_quickwizard_item_edit_button">Edytuj</string>
     <string name="a11y_drag_and_drop_handle">tryb \"Przeciągnij i upuść\"</string>
 </resources>

@@ -27,7 +27,6 @@
     <string name="objectives_smb_gate">Musisz przeczytać wiki i zwiększyć maxIOB, aby SMB działało dobrze! Dobrym początkiem jest maxIOB = średni bolus doposiłkowy + 3 x maks. spośród dziennych dawek bazowych</string>
     <string name="objectives_smb_learned">Używanie SMB jest Twoim celem. Algorytm Oref1 został zaprojektowany, aby pomóc Ci również w bolusach. Nie należy podawać pełnego bolusa do jedzenia, ale tylko jego część, a w razie potrzeby pozostawić resztę AAPS. W ten sposób masz więcej miejsca na błędnie obliczone węglowodany. Czy wiesz, że można w kalkulatorze ustawić procent wyniku bolusa, aby zmniejszyć rozmiar bolusa?</string>
     <string name="objectives_auto_objective">Włączanie automatyzacji</string>
-    <string name="objectives_auto_gate">Przeczytaj dokumentację dotyczącą działania automatyzacji. Skonfiguruj swoje pierwsze proste zasady. Zamiast wykonania działania niech AAPS wyświetli tylko powiadomienie. Gdy masz pewność, że automatyzacja zostaje uruchomiona we właściwym czasie, zastąp powiadomienie rzeczywistą akcją. (https://wiki.aaps.app/en/latest/Usage/Automation.html)</string>
     <string name="objectives_auto_learned">Automatyzacja może być dobrym sługą, ale złym panem. Nie nadużywaj jej. Nie próbuj zastąpić podwalin głównego algorytmu. Przed użyciem sprawdź regułę samym powiadomieniem. Zwróć uwagę na kolejność wykonania reguł.</string>
     <string name="objectives_bgavailableinns">Glikemia dostępna w NS lub Tidepool</string>
     <string name="objectives_pumpstatusavailableinns">Status pompy dostępny w NS lub Tidepool</string>
@@ -74,10 +73,6 @@
     <string name="unfinshed_button">Następny niedokończony</string>
     <string name="requestcode">Kod zapytania: %1$s</string>
     <string name="objectives_hint">(zaznacz wszystkie poprawne odpowiedzi)</string>
-    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
-    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html</string>
-    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">Brak połączenia z Internetem</string>
     <string name="failedretrievetime">Nie udało się odzyskać</string>
     <string name="requirementnotmet">Wymagania celu nie zostały spełnione</string>

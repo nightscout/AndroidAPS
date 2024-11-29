@@ -203,8 +203,6 @@
     <string name="overview_buttons_selection">Butoane</string>
     <string name="show_calibration_button_summary">Trimite o calibrare la xDrip+ sau deschide fereastra de calibrare BYODA</string>
     <string name="show_cgm_button_summary">Deschide xDrip+ sau BYODA, prin butoanele înapoi se revine la AAPS</string>
-    <string name="dexcom_app_not_installed">Aplicația Dexcom nu este instalată.</string>
-    <string name="dexcom_app_not_detected">Actualizați aplicația Dexcom la o versiune acceptată</string>
     <string name="error_starting_cgm">Nu s-a putut deschide aplicația CGM. Asigurați-vă că este instalată.</string>
     <string name="not_available_full">Nu este disponibil</string>
     <string name="constraints_violation">Încălcare a unei limite</string>
@@ -283,7 +281,6 @@
     <string name="skin">Tema</string>
     <string name="cannula_usage">folosire:</string>
     <!--    Iob-->
-    <string name="send_logfiles">Trimite înregistrările zilei de astăzi către dezvoltatori, împreună cu timpul curent. Situație neașteptată.</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Afişează o notificare activă cu o scurtă descriere referitoare la starea buclei</string>
     <string name="old_data">DATE VECHI</string>

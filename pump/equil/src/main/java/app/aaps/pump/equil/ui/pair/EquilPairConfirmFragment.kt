@@ -58,7 +58,7 @@ class EquilPairConfirmFragment : EquilPairFragmentBase() {
                 resolvedAt = System.currentTimeMillis(),
                 resolvedStatus = ResolvedResult.SUCCESS
             )
-            equilPumpPlugin.handler.post {
+            equilPumpPlugin.handler?.post {
                 equilHistoryRecordDao.insert(equilHistoryRecord)
             }
             equilManager.lastDataTime = System.currentTimeMillis()

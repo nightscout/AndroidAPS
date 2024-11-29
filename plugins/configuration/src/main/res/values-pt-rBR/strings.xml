@@ -36,7 +36,6 @@
     <string name="exitwizard">Sair do assistente de configuração</string>
     <string name="setupwizard_loop_description">Pressione o botão abaixo para permitir ao AndroidAPS sugerir/fazer alterações na basal.</string>
     <string name="setupwizard_sensitivity_description">Plugin de Sensibilidade é usado para detecção de sensibilidade e cálculos COB. Para mais info visite:</string>
-    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="setupwizard_aps_description">Seleccione um dos algoritmos disponíveis. Eles são classificados do mais antigo para o mais recente. Algoritmo mais recente é geralmente mais forte e mais agressivo. Assim, se você é novo looper, poderá provavelmente começar com AMA e não com a versão mais recente. Não se esqueça de ler a documentação de OpenAPS e configurá-lo antes de usar.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Por favor configurar o seu RileyLink abaixo. Após selecionar um RileyLink e assim que o estado do RileyLink for \"Conectado\", será possível continuar a instalação. Isso pode levar um minuto.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Nota:</b> Você pode continuar a configuração assim que a configuração da bomba estiver concluída.\n</string>
@@ -45,8 +44,6 @@
     <string name="readstatus">Ler estado</string>
     <string name="data_choices">Escolha de Dados</string>
     <string name="fabric_upload">Envio Fabric</string>
-    <string name="allow_automated_crash_reporting">Permitir que relatórios de falha automatizados e dados de uso de recursos sejam enviados aos desenvolvedores através do serviço fabric.io.</string>
-    <string name="summary_email_for_crash_report">Esta identificação será anexada aos relatórios de erro para podermos contatá-lo em casos de urgência. É opcional.</string>
     <string name="identification">Identificação (e-mail, apelido FB ou Discord, etc)</string>
     <string name="request">Pedido</string>
     <string name="apsmode_title">Modo APS</string>
@@ -128,11 +125,9 @@
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportado %1$s atrás</string>
     <string name="exported_at" comment="at placeholder we add export date">exportado em %1$s</string>
     <string name="exported_less_than_hour_ago">exportado há menos de uma hora</string>
-    <string name="in_directory" comment="placeholder is for exported file path">na pasta: %1$s</string>
     <string name="preferences_import_list_title">Selecionar arquivo para importar</string>
     <string name="metadata_warning_different_flavour">As preferências foram criadas com uma variante diferente do AAPS (%1$s) enquanto tem: %2$s.\n\nAlgumas configurações podem estar ausentes ou inválidas - após a importação, por favor verifique e atualize suas preferências.</string>
     <string name="metadata_warning_different_device">Preferências foram criadas num dispositivo diferente. Não há problema se estiver a importar de telefone diferente/antigo, mas se certifique que as preferências importadas estão corretas!</string>
-    <string name="metadata_warning_outdated_format">Você está usando o formato de legado desatualizado a partir de versões antigas da AAPS, que não é seguro! Use apenas como último recurso, se você não tiver uma exportação em formato atual, JSON.</string>
     <string name="metadata_warning_old_export">As preferências importadas já têm %1$s dias de idade! Talvez você tenha preferências mais atualizadas ou escolha o arquivo errado? Lembre-se de exportar preferências regularmente!</string>
     <string name="metadata_warning_date_format">Formato de data-hora inválido!</string>
     <string name="metadata_warning_different_version">Preferências de diferentes versões secundárias da aplicação. Está OK se você está importando após a atualização, mas verifique após a importação se as preferências ainda estão corretas!</string>
@@ -159,6 +154,5 @@
     <string name="metadata_label_device_model">Exportando modelo do dispositivo</string>
     <string name="metadata_label_encryption">Criptografia do arquivo</string>
     <string name="metadata_format_new">Novo formato de encriptação</string>
-    <string name="metadata_format_debug">Novo formato de depuração (não encriptado)</string>
     <string name="metadata_format_other">Formato de exportação desconhecido</string>
 </resources>

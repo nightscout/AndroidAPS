@@ -218,8 +218,6 @@
     <string name="overview_buttons_selection">Boutons</string>
     <string name="show_calibration_button_summary">Envoie un étalonnage à xDrip+ ou ouvre la boîte de dialogue de calibration de BYODA</string>
     <string name="show_cgm_button_summary">Ouvre xDrip+ ou BYODA, le bouton de retour renverra vers AAPS</string>
-    <string name="dexcom_app_not_installed">L\'application Dexcom n\'est pas installée.</string>
-    <string name="dexcom_app_not_detected">Veuillez mettre à jour votre application Dexcom vers la version prise en charge</string>
     <string name="error_starting_cgm">Impossible d’exécuter l’application de MGC. Assurez-vous de que celle-ci est installée.</string>
     <string name="not_available_full">Non disponible</string>
     <string name="constraints_violation">Violation des restrictions</string>
@@ -302,7 +300,6 @@
     <string name="skin">Thème</string>
     <string name="cannula_usage">utilisation:</string>
     <!--    Iob-->
-    <string name="send_logfiles">Envoyer les fichiers journaux d\'aujourd\'hui aux développeurs avec l\'heure actuel. Situation inattendue.</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Affiche une notification en cours avec un bref aperçu de ce que fait votre Boucle</string>
     <string name="old_data">DONNÉES ANCIENNES</string>

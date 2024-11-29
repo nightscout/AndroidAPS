@@ -3,11 +3,9 @@
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_shortname">EOP2</string>
     <string name="eopatch_pump_description">Pomp integratie voor EOPatch2 / GlucoMen Day</string>
-    <string name="category_alerts">Waarschuwingen</string>
     <string name="low_reservoir">Laag reservoir waarschuwing</string>
     <string name="patch_expiration_reminders">Patch houdbaarheid herinnering</string>
     <string name="patch_buzzer_reminders">Patch buzzer herinneringen</string>
-    <string name="time_format_a_h_mm">h:mm a</string>
     <string name="eopatch_ble_status">BLE Status</string>
     <string name="eopatch_serial_number">Serienummer</string>
     <string name="eopatch_lot_number">Partijnummer</string>
@@ -26,7 +24,6 @@
     <string name="time_1hr">1 uur</string>
     <string name="time_1hr_30min">1 uur 30 min</string>
     <string name="time_2hr">2 uur</string>
-    <string name="all_blank">\u0020</string>
     <string name="patch_safe_deactivation_desc">Om naar nieuwe patch te wisselen moet de huidige patch verwijderd worden. Alle insuline toediening van Patch zal worden geannuleerd.</string>
     <string name="patch_discard_complete_title">Het verwijderen van de patch is voltooid.</string>
     <string name="patch_discard_complete_desc">Patch is gedeactiveerd.\nVerwijder de patch.\nVerwijder de patch die op uw lichaam zit aangebracht.</string>
@@ -38,9 +35,6 @@
     <string name="patch_remaining_usage_period">Resterende tijd</string>
     <string name="patch_finish">Voltooien</string>
     <string name="patch_forced_discard">Verwijder</string>
-    <string name="patch_comm_error_during_discard_status">Negeer Patch Communicatie fout tijdens het verwijderen </string>
-    <string name="patch_comm_error_during_discard_desc">Voor normale deactivatie, druk op \'Opnieuw proberen\'.\nVoor unilaterale deactivering druk op \'Verwijderen\'.</string>
-    <string name="patch_comm_error_during_discard_desc_1">Voor de normale deactivatie druk op \'Opnieuw proberen\'.</string>
     <string name="patch_comm_error_during_discard_desc_2">Voor unilaterale deactivering, Tik op \'Verwijderen\'.</string>
     <string name="patch_manually_turning_off_alarm_title">Handmatig het alarm van Patch uitschakelen</string>
     <string name="patch_manually_turning_off_alarm_desc_1">Waneer unilateraal gedeactiveerd tijdens een communicatiefout, zal Patch mogelijk niet stoppen met piepen.</string>
@@ -82,8 +76,6 @@
     <string name="patch_expiration_reminder_setting_title">Patch houdbaarheid Herinnering</string>
     <string name="patch_activate_reminder_title">Patch activatie herinnering</string>
     <string name="patch_activate_reminder_desc">Patch activatie is niet afgerond.\n Doorgaan.</string>
-    <string name="patch_communication_check">Patch communicatie check</string>
-    <string name="patch_communication_check_status_1">Patch communicatie controleren…</string>
     <string name="patch_communication_check_helper_1">Breng je \"smart device\" dichter bij de Patch.</string>
     <string name="patch_communication_check_helper_2">Ga naar een andere locatie en probeer het opnieuw.</string>
     <string name="patch_communication_failed">Communicatie Fout</string>
@@ -114,7 +106,6 @@
     <string name="retry">Opnieuw</string>
     <string name="string_caution_not_remove_needle_cap">[Caution] Verwijder de naaldop en plakkers NIET tot verdere instructies.</string>
     <string name="string_are_you_sure_to_discard_current_patch">Weet je zeker dat je de huidige Patch wilt verwijderen?</string>
-    <string name="string_unconfirmed_bolus_info_discard_confirm_message">Door onbevestigde bolus informatie, kan de bolus calculator niet gebruikt worden totdat %s.\n\nBen je er zeker van dat je de huidige patch wilt annuleren?</string>
     <string name="needle_insertion_error_1">Naald inbreng fout.</string>
     <string name="needle_insertion_error_2">Controleer of de richting van het gat links na het draaien van de hendel recht is en druk op \'Opnieuw proberen\'.</string>
     <string name="needle_insertion_error_3">Druk op \'Verwijderen\' om de Patch te deactiveren.</string>
@@ -126,7 +117,6 @@
     <string name="finish">Voltooien</string>
     <string name="string_temp_basal_remained_hhmm">resterende tijd: %1$s:%2$s</string>
     <string name="next">Volgende</string>
-    <string name="patch_connection_fail">Probeer opnieuw na patch communicatie controle.</string>
     <string name="string_pause_failed">Uitstellen mislukt.</string>
     <string name="string_resume_failed">Hervatten mislukt.</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE d MMM, yyyy hh:mm a</string>

@@ -298,8 +298,7 @@ sealed class EventData : Event() {
         val tempTargetLevel: Int,
         val reservoirString: String,
         val reservoir: Double,
-        val reservoirLevel: Int,
-        val id: Int = 0
+        val reservoirLevel: Int
     ) : EventData(), EventDataSet
 
     @Serializable

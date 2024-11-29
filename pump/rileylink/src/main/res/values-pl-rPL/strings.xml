@@ -63,8 +63,6 @@
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Pompa Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
-    <string name="riley_link_common_yes">Tak</string>
-    <string name="riley_link_common_no">Nie</string>
     <!-- RileyLink - Preferences -->
     <string name="riley_link_show_battery_level">Pokaż poziom baterii zgłaszany przez OrangeLink/EmaLink/DiaLink</string>
     <string name="riley_link_show_battery_level_summary">NIE działa z oryginalnym RileyLinkiem. Może nie działać z alternatywami RileyLink-a.</string>

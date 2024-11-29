@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bg_label">KŞ</string>
     <string name="executing_right_now">Komut şu anda çalıştırıldı</string>
     <string name="basal_value_below_minimum">Bazal değer minimumun altında. Profil ayarlanmadı!</string>
-    <string name="permission">Yetki</string>
-    <string name="need_whitelisting">%1$s, düzgün bir şekilde çalışması için pil optimizasyonu yapılmalıdır</string>
-    <string name="need_location_permission">Uygulamanın BT taraması ve WiFi tanımlaması için konum iznine ihtiyacı var</string>
-    <string name="need_storage_permission">Uygulamanın, günlük dosyalarını saklayabilmesi ve ayarları dışa aktarabilmesi için depolama iznine ihtiyacı var</string>
     <!--       Stats -->
     <string name="veryLow" comment="below 3.1">Çok düşük</string>
     <string name="low" comment="3.1-3.9">Düşük</string>

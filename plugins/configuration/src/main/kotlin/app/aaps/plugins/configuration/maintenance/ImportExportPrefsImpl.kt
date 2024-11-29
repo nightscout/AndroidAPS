@@ -494,6 +494,9 @@ class ImportExportPrefsImpl @Inject constructor(
                 throw PrefFileNotFoundError(file.name ?: "UNKNOWN")
             } catch (_: IOException) {
                 throw PrefIOError(file.name ?: "UNKNOWN")
+            } catch (_: SecurityException) {
+                ToastUtils.errorToast(context, rh.gs(R.string.error_accessing_filesystem_select_aaps_directory_properly))
+                throw PrefFileNotFoundError(file.name ?: "UNKNOWN")
             }
         }
     }

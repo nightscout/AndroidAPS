@@ -10,8 +10,6 @@
     <string name="omnipod_dash_history_item_source">Источник</string>
     <string name="omnipod_dash_history_item_date">Дата</string>
     <string name="omnipod_dash_history_type">Тип:</string>
-    <string name="omnipod_dash_history_bolus_value">%1$.2f ед</string>
-    <string name="omnipod_dash_history_bolus_value_with_carbs">%1$.2f ед %2$.1f ГУ</string>
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_status">Состояние Bluetooth</string>
     <string name="omnipod_dash_overview_bluetooth_address">Адрес Bluetooth</string>

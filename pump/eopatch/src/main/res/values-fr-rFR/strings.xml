@@ -3,11 +3,9 @@
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_shortname">EOP2</string>
     <string name="eopatch_pump_description">Intégration de la pompe EOPatch2 / GlucoMen Day</string>
-    <string name="category_alerts">Alertes</string>
     <string name="low_reservoir">Alertes réservoir bas</string>
     <string name="patch_expiration_reminders">Rappel d\'expiration du Patch</string>
     <string name="patch_buzzer_reminders">Rappels sonores du Patch</string>
-    <string name="time_format_a_h_mm">h:mm a</string>
     <string name="eopatch_ble_status">État BT</string>
     <string name="eopatch_serial_number">Numéro de série</string>
     <string name="eopatch_lot_number">Numéro de lot</string>
@@ -26,7 +24,6 @@
     <string name="time_1hr">1 h</string>
     <string name="time_1hr_30min">1 h 30</string>
     <string name="time_2hr">2 h</string>
-    <string name="all_blank">\u0020</string>
     <string name="patch_safe_deactivation_desc">Pour passer à un nouveau Patch, le Patch actuel doit être supprimé. Toutes les injections d\'insuline provenant du Patch seront annulées.</string>
     <string name="patch_discard_complete_title">La suppression du Patch est terminée.</string>
     <string name="patch_discard_complete_desc">Le Patch a été désactivé.\nRetirez le Patch attaché à votre corps.</string>
@@ -38,9 +35,6 @@
     <string name="patch_remaining_usage_period">Temps restant</string>
     <string name="patch_finish">Terminer</string>
     <string name="patch_forced_discard">Annuler</string>
-    <string name="patch_comm_error_during_discard_status">Erreur de communication pendant la suppression du Patch</string>
-    <string name="patch_comm_error_during_discard_desc">Pour la désactivation normale, appuyez sur «Réessayer».\nPour forcer la désactivation unilatéralement, appuyez sur «Supprimer».</string>
-    <string name="patch_comm_error_during_discard_desc_1">Pour la désactivation normale, appuyez sur «Réessayer».</string>
     <string name="patch_comm_error_during_discard_desc_2">Pour forcer la désactivation unilatéralement, appuyez sur «Supprimer».</string>
     <string name="patch_manually_turning_off_alarm_title">Désactiver manuellement l\'alarme du Patch</string>
     <string name="patch_manually_turning_off_alarm_desc_1">Si le Patch est désactivé unilatéralement lors d\'une erreur de communication, le bip d\'alarme du patch peut ne pas s\'arrêter.</string>
@@ -82,8 +76,6 @@
     <string name="patch_expiration_reminder_setting_title">Rappel d\'expiration du Patch</string>
     <string name="patch_activate_reminder_title">Rappel d\'activation du Patch</string>
     <string name="patch_activate_reminder_desc">L\'activation du Patch n\'est pas terminée.\n Continuer.</string>
-    <string name="patch_communication_check">Contrôle de communication du Patch</string>
-    <string name="patch_communication_check_status_1">Vérification de la communication avec le Patch…</string>
     <string name="patch_communication_check_helper_1">Rapprochez votre appareil du patch.</string>
     <string name="patch_communication_check_helper_2">Veuillez vous déplacer à un autre endroit et réessayer.</string>
     <string name="patch_communication_failed">Erreur de communication</string>
@@ -114,7 +106,6 @@
     <string name="retry">Réessayer</string>
     <string name="string_caution_not_remove_needle_cap">[Attention] NE PAS retirer le capuchon de l\'aiguille et le support adhésif jusqu\'aux instructions suivantes.</string>
     <string name="string_are_you_sure_to_discard_current_patch">Êtes-vous sûr-e de vouloir retirer le Patch actuel ?</string>
-    <string name="string_unconfirmed_bolus_info_discard_confirm_message">En raison d\'une information de bolus non confirmée, l\'Assistant Bolus ne peut pas être utilisé jusqu\'à %s.\n\nÊtes-vous sûr de vouloir retirer le Patch actuel ?</string>
     <string name="needle_insertion_error_1">Erreur d\'insertion de l\'aiguille.</string>
     <string name="needle_insertion_error_2">Vérifiez si la direction du trou à gauche après avoir tourné le levier est droite, puis appuyez sur \"Réessayer\".</string>
     <string name="needle_insertion_error_3">Appuyez sur « Supprimer » pour désactiver le Patch.</string>
@@ -126,7 +117,6 @@
     <string name="finish">Terminer</string>
     <string name="string_temp_basal_remained_hhmm">temps restant: %1$s:%2$s</string>
     <string name="next">Suivant</string>
-    <string name="patch_connection_fail">Réessayer après la vérification de la communication avec le Patch.</string>
     <string name="string_pause_failed">Échec de la suspension.</string>
     <string name="string_resume_failed">Échec de la reprise.</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE, d MMM, yyyy hh:mm a</string>

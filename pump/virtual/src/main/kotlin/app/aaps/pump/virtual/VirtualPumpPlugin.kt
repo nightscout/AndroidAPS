@@ -363,7 +363,7 @@ open class VirtualPumpPlugin @Inject constructor(
             extended.put("Version", version)
             try {
                 extended.put("ActiveProfile", profileName)
-            } catch (ignored: Exception) {
+            } catch (_: Exception) {
             }
             val tb = persistenceLayer.getTemporaryBasalActiveAt(now)
             if (tb != null) {
@@ -389,7 +389,7 @@ open class VirtualPumpPlugin @Inject constructor(
         return pump
     }
 
-    override fun manufacturer(): ManufacturerType = pumpDescription.pumpType.manufacturer ?: ManufacturerType.AAPS
+    override fun manufacturer(): ManufacturerType = pumpDescription.pumpType.manufacturer() ?: ManufacturerType.AAPS
 
     override fun model(): PumpType = pumpDescription.pumpType
 

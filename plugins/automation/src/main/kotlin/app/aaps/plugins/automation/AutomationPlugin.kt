@@ -129,30 +129,31 @@ class AutomationPlugin @Inject constructor(
     var executionLog: MutableList<String> = ArrayList()
     var btConnects: MutableList<EventBTChange> = ArrayList()
 
-    private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
-    private lateinit var refreshLoop: Runnable
+    private var handler: Handler? = null
+    private var refreshLoop: Runnable
 
     companion object {
 
-        const val event =
+        const val EMPTY_EVENT =
             "{\"title\":\"Low\",\"enabled\":true,\"trigger\":\"{\\\"type\\\":\\\"TriggerConnector\\\",\\\"data\\\":{\\\"connectorType\\\":\\\"AND\\\",\\\"triggerList\\\":[\\\"{\\\\\\\"type\\\\\\\":\\\\\\\"TriggerBg\\\\\\\",\\\\\\\"data\\\\\\\":{\\\\\\\"bg\\\\\\\":4,\\\\\\\"comparator\\\\\\\":\\\\\\\"IS_LESSER\\\\\\\",\\\\\\\"units\\\\\\\":\\\\\\\"mmol\\\\\\\"}}\\\",\\\"{\\\\\\\"type\\\\\\\":\\\\\\\"TriggerDelta\\\\\\\",\\\\\\\"data\\\\\\\":{\\\\\\\"value\\\\\\\":-0.1,\\\\\\\"units\\\\\\\":\\\\\\\"mmol\\\\\\\",\\\\\\\"deltaType\\\\\\\":\\\\\\\"DELTA\\\\\\\",\\\\\\\"comparator\\\\\\\":\\\\\\\"IS_LESSER\\\\\\\"}}\\\"]}}\",\"actions\":[\"{\\\"type\\\":\\\"ActionStartTempTarget\\\",\\\"data\\\":{\\\"value\\\":8,\\\"units\\\":\\\"mmol\\\",\\\"durationInMinutes\\\":60}}\"]}"
     }
 
     init {
         refreshLoop = Runnable {
             processActions()
-            handler.postDelayed(refreshLoop, T.secs(150).msecs())
+            handler?.postDelayed(refreshLoop, T.secs(150).msecs())
         }
     }
 
     override fun specialEnableCondition(): Boolean = !config.NSCLIENT
 
     override fun onStart() {
+        handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
         locationServiceHelper.startService(context)
 
         super.onStart()
         loadFromSP()
-        handler.postDelayed(refreshLoop, T.mins(1).msecs())
+        handler?.postDelayed(refreshLoop, T.mins(1).msecs())
 
         disposable += rxBus
             .toObservable(EventPreferenceChange::class.java)
@@ -194,7 +195,8 @@ class AutomationPlugin @Inject constructor(
 
     override fun onStop() {
         disposable.clear()
-        handler.removeCallbacks(refreshLoop)
+        handler?.removeCallbacks(refreshLoop)
+        handler = null
         locationServiceHelper.stopService(context)
         super.onStop()
     }
@@ -230,7 +232,7 @@ class AutomationPlugin @Inject constructor(
                 e.printStackTrace()
             }
         else
-            automationEvents.add(AutomationEventObject(injector).fromJSON(event))
+            automationEvents.add(AutomationEventObject(injector).fromJSON(EMPTY_EVENT))
     }
 
     internal fun processActions() {

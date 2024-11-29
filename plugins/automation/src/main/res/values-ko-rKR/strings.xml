@@ -104,8 +104,6 @@
     <string name="automation_event">자동화 이벤트</string>
     <string name="reorder_label">정렬</string>
     <string name="user_action">사용자 동작</string>
-    <string name="remove_automation">자동 설정 제거하기</string>
-    <string name="sort_automation">자동 설정 분류하기</string>
     <string name="remove_selected_items">선택된 항목 제거하기</string>
     <string name="count_selected">%1$d 선택됨</string>
     <string name="system_automation">자동 설정 시스템</string>

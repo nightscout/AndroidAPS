@@ -40,8 +40,6 @@
     <string name="nsclient_token_dialog_title">NS toegangstoken</string>
     <string name="nsclient_token_dialog_message">Toegangstoken gegenereerd op de NS beheerderspagina (min. 17 tekens)</string>
     <string name="deliver_now">Toedienen</string>
-    <string name="clear_queue">Ledig wachtrij</string>
-    <string name="show_queue">Toon wachtrij</string>
     <string name="queue">Wachtend:</string>
     <string name="status">Status:</string>
     <string name="clear_log">Logboek wissen</string>
@@ -89,13 +87,7 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Upload gegevens naar Tidepool</string>
-    <string name="tidepool_upload_cgm">CGM-gegevens uploaden</string>
-    <string name="tidepool_upload_bolus">Upload behandelingen (insuline, carbs)</string>
-    <string name="tidepool_upload_tbr">Tijdelijke basalen uploaden</string>
-    <string name="tidepool_upload_profile">Upload profiel wisselingen, tijdelijke doelen</string>
-    <string name="tidepool_upload_bg">Upload BG-tests</string>
     <string name="remove_all">Alles verwijderen</string>
-    <string name="reset_start">Start reset</string>
     <string name="upload_now">Nu Uploaden</string>
     <string name="not_connected">Niet verbonden</string>
     <string name="read_only">Alleen lezen</string>
@@ -133,7 +125,6 @@
     <string name="wizard_result">Reken. Wizard:\nInsuline: %1$.2fE\nKoolhy.: %2$dg</string>
     <string name="quick_wizard_not_available">Geselecteerde QuickWizard is niet meer beschikbaar, vernieuw uw tegel</string>
     <string name="quick_wizard_message">QuickWizard: %1$s\nInsuline: %2$.2fE\nKoolhy.: %3$dg</string>
-    <string name="wear_action_tempt_preset_error">Tijdelijke doel onbekende preset: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Huidige tijdelijk streefdoel annuleren?</string>
     <string name="wear_action_tempt_unit_error">Verschillende eenheden gebruikt op horloge en telefoon!</string>
     <string name="wear_action_tempt_zero_message">Tijdelijk streefdoel 0 minuten,  huidige tijdelijk streefdoel annuleren?</string>

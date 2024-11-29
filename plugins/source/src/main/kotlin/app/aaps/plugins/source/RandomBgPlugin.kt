@@ -63,22 +63,22 @@ class RandomBgPlugin @Inject constructor(
     aapsLogger, rh
 ), BgSource {
 
-    private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
-    private lateinit var refreshLoop: Runnable
+    private var handler: Handler? = null
+    private var refreshLoop: Runnable
     private var wakeLock: PowerManager.WakeLock? = null
     private var interval = 5L // minutes
 
     companion object {
 
-        const val min = 70 // mgdl
-        const val max = 190 // mgdl
-        const val period = 120.0 // minutes
+        const val MIN = 70 // mgdl
+        const val MAX = 190 // mgdl
+        const val PERIOD = 120.0 // minutes
     }
 
     init {
         refreshLoop = Runnable {
             updateInterval()
-            handler.postDelayed(refreshLoop, T.mins(interval).msecs())
+            handler?.postDelayed(refreshLoop, T.mins(interval).msecs())
             handleNewData()
         }
     }
@@ -94,12 +94,13 @@ class RandomBgPlugin @Inject constructor(
     @SuppressLint("WakelockTimeout")
     override fun onStart() {
         super.onStart()
+        handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
         updateInterval()
         val cal = GregorianCalendar()
         cal[Calendar.MILLISECOND] = 0
         cal[Calendar.SECOND] = 0
         cal[Calendar.MINUTE] -= cal[Calendar.MINUTE] % interval.toInt()
-        handler.postAtTime(refreshLoop, SystemClock.uptimeMillis() + cal.timeInMillis + T.mins(interval).msecs() + 1000 - System.currentTimeMillis())
+        handler?.postAtTime(refreshLoop, SystemClock.uptimeMillis() + cal.timeInMillis + T.mins(interval).msecs() + 1000 - System.currentTimeMillis())
         disposable.clear()
         wakeLock = (context.getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AAPS:RandomBgPlugin")
         wakeLock?.acquire()
@@ -107,7 +108,8 @@ class RandomBgPlugin @Inject constructor(
 
     override fun onStop() {
         super.onStop()
-        handler.removeCallbacks(refreshLoop)
+        handler?.removeCallbacks(refreshLoop)
+        handler = null
         if (wakeLock?.isHeld == true) wakeLock?.release()
     }
 
@@ -121,7 +123,7 @@ class RandomBgPlugin @Inject constructor(
 
         val cal = GregorianCalendar()
         val currentMinute = cal[Calendar.MINUTE] + (cal[Calendar.HOUR_OF_DAY] % 2) * 60
-        val bgMgdl = min + ((max - min) + (max - min) * sin(currentMinute / period * 2 * PI)) / 2 + (SecureRandom().nextDouble() - 0.5) * (max - min) * 0.08 * interval
+        val bgMgdl = MIN + ((MAX - MIN) + (MAX - MIN) * sin(currentMinute / PERIOD * 2 * PI)) / 2 + (SecureRandom().nextDouble() - 0.5) * (MAX - MIN) * 0.08 * interval
 
         cal[Calendar.MILLISECOND] = 0
         cal[Calendar.SECOND] = 0

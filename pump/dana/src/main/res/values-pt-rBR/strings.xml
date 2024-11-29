@@ -93,7 +93,6 @@
     <string name="danar_disableeasymode">Desativar modo EasyUI na bomba</string>
     <string name="profile_set_failed">Não foi possivel configurar o perfil de basal</string>
     <string name="danar_bluetooth_status">Estado Bluetooth</string>
-    <string name="danar_iob_label">IOB Bomba</string>
     <string name="firmware_label">Firmware</string>
     <string name="danar_pump_settings">Configurações da bomba Dana</string>
     <string name="time_format_12h">12h</string>

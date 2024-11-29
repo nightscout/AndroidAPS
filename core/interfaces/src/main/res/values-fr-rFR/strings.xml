@@ -49,6 +49,8 @@
     <string name="pref_show_delta">Montrer le delta</string>
     <string name="pref_show_detailed_delta">Afficher Delta Détaillé</string>
     <string name="pref_show_avgdelta">Afficher le delta moyen</string>
+    <string name="pref_show_tempTarget">Afficher la Cible Temp</string>
+    <string name="pref_show_reservoir_level">Afficher le niveau du réservoir</string>
     <string name="pref_show_phone_battery">Afficher la batterie du téléphone</string>
     <string name="pref_show_rig_battery">Afficher la batterie de la plateforme </string>
     <string name="pref_show_basal_rate">Afficher Basale</string>
@@ -60,6 +62,7 @@
     <string name="pref_show_week_number">Afficher numéro semaine</string>
     <string name="pref_show_date">Afficher la date</string>
     <string name="default_custom_watchface_comment">Cadran par défaut, vous pouvez cliquer sur le bouton EXPORTER WATCHFACE pour générer un modèle</string>
+    <string name="default_custom_watchface_external_comment">Cadran par défaut incluant les vues externes pour les suiveurs, vous pouvez cliquer sur le bouton EXPORTER LE MODÈLE pour générer un modèle</string>
     <string name="wear_default_watchface">Cadran par défaut</string>
     <string name="wear_more_watchfaces">Plus de cadrans</string>
 </resources>

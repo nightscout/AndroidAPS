@@ -218,8 +218,6 @@
     <string name="overview_buttons_selection">Tlačítka</string>
     <string name="show_calibration_button_summary">Odeslání kalibrace do xDrip+ nebo otevření kalibračního dialogu BYODA</string>
     <string name="show_cgm_button_summary">Otevře xDrip+ nebo BYODA, tlačítko zpět vrátí do AndroidAPS</string>
-    <string name="dexcom_app_not_installed">Aplikace Dexcom není nainstalována.</string>
-    <string name="dexcom_app_not_detected">Prosím aktualizujte Dexcom aplikaci na podporovanou verzi</string>
     <string name="error_starting_cgm">Nelze spustit aplikace CGM. Ujistěte se, že je nainstalovaná.</string>
     <string name="not_available_full">Nedostupný</string>
     <string name="constraints_violation">Mimo povolený rozsah</string>
@@ -302,7 +300,6 @@
     <string name="skin">Vzhled</string>
     <string name="cannula_usage">použití:</string>
     <!--    Iob-->
-    <string name="send_logfiles">Odešlete dnešní soubory protokolů vývojářům spolu s tímto časem. Neočekávaná situace.</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Zobrazení průběžného oznámení v Androidu s krátkým přehledem, co smyčka právě dělá</string>
     <string name="old_data">ZASTARALÉ</string>

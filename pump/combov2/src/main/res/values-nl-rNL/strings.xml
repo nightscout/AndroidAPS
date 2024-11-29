@@ -4,7 +4,6 @@
     <string name="combov2_plugin_description">Ingebouwde integratie voor Accu-Chek Combo pomp</string>
     <string name="combov2_could_not_connect">Kon niet verbinden met de pomp</string>
     <string name="combov2_not_paired">Niet verbonden met een pomp</string>
-    <string name="combov2_pump_terminated_connection">Pomp heeft de verbinding verbroken</string>
     <string name="combov2_warning">Combo waarschuwing</string>
     <string name="combov2_error">Combo fout</string>
     <string name="combov2_warning_4">Bel hotline voor update</string>
@@ -116,8 +115,6 @@ Probeer opnieuw te koppelen</string>
     <string name="combov2_short_status_battery_state">Batt: %s</string>
     <string name="combov2_automatic_reservoir_entry">Autodetect en voer automatisch de vervanging van het insulinereservoir in</string>
     <string name="combov2_automatic_battery_entry">Automatisch batterijwijziging detecteren en automatisch invoeren</string>
-    <string name="combov2_note_reservoir_change">Insuline reservoir verandert automatisch ingevoegd door combov2 driver</string>
-    <string name="combov2_note_battery_change">Batterijwissel automatisch geplaatst door combov2 driver</string>
     <string name="combov2_timezone_changed">Tijdzone is gewijzigd</string>
     <string name="combov2_datetime_changed">Datum en/of tijd veranderd</string>
     <string name="combov2_dst_started">Zomer/wintertijd (DST) gestart</string>

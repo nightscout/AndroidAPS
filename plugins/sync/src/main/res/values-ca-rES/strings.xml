@@ -27,8 +27,6 @@
     <string name="ns_client_secret_dialog_title">Secret API NS</string>
     <string name="ns_client_secret_dialog_message">Introduïu el secret de l\'API NS (min 12 caràcters)</string>
     <string name="deliver_now">Lliurar ara</string>
-    <string name="clear_queue">Buidar la cua</string>
-    <string name="show_queue">Mostrar la cua</string>
     <string name="queue">Cua:</string>
     <string name="status">Estat:</string>
     <string name="clear_log">Buidar log</string>
@@ -72,11 +70,6 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Envia dades a Tidepool</string>
-    <string name="tidepool_upload_cgm">Enviar dades CGM</string>
-    <string name="tidepool_upload_bolus">Enviar tractaments (insulina, carbs)</string>
-    <string name="tidepool_upload_tbr">Enviar basals temporals</string>
-    <string name="tidepool_upload_profile">Enviar canvis de perfil, objectius temporals</string>
-    <string name="tidepool_upload_bg">Enviar tests glucèmia</string>
     <!-- Xdrip StatusLine -->
     <string name="disabled_loop">Llaç desactivat</string>
     <string name="xdrip_not_installed">xDrip+ no instal·lat</string>

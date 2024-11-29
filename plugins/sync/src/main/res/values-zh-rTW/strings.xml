@@ -40,8 +40,6 @@
     <string name="nsclient_token_dialog_title">NS 存取憑證</string>
     <string name="nsclient_token_dialog_message">在 NS 管理頁面生成的存取憑證（至少 17 個字符）</string>
     <string name="deliver_now">立即傳送</string>
-    <string name="clear_queue">清除佇列</string>
-    <string name="show_queue">顯示佇列</string>
     <string name="queue">佇列:</string>
     <string name="status">狀態:</string>
     <string name="clear_log">清除日誌</string>
@@ -89,13 +87,7 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">將資料上傳到 Tidepool</string>
-    <string name="tidepool_upload_cgm">上傳 CGM 資料</string>
-    <string name="tidepool_upload_bolus">上傳治療（胰島素，碳水化合物）</string>
-    <string name="tidepool_upload_tbr">上傳臨時基礎</string>
-    <string name="tidepool_upload_profile">上傳設定檔切換，臨時目標</string>
-    <string name="tidepool_upload_bg">上傳血糖測試</string>
     <string name="remove_all">移除全部</string>
-    <string name="reset_start">重置開始</string>
     <string name="upload_now">立即上傳</string>
     <string name="not_connected">未連線</string>
     <string name="read_only">唯讀</string>
@@ -134,7 +126,6 @@
     <string name="quick_wizard_not_available">所選的快速嚮導不再可用，請重新整理您的磁磚</string>
     <string name="quick_wizard_message">快速嚮導: %1$s\n胰島素: %2$.2fU\n碳水化合物: %3$dg</string>
     <string name="user_action_not_available">選定的用戶操作 %1$s 已不再可用，請重新整理您的面版</string>
-    <string name="wear_action_tempt_preset_error">臨時目標未知預設: %1$s</string>
     <string name="wear_action_tempt_cancel_message">取消運行中的臨時目標？</string>
     <string name="wear_action_tempt_unit_error">手錶和手機上使用了不同的單位！</string>
     <string name="wear_action_tempt_zero_message">零臨時目標 - 取消運行中的臨時目標？</string>

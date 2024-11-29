@@ -230,8 +230,6 @@
     <string name="overview_buttons_selection">Buttons</string>
     <string name="show_calibration_button_summary">Sends a calibration to xDrip+ or open BYODA calibration dialog</string>
     <string name="show_cgm_button_summary">Opens xDrip+ or BYODA, back buttons returns to AAPS</string>
-    <string name="dexcom_app_not_installed">Dexcom app is not installed.</string>
-    <string name="dexcom_app_not_detected">Please update your Dexcom app to supported version</string>
     <string name="error_starting_cgm">Could not launch CGM application.  Make sure it is installed.</string>
     <string name="not_available_full">Not available</string>
     <string name="constraints_violation">Constraints violation</string>
@@ -253,12 +251,12 @@
     <string name="thirdcarbsincrement">Third carbs increment</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">Default Temp-Targets</string>
-    <string name="eatingsoon_duration">eatingsoon duration</string>
-    <string name="eatingsoon_target">eatingsoon target</string>
-    <string name="activity_duration">activity duration</string>
-    <string name="activity_target">activity target</string>
-    <string name="hypo_duration">hypo duration</string>
-    <string name="hypo_target">hypo target</string>
+    <string name="eatingsoon_duration">Eating Soon duration (minutes)</string>
+    <string name="eatingsoon_target">Eating Soon target value</string>
+    <string name="activity_duration">Activity duration (minutes)</string>
+    <string name="activity_target">Activity target value</string>
+    <string name="hypo_duration">Hypo duration (minutes)</string>
+    <string name="hypo_target">Hypo target value</string>
     <string name="fill_bolus_title">Fill/Prime standard insulin amounts</string>
     <string name="button1">Button 1</string>
     <string name="button2">Button 2</string>
@@ -319,7 +317,6 @@
     <string name="cannula_usage">usage:</string>
 
     <!--    Iob-->
-    <string name="send_logfiles">Send today\'s log files to developers along with this time. Unexpected situation.</string>
     <string name="iob_cob_calculator" translatable="false">IobCobCalculator</string>
 
     <!--    PersistentNotification-->

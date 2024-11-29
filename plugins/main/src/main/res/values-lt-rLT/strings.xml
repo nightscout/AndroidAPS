@@ -203,8 +203,6 @@
     <string name="overview_buttons_selection">Mygtukai</string>
     <string name="show_calibration_button_summary">Siunčia kalibravimą į xDrip+ arba atidaro modifikuotos Dexcom programos BYODA kalibravimo dialogą</string>
     <string name="show_cgm_button_summary">Atidaro xDrip+ ar BYODA, o mygtukas ATGAL gražina į AAPS</string>
-    <string name="dexcom_app_not_installed">Dexcom app neįdiegta.</string>
-    <string name="dexcom_app_not_detected">Atnaujinkite savo Dexcom programėlės versiją</string>
     <string name="error_starting_cgm">Nepavyko paleisti NGJ programos.  Įsitikinkite, kad ji įdiegta.</string>
     <string name="not_available_full">Nėra duomenų</string>
     <string name="constraints_violation">Apribojimų pažeidimas</string>
@@ -282,7 +280,6 @@
     <string name="skin">Išvaizda</string>
     <string name="cannula_usage">naud:</string>
     <!--    Iob-->
-    <string name="send_logfiles">Siųsti šios dienos žurnalo įrašus kūrėjams dabar. Netikėta situacija.</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Rodo atsinaujinančius pranešimus su trumpa Ciklo veiklos apžvalga</string>
     <string name="old_data">SENI DUOMENYS</string>

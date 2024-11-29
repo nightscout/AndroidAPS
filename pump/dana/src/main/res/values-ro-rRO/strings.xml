@@ -93,7 +93,6 @@
     <string name="danar_disableeasymode">Dezactivează modul EasyUI în pompă</string>
     <string name="profile_set_failed">Setarea profilului bazalei a eșuat</string>
     <string name="danar_bluetooth_status">Status Bluetooth</string>
-    <string name="danar_iob_label">IOB din pompă</string>
     <string name="firmware_label">Firmware</string>
     <string name="danar_pump_settings">Setări pompă Dana</string>
     <string name="time_format_12h">12h</string>
