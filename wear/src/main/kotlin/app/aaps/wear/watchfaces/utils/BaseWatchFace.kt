@@ -133,7 +133,6 @@ abstract class BaseWatchFace : WatchFace() {
             .subscribe { event: EventWearPreferenceChange ->
                 simpleUi.updatePreferences()
                 if (layoutSet) setDataFields()
-                updatePreferences()
                 invalidate()
             }
         disposable += rxBus
@@ -283,10 +282,6 @@ abstract class BaseWatchFace : WatchFace() {
             val vibrationPattern = longArrayOf(0, 150, 125, 100)
             vibrator.vibrate(vibrationPattern, -1)
         }
-    }
-
-    open fun updatePreferences() {
-        //Override within CustomWatchface
     }
 
     @SuppressLint("SetTextI18n")
