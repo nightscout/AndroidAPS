@@ -4,6 +4,7 @@
     <string name="dia_label_exam">Время действия инсулина (DIA)</string>
     <string name="dia_profile">Следует задать значение DIA в вашем профиле.</string>
     <string name="dia_minimumis5h">Минимально допустимое значение-5 часов.</string>
+    <string name="dia_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="dia_meaningisequaltodiapump">Если вы удовлетворены значением длительности действия инсулина DIA, заданным в помпе до AAPS, то при запуске цикла изменять это значение не требуется.</string>
     <string name="dia_valuemustbedetermined">Следует самостоятельно определить DIA подходящее для вас.</string>
     <string name="hypott_label">Временная цель Гипо </string>
