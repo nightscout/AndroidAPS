@@ -33,7 +33,6 @@
     <string name="pref_show_rig_battery">Vis riggens batteri</string>
     <string name="pref_show_basal_rate">Vis basaldose</string>
     <string name="pref_show_temp_target">Vis midlertidig mål</string>
-    <string name="pref_show_reservoir_level">Vis mål for reservoarnivå</string>
     <string name="pref_show_loop_status">Vis loop status</string>
     <string name="pref_show_bg">Vis BS</string>
     <string name="pref_show_bgi">Vis BGI</string>
