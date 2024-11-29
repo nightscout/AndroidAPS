@@ -239,6 +239,12 @@
     <string name="thirdcarbsincrement">第三次碳水化合物增量</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">預設臨時目標</string>
+    <string name="eatingsoon_duration">即將用餐持續時間（分鐘）</string>
+    <string name="eatingsoon_target">即將用餐目標值</string>
+    <string name="activity_duration">活動持續時間（分鐘）</string>
+    <string name="activity_target">活動目標值</string>
+    <string name="hypo_duration">低血糖持續時間（分鐘）</string>
+    <string name="hypo_target">低血糖目標值</string>
     <string name="fill_bolus_title">填充/預填充標準胰島素量</string>
     <string name="button1">按鈕1</string>
     <string name="button2">按鈕2</string>
