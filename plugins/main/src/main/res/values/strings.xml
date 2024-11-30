@@ -41,7 +41,7 @@
     <string name="smscommunicator_stops_ns_with_code">To disable the SMS Remote Service reply with code %1$s.\n\nKeep in mind that you\'ll able to reactivate it directly from the AAPS master smartphone only.</string>
     <string name="smscommunicator_stopped_sms">SMS Remote Service stopped. To reactivate it, use AAPS on master smartphone.</string>
     <string name="smscommunicator_calibration_reply_with_code">To send calibration %1$.2f reply with code %2$s</string>
-    <string name="smscommunicator_bolus_failed">Bolus failed</string>
+    <string name="smscommunicator_bolus_failed">Bolus failed. Verify real state before sending another command!</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Minimum number of minutes that must elapse between one remote bolus and the next</string>
     <string name="smscommunicator_remote_bolus_min_distance">How many minutes must elapse, at least, between one bolus and the next</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">For your safety, to edit this preference you need to add at least 2 phone numbers.</string>
