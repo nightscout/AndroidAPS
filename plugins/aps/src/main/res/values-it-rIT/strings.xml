@@ -66,9 +66,7 @@
     <string name="enable_smb_summary">Usa super-micro-boli (SMB) al posto della basale temporanea per un\'azione più veloce</string>
     <string name="enable_uam_summary">Rilevamento dei pasti non annunciati</string>
     <string name="enable_smb_always">Abilita SMB sempre</string>
-    <string name="enable_smb_always_summary">Abilita SMB sempre, indipendentemente dai boli. Possibile solo con sorgente glicemia con un buon filtraggio dei dati, come G5</string>
     <string name="enable_smb_after_carbs">Abilita SMB dopo i CHO</string>
-    <string name="enable_smb_after_carbs_summary">Abilita SMB per 6h dopo i carboidrati, anche con 0 COB. Possibile solo con sorgente glicemia con un buon filtraggio dei dati, come G5</string>
     <string name="enable_smb_with_cob">Abilita SMB con COB</string>
     <string name="enable_smb_with_cob_summary">Abilita SMB quando COB è attivo (ci sono carboidrati non assorbiti).</string>
     <string name="enable_smb_with_temp_target">Abilita SMB con target temporanei</string>
