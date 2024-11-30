@@ -32,7 +32,6 @@
     <string name="smscommunicator_stops_ns_with_code">要禁用短信遥控服务，请回复验证码%1$s.\n\n请记住，你只能在AAPS闭环手机上重新激活此功能。</string>
     <string name="smscommunicator_stopped_sms">短信遥控服务已禁用。要重新激活它，请使用AAPS闭环手机。</string>
     <string name="smscommunicator_calibration_reply_with_code">要发送校准值 %1$.2f 回复如下代码 %2$s</string>
-    <string name="smscommunicator_bolus_failed">大剂量输注失败</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">一次远程遥控输注命令与下一次命令之间必须经过的最小分钟数</string>
     <string name="smscommunicator_remote_bolus_min_distance">两次短信遥控胰岛素输注的时间间隔</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">为了您的安全，您需要添加至少两个电话号码。</string>
