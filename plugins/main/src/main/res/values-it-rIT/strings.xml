@@ -39,7 +39,7 @@
     <string name="smscommunicator_stops_ns_with_code">Per disabilitare il servizio di controllo remoto tramite SMS rispondi col codice %1$s.\n\nRicorda che potrai riattivarlo solo in maniera diretta dallo smartphone master in cui è installato AAPS.</string>
     <string name="smscommunicator_stopped_sms">Servizio di controllo remoto tramite SMS stoppato. Per riattivarlo, usa lo smartphone master in cui è installato AAPS.</string>
     <string name="smscommunicator_calibration_reply_with_code">Per inviare la calibrazione %1$.2f rispondi col codice %2$s</string>
-    <string name="smscommunicator_bolus_failed">Bolo fallito</string>
+    <string name="smscommunicator_bolus_failed">Bolo non riuscito. Verificare lo stato reale prima di inviare un altro comando!</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Numero minimo di minuti che devono trascorrere tra un bolo remoto e il successivo</string>
     <string name="smscommunicator_remote_bolus_min_distance">Quanti minuti devono trascorrere, almeno, tra un bolo e il successivo</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">Per la tua sicurezza, per modificare questa preferenza hai bisogno di aggiungere almeno 2 numeri di telefono.</string>
