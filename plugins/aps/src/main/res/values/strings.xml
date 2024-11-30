@@ -71,9 +71,9 @@
     <string name="enable_smb_summary">Use Super Micro Boluses instead of temp basal for faster action</string>
     <string name="enable_uam_summary">Detection of Unannounced meals</string>
     <string name="enable_smb_always">Enable SMB always</string>
-    <string name="enable_smb_always_summary">Enable SMB always independently to boluses. Possible only with BG source with nice filtering of data like G5</string>
+    <string name="enable_smb_always_summary">Enable SMB always independently to COB, temp targets or boluses. Possible only with BG sources with advanced filtering of data</string>
     <string name="enable_smb_after_carbs">Enable SMB after carbs</string>
-    <string name="enable_smb_after_carbs_summary">Enable SMB for 6h after carbs, even with 0 COB. Possible only with BG source with nice filtering of data like G5</string>
+    <string name="enable_smb_after_carbs_summary">Enable SMB for 6h after carbs, even with 0 COB. Possible only with BG sources with advanced filtering of data</string>
     <string name="enable_smb_with_cob">Enable SMB with COB</string>
     <string name="enable_smb_with_cob_summary">Enable SMB when there is COB active.</string>
     <string name="enable_smb_with_temp_target">Enable SMB with temp targets</string>
