@@ -39,7 +39,6 @@
     <string name="smscommunicator_stops_ns_with_code">За да изключите услугата за отдалечен SMS контрол, отговорете с код %1$s.\n\nИмайте предвид, че можете да го активирате само от AAPS смартфона.</string>
     <string name="smscommunicator_stopped_sms">Отдалечен SMS контрол е изключен. Можете да го включите от AndroidAPS телефона.</string>
     <string name="smscommunicator_calibration_reply_with_code">За да изпратите калибрация %1$.2f, отговорете с код %2$s</string>
-    <string name="smscommunicator_bolus_failed">Болус отказан</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Минимално време в минути, което трябва да е изминало след отдалечен болус, преди да може да бъде доставен следващият</string>
     <string name="smscommunicator_remote_bolus_min_distance">Колко най-малко минути трябва да минат между доставката на два болуса</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">За вашата сигурност, променете тази настройка, трябва да добавите най-малко 2 телефонни номера.</string>
