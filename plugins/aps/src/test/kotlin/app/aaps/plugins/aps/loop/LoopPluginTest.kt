@@ -10,6 +10,7 @@ import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
@@ -38,6 +39,7 @@ class LoopPluginTest : TestBaseWithProfile() {
     @Mock lateinit var runningConfiguration: RunningConfiguration
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var sharedPrefs: SharedPreferences
+    @Mock lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
 
     private lateinit var loopPlugin: LoopPlugin
 
@@ -60,7 +62,7 @@ class LoopPluginTest : TestBaseWithProfile() {
         loopPlugin = LoopPlugin(
             aapsLogger, aapsSchedulers, rxBus, sp, preferences, config,
             constraintChecker, rh, profileFunction, context, commandQueue, activePlugin, virtualPumpPlugin, iobCobCalculator, processedTbrEbData, receiverStatusStore, fabricPrivacy, dateUtil, uel,
-            persistenceLayer, runningConfiguration, uiInteraction, instantiator
+            persistenceLayer, runningConfiguration, uiInteraction, instantiator, processedDeviceStatusData
         )
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         `when`(context.getSystemService(Context.NOTIFICATION_SERVICE)).thenReturn(notificationManager)

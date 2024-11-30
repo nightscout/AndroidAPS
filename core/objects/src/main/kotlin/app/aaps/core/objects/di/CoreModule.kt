@@ -12,18 +12,18 @@ import dagger.android.ContributesAndroidInjector
 
 @Module(
     includes = [
-        CoreModule.CoreDataClassesModule::class,
+        CoreModule.Bindings::class,
     ]
 )
 open class CoreModule {
 
     @Suppress("unused")
     @Module
-    abstract class CoreDataClassesModule {
+    interface Bindings {
 
-        @ContributesAndroidInjector abstract fun determineBasalResultInjector(): DetermineBasalResult
-        @ContributesAndroidInjector abstract fun bolusWizardInjector(): BolusWizard
-        @ContributesAndroidInjector abstract fun quickWizardEntryInjector(): QuickWizardEntry
+        @ContributesAndroidInjector fun determineBasalResultInjector(): DetermineBasalResult
+        @ContributesAndroidInjector fun bolusWizardInjector(): BolusWizard
+        @ContributesAndroidInjector fun quickWizardEntryInjector(): QuickWizardEntry
     }
 
     @Suppress("DEPRECATION")

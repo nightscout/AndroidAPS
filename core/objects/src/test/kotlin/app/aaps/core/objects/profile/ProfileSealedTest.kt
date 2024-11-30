@@ -3,6 +3,7 @@ package app.aaps.core.objects.profile
 import android.content.Context
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
@@ -36,6 +37,7 @@ class ProfileSealedTest : TestBase() {
     @Mock lateinit var sp: SP
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var aps: APS
+    @Mock lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
 
     private lateinit var hardLimits: HardLimits
     private lateinit var dateUtil: DateUtil
@@ -85,9 +87,9 @@ class ProfileSealedTest : TestBase() {
         c[Calendar.MINUTE] = 0
         c[Calendar.SECOND] = 0
         c[Calendar.MILLISECOND] = 0
-        assertThat(p.getIsfMgdlForCarbs(c.timeInMillis, "test")).isWithin(0.01).of(108.0)
+        assertThat(p.getIsfMgdlForCarbs(c.timeInMillis, "test", config, processedDeviceStatusData)).isWithin(0.01).of(108.0)
         c[Calendar.HOUR_OF_DAY] = 2
-        assertThat(p.getIsfMgdlForCarbs(c.timeInMillis, "test")).isWithin(0.01).of(111.6)
+        assertThat(p.getIsfMgdlForCarbs(c.timeInMillis, "test", config, processedDeviceStatusData)).isWithin(0.01).of(111.6)
 //        assertThat(p.getIsfTimeFromMidnight(2 * 60 * 60)).isWithin(0.01).of(110.0)
         assertThat(p.getIsfList(rh, dateUtil).replace(".", ",")).isEqualTo(
             """
@@ -134,7 +136,7 @@ class ProfileSealedTest : TestBase() {
         assertThat(p.getBasal(c.timeInMillis)).isWithin(0.01).of(0.05)
         assertThat(p.percentageBasalSum()).isWithin(0.01).of(1.2)
         assertThat(p.getIc(c.timeInMillis)).isWithin(0.01).of(60.0)
-        assertThat(p.getIsfMgdlForCarbs(c.timeInMillis, "test")).isWithin(0.01).of(223.2)
+        assertThat(p.getIsfMgdlForCarbs(c.timeInMillis, "test", config, processedDeviceStatusData)).isWithin(0.01).of(223.2)
 
         // Test timeshift functionality
         p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(okProfile), dateUtil)!!, activePlugin)

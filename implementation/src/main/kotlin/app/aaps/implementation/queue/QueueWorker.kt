@@ -5,11 +5,11 @@ import android.content.Context
 import android.os.Build
 import android.os.PowerManager
 import android.os.SystemClock
+import androidx.work.WorkerParameters
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.androidPermissions.AndroidPermission
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.VirtualPump
@@ -22,33 +22,34 @@ import app.aaps.core.interfaces.rx.events.EventQueueChanged
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.Preferences
+import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.ui.R
 import app.aaps.core.utils.extensions.safeDisable
 import app.aaps.core.utils.extensions.safeEnable
+import kotlinx.coroutines.Dispatchers
+import javax.inject.Inject
 
-class QueueThread internal constructor(
-    private val queue: CommandQueue,
-    private val context: Context,
-    private val aapsLogger: AAPSLogger,
-    private val rxBus: RxBus,
-    private val activePlugin: ActivePlugin,
-    private val rh: ResourceHelper,
-    private val sp: SP,
-    private val preferences: Preferences,
-    private val androidPermission: AndroidPermission,
-    private val config: Config
-) : Thread() {
+class QueueWorker internal constructor(
+    context: Context,
+    params: WorkerParameters
+) : LoggingWorker(context, params, Dispatchers.IO) {
+
+    @Inject lateinit var queue: CommandQueue
+    @Inject lateinit var context: Context
+    @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var activePlugin: ActivePlugin
+    @Inject lateinit var rh: ResourceHelper
+    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
+    @Inject lateinit var androidPermission: AndroidPermission
+    @Inject lateinit var config: Config
 
     private var connectLogged = false
-    var waitingForDisconnect = false
-    private var mWakeLock: PowerManager.WakeLock? = null
 
-    init {
-        mWakeLock = (context.getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, rh.gs(config.appName) + ":QueueThread")
-    }
-
-    override fun run() {
-        mWakeLock?.acquire(T.mins(10).msecs())
+    override suspend fun doWorkAndLog(): Result {
+        queue.waitingForDisconnect = false
+        val wakeLock = (context.getSystemService(Context.POWER_SERVICE) as PowerManager?)?.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, rh.gs(config.appName) + ":" + this::class.simpleName)
+        wakeLock?.acquire(T.mins(10).msecs())
         rxBus.send(EventQueueChanged())
         var lastCommandTime: Long
         lastCommandTime = System.currentTimeMillis()
@@ -98,7 +99,7 @@ class QueueThread internal constructor(
                         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
                         pump.disconnect("Queue empty")
                         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
-                        return
+                        return Result.success()
                     }
                 }
                 if (pump.isHandshakeInProgress()) {
@@ -147,13 +148,13 @@ class QueueThread internal constructor(
                 if (queue.size() == 0 && queue.performing() == null) {
                     val secondsFromLastCommand = (System.currentTimeMillis() - lastCommandTime) / 1000
                     if (secondsFromLastCommand >= pump.waitForDisconnectionInSeconds()) {
-                        waitingForDisconnect = true
+                        queue.waitingForDisconnect = true
                         aapsLogger.debug(LTag.PUMPQUEUE, "queue empty. disconnect")
                         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
                         pump.disconnect("Queue empty")
                         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
                         aapsLogger.debug(LTag.PUMPQUEUE, "disconnected")
-                        return
+                        return Result.success()
                     } else {
                         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.WAITING_FOR_DISCONNECTION))
                         aapsLogger.debug(LTag.PUMPQUEUE, "waiting for disconnect")
@@ -162,7 +163,7 @@ class QueueThread internal constructor(
                 }
             }
         } finally {
-            if (mWakeLock?.isHeld == true) mWakeLock?.release()
+            if (wakeLock?.isHeld == true) wakeLock.release()
             aapsLogger.debug(LTag.PUMPQUEUE, "thread end")
         }
     }

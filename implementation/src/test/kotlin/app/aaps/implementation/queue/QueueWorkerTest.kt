@@ -2,6 +2,9 @@ package app.aaps.implementation.queue
 
 import android.content.Context
 import android.os.PowerManager
+import androidx.work.ListenableWorker
+import androidx.work.WorkManager
+import androidx.work.testing.TestListenableWorkerBuilder
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.androidPermissions.AndroidPermission
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -12,19 +15,24 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.implementation.queue.commands.CommandTempBasalAbsolute
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.Mockito
+import kotlin.test.assertIs
+import kotlin.time.Duration.Companion.seconds
 
-class QueueThreadTest : TestBaseWithProfile() {
+class QueueWorkerTest : TestBaseWithProfile() {
 
     @Mock lateinit var constraintChecker: ConstraintsChecker
     @Mock lateinit var powerManager: PowerManager
     @Mock lateinit var androidPermission: AndroidPermission
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var persistenceLayer: PersistenceLayer
+    @Mock lateinit var jobName: CommandQueueName
+    @Mock lateinit var workManager: WorkManager
 
     init {
         addInjector {
@@ -33,18 +41,30 @@ class QueueThreadTest : TestBaseWithProfile() {
                 it.activePlugin = activePlugin
                 it.rh = rh
             }
+            if (it is QueueWorker) {
+                it.aapsLogger = aapsLogger
+                it.queue = commandQueue
+                it.context = context
+                it.rxBus = rxBus
+                it.activePlugin = activePlugin
+                it.rh = rh
+                it.sp = sp
+                it.preferences = preferences
+                it.androidPermission = androidPermission
+                it.config = config
+            }
         }
     }
 
     private lateinit var commandQueue: CommandQueueImplementation
-    private lateinit var sut: QueueThread
+    private lateinit var sut: QueueWorker
 
     @BeforeEach
     fun prepare() {
         commandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker,
             profileFunction, activePlugin, context, sp, preferences, config, dateUtil, fabricPrivacy, androidPermission,
-            uiInteraction, persistenceLayer, decimalFormatter, instantiator
+            uiInteraction, persistenceLayer, decimalFormatter, instantiator, jobName, workManager
         )
 
         val pumpDescription = PumpDescription()
@@ -65,14 +85,14 @@ class QueueThreadTest : TestBaseWithProfile() {
             .thenReturn(percentageConstraint)
         Mockito.`when`(rh.gs(ArgumentMatchers.eq(app.aaps.core.ui.R.string.temp_basal_absolute), anyObject(), anyObject())).thenReturn("TEMP BASAL %1\$.2f U/h %2\$d min")
 
-        sut = QueueThread(commandQueue, context, aapsLogger, rxBus, activePlugin, rh, sp, preferences, androidPermission, config)
+        sut = TestListenableWorkerBuilder<QueueWorker>(context).build()
     }
 
     @Test
-    fun commandIsPickedUp() {
+    fun commandIsPickedUp() = runTest(timeout = 30.seconds) {
         commandQueue.tempBasalAbsolute(2.0, 60, true, validProfile, PumpSync.TemporaryBasalType.NORMAL, null)
-        @Suppress("CallToThreadRun")
-        sut.run()
+        val result = sut.doWorkAndLog()
+        assertIs<ListenableWorker.Result.Success>(result)
         assertThat(commandQueue.size()).isEqualTo(0)
     }
 }

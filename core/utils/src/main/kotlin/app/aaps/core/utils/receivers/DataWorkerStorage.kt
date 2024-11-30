@@ -66,10 +66,6 @@ class DataWorkerStorage @Inject constructor(
             .enqueueUniqueWork(jobGroupName, ExistingWorkPolicy.APPEND_OR_REPLACE, request)
     }
 
-    fun beginUniqueWork(jobName: String, request: OneTimeWorkRequest) =
-        WorkManager.getInstance(context)
-            .beginUniqueWork(jobName, ExistingWorkPolicy.APPEND_OR_REPLACE, request)
-
     companion object {
 
         const val STORE_KEY = "storeKey"

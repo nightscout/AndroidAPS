@@ -1,11 +1,12 @@
 package app.aaps.implementation.wizard
 
-import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.aps.AutosensDataStore
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.objects.wizard.BolusWizard
@@ -26,6 +27,7 @@ class BolusWizardTest : TestBaseWithProfile() {
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var loop: Loop
     @Mock lateinit var autosensDataStore: AutosensDataStore
+    @Mock lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
 
     init {
         addInjector {
@@ -42,6 +44,8 @@ class BolusWizardTest : TestBaseWithProfile() {
                 it.iobCobCalculator = iobCobCalculator
                 it.glucoseStatusProvider = GlucoseStatusProviderImpl(aapsLogger, iobCobCalculator, dateUtil, decimalFormatter)
                 it.profileUtil = profileUtil
+                it.config = config
+                it.processedDeviceStatusData = processedDeviceStatusData
             }
         }
     }
@@ -51,7 +55,7 @@ class BolusWizardTest : TestBaseWithProfile() {
         val profile = Mockito.mock(Profile::class.java)
         Mockito.`when`(profile.getTargetLowMgdl()).thenReturn(targetLow)
         Mockito.`when`(profile.getTargetLowMgdl()).thenReturn(targetHigh)
-        Mockito.`when`(profile.getIsfMgdlForCarbs(any(), any())).thenReturn(insulinSensitivityFactor)
+        Mockito.`when`(profile.getIsfMgdlForCarbs(any(), any(), any(), any())).thenReturn(insulinSensitivityFactor)
         Mockito.`when`(profile.getIc()).thenReturn(insulinToCarbRatio)
 
         Mockito.`when`(iobCobCalculator.calculateIobFromBolus()).thenReturn(IobTotal(System.currentTimeMillis()))
