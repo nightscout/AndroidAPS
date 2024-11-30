@@ -61,9 +61,7 @@
     <string name="enable_smb_summary">더 빠른 작용을 위해 임시Basal 대신 Super Micro Bolus 사용</string>
     <string name="enable_uam_summary">알리지 않은 식사 감지</string>
     <string name="enable_smb_always">SMB를 항상 사용하기</string>
-    <string name="enable_smb_always_summary">Bolus와 독립적으로 항상 SMB를 사용합니다. G5처럼 잘 필터된 혈당출처와만 사용이 가능합니다.</string>
     <string name="enable_smb_after_carbs">탄수화물 이후 SMB를 사용합니다.</string>
-    <string name="enable_smb_after_carbs_summary">탄수화물 이후 6시간동안 SMB를 사용합니다, 0 COB이라도 적용됩니다. G5처럼 잘 필터된 혈당출처와만 사용이 가능합니다.</string>
     <string name="enable_smb_with_cob">COB와 SMB를 사용합니다.</string>
     <string name="enable_smb_with_cob_summary">활성화된 COB가 있으면 SMB를 사용합니다.</string>
     <string name="enable_smb_with_temp_target">임시 목표에서 SMB를 사용하기</string>
