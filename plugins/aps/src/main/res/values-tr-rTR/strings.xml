@@ -67,9 +67,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="enable_smb_summary">Daha hızlı bir etki için geçici bazal yerine Super Micro Bolus kullanın</string>
     <string name="enable_uam_summary">(Uam) Bildirilmemiş öğünlerin tespiti</string>
     <string name="enable_smb_always">SMB\'yi her zaman etkinleştir</string>
-    <string name="enable_smb_always_summary">SMB\'yi her zaman boluslardan bağımsız olarak etkinleştirin. Yalnızca G5-G6 gibi güzel veri filtreleme özelliğine sahip KŞ kaynağıyla mümkündür</string>
     <string name="enable_smb_after_carbs">Yemeklerden sonra SMB\'yi etkinleştir</string>
-    <string name="enable_smb_after_carbs_summary">0 AKRB (Aktif Karbonhidrat) olsa dahi, karbonhidrat alındıktan sonra 6 saat süreyle SMB\'yi (Süper Mikro Bolus) etkinleştirir. Şayet KŞ kaynağıyla kullanılacaksa verilerin iyice filtrelenmesiyle (Dexcom G5-G6 gibi) mümkündür.</string>
     <string name="enable_smb_with_cob">SMB\'yi AKRB ile etkinleştir</string>
     <string name="enable_smb_with_cob_summary">AKRB (Aktif Karbonhidrat) aktif olduğunda SMB\'yi (Süper Mikro Bolus) etkinleştirin.</string>
     <string name="enable_smb_with_temp_target">Geçici hedeflerle SMB\'yi etkinleştir</string>
