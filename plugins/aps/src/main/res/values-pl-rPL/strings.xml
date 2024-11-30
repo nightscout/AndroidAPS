@@ -61,9 +61,7 @@
     <string name="enable_smb_summary">Używaj SMB (Super Mikro Bolusów) zamiast bazy tymczasowej dla szybszego działania </string>
     <string name="enable_uam_summary">Detekcja niezapowiedzianych posiłków (UAM)</string>
     <string name="enable_smb_always">Włącz SMB (Super Mikro Bolusy) zawsze</string>
-    <string name="enable_smb_always_summary">Włącz SMB (Super Mikro Bolusy) zawsze, niezależnie od bolusów. Możliwe jedynie ze źródłem BG (poziomu cukru) z dobrym filtrowaniem, jak aplikacja G5</string>
     <string name="enable_smb_after_carbs">Włącz SMB po węglowodanach</string>
-    <string name="enable_smb_after_carbs_summary">Włącz SMB na 6 godzin po węglow., nawet z 0 COB. Możliwe jedynie ze źródłem BG (poziomu cukru) z dobrym filtrowaniem, jak aplikacja G5</string>
     <string name="enable_smb_with_cob">Włącz SMB z COB</string>
     <string name="enable_smb_with_cob_summary">Włącz SMB gdy COB są aktywne.</string>
     <string name="enable_smb_with_temp_target">Włącz SMB z tymczasowym poziomem docelowym (TT)</string>
