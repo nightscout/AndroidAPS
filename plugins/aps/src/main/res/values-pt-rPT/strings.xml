@@ -59,9 +59,7 @@
     <string name="enable_smb_summary">Use Super Micro Bólus em vez de basal temporária para uma ação mais rápida</string>
     <string name="enable_uam_summary">Deteção de Refeições Não Anunciadas (RNA)</string>
     <string name="enable_smb_always">SMB sempre activado</string>
-    <string name="enable_smb_always_summary">SMB sempre activo independentemente dos bólus. Possível apenas quando o medidor tive um bom filtro de dados como o G5</string>
     <string name="enable_smb_after_carbs">Activar SMB após hidratos</string>
-    <string name="enable_smb_after_carbs_summary">SMB ativo por 6h após HCs, mesmo com 0 HCA. Possível apenas quando o medidor tive um bom filtro de dados como o G5</string>
     <string name="enable_smb_with_cob">Ativar SMB com HCA</string>
     <string name="enable_smb_with_cob_summary">Ativar SMB quando tem HCA positivos.</string>
     <string name="enable_smb_with_temp_target">SMB activo com valores alvo temporários</string>
