@@ -29,4 +29,5 @@ interface Config {
     fun isUnfinishedMode(): Boolean
 
     fun showUserActionsOnWatchOnly(): Boolean
+    fun ignoreNightscoutV3Errors(): Boolean
 }
