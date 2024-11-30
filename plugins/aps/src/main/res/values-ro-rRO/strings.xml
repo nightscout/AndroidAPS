@@ -61,9 +61,7 @@
     <string name="enable_smb_summary">Folosește SMB în locul bazalei temporare pentru reacție mai rapidă</string>
     <string name="enable_uam_summary">S-a detectat masă neanunțată</string>
     <string name="enable_smb_always">Activează SMB întotdeauna</string>
-    <string name="enable_smb_always_summary">Activează SMB întotdeauna independent de bolusuri. Este posibil doar în cazul unei surse de glicemii filtrate, cum ar fi G5</string>
     <string name="enable_smb_after_carbs">Activează SMB după carbohidrați</string>
-    <string name="enable_smb_after_carbs_summary">Activează SMB pentru 6 ore după carbohidrați, chiar și cu 0 COB. Este posibil doar cu o sursă de glicemii filtrate, ca datele din G5</string>
     <string name="enable_smb_with_cob">Activează SMB cu COB</string>
     <string name="enable_smb_with_cob_summary">Activează SMB atunci când sunt COB activi.</string>
     <string name="enable_smb_with_temp_target">Activează SMB cu ținte temporare</string>
