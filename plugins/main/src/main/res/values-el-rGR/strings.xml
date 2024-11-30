@@ -39,7 +39,6 @@
     <string name="smscommunicator_stops_ns_with_code">Για να απενεργοποιήσετε το SMS Απομακρυσμένη Υπηρεσία απαντήστε με κωδικό %1$s.\n\n μπορείτε να το ενεργοποιήσετε ξανά απευθείας μόνο από το AAPS master smartphone.</string>
     <string name="smscommunicator_stopped_sms">Η απομάκρυσμένη υπηρεσία SMS σταμάτησε. Για να την ενεργοποιήσετε πάλι, χρησιμοποιήστε το AAPS στο κύριο τηλέφωνο.</string>
     <string name="smscommunicator_calibration_reply_with_code">Για αποστολή καλιμπραρίσματος %1$.2f στείλτε με κωδικό %2$s</string>
-    <string name="smscommunicator_bolus_failed">Αποτυχία Bolus</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Ελάχιστος χρόνος σε λεπτά που πρέπει να μεσολαβήσει μεταξύ μίας απομακρυσμένης έγχυσης (bolus) και της επόμενης</string>
     <string name="smscommunicator_remote_bolus_min_distance">Πόσα λεπτά, τουλάχιστον, πρέπει να μεσολαβήσουν μεταξύ μιας έγχυσης (bolus) και της επόμενης</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">Για την ασφάλειά σας, για να επεξεργαστείτε αυτή την προτίμηση πρέπει να προσθέσετε τουλάχιστον 2 αριθμούς τηλεφώνου.</string>
