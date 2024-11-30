@@ -32,7 +32,6 @@
     <string name="smscommunicator_stops_ns_with_code">Per desactivar el Servei Remot d\'SMS contesteu amb el codi %1$s.\n\nRecordeu que només el podreu reactivar des del mòbil amb AAPS principal.</string>
     <string name="smscommunicator_stopped_sms">Servei Remot d\'SMS aturat. Per reactivar-lo, utilitzeu AAPS des del mòbil principal.</string>
     <string name="smscommunicator_calibration_reply_with_code">Per enviar calibració %1$.2f contesteu amb el codi %2$s</string>
-    <string name="smscommunicator_bolus_failed">Error de bolus</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Mínim nr. de minuts que han de passar entre un bolus remot i el següent</string>
     <string name="smscommunicator_remote_bolus_min_distance">Quants minuts han de passar, com a mínim, entre un bolus i el següent</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">Per la vostra seguretat, per editar aquesta configuració haureu d\'afegir al menys 2 nrs. de telèfon.</string>
