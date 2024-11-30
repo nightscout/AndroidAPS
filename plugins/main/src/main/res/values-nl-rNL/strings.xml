@@ -39,7 +39,6 @@
     <string name="smscommunicator_stops_ns_with_code">Om de SMS Remote Service uit te zetten, antwoord met code %1$s.\n\nDenk er aan dat je deze alleen weer aan kunt zetten op de AAPS master smartphone.</string>
     <string name="smscommunicator_stopped_sms">De controle via SMS is uitgezet. Gebruik AAPS op de master smartphone om deze weer te aan te zetten.</string>
     <string name="smscommunicator_calibration_reply_with_code">Om calibratie %1$.2f te verzenden antwoord met de code %2$s</string>
-    <string name="smscommunicator_bolus_failed">Bolus mislukt</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Minimum aantal minuten dat moet verstrijken tussen een bolus op afstand en de volgende</string>
     <string name="smscommunicator_remote_bolus_min_distance">Hoeveel minuten er ten minste moeten verstrijken tussen een bolus en de volgende</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">Voor de veiligheid moet je ten minste 2 telefoonnummers toevoegen om deze instelling te kunnen bijwerken.</string>
