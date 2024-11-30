@@ -56,9 +56,7 @@
     <string name="enable_smb_summary">Utilitzar Super Micro Bolus enlloc de basals temporals per guanyar temps</string>
     <string name="enable_uam_summary">Detecció d\'àpats no anunciats (UAM)</string>
     <string name="enable_smb_always">Habilitar SMB sempre</string>
-    <string name="enable_smb_always_summary">Habilitar SMB independentment dels bolus. Possible només si la font de glucèmia te un bon filtrat de dades, com G5</string>
     <string name="enable_smb_after_carbs">Habilitar SMB després de carbohidrats</string>
-    <string name="enable_smb_after_carbs_summary">Habilitar SMB durant 6h després de carbohidrats, fins i tot amb COB = 0. Possible només si la font de glucèmia te un bon filtrat de dades, com G5</string>
     <string name="enable_smb_with_cob">Habilitar SMB amb COB</string>
     <string name="enable_smb_with_cob_summary">Habilitar SMB quan CBO actiu.</string>
     <string name="enable_smb_with_temp_target">Habilitar SMB amb objectius temporals</string>
