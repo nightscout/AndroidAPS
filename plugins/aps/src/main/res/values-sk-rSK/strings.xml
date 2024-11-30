@@ -66,9 +66,7 @@
     <string name="enable_smb_summary">Použiť Super Mikro Bolusy namiesto dočasných bazálov, pre zrýchleniu účinku</string>
     <string name="enable_uam_summary">Detekcia neoznámených jedál</string>
     <string name="enable_smb_always">Vždy povoliť SMB</string>
-    <string name="enable_smb_always_summary">Povoliť SMB nezávisle na bolusoch. Možno iba zo zdrojom glykémií s dobrým filtrovaním dát, ako napr. G5</string>
     <string name="enable_smb_after_carbs">Povoliť SMB po jedle</string>
-    <string name="enable_smb_after_carbs_summary">Povoliť SMB 6 hodín po boluse aj pri nulovom COB. Možno iba zo zdrojom glykémií s dobrým filtrovaním dát, ako napr. G5</string>
     <string name="enable_smb_with_cob">Povoliť SMB zo sacharidmi</string>
     <string name="enable_smb_with_cob_summary">Povoliť SMB, pokiaľ zostávajú aktívne sacharidy.</string>
     <string name="enable_smb_with_temp_target">Povoliť SMB s dočasnými cieľmi</string>
