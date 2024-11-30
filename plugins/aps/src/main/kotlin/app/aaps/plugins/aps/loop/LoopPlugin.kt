@@ -40,6 +40,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -116,7 +117,8 @@ class LoopPlugin @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     private val runningConfiguration: RunningConfiguration,
     private val uiInteraction: UiInteraction,
-    private val instantiator: Instantiator
+    private val instantiator: Instantiator,
+    private val processedDeviceStatusData: ProcessedDeviceStatusData
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.LOOP)
@@ -763,6 +765,7 @@ class LoopPlugin @Inject constructor(
                 // do not send if result is older than 1 min
                 apsResult = lastRun.request?.json()?.also {
                     it.put("timestamp", dateUtil.toISOString(lastRun.lastAPSRun))
+                    it.put("isfMgdlForCarbs", profile.getIsfMgdlForCarbs(dateUtil.now(), "LoopPlugin", config, processedDeviceStatusData))
                 }
                 iob = lastRun.request?.iob?.json(dateUtil)?.also {
                     it.put("time", dateUtil.toISOString(lastRun.lastAPSRun))

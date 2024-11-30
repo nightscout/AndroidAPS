@@ -23,6 +23,7 @@ import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -82,6 +83,7 @@ class BolusWizard @Inject constructor(
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var decimalFormatter: DecimalFormatter
+    @Inject lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
 
     var timeStamp: Long
 
@@ -208,7 +210,7 @@ class BolusWizard @Inject constructor(
         this.positiveIOBOnly = positiveIOBOnly
 
         // Insulin from BG
-        sens = profileUtil.fromMgdlToUnits(profile.getIsfMgdlForCarbs(dateUtil.now(), "BolusWizard"))
+        sens = profileUtil.fromMgdlToUnits(profile.getIsfMgdlForCarbs(dateUtil.now(), "BolusWizard", config, processedDeviceStatusData))
         targetBGLow = profileUtil.fromMgdlToUnits(profile.getTargetLowMgdl())
         targetBGHigh = profileUtil.fromMgdlToUnits(profile.getTargetHighMgdl())
         if (useTT && tempTarget != null) {

@@ -44,6 +44,8 @@ data class RT(
     var COB: Double? = null,
     var IOB: Double? = null,
     var variable_sens: Double? = null,
+    var isfMgdlForCarbs: Double? = null, // used to pass to AAPS client
+
 
     var consoleLog: MutableList<String>? = null,
     var consoleError: MutableList<String>? = null

@@ -634,7 +634,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         if (divided[1].uppercase(Locale.getDefault()) == "STATUS") {
             sendSMS(Sms(receivedSms.phoneNumber, profileName))
         } else if (divided[1].uppercase(Locale.getDefault()) == "LIST") {
-            if (list.isEmpty) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(app.aaps.core.ui.R.string.invalid_profile)))
+            if (list.isEmpty()) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(app.aaps.core.ui.R.string.invalid_profile)))
             else {
                 var reply = ""
                 for (i in list.indices) {

@@ -1136,7 +1136,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val profile = profileFunction.getProfile()
         val request = loop.lastRun?.request
         val isfMgdl = profile?.getProfileIsfMgdl()
-        val isfForCarbs = profile?.getIsfMgdlForCarbs(dateUtil.now(), "Overview")
+        val isfForCarbs = profile?.getIsfMgdlForCarbs(dateUtil.now(), "Overview", config, processedDeviceStatusData)
         val variableSens =
             if (config.APS) request?.variableSens ?: 0.0
             else if (config.NSCLIENT) processedDeviceStatusData.getAPSResult()?.variableSens ?: 0.0
