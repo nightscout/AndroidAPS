@@ -313,14 +313,16 @@ class EquilFragment : DaggerFragment() {
     }
 
     private fun dismissLoading() {
-        val fragment = childFragmentManager.findFragmentByTag("loading")
-        if (fragment is DialogFragment) {
-            try {
-                fragment.dismiss()
-            } catch (e: IllegalStateException) {
-                // dialog not running yet
-                aapsLogger.error("Unhandled exception", e)
+        try {
+            if (isAdded) {
+                val fragment = childFragmentManager.findFragmentByTag("loading")
+                if (fragment is DialogFragment) {
+                    fragment.dismiss()
+                }
             }
+        } catch (e: IllegalStateException) {
+            // dialog not running yet
+            aapsLogger.error("Unhandled exception", e)
         }
     }
 
