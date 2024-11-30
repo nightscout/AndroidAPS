@@ -63,9 +63,7 @@
     <string name="enable_smb_summary">Gebruik Super Micro Bolussen in plaats van tijdelijke basaalstanden voor een snellere reactie</string>
     <string name="enable_uam_summary">Detectie van niet aangekondigde (UnAnnounced) Maaltijden</string>
     <string name="enable_smb_always">Activeer SMB altijd</string>
-    <string name="enable_smb_always_summary">Zet SMB altijd aan, onafhankelijk van bolussen. Enkel mogelijk met een BG bron met goed gefilterde data zoals de G5 of G6</string>
     <string name="enable_smb_after_carbs">Activeer SMB na koolhydraten</string>
-    <string name="enable_smb_after_carbs_summary">SMB actief gedurende 6u, zelfs met 0 COB. Enkel mogelijk met een BG bron met goed gefilterde data zoals de G5 of G6</string>
     <string name="enable_smb_with_cob">Activeer SMB met Koolhydraten</string>
     <string name="enable_smb_with_cob_summary">SMB actief tijdens actieve koolhydraten</string>
     <string name="enable_smb_with_temp_target">Gebruik SMB met tijdelijke streefdoelen</string>
