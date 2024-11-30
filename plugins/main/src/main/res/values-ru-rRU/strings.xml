@@ -39,7 +39,6 @@
     <string name="smscommunicator_stops_ns_with_code">Чтобы отключить службу удаленных SMS-сообщений ответьте кодом %1$s.\n\n Имейте в виду, что вы сможете вновь активировать ее только с основного телефона AAPS.</string>
     <string name="smscommunicator_stopped_sms">Удаленная служба SMS остановлена. Для ее реактивации используйте AAPS на главном смартфоне.</string>
     <string name="smscommunicator_calibration_reply_with_code">Чтобы отправить калибровку %1$.2f ответьте кодом %2$s</string>
-    <string name="smscommunicator_bolus_failed">Подача болюса не состоялась</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Минимальное количество минут между одним удаленным болюсом и следующим</string>
     <string name="smscommunicator_remote_bolus_min_distance">Минимум минут между одним болюсом и следующим</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">В целях безопасности, для изменения этого параметра необходимо добавить не менее 2 телефонных номеров.</string>
