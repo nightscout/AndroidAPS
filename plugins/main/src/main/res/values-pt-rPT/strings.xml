@@ -39,7 +39,6 @@
     <string name="smscommunicator_stops_ns_with_code">Para desactivar o Serviço Remoto SMS de responda com o código %1$s.\n\nTenha em mente que será capaz de o reactivar directamente apenas a partir do telemóvel mestre do AAPS.</string>
     <string name="smscommunicator_stopped_sms">SMS Serviço Remoto interrompido. Para reactivá-lo, use o AAPS no telemóvel mestre.</string>
     <string name="smscommunicator_calibration_reply_with_code">Para enviar calibração %1$.2f responder com código %2$s</string>
-    <string name="smscommunicator_bolus_failed">Bólus falhado</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Número mínimo de minutos que deve decorrer entre um bólus remoto e o próximo</string>
     <string name="smscommunicator_remote_bolus_min_distance">Quantos minutos deve decorrer, pelo menos, entre um bólus e o próximo</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">Para sua segurança, para editar esta preferência precisa adicionar pelo menos 2 números de telefone.</string>
