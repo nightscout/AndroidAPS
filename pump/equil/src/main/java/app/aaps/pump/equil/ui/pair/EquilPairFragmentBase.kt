@@ -74,7 +74,8 @@ abstract class EquilPairFragmentBase : DaggerFragment() {
             if (nextPage == null) {
                 activity?.finish()
             } else {
-                findNavController().navigate(nextPage)
+                if (isAdded)
+                    findNavController().navigate(nextPage)
             }
         }
 
@@ -114,12 +115,12 @@ abstract class EquilPairFragmentBase : DaggerFragment() {
     protected abstract fun getIndex(): Int
 
     protected fun showLoading() {
-        if (activity == null) return
+        if (activity == null || !isAdded) return
         LoadingDlg().show(childFragmentManager, "loading")
     }
 
     protected fun dismissLoading() {
-        if (activity == null) return
+        if (activity == null || !isAdded) return
         val fragment = childFragmentManager.findFragmentByTag("loading")
         if (fragment is LoadingDlg) {
             try {
