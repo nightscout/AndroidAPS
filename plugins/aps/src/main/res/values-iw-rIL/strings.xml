@@ -66,9 +66,7 @@
     <string name="enable_smb_summary">השתמש בסופר מיקרו בולוסים במקום בבזאלי זמני לפעילות מהירה יותר</string>
     <string name="enable_uam_summary">זיהוי של ארוחות לא מוכרזות</string>
     <string name="enable_smb_always">הפעל SMB תמיד</string>
-    <string name="enable_smb_always_summary">אפשר SMB תמיד באופן עצמאי מבולוסים. אפשרי רק עם מקור ערכי סוכר עם דיוק של נתונים כמו G5</string>
     <string name="enable_smb_after_carbs">הפעל SMB אחרי פחמימות</string>
-    <string name="enable_smb_after_carbs_summary">הפעלת SMB במשך 6 ש\' אחרי פחמימות, גם אם אין פחמ\' פעילות. אפשרי רק עם מקור ערכי סוכר מדויק כמו G6</string>
     <string name="enable_smb_with_cob">הפעלת SMB עם פחמ\' פעילות</string>
     <string name="enable_smb_with_cob_summary">הפעלת SMB כשיש פחמ\' פעילות.</string>
     <string name="enable_smb_with_temp_target">הפעלת SMB עם ערכי מטרה זמניים</string>
