@@ -66,9 +66,7 @@
     <string name="enable_smb_summary">Utiliser les Super Micro Bolus au lieu des débits de base temporaires pour une action rapide</string>
     <string name="enable_uam_summary">Détection des Repas Non Signalés</string>
     <string name="enable_smb_always">Activer les SMB en permanence</string>
-    <string name="enable_smb_always_summary">Activer les SMB en permanence de manière indépendante des bolus. Ceci est possible uniquement avec une source de gly ayant un très bon filtrage de données comme le G5</string>
     <string name="enable_smb_after_carbs">Activer les SMB après les glucides</string>
-    <string name="enable_smb_after_carbs_summary">Activer les SMB pendant 6h après les glucides, même s’il y a 0 GA (Glucides Actifs). Ceci est possible uniquement avec une source de glycémie ayant un très bon filtrage de données comme le G5</string>
     <string name="enable_smb_with_cob">Activer les SMB avec les GA</string>
     <string name="enable_smb_with_cob_summary">Activer les SMB tant que des Glucides sont actifs.</string>
     <string name="enable_smb_with_temp_target">Activer les SMB avec les cibles temp</string>
