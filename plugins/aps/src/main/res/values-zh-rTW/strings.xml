@@ -66,7 +66,9 @@
     <string name="enable_smb_summary">使用超微量注射(SMB) 來取代臨時基礎率，以便加快作用速度</string>
     <string name="enable_uam_summary">偵測未輸入的餐點</string>
     <string name="enable_smb_always">始終啟用SMB</string>
+    <string name="enable_smb_always_summary">啟用 SMB（超微量注射），無論 COB、臨時目標或注射劑量如何，皆可持續運作。此功能僅適用於具備進階資料過濾的血糖資料來源。</string>
     <string name="enable_smb_after_carbs">在碳水化合物後啟用SMB</string>
+    <string name="enable_smb_after_carbs_summary">啟用 SMB（超微量注射）功能，於進食碳水後 6 小時內，即使 COB 為 0 也能運作。此功能僅適用於具備進階資料過濾功能的血糖資料來源。</string>
     <string name="enable_smb_with_cob">有COB時啟用SMB</string>
     <string name="enable_smb_with_cob_summary">在體內仍有碳水存在時啟用SMB。</string>
     <string name="enable_smb_with_temp_target">在有臨時目標時啟用SMB</string>
