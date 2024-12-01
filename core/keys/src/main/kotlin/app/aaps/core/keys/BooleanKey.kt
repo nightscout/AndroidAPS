@@ -84,7 +84,7 @@ enum class BooleanKey(
     NsClientAcceptCarbs("ns_receive_carbs", false, showInNsClientMode = false, hideParentScreenIfHidden = true),
     NsClientAcceptTherapyEvent("ns_receive_therapy_events", false, showInNsClientMode = false, hideParentScreenIfHidden = true),
     NsClientAcceptOfflineEvent("ns_receive_offline_event", false, showInNsClientMode = false, hideParentScreenIfHidden = true),
-    NsClientAcceptTbrEb("ns_receive_tbr_eb", false, showInNsClientMode = false, hideParentScreenIfHidden = true, engineeringModeOnly = true),
+    NsClientAcceptTbrEb("ns_receive_tbr_eb", false, showInNsClientMode = false, engineeringModeOnly = true),
     NsClientNotificationsFromAlarms("ns_alarms", false, calculatedDefaultValue = true),
     NsClientNotificationsFromAnnouncements("ns_announcements", false, calculatedDefaultValue = true),
     NsClientUseCellular("ns_cellular", true),
