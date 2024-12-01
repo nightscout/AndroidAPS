@@ -39,6 +39,7 @@
     <string name="smscommunicator_stops_ns_with_code">לביטול שירות השליטה מרחוק באמצעות SMS השיבו עם הקוד %1$s. \n\nהשירות ניתן להפעלה מחדש ממכשיר ה-AAPS הראשי בלבד.</string>
     <string name="smscommunicator_stopped_sms">שירות השליטה מרחוק באמצעות SMS מופסק. על מנת להפעילו, השתמשו ב-AAPS במכשיר הראשי.</string>
     <string name="smscommunicator_calibration_reply_with_code">כדי לשלוח ערך כיול %1$.2f יש להשיב עם הקוד %2$s</string>
+    <string name="smscommunicator_bolus_failed">הזרקת הבולוס נכשלה. נא לוודא את המצב האמיתי לפני שליחת פקודה נוספת!</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">מספר המינימלי (בדקות) שחייב לחלוף בין בולוס מרוחק אחד למשנהו</string>
     <string name="smscommunicator_remote_bolus_min_distance">מספר הדקות המינימלי שצריכות לחלוף, בין בולוס אחד למשנהו</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">למען בטחונכם, על מנת לערוך את העדפה זו, עליכם להוסיף לפחות שני מספרי טלפון.</string>
