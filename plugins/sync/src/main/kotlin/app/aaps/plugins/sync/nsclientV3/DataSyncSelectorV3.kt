@@ -36,7 +36,7 @@ class DataSyncSelectorV3 @Inject constructor(
     private val config: Config
 ) : DataSyncSelector {
 
-    class QueueCounter(
+    data class QueueCounter(
         var bolusesRemaining: Long = -1L,
         var carbsRemaining: Long = -1L,
         var bcrRemaining: Long = -1L,
@@ -107,6 +107,7 @@ class DataSyncSelectorV3 @Inject constructor(
             processChangedOfflineEvents()
             processChangedProfileStore()
             storeDataForDb.updateNsIds()
+            aapsLogger.debug(LTag.NSCLIENT, "Remaining: $queueCounter")
         }
         rxBus.send(EventNSClientUpdateGuiStatus())
     }
