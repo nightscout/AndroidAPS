@@ -32,6 +32,12 @@ interface APS : ConfigExportImport {
     fun supportsDynamicIc(): Boolean = false
 
     /**
+     * Dedicated string for Sensitivity OKDialog in overview on ISF calculation ?
+     * @return string or null if nothing to show
+     */
+    fun getSensitivityOverviewString(): String? = null
+
+    /**
      * Calculate current ISF
      * @param multiplier Multiplier from profile switch. Algorithm can take it into a count or ignore
      * @param timeShift Time shift from profile switch. Algorithm can take it into a count or ignore

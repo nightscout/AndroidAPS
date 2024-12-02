@@ -430,6 +430,8 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
+    <string name="sensitivity">Sensitivity</string>
+    <string name="isf_for_carbs">ISF for carbs absorption: %1$.1f</string>
     <string name="a11y_file">file</string>
     <string name="a11y_user">user</string>
 
