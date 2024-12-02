@@ -8,6 +8,7 @@ import javax.inject.Inject
 /**
  * BasalSettingPacket
  */
+@Suppress("SpellCheckingInspection")
 class BasalSettingPacket(
     injector: HasAndroidInjector,
     private var pattern: Int, // pattern(1=basic, 2=life1, 3=life2, 4=life3, 5=dr1, 6=dr2)
@@ -48,7 +49,5 @@ class BasalSettingPacket(
         return suffixEncode(buffer)
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_BASAL_SETTING"
-    }
+    override val friendlyName = "PUMP_BASAL_SETTING"
 }

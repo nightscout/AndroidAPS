@@ -37,7 +37,5 @@ class TimeSettingPacket(
         return suffixEncode(buffer)
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_TIME_SETTING_REQUEST"
-    }
+    override val friendlyName = "PUMP_TIME_SETTING_REQUEST"
 }

@@ -1,6 +1,8 @@
 package app.aaps.pump.equil.manager.command;
 
 
+import androidx.annotation.Nullable;
+
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 
@@ -26,7 +28,7 @@ public class CmdUnPair extends BaseCmd {
 
     byte[] randomPassword;
 
-    public EquilResponse clear1() {
+    @Nullable public EquilResponse clear1() {
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
             messageDigest.update(Utils.hexStringToBytes(sn));

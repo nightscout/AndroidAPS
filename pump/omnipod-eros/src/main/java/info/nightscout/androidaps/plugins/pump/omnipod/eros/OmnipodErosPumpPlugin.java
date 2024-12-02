@@ -144,8 +144,8 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     private final ResourceHelper rh;
     private final SP sp;
     private final DateUtil dateUtil;
-    private final PumpDescription pumpDescription;
-    private final ServiceConnection serviceConnection;
+    @NonNull private final PumpDescription pumpDescription;
+    @NonNull private final ServiceConnection serviceConnection;
     private final PumpType pumpType = PumpType.OMNIPOD_EROS;
     private final PumpSync pumpSync;
     private final UiInteraction uiInteraction;
@@ -550,7 +550,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         return rileyLinkOmnipodService;
     }
 
-    @Override public RileyLinkPumpInfo getPumpInfo() {
+    @NonNull @Override public RileyLinkPumpInfo getPumpInfo() {
         String frequency = rh.gs(R.string.omnipod_eros_frequency);
         String connectedModel = "Eros";
         String serialNumber = podStateManager.isPodInitialized() ? String.valueOf(podStateManager.getAddress()) : "-";
@@ -666,7 +666,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     }
 
     @NonNull @Override
-    public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
+    public PumpEnactResult deliverTreatment(@NonNull DetailedBolusInfo detailedBolusInfo) {
         if (detailedBolusInfo.insulin == 0 || detailedBolusInfo.carbs > 0) {
             throw new IllegalArgumentException(detailedBolusInfo.toString(), new Exception());
         }
@@ -1098,7 +1098,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         fabricPrivacy.logCustom("OmnipodPumpInit");
     }
 
-    @NonNull private PumpEnactResult deliverBolus(final DetailedBolusInfo detailedBolusInfo) {
+    @NonNull private PumpEnactResult deliverBolus(@NonNull final DetailedBolusInfo detailedBolusInfo) {
         PumpEnactResult result = executeCommand(OmnipodCommandType.SET_BOLUS, () -> aapsOmnipodErosManager.bolus(detailedBolusInfo));
 
         if (result.getSuccess()) {
@@ -1149,7 +1149,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         return pumpSync.expectedPumpState().getTemporaryBasal();
     }
 
-    private PumpEnactResult getOperationNotSupportedWithCustomText(int resourceId) {
+    @NonNull private PumpEnactResult getOperationNotSupportedWithCustomText(int resourceId) {
         return instantiator.providePumpEnactResult().success(false).enacted(false).comment(resourceId);
     }
 

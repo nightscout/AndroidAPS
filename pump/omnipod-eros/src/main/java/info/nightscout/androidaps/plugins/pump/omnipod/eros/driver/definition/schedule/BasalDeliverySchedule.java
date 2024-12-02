@@ -32,7 +32,7 @@ public class BasalDeliverySchedule extends DeliverySchedule implements IRawRepre
         return rawData;
     }
 
-    @Override
+    @NonNull @Override
     public InsulinScheduleType getType() {
         return InsulinScheduleType.BASAL_SCHEDULE;
     }

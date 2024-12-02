@@ -22,7 +22,7 @@ class SerialNumInquireResponsePacket(injector: HasAndroidInjector) : DiaconnG8Pa
         aapsLogger.debug(LTag.PUMPCOMM, "SerialNumInquireResponsePacket init")
     }
 
-    override fun handleMessage(data: ByteArray?) {
+    override fun handleMessage(data: ByteArray) {
         val result = defect(data)
         if (result != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "SerialNumInquireResponsePacket Got some Error")
@@ -62,7 +62,5 @@ class SerialNumInquireResponsePacket(injector: HasAndroidInjector) : DiaconnG8Pa
         sp.putString(rh.gs(R.string.pumpversion), diaconnG8Pump.majorVersion.toString() + "." + diaconnG8Pump.minorVersion.toString())
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_SERIAL_NUM_INQUIRE_RESPONSE"
-    }
+    override val friendlyName = "PUMP_SERIAL_NUM_INQUIRE_RESPONSE"
 }

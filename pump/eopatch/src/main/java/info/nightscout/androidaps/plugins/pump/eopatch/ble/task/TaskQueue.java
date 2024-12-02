@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ble.task;
 
-import java.util.Iterator;
+import androidx.annotation.NonNull;
+
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -18,7 +19,7 @@ public class TaskQueue {
     @Inject AAPSLogger aapsLogger;
     @Inject AapsSchedulers aapsSchedulers;
 
-    Queue<PatchTask> queue = new LinkedList<>();
+    @NonNull Queue<PatchTask> queue = new LinkedList<>();
 
     private int sequence = 0;
     private final BehaviorSubject<PatchTask> ticketSubject = BehaviorSubject.create();
@@ -68,7 +69,7 @@ public class TaskQueue {
     }
 
     private synchronized void done() {
-        if (queue.size() > 0) {
+        if (!queue.isEmpty()) {
             PatchTask done = queue.remove();
             aapsLogger.debug(LTag.PUMPCOMM, String.format("done() Task #:%s completed   func:%s  task remaining:%s",
                     done.number, done.func.name(), queue.size()));
@@ -81,24 +82,6 @@ public class TaskQueue {
         if (next != null) {
             ticketSubject.onNext(next);
         }
-    }
-
-    public synchronized boolean has(TaskFunc func) {
-        if (queue.size() > 1) {
-            Iterator<PatchTask> iterator = queue.iterator();
-
-            /* remove 1st queue */
-            iterator.next();
-
-            while (iterator.hasNext()) {
-                PatchTask item = iterator.next();
-                if (item.func == func) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 
     static class PatchTask {

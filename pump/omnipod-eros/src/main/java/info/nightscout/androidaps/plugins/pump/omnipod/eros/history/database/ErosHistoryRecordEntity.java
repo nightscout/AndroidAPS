@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.Entity;
 import androidx.room.Index;
@@ -17,7 +18,7 @@ public class ErosHistoryRecordEntity implements Comparable<ErosHistoryRecordEnti
     private long pumpId;
     public long date;
     private long podEntryTypeCode;
-    @Nullable  private String data = null;
+    @Nullable private String data = null;
     private boolean success = false;
     private String podSerial = "None";
     private Boolean successConfirmed = false;
@@ -99,7 +100,7 @@ public class ErosHistoryRecordEntity implements Comparable<ErosHistoryRecordEnti
     }
 
     @Override
-    public int compareTo(ErosHistoryRecordEntity otherOne) {
+    public int compareTo(@NonNull ErosHistoryRecordEntity otherOne) {
         return (int) (otherOne.date - this.date);
     }
 }

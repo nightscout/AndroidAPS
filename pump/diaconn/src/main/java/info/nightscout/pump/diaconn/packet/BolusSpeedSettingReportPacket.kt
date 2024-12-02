@@ -22,7 +22,7 @@ class BolusSpeedSettingReportPacket(
         aapsLogger.debug(LTag.PUMPCOMM, "BolusSpeedSettingReportPacket init ")
     }
 
-    override fun handleMessage(data: ByteArray?) {
+    override fun handleMessage(data: ByteArray) {
         val defectCheck = defect(data)
         if (defectCheck != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "BolusSpeedSettingReportPacket Report Packet Got some Error")
@@ -36,7 +36,5 @@ class BolusSpeedSettingReportPacket(
         aapsLogger.debug(LTag.PUMPCOMM, "bolusSpeed   --> ${diaconnG8Pump.speed}")
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_BOLUS_SPEED_SETTING_REPORT"
-    }
+    override val friendlyName = "PUMP_BOLUS_SPEED_SETTING_REPORT"
 }

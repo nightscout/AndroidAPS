@@ -17,7 +17,7 @@ class SerialNumInquirePacket(
 
     init {
         msgType = 0x6E
-        aapsLogger.debug(LTag.PUMPCOMM, "SeialNumInquirePacket init")
+        aapsLogger.debug(LTag.PUMPCOMM, "SerialNumInquirePacket init")
     }
 
     override fun encode(msgSeq: Int): ByteArray {
@@ -25,7 +25,5 @@ class SerialNumInquirePacket(
         return suffixEncode(buffer)
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_SERIAL_NUM_INQUIRE"
-    }
+    override val friendlyName = "PUMP_SERIAL_NUM_INQUIRE"
 }

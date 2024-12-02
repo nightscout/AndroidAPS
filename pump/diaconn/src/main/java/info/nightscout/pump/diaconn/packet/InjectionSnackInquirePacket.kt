@@ -6,7 +6,7 @@ import info.nightscout.pump.diaconn.DiaconnG8Pump
 import javax.inject.Inject
 
 /**
- * InjectionSneckInquirePacket
+ * InjectionSnackInquirePacket
  */
 class InjectionSnackInquirePacket(injector: HasAndroidInjector) : DiaconnG8Packet(injector) {
 
@@ -21,7 +21,5 @@ class InjectionSnackInquirePacket(injector: HasAndroidInjector) : DiaconnG8Packe
         return suffixEncode(prefixEncode(msgType, msgSeq, MSG_CON_END))
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_INJECTION_SNACK_INQUIRE"
-    }
+    override val friendlyName = "PUMP_INJECTION_SNACK_INQUIRE"
 }

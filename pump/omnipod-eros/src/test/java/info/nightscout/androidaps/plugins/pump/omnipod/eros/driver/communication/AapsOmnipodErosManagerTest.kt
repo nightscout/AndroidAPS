@@ -34,10 +34,6 @@ internal class AapsOmnipodErosManagerTest {
         assertThat(entry3.rate).isWithin(0.000001).of(3.05)
     }
 
-    @Test fun invalidProfileNullProfile() {
-        assertFailsWith<IllegalArgumentException> { AapsOmnipodErosManager.mapProfileToBasalSchedule(null) }
-    }
-
     @Test fun invalidProfileZeroEntries() {
         val profile = Mockito.mock(Profile::class.java)
         Mockito.`when`(profile.getBasalValues()).thenReturn(emptyArray())

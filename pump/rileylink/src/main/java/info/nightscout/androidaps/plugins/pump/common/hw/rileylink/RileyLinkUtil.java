@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.pump.common.hw.rileylink;
 import android.content.Context;
 import android.content.Intent;
 
+import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import java.nio.ByteBuffer;
@@ -67,7 +68,7 @@ public class RileyLinkUtil {
     }
 
 
-    public static BleAdvertisedData parseAdertisedData(byte[] advertisedData) {
+    @NonNull public static BleAdvertisedData parseAdertisedData(byte[] advertisedData) {
         List<UUID> uuids = new ArrayList<UUID>();
         String name = null;
         if (advertisedData == null) {
@@ -112,7 +113,7 @@ public class RileyLinkUtil {
         return new BleAdvertisedData(uuids, name);
     }
 
-    public List<RLHistoryItem> getRileyLinkHistory() {
+    @NonNull public List<RLHistoryItem> getRileyLinkHistory() {
         return historyRileyLink;
     }
 

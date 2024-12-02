@@ -8,6 +8,7 @@ import javax.inject.Inject
 /**
  * SoundSettingPacket
  */
+@Suppress("SpellCheckingInspection")
 class SoundSettingPacket(
     injector: HasAndroidInjector,
     private var type: Int, //
@@ -28,7 +29,5 @@ class SoundSettingPacket(
         return suffixEncode(buffer)
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_SOUND_SETTING"
-    }
+    override val friendlyName = "PUMP_SOUND_SETTING"
 }

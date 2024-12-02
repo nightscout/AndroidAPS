@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition;
 
+import androidx.annotation.NonNull;
+
 public class OmnipodCrc {
     public static final int[] crc16lookup = new int[]{
             0x0000, 0x8005, 0x800f, 0x000a, 0x801b, 0x001e, 0x0014, 0x8011,
@@ -55,7 +57,7 @@ public class OmnipodCrc {
             0xDE, 0xD9, 0xD0, 0xD7, 0xC2, 0xC5, 0xCC, 0xCB, 0xE6, 0xE1, 0xE8, 0xEF, 0xFA, 0xFD, 0xF4, 0xF3
     };
 
-    public static int crc16(byte[] bytes) {
+    public static int crc16(@NonNull byte[] bytes) {
         int crc = 0x0000;
         for (byte b : bytes) {
             crc = (crc >> 8) ^ crc16lookup[(crc ^ b) & 0xff];

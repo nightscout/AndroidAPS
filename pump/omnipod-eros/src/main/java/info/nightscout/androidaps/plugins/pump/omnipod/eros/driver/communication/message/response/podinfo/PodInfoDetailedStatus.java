@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.response.podinfo;
 
+import androidx.annotation.NonNull;
+
 import org.joda.time.Duration;
 
 import app.aaps.core.utils.pump.ByteUtil;
@@ -15,7 +17,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.Po
 public class PodInfoDetailedStatus extends PodInfo implements StatusUpdatableResponse {
     private static final int MINIMUM_MESSAGE_LENGTH = 21;
 
-    private final PodProgressStatus podProgressStatus;
+    @NonNull private final PodProgressStatus podProgressStatus;
     private final DeliveryStatus deliveryStatus;
     private final double bolusNotDelivered;
     private final byte podMessageCounter;
@@ -165,7 +167,7 @@ public class PodInfoDetailedStatus extends PodInfo implements StatusUpdatableRes
         return unknownValue;
     }
 
-    @Override public String toString() {
+    @NonNull @Override public String toString() {
         return "PodInfoDetailedStatus{" +
                 "podProgressStatus=" + podProgressStatus +
                 ", deliveryStatus=" + deliveryStatus +

@@ -30,7 +30,5 @@ class InjectionExtendedBolusSettingPacket(
         return suffixEncode(buffer)
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_INJECTION_EXTENDED_BOLUS_SETTING"
-    }
+    override val friendlyName = "PUMP_INJECTION_EXTENDED_BOLUS_SETTING"
 }

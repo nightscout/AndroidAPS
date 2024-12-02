@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.action;
 
+import androidx.annotation.NonNull;
+
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.command.GetStatusCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.response.podinfo.PodInfoResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PodInfoType;
@@ -7,7 +9,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.ErosP
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 
 public class GetPodInfoAction implements OmnipodAction<PodInfoResponse> {
-    private final ErosPodStateManager podStateManager;
+    @NonNull private final ErosPodStateManager podStateManager;
     private final PodInfoType podInfoType;
 
     public GetPodInfoAction(ErosPodStateManager podStateManager, PodInfoType podInfoType) {
@@ -22,7 +24,7 @@ public class GetPodInfoAction implements OmnipodAction<PodInfoResponse> {
     }
 
     @Override
-    public PodInfoResponse execute(OmnipodRileyLinkCommunicationManager communicationService) {
+    public PodInfoResponse execute(@NonNull OmnipodRileyLinkCommunicationManager communicationService) {
         return communicationService.sendCommand(PodInfoResponse.class, podStateManager, new GetStatusCommand(podInfoType));
     }
 }

@@ -8,6 +8,7 @@ import javax.inject.Inject
 /**
  * LanguageSettingPacket
  */
+@Suppress("SpellCheckingInspection")
 class LanguageSettingPacket(
     injector: HasAndroidInjector,
     private var type: Int
@@ -26,7 +27,5 @@ class LanguageSettingPacket(
         return suffixEncode(buffer)
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_LANGUAGE_SETTING"
-    }
+    override val friendlyName = "PUMP_LANGUAGE_SETTING"
 }

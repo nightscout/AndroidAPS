@@ -24,7 +24,5 @@ class LogStatusInquirePacket(
         return suffixEncode(buffer)
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_LOG_STATUS_INQUIRE"
-    }
+    override val friendlyName = "PUMP_LOG_STATUS_INQUIRE"
 }

@@ -3,6 +3,8 @@ package app.aaps.pump.equil.manager;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
@@ -68,7 +70,7 @@ public class AESUtil {
     }
 
 
-    public static String decrypt(EquilCmdModel equilCmdModel, byte[] keyBytes) throws Exception {
+    @NonNull public static String decrypt(@NonNull EquilCmdModel equilCmdModel, byte[] keyBytes) throws Exception {
         String iv = equilCmdModel.getIv();
         String ciphertext = equilCmdModel.getCiphertext();
         String authenticationTag = equilCmdModel.getTag();

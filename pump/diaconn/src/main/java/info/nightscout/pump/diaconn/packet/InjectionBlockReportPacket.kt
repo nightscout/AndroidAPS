@@ -19,7 +19,7 @@ class InjectionBlockReportPacket(
         aapsLogger.debug(LTag.PUMPCOMM, "InjectionBlockReportPacket init ")
     }
 
-    override fun handleMessage(data: ByteArray?) {
+    override fun handleMessage(data: ByteArray) {
         val defectCheck = defect(data)
         if (defectCheck != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "InjectionBasalReportPacket Got some Error")
@@ -35,11 +35,9 @@ class InjectionBlockReportPacket(
 
         aapsLogger.debug(LTag.PUMPCOMM, "injectionBlockGrade --> ${diaconnG8Pump.injectionBlockGrade} (1:info, 2: warning , 3: major , 4: critical)")
         aapsLogger.debug(LTag.PUMPCOMM, "injectionBlockProcess --> ${diaconnG8Pump.injectionBlockProcess} (1:skip, 2: stop , 3: ignore ) ")
-        aapsLogger.debug(LTag.PUMPCOMM, "injectionBlockReaminAmount --> ${diaconnG8Pump.injectionBlockRemainAmount}  ")
+        aapsLogger.debug(LTag.PUMPCOMM, "injectionBlockRemainAmount --> ${diaconnG8Pump.injectionBlockRemainAmount}  ")
         aapsLogger.debug(LTag.PUMPCOMM, "injectionBlockType --> ${diaconnG8Pump.injectionBlockType} (1:basal, 2: meal , 3: normal , 4: square , 5:dual, 6:tube, 7:needle) ")
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_INJECTION_BLOCK_REPORT"
-    }
+    override val friendlyName = "PUMP_INJECTION_BLOCK_REPORT"
 }

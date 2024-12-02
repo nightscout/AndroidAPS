@@ -14,6 +14,7 @@ kotlinx-serialization = "1.7.3"
 kotlinx-coroutines = "1.9.0"
 work = "2.10.0"
 datastorePreferences = "1.1.1"
+annotation = "1.7.0-alpha02"
 
 [plugins]
 android-library = { id = "com.android.library" }
@@ -144,3 +145,4 @@ commons-codec = { group = "commons-codec", name = "commons-codec", version = "1.
 com-github-guepardoapps-kulid = { group = "com.github.guepardoapps", name = "kulid", version = "2.0.0.0" }
 com-thoughtworks-xstream = { group = "com.thoughtworks.xstream", name = "xstream", version = "1.4.21" }
 com-garmin-connectiq = { group = "com.garmin.connectiq", name = "ciq-companion-app-sdk", version = "2.0.3" }
+androidx-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "annotation" }

@@ -2,6 +2,8 @@ package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communicatio
 
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -47,7 +49,7 @@ public class PodInfoRecentPulseLog extends PodInfo {
         return lastEntryIndex;
     }
 
-    @Override
+    @NonNull @Override
     public String toString() {
         String out = "PodInfoRecentPulseLog{" +
                 "lastEntryIndex=" + lastEntryIndex +

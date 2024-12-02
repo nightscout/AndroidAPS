@@ -23,7 +23,7 @@ class BasalLimitInquireResponsePacket(injector: HasAndroidInjector) : DiaconnG8P
         aapsLogger.debug(LTag.PUMPCOMM, "BasalLimitInquireResponsePacket init")
     }
 
-    override fun handleMessage(data: ByteArray?) {
+    override fun handleMessage(data: ByteArray) {
         val result = defect(data)
         if (result != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "BasalLimitInquireResponsePacket Got some Error")
@@ -49,7 +49,5 @@ class BasalLimitInquireResponsePacket(injector: HasAndroidInjector) : DiaconnG8P
         aapsLogger.debug(LTag.PUMPCOMM, "maxBasal --> ${diaconnG8Pump.maxBasal}")
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_BASAL_LIMIT_INQUIRE_RESPONSE"
-    }
+    override val friendlyName = "PUMP_BASAL_LIMIT_INQUIRE_RESPONSE"
 }

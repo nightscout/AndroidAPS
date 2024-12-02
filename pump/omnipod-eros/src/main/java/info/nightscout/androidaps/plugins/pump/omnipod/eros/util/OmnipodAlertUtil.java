@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.util;
 
+import androidx.annotation.Nullable;
+
 import org.joda.time.Duration;
 
 import javax.inject.Inject;
@@ -18,7 +20,7 @@ public class OmnipodAlertUtil {
         this.sp = sp;
     }
 
-    public Duration getExpirationReminderTimeBeforeShutdown() {
+    @Nullable public Duration getExpirationReminderTimeBeforeShutdown() {
         boolean expirationAlertEnabled = sp.getBoolean(OmnipodErosStorageKeys.Preferences.EXPIRATION_REMINDER_ENABLED, true);
         return expirationAlertEnabled ? Duration.standardHours(sp.getInt(OmnipodErosStorageKeys.Preferences.EXPIRATION_REMINDER_HOURS_BEFORE_SHUTDOWN, 9)) : null;
     }

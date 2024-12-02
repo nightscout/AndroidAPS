@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ble.task;
 
+import androidx.annotation.NonNull;
+
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -23,7 +25,7 @@ public class DeactivateTask extends TaskBase {
     @Inject IPreferenceManager pm;
     @Inject AapsSchedulers aapsSchedulers;
 
-    private final DeActivation DEACTIVATION;
+    @NonNull private final DeActivation DEACTIVATION;
 
     @Inject
     public DeactivateTask() {

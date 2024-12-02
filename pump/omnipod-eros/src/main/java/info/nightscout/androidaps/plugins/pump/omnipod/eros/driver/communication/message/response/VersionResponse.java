@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.response;
 
+import androidx.annotation.NonNull;
+
 import app.aaps.core.utils.pump.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.MessageBlock;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.FirmwareVersion;
@@ -11,7 +13,7 @@ public class VersionResponse extends MessageBlock {
     private static final int SETUP_POD_VERSION_RESPONSE_LENGTH = 0x1b;
 
     private final PodProgressStatus podProgressStatus;
-    private final FirmwareVersion pmVersion;
+    @NonNull private final FirmwareVersion pmVersion;
     private final FirmwareVersion piVersion;
     private final int lot;
     private final int tid;
@@ -19,7 +21,7 @@ public class VersionResponse extends MessageBlock {
     private Byte gain; // Only in the assign address version response
     private Byte rssi; // Only in the assign address version response
 
-    public VersionResponse(byte[] data) {
+    public VersionResponse(@NonNull byte[] data) {
         int length = ByteUtil.INSTANCE.convertUnsignedByteToInt(data[1]);
         this.encodedData = ByteUtil.INSTANCE.substring(data, 2, length);
 
@@ -63,7 +65,7 @@ public class VersionResponse extends MessageBlock {
         return podProgressStatus;
     }
 
-    public FirmwareVersion getPmVersion() {
+    @NonNull public FirmwareVersion getPmVersion() {
         return pmVersion;
     }
 
@@ -99,7 +101,7 @@ public class VersionResponse extends MessageBlock {
         return address;
     }
 
-    @Override
+    @NonNull @Override
     public String toString() {
         return "VersionResponse{" +
                 "podProgressStatus=" + podProgressStatus +

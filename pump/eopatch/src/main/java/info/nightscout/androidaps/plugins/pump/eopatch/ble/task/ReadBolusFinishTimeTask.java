@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ble.task;
 
+import androidx.annotation.NonNull;
+
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -15,7 +17,7 @@ import io.reactivex.rxjava3.core.Single;
 
 @Singleton
 public class ReadBolusFinishTimeTask extends BolusTask {
-    private final BolusFinishTimeGet BOLUS_FINISH_TIME_GET;
+    @NonNull private final BolusFinishTimeGet BOLUS_FINISH_TIME_GET;
 
     @Inject
     public ReadBolusFinishTimeTask() {

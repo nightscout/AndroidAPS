@@ -8,6 +8,7 @@ import javax.inject.Inject
 /**
  * BolusSpeedSettingPacket
  */
+@Suppress("SpellCheckingInspection")
 class BolusSpeedSettingPacket(
     injector: HasAndroidInjector,
     private var type: Int
@@ -26,7 +27,5 @@ class BolusSpeedSettingPacket(
         return suffixEncode(buffer)
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_BOLUS_SPEED_SETTING_PACKET"
-    }
+    override val friendlyName = "PUMP_BOLUS_SPEED_SETTING_PACKET"
 }

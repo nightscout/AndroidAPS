@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ble.task;
 
+import androidx.annotation.NonNull;
+
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -14,7 +16,7 @@ import io.reactivex.rxjava3.core.Single;
 
 @Singleton
 public class StopNowBolusTask extends BolusTask {
-    private final BolusStop BOLUS_STOP;
+    @NonNull private final BolusStop BOLUS_STOP;
 
     @Inject AapsSchedulers aapsSchedulers;
 

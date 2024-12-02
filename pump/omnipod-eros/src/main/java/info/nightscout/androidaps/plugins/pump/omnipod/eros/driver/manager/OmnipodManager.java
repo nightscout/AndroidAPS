@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager;
 
+import androidx.annotation.Nullable;
+
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Duration;
@@ -65,7 +67,7 @@ public class OmnipodManager {
     private final OmnipodRileyLinkCommunicationManager communicationService;
     private final ErosPodStateManager podStateManager;
 
-    private ActiveBolusData activeBolusData;
+    @Nullable private ActiveBolusData activeBolusData;
     private SingleSubject<Boolean> bolusCommandExecutionSubject;
 
     private final Object bolusDataMutex = new Object();

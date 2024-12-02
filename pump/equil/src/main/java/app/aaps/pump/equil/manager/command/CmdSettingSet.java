@@ -1,6 +1,8 @@
 package app.aaps.pump.equil.manager.command;
 
 
+import androidx.annotation.NonNull;
+
 import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.pump.equil.EquilConst;
 import app.aaps.pump.equil.database.EquilHistoryRecord;
@@ -50,7 +52,7 @@ public class CmdSettingSet extends BaseSetting {
         return data;
     }
 
-    public void decodeConfirmData(byte[] data) {
+    public void decodeConfirmData(@NonNull byte[] data) {
         int index = data[4];
 //        int i1 = ((data[15] & 0x0f) << 8) | data[14] & 0xff;
 //        int i2 = ((data[17] & 0x0f) << 8) | data[16] & 0xff;

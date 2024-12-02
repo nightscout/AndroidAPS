@@ -28,6 +28,8 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.TypedValue;
 
+import androidx.annotation.NonNull;
+
 import com.jjoe64.graphview.series.Series;
 
 import java.util.ArrayList;
@@ -78,7 +80,7 @@ public class LegendRenderer {
     /**
      * wrapped styles
      */
-    private final Styles mStyles;
+    @NonNull private final Styles mStyles;
 
     /**
      * reference to the graphview

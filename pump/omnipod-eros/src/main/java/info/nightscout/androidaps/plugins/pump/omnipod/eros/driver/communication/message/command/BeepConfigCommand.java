@@ -39,7 +39,7 @@ public class BeepConfigCommand extends MessageBlock {
         encodedData = ByteUtil.INSTANCE.concat(encodedData, (byte) ((bolusCompletionBeep ? (1 << 6) : 0) + (bolusIntervalBeep.getStandardMinutes() & 0x3f)));
     }
 
-    @Override
+    @NonNull @Override
     public MessageBlockType getType() {
         return MessageBlockType.BEEP_CONFIG;
     }

@@ -1,6 +1,8 @@
 package app.aaps.pump.equil.manager.command;
 
 
+import androidx.annotation.Nullable;
+
 import app.aaps.pump.equil.database.EquilHistoryRecord;
 import app.aaps.pump.equil.manager.Utils;
 
@@ -48,7 +50,7 @@ public class SettingCmd extends BaseSetting {
         return data;
     }
 
-    @Override public EquilHistoryRecord.EventType getEventType() {
+    @Nullable @Override public EquilHistoryRecord.EventType getEventType() {
         return null;
     }
 }

@@ -1,18 +1,18 @@
 /**
  * GraphView
  * Copyright (C) 2014  Jonas Gehring
- *
+ * <p>
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License,
  * with the "Linking Exception", which can be found at the license.txt
  * file in this program.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU General Public License
  * with the "Linking Exception" along with this program; if not,
  * write to the author Jonas Gehring <g.jjoe64@gmail.com>.
@@ -25,15 +25,15 @@ import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.R;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.BaseSeries;
 import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.DataPointInterface;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.PointsGraphSeries;
-import com.jjoe64.graphview.series.Series;
 
 /**
  * helper class to use GraphView directly
@@ -70,11 +70,11 @@ public class GraphViewXML extends GraphView {
      * @param context
      * @param attrs
      */
-    public GraphViewXML(Context context, AttributeSet attrs) {
+    public GraphViewXML(@NonNull Context context, AttributeSet attrs) {
         super(context, attrs);
 
         // get attributes
-        TypedArray a=context.obtainStyledAttributes(
+        TypedArray a = context.obtainStyledAttributes(
                 attrs,
                 R.styleable.GraphViewXML);
 
@@ -118,7 +118,7 @@ public class GraphViewXML extends GraphView {
         } else if (type.equals("points")) {
             series = new PointsGraphSeries<DataPoint>(data);
         } else {
-            throw new IllegalArgumentException("unknown graph type: "+type+". Possible is line|bar|points");
+            throw new IllegalArgumentException("unknown graph type: " + type + ". Possible is line|bar|points");
         }
         if (color != Color.TRANSPARENT) {
             series.setColor(color);

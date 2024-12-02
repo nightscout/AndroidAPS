@@ -21,8 +21,5 @@ class BolusSpeedInquirePacket(injector: HasAndroidInjector) : DiaconnG8Packet(in
         return suffixEncode(prefixEncode(msgType, msgSeq, MSG_CON_END))
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_BOLUS_SPEED_INQUIRE"
-
-    }
+    override val friendlyName = "PUMP_BOLUS_SPEED_INQUIRE"
 }

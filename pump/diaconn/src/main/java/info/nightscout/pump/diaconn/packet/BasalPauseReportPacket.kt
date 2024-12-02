@@ -18,7 +18,7 @@ class BasalPauseReportPacket(injector: HasAndroidInjector) : DiaconnG8Packet(inj
         aapsLogger.debug(LTag.PUMPCOMM, "BasalPauseReportPacket init ")
     }
 
-    override fun handleMessage(data: ByteArray?) {
+    override fun handleMessage(data: ByteArray) {
         val defectCheck = defect(data)
         if (defectCheck != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "BasalPauseReportPacket Got some Error")
@@ -27,11 +27,9 @@ class BasalPauseReportPacket(injector: HasAndroidInjector) : DiaconnG8Packet(inj
         } else failed = false
 
         val bufferData = prefixDecode(data)
-        status = getByteToInt(bufferData) //(1: pauseed, 2: pause cancel)
+        status = getByteToInt(bufferData) //(1: paused, 2: pause cancel)
         aapsLogger.debug(LTag.PUMPCOMM, "status --> $status")
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_BASAL_PAUSE_REPORT"
-    }
+    override val friendlyName = "PUMP_BASAL_PAUSE_REPORT"
 }

@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.response;
 
+import androidx.annotation.NonNull;
+
 import org.joda.time.Duration;
 
 import java.io.ByteArrayOutputStream;
@@ -109,7 +111,7 @@ public class StatusResponse extends MessageBlock implements StatusUpdatableRespo
         return stream.toByteArray();
     }
 
-    @Override public String toString() {
+    @NonNull @Override public String toString() {
         return "StatusResponse{" +
                 "deliveryStatus=" + deliveryStatus +
                 ", podProgressStatus=" + podProgressStatus +

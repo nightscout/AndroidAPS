@@ -1,5 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.manager;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 
@@ -95,7 +98,6 @@ public class AapsOmnipodErosManager {
     private final AAPSLogger aapsLogger;
     private final RxBus rxBus;
     private final ResourceHelper rh;
-    private final HasAndroidInjector injector;
     private final SP sp;
     private final OmnipodManager delegate;
     private final OmnipodAlertUtil omnipodAlertUtil;
@@ -119,8 +121,8 @@ public class AapsOmnipodErosManager {
     private boolean batteryChangeLoggingEnabled;
 
     @Inject
-    public AapsOmnipodErosManager(OmnipodRileyLinkCommunicationManager communicationService,
-                                  ErosPodStateManager podStateManager,
+    public AapsOmnipodErosManager(@NonNull OmnipodRileyLinkCommunicationManager communicationService,
+                                  @NonNull ErosPodStateManager podStateManager,
                                   ErosHistory erosHistory,
                                   AapsOmnipodUtil aapsOmnipodUtil,
                                   AAPSLogger aapsLogger,
@@ -128,7 +130,6 @@ public class AapsOmnipodErosManager {
                                   RxBus rxBus,
                                   SP sp,
                                   ResourceHelper rh,
-                                  HasAndroidInjector injector,
                                   OmnipodAlertUtil omnipodAlertUtil,
                                   PumpSync pumpSync,
                                   UiInteraction uiInteraction,
@@ -142,7 +143,6 @@ public class AapsOmnipodErosManager {
         this.rxBus = rxBus;
         this.sp = sp;
         this.rh = rh;
-        this.injector = injector;
         this.omnipodAlertUtil = omnipodAlertUtil;
         this.pumpSync = pumpSync;
         this.uiInteraction = uiInteraction;
@@ -153,10 +153,7 @@ public class AapsOmnipodErosManager {
         reloadSettings();
     }
 
-    public static BasalSchedule mapProfileToBasalSchedule(Profile profile) {
-        if (profile == null) {
-            throw new IllegalArgumentException("Profile can not be null");
-        }
+    @NonNull public static BasalSchedule mapProfileToBasalSchedule(@NonNull Profile profile) {
         Profile.ProfileValue[] basalValues = profile.getBasalValues();
         List<BasalScheduleEntry> entries = new ArrayList<>();
         for (Profile.ProfileValue basalValue : basalValues) {
@@ -242,7 +239,7 @@ public class AapsOmnipodErosManager {
         return result;
     }
 
-    public PumpEnactResult configureAlerts(List<AlertConfiguration> alertConfigurations) {
+    @NonNull public PumpEnactResult configureAlerts(@NonNull List<AlertConfiguration> alertConfigurations) {
         try {
             executeCommand(() -> delegate.configureAlerts(alertConfigurations));
         } catch (Exception ex) {
@@ -255,7 +252,7 @@ public class AapsOmnipodErosManager {
         return instantiator.providePumpEnactResult().success(true).enacted(false);
     }
 
-    public PumpEnactResult playTestBeep(BeepConfigType beepType) {
+    @NonNull public PumpEnactResult playTestBeep(BeepConfigType beepType) {
         try {
             executeCommand(() -> delegate.playTestBeep(beepType));
         } catch (Exception ex) {
@@ -284,7 +281,7 @@ public class AapsOmnipodErosManager {
         return instantiator.providePumpEnactResult().success(true).enacted(false);
     }
 
-    public PumpEnactResult deactivatePod() {
+    @NonNull public PumpEnactResult deactivatePod() {
         try {
             executeCommand(delegate::deactivatePod);
         } catch (Exception ex) {
@@ -301,7 +298,7 @@ public class AapsOmnipodErosManager {
         return instantiator.providePumpEnactResult().success(true).enacted(true);
     }
 
-    public PumpEnactResult setBasalProfile(Profile profile, boolean showNotifications) {
+    @NonNull public PumpEnactResult setBasalProfile(@Nullable Profile profile, boolean showNotifications) {
         if (profile == null) {
             String note = getStringResource(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_error_failed_to_set_profile_empty_profile);
             if (showNotifications) {
@@ -505,7 +502,7 @@ public class AapsOmnipodErosManager {
         return instantiator.providePumpEnactResult().success(false).enacted(false).comment(comment);
     }
 
-    public PumpEnactResult setTemporaryBasal(TempBasalPair tempBasalPair) {
+    @NonNull public PumpEnactResult setTemporaryBasal(@NonNull TempBasalPair tempBasalPair) {
         boolean beepsEnabled = isTbrBeepsEnabled();
         try {
             executeCommand(() -> delegate.setTemporaryBasal(PumpTypeExtensionKt.determineCorrectBasalSize(PumpType.OMNIPOD_EROS, tempBasalPair.getInsulinRate()),
@@ -583,7 +580,7 @@ public class AapsOmnipodErosManager {
         return instantiator.providePumpEnactResult().success(true).enacted(true);
     }
 
-    public PumpEnactResult acknowledgeAlerts() {
+    @NonNull public PumpEnactResult acknowledgeAlerts() {
         try {
             executeCommand(delegate::acknowledgeAlerts);
         } catch (Exception ex) {
@@ -857,20 +854,20 @@ public class AapsOmnipodErosManager {
         );
     }
 
-    private long addSuccessToHistory(PodHistoryEntryType entryType, Object data) {
+    private long addSuccessToHistory(@NonNull PodHistoryEntryType entryType, Object data) {
         return addSuccessToHistory(System.currentTimeMillis(), entryType, data);
     }
 
-    private long addSuccessToHistory(long requestTime, PodHistoryEntryType entryType, Object
+    private long addSuccessToHistory(long requestTime, @NonNull PodHistoryEntryType entryType, Object
             data) {
         return addToHistory(requestTime, entryType, data, true);
     }
 
-    private long addFailureToHistory(PodHistoryEntryType entryType, Object data) {
+    private long addFailureToHistory(@NonNull PodHistoryEntryType entryType, Object data) {
         return addFailureToHistory(System.currentTimeMillis(), entryType, data);
     }
 
-    private long addFailureToHistory(long requestTime, PodHistoryEntryType entryType, Object
+    private long addFailureToHistory(long requestTime, @NonNull PodHistoryEntryType entryType, Object
             data) {
         return addToHistory(requestTime, entryType, data, false);
     }
@@ -985,7 +982,7 @@ public class AapsOmnipodErosManager {
         rxBus.send(event);
     }
 
-    private void showErrorDialog(String message, Integer sound) {
+    private void showErrorDialog(@NonNull String message, Integer sound) {
         uiInteraction.runAlarm(message, rh.gs(app.aaps.core.ui.R.string.error), sound);
     }
 

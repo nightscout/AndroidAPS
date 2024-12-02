@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.response.podinfo;
 
+import androidx.annotation.NonNull;
+
 import org.joda.time.Duration;
 
 import java.util.ArrayList;
@@ -69,7 +71,7 @@ public class PodInfoDataLog extends PodInfo {
         return Collections.unmodifiableList(dwords);
     }
 
-    @Override
+    @NonNull @Override
     public String toString() {
         return "PodInfoDataLog{" +
                 "faultEventCode=" + faultEventCode +

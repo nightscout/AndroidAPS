@@ -8,6 +8,7 @@ import javax.inject.Inject
 /**
  * TempBasalSettingPacket
  */
+@Suppress("SpellCheckingInspection")
 class TempBasalSettingPacket(
     injector: HasAndroidInjector,
     private var status: Int, // (1:tempbasal running, 2:tempbasal dismissed)
@@ -38,7 +39,5 @@ class TempBasalSettingPacket(
         return suffixEncode(buffer)
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_TEMP_BASAL_SETTING"
-    }
+    override val friendlyName = "PUMP_TEMP_BASAL_SETTING"
 }

@@ -21,6 +21,9 @@ package com.jjoe64.graphview.series;
 
 import android.graphics.PointF;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.jjoe64.graphview.GraphView;
 
 import java.util.ArrayList;
@@ -167,7 +170,7 @@ public abstract class BaseSeries<E extends DataPointInterface> implements Series
             return new Iterator<E>() {
                 final Iterator<E> org = mData.iterator();
                 E nextValue = null;
-                E nextNextValue = null;
+                @Nullable E nextNextValue = null;
                 boolean plusOne = true;
 
                 {
@@ -202,7 +205,7 @@ public abstract class BaseSeries<E extends DataPointInterface> implements Series
                     throw new UnsupportedOperationException();
                 }
 
-                @Override
+                @NonNull @Override
                 public E next() {
                     if (hasNext()) {
                         E r = nextValue;
@@ -297,7 +300,7 @@ public abstract class BaseSeries<E extends DataPointInterface> implements Series
      * @param y pixel
      * @return the data point or null if nothing was found
      */
-    protected E findDataPoint(float x, float y) {
+    @Nullable protected E findDataPoint(float x, float y) {
         float shortestDistance = Float.NaN;
         E shortest = null;
         for (Map.Entry<PointF, E> entry : mDataPoints.entrySet()) {

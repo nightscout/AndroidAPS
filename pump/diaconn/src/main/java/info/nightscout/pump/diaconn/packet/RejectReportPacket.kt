@@ -21,7 +21,7 @@ class RejectReportPacket(
         aapsLogger.debug(LTag.PUMPCOMM, "RejectReportPacket init ")
     }
 
-    override fun handleMessage(data: ByteArray?) {
+    override fun handleMessage(data: ByteArray) {
         val defectCheck = defect(data)
         if (defectCheck != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "RejectReportPacket Got some Error")
@@ -36,7 +36,5 @@ class RejectReportPacket(
         aapsLogger.debug(LTag.PUMPCOMM, "Reject Reason --> $reason (6:cancel, 10:timeout) ")
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_REJECT_REPORT"
-    }
+    override val friendlyName = "PUMP_REJECT_REPORT"
 }

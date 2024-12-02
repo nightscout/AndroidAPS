@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.data;
 
+import androidx.annotation.NonNull;
+
 import org.joda.time.LocalDateTime;
 
 import javax.inject.Inject;
@@ -15,14 +17,14 @@ public class RLHistoryItemOmnipod extends RLHistoryItem {
     @Inject ResourceHelper rh;
     private final OmnipodCommandType omnipodCommandType;
 
-    public RLHistoryItemOmnipod(HasAndroidInjector injector, OmnipodCommandType omnipodCommandType) {
+    public RLHistoryItemOmnipod(@NonNull HasAndroidInjector injector, OmnipodCommandType omnipodCommandType) {
         super(new LocalDateTime(), RLHistoryItemSource.OmnipodCommand, RileyLinkTargetDevice.Omnipod);
         injector.androidInjector().inject(this);
         this.omnipodCommandType = omnipodCommandType;
     }
 
     @Override
-    public String getDescription(ResourceHelper rh) {
+    public String getDescription(@NonNull ResourceHelper rh) {
         if (RLHistoryItemSource.OmnipodCommand.equals(source)) {
             return rh.gs(omnipodCommandType.getResourceId());
         }

@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -60,7 +62,7 @@ public enum RileyLinkFirmwareVersion {
         return familyMembers != null;
     }
 
-    private List<RileyLinkFirmwareVersion> getFamilyMembersRecursive() {
+    @NonNull private List<RileyLinkFirmwareVersion> getFamilyMembersRecursive() {
         List<RileyLinkFirmwareVersion> members = new ArrayList<>();
         if (hasFamilyMembers()) {
             for (RileyLinkFirmwareVersion version : familyMembers) {
@@ -119,7 +121,7 @@ public enum RileyLinkFirmwareVersion {
     }
 
 
-    @Override
+    @NonNull @Override
     public String toString() {
         if (hasFamilyMembers()) {
             return FIRMWARE_IDENTIFICATION_PREFIX + name();

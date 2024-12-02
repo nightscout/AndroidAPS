@@ -17,7 +17,7 @@ class SoundInquireResponsePacket(injector: HasAndroidInjector) : DiaconnG8Packet
         aapsLogger.debug(LTag.PUMPCOMM, "SoundInquireResponsePacket init")
     }
 
-    override fun handleMessage(data: ByteArray?) {
+    override fun handleMessage(data: ByteArray) {
         val result = defect(data)
         if (result != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "SoundInquireResponsePacket Got some Error")
@@ -40,7 +40,5 @@ class SoundInquireResponsePacket(injector: HasAndroidInjector) : DiaconnG8Packet
         aapsLogger.debug(LTag.PUMPCOMM, "alarmIntensity --> ${diaconnG8Pump.alarmIntensity}")
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_SOUND_INQUIRE_RESPONSE"
-    }
+    override val friendlyName = "PUMP_SOUND_INQUIRE_RESPONSE"
 }

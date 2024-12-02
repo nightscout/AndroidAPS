@@ -14,6 +14,7 @@ import kotlin.math.floor
 /**
  * BigMainInfoInquireResponsePacket
  */
+@Suppress("SpellCheckingInspection")
 class BigMainInfoInquireResponsePacket(
     injector: HasAndroidInjector
 ) : DiaconnG8Packet(injector) {
@@ -27,7 +28,7 @@ class BigMainInfoInquireResponsePacket(
         aapsLogger.debug(LTag.PUMPCOMM, "BigMainInfoInquireResponsePacket init")
     }
 
-    override fun handleMessage(data: ByteArray?) {
+    override fun handleMessage(data: ByteArray) {
         val result = defect(data)
         if (result != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "BigMainInfoInquireResponsePacket Got some Error")
@@ -316,7 +317,5 @@ class BigMainInfoInquireResponsePacket(
         aapsLogger.debug(LTag.PUMPCOMM, "baseAmount24 > " + diaconnG8Pump.baseAmount24)
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_BIG_MAIN_INFO_INQUIRE_RESPONSE"
-    }
+    override val friendlyName = "PUMP_BIG_MAIN_INFO_INQUIRE_RESPONSE"
 }

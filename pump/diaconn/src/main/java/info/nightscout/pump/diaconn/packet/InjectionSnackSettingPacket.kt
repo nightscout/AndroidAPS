@@ -26,7 +26,5 @@ class InjectionSnackSettingPacket(
         return suffixEncode(buffer)
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_INJECTION_SNACK_SETTING"
-    }
+    override val friendlyName = "PUMP_INJECTION_SNACK_SETTING"
 }

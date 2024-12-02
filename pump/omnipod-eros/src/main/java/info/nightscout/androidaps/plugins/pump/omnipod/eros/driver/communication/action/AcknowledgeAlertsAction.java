@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.action;
 
+import androidx.annotation.NonNull;
+
 import java.util.Collections;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.command.AcknowledgeAlertsCommand;
@@ -26,7 +28,7 @@ public class AcknowledgeAlertsAction implements OmnipodAction<StatusResponse> {
         this.alerts = alerts;
     }
 
-    public AcknowledgeAlertsAction(ErosPodStateManager podStateManager, AlertSlot alertSlot) {
+    public AcknowledgeAlertsAction(@NonNull ErosPodStateManager podStateManager, AlertSlot alertSlot) {
         this(podStateManager, new AlertSet(Collections.singletonList(alertSlot)));
     }
 

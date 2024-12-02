@@ -337,7 +337,7 @@ class BLECommonService @Inject internal constructor(
         isConnecting = false
 
         //요청정보
-        val originalMessageSeq = processedMessage?.getSeq(processedMessageByte)
+        val originalMessageSeq = processedMessage?.getSeq(processedMessageByte ?: throw IllegalStateException())
 
         // 응답정보
         val receivedCommand = DiaconnG8Packet(injector).getCmd(data)

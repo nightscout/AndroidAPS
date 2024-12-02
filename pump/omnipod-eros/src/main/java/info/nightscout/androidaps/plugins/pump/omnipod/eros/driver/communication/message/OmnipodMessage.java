@@ -38,7 +38,7 @@ public class OmnipodMessage {
         this.sequenceNumber = sequenceNumber;
     }
 
-    public static OmnipodMessage decodeMessage(byte[] data) {
+    @NonNull public static OmnipodMessage decodeMessage(byte[] data) {
         if (data.length < 10) {
             throw new NotEnoughDataException(data);
         }
@@ -64,7 +64,7 @@ public class OmnipodMessage {
         return new OmnipodMessage(address, blocks, sequenceNumber);
     }
 
-    private static List<MessageBlock> decodeBlocks(byte[] data) {
+    @NonNull private static List<MessageBlock> decodeBlocks(byte[] data) {
         List<MessageBlock> blocks = new ArrayList<>();
         int index = 0;
         while (index < data.length) {
@@ -112,7 +112,7 @@ public class OmnipodMessage {
         return address;
     }
 
-    public List<MessageBlock> getMessageBlocks() {
+    @NonNull public List<MessageBlock> getMessageBlocks() {
         return new ArrayList<>(messageBlocks);
     }
 
@@ -141,7 +141,7 @@ public class OmnipodMessage {
         }
     }
 
-    public boolean containsBlock(Class<? extends MessageBlock> blockType) {
+    public boolean containsBlock(@NonNull Class<? extends MessageBlock> blockType) {
         for (MessageBlock messageBlock : messageBlocks) {
             if (blockType.isInstance(messageBlock)) {
                 return true;

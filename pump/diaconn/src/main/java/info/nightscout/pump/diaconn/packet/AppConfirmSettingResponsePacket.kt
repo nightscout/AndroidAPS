@@ -20,7 +20,7 @@ class AppConfirmSettingResponsePacket(
         aapsLogger.debug(LTag.PUMPCOMM, "AppConfirmSettingReqPacket Response ")
     }
 
-    override fun handleMessage(data: ByteArray?) {
+    override fun handleMessage(data: ByteArray) {
         val defectCheck = defect(data)
         if (defectCheck != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "AppConfirmSettingResponsePacket Got some Error")
@@ -42,7 +42,5 @@ class AppConfirmSettingResponsePacket(
         }
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_APP_CONFIRM_SETTING_RESPONSE"
-    }
+    override val friendlyName = "PUMP_APP_CONFIRM_SETTING_RESPONSE"
 }

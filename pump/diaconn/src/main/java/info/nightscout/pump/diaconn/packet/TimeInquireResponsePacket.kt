@@ -19,7 +19,7 @@ class TimeInquireResponsePacket(
         aapsLogger.debug(LTag.PUMPCOMM, "TimeInquireResponsePacket init")
     }
 
-    override fun handleMessage(data: ByteArray?) {
+    override fun handleMessage(data: ByteArray) {
         val defectCheck = defect(data)
         if (defectCheck != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "TimeInquireResponsePacket Got some Error")
@@ -41,7 +41,5 @@ class TimeInquireResponsePacket(
         diaconnG8Pump.second = getByteToInt(bufferData) // 초 (0~59)
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_TIME_INQUIRE_RESPONSE"
-    }
+    override val friendlyName = "PUMP_TIME_INQUIRE_RESPONSE"
 }

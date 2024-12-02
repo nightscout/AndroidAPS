@@ -26,7 +26,5 @@ class BasalPauseSettingPacket(
         return suffixEncode(buffer)
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_BASAL_PAUSE_SETTING"
-    }
+    override val friendlyName = "PUMP_BASAL_PAUSE_SETTING"
 }

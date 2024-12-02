@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition;
 
+import androidx.annotation.NonNull;
+
 public enum PodProgressStatus {
     INITIALIZED((byte) 0x00),
     MEMORY_INITIALIZED((byte) 0x01),
@@ -54,7 +56,7 @@ public enum PodProgressStatus {
         return value <= other.value;
     }
 
-    public boolean isBefore(PodProgressStatus other) {
+    public boolean isBefore(@NonNull PodProgressStatus other) {
         return value < other.value;
     }
 

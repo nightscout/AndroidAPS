@@ -20,7 +20,7 @@ class InjectionMealSettingResponsePacket(
         aapsLogger.debug(LTag.PUMPCOMM, "InjectionMealSettingResponsePacket init ")
     }
 
-    override fun handleMessage(data: ByteArray?) {
+    override fun handleMessage(data: ByteArray) {
         val defectCheck = defect(data)
         if (defectCheck != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "InjectionMealSettingResponsePacket Got some Error")
@@ -41,7 +41,5 @@ class InjectionMealSettingResponsePacket(
         aapsLogger.debug(LTag.PUMPCOMM, "otpNumber --> ${diaconnG8Pump.otpNumber}")
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_INJECTION_MEAL_SETTING_RESPONSE"
-    }
+    override val friendlyName = "PUMP_INJECTION_MEAL_SETTING_RESPONSE"
 }

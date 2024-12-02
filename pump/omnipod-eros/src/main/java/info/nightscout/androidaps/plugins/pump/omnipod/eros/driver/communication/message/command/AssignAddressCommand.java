@@ -19,7 +19,7 @@ public class AssignAddressCommand extends MessageBlock {
         return address;
     }
 
-    @Override
+    @NonNull @Override
     public MessageBlockType getType() {
         return MessageBlockType.ASSIGN_ADDRESS;
     }

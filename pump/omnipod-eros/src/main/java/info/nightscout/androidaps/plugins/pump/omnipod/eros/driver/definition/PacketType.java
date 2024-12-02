@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition;
 
+import androidx.annotation.NonNull;
+
 public enum PacketType {
     INVALID((byte) 0),
     POD((byte) 0b111),
@@ -13,7 +15,7 @@ public enum PacketType {
         this.value = value;
     }
 
-    public static PacketType fromByte(byte value) {
+    @NonNull public static PacketType fromByte(byte value) {
         for (PacketType type : values()) {
             if (type.value == value) {
                 return type;

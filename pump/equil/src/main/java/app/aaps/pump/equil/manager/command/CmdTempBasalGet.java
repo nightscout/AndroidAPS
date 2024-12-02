@@ -1,6 +1,8 @@
 package app.aaps.pump.equil.manager.command;
 
 
+import androidx.annotation.NonNull;
+
 import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.pump.equil.database.EquilHistoryRecord;
 import app.aaps.pump.equil.manager.Utils;
@@ -48,7 +50,7 @@ public class CmdTempBasalGet extends BaseSetting {
         return data;
     }
 
-    public void decodeConfirmData(byte[] data) {
+    public void decodeConfirmData(@NonNull byte[] data) {
         int index = data[4];
         step = Utils.bytes2Int(new byte[]{data[6], data[7], data[8], data[9]});
         time = Utils.bytes2Int(new byte[]{data[10], data[11], data[12], data[13]});

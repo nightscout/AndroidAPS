@@ -3,6 +3,8 @@ package app.aaps.pump.equil.manager.command;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 
@@ -22,7 +24,7 @@ public class CmdPair extends BaseCmd {
     public String address;
     private final String password;
 
-    public CmdPair(String name, String address, String password) {
+    public CmdPair(@NonNull String name, String address, String password) {
         super(System.currentTimeMillis());
         port = "0E0E";
         this.address = address;

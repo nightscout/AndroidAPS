@@ -28,7 +28,5 @@ class InjectionMealSettingPacket(
         return suffixEncode(buffer)
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_INJECTION_MEAL_SETTING"
-    }
+    override val friendlyName = "PUMP_INJECTION_MEAL_SETTING"
 }

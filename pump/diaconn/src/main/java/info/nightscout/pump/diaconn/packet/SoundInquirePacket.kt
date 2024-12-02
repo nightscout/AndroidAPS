@@ -24,7 +24,5 @@ class SoundInquirePacket(
         return suffixEncode(buffer)
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_SOUND_INQUIRE"
-    }
+    override val friendlyName = "PUMP_SOUND_INQUIRE"
 }

@@ -20,7 +20,7 @@ class BasalSettingResponsePacket(
         aapsLogger.debug(LTag.PUMPCOMM, "BasalSettingResponsePacket init")
     }
 
-    override fun handleMessage(data: ByteArray?) {
+    override fun handleMessage(data: ByteArray) {
         val defectCheck = defect(data)
         if (defectCheck != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "BasalSettingResponsePacket Got some Error")
@@ -40,7 +40,5 @@ class BasalSettingResponsePacket(
         aapsLogger.debug(LTag.PUMPCOMM, "otpNumber --> ${diaconnG8Pump.otpNumber}")
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_BASAL_SETTING_RESPONSE"
-    }
+    override val friendlyName = "PUMP_BASAL_SETTING_RESPONSE"
 }

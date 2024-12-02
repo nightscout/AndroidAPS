@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule;
 
+import androidx.annotation.NonNull;
+
 import app.aaps.core.utils.pump.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.IRawRepresentable;
 
@@ -46,19 +48,7 @@ public class TempBasalDeliverySchedule extends DeliverySchedule implements IRawR
         return checksum;
     }
 
-    public int getSecondsRemaining() {
-        return secondsRemaining;
-    }
-
-    public int getFirstSegmentPulses() {
-        return firstSegmentPulses;
-    }
-
-    public BasalDeliveryTable getBasalTable() {
-        return basalTable;
-    }
-
-    @Override
+    @NonNull @Override
     public String toString() {
         return "TempBasalDeliverySchedule{" +
                 "secondsRemaining=" + secondsRemaining +

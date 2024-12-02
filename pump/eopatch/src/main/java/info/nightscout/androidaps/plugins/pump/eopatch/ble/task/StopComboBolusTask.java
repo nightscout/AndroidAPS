@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ble.task;
 
+import androidx.annotation.NonNull;
+
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -39,7 +41,7 @@ public class StopComboBolusTask extends BolusTask {
                 (ext, now) -> createStopComboBolusResponse(now, ext));
     }
 
-    private ComboBolusStopResponse createStopComboBolusResponse(BolusStopResponse now, BolusStopResponse ext) {
+    @NonNull private ComboBolusStopResponse createStopComboBolusResponse(BolusStopResponse now, @NonNull BolusStopResponse ext) {
         int idNow = now.isSuccess() ? IPatchConstant.NOW_BOLUS_ID : 0;
         int idExt = ext.isSuccess() ? IPatchConstant.EXT_BOLUS_ID : 0;
 
