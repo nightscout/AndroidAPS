@@ -20,7 +20,7 @@ class InjectionExtendedBolusSettingResponsePacket(
         aapsLogger.debug(LTag.PUMPCOMM, "InjectionExtendedBolusSettingResponsePacket init ")
     }
 
-    override fun handleMessage(data: ByteArray?) {
+    override fun handleMessage(data: ByteArray) {
         val defectCheck = defect(data)
         if (defectCheck != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "InjectionExtendedBolusSettingResponsePacket Got some Error")
@@ -41,7 +41,5 @@ class InjectionExtendedBolusSettingResponsePacket(
         aapsLogger.debug(LTag.PUMPCOMM, "otpNumber --> ${diaconnG8Pump.otpNumber}")
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_INJECTION_EXTENDED_BOLUS_SETTING_RESPONSE"
-    }
+    override val friendlyName = "PUMP_INJECTION_EXTENDED_BOLUS_SETTING_RESPONSE"
 }

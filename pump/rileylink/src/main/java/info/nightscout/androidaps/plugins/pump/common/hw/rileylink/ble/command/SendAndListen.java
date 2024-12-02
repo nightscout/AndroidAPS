@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command;
 
+import androidx.annotation.NonNull;
+
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
@@ -34,7 +36,7 @@ public class SendAndListen extends RileyLinkCommand {
     }
 
 
-    public SendAndListen(HasAndroidInjector injector, byte sendChannel, byte repeatCount, int delayBetweenPackets_ms, byte listenChannel,
+    public SendAndListen(@NonNull HasAndroidInjector injector, byte sendChannel, byte repeatCount, int delayBetweenPackets_ms, byte listenChannel,
                          int timeout_ms, byte retryCount, Integer preambleExtension_ms, RadioPacket packetToSend
 
     ) {

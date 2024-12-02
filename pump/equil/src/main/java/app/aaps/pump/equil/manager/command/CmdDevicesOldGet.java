@@ -1,6 +1,8 @@
 package app.aaps.pump.equil.manager.command;
 
 
+import androidx.annotation.NonNull;
+
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +29,7 @@ public class CmdDevicesOldGet extends BaseSetting {
         return address;
     }
 
-    public EquilResponse getEquilResponse() {
+    @NonNull public EquilResponse getEquilResponse() {
         config = false;
         isEnd = false;
         response = new EquilResponse(createTime);
@@ -136,7 +138,7 @@ public class CmdDevicesOldGet extends BaseSetting {
         return responseCmd(reqModel, "0000" + reqModel.getCode());
     }
 
-    public EquilCmdModel decodeModel() {
+    @NonNull public EquilCmdModel decodeModel() {
         EquilCmdModel equilCmdModel = new EquilCmdModel();
         List<Byte> list = new ArrayList<>();
         int index = 0;
@@ -144,13 +146,13 @@ public class CmdDevicesOldGet extends BaseSetting {
             if (index == 0) {
                 byte[] bs = b.array();
                 byte[] codeByte = new byte[]{bs[10], bs[11]};
-                list.add((Byte) bs[bs.length - 2]);
-                list.add((Byte) bs[bs.length - 1]);
+                list.add(bs[bs.length - 2]);
+                list.add(bs[bs.length - 1]);
                 equilCmdModel.setCode(Utils.bytesToHex(codeByte));
             } else {
                 byte[] bs = b.array();
                 for (int i = 6; i < bs.length; i++) {
-                    list.add((Byte) bs[i]);
+                    list.add(bs[i]);
                 }
             }
             index++;
@@ -163,7 +165,7 @@ public class CmdDevicesOldGet extends BaseSetting {
     }
 
     @Override
-    public void decodeConfirmData(byte[] data) {
+    public void decodeConfirmData(@NonNull byte[] data) {
         int value = Utils.bytesToInt(data[7], data[6]);
         String fv = data[18] + "." + data[19];
         firmwareVersion = Float.parseFloat(fv);

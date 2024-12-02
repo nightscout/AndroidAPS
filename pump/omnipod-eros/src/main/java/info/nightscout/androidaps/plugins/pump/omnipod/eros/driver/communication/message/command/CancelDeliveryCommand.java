@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.command;
 
+import androidx.annotation.NonNull;
+
 import java.util.EnumSet;
 
 import app.aaps.core.utils.pump.ByteUtil;
@@ -64,7 +66,7 @@ public class CancelDeliveryCommand extends NonceResyncableMessageBlock {
         return deliveryTypes.clone();
     }
 
-    @Override
+    @NonNull @Override
     public String toString() {
         return "CancelDeliveryCommand{" +
                 "beepType=" + beepType +

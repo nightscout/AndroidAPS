@@ -20,7 +20,7 @@ class SoundSettingResponsePacket(
         aapsLogger.debug(LTag.PUMPCOMM, "SoundSettingResponsePacket init")
     }
 
-    override fun handleMessage(data: ByteArray?) {
+    override fun handleMessage(data: ByteArray) {
         val defectCheck = defect(data)
         if (defectCheck != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "SoundSettingResponsePacket Got some Error")
@@ -42,7 +42,5 @@ class SoundSettingResponsePacket(
         aapsLogger.debug(LTag.PUMPCOMM, "otpNumber --> ${diaconnG8Pump.otpNumber}")
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_SOUND_SETTING_RESPONSE"
-    }
+    override val friendlyName = "PUMP_SOUND_SETTING_RESPONSE"
 }

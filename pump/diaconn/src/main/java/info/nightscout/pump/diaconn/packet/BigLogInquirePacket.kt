@@ -31,7 +31,5 @@ class BigLogInquirePacket(
         return suffixEncode(buffer)
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_BIG_LOG_INQUIRE"
-    }
+    override val friendlyName = "PUMP_BIG_LOG_INQUIRE"
 }

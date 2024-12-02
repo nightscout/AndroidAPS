@@ -14,6 +14,7 @@ import kotlin.math.floor
 /**
  * BigAPSMainInfoInquireResponsePacket
  */
+@Suppress("SpellCheckingInspection")
 class BigAPSMainInfoInquireResponsePacket(
     injector: HasAndroidInjector
 ) : DiaconnG8Packet(injector) {
@@ -27,7 +28,7 @@ class BigAPSMainInfoInquireResponsePacket(
         aapsLogger.debug(LTag.PUMPCOMM, "BigAPSMainInfoInquireResponsePacket init")
     }
 
-    override fun handleMessage(data: ByteArray?) {
+    override fun handleMessage(data: ByteArray) {
         val result = defect(data)
         if (result != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "BigAPSMainInfoInquireResponsePacket Got some Error")
@@ -329,7 +330,5 @@ class BigAPSMainInfoInquireResponsePacket(
         aapsLogger.debug(LTag.PUMPCOMM, "selectedLanguage > " + diaconnG8Pump.selectedLanguage)
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_BIG_APS_MAIN_INFO_INQUIRE_RESPONSE"
-    }
+    override val friendlyName = "PUMP_BIG_APS_MAIN_INFO_INQUIRE_RESPONSE"
 }

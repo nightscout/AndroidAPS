@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.action;
 
+import androidx.annotation.NonNull;
+
 import org.joda.time.DateTime;
 
 import java.util.Collections;
@@ -20,22 +22,16 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.ErosP
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 
 public class SetupPodAction implements OmnipodAction<Void> {
-    private final ErosPodStateManager podStateManager;
+    @NonNull private final ErosPodStateManager podStateManager;
     private final AAPSLogger aapsLogger;
 
-    public SetupPodAction(ErosPodStateManager podStateManager, AAPSLogger aapsLogger) {
-        if (podStateManager == null) {
-            throw new IllegalArgumentException("Pod state manager can not be null");
-        }
-        if (aapsLogger == null) {
-            throw new IllegalArgumentException("Logger can not be null");
-        }
+    public SetupPodAction(@NonNull ErosPodStateManager podStateManager, @NonNull AAPSLogger aapsLogger) {
         this.podStateManager = podStateManager;
         this.aapsLogger = aapsLogger;
     }
 
     @Override
-    public Void execute(OmnipodRileyLinkCommunicationManager communicationService) {
+    public Void execute(@NonNull OmnipodRileyLinkCommunicationManager communicationService) {
         if (!podStateManager.isPodInitialized()) {
             throw new IllegalPodProgressException(PodProgressStatus.REMINDER_INITIALIZED, podStateManager.isPodInitialized() ? podStateManager.getPodProgressStatus() : null);
         }

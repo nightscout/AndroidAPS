@@ -24,7 +24,7 @@ public class RateEntry implements IRawRepresentable {
         this.delayBetweenPulsesInSeconds = delayBetweenPulsesInSeconds;
     }
 
-    public static List<RateEntry> createEntries(double rate, Duration duration) {
+    @NonNull public static List<RateEntry> createEntries(double rate, Duration duration) {
         if (Duration.ZERO.equals(duration)) {
             throw new IllegalArgumentException("Duration may not be 0 minutes.");
         }

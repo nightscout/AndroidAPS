@@ -6,21 +6,21 @@ import info.nightscout.pump.diaconn.DiaconnG8Pump
 import javax.inject.Inject
 
 /**
- * SneckLimitInquireResponsePacket
+ * SnackLimitInquireResponsePacket
  */
-class SneckLimitInquireResponsePacket(injector: HasAndroidInjector) : DiaconnG8Packet(injector) {
+class SnackLimitInquireResponsePacket(injector: HasAndroidInjector) : DiaconnG8Packet(injector) {
 
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
 
     init {
         msgType = 0x90.toByte()
-        aapsLogger.debug(LTag.PUMPCOMM, "SneckLimitInquireResponsePacket init")
+        aapsLogger.debug(LTag.PUMPCOMM, "SnackLimitInquireResponsePacket init")
     }
 
-    override fun handleMessage(data: ByteArray?) {
+    override fun handleMessage(data: ByteArray) {
         val result = defect(data)
         if (result != 0) {
-            aapsLogger.debug(LTag.PUMPCOMM, "SneckLimitInquireResponsePacket Got some Error")
+            aapsLogger.debug(LTag.PUMPCOMM, "SnackLimitInquireResponsePacket Got some Error")
             failed = true
             return
         } else failed = false
@@ -36,11 +36,9 @@ class SneckLimitInquireResponsePacket(injector: HasAndroidInjector) : DiaconnG8P
         diaconnG8Pump.maxBolusePerDay = getShortToInt(bufferData).toDouble() / 100
 
         aapsLogger.debug(LTag.PUMPCOMM, "Result --> ${diaconnG8Pump.result}")
-        aapsLogger.debug(LTag.PUMPCOMM, "maxBolusePerDay --> ${diaconnG8Pump.maxBolusePerDay}")
+        aapsLogger.debug(LTag.PUMPCOMM, "maxBolusesPerDay --> ${diaconnG8Pump.maxBolusePerDay}")
         aapsLogger.debug(LTag.PUMPCOMM, "maxBolus --> ${diaconnG8Pump.maxBolus}")
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_SNACK_LIMIT_INQUIRE_RESPONSE"
-    }
+    override val friendlyName = "PUMP_SNACK_LIMIT_INQUIRE_RESPONSE"
 }

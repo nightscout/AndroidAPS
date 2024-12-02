@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.response.podinfo;
 
+import androidx.annotation.NonNull;
+
 import org.joda.time.Duration;
 
 import java.util.ArrayList;
@@ -14,7 +16,7 @@ public class PodInfoActiveAlerts extends PodInfo {
     private static final int MINIMUM_MESSAGE_LENGTH = 11;
 
     private final byte[] word278; // Unknown use
-    private final List<AlertActivation> alertActivations;
+    @NonNull private final List<AlertActivation> alertActivations;
 
     public PodInfoActiveAlerts(byte[] encodedData) {
         super(encodedData);
@@ -50,7 +52,7 @@ public class PodInfoActiveAlerts extends PodInfo {
         return new ArrayList<>(alertActivations);
     }
 
-    @Override
+    @NonNull @Override
     public String toString() {
         return "PodInfoActiveAlerts{" +
                 "word278=" + ByteUtil.INSTANCE.shortHexString(word278) +
@@ -79,7 +81,7 @@ public class PodInfoActiveAlerts extends PodInfo {
             return alertSlot;
         }
 
-        @Override
+        @NonNull @Override
         public String toString() {
             return "AlertActivation{" +
                     "alertSlot=" + alertSlot +

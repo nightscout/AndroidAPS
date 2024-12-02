@@ -4,6 +4,7 @@ import android.os.SystemClock;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -75,7 +76,6 @@ import app.aaps.pump.equil.manager.command.CmdModelGet;
 import app.aaps.pump.equil.manager.command.CmdTempBasalGet;
 import app.aaps.pump.equil.manager.command.CmdTempBasalSet;
 import app.aaps.pump.equil.manager.command.PumpEvent;
-import dagger.android.HasAndroidInjector;
 
 @Singleton
 public class EquilManager {
@@ -165,7 +165,7 @@ public class EquilManager {
         return result;
     }
 
-    public PumpEnactResult readStatus() {
+    @NonNull public PumpEnactResult readStatus() {
         PumpEnactResult result = instantiator.providePumpEnactResult();
         try {
             equilBLE.getEquilStatus();
@@ -289,7 +289,7 @@ public class EquilManager {
     }
 
 
-    public PumpEnactResult bolus(DetailedBolusInfo detailedBolusInfo, BolusProfile bolusProfile) {
+    @NonNull public PumpEnactResult bolus(DetailedBolusInfo detailedBolusInfo, BolusProfile bolusProfile) {
         EventOverviewBolusProgress progressUpdateEvent = EventOverviewBolusProgress.INSTANCE;
         progressUpdateEvent.setT(new EventOverviewBolusProgress.Treatment(HardLimits.MAX_IOB_LGS, 0,
                 detailedBolusInfo.getBolusType() ==
@@ -351,7 +351,7 @@ public class EquilManager {
         return result;
     }
 
-    public PumpEnactResult stopBolus(BolusProfile bolusProfile) {
+    @NonNull public PumpEnactResult stopBolus(BolusProfile bolusProfile) {
         PumpEnactResult result = instantiator.providePumpEnactResult();
         try {
             BaseCmd command = new CmdLargeBasalSet(0);
@@ -425,7 +425,7 @@ public class EquilManager {
         return result;
     }
 
-    public EquilHistoryRecord addHistory(BaseCmd command) {
+    @NonNull public EquilHistoryRecord addHistory(BaseCmd command) {
         EquilHistoryRecord equilHistoryRecord = new EquilHistoryRecord(System.currentTimeMillis(), getSerialNumber());
         if (command.getEventType() != null) {
             equilHistoryRecord.setType(command.getEventType());
@@ -434,8 +434,7 @@ public class EquilManager {
             Profile profile = ((CmdBasalSet) command).getProfile();
             equilHistoryRecord.setBasalValuesRecord(new EquilBasalValuesRecord(Arrays.asList(profile.getBasalValues())));
         }
-        if (command instanceof CmdTempBasalSet) {
-            CmdTempBasalSet cmd = ((CmdTempBasalSet) command);
+        if (command instanceof CmdTempBasalSet cmd) {
             boolean cancel = cmd.isCancel();
             if (!cancel) {
                 EquilTempBasalRecord equilTempBasalRecord =
@@ -444,8 +443,7 @@ public class EquilManager {
                 equilHistoryRecord.setTempBasalRecord(equilTempBasalRecord);
             }
         }
-        if (command instanceof CmdExtendedBolusSet) {
-            CmdExtendedBolusSet cmd = ((CmdExtendedBolusSet) command);
+        if (command instanceof CmdExtendedBolusSet cmd) {
             boolean cancel = cmd.isCancel();
             if (!cancel) {
                 EquilTempBasalRecord equilTempBasalRecord =
@@ -454,8 +452,7 @@ public class EquilManager {
                 equilHistoryRecord.setTempBasalRecord(equilTempBasalRecord);
             }
         }
-        if (command instanceof CmdLargeBasalSet) {
-            CmdLargeBasalSet cmd = ((CmdLargeBasalSet) command);
+        if (command instanceof CmdLargeBasalSet cmd) {
             double insulin = cmd.getInsulin();
             if (insulin != 0) {
                 EquilBolusRecord equilBolusRecord =
@@ -473,7 +470,7 @@ public class EquilManager {
         return equilHistoryRecord;
     }
 
-    public void updateHistory(EquilHistoryRecord equilHistoryRecord, ResolvedResult result) {
+    public void updateHistory(EquilHistoryRecord equilHistoryRecord, @Nullable ResolvedResult result) {
         if (result != null && equilHistoryRecord != null) {
             aapsLogger.debug(LTag.PUMPCOMM, "equilHistoryRecord2 is {} {}",
                     equilHistoryRecord.getId(), result);
@@ -508,7 +505,7 @@ public class EquilManager {
         return result;
     }
 
-    public PumpEnactResult loadEquilHistory() {
+    @NonNull public PumpEnactResult loadEquilHistory() {
         PumpEnactResult pumpEnactResult = instantiator.providePumpEnactResult();
         int startIndex;
         startIndex = getStartHistoryIndex();
@@ -561,11 +558,11 @@ public class EquilManager {
     }
 
 
-    public String translateException(Throwable ex) {
+    @NonNull public String translateException(Throwable ex) {
         return "";
     }
 
-    private void handleException(Exception ex) {
+    private void handleException(@NonNull Exception ex) {
         aapsLogger.error(LTag.PUMP, "Caught an unexpected non-OmnipodException from OmnipodManager", ex);
     }
 
@@ -573,7 +570,7 @@ public class EquilManager {
         return equilBLE.isConnected();
     }
 
-    public void showNotification(int id, String message, int urgency, Integer sound) {
+    public void showNotification(int id, String message, int urgency, @Nullable Integer sound) {
         Notification notification = new Notification( //
                 id, //
                 message, //
@@ -588,11 +585,11 @@ public class EquilManager {
         sendEvent(new EventDismissNotification(id));
     }
 
-    private void sendEvent(Event event) {
+    private void sendEvent(@NonNull Event event) {
         rxBus.send(event);
     }
 
-    private final Gson gsonInstance;
+    @NonNull private final Gson gsonInstance;
     private EquilState equilState;
 
     private static Gson createGson() {
@@ -662,7 +659,7 @@ public class EquilManager {
         storePodState();
     }
 
-    private <T> T getSafe(Supplier<T> supplier) {
+    private <T> T getSafe(@NonNull Supplier<T> supplier) {
         if (!hasPodState()) {
             throw new IllegalStateException("Cannot read from PodState: podState is null");
         }
@@ -702,7 +699,7 @@ public class EquilManager {
         return isTempBasalRunningAt(null);
     }
 
-    public final boolean isTempBasalRunningAt(DateTime time) {
+    public final boolean isTempBasalRunningAt(@Nullable DateTime time) {
         if (time == null) { // now
             if (!hasTempBasal()) {
                 return true;

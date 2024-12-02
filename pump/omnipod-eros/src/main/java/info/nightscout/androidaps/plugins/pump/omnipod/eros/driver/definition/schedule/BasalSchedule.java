@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule;
 
 import androidx.annotation.NonNull;
+
 import org.joda.time.Duration;
 
 import java.util.ArrayList;
@@ -24,11 +25,11 @@ public class BasalSchedule {
         return lookup(offset).getBasalScheduleEntry().getRate();
     }
 
-    public List<BasalScheduleEntry> getEntries() {
+    @NonNull public List<BasalScheduleEntry> getEntries() {
         return new ArrayList<>(entries);
     }
 
-    public BasalScheduleLookupResult lookup(Duration offset) {
+    public BasalScheduleLookupResult lookup(@NonNull Duration offset) {
         if (offset.isLongerThan(Duration.standardHours(24)) || offset.isShorterThan(Duration.ZERO)) {
             throw new IllegalArgumentException("Invalid duration");
         }
@@ -58,7 +59,7 @@ public class BasalSchedule {
         return reversedEntries;
     }
 
-    public List<BasalScheduleEntry> adjacentEqualRatesMergedEntries() {
+    @NonNull public List<BasalScheduleEntry> adjacentEqualRatesMergedEntries() {
         List<BasalScheduleEntry> mergedEntries = new ArrayList<>();
         Double lastRate = null;
         for (BasalScheduleEntry entry : entries) {

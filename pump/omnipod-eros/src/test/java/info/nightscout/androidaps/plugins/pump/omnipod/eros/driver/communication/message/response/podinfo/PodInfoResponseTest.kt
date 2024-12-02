@@ -22,7 +22,7 @@ internal class PodInfoResponseTest {
     }
 
     @Test fun testMessageDecoding() {
-        val podInfoResponse = PodInfoResponse(ByteUtil.fromHexString("0216020d0000000000ab6a038403ff03860000285708030d"))
+        val podInfoResponse = PodInfoResponse(ByteUtil.fromHexString("0216020d0000000000ab6a038403ff03860000285708030d")!!)
         assertThat(podInfoResponse.subType).isEqualTo(PodInfoType.DETAILED_STATUS)
         val podInfo = podInfoResponse.podInfo as PodInfoDetailedStatus
         assertThat(podInfo.isFaultAccessingTables).isFalse()
@@ -30,7 +30,7 @@ internal class PodInfoResponseTest {
     }
 
     @Test fun testInvalidPodInfoTypeMessageDecoding() {
-        val podInfoResponse = PodInfoResponse(ByteUtil.fromHexString("0216020d0000000000ab6a038403ff03860000285708030d"))
+        val podInfoResponse = PodInfoResponse(ByteUtil.fromHexString("0216020d0000000000ab6a038403ff03860000285708030d")!!)
         assertThat(podInfoResponse.subType).isEqualTo(PodInfoType.DETAILED_STATUS)
         assertIsNot<PodInfoActiveAlerts>(podInfoResponse.podInfo)
     }

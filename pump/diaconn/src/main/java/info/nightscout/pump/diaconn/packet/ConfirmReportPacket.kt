@@ -20,7 +20,7 @@ class ConfirmReportPacket(
         aapsLogger.debug(LTag.PUMPCOMM, "ConfirmReportPacket init ")
     }
 
-    override fun handleMessage(data: ByteArray?) {
+    override fun handleMessage(data: ByteArray) {
         val defectCheck = defect(data)
         if (defectCheck != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "ConfirmReportPacket Got some Error")
@@ -33,7 +33,5 @@ class ConfirmReportPacket(
         aapsLogger.debug(LTag.PUMPCOMM, "Pump Report Confirm reqMsgType --> $reqMsgType")
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_CONFIRM_REPORT"
-    }
+    override val friendlyName = "PUMP_CONFIRM_REPORT"
 }

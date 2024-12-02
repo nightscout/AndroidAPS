@@ -1,5 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import app.aaps.core.utils.pump.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RLMessage;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodCrc;
@@ -14,7 +17,7 @@ public class OmnipodPacket implements RLMessage {
     private int packetAddress = 0;
     private PacketType packetType = PacketType.INVALID;
     private int sequenceNumber = 0;
-    private byte[] encodedMessage = null;
+    @Nullable private byte[] encodedMessage = null;
     private boolean valid = false;
 
     public OmnipodPacket(byte[] encoded) {
@@ -79,7 +82,7 @@ public class OmnipodPacket implements RLMessage {
         return valid;
     }
 
-    @Override
+    @NonNull @Override
     public String toString() {
         return "OmnipodPacket{" +
                 "packetAddress=" + packetAddress +

@@ -21,7 +21,7 @@ class InjectionExtendedBolusResultReportPacket(injector: HasAndroidInjector) : D
         aapsLogger.debug(LTag.PUMPCOMM, "InjectionExtendedBolusResultReportPacket init ")
     }
 
-    override fun handleMessage(data: ByteArray?) {
+    override fun handleMessage(data: ByteArray) {
         val defectCheck = defect(data)
         if (defectCheck != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "InjectionExtendedBolusResultReportPacket Got some Error")
@@ -50,7 +50,5 @@ class InjectionExtendedBolusResultReportPacket(injector: HasAndroidInjector) : D
         aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus delivered so far: " + diaconnG8Pump.squareInjAmount + " U")
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_INJECTION_EXTENDED_BOLUS_RESULT_REPORT"
-    }
+    override val friendlyName = "PUMP_INJECTION_EXTENDED_BOLUS_RESULT_REPORT"
 }

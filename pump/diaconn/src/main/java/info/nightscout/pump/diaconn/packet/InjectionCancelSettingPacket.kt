@@ -8,6 +8,7 @@ import javax.inject.Inject
 /**
  * InjectionCancelSettingPacket
  */
+@Suppress("SpellCheckingInspection")
 class InjectionCancelSettingPacket(
     injector: HasAndroidInjector,
     private var reqMsgType: Byte, // 명령코드
@@ -26,7 +27,5 @@ class InjectionCancelSettingPacket(
         return suffixEncode(buffer)
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_INJECTION_CANCEL_SETTING_REQUEST"
-    }
+    override val friendlyName = "PUMP_INJECTION_CANCEL_SETTING_REQUEST"
 }

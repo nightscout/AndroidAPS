@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data;
 
+import androidx.annotation.NonNull;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -15,21 +17,21 @@ public class GattAttributes {
     public static String SUFFIX = "-0000-1000-8000-00805f9b34fb";
 
     // Generic Access
-    public static String SERVICE_GA = PREFIX + "1800" + SUFFIX;
-    public static String CHARA_GA_NAME = PREFIX + "2a00" + SUFFIX; // RileyLink RFSpy
-    public static String CHARA_GA_APPEARANCE = PREFIX + "2a01" + SUFFIX; // 0000
+    @NonNull public static String SERVICE_GA = PREFIX + "1800" + SUFFIX;
+    @NonNull public static String CHARA_GA_NAME = PREFIX + "2a00" + SUFFIX; // RileyLink RFSpy
+    @NonNull public static String CHARA_GA_APPEARANCE = PREFIX + "2a01" + SUFFIX; // 0000
     public static String CHARA_GA_PPCP = PREFIX + "2a04" + SUFFIX; // 0000
     public static String CHARA_GA_CAR = PREFIX + "2aa6" + SUFFIX; // 0000
 
     // Generic Attribute
-    public static String SERVICE_G_ATTR = PREFIX + "1801" + SUFFIX;
+    @NonNull public static String SERVICE_G_ATTR = PREFIX + "1801" + SUFFIX;
 
     // Battery Service
     public static String SERVICE_BATTERY = PREFIX + "180f" + SUFFIX; // Battery
     public static String CHARA_BATTERY_LEVEL = PREFIX + "2a19" + SUFFIX;
 
     // RileyLink Radio Service
-    public static String SERVICE_RADIO = "0235733b-99c5-4197-b856-69219c2a3845";
+    @NonNull public static String SERVICE_RADIO = "0235733b-99c5-4197-b856-69219c2a3845";
     public static String CHARA_RADIO_DATA = "c842e849-5028-42e2-867c-016adada9155";
     public static String CHARA_RADIO_RESPONSE_COUNT = "6e6c7910-b89e-43a5-a0fe-50c5e2b81f4a";
     public static String CHARA_RADIO_TIMER_TICK = "6e6c7910-b89e-43a5-78af-50c5e2b86f7e";
@@ -38,7 +40,7 @@ public class GattAttributes {
     public static String CHARA_RADIO_LED_MODE = "c6d84241-f1a7-4f9c-a25f-fce16732f14e";
 
     // Secure DFU Service (Orange 1.5 - 3.2)
-    public static String SERVICE_DFU = "0000fe59-0000-1000-8000-00805f9b34fb";
+    @NonNull public static String SERVICE_DFU = "0000fe59-0000-1000-8000-00805f9b34fb";
     public static String CHARA_BUTTONLESS_DFU = "8ec90003-f315-4f60-9fb8-838830daea50";
 
     // Nordic UART Service (Orange 2.1 - 3.2)
@@ -51,8 +53,8 @@ public class GattAttributes {
     public static String SERVICE_RADIO_ORANGE = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
     public static String CHARA_NOTIFICATION_ORANGE = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
 
-    private static final Map<String, String> attributes;
-    private static final Map<String, String> attributesRileyLinkSpecific;
+    @NonNull private static final Map<String, String> attributes;
+    @NonNull private static final Map<String, String> attributesRileyLinkSpecific;
 
     // table of names for uuids
     static {
@@ -121,7 +123,7 @@ public class GattAttributes {
     }
 
 
-    public static boolean isOrange(UUID uuid) {
+    public static boolean isOrange(@NonNull UUID uuid) {
         return SERVICE_RADIO_ORANGE.equals(uuid.toString());
     }
 

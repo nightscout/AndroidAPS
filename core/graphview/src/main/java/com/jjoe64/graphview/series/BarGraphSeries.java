@@ -24,6 +24,8 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.ValueDependentColor;
 
@@ -365,7 +367,7 @@ public class BarGraphSeries<E extends DataPointInterface> extends BaseSeries<E> 
      * @param y pixels
      * @return datapoint or null
      */
-    @Override
+    @Nullable @Override
     protected E findDataPoint(float x, float y) {
         for (Map.Entry<RectF, E> entry : mDataPoints.entrySet()) {
             if (x >= entry.getKey().left && x <= entry.getKey().right

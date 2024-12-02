@@ -26,7 +26,5 @@ class DisplayTimeoutSettingPacket(
         return suffixEncode(buffer)
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_DISPLAY_TIMEOUT_SETTING_PACKET"
-    }
+    override val friendlyName = "PUMP_DISPLAY_TIMEOUT_SETTING_PACKET"
 }

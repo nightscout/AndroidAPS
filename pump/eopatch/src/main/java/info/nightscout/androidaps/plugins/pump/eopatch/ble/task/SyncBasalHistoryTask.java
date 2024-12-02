@@ -1,27 +1,28 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ble.task;
 
-import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.api.BasalHistoryGetExBig;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.api.BasalHistoryIndexGet;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.api.TempBasalHistoryGetExBig;
+import static info.nightscout.androidaps.plugins.pump.eopatch.core.define.IPatchConstant.BASAL_HISTORY_SIZE_BIG;
+
+import androidx.annotation.NonNull;
 
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.api.BasalHistoryGetExBig;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.api.BasalHistoryIndexGet;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.api.TempBasalHistoryGetExBig;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BasalHistoryIndexResponse;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BasalHistoryResponse;
 import io.reactivex.rxjava3.core.Single;
-
-import static info.nightscout.androidaps.plugins.pump.eopatch.core.define.IPatchConstant.BASAL_HISTORY_SIZE_BIG;
 
 @Singleton
 public class SyncBasalHistoryTask extends TaskBase {
     @Inject IPreferenceManager pm;
 
     private final BasalHistoryIndexGet BASAL_HISTORY_INDEX_GET;
-    private final BasalHistoryGetExBig BASAL_HISTORY_GET_EX_BIG;
+    @NonNull private final BasalHistoryGetExBig BASAL_HISTORY_GET_EX_BIG;
     private final TempBasalHistoryGetExBig TEMP_BASAL_HISTORY_GET_EX_BIG;
 
     @Inject
@@ -66,8 +67,8 @@ public class SyncBasalHistoryTask extends TaskBase {
 
         if (ready) {
             disposable = sync(end)
-                .timeout(TASK_ENQUEUE_TIME_OUT, TimeUnit.SECONDS)
-                .subscribe();
+                    .timeout(TASK_ENQUEUE_TIME_OUT, TimeUnit.SECONDS)
+                    .subscribe();
         }
     }
 
@@ -76,8 +77,8 @@ public class SyncBasalHistoryTask extends TaskBase {
 
         if (ready) {
             disposable = sync()
-                .timeout(TASK_ENQUEUE_TIME_OUT, TimeUnit.SECONDS)
-                .subscribe();
+                    .timeout(TASK_ENQUEUE_TIME_OUT, TimeUnit.SECONDS)
+                    .subscribe();
         }
     }
 
@@ -114,7 +115,7 @@ public class SyncBasalHistoryTask extends TaskBase {
 
         if (count > 0) {
             int lastSyncIndex = pm.getPatchConfig().getLastIndex();
-            for (int i = 0;i < count;i++) {
+            for (int i = 0; i < count; i++) {
                 int seq = start + i;
                 if (seq < lastSyncIndex)
                     continue;

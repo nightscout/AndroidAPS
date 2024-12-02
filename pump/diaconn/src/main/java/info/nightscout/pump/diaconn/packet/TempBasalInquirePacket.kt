@@ -23,7 +23,5 @@ class TempBasalInquirePacket(
         return suffixEncode(prefixEncode(msgType, msgSeq, MSG_CON_END))
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_TEMP_BASAL_INQUIRE_REQUEST"
-    }
+    override val friendlyName = "PUMP_TEMP_BASAL_INQUIRE_REQUEST"
 }

@@ -14,7 +14,7 @@ public class DeactivatePodCommand extends NonceResyncableMessageBlock {
         encode();
     }
 
-    @Override
+    @NonNull @Override
     public MessageBlockType getType() {
         return MessageBlockType.DEACTIVATE_POD;
     }

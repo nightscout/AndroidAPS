@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data;
 
+import androidx.annotation.NonNull;
+
 import org.apache.commons.lang3.NotImplementedException;
 
 import javax.inject.Inject;
@@ -34,7 +36,7 @@ public class RadioResponse {
     private RileyLinkCommand command;
 
 
-    public RadioResponse(HasAndroidInjector injector) {
+    public RadioResponse(@NonNull HasAndroidInjector injector) {
         injector.androidInjector().inject(this);
     }
 

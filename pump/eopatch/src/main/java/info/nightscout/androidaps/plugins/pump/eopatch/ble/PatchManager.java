@@ -3,6 +3,9 @@ package info.nightscout.androidaps.plugins.pump.eopatch.ble;
 import android.content.Context;
 import android.content.Intent;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -71,7 +74,7 @@ public class PatchManager implements IPatchManager {
     @Inject AapsSchedulers aapsSchedulers;
     @Inject IAlarmRegistry alarmRegistry;
     private IPatchScanner patchScanner;
-    private Disposable mConnectingDisposable = null;
+    @Nullable private Disposable mConnectingDisposable = null;
 
     @Inject
     public PatchManager() {
@@ -142,7 +145,7 @@ public class PatchManager implements IPatchManager {
         return pm;
     }
 
-    @Override
+    @NonNull @Override
     public PatchConfig getPatchConfig() {
         return pm.getPatchConfig();
     }
@@ -173,7 +176,7 @@ public class PatchManager implements IPatchManager {
     }
 
     @Override
-    public void updatePatchState(PatchState state) {
+    public void updatePatchState(@NonNull PatchState state) {
         pm.getPatchState().update(state);
         pm.flushPatchState();
     }

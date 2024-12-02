@@ -6,9 +6,9 @@ import info.nightscout.pump.diaconn.DiaconnG8Pump
 import javax.inject.Inject
 
 /**
- * SneckLimitInquirePacket
+ * SnackLimitInquirePacket
  */
-class SneckLimitInquirePacket(
+class SnackLimitInquirePacket(
     injector: HasAndroidInjector
 ) : DiaconnG8Packet(injector) {
 
@@ -16,7 +16,7 @@ class SneckLimitInquirePacket(
 
     init {
         msgType = 0x50.toByte()
-        aapsLogger.debug(LTag.PUMPCOMM, "SneckLimitInquirePacket limit request")
+        aapsLogger.debug(LTag.PUMPCOMM, "SnackLimitInquirePacket limit request")
     }
 
     override fun encode(msgSeq: Int): ByteArray {
@@ -24,7 +24,5 @@ class SneckLimitInquirePacket(
         return suffixEncode(buffer)
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_SNECK_LIMIT_REQUEST"
-    }
+    override val friendlyName = "PUMP_SNACK_LIMIT_REQUEST"
 }

@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.action.service;
 
+import androidx.annotation.NonNull;
+
 import org.joda.time.Duration;
 
 import java.util.Collections;
@@ -17,7 +19,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.Om
 
 public class PrimeService {
 
-    public StatusResponse executeDisableTab5Sub16And17FaultConfigCommand(OmnipodRileyLinkCommunicationManager communicationService, ErosPodStateManager podStateManager) {
+    public StatusResponse executeDisableTab5Sub16And17FaultConfigCommand(OmnipodRileyLinkCommunicationManager communicationService, @NonNull ErosPodStateManager podStateManager) {
         FaultConfigCommand faultConfigCommand = new FaultConfigCommand(podStateManager.getCurrentNonce(), (byte) 0x00, (byte) 0x00);
         OmnipodMessage faultConfigMessage = new OmnipodMessage(podStateManager.getAddress(),
                 Collections.singletonList(faultConfigCommand), podStateManager.getMessageNumber());
@@ -30,7 +32,7 @@ public class PrimeService {
                 Collections.singletonList(finishSetupReminderAlertConfiguration)));
     }
 
-    public StatusResponse executePrimeBolusCommand(OmnipodRileyLinkCommunicationManager communicationService, ErosPodStateManager podStateManager) {
+    public StatusResponse executePrimeBolusCommand(@NonNull OmnipodRileyLinkCommunicationManager communicationService, ErosPodStateManager podStateManager) {
         return communicationService.executeAction(new BolusAction(podStateManager, OmnipodConstants.POD_PRIME_BOLUS_UNITS,
                 Duration.standardSeconds(1), false, true));
     }

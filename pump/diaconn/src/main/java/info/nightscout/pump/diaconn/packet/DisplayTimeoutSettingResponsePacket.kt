@@ -20,7 +20,7 @@ class DisplayTimeoutSettingResponsePacket(
         aapsLogger.debug(LTag.PUMPCOMM, "DisplayTimeoutSettingResponsePacket init ")
     }
 
-    override fun handleMessage(data: ByteArray?) {
+    override fun handleMessage(data: ByteArray) {
         val defectCheck = defect(data)
         if (defectCheck != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "DisplayTimeoutSettingResponsePacket Got some Error")
@@ -41,7 +41,5 @@ class DisplayTimeoutSettingResponsePacket(
         aapsLogger.debug(LTag.PUMPCOMM, "otpNumber --> ${diaconnG8Pump.otpNumber}")
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_DISPLAY_TIMEOUT_SETTING_RESPONSE"
-    }
+    override val friendlyName = "PUMP_DISPLAY_TIMEOUT_SETTING_RESPONSE"
 }

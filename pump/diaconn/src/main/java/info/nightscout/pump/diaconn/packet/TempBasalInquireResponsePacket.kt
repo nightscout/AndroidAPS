@@ -9,6 +9,7 @@ import javax.inject.Inject
 /**
  * TempBasalInquireResponsePacket
  */
+@Suppress("SpellCheckingInspection")
 open class TempBasalInquireResponsePacket(
     injector: HasAndroidInjector
 ) : DiaconnG8Packet(injector) {
@@ -23,7 +24,7 @@ open class TempBasalInquireResponsePacket(
         aapsLogger.debug(LTag.PUMPCOMM, "TempBasalInquireResponsePacket init")
     }
 
-    override fun handleMessage(data: ByteArray?) {
+    override fun handleMessage(data: ByteArray) {
         val defectCheck = defect(data)
         if (defectCheck != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "TempBasalInquireResponsePacket Got some Error")
@@ -50,7 +51,5 @@ open class TempBasalInquireResponsePacket(
         aapsLogger.debug(LTag.PUMPCOMM, "tbElapsedTime > " + diaconnG8Pump.tbElapsedTime)
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_TEMP_BASAL_INQUIRE_RESPONSE"
-    }
+    override val friendlyName = "PUMP_TEMP_BASAL_INQUIRE_RESPONSE"
 }

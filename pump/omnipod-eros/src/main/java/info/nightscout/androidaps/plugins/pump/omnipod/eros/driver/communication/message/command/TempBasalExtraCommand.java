@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communicatio
 
 import org.joda.time.Duration;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import app.aaps.core.utils.pump.ByteUtil;
@@ -70,30 +69,6 @@ public class TempBasalExtraCommand extends MessageBlock {
     @Override
     public MessageBlockType getType() {
         return MessageBlockType.TEMP_BASAL_EXTRA;
-    }
-
-    public boolean isAcknowledgementBeep() {
-        return acknowledgementBeep;
-    }
-
-    public boolean isCompletionBeep() {
-        return completionBeep;
-    }
-
-    public Duration getProgramReminderInterval() {
-        return programReminderInterval;
-    }
-
-    public double getRemainingPulses() {
-        return remainingPulses;
-    }
-
-    public double getDelayUntilNextPulse() {
-        return delayUntilNextPulse;
-    }
-
-    public List<RateEntry> getRateEntries() {
-        return new ArrayList<>(rateEntries);
     }
 
     @Override

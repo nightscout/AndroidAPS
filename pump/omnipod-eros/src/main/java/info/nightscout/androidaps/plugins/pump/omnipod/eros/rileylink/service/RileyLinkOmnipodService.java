@@ -5,6 +5,9 @@ import android.content.res.Configuration;
 import android.os.Binder;
 import android.os.IBinder;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
@@ -37,7 +40,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
     private boolean rileyLinkAddressChanged = false;
     private boolean inPreInit = true;
     private String rileyLinkAddress;
-    private String errorDescription;
+    @Nullable private String errorDescription;
 
     public RileyLinkOmnipodService() {
         super();
@@ -54,7 +57,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
         return mBinder;
     }
 
-    @Override
+    @NonNull @Override
     public RileyLinkEncodingType getEncoding() {
         return RileyLinkEncodingType.Manchester;
     }
@@ -72,7 +75,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
         aapsLogger.debug(LTag.PUMPBTCOMM, "RileyLinkOmnipodService newly constructed");
     }
 
-    @Override
+    @NonNull @Override
     public RileyLinkCommunicationManager getDeviceCommunicationManager() {
         return omnipodRileyLinkCommunicationManager;
     }

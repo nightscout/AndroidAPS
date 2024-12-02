@@ -2,6 +2,9 @@ package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble;
 
 import android.os.SystemClock;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.Locale;
@@ -76,7 +79,7 @@ public class RFSpy {
         this.rileyLinkBle = rileyLinkBle;
     }
 
-    static RileyLinkFirmwareVersion getFirmwareVersion(AAPSLogger aapsLogger, String bleVersion, String cc1110Version) {
+    static RileyLinkFirmwareVersion getFirmwareVersion(AAPSLogger aapsLogger, @NonNull String bleVersion, String cc1110Version) {
         if (cc1110Version != null) {
             RileyLinkFirmwareVersion version = RileyLinkFirmwareVersion.getByVersionString(cc1110Version);
             aapsLogger.debug(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "Firmware Version string: %s, resolved to %s.", cc1110Version, version));
@@ -131,7 +134,7 @@ public class RFSpy {
         reader.newDataIsAvailable();
     }
 
-    public Integer retrieveBatteryLevel() {
+    @Nullable public Integer retrieveBatteryLevel() {
         BLECommOperationResult result = rileyLinkBle.readCharacteristicBlocking(batteryServiceUUID, batteryLevelUUID);
         if (result.resultCode == BLECommOperationResult.RESULT_SUCCESS) {
             if (ArrayUtils.isNotEmpty(result.value)) {
@@ -189,7 +192,7 @@ public class RFSpy {
         return null;
     }
 
-    private byte[] writeToDataRaw(byte[] bytes, int responseTimeout_ms) {
+    private byte[] writeToDataRaw(@NonNull byte[] bytes, int responseTimeout_ms) {
         SystemClock.sleep(100);
         // FIXME drain read queue?
         byte[] junkInBuffer = reader.poll(0);
@@ -285,7 +288,7 @@ public class RFSpy {
         rxBus.send(new EventRefreshOverview("RL battery level updated", false));
     }
 
-    private RFSpyResponse updateRegister(CC111XRegister reg, int val) {
+    @NonNull private RFSpyResponse updateRegister(CC111XRegister reg, int val) {
         return writeToData(new UpdateRegister(reg, (byte) val), EXPECTED_MAX_BLUETOOTH_LATENCY_MS);
     }
 

@@ -20,7 +20,7 @@ class TimeReportPacket(
         aapsLogger.debug(LTag.PUMPCOMM, "TimeReportPacket init ")
     }
 
-    override fun handleMessage(data: ByteArray?) {
+    override fun handleMessage(data: ByteArray) {
         val defectCheck = defect(data)
         if (defectCheck != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "TimeReportPacket Report Packet Got some Error")
@@ -44,7 +44,5 @@ class TimeReportPacket(
         aapsLogger.debug(LTag.PUMPCOMM, "second --> ${diaconnG8Pump.second}")
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_TIME_REPORT"
-    }
+    override val friendlyName = "PUMP_TIME_REPORT"
 }

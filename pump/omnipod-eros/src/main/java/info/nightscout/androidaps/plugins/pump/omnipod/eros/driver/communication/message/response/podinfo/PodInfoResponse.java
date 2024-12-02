@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.response.podinfo;
 
+import androidx.annotation.NonNull;
+
 import app.aaps.core.utils.pump.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.MessageBlock;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.MessageBlockType;
@@ -9,7 +11,7 @@ public class PodInfoResponse extends MessageBlock {
     private final PodInfoType subType;
     private final PodInfo podInfo;
 
-    public PodInfoResponse(byte[] encodedData) {
+    public PodInfoResponse(@NonNull byte[] encodedData) {
         int bodyLength = ByteUtil.INSTANCE.convertUnsignedByteToInt(encodedData[1]);
 
         this.encodedData = ByteUtil.INSTANCE.substring(encodedData, 2, bodyLength);

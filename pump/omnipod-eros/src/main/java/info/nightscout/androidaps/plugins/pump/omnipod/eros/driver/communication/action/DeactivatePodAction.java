@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.action;
 
+import androidx.annotation.NonNull;
+
 import java.util.EnumSet;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.command.DeactivatePodCommand;
@@ -10,7 +12,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.ErosP
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 
 public class DeactivatePodAction implements OmnipodAction<StatusResponse> {
-    private final ErosPodStateManager podStateManager;
+    @NonNull private final ErosPodStateManager podStateManager;
     private final boolean acknowledgementBeep;
 
     public DeactivatePodAction(ErosPodStateManager podStateManager, boolean acknowledgementBeep) {

@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ble.task;
 
+import androidx.annotation.NonNull;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -38,7 +40,7 @@ public class ResumeBasalTask extends TaskBase {
                 .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "ResumeBasalTask error"));
     }
 
-    private void onResumeResponse(PatchBooleanResponse v) {
+    private void onResumeResponse(@NonNull PatchBooleanResponse v) {
         if (v.isSuccess()) {
             patchStateManager.onBasalResumed(v.getTimestamp() + 1000);
             alarmRegistry.remove(AlarmCode.B001).subscribe();

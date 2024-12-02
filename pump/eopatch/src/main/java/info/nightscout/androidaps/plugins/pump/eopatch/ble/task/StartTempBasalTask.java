@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ble.task;
 
+import androidx.annotation.NonNull;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -25,7 +27,7 @@ public class StartTempBasalTask extends TaskBase {
         TEMP_BASAL_SCHEDULE_START = new TempBasalScheduleStart();
     }
 
-    public Single<TempBasalScheduleSetResponse> start(TempBasal tempBasal) {
+    public Single<TempBasalScheduleSetResponse> start(@NonNull TempBasal tempBasal) {
         return isReady()
                 .concatMapSingle(v -> TEMP_BASAL_SCHEDULE_START.start(tempBasal.getDurationMinutes(), tempBasal.getDoseUnitPerHour(), tempBasal.getPercent()))
                 .doOnNext(this::checkResponse)

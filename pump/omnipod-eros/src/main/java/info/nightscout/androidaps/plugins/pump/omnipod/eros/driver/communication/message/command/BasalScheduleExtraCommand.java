@@ -38,7 +38,7 @@ public class BasalScheduleExtraCommand extends MessageBlock {
         encode();
     }
 
-    public BasalScheduleExtraCommand(BasalSchedule schedule, Duration scheduleOffset,
+    public BasalScheduleExtraCommand(@NonNull BasalSchedule schedule, Duration scheduleOffset,
                                      boolean acknowledgementBeep, boolean completionBeep, Duration programReminderInterval) {
         rateEntries = new ArrayList<>();
         this.acknowledgementBeep = acknowledgementBeep;

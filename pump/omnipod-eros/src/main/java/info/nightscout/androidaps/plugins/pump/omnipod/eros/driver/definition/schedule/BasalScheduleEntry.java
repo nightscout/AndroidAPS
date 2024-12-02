@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import org.joda.time.Duration;
 
 import java.util.Objects;
@@ -41,7 +43,7 @@ public class BasalScheduleEntry {
                 '}';
     }
 
-    @Override public boolean equals(Object o) {
+    @Override public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BasalScheduleEntry that = (BasalScheduleEntry) o;

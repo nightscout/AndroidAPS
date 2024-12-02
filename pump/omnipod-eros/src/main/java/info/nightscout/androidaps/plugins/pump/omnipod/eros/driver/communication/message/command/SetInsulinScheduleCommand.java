@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.command;
 
+import androidx.annotation.NonNull;
+
 import org.joda.time.Duration;
 
 import app.aaps.core.utils.pump.ByteUtil;
@@ -87,7 +89,7 @@ public class SetInsulinScheduleCommand extends NonceResyncableMessageBlock {
         encode();
     }
 
-    @Override
+    @NonNull @Override
     public String toString() {
         return "SetInsulinScheduleCommand{" +
                 "schedule=" + schedule +

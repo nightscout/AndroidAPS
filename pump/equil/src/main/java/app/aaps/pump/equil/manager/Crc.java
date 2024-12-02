@@ -1,8 +1,10 @@
 package app.aaps.pump.equil.manager;
 
+import androidx.annotation.NonNull;
+
 public class Crc {
 
-    public static int CRC8_MAXIM(byte[] source) {
+    public static int CRC8_MAXIM(@NonNull byte[] source) {
         int offset = 0;
         int length = source.length;
         int wCRCin = 0x00;

@@ -88,7 +88,7 @@ class BigLogInquireResponsePacket(
         aapsLogger.debug(LTag.PUMPCOMM, "BigLogInquireResponsePacket init")
     }
 
-    override fun handleMessage(data: ByteArray?) {
+    override fun handleMessage(data: ByteArray) {
         val result = defect(data)
         if (result != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "BigLogInquireResponsePacket Got some Error")
@@ -941,9 +941,7 @@ class BigLogInquireResponsePacket(
         }
     }
 
-    override fun getFriendlyName(): String {
-        return "BIG_LOG_INQUIRE_RESPONSE"
-    }
+    override val friendlyName = "BIG_LOG_INQUIRE_RESPONSE"
 
     private fun getReasonName(logKind: Byte, reason: Byte): String {
         val logInjectNormalFail: Byte = 0x0B

@@ -17,7 +17,7 @@ class DisplayTimeInquireResponsePacket(injector: HasAndroidInjector) : DiaconnG8
         aapsLogger.debug(LTag.PUMPCOMM, "DisplayTimeInquireResponsePacket init")
     }
 
-    override fun handleMessage(data: ByteArray?) {
+    override fun handleMessage(data: ByteArray) {
         val result = defect(data)
         if (result != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "DisplayTimeInquireResponsePacket Got some Error")
@@ -38,7 +38,5 @@ class DisplayTimeInquireResponsePacket(injector: HasAndroidInjector) : DiaconnG8
         aapsLogger.debug(LTag.PUMPCOMM, "lcdOnTimeSec --> ${diaconnG8Pump.lcdOnTimeSec}")
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_DISPLAY_TIME_INQUIRE_RESPONSE"
-    }
+    override val friendlyName = "PUMP_DISPLAY_TIME_INQUIRE_RESPONSE"
 }

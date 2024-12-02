@@ -24,7 +24,5 @@ class BasalLimitInquirePacket(
         return suffixEncode(buffer)
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_BASAL_LIMIT_INQUIRE"
-    }
+    override val friendlyName = "PUMP_BASAL_LIMIT_INQUIRE"
 }

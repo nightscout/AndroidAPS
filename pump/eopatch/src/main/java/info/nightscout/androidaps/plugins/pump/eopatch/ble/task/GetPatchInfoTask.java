@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ble.task;
 
+import androidx.annotation.NonNull;
+
 import java.util.Arrays;
 
 import javax.inject.Inject;
@@ -28,11 +30,11 @@ public class GetPatchInfoTask extends TaskBase {
     @Inject UpdateConnectionTask updateConnectionTask;
 
     private final SetGlobalTime SET_GLOBAL_TIME;
-    private final GetSerialNumber SERIAL_NUMBER_GET;
+    @NonNull private final GetSerialNumber SERIAL_NUMBER_GET;
     private final GetLOT LOT_NUMBER_GET;
     private final GetFirmwareVersion FIRMWARE_VERSION_GET;
-    private final GetWakeUpTime WAKE_UP_TIME_GET;
-    private final GetPumpDuration PUMP_DURATION_GET;
+    @NonNull private final GetWakeUpTime WAKE_UP_TIME_GET;
+    @NonNull private final GetPumpDuration PUMP_DURATION_GET;
     private final GetModelName GET_MODEL_NAME;
 
     @Inject
@@ -82,7 +84,7 @@ public class GetPatchInfoTask extends TaskBase {
         pm.getPatchConfig().setPatchFirmwareVersion(v.getFirmwareVersionString());
     }
 
-    private void onWakeupTimeResponse(WakeUpTimeResponse v) {
+    private void onWakeupTimeResponse(@NonNull WakeUpTimeResponse v) {
         pm.getPatchConfig().setPatchWakeupTimestamp(v.getTimeInMillis());
     }
 

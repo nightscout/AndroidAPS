@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
@@ -131,7 +133,7 @@ public abstract class ErosPodStateManager {
         return isPodInitialized() && getPodProgressStatus().isDead();
     }
 
-    public final void setInitializationParameters(int lot, int tid, FirmwareVersion piVersion, FirmwareVersion pmVersion, DateTimeZone timeZone, PodProgressStatus podProgressStatus) {
+    public final void setInitializationParameters(int lot, int tid, FirmwareVersion piVersion, FirmwareVersion pmVersion, @NonNull DateTimeZone timeZone, PodProgressStatus podProgressStatus) {
         if (isPodInitialized() && getActivationProgress().isAtLeast(ActivationProgress.PAIRING_COMPLETED)) {
             throw new IllegalStateException("Cannot set pairing parameters: pairing parameters have already been set");
         }
@@ -278,7 +280,7 @@ public abstract class ErosPodStateManager {
         return activeAlerts != null && activeAlerts.size() > 0;
     }
 
-    public final AlertSet getActiveAlerts() {
+    @NonNull public final AlertSet getActiveAlerts() {
         return new AlertSet(getSafe(() -> podState.getActiveAlerts()));
     }
 
@@ -302,7 +304,7 @@ public abstract class ErosPodStateManager {
         return getSafe(() -> podState.getTimeZone());
     }
 
-    public final void setTimeZone(DateTimeZone timeZone) {
+    public final void setTimeZone(@NonNull DateTimeZone timeZone) {
         if (timeZone == null) {
             throw new IllegalArgumentException("Time zone can not be null");
         }
@@ -609,8 +611,7 @@ public abstract class ErosPodStateManager {
                 podState.setBasalCertain(true);
             }
 
-            if (status instanceof PodInfoDetailedStatus) {
-                PodInfoDetailedStatus detailedStatus = (PodInfoDetailedStatus) status;
+            if (status instanceof PodInfoDetailedStatus detailedStatus) {
                 if (detailedStatus.isFaulted()) {
                     if (!Objects.equals(podState.getFaultEventCode(), detailedStatus.getFaultEventCode())) {
                         podState.setFaultEventCode(detailedStatus.getFaultEventCode());
@@ -692,14 +693,14 @@ public abstract class ErosPodStateManager {
     }
 
     // Not actually "safe" as it throws an Exception, but it prevents NPEs
-    private <T> T getSafe(Supplier<T> supplier) {
+    private <T> T getSafe(@NonNull Supplier<T> supplier) {
         if (!hasPodState()) {
             throw new IllegalStateException("Cannot read from PodState: podState is null");
         }
         return supplier.get();
     }
 
-    private static Gson createGson() {
+    @NonNull private static Gson createGson() {
         GsonBuilder gsonBuilder = new GsonBuilder()
                 .registerTypeAdapter(DateTime.class, (JsonSerializer<DateTime>) (dateTime, typeOfSrc, context) ->
                         new JsonPrimitive(ISODateTimeFormat.dateTime().print(dateTime)))
@@ -713,7 +714,7 @@ public abstract class ErosPodStateManager {
         return gsonBuilder.create();
     }
 
-    @Override public String toString() {
+    @NonNull @Override public String toString() {
         return "AapsPodStateManager{" +
                 "podState=" + podState +
                 '}';
@@ -1020,7 +1021,7 @@ public abstract class ErosPodStateManager {
             this.tempBasalCertain = certain;
         }
 
-        Map<AlertSlot, AlertType> getConfiguredAlerts() {
+        @NonNull Map<AlertSlot, AlertType> getConfiguredAlerts() {
             return configuredAlerts;
         }
 

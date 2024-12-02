@@ -8,6 +8,7 @@ import javax.inject.Inject
 /**
  * LogStatusInquireResponsePacket
  */
+@Suppress("SpellCheckingInspection")
 open class LogStatusInquireResponsePacket(
     injector: HasAndroidInjector
 ) : DiaconnG8Packet(injector) {
@@ -21,7 +22,7 @@ open class LogStatusInquireResponsePacket(
         aapsLogger.debug(LTag.PUMPCOMM, "LogStatusInquireResponsePacket init")
     }
 
-    override fun handleMessage(data: ByteArray?) {
+    override fun handleMessage(data: ByteArray) {
         val defectCheck = defect(data)
         if (defectCheck != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "LogStatusInquireResponsePacket Got some Error")
@@ -44,7 +45,5 @@ open class LogStatusInquireResponsePacket(
         aapsLogger.debug(LTag.PUMPCOMM, "pumpWrappingCount> " + diaconnG8Pump.pumpWrappingCount)
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_LOG_STATUS_INQUIRE_RESPONSE"
-    }
+    override val friendlyName = "PUMP_LOG_STATUS_INQUIRE_RESPONSE"
 }

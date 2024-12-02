@@ -1,5 +1,7 @@
 package app.aaps.pump.equil.manager.command;
 
+import androidx.annotation.Nullable;
+
 import java.nio.ByteBuffer;
 
 import app.aaps.core.interfaces.logging.LTag;
@@ -44,7 +46,7 @@ public abstract class BaseSetting extends BaseCmd {
     }
 
 
-    public EquilResponse decodeEquilPacket(byte[] data) {
+    @Nullable public EquilResponse decodeEquilPacket(byte[] data) {
         if (!checkData(data)) {
             return null;
         }
@@ -132,7 +134,7 @@ public abstract class BaseSetting extends BaseCmd {
 
     public abstract void decodeConfirmData(byte[] data);
 
-    public EquilResponse decodeConfirm() throws Exception {
+    @Nullable public EquilResponse decodeConfirm() throws Exception {
         EquilCmdModel equilCmdModel = decodeModel();
         runCode = equilCmdModel.getCode();
         String content = AESUtil.decrypt(equilCmdModel, Utils.hexStringToBytes(runPwd));

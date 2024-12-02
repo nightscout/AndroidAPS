@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition;
 
+import androidx.annotation.NonNull;
+
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.response.podinfo.PodInfo;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.response.podinfo.PodInfoActiveAlerts;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.response.podinfo.PodInfoDataLog;
@@ -36,7 +38,7 @@ public enum PodInfoType {
         return value;
     }
 
-    public PodInfo decode(byte[] encodedData, int bodyLength) {
+    @NonNull public PodInfo decode(byte[] encodedData, int bodyLength) {
         switch (this) {
             case NORMAL:
                 // We've never observed a PodInfoResponse with 0x00 subtype

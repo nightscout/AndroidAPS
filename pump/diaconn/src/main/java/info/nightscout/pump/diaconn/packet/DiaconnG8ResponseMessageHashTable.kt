@@ -5,7 +5,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class DiaconnG8ResponseMessageHashTable @Inject constructor(val injector: HasAndroidInjector) {
+class DiaconnG8ResponseMessageHashTable @Inject constructor(
+    private val injector: HasAndroidInjector
+) {
+
     var messages: HashMap<Int, DiaconnG8Packet> = HashMap()
 
     fun put(message: DiaconnG8Packet) {
@@ -21,7 +24,7 @@ class DiaconnG8ResponseMessageHashTable @Inject constructor(val injector: HasAnd
         put(BigAPSMainInfoInquireResponsePacket(injector))
         put(BigLogInquireResponsePacket(injector))
         put(InjectionSnackInquireResponsePacket(injector))
-        put(SneckLimitInquireResponsePacket(injector))
+        put(SnackLimitInquireResponsePacket(injector))
         put(BasalLimitInquireResponsePacket(injector))
         put(TempBasalInquireResponsePacket(injector))
         put(TimeInquireResponsePacket(injector))
@@ -33,7 +36,6 @@ class DiaconnG8ResponseMessageHashTable @Inject constructor(val injector: HasAnd
         put(DisplayTimeInquireResponsePacket(injector))
         put(LanguageInquireResponsePacket(injector))
         put(SerialNumInquireResponsePacket(injector))
-
 
         // Report Packet
         put(BasalPauseReportPacket(injector))

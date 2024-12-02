@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.action;
 
+import androidx.annotation.NonNull;
+
 import org.joda.time.Duration;
 
 import java.util.ArrayList;
@@ -36,7 +38,7 @@ public class CancelDeliveryAction implements OmnipodAction<StatusResponse> {
     }
 
     @Override
-    public StatusResponse execute(OmnipodRileyLinkCommunicationManager communicationService) {
+    public StatusResponse execute(@NonNull OmnipodRileyLinkCommunicationManager communicationService) {
         List<MessageBlock> messageBlocks = new ArrayList<>();
 
         messageBlocks.add(new CancelDeliveryCommand(podStateManager.getCurrentNonce(), BeepType.NO_BEEP, deliveryTypes));

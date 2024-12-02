@@ -1,5 +1,7 @@
 package app.aaps.pump.equil.manager.command;
 
+import androidx.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -57,7 +59,7 @@ public class PumpEvent {
 
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PumpEvent pumpEvent = (PumpEvent) o;

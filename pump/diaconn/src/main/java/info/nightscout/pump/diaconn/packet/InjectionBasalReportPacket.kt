@@ -19,7 +19,7 @@ class InjectionBasalReportPacket(
         aapsLogger.debug(LTag.PUMPCOMM, "InjectionBasalReportPacket init ")
     }
 
-    override fun handleMessage(data: ByteArray?) {
+    override fun handleMessage(data: ByteArray) {
         val defectCheck = defect(data)
         if (defectCheck != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "InjectionBasalReportPacket Got some Error")
@@ -32,7 +32,5 @@ class InjectionBasalReportPacket(
         aapsLogger.debug(LTag.PUMPCOMM, "Pump Report BasalPattern --> ${diaconnG8Pump.systemBasePattern} (1:basic, 2: life1 , 3: life2 , 4: life3 , 5:dr1, 6:dr2) ")
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_INJECTION_BASAL_REPORT"
-    }
+    override val friendlyName = "PUMP_INJECTION_BASAL_REPORT"
 }

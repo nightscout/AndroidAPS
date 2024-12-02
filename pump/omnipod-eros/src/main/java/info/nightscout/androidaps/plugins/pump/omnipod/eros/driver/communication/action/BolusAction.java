@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.action;
 
+import androidx.annotation.NonNull;
+
 import org.joda.time.Duration;
 
 import java.util.Arrays;
@@ -15,11 +17,11 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.Om
 public class BolusAction implements OmnipodAction<StatusResponse> {
     private final ErosPodStateManager podStateManager;
     private final double units;
-    private final Duration timeBetweenPulses;
+    @NonNull private final Duration timeBetweenPulses;
     private final boolean acknowledgementBeep;
     private final boolean completionBeep;
 
-    public BolusAction(ErosPodStateManager podStateManager, double units, Duration timeBetweenPulses,
+    public BolusAction(@NonNull ErosPodStateManager podStateManager, double units, Duration timeBetweenPulses,
                        boolean acknowledgementBeep, boolean completionBeep) {
         if (podStateManager == null) {
             throw new IllegalArgumentException("Pod state manager cannot be null");
@@ -34,7 +36,7 @@ public class BolusAction implements OmnipodAction<StatusResponse> {
         this.completionBeep = completionBeep;
     }
 
-    public BolusAction(ErosPodStateManager podStateManager, double units, boolean acknowledgementBeep, boolean completionBeep) {
+    public BolusAction(@NonNull ErosPodStateManager podStateManager, double units, boolean acknowledgementBeep, boolean completionBeep) {
         this(podStateManager, units, Duration.standardSeconds(2), acknowledgementBeep, completionBeep);
     }
 

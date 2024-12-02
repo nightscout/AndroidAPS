@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.math.BigInteger;
@@ -124,7 +125,7 @@ public class PatchManagerImpl {
     private final BuzzerStop BUZZER_STOP;
     private final GetTemperature TEMPERATURE_GET;
     private final StopAeBeep ALARM_ALERT_ERROR_BEEP_STOP;
-    private final PublicKeySend PUBLIC_KEY_SET;
+    @NonNull private final PublicKeySend PUBLIC_KEY_SET;
     private final SequenceGet SEQUENCE_GET;
 
     @Inject
@@ -650,7 +651,7 @@ public class PatchManagerImpl {
                 .map(PatchManagerImpl::encodeECPublicKey);
     }
 
-    private static byte[] encodeECPublicKey(ECPublicKey pubKey) {
+    private static byte[] encodeECPublicKey(@NonNull ECPublicKey pubKey) {
         int keyLengthBytes = pubKey.getParams().getOrder().bitLength()
                 / Byte.SIZE;
         byte[] publicKeyEncoded = new byte[2 * keyLengthBytes];

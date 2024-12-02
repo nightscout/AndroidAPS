@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.action;
 
+import androidx.annotation.Nullable;
+
 import org.joda.time.Duration;
 
 import java.util.List;
@@ -35,7 +37,7 @@ public class InsertCannulaAction implements OmnipodAction<Void> {
         this.lowReservoirAlertUnits = lowReservoirAlertUnits;
     }
 
-    @Override
+    @Nullable @Override
     public Void execute(OmnipodRileyLinkCommunicationManager communicationService) {
         if (podStateManager.getActivationProgress().isBefore(ActivationProgress.PRIMING_COMPLETED)) {
             throw new IllegalActivationProgressException(ActivationProgress.PRIMING_COMPLETED, podStateManager.getActivationProgress());

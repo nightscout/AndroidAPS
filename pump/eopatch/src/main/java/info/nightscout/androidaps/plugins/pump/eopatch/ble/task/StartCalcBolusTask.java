@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ble.task;
 
+import androidx.annotation.NonNull;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -11,7 +13,7 @@ import io.reactivex.rxjava3.core.Single;
 
 @Singleton
 public class StartCalcBolusTask extends BolusTask {
-    private final BolusStart NOW_BOLUS_START;
+    @NonNull private final BolusStart NOW_BOLUS_START;
 
     @Inject
     public StartCalcBolusTask() {

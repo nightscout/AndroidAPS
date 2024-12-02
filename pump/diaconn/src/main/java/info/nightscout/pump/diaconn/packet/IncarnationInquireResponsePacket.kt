@@ -10,6 +10,7 @@ import javax.inject.Inject
 /**
  * IncarnationInquireResponsePacket
  */
+@Suppress("SpellCheckingInspection")
 open class IncarnationInquireResponsePacket(
     injector: HasAndroidInjector
 ) : DiaconnG8Packet(injector) {
@@ -25,7 +26,7 @@ open class IncarnationInquireResponsePacket(
         aapsLogger.debug(LTag.PUMPCOMM, "IncarnationInquireResponsePacket init")
     }
 
-    override fun handleMessage(data: ByteArray?) {
+    override fun handleMessage(data: ByteArray) {
         val defectCheck = defect(data)
         if (defectCheck != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "IncarnationInquireResponsePacket Got some Error")
@@ -45,7 +46,5 @@ open class IncarnationInquireResponsePacket(
         aapsLogger.debug(LTag.PUMPCOMM, "pumpIncarnationNum > " + diaconnG8Pump.pumpIncarnationNum)
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_INCARNATION_INQUIRE_RESPONSE"
-    }
+    override val friendlyName = "PUMP_INCARNATION_INQUIRE_RESPONSE"
 }

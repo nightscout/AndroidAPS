@@ -50,17 +50,17 @@ public abstract class BaseCmd implements CustomCommand {
         this.createTime = createTime;
     }
 
-    public abstract EquilResponse getEquilResponse();
+    @Nullable public abstract EquilResponse getEquilResponse();
 
-    public abstract EquilResponse getNextEquilResponse();
+    @Nullable public abstract EquilResponse getNextEquilResponse();
 
     @Nullable public abstract EquilResponse decodeEquilPacket(byte[] data);
 
     public abstract EquilResponse decode() throws Exception;
 
-    public abstract EquilResponse decodeConfirm() throws Exception;
+    @Nullable public abstract EquilResponse decodeConfirm() throws Exception;
 
-    public abstract EquilHistoryRecord.EventType getEventType();
+    @Nullable public abstract EquilHistoryRecord.EventType getEventType();
 
 
     public ResolvedResult getResolvedResult() {
@@ -167,7 +167,7 @@ public abstract class BaseCmd implements CustomCommand {
         return false;
     }
 
-    public EquilResponse responseCmd(EquilCmdModel equilCmdModel, String port) {
+    @NonNull public EquilResponse responseCmd(EquilCmdModel equilCmdModel, String port) {
         StringBuilder allData = new StringBuilder();
         allData.append(port);
         allData.append(equilCmdModel.getTag());
@@ -197,43 +197,43 @@ public abstract class BaseCmd implements CustomCommand {
             if (i == maxLen - 1) {
                 buffer.put((byte) (6 + lastLen));
                 buffer.put((byte) ((10 * i)));
-                buffer.put((byte) toNewEndConf((byte) reqIndex));
+                buffer.put(toNewEndConf((byte) reqIndex));
             } else {
                 buffer.put((byte) 0x10);
                 buffer.put((byte) (10 * i));
-                buffer.put((byte) toNewStart((byte) reqIndex));
+                buffer.put(toNewStart((byte) reqIndex));
             }
             byte[] crcArray = new byte[5];
             System.arraycopy(buffer.array(), 0, crcArray, 0, 5);
             buffer.put((byte) Crc.CRC8_MAXIM(crcArray));
             if (i == 0) {
-                buffer.put((byte) allByte[byteIndex]);
+                buffer.put(allByte[byteIndex]);
                 byteIndex++;
-                buffer.put((byte) allByte[byteIndex]);
+                buffer.put(allByte[byteIndex]);
                 byteIndex++;
-                buffer.put((byte) allByte[byteIndex]);
+                buffer.put(allByte[byteIndex]);
                 byteIndex++;
-                buffer.put((byte) allByte[byteIndex]);
+                buffer.put(allByte[byteIndex]);
                 byteIndex++;
                 buffer.put(crc1[1]);
                 buffer.put(crc1[0]);
-                buffer.put((byte) allByte[byteIndex]);
+                buffer.put(allByte[byteIndex]);
                 byteIndex++;
-                buffer.put((byte) allByte[byteIndex]);
+                buffer.put(allByte[byteIndex]);
                 byteIndex++;
-                buffer.put((byte) allByte[byteIndex]);
+                buffer.put(allByte[byteIndex]);
                 byteIndex++;
-                buffer.put((byte) allByte[byteIndex]);
+                buffer.put(allByte[byteIndex]);
                 byteIndex++;
             } else {
                 if (lastLen < 10) {
                     for (int j = 0; j < lastLen; j++) {
-                        buffer.put((byte) allByte[byteIndex]);
+                        buffer.put(allByte[byteIndex]);
                         byteIndex++;
                     }
                 } else {
                     for (int j = 0; j < 10; j++) {
-                        buffer.put((byte) allByte[byteIndex]);
+                        buffer.put(allByte[byteIndex]);
                         byteIndex++;
                     }
                 }
@@ -254,14 +254,14 @@ public abstract class BaseCmd implements CustomCommand {
             if (index == 0) {
                 byte[] bs = b.array();
                 for (int i = bs.length - 4; i < bs.length; i++) {
-                    list.add((Byte) bs[i]);
+                    list.add(bs[i]);
                 }
                 byte[] codeByte = new byte[]{bs[10], bs[11]};
                 equilCmdModel.setCode(Utils.bytesToHex(codeByte));
             } else {
                 byte[] bs = b.array();
                 for (int i = 6; i < bs.length; i++) {
-                    list.add((Byte) bs[i]);
+                    list.add(bs[i]);
                 }
             }
             index++;
@@ -297,11 +297,11 @@ public abstract class BaseCmd implements CustomCommand {
     }
 
     public int getBit(byte b, int i) {
-        int bit = (int) ((b >> i) & 0x1);
+        int bit = (b >> i) & 0x1;
         return bit;
     }
 
-    public String convertString(String input) {
+    public String convertString(@NonNull String input) {
         StringBuilder sb = new StringBuilder();
         for (char ch : input.toCharArray()) {
             sb.append("0").append(ch);

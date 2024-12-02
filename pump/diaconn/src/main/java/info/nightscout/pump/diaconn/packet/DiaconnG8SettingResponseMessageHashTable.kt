@@ -5,7 +5,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class DiaconnG8SettingResponseMessageHashTable @Inject constructor(val injector: HasAndroidInjector) {
+class DiaconnG8SettingResponseMessageHashTable @Inject constructor(
+    val injector: HasAndroidInjector
+) {
+
     var messages: HashMap<Int, DiaconnG8Packet> = HashMap()
 
     fun put(message: DiaconnG8Packet) {

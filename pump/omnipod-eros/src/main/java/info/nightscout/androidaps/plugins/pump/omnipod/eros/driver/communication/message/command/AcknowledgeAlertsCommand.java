@@ -25,7 +25,7 @@ public class AcknowledgeAlertsCommand extends NonceResyncableMessageBlock {
         this(nonce, new AlertSet(Collections.singletonList(alertSlot)));
     }
 
-    @Override
+    @NonNull @Override
     public MessageBlockType getType() {
         return MessageBlockType.ACKNOWLEDGE_ALERT;
     }

@@ -27,7 +27,5 @@ class BigMainInfoInquirePacket(
         return suffixEncode(buffer)
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_BIG_MAIN_INFO_INQUIRE"
-    }
+    override val friendlyName = "PUMP_BIG_MAIN_INFO_INQUIRE"
 }

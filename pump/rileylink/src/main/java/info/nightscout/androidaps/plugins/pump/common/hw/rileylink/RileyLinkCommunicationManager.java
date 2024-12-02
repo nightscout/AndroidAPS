@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink;
 
+import androidx.annotation.NonNull;
+
 import java.util.Locale;
 
 import javax.inject.Inject;
@@ -66,7 +68,7 @@ public abstract class RileyLinkCommunicationManager<T extends RLMessage> {
         return sendAndListen(msg, timeout_ms, repeatCount, 0, extendPreamble_ms);
     }
 
-    protected T sendAndListen(T msg, int timeout_ms, int repeatCount, int retryCount, Integer extendPreamble_ms)
+    protected T sendAndListen(@NonNull T msg, int timeout_ms, int repeatCount, int retryCount, Integer extendPreamble_ms)
             throws RileyLinkCommunicationException {
 
         // internal flag

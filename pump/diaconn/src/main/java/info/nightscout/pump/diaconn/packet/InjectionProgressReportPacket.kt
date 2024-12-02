@@ -21,7 +21,7 @@ class InjectionProgressReportPacket(injector: HasAndroidInjector) : DiaconnG8Pac
         aapsLogger.debug(LTag.PUMPCOMM, "InjectionProgressReportPacket init ")
     }
 
-    override fun handleMessage(data: ByteArray?) {
+    override fun handleMessage(data: ByteArray) {
         val defectCheck = defect(data)
         if (defectCheck != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "InjectionProgressReportPacket Got some Error")
@@ -46,8 +46,5 @@ class InjectionProgressReportPacket(injector: HasAndroidInjector) : DiaconnG8Pac
         aapsLogger.debug(LTag.PUMPCOMM, "bolusingInjProgress --> ${diaconnG8Pump.bolusingInjProgress}")
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_INJECTION_PROGRESS_REPORT"
-
-    }
+    override val friendlyName = "PUMP_INJECTION_PROGRESS_REPORT"
 }

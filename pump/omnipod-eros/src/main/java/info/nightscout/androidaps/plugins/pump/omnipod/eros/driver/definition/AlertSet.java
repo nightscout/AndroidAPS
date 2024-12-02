@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,11 +19,11 @@ public class AlertSet {
         }
     }
 
-    public AlertSet(AlertSet alertSet) {
+    public AlertSet(@Nullable AlertSet alertSet) {
         this(alertSet == null ? new ArrayList<>() : alertSet.getAlertSlots());
     }
 
-    public AlertSet(List<AlertSlot> alertSlots) {
+    public AlertSet(@Nullable List<AlertSlot> alertSlots) {
         this.alertSlots = alertSlots == null ? new ArrayList<>() : new ArrayList<>(alertSlots);
     }
 
@@ -42,7 +43,7 @@ public class AlertSet {
         return value;
     }
 
-    @Override public boolean equals(Object o) {
+    @Override public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AlertSet alertSet = (AlertSet) o;

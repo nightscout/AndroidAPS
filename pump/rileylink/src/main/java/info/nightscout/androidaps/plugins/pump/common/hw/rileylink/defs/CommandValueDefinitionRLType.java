@@ -1,5 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 /**
  * Created by andy on 4/5/19.
  */
@@ -12,7 +15,7 @@ public enum CommandValueDefinitionRLType implements CommandValueDefinitionType {
     Frequency, //
     ;
 
-    @Override
+    @NonNull @Override
     public String getName() {
         return this.name();
     }
@@ -24,7 +27,7 @@ public enum CommandValueDefinitionRLType implements CommandValueDefinitionType {
     }
 
 
-    @Override
+    @Nullable @Override
     public String commandAction() {
         return null;
     }

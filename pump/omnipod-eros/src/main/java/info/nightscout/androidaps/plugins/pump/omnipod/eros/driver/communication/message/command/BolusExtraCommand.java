@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.command;
 
+import androidx.annotation.NonNull;
+
 import org.joda.time.Duration;
 
 import app.aaps.core.utils.pump.ByteUtil;
@@ -60,7 +62,7 @@ public class BolusExtraCommand extends MessageBlock {
         return MessageBlockType.BOLUS_EXTRA;
     }
 
-    @Override
+    @NonNull @Override
     public String toString() {
         return "BolusExtraCommand{" +
                 "acknowledgementBeep=" + acknowledgementBeep +

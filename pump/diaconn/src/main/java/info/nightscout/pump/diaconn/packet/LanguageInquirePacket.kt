@@ -24,7 +24,5 @@ class LanguageInquirePacket(
         return suffixEncode(buffer)
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_LANGUAGE_INQUIRE"
-    }
+    override val friendlyName = "PUMP_LANGUAGE_INQUIRE"
 }

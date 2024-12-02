@@ -9,6 +9,7 @@ import javax.inject.Inject
 /**
  * BolusSpeedInquireResponsePacket
  */
+@Suppress("SpellCheckingInspection")
 class BolusSpeedInquireResponsePacket(injector: HasAndroidInjector) : DiaconnG8Packet(injector) {
 
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
@@ -19,7 +20,7 @@ class BolusSpeedInquireResponsePacket(injector: HasAndroidInjector) : DiaconnG8P
         aapsLogger.debug(LTag.PUMPCOMM, "BolusSpeedInquireResponsePacket init")
     }
 
-    override fun handleMessage(data: ByteArray?) {
+    override fun handleMessage(data: ByteArray) {
         val defectResult = defect(data)
         if (defectResult != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "BolusSpeedInquireResponsePacket Got some Error")
@@ -42,8 +43,5 @@ class BolusSpeedInquireResponsePacket(injector: HasAndroidInjector) : DiaconnG8P
         aapsLogger.debug(LTag.PUMPCOMM, "bolusSpeed > " + diaconnG8Pump.speed)
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_BOLUS_SPEED_INQUIRE_RESPONSE"
-    }
-
+    override val friendlyName = "PUMP_BOLUS_SPEED_INQUIRE_RESPONSE"
 }

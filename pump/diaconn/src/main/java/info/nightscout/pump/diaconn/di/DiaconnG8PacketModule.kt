@@ -59,8 +59,8 @@ import info.nightscout.pump.diaconn.packet.LogStatusInquireResponsePacket
 import info.nightscout.pump.diaconn.packet.RejectReportPacket
 import info.nightscout.pump.diaconn.packet.SerialNumInquirePacket
 import info.nightscout.pump.diaconn.packet.SerialNumInquireResponsePacket
-import info.nightscout.pump.diaconn.packet.SneckLimitInquirePacket
-import info.nightscout.pump.diaconn.packet.SneckLimitInquireResponsePacket
+import info.nightscout.pump.diaconn.packet.SnackLimitInquirePacket
+import info.nightscout.pump.diaconn.packet.SnackLimitInquireResponsePacket
 import info.nightscout.pump.diaconn.packet.SoundInquirePacket
 import info.nightscout.pump.diaconn.packet.SoundInquireResponsePacket
 import info.nightscout.pump.diaconn.packet.SoundSettingPacket
@@ -84,9 +84,9 @@ abstract class DiaconnG8PacketModule {
     @ContributesAndroidInjector abstract fun contributesAppCancelSettingResponsePacket(): AppCancelSettingResponsePacket
     @ContributesAndroidInjector abstract fun contributesAppConfirmSettingPacket(): AppConfirmSettingPacket
     @ContributesAndroidInjector abstract fun contributesAppConfirmSettingResponsePacket(): AppConfirmSettingResponsePacket
-    @ContributesAndroidInjector abstract fun contributesSneckLimitInquirePacket(): SneckLimitInquirePacket
+    @ContributesAndroidInjector abstract fun contributesSneckLimitInquirePacket(): SnackLimitInquirePacket
     @ContributesAndroidInjector abstract fun contributesBasalLimitInquirePacket(): BasalLimitInquirePacket
-    @ContributesAndroidInjector abstract fun contributesSneckLimitInquireResponsePacket(): SneckLimitInquireResponsePacket
+    @ContributesAndroidInjector abstract fun contributesSneckLimitInquireResponsePacket(): SnackLimitInquireResponsePacket
     @ContributesAndroidInjector abstract fun contributesBasalLimitInquireResponsePacket(): BasalLimitInquireResponsePacket
     @ContributesAndroidInjector abstract fun contributesBasalPauseReportPacket(): BasalPauseReportPacket
     @ContributesAndroidInjector abstract fun contributesBasalPauseSettingPacket(): BasalPauseSettingPacket

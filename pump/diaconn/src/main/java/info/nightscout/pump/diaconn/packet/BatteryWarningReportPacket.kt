@@ -19,7 +19,7 @@ class BatteryWarningReportPacket(
         aapsLogger.debug(LTag.PUMPCOMM, "BatteryWarningReportPacket init ")
     }
 
-    override fun handleMessage(data: ByteArray?) {
+    override fun handleMessage(data: ByteArray) {
         val defectCheck = defect(data)
         if (defectCheck != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "BatteryWarningReportPacket Got some Error")
@@ -38,7 +38,5 @@ class BatteryWarningReportPacket(
 
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_BATTERY_WARNING_REPORT"
-    }
+    override val friendlyName = "PUMP_BATTERY_WARNING_REPORT"
 }

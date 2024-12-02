@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ble.task;
 
+import androidx.annotation.NonNull;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -27,7 +29,7 @@ public class StartQuickBolusTask extends BolusTask {
     }
 
     public Single<? extends BolusResponse> start(float nowDoseU, float exDoseU,
-                                                 BolusExDuration exDuration) {
+                                                 @NonNull BolusExDuration exDuration) {
         return isReady().concatMapSingle(v -> startBolusImpl(nowDoseU, exDoseU, exDuration))
                 .doOnNext(this::checkResponse)
                 .firstOrError()

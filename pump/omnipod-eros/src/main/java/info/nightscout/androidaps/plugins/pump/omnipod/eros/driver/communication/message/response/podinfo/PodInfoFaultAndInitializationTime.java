@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.response.podinfo;
 
+import androidx.annotation.NonNull;
+
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 
@@ -43,7 +45,7 @@ public class PodInfoFaultAndInitializationTime extends PodInfo {
         return initializationTime;
     }
 
-    @Override
+    @NonNull @Override
     public String toString() {
         return "PodInfoFaultAndInitializationTime{" +
                 "faultEventCode=" + faultEventCode +

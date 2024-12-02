@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.action;
 
+import androidx.annotation.NonNull;
+
 import org.joda.time.Duration;
 
 import java.util.Arrays;
@@ -16,7 +18,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.Om
 public class SetTempBasalAction implements OmnipodAction<StatusResponse> {
     private final ErosPodStateManager podStateManager;
     private final double rate;
-    private final Duration duration;
+    @NonNull private final Duration duration;
     private final boolean acknowledgementBeep;
     private final boolean completionBeep;
 

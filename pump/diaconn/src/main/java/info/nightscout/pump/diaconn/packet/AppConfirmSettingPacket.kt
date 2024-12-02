@@ -8,10 +8,11 @@ import javax.inject.Inject
 /**
  * AppConfirmSettingPacket
  */
+@Suppress("SpellCheckingInspection")
 class AppConfirmSettingPacket(
     injector: HasAndroidInjector,
     private var reqMsgType: Byte, // 명령코드
-    private var otp: Int // 응답시 전달받은 opt (random 6 digit numbner)
+    private var otp: Int // 응답시 전달받은 opt (random 6 digit number)
 ) : DiaconnG8Packet(injector) {
 
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
@@ -33,7 +34,5 @@ class AppConfirmSettingPacket(
         return suffixEncode(buffer)
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_APP_CONFRIM_SETTING"
-    }
+    override val friendlyName = "PUMP_APP_CONFRIM_SETTING"
 }

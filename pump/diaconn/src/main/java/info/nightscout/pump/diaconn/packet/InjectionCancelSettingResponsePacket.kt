@@ -20,7 +20,7 @@ class InjectionCancelSettingResponsePacket(
         aapsLogger.debug(LTag.PUMPCOMM, "InjectionCancelSettingResponsePacket init ")
     }
 
-    override fun handleMessage(data: ByteArray?) {
+    override fun handleMessage(data: ByteArray) {
         val defectCheck = defect(data)
         if (defectCheck != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "InjectionCancelSettingResponsePacket Got some Error")
@@ -41,7 +41,5 @@ class InjectionCancelSettingResponsePacket(
         aapsLogger.debug(LTag.PUMPCOMM, "otpNumber --> ${diaconnG8Pump.otpNumber}")
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_INJECTION_CANCEL_SETTING_RESPONSE"
-    }
+    override val friendlyName = "PUMP_INJECTION_CANCEL_SETTING_RESPONSE"
 }

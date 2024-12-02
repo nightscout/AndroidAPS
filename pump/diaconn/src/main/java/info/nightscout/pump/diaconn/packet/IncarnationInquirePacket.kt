@@ -25,7 +25,5 @@ class IncarnationInquirePacket(
         return suffixEncode(buffer)
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_INCARNATION_INQUIRE"
-    }
+    override val friendlyName = "PUMP_INCARNATION_INQUIRE"
 }

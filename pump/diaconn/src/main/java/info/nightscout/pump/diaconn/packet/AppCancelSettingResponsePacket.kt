@@ -20,7 +20,7 @@ class AppCancelSettingResponsePacket(
         aapsLogger.debug(LTag.PUMPCOMM, "AppCancelSettingResPacket init ")
     }
 
-    override fun handleMessage(data: ByteArray?) {
+    override fun handleMessage(data: ByteArray) {
         val defectCheck = defect(data)
         if (defectCheck != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "AppCancelSettingResponsePacket Got some Error")
@@ -38,7 +38,5 @@ class AppCancelSettingResponsePacket(
         aapsLogger.debug(LTag.PUMPCOMM, "Result --> $result")
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_APP_CANCEL_SETTING_RESPONSE"
-    }
+    override val friendlyName = "PUMP_APP_CANCEL_SETTING_RESPONSE"
 }

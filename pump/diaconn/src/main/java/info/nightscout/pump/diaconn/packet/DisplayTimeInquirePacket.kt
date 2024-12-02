@@ -24,7 +24,5 @@ class DisplayTimeInquirePacket(
         return suffixEncode(buffer)
     }
 
-    override fun getFriendlyName(): String {
-        return "PUMP_DISPLAY_TIME_INQUIRE"
-    }
+    override val friendlyName = "PUMP_DISPLAY_TIME_INQUIRE"
 }
