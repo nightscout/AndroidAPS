@@ -144,7 +144,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
         if (sensitivity.second == null)
             uiInteraction.addNotificationValidTo(
                 Notification.DYN_ISF_FALLBACK, start,
-                rh.gs(R.string.fallback_to_isf_no_tdd), Notification.INFO, dateUtil.now() + T.mins(1).msecs()
+                rh.gs(R.string.fallback_to_isf_no_tdd, sensitivity.first), Notification.INFO, dateUtil.now() + T.mins(1).msecs()
             )
         else
             uiInteraction.dismissNotification(Notification.DYN_ISF_FALLBACK)
