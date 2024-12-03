@@ -120,7 +120,6 @@
     <string name="loop_open_mode_min_change">Минимальный запрос на изменения [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Алгоритм ИПЖ выдаст всплывающее окно с запросом на новые изменения, только если изменение больше, чем это значение в %. Значение по умолчанию — 20%</string>
     <string name="fallback_smb_no_tdd">Возврат к SMB. Недостаточно данных TDD.</string>
-    <string name="fallback_to_isf_no_tdd">Откат к чувствительности профиля. Недостаточно данных TDD.</string>
     <!-- Autotune -->
     <string name="autotune_description">Помощь в возможной корректировке профиля (ISF, IC, базал)</string>
     <string name="autotune_shortname">АвтТюн</string>
