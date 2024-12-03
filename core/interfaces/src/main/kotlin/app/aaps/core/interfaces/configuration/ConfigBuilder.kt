@@ -2,7 +2,6 @@ package app.aaps.core.interfaces.configuration
 
 import android.widget.LinearLayout
 import androidx.annotation.StringRes
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -37,8 +36,7 @@ interface ConfigBuilder {
      * @param pluginType plugin category for example SYNC
      * @param plugins list of plugins
      * @param pluginViewHolders links to created UI elements (for calling `update` if configuration is changed)
-     * @param fragment
-     * @param activity either fragment or activity must be non null
+     * @param activity activity
      * @param parent UI container to add views
      */
     fun createViewsForPlugins(
@@ -47,12 +45,11 @@ interface ConfigBuilder {
         pluginType: PluginType,
         plugins: List<PluginBase>,
         pluginViewHolders: ArrayList<PluginViewHolderInterface>,
-        fragment: Fragment? = null,
-        activity: FragmentActivity? = null,
+        activity: FragmentActivity,
         parent: LinearLayout
     )
 
-    interface PluginViewHolderInterface {
+    fun interface PluginViewHolderInterface {
 
         fun update()
     }

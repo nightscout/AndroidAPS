@@ -5,15 +5,9 @@ import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.CheckBox
-import android.widget.ImageButton
-import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.RadioButton
-import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.ue.Action
@@ -48,7 +42,8 @@ import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.plugins.configuration.R
 import app.aaps.plugins.configuration.configBuilder.events.EventConfigBuilderUpdateGui
-import java.security.InvalidParameterException
+import app.aaps.plugins.configuration.databinding.ConfigbuilderSingleCategoryBinding
+import app.aaps.plugins.configuration.databinding.ConfigbuilderSinglePluginBinding
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -154,7 +149,7 @@ class ConfigBuilderPlugin @Inject constructor(
     }
 
     // Ask when switching to physical pump plugin
-    fun switchAllowed(changedPlugin: PluginBase, newState: Boolean, activity: FragmentActivity?, type: PluginType) {
+    fun switchAllowed(changedPlugin: PluginBase, newState: Boolean, activity: FragmentActivity, type: PluginType) {
         if (changedPlugin.getType() == PluginType.PUMP && changedPlugin.name != rh.gs(app.aaps.core.ui.R.string.virtual_pump))
             confirmPumpPluginActivation(changedPlugin, newState, activity, type)
         else if (changedPlugin.getType() == PluginType.PUMP) {
@@ -163,9 +158,9 @@ class ConfigBuilderPlugin @Inject constructor(
         } else performPluginSwitch(changedPlugin, newState, type)
     }
 
-    private fun confirmPumpPluginActivation(changedPlugin: PluginBase, newState: Boolean, activity: FragmentActivity?, type: PluginType) {
+    private fun confirmPumpPluginActivation(changedPlugin: PluginBase, newState: Boolean, activity: FragmentActivity, type: PluginType) {
         val allowHardwarePump = sp.getBoolean("allow_hardware_pump", false)
-        if (allowHardwarePump || activity == null) {
+        if (allowHardwarePump) {
             performPluginSwitch(changedPlugin, newState, type)
             pumpSync.connectNewPump()
         } else {
@@ -188,25 +183,27 @@ class ConfigBuilderPlugin @Inject constructor(
     }
 
     override fun performPluginSwitch(changedPlugin: PluginBase, enabled: Boolean, type: PluginType) {
-        if (enabled && !changedPlugin.isEnabled()) {
-            uel.log(
-                Action.PLUGIN_ENABLED, Sources.ConfigBuilder, rh.gs(changedPlugin.pluginDescription.pluginName),
-                ValueWithUnit.SimpleString(rh.gsNotLocalised(changedPlugin.pluginDescription.pluginName))
-            )
-        } else if (!enabled) {
-            uel.log(
-                Action.PLUGIN_DISABLED, Sources.ConfigBuilder, rh.gs(changedPlugin.pluginDescription.pluginName),
-                ValueWithUnit.SimpleString(rh.gsNotLocalised(changedPlugin.pluginDescription.pluginName))
-            )
-        }
-        changedPlugin.setPluginEnabled(type, enabled)
-        changedPlugin.setFragmentVisible(type, enabled)
-        processOnEnabledCategoryChanged(changedPlugin, type)
-        storeSettings("RemoteConfiguration")
-        rxBus.send(EventRebuildTabs())
-        rxBus.send(EventConfigBuilderChange())
-        rxBus.send(EventConfigBuilderUpdateGui())
-        logPluginStatus()
+        Thread {
+            if (enabled && !changedPlugin.isEnabled()) {
+                uel.log(
+                    Action.PLUGIN_ENABLED, Sources.ConfigBuilder, rh.gs(changedPlugin.pluginDescription.pluginName),
+                    ValueWithUnit.SimpleString(rh.gsNotLocalised(changedPlugin.pluginDescription.pluginName))
+                )
+            } else if (!enabled) {
+                uel.log(
+                    Action.PLUGIN_DISABLED, Sources.ConfigBuilder, rh.gs(changedPlugin.pluginDescription.pluginName),
+                    ValueWithUnit.SimpleString(rh.gsNotLocalised(changedPlugin.pluginDescription.pluginName))
+                )
+            }
+            changedPlugin.setPluginEnabled(type, enabled)
+            changedPlugin.setFragmentVisible(type, enabled)
+            processOnEnabledCategoryChanged(changedPlugin, type)
+            storeSettings("RemoteConfiguration")
+            rxBus.send(EventRebuildTabs())
+            rxBus.send(EventConfigBuilderChange())
+            rxBus.send(EventConfigBuilderUpdateGui())
+            logPluginStatus()
+        }.start()
     }
 
     override fun processOnEnabledCategoryChanged(changedPlugin: PluginBase, type: PluginType) {
@@ -222,7 +219,7 @@ class ConfigBuilderPlugin @Inject constructor(
             // Process only NSClients
             changedPlugin is NsClient      -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(NsClient::class.java)
 
-            else                           -> {
+            else                           -> { // do nothing
             }
         }
         if (pluginsInCategory != null) {
@@ -250,110 +247,112 @@ class ConfigBuilderPlugin @Inject constructor(
         pluginType: PluginType,
         plugins: List<PluginBase>,
         pluginViewHolders: ArrayList<ConfigBuilder.PluginViewHolderInterface>,
-        fragment: Fragment?,
-        activity: FragmentActivity?,
+        activity: FragmentActivity,
         parent: LinearLayout
     ) {
         if (plugins.isEmpty()) return
-        val layoutInflater = fragment?.layoutInflater ?: activity?.layoutInflater ?: throw InvalidParameterException()
+        val layoutInflater = activity.layoutInflater
 
-        @Suppress("InflateParams")
-        val holder = layoutInflater.inflate(R.layout.configbuilder_single_category, null) as LinearLayout
-        holder.findViewById<TextView>(R.id.category_title).let {
-            if (title != null) it.text = rh.gs(title)
-            else it.visibility = View.GONE
+        val layout = ConfigbuilderSingleCategoryBinding.inflate(layoutInflater, parent, true)
+        val pluginsAdded = ArrayList<PluginViewHolder>()
+
+        if (title != null) layout.categoryTitle.text = rh.gs(title)
+        else layout.categoryTitle.visibility = View.GONE
+        layout.categoryVisibility.visibility = preferences.simpleMode.not().toVisibility()
+        layout.categoryDescription.text = rh.gs(description)
+        layout.categoryExpandLess.setOnClickListener {
+            layout.categoryExpandLess.visibility = false.toVisibility()
+            layout.categoryExpandMore.visibility = true.toVisibility()
+            pluginsAdded.forEach { pluginViewHolder ->
+                pluginViewHolder.layout.root.visibility = pluginViewHolder.plugin.isEnabled().toVisibility()
+            }
         }
-        if (preferences.simpleMode) holder.findViewById<View>(R.id.category_visibility).visibility = false.toVisibility()
-        holder.findViewById<TextView>(R.id.category_description).text = rh.gs(description)
-        val pluginContainer = holder.findViewById<LinearLayout>(R.id.category_plugins)
-        val appActivity = fragment?.activity ?: activity ?: throw InvalidParameterException()
+        layout.categoryExpandMore.setOnClickListener {
+            layout.categoryExpandLess.visibility = true.toVisibility()
+            layout.categoryExpandMore.visibility = false.toVisibility()
+            pluginsAdded.forEach { pluginViewHolder ->
+                pluginViewHolder.layout.root.visibility = true.toVisibility()
+            }
+        }
         for (plugin in plugins) {
-            val pluginViewHolder = PluginViewHolder(layoutInflater, appActivity, pluginType, plugin)
-            pluginContainer.addView(pluginViewHolder.baseView)
+            val pluginViewHolder = PluginViewHolder(layoutInflater, activity, pluginType, plugin)
+            layout.categoryPlugins.addView(pluginViewHolder.layout.root)
             pluginViewHolders.add(pluginViewHolder)
+            pluginsAdded.add(pluginViewHolder)
         }
-        parent.addView(holder)
+        layout.categoryExpandLess.callOnClick()
     }
 
     inner class PluginViewHolder internal constructor(
         layoutInflater: LayoutInflater,
         private val activity: FragmentActivity,
         private val pluginType: PluginType,
-        private val plugin: PluginBase
+        val plugin: PluginBase
     ) : ConfigBuilder.PluginViewHolderInterface {
 
-        @Suppress("InflateParams")
-        val baseView: LinearLayout = layoutInflater.inflate(R.layout.configbuilder_single_plugin, null) as LinearLayout
-        private val enabledExclusive: RadioButton = baseView.findViewById(R.id.plugin_enabled_exclusive)
-        private val enabledInclusive: CheckBox = baseView.findViewById(R.id.plugin_enabled_inclusive)
-        private val pluginIcon: ImageView = baseView.findViewById(R.id.plugin_icon)
-        private val pluginIcon2: ImageView = baseView.findViewById(R.id.plugin_icon2)
-        private val pluginName: TextView = baseView.findViewById(R.id.plugin_name)
-        private val pluginDescription: TextView = baseView.findViewById(R.id.plugin_description)
-        private val pluginPreferences: ImageButton = baseView.findViewById(R.id.plugin_preferences)
-        private val pluginVisibility: CheckBox = baseView.findViewById(R.id.plugin_visibility)
-
-        init {
-
-            pluginVisibility.setOnClickListener {
-                plugin.setFragmentVisible(pluginType, pluginVisibility.isChecked)
+        val layout = ConfigbuilderSinglePluginBinding.inflate(layoutInflater, null, false).also { layout ->
+            layout.pluginVisibility.setOnClickListener {
+                plugin.setFragmentVisible(pluginType, layout.pluginVisibility.isChecked)
                 storeSettings("CheckedCheckboxVisible")
                 rxBus.send(EventRebuildTabs())
                 logPluginStatus()
             }
 
-            enabledExclusive.setOnClickListener {
-                switchAllowed(plugin, if (enabledExclusive.visibility == View.VISIBLE) enabledExclusive.isChecked else enabledInclusive.isChecked, activity, pluginType)
+            layout.pluginEnabledExclusive.setOnClickListener {
+                switchAllowed(plugin, if (layout.pluginEnabledExclusive.visibility == View.VISIBLE) layout.pluginEnabledExclusive.isChecked else layout.pluginEnabledInclusive.isChecked, activity, pluginType)
             }
-            enabledInclusive.setOnClickListener {
-                switchAllowed(plugin, if (enabledExclusive.visibility == View.VISIBLE) enabledExclusive.isChecked else enabledInclusive.isChecked, activity, pluginType)
+            layout.pluginEnabledInclusive.setOnClickListener {
+                switchAllowed(plugin, if (layout.pluginEnabledExclusive.visibility == View.VISIBLE) layout.pluginEnabledExclusive.isChecked else layout.pluginEnabledInclusive.isChecked, activity, pluginType)
             }
 
-            pluginPreferences.setOnClickListener {
+            layout.pluginPreferences.setOnClickListener {
                 protectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, {
                     val i = Intent(activity, uiInteraction.preferencesActivity)
                     i.putExtra(UiInteraction.PLUGIN_NAME, plugin.javaClass.simpleName)
                     activity.startActivity(i)
                 }, null)
             }
+        }
+
+        init {
             update()
         }
 
         override fun update() {
-            enabledExclusive.visibility = areMultipleSelectionsAllowed(pluginType).not().toVisibility()
-            enabledInclusive.visibility = areMultipleSelectionsAllowed(pluginType).toVisibility()
-            enabledExclusive.isChecked = plugin.isEnabled(pluginType)
-            enabledInclusive.isChecked = plugin.isEnabled(pluginType)
-            enabledInclusive.isEnabled = !plugin.pluginDescription.alwaysEnabled
-            enabledExclusive.isEnabled = !plugin.pluginDescription.alwaysEnabled
+            layout.pluginEnabledExclusive.visibility = areMultipleSelectionsAllowed(pluginType).not().toVisibility()
+            layout.pluginEnabledInclusive.visibility = areMultipleSelectionsAllowed(pluginType).toVisibility()
+            layout.pluginEnabledExclusive.isChecked = plugin.isEnabled(pluginType)
+            layout.pluginEnabledInclusive.isChecked = plugin.isEnabled(pluginType)
+            layout.pluginEnabledInclusive.isEnabled = !plugin.pluginDescription.alwaysEnabled
+            layout.pluginEnabledExclusive.isEnabled = !plugin.pluginDescription.alwaysEnabled
             if (plugin.menuIcon != -1) {
-                pluginIcon.visibility = View.VISIBLE
-                pluginIcon.setImageDrawable(ContextCompat.getDrawable(activity, plugin.menuIcon))
+                layout.pluginIcon.visibility = View.VISIBLE
+                layout.pluginIcon.setImageDrawable(ContextCompat.getDrawable(activity, plugin.menuIcon))
                 if (plugin.menuIcon2 != -1) {
-                    pluginIcon2.visibility = View.VISIBLE
-                    pluginIcon2.setImageDrawable(ContextCompat.getDrawable(activity, plugin.menuIcon2))
+                    layout.pluginIcon2.visibility = View.VISIBLE
+                    layout.pluginIcon2.setImageDrawable(ContextCompat.getDrawable(activity, plugin.menuIcon2))
                 } else {
-                    pluginIcon2.visibility = View.GONE
+                    layout.pluginIcon2.visibility = View.GONE
                 }
             } else {
-                pluginIcon.visibility = View.GONE
+                layout.pluginIcon.visibility = View.GONE
             }
-            pluginName.text = plugin.name
+            layout.pluginName.text = plugin.name
             if (plugin.description == null)
-                pluginDescription.visibility = View.GONE
+                layout.pluginDescription.visibility = View.GONE
             else {
-                pluginDescription.visibility = View.VISIBLE
-                pluginDescription.text = plugin.description
+                layout.pluginDescription.visibility = View.VISIBLE
+                layout.pluginDescription.text = plugin.description
             }
             if (preferences.simpleMode) {
-                pluginPreferences.visibility =
+                layout.pluginPreferences.visibility =
                     if (plugin.preferencesId == PluginDescription.PREFERENCE_NONE || !plugin.isEnabled(pluginType) || !plugin.pluginDescription.preferencesVisibleInSimpleMode) View.INVISIBLE else View.VISIBLE
-                pluginVisibility.visibility = false.toVisibility()
+                layout.pluginVisibility.visibility = false.toVisibility()
             } else {
-                pluginPreferences.visibility = if (plugin.preferencesId == PluginDescription.PREFERENCE_NONE || !plugin.isEnabled(pluginType)) View.INVISIBLE else View.VISIBLE
-                pluginVisibility.visibility = plugin.hasFragment().toVisibility()
-                pluginVisibility.isEnabled = !(plugin.pluginDescription.neverVisible || plugin.pluginDescription.alwaysVisible) && plugin.isEnabled(pluginType)
-                pluginVisibility.isChecked = plugin.isFragmentVisible()
+                layout.pluginPreferences.visibility = if (plugin.preferencesId == PluginDescription.PREFERENCE_NONE || !plugin.isEnabled(pluginType)) View.INVISIBLE else View.VISIBLE
+                layout.pluginVisibility.visibility = plugin.hasFragment().toVisibility()
+                layout.pluginVisibility.isEnabled = !(plugin.pluginDescription.neverVisible || plugin.pluginDescription.alwaysVisible) && plugin.isEnabled(pluginType)
+                layout.pluginVisibility.isChecked = plugin.isFragmentVisible()
             }
         }
 
