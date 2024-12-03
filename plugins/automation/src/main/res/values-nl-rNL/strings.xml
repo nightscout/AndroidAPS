@@ -6,6 +6,8 @@
     <string name="automation_missing_task_name">Voer een taaknaam in.</string>
     <string name="automation_missing_trigger">Voer minstens één trigger in.</string>
     <string name="automation_missing_action">Voer minstens één actie in.</string>
+    <string name="exportsettings_message">Instellingen Exporteren: %1$s</string>
+    <string name="export_settings_short">Tekst in behandelingen:</string>
     <string name="alarm_message">Alarm: %1$s</string>
     <string name="alarm_short">Alarm:</string>
     <string name="message_short">Boodsch:</string>
@@ -91,6 +93,8 @@
     <string name="triggerSensorAgeDesc">Sensor leeftijd %1$s %2$.1f uur</string>
     <string name="triggerCannulaAgeLabel">Canule leeftijd</string>
     <string name="triggerCannulaAgeDesc">Canule leeftijd %1$s %2$.1f uur</string>
+    <string name="triggerPodChangeLabel">Pod activering</string>
+    <string name="triggerPodChangeDesc">Pod geactiveerd</string>
     <string name="triggerInsulinAgeLabel">Insuline leeftijd</string>
     <string name="triggerInsulinAgeDesc">Insuline leeftijd %1$s %2$.1f uur</string>
     <string name="triggerPumpBatteryAgeLabel">Pomp batterij leeftijd</string>
