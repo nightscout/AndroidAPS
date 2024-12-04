@@ -66,7 +66,9 @@
     <string name="enable_smb_summary">Usar microbolos en lugar de basales temporales, para corregir más rápidamente</string>
     <string name="enable_uam_summary">Detectar comidas no anunciadas (UAM)</string>
     <string name="enable_smb_always">Habilitar SMB siempre</string>
+    <string name="enable_smb_always_summary">Habilitar SMB siempre, independientemente de los COB, objetivos temporales o bolos. Sólo se puede usar con sensores de glucosa con filtrado avanzado de datos</string>
     <string name="enable_smb_after_carbs">Habilitar SMB después de carbohidratos</string>
+    <string name="enable_smb_after_carbs_summary">Habilitar SMB 6h después de los carbohidratos, incluso con 0 COB. Sólo es posible con sensores de glucosa con filtrado avanzado de datos</string>
     <string name="enable_smb_with_cob">Habilitar SMB con carbohidratos</string>
     <string name="enable_smb_with_cob_summary">Habilitar SMB cuando hay carbohidratos activos (COB)</string>
     <string name="enable_smb_with_temp_target">Habilitar SMB con objetivos temporales </string>
