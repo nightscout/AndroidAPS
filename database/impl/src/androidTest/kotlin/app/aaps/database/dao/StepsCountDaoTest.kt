@@ -55,7 +55,10 @@ class StepsCountDaoTest {
 
     @Test
     fun new_insertAndFind() {
-        createDatabase().use { db -> insertAndFind(db) }
+        createDatabase().also { db ->
+            insertAndFind(db)
+            db.close()
+        }
     }
 
     @Test
@@ -86,12 +89,15 @@ class StepsCountDaoTest {
         // Room.databaseBuilder will use the previously created db file that has version 22.
         Room.databaseBuilder(ApplicationProvider.getApplicationContext(), AppDatabase::class.java, TEST_DB_NAME)
             .addMigrations(*DatabaseModule().migrations)
-            .build().use { db -> insertAndFind(db) }
+            .build().also { db ->
+                insertAndFind(db)
+                db.close()
+            }
     }
 
     @Test
     fun getFromTime() {
-        createDatabase().use { db ->
+        createDatabase().also { db ->
             val dao = db.stepsCountDao
             val timestamp = System.currentTimeMillis()
             val sc1 = createStepsCount(timestamp = timestamp, steps5Min = 80)
@@ -102,12 +108,13 @@ class StepsCountDaoTest {
             Assert.assertEquals(listOf(sc1, sc2), dao.getFromTime(timestamp).blockingGet())
             Assert.assertEquals(listOf(sc2), dao.getFromTime(timestamp + 1).blockingGet())
             Assert.assertTrue(dao.getFromTime(timestamp + 2).blockingGet().isEmpty())
+            db.close()
         }
     }
 
     @Test
     fun getFromTimeToTime() {
-        createDatabase().use { db ->
+        createDatabase().also { db ->
             val dao = db.stepsCountDao
             val timestamp = System.currentTimeMillis()
             val hr1 = createStepsCount(timestamp = timestamp, steps5Min = 80)
@@ -121,6 +128,7 @@ class StepsCountDaoTest {
             Assert.assertEquals(listOf(hr1, hr2), dao.getFromTimeToTime(timestamp, timestamp + 1).blockingGet())
             Assert.assertEquals(listOf(hr2), dao.getFromTimeToTime(timestamp + 1, timestamp + 1).blockingGet())
             Assert.assertTrue(dao.getFromTimeToTime(timestamp + 3, timestamp + 10).blockingGet().isEmpty())
+            db.close()
         }
     }
 
