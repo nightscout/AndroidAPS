@@ -39,6 +39,7 @@ class ConfigImpl @Inject constructor(
     private var isUnfinishedMode: Boolean? = null
     private var showUserActionsOnWatchOnly: Boolean? = null
     private var ignoreNightscoutV3Errors: Boolean? = null
+    private var doNotSendSmsOnProfileChange: Boolean? = null
 
     override fun isEngineeringModeOrRelease(): Boolean = if (!APS) true else isEngineeringMode() || !isDev()
     override fun isEngineeringMode(): Boolean = isEngineeringMode ?: (fileListProvider.ensureExtraDirExists()?.findFile("engineering_mode") != null).also { isEngineeringMode = it }
@@ -46,4 +47,5 @@ class ConfigImpl @Inject constructor(
     override fun isDev(): Boolean = (VERSION.contains("-") || VERSION.matches(Regex(".*[a-zA-Z]+.*"))) && !VERSION.contains("-beta") && !VERSION.contains("-rc")
     override fun showUserActionsOnWatchOnly(): Boolean = showUserActionsOnWatchOnly ?: (fileListProvider.ensureExtraDirExists()?.findFile("show_user_actions_on_watch_only") != null).also { showUserActionsOnWatchOnly = it }
     override fun ignoreNightscoutV3Errors(): Boolean = ignoreNightscoutV3Errors ?: (fileListProvider.ensureExtraDirExists()?.findFile("ignore_nightscout_v3_errors") != null).also { ignoreNightscoutV3Errors = it }
+    override fun doNotSendSmsOnProfileChange(): Boolean = doNotSendSmsOnProfileChange ?: (fileListProvider.ensureExtraDirExists()?.findFile("do_not_send_sms_on_profile_change") != null).also { doNotSendSmsOnProfileChange = it }
 }
