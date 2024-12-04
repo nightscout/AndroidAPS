@@ -52,7 +52,8 @@ class SWPlugin(injector: HasAndroidInjector, private val definition: SWDefinitio
             plugins = activePlugin.getSpecificPluginsVisibleInList(pType),
             pluginViewHolders = pluginViewHolders,
             activity = definition.activity,
-            parent = layout
+            parent = layout,
+            showExpanded = true
         )
         super.generateDialog(layout)
     }

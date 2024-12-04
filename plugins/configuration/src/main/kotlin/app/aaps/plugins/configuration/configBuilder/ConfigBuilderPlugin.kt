@@ -248,7 +248,8 @@ class ConfigBuilderPlugin @Inject constructor(
         plugins: List<PluginBase>,
         pluginViewHolders: ArrayList<ConfigBuilder.PluginViewHolderInterface>,
         activity: FragmentActivity,
-        parent: LinearLayout
+        parent: LinearLayout,
+        showExpanded: Boolean
     ) {
         if (plugins.isEmpty()) return
         val layoutInflater = activity.layoutInflater
@@ -280,7 +281,8 @@ class ConfigBuilderPlugin @Inject constructor(
             pluginViewHolders.add(pluginViewHolder)
             pluginsAdded.add(pluginViewHolder)
         }
-        layout.categoryExpandLess.callOnClick()
+        if (showExpanded) layout.categoryExpandMore.callOnClick()
+        else layout.categoryExpandLess.callOnClick()
     }
 
     inner class PluginViewHolder internal constructor(

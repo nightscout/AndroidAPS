@@ -38,6 +38,7 @@ interface ConfigBuilder {
      * @param pluginViewHolders links to created UI elements (for calling `update` if configuration is changed)
      * @param activity activity
      * @param parent UI container to add views
+     * @param showExpanded display as expanded on first view
      */
     fun createViewsForPlugins(
         @StringRes title: Int?,
@@ -46,7 +47,8 @@ interface ConfigBuilder {
         plugins: List<PluginBase>,
         pluginViewHolders: ArrayList<PluginViewHolderInterface>,
         activity: FragmentActivity,
-        parent: LinearLayout
+        parent: LinearLayout,
+        showExpanded: Boolean = false
     )
 
     fun interface PluginViewHolderInterface {
