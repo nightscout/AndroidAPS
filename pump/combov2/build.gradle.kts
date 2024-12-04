@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
+    alias(libs.plugins.ksp)
     id("kotlin-android")
-    id("kotlin-kapt")
     id("android-module-dependencies")
     id("test-module-dependencies")
     id("jacoco-module-dependencies")
@@ -9,9 +9,6 @@ plugins {
 
 android {
     namespace = "info.nightscout.pump.combov2"
-    buildFeatures {
-        dataBinding = true
-    }
 }
 
 dependencies {
@@ -43,6 +40,6 @@ dependencies {
     api(platform(libs.kotlinx.serialization.bom))
     runtimeOnly(libs.kotlinx.serialization.core)
 
-    kapt(libs.com.google.dagger.compiler)
-    kapt(libs.com.google.dagger.android.processor)
+    ksp(libs.com.google.dagger.compiler)
+    ksp(libs.com.google.dagger.android.processor)
 }
