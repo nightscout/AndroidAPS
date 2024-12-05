@@ -166,7 +166,7 @@ class ProfileFunctionImpl @Inject constructor(
 
     override fun createProfileSwitch(
         profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long,
-        action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>
+        action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>
     ): Boolean {
         val ps = buildProfileSwitch(profileStore, profileName, durationInMinutes, percentage, timeShiftInHours, timestamp) ?: return false
         disposable += persistenceLayer.insertOrUpdateProfileSwitch(ps, action, source, note, listValues).subscribe()
@@ -175,7 +175,7 @@ class ProfileFunctionImpl @Inject constructor(
 
     override fun createProfileSwitch(
         durationInMinutes: Int, percentage: Int, timeShiftInHours: Int,
-        action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>
+        action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>
     ): Boolean {
         val profile = persistenceLayer.getPermanentProfileSwitchActiveAt(dateUtil.now()) ?: return false
         val profileStore = activePlugin.activeProfileSource.profile ?: return false

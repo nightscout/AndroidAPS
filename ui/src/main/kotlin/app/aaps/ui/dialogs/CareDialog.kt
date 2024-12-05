@@ -231,7 +231,7 @@ class CareDialog : DialogFragmentWithDate() {
                     action = Action.CAREPORTAL,
                     source = source,
                     note = notes,
-                    listValues = valuesWithUnit
+                    listValues = valuesWithUnit.filterNotNull()
                 ).subscribe()
             }, null)
         }

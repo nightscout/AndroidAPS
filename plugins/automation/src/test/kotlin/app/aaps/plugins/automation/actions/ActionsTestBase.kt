@@ -48,8 +48,8 @@ ActionsTestBase : TestBaseWithProfile() {
         override fun invoke(initiator: String, allowNotification: Boolean, tempBasalFallback: Boolean) {}
         override fun acceptChangeRequest() {}
         override fun minutesToEndOfSuspend(): Int = 0
-        override fun goToZeroTemp(durationInMinutes: Int, profile: Profile, reason: OE.Reason, action: app.aaps.core.data.ue.Action, source: Sources, listValues: List<ValueWithUnit?>) {}
-        override fun suspendLoop(durationInMinutes: Int, action: app.aaps.core.data.ue.Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>) {}
+        override fun goToZeroTemp(durationInMinutes: Int, profile: Profile, reason: OE.Reason, action: app.aaps.core.data.ue.Action, source: Sources, listValues: List<ValueWithUnit>) {}
+        override fun suspendLoop(durationInMinutes: Int, action: app.aaps.core.data.ue.Action, source: Sources, note: String?, listValues: List<ValueWithUnit>) {}
         override fun disableCarbSuggestions(durationMinutes: Int) {}
         override fun buildAndStoreDeviceStatus() {}
         override fun entries(): Array<CharSequence> = emptyArray()

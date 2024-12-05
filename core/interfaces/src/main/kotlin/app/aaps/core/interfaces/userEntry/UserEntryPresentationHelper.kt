@@ -13,6 +13,6 @@ interface UserEntryPresentationHelper {
     @ColorRes fun colorId(colorGroup: Action.ColorGroup): Int
     @DrawableRes fun iconId(source: Sources): Int
     fun actionToColoredString(action: Action): Spanned
-    fun listToPresentationString(list: List<ValueWithUnit?>): String
+    fun listToPresentationString(list: List<ValueWithUnit>): String
     fun userEntriesToCsv(userEntries: List<UE>): String
 }

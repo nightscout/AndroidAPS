@@ -212,7 +212,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
                                 ValueWithUnit.Percent(percent),
                                 ValueWithUnit.Hour(timeShift).takeIf { timeShift != 0 },
                                 ValueWithUnit.Minute(duration).takeIf { duration != 0 }
-                            )
+                            ).filterNotNull()
                         )
                     ) {
                         if (percent == 90 && duration == 10) sp.putBoolean(app.aaps.core.utils.R.string.key_objectiveuseprofileswitch, true)
@@ -233,7 +233,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
                                     ValueWithUnit.TETTReason(TT.Reason.ACTIVITY),
                                     ValueWithUnit.fromGlucoseUnit(target, units),
                                     ValueWithUnit.Minute(duration)
-                                )
+                                ).filterNotNull()
                             ).subscribe()
                         }
                     }

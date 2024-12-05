@@ -13,5 +13,5 @@ data class PreferenceChange(
     override var timestamp: Long,
     override var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
     var key: String,
-    var value: Any?
+    var value: String
 ) : DBEntry, DBEntryWithTime

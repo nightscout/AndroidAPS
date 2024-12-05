@@ -9,7 +9,9 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import app.aaps.database.AppDatabase
 import app.aaps.database.entities.TABLE_APS_RESULTS
 import app.aaps.database.entities.TABLE_HEART_RATE
+import app.aaps.database.entities.TABLE_PREFERENCE_CHANGES
 import app.aaps.database.entities.TABLE_STEPS_COUNT
+import app.aaps.database.entities.TABLE_USER_ENTRY
 import dagger.Module
 import dagger.Provides
 import javax.inject.Qualifier
@@ -163,7 +165,20 @@ open class DatabaseModule {
         }
     }
 
+    private val migration28to29 = object : Migration(28, 29) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL("DROP TABLE IF EXISTS $TABLE_PREFERENCE_CHANGES")
+            database.execSQL("CREATE TABLE IF NOT EXISTS `$TABLE_PREFERENCE_CHANGES` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `key` TEXT NOT NULL, `value` TEXT NOT NULL)")
+            database.execSQL("DROP TABLE IF EXISTS $TABLE_USER_ENTRY")
+            database.execSQL("CREATE TABLE IF NOT EXISTS `$TABLE_USER_ENTRY` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `action` TEXT NOT NULL, `source` TEXT NOT NULL, `note` TEXT NOT NULL, `values` TEXT NOT NULL)")
+            database.execSQL("CREATE INDEX IF NOT EXISTS `index_userEntry_source` ON `$TABLE_USER_ENTRY` (`source`)")
+            database.execSQL("CREATE INDEX IF NOT EXISTS `index_userEntry_timestamp` ON `$TABLE_USER_ENTRY` (`timestamp`)")
+            // Custom indexes must be dropped on migration to pass room schema checking after upgrade
+            dropCustomIndexes(database)
+        }
+    }
+
     /** List of all migrations for easy reply in tests. */
     @VisibleForTesting
-    internal val migrations = arrayOf(migration20to21, migration21to22, migration22to23, migration23to24, migration24to25, migration25to26, migration26to27, migration27to28)
+    internal val migrations = arrayOf(migration20to21, migration21to22, migration22to23, migration23to24, migration24to25, migration25to26, migration26to27, migration27to28, migration28to29)
 }

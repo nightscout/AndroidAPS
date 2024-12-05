@@ -147,7 +147,7 @@ interface PersistenceLayer {
      * @param listValues Values for UserEntry logging
      * @return List of changed records
      */
-    fun invalidateBolus(id: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit?>): Single<TransactionResult<BS>>
+    fun invalidateBolus(id: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>): Single<TransactionResult<BS>>
 
     /**
      * Sync record coming from pump to database
@@ -291,7 +291,7 @@ interface PersistenceLayer {
      * @param listValues Values for UserEntry logging
      * @return List of changed records
      */
-    fun invalidateCarbs(id: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit?>): Single<TransactionResult<CA>>
+    fun invalidateCarbs(id: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>): Single<TransactionResult<CA>>
 
     /**
      * Invalidate record with id
@@ -391,7 +391,7 @@ interface PersistenceLayer {
      * @param listValues Values for UserEntry logging
      * @return List of changed records
      */
-    fun invalidateBolusCalculatorResult(id: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit?>): Single<TransactionResult<BCR>>
+    fun invalidateBolusCalculatorResult(id: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>): Single<TransactionResult<BCR>>
 
     // GV
     fun getLastGlucoseValue(): GV?
@@ -423,7 +423,7 @@ interface PersistenceLayer {
      * @param listValues Values for UserEntry logging
      * @return List of changed records
      */
-    fun invalidateGlucoseValue(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>): Single<TransactionResult<GV>>
+    fun invalidateGlucoseValue(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): Single<TransactionResult<GV>>
     fun insertCgmSourceData(caller: Sources, glucoseValues: List<GV>, calibrations: List<Calibration>, sensorInsertionTime: Long?): Single<TransactionResult<GV>>
 
     /**
@@ -515,7 +515,7 @@ interface PersistenceLayer {
      * @param listValues Values for UserEntry logging
      * @return List of changed records
      */
-    fun invalidateEffectiveProfileSwitch(id: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit?>): Single<TransactionResult<EPS>>
+    fun invalidateEffectiveProfileSwitch(id: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>): Single<TransactionResult<EPS>>
 
     /**
      * Store records coming from NS to database
@@ -606,7 +606,7 @@ interface PersistenceLayer {
      * @param listValues Values for UserEntry logging
      * @return List of inserted/updated records
      */
-    fun insertOrUpdateProfileSwitch(profileSwitch: PS, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit?>): Single<TransactionResult<PS>>
+    fun insertOrUpdateProfileSwitch(profileSwitch: PS, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>): Single<TransactionResult<PS>>
 
     /**
      * Invalidate record with id
@@ -618,7 +618,7 @@ interface PersistenceLayer {
      * @param listValues Values for UserEntry logging
      * @return List of changed records
      */
-    fun invalidateProfileSwitch(id: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit?>): Single<TransactionResult<PS>>
+    fun invalidateProfileSwitch(id: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>): Single<TransactionResult<PS>>
 
     /**
      * Store records coming from NS to database
@@ -719,7 +719,7 @@ interface PersistenceLayer {
      * @param listValues Values for UserEntry logging
      * @return List of changed records
      */
-    fun invalidateTemporaryBasal(id: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit?>): Single<TransactionResult<TB>>
+    fun invalidateTemporaryBasal(id: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>): Single<TransactionResult<TB>>
 
     /**
      * Store records coming from NS to database
@@ -866,7 +866,7 @@ interface PersistenceLayer {
      * @param listValues Values for UserEntry logging
      * @return List of changed records
      */
-    fun invalidateExtendedBolus(id: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit?>): Single<TransactionResult<EB>>
+    fun invalidateExtendedBolus(id: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>): Single<TransactionResult<EB>>
 
     /**
      * Store records coming from NS to database
@@ -945,9 +945,9 @@ interface PersistenceLayer {
      * @param listValues Values for UserEntry logging
      * @return List of changed records
      */
-    fun invalidateTemporaryTarget(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>): Single<TransactionResult<TT>>
-    fun insertAndCancelCurrentTemporaryTarget(temporaryTarget: TT, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>): Single<TransactionResult<TT>>
-    fun cancelCurrentTemporaryTargetIfAny(timestamp: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>): Single<TransactionResult<TT>>
+    fun invalidateTemporaryTarget(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): Single<TransactionResult<TT>>
+    fun insertAndCancelCurrentTemporaryTarget(temporaryTarget: TT, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): Single<TransactionResult<TT>>
+    fun cancelCurrentTemporaryTargetIfAny(timestamp: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): Single<TransactionResult<TT>>
 
     /**
      * Store records coming from NS to database
@@ -1008,7 +1008,7 @@ interface PersistenceLayer {
         action: Action,
         source: Sources,
         note: String?,
-        listValues: List<ValueWithUnit?>
+        listValues: List<ValueWithUnit>
     ): Single<TransactionResult<TE>>
 
     /**
@@ -1020,7 +1020,7 @@ interface PersistenceLayer {
      * @param listValues Values for UserEntry logging
      * @return List of changed records
      */
-    fun invalidateTherapyEvent(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>): Single<TransactionResult<TE>>
+    fun invalidateTherapyEvent(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>): Single<TransactionResult<TE>>
 
     /**
      * Invalidate records with notes containing string
@@ -1089,7 +1089,7 @@ interface PersistenceLayer {
      * @param source Source for UserEntry logging
      * @param listValues Values for UserEntry logging
      */
-    fun insertAndCancelCurrentOfflineEvent(offlineEvent: OE, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit?> = listOf()): Single<TransactionResult<OE>>
+    fun insertAndCancelCurrentOfflineEvent(offlineEvent: OE, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit> = listOf()): Single<TransactionResult<OE>>
 
     /**
      * Invalidate record with id
@@ -1101,7 +1101,7 @@ interface PersistenceLayer {
      * @param listValues Values for UserEntry logging
      * @return List of changed records
      */
-    fun invalidateOfflineEvent(id: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit?>): Single<TransactionResult<OE>>
+    fun invalidateOfflineEvent(id: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>): Single<TransactionResult<OE>>
 
     /**
      * Cancel offline event if there is some running at provided timestamp
@@ -1111,7 +1111,7 @@ interface PersistenceLayer {
      * @param source Source for UserEntry logging
      * @param listValues Values for UserEntry logging
      */
-    fun cancelCurrentOfflineEvent(timestamp: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit?> = listOf()): Single<TransactionResult<OE>>
+    fun cancelCurrentOfflineEvent(timestamp: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit> = listOf()): Single<TransactionResult<OE>>
 
     /**
      * Store records coming from NS to database
@@ -1306,7 +1306,7 @@ interface PersistenceLayer {
     /**
      * Insert or update if exists record
      *
-     * @param totalDailyDose record
+     * @param stepsCount record
      * @return List of inserted/updated records
      */
     fun insertOrUpdateStepsCount(stepsCount: SC): Single<TransactionResult<SC>>

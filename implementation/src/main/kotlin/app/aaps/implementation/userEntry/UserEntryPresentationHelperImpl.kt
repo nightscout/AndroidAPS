@@ -125,7 +125,7 @@ class UserEntryPresentationHelperImpl @Inject constructor(
 
     private fun coloredAction(action: Action): String = "<font color='${rh.gc(colorId(action.colorGroup))}'>${translator.translate(action)}</font>"
 
-    override fun listToPresentationString(list: List<ValueWithUnit?>) =
+    override fun listToPresentationString(list: List<ValueWithUnit>) =
         list.joinToString(separator = "  ", transform = this::toPresentationString)
 
     private fun toPresentationString(valueWithUnit: ValueWithUnit?): String = when (valueWithUnit) {

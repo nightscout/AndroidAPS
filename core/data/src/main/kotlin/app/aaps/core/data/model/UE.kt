@@ -12,5 +12,5 @@ data class UE(
     var action: Action,
     var source: Sources,
     var note: String,
-    var values: List<ValueWithUnit?>
+    var values: List<ValueWithUnit>
 )

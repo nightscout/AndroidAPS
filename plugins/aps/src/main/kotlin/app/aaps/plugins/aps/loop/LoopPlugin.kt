@@ -694,7 +694,7 @@ class LoopPlugin @Inject constructor(
         return virtualPump.isEnabled()
     }
 
-    override fun goToZeroTemp(durationInMinutes: Int, profile: Profile, reason: OE.Reason, action: Action, source: Sources, listValues: List<ValueWithUnit?>) {
+    override fun goToZeroTemp(durationInMinutes: Int, profile: Profile, reason: OE.Reason, action: Action, source: Sources, listValues: List<ValueWithUnit>) {
         val pump = activePlugin.activePump
         disposable += persistenceLayer.insertAndCancelCurrentOfflineEvent(
             offlineEvent = OE(
@@ -735,7 +735,7 @@ class LoopPlugin @Inject constructor(
         }
     }
 
-    override fun suspendLoop(durationInMinutes: Int, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>) {
+    override fun suspendLoop(durationInMinutes: Int, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>) {
         disposable += persistenceLayer.insertAndCancelCurrentOfflineEvent(
             offlineEvent = OE(timestamp = dateUtil.now(), duration = T.mins(durationInMinutes.toLong()).msecs(), reason = OE.Reason.SUSPEND),
             action = action,

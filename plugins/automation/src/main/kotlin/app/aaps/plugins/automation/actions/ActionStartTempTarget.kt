@@ -61,7 +61,7 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
                 ValueWithUnit.Mgdl(tt().lowTarget),
                 ValueWithUnit.Mgdl(tt().highTarget).takeIf { tt().lowTarget != tt().highTarget },
                 ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt().duration).toInt())
-            )
+            ).filterNotNull()
         ).subscribe(
             { callback.result(instantiator.providePumpEnactResult().success(true).comment(app.aaps.core.ui.R.string.ok)).run() },
             { callback.result(instantiator.providePumpEnactResult().success(false).comment(app.aaps.core.ui.R.string.error)).run() }

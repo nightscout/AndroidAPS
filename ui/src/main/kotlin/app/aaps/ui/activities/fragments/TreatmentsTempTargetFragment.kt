@@ -236,7 +236,7 @@ class TreatmentsTempTargetFragment : DaggerFragment(), MenuProvider {
                             ValueWithUnit.Mgdl(tempTarget.lowTarget),
                             ValueWithUnit.Mgdl(tempTarget.highTarget).takeIf { tempTarget.lowTarget != tempTarget.highTarget },
                             ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tempTarget.duration).toInt())
-                        )
+                        ).filterNotNull()
                     ).subscribe()
                 }
                 actionHelper.finish()
