@@ -12,12 +12,18 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.extensions.fromGv
 import kotlin.math.abs
+import kotlin.math.min
 import kotlin.math.roundToLong
 
 class AutosensDataStoreObject : AutosensDataStore {
 
     override val dataLock = Any()
     override var lastUsed5minCalculation: Boolean? = null // true if used 5min bucketed data
+
+    companion object {
+
+        const val IRREGULAR_DATA_SEC = 30L
+    }
 
     // we need to make sure that bucketed_data will always have the same timestamp for correct use of cached values
     // once referenceTime != null all bucketed data should be (x * 5min) from referenceTime
@@ -130,7 +136,7 @@ class AutosensDataStoreObject : AutosensDataStore {
             }
             val data: AutosensData = try {
                 autosensDataTable.valueAt(autosensDataTable.size() - 1)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 // data can be processed on the background
                 // in this rare case better return null and do not block UI
                 // APS plugin should use getLastAutosensDataSynchronized where the blocking is not an issue
@@ -172,7 +178,7 @@ class AutosensDataStoreObject : AutosensDataStore {
                 if (diff > T.mins(2).plus(T.secs(30)).msecs()) diff -= T.mins(5).msecs()
                 totalDiff += diff
                 diff = abs(diff)
-                if (diff > T.secs(30).msecs()) {
+                if (diff > T.secs(IRREGULAR_DATA_SEC).msecs()) {
                     aapsLogger.debug(LTag.AUTOSENS, "Interval detection: values: ${bgReadings.size} diff: ${diff / 1000}[s] is5minData: false")
                     return false
                 }
@@ -242,7 +248,7 @@ class AutosensDataStoreObject : AutosensDataStore {
                 val bgDelta = newer.value - older.value
                 val timeDiffToNew = newer.timestamp - currentTime
                 val timeDiffToOlder = currentTime - older.timestamp
-                val filledGap = timeDiffToOlder > T.mins(5).msecs() || timeDiffToNew > T.mins(5).msecs()
+                val filledGap = min(timeDiffToOlder, timeDiffToNew) > T.secs(IRREGULAR_DATA_SEC).msecs()
                 val currentBg = newer.value - timeDiffToNew.toDouble() / (newer.timestamp - older.timestamp) * bgDelta
                 val newBgReading = InMemoryGlucoseValue(currentTime, currentBg.roundToLong().toDouble(), filledGap = filledGap, sourceSensor = lastBg.sourceSensor)
                 newBucketedData.add(newBgReading)
