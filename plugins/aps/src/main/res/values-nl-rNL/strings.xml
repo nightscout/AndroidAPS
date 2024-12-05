@@ -11,6 +11,7 @@
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Lagere gevoeligheid voor temptargets < 100]]></string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamische ISF</string>
+    <string name="openaps_auto_isf">Auto ISF</string>
     <string name="smb_interval_summary">Tijdsinterval in minuten tussen afgeven van SMBs</string>
     <string name="resistance_lowers_target_title">Resistentie verlaagt het doel</string>
     <string name="resistance_lowers_target_summary">Wanneer insulineresistentie wordt gedetecteerd, wordt het BG streefdoel verlaagd</string>
@@ -20,6 +21,7 @@
     <string name="openapsma_no_glucose_data">Geen BG gegevens beschikbaar</string>
     <string name="openaps_no_as_data">Geen autosens-gegevens beschikbaar</string>
     <string name="dynisf_shortname">DYNISF</string>
+    <string name="autoisf_shortname">AUTOISF</string>
     <string name="executing">Uitvoeren</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Array van %1$d elementen. \nActuele waarde:</string>
@@ -63,9 +65,7 @@
     <string name="enable_smb_summary">Gebruik Super Micro Bolussen in plaats van tijdelijke basaalstanden voor een snellere reactie</string>
     <string name="enable_uam_summary">Detectie van niet aangekondigde (UnAnnounced) Maaltijden</string>
     <string name="enable_smb_always">Activeer SMB altijd</string>
-    <string name="enable_smb_always_summary">Zet SMB altijd aan, onafhankelijk van bolussen. Enkel mogelijk met een BG bron met goed gefilterde data zoals de G5 of G6</string>
     <string name="enable_smb_after_carbs">Activeer SMB na koolhydraten</string>
-    <string name="enable_smb_after_carbs_summary">SMB actief gedurende 6u, zelfs met 0 COB. Enkel mogelijk met een BG bron met goed gefilterde data zoals de G5 of G6</string>
     <string name="enable_smb_with_cob">Activeer SMB met Koolhydraten</string>
     <string name="enable_smb_with_cob_summary">SMB actief tijdens actieve koolhydraten</string>
     <string name="enable_smb_with_temp_target">Gebruik SMB met tijdelijke streefdoelen</string>
@@ -119,7 +119,6 @@
     <string name="loop_open_mode_min_change">Minimale aanvraag wijziging [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Open Loop zal alleen een wijzigingsverzoek tonen als de verandering groter is dan deze waarde in %. De standaard waarde is 20%</string>
     <string name="fallback_smb_no_tdd">Terugvallen naar SMB. Niet genoeg TDD gegevens.</string>
-    <string name="fallback_to_isf_no_tdd">Terugval naar profiel gevoeligheid. Onvoldoende TDD gegevens.</string>
     <!-- Autotune -->
     <string name="autotune_description">Hulp voor mogelijke aanpassingen van het profiel (ISF, koolhydraten en basaal insuline)</string>
     <string name="autotune_shortname">AT</string>

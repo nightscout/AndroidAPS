@@ -39,7 +39,6 @@
     <string name="smscommunicator_stops_ns_with_code">Norėdami išjungti SMS nuotolinį valdymą, atsakykite kodu %1$s.\n\n Turėkite omenyje, kad jūs funkciją galėsite atnaujinti tik tiesiai iš AAPS pagrindinio telefono.</string>
     <string name="smscommunicator_stopped_sms">SMS nuotolinio valdymo funkcija sustojo. Norėdami ją atnaujinti, naudokite AAPS pagrindinį išmanųjį telefoną.</string>
     <string name="smscommunicator_calibration_reply_with_code">Norėdami nusiųsti kalibraciją %1$.2f, atsakykite kodu %2$s</string>
-    <string name="smscommunicator_bolus_failed">Bolusas nesuleistas</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Minimalus minučių skaičius, kuris turi praeiti nuo vieno nuotolinio boluso iki kito</string>
     <string name="smscommunicator_remote_bolus_min_distance">Kiek mažiausiai minučių turi praeiti tarp vieno ir kito boluso</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">Jūsų saugumui, norėdami redaguoti šį pasirinkimą, jums reikia pridėti ne mažiau kaip 2 telefono numerius.</string>
@@ -224,12 +223,6 @@
     <string name="thirdcarbsincrement">Trečias angliavandenių kiekio žingsnis</string>
     <string name="cgm">NGJ</string>
     <string name="default_temptargets">Numatyti Laikini Tikslai</string>
-    <string name="eatingsoon_duration">\"Netrukus valgysiu\" trukmė</string>
-    <string name="eatingsoon_target">\"Netrukus valgysiu\" tikslas</string>
-    <string name="activity_duration">\"Aktyvumas\" trukmė</string>
-    <string name="activity_target">\"Aktyvumas\" tikslas</string>
-    <string name="hypo_duration">\"Hipo\" trukmė</string>
-    <string name="hypo_target">\"Hipo\" tikslas</string>
     <string name="fill_bolus_title">Standartiniai insulino kiekiai kateterio/kaniulės užpildymui</string>
     <string name="button1">Mygtukas 1</string>
     <string name="button2">Mygtukas 2</string>

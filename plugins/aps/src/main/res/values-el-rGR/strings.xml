@@ -59,9 +59,7 @@
     <string name="enable_smb_summary">Χρησιμοποιήστε Super Micro Boluses αντί προσωρινού ρυθμού για ταχύτερα αποτελέσματα</string>
     <string name="enable_uam_summary">Ανίχνευση απαρατήρητων γευμάτων</string>
     <string name="enable_smb_always">Πάντα ενεργό SMB</string>
-    <string name="enable_smb_always_summary">Ενεργοποιήστε τις ΜΜΕ ανεξάρτητα από τα bolus. Πιθανόν μόνο με πηγές BG με καλό φιλτράρισμα δεδομένων, όπως το G5</string>
     <string name="enable_smb_after_carbs">Ενεργοποίηση SMB μετά από υδατάνθρακες</string>
-    <string name="enable_smb_after_carbs_summary">Ενεργοποίηση SMB για 6 ώρες μετά από υδατάνθρακες, ακόμη και με 0 COB. Πιθανόν μόνο με πηγή BG με καλό φιλτράρισμα δεδομένων όπως το G5</string>
     <string name="enable_smb_with_cob">Ενεργοποίηση SMB με COB</string>
     <string name="enable_smb_with_cob_summary">Ενεργοποίηση SMB όταν υπάρχει ενεργό COB.</string>
     <string name="enable_smb_with_temp_target">Ενεργοποίηση SMB με προσωρινούς στόχους</string>

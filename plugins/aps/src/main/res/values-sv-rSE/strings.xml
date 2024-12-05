@@ -59,9 +59,7 @@
     <string name="enable_smb_summary">Använd Super Micro Bolusar istället för temp basal för snabbare resultat</string>
     <string name="enable_uam_summary">Avkänning av oförberedda måltider (UAM)</string>
     <string name="enable_smb_always">Använd alltid SMB</string>
-    <string name="enable_smb_always_summary">Använd alltid SMB oberoende av bolus. Endast möjligt med en bra filtrerad BG-källa, t ex Dexcom G5.</string>
     <string name="enable_smb_after_carbs">Använd SMB efter kolhydrater</string>
-    <string name="enable_smb_after_carbs_summary">Använd SMB i 6 timmar efter kolhydrater, även med 0 COB. Endast möjligt med en bra filtrerad BG-källa, t ex Dexcom G5.</string>
     <string name="enable_smb_with_cob">Använd SMB med kolhydrater (COB)</string>
     <string name="enable_smb_with_cob_summary">Använd SMB medan du har kolhydrater aktiva (COB)</string>
     <string name="enable_smb_with_temp_target">Använd SMB vid temp målvärde</string>

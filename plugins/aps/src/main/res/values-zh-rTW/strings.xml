@@ -66,9 +66,9 @@
     <string name="enable_smb_summary">使用超微量注射(SMB) 來取代臨時基礎率，以便加快作用速度</string>
     <string name="enable_uam_summary">偵測未輸入的餐點</string>
     <string name="enable_smb_always">始終啟用SMB</string>
-    <string name="enable_smb_always_summary">始終啟用SMB，獨立於注射。僅適用於具有良好資料過濾的血糖來源，如G5</string>
+    <string name="enable_smb_always_summary">啟用 SMB（超微量注射），無論 COB、臨時目標或注射劑量如何，皆可持續運作。此功能僅適用於具備進階資料過濾的血糖資料來源。</string>
     <string name="enable_smb_after_carbs">在碳水化合物後啟用SMB</string>
-    <string name="enable_smb_after_carbs_summary">在碳水化合物後6小時啟用SMB，即使COB為0。僅適用於具有良好資料過濾的血糖來源，如G5</string>
+    <string name="enable_smb_after_carbs_summary">啟用 SMB（超微量注射）功能，於進食碳水後 6 小時內，即使 COB 為 0 也能運作。此功能僅適用於具備進階資料過濾功能的血糖資料來源。</string>
     <string name="enable_smb_with_cob">有COB時啟用SMB</string>
     <string name="enable_smb_with_cob_summary">在體內仍有碳水存在時啟用SMB。</string>
     <string name="enable_smb_with_temp_target">在有臨時目標時啟用SMB</string>
@@ -122,7 +122,7 @@
     <string name="loop_open_mode_min_change">最小請求變更 [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">開環模式將彈出新變更請求，僅當變更超過此值的百分比。預設值為20%</string>
     <string name="fallback_smb_no_tdd">總每日劑量（TDD）資料不足，回退到使用 SMB 模式。</string>
-    <string name="fallback_to_isf_no_tdd">總每日劑量（TDD）資料不足，回退到使用設定檔的ISF。</string>
+    <string name="fallback_to_isf_no_tdd">回退使用設定檔敏感度(ISF)。資料不足，原因：%1$s</string>
     <!-- Autotune -->
     <string name="autotune_description">幫助調整檔案（ISF、碳水化合物比率和基礎率）</string>
     <string name="autotune_shortname">AT</string>

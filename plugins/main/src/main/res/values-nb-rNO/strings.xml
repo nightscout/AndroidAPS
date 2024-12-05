@@ -39,7 +39,7 @@
     <string name="smscommunicator_stops_ns_with_code">For å deaktivere fjernstyring via SMS-meldinger, svar med kode %1$s.\n\nHusk at du vil kunne reaktivere den igjen kun fra AAPS hovedtelefon.</string>
     <string name="smscommunicator_stopped_sms">Fjernstyring via SMS-meldinger er stanset. For å reaktivere, bruk AAPS på hovedtelefonen.</string>
     <string name="smscommunicator_calibration_reply_with_code">For å sende kalibrering %1$.2f, svar med kode %2$s</string>
-    <string name="smscommunicator_bolus_failed">Bolus feilet</string>
+    <string name="smscommunicator_bolus_failed">Bolus mislyktes. Kontroller ekte status før du sender en ny kommando!</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Minimum antall minutter mellom en fjernstyrt bolus og til den neste</string>
     <string name="smscommunicator_remote_bolus_min_distance">Minimum antall minutter mellom en fjernstyrt bolus og den neste</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">For din egen sikkerhet, må du legge til minst 2 telefonnumre for å endre denne innstillingen.</string>
@@ -239,11 +239,11 @@
     <string name="thirdcarbsincrement">Tredje økning knapp for karbohydrater</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">Standard midlertidig mål</string>
-    <string name="eatingsoon_duration">Spise snart varighet (min)</string>
+    <string name="eatingsoon_duration">Spise snart varighet (minutter)</string>
     <string name="eatingsoon_target">Spise snart målverdi</string>
-    <string name="activity_duration">Aktivitet varighet (min)</string>
+    <string name="activity_duration">Aktivitet varighet (minutter)</string>
     <string name="activity_target">Aktivitet målverdi</string>
-    <string name="hypo_duration">Hypo varighet (min)</string>
+    <string name="hypo_duration">Hypo varighet (minutter)</string>
     <string name="hypo_target">Hypo målverdi</string>
     <string name="fill_bolus_title">Standardverdier for påfyll/prime</string>
     <string name="button1">Knapp 1</string>

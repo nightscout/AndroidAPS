@@ -66,9 +66,7 @@
     <string name="enable_smb_summary">Použiť Super Mikro Bolusy namiesto dočasných bazálov, pre zrýchleniu účinku</string>
     <string name="enable_uam_summary">Detekcia neoznámených jedál</string>
     <string name="enable_smb_always">Vždy povoliť SMB</string>
-    <string name="enable_smb_always_summary">Povoliť SMB nezávisle na bolusoch. Možno iba zo zdrojom glykémií s dobrým filtrovaním dát, ako napr. G5</string>
     <string name="enable_smb_after_carbs">Povoliť SMB po jedle</string>
-    <string name="enable_smb_after_carbs_summary">Povoliť SMB 6 hodín po boluse aj pri nulovom COB. Možno iba zo zdrojom glykémií s dobrým filtrovaním dát, ako napr. G5</string>
     <string name="enable_smb_with_cob">Povoliť SMB zo sacharidmi</string>
     <string name="enable_smb_with_cob_summary">Povoliť SMB, pokiaľ zostávajú aktívne sacharidy.</string>
     <string name="enable_smb_with_temp_target">Povoliť SMB s dočasnými cieľmi</string>
@@ -122,7 +120,6 @@
     <string name="loop_open_mode_min_change">Minimálna požiadavka na zmenu [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Otvorený okruh vytvorí novú žiadosť o zmenu iba v prípade, že zmena je väčšia ako táto hodnota v %. Štandardná hodnota je 20%</string>
     <string name="fallback_smb_no_tdd">Použiť algoritmus SMB. Nedostatok dát o CDD.</string>
-    <string name="fallback_to_isf_no_tdd">Použitá hodnota citlivosti z profilu. Nedostatok dát CDD.</string>
     <!-- Autotune -->
     <string name="autotune_description">Pomoc s možnými úpravami profilu (citlivosť, inzulíno-sacharidový pomer a bazálny dávky)</string>
     <string name="autotune_shortname">AT</string>

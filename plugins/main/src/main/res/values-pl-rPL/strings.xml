@@ -39,7 +39,6 @@
     <string name="smscommunicator_stops_ns_with_code">Aby wyłączyć zdalne sterowanie SMS-ami odeślij kod %1$s.\n\nPamiętaj że możesz to ponownie włączyć tylko bezpośrednio w aplikacji AAPS na głównym telefonie.</string>
     <string name="smscommunicator_stopped_sms">Zatrzymano zdalne sterowanie SMS-ami. Aby ponownie włączyć użyj aplikacji AAPS na głównym telefonie.</string>
     <string name="smscommunicator_calibration_reply_with_code">Aby wysłać kalibrację %1$.2f wprowadź kod %2$s</string>
-    <string name="smscommunicator_bolus_failed">Bolus nieudany</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Minimalna liczba minut która musi upłynąć pomiędzy jednym a drugim zdalnie podawanym bolusem</string>
     <string name="smscommunicator_remote_bolus_min_distance">Ile co najmniej minut musi upłynąć pomiędzy jednym a drugim bolusem</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">Dla twojego bezpieczeństwa, aby zmienić to ustawienie musisz dodać co najmniej 2 numery telefonów.</string>
@@ -224,12 +223,6 @@
     <string name="thirdcarbsincrement">Trzeci stopień przyrostu węglow.</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">Domyślne tymczasowe wartości docelowe</string>
-    <string name="eatingsoon_duration">WkrótcePosiłek czas trwania</string>
-    <string name="eatingsoon_target">WkrótcePosiłek cel</string>
-    <string name="activity_duration">Ćwiczenia czas trwania</string>
-    <string name="activity_target">Ćwiczenia cel</string>
-    <string name="hypo_duration">Hipo czas trwania</string>
-    <string name="hypo_target">Hipo cel</string>
     <string name="fill_bolus_title">Rozpocznij/Wypełnij standardowe ilości insuliny</string>
     <string name="button1">Przycisk 1</string>
     <string name="button2">Przycisk 2</string>

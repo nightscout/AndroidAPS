@@ -59,9 +59,7 @@
     <string name="enable_smb_summary">使用微型大剂量代替使用临时基础率，更快的干预</string>
     <string name="enable_uam_summary">检测未输入的膳食</string>
     <string name="enable_smb_always">始终启用 SMB</string>
-    <string name="enable_smb_always_summary">启用SMB微型大剂量，总是独立于常规大剂量。 可能只能使用带有良好的数据过滤功能的血糖值来源。例如G5</string>
     <string name="enable_smb_after_carbs">在输入碳水化合物后启用SMB</string>
-    <string name="enable_smb_after_carbs_summary">在输入碳水化合物后，启用SMB微型大剂量6个小时，即使活性碳水化合物COB为0。 可能只能使用带有良好的数据过滤功能的血糖值来源。例如G5</string>
     <string name="enable_smb_with_cob">启用带活性碳水化合物的SMB</string>
     <string name="enable_smb_with_cob_summary">当有活性碳水化合物时启动SMB</string>
     <string name="enable_smb_with_temp_target">启用带有临时目标的SMB</string>

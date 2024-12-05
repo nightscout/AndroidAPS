@@ -66,9 +66,9 @@
     <string name="enable_smb_summary">Použít super mikro bolusy místo dočasných bazálů pro zrychlení účinku</string>
     <string name="enable_uam_summary">Detekce neoznámených jídel</string>
     <string name="enable_smb_always">Vždy povolit SMB</string>
-    <string name="enable_smb_always_summary">Povolit SMB nezávisle na bolusech. Možno pouze se zdroji glykémií s dobrým filtrováním dat, jako např. G5</string>
+    <string name="enable_smb_always_summary">Povolit SMB nezávisle na sacharidech, dočasných cílech nebo bolusech. Možno pouze se zdroji glykémií s dobrým filtrováním dat</string>
     <string name="enable_smb_after_carbs">Povolit SMB po jídle</string>
-    <string name="enable_smb_after_carbs_summary">Povolit SMB 6 hodin po bolusu i při nulovém COB. Možno pouze se zdroji glykémií s dobrým filtrováním dat, jako např. G5</string>
+    <string name="enable_smb_after_carbs_summary">Povolit SMB 6 hodin po bolusu i při nulovém COB. Možno pouze se zdroji glykémií s dobrým filtrováním dat</string>
     <string name="enable_smb_with_cob">Povolit SMB se sacharidy</string>
     <string name="enable_smb_with_cob_summary">Povolit SMB, pokud zbývají aktivní sacharidy.</string>
     <string name="enable_smb_with_temp_target">Povolit SMB s dočasnými cíli</string>
@@ -122,7 +122,7 @@
     <string name="loop_open_mode_min_change">Minimální změna pro výzvu [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Otevřená smyčka vytvoří novou žádost o změnu pouze v případě, že změna je větší než tato hodnota. Výchozí hodnota je 20 %</string>
     <string name="fallback_smb_no_tdd">Použit algoritmus SMB. Nedostatek dat o CDD.</string>
-    <string name="fallback_to_isf_no_tdd">Použita hodnota citlivosti z profilu. Nedostatek dat CDD.</string>
+    <string name="fallback_to_isf_no_tdd">Použita hodnota citlivosti z profilu. Nedostatek dat. Důvod: %1$s</string>
     <!-- Autotune -->
     <string name="autotune_description">Pomoc s možnými úpravami profilu (citlivost, sacharidový poměr a bazální dávky)</string>
     <string name="autotune_shortname">AT</string>

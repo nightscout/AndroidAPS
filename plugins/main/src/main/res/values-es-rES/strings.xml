@@ -39,7 +39,7 @@
     <string name="smscommunicator_stops_ns_with_code">Para deshabilitar la respuesta de servicio remoto de SMS, responder con el código %1$s.\n\nTen en cuenta que solamente será capaz de reactivarlo directamente desde el móvil con la aplicación AAPS maestra.</string>
     <string name="smscommunicator_stopped_sms">Servicio remoto de SMS detenido. Para reactivarlo, utilice AAPS en el movil maestro.</string>
     <string name="smscommunicator_calibration_reply_with_code">Para enviar calibración %1$.2f responder con código %2$s</string>
-    <string name="smscommunicator_bolus_failed">Bolo fallido</string>
+    <string name="smscommunicator_bolus_failed">Bolo fallido. ¡Comprueba el estado real antes de enviar otro comando!</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Número mínimo de minutos que deben transcurrir entre un bolo remoto y el siguiente</string>
     <string name="smscommunicator_remote_bolus_min_distance">Cuántos minutos deben transcurrir, al menos, entre un bolo y el siguiente</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">Por tu seguridad, para editar esta preferencia es necesario añadir al menos 2 números de teléfono.</string>
@@ -239,12 +239,12 @@
     <string name="thirdcarbsincrement">Tercer incremento de carbohidratos</string>
     <string name="cgm">MCG</string>
     <string name="default_temptargets">Objetivo temporal por defecto</string>
-    <string name="eatingsoon_duration">Duración OT Comiendo Pronto</string>
-    <string name="eatingsoon_target">Objetivo Comiendo Pronto</string>
-    <string name="activity_duration">Duración OT Actividad</string>
-    <string name="activity_target">Objetivo Actividad</string>
-    <string name="hypo_duration">Duración OT Hipo</string>
-    <string name="hypo_target">Objetivo Hipo</string>
+    <string name="eatingsoon_duration">Duración Comiendo Pronto (minutos)</string>
+    <string name="eatingsoon_target">Valor Objetivo Comiendo Pronto</string>
+    <string name="activity_duration">Duración de la actividad (minutos)</string>
+    <string name="activity_target">Valor objetivo de la actividad</string>
+    <string name="hypo_duration">Duración de hipo (minutos)</string>
+    <string name="hypo_target">Valor objetivo de hipo</string>
     <string name="fill_bolus_title">Cebar/Llenar la cantidad de insulina estándar</string>
     <string name="button1">Botón 1</string>
     <string name="button2">Botón 2</string>

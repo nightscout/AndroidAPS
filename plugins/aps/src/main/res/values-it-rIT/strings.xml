@@ -66,9 +66,9 @@
     <string name="enable_smb_summary">Usa super-micro-boli (SMB) al posto della basale temporanea per un\'azione più veloce</string>
     <string name="enable_uam_summary">Rilevamento dei pasti non annunciati</string>
     <string name="enable_smb_always">Abilita SMB sempre</string>
-    <string name="enable_smb_always_summary">Abilita SMB sempre, indipendentemente dai boli. Possibile solo con sorgente glicemia con un buon filtraggio dei dati, come G5</string>
+    <string name="enable_smb_always_summary">Abilita SMB sempre, indipendentemente dai COB, dai target temporanei o i boli. Possibile solo con una sorgente glicemia con un buon filtraggio dei dati</string>
     <string name="enable_smb_after_carbs">Abilita SMB dopo i CHO</string>
-    <string name="enable_smb_after_carbs_summary">Abilita SMB per 6h dopo i carboidrati, anche con 0 COB. Possibile solo con sorgente glicemia con un buon filtraggio dei dati, come G5</string>
+    <string name="enable_smb_after_carbs_summary">Abilita SMB per 6h dopo i carboidrati, anche con 0 COB. Possibile solo con sorgente glicemia con un buon filtraggio dei dati</string>
     <string name="enable_smb_with_cob">Abilita SMB con COB</string>
     <string name="enable_smb_with_cob_summary">Abilita SMB quando COB è attivo (ci sono carboidrati non assorbiti).</string>
     <string name="enable_smb_with_temp_target">Abilita SMB con target temporanei</string>
@@ -122,7 +122,7 @@
     <string name="loop_open_mode_min_change">Richiesta minima di modifica [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Il loop aperto mostrerà una nuova richiesta di modifica solo se la modifica è maggiore di questo valore in %. Il valore predefinito è 20%</string>
     <string name="fallback_smb_no_tdd">Ripiego a SMB. Dati TDD insufficienti.</string>
-    <string name="fallback_to_isf_no_tdd">Torna alla sensibilità del profilo. Dati TDD insufficienti.</string>
+    <string name="fallback_to_isf_no_tdd">Torna alla sensibilità del profilo. Dati insufficienti. Motivo: %1$s</string>
     <!-- Autotune -->
     <string name="autotune_description">Aiuto per potenziali regolazioni del profilo (ISF, rapporto CHO e velocità basali)</string>
     <string name="autotune_shortname">AT</string>

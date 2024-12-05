@@ -66,9 +66,7 @@
     <string name="enable_smb_summary">השתמש בסופר מיקרו בולוסים במקום בבזאלי זמני לפעילות מהירה יותר</string>
     <string name="enable_uam_summary">זיהוי של ארוחות לא מוכרזות</string>
     <string name="enable_smb_always">הפעל SMB תמיד</string>
-    <string name="enable_smb_always_summary">אפשר SMB תמיד באופן עצמאי מבולוסים. אפשרי רק עם מקור ערכי סוכר עם דיוק של נתונים כמו G5</string>
     <string name="enable_smb_after_carbs">הפעל SMB אחרי פחמימות</string>
-    <string name="enable_smb_after_carbs_summary">הפעלת SMB במשך 6 ש\' אחרי פחמימות, גם אם אין פחמ\' פעילות. אפשרי רק עם מקור ערכי סוכר מדויק כמו G6</string>
     <string name="enable_smb_with_cob">הפעלת SMB עם פחמ\' פעילות</string>
     <string name="enable_smb_with_cob_summary">הפעלת SMB כשיש פחמ\' פעילות.</string>
     <string name="enable_smb_with_temp_target">הפעלת SMB עם ערכי מטרה זמניים</string>
@@ -122,6 +120,8 @@
     <string name="loop_open_mode_min_change">מינימום לבקשה לשינוי [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">\"לולאה פתוחה\" תציג בקשת שינוי חדשה רק אם השינוי גדול מערך זה ב-%. ערך ברירת המחדל הוא 20%</string>
     <string name="fallback_smb_no_tdd">חוזר ל-SMB, אין מספיק נתוני מינון יומי.</string>
+    <string name="fallback_to_isf_no_tdd">חוזר לרגישות ע\"פ הפרופיל. אין מספיק נתונים.
+סיבה: %1$s</string>
     <!-- Autotune -->
     <string name="autotune_description">עזרה בכיוונונים פוטנציאליים בפרופיל (ISF, יחס פחמימות ומינונים בזאליים)</string>
     <string name="autotune_shortname">AT</string>

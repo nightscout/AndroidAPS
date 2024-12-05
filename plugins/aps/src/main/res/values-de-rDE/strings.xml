@@ -59,9 +59,7 @@
     <string name="enable_smb_summary">Benutze Super-Mikro-Boli anstelle von temporären Basalraten, um eine schnellere Wirkung zu erreichen.</string>
     <string name="enable_uam_summary">Erkennung von unangekündigten Mahlzeiten</string>
     <string name="enable_smb_always">SMB immer aktivieren</string>
-    <string name="enable_smb_always_summary">Aktiviere SMB immer, unabhängig von Boli. Dies ist nur möglich, wenn eine BZ-Quelle genutzt wird, die die Daten besonders gut filtert wie z. B. G5.</string>
     <string name="enable_smb_after_carbs">Aktiviere SMB nach Mahlzeiten.</string>
-    <string name="enable_smb_after_carbs_summary">Aktiviere SMB für sechs Stunden nach der Einnahme von Kohlenhydraten, auch mit 0 COB. Dies ist nur möglich, wenn eine BZ-Quelle genutzt wird, die die Daten besonders gut filtert wie z. B. G5.</string>
     <string name="enable_smb_with_cob">Aktiviere SMB während aktiver Kohlenhydrate.</string>
     <string name="enable_smb_with_cob_summary">SMB aktivieren, wenn Kohlenhydrate aktiv sind.</string>
     <string name="enable_smb_with_temp_target">Aktiviere SMB bei aktiven temporären Zielen</string>

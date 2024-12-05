@@ -39,7 +39,7 @@
     <string name="smscommunicator_stops_ns_with_code">要停用SMS遠端服務請回覆代碼 %1$s。\n\n請記住，您只能從AAPS主手機重新啟用它。</string>
     <string name="smscommunicator_stopped_sms">SMS遠端服務已停止。要重新啟用它，請在主手機上使用AAPS。</string>
     <string name="smscommunicator_calibration_reply_with_code">要發送校準 %1$.2f 請回覆代碼 %2$s</string>
-    <string name="smscommunicator_bolus_failed">注射失敗</string>
+    <string name="smscommunicator_bolus_failed">注射失敗。請在發送下一個指令前確認實際狀態！</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">一次遠端注射與下一次之間必須經過的最短分鐘數</string>
     <string name="smscommunicator_remote_bolus_min_distance">一次注射與下一次注射之間至少必須經過多少分鐘</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">為了您的安全，編輯此偏好設定需要添加至少兩個電話號碼。</string>
@@ -239,12 +239,12 @@
     <string name="thirdcarbsincrement">第三次碳水化合物增量</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">預設臨時目標</string>
-    <string name="eatingsoon_duration">即將用餐的持續時間</string>
-    <string name="eatingsoon_target">即將用餐的目標</string>
-    <string name="activity_duration">活動持續時間</string>
-    <string name="activity_target">活動目標</string>
-    <string name="hypo_duration">低血糖持續時間</string>
-    <string name="hypo_target">低血糖目標</string>
+    <string name="eatingsoon_duration">即將用餐持續時間（分鐘）</string>
+    <string name="eatingsoon_target">即將用餐目標值</string>
+    <string name="activity_duration">活動持續時間（分鐘）</string>
+    <string name="activity_target">活動目標值</string>
+    <string name="hypo_duration">低血糖持續時間（分鐘）</string>
+    <string name="hypo_target">低血糖目標值</string>
     <string name="fill_bolus_title">填充/預填充標準胰島素量</string>
     <string name="button1">按鈕1</string>
     <string name="button2">按鈕2</string>

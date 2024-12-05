@@ -28,6 +28,7 @@
     <string name="objectives_smb_gate">Debes leer la wiki y aumentar el valor de maxIOB para que SMB funcione bien. Un buen comienzo sería maxIOB = bolo de comida promedio + 3x máxima basal diaria</string>
     <string name="objectives_smb_learned">Utilizar SMB es su objetivo. El algoritmo Oref1 fue diseñado para ayudarle también con sus bolos. No debe dar un bolo completo para su comida, sino sólo una parte y dejar que AAPS le dé el resto si es necesario. De esta forma tendrás más espacio para los carbohidratos mal calculados. ¿Sabías que puedes establecer un porcentaje del resultado de la calculadora de bolo para reducir el tamaño del bolo?</string>
     <string name="objectives_auto_objective">Activar automatización</string>
+    <string name="objectives_auto_gate">Lee la documentación sobre el funcionamiento de las automatizaciones. Configura tus primeras reglas simples. En lugar de ejecutar una acción, deja que AAPS muestre sólo una notificación. Cuando estés seguro de que la automatización se activa en el momento adecuado, sustituye la notificación por una acción real. (https://wiki.aaps.app/es/latest/DailyLifeWithAaps/Automations.html)</string>
     <string name="objectives_auto_learned">La automatización puede ser un buen ayudante, pero un mal amo. No abuses. No intentes reemplazar el algoritmo subyacente. Pruebe la regla sólo con mensajes antes de utilizarla. Además, depende del orden.</string>
     <string name="objectives_bgavailableinns">BG disponible en NS o Tidepool</string>
     <string name="objectives_pumpstatusavailableinns">Estado de la bomba disponible en NS o Tidepool</string>
@@ -74,6 +75,10 @@
     <string name="unfinshed_button">Siguien&amp;te sin terminar</string>
     <string name="requestcode">Solicitar código: %1$s</string>
     <string name="objectives_hint">(compruebe todas las respuestas correctas)</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/es/latest/UsefulLinks/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/es/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/es/latest/SettingUpAaps/ConfigBuilder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/es/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
     <string name="notconnected">Sin conexión a Internet</string>
     <string name="failedretrievetime">Fallo tiempo de recuperación</string>
     <string name="requirementnotmet">No se cumplen los requisitos de objetivo</string>

@@ -59,9 +59,7 @@
     <string name="enable_smb_summary">Naudoti Super Mikro Bolusus vietoj laikinos bazės greitesniam veikimui</string>
     <string name="enable_uam_summary">Nedeklaruoto maisto (NDM) aptikimas</string>
     <string name="enable_smb_always">Įjungti SMB visada</string>
-    <string name="enable_smb_always_summary">Leisti SMB visada, nepriklausomai nuo bolusų. Įmanoma tik naudojant patikimų, filtruotų glikemijos duomenų šaltinį, pvz.: Dexcom.</string>
     <string name="enable_smb_after_carbs">Įjungti SMB po angliavandenių</string>
-    <string name="enable_smb_after_carbs_summary">Leisti SMB iki 6 val. po angliavandenių įvedimo, net jei AAO yra 0. Įmanoma tik naudojant patikimų, filtruotų glikemijos duomenų šaltinį, pvz.: Dexcom</string>
     <string name="enable_smb_with_cob">Įjungti SMB su AAO</string>
     <string name="enable_smb_with_cob_summary">Įjungti SMB, kai yra AAO.</string>
     <string name="enable_smb_with_temp_target">Įjungti SMB su laikinais tikslais</string>

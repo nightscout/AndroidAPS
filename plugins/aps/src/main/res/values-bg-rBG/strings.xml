@@ -59,9 +59,7 @@
     <string name="enable_smb_summary">Използвай супер микро болуси вместо временен базал за по бързо действие</string>
     <string name="enable_uam_summary">Детекция на необявено хранене (UAM)</string>
     <string name="enable_smb_always">Разреши SMB постоянно</string>
-    <string name="enable_smb_always_summary">Разрешава SMB постоянно и независимо от болусите. Възможно само с източник на КЗ с добра филтрация като G5  </string>
     <string name="enable_smb_after_carbs">Разреши SMB след въглехидрати</string>
-    <string name="enable_smb_after_carbs_summary">Разрешава SMB 6 часа след въглехидрати, дори при COB=0. Възможно само с източник на КЗ с добра филтрация като G5 приложение </string>
     <string name="enable_smb_with_cob">Разреши SMB с COB (въглехидрати)</string>
     <string name="enable_smb_with_cob_summary">Разрешава SMB, когато има активни COB</string>
     <string name="enable_smb_with_temp_target">Разреши SMB с временни цели</string>

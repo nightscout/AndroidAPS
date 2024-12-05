@@ -39,7 +39,7 @@
     <string name="smscommunicator_stops_ns_with_code">לביטול שירות השליטה מרחוק באמצעות SMS השיבו עם הקוד %1$s. \n\nהשירות ניתן להפעלה מחדש ממכשיר ה-AAPS הראשי בלבד.</string>
     <string name="smscommunicator_stopped_sms">שירות השליטה מרחוק באמצעות SMS מופסק. על מנת להפעילו, השתמשו ב-AAPS במכשיר הראשי.</string>
     <string name="smscommunicator_calibration_reply_with_code">כדי לשלוח ערך כיול %1$.2f יש להשיב עם הקוד %2$s</string>
-    <string name="smscommunicator_bolus_failed">הבולוס נכשל</string>
+    <string name="smscommunicator_bolus_failed">הזרקת הבולוס נכשלה. נא לוודא את המצב האמיתי לפני שליחת פקודה נוספת!</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">מספר המינימלי (בדקות) שחייב לחלוף בין בולוס מרוחק אחד למשנהו</string>
     <string name="smscommunicator_remote_bolus_min_distance">מספר הדקות המינימלי שצריכות לחלוף, בין בולוס אחד למשנהו</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">למען בטחונכם, על מנת לערוך את העדפה זו, עליכם להוסיף לפחות שני מספרי טלפון.</string>
@@ -239,12 +239,6 @@
     <string name="thirdcarbsincrement">תוספת פחמימות שלישית</string>
     <string name="cgm">סנסור</string>
     <string name="default_temptargets">ברירות מחדל ערכי מטרה</string>
-    <string name="eatingsoon_duration">משך אוכלים בקרוב</string>
-    <string name="eatingsoon_target">ערך מטרת אוכלים בקרוב</string>
-    <string name="activity_duration">משך פעילות</string>
-    <string name="activity_target">ערך מטרת פעילות</string>
-    <string name="hypo_duration">משך היפו</string>
-    <string name="hypo_target">ערך מטרת היפו</string>
     <string name="fill_bolus_title">מילוי\\תיחול כמויות סטנדרטיות של אינסולין</string>
     <string name="button1">כפתור 1</string>
     <string name="button2">כפתור 2</string>
