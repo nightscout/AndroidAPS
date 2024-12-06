@@ -43,12 +43,6 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.max
 
-interface IAlarmManager {
-
-    fun init()
-    fun restartAll()
-}
-
 @Singleton
 class AlarmManager @Inject constructor() : IAlarmManager {
 
