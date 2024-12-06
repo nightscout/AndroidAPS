@@ -13,7 +13,6 @@
     <string name="ns_create_announcements_from_carbs_req_title">Создавать оповещения из напоминаний о необходимых углеводах</string>
     <string name="ns_create_announcements_from_errors_summary">Создать оповещение NS с диалогом об ошибке и оповещения на месте (также видимые в портале назначений в разделе лечение)</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Создавать оповещения Nightscout из напоминаний о необходимых углеводах</string>
-    <string name="description_ns_client">Синхронизирует данные с Nightscout</string>
     <string name="description_ns_client_v3">Синхронизирует данные с Nightscout при помощи API v3</string>
     <string name="blocked_by_charging">Заблокировано опциями зарядки</string>
     <string name="blocked_by_connectivity">Заблокировано настройками подключения</string>
@@ -24,21 +23,10 @@
     <string name="ns_malfunction">Некорректная работа NSClient. Возможно следует перезапустить NS и NSClient.</string>
     <!-- NSClient -->
     <string name="no_write_permission">NS не имеет разрешения внести изменения. неверный API secret?</string>
-    <string name="ns_client_v3">NSClientV3</string>
-    <string name="ns_client_v3_short_name">NSV3</string>
     <string name="ns_client">клиент NS</string>
-    <string name="ns_client_short_name">КЛNS</string>
     <string name="ns_client_url">Адрес URL:</string>
     <string name="restart">перезапуск</string>
-    <string name="ns_client_internal_title">клиент NS</string>
     <string name="ns_client_url_title">URL-адрес Nightscout</string>
-    <string name="ns_client_url_dialog_message">введите URL адрес Nightscout</string>
-    <string name="ns_client_secret_title">API secret для NS</string>
-    <string name="ns_client_secret_dialog_title">API secret для NS</string>
-    <string name="ns_client_secret_dialog_message">введите API secret для NS (мин 12 знаков)</string>
-    <string name="nsclient_token_title">Атрибут защиты доступа в NS</string>
-    <string name="nsclient_token_dialog_title">Атрибут защиты доступа в NS</string>
-    <string name="nsclient_token_dialog_message">Атрибут защиты доступа в NS, созданный на странице администратора NS (минимум 17 символов)</string>
     <string name="deliver_now">Подать сейчас</string>
     <string name="queue">очередь</string>
     <string name="status">состояние:</string>
