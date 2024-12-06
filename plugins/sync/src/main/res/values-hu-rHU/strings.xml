@@ -8,7 +8,6 @@
     <!-- NSClient -->
     <string name="ns_client">NSClient</string>
     <string name="ns_client_url">URL:</string>
-    <string name="ns_client_internal_title">NSClient</string>
     <string name="ns_client_url_title">Nightscout URL</string>
     <string name="status">Állapot:</string>
     <string name="clear_log">Napló törlése</string>
