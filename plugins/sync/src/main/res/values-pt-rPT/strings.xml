@@ -20,7 +20,7 @@
     <string name="ns_client_short_name">CLNS</string>
     <string name="ns_client_url">URL:</string>
     <string name="restart">Reiniciar</string>
-    <string name="ns_client_internal_title">ClienteNS</string>
+    <string name="ns_client_title">ClienteNS</string>
     <string name="ns_client_url_title">Nightscout URL</string>
     <string name="ns_client_url_dialog_message">Introduza o Nightscout URL</string>
     <string name="ns_client_secret_title">NS API secret</string>

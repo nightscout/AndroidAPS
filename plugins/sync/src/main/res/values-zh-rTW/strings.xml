@@ -30,7 +30,7 @@
     <string name="ns_client_short_name">NSv1</string>
     <string name="ns_client_url">URL:</string>
     <string name="restart">重新啟動</string>
-    <string name="ns_client_internal_title">NSClient</string>
+    <string name="ns_client_title">NSClient</string>
     <string name="ns_client_url_title">Nightscout URL</string>
     <string name="ns_client_url_dialog_message">輸入您的 Nightscout URL</string>
     <string name="ns_client_secret_title">NS API 密碼</string>

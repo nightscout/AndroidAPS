@@ -30,7 +30,7 @@
     <string name="ns_client_short_name">NSCI</string>
     <string name="ns_client_url">URL:</string>
     <string name="restart">Restartare</string>
-    <string name="ns_client_internal_title">Client NS</string>
+    <string name="ns_client_title">Client NS</string>
     <string name="ns_client_url_title">Adresa Nightscout</string>
     <string name="ns_client_url_dialog_message">Introduceți adresa Nightscout</string>
     <string name="ns_client_secret_title">Cheia API NS</string>

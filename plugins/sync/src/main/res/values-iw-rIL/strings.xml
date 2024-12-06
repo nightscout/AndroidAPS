@@ -30,7 +30,7 @@
     <string name="ns_client_short_name">NSCI</string>
     <string name="ns_client_url">כתובת URL:</string>
     <string name="restart">הפעל מחדש</string>
-    <string name="ns_client_internal_title">NSClient</string>
+    <string name="ns_client_title">NSClient</string>
     <string name="ns_client_url_title">כתובת נייטסקאוט</string>
     <string name="ns_client_url_dialog_message">הזינו את כתובת ה-Nightscout שלכם</string>
     <string name="ns_client_secret_title">קוד API של Nightscout</string>

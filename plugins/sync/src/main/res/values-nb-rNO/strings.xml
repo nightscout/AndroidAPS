@@ -30,7 +30,7 @@
     <string name="ns_client_short_name">NSV1</string>
     <string name="ns_client_url">URL:</string>
     <string name="restart">Omstart</string>
-    <string name="ns_client_internal_title">NSClient</string>
+    <string name="ns_client_title">NSClient</string>
     <string name="ns_client_url_title">Nightscout URL</string>
     <string name="ns_client_url_dialog_message">Oppgi din Nightscout URL</string>
     <string name="ns_client_secret_title">Nightscout API-nøkkel</string>

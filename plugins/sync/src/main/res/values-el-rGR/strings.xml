@@ -29,7 +29,7 @@
     <string name="ns_client_short_name">NSCI</string>
     <string name="ns_client_url">URL:</string>
     <string name="restart">Επανεκκίνηση</string>
-    <string name="ns_client_internal_title">NSClient</string>
+    <string name="ns_client_title">NSClient</string>
     <string name="ns_client_url_title">Διεύθυνση Nightscout</string>
     <string name="ns_client_url_dialog_message">Βάλτε την διεύθυνσή σας Nightscout</string>
     <string name="ns_client_secret_title">Μυστικός κωδικός NS API secret</string>

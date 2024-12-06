@@ -76,7 +76,7 @@ class NSClientPlugin @Inject constructor(
         .mainType(PluginType.SYNC)
         .fragmentClass(NSClientFragment::class.java.name)
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_nightscout_syncs)
-        .pluginName(R.string.ns_client_internal_title)
+        .pluginName(R.string.ns_client_title)
         .shortName(R.string.ns_client_short_name)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.description_ns_client),
@@ -256,7 +256,7 @@ class NSClientPlugin @Inject constructor(
         parent.addPreference(category)
         category.apply {
             key = "ns_client_settings"
-            title = rh.gs(R.string.ns_client_internal_title)
+            title = rh.gs(R.string.ns_client_title)
             initialExpandedChildrenCount = 0
             addPreference(
                 AdaptiveStringPreference(

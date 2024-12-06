@@ -29,7 +29,7 @@
     <string name="ns_client_short_name">NSCI</string>
     <string name="ns_client_url">URL:</string>
     <string name="restart">Genstart</string>
-    <string name="ns_client_internal_title">NSClient</string>
+    <string name="ns_client_title">NSClient</string>
     <string name="ns_client_url_title">Nightscout URL</string>
     <string name="ns_client_url_dialog_message">Indtast dit Nightscout URL</string>
     <string name="ns_client_secret_title">NS API secret</string>

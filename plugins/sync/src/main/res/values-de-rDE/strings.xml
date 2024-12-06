@@ -29,7 +29,7 @@
     <string name="ns_client_short_name">NSCl</string>
     <string name="ns_client_url">URL:</string>
     <string name="restart">Neustart</string>
-    <string name="ns_client_internal_title">Nightscout-Client</string>
+    <string name="ns_client_title">Nightscout-Client</string>
     <string name="ns_client_url_title">Nightscout-URL</string>
     <string name="ns_client_url_dialog_message">Nightscout-URL eingeben</string>
     <string name="ns_client_secret_title">Nightscout API-Key</string>

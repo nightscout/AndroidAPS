@@ -22,7 +22,7 @@
     <string name="ns_client_short_name">NSCIient</string>
     <string name="ns_client_url">URL网址：</string>
     <string name="restart">重新启动</string>
-    <string name="ns_client_internal_title">NSClient</string>
+    <string name="ns_client_title">NSClient</string>
     <string name="ns_client_url_title">Nightscout URL(网址)</string>
     <string name="ns_client_url_dialog_message">输入您的 Nightscout URL(网址)</string>
     <string name="ns_client_secret_title">NS API 密钥</string>

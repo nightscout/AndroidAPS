@@ -30,7 +30,7 @@
     <string name="ns_client_short_name">NSCl</string>
     <string name="ns_client_url">Adresa URL:</string>
     <string name="restart">Reštart</string>
-    <string name="ns_client_internal_title">Interný NSClient</string>
+    <string name="ns_client_title">Interný NSClient</string>
     <string name="ns_client_url_title">Adresa Nightscoutu</string>
     <string name="ns_client_url_dialog_message">Zadajte adresu Nightscoutu</string>
     <string name="ns_client_secret_title">NS heslo (API secret)</string>

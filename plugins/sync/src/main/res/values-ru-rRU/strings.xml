@@ -30,7 +30,7 @@
     <string name="ns_client_short_name">КЛNS</string>
     <string name="ns_client_url">Адрес URL:</string>
     <string name="restart">перезапуск</string>
-    <string name="ns_client_internal_title">клиент NS</string>
+    <string name="ns_client_title">клиент NS</string>
     <string name="ns_client_url_title">URL-адрес Nightscout</string>
     <string name="ns_client_url_dialog_message">введите URL адрес Nightscout</string>
     <string name="ns_client_secret_title">API secret для NS</string>

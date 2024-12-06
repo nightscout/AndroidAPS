@@ -29,7 +29,7 @@
     <string name="ns_client_short_name">NSКЛ</string>
     <string name="ns_client_url">Nightscout aдрес:</string>
     <string name="restart">Рестарт</string>
-    <string name="ns_client_internal_title">Вътрешен NSClient</string>
+    <string name="ns_client_title">Вътрешен NSClient</string>
     <string name="ns_client_url_title">Nightscout адрес</string>
     <string name="ns_client_url_dialog_message">Въведете вашият Nightscout адрес</string>
     <string name="ns_client_secret_title">NS API парола</string>

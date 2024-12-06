@@ -30,7 +30,7 @@
     <string name="ns_client_short_name">NSCI</string>
     <string name="ns_client_url">URL:</string>
     <string name="restart">Riavvio</string>
-    <string name="ns_client_internal_title">NSClient</string>
+    <string name="ns_client_title">NSClient</string>
     <string name="ns_client_url_title">URL di Nightscout</string>
     <string name="ns_client_url_dialog_message">Inserisci il tuo URL di Nightscout</string>
     <string name="ns_client_secret_title">API secret di NS</string>
