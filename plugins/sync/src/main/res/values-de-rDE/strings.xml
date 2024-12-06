@@ -13,7 +13,6 @@
     <string name="ns_create_announcements_from_carbs_req_title">Benachrichtigungen aus KH-Vorschlags-Alarmen erzeugen</string>
     <string name="ns_create_announcements_from_errors_summary">Erstelle Nightscout-Ankündigungen für Fehler-Dialoge und lokale Alarme (auch einsehbar im Careportal unter \"Behandlungen\").</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Nightscout-Benachrichtigungen aus KH-Vorschlags-Alarmen erzeugen</string>
-    <string name="description_ns_client">Synchronisiert deine Daten mit Nightscout</string>
     <string name="description_ns_client_v3">Synchronisiert deine Daten mit Nightscout</string>
     <string name="blocked_by_charging">Blockiert durch Ladeoptionen</string>
     <string name="blocked_by_connectivity">Blockiert durch Verbindungsoptionen</string>
@@ -23,21 +22,10 @@
     <string name="ns_malfunction">NSClient Störung. Ziehe einen Neustart von NS und NSClient in Betracht.</string>
     <!-- NSClient -->
     <string name="no_write_permission">Nightscout-Client hat keine Schreibrechte. Falscher API-Key?</string>
-    <string name="ns_client_v3">NSClientV3</string>
-    <string name="ns_client_v3_short_name">NSV3</string>
     <string name="ns_client">Nightscout-Client</string>
-    <string name="ns_client_short_name">NSCl</string>
     <string name="ns_client_url">URL:</string>
     <string name="restart">Neustart</string>
-    <string name="ns_client_internal_title">Nightscout-Client</string>
     <string name="ns_client_url_title">Nightscout-URL</string>
-    <string name="ns_client_url_dialog_message">Nightscout-URL eingeben</string>
-    <string name="ns_client_secret_title">Nightscout API-Key</string>
-    <string name="ns_client_secret_dialog_title">Nightscout API-Key</string>
-    <string name="ns_client_secret_dialog_message">Nightscout API-Key eingeben (min. 12 Zeichen)</string>
-    <string name="nsclient_token_title">NS-Zugangstoken</string>
-    <string name="nsclient_token_dialog_title">NS-Zugangstoken</string>
-    <string name="nsclient_token_dialog_message">Zugriffstoken der auf der NS Admin-Seite generiert wurde (min 17 Zeichen)</string>
     <string name="deliver_now">Jetzt abgeben</string>
     <string name="queue">Warteschlange:</string>
     <string name="status">Status:</string>
