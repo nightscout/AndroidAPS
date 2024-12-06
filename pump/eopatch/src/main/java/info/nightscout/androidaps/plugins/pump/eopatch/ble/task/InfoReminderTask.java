@@ -6,14 +6,14 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import app.aaps.core.interfaces.logging.LTag;
-import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager;
+import info.nightscout.androidaps.plugins.pump.eopatch.ble.PreferenceManager;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.InfoReminderSet;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.PatchBooleanResponse;
 import io.reactivex.rxjava3.core.Single;
 
 @Singleton
 public class InfoReminderTask extends TaskBase {
-    @Inject IPreferenceManager pm;
+    @Inject PreferenceManager pm;
 
     private final InfoReminderSet INFO_REMINDER_SET;
 
@@ -32,12 +32,12 @@ public class InfoReminderTask extends TaskBase {
                 .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "InfoReminderTask error"));
     }
 
-    public synchronized void enqueue() {
+    @Override public synchronized void enqueue() {
 
         boolean ready = (disposable == null || disposable.isDisposed());
 
         if (ready) {
-            disposable = set(pm.getPatchConfig().getInfoReminder())
+            disposable = set(patchConfig.getInfoReminder())
                     .timeout(TASK_ENQUEUE_TIME_OUT, TimeUnit.SECONDS)
                     .subscribe();
         }

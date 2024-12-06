@@ -6,13 +6,15 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import app.aaps.core.interfaces.logging.AAPSLogger;
-import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager;
+import info.nightscout.androidaps.plugins.pump.eopatch.ble.PreferenceManager;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.Patch;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.exception.NoActivatedPatchException;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.exception.PatchDisconnectedException;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BaseResponse;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.BleConnectionState;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.IBleDevice;
+import info.nightscout.androidaps.plugins.pump.eopatch.vo.NormalBasalManager;
+import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchConfig;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.Disposable;
 
@@ -21,7 +23,9 @@ public class TaskBase {
     protected IBleDevice patch;
 
     @Inject AAPSLogger aapsLogger;
-    @Inject protected IPreferenceManager pm;
+    @Inject protected PreferenceManager pm;
+    @Inject NormalBasalManager normalBasalManager;
+    @Inject PatchConfig patchConfig;
     @Inject TaskQueue taskQueue;
 
     TaskFunc func;
@@ -90,7 +94,7 @@ public class TaskBase {
     }
 
     protected void checkPatchActivated() throws Exception {
-        if (pm.getPatchConfig().isDeactivated()) {
+        if (patchConfig.isDeactivated()) {
             throw new NoActivatedPatchException();
         }
     }

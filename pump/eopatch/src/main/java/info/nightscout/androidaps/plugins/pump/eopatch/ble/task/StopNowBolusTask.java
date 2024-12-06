@@ -44,7 +44,7 @@ public class StopNowBolusTask extends BolusTask {
         enqueue(TaskFunc.UPDATE_CONNECTION);
     }
 
-    public synchronized void enqueue() {
+    @Override public synchronized void enqueue() {
         boolean ready = (disposable == null || disposable.isDisposed());
 
         if (ready) {

@@ -33,7 +33,7 @@ public class ReadTempBasalFinishTimeTask extends TaskBase {
     private void onResponse(TempBasalFinishTimeResponse response) {
     }
 
-    public synchronized void enqueue() {
+    @Override public synchronized void enqueue() {
         boolean ready = (disposable == null || disposable.isDisposed());
 
         if (ready) {

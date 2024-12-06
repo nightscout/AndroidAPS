@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ble.task;
 
+import androidx.annotation.NonNull;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -24,10 +26,12 @@ public class StartNormalBasalTask extends TaskBase {
         BASAL_SCHEDULE_SET_BIG = new BasalScheduleSetBig();
     }
 
+    @NonNull
     public Single<BasalScheduleSetResponse> start(NormalBasal basal) {
         return isReady().concatMapSingle(v -> startJob(basal)).firstOrError();
     }
 
+    @NonNull
     public Single<BasalScheduleSetResponse> startJob(NormalBasal basal) {
         return BASAL_SCHEDULE_SET_BIG.set(basal.getDoseUnitPerSegmentArray())
                 .doOnSuccess(this::checkResponse)
@@ -41,7 +45,7 @@ public class StartNormalBasalTask extends TaskBase {
         long timeStamp = response.getTimestamp();
         patchStateManager.onBasalStarted(basal, timeStamp + 1000);
 
-        pm.getNormalBasalManager().setNormalBasal(basal);
+        normalBasalManager.setNormalBasal(basal);
         pm.flushNormalBasalManager();
         enqueue(TaskFunc.UPDATE_CONNECTION);
     }

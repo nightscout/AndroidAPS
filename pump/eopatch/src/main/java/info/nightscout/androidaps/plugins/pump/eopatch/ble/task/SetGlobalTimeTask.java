@@ -57,7 +57,7 @@ public class SetGlobalTimeTask extends TaskBase {
         throw new Exception("No time set required");
     }
 
-    public synchronized void enqueue() {
+    @Override public synchronized void enqueue() {
         boolean ready = (disposable == null || disposable.isDisposed());
 
         if (ready) {

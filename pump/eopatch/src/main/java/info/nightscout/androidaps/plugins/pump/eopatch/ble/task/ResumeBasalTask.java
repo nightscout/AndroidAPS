@@ -28,15 +28,16 @@ public class ResumeBasalTask extends TaskBase {
         BASAL_RESUME = new BasalResume();
     }
 
+    @NonNull
     public synchronized Single<? extends BaseResponse> resume() {
-        if (pm.getPatchConfig().getNeedSetBasalSchedule()) {
-            return startNormalBasalTask.start(pm.getNormalBasalManager().getNormalBasal());
+        if (patchConfig.getNeedSetBasalSchedule()) {
+            return startNormalBasalTask.start(normalBasalManager.getNormalBasal());
         }
 
         return isReady().concatMapSingle(v -> BASAL_RESUME.resume())
                 .doOnNext(this::checkResponse)
                 .firstOrError()
-                .doOnSuccess(v -> onResumeResponse(v))
+                .doOnSuccess(this::onResumeResponse)
                 .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "ResumeBasalTask error"));
     }
 

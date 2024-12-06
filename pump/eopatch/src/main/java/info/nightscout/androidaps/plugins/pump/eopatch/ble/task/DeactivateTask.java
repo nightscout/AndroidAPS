@@ -9,20 +9,22 @@ import javax.inject.Singleton;
 
 import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.core.interfaces.rx.AapsSchedulers;
-import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager;
+import info.nightscout.androidaps.plugins.pump.eopatch.ble.PreferenceManager;
 import info.nightscout.androidaps.plugins.pump.eopatch.code.DeactivationStatus;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.DeActivation;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.code.BolusType;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.BolusCurrent;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchLifecycleEvent;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasal;
+import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasalManager;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
 
 @Singleton
 public class DeactivateTask extends TaskBase {
     @Inject StopBasalTask stopBasalTask;
-    @Inject IPreferenceManager pm;
+    @Inject TempBasalManager tempBasalManager;
+    @Inject PreferenceManager pm;
     @Inject AapsSchedulers aapsSchedulers;
 
     @NonNull private final DeActivation DEACTIVATION;
@@ -58,7 +60,7 @@ public class DeactivateTask extends TaskBase {
     }
 
     private Observable<TaskFunc> isReadyCheckActivated() {
-        if (pm.getPatchConfig().isActivated()) {
+        if (patchConfig.isActivated()) {
             enqueue(TaskFunc.UPDATE_CONNECTION);
 
             stopBasalTask.enqueue();
@@ -73,11 +75,11 @@ public class DeactivateTask extends TaskBase {
         synchronized (lock) {
             patch.updateMacAddress(null, false);
 
-            if (pm.getPatchConfig().getLifecycleEvent().isShutdown()) {
+            if (patchConfig.getLifecycleEvent().isShutdown()) {
                 return;
             }
             cleanUpRepository();
-            pm.getNormalBasalManager().updateForDeactivation();
+            normalBasalManager.updateForDeactivation();
             pm.updatePatchLifeCycle(PatchLifecycleEvent.createShutdown());
 
         }
@@ -90,10 +92,10 @@ public class DeactivateTask extends TaskBase {
     }
 
     private void updateTempBasalStopped() {
-        TempBasal tempBasal = pm.getTempBasalManager().getStartedBasal();
+        TempBasal tempBasal = tempBasalManager.getStartedBasal();
 
         if (tempBasal != null) {
-            pm.getTempBasalManager().updateBasalStopped();
+            tempBasalManager.updateBasalStopped();
             pm.flushTempBasalManager();
         }
     }

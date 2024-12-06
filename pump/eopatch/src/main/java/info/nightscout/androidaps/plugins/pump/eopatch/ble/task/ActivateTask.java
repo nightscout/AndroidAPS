@@ -23,7 +23,7 @@ public class ActivateTask extends TaskBase {
     }
 
     public Single<Boolean> start() {
-        NormalBasal enabled = pm.getNormalBasalManager().getNormalBasal();
+        NormalBasal enabled = normalBasalManager.getNormalBasal();
         return isReady()
                 .concatMapSingle(v -> SET_KEY.setKey())
                 .doOnNext(this::checkResponse)

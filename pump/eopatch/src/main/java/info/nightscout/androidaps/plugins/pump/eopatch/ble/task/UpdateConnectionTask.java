@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ble.task;
 
+import androidx.annotation.NonNull;
+
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -16,7 +18,7 @@ import io.reactivex.rxjava3.core.Single;
 public class UpdateConnectionTask extends TaskBase {
     @Inject PatchStateManager patchStateManager;
 
-    private final UpdateConnection UPDATE_CONNECTION;
+    @NonNull private final UpdateConnection UPDATE_CONNECTION;
 
     @Inject
     public UpdateConnectionTask() {
@@ -34,7 +36,7 @@ public class UpdateConnectionTask extends TaskBase {
                 .doOnSuccess(this::checkResponse)
                 .map(UpdateConnectionResponse::getPatchState)
                 .map(bytes -> PatchState.Companion.create(bytes, System.currentTimeMillis()))
-                .doOnSuccess(state -> onUpdateConnection(state))
+                .doOnSuccess(this::onUpdateConnection)
                 .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "UpdateConnectionTask error"));
     }
 
@@ -42,7 +44,7 @@ public class UpdateConnectionTask extends TaskBase {
         patchStateManager.updatePatchState(patchState);
     }
 
-    public synchronized void enqueue() {
+    @Override public synchronized void enqueue() {
         boolean ready = (disposable == null || disposable.isDisposed());
 
         if (ready) {

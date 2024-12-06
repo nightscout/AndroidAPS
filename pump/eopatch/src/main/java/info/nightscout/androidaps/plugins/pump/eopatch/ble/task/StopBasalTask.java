@@ -17,7 +17,7 @@ import app.aaps.core.interfaces.pump.PumpSync;
 import app.aaps.core.interfaces.queue.Callback;
 import app.aaps.core.interfaces.queue.Command;
 import app.aaps.core.interfaces.queue.CommandQueue;
-import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager;
+import info.nightscout.androidaps.plugins.pump.eopatch.ble.PreferenceManager;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.BasalStop;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BasalStopResponse;
 import io.reactivex.rxjava3.core.Observable;
@@ -26,7 +26,7 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject;
 
 @Singleton
 public class StopBasalTask extends TaskBase {
-    @Inject IPreferenceManager pm;
+    @Inject PreferenceManager pm;
     @Inject CommandQueue commandQueue;
     @Inject AAPSLogger aapsLogger;
     @Inject PumpSync pumpSync;
@@ -102,6 +102,7 @@ public class StopBasalTask extends TaskBase {
                 .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "StopBasalTask error"));
     }
 
+    @Override
     public synchronized void enqueue() {
         boolean ready = (disposable == null || disposable.isDisposed());
 

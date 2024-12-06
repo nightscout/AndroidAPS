@@ -3,6 +3,8 @@ package info.nightscout.androidaps.plugins.pump.eopatch.ble.task;
 
 import android.os.SystemClock;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -21,7 +23,7 @@ import app.aaps.core.interfaces.queue.Command;
 import app.aaps.core.interfaces.queue.CommandQueue;
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode;
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.IAlarmRegistry;
-import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager;
+import info.nightscout.androidaps.plugins.pump.eopatch.ble.PreferenceManager;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.BasalPause;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.PatchBooleanResponse;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState;
@@ -32,7 +34,7 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject;
 @Singleton
 public class PauseBasalTask extends BolusTask {
     @Inject IAlarmRegistry alarmRegistry;
-    @Inject IPreferenceManager pm;
+    @Inject PreferenceManager pm;
     @Inject CommandQueue commandQueue;
     @Inject AAPSLogger aapsLogger;
     @Inject PumpSync pumpSync;
@@ -63,6 +65,7 @@ public class PauseBasalTask extends BolusTask {
         return basalCheckSubject.hide();
     }
 
+    @NonNull
     public Single<PatchBooleanResponse> pause(float pauseDurationHour, long pausedTimestamp, @Nullable AlarmCode alarmCode) {
         PatchState patchState = pm.getPatchState();
 
@@ -130,13 +133,13 @@ public class PauseBasalTask extends BolusTask {
     }
 
     private void onBasalPaused(float pauseDurationHour, @Nullable AlarmCode alarmCode) {
-        if (!pm.getNormalBasalManager().isSuspended()) {
+        if (!normalBasalManager.isSuspended()) {
             if (alarmCode != null) {
-                pm.getPatchConfig().updateNormalBasalPausedSilently();
+                patchConfig.updateNormalBasalPausedSilently();
             } else {
-                pm.getPatchConfig().updateNormalBasalPaused(pauseDurationHour);
+                patchConfig.updateNormalBasalPaused(pauseDurationHour);
             }
-            pm.getNormalBasalManager().updateBasalSuspended();
+            normalBasalManager.updateBasalSuspended();
 
             pm.flushNormalBasalManager();
             pm.flushPatchConfig();

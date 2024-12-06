@@ -22,6 +22,7 @@ public class StartCalcBolusTask extends BolusTask {
         NOW_BOLUS_START = new BolusStart();
     }
 
+    @NonNull
     public Single<? extends BolusResponse> start(DetailedBolusInfo detailedBolusInfo) {
         return isReady().concatMapSingle(v -> startBolusImpl((float) detailedBolusInfo.insulin))
                 .doOnNext(this::checkResponse)
@@ -30,6 +31,7 @@ public class StartCalcBolusTask extends BolusTask {
                 .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "StartCalcBolusTask error"));
     }
 
+    @NonNull
     private Single<? extends BolusResponse> startBolusImpl(float nowDoseU) {
         return NOW_BOLUS_START.start(nowDoseU);
     }

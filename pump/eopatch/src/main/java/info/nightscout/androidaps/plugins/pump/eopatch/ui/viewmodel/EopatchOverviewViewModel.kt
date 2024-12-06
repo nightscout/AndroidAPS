@@ -14,15 +14,18 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.utils.DateUtil
 import info.nightscout.androidaps.plugins.pump.eopatch.R
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
-import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager
+import info.nightscout.androidaps.plugins.pump.eopatch.ble.PatchManagerExecutor
+import info.nightscout.androidaps.plugins.pump.eopatch.ble.PreferenceManager
 import info.nightscout.androidaps.plugins.pump.eopatch.code.EventType
 import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.BleConnectionState
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.EoBaseNavigator
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.event.SingleLiveEvent
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.event.UIEvent
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.Alarms
+import info.nightscout.androidaps.plugins.pump.eopatch.vo.NormalBasalManager
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchConfig
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState
+import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasalManager
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import java.util.Calendar
@@ -34,7 +37,11 @@ import kotlin.math.roundToInt
 class EopatchOverviewViewModel @Inject constructor(
     private val rh: ResourceHelper,
     val patchManager: IPatchManager,
-    private val preferenceManager: IPreferenceManager,
+    private val patchManagerExecutor: PatchManagerExecutor,
+    private val patchConfigData: PatchConfig,
+    private val tempBasalManager: TempBasalManager,
+    private val normalBasalManager: NormalBasalManager,
+    val preferenceManager: PreferenceManager,
     private val profileFunction: ProfileFunction,
     private val aapsSchedulers: AapsSchedulers,
     private val aapsLogger: AAPSLogger,
@@ -93,7 +100,7 @@ class EopatchOverviewViewModel @Inject constructor(
         }
 
     val isPatchConnected: Boolean
-        get() = patchManager.patchConnectionState.isConnected
+        get() = patchManagerExecutor.patchConnectionState.isConnected
 
     init {
         preferenceManager.observePatchConfig()
@@ -111,7 +118,7 @@ class EopatchOverviewViewModel @Inject constructor(
             }
             .addTo()
 
-        patchManager.observePatchConnectionState()
+        patchManagerExecutor.observePatchConnectionState()
             .observeOn(aapsSchedulers.main)
             .subscribe {
                 _bleStatus.value = when (it) {
@@ -122,7 +129,7 @@ class EopatchOverviewViewModel @Inject constructor(
             }
             .addTo()
 
-        patchManager.observePatchLifeCycle()
+        preferenceManager.observePatchLifeCycle()
             .observeOn(aapsSchedulers.main)
             .subscribe {
                 updatePatchStatus()
@@ -136,7 +143,7 @@ class EopatchOverviewViewModel @Inject constructor(
             }
             .addTo()
 
-        if (preferenceManager.getPatchState().isNormalBasalPaused) {
+        if (preferenceManager.patchState.isNormalBasalPaused) {
             startPauseTimeUpdate()
         } else {
             updateBasalInfo()
@@ -144,29 +151,29 @@ class EopatchOverviewViewModel @Inject constructor(
     }
 
     private fun updatePatchStatus() {
-        if (patchManager.isActivated) {
+        if (patchConfigData.isActivated) {
             val finishTimeMillis = patchConfig.value?.basalPauseFinishTimestamp ?: System.currentTimeMillis()
             val remainTimeMillis = max(finishTimeMillis - System.currentTimeMillis(), 0L)
             val h = TimeUnit.MILLISECONDS.toHours(remainTimeMillis)
             val m = TimeUnit.MILLISECONDS.toMinutes(remainTimeMillis - TimeUnit.HOURS.toMillis(h))
-            _status.value = if (patchManager.patchState.isNormalBasalPaused)
+            _status.value = if (preferenceManager.patchState.isNormalBasalPaused)
                 "${rh.gs(R.string.string_suspended)}\n${rh.gs(R.string.string_temp_basal_remained_hhmm, h.toString(), m.toString())}"
             else
                 rh.gs(R.string.string_running)
         } else {
             _status.value = ""
         }
-        _pauseBtnStr.value = if (patchManager.patchState.isNormalBasalPaused) rh.gs(R.string.string_resume) else rh.gs(R.string.string_suspend)
+        _pauseBtnStr.value = if (preferenceManager.patchState.isNormalBasalPaused) rh.gs(R.string.string_resume) else rh.gs(R.string.string_suspend)
     }
 
     private fun updateBasalInfo() {
-        if (patchManager.isActivated) {
-            _normalBasal.value = if (patchManager.patchState.isNormalBasalRunning)
-                "${preferenceManager.getNormalBasalManager().normalBasal.currentSegmentDoseUnitPerHour} U/hr"
+        if (patchConfigData.isActivated) {
+            _normalBasal.value = if (preferenceManager.patchState.isNormalBasalRunning)
+                "${normalBasalManager.normalBasal.currentSegmentDoseUnitPerHour} U/hr"
             else
                 ""
-            _tempBasal.value = if (patchManager.patchState.isTempBasalActive)
-                "${preferenceManager.getTempBasalManager().startedBasal?.doseUnitPerHour} U/hr"
+            _tempBasal.value = if (preferenceManager.patchState.isTempBasalActive)
+                "${tempBasalManager.startedBasal?.doseUnitPerHour} U/hr"
             else
                 ""
 
@@ -192,8 +199,8 @@ class EopatchOverviewViewModel @Inject constructor(
             }
 
             if (isValid) {
-                patchManager.preferenceManager.getNormalBasalManager().setNormalBasal(profile)
-                patchManager.preferenceManager.flushNormalBasalManager()
+                normalBasalManager.setNormalBasal(profile)
+                preferenceManager.flushNormalBasalManager()
 
                 _eventHandler.postValue(UIEvent(EventType.ACTIVATION_CLICKED))
             }
@@ -205,7 +212,7 @@ class EopatchOverviewViewModel @Inject constructor(
     }
 
     fun onClickSuspendOrResume() {
-        if (patchManager.patchState.isNormalBasalPaused) {
+        if (preferenceManager.patchState.isNormalBasalPaused) {
             _eventHandler.postValue(UIEvent(EventType.RESUME_CLICKED))
         } else {
             _eventHandler.postValue(UIEvent(EventType.SUSPEND_CLICKED))
@@ -213,7 +220,7 @@ class EopatchOverviewViewModel @Inject constructor(
     }
 
     fun pauseBasal(pauseDurationHour: Float) {
-        patchManager.pauseBasal(pauseDurationHour)
+        patchManagerExecutor.pauseBasal(pauseDurationHour)
             .subscribeOn(aapsSchedulers.io)
             .observeOn(aapsSchedulers.main)
             .subscribe({ response ->
@@ -226,7 +233,7 @@ class EopatchOverviewViewModel @Inject constructor(
                                    type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
                                    pumpId = dateUtil.now(),
                                    pumpType = PumpType.EOFLOW_EOPATCH2,
-                                   pumpSerial = patchManager.patchConfig.patchSerialNumber
+                                   pumpSerial = patchConfigData.patchSerialNumber
                                )
                                aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithPumpId: Result: $result")
 
@@ -241,7 +248,7 @@ class EopatchOverviewViewModel @Inject constructor(
     }
 
     fun resumeBasal() {
-        patchManager.resumeBasal()
+        patchManagerExecutor.resumeBasal()
             .subscribeOn(aapsSchedulers.io)
             .observeOn(aapsSchedulers.main)
             .subscribe({
@@ -250,7 +257,7 @@ class EopatchOverviewViewModel @Inject constructor(
                                    timestamp = dateUtil.now(),
                                    endPumpId = dateUtil.now(),
                                    pumpType = PumpType.EOFLOW_EOPATCH2,
-                                   pumpSerial = patchManager.patchConfig.patchSerialNumber
+                                   pumpSerial = patchConfigData.patchSerialNumber
                                )
                                UIEvent(EventType.RESUME_BASAL_SUCCESS).let { event -> _eventHandler.postValue(event) }
                                stopPauseTimeUpdate()

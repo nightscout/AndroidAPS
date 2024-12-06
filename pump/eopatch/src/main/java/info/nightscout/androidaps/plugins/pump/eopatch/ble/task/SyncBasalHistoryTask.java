@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager;
+import info.nightscout.androidaps.plugins.pump.eopatch.ble.PreferenceManager;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.BasalHistoryGetExBig;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.BasalHistoryIndexGet;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.TempBasalHistoryGetExBig;
@@ -19,11 +19,11 @@ import io.reactivex.rxjava3.core.Single;
 
 @Singleton
 public class SyncBasalHistoryTask extends TaskBase {
-    @Inject IPreferenceManager pm;
+    @Inject PreferenceManager pm;
 
-    private final BasalHistoryIndexGet BASAL_HISTORY_INDEX_GET;
+    @NonNull private final BasalHistoryIndexGet BASAL_HISTORY_INDEX_GET;
     @NonNull private final BasalHistoryGetExBig BASAL_HISTORY_GET_EX_BIG;
-    private final TempBasalHistoryGetExBig TEMP_BASAL_HISTORY_GET_EX_BIG;
+    @NonNull private final TempBasalHistoryGetExBig TEMP_BASAL_HISTORY_GET_EX_BIG;
 
     @Inject
     public SyncBasalHistoryTask() {
@@ -72,6 +72,7 @@ public class SyncBasalHistoryTask extends TaskBase {
         }
     }
 
+    @Override
     public synchronized void enqueue() {
         boolean ready = (disposable == null || disposable.isDisposed());
 
@@ -82,8 +83,7 @@ public class SyncBasalHistoryTask extends TaskBase {
         }
     }
 
-    private int onBasalHistoryResponse(BasalHistoryResponse n, BasalHistoryResponse t,
-                                       int startRequested, int end) {
+    private int onBasalHistoryResponse(BasalHistoryResponse n, BasalHistoryResponse t, int startRequested, int end) {
 
         if (!n.isSuccess() || !t.isSuccess() || n.getSeq() != t.getSeq()) {
             return -1;
@@ -94,15 +94,15 @@ public class SyncBasalHistoryTask extends TaskBase {
         float[] normal = n.getInjectedDoseValues();
         float[] temp = t.getInjectedDoseValues();
 
-        int count = Math.min(end - start + 1, BASAL_HISTORY_SIZE_BIG);
-        count = Math.min(count, normal.length);
-        count = Math.min(count, temp.length);
+//        int count = Math.min(end - start + 1, BASAL_HISTORY_SIZE_BIG);
+//        count = Math.min(count, normal.length);
+//        count = Math.min(count, temp.length);
 
         return updateInjected(normal, temp, start, end);
     }
 
     public synchronized int updateInjected(float[] normal, float[] temp, int start, int end) {
-        if (pm.getPatchState().isPatchInternalSuspended() && !pm.getPatchConfig().isInBasalPausedTime()) {
+        if (pm.getPatchState().isPatchInternalSuspended() && !patchConfig.isInBasalPausedTime()) {
             return -1;
         }
 
@@ -114,7 +114,7 @@ public class SyncBasalHistoryTask extends TaskBase {
         }
 
         if (count > 0) {
-            int lastSyncIndex = pm.getPatchConfig().getLastIndex();
+            int lastSyncIndex = patchConfig.getLastIndex();
             for (int i = 0; i < count; i++) {
                 int seq = start + i;
                 if (seq < lastSyncIndex)
@@ -130,10 +130,10 @@ public class SyncBasalHistoryTask extends TaskBase {
     }
 
     private void updatePatchLastIndex(int newIndex) {
-        int lastIndex = pm.getPatchConfig().getLastIndex();
+        int lastIndex = patchConfig.getLastIndex();
 
         if (lastIndex < newIndex) {
-            pm.getPatchConfig().setLastIndex(newIndex);
+            patchConfig.setLastIndex(newIndex);
             pm.flushPatchConfig();
         }
     }

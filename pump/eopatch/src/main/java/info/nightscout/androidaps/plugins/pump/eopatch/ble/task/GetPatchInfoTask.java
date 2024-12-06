@@ -29,13 +29,13 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 public class GetPatchInfoTask extends TaskBase {
     @Inject UpdateConnectionTask updateConnectionTask;
 
-    private final SetGlobalTime SET_GLOBAL_TIME;
+    @NonNull private final SetGlobalTime SET_GLOBAL_TIME;
     @NonNull private final GetSerialNumber SERIAL_NUMBER_GET;
-    private final GetLOT LOT_NUMBER_GET;
-    private final GetFirmwareVersion FIRMWARE_VERSION_GET;
+    @NonNull private final GetLOT LOT_NUMBER_GET;
+    @NonNull private final GetFirmwareVersion FIRMWARE_VERSION_GET;
     @NonNull private final GetWakeUpTime WAKE_UP_TIME_GET;
     @NonNull private final GetPumpDuration PUMP_DURATION_GET;
-    private final GetModelName GET_MODEL_NAME;
+    @NonNull private final GetModelName GET_MODEL_NAME;
 
     @Inject
     public GetPatchInfoTask() {
@@ -73,29 +73,29 @@ public class GetPatchInfoTask extends TaskBase {
     }
 
     private void onSerialNumberResponse(SerialNumberResponse v) {
-        pm.getPatchConfig().setPatchSerialNumber(v.getSerialNumber());
+        patchConfig.setPatchSerialNumber(v.getSerialNumber());
     }
 
     private void onLotNumberResponse(LotNumberResponse v) {
-        pm.getPatchConfig().setPatchLotNumber(v.getLotNumber());
+        patchConfig.setPatchLotNumber(v.getLotNumber());
     }
 
     private void onFirmwareResponse(FirmwareVersionResponse v) {
-        pm.getPatchConfig().setPatchFirmwareVersion(v.getFirmwareVersionString());
+        patchConfig.setPatchFirmwareVersion(v.getFirmwareVersionString());
     }
 
     private void onWakeupTimeResponse(@NonNull WakeUpTimeResponse v) {
-        pm.getPatchConfig().setPatchWakeupTimestamp(v.getTimeInMillis());
+        patchConfig.setPatchWakeupTimestamp(v.getTimeInMillis());
     }
 
     private void onPumpDurationResponse(PumpDurationResponse v) {
-        pm.getPatchConfig().setPumpDurationLargeMilli(v.getDurationL() * 100L);
-        pm.getPatchConfig().setPumpDurationMediumMilli(v.getDurationM() * 100L);
-        pm.getPatchConfig().setPumpDurationSmallMilli(v.getDurationS() * 100L);
+        patchConfig.setPumpDurationLargeMilli(v.getDurationL() * 100L);
+        patchConfig.setPumpDurationMediumMilli(v.getDurationM() * 100L);
+        patchConfig.setPumpDurationSmallMilli(v.getDurationS() * 100L);
     }
 
     private void onModelNameResponse(ModelNameResponse modelNameResponse) {
-        pm.getPatchConfig().setPatchModelName(modelNameResponse.getModelName());
+        patchConfig.setPatchModelName(modelNameResponse.getModelName());
     }
 
     private void onPatchWakeupSuccess(Boolean result) {
@@ -106,7 +106,7 @@ public class GetPatchInfoTask extends TaskBase {
 
     private void onPatchWakeupFailed(Throwable e) {
         patch.setSeq(-1);
-        pm.getPatchConfig().updateDeactivated();
+        patchConfig.updateDeactivated();
         pm.flushPatchConfig();
     }
 }

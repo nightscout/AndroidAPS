@@ -34,7 +34,7 @@ public class FetchAlarmTask extends TaskBase {
                 .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "FetchAlarmTask error"));
     }
 
-    public synchronized void enqueue() {
+    @Override public synchronized void enqueue() {
         boolean ready = (disposable == null || disposable.isDisposed());
 
         if (ready) {

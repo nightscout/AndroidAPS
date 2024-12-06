@@ -16,8 +16,11 @@ import info.nightscout.androidaps.plugins.pump.eopatch.ble.task.ReadTempBasalFin
 import info.nightscout.androidaps.plugins.pump.eopatch.core.code.BolusType;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.BolusCurrent;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.NormalBasal;
+import info.nightscout.androidaps.plugins.pump.eopatch.vo.NormalBasalManager;
+import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchConfig;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasal;
+import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasalManager;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
@@ -25,7 +28,10 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 @Singleton
 public class PatchStateManager {
 
-    @Inject IPreferenceManager pm;
+    @Inject PreferenceManager pm;
+    @Inject PatchConfig patchConfig;
+    @Inject TempBasalManager tempBasalManager;
+    @Inject NormalBasalManager normalBasalManager;
     @Inject ReadBolusFinishTimeTask readBolusFinishTimeTask;
     @Inject ReadTempBasalFinishTimeTask readTempBasalFinishTimeTask;
     @Inject InternalSuspendedTask internalSuspendedTask;
@@ -41,7 +47,7 @@ public class PatchStateManager {
 
     public synchronized void updatePatchState(PatchState newState) {
         Maybe.fromCallable(() -> newState).observeOn(Schedulers.single())
-                .doOnSuccess(patchState -> updatePatchStateInner(patchState))
+                .doOnSuccess(this::updatePatchStateInner)
                 .observeOn(aapsSchedulers.getMain())
                 .doOnSuccess(patchState -> aapsLogger.debug(LTag.PUMP, patchState.toString()))
                 .subscribe();
@@ -122,8 +128,8 @@ public class PatchStateManager {
             }
         }
 
-        if (!newState.isTempBasalAct() && pm.getTempBasalManager().getStartedBasal() != null) {
-            pm.getTempBasalManager().updateBasalStopped();
+        if (!newState.isTempBasalAct() && tempBasalManager.getStartedBasal() != null) {
+            tempBasalManager.updateBasalStopped();
         }
 
         /* Now Bolus -------------------------------------------------------------------------------------------- */
@@ -174,7 +180,7 @@ public class PatchStateManager {
 
         /* Remained Insulin update */
         if (newState.getRemainedInsulin() != oldState.getRemainedInsulin()) {
-            pm.getPatchConfig().setRemainedInsulin(newState.getRemainedInsulin());
+            patchConfig.setRemainedInsulin(newState.getRemainedInsulin());
             pm.flushPatchConfig();
         }
 
@@ -183,15 +189,15 @@ public class PatchStateManager {
     }
 
     private void onTempBasalStartState() {
-        TempBasal tempBasal = pm.getTempBasalManager().getStartedBasal();
+        TempBasal tempBasal = tempBasalManager.getStartedBasal();
 
         if (tempBasal != null) {
-            pm.getPatchConfig().updateTempBasalStarted();
+            patchConfig.updateTempBasalStarted();
 
-            NormalBasal normalBasal = pm.getNormalBasalManager().getNormalBasal();
+            NormalBasal normalBasal = normalBasalManager.getNormalBasal();
 
             if (normalBasal != null) {
-                pm.getNormalBasalManager().updateBasalPaused();
+                normalBasalManager.updateBasalPaused();
             }
 
             pm.flushPatchConfig();
@@ -200,19 +206,19 @@ public class PatchStateManager {
     }
 
     void onTempBasalDoneState() {
-        TempBasal tempBasal = pm.getTempBasalManager().getStartedBasal();
+        TempBasal tempBasal = tempBasalManager.getStartedBasal();
 
         if (tempBasal != null) {
-            pm.getTempBasalManager().updateBasalStopped();
+            tempBasalManager.updateBasalStopped();
             pm.flushTempBasalManager();
         }
     }
 
     private void onTempBasalCancelState() {
-        TempBasal tempBasal = pm.getTempBasalManager().getStartedBasal();
+        TempBasal tempBasal = tempBasalManager.getStartedBasal();
 
         if (tempBasal != null) {
-            pm.getTempBasalManager().updateBasalStopped();
+            tempBasalManager.updateBasalStopped();
             pm.flushTempBasalManager();
         }
     }
@@ -228,29 +234,29 @@ public class PatchStateManager {
 
     private synchronized void onBasalResumeState() {
 
-        if (!pm.getNormalBasalManager().isStarted()) {
+        if (!normalBasalManager.isStarted()) {
             long timestamp = System.currentTimeMillis();
             onBasalResumed(timestamp + 1000);
         }
     }
 
     void onNormalBasalResumed(boolean tempBasalFinished) {
-        NormalBasal normalBasal = pm.getNormalBasalManager().getNormalBasal();
+        NormalBasal normalBasal = normalBasalManager.getNormalBasal();
         if (normalBasal != null) {
-            pm.getNormalBasalManager().updateBasalStarted();
+            normalBasalManager.updateBasalStarted();
             normalBasal.updateNormalBasalIndex();
             pm.flushNormalBasalManager();
         }
     }
 
     public synchronized void onBasalResumed(long timestamp) {
-        if (!pm.getNormalBasalManager().isStarted()) {
-            pm.getNormalBasalManager().updateBasalStarted();
+        if (!normalBasalManager.isStarted()) {
+            normalBasalManager.updateBasalStarted();
 
-            pm.getPatchConfig().updateNormalBasalStarted();
-            pm.getPatchConfig().setNeedSetBasalSchedule(false);
+            patchConfig.updateNormalBasalStarted();
+            patchConfig.setNeedSetBasalSchedule(false);
 
-            NormalBasal basal = pm.getNormalBasalManager().getNormalBasal();
+            NormalBasal basal = normalBasalManager.getNormalBasal();
 
             if (basal != null) {
                 basal.updateNormalBasalIndex();
@@ -263,12 +269,12 @@ public class PatchStateManager {
 
     public synchronized void onBasalStarted(NormalBasal basal, long timestamp) {
         if (basal != null) {
-            pm.getNormalBasalManager().updateBasalStarted();
+            normalBasalManager.updateBasalStarted();
             basal.updateNormalBasalIndex();
         }
 
-        pm.getPatchConfig().updateNormalBasalStarted(); // updateNormalBasalStarted 도 동일함...
-        pm.getPatchConfig().setNeedSetBasalSchedule(false);
+        patchConfig.updateNormalBasalStarted(); // updateNormalBasalStarted 도 동일함...
+        patchConfig.setNeedSetBasalSchedule(false);
 
         pm.flushPatchConfig();
         pm.flushNormalBasalManager();

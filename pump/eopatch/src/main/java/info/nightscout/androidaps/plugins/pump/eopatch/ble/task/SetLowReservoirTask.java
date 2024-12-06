@@ -6,14 +6,14 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import app.aaps.core.interfaces.logging.LTag;
-import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager;
+import info.nightscout.androidaps.plugins.pump.eopatch.ble.PreferenceManager;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.SetLowReservoirLevelAndExpireAlert;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.PatchBooleanResponse;
 import io.reactivex.rxjava3.core.Single;
 
 @Singleton
 public class SetLowReservoirTask extends TaskBase {
-    @Inject IPreferenceManager pm;
+    @Inject PreferenceManager pm;
 
     private final SetLowReservoirLevelAndExpireAlert SET_LOW_RESERVOIR_N_EXPIRE_ALERT;
 
@@ -33,10 +33,10 @@ public class SetLowReservoirTask extends TaskBase {
                 .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "SetLowReservoirTask error"));
     }
 
-    public synchronized void enqueue() {
+    @Override public synchronized void enqueue() {
 
-        int alertTime = pm.getPatchConfig().getPatchExpireAlertTime();
-        int alertSetting = pm.getPatchConfig().getLowReservoirAlertAmount();
+        int alertTime = patchConfig.getPatchExpireAlertTime();
+        int alertSetting = patchConfig.getLowReservoirAlertAmount();
 
         boolean ready = (disposable == null || disposable.isDisposed());
 

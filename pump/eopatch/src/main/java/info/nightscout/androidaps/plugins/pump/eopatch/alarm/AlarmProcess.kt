@@ -35,6 +35,7 @@ import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode.B006
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode.B012
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode.B018
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
+import info.nightscout.androidaps.plugins.pump.eopatch.ble.PatchManagerExecutor
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BaseResponse
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.PatchBooleanResponse
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.TemperatureResponse
@@ -49,20 +50,7 @@ import info.nightscout.androidaps.plugins.pump.eopatch.ui.dialogs.CommonDialog
 import io.reactivex.rxjava3.core.Single
 import java.util.concurrent.Callable
 
-interface IAlarmProcess {
-
-    fun doAction(context: Context, code: AlarmCode): Single<Int>
-
-    companion object {
-
-        const val ALARM_UNHANDLED = 0
-        const val ALARM_PAUSE = 1
-        const val ALARM_HANDLED = 2
-        const val ALARM_HANDLED_BUT_NEED_STOP_BEEP = 3
-    }
-}
-
-class AlarmProcess(val patchManager: IPatchManager, val rxBus: RxBus) : IAlarmProcess {
+class AlarmProcess(val patchManager: IPatchManager, val patchManagerExecutor: PatchManagerExecutor, val rxBus: RxBus) : IAlarmProcess {
 
     override fun doAction(context: Context, code: AlarmCode): Single<Int> {
         return when (code) {
@@ -100,10 +88,10 @@ class AlarmProcess(val patchManager: IPatchManager, val rxBus: RxBus) : IAlarmPr
     }
 
     private fun actionWithPatchCheckConnection(context: Context, action: Callable<Single<Int>>): Single<Int> {
-        return if (patchManager.patchConnectionState.isConnected) {
+        return if (patchManagerExecutor.patchConnectionState.isConnected) {
             try {
                 action.call()
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 Single.just(IAlarmProcess.ALARM_PAUSE)
             }
         } else {
@@ -121,7 +109,7 @@ class AlarmProcess(val patchManager: IPatchManager, val rxBus: RxBus) : IAlarmPr
 
     private fun resumeBasalAction(context: Context): Single<Int> {
         return actionWithPatchCheckConnection(context) {
-            patchManager.resumeBasal()
+            patchManagerExecutor.resumeBasal()
                 .map { obj: BaseResponse -> obj.isSuccess }
                 .onErrorReturn { false }
                 .flatMap { Single.just(it.takeOne(IAlarmProcess.ALARM_HANDLED, IAlarmProcess.ALARM_UNHANDLED)) }
@@ -131,7 +119,7 @@ class AlarmProcess(val patchManager: IPatchManager, val rxBus: RxBus) : IAlarmPr
     private fun patchDeactivationAction(context: Context): Single<Int> {
         return actionWithPatchCheckConnection(context) {
             rxBus.send(EventProgressDialog(true, R.string.string_in_progress))
-            patchManager.deactivate(6000, true)
+            patchManagerExecutor.deactivate(6000, true)
                 .doFinally {
                     rxBus.send(EventProgressDialog(false, R.string.string_in_progress))
                     startActivityWithSingleTop(context, createIntentForDiscarded(context))
@@ -149,18 +137,18 @@ class AlarmProcess(val patchManager: IPatchManager, val rxBus: RxBus) : IAlarmPr
 
     private fun inappropriateTemperatureAction(context: Context): Single<Int> {
         return actionWithPatchCheckConnection(context) {
-            patchManager.temperature
+            patchManagerExecutor.temperature
                 .map(TemperatureResponse::getTemperature)
                 .map { temp -> (temp >= EopatchActivity.NORMAL_TEMPERATURE_MIN && temp <= EopatchActivity.NORMAL_TEMPERATURE_MAX) }
                 .filter { ok -> ok }
-                .flatMap { patchManager.resumeBasal().map { it.isSuccess.takeOne(IAlarmProcess.ALARM_HANDLED, IAlarmProcess.ALARM_UNHANDLED) }.toMaybe() }
+                .flatMap { patchManagerExecutor.resumeBasal().map { it.isSuccess.takeOne(IAlarmProcess.ALARM_HANDLED, IAlarmProcess.ALARM_UNHANDLED) }.toMaybe() }
                 .defaultIfEmpty(IAlarmProcess.ALARM_UNHANDLED)
         }
     }
 
     private fun stopAeBeepAction(alarm: AlarmCode): Single<Int> {
-        return if (patchManager.patchConnectionState.isConnected) {
-            patchManager.stopAeBeep(alarm.aeCode)
+        return if (patchManagerExecutor.patchConnectionState.isConnected) {
+            patchManagerExecutor.stopAeBeep(alarm.aeCode)
                 .map { obj: PatchBooleanResponse -> obj.isSuccess }
                 .onErrorReturn { false }
                 .flatMap { Single.just(it.takeOne(IAlarmProcess.ALARM_HANDLED, IAlarmProcess.ALARM_HANDLED_BUT_NEED_STOP_BEEP)) }

@@ -37,14 +37,12 @@ public class StartBondTask extends TaskBase {
                 .map(result -> true)
                 .timeout(35, TimeUnit.SECONDS)
                 .doOnNext(v -> prefSetMacAddress(mac))
-                .doOnError(e -> {
-                    prefSetMacAddress("");
-                })
+                .doOnError(e -> prefSetMacAddress(""))
                 .firstOrError();
     }
 
     private synchronized void prefSetMacAddress(String mac) {
-        pm.getPatchConfig().setMacAddress(mac);
+        patchConfig.setMacAddress(mac);
     }
 }
 

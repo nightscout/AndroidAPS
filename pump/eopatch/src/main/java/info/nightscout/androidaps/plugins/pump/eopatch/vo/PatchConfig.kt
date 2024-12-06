@@ -168,8 +168,7 @@ class PatchConfig : IPreference<PatchConfig> {
         return patchFirmwareVersion
     }
 
-    fun getPatchExpiredTime(): Long =
-        if (isActivated) expireTimestamp else -1L
+    val patchExpiredTime: Long get() = if (isActivated) expireTimestamp else -1L
 
     @Synchronized
     fun incSeq() {

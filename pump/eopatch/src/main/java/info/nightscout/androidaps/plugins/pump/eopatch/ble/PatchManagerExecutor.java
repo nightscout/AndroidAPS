@@ -90,8 +90,10 @@ import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.IBleDevice;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.PatchSelfTestResult;
 import info.nightscout.androidaps.plugins.pump.eopatch.event.EventEoPatchAlarm;
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.receiver.RxBroadcastReceiver;
+import info.nightscout.androidaps.plugins.pump.eopatch.vo.Alarms;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.BolusCurrent;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.NormalBasal;
+import info.nightscout.androidaps.plugins.pump.eopatch.vo.NormalBasalManager;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchConfig;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasal;
@@ -103,8 +105,11 @@ import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 @Singleton
-public class PatchManagerImpl {
-    @Inject IPreferenceManager pm;
+public class PatchManagerExecutor {
+    @Inject PreferenceManager pm;
+    @Inject PatchConfig patchConfig;
+    @Inject NormalBasalManager normalBasalManager;
+    @Inject Alarms alarms;
     @Inject Context context;
     @Inject SP sp;
     @Inject AAPSLogger aapsLogger;
@@ -116,20 +121,21 @@ public class PatchManagerImpl {
     @Inject PrimingTask START_PRIMING;
     @Inject NeedleSensingTask START_NEEDLE_CHECK;
 
-    IBleDevice patch;
+    @NonNull
+    IBleDevice patch = Patch.getInstance();
 
     private final CompositeDisposable compositeDisposable;
 
     private static final long DEFAULT_API_TIME_OUT = 10; // SECONDS
 
-    private final BuzzerStop BUZZER_STOP;
-    private final GetTemperature TEMPERATURE_GET;
-    private final StopAeBeep ALARM_ALERT_ERROR_BEEP_STOP;
+    @NonNull private final BuzzerStop BUZZER_STOP;
+    @NonNull private final GetTemperature TEMPERATURE_GET;
+    @NonNull private final StopAeBeep ALARM_ALERT_ERROR_BEEP_STOP;
     @NonNull private final PublicKeySend PUBLIC_KEY_SET;
-    private final SequenceGet SEQUENCE_GET;
+    @NonNull private final SequenceGet SEQUENCE_GET;
 
     @Inject
-    public PatchManagerImpl() {
+    public PatchManagerExecutor() {
         compositeDisposable = new CompositeDisposable();
 
         BUZZER_STOP = new BuzzerStop();
@@ -141,9 +147,8 @@ public class PatchManagerImpl {
 
     @Inject
     void onInit() {
-        patch = Patch.getInstance();
         patch.init(context);
-        patch.setSeq(pm.getPatchConfig().getSeq15());
+        patch.setSeq(patchConfig.getSeq15());
 
         IntentFilter filter = new IntentFilter(ACTION_TIME_CHANGED);
         filter.addAction(ACTION_DATE_CHANGED);
@@ -180,7 +185,7 @@ public class PatchManagerImpl {
                         .subscribe());
 
         compositeDisposable.add(
-                pm.getPatchConfig().observe().doOnNext(config -> {
+                patchConfig.observe().doOnNext(config -> {
                     byte[] newKey = config.getSharedKey();
                     patch.updateEncryptionParam(newKey);
                 }).subscribe()
@@ -189,7 +194,7 @@ public class PatchManagerImpl {
         compositeDisposable.add(
                 EoPatchRxBus.INSTANCE.listen(EventEoPatchAlarm.class)
                         .filter(EventEoPatchAlarm::isFirst)
-                        .filter(it -> !pm.getPatchConfig().isDeactivated())
+                        .filter(it -> !patchConfig.isDeactivated())
                         .filter(it -> patch.getConnectionState().isConnected())
                         .concatMapIterable(EventEoPatchAlarm::getAlarmCodes)
                         .filter(AlarmCode::isPatchOccurrenceAlert)
@@ -199,7 +204,7 @@ public class PatchManagerImpl {
         compositeDisposable.add(
                 EoPatchRxBus.INSTANCE.listen(EventEoPatchAlarm.class)
                         .filter(EventEoPatchAlarm::isFirst)
-                        .filter(it -> !pm.getPatchConfig().isDeactivated())
+                        .filter(it -> !patchConfig.isDeactivated())
                         .filter(it -> patch.getConnectionState().isConnected())
                         .concatMapIterable(EventEoPatchAlarm::getAlarmCodes)
                         .filter(AlarmCode::isPatchOccurrenceAlarm)
@@ -209,16 +214,15 @@ public class PatchManagerImpl {
 
 
         monitorPatchNotification();
-        onConnectedUpdateSequence();
     }
 
     private void onPatchConnected(boolean connected) {
-        boolean activated = pm.getPatchConfig().isActivated();
-        boolean useEncryption = pm.getPatchConfig().getSharedKey() != null;
+        boolean activated = patchConfig.isActivated();
+        boolean useEncryption = patchConfig.getSharedKey() != null;
         int doseUnit = sp.getInt(SettingKeys.Companion.getLOW_RESERVOIR_REMINDERS(), 0);
         int hours = sp.getInt(SettingKeys.Companion.getEXPIRATION_REMINDERS(), 0);
         boolean buzzer = sp.getBoolean(SettingKeys.Companion.getBUZZER_REMINDERS(), false);
-        PatchConfig pc = pm.getPatchConfig();
+        PatchConfig pc = patchConfig;
 
         if (connected && activated && useEncryption) {
             compositeDisposable.add(
@@ -251,10 +255,10 @@ public class PatchManagerImpl {
                                 return Single.just(true);
                             })
                             .flatMap(ret -> {
-                                if (!pm.getAlarms().getNeedToStopBeep().isEmpty()) {
-                                    return Observable.fromStream(pm.getAlarms().getNeedToStopBeep().stream())
+                                if (!alarms.getNeedToStopBeep().isEmpty()) {
+                                    return Observable.fromStream(alarms.getNeedToStopBeep().stream())
                                             .flatMapSingle(alarmCode -> stopAeBeep(alarmCode.getAeCode()).doOnSuccess(patchBooleanResponse -> {
-                                                pm.getAlarms().getNeedToStopBeep().remove(alarmCode);
+                                                alarms.getNeedToStopBeep().remove(alarmCode);
                                             }))
                                             .lastOrError();
                                 }
@@ -264,7 +268,7 @@ public class PatchManagerImpl {
         }
 
         if (!connected && activated) {
-            pm.getPatchConfig().updatetDisconnectedTime();
+            patchConfig.updatetDisconnectedTime();
         }
     }
 
@@ -277,7 +281,7 @@ public class PatchManagerImpl {
                                         throwable.getMessage() : "AlarmNotification observation error")
                         ),
                 patch.observeInfoNotification()
-                        .filter(state -> pm.getPatchConfig().isActivated())
+                        .filter(state -> patchConfig.isActivated())
                         .subscribe(
                                 this::onInfoNotification,
                                 throwable -> aapsLogger.error(LTag.PUMP, throwable.getMessage() != null ?
@@ -286,10 +290,6 @@ public class PatchManagerImpl {
         );
     }
 
-
-    private void onConnectedUpdateSequence() {
-
-    }
 
     //==============================================================================================
     // preference database update helper
@@ -300,7 +300,7 @@ public class PatchManagerImpl {
 
     private void updatePatchConfig(Consumer<PatchConfig> consumer, boolean needSave) throws Throwable {
         synchronized (lock) {
-            consumer.accept(pm.getPatchConfig());
+            consumer.accept(patchConfig);
             if (needSave) {
                 pm.flushPatchConfig();
             }
@@ -309,18 +309,11 @@ public class PatchManagerImpl {
 
     synchronized void updateBasal() {
 
-        NormalBasal normalBasal = pm.getNormalBasalManager().getNormalBasal();
+        NormalBasal normalBasal = normalBasalManager.getNormalBasal();
 
         if (normalBasal.updateNormalBasalIndex()) {
             pm.flushNormalBasalManager();
         }
-    }
-
-    public void connect() {
-
-    }
-
-    public void disconnect() {
     }
 
     /**
@@ -376,9 +369,9 @@ public class PatchManagerImpl {
      * Activation Process task #5 Activation Secure Key, Basal writing
      * Fragment: fragment_patch_check_patch
      */
-    @Inject
-    ActivateTask ACTIVATE;
+    @Inject ActivateTask ACTIVATE;
 
+    @NonNull
     public Single<Boolean> patchActivation(long timeout) {
 
         return ACTIVATE.start().timeout(timeout, TimeUnit.MILLISECONDS)
@@ -400,6 +393,7 @@ public class PatchManagerImpl {
     @Inject
     StartNormalBasalTask startNormalBasalTask;
 
+    @NonNull
     public Single<BasalScheduleSetResponse> startBasal(NormalBasal basal) {
 
         return startNormalBasalTask.start(basal)
@@ -409,11 +403,13 @@ public class PatchManagerImpl {
     @Inject
     ResumeBasalTask resumeBasalTask;
 
+    @NonNull
     public Single<? extends BaseResponse> resumeBasal() {
         return resumeBasalTask.resume()
                 .timeout(DEFAULT_API_TIME_OUT, TimeUnit.SECONDS);
     }
 
+    @NonNull
     public Single<? extends BaseResponse> pauseBasal(float pauseDurationHour) {
         return pauseBasalImpl(pauseDurationHour, 0, null)
                 .observeOn(SS)
@@ -427,6 +423,7 @@ public class PatchManagerImpl {
     @Inject
     PauseBasalTask pauseBasalTask;
 
+    @NonNull
     private Single<? extends BaseResponse> pauseBasalImpl(float pauseDurationHour, long alarmOccurredTime, @Nullable AlarmCode alarmCode) {
         return pauseBasalTask.pause(pauseDurationHour, alarmOccurredTime, alarmCode);
     }
@@ -438,7 +435,8 @@ public class PatchManagerImpl {
     @Inject
     StartTempBasalTask startTempBasalTask;
 
-    public Single<TempBasalScheduleSetResponse> startTempBasal(TempBasal tempBasal) {
+    @NonNull
+    public Single<TempBasalScheduleSetResponse> startTempBasal(@NonNull TempBasal tempBasal) {
         return startTempBasalTask.start(tempBasal).timeout(DEFAULT_API_TIME_OUT, TimeUnit.SECONDS);
     }
 
@@ -449,6 +447,7 @@ public class PatchManagerImpl {
     @Inject
     StopTempBasalTask stopTempBasalTask;
 
+    @NonNull
     public Single<PatchBooleanResponse> stopTempBasal() {
         return stopTempBasalTask.stop().timeout(DEFAULT_API_TIME_OUT, TimeUnit.SECONDS);
     }
@@ -469,25 +468,30 @@ public class PatchManagerImpl {
     StopExtBolusTask stopExtBolusTask;
 
 
+    @NonNull
     public Single<? extends BolusResponse> startQuickBolus(float nowDoseU, float exDoseU,
-                                                           BolusExDuration exDuration) {
+                                                           @NonNull BolusExDuration exDuration) {
         return startQuickBolusTask.start(nowDoseU, exDoseU, exDuration)
                 .timeout(DEFAULT_API_TIME_OUT, TimeUnit.SECONDS);
     }
 
-    public Single<? extends BolusResponse> startCalculatorBolus(DetailedBolusInfo detailedBolusInfo) {
+    @NonNull
+    public Single<? extends BolusResponse> startCalculatorBolus(@NonNull DetailedBolusInfo detailedBolusInfo) {
         return startCalcBolusTask.start(detailedBolusInfo)
                 .timeout(DEFAULT_API_TIME_OUT, TimeUnit.SECONDS);
     }
 
+    @NonNull
     public Single<BolusStopResponse> stopNowBolus() {
         return stopNowBolusTask.stop().timeout(DEFAULT_API_TIME_OUT, TimeUnit.SECONDS);
     }
 
+    @NonNull
     public Single<BolusStopResponse> stopExtBolus() {
         return stopExtBolusTask.stop().timeout(DEFAULT_API_TIME_OUT, TimeUnit.SECONDS);
     }
 
+    @NonNull
     public Single<ComboBolusStopResponse> stopComboBolus() {
         return stopComboBolusTask.stop().timeout(DEFAULT_API_TIME_OUT, TimeUnit.SECONDS);
     }
@@ -532,6 +536,7 @@ public class PatchManagerImpl {
     DeactivateTask deactivateTask;
 
     // Patch Activation Tasks
+    @NonNull
     public Single<DeactivationStatus> deactivate(long timeout, boolean force) {
         return deactivateTask.run(force, timeout);
     }
@@ -539,6 +544,7 @@ public class PatchManagerImpl {
     @Inject
     InfoReminderTask infoReminderTask;
 
+    @NonNull
     public Single<PatchBooleanResponse> infoReminderSet(boolean infoReminder) {
         return infoReminderTask.set(infoReminder).timeout(DEFAULT_API_TIME_OUT, TimeUnit.SECONDS);
     }
@@ -546,6 +552,7 @@ public class PatchManagerImpl {
     @Inject
     SetLowReservoirTask setLowReservoirTask;
 
+    @NonNull
     public Single<PatchBooleanResponse> setLowReservoir(int doseUnit, int hours) {
         return setLowReservoirTask.set(doseUnit, hours).timeout(DEFAULT_API_TIME_OUT, TimeUnit.SECONDS);
     }
@@ -553,10 +560,12 @@ public class PatchManagerImpl {
     @Inject
     UpdateConnectionTask updateConnectionTask;
 
+    @NonNull
     public Single<PatchState> updateConnection() {
         return updateConnectionTask.update();
     }
 
+    @NonNull
     public Single<PatchBooleanResponse> stopAeBeep(int aeCode) {
         return ALARM_ALERT_ERROR_BEEP_STOP.stop(aeCode);
     }
@@ -571,7 +580,7 @@ public class PatchManagerImpl {
     void onAlarmNotification(AlarmNotification notification) throws Throwable {
         patchStateManager.updatePatchState(PatchState.create(notification.patchState, System.currentTimeMillis()));
 
-        if (pm.getPatchConfig().isActivated()) {
+        if (patchConfig.isActivated()) {
             if (!patch.isSeqReady()) {
                 getSequence().subscribe();
             }
@@ -605,6 +614,7 @@ public class PatchManagerImpl {
     private static final String EC = "EC";
     private static final String ECDH = "ECDH";
 
+    @NonNull
     public Single<Boolean> sharedKey() {
         return genKeyPair().flatMap(keyPair -> ECPublicToRawBytes(keyPair)
                         .flatMap(bytes -> PUBLIC_KEY_SET.send(bytes)
@@ -615,6 +625,7 @@ public class PatchManagerImpl {
                 .doOnError(e -> aapsLogger.error(LTag.PUMP, "sharedKey error"));
     }
 
+    @NonNull
     public Single<Boolean> getSequence() {
         return SEQUENCE_GET.get()
                 .map(KeyResponse::getSequence)
@@ -627,16 +638,17 @@ public class PatchManagerImpl {
     }
 
     private void saveShared(byte[] v) {
-        pm.getPatchConfig().setSharedKey(v);
+        patchConfig.setSharedKey(v);
         pm.flushPatchConfig();
     }
 
     private void saveSequence(int sequence) {
         patch.setSeq(sequence);
-        pm.getPatchConfig().setSeq15(sequence);
+        patchConfig.setSeq15(sequence);
         pm.flushPatchConfig();
     }
 
+    @NonNull
     public Single<KeyPair> genKeyPair() {
         return Single.fromCallable(() -> {
             ECGenParameterSpec ecSpec_named = new ECGenParameterSpec(SECP256R1);
@@ -646,11 +658,13 @@ public class PatchManagerImpl {
         });
     }
 
+    @NonNull
     public Single<byte[]> ECPublicToRawBytes(KeyPair keyPair) {
         return Single.just(keyPair.getPublic()).cast(ECPublicKey.class)
-                .map(PatchManagerImpl::encodeECPublicKey);
+                .map(PatchManagerExecutor::encodeECPublicKey);
     }
 
+    @NonNull
     private static byte[] encodeECPublicKey(@NonNull ECPublicKey pubKey) {
         int keyLengthBytes = pubKey.getParams().getOrder().bitLength()
                 / Byte.SIZE;
@@ -692,6 +706,7 @@ public class PatchManagerImpl {
         return publicKeyEncoded;
     }
 
+    @NonNull
     public static ECPublicKey rawToEncodedECPublicKey(String curveName, byte[] rawBytes) throws
             NoSuchAlgorithmException, InvalidKeySpecException, InvalidParameterSpecException {
         KeyFactory kf = KeyFactory.getInstance(EC);
@@ -709,6 +724,7 @@ public class PatchManagerImpl {
         return params.getParameterSpec(ECParameterSpec.class);
     }
 
+    @Nullable
     public static byte[] generateSharedSecret(PrivateKey privateKey,
                                               PublicKey publicKey) {
         try {

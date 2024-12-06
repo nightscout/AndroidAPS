@@ -98,7 +98,7 @@ abstract class BolusTask extends TaskBase {
 
     private long getPumpDuration(float doseU) {
         if (doseU > 0) {
-            long pumpDuration = pm.getPatchConfig().getPumpDurationSmallMilli();
+            long pumpDuration = patchConfig.getPumpDurationSmallMilli();
             return (long) ((doseU / AppConstant.BOLUS_UNIT_STEP) * pumpDuration);
         }
         return 0L;

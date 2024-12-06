@@ -13,12 +13,12 @@ import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmRegistry
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.IAlarmManager
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.IAlarmRegistry
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
-import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.PatchManager
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.PreferenceManager
+import info.nightscout.androidaps.plugins.pump.eopatch.ble.PreferenceManagerImpl
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.*
-import info.nightscout.androidaps.plugins.pump.eopatch.ui.dialogs.AlarmDialog
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.dialogs.ActivationNotCompleteDialog
+import info.nightscout.androidaps.plugins.pump.eopatch.ui.dialogs.AlarmDialog
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.dialogs.CommonDialog
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchOverviewViewModel
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel
@@ -30,7 +30,9 @@ import javax.inject.Singleton
 @Module(includes = [EopatchPrefModule::class])
 @Suppress("unused")
 abstract class EopatchModule {
+
     companion object {
+
         @Provides
         @EopatchPluginQualifier
         fun providesViewModelFactory(@EopatchPluginQualifier viewModels: MutableMap<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>>): ViewModelProvider.Factory {
@@ -53,7 +55,7 @@ abstract class EopatchModule {
 
     @Binds
     @Singleton
-    abstract fun bindPreferenceManager(preferenceManager: PreferenceManager): IPreferenceManager
+    abstract fun bindPreferenceManager(preferenceManager: PreferenceManagerImpl): PreferenceManager
 
     // #### VIEW MODELS ############################################################################
     @Binds

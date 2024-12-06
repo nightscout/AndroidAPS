@@ -7,15 +7,17 @@ import javax.inject.Singleton;
 
 import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.core.interfaces.rx.AapsSchedulers;
-import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager;
+import info.nightscout.androidaps.plugins.pump.eopatch.ble.PreferenceManager;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.TempBasalScheduleStart;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.TempBasalScheduleSetResponse;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasal;
+import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasalManager;
 import io.reactivex.rxjava3.core.Single;
 
 @Singleton
 public class StartTempBasalTask extends TaskBase {
-    @Inject IPreferenceManager pm;
+    @Inject PreferenceManager pm;
+    @Inject TempBasalManager tempBasalManager;
     @Inject AapsSchedulers aapsSchedulers;
 
     private final TempBasalScheduleStart TEMP_BASAL_SCHEDULE_START;
@@ -38,7 +40,7 @@ public class StartTempBasalTask extends TaskBase {
     }
 
     private void onTempBasalStarted(TempBasal tempBasal) {
-        pm.getTempBasalManager().updateBasalRunning(tempBasal);
+        tempBasalManager.updateBasalRunning(tempBasal);
         pm.flushTempBasalManager();
         enqueue(TaskFunc.UPDATE_CONNECTION);
     }

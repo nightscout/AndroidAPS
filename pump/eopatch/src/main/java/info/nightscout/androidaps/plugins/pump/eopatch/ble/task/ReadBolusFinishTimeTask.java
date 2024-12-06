@@ -53,7 +53,7 @@ public class ReadBolusFinishTimeTask extends BolusTask {
         pm.flushBolusCurrent();
     }
 
-    public synchronized void enqueue() {
+    @Override public synchronized void enqueue() {
         boolean ready = (disposable == null || disposable.isDisposed());
 
         if (ready) {
