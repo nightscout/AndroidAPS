@@ -9,7 +9,6 @@
     <string name="ns_create_announcements_from_carbs_req_title">Criar anúncios a partir dos alertas de hidratos necessários</string>
     <string name="ns_create_announcements_from_errors_summary">Criar um anúncio no Nightscout para caixas de diálogo de erro e alertas locais (também podem ser visualizados em Careportal sob tratamentos)</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Criar anúncios Nightscout para alertas de hidratos necessários</string>
-    <string name="description_ns_client">Sincroniza os seus dados com o Nightscout</string>
     <string name="unsupported_ns_version">Versão sem suporte do Nightscout</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
@@ -17,15 +16,9 @@
     <!-- NSClient -->
     <string name="no_write_permission">ClienteNS sem permissões para alterar dados. Tem a senha API correta?</string>
     <string name="ns_client">ClienteNS</string>
-    <string name="ns_client_short_name">CLNS</string>
     <string name="ns_client_url">URL:</string>
     <string name="restart">Reiniciar</string>
-    <string name="ns_client_internal_title">ClienteNS</string>
     <string name="ns_client_url_title">Nightscout URL</string>
-    <string name="ns_client_url_dialog_message">Introduza o Nightscout URL</string>
-    <string name="ns_client_secret_title">NS API secret</string>
-    <string name="ns_client_secret_dialog_title">NS API secret</string>
-    <string name="ns_client_secret_dialog_message">Insira NS API secret (min 12 caract.)</string>
     <string name="deliver_now">Administrar agora</string>
     <string name="queue">Fila de espera:</string>
     <string name="status">Estado:</string>
