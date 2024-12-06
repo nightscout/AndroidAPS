@@ -124,7 +124,7 @@ class NSClientV3Plugin @Inject constructor(
         .mainType(PluginType.SYNC)
         .fragmentClass(NSClientFragment::class.java.name)
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_nightscout_syncs)
-        .pluginName(R.string.ns_client_v3)
+        .pluginName(R.string.ns_client_v3_internal_title)
         .shortName(R.string.ns_client_v3_short_name)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.description_ns_client_v3),
@@ -785,7 +785,7 @@ class NSClientV3Plugin @Inject constructor(
         parent.addPreference(category)
         category.apply {
             key = "ns_client_settings"
-            title = rh.gs(R.string.ns_client_internal_title)
+            title = rh.gs(R.string.ns_client_v3_internal_title)
             initialExpandedChildrenCount = 0
             addPreference(
                 AdaptiveStringPreference(
@@ -795,7 +795,7 @@ class NSClientV3Plugin @Inject constructor(
             )
             addPreference(
                 AdaptiveStringPreference(
-                    ctx = context, stringKey = StringKey.NsClientAccessToken, dialogMessage = R.string.nsclient_token_dialog_title, title = R.string.nsclient_token_title,
+                    ctx = context, stringKey = StringKey.NsClientAccessToken, dialogMessage = R.string.nsclient_token_dialog_message, title = R.string.nsclient_token_title,
                     validatorParams = DefaultEditTextValidator.Parameters(testType = EditTextValidator.TEST_MIN_LENGTH, minLength = 17)
                 )
             )
