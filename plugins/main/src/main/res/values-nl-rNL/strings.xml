@@ -237,6 +237,9 @@
     <string name="thirdcarbsincrement">Derde koolhydraten increment</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">Standaard tijdelijke streefdoelen</string>
+    <string name="eatingsoon_duration">Binnenkort eten tijdsduur (minuten)</string>
+    <string name="eatingsoon_target">Binnenkort eten streefwaarde</string>
+    <string name="activity_duration">Activiteit duur (minuten)</string>
     <string name="fill_bolus_title">Ontlucht/Vul standaard insuline hoeveelheden</string>
     <string name="button1">Knop 1</string>
     <string name="button2">Knop 2</string>
