@@ -119,6 +119,7 @@
     <string name="loop_open_mode_min_change">Minimale aanvraag wijziging [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Open Loop zal alleen een wijzigingsverzoek tonen als de verandering groter is dan deze waarde in %. De standaard waarde is 20%</string>
     <string name="fallback_smb_no_tdd">Terugvallen naar SMB. Niet genoeg TDD gegevens.</string>
+    <string name="fallback_to_isf_no_tdd">Terugval naar profiel gevoeligheid. Niet genoeg gegevens. Reden: %1$s</string>
     <!-- Autotune -->
     <string name="autotune_description">Hulp voor mogelijke aanpassingen van het profiel (ISF, koolhydraten en basaal insuline)</string>
     <string name="autotune_shortname">AT</string>
@@ -163,4 +164,8 @@
     <string name="not_available_full">Niet beschikbaar</string>
     <string name="pump_disconnected">Pomp niet verbonden</string>
     <!--    autoISF -->
+    <string name="autoISF_settings_title">AutoISF instellingen</string>
+    <string name="autoISF_settings_summary">AutoISF maakt het mogelijk om de insulinegevoeligheidsfactor (ISF) aan te passen in verschillende scenario\'s van glucosedrag\n\nHet kan ook de SMB leveringsinstellingen aanpassen</string>
+    <string name="smb_delivery_settings_title">SMB leveringsinstellingen</string>
+    <string name="smb_delivery_settings_summary">Set van opties om de actuele SMB grootte te verhogen die kan worden geleverd in situaties waar ISF is versterkt, dwz een vrij laag ISF cijfer.\n\nGEBRUIK MET VOORZICHTIGHEID</string>
 </resources>
