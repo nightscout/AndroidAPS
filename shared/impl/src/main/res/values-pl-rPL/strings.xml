@@ -7,6 +7,13 @@
     <string name="cwf_comment_freetext2">Wolne pole tekstowe 2</string>
     <string name="cwf_comment_freetext3">Wolne pole tekstowe 3</string>
     <string name="cwf_comment_freetext4">Wolne pole tekstowe 4</string>
+    <string name="cwf_comment_patient_name_ext">Nazwa pacjenta (z AAPSClient lub AAPSClient2)</string>
+    <string name="cwf_comment_iob1_ext">Etykieta IOB lub suma IOB jeśli wyszczególniono (z AAPSClient lub AAPSClient2)</string>
+    <string name="cwf_comment_iob2_ext">Suma IOB lub [Bolus_IOB|Basal_IOB], jeśli wyszczególniono (z AAPSClient lub AAPSClient2)</string>
+    <string name="cwf_comment_cob2_ext">Wartość COB (z AAPSClient lub AAPSClient2)</string>
+    <string name="cwf_comment_delta_ext">Krótka delta glikemii (z AAPSClient lub AAPSClient2)</string>
+    <string name="cwf_comment_avg_delta_ext">Średnia delta glikemii [15min] (z AAPSClient lub AAPSClient2)</string>
+    <string name="cwf_comment_temp_target_ext">Cel tymczasowy [TempTarget] lub jego zakres [TempTargetLow - TempTargetHigh] (z AAPSClient lub AAPSClient2)</string>
     <string name="cwf_comment_iob1">Etykieta IOB lub suma IOB przy szczegółowym IOB</string>
     <string name="cwf_comment_iob2">Suma IOB lub (Bolus_IOB|Basal_IOB) jeśli szczegółowo</string>
     <string name="cwf_comment_cob1">Etykieta COB</string>
