@@ -184,7 +184,22 @@
     <string name="openapsama_bgBrake_ISF_weight_summary">C\'est le poids appliqué lors de la décélération de la glycémie et qui affaiblit la SI en réduisant la quantité d\'insuline injecté.\n\nLa valeur par défaut 0.0 désactive cet effet.</string>
     <string name="openapsama_autoISF_max">Ratio max autoISF\n(autoISF_max)</string>
     <string name="openapsama_autoISF_min">Ratio min autoISF\n(autoISF_min)</string>
+    <string name="openapsama_pp_ISF_weight">poids de la SI postprandiale\n(pp_ISF_weight)</string>
+    <string name="openapsama_bgAccel_ISF_weight">Poids lorsque la glycémie accélère\n(bgAccel_ISF_weight)</string>
+    <string name="openapsama_bgBrake_ISF_weight">Poids lorsque la glycémie décélère\n(bgBrake_ISF_weight)</string>
+    <string name="openapsama_dura_ISF_weight">poids SI en cas de plateau\n(dura_ISF_weight)</string>
+    <string name="openapsama_smb_delivery_ratio">Facteur d\'injection SMB fixe\n(smb_delivery_ratio)</string>
+    <string name="openapsama_smb_delivery_ratio_min">Facteur d\'injection SMB variable, valeur mini\n(smb_delivery_ratio_min)</string>
+    <string name="openapsama_smb_delivery_ratio_max">Facteur d\'injection SMB variable, valeur maxi\n(smb_delivery_ratio_max)</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range">Facteur d\'injection SMB variable, selon la plage de glycémies\n(smb_delivery_ratio_bg_range)</string>
+    <string name="openapsama_smb_max_range_extension">Extension de l\'intervalle max SMB/RNS\n(smb_max_range_extension)</string>
+    <string name="openapsama_smb_delivery_ratio_summary">Valeur par défaut : 0.5\nCeci est une autre limite de sécurité OpenAPS, et spécifie quelle part de l\'insuline totale requise peut être injectée en tant que SMB. Cela a pour but d\'empêcher d\'aller sur un territoire dangereux si des aidants demandent simultanément des SMB par téléphone. Augmentez cette valeur expérimentale lentement et avec prudence.</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">Valeur par défaut: 0,5. Ceci est la valeur minimale du facteur linéaire contrairement au facteur fixe ci-dessus.</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">Valeur par défaut: 0,5. Ceci est la valeur maximale du facteur linéaire contrairement au facteur fixe ci-dessus.</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range_summary">Valeur par défaut : 0. Le facteur d\'injection de SMB augmente linérairement en fonction de la plage de glycémie [target_bg, target_bg+bg_range].\nSur la Cible, le facteur de SMB est la valeur minimale (smb_delivery_ratio_min), sur la Cible+Plage, c\'est le facteur maximal.\nAvec 0 la variation linéraire du facteur SMB est désactivé et la facteur fixe (smb_delivery_ratio) est utilisé.</string>
     <string name="openapsama_smb_max_range_extension_summary">Valeur par défaut : 1 Ceci est une autre clé de sécurité OpenAPS. Elle spécifie par quel facteur vous pouvez dépasser les 120 minutes régulières maxSMB/maxUAM. Augmentez lentement et avec prudence cette valeur expérimentale.</string>
+    <string name="enableSMB_EvenOn_OddOff_always">Activer les SMB uniquement si la Cible active est un nombre pair</string>
+    <string name="enableSMB_EvenOn_OddOff_always_summary">\nactivé ...\nsi la Cible active (mmol/L) a son chiffre décimal pair\nou si la Cible active (mg/dL) est un nombre pair\n\ndésactivé sinon</string>
     <string name="openapsama_iob_threshold_percent_summary" formatted="false">Pourcentage de maxIA au-dessus de laquelle les SMB sont désactivés.\nValeur par défaut : 100%\nAvec 100% cette fonctionnalité est désactivée.</string>
     <string name="openapsama_iob_threshold_percent">seuil maxIA pour SMB\n(iob_threshold_pourcent)</string>
 </resources>
