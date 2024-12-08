@@ -107,6 +107,7 @@ import javax.inject.Singleton
 
     override fun onStart() {
         super.onStart()
+        equilManager.init()
         handler?.postDelayed(statusChecker, STATUS_CHECK_INTERVAL_MILLIS)
         disposable += rxBus
             .toObservable(EventEquilDataChanged::class.java)

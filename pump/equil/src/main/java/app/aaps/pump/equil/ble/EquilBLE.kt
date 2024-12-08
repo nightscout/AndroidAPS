@@ -55,10 +55,10 @@ class EquilBLE @Inject constructor(
     private val rxBus: RxBus
 ) {
 
-    var equilManager: EquilManager? = null
+    private var equilManager: EquilManager? = null
     private var mGattCallback: BluetoothGattCallback? = null
-    var notifyChara: BluetoothGattCharacteristic? = null
-    var writeChara: BluetoothGattCharacteristic? = null
+    private var notifyChara: BluetoothGattCharacteristic? = null
+    private var writeChara: BluetoothGattCharacteristic? = null
 
     private var bluetoothGatt: BluetoothGatt? = null
     private val bluetoothAdapter: BluetoothAdapter? get() = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter

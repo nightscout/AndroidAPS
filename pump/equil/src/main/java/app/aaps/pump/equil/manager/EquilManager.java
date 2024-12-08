@@ -121,6 +121,9 @@ public class EquilManager {
         this.instantiator = instantiator;
 
         this.gsonInstance = createGson();
+    }
+
+    public void init() {
         loadPodState();
         initEquilError();
         equilBLE.init(this);
