@@ -154,4 +154,30 @@
     <string name="autotune_revert_local_profile_message">Przywrócić profil %1$s przy użyciu profilu wejściowego?</string>
     <string name="autotune_profile_invalid">Nieprawidłowy profil</string>
     <!--    autoISF -->
+    <string name="openapsama_higher_ISFrange_weight_summary">Jest to waga stosowana gdy glikemia jest powyżej celu, co wzmacnia ISF i w efekcie może potencjalnie zwiększyć podaż insuliny.\n\nDomyślna wartość 0.0 wyłącza ten efekt.</string>
+    <string name="openapsama_pp_ISF_weight_summary">Jest to waga stosowana gdy glikemia rośnie, co wzmacnia ISF i w efekcie może potencjalnie zwiększyć podaż insuliny.\n\nDomyślna wartość 0.0 wyłącza ten efekt.</string>
+    <string name="openapsama_bgAccel_ISF_weight_summary">Jest to waga stosowana gdy glikemia przyśpiesza, co wzmacnia ISF i w efekcie może potencjalnie zwiększyć podaż insuliny.\n\nDomyślna wartość 0.0 wyłącza ten efekt.</string>
+    <string name="openapsama_bgBrake_ISF_weight_summary">Jest to waga stosowana gdy glikemia zwalnia, co osłabia ISF i w efekcie może potencjalnie zmniejszyć podaż insuliny.\n\nDomyślna wartość 0.0 wyłącza ten efekt.</string>
+    <string name="openapsama_autoISF_max">Maksymalny współczynnik autoISF\n(autoISF_max)</string>
+    <string name="openapsama_autoISF_min">Minimalny współczynnik autoISF\n(autoISF_min)</string>
+    <string name="openapsama_lower_ISFrange_weight">Waga dolnego zakresu ISF\n(lower_ISFrange_weight)</string>
+    <string name="openapsama_higher_ISFrange_weight">Waga górnego zakresu ISF\n(higher_ISFrange_weight)</string>
+    <string name="openapsama_pp_ISF_weight">poposiłkowa waga ISF\n(pp_ISF_weight)</string>
+    <string name="openapsama_bgAccel_ISF_weight">Waga podczas przyśpieszania glikemi\n(bgAccel_ISF_weight)</string>
+    <string name="openapsama_bgBrake_ISF_weight">Waga podczas zwalniania glikemi\n(bgBrake_ISF_weight)</string>
+    <string name="openapsama_dura_ISF_weight">Waga przy stagnacji glikemii\n(dura_ISF_weight)</string>
+    <string name="openapsama_smb_delivery_ratio">stały współczynnik podaży SMB\n(smb_delivery_ratio)</string>
+    <string name="openapsama_smb_delivery_ratio_min">zmienny współczynnik podaży SMB, dół zakresu\n(smb_delivery_ratio_min)</string>
+    <string name="openapsama_smb_delivery_ratio_max">zmienny współczynnik podaży SMB, góra zakresu\n(smb_delivery_ratio_max)</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range">zmienny współczynnik podaży SMB, zmapowany zakres glikemii\n(smb_delivery_ratio_bg_range)</string>
+    <string name="openapsama_smb_max_range_extension">Maksymalne rozszerzenie zakresu SMB/UAM\n(smb_max_range_extension)</string>
+    <string name="openapsama_smb_delivery_ratio_summary">Domyślna wartość: 0,5. To jest kolejny kluczowy limit bezpieczeństwa OpenAPS i określa, jaki udział całej wymaganej insuliny może być dostarczony jako SMB. Ma to na celu uniemożliwienie ludziom wchodzenia na niebezpieczny obszar poprzez jednoczesne realizowanie wielu zleceń SMB wydanych zdalnie z telefonów opiekunów. Zwiększaj tę wartość eksperymentalną powoli i ostrożnie.</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">Wartość domyślna: 0,5. Jest to dolna granica liniowo rosnącego współczynnika, a nie ustalona powyżej wartość.</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">Wartość domyślna: 0,5. Jest to górna granica liniowo rosnącego współczynnika, a nie ustalona powyżej wartość.</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range_summary">Wartość domyślna: 0. Liniowo rosnący współczynnik podaży SMB jest mapowany do zakresu glukozy [target_bg, target_bg+bg_range].\nPrzy glikemi równej dolnemu zakresowi (target_bg) współczynnik SMB wynosi [smb_delivery_ratio_min], a przy górnym (target_bg+bg_range) jest to [smb_delivery_ratio_max]\nPrzy wartości 0 liniowo rosnący współczynnik SMB jest wyłączony i stosuje się stały współczynnik smb_delivery_ratio.</string>
+    <string name="openapsama_smb_max_range_extension_summary">Domyślna wartość: 1. Jest to kolejny kluczowy limit bezpieczeństwa OpenAPS i określa, o ile (jaki mnożnik) możesz przekroczyć standardowe 120 minut [maxSMB/maxUAM]. Zwiększaj tę wartość eksperymentalną powoli i ostrożnie.</string>
+    <string name="enableSMB_EvenOn_OddOff_always">Włącz alternatywną aktywację SMB w zależności od tego, czy aktywny cel będzie liczbą parzystą</string>
+    <string name="enableSMB_EvenOn_OddOff_always_summary">\nwłączone...\n- jeśli aktywny cel (mmol/L) ma parzystą wartość dziesiątek (np.: 80, 121, 103) \n- lub aktywny cel (mg/dL) jest liczbą parzystą (np.: 98, 112) \n\n... inaczej wyłączone</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Procent maxIOB powyżej którego SMB są wyłączone.\nDomyślna wartość: 100%\nPrzy wartości 100% ta funkcja jest wyłączona.</string>
+    <string name="openapsama_iob_threshold_percent">procent progu maxIOB dla SMB\n(iob_threshold d_percent)</string>
 </resources>
