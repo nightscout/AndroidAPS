@@ -1159,10 +1159,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     sensitivityText += "\n$it"
                 }
             }
-            runOnUiThread {
-                _binding ?: return@runOnUiThread
-                binding.infoLayout.asLayout.setOnClickListener { activity?.let { OKDialog.show(it, rh.gs(app.aaps.core.ui.R.string.sensitivity), sensitivityText) } }
-            }
+            binding.infoLayout.asLayout.setOnClickListener { activity?.let { OKDialog.show(it, rh.gs(app.aaps.core.ui.R.string.sensitivity), sensitivityText) } }
         } else binding.infoLayout.variableSensitivity.visibility = View.GONE
     }
 
