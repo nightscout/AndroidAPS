@@ -76,8 +76,12 @@
     <string name="requestcode">Kod zapytania: %1$s</string>
     <string name="objectives_hint">(zaznacz wszystkie poprawne odpowiedzi)</string>
     <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
     <string name="notconnected">Brak połączenia z Internetem</string>
     <string name="failedretrievetime">Nie udało się odzyskać</string>
     <string name="requirementnotmet">Wymagania celu nie zostały spełnione</string>
     <string name="what_i_ve_learned">Czego się nauczyłem:</string>
+    <string name="verify_master_password">Sprawdź, czy znasz hasło główne</string>
 </resources>
