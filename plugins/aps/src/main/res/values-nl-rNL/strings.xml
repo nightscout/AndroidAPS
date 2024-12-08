@@ -29,6 +29,7 @@
     <string name="description_ama">Het algoritme uit 2017</string>
     <string name="description_smb">Meest recente algoritme voor gevorderde gebruikers</string>
     <string name="description_smb_dynamic_isf">Meest recente algoritme voor gevorderde gebruikers met dynamische/automatische ISF</string>
+    <string name="description_auto_isf">Meest recente algoritme voor gevorderde gebruikers met AutoISF uitbreidingen</string>
     <string name="openapsama_bolus_snooze_dia_divisor">Bolus snooze dia deler</string>
     <string name="openapsma_run">Nu uitvoeren</string>
     <string name="openapsma_last_run_label">Laatste berekening</string>
@@ -65,7 +66,9 @@
     <string name="enable_smb_summary">Gebruik Super Micro Bolussen in plaats van tijdelijke basaalstanden voor een snellere reactie</string>
     <string name="enable_uam_summary">Detectie van niet aangekondigde (UnAnnounced) Maaltijden</string>
     <string name="enable_smb_always">Activeer SMB altijd</string>
+    <string name="enable_smb_always_summary">Activeer SMB altijd onafhankelijk van COB, tijdelijke streefdoelen of bolussen. Alleen mogelijk bij BG bronnen met geavanceerd filteren van gegevens</string>
     <string name="enable_smb_after_carbs">Activeer SMB na koolhydraten</string>
+    <string name="enable_smb_after_carbs_summary">Activeer SMB gedurende 6 uur na koolhydraten, zelfs met 0 COB. Alleen mogelijk bij BG bronnen met geavanceerd filteren van gegevens</string>
     <string name="enable_smb_with_cob">Activeer SMB met Koolhydraten</string>
     <string name="enable_smb_with_cob_summary">SMB actief tijdens actieve koolhydraten</string>
     <string name="enable_smb_with_temp_target">Gebruik SMB met tijdelijke streefdoelen</string>
@@ -164,8 +167,18 @@
     <string name="not_available_full">Niet beschikbaar</string>
     <string name="pump_disconnected">Pomp niet verbonden</string>
     <!--    autoISF -->
+    <string name="half_basal_exercise_target_title">Halve basaal bewegingsdoel</string>
     <string name="autoISF_settings_title">AutoISF instellingen</string>
     <string name="autoISF_settings_summary">AutoISF maakt het mogelijk om de insulinegevoeligheidsfactor (ISF) aan te passen in verschillende scenario\'s van glucosedrag\n\nHet kan ook de SMB leveringsinstellingen aanpassen</string>
     <string name="smb_delivery_settings_title">SMB leveringsinstellingen</string>
     <string name="smb_delivery_settings_summary">Set van opties om de actuele SMB grootte te verhogen die kan worden geleverd in situaties waar ISF is versterkt, dwz een vrij laag ISF cijfer.\n\nGEBRUIK MET VOORZICHTIGHEID</string>
+    <string name="openapsama_autoISF_max_summary">Vergelijkbaar met autosens_max definieert dit hoe sterk ISF kan worden.\n\nDe standaard waarde 1.0 schakelt dit effect effectief uit.\n\nWAARSCHUWING: Wees extreem voorzichtig bij het gebruik van waarden boven de 2,5</string>
+    <string name="openapsama_autoISF_min_summary">Vergelijkbaar met autosens_min definieert dit hoe zwak ISF kan worden.\n\nDe standaard waarde 1.0 schakelt dit effect effectief uit.</string>
+    <string name="openapsama_dura_ISF_weight_summary">Dit is het gewicht dat wordt toegepast wanneer de glucose gedurende langere tijd verhoogd blijft waardoor ISF wordt versterkt en de insulinetoediening mogelijk toeneemt.\n\nDe standaardwaarde 0.0 schakelt dit effect effectief uit.</string>
+    <string name="openapsama_lower_ISFrange_weight_summary">Dit is het gewicht dat wordt toegepast wanneer de glucose lager dan de doelwaarde is, wat ISF verzwakt en hiermee mogelijk de insulinetoediening verlaagd.\n\nDe standaardwaarde 0.0 schakelt dit effect effectief uit.</string>
+    <string name="openapsama_higher_ISFrange_weight_summary">Dit is het gewicht dat wordt toegepast wanneer de glucose hoger dan de doelwaarde is, wat ISF versterkt en hiermee mogelijk de insulinetoediening verhoogd.\n\nDe standaardwaarde 0.0 schakelt dit effect effectief uit.</string>
+    <string name="openapsama_pp_ISF_weight_summary">Dit is het gewicht dat wordt toegepast bij een stijgende glucose waardoor ISF versterkt wordt en de insulinetoediening mogelijk verhoogt.\n\nDe standaardwaarde 0.0 schakelt dit effect effectief uit.</string>
+    <string name="openapsama_autoISF_max">Max autoISF verhouding\n(autoISF_max)</string>
+    <string name="openapsama_autoISF_min">Min autoISF ratio\n(autoISF_min)</string>
+    <string name="openapsama_iob_threshold_percent">maxIOB drempelpercentage voor SMB\n(iob_threshold_percent)</string>
 </resources>
