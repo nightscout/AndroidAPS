@@ -1144,7 +1144,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val ratioUsed = request?.autosensResult?.ratio ?: 1.0
 
         if (variableSens != isfMgdl && variableSens != 0.0 && isfMgdl != null) {
-            var text = if (ratioUsed != 1.0 && ratioUsed != lastAutosensData?.autosensResult?.ratio) String.format(Locale.getDefault(), "%.0f%%\n", ratioUsed * 100) else ""
+            var text = if (ratioUsed != 1.0 && ratioUsed != lastAutosensData?.autosensResult?.ratio) String.format(Locale.getDefault(), "Alg: %.0f%%\n", ratioUsed * 100) else ""
             text += String.format(
                 Locale.getDefault(), "%1$.1f→%2$.1f (%3$.1f)",
                 profileUtil.fromMgdlToUnits(isfMgdl, profileFunction.getUnits()),

@@ -162,8 +162,9 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
 
     override fun supportsDynamicIsf() = true //: Boolean = preferences.get(BooleanKey.ApsUseAutoIsf)
 
-    override fun getIsfMgdl(multiplier: Double, timeShift: Int, caller: String): Double? {
+    override fun getIsfMgdl(profile: Profile, caller: String): Double? {
         val start = dateUtil.now()
+        val multiplier = (profile as ProfileSealed.EPS).value.originalPercentage / 100.0
         val sensitivity = calculateVariableIsf(start)
         if (sensitivity.second == null)
             uiInteraction.addNotificationValidTo(
