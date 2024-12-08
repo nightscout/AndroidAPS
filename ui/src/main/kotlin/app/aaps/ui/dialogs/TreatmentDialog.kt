@@ -110,7 +110,11 @@ class TreatmentDialog : DialogFragmentWithDate() {
         super.onViewCreated(view, savedInstanceState)
 
         if (config.NSCLIENT) {
-            binding.recordOnly.isChecked = preferences.get(StringKey.SmsReceiverNumber).isNullOrBlank()
+            if(preferences.get(BooleanKey.SmsAllowRemoteCommands)) {
+                binding.recordOnly.isChecked = preferences.get(StringKey.SmsReceiverNumber).isNullOrBlank()
+            } else {
+                binding.recordOnly.isChecked = true
+            }
         }
         val maxCarbs = constraintChecker.getMaxCarbsAllowed().value().toDouble()
         val maxInsulin = constraintChecker.getMaxBolusAllowed().value()
@@ -150,6 +154,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
         val actions: LinkedList<String?> = LinkedList()
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(insulin, aapsLogger)).value()
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(carbs, aapsLogger)).value()
+        val sendSMS = preferences.get(BooleanKey.SmsAllowRemoteCommands) && !phoneNumber.isNullOrBlank()
 
         if (insulinAfterConstraints > 0) {
             actions.add(
@@ -161,7 +166,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
             )
             if (recordOnlyChecked)
                 actions.add(rh.gs(app.aaps.core.ui.R.string.bolus_recorded_only).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
-            else if (preferences.get(BooleanKey.SmsAllowRemoteCommands) && !phoneNumber.isNullOrBlank())
+            else if (sendSMS)
                 actions.add(
                     rh.gs(
                         app.aaps.core.ui.R.string.sms_bolus_notification
@@ -196,9 +201,9 @@ class TreatmentDialog : DialogFragmentWithDate() {
                     detailedBolusInfo.insulin = insulinAfterConstraints
                     detailedBolusInfo.carbs = carbsAfterConstraints.toDouble()
                     detailedBolusInfo.context = context
-                    if (recordOnlyChecked) {
+                    if (recordOnlyChecked || sendSMS) {
                         if (detailedBolusInfo.insulin > 0)
-                            if (preferences.get(BooleanKey.SmsAllowRemoteCommands) && !phoneNumber.isNullOrBlank())
+                            if (sendSMS)
                                 smsCommunicator.sendSMS(Sms(phoneNumber, rh.gs(app.aaps.core.ui.R.string.bolus) + " " + detailedBolusInfo.insulin))
                             else
                                 disposable += persistenceLayer.insertOrUpdateBolus(

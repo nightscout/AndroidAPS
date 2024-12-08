@@ -132,8 +132,13 @@ class InsulinDialog : DialogFragmentWithDate() {
         if (config.NSCLIENT) {
             // If SmsAllowRemoteCommands is True, then user might use either SMS command or record only, otherwise hardcode record_only option
             val allowSms = preferences.get(BooleanKey.SmsAllowRemoteCommands)
-            binding.recordOnly.isEnabled = allowSms
-            binding.recordOnly.isChecked = preferences.get(StringKey.SmsReceiverNumber).isNullOrBlank()
+            if(allowSms) {
+                binding.recordOnly.isEnabled = !preferences.get(StringKey.SmsReceiverNumber).isNullOrBlank()
+                binding.recordOnly.isChecked = preferences.get(StringKey.SmsReceiverNumber).isNullOrBlank()
+            } else {
+                binding.recordOnly.isEnabled = false
+                binding.recordOnly.isChecked = true
+            }
         }
         val maxInsulin = constraintChecker.getMaxBolusAllowed().value()
 
@@ -207,6 +212,7 @@ class InsulinDialog : DialogFragmentWithDate() {
         val phoneNumber = preferences.get(StringKey.SmsReceiverNumber)
         val recordOnlyChecked = binding.recordOnly.isChecked
         val eatingSoonChecked = binding.startEatingSoonTt.isChecked
+        val sendSMS = preferences.get(BooleanKey.SmsAllowRemoteCommands) && !phoneNumber.isNullOrBlank()
 
         if (insulinAfterConstraints > 0) {
             actions.add(
@@ -215,7 +221,7 @@ class InsulinDialog : DialogFragmentWithDate() {
             )
             if (recordOnlyChecked)
                 actions.add(rh.gs(app.aaps.core.ui.R.string.bolus_recorded_only).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
-            else if (preferences.get(BooleanKey.SmsAllowRemoteCommands) && !phoneNumber.isNullOrBlank())
+            else if (sendSMS)
                 actions.add(rh.gs(app.aaps.core.ui.R.string.sms_bolus_notification).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
 
             if (abs(insulinAfterConstraints - insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
@@ -280,7 +286,7 @@ class InsulinDialog : DialogFragmentWithDate() {
                             ).subscribe()
                             if (timeOffset == 0)
                                 automation.removeAutomationEventBolusReminder()
-                        } else if (preferences.get(BooleanKey.SmsAllowRemoteCommands) && !phoneNumber.isNullOrBlank()) {
+                        } else if (sendSMS) {
                             smsCommunicator.sendSMS(Sms(phoneNumber, rh.gs(app.aaps.core.ui.R.string.bolus) + " " + detailedBolusInfo.insulin))
                         } else {
                             uel.log(
