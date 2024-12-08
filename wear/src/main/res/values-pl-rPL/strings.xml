@@ -17,7 +17,7 @@
     <string name="msg_warning_old">Dane z AAPS są %1$s stare! Sprawdź swój sensor, xDrip+, NS, konfigurację AAPS i inne ustawienia!</string>
     <string name="pref_vibrate_on_bolus">Wibruj przy Bolusie</string>
     <string name="units_short">U</string>
-    <string name="pref_display_settings">Wyświetlanie</string>
+    <string name="pref_display_settings">Wyświetlacz</string>
     <string name="pref_graph_settings">Wykres</string>
     <string name="pref_interface_settings">Interfejs</string>
     <string name="pref_others_settings">Inne</string>
