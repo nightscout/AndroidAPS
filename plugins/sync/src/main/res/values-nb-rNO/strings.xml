@@ -36,7 +36,7 @@
     <string name="ns_client_secret_title">Nightscout API-nøkkel</string>
     <string name="ns_client_secret_dialog_message">Skriv inn Nightscout API-nøkkel (minimum 12-tegn passord registrert i dine Nightscout-variabler)</string>
     <string name="nsclient_token_title">Nightscout tilgangstoken</string>
-    <string name="nsclient_token_dialog_message">Skriv inn ditt admin-nivå tilgangstoken generert i Nightscout adminverktøy (minimum 17 tegn, ikke din API-nøkkel!)</string>
+    <string name="nsclient_token_dialog_message">Skriv inn din admin-nivå tilgangstoken generert i Nightscout adminverktøy (minimum 17 tegn, ikke din API-nøkkel!)</string>
     <string name="deliver_now">Lever nå</string>
     <string name="queue">Kø:</string>
     <string name="status">Status:</string>
