@@ -122,6 +122,7 @@
     <string name="wizard_result">Reken. Wizard:\nInsuline: %1$.2fE\nKoolhy.: %2$dg</string>
     <string name="quick_wizard_not_available">Geselecteerde QuickWizard is niet meer beschikbaar, vernieuw uw tegel</string>
     <string name="quick_wizard_message">QuickWizard: %1$s\nInsuline: %2$.2fE\nKoolhy.: %3$dg</string>
+    <string name="user_action_not_available">De geselecteerde gebruikersactie %1$s is niet meer beschikbaar, ververs uw tegel</string>
     <string name="wear_action_tempt_cancel_message">Huidige tijdelijk streefdoel annuleren?</string>
     <string name="wear_action_tempt_unit_error">Verschillende eenheden gebruikt op horloge en telefoon!</string>
     <string name="wear_action_tempt_zero_message">Tijdelijk streefdoel 0 minuten,  huidige tijdelijk streefdoel annuleren?</string>
@@ -134,6 +135,8 @@
     <string name="wear_settings">Wear instellingen</string>
     <string name="wearcontrol_title">Bedieningen via horloge</string>
     <string name="wearcontrol_summary">Stel tijdelijke doelen en bolussen in vanop je horloge.</string>
+    <string name="wear_broadcast_data">Gegevens verzenden</string>
+    <string name="wear_broadcast_data_summary">Verzend gegevens naar AAPS of AAPSClient</string>
     <string name="wear_wizard_settings_summary">Berekeningen inclusief in het resultaat van de wizard</string>
     <string name="wear_general_settings">Algemene instellingen</string>
     <string name="wear_notifysmb_title">Waarschuw bij SMB</string>
