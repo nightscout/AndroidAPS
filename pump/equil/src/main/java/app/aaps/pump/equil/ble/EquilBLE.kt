@@ -66,6 +66,7 @@ class EquilBLE @Inject constructor(
     var connecting = false
     var macAddress: String? = null
     private var bleHandler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
+
     @Synchronized
     fun unBond(transmitterMAC: String?) {
         if (transmitterMAC == null) return
@@ -91,7 +92,7 @@ class EquilBLE @Inject constructor(
     private fun bleConnectErrorForResult() {
         baseCmd?.let { baseCmd ->
             synchronized(baseCmd) {
-                baseCmd.isCmdStatus = false
+                baseCmd.cmdStatus = false
                 baseCmd.notifyAll()
             }
         }
@@ -114,7 +115,7 @@ class EquilBLE @Inject constructor(
                     unBond(macAddress)
                     SystemClock.sleep(50)
                     aapsLogger.debug(LTag.PUMPCOMM, "error133 ")
-                    baseCmd?.setResolvedResult(ResolvedResult.CONNECT_ERROR)
+                    baseCmd?.resolvedResult = ResolvedResult.CONNECT_ERROR
                     bleConnectErrorForResult()
                     disconnect()
                     return
@@ -197,7 +198,7 @@ class EquilBLE @Inject constructor(
         aapsLogger.debug(LTag.PUMPBTCOMM, "ready: ===$baseCmd")
         dataList = ArrayList()
         baseCmd?.let { baseCmd ->
-            equilResponse = baseCmd.equilResponse
+            equilResponse = baseCmd.getEquilResponse()
             indexData = 0
             writeData()
         }
@@ -207,7 +208,7 @@ class EquilBLE @Inject constructor(
         dataList = ArrayList()
         aapsLogger.debug(LTag.PUMPCOMM, "nextCmd===== ${baseCmd?.isEnd}====")
         baseCmd?.let { baseCmd ->
-            equilResponse = baseCmd.nextEquilResponse
+            equilResponse = baseCmd.getNextEquilResponse()
             aapsLogger.debug(LTag.PUMPCOMM, "nextCmd===== $baseCmd===${equilResponse?.send}")
             if ((equilResponse?.send?.size ?: 0) == 0) {
                 aapsLogger.debug(LTag.PUMPCOMM, "equilResponse is null")
@@ -231,11 +232,13 @@ class EquilBLE @Inject constructor(
         preCmd = null
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
     }
-    fun closeBleAuto(){
+
+    fun closeBleAuto() {
         handler.postDelayed({
-                             disconnect()
+                                disconnect()
                             }, EquilConst.EQUIL_BLE_NEXT_CMD)
     }
+
     var autoScan = false
     private fun findEquil(mac: String) {
         if (mac.isEmpty()) return
@@ -262,17 +265,17 @@ class EquilBLE @Inject constructor(
         aapsLogger.debug(LTag.PUMPCOMM, "writeCmd {}", baseCmd)
         this.baseCmd = baseCmd
         val mac: String = when (baseCmd) {
-            is CmdPair          -> baseCmd.getAddress()
-            is CmdDevicesOldGet -> baseCmd.getAddress()
+            is CmdPair          -> baseCmd.address
+            is CmdDevicesOldGet -> baseCmd.address
             else                -> equilManager?.address ?: error("Unknown MAC address")
         }
         autoScan = baseCmd is CmdModelGet || baseCmd is CmdInsulinGet
-        if (isConnected && baseCmd.isPairStep) {
+        if (isConnected && baseCmd.isPairStep()) {
             ready()
         } else if (isConnected) {
             preCmd?.let { preCmd ->
-                baseCmd.setRunCode(preCmd.getRunCode())
-                baseCmd.setRunPwd(preCmd.getRunPwd())
+                baseCmd.runCode = preCmd.runCode
+                baseCmd.runPwd = preCmd.runPwd
                 nextCmd2()
             }
         } else {
@@ -284,8 +287,8 @@ class EquilBLE @Inject constructor(
 
     fun readHistory(baseCmd: CmdHistoryGet) {
         if (isConnected && preCmd != null) {
-            baseCmd.setRunCode(preCmd!!.getRunCode())
-            baseCmd.setRunPwd(preCmd!!.getRunPwd())
+            baseCmd.runCode = preCmd!!.runCode
+            baseCmd.runPwd = preCmd!!.runPwd
             this.baseCmd = baseCmd
             nextCmd2()
             preCmd = baseCmd
@@ -322,7 +325,7 @@ class EquilBLE @Inject constructor(
     }
 
     private var dataList: List<String> = ArrayList()
-    @Synchronized fun decode(buffer: ByteArray?) {
+    @Synchronized fun decode(buffer: ByteArray) {
         val str = Utils.bytesToHex(buffer)
         aapsLogger.debug(LTag.PUMPBTCOMM, "decode=====$str")
         val response = baseCmd?.decodeEquilPacket(buffer)
@@ -352,7 +355,7 @@ class EquilBLE @Inject constructor(
                 TIME_OUT_CONNECT_WHAT -> {
                     stopScan()
                     aapsLogger.debug(LTag.PUMPCOMM, "TIME_OUT_CONNECT_WHAT====")
-                    baseCmd?.setResolvedResult(ResolvedResult.CONNECT_ERROR)
+                    baseCmd?.resolvedResult = ResolvedResult.CONNECT_ERROR
                     bleConnectErrorForResult()
                     disconnect()
                 }
@@ -374,7 +377,7 @@ class EquilBLE @Inject constructor(
                     updateCmdStatus(ResolvedResult.NOT_FOUNT)
                     bluetoothLeScanner.startScan(buildScanFilters(), buildScanSettings(), scanCallback)
                 }
-            } catch (ignore: IllegalStateException) {
+            } catch (_: IllegalStateException) {
             } // ignore BT not on
         } else {
             ToastUtils.errorToast(context, context.getString(app.aaps.core.ui.R.string.need_connect_permission))
@@ -382,7 +385,7 @@ class EquilBLE @Inject constructor(
     }
 
     private fun updateCmdStatus(result: ResolvedResult) {
-        baseCmd?.setResolvedResult(result)
+        baseCmd?.resolvedResult = result
     }
 
     val equilStatus: Unit

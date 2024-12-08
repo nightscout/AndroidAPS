@@ -93,7 +93,7 @@ class EquilUnPairDetachActivity : TranslatedDaggerAppCompatActivity() {
 
     private fun changeInsulin() {
         showLoading()
-        commandQueue.customCommand(CmdInsulinChange(), object : Callback() {
+        commandQueue.customCommand(CmdInsulinChange(aapsLogger, sp, equilManager), object : Callback() {
             override fun run() {
                 if (result.success) {
                     equilManager.runMode = RunMode.STOP

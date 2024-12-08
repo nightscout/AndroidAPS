@@ -72,7 +72,7 @@ class EquilPairAirFragment : EquilPairFragmentBase() {
     }
 
     private fun setStep() {
-        commandQueue.customCommand(CmdStepSet(false, EquilConst.EQUIL_STEP_AIR), object : Callback() {
+        commandQueue.customCommand(CmdStepSet(false, EquilConst.EQUIL_STEP_AIR, aapsLogger, sp, equilManager), object : Callback() {
             override fun run() {
                 if (activity == null) return
                 aapsLogger.debug(LTag.PUMPCOMM, "result====" + result.success)
@@ -88,7 +88,7 @@ class EquilPairAirFragment : EquilPairFragmentBase() {
 
     private fun setTime() {
         showLoading()
-        commandQueue.customCommand(CmdTimeSet(), object : Callback() {
+        commandQueue.customCommand(CmdTimeSet(aapsLogger, sp, equilManager), object : Callback() {
             override fun run() {
                 if (activity == null) return
                 if (result.success) {
@@ -106,7 +106,7 @@ class EquilPairAirFragment : EquilPairFragmentBase() {
     private fun setAlarmMode() {
         showLoading()
         val mode = preferences.get(EquilIntKey.EquilTone)
-        commandQueue.customCommand(CmdAlarmSet(mode), object : Callback() {
+        commandQueue.customCommand(CmdAlarmSet(mode, aapsLogger, sp, equilManager), object : Callback() {
             override fun run() {
                 if (activity == null) return
                 if (result.success) {
@@ -122,7 +122,7 @@ class EquilPairAirFragment : EquilPairFragmentBase() {
     }
 
     private fun readFM() {
-        commandQueue.customCommand(CmdDevicesGet(), object : Callback() {
+        commandQueue.customCommand(CmdDevicesGet(aapsLogger, sp, equilManager), object : Callback() {
             override fun run() {
                 if (activity == null) return
                 aapsLogger.debug(LTag.PUMPCOMM, "CmdGetDevices result====" + result.success)
@@ -153,7 +153,7 @@ class EquilPairAirFragment : EquilPairFragmentBase() {
             return
         }
         showLoading()
-        commandQueue.customCommand(CmdBasalSet(basalSchedule, profile), object : Callback() {
+        commandQueue.customCommand(CmdBasalSet(basalSchedule, profile, aapsLogger, sp, equilManager), object : Callback() {
             override fun run() {
                 if (activity == null) return
                 aapsLogger.debug(LTag.PUMPCOMM, "CmdTimeSet result====" + result.success)

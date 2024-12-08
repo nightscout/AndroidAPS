@@ -270,7 +270,7 @@ class EquilFragment : DaggerFragment() {
             tempMode = RunMode.SUSPEND
         }
         showLoading()
-        commandQueue.customCommand(CmdModelSet(tempMode.command), object : Callback() {
+        commandQueue.customCommand(CmdModelSet(tempMode.command, aapsLogger, sp, equilManager), object : Callback() {
             override fun run() {
                 dismissLoading()
                 aapsLogger.debug(LTag.PUMPCOMM, "result====" + result.success)

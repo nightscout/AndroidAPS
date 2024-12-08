@@ -181,13 +181,12 @@ public class EquilManager {
     public PumpEnactResult getTempBasalPump() {
         PumpEnactResult result = instantiator.providePumpEnactResult();
         try {
-            CmdTempBasalGet command = new CmdTempBasalGet();
-            command.setEquilManager(this);
+            CmdTempBasalGet command = new CmdTempBasalGet(aapsLogger, sp, this);
             equilBLE.writeCmd(command);
             synchronized (command) {
                 command.wait(command.getTimeOut());
             }
-            result.setSuccess(command.isCmdStatus());
+            result.setSuccess(command.getCmdStatus());
             result.enacted(command.getTime() != 0);
             SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD);
         } catch (Exception ex) {
@@ -200,15 +199,14 @@ public class EquilManager {
     public PumpEnactResult setTempBasal(double insulin, int time, boolean cancel) {
         PumpEnactResult result = instantiator.providePumpEnactResult();
         try {
-            CmdTempBasalSet command = new CmdTempBasalSet(insulin, time);
+            CmdTempBasalSet command = new CmdTempBasalSet(insulin, time, aapsLogger, sp, this);
             command.setCancel(cancel);
             EquilHistoryRecord equilHistoryRecord = addHistory(command);
-            command.setEquilManager(this);
             equilBLE.writeCmd(command);
             synchronized (command) {
                 command.wait(command.getTimeOut());
             }
-            if (command.isCmdStatus()) {
+            if (command.getCmdStatus()) {
                 long currentTime = System.currentTimeMillis();
                 if (cancel) {
                     pumpSync.syncStopTemporaryBasalWithPumpId(
@@ -237,7 +235,7 @@ public class EquilManager {
                 command.setResolvedResult(ResolvedResult.SUCCESS);
             }
             updateHistory(equilHistoryRecord, command.getResolvedResult());
-            result.setSuccess(command.isCmdStatus());
+            result.setSuccess(command.getCmdStatus());
             result.enacted(true);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -249,16 +247,15 @@ public class EquilManager {
     public PumpEnactResult setExtendedBolus(double insulin, int time, boolean cancel) {
         PumpEnactResult result = instantiator.providePumpEnactResult();
         try {
-            CmdExtendedBolusSet command = new CmdExtendedBolusSet(insulin, time, cancel);
+            CmdExtendedBolusSet command = new CmdExtendedBolusSet(insulin, time, cancel, aapsLogger, sp, this);
             EquilHistoryRecord equilHistoryRecord = addHistory(command);
-            command.setEquilManager(this);
             equilBLE.writeCmd(command);
             synchronized (command) {
                 command.wait(command.getTimeOut());
             }
 
-            result.setSuccess(command.isCmdStatus());
-            if (command.isCmdStatus()) {
+            result.setSuccess(command.getCmdStatus());
+            if (command.getCmdStatus()) {
                 command.setResolvedResult(ResolvedResult.SUCCESS);
                 long currentTimeMillis = System.currentTimeMillis();
                 if (cancel) {
@@ -299,9 +296,8 @@ public class EquilManager {
                         BS.Type.SMB, detailedBolusInfo.getId()));
         PumpEnactResult result = instantiator.providePumpEnactResult();
         try {
-            CmdLargeBasalSet command = new CmdLargeBasalSet(detailedBolusInfo.insulin);
+            CmdLargeBasalSet command = new CmdLargeBasalSet(detailedBolusInfo.insulin, aapsLogger, sp, this);
             EquilHistoryRecord equilHistoryRecord = addHistory(command);
-            command.setEquilManager(this);
             equilBLE.writeCmd(command);
             synchronized (command) {
                 command.wait(command.getTimeOut());
@@ -312,7 +308,7 @@ public class EquilManager {
             float percent1 = (float) (5f / detailedBolusInfo.insulin);
             aapsLogger.debug(LTag.PUMPCOMM, "sleep===" + detailedBolusInfo.insulin + "===" + percent1);
             float percent = 0;
-            if (command.isCmdStatus()) {
+            if (command.getCmdStatus()) {
                 result.setSuccess(true);
                 result.enacted(true);
                 while (!bolusProfile.getStop() && percent < 100) {
@@ -357,17 +353,16 @@ public class EquilManager {
     @NonNull public PumpEnactResult stopBolus(BolusProfile bolusProfile) {
         PumpEnactResult result = instantiator.providePumpEnactResult();
         try {
-            BaseCmd command = new CmdLargeBasalSet(0);
+            BaseCmd command = new CmdLargeBasalSet(0, aapsLogger, sp, this);
             EquilHistoryRecord equilHistoryRecord = addHistory(command);
-            command.setEquilManager(this);
             equilBLE.writeCmd(command);
             synchronized (command) {
                 command.wait(command.getTimeOut());
             }
-            bolusProfile.setStop(command.isCmdStatus());
+            bolusProfile.setStop(command.getCmdStatus());
             aapsLogger.debug(LTag.PUMPCOMM, "stopBolus===");
-            result.setSuccess(command.isCmdStatus());
-            if (command.isCmdStatus()) {
+            result.setSuccess(command.getCmdStatus());
+            if (command.getCmdStatus()) {
                 command.setResolvedResult(ResolvedResult.SUCCESS);
             }
             updateHistory(equilHistoryRecord, command.getResolvedResult());
@@ -381,8 +376,7 @@ public class EquilManager {
     public int loadEquilHistory(int index) {
         try {
             aapsLogger.debug(LTag.PUMPCOMM, "loadHistory start: ");
-            CmdHistoryGet historyGet = new CmdHistoryGet(index);
-            historyGet.setEquilManager(this);
+            CmdHistoryGet historyGet = new CmdHistoryGet(index, aapsLogger, sp, this);
             equilBLE.readHistory(historyGet);
             synchronized (historyGet) {
                 historyGet.wait(historyGet.getTimeOut());
@@ -397,8 +391,7 @@ public class EquilManager {
 
     public int loadHistory(int index) {
         try {
-            CmdHistoryGet historyGet = new CmdHistoryGet(index);
-            historyGet.setEquilManager(this);
+            CmdHistoryGet historyGet = new CmdHistoryGet(index, aapsLogger, sp, this);
             equilBLE.writeCmd(historyGet);
             synchronized (historyGet) {
                 historyGet.wait(historyGet.getTimeOut());
@@ -414,13 +407,12 @@ public class EquilManager {
     public PumpEnactResult getBasal(Profile profile) {
         PumpEnactResult result = instantiator.providePumpEnactResult();
         try {
-            CmdBasalGet cmdBasalGet = new CmdBasalGet(profile);
-            cmdBasalGet.setEquilManager(this);
+            CmdBasalGet cmdBasalGet = new CmdBasalGet(profile, aapsLogger, sp, this);
             equilBLE.writeCmd(cmdBasalGet);
             synchronized (cmdBasalGet) {
                 cmdBasalGet.wait(cmdBasalGet.getTimeOut());
             }
-            result.setSuccess(cmdBasalGet.isCmdStatus());
+            result.setSuccess(cmdBasalGet.getCmdStatus());
         } catch (Exception ex) {
             ex.printStackTrace();
             result.success(false).enacted(false).comment(translateException(ex));
@@ -438,7 +430,7 @@ public class EquilManager {
             equilHistoryRecord.setBasalValuesRecord(new EquilBasalValuesRecord(Arrays.asList(profile.getBasalValues())));
         }
         if (command instanceof CmdTempBasalSet cmd) {
-            boolean cancel = cmd.isCancel();
+            boolean cancel = cmd.getCancel();
             if (!cancel) {
                 EquilTempBasalRecord equilTempBasalRecord =
                         new EquilTempBasalRecord(cmd.getDuration() * 60 * 1000,
@@ -447,7 +439,7 @@ public class EquilManager {
             }
         }
         if (command instanceof CmdExtendedBolusSet cmd) {
-            boolean cancel = cmd.isCancel();
+            boolean cancel = cmd.getCancel();
             if (!cancel) {
                 EquilTempBasalRecord equilTempBasalRecord =
                         new EquilTempBasalRecord(cmd.getDurationInMinutes() * 60 * 1000,
@@ -488,19 +480,18 @@ public class EquilManager {
     public PumpEnactResult readEquilStatus() {
         PumpEnactResult result = instantiator.providePumpEnactResult();
         try {
-            BaseCmd command = new CmdModelGet();
-            command.setEquilManager(this);
+            BaseCmd command = new CmdModelGet(aapsLogger, sp, this);
             equilBLE.writeCmd(command);
             synchronized (command) {
                 command.wait(command.getTimeOut());
             }
-            if (command.isCmdStatus()) {
+            if (command.getCmdStatus()) {
                 command.setResolvedResult(ResolvedResult.SUCCESS);
                 SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD);
                 return loadEquilHistory();
             }
-            result.setSuccess(command.isCmdStatus());
-            result.enacted(command.isEnacted());
+            result.setSuccess(command.getCmdStatus());
+            result.enacted(command.getEnacted());
         } catch (Exception ex) {
             ex.printStackTrace();
             result.success(false).enacted(false).comment(translateException(ex));
@@ -540,18 +531,17 @@ public class EquilManager {
         PumpEnactResult result = instantiator.providePumpEnactResult();
         try {
             EquilHistoryRecord equilHistoryRecord = addHistory(command);
-            command.setEquilManager(this);
             equilBLE.writeCmd(command);
             synchronized (command) {
                 command.wait(command.getTimeOut());
             }
-            if (command.isCmdStatus()) {
+            if (command.getCmdStatus()) {
                 command.setResolvedResult(ResolvedResult.SUCCESS);
             }
             updateHistory(equilHistoryRecord, command.getResolvedResult());
             aapsLogger.debug(LTag.PUMPCOMM, "executeCmd result {}", command.getResolvedResult());
-            result.setSuccess(command.isCmdStatus());
-            result.enacted(command.isEnacted());
+            result.setSuccess(command.getCmdStatus());
+            result.enacted(command.getEnacted());
         } catch (Exception ex) {
 
             ex.printStackTrace();

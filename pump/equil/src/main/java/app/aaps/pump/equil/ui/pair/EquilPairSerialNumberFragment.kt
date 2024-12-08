@@ -270,13 +270,13 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
 
     fun getVersion(scanResult: BluetoothDevice) {
         // CmdDevicesOldGet
-        var cmdDevicesOldGet = CmdDevicesOldGet(scanResult.address.toString())
+        var cmdDevicesOldGet = CmdDevicesOldGet(scanResult.address.toString(), aapsLogger, sp, equilManager)
         commandQueue.customCommand(cmdDevicesOldGet, object : Callback() {
             override fun run() {
                 if (activity == null) return
                 aapsLogger.debug(LTag.PUMPCOMM, "result====" + result.success + "===" + result.enacted)
                 if (result.success) {
-                    if (cmdDevicesOldGet.isSupport) {
+                    if (cmdDevicesOldGet.isSupport()) {
                         SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
                         pair(scanResult)
                     } else {
@@ -307,11 +307,12 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
         })
     }
 
+    @SuppressLint("MissingPermission")
     private fun pair(scanResult: BluetoothDevice) {
         equilManager.activationProgress = ActivationProgress.PRIMING
         equilManager.bluetoothConnectionState = BluetoothConnectionState.CONNECTED
         aapsLogger.debug(LTag.PUMPCOMM, "result====${scanResult.name}===${scanResult.address}")
-        commandQueue.customCommand(CmdPair(scanResult.name.toString(), scanResult.address.toString(), password), object : Callback() {
+        commandQueue.customCommand(CmdPair(scanResult.name.toString(), scanResult.address.toString(), password, aapsLogger, sp, equilManager), object : Callback() {
             override fun run() {
                 if (activity == null) return
                 aapsLogger.debug(LTag.PUMPCOMM, "result====" + result.success + "===" + result.enacted)
@@ -350,7 +351,7 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
     }
 
     private fun pumpSettings(address: String, serialNumber: String) {
-        commandQueue.customCommand(CmdSettingSet(), object : Callback() {
+        commandQueue.customCommand(CmdSettingSet(null, aapsLogger, sp, equilManager), object : Callback() {
             override fun run() {
                 if (activity == null) return
                 if (result.success) {

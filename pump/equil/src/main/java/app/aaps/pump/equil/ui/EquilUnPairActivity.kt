@@ -84,7 +84,7 @@ class EquilUnPairActivity : TranslatedDaggerAppCompatActivity() {
 
     private fun unpair(name: String) {
         showLoading()
-        commandQueue.customCommand(CmdUnPair(name, sp.getString(rh.gs(R.string.key_equil_pair_password), "")), object : Callback() {
+        commandQueue.customCommand(CmdUnPair(name, sp.getString(rh.gs(R.string.key_equil_pair_password), ""), aapsLogger, sp, equilManager), object : Callback() {
             override fun run() {
                 dismissLoading()
                 if (result.success) {

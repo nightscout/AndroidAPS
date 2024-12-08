@@ -119,7 +119,7 @@ import javax.inject.Singleton
             .subscribe({ event ->
                            if (event.isChanged(EquilIntKey.EquilTone.key)) {
                                val mode = preferences.get(EquilIntKey.EquilTone)
-                               commandQueue.customCommand(CmdAlarmSet(mode), object : Callback() {
+                               commandQueue.customCommand(CmdAlarmSet(mode, aapsLogger, sp, equilManager), object : Callback() {
                                    override fun run() {
                                        if (result.success) ToastUtils.infoToast(context, rh.gs(R.string.equil_pump_updated))
                                        else ToastUtils.infoToast(context, rh.gs(R.string.equil_error))
@@ -127,7 +127,7 @@ import javax.inject.Singleton
                                })
                            } else if (event.isChanged(EquilDoubleKey.EquilMaxBolus.key)) {
                                val data = preferences.get(EquilDoubleKey.EquilMaxBolus)
-                               commandQueue.customCommand(CmdSettingSet(data), object : Callback() {
+                               commandQueue.customCommand(CmdSettingSet(data, aapsLogger, sp, equilManager), object : Callback() {
                                    override fun run() {
                                        if (result.success) ToastUtils.infoToast(context, rh.gs(R.string.equil_pump_updated))
                                        else ToastUtils.infoToast(context, rh.gs(R.string.equil_error))
@@ -179,7 +179,7 @@ import javax.inject.Singleton
         val mode = equilManager.runMode
         if (mode === RunMode.RUN || mode === RunMode.SUSPEND) {
             val basalSchedule = BasalSchedule.mapProfileToBasalSchedule(profile)
-            val pumpEnactResult = equilManager.executeCmd(CmdBasalSet(basalSchedule, profile))
+            val pumpEnactResult = equilManager.executeCmd(CmdBasalSet(basalSchedule, profile, aapsLogger, sp, equilManager))
             if (pumpEnactResult.success) {
                 equilManager.basalSchedule = basalSchedule
             }
@@ -367,7 +367,7 @@ import javax.inject.Singleton
 
     override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
         aapsLogger.debug(LTag.PUMP, "DST and/or TimeZone changed event will be consumed by driver")
-        commandQueue.customCommand(CmdTimeSet(), null)
+        commandQueue.customCommand(CmdTimeSet(aapsLogger, sp, equilManager), null)
     }
 
     override val isFakingTempsByExtendedBoluses: Boolean = false
