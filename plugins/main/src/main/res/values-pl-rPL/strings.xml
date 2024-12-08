@@ -287,8 +287,11 @@
     <string name="devslope_shortname">KRZOD</string>
     <string name="treatments_shortname">TREAT</string>
     <string name="heartRate_shortname">HR</string>
+    <string name="sensitivity_shortname">SENS%</string>
+    <string name="variable_sensitivity_shortname">VSENS</string>
     <string name="graph_scale">Skala wykresu</string>
     <string name="graph_menu_divider_header">Wykres</string>
+    <string name="temp_basal_overview_short_name">T:</string>
     <!-- Skins -->
     <string name="classic_description">Motyw oryginalny</string>
     <string name="lowres_description">Mały ekran</string>
@@ -300,4 +303,7 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Wyświetla bieżące powiadomienia z krótkim omówieniem działania pętli</string>
     <string name="old_data">NIEAKTUALNE DANE</string>
+    <string name="overview_show_steps">Kroki</string>
+    <string name="steps_shortname">KROKI</string>
+    <string name="simple_mode_enabled">Włączony tryb uproszczony</string>
 </resources>
