@@ -9,8 +9,6 @@
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Ricevi valori glicemia dall\'app Dexcom ottenuta con \'Build Your Own Dexcom App\'.</string>
-    <string name="eversense">Eversense app (modificata)</string>
-    <string name="description_source_eversense">Ricevi valori glicemia dall\'app Eversense modificata.</string>
     <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Ricevi valori glicemia da Glimp.</string>
     <string name="mm640g">MM640g</string>
@@ -24,9 +22,6 @@
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">Ricevi valori glicemia da app Tomato (dispositivo MiaoMiao)</string>
-    <string name="aidex">GlucoRx Aidex</string>
-    <string name="aidex_short">GlucoRx Aidex</string>
-    <string name="description_source_aidex">Ricevi valori glicemia da CGM GlucoRx Aidex.</string>
     <string name="random_bg">BG casuale</string>
     <string name="description_source_random_bg">Genera dati glicemia casuali (solo modalità demo)</string>
     <string name="random_bg_short">BG</string>
