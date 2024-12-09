@@ -553,6 +553,8 @@ class DetermineBasalSMB @Inject constructor(
             // bilinear curve peaking at remainingCIpeak at remainingCATime/2 hours (remainingCATime/2*12 * 5m)
             // and ending at remainingCATime h (remainingCATime*12 * 5m intervals)
             val intervals = Math.min(COBpredBGs.size.toDouble(), ((remainingCATime * 12) - COBpredBGs.size))
+            if (remainingCIpeak.isNaN()) throw IllegalStateException("remainingCIpeak is NaN")
+            if (remainingCATime.isNaN()) throw IllegalStateException("remainingCATime is NaN")
             if (intervals.isNaN()) throw IllegalStateException("intervals is NaN")
             val remainingCI = Math.max(0.0, intervals / (remainingCATime / 2 * 12) * remainingCIpeak)
             if (remainingCI.isNaN()) throw IllegalStateException("remainingCI is NaN")
