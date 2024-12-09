@@ -36,6 +36,7 @@
     <string name="ns_client_secret_title">Nightscout API secret</string>
     <string name="ns_client_secret_dialog_message">Voer je Nightscout API secret (wachtwoord met minimaal 12 tekens als gedefinieerd je Nightscout variabelen)</string>
     <string name="nsclient_token_title">Nightscout toegangstoken</string>
+    <string name="nsclient_token_dialog_message">Voer uw admin level toegangstoken, welke is gegenereerd via de Nightscout admin tools in (minimaal 17 tekens, niet uw API secret!)</string>
     <string name="deliver_now">Toedienen</string>
     <string name="queue">Wachtend:</string>
     <string name="status">Status:</string>
