@@ -9,8 +9,6 @@
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Да получава данни за КЗ от модифицираното приложение на Dexcom BYODA.</string>
-    <string name="eversense">Eversense приложение(модифицирано)</string>
-    <string name="description_source_eversense">Получава данни за КЗ от модифицираното приложение на Eversense.</string>
     <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Получава данни за КЗ от Glimp.</string>
     <string name="mm640g">MM640g</string>
@@ -24,9 +22,6 @@
     <string name="tomato">Tomato(MяоМяо)</string>
     <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">Получавай КЗ от Tomato апликация (устройство МяоМяо)</string>
-    <string name="aidex">GlucoRx Aidex</string>
-    <string name="aidex_short">Aidex</string>
-    <string name="description_source_aidex">КЗ от  GlucoRx Aidex CGMS.</string>
     <string name="random_bg">Произволна КЗ</string>
     <string name="description_source_random_bg">Генерира произволни захари(демо режим)</string>
     <string name="random_bg_short">КЗ</string>
