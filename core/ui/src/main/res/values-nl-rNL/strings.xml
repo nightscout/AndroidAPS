@@ -89,6 +89,7 @@
     <string name="removerecord">Verwijder record</string>
     <string name="loopisdisabled">Loop is uitgeschakeld</string>
     <string name="alarm">Alarm</string>
+    <string name="exportsettings">Exporteer instellingen</string>
     <string name="disableloop">Loop deactiveren</string>
     <string name="enableloop">Activeer loop</string>
     <string name="resumeloop">Hervat loop</string>
@@ -213,6 +214,7 @@
     <string name="careportal_question">Vraag</string>
     <string name="careportal_exercise">Sport</string>
     <string name="careportal_announcement_message">Mededeling : %1$s</string>
+    <string name="careportal_settings_export_message">Instellingen exporteren: %1$s</string>
     <string name="careportal_note_message">Notitie : %1$s</string>
     <string name="careportal_question_message">Vraag : %1$s</string>
     <string name="careportal_exercise_message">Bewegen : %1$s</string>
@@ -245,6 +247,7 @@
     <string name="activity">Activiteit</string>
     <string name="wear">Wear</string>
     <string name="automation">Automatisering</string>
+    <string name="settingsexport">Exporteer instellingen</string>
     <string name="custom">Aangepast</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
@@ -511,7 +514,14 @@
     <string name="password_preferences_decrypt_prompt">Je wordt gevraagd om een masterwachtwoord. Daarmee worden geïmporteerde instellingen ontsleuteld.</string>
     <!-- <unattended_export> -->
     <string name="export_ok">OK</string>
+    <string name="export_warning">Waarschuwing</string>
+    <string name="export_expired">Verlopen</string>
+    <string name="export_disabled">Uitgeschakeld</string>
+    <string name="export_failed">Mislukt</string>
+    <string name="export_alert">WAARSCHUWING</string>
     <!-- <unattended_export result messages> -->
+    <string name="export_result_message_exported">Instellingen geëxporteerd</string>
+    <string name="export_result_message_failed">Instellingen exporteren MISLUKT!</string>
     <string name="export_result_message_about_to_expire">Instellingen geëxporteerd: wachtwoord verloopt binnenkort. Exporteer handmatig en voer het wachtwoord (opnieuw) in.</string>
     <string name="export_result_message_expired">Export instellingen geannuleerd: wachtwoord is verlopen. Exporteer handmatig en geef (opnieuw) in!</string>
     <string name="export_result_message_disabled">Waarschuwing (automatisering): Instellingen export niet ingeschakeld!</string>
