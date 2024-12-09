@@ -9,8 +9,6 @@
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Motta BS-verdier fra \'Build Your Own Dexcom App\'.</string>
-    <string name="eversense">Eversense App (patched)</string>
-    <string name="description_source_eversense">Motta BS-verdier fra den modifiserte Eversense-appen.</string>
     <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Motta BS-verdier fra Glimp.</string>
     <string name="mm640g">MM640G</string>
@@ -24,9 +22,6 @@
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">Motta BS-verdier fra Tomato app (MiaoMiao enhet)</string>
-    <string name="aidex">GlucoRx Aidex</string>
-    <string name="aidex_short">Aidex</string>
-    <string name="description_source_aidex">Motta BS-verdier fra GlucoRx Aidex CGM.</string>
     <string name="random_bg">Vilkårlig BS</string>
     <string name="description_source_random_bg">Generer vilkårlige BS-data (kun demo formål)</string>
     <string name="random_bg_short">BS</string>
