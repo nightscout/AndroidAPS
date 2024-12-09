@@ -350,39 +350,40 @@ open class OpenAPSSMBPlugin @Inject constructor(
         // var variableSensitivity = 0.0
         // var tdd = 0.0
         // var insulinDivisor = 0
-        if (dynIsfMode) {
-            dynIsfResult = calculateRawDynIsf((profile as ProfileSealed.EPS).value.originalPercentage / 100.0)
-            if (!dynIsfResult.tddPartsCalculated()) {
-                uiInteraction.addNotificationValidTo(
-                    Notification.SMB_FALLBACK, dateUtil.now(),
-                    rh.gs(R.string.fallback_smb_no_tdd), Notification.INFO, dateUtil.now() + T.mins(1).msecs()
-                )
-                inputConstraints.copyReasons(
-                    ConstraintObject(false, aapsLogger).also {
-                        it.set(false, rh.gs(R.string.fallback_smb_no_tdd), this)
-                    }
-                )
-                inputConstraints.copyReasons(
-                    ConstraintObject(false, aapsLogger).apply { set(true, "tdd1D=${dynIsfResult.tdd1D} tdd7D=${dynIsfResult.tdd7D} tddLast4H=${dynIsfResult.tddLast4H} tddLast8to4H=${dynIsfResult.tddLast8to4H} tddLast24H=${dynIsfResult.tddLast24H}", this) }
-                )
-            } else {
-                uiInteraction.dismissNotification(Notification.SMB_FALLBACK)
-                // Compare insulin consumption of last 24h with last 7 days average
-                val tddRatio = if (preferences.get(BooleanKey.ApsDynIsfAdjustSensitivity)) dynIsfResult.tddLast24H!! / dynIsfResult.tdd7D!! else 1.0
-                // Because consumed carbs affects total amount of insulin compensate final ratio by consumed carbs ratio
-                // take only 60% (expecting 40% basal). We cannot use bolus/total because of SMBs
-                val carbsRatio = if (
-                    preferences.get(BooleanKey.ApsDynIsfAdjustSensitivity) &&
-                    dynIsfResult.tddLast24HCarbs != 0.0 &&
-                    dynIsfResult.tdd7DDataCarbs != 0.0 &&
-                    dynIsfResult.tdd7DAllDaysHaveCarbs
-                ) ((dynIsfResult.tddLast24HCarbs / dynIsfResult.tdd7DDataCarbs - 1.0) * 0.6) + 1.0 else 1.0
-                autosensResult = AutosensResult(
-                    ratio = tddRatio / carbsRatio,
-                    ratioFromTdd = tddRatio,
-                    ratioFromCarbs = carbsRatio
-                )
-            }
+        dynIsfResult = calculateRawDynIsf((profile as ProfileSealed.EPS).value.originalPercentage / 100.0)
+        if (!dynIsfResult.tddPartsCalculated()) {
+            uiInteraction.addNotificationValidTo(
+                Notification.SMB_FALLBACK, dateUtil.now(),
+                rh.gs(R.string.fallback_smb_no_tdd), Notification.INFO, dateUtil.now() + T.mins(1).msecs()
+            )
+            inputConstraints.copyReasons(
+                ConstraintObject(false, aapsLogger).also {
+                    it.set(false, rh.gs(R.string.fallback_smb_no_tdd), this)
+                }
+            )
+            inputConstraints.copyReasons(
+                ConstraintObject(false, aapsLogger).apply {
+                    set(true, "tdd1D=${dynIsfResult.tdd1D} tdd7D=${dynIsfResult.tdd7D} tddLast4H=${dynIsfResult.tddLast4H} tddLast8to4H=${dynIsfResult.tddLast8to4H} tddLast24H=${dynIsfResult.tddLast24H}", this)
+                }
+            )
+        }
+        if (dynIsfMode && dynIsfResult.tddPartsCalculated()) {
+            uiInteraction.dismissNotification(Notification.SMB_FALLBACK)
+            // Compare insulin consumption of last 24h with last 7 days average
+            val tddRatio = if (preferences.get(BooleanKey.ApsDynIsfAdjustSensitivity)) dynIsfResult.tddLast24H!! / dynIsfResult.tdd7D!! else 1.0
+            // Because consumed carbs affects total amount of insulin compensate final ratio by consumed carbs ratio
+            // take only 60% (expecting 40% basal). We cannot use bolus/total because of SMBs
+            val carbsRatio = if (
+                preferences.get(BooleanKey.ApsDynIsfAdjustSensitivity) &&
+                dynIsfResult.tddLast24HCarbs != 0.0 &&
+                dynIsfResult.tdd7DDataCarbs != 0.0 &&
+                dynIsfResult.tdd7DAllDaysHaveCarbs
+            ) ((dynIsfResult.tddLast24HCarbs / dynIsfResult.tdd7DDataCarbs - 1.0) * 0.6) + 1.0 else 1.0
+            autosensResult = AutosensResult(
+                ratio = tddRatio / carbsRatio,
+                ratioFromTdd = tddRatio,
+                ratioFromCarbs = carbsRatio
+            )
         } else {
             if (constraintsChecker.isAutosensModeEnabled().value()) {
                 val autosensData = iobCobCalculator.getLastAutosensDataWithWaitForCalculationFinish("OpenAPSPlugin")
@@ -466,7 +467,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
             microBolusAllowed = microBolusAllowed,
             currentTime = now,
             flatBGsDetected = flatBGsDetected,
-            dynIsfMode = dynIsfMode
+            dynIsfMode = dynIsfMode && dynIsfResult.tddPartsCalculated()
         ).also {
             val determineBasalResult = DetermineBasalResult(injector, it)
             // Preserve input data
