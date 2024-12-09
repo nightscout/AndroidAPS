@@ -6,8 +6,6 @@
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Receber valores de glicemia do aplicativo BYODA.</string>
-    <string name="eversense">Aplicação Eversense (com patch)</string>
-    <string name="description_source_eversense">Receber valores Glicose da aplicação Eversense modificada.</string>
     <string name="description_source_glimp">Receber valores Glicose do Glimp.</string>
     <string name="description_source_mm640g">Receber valores Glicose do 600SeriesAndroidUploader.</string>
     <string name="poctech">Poctech</string>
