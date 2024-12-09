@@ -453,6 +453,7 @@ class DetermineBasalSMB @Inject constructor(
             val fractionCOBAbsorbed = (meal_data.carbs - meal_data.mealCOB) / meal_data.carbs
             remainingCATime = remainingCATimeMin + 1.5 * lastCarbAge / 60
             remainingCATime = round(remainingCATime, 1)
+            if (remainingCATime.isNaN()) throw IllegalStateException("remainingCATime is NaN")
             //console.error(fractionCOBAbsorbed, remainingCATimeAdjustment, remainingCATime)
             consoleError.add("Last carbs " + lastCarbAge + "minutes ago; remainingCATime:" + remainingCATime + "hours;" + round(fractionCOBAbsorbed * 100) + "% carbs absorbed")
         }
@@ -552,7 +553,9 @@ class DetermineBasalSMB @Inject constructor(
             // bilinear curve peaking at remainingCIpeak at remainingCATime/2 hours (remainingCATime/2*12 * 5m)
             // and ending at remainingCATime h (remainingCATime*12 * 5m intervals)
             val intervals = Math.min(COBpredBGs.size.toDouble(), ((remainingCATime * 12) - COBpredBGs.size))
+            if (intervals.isNaN()) throw IllegalStateException("intervals is NaN")
             val remainingCI = Math.max(0.0, intervals / (remainingCATime / 2 * 12) * remainingCIpeak)
+            if (remainingCI.isNaN()) throw IllegalStateException("remainingCI is NaN")
             remainingCItotal += predCI + remainingCI
             remainingCIs.add(round(remainingCI))
             predCIs.add(round(predCI))
