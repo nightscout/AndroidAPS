@@ -1,7 +1,6 @@
 package app.aaps.plugins.constraints.objectives
 
 import app.aaps.core.data.plugin.PluginType
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.constraints.Objectives.Companion.AUTOSENS_OBJECTIVE
@@ -12,7 +11,6 @@ import app.aaps.core.interfaces.constraints.Objectives.Companion.MAXIOB_ZERO_CL_
 import app.aaps.core.interfaces.constraints.Objectives.Companion.SMB_OBJECTIVE
 import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -38,15 +36,11 @@ class ObjectivesPlugin @Inject constructor(
     private val injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
-    private val activePlugin: ActivePlugin,
     private val sp: SP,
-    config: Config
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
         .fragmentClass(ObjectivesFragment::class.qualifiedName)
-        .alwaysEnabled(config.APS)
-        .showInList { config.APS }
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_graduation)
         .pluginName(app.aaps.core.ui.R.string.objectives)
         .shortName(R.string.objectives_shortname)
@@ -59,9 +53,6 @@ class ObjectivesPlugin @Inject constructor(
     init {
         setupObjectives()
     }
-
-    override fun specialEnableCondition(): Boolean =
-        activePlugin.activePump.pumpDescription.isTempBasalCapable
 
     private fun setupObjectives() {
         objectives.clear()
