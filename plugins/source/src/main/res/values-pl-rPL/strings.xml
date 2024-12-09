@@ -9,8 +9,6 @@
     <string name="dexcom_app_patched">Dexcom Patched</string>
     <string name="dexcom_short">DEX.PATCH.</string>
     <string name="description_source_dexcom">Pobieraj glikemię ze spatchowanej aplikacji Dexcom.</string>
-    <string name="eversense">Apka Eversense (spatchowana)</string>
-    <string name="description_source_eversense">Pobieraj wartości BG ze spatchowanej aplikacji Eversense.</string>
     <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Pobieraj wartości BG z Glimp.</string>
     <string name="mm640g">MM640g</string>
@@ -24,9 +22,6 @@
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">Otrzymuj poziomy cukru (BG) z Apki Tomato) (urządzenie MiaoMiao)</string>
-    <string name="aidex">GlucoRx Aidex</string>
-    <string name="aidex_short">Aidex</string>
-    <string name="description_source_aidex">Otrzymuj glikemię z GlucoRx Aidex CGMS.</string>
     <string name="random_bg">Losowa glikemia</string>
     <string name="description_source_random_bg">Generuj losowe odczyty glukozy (wyłącznie do celów demonstracyjnych)</string>
     <string name="random_bg_short">BG</string>
