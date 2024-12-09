@@ -28,9 +28,6 @@
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">Receive BG values from Tomato app (MiaoMiao device)</string>
-    <string name="aidex">GlucoRx Aidex</string>
-    <string name="aidex_short">Aidex</string>
-    <string name="description_source_aidex">Receive BG values from GlucoRx Aidex CGMS.</string>
     <string name="random_bg">Random BG</string>
     <string name="description_source_random_bg">Generate random BG data (Demo mode only)</string>
     <string name="random_bg_short">BG</string>
