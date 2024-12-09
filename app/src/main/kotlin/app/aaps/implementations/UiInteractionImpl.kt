@@ -210,10 +210,10 @@ class UiInteractionImpl @Inject constructor(
         )
     }
 
-    override fun showToastAndNotification(ctx: Context?, string: String?, soundID: Int) {
+    override fun showToastAndNotification(ctx: Context?, string: String, soundID: Int) {
         ToastUtils.showToastInUiThread(ctx, string)
         ToastUtils.playSound(ctx, soundID)
-        addNotification(Notification.TOAST_ALARM, string!!, Notification.URGENT)
+        addNotification(Notification.TOAST_ALARM, string, Notification.URGENT)
     }
 
     override fun startAlarm(@RawRes sound: Int, reason: String) {
