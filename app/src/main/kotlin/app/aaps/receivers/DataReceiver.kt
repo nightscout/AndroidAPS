@@ -15,7 +15,6 @@ import app.aaps.core.utils.receivers.BundleLogger
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.plugins.main.general.smsCommunicator.SmsCommunicatorPlugin
 import app.aaps.plugins.source.DexcomPlugin
-import app.aaps.plugins.source.EversensePlugin
 import app.aaps.plugins.source.GlimpPlugin
 import app.aaps.plugins.source.MM640gPlugin
 import app.aaps.plugins.source.OttaiPlugin
@@ -86,10 +85,6 @@ open class DataReceiver : DaggerBroadcastReceiver() {
 
             Telephony.Sms.Intents.SMS_RECEIVED_ACTION ->
                 OneTimeWorkRequest.Builder(SmsCommunicatorPlugin.SmsCommunicatorWorker::class.java)
-                    .setInputData(dataWorkerStorage.storeInputData(bundle, intent.action)).build()
-
-            Intents.EVERSENSE_BG                      ->
-                OneTimeWorkRequest.Builder(EversensePlugin.EversenseWorker::class.java)
                     .setInputData(dataWorkerStorage.storeInputData(bundle, intent.action)).build()
 
             Intents.DEXCOM_BG, Intents.DEXCOM_G7_BG   ->
