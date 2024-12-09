@@ -158,7 +158,6 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
             val key = timestamp - timestamp % T.mins(minutesClass).msecs() + glucose.toLong()
             if (variableSens > 0) autoIsfCache.put(key, variableSens)
             count++
-            count++
         }
         aapsLogger.debug(LTag.APS, "Loaded $count variable sensitivity values from database")
     }
