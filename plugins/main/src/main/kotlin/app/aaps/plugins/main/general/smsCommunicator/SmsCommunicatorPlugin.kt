@@ -933,7 +933,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         if (divided.size == 3 && !isMeal) {
             sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
         } else if (bolus > 0.0) {
-            val iob = (iobCobCalculator.calculateIobFromBolus() + iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).round()
+            val iob = iobCobCalculator.calculateIobFromBolus().round().iob + iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round().basaliob
             val passCode = generatePassCode()
             val reply = if (isMeal)
                 rh.gs(R.string.smscommunicator_meal_bolus_reply_with_code, bolus, passCode, iob)
