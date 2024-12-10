@@ -8,6 +8,7 @@
     <string name="label_actions_tile">AAPS (Akcie)</string>
     <string name="label_temp_target_tile">AAPS(Dočasný cieľ)</string>
     <string name="label_quick_wizard_tile">AAPS(Rýchly bolus)</string>
+    <string name="label_user_action_tile">AAPS (Akcia používateľa)</string>
     <string name="label_warning_sync">Žiadne dáta!</string>
     <string name="label_warning_old">Zastaralé dáta!</string>
     <string name="label_warning_since">Od %1$s</string>
@@ -31,6 +32,8 @@
     <string name="pref_show_phone_battery">Zobraziť stav batérie telefónu</string>
     <string name="pref_show_rig_battery">Zobrazovať kruhový graf batérie</string>
     <string name="pref_show_basal_rate">Zobraziť bazál</string>
+    <string name="pref_show_temp_target">Zobraziť dočasný cieľ</string>
+    <string name="pref_show_reservoir_level">Zobraziť stav zásobníka</string>
     <string name="pref_show_loop_status">Zobrazovať stav uzavretého okruhu</string>
     <string name="pref_show_bg">Zobrazovať glykémiu</string>
     <string name="pref_show_bgi">Zobraziť BGI</string>
@@ -90,6 +93,7 @@
     <string name="action_duration">Trvanie</string>
     <string name="action_tempt_confirmation">Požadovaný dočasný cieľ</string>
     <string name="action_quick_wizard_confirmation">Požadovaný rýchly bolus</string>
+    <string name="action_user_action_confirmation">Vyžaduje sa akcia používateľa</string>
     <string name="action_treatment_confirmation">Požadované ošetrenie</string>
     <string name="action_bolus_confirmation">Požadovaný bolus</string>
     <string name="action_wizard_confirmation">Požadovaná kalkulačka</string>
@@ -147,6 +151,8 @@
     <string name="pref_simplify_ui_sum">Zobraziť iba čas a glykémiu</string>
     <string name="pref_vibrate_hourly">Vibrovať každú hodinu</string>
     <string name="pref_show_weeknumber">Zobraziť číslo týždňa</string>
+    <string name="pref_include_external">Zahrnúť externé zobrazenia do šablóny</string>
+    <string name="pref_switch_external">Zobraziť externé dáta v ciferníku</string>
     <string name="custom_pref_show_seconds">Zobrazovať sekundy</string>
     <string name="digitalstyle_pref_your_style">Váš štýl:</string>
     <string name="digitalstyle_style_none">žiadny štýl</string>
