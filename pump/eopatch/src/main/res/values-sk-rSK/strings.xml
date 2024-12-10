@@ -104,7 +104,7 @@
     <string name="string_changing">Mením</string>
     <string name="string_in_progress">Prebieha spracovanie</string>
     <string name="retry">Opakovať</string>
-    <string name="string_caution_not_remove_needle_cap">[Pozor] Neodstraňujte kryt ihly a náplasť, než príde požiadavka.</string>
+    <string name="string_caution_not_remove_needle_cap">[Pozor] Neodstraňujte kryt ihly a náplasť, kým nepríde ďalšia inštrukcia.</string>
     <string name="string_are_you_sure_to_discard_current_patch">Naozaj chcete zahodiť pumpu?</string>
     <string name="needle_insertion_error_1">Chyba vloženia ihly.</string>
     <string name="needle_insertion_error_2">Skontroluj smer otvoru vľavo po otočení páky, že je rovný, a potom kliknite na \'Opakovať\'.</string>
