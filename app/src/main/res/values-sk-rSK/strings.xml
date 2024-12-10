@@ -28,4 +28,6 @@
     <string name="sort_label">Zoradiť</string>
     <string name="search">Hľadať</string>
     <string name="simple_mode">Jednoduchý mód</string>
+    <string name="select">Vybrať</string>
+    <string name="set">Nastaviť</string>
 </resources>
