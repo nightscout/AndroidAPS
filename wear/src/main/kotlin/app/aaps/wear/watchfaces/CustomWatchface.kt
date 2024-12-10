@@ -29,6 +29,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.forEach
 import androidx.viewbinding.ViewBinding
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.rx.events.EventUpdateSelectedWatchface
 import app.aaps.core.interfaces.rx.weardata.CUSTOM_VERSION
 import app.aaps.core.interfaces.rx.weardata.CwfData
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
@@ -49,6 +50,7 @@ import app.aaps.shared.impl.weardata.toTypeface
 import app.aaps.wear.R
 import app.aaps.wear.databinding.ActivityCustomBinding
 import app.aaps.wear.watchfaces.utils.BaseWatchFace
+import app.aaps.wear.watchfaces.utils.WatchfaceViewAdapter.Companion.SelectedWatchFace
 import org.joda.time.DateTime
 import org.joda.time.TimeOfDay
 import org.json.JSONObject
@@ -92,6 +94,8 @@ class CustomWatchface : BaseWatchFace() {
 
     @Suppress("DEPRECATION")
     override fun inflateLayout(inflater: LayoutInflater): ViewBinding {
+        sp.putInt(R.string.key_last_selected_watchface, SelectedWatchFace.CUSTOM.ordinal)
+        rxBus.send(EventUpdateSelectedWatchface())
         binding = ActivityCustomBinding.inflate(inflater)
         setDefaultColors()
         persistence.store(defaultWatchface(false), defaultWatchface(true), true)
