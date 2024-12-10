@@ -275,7 +275,7 @@ import kotlin.math.abs
         val pumpWarningNotificationPref = preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_pump_warning_notification))
         val pumpWarningExpiryHourPref = preferenceFragment.findPreference<ValidatingEditTextPreference>(rh.gs(R.string.key_pump_warning_expiry_hour))
 
-        pumpWarningExpiryHourPref?.isEnabled = patchExpirationPref?.isChecked == true && pumpWarningNotificationPref?.isChecked == true
+        pumpWarningExpiryHourPref?.isVisible = patchExpirationPref?.isChecked == true && pumpWarningNotificationPref?.isChecked == true
     }
 
     override fun isInitialized(): Boolean {
