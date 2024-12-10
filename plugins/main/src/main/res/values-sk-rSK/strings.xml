@@ -20,7 +20,7 @@
     <string name="smscommunicator_otp_export_successful">Tajné OTP heslo (vo formáte Base32) bolo vyexportované a skopírované do schránky. Vložte ho do autentikátora, alebo programátora OTP hardwaru!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Nainštalujte Autentifikátor</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Naskenujte kód pre nastavenie AAPS OTP kódov</string>
-    <string name="smscommunicator_otp_step3_test_header">3. Odtestujte jednorázové heslo</string>
+    <string name="smscommunicator_otp_step3_test_header">3. Otestujte jednorázové heslo</string>
     <string name="smscommunicator_otp_reset_header">Resetovať autentifikátory</string>
     <string name="smscommunicator_otp_install_info">Na každom sledovacom telefóne nainštalujte Autentifikátor, ktorý podporuje tokeny TOTP RFC 6238. Najobľúbenejšie bezplatné aplikácie sú:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">Resetovaním autentifikátora budú všetky už poskytnuté autentifikátory neplatné. Budete ich musieť znovu nastaviť!</string>
