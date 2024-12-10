@@ -49,6 +49,8 @@
     <string name="pref_show_delta">Toon Delta</string>
     <string name="pref_show_detailed_delta">Toon gedetailleerde Delta</string>
     <string name="pref_show_avgdelta">Toon gemiddelde delta</string>
+    <string name="pref_show_tempTarget">Toon tijdelijk doel</string>
+    <string name="pref_show_reservoir_level">Toon reservoir niveau</string>
     <string name="pref_show_phone_battery">Toon Telefoon Batterij</string>
     <string name="pref_show_rig_battery">Toon Rig batterij</string>
     <string name="pref_show_basal_rate">Toon basaalstand</string>
@@ -60,6 +62,7 @@
     <string name="pref_show_week_number">Weeknummer weergeven</string>
     <string name="pref_show_date">Toon datum</string>
     <string name="default_custom_watchface_comment">Standaard watchface, u kunt op de EXPORT WATCHFACE knop klikken om een sjabloon te genereren</string>
+    <string name="default_custom_watchface_external_comment">Standaard watchface inclusief externe weergaven voor volgers, u kunt klikken op EXPORT WATCHFACE knop om een sjabloon te genereren</string>
     <string name="wear_default_watchface">Standaard watchface</string>
     <string name="wear_more_watchfaces">Meer wijzerplaten</string>
 </resources>

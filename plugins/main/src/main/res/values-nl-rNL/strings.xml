@@ -39,6 +39,7 @@
     <string name="smscommunicator_stops_ns_with_code">Om de SMS Remote Service uit te zetten, antwoord met code %1$s.\n\nDenk er aan dat je deze alleen weer aan kunt zetten op de AAPS master smartphone.</string>
     <string name="smscommunicator_stopped_sms">De controle via SMS is uitgezet. Gebruik AAPS op de master smartphone om deze weer te aan te zetten.</string>
     <string name="smscommunicator_calibration_reply_with_code">Om calibratie %1$.2f te verzenden antwoord met de code %2$s</string>
+    <string name="smscommunicator_bolus_failed">Bolus is mislukt. Controleer werkelijke status voordat je een andere opdracht verzendt!</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Minimum aantal minuten dat moet verstrijken tussen een bolus op afstand en de volgende</string>
     <string name="smscommunicator_remote_bolus_min_distance">Hoeveel minuten er ten minste moeten verstrijken tussen een bolus en de volgende</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">Voor de veiligheid moet je ten minste 2 telefoonnummers toevoegen om deze instelling te kunnen bijwerken.</string>
@@ -199,6 +200,7 @@
     <string name="graph_long_scale_18h">18 uur</string>
     <string name="graph_long_scale_24h">24 uur</string>
     <string name="a11y_graph">grafiek</string>
+    <string name="a11y_graph_scale">selecteer grafiek schaal</string>
     <string name="a11y_graph_scale_6h">grafiek schaal 6 uur</string>
     <string name="a11y_graph_scale_12h">grafiek schaal 12 uur</string>
     <string name="a11y_graph_scale_18h">grafiek schaal 18 uur</string>
@@ -237,6 +239,12 @@
     <string name="thirdcarbsincrement">Derde koolhydraten increment</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">Standaard tijdelijke streefdoelen</string>
+    <string name="eatingsoon_duration">Binnenkort eten tijdsduur (minuten)</string>
+    <string name="eatingsoon_target">Binnenkort eten streefwaarde</string>
+    <string name="activity_duration">Activiteit duur (minuten)</string>
+    <string name="activity_target">Activiteit streefwaarde</string>
+    <string name="hypo_duration">Hypo duur (minuten)</string>
+    <string name="hypo_target">Hypo streefwaarde</string>
     <string name="fill_bolus_title">Ontlucht/Vul standaard insuline hoeveelheden</string>
     <string name="button1">Knop 1</string>
     <string name="button2">Knop 2</string>

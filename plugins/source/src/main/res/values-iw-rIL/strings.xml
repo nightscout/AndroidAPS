@@ -9,8 +9,6 @@
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">השתמש בנתוני הסוכר מאפליקציית \"בנה לעצמך דקסקום\" (BYODA).</string>
-    <string name="eversense">אפליקלציית Eversense (עם פאץ\')</string>
-    <string name="description_source_eversense">קבלת ערכי רמת סוכר מאפליקציית Eversense עם פאץ\'.</string>
     <string name="glimp">Glimp</string>
     <string name="description_source_glimp">קבלת ערכי סוכר בדם מאפליקציית Glimp.</string>
     <string name="mm640g">Minimed 640G</string>
@@ -24,9 +22,6 @@
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">קבלת ערכי סוכר מאפליקציית Tomato (התקן MiaoMiao)</string>
-    <string name="aidex">GlucoRx Aidex</string>
-    <string name="aidex_short">Aidex</string>
-    <string name="description_source_aidex">קבלת נתוני סוכר מחיישני GlucoRx Aidex.</string>
     <string name="random_bg">נתוני סוכר אקראיים</string>
     <string name="description_source_random_bg">הפקת נתוני גלוקוז אקראיים (מצב הדגמה בלבד)</string>
     <string name="random_bg_short">נתוני סוכר</string>

@@ -89,6 +89,7 @@
     <string name="removerecord">Verwijder record</string>
     <string name="loopisdisabled">Loop is uitgeschakeld</string>
     <string name="alarm">Alarm</string>
+    <string name="exportsettings">Exporteer instellingen</string>
     <string name="disableloop">Loop deactiveren</string>
     <string name="enableloop">Activeer loop</string>
     <string name="resumeloop">Hervat loop</string>
@@ -113,6 +114,7 @@
     <string name="bg_label">BG</string>
     <string name="calibration">Kalibratie</string>
     <string name="alarminxmin">Start alarm over %1$d min</string>
+    <string name="treatmentdeliveryerror">Bolus fout geconstateerd. Controleer handmatig de werkelijk toegediende hoeveelheid insuline en koolhydraten</string>
     <string name="bolus_reminder">Bolus herinnering</string>
     <string name="duration_label">Tijdsduur</string>
     <string name="shortgramm">g</string>
@@ -176,6 +178,7 @@
     <string name="extended_bolus_full">%1$.2f E/u @%2$s %3$s/%4$s min</string>
     <string name="extended_bolus_medium">%1$.2f E/u %2$s/%3$s\'</string>
     <string name="nav_export">Exporteer instellingen</string>
+    <string name="location_permission_not_granted">Locatiemachtiging niet verleend. Toestaan in android instellingen.</string>
     <!--    Protection-->
     <string name="wrongpassword">Verkeerd wachtwoord</string>
     <string name="wrongpin">Onjuiste PIN-code</string>
@@ -206,10 +209,12 @@
     <string name="careportal_bgcheck">BG Controle</string>
     <string name="careportal_mbg">Handmatige BG of calibratie</string>
     <string name="careportal_announcement">Mededeling</string>
+    <string name="careportal_settings_export">Instellingen exporteren</string>
     <string name="careportal_note">Notitie</string>
     <string name="careportal_question">Vraag</string>
     <string name="careportal_exercise">Sport</string>
     <string name="careportal_announcement_message">Mededeling : %1$s</string>
+    <string name="careportal_settings_export_message">Instellingen exporteren: %1$s</string>
     <string name="careportal_note_message">Notitie : %1$s</string>
     <string name="careportal_question_message">Vraag : %1$s</string>
     <string name="careportal_exercise_message">Bewegen : %1$s</string>
@@ -242,6 +247,7 @@
     <string name="activity">Activiteit</string>
     <string name="wear">Wear</string>
     <string name="automation">Automatisering</string>
+    <string name="settingsexport">Exporteer instellingen</string>
     <string name="custom">Aangepast</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
@@ -343,6 +349,7 @@
     <string name="delete_future_treatments">Verwijder behandelingen in de toekomst</string>
     <string name="uel_export_settings">EXPORTEER INSTELLINGEN</string>
     <string name="uel_import_settings">IMPORT INSTELLINGEN</string>
+    <string name="uel_select_directory">SELECTEER DIRECTORY</string>
     <string name="uel_reset_databases">RESET DATABASES</string>
     <string name="uel_reset_aps_results">RESET APS RESULTATEN</string>
     <string name="uel_cleanup_databases">DATABASES OPSCHONEN</string>
@@ -506,7 +513,18 @@
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Je wordt gevraagd om een masterwachtwoord. Daarmee worden geïmporteerde instellingen ontsleuteld.</string>
     <!-- <unattended_export> -->
+    <string name="export_ok">OK</string>
+    <string name="export_warning">Waarschuwing</string>
+    <string name="export_expired">Verlopen</string>
+    <string name="export_disabled">Uitgeschakeld</string>
+    <string name="export_failed">Mislukt</string>
+    <string name="export_alert">WAARSCHUWING</string>
     <!-- <unattended_export result messages> -->
+    <string name="export_result_message_exported">Instellingen geëxporteerd</string>
+    <string name="export_result_message_failed">Instellingen exporteren MISLUKT!</string>
+    <string name="export_result_message_about_to_expire">Instellingen geëxporteerd: wachtwoord verloopt binnenkort. Exporteer handmatig en voer het wachtwoord (opnieuw) in.</string>
+    <string name="export_result_message_expired">Export instellingen geannuleerd: wachtwoord is verlopen. Exporteer handmatig en geef (opnieuw) in!</string>
+    <string name="export_result_message_disabled">Waarschuwing (automatisering): Instellingen export niet ingeschakeld!</string>
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">verlaag %1$s met %2$s</string>
     <string name="a11y_plus_button_description">verhoog %1$s met %2$s</string>

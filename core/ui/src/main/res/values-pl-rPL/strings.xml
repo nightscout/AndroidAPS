@@ -89,6 +89,7 @@
     <string name="removerecord">Usuń wpis</string>
     <string name="loopisdisabled">Pętla jest wyłączona</string>
     <string name="alarm">Alarm</string>
+    <string name="exportsettings">Eksport ustawień</string>
     <string name="disableloop">Wyłącz pętle</string>
     <string name="enableloop">Włącz pętle</string>
     <string name="resumeloop">Wznów pętlę</string>
@@ -113,6 +114,7 @@
     <string name="bg_label">BG</string>
     <string name="calibration">Kalibracja</string>
     <string name="alarminxmin">Uruchom alarm za %1$d min</string>
+    <string name="treatmentdeliveryerror">Błąd podczas podawania bolusa. Sprawdź ręcznie ile faktycznie podano insuliny i ilość węglowodanów</string>
     <string name="bolus_reminder">Przypomnienie bolusa</string>
     <string name="duration_label">Czas trwania</string>
     <string name="shortgramm">g</string>
@@ -169,6 +171,14 @@
     <string name="iob_label">Aktywna insulina (IOB)</string>
     <string name="loopstatus_targets">CELE:</string>
     <string name="loopstatus_OAPS_result">WYNIK OAPS:</string>
+    <string name="extended_bolus_data_point_graph">%1$.2f U ( %2$.2f U/h )</string>
+    <string name="temp_basal_tsf_fake_extended">%1$.2f U/h (%2$.2fE) @%3$s</string>
+    <string name="temp_basal_tsf_absolute">%1$.2f U/h @%2$s</string>
+    <string name="temp_basal_tsf_percent">%1$.0f%% @%2$s</string>
+    <string name="extended_bolus_full">E %1$.2f U/h @%2$s %3$s/%4$s min</string>
+    <string name="extended_bolus_medium">%1$.2f U/h %2$s/%3$s\'</string>
+    <string name="nav_export">Eksport ustawień</string>
+    <string name="location_permission_not_granted">Nie przyznano uprawnień do lokalizacji. Pozwól aplikacji AAPS na lokalizację w ustawieniach Androida.</string>
     <!--    Protection-->
     <string name="wrongpassword">Złe hasło</string>
     <string name="wrongpin">Nieprawidłowy PIN</string>
@@ -199,10 +209,12 @@
     <string name="careportal_bgcheck">Sprawdź BG</string>
     <string name="careportal_mbg">Ręczny pomiar cukru lub kalibracja</string>
     <string name="careportal_announcement">Powiadomienie</string>
+    <string name="careportal_settings_export">Eksport ustawień</string>
     <string name="careportal_note">Notatka</string>
     <string name="careportal_question">Pytanie</string>
     <string name="careportal_exercise">Ćwiczenia</string>
     <string name="careportal_announcement_message">Ogłoszenie: %1$s</string>
+    <string name="careportal_settings_export_message">Eksport ustawień : %1$s</string>
     <string name="careportal_note_message">Wskazówka: %1$s</string>
     <string name="careportal_question_message">Pytanie : %1$s</string>
     <string name="careportal_exercise_message">Ćwiczenie: %1$s</string>
@@ -235,6 +247,7 @@
     <string name="activity">Ćwiczenia</string>
     <string name="wear">Oprogramowanie Wear (Smartwatch)</string>
     <string name="automation">Automatyzacja</string>
+    <string name="settingsexport">Eksport ustawień</string>
     <string name="custom">Niestandardowe</string>
     <string name="loop">Pętla</string>
     <string name="ns">NS</string>
@@ -336,7 +349,9 @@
     <string name="delete_future_treatments">Usuń przyszłe zabiegi</string>
     <string name="uel_export_settings">EXPORT USTAWIEŃ</string>
     <string name="uel_import_settings">IMPORT USTAWIEŃ</string>
+    <string name="uel_select_directory">WYBIERZ KATALOG</string>
     <string name="uel_reset_databases">RESET BAZ DANYCH</string>
+    <string name="uel_reset_aps_results">RESET WYNIKÓW APS</string>
     <string name="uel_cleanup_databases">WYCZYŚĆ BAZY DANYCH</string>
     <string name="uel_export_databases">EKSPORT BAZ DANYCH</string>
     <string name="uel_import_databases">IMPORT BAZ DANCH</string>
@@ -479,6 +494,7 @@
     <string name="password_cleared">Hasło usunięte!</string>
     <string name="pairing">Parowanie</string>
     <string name="initializing">Inicjuje ...</string>
+    <string name="secs" comment="second short">%1$d s</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Ograniczam maks. dawkę bazową do %1$.2f U/h z uwagi na %2$s</string>
     <string name="pumplimit">ograniczenie pompy</string>
@@ -497,7 +513,18 @@
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Zostaniesz poproszony o hasło główne, które jest potrzebne do odszyfrowania zaimportowanych ustawień.</string>
     <!-- <unattended_export> -->
+    <string name="export_ok">OK</string>
+    <string name="export_warning">Ostrzeżenie</string>
+    <string name="export_expired">Wygasły</string>
+    <string name="export_disabled">Wyłączony</string>
+    <string name="export_failed">Niepowodzenie</string>
+    <string name="export_alert">OSTRZEŻENIE</string>
     <!-- <unattended_export result messages> -->
+    <string name="export_result_message_exported">Ustawienia wyeksportowane</string>
+    <string name="export_result_message_failed">Eksport ustawień nie powiódł się!</string>
+    <string name="export_result_message_about_to_expire">Ustawienia wyeksportowane: hasło wkrótce wygasa. Eksportuj ręcznie i (ponownie) wprowadź hasło.</string>
+    <string name="export_result_message_expired">Eksport ustawień anulowany: hasło wygasło. Eksportuj ręcznie i (ponownie) podaj hasło!</string>
+    <string name="export_result_message_disabled">Ostrzeżenie (automatyzacja): Eksport ustawień nie jest włączony!</string>
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">zmniejszenie %1$s o %2$s</string>
     <string name="a11y_plus_button_description">zwiększenie %1$s o %2$s</string>

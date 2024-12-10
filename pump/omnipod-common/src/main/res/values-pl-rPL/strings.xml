@@ -65,6 +65,7 @@
     <string name="omnipod_common_overview_reservoir_value">pozostało %1$.2f U</string>
     <string name="omnipod_common_overview_reservoir_value_over50">Pozostało ponad 50 U</string>
     <string name="omnipod_common_overview_errors">Błędy</string>
+    <string name="omnipod_common_uncertain">niepewne</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_cancel">Anuluj</string>
     <string name="omnipod_common_wizard_button_finish">Zakończ</string>
@@ -173,6 +174,7 @@
     <string name="omnipod_common_ok">OK</string>
     <string name="omnipod_common_cancel">Anuluj</string>
     <string name="omnipod_common_warning">Ostrzeżenie</string>
+    <string name="omnipod_common_disable_suspend_alerts">WYŁĄCZ OSTRZEŻENIA O ZAWIESZENIU</string>
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">Moment temu</string>
     <string name="omnipod_common_less_than_a_minute_ago">Mniej niż minutę temu</string>

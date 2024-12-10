@@ -19,6 +19,7 @@
     <string name="permission">Toestemming</string>
     <string name="need_system_window_permission">Toepassing vereist systeemvenster machtiging voor meldingen</string>
     <string name="need_location_permission">App heeft locatie toestemming nodig voor Bluetooth scan en WiFi identificatie</string>
+    <string name="need_background_location_permission">Applicatie heeft toestemming voor locatie op de achtergrond nodig voor automatiseringen</string>
     <string name="need_storage_permission">Applicatie heeft gegevens toestemming nodig om log bestanden op te slaan en instellingen te exporteren</string>
     <string name="askforpermission">Vragen om toestemming</string>
     <string name="need_whitelisting">Voor een goede werking van %1$s moeten de accubesparingsopties zijn uitgeschakeld in de telefooninstellingen</string>
@@ -36,6 +37,7 @@
     <string name="exitwizard">De installatiewizard overslaan</string>
     <string name="setupwizard_loop_description">Druk op de knop hieronder om AAPS basaalwijzigingen te laten voorstellen/uitvoeren</string>
     <string name="setupwizard_sensitivity_description">Gevoeligheid plugin wordt gebruikt voor de detectie van de gevoeligheid en COB berekening. Voor meer info bezoek:</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/nl/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
     <string name="setupwizard_aps_description">Selecteer een van beschikbare algoritmen. Ze zijn gesorteerd van oudste naar nieuwste. Nieuwer algoritme is meestal krachtiger en agressiever. Dus als je een nieuwe looper bent, kun je waarschijnlijk beginnen met AMA en niet met de nieuwste. Vergeet niet de OpenAPS-documentatie te lezen en deze vóór gebruik te configureren.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Configureer uw RileyLink hieronder. Na het selecteren van een RileyLink, kun je doorgaan zodra de RileyLink status \"Verbonden\" is. Dit kan even duren.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Opmerking:</b> Je kunt doorgaan zodra de pomp is ingesteld.\n</string>
@@ -44,6 +46,8 @@
     <string name="readstatus">Lees status</string>
     <string name="data_choices">Data Keuzes</string>
     <string name="fabric_upload">Fabric Upload</string>
+    <string name="unattended_settings_export">Niet interactief instellingen exporteren</string>
+    <string name="unattended_settings_export_summary">Met het activeren van deze optie wordt uw wachtwoord veilig opgeslagen op uw telefoon</string>
     <string name="identification">Identificatie (e-mail, FB, Discord e. d.)</string>
     <string name="request">Verzoek</string>
     <string name="apsmode_title">APS Mode</string>
@@ -88,6 +92,8 @@
     <string name="check_preferences_import_btn">Importeren</string>
     <string name="check_preferences_import_anyway_btn">Toch importeren (GEVAARLIJK!)</string>
     <string name="import_setting">Importeer instellingen</string>
+    <string name="aaps_directory">AAPS map</string>
+    <string name="select_aaps_directory">Selecteer de AAPS map voor het opslaan van exporten, configuraties, enz.</string>
     <string name="check_preferences_before_import">Controleer instellingen voor het importeren:</string>
     <string name="check_preferences_cannot_import">Instellingen kunnen niet worden geïmporteerd!</string>
     <string name="check_preferences_dangerous_import">Instellingen zouden niet moeten worden geïmporteerd!</string>
@@ -98,11 +104,13 @@
     <string name="different_password_used">Dit bestand is geëxporteerd en gecodeerd met een ander masterwachtwoord. Geef het oude masterwachtwoord op om het bestand te kunnen decoderen.</string>
     <string name="master_password_will_be_replaced">Als gevolg van het importeren, zal het huidige masterwachtwoord worden vervangen door het oude masterwachtwoord!</string>
     <string name="exported">Instellingen geëxporteerd</string>
+    <string name="exported_failed">Export instellingen mislukt!</string>
     <string name="filenotfound">Bestand niet gevonden</string>
     <string name="goto_main_try_again">Ga terug naar het hoofdscherm en probeer opnieuw.</string>
     <string name="restartingapp">Sluiten van applicatie om instellingen bij te werken.</string>
     <string name="ue_exported">Gebruikers invoer geëxporteerd</string>
     <string name="protection">Beveiliging</string>
+    <string name="master_password_missing">Masterwachtwoord is niet ingesteld!\n\nDefinieer een masterwachtwoord in Instellingen (%1$s)</string>
     <!--    Maintenance-->
     <string name="maintenance">Onderhoud</string>
     <string name="maintenance_shortname">ONDH</string>
@@ -157,4 +165,5 @@
     <string name="metadata_format_new">Nieuwe versleutelde indeling</string>
     <string name="metadata_format_other">Onbekende export indeling</string>
     <string name="reset_aps_results">Reset APS resultaten</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Fout bij toegang tot het bestandssysteem. Selecteer de juiste AAPS map.</string>
 </resources>

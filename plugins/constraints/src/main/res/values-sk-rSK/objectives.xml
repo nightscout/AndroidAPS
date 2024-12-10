@@ -28,6 +28,7 @@
     <string name="objectives_smb_gate">Prečítať si dokumentáciu a zvýšiť maximálne IOB, aby mohlo správne fungovať SMB! Pre začiatok sa dá použiť veľkosť bežného bolusu + 3x maximálny denný bazál</string>
     <string name="objectives_smb_learned">Používanie SMB je Váš cieľ. Oref1 algoritmus bol navrhnutý tak, aby Vám pomáhal aj s Vašimi bolusmi. Nemali by ste si poslať celý bolus k jedlu naraz, ale iba časť a nechať AAPS poslať zvyšok, keď bude treba. Takto máte väčší priestor na zle spočítané sacharidy. Viete, že možete nastaviť precento vypočítaného bolusu, na zníženie veľkosti bolusu?</string>
     <string name="objectives_auto_objective">Povolenie automatiky</string>
+    <string name="objectives_auto_gate">Prečítajte si dokumentáciu, ako automatika funguje. Najskôr nastavte iba jednoduché pravidlá. Namiesto vykonávania akcií nechajte AAPS zobrazovať iba oznámenia. Pokiaľ ste si istý, že automatika je spustená v správnom čase, môžete oznámenie nahradiť vykonaním reálnej akcie. (https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/Automations.html)</string>
     <string name="objectives_auto_learned">Automatizácia môže byť dobrý sluha, ale zlý pán. Nepreháňajte to s ním. Nesnažte sa nahradiť základný algoritmus. Odtestujte pravidlo iba so správou, predtým, ako ho použijete. Závisí na požiadavke.</string>
     <string name="objectives_bgavailableinns">Glykémia dostupná v NS, alebo Tidepool</string>
     <string name="objectives_pumpstatusavailableinns">Stav pumpy dostupný v NS, alebo Tidepool</string>
@@ -74,6 +75,10 @@
     <string name="unfinshed_button">Ďalšia nedokončená</string>
     <string name="requestcode">Kód žiadosti: %1$s</string>
     <string name="objectives_hint">(zaškrtnite všetky správne odpovede)</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/cs/latest/UsefulLinks/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/cs/latest/SettingUpAaps/ConfigBuilder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
     <string name="notconnected">Nie ste pripojený k internetu</string>
     <string name="failedretrievetime">Vyčítanie času zlyhalo</string>
     <string name="requirementnotmet">Požiadavky cieľa nie sú splnené</string>

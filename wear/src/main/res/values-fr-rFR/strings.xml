@@ -33,6 +33,7 @@
     <string name="pref_show_rig_battery">Afficher Batterie Système</string>
     <string name="pref_show_basal_rate">Afficher Basale</string>
     <string name="pref_show_temp_target">Afficher la Cible Temp</string>
+    <string name="pref_show_reservoir_level">Afficher le niveau du réservoir</string>
     <string name="pref_show_loop_status">Afficher État Boucle</string>
     <string name="pref_show_bg">Afficher Glycémie</string>
     <string name="pref_show_bgi">Afficher IGly</string>

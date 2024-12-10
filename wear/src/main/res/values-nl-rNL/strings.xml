@@ -152,6 +152,7 @@
     <string name="pref_vibrate_hourly">Tril ieder uur</string>
     <string name="pref_show_weeknumber">Weeknummer weergeven</string>
     <string name="pref_include_external">Externe weergaven opnemen in sjabloon</string>
+    <string name="pref_switch_external">Externe data wijzigen in watchface</string>
     <string name="custom_pref_show_seconds">Toon seconden</string>
     <string name="digitalstyle_pref_your_style">Jouw stijl:</string>
     <string name="digitalstyle_style_none">geen stijl</string>
