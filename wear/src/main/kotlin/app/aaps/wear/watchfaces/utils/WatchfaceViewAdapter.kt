@@ -109,6 +109,18 @@ class WatchfaceViewAdapter(
                 else                           -> throw IllegalArgumentException("ViewBinding is not implement in WatchfaceViewAdapter")
             }
         }
+
+        enum class SelectedWatchFace() {
+            NONE,
+            CUSTOM,
+            DIGITAL,
+            CIRCLE;
+
+            companion object {
+
+                fun fromId(ordinal: Int): SelectedWatchFace = SelectedWatchFace.entries[ordinal]
+            }
+        }
     }
 
 }

@@ -20,6 +20,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventUpdateSelectedWatchface
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.rx.weardata.EventData.ActionResendData
@@ -29,6 +30,7 @@ import app.aaps.wear.R
 import app.aaps.wear.data.RawDisplayData
 import app.aaps.wear.interaction.menus.MainMenuActivity
 import app.aaps.wear.interaction.utils.Persistence
+import app.aaps.wear.watchfaces.utils.WatchfaceViewAdapter.Companion.SelectedWatchFace
 import com.ustwo.clockwise.common.WatchFaceTime
 import com.ustwo.clockwise.wearable.WatchFace
 import dagger.android.AndroidInjection
@@ -89,6 +91,8 @@ class CircleWatchface : WatchFace() {
     override fun onCreate() {
         AndroidInjection.inject(this)
         super.onCreate()
+        sp.putInt(R.string.key_last_selected_watchface, SelectedWatchFace.CIRCLE.ordinal)
+        rxBus.send(EventUpdateSelectedWatchface())
         val powerManager = getSystemService(POWER_SERVICE) as PowerManager
         val wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:CircleWatchface")
         wakeLock.acquire(30000)
