@@ -351,7 +351,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
         // var tdd = 0.0
         // var insulinDivisor = 0
         dynIsfResult = calculateRawDynIsf((profile as ProfileSealed.EPS).value.originalPercentage / 100.0)
-        if (!dynIsfResult.tddPartsCalculated()) {
+        if (dynIsfMode && !dynIsfResult.tddPartsCalculated()) {
             uiInteraction.addNotificationValidTo(
                 Notification.SMB_FALLBACK, dateUtil.now(),
                 rh.gs(R.string.fallback_smb_no_tdd), Notification.INFO, dateUtil.now() + T.mins(1).msecs()
