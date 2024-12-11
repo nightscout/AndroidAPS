@@ -446,7 +446,7 @@ class NSClientV3Plugin @Inject constructor(
                     }
                 }
                 slowDown()
-                return result.response < 300 || config.ignoreNightscoutV3Errors()
+                return true
             }
         } catch (e: Exception) {
             aapsLogger.error(LTag.NSCLIENT, "Upload exception", e)
@@ -476,7 +476,7 @@ class NSClientV3Plugin @Inject constructor(
                     sp.putBoolean(app.aaps.core.utils.R.string.key_objectives_pump_status_is_available_in_ns, true)
                 }
                 slowDown()
-                return result.response < 300 || config.ignoreNightscoutV3Errors()
+                return true
             }
         } catch (e: Exception) {
             aapsLogger.error(LTag.NSCLIENT, "Upload exception", e)
@@ -522,7 +522,7 @@ class NSClientV3Plugin @Inject constructor(
                     storeDataForDb.nsIdGlucoseValues.add(dataPair.value)
                 }
                 slowDown()
-                return result.response < 300 || config.ignoreNightscoutV3Errors()
+                return true
             }
         } catch (e: Exception) {
             aapsLogger.error(LTag.NSCLIENT, "Upload exception", e)
@@ -568,7 +568,7 @@ class NSClientV3Plugin @Inject constructor(
                     storeDataForDb.nsIdFoods.add(dataPair.value)
                 }
                 slowDown()
-                return result.response < 300 || config.ignoreNightscoutV3Errors()
+                return true
             }
         } catch (e: Exception) {
             aapsLogger.error(LTag.NSCLIENT, "Upload exception", e)
@@ -688,7 +688,7 @@ class NSClientV3Plugin @Inject constructor(
                         }
                     }
                     slowDown()
-                    return result.response < 300 || config.ignoreNightscoutV3Errors()
+                    return true
                 }
             } catch (e: Exception) {
                 rxBus.send(EventNSClientNewLog("◄ ERROR", e.localizedMessage))
