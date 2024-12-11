@@ -25,15 +25,18 @@ class NotificationWithAction(
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var activePlugin: ActivePlugin
 
+    var validityCheck: (() -> Boolean)? = null
+
     init {
         injector.androidInjector().inject(this)
     }
 
-    constructor(injector: HasAndroidInjector, id: Int, text: String, level: Int) : this(injector) {
+    constructor(injector: HasAndroidInjector, id: Int, text: String, level: Int, validityCheck: (() -> Boolean)?) : this(injector) {
         this.id = id
         date = System.currentTimeMillis()
         this.text = text
         this.level = level
+        this.validityCheck = validityCheck
     }
 
     constructor (injector: HasAndroidInjector, nsAlarm: NSAlarm) : this(injector) {

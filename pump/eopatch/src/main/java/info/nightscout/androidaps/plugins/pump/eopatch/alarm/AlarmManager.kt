@@ -198,6 +198,7 @@ class AlarmManager @Inject constructor() : IAlarmManager {
                         }
                 )
             },
+            validityCheck = null,
             soundId = app.aaps.core.ui.R.raw.error,
             date = pm.getAlarms().getOccuredAlarmTimestamp(alarmCode)
         )

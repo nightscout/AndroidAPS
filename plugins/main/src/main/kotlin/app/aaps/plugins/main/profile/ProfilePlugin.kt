@@ -23,6 +23,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventLocalProfileChanged
 import app.aaps.core.interfaces.rx.events.EventProfileStoreChanged
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
@@ -53,7 +54,8 @@ class ProfilePlugin @Inject constructor(
     private val dateUtil: DateUtil,
     private val config: Config,
     private val instantiator: Instantiator,
-    private val decimalFormatter: DecimalFormatter
+    private val decimalFormatter: DecimalFormatter,
+    private val uiInteraction: UiInteraction
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.PROFILE)
@@ -239,13 +241,14 @@ class ProfilePlugin @Inject constructor(
                     sp.name = p.toString()
                     newProfiles.add(sp)
                 } else {
-                    activePlugin.activeOverview.addNotificationWithDialogResponse(
-                        Notification.INVALID_PROFILE_NOT_ACCEPTED,
-                        rh.gs(R.string.invalid_profile_not_accepted, p.toString()),
-                        Notification.NORMAL,
-                        R.string.view,
-                        rh.gs(R.string.errors),
-                        validityCheck.reasons.joinToString(separator = "\n")
+                    uiInteraction.addNotificationWithDialogResponse(
+                        id = Notification.INVALID_PROFILE_NOT_ACCEPTED,
+                        text = rh.gs(R.string.invalid_profile_not_accepted, p.toString()),
+                        level = Notification.NORMAL,
+                        buttonText = R.string.view,
+                        title = rh.gs(R.string.errors),
+                        message = validityCheck.reasons.joinToString(separator = "\n"),
+                        validityCheck = null
                     )
                 }
             }
