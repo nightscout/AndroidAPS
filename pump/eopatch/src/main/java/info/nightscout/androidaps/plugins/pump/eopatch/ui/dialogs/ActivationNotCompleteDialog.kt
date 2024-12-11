@@ -14,6 +14,7 @@ import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
 import info.nightscout.androidaps.plugins.pump.eopatch.databinding.DialogCommonBinding
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.DialogHelperActivity
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.EopatchActivity
+import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchConfig
 import javax.inject.Inject
 
 class ActivationNotCompleteDialog : DaggerDialogFragment() {
@@ -21,6 +22,7 @@ class ActivationNotCompleteDialog : DaggerDialogFragment() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var patchManager: IPatchManager
     @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var patchConfig: PatchConfig
 
     var helperActivity: DialogHelperActivity? = null
     var message: String = ""
@@ -52,7 +54,7 @@ class ActivationNotCompleteDialog : DaggerDialogFragment() {
         binding.title.text = title
         binding.ok.setOnSafeClickListener {
             helperActivity?.apply {
-                startActivity(EopatchActivity.createIntent(this, patchManager.patchConfig.lifecycleEvent.lifeCycle, false))
+                startActivity(EopatchActivity.createIntent(this, patchConfig.lifecycleEvent.lifeCycle, false))
             }
             dismiss()
         }

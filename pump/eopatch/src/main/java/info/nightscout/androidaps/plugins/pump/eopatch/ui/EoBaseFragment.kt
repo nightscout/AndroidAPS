@@ -11,11 +11,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.plugins.pump.eopatch.dagger.EopatchPluginQualifier
+import info.nightscout.androidaps.plugins.pump.eopatch.di.EopatchPluginQualifier
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 
 abstract class EoBaseFragment<B : ViewDataBinding> : DaggerFragment(), EoBaseNavigator {
+
     @Inject
     @EopatchPluginQualifier
     lateinit var viewModelFactory: ViewModelProvider.Factory

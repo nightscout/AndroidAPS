@@ -14,10 +14,12 @@ import app.aaps.core.interfaces.utils.DateUtil
 import info.nightscout.androidaps.plugins.pump.eopatch.EoPatchRxBus
 import info.nightscout.androidaps.plugins.pump.eopatch.OsAlarmReceiver
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode.Companion.getUri
-import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager
+import info.nightscout.androidaps.plugins.pump.eopatch.ble.PreferenceManager
 import info.nightscout.androidaps.plugins.pump.eopatch.code.PatchLifecycle
 import info.nightscout.androidaps.plugins.pump.eopatch.core.code.PatchAeCode
 import info.nightscout.androidaps.plugins.pump.eopatch.event.EventEoPatchAlarm
+import info.nightscout.androidaps.plugins.pump.eopatch.vo.Alarms
+import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchConfig
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -26,22 +28,17 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
-interface IAlarmRegistry {
-
-    fun add(alarmCode: AlarmCode, triggerAfter: Long, isFirst: Boolean = false): Maybe<AlarmCode>
-    fun add(patchAeCodes: Set<PatchAeCode>)
-    fun remove(alarmCode: AlarmCode): Maybe<AlarmCode>
-}
-
 @Singleton
 class AlarmRegistry @Inject constructor() : IAlarmRegistry {
 
     @Inject lateinit var mContext: Context
-    @Inject lateinit var pm: IPreferenceManager
+    @Inject lateinit var pm: PreferenceManager
+    @Inject lateinit var patchConfig: PatchConfig
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var alarms: Alarms
 
     private lateinit var mOsAlarmManager: AlarmManager
     private var mDisposable: Disposable? = null
@@ -54,18 +51,16 @@ class AlarmRegistry @Inject constructor() : IAlarmRegistry {
             .subscribe {
                 when (it) {
                     PatchLifecycle.REMOVE_NEEDLE_CAP -> {
-                        val triggerAfter = pm.getPatchConfig().patchWakeupTimestamp + TimeUnit.HOURS.toMillis(1) - System.currentTimeMillis()
+                        val triggerAfter = patchConfig.patchWakeupTimestamp + TimeUnit.HOURS.toMillis(1) - System.currentTimeMillis()
                         compositeDisposable.add(add(AlarmCode.A020, triggerAfter).subscribe())
                     }
 
-                    PatchLifecycle.ACTIVATED         -> {
-
-                    }
+                    PatchLifecycle.ACTIVATED         -> {}
 
                     PatchLifecycle.SHUTDOWN          -> {
                         val sources = ArrayList<Maybe<*>>()
                         sources.add(Maybe.just(true))
-                        pm.getAlarms().occurred.let { occurredAlarms ->
+                        alarms.occurred.let { occurredAlarms ->
                             if (occurredAlarms.isNotEmpty()) {
                                 occurredAlarms.keys.forEach { alarmCode ->
                                     sources.add(
@@ -76,7 +71,7 @@ class AlarmRegistry @Inject constructor() : IAlarmRegistry {
                                 }
                             }
                         }
-                        pm.getAlarms().registered.let { registeredAlarms ->
+                        alarms.registered.let { registeredAlarms ->
                             if (registeredAlarms.isNotEmpty()) {
                                 registeredAlarms.keys.forEach { alarmCode ->
                                     sources.add(remove(alarmCode))
@@ -85,7 +80,7 @@ class AlarmRegistry @Inject constructor() : IAlarmRegistry {
                         }
                         compositeDisposable.add(Maybe.concat(sources)
                                                     .subscribe {
-                                                        pm.getAlarms().clear()
+                                                        alarms.clear()
                                                         pm.flushAlarms()
                                                     }
                         )
@@ -97,11 +92,11 @@ class AlarmRegistry @Inject constructor() : IAlarmRegistry {
     }
 
     override fun add(alarmCode: AlarmCode, triggerAfter: Long, isFirst: Boolean): Maybe<AlarmCode> {
-        if (pm.getAlarms().occurred.containsKey(alarmCode)) {
+        if (alarms.occurred.containsKey(alarmCode)) {
             return Maybe.just(alarmCode)
         } else {
             val triggerTimeMilli = System.currentTimeMillis() + triggerAfter
-            pm.getAlarms().register(alarmCode, triggerAfter)
+            alarms.register(alarmCode, triggerAfter)
             pm.flushAlarms()
             if (triggerAfter <= 0L) {
                 EoPatchRxBus.publish(EventEoPatchAlarm(HashSet<AlarmCode>().apply { add(alarmCode) }, isFirst))
@@ -134,10 +129,10 @@ class AlarmRegistry @Inject constructor() : IAlarmRegistry {
     }
 
     override fun remove(alarmCode: AlarmCode): Maybe<AlarmCode> {
-        return if (pm.getAlarms().registered.containsKey(alarmCode)) {
+        return if (alarms.registered.containsKey(alarmCode)) {
             cancelOsAlarms(alarmCode)
                 .doOnSuccess {
-                    pm.getAlarms().unregister(alarmCode)
+                    alarms.unregister(alarmCode)
                     pm.flushAlarms()
                 }
                 .map { alarmCode }

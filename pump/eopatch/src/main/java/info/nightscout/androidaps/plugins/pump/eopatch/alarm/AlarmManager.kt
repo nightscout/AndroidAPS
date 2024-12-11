@@ -24,12 +24,14 @@ import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode.B000
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode.B001
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode.B012
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
-import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager
+import info.nightscout.androidaps.plugins.pump.eopatch.ble.PatchManagerExecutor
+import info.nightscout.androidaps.plugins.pump.eopatch.ble.PreferenceManager
 import info.nightscout.androidaps.plugins.pump.eopatch.code.AlarmCategory
 import info.nightscout.androidaps.plugins.pump.eopatch.event.EventEoPatchAlarm
 import info.nightscout.androidaps.plugins.pump.eopatch.extension.takeOne
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.AlarmHelperActivity
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.Alarms
+import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchConfig
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -40,12 +42,6 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.max
-
-interface IAlarmManager {
-
-    fun init()
-    fun restartAll()
-}
 
 @Singleton
 class AlarmManager @Inject constructor() : IAlarmManager {
@@ -60,8 +56,11 @@ class AlarmManager @Inject constructor() : IAlarmManager {
     @Inject lateinit var context: Context
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var uiInteraction: UiInteraction
-    @Inject lateinit var pm: IPreferenceManager
+    @Inject lateinit var pm: PreferenceManager
+    @Inject lateinit var patchManagerExecutor: PatchManagerExecutor
     @Inject lateinit var mAlarmRegistry: IAlarmRegistry
+    @Inject lateinit var patchConfig: PatchConfig
+    @Inject lateinit var alarms: Alarms
 
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var pumpSync: PumpSync
@@ -74,7 +73,7 @@ class AlarmManager @Inject constructor() : IAlarmManager {
     @Suppress("unused")
     @Inject
     fun onInit() {
-        mAlarmProcess = AlarmProcess(patchManager, rxBus)
+        mAlarmProcess = AlarmProcess(patchManager, patchManagerExecutor, rxBus)
     }
 
     override fun init() {
@@ -111,10 +110,10 @@ class AlarmManager @Inject constructor() : IAlarmManager {
         val now = System.currentTimeMillis()
 
         @Suppress("UNCHECKED_CAST")
-        val occurredAlarm = pm.getAlarms().occurred.clone() as HashMap<AlarmCode, Alarms.AlarmItem>
+        val occurredAlarm = alarms.occurred.clone() as HashMap<AlarmCode, Alarms.AlarmItem>
 
         @Suppress("UNCHECKED_CAST")
-        val registeredAlarm = pm.getAlarms().registered.clone() as HashMap<AlarmCode, Alarms.AlarmItem>
+        val registeredAlarm = alarms.registered.clone() as HashMap<AlarmCode, Alarms.AlarmItem>
         compositeDisposable.clear()
         if (occurredAlarm.isNotEmpty()) {
             EoPatchRxBus.publish(EventEoPatchAlarm(occurredAlarm.keys))
@@ -133,13 +132,13 @@ class AlarmManager @Inject constructor() : IAlarmManager {
     private fun isValid(code: AlarmCode): Boolean {
         return when (code) {
             A005, A016, A020, B012 -> {
-                aapsLogger.info(LTag.PUMP, "Is $code valid? ${pm.getPatchConfig().hasMacAddress() && pm.getPatchConfig().lifecycleEvent.isSubStepRunning}")
-                pm.getPatchConfig().hasMacAddress() && pm.getPatchConfig().lifecycleEvent.isSubStepRunning
+                aapsLogger.info(LTag.PUMP, "Is $code valid? ${patchConfig.hasMacAddress() && patchConfig.lifecycleEvent.isSubStepRunning}")
+                patchConfig.hasMacAddress() && patchConfig.lifecycleEvent.isSubStepRunning
             }
 
             else                   -> {
-                aapsLogger.info(LTag.PUMP, "Is $code valid? ${pm.getPatchConfig().isActivated}")
-                pm.getPatchConfig().isActivated
+                aapsLogger.info(LTag.PUMP, "Is $code valid? ${patchConfig.isActivated}")
+                patchConfig.isActivated
             }
         }
     }
@@ -182,14 +181,14 @@ class AlarmManager @Inject constructor() : IAlarmManager {
                                             timestamp = dateUtil.now(),
                                             endPumpId = dateUtil.now(),
                                             pumpType = PumpType.EOFLOW_EOPATCH2,
-                                            pumpSerial = patchManager.patchConfig.patchSerialNumber
+                                            pumpSerial = patchConfig.patchSerialNumber
                                         )
                                     }
                                     updateState(alarmCode, AlarmState.HANDLE)
                                 }
 
                                 IAlarmProcess.ALARM_HANDLED_BUT_NEED_STOP_BEEP -> {
-                                    pm.getAlarms().needToStopBeep.add(alarmCode)
+                                    alarms.needToStopBeep.add(alarmCode)
                                     updateState(alarmCode, AlarmState.HANDLE)
                                 }
 
@@ -200,16 +199,16 @@ class AlarmManager @Inject constructor() : IAlarmManager {
             },
             validityCheck = null,
             soundId = app.aaps.core.ui.R.raw.error,
-            date = pm.getAlarms().getOccuredAlarmTimestamp(alarmCode)
+            date = alarms.getOccuredAlarmTimestamp(alarmCode)
         )
 
     }
 
     private fun updateState(alarmCode: AlarmCode, state: AlarmState) {
         when (state) {
-            AlarmState.REGISTER -> pm.getAlarms().register(alarmCode, 0)
-            AlarmState.FIRED    -> pm.getAlarms().occurred(alarmCode)
-            AlarmState.HANDLE   -> pm.getAlarms().handle(alarmCode)
+            AlarmState.REGISTER -> alarms.register(alarmCode, 0)
+            AlarmState.FIRED    -> alarms.occurred(alarmCode)
+            AlarmState.HANDLE   -> alarms.handle(alarmCode)
         }
         pm.flushAlarms()
     }
