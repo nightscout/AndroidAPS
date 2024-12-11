@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash
 
 import android.text.format.DateFormat
+import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SwitchPreference
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
@@ -44,6 +46,7 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.utils.DateTimeUtil
+import app.aaps.core.validators.ValidatingEditTextPreference
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandDeactivatePod
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandDisableSuspendAlerts
@@ -1201,6 +1204,25 @@ class OmnipodDashPumpPlugin @Inject constructor(
         return profileFunction.getProfile()?.let {
             setNewBasalProfile(it, OmnipodCommandType.SET_TIME)
         } ?: instantiator.providePumpEnactResult().success(false).enacted(false).comment("No profile active")
+    }
+
+    override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
+        super.preprocessPreferences(preferenceFragment)
+
+        preprocessPodExpirationSettings(preferenceFragment)
+    }
+
+    private fun preprocessPodExpirationSettings(preferenceFragment: PreferenceFragmentCompat) {
+        val podExpirationReminder = preferenceFragment.findPreference<SwitchPreference>(rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.key_omnipod_common_expiration_reminder_enabled))
+        val podExpirationReminderHours = preferenceFragment.findPreference<ValidatingEditTextPreference>(rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.key_omnipod_common_expiration_reminder_hours_before_expiry))
+        val podExpirationAlarm = preferenceFragment.findPreference<SwitchPreference>(rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.key_omnipod_common_expiration_alarm_enabled))
+        val podExpirationAlarmHours = preferenceFragment.findPreference<ValidatingEditTextPreference>(rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.key_omnipod_common_expiration_alarm_hours_before_shutdown))
+        val podLowReservoirAlert = preferenceFragment.findPreference<SwitchPreference>(rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.key_omnipod_common_low_reservoir_alert_enabled))
+        val podLowReservoirAlertUnits = preferenceFragment.findPreference<ValidatingEditTextPreference>(rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.key_omnipod_common_low_reservoir_alert_units))
+
+        podExpirationReminderHours?.isVisible = podExpirationReminder?.isChecked == true
+        podExpirationAlarmHours?.isVisible = podExpirationAlarm?.isChecked == true
+        podLowReservoirAlertUnits?.isVisible = podLowReservoirAlert?.isChecked == true
     }
 
     private fun updateAlertConfiguration(): PumpEnactResult {
