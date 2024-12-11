@@ -8,6 +8,7 @@ import androidx.work.OneTimeWorkRequest
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.receivers.Intents
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.utils.extensions.copyDouble
 import app.aaps.core.utils.extensions.copyLong
 import app.aaps.core.utils.extensions.copyString
@@ -29,6 +30,7 @@ open class DataReceiver : DaggerBroadcastReceiver() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
@@ -93,6 +95,10 @@ open class DataReceiver : DaggerBroadcastReceiver() {
 
             else                                      -> null
         }?.let { request -> dataWorkerStorage.enqueue(request) }
+
+        // Verify KeepAlive is running
+        // Sometimes the schedule fail
+        KeepAliveWorker.scheduleIfNotRunning(context, aapsLogger, fabricPrivacy)
     }
 
 }

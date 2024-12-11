@@ -141,14 +141,7 @@ class MainApp : DaggerApplication() {
                         ).subscribe()
                 }, 10000
             )
-            WorkManager.getInstance(this@MainApp).enqueueUniquePeriodicWork(
-                KeepAliveWorker.KA_0,
-                ExistingPeriodicWorkPolicy.UPDATE,
-                PeriodicWorkRequest.Builder(KeepAliveWorker::class.java, 15, TimeUnit.MINUTES)
-                    .setInputData(Data.Builder().putString("schedule", KeepAliveWorker.KA_0).build())
-                    .setInitialDelay(5, TimeUnit.SECONDS)
-                    .build()
-            )
+            KeepAliveWorker.schedule(this@MainApp)
             localAlertUtils.shortenSnoozeInterval()
             localAlertUtils.preSnoozeAlarms()
             doMigrations()
