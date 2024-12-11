@@ -3,6 +3,7 @@ package app.aaps.pump.equil
 import android.content.SharedPreferences
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.ui.R
 import app.aaps.core.validators.preferences.AdaptiveDoublePreference
 import app.aaps.core.validators.preferences.AdaptiveListIntPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
@@ -11,7 +12,9 @@ import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
+import org.mockito.Mockito
 
 class EquilPumpPluginTest : TestBaseWithProfile() {
 
@@ -44,6 +47,7 @@ class EquilPumpPluginTest : TestBaseWithProfile() {
     @BeforeEach
     fun prepareMocks() {
 
+        Mockito.`when`(rh.gs(anyInt())).thenReturn("")
         equilPumpPlugin =
             EquilPumpPlugin(
                 aapsLogger,
