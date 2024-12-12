@@ -18,24 +18,24 @@
     <color name="secondaryColorDefault">#03dac6</color>
     <color name="secondaryLightColorDefault">#e3e3e3</color>
     <color name="secondaryDarkColorDefault">#848484</color>
-    <color name="primaryTextColorDefault">#ffffff</color>
+    <color name="primaryTextColorDefault">#000000</color>
     <color name="secondaryTextColorDefault">#000000</color>
     <color name="overviewPillColorDefault">#1c171c</color>
     <color name="colorOnPrimaryDefault">#FFFFFF</color>
 
-    <color name="defaultBackground">#FFFFFF</color>
+    <color name="defaultBackground">#F8F1F6</color>
     <color name="defaultTextColor">#000000</color>
 
     <!---Android Dark ans Light Theme Base colors-->
     <color name="background_dark">#262626</color>
-    <color name="background_light">#FFFFFF</color>
+    <color name="background_light">#F3F3F3</color>
 
     <!--    Tabs-->
     <color name="tabText">@color/black_alpha_90</color>
     <color name="tabSelectedText">@color/black_alpha_90</color>
 
     <!--    Buttons-->
-    <color name="buttonBackground">#BABABA</color>
+    <color name="buttonBackground">#F8F1F6</color>
     <color name="buttonText">#000000</color>
     <color name="okButtonText">@color/colorAccent</color>
     <color name="okButtonSelected">#33969696</color>
@@ -64,7 +64,7 @@
     <color name="errorAlertHeaderText">#FF000000</color>
     <color name="helperProfile">#C803A9F4</color>
     <color name="examinedProfile">#FFFF5555</color>
-    <color name="defaultText">#666666</color>
+    <color name="defaultText">#000000</color>
 
     <!--    DatePicker-->
     <color name="dateTimePickerBackground">@color/white</color>
@@ -99,7 +99,7 @@
     <color name="blue">#0000FF</color>
     <color name="sens">#008585</color>
 
-    <color name="ribbonDefault">#8C8C8C</color>
+    <color name="ribbonDefault">#5F5D5D</color>
     <color name="daySelected">#D000FF00</color>
     <color name="weekdayOutline">#1ea3e5</color>
     <color name="weekendOutline">#1e88e5</color>
@@ -145,7 +145,7 @@
 
     <color name="ribbonWarning">#f4d700</color>
     <color name="ribbonCritical">#ff0400</color>
-    <color name="ribbonTextDefault">#FFFFFF</color>
+    <color name="ribbonTextDefault">#000000</color>
     <color name="ribbonTextWarning">#303030</color>
     <color name="tempTargetConfirmation">#6BD16B</color>
 
@@ -153,7 +153,7 @@
     <color name="iobPred">#00d2d2</color>
     <color name="bolus">#1ea3e5</color>
     <color name="ratio">#000000</color>
-    <color name="activity">#d3f166</color>
+    <color name="activity">#F2A868</color>
     <color name="bgi">#00EEEE</color>
     <color name="devSlopePos">#FFFFFF00</color>
     <color name="devSlopeNeg">#FFFF00FF</color>
@@ -296,7 +296,7 @@
          colors can be used also if we change to material 3
          !!! In the moment only tested in light theme !!! -->
     <color name="aaps_theme_light_primary">#006493</color>
-    <color name="aaps_theme_light_onPrimary">#FFFFFF</color>
+    <color name="aaps_theme_light_onPrimary">#000000</color>
     <color name="aaps_theme_light_primaryContainer">#C7E6FF</color>
     <color name="aaps_theme_light_onPrimaryContainer">#001E30</color>
     <color name="aaps_theme_light_secondary">#006A5F</color>
@@ -311,9 +311,9 @@
     <color name="aaps_theme_light_errorContainer">#F9DEDC</color>
     <color name="aaps_theme_light_onError">#FFFFFF</color>
     <color name="aaps_theme_light_onErrorContainer">#410E0B</color>
-    <color name="aaps_theme_light_background">#FFFBFC</color>
+    <color name="aaps_theme_light_background">#FFFFFF</color>
     <color name="aaps_theme_light_onBackground">#1D1B1E</color>
-    <color name="aaps_theme_light_surface">#FFFBFC</color>
+    <color name="aaps_theme_light_surface">#F6EFF6</color>
     <color name="aaps_theme_light_onSurface">#1D1B1E</color>
     <color name="aaps_theme_light_surfaceVariant">#E7E0EC</color>
     <color name="aaps_theme_light_onSurfaceVariant">#49454F</color>
