@@ -1,8 +1,8 @@
 package info.nightscout.pump.medtrum.comm.packets
 
+import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import com.google.common.truth.Truth.assertThat
 import info.nightscout.pump.medtrum.MedtrumTestBase
 import info.nightscout.pump.medtrum.comm.enums.AlarmSetting
 import info.nightscout.pump.medtrum.comm.enums.BasalType
