@@ -5,7 +5,7 @@
 
         <variable
             name="viewmodel"
-            type="info.nightscout.pump.medtrum.ui.viewmodel.MedtrumOverviewViewModel" />
+            type="app.aaps.pump.medtrum.ui.viewmodel.MedtrumOverviewViewModel" />
 
         <import type="android.view.View" />
 

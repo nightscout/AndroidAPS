@@ -38,7 +38,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.di.OmnipodDashModule
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.di.OmnipodErosModule
 import info.nightscout.pump.combov2.di.ComboV2Module
 import info.nightscout.pump.common.di.PumpCommonModule
-import info.nightscout.pump.medtrum.di.MedtrumModule
+import app.aaps.pump.medtrum.di.MedtrumModule
 import javax.inject.Singleton
 
 @Singleton

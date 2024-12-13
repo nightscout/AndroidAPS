@@ -71,7 +71,7 @@ import app.aaps.pump.medtronic.MedtronicPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.OmnipodDashPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
 import info.nightscout.pump.combov2.ComboV2Plugin
-import info.nightscout.pump.medtrum.MedtrumPlugin
+import app.aaps.pump.medtrum.MedtrumPlugin
 import javax.inject.Qualifier
 
 @Suppress("unused")

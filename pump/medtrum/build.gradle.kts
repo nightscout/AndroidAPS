@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "info.nightscout.pump.medtrum"
+    namespace = "app.aaps.pump.medtrum"
     buildFeatures {
         dataBinding = true
     }
