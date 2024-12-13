@@ -35,9 +35,7 @@ data class Id(val address: ByteArray) {
 
         other as Id
 
-        if (!address.contentEquals(other.address)) return false
-
-        return true
+        return address.contentEquals(other.address)
     }
 
     override fun hashCode(): Int {

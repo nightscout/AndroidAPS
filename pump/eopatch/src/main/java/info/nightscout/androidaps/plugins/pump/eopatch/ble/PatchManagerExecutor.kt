@@ -179,7 +179,7 @@ class PatchManagerExecutor @Inject constructor(
             listen<EventEoPatchAlarm>(EventEoPatchAlarm::class.java)
                 .filter(EventEoPatchAlarm::isFirst)
                 .filter(Predicate { !patchConfig.isDeactivated })
-                .filter(Predicate { patch.getConnectionState().isConnected() })
+                .filter(Predicate { patch.connectionState.isConnected })
                 .concatMapIterable<AlarmCode>(EventEoPatchAlarm::alarmCodes)
                 .filter(AlarmCode::isPatchOccurrenceAlert)
                 .subscribe()
@@ -189,7 +189,7 @@ class PatchManagerExecutor @Inject constructor(
             listen<EventEoPatchAlarm>(EventEoPatchAlarm::class.java)
                 .filter(EventEoPatchAlarm::isFirst)
                 .filter(Predicate { !patchConfig.isDeactivated })
-                .filter(Predicate { patch.getConnectionState().isConnected() })
+                .filter(Predicate { patch.connectionState.isConnected })
                 .concatMapIterable<AlarmCode>(EventEoPatchAlarm::alarmCodes)
                 .filter(AlarmCode::isPatchOccurrenceAlarm)
                 .flatMap(Function { it: AlarmCode -> pauseBasalImpl(0.0f, System.currentTimeMillis(), it).toObservable() })
@@ -211,7 +211,7 @@ class PatchManagerExecutor @Inject constructor(
         if (connected && activated && useEncryption) {
             compositeDisposable.add(
                 SEQUENCE_GET.get()
-                    .map<Int>(Function { obj: KeyResponse -> obj.getSequence() })
+                    .map<Int>(Function { obj: KeyResponse -> obj.sequence })
                     .doOnSuccess(Consumer { sequence: Int ->
                         if (sequence >= 0) {
                             saveSequence(sequence)
@@ -471,7 +471,7 @@ class PatchManagerExecutor @Inject constructor(
     // IPatchManager implementation [BOLUS]
     //==============================================================================================
     fun readBolusStatusFromNotification(infoNotification: InfoNotification) {
-        if (infoNotification.isBolusRegAct()) {
+        if (infoNotification.isBolusRegAct) {
             val bolusCurrent = pm.bolusCurrent
 
             Arrays.asList<BolusType>(BolusType.NOW, BolusType.EXT).forEach(java.util.function.Consumer { type: BolusType ->
@@ -529,7 +529,7 @@ class PatchManagerExecutor @Inject constructor(
         patchStateManager.updatePatchState(create(notification.patchState, System.currentTimeMillis()))
 
         if (patchConfig.isActivated) {
-            if (!patch.isSeqReady()) {
+            if (!patch.isSeqReady) {
                 getSequence().subscribe()
             }
             updateBasal()
@@ -541,17 +541,17 @@ class PatchManagerExecutor @Inject constructor(
     @Throws(Throwable::class) private fun onInfoNotification(notification: InfoNotification) {
         readBolusStatusFromNotification(notification)
         updateInjected(notification, false)
-        if (notification.isBolusDone()) {
+        if (notification.isBolusDone) {
             fetchPatchState()
         }
     }
 
     @Throws(Throwable::class) fun updateInjected(notification: BaseNotification, needSave: Boolean) {
         updatePatchConfig(Consumer { patchConfig: PatchConfig ->
-            patchConfig.injectCount = notification.getTotalInjected()
-            patchConfig.standardBolusInjectCount = notification.getSB_CNT()
-            patchConfig.extendedBolusInjectCount = notification.getEB_CNT()
-            patchConfig.basalInjectCount = notification.getBasal_CNT()
+            patchConfig.injectCount = notification.totalInjected
+            patchConfig.standardBolusInjectCount = notification.sB_CNT
+            patchConfig.extendedBolusInjectCount = notification.eB_CNT
+            patchConfig.basalInjectCount = notification.basal_CNT
         }, needSave)
     }
 
@@ -562,7 +562,7 @@ class PatchManagerExecutor @Inject constructor(
                     PUBLIC_KEY_SET.send(bytes)
                         .map<ByteArray>(Function { obj: KeyResponse -> obj.getPublicKey() })
                         .map<ECPublicKey>(Function { bytes2: ByteArray -> rawToEncodedECPublicKey(SECP256R1, bytes2) })
-                        .map<ByteArray>(Function { publicKey: ECPublicKey -> generateSharedSecret(keyPair.getPrivate(), publicKey) })
+                        .map<ByteArray>(Function { publicKey: ECPublicKey -> generateSharedSecret(keyPair.private, publicKey) })
                         .doOnSuccess(Consumer { v: ByteArray -> this.saveShared(v) })
                         .map<Boolean>(Function { true })
                 })
@@ -572,7 +572,7 @@ class PatchManagerExecutor @Inject constructor(
 
     fun getSequence(): Single<Boolean> {
         return SEQUENCE_GET.get()
-            .map<Int>(Function { obj: KeyResponse -> obj.getSequence() })
+            .map<Int>(Function { obj: KeyResponse -> obj.sequence })
             .doOnSuccess(Consumer { sequence: Int ->
                 if (sequence >= 0) {
                     saveSequence(sequence)
@@ -602,7 +602,7 @@ class PatchManagerExecutor @Inject constructor(
     }
 
     fun ECPublicToRawBytes(keyPair: KeyPair): Single<ByteArray> {
-        return Single.just<PublicKey>(keyPair.getPublic()).cast<ECPublicKey>(ECPublicKey::class.java)
+        return Single.just<PublicKey>(keyPair.public).cast<ECPublicKey>(ECPublicKey::class.java)
             .map<ByteArray>(Function { pubKey: ECPublicKey -> encodeECPublicKey(pubKey) })
     }
 
@@ -637,13 +637,13 @@ class PatchManagerExecutor @Inject constructor(
         private const val ECDH = "ECDH"
 
         private fun encodeECPublicKey(pubKey: ECPublicKey): ByteArray {
-            val keyLengthBytes = (pubKey.getParams().getOrder().bitLength()
+            val keyLengthBytes = (pubKey.params.order.bitLength()
                 / Byte.SIZE)
             val publicKeyEncoded = ByteArray(2 * keyLengthBytes)
 
             var offset = 0
 
-            val x = pubKey.getW().getAffineX()
+            val x = pubKey.w.affineX
             val xba = x.toByteArray()
             check(
                 !(xba.size > keyLengthBytes + 1 || xba.size == keyLengthBytes + 1
@@ -660,7 +660,7 @@ class PatchManagerExecutor @Inject constructor(
             }
             offset += keyLengthBytes
 
-            val y = pubKey.getW().getAffineY()
+            val y = pubKey.w.affineY
             val yba = y.toByteArray()
             check(
                 !(yba.size > keyLengthBytes + 1 || yba.size == keyLengthBytes + 1

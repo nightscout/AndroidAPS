@@ -775,7 +775,7 @@ class EquilManager @Inject constructor(
         val insulin = data[18].toInt() and 0xff
         val rate1 = bytesToInt(data[20], data[19])
         val rate = internalDecodeSpeedToUH(rate1)
-        val largeRate = bytesToInt(data[22], data[21]).toFloat()
+        //val largeRate = bytesToInt(data[22], data[21]).toFloat()
         val historyIndex = bytesToInt(data[24], data[23])
         val currentIndex = getHistoryIndex()
         val port = data[25].toInt() and 0xff
@@ -825,9 +825,9 @@ class EquilManager @Inject constructor(
         private fun createGson(): Gson {
             val gsonBuilder = GsonBuilder()
                 .registerTypeAdapter(DateTime::class.java, JsonSerializer { dateTime: DateTime?, typeOfSrc: Type?, context: JsonSerializationContext? -> JsonPrimitive(ISODateTimeFormat.dateTime().print(dateTime)) })
-                .registerTypeAdapter(DateTime::class.java, JsonDeserializer { json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext? -> ISODateTimeFormat.dateTime().parseDateTime(json!!.getAsString()) })
-                .registerTypeAdapter(DateTimeZone::class.java, JsonSerializer { timeZone: DateTimeZone?, typeOfSrc: Type?, context: JsonSerializationContext? -> JsonPrimitive(timeZone!!.getID()) })
-                .registerTypeAdapter(DateTimeZone::class.java, JsonDeserializer { json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext? -> DateTimeZone.forID(json!!.getAsString()) })
+                .registerTypeAdapter(DateTime::class.java, JsonDeserializer { json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext? -> ISODateTimeFormat.dateTime().parseDateTime(json!!.asString) })
+                .registerTypeAdapter(DateTimeZone::class.java, JsonSerializer { timeZone: DateTimeZone?, typeOfSrc: Type?, context: JsonSerializationContext? -> JsonPrimitive(timeZone!!.id) })
+                .registerTypeAdapter(DateTimeZone::class.java, JsonDeserializer { json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext? -> DateTimeZone.forID(json!!.asString) })
 
             return gsonBuilder.create()
         }

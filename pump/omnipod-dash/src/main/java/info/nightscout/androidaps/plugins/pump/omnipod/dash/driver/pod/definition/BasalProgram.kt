@@ -85,9 +85,7 @@ class BasalProgram(
 
         other as BasalProgram
 
-        if (segments != other.segments) return false
-
-        return true
+        return segments == other.segments
     }
 
     override fun hashCode(): Int {

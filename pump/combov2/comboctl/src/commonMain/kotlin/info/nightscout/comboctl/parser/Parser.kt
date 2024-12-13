@@ -532,10 +532,7 @@ class StringParser : Parser() {
         val x1 = firstToken.x
         val x2 = secondToken.x
 
-        if ((x1 + firstToken.pattern.width + 1 + 3) < x2)
-            return true
-
-        return false
+        return (x1 + firstToken.pattern.width + 1 + 3) < x2
     }
 }
 

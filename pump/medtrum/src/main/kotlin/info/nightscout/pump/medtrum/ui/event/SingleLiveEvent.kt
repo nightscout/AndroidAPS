@@ -20,6 +20,7 @@ open class SingleLiveEvent<T> : MutableLiveData<T>() {
     @MainThread
     override fun setValue(t: T?) {
         mPending.set(true)
+        // Keep line bellow as it is !!
         super.setValue(t)
     }
 
