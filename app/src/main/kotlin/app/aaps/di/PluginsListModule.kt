@@ -62,16 +62,16 @@ import app.aaps.pump.diaconn.DiaconnG8Plugin
 import app.aaps.pump.eopatch.EopatchPumpPlugin
 import app.aaps.pump.equil.EquilPumpPlugin
 import app.aaps.pump.insight.InsightPlugin
+import app.aaps.pump.medtronic.MedtronicPumpPlugin
+import app.aaps.pump.medtrum.MedtrumPlugin
+import app.aaps.pump.omnipod.dash.OmnipodDashPumpPlugin
+import app.aaps.pump.omnipod.eros.OmnipodErosPumpPlugin
 import app.aaps.pump.virtual.VirtualPumpPlugin
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntKey
 import dagger.multibindings.IntoMap
-import app.aaps.pump.medtronic.MedtronicPumpPlugin
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.OmnipodDashPumpPlugin
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
 import info.nightscout.pump.combov2.ComboV2Plugin
-import app.aaps.pump.medtrum.MedtrumPlugin
 import javax.inject.Qualifier
 
 @Suppress("unused")
