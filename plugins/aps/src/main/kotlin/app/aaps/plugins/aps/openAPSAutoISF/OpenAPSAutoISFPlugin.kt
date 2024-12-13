@@ -218,25 +218,12 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         preferenceFragment.findPreference<SwitchPreference>(BooleanKey.ApsUseSmbAfterCarbs.key)?.isVisible = !smbAlwaysEnabled || !advancedFiltering
     }
 
-    private var autoIsfCache = LongSparseArray<Double>()
+    private val autoIsfCache = LongSparseArray<Double>()
 
     @Synchronized
     private fun calculateVariableIsf(timestamp: Long): Pair<String, Double?> {
         val profile = profileFunction.getProfile(timestamp)
         if (profile == null) return Pair("OFF", null)
-        val maxIsfCacheAge = T.hours(24).msecs()
-        if (autoIsfCache.size() >0) {
-            if (autoIsfCache.keyAt(autoIsfCache.size() - 1) - autoIsfCache.keyAt(0) > maxIsfCacheAge - 400L ) {
-                val tempIsfCache = autoIsfCache
-                autoIsfCache.forEach { key, value ->
-                    if (key < dateUtil.now() - maxIsfCacheAge - 400L) {
-                        tempIsfCache.remove(key)
-                    }
-                }
-                autoIsfCache.clear()
-                autoIsfCache = tempIsfCache
-            }
-        }
         val glucose = glucoseStatusProvider.glucoseStatusData?.glucose ?: return Pair("GLUC", null)
         // Round down to minutesClass min and use it as a key for caching
         // Add BG to key as it affects calculation
@@ -246,6 +233,7 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
             // can default to 0, e.g. for the first 2-3 loops in a virgin setup
             aapsLogger.debug("calculateVariableIsf CALC ${dateUtil.dateAndTimeAndSecondsString(timestamp)} $sensitivity")
             autoIsfCache.put(key, sensitivity)
+            if (autoIsfCache.size() > 1000) autoIsfCache.clear()
         }
         // this return is mandatory, otherwise it messed up the AutoISF algo.
         return Pair("OFF", null)
