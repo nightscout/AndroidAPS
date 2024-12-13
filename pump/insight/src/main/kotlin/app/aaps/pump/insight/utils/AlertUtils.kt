@@ -1,9 +1,9 @@
 package app.aaps.pump.insight.utils
 
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.pump.insight.R
 import app.aaps.pump.insight.descriptors.AlertCategory
 import app.aaps.pump.insight.descriptors.AlertType
-import info.nightscout.androidaps.insight.R
 import java.text.DecimalFormat
 import javax.inject.Inject
 import javax.inject.Singleton

@@ -16,11 +16,10 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.extensions.toVisibility
+import app.aaps.pump.insight.databinding.LocalInsightFragmentBinding
 import app.aaps.pump.insight.descriptors.*
 import app.aaps.pump.insight.events.EventLocalInsightUpdateGUI
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.insight.R
-import info.nightscout.androidaps.insight.databinding.LocalInsightFragmentBinding
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 

@@ -70,7 +70,6 @@ import app.aaps.pump.insight.exceptions.app_layer_errors.AppLayerErrorException
 import app.aaps.pump.insight.exceptions.app_layer_errors.NoActiveTBRToCancelException
 import app.aaps.pump.insight.utils.ExceptionTranslator
 import app.aaps.pump.insight.utils.ParameterBlockUtil
-import info.nightscout.androidaps.insight.R
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.*

@@ -9,7 +9,7 @@ plugins {
 
 android {
 
-    namespace = "info.nightscout.androidaps.insight"
+    namespace = "app.aaps.pump.insight"
     defaultConfig {
         ksp {
             arg("room.incremental", "true")

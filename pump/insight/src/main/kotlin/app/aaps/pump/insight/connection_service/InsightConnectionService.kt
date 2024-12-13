@@ -15,6 +15,7 @@ import androidx.core.app.ActivityCompat
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.pump.insight.R
 import app.aaps.pump.insight.app_layer.AppLayerMessage
 import app.aaps.pump.insight.app_layer.AppLayerMessage.Companion.unwrap
 import app.aaps.pump.insight.app_layer.AppLayerMessage.Companion.wrap
@@ -88,7 +89,6 @@ import app.aaps.pump.insight.utils.crypto.Cryptograph.generateRSAKey
 import app.aaps.pump.insight.utils.crypto.Cryptograph.getServicePasswordHash
 import app.aaps.pump.insight.utils.crypto.KeyPair
 import dagger.android.DaggerService
-import info.nightscout.androidaps.insight.R
 import org.spongycastle.crypto.InvalidCipherTextException
 import java.io.IOException
 import java.security.SecureRandom
