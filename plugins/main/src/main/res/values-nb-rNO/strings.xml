@@ -265,7 +265,7 @@
     <string name="enablebolusreminder_summary">Bruk en påminnelse for å sette bolusdosen senere med boluskalkulatoren («post bolus»)</string>
     <string name="run_question">Kjør %s?</string>
     <!--    OverviewMenu-->
-    <string name="overview_show_predictions">Prognoser</string>
+    <string name="overview_show_predictions">Prediksjoner</string>
     <string name="overview_show_treatments">Behandlinger</string>
     <string name="overview_show_heartRate">Puls</string>
     <string name="overview_show_deviation_slope">Avvikskurve</string>
@@ -278,7 +278,7 @@
     <string name="overview_show_basals">Basaler</string>
     <string name="overview_show_abs_insulin">Absolutt insulinmengde</string>
     <string name="overview_show_variable_sens">Variabel sensitivitet</string>
-    <string name="prediction_shortname">PROGN</string>
+    <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
     <string name="deviation_shortname">AVVIK</string>
     <string name="activity_shortname">AKT</string>
