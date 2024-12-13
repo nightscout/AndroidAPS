@@ -37,6 +37,7 @@ import app.aaps.core.interfaces.rx.events.EventRefreshOverview;
 import app.aaps.core.interfaces.sharedPreferences.SP;
 import app.aaps.core.interfaces.ui.UiInteraction;
 import app.aaps.core.utils.pump.ByteUtil;
+import app.aaps.pump.common.defs.TempBasalPair;
 import app.aaps.pump.omnipod.common.definition.OmnipodCommandType;
 import app.aaps.pump.omnipod.eros.R;
 import app.aaps.pump.omnipod.eros.definition.OmnipodErosStorageKeys;
@@ -85,7 +86,6 @@ import app.aaps.pump.omnipod.eros.history.database.ErosHistoryRecordEntity;
 import app.aaps.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 import app.aaps.pump.omnipod.eros.util.AapsOmnipodUtil;
 import app.aaps.pump.omnipod.eros.util.OmnipodAlertUtil;
-import info.nightscout.pump.common.defs.TempBasalPair;
 import io.reactivex.rxjava3.subjects.SingleSubject;
 
 @Singleton
@@ -395,7 +395,7 @@ public class AapsOmnipodErosManager {
                     detailedBolusInfo.getBolusType() == BS.Type.SMB ? null :
                             (estimatedUnitsDelivered, percentage) -> {
                                 EventOverviewBolusProgress progressUpdateEvent = EventOverviewBolusProgress.INSTANCE;
-                                progressUpdateEvent.setStatus(getStringResource(info.nightscout.pump.common.R.string.bolus_delivered_so_far, estimatedUnitsDelivered, detailedBolusInfo.insulin));
+                                progressUpdateEvent.setStatus(getStringResource(app.aaps.pump.common.R.string.bolus_delivered_so_far, estimatedUnitsDelivered, detailedBolusInfo.insulin));
                                 progressUpdateEvent.setPercent(percentage);
                                 sendEvent(progressUpdateEvent);
                             }));

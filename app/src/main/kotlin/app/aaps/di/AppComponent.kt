@@ -15,6 +15,7 @@ import app.aaps.plugins.main.di.PluginsModule
 import app.aaps.plugins.source.di.SourceModule
 import app.aaps.plugins.sync.di.OpenHumansModule
 import app.aaps.plugins.sync.di.SyncModule
+import app.aaps.pump.common.di.PumpCommonModule
 import app.aaps.pump.dana.di.DanaHistoryModule
 import app.aaps.pump.dana.di.DanaModule
 import app.aaps.pump.danar.di.DanaRModule
@@ -39,7 +40,6 @@ import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
 import info.nightscout.androidaps.plugins.pump.common.di.RileyLinkModule
 import info.nightscout.pump.combov2.di.ComboV2Module
-import info.nightscout.pump.common.di.PumpCommonModule
 import javax.inject.Singleton
 
 @Singleton

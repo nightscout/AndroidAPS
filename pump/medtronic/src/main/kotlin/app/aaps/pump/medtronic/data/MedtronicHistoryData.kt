@@ -14,9 +14,11 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.utils.DateTimeUtil
 import app.aaps.core.utils.StringUtil
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import dagger.android.HasAndroidInjector
+import app.aaps.pump.common.sync.PumpDbEntry
+import app.aaps.pump.common.sync.PumpDbEntryBolus
+import app.aaps.pump.common.sync.PumpDbEntryCarbs
+import app.aaps.pump.common.sync.PumpDbEntryTBR
+import app.aaps.pump.common.sync.PumpSyncStorage
 import app.aaps.pump.medtronic.R
 import app.aaps.pump.medtronic.comm.history.pump.MedtronicPumpHistoryDecoder
 import app.aaps.pump.medtronic.comm.history.pump.PumpHistoryEntry
@@ -34,11 +36,9 @@ import app.aaps.pump.medtronic.defs.PumpBolusType
 import app.aaps.pump.medtronic.driver.MedtronicPumpStatus
 import app.aaps.pump.medtronic.util.MedtronicConst
 import app.aaps.pump.medtronic.util.MedtronicUtil
-import info.nightscout.pump.common.sync.PumpDbEntry
-import info.nightscout.pump.common.sync.PumpDbEntryBolus
-import info.nightscout.pump.common.sync.PumpDbEntryCarbs
-import info.nightscout.pump.common.sync.PumpDbEntryTBR
-import info.nightscout.pump.common.sync.PumpSyncStorage
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import dagger.android.HasAndroidInjector
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.LocalDateTime
 import java.util.GregorianCalendar
@@ -515,8 +515,7 @@ class MedtronicHistoryData @Inject constructor(
         for (batteryChangeRecord in batteryChangeRecords) {
             val isRemoved = batteryChangeRecord.getDecodedDataEntry("isRemoved")
 
-            if (isRemoved != null && isRemoved as Boolean)
-            {
+            if (isRemoved != null && isRemoved as Boolean) {
                 // we're interested in battery replacements, not battery removals
                 continue
             }
@@ -537,7 +536,7 @@ class MedtronicHistoryData @Inject constructor(
         }
     }
 
-        private fun uploadCareportalEventIfFoundInHistory(historyRecord: PumpHistoryEntry, eventSP: String, eventType: TE.Type) {
+    private fun uploadCareportalEventIfFoundInHistory(historyRecord: PumpHistoryEntry, eventSP: String, eventType: TE.Type) {
         val lastPrimeFromAAPS = sp.getLong(eventSP, 0L)
         if (historyRecord.atechDateTime != lastPrimeFromAAPS) {
             val result = pumpSync.insertTherapyEventIfNewWithTimestamp(

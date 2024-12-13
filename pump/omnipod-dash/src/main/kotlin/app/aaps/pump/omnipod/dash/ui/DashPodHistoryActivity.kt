@@ -19,6 +19,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.core.utils.DateTimeUtil
+import app.aaps.pump.common.defs.PumpHistoryEntryGroup
 import app.aaps.pump.omnipod.common.definition.OmnipodCommandType
 import app.aaps.pump.omnipod.dash.R
 import app.aaps.pump.omnipod.dash.history.DashHistory
@@ -28,7 +29,6 @@ import app.aaps.pump.omnipod.dash.history.data.HistoryRecord
 import app.aaps.pump.omnipod.dash.history.data.InitialResult
 import app.aaps.pump.omnipod.dash.history.data.ResolvedResult
 import app.aaps.pump.omnipod.dash.history.data.TempBasalRecord
-import info.nightscout.pump.common.defs.PumpHistoryEntryGroup
 import java.util.Calendar
 import java.util.GregorianCalendar
 import javax.inject.Inject

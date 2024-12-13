@@ -7,13 +7,13 @@ import app.aaps.core.interfaces.pump.defs.determineCorrectBasalSize
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.implementation.pump.PumpEnactResultObject
+import app.aaps.pump.common.defs.TempBasalPair
 import app.aaps.pump.omnipod.eros.history.database.ErosHistoryDatabase
 import app.aaps.pump.omnipod.eros.manager.AapsOmnipodErosManager
 import app.aaps.shared.tests.TestBaseWithProfile
 import app.aaps.shared.tests.rx.TestAapsSchedulers
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
-import info.nightscout.pump.common.defs.TempBasalPair
 import org.joda.time.DateTimeZone
 import org.joda.time.tz.UTCProvider
 import org.junit.jupiter.api.BeforeEach

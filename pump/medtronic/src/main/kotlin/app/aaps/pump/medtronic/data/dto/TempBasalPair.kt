@@ -3,8 +3,8 @@ package app.aaps.pump.medtronic.data.dto
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.utils.pump.ByteUtil
+import app.aaps.pump.common.defs.TempBasalPair
 import app.aaps.pump.medtronic.util.MedtronicUtil
-import info.nightscout.pump.common.defs.TempBasalPair
 import java.util.Locale
 
 /**

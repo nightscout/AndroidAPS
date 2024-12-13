@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "info.nightscout.pump.common"
+    namespace = "app.aaps.pump.common"
 }
 
 dependencies {

@@ -12,11 +12,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.aaps.core.interfaces.resources.ResourceHelper
-import dagger.android.DaggerActivity
+import app.aaps.pump.common.defs.PumpHistoryEntryGroup
 import app.aaps.pump.medtronic.R
 import app.aaps.pump.medtronic.comm.history.pump.PumpHistoryEntry
 import app.aaps.pump.medtronic.data.MedtronicHistoryData
-import info.nightscout.pump.common.defs.PumpHistoryEntryGroup
+import dagger.android.DaggerActivity
 import javax.inject.Inject
 
 class MedtronicHistoryActivity : DaggerActivity() {

@@ -19,14 +19,14 @@ import app.aaps.core.interfaces.profile.Profile.ProfileValue
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
+import app.aaps.pump.common.defs.PumpHistoryEntryGroup
+import app.aaps.pump.common.defs.PumpHistoryEntryGroup.Companion.getTranslatedList
+import app.aaps.pump.common.defs.TempBasalPair
 import app.aaps.pump.omnipod.eros.R
 import app.aaps.pump.omnipod.eros.definition.PodHistoryEntryType
 import app.aaps.pump.omnipod.eros.history.ErosHistory
 import app.aaps.pump.omnipod.eros.history.database.ErosHistoryRecordEntity
 import app.aaps.pump.omnipod.eros.util.AapsOmnipodUtil
-import info.nightscout.pump.common.defs.PumpHistoryEntryGroup
-import info.nightscout.pump.common.defs.PumpHistoryEntryGroup.Companion.getTranslatedList
-import info.nightscout.pump.common.defs.TempBasalPair
 import java.util.Calendar
 import java.util.GregorianCalendar
 import javax.inject.Inject
