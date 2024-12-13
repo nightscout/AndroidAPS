@@ -7,11 +7,11 @@ import android.os.IBinder
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.defs.PumpDeviceState
 import app.aaps.core.utils.pump.ByteUtil
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkTargetFrequency
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkService
+import app.aaps.pump.common.hw.rileylink.RileyLinkConst
+import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType
+import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkTargetFrequency
+import app.aaps.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
+import app.aaps.pump.common.hw.rileylink.service.RileyLinkService
 import app.aaps.pump.medtronic.MedtronicPumpPlugin
 import app.aaps.pump.medtronic.R
 import app.aaps.pump.medtronic.comm.MedtronicCommunicationManager

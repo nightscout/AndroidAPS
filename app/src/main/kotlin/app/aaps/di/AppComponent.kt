@@ -38,7 +38,7 @@ import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
-import info.nightscout.androidaps.plugins.pump.common.di.RileyLinkModule
+import app.aaps.pump.common.di.RileyLinkModule
 import info.nightscout.pump.combov2.di.ComboV2Module
 import javax.inject.Singleton
 

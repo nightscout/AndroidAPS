@@ -2,6 +2,7 @@ package app.aaps.pump.medtronic
 
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.pump.common.hw.rileylink.RileyLinkUtil
 import app.aaps.pump.common.sync.PumpSyncStorage
 import app.aaps.pump.medtronic.comm.history.pump.MedtronicPumpHistoryDecoder
 import app.aaps.pump.medtronic.comm.history.pump.PumpHistoryEntry
@@ -10,7 +11,6 @@ import app.aaps.pump.medtronic.util.MedtronicUtil
 import app.aaps.shared.tests.TestBaseWithProfile
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import org.mockito.Answers
 import org.mockito.Mock
 

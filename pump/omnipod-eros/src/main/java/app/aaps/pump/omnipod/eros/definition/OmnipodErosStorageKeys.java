@@ -22,7 +22,7 @@ public class OmnipodErosStorageKeys {
         public static final int NOTIFICATION_UNCERTAIN_BOLUS_SOUND_ENABLED = R.string.key_omnipod_eros_notification_uncertain_bolus_sound_enabled;
         public static final int AUTOMATICALLY_ACKNOWLEDGE_ALERTS_ENABLED = app.aaps.pump.omnipod.common.R.string.key_omnipod_common_automatically_silence_alerts_enabled;
         public static final int RILEY_LINK_STATS_BUTTON_ENABLED = R.string.key_omnipod_eros_riley_link_stats_button_enabled;
-        public static final int SHOW_RILEY_LINK_BATTERY_LEVEL = info.nightscout.androidaps.plugins.pump.common.hw.rileylink.R.string.key_riley_link_show_battery_level;
+        public static final int SHOW_RILEY_LINK_BATTERY_LEVEL = app.aaps.pump.common.hw.rileylink.R.string.key_riley_link_show_battery_level;
         public static final int BATTERY_CHANGE_LOGGING_ENABLED = R.string.key_omnipod_eros_battery_change_logging_enabled;
     }
 

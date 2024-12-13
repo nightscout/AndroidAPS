@@ -14,6 +14,10 @@ import javax.inject.Singleton;
 import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.core.interfaces.pump.defs.PumpDeviceState;
 import app.aaps.core.utils.pump.ByteUtil;
+import app.aaps.pump.common.hw.rileylink.RileyLinkCommunicationManager;
+import app.aaps.pump.common.hw.rileylink.ble.RileyLinkCommunicationException;
+import app.aaps.pump.common.hw.rileylink.ble.defs.RLMessageType;
+import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkBLEError;
 import app.aaps.pump.omnipod.eros.driver.communication.action.OmnipodAction;
 import app.aaps.pump.omnipod.eros.driver.communication.message.MessageBlock;
 import app.aaps.pump.omnipod.eros.driver.communication.message.OmnipodMessage;
@@ -43,10 +47,6 @@ import app.aaps.pump.omnipod.eros.driver.exception.RileyLinkTimeoutException;
 import app.aaps.pump.omnipod.eros.driver.exception.RileyLinkUnexpectedException;
 import app.aaps.pump.omnipod.eros.driver.exception.RileyLinkUnreachableException;
 import app.aaps.pump.omnipod.eros.driver.manager.ErosPodStateManager;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkCommunicationException;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RLMessageType;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkBLEError;
 
 /**
  * Created by andy on 6/29/18.

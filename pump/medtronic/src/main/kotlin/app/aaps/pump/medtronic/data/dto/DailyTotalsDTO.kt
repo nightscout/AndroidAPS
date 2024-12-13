@@ -1,6 +1,5 @@
 package app.aaps.pump.medtronic.data.dto
 
-//import info.nightscout.androidaps.db.TDD
 import app.aaps.core.utils.StringUtil
 import app.aaps.core.utils.pump.ByteUtil
 import com.google.gson.annotations.Expose

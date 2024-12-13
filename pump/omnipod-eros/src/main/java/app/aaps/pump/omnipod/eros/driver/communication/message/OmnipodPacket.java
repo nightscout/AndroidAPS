@@ -4,11 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import app.aaps.core.utils.pump.ByteUtil;
+import app.aaps.pump.common.hw.rileylink.ble.data.RLMessage;
 import app.aaps.pump.omnipod.eros.driver.definition.OmnipodCrc;
 import app.aaps.pump.omnipod.eros.driver.definition.PacketType;
 import app.aaps.pump.omnipod.eros.driver.exception.CrcMismatchException;
 import app.aaps.pump.omnipod.eros.driver.exception.IllegalPacketTypeException;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RLMessage;
 
 /**
  * Created by andy on 6/1/18.

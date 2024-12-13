@@ -14,16 +14,16 @@ import javax.inject.Inject;
 
 import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.core.interfaces.pump.defs.PumpDeviceState;
+import app.aaps.pump.common.hw.rileylink.RileyLinkCommunicationManager;
+import app.aaps.pump.common.hw.rileylink.RileyLinkConst;
+import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType;
+import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkTargetFrequency;
+import app.aaps.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
+import app.aaps.pump.common.hw.rileylink.service.RileyLinkService;
 import app.aaps.pump.omnipod.eros.OmnipodErosPumpPlugin;
 import app.aaps.pump.omnipod.eros.R;
 import app.aaps.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 import app.aaps.pump.omnipod.eros.util.AapsOmnipodUtil;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkTargetFrequency;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkService;
 
 
 /**

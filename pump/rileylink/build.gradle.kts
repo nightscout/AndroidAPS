@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "info.nightscout.androidaps.plugins.pump.common.hw.rileylink"
+    namespace = "app.aaps.pump.common.hw.rileylink"
 }
 
 dependencies {

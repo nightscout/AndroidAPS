@@ -28,13 +28,10 @@ import app.aaps.core.interfaces.rx.events.EventTempBasalChange
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.dialogs.OKDialog
-import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
-import info.nightscout.androidaps.plugins.pump.common.extensions.stringResource
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData
+import app.aaps.pump.common.hw.rileylink.defs.RileyLinkServiceState
+import app.aaps.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
+import app.aaps.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity
+import app.aaps.pump.common.hw.rileylink.service.RileyLinkServiceData
 import app.aaps.pump.medtronic.databinding.MedtronicFragmentBinding
 import app.aaps.pump.medtronic.defs.BatteryType
 import app.aaps.pump.medtronic.defs.MedtronicCommandType
@@ -43,6 +40,9 @@ import app.aaps.pump.medtronic.driver.MedtronicPumpStatus
 import app.aaps.pump.medtronic.events.EventMedtronicPumpConfigurationChanged
 import app.aaps.pump.medtronic.events.EventMedtronicPumpValuesChanged
 import app.aaps.pump.medtronic.util.MedtronicUtil
+import dagger.android.support.DaggerFragment
+import app.aaps.pump.common.events.EventRileyLinkDeviceStatusChange
+import app.aaps.pump.common.extensions.stringResource
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -279,13 +279,13 @@ class MedtronicFragment : DaggerFragment() {
                     binding.lastConnection.text = rh.gs(app.aaps.core.interfaces.R.string.minago, min)
                 } else if (min < 1440) {
                     val h = (min / 60).toInt()
-                    binding.lastConnection.text = (rh.gq(info.nightscout.androidaps.plugins.pump.common.hw.rileylink.R.plurals.duration_hours, h, h) + " "
+                    binding.lastConnection.text = (rh.gq(app.aaps.pump.common.hw.rileylink.R.plurals.duration_hours, h, h) + " "
                         + rh.gs(R.string.ago))
                 } else {
                     val h = (min / 60).toInt()
                     val d = h / 24
                     // h = h - (d * 24);
-                    binding.lastConnection.text = (rh.gq(info.nightscout.androidaps.plugins.pump.common.hw.rileylink.R.plurals.duration_days, d, d) + " "
+                    binding.lastConnection.text = (rh.gq(app.aaps.pump.common.hw.rileylink.R.plurals.duration_days, d, d) + " "
                         + rh.gs(R.string.ago))
                 }
                 binding.lastConnection.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.warningColor))

@@ -28,6 +28,9 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.pump.common.hw.rileylink.defs.RileyLinkServiceState
+import app.aaps.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
+import app.aaps.pump.common.hw.rileylink.service.RileyLinkServiceData
 import app.aaps.pump.omnipod.common.databinding.OmnipodCommonOverviewButtonsBinding
 import app.aaps.pump.omnipod.common.databinding.OmnipodCommonOverviewPodInfoBinding
 import app.aaps.pump.omnipod.common.queue.command.CommandHandleTimeChange
@@ -49,10 +52,7 @@ import app.aaps.pump.omnipod.eros.queue.command.CommandGetPodStatus
 import app.aaps.pump.omnipod.eros.util.AapsOmnipodUtil
 import app.aaps.pump.omnipod.eros.util.OmnipodAlertUtil
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData
+import app.aaps.pump.common.events.EventRileyLinkDeviceStatusChange
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.apache.commons.lang3.StringUtils
@@ -375,7 +375,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
             }
         }
 
-        if (errors.isEmpty()) {
+        if (errors.isEmpty) {
             podInfoBinding.errors.text = PLACEHOLDER
             podInfoBinding.errors.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor))
         } else {

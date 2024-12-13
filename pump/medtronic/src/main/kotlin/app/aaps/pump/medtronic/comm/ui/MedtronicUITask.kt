@@ -5,7 +5,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.defs.PumpDeviceState
 import app.aaps.core.interfaces.rx.bus.RxBus
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
+import app.aaps.pump.common.events.EventRileyLinkDeviceStatusChange
 import app.aaps.pump.medtronic.comm.MedtronicCommunicationManager
 import app.aaps.pump.medtronic.comm.history.pump.PumpHistoryEntry
 import app.aaps.pump.medtronic.data.dto.BasalProfile

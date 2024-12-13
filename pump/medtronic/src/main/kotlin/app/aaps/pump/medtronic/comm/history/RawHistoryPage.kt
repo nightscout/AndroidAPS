@@ -3,7 +3,7 @@ package app.aaps.pump.medtronic.comm.history
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.utils.pump.ByteUtil
-import info.nightscout.androidaps.plugins.pump.common.utils.CRC
+import app.aaps.pump.common.utils.CRC
 import app.aaps.pump.medtronic.util.MedtronicUtil
 import java.util.Locale
 
