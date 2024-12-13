@@ -46,7 +46,7 @@
             android:singleLine="true"
             android:text="@string/overview_treatment_label"
             android:textColor="?attr/icTreatmentColor"
-            android:visibility="visible"
+            android:visibility="gone"
             app:iconPadding="-4dp" />
 
         <app.aaps.core.ui.elements.SingleClickButton
@@ -104,7 +104,7 @@
             android:singleLine="true"
             android:text="@string/calibration"
             android:textColor="?attr/icCalibrationColor"
-            android:visibility="visible"
+            android:visibility="gone"
             app:iconPadding="-4dp" />
 
         <app.aaps.core.ui.elements.SingleClickButton
@@ -120,7 +120,7 @@
             android:singleLine="true"
             android:text="@string/overview_cgm"
             android:textColor="?attr/icCalibrationColor"
-            android:visibility="visible"
+            android:visibility="gone"
             app:iconPadding="-4dp" />
 
         <app.aaps.core.ui.elements.SingleClickButton
