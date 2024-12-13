@@ -239,7 +239,7 @@ class PatchManagerExecutor @Inject constructor(
                             Single.just<Boolean>(true)
                     })
                     .flatMap<Any>(Function {
-                        if (!alarms.needToStopBeep.isEmpty) {
+                        if (!alarms.needToStopBeep.isEmpty()) {
                             Observable.fromStream<AlarmCode>(alarms.needToStopBeep.stream())
                                 .flatMapSingle<PatchBooleanResponse>(Function { alarmCode: AlarmCode ->
                                     stopAeBeep(alarmCode.aeCode).doOnSuccess(Consumer {

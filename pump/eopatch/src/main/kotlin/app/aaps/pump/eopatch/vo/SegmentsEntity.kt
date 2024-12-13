@@ -55,7 +55,7 @@ abstract class SegmentsEntity<T : SegmentEntity<T>> {
 
     fun isValid(allowEmpty: Boolean): Boolean {
         if (!allowEmpty) {
-            if (list.isEmpty) {
+            if (list.isEmpty()) {
                 return false
             }
         }
