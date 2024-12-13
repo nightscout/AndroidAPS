@@ -866,7 +866,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
             return executeCommand(OmnipodCommandType.DEACTIVATE_POD, aapsOmnipodErosManager::deactivatePod);
         }
         if (command instanceof CommandHandleTimeChange) {
-            return handleTimeChange(((CommandHandleTimeChange) command).isRequestedByUser());
+            return handleTimeChange(((CommandHandleTimeChange) command).getRequestedByUser());
         }
         if (command instanceof CommandUpdateAlertConfiguration) {
             return updateAlertConfiguration();

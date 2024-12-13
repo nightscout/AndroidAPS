@@ -6,8 +6,8 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import info.nightscout.androidaps.plugins.pump.omnipod.common.R
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
+import info.nightscout.androidaps.plugins.pump.omnipod.common.R
 
 abstract class OmnipodWizardActivityBase : TranslatedDaggerAppCompatActivity() {
 
