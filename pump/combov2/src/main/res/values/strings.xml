@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="combov2_plugin_name">Accu-Chek Combo</string>
-    <string name="combov2_plugin_shortname" translatable="false">COMBOV2</string>
+    <string name="combov2_plugin_shortname" translatable="false">COMBO</string>
     <string name="combov2_plugin_description">Native pump integration for Accu-Chek Combo pumps</string>
     <string name="combov2_could_not_connect">Could not connect to the pump</string>
     <string name="combov2_not_paired">Not paired to a pump</string>
