@@ -35,7 +35,7 @@ class NSClientMbgWorker(
         for (i in 0 until mbgArray.length()) {
             val nsMbg = NSMbg(mbgArray.getJSONObject(i))
             if (!nsMbg.isValid()) continue
-            storeDataForDb.therapyEvents.add(therapyEventFromNsMbg(nsMbg))
+            storeDataForDb.addToTherapyEvents(therapyEventFromNsMbg(nsMbg))
         }
         // storeDataForDb.storeTreatmentsToDb() don't do this. It will be stored along with other treatments
         return ret

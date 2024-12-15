@@ -472,7 +472,7 @@ class NSClientV3Plugin @Inject constructor(
                 }
                 result.identifier?.let {
                     dataPair.value.ids.nightscoutId = it
-                    storeDataForDb.nsIdDeviceStatuses.add(dataPair.value)
+                    storeDataForDb.addToNsIdDeviceStatuses(dataPair.value)
                     sp.putBoolean(app.aaps.core.utils.R.string.key_objectives_pump_status_is_available_in_ns, true)
                 }
                 slowDown()
@@ -519,7 +519,7 @@ class NSClientV3Plugin @Inject constructor(
                 }
                 result.identifier?.let {
                     dataPair.value.ids.nightscoutId = it
-                    storeDataForDb.nsIdGlucoseValues.add(dataPair.value)
+                    storeDataForDb.addToNsIdGlucoseValues(dataPair.value)
                 }
                 slowDown()
                 return true
@@ -565,7 +565,7 @@ class NSClientV3Plugin @Inject constructor(
                 }
                 result.identifier?.let {
                     dataPair.value.ids.nightscoutId = it
-                    storeDataForDb.nsIdFoods.add(dataPair.value)
+                    storeDataForDb.addToNsIdFoods(dataPair.value)
                 }
                 slowDown()
                 return true
@@ -634,52 +634,52 @@ class NSClientV3Plugin @Inject constructor(
                         when (dataPair) {
                             is DataSyncSelector.PairBolus                  -> {
                                 dataPair.value.ids.nightscoutId = it
-                                storeDataForDb.nsIdBoluses.add(dataPair.value)
+                                storeDataForDb.addToNsIdBoluses(dataPair.value)
                             }
 
                             is DataSyncSelector.PairCarbs                  -> {
                                 dataPair.value.ids.nightscoutId = it
-                                storeDataForDb.nsIdCarbs.add(dataPair.value)
+                                storeDataForDb.addToNsIdCarbs(dataPair.value)
                             }
 
                             is DataSyncSelector.PairBolusCalculatorResult  -> {
                                 dataPair.value.ids.nightscoutId = it
-                                storeDataForDb.nsIdBolusCalculatorResults.add(dataPair.value)
+                                storeDataForDb.addToNsIdBolusCalculatorResults(dataPair.value)
                             }
 
                             is DataSyncSelector.PairTemporaryTarget        -> {
                                 dataPair.value.ids.nightscoutId = it
-                                storeDataForDb.nsIdTemporaryTargets.add(dataPair.value)
+                                storeDataForDb.addToNsIdTemporaryTargets(dataPair.value)
                             }
 
                             is DataSyncSelector.PairTherapyEvent           -> {
                                 dataPair.value.ids.nightscoutId = it
-                                storeDataForDb.nsIdTherapyEvents.add(dataPair.value)
+                                storeDataForDb.addToNsIdTherapyEvents(dataPair.value)
                             }
 
                             is DataSyncSelector.PairTemporaryBasal         -> {
                                 dataPair.value.ids.nightscoutId = it
-                                storeDataForDb.nsIdTemporaryBasals.add(dataPair.value)
+                                storeDataForDb.addToNsIdTemporaryBasals(dataPair.value)
                             }
 
                             is DataSyncSelector.PairExtendedBolus          -> {
                                 dataPair.value.ids.nightscoutId = it
-                                storeDataForDb.nsIdExtendedBoluses.add(dataPair.value)
+                                storeDataForDb.addToNsIdExtendedBoluses(dataPair.value)
                             }
 
                             is DataSyncSelector.PairProfileSwitch          -> {
                                 dataPair.value.ids.nightscoutId = it
-                                storeDataForDb.nsIdProfileSwitches.add(dataPair.value)
+                                storeDataForDb.addToNsIdProfileSwitches(dataPair.value)
                             }
 
                             is DataSyncSelector.PairEffectiveProfileSwitch -> {
                                 dataPair.value.ids.nightscoutId = it
-                                storeDataForDb.nsIdEffectiveProfileSwitches.add(dataPair.value)
+                                storeDataForDb.addToNsIdEffectiveProfileSwitches(dataPair.value)
                             }
 
                             is DataSyncSelector.PairOfflineEvent           -> {
                                 dataPair.value.ids.nightscoutId = it
-                                storeDataForDb.nsIdOfflineEvents.add(dataPair.value)
+                                storeDataForDb.addToNsIdOfflineEvents(dataPair.value)
                             }
 
                             else                                           -> {
