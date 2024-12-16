@@ -97,7 +97,7 @@ class CustomWatchfaceImportListActivity : TranslatedDaggerAppCompatActivity() {
             val metadata = customWatchfaceFile.cwfData.metadata
             val drawable = customWatchfaceFile.cwfData.resData[ResFileMap.CUSTOM_WATCHFACE.fileName]?.toDrawable(resources)
             with(holder.customWatchfaceImportListItemBinding) {
-                val fileName = metadata[CWF_FILENAME]?.let { "$it${ZipWatchfaceFormat.CWF_EXTENSION}" } ?: ""
+                val fileName = metadata[CWF_FILENAME]?.let { "${it}.${ZipWatchfaceFormat.CWF_EXTENSION}" } ?: ""
                 filelistName.text = rh.gs(app.aaps.core.interfaces.R.string.metadata_wear_import_filename, fileName)
                 filelistName.tag = customWatchfaceFile
                 customWatchface.setImageDrawable(drawable)
