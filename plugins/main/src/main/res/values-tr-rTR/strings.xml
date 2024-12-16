@@ -216,8 +216,6 @@
     <string name="overview_shortname">GİRİŞ</string>
     <string name="description_overview">Döngünüzün mevcut durumunu ve en yaygın eylemler için düğmeleri görüntüler</string>
     <string name="overview_buttons_selection">Butonlar</string>
-    <string name="show_calibration_button_summary">xDrip+\'a bir kalibrasyon gönderir veya BYODA kalibrasyon iletişim kutusunu açar</string>
-    <string name="show_cgm_button_summary">xDrip+ veya BYODA\'yı açar, geri dönme düğmesi AAPS\'ye döndürür</string>
     <string name="error_starting_cgm">CGM uygulaması başlatılamadı. Yüklendiğinden emin olun.</string>
     <string name="not_available_full">Mevcut değil</string>
     <string name="constraints_violation">Kısıtlamalar ihlali</string>
