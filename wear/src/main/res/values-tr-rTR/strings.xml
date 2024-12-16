@@ -33,6 +33,7 @@
     <string name="pref_show_rig_battery">Teçhizat Pilini Göster</string>
     <string name="pref_show_basal_rate">Bazal Oranı Göster</string>
     <string name="pref_show_temp_target">Geçici Hedefi Göster</string>
+    <string name="pref_show_reservoir_level">Rezervuar Seviyesini Göster</string>
     <string name="pref_show_loop_status">Döngü Durumunu Göster</string>
     <string name="pref_show_bg">KŞ\'ni göster</string>
     <string name="pref_show_bgi">KŞ Etkisi Göster</string>
