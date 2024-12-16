@@ -1,6 +1,7 @@
 package app.aaps.plugins.sync.nsShared
 
 import android.os.SystemClock
+import androidx.annotation.VisibleForTesting
 import app.aaps.core.data.model.BCR
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
@@ -71,19 +72,19 @@ class StoreDataForDbImpl @Inject constructor(
     private val offlineEvents: MutableList<OE> = mutableListOf()
     private val foods: MutableList<FD> = mutableListOf()
 
-    private val nsIdGlucoseValues: MutableList<GV> = mutableListOf()
-    private val nsIdBoluses: MutableList<BS> = mutableListOf()
-    private val nsIdCarbs: MutableList<CA> = mutableListOf()
-    private val nsIdTemporaryTargets: MutableList<TT> = mutableListOf()
-    private val nsIdEffectiveProfileSwitches: MutableList<EPS> = mutableListOf()
-    private val nsIdBolusCalculatorResults: MutableList<BCR> = mutableListOf()
-    private val nsIdTherapyEvents: MutableList<TE> = mutableListOf()
-    private val nsIdExtendedBoluses: MutableList<EB> = mutableListOf()
-    private val nsIdTemporaryBasals: MutableList<TB> = mutableListOf()
-    private val nsIdProfileSwitches: MutableList<PS> = mutableListOf()
-    private val nsIdOfflineEvents: MutableList<OE> = mutableListOf()
-    private val nsIdDeviceStatuses: MutableList<DS> = mutableListOf()
-    private val nsIdFoods: MutableList<FD> = mutableListOf()
+    @VisibleForTesting val nsIdGlucoseValues: MutableList<GV> = mutableListOf()
+    @VisibleForTesting val nsIdBoluses: MutableList<BS> = mutableListOf()
+    @VisibleForTesting val nsIdCarbs: MutableList<CA> = mutableListOf()
+    @VisibleForTesting val nsIdTemporaryTargets: MutableList<TT> = mutableListOf()
+    @VisibleForTesting val nsIdEffectiveProfileSwitches: MutableList<EPS> = mutableListOf()
+    @VisibleForTesting val nsIdBolusCalculatorResults: MutableList<BCR> = mutableListOf()
+    @VisibleForTesting val nsIdTherapyEvents: MutableList<TE> = mutableListOf()
+    @VisibleForTesting val nsIdExtendedBoluses: MutableList<EB> = mutableListOf()
+    @VisibleForTesting val nsIdTemporaryBasals: MutableList<TB> = mutableListOf()
+    @VisibleForTesting val nsIdProfileSwitches: MutableList<PS> = mutableListOf()
+    @VisibleForTesting val nsIdOfflineEvents: MutableList<OE> = mutableListOf()
+    @VisibleForTesting val nsIdDeviceStatuses: MutableList<DS> = mutableListOf()
+    @VisibleForTesting val nsIdFoods: MutableList<FD> = mutableListOf()
 
     private val deleteTreatment: MutableList<String> = mutableListOf()
     private val deleteGlucoseValue: MutableList<String> = mutableListOf()
