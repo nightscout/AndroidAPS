@@ -395,9 +395,11 @@ open class OpenAPSSMBPlugin @Inject constructor(
             } else autosensResult.sensResult = "autosens disabled"
         }
 
+        @Suppress("KotlinConstantConditions")
         val iobArray = iobCobCalculator.calculateIobArrayForSMB(autosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
         val mealData = iobCobCalculator.getMealDataWithWaitingForCalculationFinish()
 
+        @Suppress("KotlinConstantConditions")
         val oapsProfile = OapsProfile(
             dia = 0.0, // not used
             min_5m_carbimpact = 0.0, // not used
@@ -439,9 +441,9 @@ open class OpenAPSSMBPlugin @Inject constructor(
             temptargetSet = isTempTarget,
             autosens_max = preferences.get(DoubleKey.AutosensMax),
             out_units = if (profileFunction.getUnits() == GlucoseUnit.MMOL) "mmol/L" else "mg/dl",
-            variable_sens = dynIsfResult?.variableSensitivity ?: 0.0,
-            insulinDivisor = dynIsfResult?.insulinDivisor ?: 0,
-            TDD = dynIsfResult?.tdd ?: 0.0
+            variable_sens = if (dynIsfMode) dynIsfResult.variableSensitivity ?: 0.0 else 0.0,
+            insulinDivisor = dynIsfResult.insulinDivisor,
+            TDD = dynIsfResult.tdd ?: 0.0
         )
         val microBolusAllowed = constraintsChecker.isSMBModeEnabled(ConstraintObject(tempBasalFallback.not(), aapsLogger)).also { inputConstraints.copyReasons(it) }.value()
         val flatBGsDetected = bgQualityCheck.state == BgQualityCheck.State.FLAT
