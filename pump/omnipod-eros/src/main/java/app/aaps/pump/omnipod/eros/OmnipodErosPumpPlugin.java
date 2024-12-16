@@ -74,6 +74,7 @@ import app.aaps.core.interfaces.utils.Round;
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy;
 import app.aaps.core.utils.DateTimeUtil;
 import app.aaps.pump.common.defs.TempBasalPair;
+import app.aaps.pump.common.events.EventRileyLinkDeviceStatusChange;
 import app.aaps.pump.common.hw.rileylink.RileyLinkConst;
 import app.aaps.pump.common.hw.rileylink.RileyLinkUtil;
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkPumpDevice;
@@ -114,7 +115,6 @@ import app.aaps.pump.omnipod.eros.ui.OmnipodErosOverviewFragment;
 import app.aaps.pump.omnipod.eros.util.AapsOmnipodUtil;
 import app.aaps.pump.omnipod.eros.util.OmnipodAlertUtil;
 import dagger.android.HasAndroidInjector;
-import app.aaps.pump.common.events.EventRileyLinkDeviceStatusChange;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 /**
@@ -659,7 +659,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     @Override
     public int getBatteryLevel() {
         if (aapsOmnipodErosManager.isShowRileyLinkBatteryLevel()) {
-            return Optional.ofNullable(rileyLinkServiceData.batteryLevel).orElse(0);
+            return Optional.ofNullable(rileyLinkServiceData.getBatteryLevel()).orElse(0);
         }
 
         return 0;
@@ -1114,7 +1114,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         try {
             aapsLogger.debug(LTag.PUMP, "Executing command: {}", commandType);
 
-            rileyLinkUtil.getRileyLinkHistory().add(new RLHistoryItemOmnipod(injector, commandType));
+            rileyLinkUtil.getRileyLinkHistory().add(new RLHistoryItemOmnipod(commandType));
 
             return supplier.get();
         } finally {

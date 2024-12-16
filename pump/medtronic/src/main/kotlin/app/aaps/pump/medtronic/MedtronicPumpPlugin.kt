@@ -42,6 +42,7 @@ import app.aaps.core.utils.DateTimeUtil
 import app.aaps.pump.common.PumpPluginAbstract
 import app.aaps.pump.common.data.PumpStatus
 import app.aaps.pump.common.defs.PumpDriverState
+import app.aaps.pump.common.events.EventRileyLinkDeviceStatusChange
 import app.aaps.pump.common.hw.rileylink.RileyLinkConst
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkPumpDevice
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkPumpInfo
@@ -76,7 +77,6 @@ import app.aaps.pump.medtronic.util.MedtronicConst
 import app.aaps.pump.medtronic.util.MedtronicUtil
 import app.aaps.pump.medtronic.util.MedtronicUtil.Companion.isSame
 import dagger.android.HasAndroidInjector
-import app.aaps.pump.common.events.EventRileyLinkDeviceStatusChange
 import org.joda.time.LocalDateTime
 import java.util.Calendar
 import java.util.GregorianCalendar
@@ -276,9 +276,9 @@ class MedtronicPumpPlugin @Inject constructor(
         if (displayConnectionMessages) aapsLogger.debug(LTag.PUMP, "MedtronicPumpPlugin::isBusy")
         if (isServiceSet) {
             if (isBusy) return true
-            if (this.busyTimestamps.size > 0) {
+            if (this.busyTimestamps.isNotEmpty()) {
                 clearBusyQueue()
-                return this.busyTimestamps.size > 0
+                return this.busyTimestamps.isNotEmpty()
             }
         }
         return false
@@ -339,7 +339,7 @@ class MedtronicPumpPlugin @Inject constructor(
                 aapsLogger.debug(LTag.PUMP, "RileyLink unreachable.")
                 return false
             }
-            return rileyLinkMedtronicService?.deviceCommunicationManager?.isDeviceReachable != true
+            return rileyLinkMedtronicService?.deviceCommunicationManager?.isDeviceReachable() != true
         }
 
     private fun refreshAnyStatusThatNeedsToBeRefreshed() {
@@ -975,7 +975,7 @@ class MedtronicPumpPlugin @Inject constructor(
                     return 0L
                 }
                 lastPumpEntryTime
-            } catch (ex: Exception) {
+            } catch (_x: Exception) {
                 aapsLogger.warn(LTag.PUMP, "Saved LastPumpHistoryEntry was invalid.")
                 0L
             }
@@ -1217,7 +1217,7 @@ class MedtronicPumpPlugin @Inject constructor(
                 serviceTaskExecutor.startTask(ResetRileyLinkConfigurationTask(injector))
             }
 
-            null                                                  -> {
+            null                                                  -> { // do nothing
 
             }
         }
