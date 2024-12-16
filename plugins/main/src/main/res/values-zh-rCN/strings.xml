@@ -187,8 +187,6 @@
     <string name="overview_shortname">主页</string>
     <string name="description_overview">显示闭环的当前状态和大多数常用操作的按钮</string>
     <string name="overview_buttons_selection">按钮</string>
-    <string name="show_calibration_button_summary">将校准发送到xDrip+或打开BYODA校准对话框</string>
-    <string name="show_cgm_button_summary">打开xDrip+或BYODA应用时，返回键将返回到AAPS应用</string>
     <string name="error_starting_cgm">无法启动 CGM 应用程序。 请确保已安装。</string>
     <string name="not_available_full">不可用</string>
     <string name="constraints_violation">违反约束条件</string>
