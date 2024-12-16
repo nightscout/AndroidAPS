@@ -39,6 +39,7 @@
     <string name="smscommunicator_stops_ns_with_code">SMS Uzak Hizmet desteğini devre dışı bırakmak için %1$s koduyla yanıt verin.\n\nBu hizmeti yalnızca AAPS yüklü ana telefondan yeniden etkinleştirebileceğinizi unutmayın.</string>
     <string name="smscommunicator_stopped_sms">SMS Uzak Hizmeti durduruldu. Yeniden etkinleştirmek için ana telefondaki AAPS\'i kullanın.</string>
     <string name="smscommunicator_calibration_reply_with_code">Kalibrasyon için %1$.2f gönderilecek, kod ile cevap ver %2$s</string>
+    <string name="smscommunicator_bolus_failed">Bolus başarısız oldu. Başka bir komut göndermeden önce gerçek durumu doğrulayın!</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Bir sms bolusu ile bir sonraki bolus arasında geçmesi gereken minimum süre (dk)</string>
     <string name="smscommunicator_remote_bolus_min_distance">Bir sms bolus gönderimi ile bir sonraki bolus arasında en az kaç dakika geçsin?</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">Güvenliğiniz için en az 2 telefon numarası eklemeniz gerekir.</string>
@@ -238,6 +239,12 @@
     <string name="thirdcarbsincrement">Üçüncü karbonhidrat artışı</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">Varsayılan Geçici hedefler</string>
+    <string name="eatingsoon_duration">Yakında Yemek süresi (dakika)</string>
+    <string name="eatingsoon_target">Yakında Yemek Hedef değeri</string>
+    <string name="activity_duration">Etkinlik süresi (dakika)</string>
+    <string name="activity_target">Etkinlik Hedef değeri</string>
+    <string name="hypo_duration">Hipo süresi (dakika)</string>
+    <string name="hypo_target">Hipo Hedef değeri</string>
     <string name="fill_bolus_title">Standart insülin miktarlarını Hazırla/Doldur</string>
     <string name="button1">Buton 1</string>
     <string name="button2">Buton 2</string>
