@@ -65,7 +65,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Mock lateinit var l: L
     @Mock lateinit var sharedPrefs: SharedPreferences
 
-    private lateinit var storeDataForDb: StoreDataForDb
+    private lateinit var storeDataForDb: StoreDataForDbImpl
     private lateinit var sut: NSClientV3Plugin
 
     private var insulinConfiguration: ICfg = ICfg("Insulin", 360 * 60 * 1000, 60 * 60 * 1000)
