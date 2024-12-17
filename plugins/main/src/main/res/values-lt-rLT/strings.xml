@@ -200,8 +200,6 @@
     <string name="overview_shortname">PRADŽIA</string>
     <string name="description_overview">Rodo dabartinę Ciklo būseną ir pagrindinių veiksmų mygtukus</string>
     <string name="overview_buttons_selection">Mygtukai</string>
-    <string name="show_calibration_button_summary">Siunčia kalibravimą į xDrip+ arba atidaro modifikuotos Dexcom programos BYODA kalibravimo dialogą</string>
-    <string name="show_cgm_button_summary">Atidaro xDrip+ ar BYODA, o mygtukas ATGAL gražina į AAPS</string>
     <string name="error_starting_cgm">Nepavyko paleisti NGJ programos.  Įsitikinkite, kad ji įdiegta.</string>
     <string name="not_available_full">Nėra duomenų</string>
     <string name="constraints_violation">Apribojimų pažeidimas</string>

@@ -39,6 +39,7 @@
     <string name="smscommunicator_stops_ns_with_code">Чтобы отключить службу удаленных SMS-сообщений ответьте кодом %1$s.\n\n Имейте в виду, что вы сможете вновь активировать ее только с основного телефона AAPS.</string>
     <string name="smscommunicator_stopped_sms">Удаленная служба SMS остановлена. Для ее реактивации используйте AAPS на главном смартфоне.</string>
     <string name="smscommunicator_calibration_reply_with_code">Чтобы отправить калибровку %1$.2f ответьте кодом %2$s</string>
+    <string name="smscommunicator_bolus_failed">Ошибка болюса. Проверьте его реальное состояние перед отправкой следующей команды.</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Минимальное количество минут между одним удаленным болюсом и следующим</string>
     <string name="smscommunicator_remote_bolus_min_distance">Минимум минут между одним болюсом и следующим</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">В целях безопасности, для изменения этого параметра необходимо добавить не менее 2 телефонных номеров.</string>
@@ -215,8 +216,6 @@
     <string name="overview_shortname">НАЧАЛО</string>
     <string name="description_overview">Отображает текущее состояние цикла и часто используемые кнопки</string>
     <string name="overview_buttons_selection">Кнопки</string>
-    <string name="show_calibration_button_summary">Отправляет калибровки на xDrip+ или открывает диалоговое окно калибровки BYODA DEXCOM</string>
-    <string name="show_cgm_button_summary">Открывает xDrip + или BYODA DEXCOM, кнопка назад возвращает в AAPS</string>
     <string name="error_starting_cgm">Не удалось запустить приложения мониторинга СК. Убедитесь, что оно установлено.</string>
     <string name="not_available_full">Недоступно</string>
     <string name="constraints_violation">ограничение нарушено</string>

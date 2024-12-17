@@ -200,8 +200,6 @@
     <string name="overview_shortname">ОСН</string>
     <string name="description_overview">Показва текущото състояние на вашия APS и бутони за най-често използваните действия</string>
     <string name="overview_buttons_selection">Бутони</string>
-    <string name="show_calibration_button_summary">Изпрати калибрация до xDrip+ или отвори BYODA калибрационнен диалог</string>
-    <string name="show_cgm_button_summary">Отваря xDrip+ или BYODA, бутон назад те връща в AAPS</string>
     <string name="error_starting_cgm">Не може да се стартира CGM приложението. Уверете се, че е инсталирано.</string>
     <string name="not_available_full">Недостъпно</string>
     <string name="constraints_violation">Нарушено ограничение</string>

@@ -216,8 +216,6 @@
     <string name="overview_shortname">OVZ</string>
     <string name="description_overview">Toont de huidige Loop-status en knoppen voor meest gebruikte acties</string>
     <string name="overview_buttons_selection">Knoppen</string>
-    <string name="show_calibration_button_summary">Stuurt een kalibratie naar xDrip+ of open het BYODA kalibratie venster</string>
-    <string name="show_cgm_button_summary">Opent xDrip+ of BYODA, terug knop om terug te gaan naar AAPS</string>
     <string name="error_starting_cgm">Kon de CGM applicatie niet starten. Zorg dat deze geïnstalleerd is.</string>
     <string name="not_available_full">Niet beschikbaar</string>
     <string name="constraints_violation">In strijd met beperkingen</string>

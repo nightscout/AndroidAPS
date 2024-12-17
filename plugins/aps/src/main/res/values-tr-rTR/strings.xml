@@ -67,7 +67,9 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="enable_smb_summary">Daha hızlı bir etki için geçici bazal yerine Super Micro Bolus kullanın</string>
     <string name="enable_uam_summary">(Uam) Bildirilmemiş öğünlerin tespiti</string>
     <string name="enable_smb_always">SMB\'yi her zaman etkinleştir</string>
+    <string name="enable_smb_always_summary">SMB\'yi her zaman AKRB, Geçici hedef veya boluslardan bağımsız olarak etkinleştirin. Yalnızca gelişmiş veri filtrelemesine sahip KŞ kaynaklarıyla mümkündür</string>
     <string name="enable_smb_after_carbs">Yemeklerden sonra SMB\'yi etkinleştir</string>
+    <string name="enable_smb_after_carbs_summary">0 AKRB (Aktif Karbonhidrat) olsa dahi, karbonhidrat alındıktan sonra 6 saat süreyle SMB\'yi (Süper Mikro Bolus) etkinleştirir. Yalnızca gelişmiş veri filtrelemesine sahip KŞ kaynaklarıyla mümkündür</string>
     <string name="enable_smb_with_cob">SMB\'yi AKRB ile etkinleştir</string>
     <string name="enable_smb_with_cob_summary">AKRB (Aktif Karbonhidrat) aktif olduğunda SMB\'yi (Süper Mikro Bolus) etkinleştirin.</string>
     <string name="enable_smb_with_temp_target">Geçici hedeflerle SMB\'yi etkinleştir</string>
@@ -121,6 +123,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="loop_open_mode_min_change">Minimum istek değişikliği [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Açık Döngü, yalnızca değişiklik % cinsinden bu değerden büyükse yeni değişiklik isteğini açar. Varsayılan değer %20\'dir</string>
     <string name="fallback_smb_no_tdd">SMB\'ye dönülüyor. Yeterli günlük doz verisi yok.</string>
+    <string name="fallback_to_isf_no_tdd">Profil duyarlılığına geri dönüş. Yeterli veri yok. Sebep: %1$s</string>
     <!-- Autotune -->
     <string name="autotune_description">Potansiyel profil ayarlamaları için yardım (İDF, karbonhidrat ve bazal oranları)</string>
     <string name="autotune_shortname">AT</string>

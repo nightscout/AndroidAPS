@@ -114,6 +114,7 @@
     <string name="bg_label">ГК</string>
     <string name="calibration">калибровка</string>
     <string name="alarminxmin">Напомнить через %1$d мин</string>
+    <string name="treatmentdeliveryerror">Возможная ошибка подачи болюса. Проверьте количество реально поданного инсулина и углеводов</string>
     <string name="bolus_reminder">Напоминание о болюсе</string>
     <string name="duration_label">Длительность действия</string>
     <string name="shortgramm">грамм</string>
@@ -177,6 +178,7 @@
     <string name="extended_bolus_full">ПБ%1$.2f ед/ @%2$s%3$s%4$s мин</string>
     <string name="extended_bolus_medium">%1$.2f ед/ч %2$s%3$s</string>
     <string name="nav_export">Экспорт настроек</string>
+    <string name="location_permission_not_granted">Доступ к геолокации не предоставлен. Предоставьте в настройках Android.</string>
     <!--    Protection-->
     <string name="wrongpassword">Неверный пароль</string>
     <string name="wrongpin">Неверный PIN-код</string>
@@ -347,6 +349,7 @@
     <string name="delete_future_treatments">Удалить назначения из будущего</string>
     <string name="uel_export_settings">ЭКСПОРТИРОВАТЬ НАСТРОЙКИ</string>
     <string name="uel_import_settings">ИМПОРТИРОВАТЬ НАСТРОЙКИ</string>
+    <string name="uel_select_directory">ВЫБОР ДИРЕКТОРИИ</string>
     <string name="uel_reset_databases">СБРОСИТЬ БАЗЫ ДАННЫХ</string>
     <string name="uel_reset_aps_results">СБРОС РЕЗУЛЬТАТОВ APS</string>
     <string name="uel_cleanup_databases">ОЧИСТКА ДАННЫХ</string>
@@ -519,6 +522,9 @@
     <!-- <unattended_export result messages> -->
     <string name="export_result_message_exported">Настройки экспортированы</string>
     <string name="export_result_message_failed">ОШИБКА экспорта настроек!</string>
+    <string name="export_result_message_about_to_expire">Настройки были экспортированы: пароль скоро перестанет действовать. Экспортируйте их вручную и (заново) введите пароль.</string>
+    <string name="export_result_message_expired">Экспорт настроек отменен: пароль перестал действовать. Экспортируйте их вручную и введите его заново!</string>
+    <string name="export_result_message_disabled">Предупреждение (автоматизация): Экспорт настроек выключен!</string>
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">снижение %1$s на %2$s</string>
     <string name="a11y_plus_button_description">увеличение %1$s на %2$s</string>
