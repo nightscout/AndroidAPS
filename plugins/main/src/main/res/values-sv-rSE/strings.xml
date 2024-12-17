@@ -200,8 +200,6 @@
     <string name="overview_shortname">Hem</string>
     <string name="description_overview">Visar loopens nuvarande tillstånd och knappar för de vanligaste funktionerna</string>
     <string name="overview_buttons_selection">Knappar</string>
-    <string name="show_calibration_button_summary">Sänder kalibrering till xDrip eller öppnar kalibreringsrutan i Dexcom-appen</string>
-    <string name="show_cgm_button_summary">Öppnar xDrip+ eller Dexcom-appen. Bakåtknappen återgår till AAPS</string>
     <string name="error_starting_cgm">Kunde inte starta CGM-appen. Kontrollera att den är installerad.</string>
     <string name="not_available_full">Ej tillgängligt</string>
     <string name="constraints_violation">Begränsning nådd</string>

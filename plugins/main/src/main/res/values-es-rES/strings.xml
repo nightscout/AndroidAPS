@@ -216,8 +216,8 @@
     <string name="overview_shortname">INICIO</string>
     <string name="description_overview">Muestra el estado actual de tu bucle y los botones para las acciones más usadas</string>
     <string name="overview_buttons_selection">Botones</string>
-    <string name="show_calibration_button_summary">Envía una calibración a xDrip+ o abre la pantalla de calibración de Dexcom BYODA</string>
-    <string name="show_cgm_button_summary">Abre xDrip+ o Dexcom BYODA. Si pulsas el botón atrás, regresa a AAPS</string>
+    <string name="show_calibration_button_summary">Envía una calibración a xDrip+ (asegúrate de que \'Aceptar Calibraciones\' está activado en xDrip+ bajo la opción \'Ajustes entre aplicaciones\').</string>
+    <string name="show_cgm_button_summary">Abre xDrip+ (puedes usar el botón atrás para volver a AAPS).</string>
     <string name="error_starting_cgm">No se pudo iniciar la aplicación CGM. Asegúrate de que está instalada.</string>
     <string name="not_available_full">No disponible</string>
     <string name="constraints_violation">Violación de restricciones</string>
