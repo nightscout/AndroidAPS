@@ -81,6 +81,7 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.objects.constraints.ConstraintObject
@@ -1120,18 +1121,34 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     private fun updateSensitivity() {
         _binding ?: return
         val lastAutosensData = iobCobCalculator.ads.getLastAutosensData("Overview", aapsLogger, dateUtil)
+        val lastAutosensRatio = lastAutosensData?.let { it.autosensResult.ratio * 100 }
         if (config.NSCLIENT && sp.getBoolean(app.aaps.core.utils.R.string.key_used_autosens_on_main_phone, false) ||
             !config.NSCLIENT && constraintChecker.isAutosensModeEnabled().value()
         ) {
-            binding.infoLayout.sensitivityIcon.setImageResource(app.aaps.core.objects.R.drawable.ic_swap_vert_black_48dp_green)
+            binding.infoLayout.sensitivityIcon.setImageResource(
+                lastAutosensRatio?.let {
+                    when {
+                        it > 100.0 -> app.aaps.core.objects.R.drawable.ic_as_above
+                        it < 100.0 -> app.aaps.core.objects.R.drawable.ic_as_below
+                        else     -> app.aaps.core.objects.R.drawable.ic_swap_vert_black_48dp_green
+                    }
+                }
+                    ?: app.aaps.core.objects.R.drawable.ic_swap_vert_black_48dp_green
+            )
         } else {
-            binding.infoLayout.sensitivityIcon.setImageResource(app.aaps.core.objects.R.drawable.ic_x_swap_vert)
+            binding.infoLayout.sensitivityIcon.setImageResource(
+                lastAutosensRatio?.let {
+                    when {
+                        it > 100.0 -> app.aaps.core.objects.R.drawable.ic_x_as_above
+                        it < 100.0 -> app.aaps.core.objects.R.drawable.ic_x_as_below
+                        else     -> app.aaps.core.objects.R.drawable.ic_x_swap_vert
+                    }
+                }
+                    ?: app.aaps.core.objects.R.drawable.ic_x_swap_vert
+            )
         }
 
-        binding.infoLayout.sensitivity.text =
-            lastAutosensData?.let {
-                String.format(Locale.ENGLISH, "AS: %.0f%%", it.autosensResult.ratio * 100)
-            } ?: ""
+
         // Show variable sensitivity
         val profile = profileFunction.getProfile()
         val request = loop.lastRun?.request
@@ -1144,23 +1161,45 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val ratioUsed = request?.autosensResult?.ratio ?: 1.0
 
         if (variableSens != isfMgdl && variableSens != 0.0 && isfMgdl != null) {
-            var text = if (ratioUsed != 1.0 && ratioUsed != lastAutosensData?.autosensResult?.ratio) String.format(Locale.getDefault(), "%.0f%%\n", ratioUsed * 100) else ""
-            text += String.format(
-                Locale.getDefault(), "%1$.1f→%2$.1f",
-                profileUtil.fromMgdlToUnits(isfMgdl, profileFunction.getUnits()),
-                profileUtil.fromMgdlToUnits(variableSens, profileFunction.getUnits())
+            val okDialogText: ArrayList<String> = ArrayList()
+            val overViewText: ArrayList<String> = ArrayList()
+            val autoSensHiddenRange = 0.2             //Hide Autosens value if below 20% of Autosens Range
+            val autoSensMax = 100.0 + (preferences.get(DoubleKey.AutosensMax) - 1.0) * autoSensHiddenRange * 100.0
+            val autoSensMin = 100.0 + (preferences.get(DoubleKey.AutosensMin) - 1.0) * autoSensHiddenRange * 100.0
+            lastAutosensRatio?.let {
+                if(it < autoSensMin || it > autoSensMax)
+                    overViewText.add(rh.gs(app.aaps.core.ui.R.string.autosens_short, it))
+                okDialogText.add(rh.gs(app.aaps.core.ui.R.string.autosens_long, it))
+            }
+            overViewText.add(
+                String.format(
+                    Locale.getDefault(), "%1$.1f→%2$.1f",
+                    profileUtil.fromMgdlToUnits(isfMgdl, profileFunction.getUnits()),
+                    profileUtil.fromMgdlToUnits(variableSens, profileFunction.getUnits())
+                )
             )
-            binding.infoLayout.variableSensitivity.text = text
-            binding.infoLayout.variableSensitivity.visibility = View.VISIBLE
-            var sensitivityText = rh.gs(app.aaps.core.ui.R.string.isf_for_carbs, profileUtil.fromMgdlToUnits(isfForCarbs ?: 0.0, profileFunction.getUnits()))
+            binding.infoLayout.sensitivity.text = overViewText.joinToString("\n")
+            binding.infoLayout.sensitivity.visibility = View.VISIBLE
+            binding.infoLayout.variableSensitivity.visibility = View.GONE
+            if (ratioUsed != 1.0 && ratioUsed != lastAutosensData?.autosensResult?.ratio)
+                okDialogText.add(rh.gs(app.aaps.core.ui.R.string.algorithm_long, ratioUsed * 100))
+            okDialogText.add(rh.gs(app.aaps.core.ui.R.string.isf_for_carbs, profileUtil.fromMgdlToUnits(isfForCarbs ?: 0.0, profileFunction.getUnits())))
             if (config.APS) {
                 val aps = activePlugin.activeAPS
                 aps.getSensitivityOverviewString()?.let {
-                    sensitivityText += "\n$it"
+                    okDialogText.add("$it")
                 }
             }
-            binding.infoLayout.asLayout.setOnClickListener { activity?.let { OKDialog.show(it, rh.gs(app.aaps.core.ui.R.string.sensitivity), sensitivityText) } }
-        } else binding.infoLayout.variableSensitivity.visibility = View.GONE
+            binding.infoLayout.asLayout.setOnClickListener { activity?.let { OKDialog.show(it, rh.gs(app.aaps.core.ui.R.string.sensitivity), okDialogText.joinToString("\n")) } }
+
+        } else {
+            binding.infoLayout.sensitivity.text =
+                lastAutosensData?.let {
+                    rh.gs(app.aaps.core.ui.R.string.autosens_short,it.autosensResult.ratio * 100)
+                } ?: ""
+            binding.infoLayout.variableSensitivity.visibility = View.GONE
+            binding.infoLayout.sensitivity.visibility = View.VISIBLE
+        }
     }
 
     private fun updatePumpStatus() {
