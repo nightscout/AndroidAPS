@@ -87,7 +87,7 @@ interface ProfileFunction {
      */
     fun createProfileSwitch(
         profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long,
-        action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit?>
+        action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>
     ): Boolean
 
     /**
@@ -104,6 +104,6 @@ interface ProfileFunction {
      */
     fun createProfileSwitch(
         durationInMinutes: Int, percentage: Int, timeShiftInHours: Int,
-        action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit?>
+        action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>
     ): Boolean
 }

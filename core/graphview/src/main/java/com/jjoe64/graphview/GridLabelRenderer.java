@@ -26,7 +26,8 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.TypedValue;
 
-import androidx.core.view.ViewCompat;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -106,7 +107,7 @@ public class GridLabelRenderer {
      * the width of the vertical labels
      * of the second scale
      */
-    private Integer mLabelVerticalSecondScaleWidth;
+    @Nullable private Integer mLabelVerticalSecondScaleWidth;
     /**
      * the height of the vertical labels
      * of the second scale
@@ -805,7 +806,7 @@ public class GridLabelRenderer {
      *
      * @param canvas canvas
      */
-    protected void drawVerticalAxisTitle(Canvas canvas) {
+    protected void drawVerticalAxisTitle(@NonNull Canvas canvas) {
         if (mVerticalAxisTitle != null && mVerticalAxisTitle.length() > 0) {
             mPaintAxisTitle.setColor(getVerticalAxisTitleColor());
             mPaintAxisTitle.setTextSize(getVerticalAxisTitleTextSize());
@@ -1124,7 +1125,7 @@ public class GridLabelRenderer {
      * @param mLabelFormatter the label formatter, that converts
      *                        the raw numbers to strings
      */
-    public void setLabelFormatter(LabelFormatter mLabelFormatter) {
+    public void setLabelFormatter(@NonNull LabelFormatter mLabelFormatter) {
         this.mLabelFormatter = mLabelFormatter;
         mLabelFormatter.setViewport(mGraphView.getViewport());
     }

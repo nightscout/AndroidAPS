@@ -523,7 +523,7 @@
     <string name="export_result_message_exported">Paramètres exportés</string>
     <string name="export_result_message_failed">Échec de l\'export des paramètres !</string>
     <string name="export_result_message_about_to_expire">Paramètres exportés : le mot de passe va bientôt expirer. Exportez manuellement et (re)entrez le mot de passe.</string>
-    <string name="export_result_message_expired">L\'export des paramètres a été annulée : le mot de passe a expiré. Exporter manuellement et (re)entrer!</string>
+    <string name="export_result_message_expired">Export des paramètres annulé : le mot de passe est expiré. Exporter manuellement et le (re)saisir !</string>
     <string name="export_result_message_disabled">Avertissement (automatisation): L\'export des paramètres n\'est pas activée !</string>
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">réduire %1$s par %2$s</string>

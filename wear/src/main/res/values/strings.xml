@@ -232,6 +232,7 @@
     <string name="key_show_seconds" translatable="false">show_second</string>
     <string name="key_include_external" translatable="false">include_external</string>
     <string name="key_switch_external" translatable="false">switch_external</string>
+    <string name="key_last_selected_watchface" translatable="false">last_selected_watchface</string>
     <string name="increment">increment</string>
     <string name="decrement">decrement</string>
     <string name="abbreviation_average">avg</string>

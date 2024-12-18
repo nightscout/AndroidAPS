@@ -9,7 +9,7 @@ plugins {
 
 android {
 
-    namespace = "info.nightscout.androidaps.plugins.pump.omnipod.dash"
+    namespace = "app.aaps.pump.omnipod.dash"
     defaultConfig {
         ksp {
             arg("room.incremental", "true")

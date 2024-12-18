@@ -9,7 +9,7 @@ plugins {
 
 android {
 
-    namespace = "info.nightscout.pump.diaconn"
+    namespace = "app.aaps.pump.diaconn"
     defaultConfig {
         ksp {
             arg("room.incremental", "true")

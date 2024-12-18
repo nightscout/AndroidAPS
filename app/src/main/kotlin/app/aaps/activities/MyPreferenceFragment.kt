@@ -16,7 +16,6 @@ import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
 import androidx.preference.size
 import app.aaps.R
-import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -39,7 +38,6 @@ import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
-import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.utils.extensions.safeGetSerializable
 import app.aaps.core.validators.DefaultEditTextValidator
@@ -56,8 +54,6 @@ import app.aaps.plugins.configuration.maintenance.MaintenancePlugin
 import app.aaps.plugins.main.general.smsCommunicator.SmsCommunicatorPlugin
 import app.aaps.plugins.main.skins.SkinProvider
 import dagger.android.support.AndroidSupportInjection
-import java.math.BigDecimal
-import java.math.RoundingMode
 import java.util.Vector
 import javax.inject.Inject
 
@@ -304,13 +300,6 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
                 }
             }
 
-            is UnitDoubleKey -> {
-                // convert preferences values to current units
-                val value = profileUtil.valueInCurrentUnitsDetect(preferences.get(keyDefinition)).toString()
-                val precision = if (profileUtil.units == GlucoseUnit.MGDL) 0 else 1
-                val converted = BigDecimal(value).setScale(precision, RoundingMode.HALF_UP)
-                pref.summary = converted.toPlainString()
-            }
         }
         for (plugin in activePlugin.getPluginsList()) pref.key?.let { plugin.updatePreferenceSummary(pref) }
     }

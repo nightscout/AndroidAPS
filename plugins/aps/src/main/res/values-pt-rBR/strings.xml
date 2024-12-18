@@ -59,9 +59,7 @@
     <string name="enable_smb_summary">Usar Super Micro Bolus (SMB) em vez de basal temporária para resposta mais rápida</string>
     <string name="enable_uam_summary">Detecção de refeições não anunciadas</string>
     <string name="enable_smb_always">SMB sempre ativo</string>
-    <string name="enable_smb_always_summary">SMB sempre activo independentemente dos bolus. Possível apenas quando o medidor tive um bom filtro de dados como o G5</string>
     <string name="enable_smb_after_carbs">Ativar SMB após refeição</string>
-    <string name="enable_smb_after_carbs_summary">SMB activo por 6h após carbs, mesmo com 0 COB. Possível apenas quando o medidor tive um bom filtro de dados como o G5</string>
     <string name="enable_smb_with_cob">Ativar SMB com COB</string>
     <string name="enable_smb_with_cob_summary">Ativar SMB quando houver carboidratos ativos.</string>
     <string name="enable_smb_with_temp_target">SMB activo com valores alvo temporários</string>

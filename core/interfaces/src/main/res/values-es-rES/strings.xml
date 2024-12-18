@@ -49,6 +49,8 @@
     <string name="pref_show_delta">Mostrar delta</string>
     <string name="pref_show_detailed_delta">Mostrar delta detallado</string>
     <string name="pref_show_avgdelta">Mostrar delta promedio</string>
+    <string name="pref_show_tempTarget">Mostrar ObjetivoTemporal</string>
+    <string name="pref_show_reservoir_level">Mostrar Nivel del Reservorio</string>
     <string name="pref_show_phone_battery">Mostrar batería del teléfono</string>
     <string name="pref_show_rig_battery">Mostrar batería global del bucle</string>
     <string name="pref_show_basal_rate">Mostrar la tasa basal</string>

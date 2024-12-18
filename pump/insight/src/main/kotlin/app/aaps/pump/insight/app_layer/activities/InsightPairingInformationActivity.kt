@@ -6,8 +6,8 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import app.aaps.pump.insight.connection_service.InsightConnectionService
+import app.aaps.pump.insight.databinding.ActivityInsightPairingInformationBinding
 import dagger.android.support.DaggerAppCompatActivity
-import info.nightscout.androidaps.insight.databinding.ActivityInsightPairingInformationBinding
 
 class InsightPairingInformationActivity : DaggerAppCompatActivity() {
 

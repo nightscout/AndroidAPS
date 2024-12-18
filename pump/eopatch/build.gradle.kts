@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "info.nightscout.androidaps.plugins.pump.eopatch"
+    namespace = "app.aaps.pump.eopatch"
     buildFeatures {
         dataBinding = true
     }

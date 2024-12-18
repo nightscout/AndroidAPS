@@ -4,6 +4,7 @@
     <string name="disable_tbr_over_notification">Wyłącz powiadomienia o końcu TBR\n(ustawienia pompy)</string>
     <string name="not_paired">Nie sparowane</string>
     <string name="recovering">Odzyskiwanie</string>
+    <string name="insight_status">Status</string>
     <string name="recovery_duration">Czas odzyskiwania</string>
     <string name="last_connected">Ostatnie połączenie</string>
     <string name="start_pump">Uruchom pompę</string>
@@ -13,6 +14,7 @@
     <string name="operating_mode">Tryb działania</string>
     <string name="description_pump_insight_local">Integracja pompy dla pomp Accu-Check Insight</string>
     <string name="not_inserted">Nie wprowadzono</string>
+    <string name="tdd_bolus">TDD Bolus</string>
     <string name="tdd_basal">TDD Baza</string>
     <string name="tbr_formatter">%1$d%% na %2$d / %3$d min</string>
     <string name="multiwave_bolus">Bolus złożony (wielofalowy)</string>
@@ -22,7 +24,10 @@
     <string name="pairing_completed">Parowanie zakończone</string>
     <string name="code_compare">Czy kody wyświetlone na tym urządzeniu i na twojej pompie pasują?</string>
     <string name="insight_pairing">Parowanie Insight</string>
+    <string name="insight_local">Accu-Chek Insight</string>
+    <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Dren zmieniony</string>
+    <string name="insightpump_shortname">Sight</string>
     <string name="insight_alert_notification_channel">Alarmy pompy Insight</string>
     <string name="disable_vibration">Wyłącz wibracje przy ręcznym podawaniu bolusa</string>
     <string name="disable_vibration_summary">Dotyczy bolusa i rozszerzonego bolusa (dostępne tylko z pompami Insight z firmware 3.x)</string>
@@ -35,6 +40,7 @@
     <string name="short_status_tbr">TBR: %1$d%% na %2$d / %3$d min</string>
     <string name="short_status_extended">Przedłużony: %1$.2f / %2$.2f U na %3$d min</string>
     <string name="short_status_multiwave">Multiwave (zwykły + przedłużony): %1$.2f / %2$.2f U for %3$d min</string>
+    <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_reservoir">Zbiornik: %1$.2f U</string>
     <string name="short_status_battery">Bat.: %1$d%%</string>
     <string name="release_software_version">Wersja oprogramowania</string>
@@ -60,4 +66,5 @@
     <string name="min_recovery_duration">Min. czas odzyskiwania [s]</string>
     <string name="pump_alert">Alarm pompy</string>
     <string name="pairing_information">Informacja o sparowaniu</string>
+    <string name="last_connection">%1$s (%2$s)</string>
 </resources>

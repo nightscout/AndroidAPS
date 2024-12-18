@@ -535,7 +535,8 @@ class BolusWizard @Inject constructor(
                                 ValueWithUnit.TEType(eventType),
                                 ValueWithUnit.Insulin(insulinAfterConstraints).takeIf { insulinAfterConstraints != 0.0 },
                                 ValueWithUnit.Gram(this@BolusWizard.carbs).takeIf { this@BolusWizard.carbs != 0 },
-                                ValueWithUnit.Minute(carbTime).takeIf { carbTime != 0 })
+                                ValueWithUnit.Minute(carbTime).takeIf { carbTime != 0 }
+                            ).filterNotNull()
                         )
                         commandQueue.bolus(this, object : Callback() {
                             override fun run() {
@@ -583,7 +584,8 @@ class BolusWizard @Inject constructor(
                         ValueWithUnit.Timestamp(eventTime),
                         ValueWithUnit.Gram(carbs2),
                         ValueWithUnit.Minute(timeOffset).takeIf { timeOffset != 0 },
-                        ValueWithUnit.Hour(duration).takeIf { duration != 0 })
+                        ValueWithUnit.Hour(duration).takeIf { duration != 0 }
+                    ).filterNotNull()
                 )
                 commandQueue.bolus(detailedBolusInfo, object : Callback() {
                     override fun run() {

@@ -13,7 +13,6 @@
     <string name="ns_create_announcements_from_carbs_req_title">Създаване на известия при предупреждения за необходими въглехидрати</string>
     <string name="ns_create_announcements_from_errors_summary">Създаване на Nightscout известие при грешки и локални аларми (също видими в Careportal - Treatments)</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Създаване на Nightscout известия при предупреждения за необходими въглехидрати</string>
-    <string name="description_ns_client">Синхронизира локалните данни с Nightscout</string>
     <string name="description_ns_client_v3">Синхронизира локалните данни с Nightscout чрез API v3</string>
     <string name="blocked_by_charging">Блокирано от настройки</string>
     <string name="blocked_by_connectivity">Блокирано от настйкиро</string>
@@ -23,21 +22,10 @@
     <string name="ns_malfunction">Грешка в NSClient. Рестартирайте Nightscout и NSClient</string>
     <!-- NSClient -->
     <string name="no_write_permission">NSClient няма права за запис. Грешна API парола?</string>
-    <string name="ns_client_v3">NSClientV3</string>
-    <string name="ns_client_v3_short_name">NSV3</string>
     <string name="ns_client">Вътрешен NSClient</string>
-    <string name="ns_client_short_name">NSКЛ</string>
     <string name="ns_client_url">Nightscout aдрес:</string>
     <string name="restart">Рестарт</string>
-    <string name="ns_client_internal_title">Вътрешен NSClient</string>
     <string name="ns_client_url_title">Nightscout адрес</string>
-    <string name="ns_client_url_dialog_message">Въведете вашият Nightscout адрес</string>
-    <string name="ns_client_secret_title">NS API парола</string>
-    <string name="ns_client_secret_dialog_title">NS API парола</string>
-    <string name="ns_client_secret_dialog_message">Въведете NS API паролата (мин 12 символа)</string>
-    <string name="nsclient_token_title">NS access token</string>
-    <string name="nsclient_token_dialog_title">NS access token</string>
-    <string name="nsclient_token_dialog_message">Токена генериран от NS админ страницата (мин 17 символа)</string>
     <string name="deliver_now">Изпрати сега</string>
     <string name="queue">Опашка:</string>
     <string name="status">Статус:</string>

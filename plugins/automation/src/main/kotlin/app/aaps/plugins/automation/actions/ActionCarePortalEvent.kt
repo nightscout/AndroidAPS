@@ -37,7 +37,7 @@ class ActionCarePortalEvent(injector: HasAndroidInjector) : Action(injector) {
     var note = InputString()
     var duration = InputDuration(0, InputDuration.TimeUnit.MINUTES)
     var cpEvent = InputCarePortalMenu(rh)
-    private var valuesWithUnit = mutableListOf<ValueWithUnit?>()
+    private var valuesWithUnit = mutableListOf<ValueWithUnit>()
 
     override fun friendlyName(): Int = app.aaps.core.ui.R.string.careportal
     override fun shortDescription(): String = rh.gs(cpEvent.value.stringResWithValue, note.value)
@@ -65,10 +65,10 @@ class ActionCarePortalEvent(injector: HasAndroidInjector) : Action(injector) {
             }
         } else {
             therapyEvent.duration = T.mins(duration.value.toLong()).msecs()
-            valuesWithUnit.add(ValueWithUnit.Minute(duration.value).takeIf { duration.value != 0 })
+            valuesWithUnit.addAll(listOf(ValueWithUnit.Minute(duration.value).takeIf { duration.value != 0 }).filterNotNull())
         }
         therapyEvent.note = note.value
-        valuesWithUnit.add(ValueWithUnit.SimpleString(note.value).takeIf { note.value.isNotBlank() })
+        valuesWithUnit.addAll(listOf(ValueWithUnit.SimpleString(note.value).takeIf { note.value.isNotBlank() }).filterNotNull())
         disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
             therapyEvent = therapyEvent,
             action = app.aaps.core.data.ue.Action.CAREPORTAL,

@@ -14,13 +14,20 @@ import app.aaps.plugins.main.di.PluginsModule
 import app.aaps.plugins.source.di.SourceModule
 import app.aaps.plugins.sync.di.OpenHumansModule
 import app.aaps.plugins.sync.di.SyncModule
+import app.aaps.pump.common.di.PumpCommonModule
 import app.aaps.pump.dana.di.DanaHistoryModule
 import app.aaps.pump.dana.di.DanaModule
 import app.aaps.pump.danar.di.DanaRModule
 import app.aaps.pump.danars.di.DanaRSModule
+import app.aaps.pump.diaconn.di.DiaconnG8Module
+import app.aaps.pump.eopatch.di.EopatchModule
 import app.aaps.pump.equil.di.EquilModule
 import app.aaps.pump.insight.di.InsightDatabaseModule
 import app.aaps.pump.insight.di.InsightModule
+import app.aaps.pump.medtronic.di.MedtronicModule
+import app.aaps.pump.medtrum.di.MedtrumModule
+import app.aaps.pump.omnipod.dash.di.OmnipodDashModule
+import app.aaps.pump.omnipod.eros.di.OmnipodErosModule
 import app.aaps.pump.virtual.di.VirtualPumpModule
 import app.aaps.shared.impl.di.LoggerModule
 import app.aaps.shared.impl.di.SharedImplModule
@@ -30,15 +37,8 @@ import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
-import info.nightscout.androidaps.plugins.pump.common.di.RileyLinkModule
-import info.nightscout.androidaps.plugins.pump.eopatch.dagger.EopatchModule
-import info.nightscout.androidaps.plugins.pump.medtronic.di.MedtronicModule
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.di.OmnipodDashModule
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.di.OmnipodErosModule
+import app.aaps.pump.common.di.RileyLinkModule
 import info.nightscout.pump.combov2.di.ComboV2Module
-import info.nightscout.pump.common.di.PumpCommonModule
-import info.nightscout.pump.diaconn.di.DiaconnG8Module
-import info.nightscout.pump.medtrum.di.MedtrumModule
 import javax.inject.Singleton
 
 @Singleton

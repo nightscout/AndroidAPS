@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
+import app.aaps.pump.insight.R
 import app.aaps.pump.insight.exceptions.ConnectionFailedException
 import app.aaps.pump.insight.exceptions.ConnectionLostException
 import app.aaps.pump.insight.exceptions.DisconnectedException
@@ -17,7 +18,6 @@ import app.aaps.pump.insight.exceptions.app_layer_errors.PumpAlreadyInThatStateE
 import app.aaps.pump.insight.exceptions.app_layer_errors.PumpStoppedException
 import app.aaps.pump.insight.exceptions.app_layer_errors.RunModeNotAllowedException
 import app.aaps.pump.insight.exceptions.satl_errors.SatlPairingRejectedException
-import info.nightscout.androidaps.insight.R
 
 object ExceptionTranslator {
 

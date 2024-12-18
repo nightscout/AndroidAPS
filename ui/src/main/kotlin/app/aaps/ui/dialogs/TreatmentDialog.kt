@@ -206,7 +206,8 @@ class TreatmentDialog : DialogFragmentWithDate() {
                                 source = Sources.TreatmentDialog,
                                 listValues = listOf(
                                     ValueWithUnit.Insulin(insulinAfterConstraints),
-                                    ValueWithUnit.Gram(carbsAfterConstraints).takeIf { carbsAfterConstraints != 0 })
+                                    ValueWithUnit.Gram(carbsAfterConstraints).takeIf { carbsAfterConstraints != 0 }
+                                ).filterNotNull()
                             )
                             commandQueue.bolus(detailedBolusInfo, object : Callback() {
                                 override fun run() {

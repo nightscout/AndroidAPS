@@ -16,35 +16,35 @@ import app.aaps.core.data.model.TT
 
 interface StoreDataForDb {
 
-    val glucoseValues: MutableList<GV>
-    val boluses: MutableList<BS>
-    val carbs: MutableList<CA>
-    val temporaryTargets: MutableList<TT>
-    val effectiveProfileSwitches: MutableList<EPS>
-    val bolusCalculatorResults: MutableList<BCR>
-    val therapyEvents: MutableList<TE>
-    val extendedBoluses: MutableList<EB>
-    val temporaryBasals: MutableList<TB>
-    val profileSwitches: MutableList<PS>
-    val offlineEvents: MutableList<OE>
-    val foods: MutableList<FD>
+    fun addToGlucoseValues(payload: MutableList<GV>): Boolean
+    fun addToBoluses(payload: BS): Boolean
+    fun addToCarbs(payload: CA): Boolean
+    fun addToTemporaryTargets(payload: TT): Boolean
+    fun addToEffectiveProfileSwitches(payload: EPS): Boolean
+    fun addToBolusCalculatorResults(payload: BCR): Boolean
+    fun addToTherapyEvents(payload: TE): Boolean
+    fun addToExtendedBoluses(payload: EB): Boolean
+    fun addToTemporaryBasals(payload: TB): Boolean
+    fun addToProfileSwitches(payload: PS): Boolean
+    fun addToOfflineEvents(payload: OE): Boolean
+    fun addToFoods(payload: MutableList<FD>): Boolean
 
-    val nsIdGlucoseValues: MutableList<GV>
-    val nsIdBoluses: MutableList<BS>
-    val nsIdCarbs: MutableList<CA>
-    val nsIdTemporaryTargets: MutableList<TT>
-    val nsIdEffectiveProfileSwitches: MutableList<EPS>
-    val nsIdBolusCalculatorResults: MutableList<BCR>
-    val nsIdTherapyEvents: MutableList<TE>
-    val nsIdExtendedBoluses: MutableList<EB>
-    val nsIdTemporaryBasals: MutableList<TB>
-    val nsIdProfileSwitches: MutableList<PS>
-    val nsIdOfflineEvents: MutableList<OE>
-    val nsIdDeviceStatuses: MutableList<DS>
-    val nsIdFoods: MutableList<FD>
+    fun addToNsIdGlucoseValues(payload: GV): Boolean
+    fun addToNsIdBoluses(payload: BS): Boolean
+    fun addToNsIdCarbs(payload: CA): Boolean
+    fun addToNsIdTemporaryTargets(payload: TT): Boolean
+    fun addToNsIdEffectiveProfileSwitches(payload: EPS): Boolean
+    fun addToNsIdBolusCalculatorResults(payload: BCR): Boolean
+    fun addToNsIdTherapyEvents(payload: TE): Boolean
+    fun addToNsIdExtendedBoluses(payload: EB): Boolean
+    fun addToNsIdTemporaryBasals(payload: TB): Boolean
+    fun addToNsIdProfileSwitches(payload: PS): Boolean
+    fun addToNsIdOfflineEvents(payload: OE): Boolean
+    fun addToNsIdDeviceStatuses(payload: DS): Boolean
+    fun addToNsIdFoods(payload: FD): Boolean
 
-    val deleteTreatment: MutableList<String>
-    val deleteGlucoseValue: MutableList<String>
+    fun addToDeleteTreatment(payload: String): Boolean
+    fun addToDeleteGlucoseValue(payload: String): Boolean
 
     fun updateDeletedGlucoseValuesInDb()
     fun storeTreatmentsToDb()

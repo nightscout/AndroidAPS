@@ -1,0 +1,54 @@
+package app.aaps.pump.equil.manager.command
+
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.pump.equil.database.EquilHistoryRecord
+import app.aaps.pump.equil.manager.EquilManager
+import app.aaps.pump.equil.manager.Utils
+
+class SettingCmd(
+    aapsLogger: AAPSLogger,
+    sp: SP,
+    equilManager: EquilManager
+) : BaseSetting(System.currentTimeMillis(), aapsLogger, sp, equilManager) {
+
+    fun getData(): ByteArray {
+        val indexByte = Utils.intToBytes(pumpReqIndex)
+        val tzm = Utils.hexStringToBytes(getEquilDevices())
+        val data = Utils.concat(indexByte, tzm)
+        pumpReqIndex++
+        return data
+    }
+
+    fun getData2(): ByteArray {
+        val indexByte = Utils.intToBytes(pumpReqIndex)
+        val data2 = byteArrayOf(0x01, 0x07)
+        val data3 = Utils.intToBytes(120)
+        val data = Utils.concat(indexByte, data2, data3)
+        pumpReqIndex++
+        return data
+    }
+
+    override fun getFirstData(): ByteArray? {
+        return ByteArray(0)
+    }
+
+    override fun getNextData(): ByteArray? {
+        return ByteArray(0)
+    }
+
+    override fun decodeConfirmData(data: ByteArray) {
+    }
+
+    fun getData3(): ByteArray {
+        val indexByte = Utils.intToBytes(pumpReqIndex)
+        val data2 = byteArrayOf(0x00, 0x07, 0x01)
+        val data = Utils.concat(indexByte, data2)
+        pumpReqIndex++
+        return data
+    }
+
+    override fun getEventType(): EquilHistoryRecord.EventType? {
+        return null
+    }
+}

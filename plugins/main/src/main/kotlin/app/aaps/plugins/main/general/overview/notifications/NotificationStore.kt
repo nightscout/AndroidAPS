@@ -99,6 +99,12 @@ class NotificationStore @Inject constructor(
                 store.removeAt(i)
                 i--
             }
+            if (n is NotificationWithAction) {
+                if (n.validityCheck?.invoke() == false) {
+                    store.removeAt(i)
+                    i--
+                }
+            }
             i++
         }
     }

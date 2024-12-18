@@ -9,8 +9,6 @@
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">接收來自「Build Your Own Dexcom App」的血糖值。</string>
-    <string name="eversense">Eversense 應用（已修補）</string>
-    <string name="description_source_eversense">接收來自修補後的 Eversense 應用的血糖值。</string>
     <string name="glimp">Glimp</string>
     <string name="description_source_glimp">接收來自 Glimp 的血糖值。</string>
     <string name="mm640g">MM640g</string>
@@ -24,9 +22,6 @@
     <string name="tomato">Tomato（MiaoMiao）</string>
     <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">接收來自 Tomato 應用（MiaoMiao 設備）的血糖值</string>
-    <string name="aidex">GlucoRx Aidex</string>
-    <string name="aidex_short">Aidex</string>
-    <string name="description_source_aidex">接收來自 GlucoRx Aidex CGMS 的血糖值。</string>
     <string name="random_bg">隨機血糖值</string>
     <string name="description_source_random_bg">生成隨機血糖資料（僅限演示模式）</string>
     <string name="random_bg_short">血糖值</string>

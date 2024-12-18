@@ -47,7 +47,6 @@ import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventAppInitialized
-import app.aaps.core.interfaces.rx.events.EventNewNotification
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventRebuildTabs
 import app.aaps.core.interfaces.sharedPreferences.SP
@@ -70,7 +69,6 @@ import app.aaps.plugins.configuration.activities.SingleFragmentActivity
 import app.aaps.plugins.configuration.maintenance.MaintenancePlugin
 import app.aaps.plugins.configuration.setupwizard.SetupWizardActivity
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
-import app.aaps.plugins.main.general.overview.notifications.NotificationWithAction
 import app.aaps.ui.activities.ProfileHelperActivity
 import app.aaps.ui.activities.StatsActivity
 import app.aaps.ui.activities.TreatmentsActivity
@@ -107,6 +105,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     @Inject lateinit var fileListProvider: FileListProvider
     @Inject lateinit var cryptoUtil: CryptoUtil
     @Inject lateinit var exportPasswordDataStore: ExportPasswordDataStore
+    @Inject lateinit var uiInteraction: UiInteraction
 
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private var pluginPreferencesMenuItem: MenuItem? = null
@@ -301,35 +300,39 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
 
         // check if identification is set
         if (config.isDev() && preferences.get(StringKey.MaintenanceIdentification).isBlank())
-            rxBus.send(EventNewNotification(
-                NotificationWithAction(this, Notification.IDENTIFICATION_NOT_SET, rh.gs(R.string.identification_not_set), Notification.INFO)
-                    .action(R.string.set, Runnable {
-                        startActivity(
-                            Intent(this@MainActivity, PreferencesActivity::class.java)
-                                .setAction("info.nightscout.androidaps.MainActivity")
-                                .putExtra(UiInteraction.PLUGIN_NAME, MaintenancePlugin::class.java.simpleName)
-                        )
-                    })
-            ))
+            uiInteraction.addNotificationWithAction(
+                id = Notification.IDENTIFICATION_NOT_SET,
+                text = rh.gs(R.string.identification_not_set),
+                level = Notification.INFO,
+                buttonText = R.string.set,
+                action = Runnable {
+                    preferences.put(BooleanKey.GeneralSimpleMode, false)
+                    startActivity(
+                        Intent(this@MainActivity, PreferencesActivity::class.java)
+                            .setAction("info.nightscout.androidaps.MainActivity")
+                            .putExtra(UiInteraction.PLUGIN_NAME, MaintenancePlugin::class.java.simpleName)
+                    )
+                },
+                validityCheck = { config.isDev() && preferences.get(StringKey.MaintenanceIdentification).isBlank() }
+            )
+
         if (preferences.get(StringKey.ProtectionMasterPassword) == "")
-            rxBus.send(
-                EventNewNotification(
-                    NotificationWithAction(this, Notification.MASTER_PASSWORD_NOT_SET, rh.gs(app.aaps.core.ui.R.string.master_password_not_set), Notification.NORMAL)
-                        .action(R.string.set, Runnable {
-                            startActivity(
-                                Intent(this@MainActivity, PreferencesActivity::class.java)
-                                    .setAction("info.nightscout.androidaps.MainActivity")
-                                    .putExtra(UiInteraction.PREFERENCE, UiInteraction.Preferences.PROTECTION)
-                            )
-                        })
-                )
+            uiInteraction.addNotificationWithAction(
+                id = Notification.MASTER_PASSWORD_NOT_SET,
+                text = rh.gs(app.aaps.core.ui.R.string.master_password_not_set),
+                level = Notification.NORMAL,
+                buttonText = R.string.set,
+                action = { startActivity(Intent(this@MainActivity, PreferencesActivity::class.java).setAction("info.nightscout.androidaps.MainActivity").putExtra(UiInteraction.PREFERENCE, UiInteraction.Preferences.PROTECTION)) },
+                validityCheck = { preferences.get(StringKey.ProtectionMasterPassword) == "" }
             )
         if (preferences.getIfExists(StringKey.AapsDirectoryUri).isNullOrEmpty())
-            rxBus.send(
-                EventNewNotification(
-                    NotificationWithAction(this, Notification.AAPS_DIR_NOT_SELECTED, rh.gs(app.aaps.core.ui.R.string.aaps_directory_not_selected), Notification.IMPORTANCE_HIGH)
-                        .action(R.string.select, Runnable { accessTree?.launch(null) })
-                )
+            uiInteraction.addNotificationWithAction(
+                id = Notification.AAPS_DIR_NOT_SELECTED,
+                text = rh.gs(app.aaps.core.ui.R.string.aaps_directory_not_selected),
+                level = Notification.IMPORTANCE_HIGH,
+                buttonText = R.string.select,
+                action = { accessTree?.launch(null) },
+                validityCheck = { preferences.getIfExists(StringKey.AapsDirectoryUri).isNullOrEmpty() }
             )
     }
 
@@ -451,7 +454,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         val result = super.onMenuOpened(featureId, menu)
         menu.findItem(R.id.nav_treatments)?.isEnabled = profileFunction.getProfile() != null
         if (binding.mainPager.currentItem >= 0) {
-            val plugin = (binding.mainPager.adapter as TabPageAdapter).getPluginAt(binding.mainPager.currentItem)
+            val plugin = (binding.mainPager.adapter as TabPageAdapter?)?.getPluginAt(binding.mainPager.currentItem) ?: return result
             this.menu?.findItem(R.id.nav_plugin_preferences)?.title = rh.gs(R.string.nav_preferences_plugin, plugin.name)
             pluginPreferencesMenuItem?.isEnabled = (binding.mainPager.adapter as TabPageAdapter).getPluginAt(binding.mainPager.currentItem).preferencesId != PluginDescription.PREFERENCE_NONE
         }

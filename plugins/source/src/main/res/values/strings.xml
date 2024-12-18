@@ -12,9 +12,6 @@
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Receive BG values from the \'Build Your Own Dexcom App\'.</string>
-    <string name="eversense">Eversense App (patched)</string>
-    <string name="eversense_shortname" translatable="false">EVR</string>
-    <string name="description_source_eversense">Receive BG values from the patched Eversense app.</string>
     <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Receive BG values from Glimp.</string>
     <string name="mm640g">MM640g</string>
@@ -28,9 +25,6 @@
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">Receive BG values from Tomato app (MiaoMiao device)</string>
-    <string name="aidex">GlucoRx Aidex</string>
-    <string name="aidex_short">Aidex</string>
-    <string name="description_source_aidex">Receive BG values from GlucoRx Aidex CGMS.</string>
     <string name="random_bg">Random BG</string>
     <string name="description_source_random_bg">Generate random BG data (Demo mode only)</string>
     <string name="random_bg_short">BG</string>

@@ -239,7 +239,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
                         action = Action.TT,
                         source = Sources.TTDialog,
                         note = null,
-                        listValues = listValues
+                        listValues = listValues.filterNotNull()
                     ).subscribe()
                 }
 

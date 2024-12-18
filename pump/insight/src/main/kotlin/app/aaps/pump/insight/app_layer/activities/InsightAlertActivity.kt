@@ -10,11 +10,11 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.pump.insight.InsightAlertService
+import app.aaps.pump.insight.databinding.ActivityInsightAlertBinding
 import app.aaps.pump.insight.descriptors.Alert
 import app.aaps.pump.insight.descriptors.AlertStatus
 import app.aaps.pump.insight.utils.AlertUtils
 import dagger.android.support.DaggerAppCompatActivity
-import info.nightscout.androidaps.insight.databinding.ActivityInsightAlertBinding
 import javax.inject.Inject
 
 class InsightAlertActivity : DaggerAppCompatActivity() {

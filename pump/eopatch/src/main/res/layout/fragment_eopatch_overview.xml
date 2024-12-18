@@ -2,10 +2,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="info.nightscout.androidaps.plugins.pump.eopatch.CommonUtils"/>
+
+        <import type="app.aaps.pump.eopatch.CommonUtils" />
+
         <variable
             name="viewmodel"
-            type="info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchOverviewViewModel"/>
+            type="app.aaps.pump.eopatch.ui.viewmodel.EopatchOverviewViewModel" />
     </data>
 
     <RelativeLayout
@@ -498,6 +500,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:orientation="horizontal">
+
             <app.aaps.core.ui.elements.SingleClickButton
                 android:id="@+id/button1"
                 style="@style/ButtonSmallFontStyle"
@@ -508,7 +511,7 @@
                 android:textAllCaps="false"
                 android:text="@string/string_activate_patch"
                 android:enabled="@{!viewmodel.patchConfig.activated}"
-                app:onSafeClick="@{() -> viewmodel.onClickActivation()}"/>
+                app:onSafeClick="@{() -> viewmodel.onClickActivation()}" />
 
             <app.aaps.core.ui.elements.SingleClickButton
                 android:id="@+id/button2"
@@ -520,7 +523,7 @@
                 android:text="@string/string_change_patch"
                 android:textAllCaps="false"
                 android:enabled="@{viewmodel.patchConfig.activated}"
-                app:onSafeClick="@{() -> viewmodel.onClickDeactivation()}"/>
+                app:onSafeClick="@{() -> viewmodel.onClickDeactivation()}" />
 
             <app.aaps.core.ui.elements.SingleClickButton
                 android:id="@+id/button3"
@@ -533,7 +536,7 @@
                 app:text="@{viewmodel.pauseBtnStr}"
                 android:textAllCaps="false"
                 app:visibleOrGone="@{viewmodel.patchConfig.activated}"
-                app:onSafeClick="@{() -> viewmodel.onClickSuspendOrResume()}"/>
+                app:onSafeClick="@{() -> viewmodel.onClickSuspendOrResume()}" />
         </LinearLayout>
     </RelativeLayout>
 </layout>

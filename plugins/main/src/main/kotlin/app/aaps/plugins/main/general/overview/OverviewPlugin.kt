@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
-import androidx.annotation.StringRes
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
@@ -42,7 +41,6 @@ import app.aaps.core.objects.extensions.putString
 import app.aaps.core.objects.extensions.store
 import app.aaps.core.objects.extensions.storeBoolean
 import app.aaps.core.objects.extensions.storeString
-import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.validators.preferences.AdaptiveClickPreference
 import app.aaps.core.validators.preferences.AdaptiveDoublePreference
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
@@ -51,7 +49,6 @@ import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.core.validators.preferences.AdaptiveUnitPreference
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.general.overview.notifications.NotificationStore
-import app.aaps.plugins.main.general.overview.notifications.NotificationWithAction
 import app.aaps.plugins.main.general.overview.notifications.events.EventUpdateOverviewNotification
 import app.aaps.plugins.main.general.overview.notifications.receivers.DismissNotificationReceiver
 import app.aaps.shared.impl.rx.bus.RxBusImpl
@@ -97,31 +94,6 @@ class OverviewPlugin @Inject constructor(
     private var disposable: CompositeDisposable = CompositeDisposable()
 
     override val overviewBus = RxBusImpl(aapsSchedulers, aapsLogger)
-
-    override fun addNotificationWithDialogResponse(id: Int, text: String, level: Int, @StringRes actionButtonId: Int, title: String, message: String) {
-        rxBus.send(
-            EventNewNotification(
-                NotificationWithAction(injector, id, text, level)
-                    .also { n ->
-                        n.action(actionButtonId) {
-                            n.contextForAction?.let { OKDialog.show(it, title, message, null) }
-                        }
-                    })
-        )
-    }
-
-    override fun addNotification(id: Int, text: String, level: Int, @StringRes actionButtonId: Int, action: Runnable) {
-        rxBus.send(
-            EventNewNotification(
-                NotificationWithAction(injector, id, text, level).apply {
-                    action(actionButtonId, action)
-                })
-        )
-    }
-
-    override fun dismissNotification(id: Int) {
-        rxBus.send(EventDismissNotification(id))
-    }
 
     override fun onStart() {
         super.onStart()

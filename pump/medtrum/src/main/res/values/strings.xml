@@ -1,21 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- MedtrumPump -->
-    <string name="key_sn_input" translatable="false">sn_input</string>
-    <string name="key_alarm_setting" translatable="false">alarm_setting</string>
-    <string name="key_patch_expiration" translatable="false">patch_expiration</string>
-    <string name="key_pump_warning_notification" translatable="false">pump_warning_notification</string>
-    <string name="key_pump_warning_expiry_hour" translatable="false">pump_expiry_warning_hour</string>
-    <string name="key_hourly_max_insulin" translatable="false">hourly_max_insulin</string>
-    <string name="key_daily_max_insulin" translatable="false">daily_max_insulin</string>
-    <string name="key_scan_on_connection_error" translatable="false">scan_on_connection_error</string>
-
-    <string name="key_medtrum_pump_settings" translatable="false">medtrum_pump_setting</string>
     <string name="key_pump_state" translatable="false">pump_state</string>
     <string name="key_active_alarms" translatable="false">active_alarms</string>
     <string name="key_last_connection" translatable="false">last_connection</string>
     <string name="key_bolus_start_time" translatable="false">bolus_start_time</string>
-    <string name="key_bolus_amount_to_be_delivered" translatable = "false">bolus_amount_to_be_delivered</string>
+    <string name="key_bolus_amount_to_be_delivered" translatable="false">bolus_amount_to_be_delivered</string>
     <string name="key_last_bolus_time" translatable="false">last_bolus_time</string>
     <string name="key_last_bolus_amount" translatable="false">last_bolus_amount</string>
     <string name="key_session_token" translatable="false">medtrum_session_token</string>

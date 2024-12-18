@@ -19,6 +19,7 @@
     <string name="permission">Uprawnienia</string>
     <string name="need_system_window_permission">Aplikacja wymaga uprawnienia systemowego okna dla powiadomień</string>
     <string name="need_location_permission">Aplikacja wymaga dostępu do lokalizacji dla zarządzania bluetoothem i identyfikacją Wi-Fi</string>
+    <string name="need_background_location_permission">Aplikacja potrzebuje uprawnień do lokalizacji w tle dla automatyzacji</string>
     <string name="need_storage_permission">Aplikacja wymaga zgody na zapis do pamięci, aby móc przechować pliki logów i eksportować ustawienia</string>
     <string name="askforpermission">Zapytaj o uprawnienia</string>
     <string name="need_whitelisting">%1$s potrzebuje wyłączenia z optymalizacji baterii, w celu zapewnienia poprawnego działania</string>
@@ -36,6 +37,7 @@
     <string name="exitwizard">Pomiń Kreatora konfiguracji</string>
     <string name="setupwizard_loop_description">Naciśnij przycisk poniżej, by umożliwić AAPS sugerowanie/wprowadzenie zmian insuliny bazowej</string>
     <string name="setupwizard_sensitivity_description">Wtyczka wrażliwości używana jest w celu określenia wrażliwości i kalkulacji COB. Więcej informacji na:</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
     <string name="setupwizard_aps_description">Wybierz jeden z dostępnych algorytmów. Ułożone są one od najstarszych do najnowszych. Nowszy algorytm jest zazwyczaj bardziej wydajny i agresywny. Jeśli jesteś nowym użytkownikiem, lepiej zacznij od zaawansowanego asystenta posiłku AMA, a nie od najnowszego algorytmu. Zapoznaj się koniecznie z dokumentacją OpenAPS przed wybraniem odpowiedniego algorytmu i jego konfiguracją.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Proszę skonfigurować RileyLink poniżej. Po wybraniu RileyLink, możliwe będzie kontynuowanie konfiguracji, gdy status RileyLink będzie \"Połączony\". To może zająć minutę.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Uwaga:</b> Możesz kontynuować konfigurację po skonfigurowaniu pompy.\n</string>
@@ -44,6 +46,8 @@
     <string name="readstatus">Odczyt stanu</string>
     <string name="data_choices">Wybór Danych</string>
     <string name="fabric_upload">Przesyłanie danych fabric</string>
+    <string name="unattended_settings_export">Automatyczny Eksport Ustawień</string>
+    <string name="unattended_settings_export_summary">Włączenie tej opcji spowoduje, że twoje hasło zostanie bezpieczne zapisane na telefonie</string>
     <string name="identification">Identyfikator (email, nick na FB lub Discordzie itp.)</string>
     <string name="request">Żądanie</string>
     <string name="apsmode_title">Tryb APS</string>
@@ -88,6 +92,8 @@
     <string name="check_preferences_import_btn">Importuj</string>
     <string name="check_preferences_import_anyway_btn">Importuj mimo to (NIEBEZPIECZNE!)</string>
     <string name="import_setting">Importuj ustawienia</string>
+    <string name="aaps_directory">katalog AAPS</string>
+    <string name="select_aaps_directory">Wybierz katalog AAPS do przechowywania eksportów, konfiguracji itp.</string>
     <string name="check_preferences_before_import">Proszę sprawdzić ustawienia przed importem:</string>
     <string name="check_preferences_cannot_import">Ustawienia nie mogą być zaimportowane!</string>
     <string name="check_preferences_dangerous_import">Ustawienia nie powinny być importowane!</string>
@@ -98,17 +104,20 @@
     <string name="different_password_used">Ten plik zaszyfrowano innym hasłem głównym. Podaj te stare hasło główne którego używałeś do eksportu, aby odszyfrować plik.</string>
     <string name="master_password_will_be_replaced">W efekcie udanego importu bieżące hasło główne ZOSTANIE ZASTĄPIONE starym hasłem głównym z importowanych ustawień!</string>
     <string name="exported">Ustawienia wyeksportowane</string>
+    <string name="exported_failed">Eksport ustawień nie powiódł się!</string>
     <string name="filenotfound">Nie znaleziono pliku</string>
     <string name="goto_main_try_again">Wróć do ekranu głównego i spróbuj ponownie.</string>
     <string name="restartingapp">Zamykanie aplikacji w celu wprowadzenia ustawień.</string>
     <string name="ue_exported">Wyeksportowano wpisy użytkownika</string>
     <string name="protection">Z ochroną</string>
+    <string name="master_password_missing">Hasło główne nie jest ustawione!\n\nProszę ustawić swoje hasło główne w Ustawieniach (%1$s)</string>
     <!--    Maintenance-->
     <string name="maintenance">Konserwacja</string>
     <string name="maintenance_shortname">MAINT</string>
     <string name="description_maintenance">Dostarcza kilka funkcji używanych do konserwacji (np. wysyłanie logów, kasowanie logów).</string>
     <string name="database_cleanup">Czyszczenie bazy danych</string>
     <string name="reset_db_confirm">Na pewno chcesz zresetować bazy danych?</string>
+    <string name="reset_aps_results_confirm">Czy na pewno chcesz zresetować zapisane wyniki APS?</string>
     <string name="maintenance_settings">Ustawienia Konserwacji</string>
     <string name="maintenance_email">Odbiorca E-maila</string>
     <string name="maintenance_amount">Liczba logów do wysłania</string>
@@ -155,4 +164,6 @@
     <string name="metadata_label_encryption">Szyfrowanie pliku</string>
     <string name="metadata_format_new">Nowy zaszyfrowany format</string>
     <string name="metadata_format_other">Nieznany format eksportu</string>
+    <string name="reset_aps_results">Zresetuj wyniki APS</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Błąd dostępu do systemu plików. Wybierz prawidłowo katalog AAPS.</string>
 </resources>

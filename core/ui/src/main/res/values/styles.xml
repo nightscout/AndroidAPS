@@ -356,7 +356,7 @@
     </style>
 
     <!--    Common Buttons -->
-    <dimen name="gray_material_button_margin_horizontal">5dp</dimen>
+    <dimen name="gray_material_button_margin_horizontal">2dp</dimen>
 
     <style name="GrayButton" parent="Widget.MaterialComponents.Button">
         <item name="android:backgroundTint">@color/mtrl_btn_bg_color_selector_grey</item>

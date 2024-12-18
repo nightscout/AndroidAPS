@@ -8,6 +8,7 @@
     <string name="label_actions_tile">AAPS (Действия)</string>
     <string name="label_temp_target_tile">AAPS(ВремЦель)</string>
     <string name="label_quick_wizard_tile">AAPS(Мастер)</string>
+    <string name="label_user_action_tile">AAPS (действие пользователя)</string>
     <string name="label_warning_sync">Данные не поступают!</string>
     <string name="label_warning_old">Старые данные!</string>
     <string name="label_warning_since">Длится с: %1$s</string>
@@ -31,6 +32,8 @@
     <string name="pref_show_phone_battery">Отображать заряд батареи телефона</string>
     <string name="pref_show_rig_battery">Отображать заряд батареи системы</string>
     <string name="pref_show_basal_rate">Отображать БС</string>
+    <string name="pref_show_temp_target">Показывать временную цель</string>
+    <string name="pref_show_reservoir_level">Показывать уровень резервуара</string>
     <string name="pref_show_loop_status">Отображать состояние цикла</string>
     <string name="pref_show_bg">Отображать ГК</string>
     <string name="pref_show_bgi">Отображать ГКИ (BGI)</string>
@@ -90,6 +93,7 @@
     <string name="action_duration">Длительность</string>
     <string name="action_tempt_confirmation">Запрошена временная цель</string>
     <string name="action_quick_wizard_confirmation">Запрошен мастер настройки</string>
+    <string name="action_user_action_confirmation">Запрошено действие пользователя</string>
     <string name="action_treatment_confirmation">Запрошена терапия</string>
     <string name="action_bolus_confirmation">Запрошен болюс</string>
     <string name="action_wizard_confirmation">Расчет запрошен</string>
@@ -148,6 +152,7 @@
     <string name="pref_vibrate_hourly">Почасовая вибрация</string>
     <string name="pref_show_weeknumber">Показывать номер недели</string>
     <string name="pref_include_external">Включить внешние представления в шаблон</string>
+    <string name="pref_switch_external">Включить внешние данные на циферблате</string>
     <string name="custom_pref_show_seconds">Показывать секунды</string>
     <string name="digitalstyle_pref_your_style">Ваш стиль:</string>
     <string name="digitalstyle_style_none">без стиля</string>

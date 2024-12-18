@@ -40,8 +40,8 @@ fun app.aaps.core.data.ue.ValueWithUnit.toDb(): app.aaps.database.entities.Value
         is app.aaps.core.data.ue.ValueWithUnit.UnitPerHour  -> app.aaps.database.entities.ValueWithUnit.UnitPerHour(value)
     }
 
-fun List<app.aaps.database.entities.ValueWithUnit?>.fromDb(): List<app.aaps.core.data.ue.ValueWithUnit?> =
-    this.map { it?.fromDb() }
+fun List<app.aaps.database.entities.ValueWithUnit>.fromDb(): List<app.aaps.core.data.ue.ValueWithUnit> =
+    this.map { it.fromDb() }
 
-fun List<app.aaps.core.data.ue.ValueWithUnit?>.toDb(): List<app.aaps.database.entities.ValueWithUnit?> =
-    this.map { it?.toDb() }
+fun List<app.aaps.core.data.ue.ValueWithUnit>.toDb(): List<app.aaps.database.entities.ValueWithUnit> =
+    this.map { it.toDb() }

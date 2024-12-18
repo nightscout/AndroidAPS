@@ -10,9 +10,11 @@ import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.viewbinding.ViewBinding
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.rx.events.EventUpdateSelectedWatchface
 import app.aaps.wear.R
 import app.aaps.wear.databinding.ActivityDigitalstyleBinding
 import app.aaps.wear.watchfaces.utils.BaseWatchFace
+import app.aaps.wear.watchfaces.utils.WatchfaceViewAdapter.Companion.SelectedWatchFace
 
 class DigitalStyleWatchface : BaseWatchFace() {
 
@@ -20,6 +22,8 @@ class DigitalStyleWatchface : BaseWatchFace() {
 
     override fun inflateLayout(inflater: LayoutInflater): ViewBinding {
         binding = ActivityDigitalstyleBinding.inflate(inflater)
+        sp.putInt(R.string.key_last_selected_watchface, SelectedWatchFace.DIGITAL.ordinal)
+        rxBus.send(EventUpdateSelectedWatchface())
         return binding
     }
 

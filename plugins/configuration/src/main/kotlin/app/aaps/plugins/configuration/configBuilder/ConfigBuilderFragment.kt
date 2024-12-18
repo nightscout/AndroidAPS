@@ -90,7 +90,7 @@ class ConfigBuilderFragment : DaggerFragment() {
             pluginType = PluginType.PROFILE,
             plugins = activePlugin.getSpecificPluginsVisibleInList(PluginType.PROFILE),
             pluginViewHolders = pluginViewHolders,
-            fragment = this,
+            activity = requireActivity(),
             parent = binding.categories
         )
         if (config.APS || config.PUMPCONTROL || config.isEngineeringMode())
@@ -100,7 +100,7 @@ class ConfigBuilderFragment : DaggerFragment() {
                 pluginType = PluginType.INSULIN,
                 plugins = activePlugin.getSpecificPluginsVisibleInList(PluginType.INSULIN),
                 pluginViewHolders = pluginViewHolders,
-                fragment = this,
+                activity = requireActivity(),
                 parent = binding.categories
             )
         if (!config.NSCLIENT) {
@@ -110,7 +110,7 @@ class ConfigBuilderFragment : DaggerFragment() {
                 pluginType = PluginType.BGSOURCE,
                 plugins = activePlugin.getSpecificPluginsVisibleInList(PluginType.BGSOURCE),
                 pluginViewHolders = pluginViewHolders,
-                fragment = this,
+                activity = requireActivity(),
                 parent = binding.categories
             )
             configBuilder.createViewsForPlugins(
@@ -119,7 +119,7 @@ class ConfigBuilderFragment : DaggerFragment() {
                 pluginType = PluginType.SMOOTHING,
                 plugins = activePlugin.getSpecificPluginsVisibleInList(PluginType.SMOOTHING),
                 pluginViewHolders = pluginViewHolders,
-                fragment = this,
+                activity = requireActivity(),
                 parent = binding.categories
             )
             configBuilder.createViewsForPlugins(
@@ -128,7 +128,7 @@ class ConfigBuilderFragment : DaggerFragment() {
                 pluginType = PluginType.PUMP,
                 plugins = activePlugin.getSpecificPluginsVisibleInList(PluginType.PUMP),
                 pluginViewHolders = pluginViewHolders,
-                fragment = this,
+                activity = requireActivity(),
                 parent = binding.categories
             )
         }
@@ -139,7 +139,7 @@ class ConfigBuilderFragment : DaggerFragment() {
                 pluginType = PluginType.SENSITIVITY,
                 plugins = activePlugin.getSpecificPluginsVisibleInList(PluginType.SENSITIVITY),
                 pluginViewHolders = pluginViewHolders,
-                fragment = this,
+                activity = requireActivity(),
                 parent = binding.categories
             )
         if (config.APS) {
@@ -149,7 +149,7 @@ class ConfigBuilderFragment : DaggerFragment() {
                 pluginType = PluginType.APS,
                 plugins = activePlugin.getSpecificPluginsVisibleInList(PluginType.APS),
                 pluginViewHolders = pluginViewHolders,
-                fragment = this,
+                activity = requireActivity(),
                 parent = binding.categories
             )
             configBuilder.createViewsForPlugins(
@@ -158,7 +158,7 @@ class ConfigBuilderFragment : DaggerFragment() {
                 pluginType = PluginType.LOOP,
                 plugins = activePlugin.getSpecificPluginsVisibleInList(PluginType.LOOP),
                 pluginViewHolders = pluginViewHolders,
-                fragment = this,
+                activity = requireActivity(),
                 parent = binding.categories
             )
             configBuilder.createViewsForPlugins(
@@ -167,7 +167,7 @@ class ConfigBuilderFragment : DaggerFragment() {
                 pluginType = PluginType.CONSTRAINTS,
                 plugins = activePlugin.getSpecificPluginsVisibleInList(PluginType.CONSTRAINTS),
                 pluginViewHolders = pluginViewHolders,
-                fragment = this,
+                activity = requireActivity(),
                 parent = binding.categories
             )
         }
@@ -177,7 +177,7 @@ class ConfigBuilderFragment : DaggerFragment() {
             pluginType = PluginType.SYNC,
             plugins = activePlugin.getSpecificPluginsVisibleInList(PluginType.SYNC),
             pluginViewHolders = pluginViewHolders,
-            fragment = this,
+            activity = requireActivity(),
             parent = binding.categories
         )
         configBuilder.createViewsForPlugins(
@@ -186,7 +186,7 @@ class ConfigBuilderFragment : DaggerFragment() {
             pluginType = PluginType.GENERAL,
             plugins = activePlugin.getSpecificPluginsVisibleInList(PluginType.GENERAL),
             pluginViewHolders = pluginViewHolders,
-            fragment = this,
+            activity = requireActivity(),
             parent = binding.categories
         )
     }

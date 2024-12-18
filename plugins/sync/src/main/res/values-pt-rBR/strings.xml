@@ -13,7 +13,6 @@
     <string name="ns_create_announcements_from_carbs_req_title">Criar anúncios a partir da alerta de carboidratos requeridos</string>
     <string name="ns_create_announcements_from_errors_summary">Criar um anúncio no Nightscout para caixas de diálogo de erro e alertas locais (também podem ser visualizados em Careportal sob tratamentos)</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Criar anúncios no Nightscout para alertas de carboidratos requeridos</string>
-    <string name="description_ns_client">Sincroniza seus dados com o Nightscout</string>
     <string name="description_ns_client_v3">Sincroniza seus dados com o Nightscout usando a API v3</string>
     <string name="blocked_by_charging">Bloqueado pelas opções de carregamento</string>
     <string name="blocked_by_connectivity">Bloqueado pelas opções de conectividade</string>
@@ -23,21 +22,10 @@
     <string name="ns_malfunction">Erro de funcionamento do NSCliente. Pondere reiniciar o NS e NSCliente.</string>
     <!-- NSClient -->
     <string name="no_write_permission">NSCLIENT não tem permissão de escrita. Senha da API errada?</string>
-    <string name="ns_client_v3">NSClienteV3</string>
-    <string name="ns_client_v3_short_name">NSV3</string>
     <string name="ns_client">NSCliente</string>
-    <string name="ns_client_short_name">NSCI</string>
     <string name="ns_client_url">URL:</string>
     <string name="restart">Reiniciar</string>
-    <string name="ns_client_internal_title">NSCliente</string>
     <string name="ns_client_url_title">Nightscout URL</string>
-    <string name="ns_client_url_dialog_message">Introduza o Nightscout URL</string>
-    <string name="ns_client_secret_title">NS API secret</string>
-    <string name="ns_client_secret_dialog_title">NS API secret</string>
-    <string name="ns_client_secret_dialog_message">Insira NS API secret (min 12 caract.)</string>
-    <string name="nsclient_token_title">Token de acesso NS</string>
-    <string name="nsclient_token_dialog_title">Token de acesso NS</string>
-    <string name="nsclient_token_dialog_message">Token de acesso gerado na página de administração do NS (mínimo de 17 caracteres)</string>
     <string name="deliver_now">Entregar agora</string>
     <string name="queue">Fila:</string>
     <string name="status">Status:</string>

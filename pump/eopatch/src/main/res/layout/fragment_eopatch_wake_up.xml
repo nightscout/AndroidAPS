@@ -4,11 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="info.nightscout.androidaps.plugins.pump.eopatch.code.PatchStep" />
+
+        <import type="app.aaps.pump.eopatch.code.PatchStep" />
 
         <variable
             name="viewModel"
-            type="info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel" />
+            type="app.aaps.pump.eopatch.ui.viewmodel.EopatchViewModel" />
     </data>
 
     <ScrollView
@@ -115,7 +116,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" >
+                app:layout_constraintBottom_toBottomOf="parent">
 
                 <Button
                     android:id="@+id/btn_negative"

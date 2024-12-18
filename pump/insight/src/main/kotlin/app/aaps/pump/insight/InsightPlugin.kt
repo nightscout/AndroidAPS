@@ -70,7 +70,6 @@ import app.aaps.pump.insight.exceptions.app_layer_errors.AppLayerErrorException
 import app.aaps.pump.insight.exceptions.app_layer_errors.NoActiveTBRToCancelException
 import app.aaps.pump.insight.utils.ExceptionTranslator
 import app.aaps.pump.insight.utils.ParameterBlockUtil
-import info.nightscout.androidaps.insight.R
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.*
@@ -462,7 +461,7 @@ class InsightPlugin @Inject constructor(
                     val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType === BS.Type.SMB, detailedBolusInfo.id)
                     val bolusingEvent = EventOverviewBolusProgress
                     bolusingEvent.t = t
-                    bolusingEvent.status = rh.gs(info.nightscout.pump.common.R.string.bolus_delivered_so_far, 0.0, insulin)
+                    bolusingEvent.status = rh.gs(app.aaps.pump.common.R.string.bolus_delivered_so_far, 0.0, insulin)
                     bolusingEvent.percent = 0
                     rxBus.send(bolusingEvent)
                     var trials = 0
@@ -505,13 +504,13 @@ class InsightPlugin @Inject constructor(
                             val percentBefore = bolusingEvent.percent
                             bolusingEvent.percent = (100.0 / activeBolus.initialAmount * (activeBolus.initialAmount - activeBolus.remainingAmount)).toInt()
                             bolusingEvent.status =
-                                rh.gs(info.nightscout.pump.common.R.string.bolus_delivered_so_far, activeBolus.initialAmount - activeBolus.remainingAmount, activeBolus.initialAmount)
+                                rh.gs(app.aaps.pump.common.R.string.bolus_delivered_so_far, activeBolus.initialAmount - activeBolus.remainingAmount, activeBolus.initialAmount)
                             if (percentBefore != bolusingEvent.percent) rxBus.send(bolusingEvent)
                         } else {
                             synchronized(_bolusLock) {
                                 if (bolusCancelled || trials == -1 || trials++ >= 5) {
                                     if (!bolusCancelled) {
-                                        bolusingEvent.status = rh.gs(info.nightscout.pump.common.R.string.bolus_delivered_so_far, insulin, insulin)
+                                        bolusingEvent.status = rh.gs(app.aaps.pump.common.R.string.bolus_delivered_so_far, insulin, insulin)
                                         bolusingEvent.percent = 100
                                         rxBus.send(bolusingEvent)
                                     }

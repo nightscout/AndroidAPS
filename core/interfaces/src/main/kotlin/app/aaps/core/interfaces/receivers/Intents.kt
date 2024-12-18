@@ -39,18 +39,8 @@ interface Intents {
         const val GLIMP_BG = "it.ct.glicemia.ACTION_GLUCOSE_MEASURED"
         const val DEXCOM_BG = "com.dexcom.cgm.EXTERNAL_BROADCAST"
         const val DEXCOM_G7_BG = "com.dexcom.g7.EXTERNAL_BROADCAST"
-        const val EVERSENSE_BG = "com.senseonics.AndroidAPSEventSubscriber.BROADCAST"
         const val POCTECH_BG = "com.china.poctech.data"
         const val TOMATO_BG = "com.fanqies.tomatofn.BgEstimate"
-
-        // Aidex -> AAPS
-        var AIDEX_NEW_BG_ESTIMATE = "com.microtechmd.cgms.aidex.action.BgEstimate"
-        var AIDEX_BG_TYPE = "com.microtechmd.cgms.aidex.BgType"
-        var AIDEX_BG_VALUE = "com.microtechmd.cgms.aidex.BgValue"
-        var AIDEX_BG_SLOPE_NAME = "com.microtechmd.cgms.aidex.BgSlopeName"
-        var AIDEX_TIMESTAMP = "com.microtechmd.cgms.aidex.Time" // epoch in ms
-        var AIDEX_TRANSMITTER_SN = "com.microtechmd.cgms.aidex.TransmitterSerialNumber"
-        var AIDEX_SENSOR_ID = "com.microtechmd.cgms.aidex.SensorId"
 
         // Broadcast status
         const val AAPS_BROADCAST = "info.nightscout.androidaps.status"

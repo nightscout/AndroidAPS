@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "info.nightscout.androidaps.plugins.pump.omnipod.common"
+    namespace = "app.aaps.pump.omnipod.common"
 }
 
 dependencies {

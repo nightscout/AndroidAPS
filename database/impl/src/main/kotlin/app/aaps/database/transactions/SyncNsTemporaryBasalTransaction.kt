@@ -17,7 +17,12 @@ class SyncNsTemporaryBasalTransaction(private val temporaryBasals: List<Temporar
                 // not ending event
                 val current = temporaryBasal.interfaceIDs.nightscoutId?.let {
                     database.temporaryBasalDao.findByNSId(it) ?: temporaryBasal.interfaceIDs.pumpId?.let {
-                        database.temporaryBasalDao.findByPumpIds(temporaryBasal.interfaceIDs.pumpId!!, temporaryBasal.interfaceIDs.pumpType!!, temporaryBasal.interfaceIDs.pumpSerial!!)
+                        val pumpId = temporaryBasal.interfaceIDs.pumpId
+                        val pumpType = temporaryBasal.interfaceIDs.pumpType
+                        val pumpSerial = temporaryBasal.interfaceIDs.pumpSerial
+                        if (pumpId != null && pumpType != null && pumpSerial != null)
+                            database.temporaryBasalDao.findByPumpIds(pumpId, pumpType, pumpSerial)
+                        else null
                     }
                 }
 

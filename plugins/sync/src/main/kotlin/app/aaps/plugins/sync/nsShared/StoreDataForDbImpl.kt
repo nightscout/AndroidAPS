@@ -1,6 +1,7 @@
 package app.aaps.plugins.sync.nsShared
 
 import android.os.SystemClock
+import androidx.annotation.VisibleForTesting
 import app.aaps.core.data.model.BCR
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.CA
@@ -58,35 +59,35 @@ class StoreDataForDbImpl @Inject constructor(
     private val uiInteraction: UiInteraction
 ) : StoreDataForDb {
 
-    override val glucoseValues: MutableList<GV> = mutableListOf()
-    override val boluses: MutableList<BS> = mutableListOf()
-    override val carbs: MutableList<CA> = mutableListOf()
-    override val temporaryTargets: MutableList<TT> = mutableListOf()
-    override val effectiveProfileSwitches: MutableList<EPS> = mutableListOf()
-    override val bolusCalculatorResults: MutableList<BCR> = mutableListOf()
-    override val therapyEvents: MutableList<TE> = mutableListOf()
-    override val extendedBoluses: MutableList<EB> = mutableListOf()
-    override val temporaryBasals: MutableList<TB> = mutableListOf()
-    override val profileSwitches: MutableList<PS> = mutableListOf()
-    override val offlineEvents: MutableList<OE> = mutableListOf()
-    override val foods: MutableList<FD> = mutableListOf()
+    private val glucoseValues: MutableList<GV> = mutableListOf()
+    private val boluses: MutableList<BS> = mutableListOf()
+    private val carbs: MutableList<CA> = mutableListOf()
+    private val temporaryTargets: MutableList<TT> = mutableListOf()
+    private val effectiveProfileSwitches: MutableList<EPS> = mutableListOf()
+    private val bolusCalculatorResults: MutableList<BCR> = mutableListOf()
+    private val therapyEvents: MutableList<TE> = mutableListOf()
+    private val extendedBoluses: MutableList<EB> = mutableListOf()
+    private val temporaryBasals: MutableList<TB> = mutableListOf()
+    private val profileSwitches: MutableList<PS> = mutableListOf()
+    private val offlineEvents: MutableList<OE> = mutableListOf()
+    private val foods: MutableList<FD> = mutableListOf()
 
-    override val nsIdGlucoseValues: MutableList<GV> = mutableListOf()
-    override val nsIdBoluses: MutableList<BS> = mutableListOf()
-    override val nsIdCarbs: MutableList<CA> = mutableListOf()
-    override val nsIdTemporaryTargets: MutableList<TT> = mutableListOf()
-    override val nsIdEffectiveProfileSwitches: MutableList<EPS> = mutableListOf()
-    override val nsIdBolusCalculatorResults: MutableList<BCR> = mutableListOf()
-    override val nsIdTherapyEvents: MutableList<TE> = mutableListOf()
-    override val nsIdExtendedBoluses: MutableList<EB> = mutableListOf()
-    override val nsIdTemporaryBasals: MutableList<TB> = mutableListOf()
-    override val nsIdProfileSwitches: MutableList<PS> = mutableListOf()
-    override val nsIdOfflineEvents: MutableList<OE> = mutableListOf()
-    override val nsIdDeviceStatuses: MutableList<DS> = mutableListOf()
-    override val nsIdFoods: MutableList<FD> = mutableListOf()
+    @VisibleForTesting val nsIdGlucoseValues: MutableList<GV> = mutableListOf()
+    @VisibleForTesting val nsIdBoluses: MutableList<BS> = mutableListOf()
+    @VisibleForTesting val nsIdCarbs: MutableList<CA> = mutableListOf()
+    @VisibleForTesting val nsIdTemporaryTargets: MutableList<TT> = mutableListOf()
+    @VisibleForTesting val nsIdEffectiveProfileSwitches: MutableList<EPS> = mutableListOf()
+    @VisibleForTesting val nsIdBolusCalculatorResults: MutableList<BCR> = mutableListOf()
+    @VisibleForTesting val nsIdTherapyEvents: MutableList<TE> = mutableListOf()
+    @VisibleForTesting val nsIdExtendedBoluses: MutableList<EB> = mutableListOf()
+    @VisibleForTesting val nsIdTemporaryBasals: MutableList<TB> = mutableListOf()
+    @VisibleForTesting val nsIdProfileSwitches: MutableList<PS> = mutableListOf()
+    @VisibleForTesting val nsIdOfflineEvents: MutableList<OE> = mutableListOf()
+    @VisibleForTesting val nsIdDeviceStatuses: MutableList<DS> = mutableListOf()
+    @VisibleForTesting val nsIdFoods: MutableList<FD> = mutableListOf()
 
-    override val deleteTreatment: MutableList<String> = mutableListOf()
-    override val deleteGlucoseValue: MutableList<String> = mutableListOf()
+    private val deleteTreatment: MutableList<String> = mutableListOf()
+    private val deleteGlucoseValue: MutableList<String> = mutableListOf()
     private val userEntries: MutableList<UE> = mutableListOf()
 
     private val inserted = HashMap<String, Long>()
@@ -131,162 +132,193 @@ class StoreDataForDbImpl @Inject constructor(
     }
 
     override fun storeFoodsToDb() {
-        if (foods.isNotEmpty())
-            disposable += persistenceLayer.syncNsFood(foods)
-                .subscribeBy { result ->
-                    foods.clear()
-                    repeat(result.updated.size) { updated.inc(FD::class.java.simpleName) }
-                    repeat(result.inserted.size) { inserted.inc(FD::class.java.simpleName) }
-                    repeat(result.invalidated.size) { nsIdUpdated.inc(FD::class.java.simpleName) }
-                    sendLog("Food", FD::class.java.simpleName)
-                }
+        synchronized(foods) {
+            if (foods.isNotEmpty()) {
+                disposable += persistenceLayer.syncNsFood(foods.toMutableList())
+                    .subscribeBy { result ->
+                        repeat(result.updated.size) { updated.inc(FD::class.java.simpleName) }
+                        repeat(result.inserted.size) { inserted.inc(FD::class.java.simpleName) }
+                        repeat(result.invalidated.size) { nsIdUpdated.inc(FD::class.java.simpleName) }
+                        sendLog("Food", FD::class.java.simpleName)
+                    }
+                foods.clear()
+            }
+        }
 
         SystemClock.sleep(pause)
         rxBus.send(EventNSClientNewLog("● DONE PROCESSING FOOD", ""))
     }
 
     override fun storeTreatmentsToDb() {
-        if (boluses.isNotEmpty())
-            disposable += persistenceLayer.syncNsBolus(boluses)
-                .subscribeBy { result ->
-                    boluses.clear()
-                    repeat(result.inserted.size) { inserted.inc(BS::class.java.simpleName) }
-                    repeat(result.invalidated.size) { invalidated.inc(BS::class.java.simpleName) }
-                    repeat(result.updatedNsId.size) { nsIdUpdated.inc(BS::class.java.simpleName) }
-                    repeat(result.updated.size) { updated.inc(BS::class.java.simpleName) }
-                    sendLog("Bolus", BS::class.java.simpleName)
-                }
-
-        SystemClock.sleep(pause)
-
-        if (carbs.isNotEmpty())
-            disposable += persistenceLayer.syncNsCarbs(carbs)
-                .subscribeBy { result ->
-                    carbs.clear()
-                    repeat(result.inserted.size) { inserted.inc(CA::class.java.simpleName) }
-                    repeat(result.invalidated.size) { invalidated.inc(CA::class.java.simpleName) }
-                    repeat(result.updated.size) { updated.inc(CA::class.java.simpleName) }
-                    repeat(result.updatedNsId.size) { nsIdUpdated.inc(CA::class.java.simpleName) }
-                    sendLog("Carbs", CA::class.java.simpleName)
-                }
-
-        SystemClock.sleep(pause)
-
-        if (temporaryTargets.isNotEmpty())
-            disposable += persistenceLayer.syncNsTemporaryTargets(temporaryTargets = temporaryTargets)
-                .subscribeBy { result ->
-                    temporaryTargets.clear()
-                    repeat(result.inserted.size) { inserted.inc(TT::class.java.simpleName) }
-                    repeat(result.invalidated.size) { invalidated.inc(TT::class.java.simpleName) }
-                    repeat(result.ended.size) { ended.inc(TT::class.java.simpleName) }
-                    repeat(result.updatedNsId.size) { nsIdUpdated.inc(TT::class.java.simpleName) }
-                    repeat(result.updatedDuration.size) { durationUpdated.inc(TT::class.java.simpleName) }
-                    sendLog("TemporaryTarget", TT::class.java.simpleName)
-                }
-
-        SystemClock.sleep(pause)
-
-        if (temporaryBasals.isNotEmpty())
-            disposable += persistenceLayer.syncNsTemporaryBasals(temporaryBasals)
-                .subscribeBy { result ->
-                    temporaryBasals.clear()
-                    repeat(result.inserted.size) { inserted.inc(TB::class.java.simpleName) }
-                    repeat(result.invalidated.size) { invalidated.inc(TB::class.java.simpleName) }
-                    repeat(result.ended.size) { ended.inc(TB::class.java.simpleName) }
-                    repeat(result.updatedNsId.size) { nsIdUpdated.inc(TB::class.java.simpleName) }
-                    repeat(result.updatedDuration.size) { durationUpdated.inc(TB::class.java.simpleName) }
-                    sendLog("TemporaryBasal", TB::class.java.simpleName)
-                }
-
-        SystemClock.sleep(pause)
-
-        if (effectiveProfileSwitches.isNotEmpty())
-            disposable += persistenceLayer.syncNsEffectiveProfileSwitches(effectiveProfileSwitches)
-                .subscribeBy { result ->
-                    effectiveProfileSwitches.clear()
-                    repeat(result.inserted.size) { inserted.inc(EPS::class.java.simpleName) }
-                    repeat(result.invalidated.size) { invalidated.inc(EPS::class.java.simpleName) }
-                    repeat(result.updatedNsId.size) { nsIdUpdated.inc(EPS::class.java.simpleName) }
-                    sendLog("EffectiveProfileSwitch", EPS::class.java.simpleName)
-                }
-
-        SystemClock.sleep(pause)
-
-        if (profileSwitches.isNotEmpty())
-            disposable += persistenceLayer.syncNsProfileSwitches(profileSwitches)
-                .subscribeBy { result ->
-                    profileSwitches.clear()
-                    repeat(result.inserted.size) { inserted.inc(PS::class.java.simpleName) }
-                    repeat(result.invalidated.size) { invalidated.inc(PS::class.java.simpleName) }
-                    repeat(result.updatedNsId.size) { nsIdUpdated.inc(PS::class.java.simpleName) }
-                    sendLog("ProfileSwitch", PS::class.java.simpleName)
-                }
-
-        SystemClock.sleep(pause)
-
-        if (bolusCalculatorResults.isNotEmpty())
-            disposable += persistenceLayer.syncNsBolusCalculatorResults(bolusCalculatorResults)
-                .subscribeBy { result ->
-                    bolusCalculatorResults.clear()
-                    repeat(result.inserted.size) { inserted.inc(BCR::class.java.simpleName) }
-                    repeat(result.invalidated.size) { invalidated.inc(BCR::class.java.simpleName) }
-                    repeat(result.updatedNsId.size) { nsIdUpdated.inc(BCR::class.java.simpleName) }
-                    sendLog("BolusCalculatorResult", BCR::class.java.simpleName)
-                }
-
-        SystemClock.sleep(pause)
-
-        if (preferences.get(BooleanKey.NsClientAcceptTherapyEvent) || config.NSCLIENT)
-            therapyEvents.filter { it.type == TE.Type.ANNOUNCEMENT }.forEach {
-                if (it.timestamp > dateUtil.now() - 15 * 60 * 1000L &&
-                    it.note?.isNotEmpty() == true &&
-                    it.enteredBy != sp.getString("careportal_enteredby", "AndroidAPS")
-                ) {
-                    if (preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements))
-                        uiInteraction.addNotificationValidFor(Notification.NS_ANNOUNCEMENT, it.note ?: "", Notification.ANNOUNCEMENT, 60)
-                }
-            }
-        if (therapyEvents.isNotEmpty())
-            disposable += persistenceLayer.syncNsTherapyEvents(therapyEvents)
-                .subscribeBy { result ->
-                    therapyEvents.clear()
-                    repeat(result.inserted.size) { inserted.inc(TE::class.java.simpleName) }
-                    repeat(result.invalidated.size) { invalidated.inc(TE::class.java.simpleName) }
-                    repeat(result.updatedNsId.size) { nsIdUpdated.inc(TE::class.java.simpleName) }
-                    repeat(result.updatedDuration.size) { durationUpdated.inc(TE::class.java.simpleName) }
-                    sendLog("TherapyEvent", TE::class.java.simpleName)
-                }
-
-        SystemClock.sleep(pause)
-
-        if (offlineEvents.isNotEmpty())
-            disposable += persistenceLayer.syncNsOfflineEvents(offlineEvents)
-                .subscribeBy { result ->
-                    offlineEvents.clear()
-                    repeat(result.inserted.size) { inserted.inc(OE::class.java.simpleName) }
-                    repeat(result.invalidated.size) { invalidated.inc(OE::class.java.simpleName) }
-                    repeat(result.ended.size) { ended.inc(OE::class.java.simpleName) }
-                    repeat(result.updatedNsId.size) { nsIdUpdated.inc(OE::class.java.simpleName) }
-                    repeat(result.updatedDuration.size) { durationUpdated.inc(OE::class.java.simpleName) }
-                    sendLog("OfflineEvent", OE::class.java.simpleName)
-                }
-
-        SystemClock.sleep(pause)
-
-        if (extendedBoluses.isNotEmpty())
-            disposable += persistenceLayer.syncNsExtendedBoluses(extendedBoluses)
-                .subscribeBy { result ->
-                    extendedBoluses.clear()
-                    result.inserted.forEach {
-                        if (it.isEmulatingTempBasal) virtualPump.fakeDataDetected = true
-                        inserted.inc(EB::class.java.simpleName)
+        synchronized(boluses) {
+            if (boluses.isNotEmpty()) {
+                disposable += persistenceLayer.syncNsBolus(boluses.toMutableList())
+                    .subscribeBy { result ->
+                        repeat(result.inserted.size) { inserted.inc(BS::class.java.simpleName) }
+                        repeat(result.invalidated.size) { invalidated.inc(BS::class.java.simpleName) }
+                        repeat(result.updatedNsId.size) { nsIdUpdated.inc(BS::class.java.simpleName) }
+                        repeat(result.updated.size) { updated.inc(BS::class.java.simpleName) }
+                        sendLog("Bolus", BS::class.java.simpleName)
                     }
-                    repeat(result.invalidated.size) { invalidated.inc(EB::class.java.simpleName) }
-                    repeat(result.ended.size) { ended.inc(EB::class.java.simpleName) }
-                    repeat(result.updatedNsId.size) { nsIdUpdated.inc(EB::class.java.simpleName) }
-                    repeat(result.updatedDuration.size) { durationUpdated.inc(EB::class.java.simpleName) }
-                    sendLog("ExtendedBolus", EB::class.java.simpleName)
+                boluses.clear()
+            }
+        }
+
+        SystemClock.sleep(pause)
+
+        synchronized(carbs) {
+            if (carbs.isNotEmpty()) {
+                disposable += persistenceLayer.syncNsCarbs(carbs.toMutableList())
+                    .subscribeBy { result ->
+                        repeat(result.inserted.size) { inserted.inc(CA::class.java.simpleName) }
+                        repeat(result.invalidated.size) { invalidated.inc(CA::class.java.simpleName) }
+                        repeat(result.updated.size) { updated.inc(CA::class.java.simpleName) }
+                        repeat(result.updatedNsId.size) { nsIdUpdated.inc(CA::class.java.simpleName) }
+                        sendLog("Carbs", CA::class.java.simpleName)
+                    }
+                carbs.clear()
+            }
+        }
+
+        SystemClock.sleep(pause)
+
+        synchronized(temporaryTargets) {
+            if (temporaryTargets.isNotEmpty()) {
+                disposable += persistenceLayer.syncNsTemporaryTargets(temporaryTargets.toMutableList())
+                    .subscribeBy { result ->
+                        repeat(result.inserted.size) { inserted.inc(TT::class.java.simpleName) }
+                        repeat(result.invalidated.size) { invalidated.inc(TT::class.java.simpleName) }
+                        repeat(result.ended.size) { ended.inc(TT::class.java.simpleName) }
+                        repeat(result.updatedNsId.size) { nsIdUpdated.inc(TT::class.java.simpleName) }
+                        repeat(result.updatedDuration.size) { durationUpdated.inc(TT::class.java.simpleName) }
+                        sendLog("TemporaryTarget", TT::class.java.simpleName)
+                    }
+                temporaryTargets.clear()
+            }
+        }
+
+        SystemClock.sleep(pause)
+
+        synchronized(temporaryBasals) {
+            if (temporaryBasals.isNotEmpty()) {
+                disposable += persistenceLayer.syncNsTemporaryBasals(temporaryBasals.toMutableList())
+                    .subscribeBy { result ->
+                        repeat(result.inserted.size) { inserted.inc(TB::class.java.simpleName) }
+                        repeat(result.invalidated.size) { invalidated.inc(TB::class.java.simpleName) }
+                        repeat(result.ended.size) { ended.inc(TB::class.java.simpleName) }
+                        repeat(result.updatedNsId.size) { nsIdUpdated.inc(TB::class.java.simpleName) }
+                        repeat(result.updatedDuration.size) { durationUpdated.inc(TB::class.java.simpleName) }
+                        sendLog("TemporaryBasal", TB::class.java.simpleName)
+                    }
+                temporaryBasals.clear()
+            }
+        }
+
+        SystemClock.sleep(pause)
+
+        synchronized(effectiveProfileSwitches) {
+            if (effectiveProfileSwitches.isNotEmpty()) {
+                disposable += persistenceLayer.syncNsEffectiveProfileSwitches(effectiveProfileSwitches.toMutableList())
+                    .subscribeBy { result ->
+                        repeat(result.inserted.size) { inserted.inc(EPS::class.java.simpleName) }
+                        repeat(result.invalidated.size) { invalidated.inc(EPS::class.java.simpleName) }
+                        repeat(result.updatedNsId.size) { nsIdUpdated.inc(EPS::class.java.simpleName) }
+                        sendLog("EffectiveProfileSwitch", EPS::class.java.simpleName)
+                    }
+                effectiveProfileSwitches.clear()
+            }
+        }
+
+        SystemClock.sleep(pause)
+
+        synchronized(profileSwitches) {
+            if (profileSwitches.isNotEmpty()) {
+                disposable += persistenceLayer.syncNsProfileSwitches(profileSwitches.toMutableList())
+                    .subscribeBy { result ->
+                        repeat(result.inserted.size) { inserted.inc(PS::class.java.simpleName) }
+                        repeat(result.invalidated.size) { invalidated.inc(PS::class.java.simpleName) }
+                        repeat(result.updatedNsId.size) { nsIdUpdated.inc(PS::class.java.simpleName) }
+                        sendLog("ProfileSwitch", PS::class.java.simpleName)
+                    }
+                profileSwitches.clear()
+            }
+        }
+
+        SystemClock.sleep(pause)
+
+        synchronized(bolusCalculatorResults) {
+            if (bolusCalculatorResults.isNotEmpty()) {
+                disposable += persistenceLayer.syncNsBolusCalculatorResults(bolusCalculatorResults.toMutableList())
+                    .subscribeBy { result ->
+                        repeat(result.inserted.size) { inserted.inc(BCR::class.java.simpleName) }
+                        repeat(result.invalidated.size) { invalidated.inc(BCR::class.java.simpleName) }
+                        repeat(result.updatedNsId.size) { nsIdUpdated.inc(BCR::class.java.simpleName) }
+                        sendLog("BolusCalculatorResult", BCR::class.java.simpleName)
+                    }
+                bolusCalculatorResults.clear()
+            }
+        }
+
+        SystemClock.sleep(pause)
+
+        synchronized(therapyEvents) {
+            if (preferences.get(BooleanKey.NsClientAcceptTherapyEvent) || config.NSCLIENT)
+                therapyEvents.filter { it.type == TE.Type.ANNOUNCEMENT }.forEach {
+                    if (it.timestamp > dateUtil.now() - 15 * 60 * 1000L &&
+                        it.note?.isNotEmpty() == true &&
+                        it.enteredBy != sp.getString("careportal_enteredby", "AndroidAPS") &&
+                        preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements)
+                    ) uiInteraction.addNotificationValidFor(Notification.NS_ANNOUNCEMENT, it.note ?: "", Notification.ANNOUNCEMENT, 60)
                 }
+            if (therapyEvents.isNotEmpty()) {
+                disposable += persistenceLayer.syncNsTherapyEvents(therapyEvents.toMutableList())
+                    .subscribeBy { result ->
+                        repeat(result.inserted.size) { inserted.inc(TE::class.java.simpleName) }
+                        repeat(result.invalidated.size) { invalidated.inc(TE::class.java.simpleName) }
+                        repeat(result.updatedNsId.size) { nsIdUpdated.inc(TE::class.java.simpleName) }
+                        repeat(result.updatedDuration.size) { durationUpdated.inc(TE::class.java.simpleName) }
+                        sendLog("TherapyEvent", TE::class.java.simpleName)
+                    }
+                therapyEvents.clear()
+            }
+        }
+
+        SystemClock.sleep(pause)
+
+        synchronized(offlineEvents) {
+            if (offlineEvents.isNotEmpty()) {
+                disposable += persistenceLayer.syncNsOfflineEvents(offlineEvents.toMutableList())
+                    .subscribeBy { result ->
+                        repeat(result.inserted.size) { inserted.inc(OE::class.java.simpleName) }
+                        repeat(result.invalidated.size) { invalidated.inc(OE::class.java.simpleName) }
+                        repeat(result.ended.size) { ended.inc(OE::class.java.simpleName) }
+                        repeat(result.updatedNsId.size) { nsIdUpdated.inc(OE::class.java.simpleName) }
+                        repeat(result.updatedDuration.size) { durationUpdated.inc(OE::class.java.simpleName) }
+                        sendLog("OfflineEvent", OE::class.java.simpleName)
+                    }
+                offlineEvents.clear()
+            }
+        }
+
+        SystemClock.sleep(pause)
+
+        synchronized(extendedBoluses) {
+            if (extendedBoluses.isNotEmpty()) {
+                disposable += persistenceLayer.syncNsExtendedBoluses(extendedBoluses.toMutableList())
+                    .subscribeBy { result ->
+                        result.inserted.forEach {
+                            if (it.isEmulatingTempBasal) virtualPump.fakeDataDetected = true
+                            inserted.inc(EB::class.java.simpleName)
+                        }
+                        repeat(result.invalidated.size) { invalidated.inc(EB::class.java.simpleName) }
+                        repeat(result.ended.size) { ended.inc(EB::class.java.simpleName) }
+                        repeat(result.updatedNsId.size) { nsIdUpdated.inc(EB::class.java.simpleName) }
+                        repeat(result.updatedDuration.size) { durationUpdated.inc(EB::class.java.simpleName) }
+                        sendLog("ExtendedBolus", EB::class.java.simpleName)
+                    }
+                extendedBoluses.clear()
+            }
+        }
 
         SystemClock.sleep(pause)
 
@@ -541,6 +573,34 @@ class StoreDataForDbImpl @Inject constructor(
                 }
         }
     }
+
+    override fun addToGlucoseValues(payload: MutableList<GV>): Boolean = synchronized(glucoseValues) { glucoseValues.addAll(payload) }
+    override fun addToBoluses(payload: BS): Boolean = synchronized(boluses) { boluses.add(payload) }
+    override fun addToCarbs(payload: CA): Boolean = synchronized(carbs) { carbs.add(payload) }
+    override fun addToTemporaryTargets(payload: TT): Boolean = synchronized(temporaryTargets) { temporaryTargets.add(payload) }
+    override fun addToEffectiveProfileSwitches(payload: EPS): Boolean = synchronized(effectiveProfileSwitches) { effectiveProfileSwitches.add(payload) }
+    override fun addToBolusCalculatorResults(payload: BCR): Boolean = synchronized(bolusCalculatorResults) { bolusCalculatorResults.add(payload) }
+    override fun addToTherapyEvents(payload: TE): Boolean = synchronized(therapyEvents) { therapyEvents.add(payload) }
+    override fun addToExtendedBoluses(payload: EB): Boolean = synchronized(extendedBoluses) { extendedBoluses.add(payload) }
+    override fun addToTemporaryBasals(payload: TB): Boolean = synchronized(temporaryBasals) { temporaryBasals.add(payload) }
+    override fun addToProfileSwitches(payload: PS): Boolean = synchronized(profileSwitches) { profileSwitches.add(payload) }
+    override fun addToOfflineEvents(payload: OE): Boolean = synchronized(offlineEvents) { offlineEvents.add(payload) }
+    override fun addToFoods(payload: MutableList<FD>): Boolean = synchronized(foods) { foods.addAll(payload) }
+    override fun addToNsIdGlucoseValues(payload: GV): Boolean = synchronized(nsIdGlucoseValues) { nsIdGlucoseValues.add(payload) }
+    override fun addToNsIdBoluses(payload: BS): Boolean = synchronized(nsIdBoluses) { nsIdBoluses.add(payload) }
+    override fun addToNsIdCarbs(payload: CA): Boolean = synchronized(nsIdCarbs) { nsIdCarbs.add(payload) }
+    override fun addToNsIdTemporaryTargets(payload: TT): Boolean = synchronized(nsIdTemporaryTargets) { nsIdTemporaryTargets.add(payload) }
+    override fun addToNsIdEffectiveProfileSwitches(payload: EPS): Boolean = synchronized(nsIdEffectiveProfileSwitches) { nsIdEffectiveProfileSwitches.add(payload) }
+    override fun addToNsIdBolusCalculatorResults(payload: BCR): Boolean = synchronized(nsIdBolusCalculatorResults) { nsIdBolusCalculatorResults.add(payload) }
+    override fun addToNsIdTherapyEvents(payload: TE): Boolean = synchronized(nsIdTherapyEvents) { nsIdTherapyEvents.add(payload) }
+    override fun addToNsIdExtendedBoluses(payload: EB): Boolean = synchronized(nsIdExtendedBoluses) { nsIdExtendedBoluses.add(payload) }
+    override fun addToNsIdTemporaryBasals(payload: TB): Boolean = synchronized(nsIdTemporaryBasals) { nsIdTemporaryBasals.add(payload) }
+    override fun addToNsIdProfileSwitches(payload: PS): Boolean = synchronized(nsIdProfileSwitches) { nsIdProfileSwitches.add(payload) }
+    override fun addToNsIdOfflineEvents(payload: OE): Boolean = synchronized(nsIdOfflineEvents) { nsIdOfflineEvents.add(payload) }
+    override fun addToNsIdDeviceStatuses(payload: DS): Boolean = synchronized(nsIdDeviceStatuses) { nsIdDeviceStatuses.add(payload) }
+    override fun addToNsIdFoods(payload: FD): Boolean = synchronized(nsIdFoods) { nsIdFoods.add(payload) }
+    override fun addToDeleteTreatment(payload: String): Boolean = synchronized(deleteTreatment) { deleteTreatment.add(payload) }
+    override fun addToDeleteGlucoseValue(payload: String): Boolean = synchronized(deleteGlucoseValue) { deleteGlucoseValue.add(payload) }
 
     override fun updateDeletedGlucoseValuesInDb() {
         deleteGlucoseValue.forEach { id ->

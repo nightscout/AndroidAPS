@@ -9,8 +9,6 @@
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Prijímať hodnoty glykémií z upravenej aplikácie Dexcom (BYODA).</string>
-    <string name="eversense">Eversense aplikácia (upravená)</string>
-    <string name="description_source_eversense">Získavať glykémie z upravenej Eversense aplikácie.</string>
     <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Získavať hodnoty glykémií z aplikácie Glimp.</string>
     <string name="mm640g">MM640g</string>
@@ -24,9 +22,6 @@
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">Prijímať glykémie z aplikácie Tomato (zariadenie MiaoMiao)</string>
-    <string name="aidex">GlucoRx Aidex</string>
-    <string name="aidex_short">Aidex</string>
-    <string name="description_source_aidex">Prijímať hodnoty glykémie zo senzora GlucoRx Aidex.</string>
     <string name="random_bg">Náhodná glykémia</string>
     <string name="description_source_random_bg">Vygeneruj náhodné dáta glykémií (iba Demo režim)</string>
     <string name="random_bg_short">Gly</string>

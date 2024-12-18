@@ -50,8 +50,8 @@ interface Loop {
 
     fun acceptChangeRequest()
     fun minutesToEndOfSuspend(): Int
-    fun goToZeroTemp(durationInMinutes: Int, profile: Profile, reason: OE.Reason, action: Action, source: Sources, listValues: List<ValueWithUnit?> = listOf())
-    fun suspendLoop(durationInMinutes: Int, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit?>)
+    fun goToZeroTemp(durationInMinutes: Int, profile: Profile, reason: OE.Reason, action: Action, source: Sources, listValues: List<ValueWithUnit> = listOf())
+    fun suspendLoop(durationInMinutes: Int, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>)
     fun disableCarbSuggestions(durationMinutes: Int)
     fun buildAndStoreDeviceStatus()
 

@@ -28,6 +28,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 import com.jjoe64.graphview.series.Series;
 
 import java.util.ArrayList;
@@ -513,7 +515,7 @@ public class GraphView extends View {
     /**
      * @return
      */
-    public SecondScale getSecondScale() {
+    @NonNull public SecondScale getSecondScale() {
         if (mSecondScale == null) {
             mSecondScale = new SecondScale(mViewport);
         }

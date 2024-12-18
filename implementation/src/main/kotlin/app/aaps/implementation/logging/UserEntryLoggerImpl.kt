@@ -20,14 +20,14 @@ class UserEntryLoggerImpl @Inject constructor(
 
     private val compositeDisposable = CompositeDisposable()
 
-    override fun log(action: Action, source: Sources, note: String?, timestamp: Long, listValues: List<ValueWithUnit?>) {
-        log(listOf(UE(timestamp = timestamp, action = action, source = source, note = note ?: "", values = listValues.toList().filterNotNull())))
+    override fun log(action: Action, source: Sources, note: String?, timestamp: Long, listValues: List<ValueWithUnit>) {
+        log(listOf(UE(timestamp = timestamp, action = action, source = source, note = note ?: "", values = listValues.toList())))
     }
 
-    override fun log(action: Action, source: Sources, note: String?, value: ValueWithUnit?) =
+    override fun log(action: Action, source: Sources, note: String?, value: ValueWithUnit) =
         log(action, source, note, listOf(value))
 
-    override fun log(action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>) =
+    override fun log(action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit>) =
         log(action, source, note, dateUtil.now(), listValues)
 
     override fun log(entries: List<UE>) {

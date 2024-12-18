@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "info.nightscout.androidaps.plugins.pump.medtronic"
+    namespace = "app.aaps.pump.medtronic"
 }
 
 dependencies {

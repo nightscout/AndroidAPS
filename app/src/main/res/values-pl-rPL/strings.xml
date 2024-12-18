@@ -27,4 +27,7 @@
     <string name="count_selected">Wybrany %1$d</string>
     <string name="sort_label">Sortuj</string>
     <string name="search">Szukaj</string>
+    <string name="simple_mode">Tryb uproszczony</string>
+    <string name="select">Wybierz</string>
+    <string name="set">Ustaw</string>
 </resources>

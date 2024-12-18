@@ -59,9 +59,7 @@
     <string name="enable_smb_summary">Brug Super Mikro Boluser i stedet for midlertidig basal for hurtigere handling</string>
     <string name="enable_uam_summary">Detektering af uanmeldte måltider</string>
     <string name="enable_smb_always">Aktiver SMB altid</string>
-    <string name="enable_smb_always_summary">Aktiver SMB altid uafhængig af bolusser. Kun muligt med BS kilde, der har god filtrering af data såsom G5</string>
     <string name="enable_smb_after_carbs">Aktiver SMB efter kulhydrater</string>
-    <string name="enable_smb_after_carbs_summary">Aktiver SMB i 6 timer efter kulhydrater, selv med 0 COB. Kun muligt med BS kilde, der har god filtrering af data såsom G5</string>
     <string name="enable_smb_with_cob">Aktiver SMB med COB</string>
     <string name="enable_smb_with_cob_summary">Aktiver SMB når der er COB aktiv.</string>
     <string name="enable_smb_with_temp_target">Aktiver SMB med midlertidige mål</string>

@@ -23,13 +23,13 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.extensions.safeDisable
 import app.aaps.core.utils.extensions.safeGetParcelableExtra
+import app.aaps.pump.insight.R
 import app.aaps.pump.insight.connection_service.InsightConnectionService
 import app.aaps.pump.insight.connection_service.InsightConnectionService.ExceptionCallback
+import app.aaps.pump.insight.databinding.ActivityInsightPairingBinding
 import app.aaps.pump.insight.descriptors.InsightState
 import app.aaps.pump.insight.utils.ExceptionTranslator
 import dagger.android.support.DaggerAppCompatActivity
-import info.nightscout.androidaps.insight.R
-import info.nightscout.androidaps.insight.databinding.ActivityInsightPairingBinding
 import javax.inject.Inject
 
 class InsightPairingActivity : DaggerAppCompatActivity(), InsightConnectionService.StateCallback, View.OnClickListener, ExceptionCallback {

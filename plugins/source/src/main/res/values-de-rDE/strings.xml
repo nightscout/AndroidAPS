@@ -9,8 +9,6 @@
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Erhalte BZ-Werte von der \'Build Your Own Dexcom App\'.</string>
-    <string name="eversense">Eversense App (gepatcht)</string>
-    <string name="description_source_eversense">Empfange BZ-Werte von der gepatchten Eversense-App.</string>
     <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Empfange Blutzuckerwerte von Glimp.</string>
     <string name="mm640g">MM640g</string>
@@ -24,9 +22,6 @@
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">Empfange Blutzucker-Werte von der Tomato-App (MiaoMiao-Geräte)</string>
-    <string name="aidex">GlucoRx Aidex</string>
-    <string name="aidex_short">Aidex</string>
-    <string name="description_source_aidex">Erhalte BG-Werte von GlucoRx Aidex CGMS.</string>
     <string name="random_bg">Zufalls-BZ</string>
     <string name="description_source_random_bg">Zufalls-BZ: Generiert zufällige Blutzuckerdaten (nur im Demo-Modus)</string>
     <string name="random_bg_short">BZ</string>

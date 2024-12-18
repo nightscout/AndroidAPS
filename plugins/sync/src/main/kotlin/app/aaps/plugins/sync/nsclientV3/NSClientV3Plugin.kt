@@ -124,7 +124,7 @@ class NSClientV3Plugin @Inject constructor(
         .mainType(PluginType.SYNC)
         .fragmentClass(NSClientFragment::class.java.name)
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_nightscout_syncs)
-        .pluginName(R.string.ns_client_v3)
+        .pluginName(R.string.ns_client_v3_title)
         .shortName(R.string.ns_client_v3_short_name)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.description_ns_client_v3),
@@ -446,7 +446,7 @@ class NSClientV3Plugin @Inject constructor(
                     }
                 }
                 slowDown()
-                return result.response < 300 || config.ignoreNightscoutV3Errors()
+                return true
             }
         } catch (e: Exception) {
             aapsLogger.error(LTag.NSCLIENT, "Upload exception", e)
@@ -472,11 +472,11 @@ class NSClientV3Plugin @Inject constructor(
                 }
                 result.identifier?.let {
                     dataPair.value.ids.nightscoutId = it
-                    storeDataForDb.nsIdDeviceStatuses.add(dataPair.value)
+                    storeDataForDb.addToNsIdDeviceStatuses(dataPair.value)
                     sp.putBoolean(app.aaps.core.utils.R.string.key_objectives_pump_status_is_available_in_ns, true)
                 }
                 slowDown()
-                return result.response < 300 || config.ignoreNightscoutV3Errors()
+                return true
             }
         } catch (e: Exception) {
             aapsLogger.error(LTag.NSCLIENT, "Upload exception", e)
@@ -519,10 +519,10 @@ class NSClientV3Plugin @Inject constructor(
                 }
                 result.identifier?.let {
                     dataPair.value.ids.nightscoutId = it
-                    storeDataForDb.nsIdGlucoseValues.add(dataPair.value)
+                    storeDataForDb.addToNsIdGlucoseValues(dataPair.value)
                 }
                 slowDown()
-                return result.response < 300 || config.ignoreNightscoutV3Errors()
+                return true
             }
         } catch (e: Exception) {
             aapsLogger.error(LTag.NSCLIENT, "Upload exception", e)
@@ -565,10 +565,10 @@ class NSClientV3Plugin @Inject constructor(
                 }
                 result.identifier?.let {
                     dataPair.value.ids.nightscoutId = it
-                    storeDataForDb.nsIdFoods.add(dataPair.value)
+                    storeDataForDb.addToNsIdFoods(dataPair.value)
                 }
                 slowDown()
-                return result.response < 300 || config.ignoreNightscoutV3Errors()
+                return true
             }
         } catch (e: Exception) {
             aapsLogger.error(LTag.NSCLIENT, "Upload exception", e)
@@ -634,52 +634,52 @@ class NSClientV3Plugin @Inject constructor(
                         when (dataPair) {
                             is DataSyncSelector.PairBolus                  -> {
                                 dataPair.value.ids.nightscoutId = it
-                                storeDataForDb.nsIdBoluses.add(dataPair.value)
+                                storeDataForDb.addToNsIdBoluses(dataPair.value)
                             }
 
                             is DataSyncSelector.PairCarbs                  -> {
                                 dataPair.value.ids.nightscoutId = it
-                                storeDataForDb.nsIdCarbs.add(dataPair.value)
+                                storeDataForDb.addToNsIdCarbs(dataPair.value)
                             }
 
                             is DataSyncSelector.PairBolusCalculatorResult  -> {
                                 dataPair.value.ids.nightscoutId = it
-                                storeDataForDb.nsIdBolusCalculatorResults.add(dataPair.value)
+                                storeDataForDb.addToNsIdBolusCalculatorResults(dataPair.value)
                             }
 
                             is DataSyncSelector.PairTemporaryTarget        -> {
                                 dataPair.value.ids.nightscoutId = it
-                                storeDataForDb.nsIdTemporaryTargets.add(dataPair.value)
+                                storeDataForDb.addToNsIdTemporaryTargets(dataPair.value)
                             }
 
                             is DataSyncSelector.PairTherapyEvent           -> {
                                 dataPair.value.ids.nightscoutId = it
-                                storeDataForDb.nsIdTherapyEvents.add(dataPair.value)
+                                storeDataForDb.addToNsIdTherapyEvents(dataPair.value)
                             }
 
                             is DataSyncSelector.PairTemporaryBasal         -> {
                                 dataPair.value.ids.nightscoutId = it
-                                storeDataForDb.nsIdTemporaryBasals.add(dataPair.value)
+                                storeDataForDb.addToNsIdTemporaryBasals(dataPair.value)
                             }
 
                             is DataSyncSelector.PairExtendedBolus          -> {
                                 dataPair.value.ids.nightscoutId = it
-                                storeDataForDb.nsIdExtendedBoluses.add(dataPair.value)
+                                storeDataForDb.addToNsIdExtendedBoluses(dataPair.value)
                             }
 
                             is DataSyncSelector.PairProfileSwitch          -> {
                                 dataPair.value.ids.nightscoutId = it
-                                storeDataForDb.nsIdProfileSwitches.add(dataPair.value)
+                                storeDataForDb.addToNsIdProfileSwitches(dataPair.value)
                             }
 
                             is DataSyncSelector.PairEffectiveProfileSwitch -> {
                                 dataPair.value.ids.nightscoutId = it
-                                storeDataForDb.nsIdEffectiveProfileSwitches.add(dataPair.value)
+                                storeDataForDb.addToNsIdEffectiveProfileSwitches(dataPair.value)
                             }
 
                             is DataSyncSelector.PairOfflineEvent           -> {
                                 dataPair.value.ids.nightscoutId = it
-                                storeDataForDb.nsIdOfflineEvents.add(dataPair.value)
+                                storeDataForDb.addToNsIdOfflineEvents(dataPair.value)
                             }
 
                             else                                           -> {
@@ -688,7 +688,7 @@ class NSClientV3Plugin @Inject constructor(
                         }
                     }
                     slowDown()
-                    return result.response < 300 || config.ignoreNightscoutV3Errors()
+                    return true
                 }
             } catch (e: Exception) {
                 rxBus.send(EventNSClientNewLog("◄ ERROR", e.localizedMessage))
@@ -785,7 +785,7 @@ class NSClientV3Plugin @Inject constructor(
         parent.addPreference(category)
         category.apply {
             key = "ns_client_settings"
-            title = rh.gs(R.string.ns_client_internal_title)
+            title = rh.gs(R.string.ns_client_v3_title)
             initialExpandedChildrenCount = 0
             addPreference(
                 AdaptiveStringPreference(
@@ -795,7 +795,7 @@ class NSClientV3Plugin @Inject constructor(
             )
             addPreference(
                 AdaptiveStringPreference(
-                    ctx = context, stringKey = StringKey.NsClientAccessToken, dialogMessage = R.string.nsclient_token_dialog_title, title = R.string.nsclient_token_title,
+                    ctx = context, stringKey = StringKey.NsClientAccessToken, dialogMessage = R.string.nsclient_token_dialog_message, title = R.string.nsclient_token_title,
                     validatorParams = DefaultEditTextValidator.Parameters(testType = EditTextValidator.TEST_MIN_LENGTH, minLength = 17)
                 )
             )

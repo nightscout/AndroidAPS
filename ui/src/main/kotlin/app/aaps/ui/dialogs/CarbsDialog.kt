@@ -302,22 +302,22 @@ class CarbsDialog : DialogFragmentWithDate() {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.carbs), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     val selectedTTDuration = when {
-                        activitySelected -> activityTTDuration
+                        activitySelected   -> activityTTDuration
                         eatingSoonSelected -> eatingSoonTTDuration
-                        hypoSelected -> hypoTTDuration
-                        else -> 0
+                        hypoSelected       -> hypoTTDuration
+                        else               -> 0
                     }
                     val selectedTT = when {
-                        activitySelected -> activityTT
+                        activitySelected   -> activityTT
                         eatingSoonSelected -> eatingSoonTT
-                        hypoSelected -> hypoTT
-                        else -> 0.0
+                        hypoSelected       -> hypoTT
+                        else               -> 0.0
                     }
                     val reason = when {
-                        activitySelected -> TT.Reason.ACTIVITY
+                        activitySelected   -> TT.Reason.ACTIVITY
                         eatingSoonSelected -> TT.Reason.EATING_SOON
-                        hypoSelected -> TT.Reason.HYPOGLYCEMIA
-                        else -> TT.Reason.CUSTOM
+                        hypoSelected       -> TT.Reason.HYPOGLYCEMIA
+                        else               -> TT.Reason.CUSTOM
                     }
                     if (reason != TT.Reason.CUSTOM)
                         disposable += persistenceLayer.insertAndCancelCurrentTemporaryTarget(
@@ -354,7 +354,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                                 ValueWithUnit.Gram(carbsAfterConstraints),
                                 ValueWithUnit.Minute(timeOffset).takeIf { timeOffset != 0 },
                                 ValueWithUnit.Hour(duration).takeIf { duration != 0 }
-                            )
+                            ).filterNotNull()
                         )
                         commandQueue.bolus(detailedBolusInfo, object : Callback() {
                             override fun run() {

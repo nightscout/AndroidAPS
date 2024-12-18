@@ -130,7 +130,7 @@ class RandomBgPlugin @Inject constructor(
         cal[Calendar.MINUTE] -= cal[Calendar.MINUTE] % interval.toInt()
         val glucoseValues = mutableListOf<GV>()
         glucoseValues += GV(
-            timestamp = cal.timeInMillis,
+            timestamp = cal.timeInMillis - T.secs(40).msecs() + SecureRandom().nextInt(T.secs(40).msecs().toInt()),
             value = bgMgdl,
             raw = 0.0,
             noise = null,

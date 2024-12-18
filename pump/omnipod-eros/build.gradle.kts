@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "info.nightscout.androidaps.plugins.pump.omnipod.eros"
+    namespace = "app.aaps.pump.omnipod.eros"
 
     defaultConfig {
         ksp {

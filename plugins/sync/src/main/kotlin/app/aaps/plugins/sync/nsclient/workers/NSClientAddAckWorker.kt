@@ -51,7 +51,7 @@ class NSClientAddAckWorker(
         if (preferences.get(BooleanKey.NsClientSlowSync)) SystemClock.sleep(1000)
         val ret = try {
             Result.success(workDataOf("ProcessedData" to ack.originalObject.toString()))
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             Result.success(workDataOf("ProcessedData" to "huge record"))
         }
 
@@ -60,7 +60,7 @@ class NSClientAddAckWorker(
                 val pair = ack.originalObject
                 pair.value.ids.nightscoutId = ack.id
                 pair.confirmed = true
-                storeDataForDb.nsIdTemporaryTargets.add(pair.value)
+                storeDataForDb.addToNsIdTemporaryTargets(pair.value)
                 storeDataForDb.scheduleNsIdUpdate()
                 rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked TemporaryTarget " + pair.value.ids.nightscoutId))
             }
@@ -69,7 +69,7 @@ class NSClientAddAckWorker(
                 val pair = ack.originalObject
                 pair.value.ids.nightscoutId = ack.id
                 pair.confirmed = true
-                storeDataForDb.nsIdGlucoseValues.add(pair.value)
+                storeDataForDb.addToNsIdGlucoseValues(pair.value)
                 storeDataForDb.scheduleNsIdUpdate()
                 rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked GlucoseValue " + pair.value.ids.nightscoutId))
             }
@@ -78,7 +78,7 @@ class NSClientAddAckWorker(
                 val pair = ack.originalObject
                 pair.value.ids.nightscoutId = ack.id
                 pair.confirmed = true
-                storeDataForDb.nsIdFoods.add(pair.value)
+                storeDataForDb.addToNsIdFoods(pair.value)
                 storeDataForDb.scheduleNsIdUpdate()
                 rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked Food " + pair.value.ids.nightscoutId))
                 // Send new if waiting
@@ -88,7 +88,7 @@ class NSClientAddAckWorker(
                 val pair = ack.originalObject
                 pair.value.ids.nightscoutId = ack.id
                 pair.confirmed = true
-                storeDataForDb.nsIdTherapyEvents.add(pair.value)
+                storeDataForDb.addToNsIdTherapyEvents(pair.value)
                 storeDataForDb.scheduleNsIdUpdate()
                 rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked TherapyEvent " + pair.value.ids.nightscoutId))
             }
@@ -97,7 +97,7 @@ class NSClientAddAckWorker(
                 val pair = ack.originalObject
                 pair.value.ids.nightscoutId = ack.id
                 pair.confirmed = true
-                storeDataForDb.nsIdBoluses.add(pair.value)
+                storeDataForDb.addToNsIdBoluses(pair.value)
                 storeDataForDb.scheduleNsIdUpdate()
                 rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked Bolus " + pair.value.ids.nightscoutId))
             }
@@ -106,7 +106,7 @@ class NSClientAddAckWorker(
                 val pair = ack.originalObject
                 pair.value.ids.nightscoutId = ack.id
                 pair.confirmed = true
-                storeDataForDb.nsIdCarbs.add(pair.value)
+                storeDataForDb.addToNsIdCarbs(pair.value)
                 storeDataForDb.scheduleNsIdUpdate()
                 rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked Carbs " + pair.value.ids.nightscoutId))
             }
@@ -114,7 +114,7 @@ class NSClientAddAckWorker(
             is PairBolusCalculatorResult         -> {
                 val pair = ack.originalObject
                 pair.value.ids.nightscoutId = ack.id
-                storeDataForDb.nsIdBolusCalculatorResults.add(pair.value)
+                storeDataForDb.addToNsIdBolusCalculatorResults(pair.value)
                 storeDataForDb.scheduleNsIdUpdate()
                 rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked BolusCalculatorResult " + pair.value.ids.nightscoutId))
             }
@@ -123,7 +123,7 @@ class NSClientAddAckWorker(
                 val pair = ack.originalObject
                 pair.value.ids.nightscoutId = ack.id
                 pair.confirmed = true
-                storeDataForDb.nsIdTemporaryBasals.add(pair.value)
+                storeDataForDb.addToNsIdTemporaryBasals(pair.value)
                 storeDataForDb.scheduleNsIdUpdate()
                 rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked TemporaryBasal " + pair.value.ids.nightscoutId))
             }
@@ -132,7 +132,7 @@ class NSClientAddAckWorker(
                 val pair = ack.originalObject
                 pair.value.ids.nightscoutId = ack.id
                 pair.confirmed = true
-                storeDataForDb.nsIdExtendedBoluses.add(pair.value)
+                storeDataForDb.addToNsIdExtendedBoluses(pair.value)
                 storeDataForDb.scheduleNsIdUpdate()
                 rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked ExtendedBolus " + pair.value.ids.nightscoutId))
             }
@@ -141,7 +141,7 @@ class NSClientAddAckWorker(
                 val pair = ack.originalObject
                 pair.value.ids.nightscoutId = ack.id
                 pair.confirmed = true
-                storeDataForDb.nsIdProfileSwitches.add(pair.value)
+                storeDataForDb.addToNsIdProfileSwitches(pair.value)
                 storeDataForDb.scheduleNsIdUpdate()
                 rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked ProfileSwitch " + pair.value.ids.nightscoutId))
             }
@@ -150,7 +150,7 @@ class NSClientAddAckWorker(
                 val pair = ack.originalObject
                 pair.value.ids.nightscoutId = ack.id
                 pair.confirmed = true
-                storeDataForDb.nsIdEffectiveProfileSwitches.add(pair.value)
+                storeDataForDb.addToNsIdEffectiveProfileSwitches(pair.value)
                 storeDataForDb.scheduleNsIdUpdate()
                 rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked EffectiveProfileSwitch " + pair.value.ids.nightscoutId))
             }
@@ -159,7 +159,7 @@ class NSClientAddAckWorker(
                 val pair = ack.originalObject
                 pair.value.ids.nightscoutId = ack.id
                 pair.confirmed = true
-                storeDataForDb.nsIdDeviceStatuses.add(pair.value)
+                storeDataForDb.addToNsIdDeviceStatuses(pair.value)
                 storeDataForDb.scheduleNsIdUpdate()
                 rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked DeviceStatus " + pair.value.ids.nightscoutId))
             }
@@ -174,7 +174,7 @@ class NSClientAddAckWorker(
                 val pair = ack.originalObject
                 pair.value.ids.nightscoutId = ack.id
                 pair.confirmed = true
-                storeDataForDb.nsIdOfflineEvents.add(pair.value)
+                storeDataForDb.addToNsIdOfflineEvents(pair.value)
                 storeDataForDb.scheduleNsIdUpdate()
                 rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked OfflineEvent " + pair.value.ids.nightscoutId))
             }

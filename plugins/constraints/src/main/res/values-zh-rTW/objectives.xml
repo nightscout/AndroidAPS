@@ -28,6 +28,7 @@
     <string name="objectives_smb_gate">您必須閱讀Wiki並提高MaxIOB以使SMB正常工作！一個好的開始是MaxIOB=平均餐前注射+3倍的每日最大基礎速率。在簡單模式下，這個值根據Wiki中的建議計算，不需要設置。</string>
     <string name="objectives_smb_learned">使用 SMB 是你的目標，Oref1 演算法也是為了幫助你進行注射設計的。你不應該為食物注射全部的劑量，只要打一部分，剩下的由 AAPS 來補足。這樣可以留出更多空間，避免碳水估算錯誤。另外，你知道嗎？你可以設定注射計算器的百分比，來減少注射的劑量。</string>
     <string name="objectives_auto_objective">啟用自動化</string>
+    <string name="objectives_auto_gate">閱讀有關自動化運作方式的文件。設定您的第一個簡單規則。一開始使用時，請讓 AAPS 僅顯示通知，而不是執行動作。當您確定自動化在正確的時間觸發後，將通知替換為實際動作。（https://wiki.aaps.app/en/latest/DailyLifeWithAaps/Automations.html）</string>
     <string name="objectives_auto_learned">自動化可以是好的僕人，但壞的主人。不要過度使用它。不要試圖替代基本算法。使用僅訊息測試規則，然後再使用它。這取決於順序。</string>
     <string name="objectives_bgavailableinns">血糖在Nightscout或Tidepool中可用</string>
     <string name="objectives_pumpstatusavailableinns">幫浦狀態在Nightscout或Tidepool中可用</string>
@@ -74,6 +75,10 @@
     <string name="unfinshed_button">下一個未完成</string>
     <string name="requestcode">請求代碼：%1$s</string>
     <string name="objectives_hint">(檢查所有正確答案)</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/zh-tw/latest/UsefulLinks/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/zh-tw/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/zh-tw/latest/SettingUpAaps/ConfigBuilder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/zh-tw/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
     <string name="notconnected">未連線到互聯網</string>
     <string name="failedretrievetime">無法獲取時間</string>
     <string name="requirementnotmet">未滿足目標要求</string>

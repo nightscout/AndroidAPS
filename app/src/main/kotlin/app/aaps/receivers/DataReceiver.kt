@@ -8,15 +8,14 @@ import androidx.work.OneTimeWorkRequest
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.receivers.Intents
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.utils.extensions.copyDouble
 import app.aaps.core.utils.extensions.copyLong
 import app.aaps.core.utils.extensions.copyString
 import app.aaps.core.utils.receivers.BundleLogger
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.plugins.main.general.smsCommunicator.SmsCommunicatorPlugin
-import app.aaps.plugins.source.AidexPlugin
 import app.aaps.plugins.source.DexcomPlugin
-import app.aaps.plugins.source.EversensePlugin
 import app.aaps.plugins.source.GlimpPlugin
 import app.aaps.plugins.source.MM640gPlugin
 import app.aaps.plugins.source.OttaiPlugin
@@ -31,6 +30,7 @@ open class DataReceiver : DaggerBroadcastReceiver() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
@@ -89,20 +89,16 @@ open class DataReceiver : DaggerBroadcastReceiver() {
                 OneTimeWorkRequest.Builder(SmsCommunicatorPlugin.SmsCommunicatorWorker::class.java)
                     .setInputData(dataWorkerStorage.storeInputData(bundle, intent.action)).build()
 
-            Intents.EVERSENSE_BG                      ->
-                OneTimeWorkRequest.Builder(EversensePlugin.EversenseWorker::class.java)
-                    .setInputData(dataWorkerStorage.storeInputData(bundle, intent.action)).build()
-
             Intents.DEXCOM_BG, Intents.DEXCOM_G7_BG   ->
                 OneTimeWorkRequest.Builder(DexcomPlugin.DexcomWorker::class.java)
                     .setInputData(dataWorkerStorage.storeInputData(bundle, intent.action)).build()
 
-            Intents.AIDEX_NEW_BG_ESTIMATE             ->
-                OneTimeWorkRequest.Builder(AidexPlugin.AidexWorker::class.java)
-                    .setInputData(dataWorkerStorage.storeInputData(bundle, intent.action)).build()
-
             else                                      -> null
         }?.let { request -> dataWorkerStorage.enqueue(request) }
+
+        // Verify KeepAlive is running
+        // Sometimes the schedule fail
+        KeepAliveWorker.scheduleIfNotRunning(context, aapsLogger, fabricPrivacy)
     }
 
 }

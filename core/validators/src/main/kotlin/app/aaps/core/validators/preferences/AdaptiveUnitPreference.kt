@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import androidx.annotation.StringRes
 import androidx.preference.EditTextPreference
 import androidx.preference.PreferenceViewHolder
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.keys.Preferences
@@ -15,6 +16,8 @@ import app.aaps.core.validators.DefaultEditTextValidator
 import app.aaps.core.validators.EditTextValidator
 import app.aaps.core.validators.R
 import dagger.android.HasAndroidInjector
+import java.math.BigDecimal
+import java.math.RoundingMode
 import javax.inject.Inject
 
 class AdaptiveUnitPreference(
@@ -36,6 +39,8 @@ class AdaptiveUnitPreference(
     // Inflater constructor
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, unitKey = null, title = null)
 
+    private var converted: BigDecimal
+
     init {
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
 
@@ -45,6 +50,13 @@ class AdaptiveUnitPreference(
         title?.let { this.title = context.getString(it) }
 
         preferenceKey = unitKey ?: preferences.get(key) as UnitDoublePreferenceKey
+
+        // convert to current unit
+        val value = profileUtil.valueInCurrentUnitsDetect(preferences.get(preferenceKey)).toString()
+        val precision = if (profileUtil.units == GlucoseUnit.MGDL) 0 else 1
+        converted = BigDecimal(value).setScale(precision, RoundingMode.HALF_UP)
+        summary = converted.toPlainString()
+
         if (preferences.simpleMode && preferenceKey.defaultedBySM) isVisible = false
         if (preferences.apsMode && !preferenceKey.showInApsMode) {
             isVisible = false; isEnabled = false
@@ -104,19 +116,16 @@ class AdaptiveUnitPreference(
     }
 
     override fun onSetInitialValue(defaultValue: Any?) {
-        text = profileUtil.fromMgdlToUnits(
-            try {
-                SafeParse.stringToDouble(getPersistedString(defaultValue as String?))
-            } catch (ignored: Exception) {
-                getPersistedFloat(preferenceKey.defaultValue.toFloat()).toDouble()
-            }, profileUtil.units
-        ).toString()
+        text = converted.toPlainString()
     }
 
     override fun persistString(value: String?): Boolean =
         try {
-            super.persistString(profileUtil.convertToMgdl(SafeParse.stringToDouble(value, preferenceKey.defaultValue), profileUtil.units).toString())
-        } catch (ignored: Exception) {
+            val numericValue = SafeParse.stringToDouble(value, preferenceKey.defaultValue)
+            summary = numericValue.toString()
+            val store = profileUtil.convertToMgdl(numericValue, profileUtil.units)
+            super.persistString(store.toString())
+        } catch (_: Exception) {
             false
         }
 }

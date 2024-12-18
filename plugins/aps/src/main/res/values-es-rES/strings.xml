@@ -66,9 +66,9 @@
     <string name="enable_smb_summary">Usar microbolos en lugar de basales temporales, para corregir más rápidamente</string>
     <string name="enable_uam_summary">Detectar comidas no anunciadas (UAM)</string>
     <string name="enable_smb_always">Habilitar SMB siempre</string>
-    <string name="enable_smb_always_summary">Habilitar SMB siempre, de forma independiente a los bolos. Sólo se puede usar con sensores de glucosa con buen filtrado, como G5/G6</string>
+    <string name="enable_smb_always_summary">Habilitar SMB siempre, independientemente de los COB, objetivos temporales o bolos. Sólo se puede usar con sensores de glucosa con filtrado avanzado de datos</string>
     <string name="enable_smb_after_carbs">Habilitar SMB después de carbohidratos</string>
-    <string name="enable_smb_after_carbs_summary">Habilitar SMB durante 6 horas después de los carbohidratos, incluso con 0g de carbohidratos (COB). Sólo se puede usar con sensores de glucosa con buen filtrado, como G5/G6</string>
+    <string name="enable_smb_after_carbs_summary">Habilitar SMB 6h después de los carbohidratos, incluso con 0 COB. Sólo es posible con sensores de glucosa con filtrado avanzado de datos</string>
     <string name="enable_smb_with_cob">Habilitar SMB con carbohidratos</string>
     <string name="enable_smb_with_cob_summary">Habilitar SMB cuando hay carbohidratos activos (COB)</string>
     <string name="enable_smb_with_temp_target">Habilitar SMB con objetivos temporales </string>
@@ -122,7 +122,7 @@
     <string name="loop_open_mode_min_change">Valor mínimo de cambio [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Valor predeterminado 20%. El bucle abierto realizará una petición de cambio, sólo cuando se supere este valor</string>
     <string name="fallback_smb_no_tdd">Regreso a SMB. No hay suficientes datos de TDD.</string>
-    <string name="fallback_to_isf_no_tdd">Volviendo a la sensibilidad del perfil. No hay suficientes datos TDD.</string>
+    <string name="fallback_to_isf_no_tdd">Volviendo a la sensibilidad del perfil. No hay suficientes datos. Motivo: %1$s</string>
     <!-- Autotune -->
     <string name="autotune_description">Ayuda a realizar ajustes en el perfil (ISF, ratio de carbohidratos y tasas basales)</string>
     <string name="autotune_shortname">AT</string>

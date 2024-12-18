@@ -170,7 +170,7 @@ class FillDialog : DialogFragmentWithDate() {
                             listValues = listOf(
                                 ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
                                 ValueWithUnit.TEType(TE.Type.CANNULA_CHANGE)
-                            )
+                            ).filterNotNull()
                         ).subscribe()
                     if (insulinChange)
                     // add a second for case of both checked
@@ -186,7 +186,7 @@ class FillDialog : DialogFragmentWithDate() {
                             listValues = listOf(
                                 ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
                                 ValueWithUnit.TEType(TE.Type.INSULIN_CHANGE)
-                            )
+                            ).filterNotNull()
 
                         ).subscribe()
                 }, null)

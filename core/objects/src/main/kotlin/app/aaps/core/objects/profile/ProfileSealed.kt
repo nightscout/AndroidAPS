@@ -259,12 +259,12 @@ sealed class ProfileSealed(
     override fun getBasal(timestamp: Long): Double = basalBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), percentage / 100.0, timeshift)
     override fun getIc(): Double =
         if (aps?.supportsDynamicIc() ?: error("APS not defined"))
-            aps.getIc(100.0 / percentage, timeshift) ?: icBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(), 100.0 / percentage, timeshift)
+            aps.getIc(this) ?: icBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(), 100.0 / percentage, timeshift)
         else icBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(), 100.0 / percentage, timeshift)
 
     override fun getIc(timestamp: Long): Double =
         if (aps?.supportsDynamicIc() ?: error("APS not defined"))
-            aps.getIc(timestamp, 100.0 / percentage, timeshift) ?: icBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), 100.0 / percentage, timeshift)
+            aps.getIc(timestamp, this) ?: icBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), 100.0 / percentage, timeshift)
         else icBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), 100.0 / percentage, timeshift)
 
     override fun getProfileIsfMgdl(): Double =
@@ -272,7 +272,7 @@ sealed class ProfileSealed(
 
     override fun getIsfMgdl(caller: String): Double =
         if (aps?.supportsDynamicIsf() ?: error("APS not defined"))
-            aps.getIsfMgdl(100.0 / percentage, timeshift, caller) ?: toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(), 100.0 / percentage, timeshift), units)
+            aps.getIsfMgdl(this, caller) ?: toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(), 100.0 / percentage, timeshift), units)
         else getProfileIsfMgdl()
 
     override fun getIsfMgdlForCarbs(timestamp: Long, caller: String, config: Config, processedDeviceStatusData: ProcessedDeviceStatusData): Double =

@@ -9,7 +9,6 @@
     <string name="ns_create_announcements_from_carbs_req_title">Crear avisos d\'alertes de calen carbohidrats</string>
     <string name="ns_create_announcements_from_errors_summary">Crear avís de Nightscout per alertes locals i finestres d\'error (també visibles al Portal de cures, sota Tractaments)</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Crear avís de Nightscout per alertes de calen carbohidrats</string>
-    <string name="description_ns_client">Sincronitza les vostres dades amb Nightscout</string>
     <string name="unsupported_ns_version">Versió no compatible de Nightscout</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
@@ -17,15 +16,9 @@
     <!-- NSClient -->
     <string name="no_write_permission">L\'NSCLIENT no te permisos d\'escriptura. Secret d\'API incorrecte?</string>
     <string name="ns_client">NSClient</string>
-    <string name="ns_client_short_name">NSCI</string>
     <string name="ns_client_url">URL:</string>
     <string name="restart">Reiniciar</string>
-    <string name="ns_client_internal_title">NSClient</string>
     <string name="ns_client_url_title">URL de Nightscout</string>
-    <string name="ns_client_url_dialog_message">Introduïu la vostra URL de Nightscout</string>
-    <string name="ns_client_secret_title">Secret API NS</string>
-    <string name="ns_client_secret_dialog_title">Secret API NS</string>
-    <string name="ns_client_secret_dialog_message">Introduïu el secret de l\'API NS (min 12 caràcters)</string>
     <string name="deliver_now">Lliurar ara</string>
     <string name="queue">Cua:</string>
     <string name="status">Estat:</string>

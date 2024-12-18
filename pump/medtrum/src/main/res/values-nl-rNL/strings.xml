@@ -126,8 +126,15 @@
     <string name="scan_on_connection_error_summary">WAARSCHUWING: Alleen inschakelen als je verbindingsproblemen ondervindt. Indien ingeschakeld zoekt het stuurprogramma opnieuw naar de pomp voordat het opnieuw verbinding probeert te maken met de pomp. Zorg ervoor dat je Locatiemachtiging is ingesteld op \"Altijd toestaan\" </string>
     <!-- treatment state-->
     <string name="getting_pump_status">Pompstatus aan het ophalen</string>
+    <string name="syncing_records">Records synchroniseren, nog %1$d te doen</string>
     <string name="getting_bolus_status">Bolus status aan het ophalen</string>
     <string name="getting_temp_basal_status">Tijdelijke basaal status aan het ophalen</string>
     <string name="setting_pump_settings">Gebruikersopties worden ingesteld</string>
     <!-- bolus-->
+    <string name="bolus_error_reason_user">Bolus afgebroken door gebruiker</string>
+    <string name="bolus_error_reason_not_connected">Pomp niet verbonden</string>
+    <string name="bolus_error_reason_already_in_progress">Bolus wordt al uitgevoerd</string>
+    <string name="bolus_error_reason_unable_to_send_command">Kan bolus opdracht niet verzenden</string>
+    <string name="bolus_error_reason_communication_lost">Time-out bij het lezen van de bolus status</string>
+    <string name="bolus_error_reason_pump_error">Pomp fout</string>
 </resources>

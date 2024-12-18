@@ -1,0 +1,73 @@
+package app.aaps.pump.equil.manager.command
+
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.pump.equil.database.EquilHistoryRecord
+import app.aaps.pump.equil.manager.EquilManager
+import app.aaps.pump.equil.manager.Utils
+
+class CmdSettingGet(
+    aapsLogger: AAPSLogger,
+    sp: SP,
+    equilManager: EquilManager
+) : BaseSetting(System.currentTimeMillis(), aapsLogger, sp, equilManager) {
+
+    private var useTime: Long = 0
+    private var closeTime: Long = 0
+    private var lowAlarm = 0f
+    private var largefastAlarm = 0f
+    private var stopAlarm = 0f
+    private var infusionUnit = 0f
+    private var basalAlarm = 0f
+    private var largeAlarm = 0f
+
+    override fun getFirstData(): ByteArray {
+        val indexByte = Utils.intToBytes(pumpReqIndex)
+        val data2 = byteArrayOf(0x02, 0x05)
+        val data = Utils.concat(indexByte, data2)
+        pumpReqIndex++
+        return data
+    }
+
+    override fun getNextData(): ByteArray {
+        val indexByte = Utils.intToBytes(pumpReqIndex)
+        val data2 = byteArrayOf(0x00, 0x05, 0x01)
+        val data = Utils.concat(indexByte, data2)
+        pumpReqIndex++
+        return data
+    }
+
+    override fun decodeConfirmData(data: ByteArray) {
+        //val index = data[4].toInt()
+
+        //        int i1 = ((data[15] & 0x0f) << 8) | data[14] & 0xff;
+//        int i2 = ((data[17] & 0x0f) << 8) | data[16] & 0xff;
+//        int i3 = ((data[19] & 0x0f) << 8) | data[18] & 0xff;
+//        int i4 = ((data[21] & 0x0f) << 8) | data[20] & 0xff;
+//        int i5 = ((data[23] & 0x0f) << 8) | data[22] & 0xff;
+//        int i6 = ((data[25] & 0x0f) << 8) | data[24] & 0xff;
+        val i1 = Utils.bytesToInt(data[15], data[14])
+        val i2 = Utils.bytesToInt(data[17], data[16])
+        val i3 = Utils.bytesToInt(data[19], data[18])
+        val i4 = Utils.bytesToInt(data[21], data[20])
+        val i5 = Utils.bytesToInt(data[23], data[22])
+        val i6 = Utils.bytesToInt(data[25], data[24])
+        lowAlarm = Utils.internalDecodeSpeedToUH(i1)
+        largefastAlarm = Utils.internalDecodeSpeedToUH(i2)
+        stopAlarm = Utils.internalDecodeSpeedToUH(i3)
+        infusionUnit = Utils.internalDecodeSpeedToUH(i4)
+        basalAlarm = Utils.internalDecodeSpeedToUH(i5)
+        largeAlarm = Utils.internalDecodeSpeedToUH(i6)
+        aapsLogger.debug(
+            LTag.PUMPCOMM,
+            "CmdSettingGet===" + Utils.bytesToHex(data) + "====" + lowAlarm + "=======" + i1
+        )
+        synchronized(this) {
+            cmdStatus = true
+            (this as Object).notify()
+        }
+    }
+
+    override fun getEventType(): EquilHistoryRecord.EventType? = null
+}
