@@ -220,7 +220,7 @@ class IobCobOrefWorker @Inject internal constructor(
                 }
                 val isAAPSOrWeighted = activePlugin.activeSensitivity.isMinCarbsAbsorptionDynamic
                 autosensData.removeOldCarbs(bgTime, isAAPSOrWeighted)
-                autosensData.cob += autosensData.carbsFromBolus
+                autosensData.cob = max(autosensData.cob + autosensData.carbsFromBolus, 0.0)
                 autosensData.deviation = deviation
                 autosensData.bgi = bgi
                 autosensData.sens = sens
