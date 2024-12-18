@@ -435,6 +435,7 @@
     <string name="autosens_long">Autosens Value: %.0f%%</string>
     <string name="autosens_short">AS: %.0f%%</string>
     <string name="algorithm_long">Autosens in Loop: %.0f%%</string>
+    <string name="algorithm_short">Alg: %.0f%%</string>
     <string name="a11y_file">file</string>
     <string name="a11y_user">user</string>
 
