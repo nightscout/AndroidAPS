@@ -282,6 +282,7 @@ class CarbsDialog : DialogFragmentWithDate() {
         }
         if (carbsAfterConstraints < 0) {
             if (carbsAfterConstraints < -cob) carbsAfterConstraints = ceil(-cob).toInt()
+            if (timeOffset != 0) carbsAfterConstraints = 0
             actions.add(
                 rh.gs(app.aaps.core.ui.R.string.carbs) + ": " + "<font color='" + rh.gac(
                     context,
