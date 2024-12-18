@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -34,7 +35,9 @@ class ComboV2Fragment : DaggerFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val binding = Combov2FragmentBinding.inflate(inflater, container, false)
+        val binding: Combov2FragmentBinding = DataBindingUtil.inflate(
+            inflater, R.layout.combov2_fragment, container, false
+        )
         val view = binding.root
 
         binding.combov2RefreshButton.setOnClickListener {
