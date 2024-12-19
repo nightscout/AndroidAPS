@@ -124,8 +124,8 @@ class DetermineBasalResult @Inject constructor(val injector: HasAndroidInjector)
             // rate
             var ret: String = if (rate == 0.0 && duration == 0) "${rh.gs(R.string.cancel_temp)} "
             else if (rate == -1.0) "${rh.gs(R.string.let_temp_basal_run)}\n"
-            else if (usePercent) "${rh.gs(R.string.percent_rate_duration, percent.toDouble(), percent * pump.baseBasalRate / 100.0, duration.toDouble())} "
-            else "${rh.gs(R.string.rate_percent_duration, rate, rate / pump.baseBasalRate * 100.0, duration.toDouble())} "
+            else if (usePercent) "${rh.gs(R.string.percent_rate_duration, percent.toDouble(), percent * pump.baseBasalRate / 100.0, duration)} "
+            else "${rh.gs(R.string.rate_percent_duration, rate, rate / pump.baseBasalRate * 100.0, duration)} "
 
             // smb
             if (smb != 0.0) ret += "SMB: ${decimalFormatter.toPumpSupportedBolus(smb, activePlugin.activePump.pumpDescription.bolusStep)} "
@@ -149,8 +149,8 @@ class DetermineBasalResult @Inject constructor(val injector: HasAndroidInjector)
             var ret: String =
                 if (rate == 0.0 && duration == 0) rh.gs(R.string.cancel_temp) + "<br>"
                 else if (rate == -1.0) rh.gs(R.string.let_temp_basal_run) + "<br>"
-                else if (usePercent) rh.gs(R.string.percent_rate_duration_formatted, percent.toDouble(), percent * pump.baseBasalRate / 100.0, duration.toDouble())
-                else rh.gs(R.string.rate_percent_duration_formatted, rate, rate / pump.baseBasalRate * 100.0, duration.toDouble())
+                else if (usePercent) rh.gs(R.string.percent_rate_duration_formatted, percent.toDouble(), percent * pump.baseBasalRate / 100.0, duration)
+                else rh.gs(R.string.rate_percent_duration_formatted, rate, rate / pump.baseBasalRate * 100.0, duration)
 
             // smb
             if (smb != 0.0) ret += "<b>" + "SMB" + "</b>: " + decimalFormatter.toPumpSupportedBolus(smb, activePlugin.activePump.pumpDescription.bolusStep) + "<br>"
