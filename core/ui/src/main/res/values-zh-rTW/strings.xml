@@ -583,4 +583,8 @@
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
     <string name="format_insulin_units">%1$.2f U</string>
+    <string name="percent_rate_duration">速率：%1$.2f%%（%2$.2f U/h）持續時間：%3$d 分鐘</string>
+    <string name="rate_percent_duration">速率：%1$.2f U/h（%2$.2f%%）持續時間：%3$d 分鐘</string>
+    <string name="percent_rate_duration_formatted"><![CDATA[<b>速率</b>：%1$.2f%%（%2$.2f U/h）<br><b>持續時間</b>：%3$d 分鐘<br>]]></string>
+    <string name="rate_percent_duration_formatted"><![CDATA[<b>速率</b>：%1$.2f U/h（%2$.2f%%）<br><b>持續時間</b>：%3$d 分鐘<br>]]></string>
 </resources>
