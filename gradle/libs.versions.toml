@@ -51,7 +51,7 @@ com-google-android-wearable-support = { group = "com.google.android.support", na
 
 com-google-guava = { group = "com.google.guava", name = "guava", version = "33.4.0-jre" }
 com-google-code-gson = { group = "com.google.code.gson", name = "gson", version = "2.11.0" }
-com-google-crypto-tink = { group = "com.google.crypto.tink", name = "tink-android", version = "1.15.0" }
+com-google-crypto-tink = { group = "com.google.crypto.tink", name = "tink-android", version = "1.16.0" }
 
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-allopen = { group = "org.jetbrains.kotlin", name = "kotlin-allopen", version.ref = "kotlin" }
