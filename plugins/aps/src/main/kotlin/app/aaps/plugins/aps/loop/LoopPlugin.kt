@@ -394,7 +394,7 @@ class LoopPlugin @Inject constructor(
                                 //only send to wear if Native notifications are turned off
                                 if (!sp.getBoolean(app.aaps.core.ui.R.string.key_raise_notifications_as_android_notifications, true)) {
                                     // Send to Wear
-                                    sendToWear()
+                                    sendToWear(resultAfterConstraints.carbsRequiredText)
                                 }
                             }
                         } else {
@@ -465,7 +465,7 @@ class LoopPlugin @Inject constructor(
                         if (preferences.get(BooleanKey.WearControl)) {
                             builder.setLocalOnly(true)
                         }
-                        presentSuggestion(builder)
+                        presentSuggestion(builder, resultAfterConstraints.resultAsString())
                     } else if (allowNotification) {
                         dismissSuggestion()
                     }
@@ -482,7 +482,7 @@ class LoopPlugin @Inject constructor(
         dismissSuggestion()
     }
 
-    private fun presentSuggestion(builder: NotificationCompat.Builder) {
+    private fun presentSuggestion(builder: NotificationCompat.Builder, contentText: String) {
         // Creates an explicit intent for an Activity in your app
         val resultIntent = Intent(context, uiInteraction.mainActivity)
 
@@ -503,7 +503,7 @@ class LoopPlugin @Inject constructor(
         rxBus.send(EventNewOpenLoopNotification())
 
         // Send to Wear
-        sendToWear()
+        sendToWear(contentText)
     }
 
     private fun dismissSuggestion() {
@@ -513,13 +513,13 @@ class LoopPlugin @Inject constructor(
         rxBus.send(EventMobileToWear(EventData.CancelNotification(dateUtil.now())))
     }
 
-    private fun sendToWear() {
+    private fun sendToWear(contentText: String) {
         lastRun?.let {
             rxBus.send(
                 EventMobileToWear(
                     EventData.OpenLoopRequest(
                         rh.gs(R.string.open_loop_new_suggestion),
-                        it.constraintsProcessed.toString(),
+                        contentText,
                         EventData.OpenLoopRequestConfirmed(dateUtil.now())
                     )
                 )
