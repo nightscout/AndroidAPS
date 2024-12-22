@@ -49,6 +49,8 @@
     <string name="pref_show_delta">Rodyti pokytį</string>
     <string name="pref_show_detailed_delta">Rodyti glikemijos pokyčius detaliai</string>
     <string name="pref_show_avgdelta">Rodyti vidutinį pokytį</string>
+    <string name="pref_show_tempTarget">Rodyti laikiną tikslą</string>
+    <string name="pref_show_reservoir_level">Rodyti rezervuaro lygį</string>
     <string name="pref_show_phone_battery">Rodyti telefono bateriją</string>
     <string name="pref_show_rig_battery">Rodyti įrenginio bateriją</string>
     <string name="pref_show_basal_rate">Rodyti valandinę bazę</string>
@@ -58,6 +60,8 @@
     <string name="pref_show_direction_arrow">Rodyti krypties rodyklę</string>
     <string name="pref_show_ago">Laikas nuo pask. vertės</string>
     <string name="pref_show_week_number">Rodyti savaitės numerį</string>
+    <string name="pref_show_date">Rodyti datą</string>
     <string name="default_custom_watchface_comment">Numatytasis ekranas. Paspaudus EKSPORTUOTI, bus sukurtas ruošinys</string>
     <string name="wear_default_watchface">Numatytasis ekranas</string>
+    <string name="wear_more_watchfaces">Daugiau ciferblatų</string>
 </resources>
