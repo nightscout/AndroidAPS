@@ -4,6 +4,7 @@
     <string name="dia_label_exam">Insulino veikimo trukmė (IVT)</string>
     <string name="dia_profile">IVT reikšmė nurodoma profilyje.</string>
     <string name="dia_minimumis5h">Mažiausia IVT reikšmė - 5 valandos.</string>
+    <string name="dia_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/YourAapsProfile.html</string>
     <string name="dia_meaningisequaltodiapump">Jei IVT reikšmė, kurią naudojote pompoje prieš pradedant naudotis AndroidAPS, tiko - jos nereikia keisti.</string>
     <string name="dia_valuemustbedetermined">Jūs turite nustatyti savo individualią IVT reikšmę.</string>
     <string name="hypott_label">Hipo laikinas tikslas</string>
@@ -12,11 +13,13 @@
     <string name="hypott_preventoversmb">Kad būtų išvengta per didelių AAPS korekcijų, kai glikemija pradeda staigiai kilti suvalgius greitai veikiančių angliavandenių hipoglikemijos metu.</string>
     <string name="hypott_exercise">Tam, kad būtų koreguojama hipoglikemija, įvykusi dėl fizinio aktyvumo.</string>
     <string name="hypott_0basal">Tam, kad būtų išvengta glikemijos kritimo kai jau nustatyta 0% laikina bazė.</string>
+    <string name="hypott_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/TempTargets.html</string>
     <string name="pumpdisconnect_label">Priežastys, kada taikoma AndroidAPS funkcija „Atjungti pompą“</string>
     <string name="pumpdisconnect_unnecessary">To daryti nereikia, nes insulinas ir taip nebus tiekiamas, jei pompa fiziškai atjungta.</string>
     <string name="pumpdisconnect_missinginsulin">Tai neleidžia AndroidAPS įskaičiuoti insuliną, kuris nebus tiekiamas fiziškai atjungus pompą.</string>
     <string name="pumpdisconnect_notstop">Tai nesustabdys insulino tiekimo, jei pompa liks prijungta prie kūno.</string>
     <string name="pumpdisconnect_openloop">Tai perves AndroidAPS į atviro ciklo režimą.</string>
+    <string name="pumpdisconnect_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#loop-status</string>
     <string name="objectives_label">AAPS nustatymai</string>
     <string name="objectives2_label">AAPS nustatymai</string>
     <string name="objectives_howtosave">Kaip geriausiai padaryti nustatymų atsarginę kopiją?</string>
@@ -28,6 +31,8 @@
     <string name="objectives2_internalstorage">Jūsų nustatymų failas saugomas telefono aplanke Internal Storage/AAPS/preferences.</string>
     <string name="objectives2_cloud">Nustatymų failą reikia perkelti į saugią vietą ne telefone (pvz.: saugykloje debesyje, kompiuteryje, el. pašte ir pan.)</string>
     <string name="objectives2_easyrestore">Jei sugadinsite telefoną ar jį pamesite, yra paprastų būdų, kaip nuotoliniu būdu atkurti nustatymus be atsarginės kopijos.</string>
+    <string name="objectives_hint1">https://wiki.aaps.app/en/latest/Maintenance/ExportImportSettings.html</string>
+    <string name="objectives_hint2">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
     <string name="noisycgm_label">Triukšmingi NGJ rodmenys</string>
     <string name="noisycgm_whattodo">Ką reikėtų daryti, jei sensoriaus duomenys yra triukšmingi - besiblaškantys?</string>
     <string name="noisycgm_nothing">Nieko - AndroidAPS savaime susitvarkys.</string>
