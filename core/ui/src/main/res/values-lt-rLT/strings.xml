@@ -511,7 +511,17 @@
     <string name="password_preferences_decrypt_prompt">Jūsų paprašys nustatyti slaptažodį, kuris bus naudojamas dešifruojant importuotus nustatymus.</string>
     <!-- <unattended_export> -->
     <string name="export_ok">OK</string>
+    <string name="export_warning">Įspėjimas</string>
+    <string name="export_expired">Galiojimo laikas baigėsi</string>
+    <string name="export_disabled">Išjungta</string>
+    <string name="export_failed">Nepavyko</string>
+    <string name="export_alert">DĖMESIO</string>
     <!-- <unattended_export result messages> -->
+    <string name="export_result_message_exported">Nustatymai eksportuoti</string>
+    <string name="export_result_message_failed">Nustatymų eksportas NEPAVYKO!</string>
+    <string name="export_result_message_about_to_expire">Nustatymai eksportuoti: slaptažodis greitai baigs galioti. Eksportuokite rankiniu būdu ir (pakartotinai) įveskite slaptažodį.</string>
+    <string name="export_result_message_expired">Nustatymų eksportavimas atšauktas: slaptažodis pasibaigęs. Eksportuokite rankiniu būdu ir (pakartotinai) įveskite!</string>
+    <string name="export_result_message_disabled">Įspėjimas (automatizacija): Nustatymų eksportavimas neįjungtas!</string>
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">sumažinimas %1$s per %2$s</string>
     <string name="a11y_plus_button_description">padidinimas %1$s per %2$s</string>
