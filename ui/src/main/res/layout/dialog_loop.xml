@@ -82,7 +82,7 @@
                     android:paddingEnd="10dp"
                     android:text="@string/closedloop"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
                 <app.aaps.core.ui.elements.SingleClickButton
                     android:id="@+id/overview_lgsloop"
@@ -139,7 +139,7 @@
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
                     android:text="@string/disableloop"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
 
             </LinearLayout>
 
