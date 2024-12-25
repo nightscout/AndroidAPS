@@ -51,6 +51,7 @@
     <string name="extended_bolus">Ištęstas bolusas</string>
     <string name="paused">Pristabdyta</string>
     <string name="tdd_total">BPD viso</string>
+    <string name="tdd_old_data">Seni duomenys</string>
     <string name="goingtodeliver">Bus suleista %1$.2f vv</string>
     <string name="waitingforpump">Laukiama ryšio su pompa</string>
     <string name="androidaps_start">AAPS paleista</string>
@@ -88,6 +89,7 @@
     <string name="removerecord">Ištrinti įrašą</string>
     <string name="loopisdisabled">Ciklas išjungtas</string>
     <string name="alarm">Aliarmas</string>
+    <string name="exportsettings">Eksportuoti nustatymus</string>
     <string name="disableloop">Išjungti Ciklą</string>
     <string name="enableloop">Įjungti Ciklą</string>
     <string name="resumeloop">Atnaujinti ciklą</string>
@@ -112,6 +114,7 @@
     <string name="bg_label">Glikemija</string>
     <string name="calibration">Kalibravimas</string>
     <string name="alarminxmin">Pranešti po %1$d min</string>
+    <string name="treatmentdeliveryerror">Boluso suleidimo klaida. Patikrinkite faktiškai suleistą insulino kiekį ir įvestą angliavandenių skaičių</string>
     <string name="bolus_reminder">Priminimas apie bolusą</string>
     <string name="duration_label">Trukmė</string>
     <string name="shortgramm">g</string>
@@ -166,6 +169,14 @@
     <string name="virtualpump_uploadstatus_title">Įkelti pompos statusą į NS arba Tidepool</string>
     <string name="suspendloop_label">Ciklas išjungtas/sustabdytas</string>
     <string name="iob_label">Aktyvus insulinas organizme (AIO)</string>
+    <string name="loopstatus_OAPS_result">OAPS REZULTATAS:</string>
+    <string name="extended_bolus_data_point_graph">%1$.2f vv ( %2$.2f vv/h )</string>
+    <string name="temp_basal_tsf_fake_extended">%1$.2f vv/val (%2$.2fE) @%3$s</string>
+    <string name="temp_basal_tsf_absolute">%1$.2f vv/val @%2$s</string>
+    <string name="temp_basal_tsf_percent">%1$.0f%% @%2$s</string>
+    <string name="extended_bolus_medium">%1$.2f vv/h %2$s/%3$s\'</string>
+    <string name="nav_export">Eksportuoti nustatymus</string>
+    <string name="location_permission_not_granted">Vietos nustatymo leidimas nesuteiktas. Suteikite leidimą Android nustatymuose.</string>
     <!--    Protection-->
     <string name="wrongpassword">Neteisingas slaptažodis</string>
     <string name="wrongpin">Klaidingas PIN</string>
@@ -196,10 +207,12 @@
     <string name="careportal_bgcheck">Gliukomatis</string>
     <string name="careportal_mbg">Gliukomačio rodmenys</string>
     <string name="careportal_announcement">Pranešimas</string>
+    <string name="careportal_settings_export">Nustatymų eksportavimas</string>
     <string name="careportal_note">Pastaba</string>
     <string name="careportal_question">Klausimas</string>
     <string name="careportal_exercise">Aktyvumas</string>
     <string name="careportal_announcement_message">Pranešimas: %1$s</string>
+    <string name="careportal_settings_export_message">Nustatymų eksportavimas: %1$s</string>
     <string name="careportal_note_message">Pastaba: %1$s</string>
     <string name="careportal_question_message">Klausimas: %1$s</string>
     <string name="careportal_exercise_message">Aktyvumas: %1$s</string>
@@ -232,6 +245,7 @@
     <string name="activity">Aktyvumas</string>
     <string name="wear">Išmanieji laikrodžiai</string>
     <string name="automation">Automatizacija</string>
+    <string name="settingsexport">Nustatymų eksportavimas</string>
     <string name="custom">Pasirinktinis</string>
     <string name="loop">Ciklas</string>
     <string name="ns">NS</string>
@@ -333,6 +347,7 @@
     <string name="delete_future_treatments">Ištrinti ateities įrašus</string>
     <string name="uel_export_settings">EKSPORTUOTI NUSTATYMUS</string>
     <string name="uel_import_settings">IMPORTUOTI NUSTATYMUS</string>
+    <string name="uel_select_directory">KATALOGO PARINKIMAS</string>
     <string name="uel_reset_databases">IŠVALYTI DUOMENŲ BAZES</string>
     <string name="uel_cleanup_databases">IŠVALYTI DUOMBAZĘ</string>
     <string name="uel_export_databases">EKSPORTUOTI DUOMENŲ BAZES</string>
@@ -416,6 +431,7 @@
     <string name="bolus_recorded_only">Bolusas bus tik įrašytas (nebus suleistas)</string>
     <string name="advisoralarm">Pranešti apie laiką valgyti</string>
     <string name="no_action_selected">Veiksmas nepasirinktas, nieko neįvyks</string>
+    <string name="carb_equal_zero_no_action">Angliavandenių = 0. Veiksmai neatlikti!</string>
     <string name="wizard_no_insulin_required">Insulino nereikia!</string>
     <string name="wizard_no_actual_bg">Nėra naujausių cukraus duomenų, kuriais būtų galima pagrįsti skaičiavimus!</string>
     <string name="wizard_no_active_profile">Neparinktas aktyvus profilis!</string>
@@ -475,6 +491,7 @@
     <string name="password_cleared">Slaptažodis išvalytas!</string>
     <string name="pairing">Susiejimas</string>
     <string name="initializing">Inicijuojama ...</string>
+    <string name="secs" comment="second short">%1$d sek.</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Ribojamas maksimalus bazės dydis%1$.2f vv/val dėl %2$s</string>
     <string name="pumplimit">pompos limitas</string>
@@ -493,7 +510,18 @@
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Jūsų paprašys nustatyti slaptažodį, kuris bus naudojamas dešifruojant importuotus nustatymus.</string>
     <!-- <unattended_export> -->
+    <string name="export_ok">OK</string>
+    <string name="export_warning">Įspėjimas</string>
+    <string name="export_expired">Galiojimo laikas baigėsi</string>
+    <string name="export_disabled">Išjungta</string>
+    <string name="export_failed">Nepavyko</string>
+    <string name="export_alert">DĖMESIO</string>
     <!-- <unattended_export result messages> -->
+    <string name="export_result_message_exported">Nustatymai eksportuoti</string>
+    <string name="export_result_message_failed">Nustatymų eksportas NEPAVYKO!</string>
+    <string name="export_result_message_about_to_expire">Nustatymai eksportuoti: slaptažodis greitai baigs galioti. Eksportuokite rankiniu būdu ir (pakartotinai) įveskite slaptažodį.</string>
+    <string name="export_result_message_expired">Nustatymų eksportavimas atšauktas: slaptažodis pasibaigęs. Eksportuokite rankiniu būdu ir (pakartotinai) įveskite!</string>
+    <string name="export_result_message_disabled">Įspėjimas (automatizacija): Nustatymų eksportavimas neįjungtas!</string>
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">sumažinimas %1$s per %2$s</string>
     <string name="a11y_plus_button_description">padidinimas %1$s per %2$s</string>

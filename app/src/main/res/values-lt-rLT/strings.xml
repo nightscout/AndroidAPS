@@ -27,4 +27,7 @@
     <string name="count_selected">%1$d pasirinkta</string>
     <string name="sort_label">Rūšiuoti</string>
     <string name="search">Ieškoti</string>
+    <string name="simple_mode">Paprastas Režimas</string>
+    <string name="select">Pasirinkti</string>
+    <string name="set">Nustatyti</string>
 </resources>

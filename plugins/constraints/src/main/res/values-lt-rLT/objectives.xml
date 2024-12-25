@@ -73,6 +73,8 @@
     <string name="unfinshed_button">Kitas neužbaigtas</string>
     <string name="requestcode">Paprašyti kodo: %1$s</string>
     <string name="objectives_hint">(pasirinkite visus teisingus atsakymus)</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
     <string name="notconnected">Neprisijungta prie interneto</string>
     <string name="failedretrievetime">Nepavyko nuskaityti laiko</string>
     <string name="requirementnotmet">Tikslo reikalavimai neįvykdyti</string>
