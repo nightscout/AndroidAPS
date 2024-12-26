@@ -106,7 +106,8 @@ class NsIncomingDataProcessor @Inject constructor(
                 if (sgv.timestamp < dateUtil.now() + T.mins(1).msecs() && sgv.timestamp > latestDateInReceivedData) {
                     latestDateInReceivedData = sgv.timestamp
                     glucoseValues += sgv
-                }
+                } else
+                    aapsLogger.debug(LTag.NSCLIENT, "Ignoring record with wrong timestamp: $sgv")
             }
         } else if (sgvs is List<*>) { // V3 client
 
@@ -115,7 +116,8 @@ class NsIncomingDataProcessor @Inject constructor(
                 if (sgv.timestamp < dateUtil.now() && sgv.timestamp > latestDateInReceivedData) {
                     latestDateInReceivedData = sgv.timestamp
                     glucoseValues += sgv
-                }
+                } else
+                    aapsLogger.debug(LTag.NSCLIENT, "Ignoring record with wrong timestamp: $sgv")
             }
         }
         if (glucoseValues.isNotEmpty()) {

@@ -94,7 +94,7 @@ class KeepAliveWorker(
     }
 
     override suspend fun doWorkAndLog(): Result {
-        aapsLogger.debug(LTag.CORE, "KeepAlive received from: " + inputData.getString("schedule"))
+        aapsLogger.debug(LTag.CORE, "KeepAlive received from: " + inputData.getString("schedule") + " Thread count: " + Thread.activeCount())
 
         // 15 min interval is WorkManager minimum so schedule another instances to have 5 min interval
         if (inputData.getString("schedule") == KA_0) {
