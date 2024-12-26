@@ -139,7 +139,7 @@ class NsIncomingDataProcessor @Inject constructor(
         try {
             var latestDateInReceivedData: Long = 0
             for (treatment in treatments) {
-                aapsLogger.debug(LTag.DATABASE, "Received NS treatment: $treatment")
+                aapsLogger.debug(LTag.NSCLIENT, "Received NS treatment: $treatment")
                 val date = treatment.date ?: continue
                 if (date > latestDateInReceivedData) latestDateInReceivedData = date
 
@@ -162,7 +162,7 @@ class NsIncomingDataProcessor @Inject constructor(
                                     || treatment.targetTopAsMgdl() > Constants.MAX_TT_MGDL
                                     || treatment.targetBottomAsMgdl() > treatment.targetTopAsMgdl()
                                 ) {
-                                    aapsLogger.debug(LTag.DATABASE, "Ignored TemporaryTarget $treatment")
+                                    aapsLogger.debug(LTag.NSCLIENT, "Ignored TemporaryTarget $treatment")
                                     continue
                                 }
                             }
@@ -222,7 +222,7 @@ class NsIncomingDataProcessor @Inject constructor(
     }
 
     fun processFood(data: Any) {
-        aapsLogger.debug(LTag.DATABASE, "Received Food Data: $data")
+        aapsLogger.debug(LTag.NSCLIENT, "Received Food Data: $data")
 
         try {
             val foods = mutableListOf<FD>()
@@ -246,7 +246,7 @@ class NsIncomingDataProcessor @Inject constructor(
                         else     -> {
                             val food = FD.fromJson(jsonFood)
                             if (food != null) foods += food
-                            else aapsLogger.error(LTag.DATABASE, "Error parsing food", jsonFood.toString())
+                            else aapsLogger.error(LTag.NSCLIENT, "Error parsing food", jsonFood.toString())
                         }
                     }
                 }
