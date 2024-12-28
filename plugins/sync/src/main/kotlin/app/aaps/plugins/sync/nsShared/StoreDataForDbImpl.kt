@@ -107,26 +107,29 @@ class StoreDataForDbImpl @Inject constructor(
 
     private val disposable = CompositeDisposable()
     override fun storeGlucoseValuesToDb() {
-        if (glucoseValues.isNotEmpty())
-            persistenceLayer.insertCgmSourceData(Sources.NSClient, glucoseValues, emptyList(), null)
-                .blockingGet()
-                .also { result ->
-                    glucoseValues.clear()
-                    result.updated.forEach {
-                        nsClientSource.detectSource(it)
-                        updated.inc(GV::class.java.simpleName)
+        synchronized(glucoseValues) {
+            if (glucoseValues.isNotEmpty()) {
+                persistenceLayer.insertCgmSourceData(Sources.NSClient, glucoseValues.toMutableList(), emptyList(), null)
+                    .blockingGet()
+                    .also { result ->
+                        glucoseValues.clear()
+                        result.updated.forEach {
+                            nsClientSource.detectSource(it)
+                            updated.inc(GV::class.java.simpleName)
+                        }
+                        result.inserted.forEach {
+                            nsClientSource.detectSource(it)
+                            inserted.inc(GV::class.java.simpleName)
+                        }
+                        result.updatedNsId.forEach {
+                            nsClientSource.detectSource(it)
+                            nsIdUpdated.inc(GV::class.java.simpleName)
+                        }
+                        sendLog("GlucoseValue", GV::class.java.simpleName)
                     }
-                    result.inserted.forEach {
-                        nsClientSource.detectSource(it)
-                        inserted.inc(GV::class.java.simpleName)
-                    }
-                    result.updatedNsId.forEach {
-                        nsClientSource.detectSource(it)
-                        nsIdUpdated.inc(GV::class.java.simpleName)
-                    }
-                    sendLog("GlucoseValue", GV::class.java.simpleName)
-                }
-
+                glucoseValues.clear()
+            }
+        }
         SystemClock.sleep(pause)
         rxBus.send(EventNSClientNewLog("● DONE PROCESSING BG", ""))
     }
