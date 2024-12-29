@@ -1,18 +1,18 @@
 /**
  * GraphView
  * Copyright (C) 2014  Jonas Gehring
- *
+ * <p>
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License,
  * with the "Linking Exception", which can be found at the license.txt
  * file in this program.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU General Public License
  * with the "Linking Exception" along with this program; if not,
  * write to the author Jonas Gehring <g.jjoe64@gmail.com>.
@@ -23,12 +23,12 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.PointF;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+
+import androidx.annotation.NonNull;
 
 import com.jjoe64.graphview.series.Series;
 
@@ -160,6 +160,7 @@ public class GraphView extends View {
 
     /**
      * Initialize the GraphView view
+     *
      * @param context
      */
     public GraphView(Context context) {
@@ -232,6 +233,7 @@ public class GraphView extends View {
     /**
      * Add a new series to the graph. This will
      * automatically redraw the graph.
+     *
      * @param s the series to be added
      */
     public void addSeries(Series s) {
@@ -266,10 +268,10 @@ public class GraphView extends View {
      *                       to use "true" because this will
      *                       improve performance and prevent
      *                       a flickering.
-     * @param keepViewport true if you don't want that
-     *                     the viewport will be recalculated.
-     *                     It is recommended to use "true" for
-     *                     performance.
+     * @param keepViewport   true if you don't want that
+     *                       the viewport will be recalculated.
+     *                       It is recommended to use "true" for
+     *                       performance.
      */
     public void onDataChanged(boolean keepLabelsSize, boolean keepViewport) {
         // adjust grid system
@@ -287,7 +289,7 @@ public class GraphView extends View {
     protected void onDraw(Canvas canvas) {
         if (isInEditMode()) {
             canvas.drawColor(Color.rgb(200, 200, 200));
-            canvas.drawText("GraphView: No Preview available", canvas.getWidth()/2, canvas.getHeight()/2, mPreviewPaint);
+            canvas.drawText("GraphView: No Preview available", canvas.getWidth() / 2, canvas.getHeight() / 2, mPreviewPaint);
         } else {
             drawTitle(canvas);
             mViewport.drawFirst(canvas);
@@ -313,11 +315,11 @@ public class GraphView extends View {
      * @param canvas Canvas
      */
     protected void drawTitle(Canvas canvas) {
-        if (mTitle != null && mTitle.length()>0) {
+        if (mTitle != null && mTitle.length() > 0) {
             mPaintTitle.setColor(mStyles.titleColor);
             mPaintTitle.setTextSize(mStyles.titleTextSize);
             mPaintTitle.setTextAlign(Paint.Align.CENTER);
-            float x = canvas.getWidth()/2;
+            float x = canvas.getWidth() / 2;
             float y = mPaintTitle.getTextSize();
             canvas.drawText(mTitle, x, y, mPaintTitle);
         }
@@ -326,12 +328,12 @@ public class GraphView extends View {
     /**
      * Calculates the height of the title.
      *
-     * @return  the actual size of the title.
-     *          if there is no title, 0 will be
-     *          returned.
+     * @return the actual size of the title.
+     * if there is no title, 0 will be
+     * returned.
      */
     protected int getTitleHeight() {
-        if (mTitle != null && mTitle.length()>0) {
+        if (mTitle != null && mTitle.length() > 0) {
             return (int) mPaintTitle.getTextSize();
         } else {
             return 0;
@@ -363,9 +365,9 @@ public class GraphView extends View {
     }
 
     /**
-     * @return  the space on the left side of the
-     *          view from the left border to the
-     *          beginning of the graph viewport.
+     * @return the space on the left side of the
+     * view from the left border to the
+     * beginning of the graph viewport.
      */
     public int getGraphContentLeft() {
         int border = getGridLabelRenderer().getStyles().padding;
@@ -373,9 +375,9 @@ public class GraphView extends View {
     }
 
     /**
-     * @return  the space on the top of the
-     *          view from the top border to the
-     *          beginning of the graph viewport.
+     * @return the space on the top of the
+     * view from the top border to the
+     * beginning of the graph viewport.
      */
     public int getGraphContentTop() {
         int border = getGridLabelRenderer().getStyles().padding + getTitleHeight();
@@ -383,7 +385,7 @@ public class GraphView extends View {
     }
 
     /**
-     * @return  the height of the graph viewport.
+     * @return the height of the graph viewport.
      */
     public int getGraphContentHeight() {
         int border = getGridLabelRenderer().getStyles().padding;
@@ -393,7 +395,7 @@ public class GraphView extends View {
     }
 
     /**
-     * @return  the width of the graph viewport.
+     * @return the width of the graph viewport.
      */
     public int getGraphContentWidth() {
         int border = getGridLabelRenderer().getStyles().padding;
@@ -457,8 +459,8 @@ public class GraphView extends View {
     }
 
     /**
-     * @return  the title that will be shown
-     *          above the graph.
+     * @return the title that will be shown
+     * above the graph.
      */
     public String getTitle() {
         return mTitle;
@@ -511,10 +513,9 @@ public class GraphView extends View {
     }
 
     /**
-     *
      * @return
      */
-    public SecondScale getSecondScale() {
+    @NonNull public SecondScale getSecondScale() {
         if (mSecondScale == null) {
             mSecondScale = new SecondScale(mViewport);
         }

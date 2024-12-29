@@ -112,7 +112,6 @@
     <string name="bg_label">BG</string>
     <string name="calibration">Καλιμπράρισμα</string>
     <string name="alarminxmin">Εκτέλεση συναγερμού σε %1$d λεπτά</string>
-    <string name="treatmentdeliveryerror">Το Bolus ανέφερε ένα σφάλμα. Ελέγξτε χειροκίνητα την ποσότητα που έχει πραγματικά χορηγηθεί</string>
     <string name="bolus_reminder">Υπενθύμιση Bolus</string>
     <string name="duration_label">Διάρκεια</string>
     <string name="shortgramm">g</string>
@@ -400,53 +399,8 @@
     <string name="a11y_user">χρήστης</string>
     <!-- Autotune -->
     <string name="autotune">Autotune</string>
-    <string name="autotune_description">Βοήθεια για πιθανές προσαρμογές του προφίλ (ISF, αναλογία υδατανθράκων και βασικοί ρυθμοί)</string>
-    <string name="autotune_shortname">AT</string>
-    <string name="autotune_settings">Ρυθμίσεις Autotune</string>
-    <string name="autotune_auto_title">Αυτοματισμός Εναλλαγής Προφίλ</string>
-    <string name="autotune_auto_summary">Αν ενεργοποιηθεί, το Autotune θα ενημερώνει αυτόματα και θα αλλάζει το προεπιλεγμένο Προφίλ μετά τον υπολογισμό από έναν κανόνα αυτοματισμού.</string>
-    <string name="autotune_categorize_uam_as_basal_title">Κατηγοριοποίηση του UAM ως βασικού</string>
-    <string name="autotune_categorize_uam_as_basal_summary">Ενεργοποιήστε μόνο αν έχετε εισαγάγει αξιόπιστα όλους τους υδατάνθρακες που καταναλώνονται, με αυτή την επιλογή ξαφνικές αυξήσεις που εμφανίζονται θα χρησιμοποιηθούν από το Autotune για να προτείνουν αλλαγές στο βασικό ρυθμό.</string>
-    <string name="autotune_tune_insulin_curve_title">Συντονισμός καμπύλης ινσουλίνης</string>
-    <string name="autotune_tune_insulin_curve_summary">Ενεργοποιήστε μόνο αν χρησιμοποιείτε free peak. Αυτή η επιλογή θα συντονίσει τις διάρκειες των peak και DIA</string>
-    <string name="autotune_default_tune_days_title">Αριθμός ημερών δεδομένων</string>
-    <string name="autotune_circadian_ic_isf_title">Εφαρμόστε το μέσο αποτέλεσμα σε κιρκαδικό IC/ISF</string>
-    <string name="autotune_circadian_ic_isf_summary">Το Autotune δεν θα συντονίσει τις κιρκαδικές παραλλαγές, αυτή η επιλογή ισχύει μόνο για του μέσο συντονισμό του IC και ISF στο κιρκαδικό προφίλ εισόδου σας</string>
-    <string name="autotune_additional_log_title">Συμπερίληψη περισσότερων πληροφοριών καταγραφής για τον εντοπισμό σφαλμάτων</string>
-    <string name="autotune_additional_log_summary">Ενεργοποιήστε μόνο αν ζητηθεί από τον προγραματιστή η αποστολή περισσότερων πληροφοριών καταγραφής για να βοηθήσει στην αποσφαλμάτωση του προσθέτου Autotune</string>
-    <string name="autotune_default_tune_days_summary">Προεπιλεγμένος αριθμός ημερών δεδομένων προς επεξεργασία από το Autotune (έως 30)</string>
-    <string name="autotune_tunedprofile_name">Συντονισμένο</string>
-    <string name="autotune_profile">Προφίλ :</string>
     <string name="autotune_tune_days">Ημέρες συντονισμού:</string>
-    <string name="autotune_last_run">Τελευταίος Υπολογισμός :</string>
-    <string name="autotune_warning">Προειδοποίηση :</string>
     <string name="autotune_select_profile">Επιλέξτε προφίλ για συντονισμό</string>
-    <string name="autotune_ic_warning">Το επιλεγμένο προφίλ έχει τιμές IC %1$d. Το Autotune θα χρησιμοποιήσει %2$.2f g/U</string>
-    <string name="autotune_isf_warning">Το επιλεγμένο προφίλ έχει τιμές ISF %1$d. Το Autotune θα χρησιμοποιήσει %2$.1f %3$s/U</string>
-    <string name="autotune_error">Σφάλμα στα εισαχθέντα δεδομένα, προσπαθήστε να εκτελέσετε ξανά το autotune ή μειώστε τον αριθμό των ημερών</string>
-    <string name="autotune_error_more_days">Σφάλμα στα εισαχθέντα δεδομένα , αυξήστε τον αριθμό των ημερών</string>
-    <string name="autotune_warning_during_run">Ο υπολογισμός Autotune ξεκίνησε, παρακαλώ να είστε υπομονετικοί</string>
-    <string name="autotune_warning_after_run">Ελέγξτε προσεκτικά τα αποτελέσματα πριν τα χρησιμοποιήσετε!</string>
-    <string name="autotune_partial_result">Ημέρα μερικού αποτελέσματος %1$d / %2$d ρυθμίστηκε</string>
-    <string name="autotune_result">Αποτέλεσμα: %1$s</string>
-    <string name="autotune_param">Παράμετρος</string>
-    <string name="autotune_percent">%</string>
-    <string name="autotune_missing">Χαμένες</string>
-    <string name="autotune_profile_name">Προφίλ Autotune %1$s</string>
-    <string name="autotune_run">Εκτέλεση Autotune</string>
-    <string name="autotune_check_input_profile_button">Έλεγχος προφίλ εισόδου</string>
-    <string name="autotune_compare_profile">Σύγκριση προφίλ</string>
-    <string name="autotune_copy_localprofile_button">Αντιγραφή στο τοπικό προφίλ</string>
-    <string name="autotune_update_input_profile_button">Ενημέρωση προφίλ εισόδου</string>
-    <string name="autotune_revert_input_profile_button">Επαναφορά προφίλ εισόδου</string>
-    <string name="autotune_copy_local_profile_message">Δημιουργία ενός νέου τοπικού προφίλ από αυτό το Προφίλ Autotune;</string>
-    <string name="autotune_update_local_profile_message">Ενημέρωση του προφίλ %1$s με το Προφίλ Autotune;</string>
-    <string name="autotune_revert_local_profile_message">Επαναφορά προφίλ %1$s με Προφίλ Εισαγωγής;</string>
-    <string name="autotune_profile_invalid">Μη έγκυρο προφίλ</string>
-    <string name="autotune_run_without_autoswitch">Το Autotune έτρεξε χωρίς αλλαγή προφίλ</string>
-    <string name="autotune_run_with_autoswitch">Το Autotune έτρεξε έγινε αυτόματη αλλαγή προφίλ</string>
-    <string name="autotune_run_with_error">Σφάλμα κατά την τελευταία εκτέλεση του Autotune</string>
-    <string name="autotune_run_cancelled">Εντοπίστηκε μια άλλη εκτέλεση του Autotune, η εκτέλεση ακυρώθηκε</string>
     <!-- Alerts -->
     <string name="raise_notifications_as_android_notifications">Χρησιμοποιήστε ειδοποιήσεις συστήματος για ειδοποιήσεις και συναγερμούς</string>
     <string name="urgent_alarm">Συναγερμός έκτακτης ανάγκης</string>
@@ -526,7 +480,6 @@
     <string name="limitingpercentrate">Περιορίζεται το μέγιστο επί τοις εκατό ποσοστό σε %1$d%% λόγω %2$s</string>
     <string name="itmustbepositivevalue">πρέπει να είναι θετική τιμή</string>
     <string name="limitingbolus">Περιορίζεται το bolus σε %1$.1f U λόγω %2$s</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Επιβεβαίωση</string>
     <string name="message">Μήνυμα</string>
@@ -538,6 +491,8 @@
     <string name="close">Κλείσιμο</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Θα σας ζητηθεί ο βασικός κωδικός πρόσβασης, ο οποίος είναι απαραίτητος για την αποκωδικοποίηση των εισαγώμενων προτιμήσεων.</string>
+    <!-- <unattended_export> -->
+    <!-- <unattended_export result messages> -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">μείωση %1$s κατά %2$s</string>
     <string name="a11y_plus_button_description">αύξηση %1$s κατά %2$s</string>

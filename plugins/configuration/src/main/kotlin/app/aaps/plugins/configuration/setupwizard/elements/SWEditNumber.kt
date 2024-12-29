@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import app.aaps.core.interfaces.utils.SafeParse
+import app.aaps.core.keys.DoubleKey
 import app.aaps.core.ui.elements.NumberPicker
 import dagger.android.HasAndroidInjector
 import java.text.DecimalFormat
@@ -33,7 +34,7 @@ class SWEditNumber(injector: HasAndroidInjector, private val init: Double, priva
         label?.let { l.setText(it) }
         l.setTypeface(l.typeface, Typeface.BOLD)
         layout.addView(l)
-        val initValue = sp.getDouble(preferenceId, init)
+        val initValue = sp.getDouble(preference, init)
         val numberPicker = NumberPicker(context)
         numberPicker.setParams(initValue, min, max, 0.1, DecimalFormat("0.0"), false, null, watcher)
 
@@ -46,8 +47,8 @@ class SWEditNumber(injector: HasAndroidInjector, private val init: Double, priva
         super.generateDialog(layout)
     }
 
-    fun preferenceId(preferenceId: Int): SWEditNumber {
-        this.preferenceId = preferenceId
+    fun preference(preference: DoubleKey): SWEditNumber {
+        this.preference = preference.key
         return this
     }
 

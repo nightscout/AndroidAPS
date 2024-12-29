@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bg_label">GUK</string>
     <string name="executing_right_now">Naredba se izvršava upravo sada</string>
     <string name="basal_value_below_minimum">Bazalna vrijednost ispod minimuma. Profil nije postavljen!</string>
-    <string name="permission">Dozvola</string>
-    <string name="need_whitelisting">%1$s potrebno stavljanje na popis dopuštenih za optimizaciju baterije za pravilan rad</string>
-    <string name="need_location_permission">Aplikaciji je potrebna dozvola za lokaciju za BT skeniranje i WiFi identifikaciju</string>
-    <string name="need_storage_permission">Aplikaciji je potrebno dopuštenje za pohranu kako bi mogla pohranjivati datoteke dnevnika i izvoziti postavke</string>
     <!--       Stats -->
     <string name="veryLow" comment="below 3.1">Vrlo nisko</string>
     <string name="low" comment="3.1-3.9">Nisko</string>

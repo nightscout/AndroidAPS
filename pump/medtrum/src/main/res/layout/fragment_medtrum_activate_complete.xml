@@ -5,11 +5,11 @@
 
     <data>
 
-        <import type="info.nightscout.pump.medtrum.code.PatchStep" />
+        <import type="app.aaps.pump.medtrum.code.PatchStep" />
 
         <variable
             name="viewModel"
-            type="info.nightscout.pump.medtrum.ui.viewmodel.MedtrumViewModel" />
+            type="app.aaps.pump.medtrum.ui.viewmodel.MedtrumViewModel" />
     </data>
 
     <ScrollView
@@ -40,18 +40,51 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
+                android:id="@+id/text_can_export_settings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="5dp"
+                android:gravity="center"
+                android:text="@string/can_export_settings"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_activating_complete" />
+
+            <app.aaps.core.ui.elements.SingleClickButton
+                android:id="@+id/nav_export"
+                style="@style/GrayButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="5dp"
+                android:drawableTop="@drawable/ic_export_settings"
+                android:padding="5dp"
+                android:text="@string/nav_export"
+                android:textSize="11sp"
+                app:layout_column="0"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill"
+                app:layout_constraintTop_toBottomOf="@+id/text_can_export_settings"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
                 android:id="@+id/text_press_OK_to_return"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="5dp"
                 android:gravity="center"
                 android:text="@string/press_OK_to_return"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_activating_complete" />
+                app:layout_constraintTop_toBottomOf="@+id/nav_export" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_button"

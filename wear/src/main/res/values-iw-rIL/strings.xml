@@ -2,14 +2,12 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_watchface_large">AAPS (גדול)</string>
-    <string name="label_watchface_big_chart">AAPS (תרשים גדול)</string>
-    <string name="label_watchface_no_chart">AAPS (ללא תרשים)</string>
     <string name="label_watchface_circle">AAPS (עיגול)</string>
     <string name="label_watchface_digital_style">AAPS (דיגיטלי)</string>
     <string name="label_actions_tile">AAPS (פעולות)</string>
     <string name="label_temp_target_tile">AAPS (מטרה זמנית)</string>
     <string name="label_quick_wizard_tile">AAPS (אשף מהיר)</string>
+    <string name="label_user_action_tile">AAPS(פעולת משתמש)</string>
     <string name="label_warning_sync">אין נתונים!</string>
     <string name="label_warning_old">נתונים ישנים!</string>
     <string name="label_warning_since">מאז %1$s</string>
@@ -17,7 +15,7 @@
     <string name="msg_warning_sync">לא התקבלו נתונים מאז %1$s! בדקו אם AAPS בטלפון שולח נתונים לשעון</string>
     <string name="msg_warning_old">נתוני AAPS מלפני %1$s! בדקו את החיישן, הגדרות xDrip, NS, AAPS או אחר!</string>
     <string name="pref_vibrate_on_bolus">רטט במתן בולוס</string>
-    <string name="pref_units_for_actions">יחידות עבור פעולות</string>
+    <string name="units_short">יח\'</string>
     <string name="pref_display_settings">תצוגה</string>
     <string name="pref_graph_settings">גרף</string>
     <string name="pref_interface_settings">ממשק</string>
@@ -50,10 +48,6 @@
     <string name="pref_quick_righty">ימני מהיר</string>
     <string name="pref_quick_lefty">שמאלי מהיר</string>
     <string name="pref_modern_sparse">מינימלי מודרני</string>
-    <string name="pref_low">נמוך</string>
-    <string name="pref_medium">בינוני</string>
-    <string name="pref_high">גבוה</string>
-    <string name="pref_auto">אוטומטי</string>
     <string name="pref_big_numbers">מספרים גדולים</string>
     <string name="pref_ring_history">היסטוריית צלצולים</string>
     <string name="pref_light_ring_history">היסטוריה של טבעת אור</string>
@@ -86,6 +80,7 @@
     <string name="action_duration">משך</string>
     <string name="action_tempt_confirmation">התבקש ערך מטרה זמני</string>
     <string name="action_quick_wizard_confirmation">התבקש אשף מהיר</string>
+    <string name="action_user_action_confirmation">נחוצה פעולת משתמש</string>
     <string name="action_treatment_confirmation">התבקש טיפול</string>
     <string name="action_bolus_confirmation">התבקש בולוס</string>
     <string name="action_wizard_confirmation">התבקש חישוב</string>
@@ -107,7 +102,6 @@
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">כמות חופשית</string>
     <string name="action_confirm">אישור</string>
     <string name="action_timeshift">היסט זמן</string>
-    <string name="action_bolus">בולוס</string>
     <string name="bolus_progress">התקדמות הבולוס</string>
     <string name="press_to_cancel">לחצו לביטול</string>
     <string name="cancel_bolus">ביטול בולוס</string>
@@ -144,6 +138,8 @@
     <string name="pref_simplify_ui_sum">מציג רק את השעה ואת רמת הסוכר</string>
     <string name="pref_vibrate_hourly">רטט אחת לשעה</string>
     <string name="pref_show_weeknumber">הצג מס\' שבוע</string>
+    <string name="pref_switch_external">החלף נתונים חיצוניים בפני השעון</string>
+    <string name="custom_pref_show_seconds">הצג שניות</string>
     <string name="digitalstyle_pref_your_style">הסגנון שלכם:</string>
     <string name="digitalstyle_style_none">ללא סגנון</string>
     <string name="digitalstyle_style_minimal">סגנון מינימלי</string>
@@ -162,7 +158,7 @@
     <string name="simple_ui_always_on_charging">דלוק תמיד וטוען</string>
     <string name="temp_target_eating_soon">אוכל בקרוב</string>
     <string name="temp_target_hypo">היפו</string>
-    <string name="temp_target_activity">פעילות</string>
+    <string name="temp_target_activity">פעילות גופנית</string>
     <string name="temp_target_manual">ידני</string>
     <string name="temp_target_cancel">ביטול</string>
     <string name="tile_none">ללא</string>
@@ -175,22 +171,27 @@
     <string name="no_iob_u">-- יח\'</string>
     <string name="no_cob_g">-- גר\'</string>
     <string name="no_tmp_basal_u_h">-.--יח\' לשעה</string>
-    <string name="uploader_na">U: --%</string>
-    <string name="no_status">S: --</string>
-    <string name="time_stamp_na_min_ago">לפני -- דקות</string>
-    <string name="delta_na">--- mg/dl</string>
-    <string name="no_loop_status">חסר סטטוס לולאה</string>
     <string name="cob_000g">000 גר\'</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00 יח\'</string>
     <string name="snooze_alert">השתק התראה (נודניק)</string>
     <string name="sending_snooze">מבצע נודניק ב-AndroidAPS</string>
-    <string name="short_hour">ש\'</string>
     <string name="week_short">ש\'</string>
     <string name="day_short">י\'</string>
     <string name="hour_short">ש\'</string>
+    <string name="hour_minute">%1$s:%2$s</string>
+    <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">ישן</string>
     <string name="old_warning">!ישן!</string>
     <string name="error">!שגיאה!</string>
     <string name="pref_heartRateSampling">דופק</string>
+    <string name="pref_stepsSampling">הפעלת ספירת צעדים</string>
+    <string name="tile_tempt_1">ערך מטרה זמני 1</string>
+    <string name="tile_tempt_2">ערך מטרה זמני 2</string>
+    <string name="tile_tempt_3">ערך מטרה זמני 3</string>
+    <string name="tile_tempt_4">ערך מטרה זמני 4</string>
+    <string name="tile_action_1">פעולה 1</string>
+    <string name="tile_action_2">פעולה 2</string>
+    <string name="tile_action_3">פעולה 3</string>
+    <string name="tile_action_4">פעולה 4</string>
 </resources>

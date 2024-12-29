@@ -13,7 +13,6 @@
     <string name="ns_create_announcements_from_carbs_req_title">Създаване на известия при предупреждения за необходими въглехидрати</string>
     <string name="ns_create_announcements_from_errors_summary">Създаване на Nightscout известие при грешки и локални аларми (също видими в Careportal - Treatments)</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Създаване на Nightscout известия при предупреждения за необходими въглехидрати</string>
-    <string name="description_ns_client">Синхронизира локалните данни с Nightscout</string>
     <string name="description_ns_client_v3">Синхронизира локалните данни с Nightscout чрез API v3</string>
     <string name="blocked_by_charging">Блокирано от настройки</string>
     <string name="blocked_by_connectivity">Блокирано от настйкиро</string>
@@ -23,24 +22,11 @@
     <string name="ns_malfunction">Грешка в NSClient. Рестартирайте Nightscout и NSClient</string>
     <!-- NSClient -->
     <string name="no_write_permission">NSClient няма права за запис. Грешна API парола?</string>
-    <string name="ns_client_v3">NSClientV3</string>
-    <string name="ns_client_v3_short_name">NSV3</string>
     <string name="ns_client">Вътрешен NSClient</string>
-    <string name="ns_client_short_name">NSКЛ</string>
     <string name="ns_client_url">Nightscout aдрес:</string>
     <string name="restart">Рестарт</string>
-    <string name="ns_client_internal_title">Вътрешен NSClient</string>
     <string name="ns_client_url_title">Nightscout адрес</string>
-    <string name="ns_client_url_dialog_message">Въведете вашият Nightscout адрес</string>
-    <string name="ns_client_secret_title">NS API парола</string>
-    <string name="ns_client_secret_dialog_title">NS API парола</string>
-    <string name="ns_client_secret_dialog_message">Въведете NS API паролата (мин 12 символа)</string>
-    <string name="nsclient_token_title">NS access token</string>
-    <string name="nsclient_token_dialog_title">NS access token</string>
-    <string name="nsclient_token_dialog_message">Токена генериран от NS админ страницата (мин 17 символа)</string>
     <string name="deliver_now">Изпрати сега</string>
-    <string name="clear_queue">Изчисти опашка</string>
-    <string name="show_queue">Покажи опашка</string>
     <string name="queue">Опашка:</string>
     <string name="status">Статус:</string>
     <string name="clear_log">Изчисти лога</string>
@@ -88,18 +74,11 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Качване на данни в Tidepool</string>
-    <string name="tidepool_upload_cgm">Качвай данни за КЗ</string>
-    <string name="tidepool_upload_bolus">Качвай лечения (инсулин, въглехидрати)</string>
-    <string name="tidepool_upload_tbr">Качвай временни базали</string>
-    <string name="tidepool_upload_profile">Качвай смени на профил и временни цели</string>
-    <string name="tidepool_upload_bg">Качвай ръчните измервания на КЗ</string>
     <string name="remove_all">Премахване на всички</string>
-    <string name="reset_start">Рестартирай</string>
     <string name="upload_now">Качи сега</string>
     <string name="not_connected">Няма активна връзка</string>
     <string name="read_only">Само за четене</string>
     <string name="working">Работи</string>
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>
@@ -125,7 +104,6 @@
     <string name="wizard_result">Съветник:\nИнсулин: %1$.2fЕ\nВъгл: %2$dгр</string>
     <string name="quick_wizard_not_available">Избраният съветник вече не е наличен, моля, опреснете</string>
     <string name="quick_wizard_message">Съветник:%1$s\nИнсулин: %2$.2fЕ\nВъгл:%3$dгр</string>
-    <string name="wear_action_tempt_preset_error">Временна цел непознат шаблон %1$s</string>
     <string name="wear_action_tempt_cancel_message">Изключи текуща Временна цел?</string>
     <string name="wear_action_tempt_unit_error">Различни мерни единици се ползват на телефона и часовника!</string>
     <string name="wear_action_tempt_zero_message">Нулева цел - изключвам временна цел?</string>

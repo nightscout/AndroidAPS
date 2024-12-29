@@ -8,24 +8,26 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.IBinder
 import android.os.SystemClock
-import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceCategory
+import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
-import androidx.preference.SwitchPreference
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import app.aaps.annotations.OpenForTesting
+import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.model.HasIDs
+import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.configuration.Constants
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.nsclient.NSAlarm
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -48,13 +50,19 @@ import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
 import app.aaps.core.nssdk.NSAndroidClientImpl
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.remotemodel.LastModified
-import app.aaps.database.ValueWrapper
-import app.aaps.database.entities.interfaces.TraceableDBEntry
+import app.aaps.core.validators.DefaultEditTextValidator
+import app.aaps.core.validators.EditTextValidator
+import app.aaps.core.validators.preferences.AdaptiveIntPreference
+import app.aaps.core.validators.preferences.AdaptiveStringPreference
+import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsShared.NSClientFragment
 import app.aaps.plugins.sync.nsShared.events.EventConnectivityOptionChanged
@@ -85,7 +93,6 @@ import app.aaps.plugins.sync.nsclientV3.workers.LoadStatusWorker
 import app.aaps.plugins.sync.nsclientV3.workers.LoadTreatmentsWorker
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.serialization.json.Json
@@ -93,10 +100,8 @@ import java.security.InvalidParameterException
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@OpenForTesting
 @Singleton
 class NSClientV3Plugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
@@ -104,6 +109,7 @@ class NSClientV3Plugin @Inject constructor(
     private val context: Context,
     private val fabricPrivacy: FabricPrivacy,
     private val sp: SP,
+    private val preferences: Preferences,
     private val receiverDelegate: ReceiverDelegate,
     private val config: Config,
     private val dateUtil: DateUtil,
@@ -111,21 +117,22 @@ class NSClientV3Plugin @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     private val nsClientSource: NSClientSource,
     private val storeDataForDb: StoreDataForDb,
-    private val decimalFormatter: DecimalFormatter
+    private val decimalFormatter: DecimalFormatter,
+    private val l: L
 ) : NsClient, Sync, PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
         .fragmentClass(NSClientFragment::class.java.name)
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_nightscout_syncs)
-        .pluginName(R.string.ns_client_v3)
+        .pluginName(R.string.ns_client_v3_title)
         .shortName(R.string.ns_client_v3_short_name)
-        .preferencesId(R.xml.pref_ns_client_v3)
+        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.description_ns_client_v3),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ) {
 
-    @Suppress("PropertyName")
-    val JOB_NAME: String = this::class.java.simpleName
+    @Suppress("PrivatePropertyName")
+    private val JOB_NAME: String = this::class.java.simpleName
 
     companion object {
 
@@ -134,22 +141,22 @@ class NSClientV3Plugin @Inject constructor(
 
     private val disposable = CompositeDisposable()
     private lateinit var runLoop: Runnable
-    private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
+    private var handler: Handler? = null
     override val listLog: MutableList<EventNSClientNewLog> = ArrayList()
     override val dataSyncSelector: DataSyncSelector get() = dataSyncSelectorV3
     override val status
         get() =
             when {
-                sp.getBoolean(R.string.key_ns_paused, false)                                                               -> rh.gs(app.aaps.core.ui.R.string.paused)
-                isAllowed.not()                                                                                            -> blockingReason
-                sp.getBoolean(app.aaps.core.utils.R.string.key_ns_use_ws, true) && nsClientV3Service?.wsConnected == true  -> "WS: " + rh.gs(app.aaps.core.interfaces.R.string.connected)
-                sp.getBoolean(app.aaps.core.utils.R.string.key_ns_use_ws, true) && nsClientV3Service?.wsConnected == false -> "WS: " + rh.gs(R.string.not_connected)
-                lastOperationError != null                                                                                 -> rh.gs(app.aaps.core.ui.R.string.error)
-                nsAndroidClient?.lastStatus == null                                                                        -> rh.gs(R.string.not_connected)
-                workIsRunning()                                                                                            -> rh.gs(R.string.working)
-                nsAndroidClient?.lastStatus?.apiPermissions?.isFull() == true                                              -> rh.gs(app.aaps.core.interfaces.R.string.connected)
-                nsAndroidClient?.lastStatus?.apiPermissions?.isRead() == true                                              -> rh.gs(R.string.read_only)
-                else                                                                                                       -> rh.gs(app.aaps.core.ui.R.string.unknown)
+                sp.getBoolean(R.string.key_ns_paused, false)                                          -> rh.gs(app.aaps.core.ui.R.string.paused)
+                isAllowed.not()                                                                       -> blockingReason
+                preferences.get(BooleanKey.NsClient3UseWs) && nsClientV3Service?.wsConnected == true  -> "WS: " + rh.gs(app.aaps.core.interfaces.R.string.connected)
+                preferences.get(BooleanKey.NsClient3UseWs) && nsClientV3Service?.wsConnected == false -> "WS: " + rh.gs(R.string.not_connected)
+                lastOperationError != null                                                            -> rh.gs(app.aaps.core.ui.R.string.error)
+                nsAndroidClient?.lastStatus == null                                                   -> rh.gs(R.string.not_connected)
+                workIsRunning()                                                                       -> rh.gs(R.string.working)
+                nsAndroidClient?.lastStatus?.apiPermissions?.isFull() == true                         -> rh.gs(app.aaps.core.interfaces.R.string.connected)
+                nsAndroidClient?.lastStatus?.apiPermissions?.isRead() == true                         -> rh.gs(R.string.read_only)
+                else                                                                                  -> rh.gs(app.aaps.core.ui.R.string.unknown)
             }
     var lastOperationError: String? = null
 
@@ -180,6 +187,7 @@ class NSClientV3Plugin @Inject constructor(
 
     override fun onStart() {
         super.onStart()
+        handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
         lastLoadedSrvModified = Json.decodeFromString(
             sp.getString(
@@ -214,12 +222,12 @@ class NSClientV3Plugin @Inject constructor(
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ ev ->
-                           if (ev.isChanged(rh.gs(R.string.key_ns_client_token)) ||
-                               ev.isChanged(rh.gs(app.aaps.core.utils.R.string.key_nsclientinternal_url)) ||
-                               ev.isChanged(rh.gs(app.aaps.core.utils.R.string.key_ns_use_ws)) ||
+                           if (ev.isChanged(StringKey.NsClientAccessToken.key) ||
+                               ev.isChanged(StringKey.NsClientUrl.key) ||
+                               ev.isChanged(BooleanKey.NsClient3UseWs.key) ||
                                ev.isChanged(rh.gs(R.string.key_ns_paused)) ||
-                               ev.isChanged(rh.gs(app.aaps.core.utils.R.string.key_ns_alarms)) ||
-                               ev.isChanged(rh.gs(app.aaps.core.utils.R.string.key_ns_announcements))
+                               ev.isChanged(BooleanKey.NsClientNotificationsFromAlarms.key) ||
+                               ev.isChanged(BooleanKey.NsClientNotificationsFromAnnouncements.key)
                            ) {
                                stopService()
                                nsAndroidClient = null
@@ -272,26 +280,24 @@ class NSClientV3Plugin @Inject constructor(
         runLoop = Runnable {
             var refreshInterval = T.mins(5).msecs()
             if (nsClientSource.isEnabled())
-                persistenceLayer.getLastGlucoseValue().blockingGet().let {
+                persistenceLayer.getLastGlucoseValue()?.let {
                     // if last value is older than 5 min or there is no bg
-                    if (it is ValueWrapper.Existing) {
-                        if (it.value.timestamp < dateUtil.now() - T.mins(5).plus(T.secs(20)).msecs()) {
-                            refreshInterval = T.mins(1).msecs()
-                        }
+                    if (it.timestamp < dateUtil.now() - T.mins(5).plus(T.secs(20)).msecs()) {
+                        refreshInterval = T.mins(1).msecs()
                     }
                 }
-            if (!sp.getBoolean(app.aaps.core.utils.R.string.key_ns_use_ws, true))
+            if (!preferences.get(BooleanKey.NsClient3UseWs))
                 executeLoop("MAIN_LOOP", forceNew = true)
             else
                 rxBus.send(EventNSClientNewLog("● TICK", ""))
-            handler.postDelayed(runLoop, refreshInterval)
+            handler?.postDelayed(runLoop, refreshInterval)
         }
-        handler.postDelayed(runLoop, T.mins(2).msecs())
+        handler?.postDelayed(runLoop, T.mins(2).msecs())
     }
 
     fun scheduleIrregularExecution(refreshToken: Boolean = false) {
         if (refreshToken) {
-            handler.post { executeLoop("REFRESH TOKEN", forceNew = true) }
+            handler?.post { executeLoop("REFRESH TOKEN", forceNew = true) }
             return
         }
         if (config.NSCLIENT || nsClientSource.isEnabled()) {
@@ -303,30 +309,20 @@ class NSClientV3Plugin @Inject constructor(
                 origin = "1_MIN_OLD_DATA"
                 forceNew = false
             }
-            handler.postDelayed({ executeLoop(origin, forceNew = forceNew) }, toTime - dateUtil.now())
+            handler?.postDelayed({ executeLoop(origin, forceNew = forceNew) }, toTime - dateUtil.now())
             rxBus.send(EventNSClientNewLog("● NEXT", dateUtil.dateAndTimeAndSecondsString(toTime)))
         }
     }
 
     override fun onStop() {
-        handler.removeCallbacksAndMessages(null)
+        handler?.removeCallbacksAndMessages(null)
+        handler = null
         disposable.clear()
         stopService()
         super.onStop()
     }
 
-    override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
-        super.preprocessPreferences(preferenceFragment)
-        if (config.NSCLIENT) {
-            preferenceFragment.findPreference<PreferenceScreen>(rh.gs(R.string.ns_sync_options))?.isVisible = false
-
-            preferenceFragment.findPreference<SwitchPreference>(rh.gs(app.aaps.core.utils.R.string.key_ns_create_announcements_from_errors))?.isVisible = false
-            preferenceFragment.findPreference<SwitchPreference>(rh.gs(app.aaps.core.utils.R.string.key_ns_create_announcements_from_carbs_req))?.isVisible = false
-        }
-        preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_tbr_eb))?.isVisible = config.isEngineeringMode()
-    }
-
-    override val hasWritePermission: Boolean get() = nsAndroidClient?.lastStatus?.apiPermissions?.isFull() ?: false
+    override val hasWritePermission: Boolean get() = nsAndroidClient?.lastStatus?.apiPermissions?.isFull() == true
     override val connected: Boolean get() = nsAndroidClient?.lastStatus != null
     private fun addToLog(ev: EventNSClientNewLog) {
         synchronized(listLog) {
@@ -342,10 +338,10 @@ class NSClientV3Plugin @Inject constructor(
     private fun setClient() {
         if (nsAndroidClient == null)
             nsAndroidClient = NSAndroidClientImpl(
-                baseUrl = sp.getString(app.aaps.core.utils.R.string.key_nsclientinternal_url, "").lowercase().replace("https://", "").replace(Regex("/$"), ""),
-                accessToken = sp.getString(R.string.key_ns_client_token, ""),
+                baseUrl = preferences.get(StringKey.NsClientUrl).lowercase().replace("https://", "").replace(Regex("/$"), ""),
+                accessToken = preferences.get(StringKey.NsClientAccessToken),
                 context = context,
-                logging = config.isEngineeringMode() || config.isDev(),
+                logging = l.findByName(LTag.NSCLIENT.tag).enabled && (config.isEngineeringMode() || config.isDev()),
                 logger = { msg -> aapsLogger.debug(LTag.HTTP, msg) }
             )
         SystemClock.sleep(2000)
@@ -354,7 +350,7 @@ class NSClientV3Plugin @Inject constructor(
     }
 
     private fun startService() {
-        if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_use_ws, true)) {
+        if (preferences.get(BooleanKey.NsClient3UseWs)) {
             context.bindService(Intent(context, NSClientV3Service::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
         }
     }
@@ -362,7 +358,7 @@ class NSClientV3Plugin @Inject constructor(
     private fun stopService() {
         try {
             if (nsClientV3Service != null) context.unbindService(serviceConnection)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             nsClientV3Service = null
         }
     }
@@ -371,7 +367,7 @@ class NSClientV3Plugin @Inject constructor(
         // If WS is enabled, download is triggered by changes in NS. Thus uploadOnly
         // Exception is after reset to full sync (initialLoadFinished == false), where
         // older data must be loaded directly and then continue over WS
-        if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_use_ws, true) && initialLoadFinished)
+        if (preferences.get(BooleanKey.NsClient3UseWs) && initialLoadFinished)
             executeUpload("START $reason", forceNew = true)
         else
             executeLoop("START $reason", forceNew = true)
@@ -384,7 +380,7 @@ class NSClientV3Plugin @Inject constructor(
 
     override fun detectedNsVersion(): String? = nsAndroidClient?.lastStatus?.version
 
-    override val address: String get() = sp.getString(app.aaps.core.utils.R.string.key_nsclientinternal_url, "")
+    override val address: String get() = preferences.get(StringKey.NsClientUrl)
 
     override fun isFirstLoad(collection: NsClient.Collection) =
         when (collection) {
@@ -412,7 +408,7 @@ class NSClientV3Plugin @Inject constructor(
 
     override fun handleClearAlarm(originalAlarm: NSAlarm, silenceTimeInMilliseconds: Long) {
         if (!isEnabled()) return
-        if (!sp.getBoolean(R.string.key_ns_upload, true)) {
+        if (!preferences.get(BooleanKey.NsClientUploadData)) {
             aapsLogger.debug(LTag.NSCLIENT, "Upload disabled. Message dropped")
             return
         }
@@ -429,8 +425,8 @@ class NSClientV3Plugin @Inject constructor(
 
     private val gson: Gson = GsonBuilder().create()
 
-    private suspend fun slowDown() {
-        if (sp.getBoolean(R.string.key_ns_sync_slow, false)) SystemClock.sleep(250)
+    private fun slowDown() {
+        if (preferences.get(BooleanKey.NsClientSlowSync)) SystemClock.sleep(250)
         else SystemClock.sleep(10)
     }
 
@@ -446,16 +442,17 @@ class NSClientV3Plugin @Inject constructor(
 
                     else -> {
                         rxBus.send(EventNSClientNewLog("◄ ERROR", "${result.errorResponse}"))
-                        return true
+                        return config.ignoreNightscoutV3Errors()
                     }
                 }
                 slowDown()
+                return true
             }
         } catch (e: Exception) {
             aapsLogger.error(LTag.NSCLIENT, "Upload exception", e)
             return false
         }
-        return true
+        return false
     }
 
     private suspend fun dbOperationDeviceStatus(collection: String = "devicestatus", dataPair: DataSyncSelector.PairDeviceStatus, progress: String): Boolean {
@@ -470,20 +467,22 @@ class NSClientV3Plugin @Inject constructor(
 
                     else -> {
                         rxBus.send(EventNSClientNewLog("◄ ERROR", "${result.errorResponse} "))
-                        return true
+                        return config.ignoreNightscoutV3Errors()
                     }
                 }
                 result.identifier?.let {
-                    dataPair.value.interfaceIDs.nightscoutId = it
-                    storeDataForDb.nsIdDeviceStatuses.add(dataPair.value)
+                    dataPair.value.ids.nightscoutId = it
+                    storeDataForDb.addToNsIdDeviceStatuses(dataPair.value)
                     sp.putBoolean(app.aaps.core.utils.R.string.key_objectives_pump_status_is_available_in_ns, true)
                 }
+                slowDown()
+                return true
             }
         } catch (e: Exception) {
             aapsLogger.error(LTag.NSCLIENT, "Upload exception", e)
             return false
         }
-        return true
+        return false
     }
 
     private suspend fun dbOperationEntries(collection: String = "entries", dataPair: DataSyncSelector.PairGlucoseValue, progress: String, operation: Operation): Boolean {
@@ -493,7 +492,7 @@ class NSClientV3Plugin @Inject constructor(
         }
         try {
             val data = dataPair.value.toNSSvgV3()
-            val id = dataPair.value.interfaceIDs.nightscoutId
+            val id = dataPair.value.ids.nightscoutId
             rxBus.send(
                 EventNSClientNewLog(
                     when (operation) {
@@ -515,20 +514,21 @@ class NSClientV3Plugin @Inject constructor(
 
                     else -> {
                         rxBus.send(EventNSClientNewLog("◄ ERROR", "${result.errorResponse} "))
-                        return true
+                        return config.ignoreNightscoutV3Errors()
                     }
                 }
                 result.identifier?.let {
-                    dataPair.value.interfaceIDs.nightscoutId = it
-                    storeDataForDb.nsIdGlucoseValues.add(dataPair.value)
+                    dataPair.value.ids.nightscoutId = it
+                    storeDataForDb.addToNsIdGlucoseValues(dataPair.value)
                 }
                 slowDown()
+                return true
             }
         } catch (e: Exception) {
             aapsLogger.error(LTag.NSCLIENT, "Upload exception", e)
             return false
         }
-        return true
+        return false
     }
 
     private suspend fun dbOperationFood(collection: String = "food", dataPair: DataSyncSelector.PairFood, progress: String, operation: Operation): Boolean {
@@ -538,7 +538,7 @@ class NSClientV3Plugin @Inject constructor(
         }
         try {
             val data = dataPair.value.toNSFood()
-            val id = dataPair.value.interfaceIDs.nightscoutId
+            val id = dataPair.value.ids.nightscoutId
             rxBus.send(
                 EventNSClientNewLog(
                     when (operation) {
@@ -560,20 +560,21 @@ class NSClientV3Plugin @Inject constructor(
 
                     else -> {
                         rxBus.send(EventNSClientNewLog("◄ ERROR", "${result.errorResponse} "))
-                        return true
+                        return config.ignoreNightscoutV3Errors()
                     }
                 }
                 result.identifier?.let {
-                    dataPair.value.interfaceIDs.nightscoutId = it
-                    storeDataForDb.nsIdFoods.add(dataPair.value)
+                    dataPair.value.ids.nightscoutId = it
+                    storeDataForDb.addToNsIdFoods(dataPair.value)
                 }
                 slowDown()
+                return true
             }
         } catch (e: Exception) {
             aapsLogger.error(LTag.NSCLIENT, "Upload exception", e)
             return false
         }
-        return true
+        return false
     }
 
     private suspend fun dbOperationTreatments(collection: String = "treatments", dataPair: DataSyncSelector.DataPair, progress: String, operation: Operation, profile: Profile?): Boolean {
@@ -604,7 +605,7 @@ class NSClientV3Plugin @Inject constructor(
             else                                           -> null
         }?.let { data ->
             try {
-                val id = if (dataPair.value is TraceableDBEntry) (dataPair.value as TraceableDBEntry).interfaceIDs.nightscoutId else ""
+                val id = if (dataPair.value is HasIDs) (dataPair.value as HasIDs).ids.nightscoutId else ""
                 rxBus.send(
                     EventNSClientNewLog(
                         when (operation) {
@@ -626,59 +627,59 @@ class NSClientV3Plugin @Inject constructor(
 
                         else -> {
                             rxBus.send(EventNSClientNewLog("◄ ERROR", "${result.errorResponse} "))
-                            return true
+                            return config.ignoreNightscoutV3Errors()
                         }
                     }
                     result.identifier?.let {
                         when (dataPair) {
                             is DataSyncSelector.PairBolus                  -> {
-                                dataPair.value.interfaceIDs.nightscoutId = it
-                                storeDataForDb.nsIdBoluses.add(dataPair.value)
+                                dataPair.value.ids.nightscoutId = it
+                                storeDataForDb.addToNsIdBoluses(dataPair.value)
                             }
 
                             is DataSyncSelector.PairCarbs                  -> {
-                                dataPair.value.interfaceIDs.nightscoutId = it
-                                storeDataForDb.nsIdCarbs.add(dataPair.value)
+                                dataPair.value.ids.nightscoutId = it
+                                storeDataForDb.addToNsIdCarbs(dataPair.value)
                             }
 
                             is DataSyncSelector.PairBolusCalculatorResult  -> {
-                                dataPair.value.interfaceIDs.nightscoutId = it
-                                storeDataForDb.nsIdBolusCalculatorResults.add(dataPair.value)
+                                dataPair.value.ids.nightscoutId = it
+                                storeDataForDb.addToNsIdBolusCalculatorResults(dataPair.value)
                             }
 
                             is DataSyncSelector.PairTemporaryTarget        -> {
-                                dataPair.value.interfaceIDs.nightscoutId = it
-                                storeDataForDb.nsIdTemporaryTargets.add(dataPair.value)
+                                dataPair.value.ids.nightscoutId = it
+                                storeDataForDb.addToNsIdTemporaryTargets(dataPair.value)
                             }
 
                             is DataSyncSelector.PairTherapyEvent           -> {
-                                dataPair.value.interfaceIDs.nightscoutId = it
-                                storeDataForDb.nsIdTherapyEvents.add(dataPair.value)
+                                dataPair.value.ids.nightscoutId = it
+                                storeDataForDb.addToNsIdTherapyEvents(dataPair.value)
                             }
 
                             is DataSyncSelector.PairTemporaryBasal         -> {
-                                dataPair.value.interfaceIDs.nightscoutId = it
-                                storeDataForDb.nsIdTemporaryBasals.add(dataPair.value)
+                                dataPair.value.ids.nightscoutId = it
+                                storeDataForDb.addToNsIdTemporaryBasals(dataPair.value)
                             }
 
                             is DataSyncSelector.PairExtendedBolus          -> {
-                                dataPair.value.interfaceIDs.nightscoutId = it
-                                storeDataForDb.nsIdExtendedBoluses.add(dataPair.value)
+                                dataPair.value.ids.nightscoutId = it
+                                storeDataForDb.addToNsIdExtendedBoluses(dataPair.value)
                             }
 
                             is DataSyncSelector.PairProfileSwitch          -> {
-                                dataPair.value.interfaceIDs.nightscoutId = it
-                                storeDataForDb.nsIdProfileSwitches.add(dataPair.value)
+                                dataPair.value.ids.nightscoutId = it
+                                storeDataForDb.addToNsIdProfileSwitches(dataPair.value)
                             }
 
                             is DataSyncSelector.PairEffectiveProfileSwitch -> {
-                                dataPair.value.interfaceIDs.nightscoutId = it
-                                storeDataForDb.nsIdEffectiveProfileSwitches.add(dataPair.value)
+                                dataPair.value.ids.nightscoutId = it
+                                storeDataForDb.addToNsIdEffectiveProfileSwitches(dataPair.value)
                             }
 
                             is DataSyncSelector.PairOfflineEvent           -> {
-                                dataPair.value.interfaceIDs.nightscoutId = it
-                                storeDataForDb.nsIdOfflineEvents.add(dataPair.value)
+                                dataPair.value.ids.nightscoutId = it
+                                storeDataForDb.addToNsIdOfflineEvents(dataPair.value)
                             }
 
                             else                                           -> {
@@ -687,6 +688,7 @@ class NSClientV3Plugin @Inject constructor(
                         }
                     }
                     slowDown()
+                    return true
                 }
             } catch (e: Exception) {
                 rxBus.send(EventNSClientNewLog("◄ ERROR", e.localizedMessage))
@@ -694,7 +696,7 @@ class NSClientV3Plugin @Inject constructor(
                 return false
             }
         }
-        return true
+        return false
     }
 
     private suspend fun dbOperation(collection: String, dataPair: DataSyncSelector.DataPair, progress: String, operation: Operation, profile: Profile?): Boolean =
@@ -713,7 +715,7 @@ class NSClientV3Plugin @Inject constructor(
     }
 
     internal fun executeLoop(origin: String, forceNew: Boolean) {
-        if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_use_ws, true) && initialLoadFinished) return
+        if (preferences.get(BooleanKey.NsClient3UseWs) && initialLoadFinished) return
         if (sp.getBoolean(R.string.key_ns_paused, false)) {
             rxBus.send(EventNSClientNewLog("● RUN", "paused  $origin"))
             return
@@ -775,5 +777,89 @@ class NSClientV3Plugin @Inject constructor(
             if (workInfo.state == WorkInfo.State.BLOCKED || workInfo.state == WorkInfo.State.ENQUEUED || workInfo.state == WorkInfo.State.RUNNING)
                 return true
         return false
+    }
+
+    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
+        if (requiredKey != null && requiredKey != "ns_client_synchronization" && requiredKey != "ns_client_alarm_options" && requiredKey != "ns_client_connection_options" && requiredKey != "ns_client_advanced") return
+        val category = PreferenceCategory(context)
+        parent.addPreference(category)
+        category.apply {
+            key = "ns_client_settings"
+            title = rh.gs(R.string.ns_client_v3_title)
+            initialExpandedChildrenCount = 0
+            addPreference(
+                AdaptiveStringPreference(
+                    ctx = context, stringKey = StringKey.NsClientUrl, dialogMessage = R.string.ns_client_url_dialog_message, title = R.string.ns_client_url_title,
+                    validatorParams = DefaultEditTextValidator.Parameters(testType = EditTextValidator.TEST_HTTPS_URL)
+                )
+            )
+            addPreference(
+                AdaptiveStringPreference(
+                    ctx = context, stringKey = StringKey.NsClientAccessToken, dialogMessage = R.string.nsclient_token_dialog_message, title = R.string.nsclient_token_title,
+                    validatorParams = DefaultEditTextValidator.Parameters(testType = EditTextValidator.TEST_MIN_LENGTH, minLength = 17)
+                )
+            )
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClient3UseWs, summary = R.string.ns_use_ws_summary, title = R.string.ns_use_ws_title))
+            addPreference(preferenceManager.createPreferenceScreen(context).apply {
+                key = "ns_client_synchronization"
+                title = rh.gs(R.string.ns_sync_options)
+                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientUploadData, summary = R.string.ns_upload_summary, title = R.string.ns_upload))
+                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.BgSourceUploadToNs, title = app.aaps.core.ui.R.string.do_ns_upload_title))
+                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientAcceptCgmData, summary = R.string.ns_receive_cgm_summary, title = R.string.ns_receive_cgm))
+                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientAcceptProfileStore, summary = R.string.ns_receive_profile_store_summary, title = R.string.ns_receive_profile_store))
+                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientAcceptTempTarget, summary = R.string.ns_receive_temp_target_summary, title = R.string.ns_receive_temp_target))
+                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientAcceptProfileSwitch, summary = R.string.ns_receive_profile_switch_summary, title = R.string.ns_receive_profile_switch))
+                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientAcceptInsulin, summary = R.string.ns_receive_insulin_summary, title = R.string.ns_receive_insulin))
+                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientAcceptCarbs, summary = R.string.ns_receive_carbs_summary, title = R.string.ns_receive_carbs))
+                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientAcceptTherapyEvent, summary = R.string.ns_receive_therapy_events_summary, title = R.string.ns_receive_therapy_events))
+                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientAcceptOfflineEvent, summary = R.string.ns_receive_offline_event_summary, title = R.string.ns_receive_offline_event))
+                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientAcceptTbrEb, summary = R.string.ns_receive_tbr_eb_summary, title = R.string.ns_receive_tbr_eb))
+            })
+            addPreference(preferenceManager.createPreferenceScreen(context).apply {
+                key = "ns_client_alarm_options"
+                title = rh.gs(R.string.ns_alarm_options)
+                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientNotificationsFromAlarms, title = R.string.ns_alarms))
+                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientNotificationsFromAnnouncements, title = R.string.ns_announcements))
+                addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.NsClientAlarmStaleData, title = R.string.ns_alarm_stale_data_value_label))
+                addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.NsClientUrgentAlarmStaleData, title = R.string.ns_alarm_urgent_stale_data_value_label))
+            })
+            addPreference(preferenceManager.createPreferenceScreen(context).apply {
+                key = "ns_client_connection_options"
+                title = rh.gs(R.string.connection_settings_title)
+                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientUseCellular, title = R.string.ns_cellular))
+                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientUseRoaming, title = R.string.ns_allow_roaming))
+                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientUseWifi, title = R.string.ns_wifi))
+                addPreference(
+                    AdaptiveStringPreference(
+                        ctx = context, stringKey = StringKey.NsClientWifiSsids, dialogMessage = R.string.ns_wifi_allowed_ssids, title = R.string.ns_wifi_ssids,
+                        validatorParams = DefaultEditTextValidator.Parameters(emptyAllowed = true)
+                    )
+                )
+                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientUseOnBattery, title = R.string.ns_battery))
+                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientUseOnCharging, title = R.string.ns_charging))
+            })
+            addPreference(preferenceManager.createPreferenceScreen(context).apply {
+                key = "ns_client_advanced"
+                title = rh.gs(app.aaps.core.ui.R.string.advanced_settings_title)
+                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientLogAppStart, title = R.string.ns_log_app_started_event))
+                addPreference(
+                    AdaptiveSwitchPreference(
+                        ctx = context,
+                        booleanKey = BooleanKey.NsClientCreateAnnouncementsFromErrors,
+                        summary = R.string.ns_create_announcements_from_errors_summary,
+                        title = R.string.ns_create_announcements_from_errors_title
+                    )
+                )
+                addPreference(
+                    AdaptiveSwitchPreference(
+                        ctx = context,
+                        booleanKey = BooleanKey.NsClientCreateAnnouncementsFromCarbsReq,
+                        summary = R.string.ns_create_announcements_from_carbs_req_summary,
+                        title = R.string.ns_create_announcements_from_carbs_req_title
+                    )
+                )
+                addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.NsClientSlowSync, title = R.string.ns_sync_slow))
+            })
+        }
     }
 }

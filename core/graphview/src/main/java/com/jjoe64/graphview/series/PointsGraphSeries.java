@@ -1,18 +1,18 @@
 /**
  * GraphView
  * Copyright (C) 2014  Jonas Gehring
- *
+ * <p>
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License,
  * with the "Linking Exception", which can be found at the license.txt
  * file in this program.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU General Public License
  * with the "Linking Exception" along with this program; if not,
  * write to the author Jonas Gehring <g.jjoe64@gmail.com>.
@@ -20,10 +20,11 @@
 package com.jjoe64.graphview.series;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
+
+import androidx.annotation.NonNull;
 
 import com.jjoe64.graphview.GraphView;
 
@@ -148,7 +149,7 @@ public class PointsGraphSeries<E extends DataPointInterface> extends BaseSeries<
      * @param isSecondScale whether it is the second scale
      */
     @Override
-    public void draw(GraphView graphView, Canvas canvas, boolean isSecondScale) {
+    public void draw(@NonNull GraphView graphView, Canvas canvas, boolean isSecondScale) {
         resetDataPoints();
 
         // get data
@@ -185,7 +186,7 @@ public class PointsGraphSeries<E extends DataPointInterface> extends BaseSeries<
         lastEndY = 0;
         lastEndX = 0;
         float firstX = 0;
-        int i=0;
+        int i = 0;
         while (values.hasNext()) {
             E value = values.next();
 
@@ -221,12 +222,12 @@ public class PointsGraphSeries<E extends DataPointInterface> extends BaseSeries<
                 } else if (mStyles.shape == Shape.POINT) {
                     canvas.drawCircle(endX, endY, mStyles.size, mPaint);
                 } else if (mStyles.shape == Shape.RECTANGLE) {
-                    canvas.drawRect(endX-mStyles.size, endY-mStyles.size, endX+mStyles.size, endY+mStyles.size, mPaint);
+                    canvas.drawRect(endX - mStyles.size, endY - mStyles.size, endX + mStyles.size, endY + mStyles.size, mPaint);
                 } else if (mStyles.shape == Shape.TRIANGLE) {
                     Point[] points = new Point[3];
-                    points[0] = new Point((int)endX, (int)(endY-getSize()));
-                    points[1] = new Point((int)(endX+getSize()), (int)(endY+getSize()*0.67));
-                    points[2] = new Point((int)(endX-getSize()), (int)(endY+getSize()*0.67));
+                    points[0] = new Point((int) endX, (int) (endY - getSize()));
+                    points[1] = new Point((int) (endX + getSize()), (int) (endY + getSize() * 0.67));
+                    points[2] = new Point((int) (endX - getSize()), (int) (endY + getSize() * 0.67));
                     drawArrows(points, canvas, mPaint);
                 }
             }
@@ -243,8 +244,8 @@ public class PointsGraphSeries<E extends DataPointInterface> extends BaseSeries<
      * @param canvas canvas to draw on
      * @param paint paint object
      */
-    private void drawArrows(Point[] point, Canvas canvas, Paint paint) {
-        float [] points  = new float[8];
+    private void drawArrows(Point[] point, Canvas canvas, @NonNull Paint paint) {
+        float[] points = new float[8];
         points[0] = point[0].x;
         points[1] = point[0].y;
         points[2] = point[1].x;
@@ -256,10 +257,10 @@ public class PointsGraphSeries<E extends DataPointInterface> extends BaseSeries<
 
         canvas.drawVertices(Canvas.VertexMode.TRIANGLES, 8, points, 0, null, 0, null, 0, null, 0, 0, paint);
         Path path = new Path();
-        path.moveTo(point[0].x , point[0].y);
-        path.lineTo(point[1].x,point[1].y);
-        path.lineTo(point[2].x,point[2].y);
-        canvas.drawPath(path,paint);
+        path.moveTo(point[0].x, point[0].y);
+        path.lineTo(point[1].x, point[1].y);
+        path.lineTo(point[2].x, point[2].y);
+        canvas.drawPath(path, paint);
     }
 
     /**

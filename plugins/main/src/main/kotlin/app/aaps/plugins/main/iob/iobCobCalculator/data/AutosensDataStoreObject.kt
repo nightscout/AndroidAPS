@@ -2,29 +2,34 @@ package app.aaps.plugins.main.iob.iobCobCalculator.data
 
 import androidx.collection.LongSparseArray
 import androidx.collection.size
-import app.aaps.annotations.OpenForTesting
+import app.aaps.core.data.iob.InMemoryGlucoseValue
+import app.aaps.core.data.model.GV
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.AutosensData
 import app.aaps.core.interfaces.aps.AutosensDataStore
-import app.aaps.core.interfaces.iob.InMemoryGlucoseValue
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.T
-import app.aaps.database.entities.GlucoseValue
+import app.aaps.core.objects.extensions.fromGv
 import kotlin.math.abs
+import kotlin.math.min
 import kotlin.math.roundToLong
 
-@OpenForTesting
 class AutosensDataStoreObject : AutosensDataStore {
 
     override val dataLock = Any()
     override var lastUsed5minCalculation: Boolean? = null // true if used 5min bucketed data
 
+    companion object {
+
+        const val IRREGULAR_DATA_SEC = 30L
+    }
+
     // we need to make sure that bucketed_data will always have the same timestamp for correct use of cached values
     // once referenceTime != null all bucketed data should be (x * 5min) from referenceTime
     var referenceTime: Long = -1
 
-    override var bgReadings: List<GlucoseValue> = listOf() // newest at index 0
+    override var bgReadings: List<GV> = listOf() // newest at index 0
         @Synchronized set
         @Synchronized get
 
@@ -46,7 +51,7 @@ class AutosensDataStoreObject : AutosensDataStore {
         }
 
     override fun getBucketedDataTableCopy(): MutableList<InMemoryGlucoseValue>? = synchronized(dataLock) { bucketedData?.toMutableList() }
-    override fun getBgReadingsDataTableCopy(): List<GlucoseValue> = synchronized(dataLock) { bgReadings.toMutableList() }
+    override fun getBgReadingsDataTableCopy(): List<GV> = synchronized(dataLock) { bgReadings.toMutableList() }
 
     override fun reset() {
         synchronized(autosensDataTable) { autosensDataTable = LongSparseArray() }
@@ -131,7 +136,7 @@ class AutosensDataStoreObject : AutosensDataStore {
             }
             val data: AutosensData = try {
                 autosensDataTable.valueAt(autosensDataTable.size() - 1)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 // data can be processed on the background
                 // in this rare case better return null and do not block UI
                 // APS plugin should use getLastAutosensDataSynchronized where the blocking is not an issue
@@ -173,7 +178,7 @@ class AutosensDataStoreObject : AutosensDataStore {
                 if (diff > T.mins(2).plus(T.secs(30)).msecs()) diff -= T.mins(5).msecs()
                 totalDiff += diff
                 diff = abs(diff)
-                if (diff > T.secs(30).msecs()) {
+                if (diff > T.secs(IRREGULAR_DATA_SEC).msecs()) {
                     aapsLogger.debug(LTag.AUTOSENS, "Interval detection: values: ${bgReadings.size} diff: ${diff / 1000}[s] is5minData: false")
                     return false
                 }
@@ -196,7 +201,7 @@ class AutosensDataStoreObject : AutosensDataStore {
         if (fiveMinData) createBucketedData5min(aapsLogger, dateUtil) else createBucketedDataRecalculated(aapsLogger, dateUtil)
     }
 
-    fun findNewer(time: Long): GlucoseValue? {
+    fun findNewer(time: Long): GV? {
         var lastFound = bgReadings[0]
         if (lastFound.timestamp < time) return null
         for (i in 1 until bgReadings.size) {
@@ -208,7 +213,7 @@ class AutosensDataStoreObject : AutosensDataStore {
         return lastFound
     }
 
-    fun findOlder(time: Long): GlucoseValue? {
+    fun findOlder(time: Long): GV? {
         var lastFound = bgReadings[bgReadings.size - 1]
         if (lastFound.timestamp > time) return null
         for (i in bgReadings.size - 2 downTo 0) {
@@ -238,12 +243,12 @@ class AutosensDataStoreObject : AutosensDataStore {
             val older = findOlder(currentTime)
             if (newer == null || older == null) break
             if (older.timestamp == newer.timestamp) { // direct hit
-                newBucketedData.add(InMemoryGlucoseValue(newer))
+                newBucketedData.add(InMemoryGlucoseValue.fromGv(newer))
             } else {
                 val bgDelta = newer.value - older.value
                 val timeDiffToNew = newer.timestamp - currentTime
                 val timeDiffToOlder = currentTime - older.timestamp
-                val filledGap = timeDiffToOlder > T.mins(5).msecs() || timeDiffToNew > T.mins(5).msecs()
+                val filledGap = min(timeDiffToOlder, timeDiffToNew) > T.secs(IRREGULAR_DATA_SEC).msecs()
                 val currentBg = newer.value - timeDiffToNew.toDouble() / (newer.timestamp - older.timestamp) * bgDelta
                 val newBgReading = InMemoryGlucoseValue(currentTime, currentBg.roundToLong().toDouble(), filledGap = filledGap, sourceSensor = lastBg.sourceSensor)
                 newBucketedData.add(newBgReading)
@@ -260,7 +265,7 @@ class AutosensDataStoreObject : AutosensDataStore {
         }
         val lastBg = bgReadings[0]
         val bData: MutableList<InMemoryGlucoseValue> = ArrayList()
-        bData.add(InMemoryGlucoseValue(bgReadings[0]))
+        bData.add(InMemoryGlucoseValue.fromGv(bgReadings[0]))
         aapsLogger.debug(LTag.AUTOSENS) { "Adding. bgTime: ${dateUtil.toISOString(bgReadings[0].timestamp)} lastBgTime: none-first-value ${bgReadings[0]}" }
         var j = 0
         for (i in 1 until bgReadings.size) {

@@ -1,7 +1,7 @@
 plugins {
-    id("com.android.library")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.ksp)
     id("kotlin-android")
-    id("kotlin-kapt")
     id("android-module-dependencies")
     id("all-open-dependencies")
     id("test-module-dependencies")
@@ -13,19 +13,18 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:data"))
     implementation(project(":core:interfaces"))
-    implementation(project(":core:main"))
+    implementation(project(":core:keys"))
+    implementation(project(":core:objects"))
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
     implementation(project(":core:validators"))
-    implementation(project(":database:entities"))
 
-    testImplementation(project(":database:impl"))
     testImplementation(project(":implementation"))
-    testImplementation(project(":insight"))
+    testImplementation(project(":pump:insight"))
     testImplementation(project(":plugins:aps"))
     testImplementation(project(":plugins:source"))
-    testImplementation(project(":pump:combo"))
     testImplementation(project(":pump:dana"))
     testImplementation(project(":pump:danar"))
     testImplementation(project(":pump:danars"))
@@ -33,8 +32,8 @@ dependencies {
     testImplementation(project(":shared:tests"))
 
     // Phone checker
-    api(Libs.rootBeer)
+    api(libs.com.scottyab.rootbeer.lib)
 
-    kapt(Libs.Dagger.compiler)
-    kapt(Libs.Dagger.androidProcessor)
+    ksp(libs.com.google.dagger.compiler)
+    ksp(libs.com.google.dagger.android.processor)
 }

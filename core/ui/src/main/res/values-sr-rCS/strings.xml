@@ -17,7 +17,6 @@
     <string name="exit">Izađi</string>
     <string name="iob">IOB</string>
     <string name="bg_label">GUK</string>
-    <string name="treatmentdeliveryerror">Bolus je prijavio grešku. Ručno proverite stvarnu isporučenu količinu</string>
     <string name="duration_label">Trajanje</string>
     <string name="profile">Profil</string>
     <string name="overview_treatment_label">Tretman</string>
@@ -52,7 +51,6 @@
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
     <!-- Autotune -->
-    <string name="autotune_result">Rezultat: %1$s</string>
     <!-- Alerts -->
     <!-- BolusWizard -->
     <string name="quickwizard">Brzi Čarobnjak</string>
@@ -60,10 +58,11 @@
     <!--    Protection-->
     <!--    Pumps -->
     <!--    Constraints-->
-    <!-- Locale -->
     <!--    Dialogs-->
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Bit ćete upitani za glavnu lozinku, koja će se koristiti za dešifriranje uvezenih postavki.</string>
+    <!-- <unattended_export> -->
+    <!-- <unattended_export result messages> -->
     <!-- NumberPicker -->
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="combov2_plugin_name">Accu-Chek Combo</string>
+    <string name="combov2_plugin_description">Accu-Chek Combo 幫浦的原生幫浦整合</string>
+    <string name="combov2_could_not_connect">無法連線到幫浦</string>
+    <string name="combov2_not_paired">未配對到幫浦</string>
+    <string name="combov2_warning">Combo 警告</string>
+    <string name="combov2_error">Combo 錯誤</string>
+    <string name="combov2_warning_4">致電客服專線以獲取更新</string>
+    <string name="combov2_warning_10">藍牙故障；重新配對</string>
+    <string name="combov2_error_1">儲液器空</string>
+    <string name="combov2_error_2">電池空</string>
+    <string name="combov2_error_4">阻塞</string>
+    <string name="combov2_error_5">備用幫浦操作結束</string>
+    <string name="combov2_error_6">機械錯誤</string>
+    <string name="combov2_error_7">電子錯誤</string>
+    <string name="combov2_error_8">電源中斷</string>
+    <string name="combov2_error_9">借用幫浦操作結束</string>
+    <string name="combov2_error_10">儲液器錯誤</string>
+    <string name="combov2_error_11">輸液組未灌注</string>
+    <string name="combov2_extended_bolus_not_supported">不支援延長注射</string>
+    <string name="combov2_title">Accu-Chek Combo v2</string>
+    <string name="combov2_pair_with_pump_title">與幫浦配對</string>
+    <string name="combov2_unpair_pump_title">取消幫浦配對</string>
+    <string name="combov2_driver_state_label">驅動狀態</string>
+    <string name="combov2_current_activity_label">目前活動</string>
+    <string name="bluetooth_address">藍牙地址</string>
+    <string name="combov2_start_pairing">開始配對</string>
+    <string name="combov2_pairing_in_progress">Combo 配對進行中</string>
+    <string name="combov2_pairing_start_steps">與您的 Combo 進行配對的步驟：\n\n
+1. 在您的幫浦上，導航到藍牙設定\n
+2. 檢查是否已顯示一個設備作為已配對；如果是，請前往幫浦螢幕的“刪除設備”以刪除/取消配對該設備\n
+3. 前往幫浦螢幕的“添加設備”，並在幫浦上開始配對\n
+4. 點擊下方的“開始配對”按鈕，以在 AndroidAPS 中啟動配對\n</string>
+    <string name="combov2_steps_if_no_connection_during_pairing">一段時間後，幫浦螢幕上顯示電話的名稱；按 CHECK 以確認。\n\n
+當配對成功完成後，請在幫浦上確認完成的配對，並按兩次 CHECK 按鈕返回主幫浦螢幕。\n\n
+如果在超過 ~5 分鐘後仍未建立連線：\n\n
+1. 按返回或“取消配對”按鈕\n
+2. 在 Combo 上取消配對（同時按下 UP 和 MENU 按鈕以取消配對）\n
+3. 再次嘗試配對</string>
+    <string name="combov2_enter_pin">輸入 PIN</string>
+    <string name="combov2_cancel_pairing">取消配對</string>
+    <string name="combov2_pin_hint">10 位數 PIN</string>
+    <string name="combov2_pairing_finished_successfully">成功與 Combo 配對</string>
+    <string name="combov2_pairing_cancelled">用戶取消了與 Combo 的配對</string>
+    <string name="combov2_pairing_combo_scan_timeout_reached">Combo 掃描逾時已達</string>
+    <string name="combov2_pairing_failed_due_to_error">由於錯誤而導致配對失敗：%1$s</string>
+    <string name="combov2_pairing_aborted_unknown_reasons">因未知原因中止配對</string>
+    <string name="combov2_pairing_invalid_pin_length">"無效的配對 PIN 長度：需要 %1$d 位數字，得到 %2$d 位"</string>
+    <string name="combov2_scanning_for_pump">正在掃描幫浦</string>
+    <string name="combov2_establishing_bt_connection">正在建立藍牙連線（第 %1$d 次嘗試）</string>
+    <string name="combov2_pairing_performing_handshake">正在與幫浦進行交握</string>
+    <string name="combov2_pairing_pump_requests_pin">幫浦要求 10 位數 PIN</string>
+    <string name="combov2_pairing_finishing">完成配對</string>
+    <string name="combov2_no_connection_for_n_mins">無連線達 %1$d 分鐘</string>
+    <string name="combov2_less_than_one_minute_ago">不到 1 分鐘前</string>
+    <string name="combov2_setting_current_pump_time">設定目前幫浦時間</string>
+    <string name="combov2_setting_current_pump_date">設定目前幫浦日期</string>
+    <string name="combov2_not_initialized">未初始化</string>
+    <string name="combov2_checking_pump">正在檢查幫浦</string>
+    <string name="combov2_ready">準備就緒</string>
+    <string name="combov2_suspended">已暫停</string>
+    <string name="combov2_pump_is_suspended">幫浦已暫停</string>
+    <string name="combov2_executing_command">正在執行命令</string>
+    <string name="combov2_getting_basal_profile_cmddesc">正在獲取基礎速率配置</string>
+    <string name="combov2_setting_basal_profile_cmddesc">正在設定基礎速率配置</string>
+    <string name="combov2_setting_tbr_cmddesc">設定 %1$d%% 的臨時基礎速率，持續 %2$d 分鐘</string>
+    <string name="combov2_cancelling_tbr">取消正在進行的臨時基礎速率</string>
+    <string name="combov2_delivering_bolus_cmddesc">正在注射 %1$.1f U 胰島素</string>
+    <string name="combov2_fetching_tdd_history_cmddesc">正在獲取 TDD 歷史紀錄</string>
+    <string name="combov2_updating_pump_datetime_cmddesc">正在更新幫浦日期時間</string>
+    <string name="combov2_updating_pump_status_cmddesc">正在更新幫浦狀態</string>
+    <string name="combov2_pairing_pin_failure">PIN 無效。檢查是否有輸入錯誤。如果此情況持續發生，請取消並重試配對。</string>
+    <string name="combov2_discovery_duration">發現持續時間（秒）</string>
+    <string name="combov2_verbose_logging">啟用詳細的 Combo 日誌紀錄</string>
+    <string name="combov2_getting_basal_profile">正在獲取基礎速率配置；已讀取 %1$d 個因子</string>
+    <string name="combov2_setting_basal_profile">正在設定基礎速率配置；已寫入 %1$d 個因子</string>
+    <string name="combov2_delivering_bolus">正在注射胰島素（已注射 %1$.1f 中的 %2$.1f U）</string>
+    <string name="combov2_cannot_deliver_pump_suspended">無法提供治療 - 幫浦已暫停</string>
+    <string name="combov2_insufficient_insulin_in_reservoir">儲液器中胰島素不足</string>
+    <string name="combov2_bolus_cancelled">注射已取消</string>
+    <string name="combov2_bolus_delivery_failed">注射失敗。似乎沒有注射成功。為確保無誤，請檢查幫浦以避免雙重注射，然後重新注射。為防止錯誤，不會自動重試注射。</string>
+    <string name="combov2_bolus_not_delivered">注射未完成</string>
+    <string name="combov2_cannot_access_pump_data">無法查看幫浦資料；必須重新配對幫浦</string>
+    <string name="combov2_unaccounted_bolus_detected_cancelling_bolus">偵測到未計入的注射。為安全起見，取消注射。</string>
+    <string name="combov2_incorrect_active_basal_profile">活動基礎速率配置錯誤；必須是配置 1 為活動配置，而不是配置 %1$d</string>
+    <string name="combov2_unrecognized_alert">未識別的 Combo 警報</string>
+    <string name="combov2_combo_alert">Combo 警報</string>
+    <string name="combov2_current_tbr">%1$d%%（剩餘 %2$d 分鐘）</string>
+    <string name="combov2_current_tbr_less_than_1min">%1$d%%（剩餘不到 1 分鐘）</string>
+    <string name="combov2_load_tdds_cancelled">載入 TDD 已取消</string>
+    <string name="combov2_retrieving_tdds_failed">檢索 TDD 失敗</string>
+    <string name="combov2_battery_low_warning">幫浦電池電量低</string>
+    <string name="combov2_reservoir_low_warning">幫浦儲液器液位低</string>
+    <string name="combov2_setting_tbr_succeeded">設定臨時基礎率成功</string>
+    <string name="combov2_setting_tbr_failed">設定臨時基礎率失敗</string>
+    <string name="combov2_set_emulated_100_tbr">設定模擬的 100% 臨時基礎率</string>
+    <string name="combov2_letting_emulated_100_tbr_finish">允許正在進行的模擬 100% 臨時基礎率完成</string>
+    <string name="combov2_ignoring_redundant_100_tbr">忽略多餘的 100% 臨時基礎率請求</string>
+    <string name="combov2_hit_unexpected_tbr_limit">調整臨時基礎率時遇到意外限制：目標百分比為 %1$d%%，達到 %2$d%% 的限制</string>
+    <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">如果基礎速率為零，則無法設定絕對臨時基礎率</string>
+    <string name="combov2_pair_with_pump_summary">將 AndroidAPS 和 Android 與目前未配對的 Accu-Chek Combo 幫浦配對</string>
+    <string name="combov2_unpair_pump_summary">將 AndroidAPS 和 Android 與目前配對的 Accu-Chek Combo 幫浦取消配對</string>
+    <string name="combov2_unknown_tbr_detected">偵測到未知的臨時基礎率並已停止；百分比：%1$d%%；剩餘持續時間：%2$s</string>
+    <string name="combov2_connection_error">連線錯誤：%1$s</string>
+    <string name="combov2_short_status_last_connection">最後連線：%1$d 分鐘前</string>
+    <string name="combov2_short_status_alert">警報：%s</string>
+    <string name="combov2_short_status_last_bolus">最後注射：%1$sU @ %2$s</string>
+    <string name="combov2_short_status_temp_basal">臨時基礎速率：%s</string>
+    <string name="combov2_short_status_reservoir">儲液器：%dU</string>
+    <string name="combov2_short_status_battery_state_empty">空</string>
+    <string name="combov2_short_status_battery_state_low">低</string>
+    <string name="combov2_short_status_battery_state_full">滿</string>
+    <string name="combov2_short_status_battery_state">電池：%s</string>
+    <string name="combov2_automatic_reservoir_entry">自動偵測並自動輸入胰島素儲液器更換</string>
+    <string name="combov2_automatic_battery_entry">自動偵測並自動輸入電池更換</string>
+    <string name="combov2_timezone_changed">時區已更改</string>
+    <string name="combov2_datetime_changed">日期和/或時間已更改</string>
+    <string name="combov2_dst_started">夏令時間 (DST) 已開始</string>
+    <string name="combov2_dst_ended">夏令時間 (DST) 已結束</string>
+    <string name="combov2_cannot_connect_pump_error_observed">無法連線到幫浦，因為幫浦報告了一個錯誤。用戶必須處理該錯誤，然後等待 5 分鐘或按驅動程式標籤中的重新整理按鈕。</string>
+    <string name="combov2_refresh_pump_status_after_error">在幫浦報告錯誤後重新整理幫浦狀態</string>
+    <string name="combov2_go_back">返回</string>
+    <string name="combov2_cannot_pair_driver_not_initialized_explanation">無法進行配對，因為驅動程式未初始化。這通常發生在未授予必要的藍牙權限時。返回，授予藍牙權限，然後再嘗試配對。</string>
+    <string name="combov2_bluetooth_disabled">無法啟動驅動程式 - 藍牙已停用</string>
+    <string name="combov2_bluetooth_not_supported">驅動程式無法運行 - 此設備不支援藍牙</string>
+</resources>

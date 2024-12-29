@@ -4,12 +4,11 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.collection.LongSparseArray
-import app.aaps.annotations.OpenForTesting
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.R
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.SafeParse
-import app.aaps.core.interfaces.utils.T
 import org.apache.commons.lang3.time.DateUtils.isSameDay
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
@@ -40,7 +39,6 @@ import kotlin.math.floor
  * The Class DateUtil. A simple wrapper around SimpleDateFormat to ease the handling of iso date string &lt;-&gt; date obj
  * with TZ
  */
-@OpenForTesting
 @Singleton
 class DateUtilImpl @Inject constructor(private val context: Context) : DateUtil {
 

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="DynISFAdjust_title" formatted="false">DynamicISF Anpassungsfaktor %</string>
-    <string name="DynISFAdjust_summary" formatted="false">Anpassungsfaktor für DynamicISF. Stelle mehr als 100 % für aggressivere Korrekturdosen ein, und weniger als 100 % für weniger aggressive Korrekturen.</string>
+    <!--Autotune-->
     <string name="high_temptarget_raises_sensitivity_title">Hohe temporäre Ziele erhöhen die Sensitivität</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Erhöhe die Sensitivität für temporäre Ziele >= 100.]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Niedrige temporäre Ziele senken die Sensitivität</string>
@@ -60,9 +59,7 @@
     <string name="enable_smb_summary">Benutze Super-Mikro-Boli anstelle von temporären Basalraten, um eine schnellere Wirkung zu erreichen.</string>
     <string name="enable_uam_summary">Erkennung von unangekündigten Mahlzeiten</string>
     <string name="enable_smb_always">SMB immer aktivieren</string>
-    <string name="enable_smb_always_summary">Aktiviere SMB immer, unabhängig von Boli. Dies ist nur möglich, wenn eine BZ-Quelle genutzt wird, die die Daten besonders gut filtert wie z. B. G5.</string>
     <string name="enable_smb_after_carbs">Aktiviere SMB nach Mahlzeiten.</string>
-    <string name="enable_smb_after_carbs_summary">Aktiviere SMB für sechs Stunden nach der Einnahme von Kohlenhydraten, auch mit 0 COB. Dies ist nur möglich, wenn eine BZ-Quelle genutzt wird, die die Daten besonders gut filtert wie z. B. G5.</string>
     <string name="enable_smb_with_cob">Aktiviere SMB während aktiver Kohlenhydrate.</string>
     <string name="enable_smb_with_cob_summary">SMB aktivieren, wenn Kohlenhydrate aktiv sind.</string>
     <string name="enable_smb_with_temp_target">Aktiviere SMB bei aktiven temporären Zielen</string>
@@ -113,4 +110,46 @@
     <string name="loop_smb_set_by_pump_label">SMB von Pumpe eingestellt</string>
     <string name="loop_open_mode_min_change">Minimaler Wert zur Anfrage einer Änderung [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Open Loop schlägt neue Änderungen nur dann vor, wenn die Änderung größer als dieser Wert ist. Der Standard-Wert ist 20%.</string>
+    <string name="fallback_smb_no_tdd">Fallback auf SMB. Nicht genügend TDD Werte.</string>
+    <!-- Autotune -->
+    <string name="autotune_shortname">AT</string>
+    <string name="autotune_settings">Autotune Einstellungen</string>
+    <string name="autotune_auto_title">Automation Profilwechsel</string>
+    <string name="autotune_auto_summary">Falls aktiviert, wird Autotune nach der Berechnung in einer Automatisierungsregel automatisch das Eingangsprofil anpassen und darauf wechseln.</string>
+    <string name="autotune_categorize_uam_as_basal_title">UAM als Basal kategorisieren</string>
+    <string name="autotune_categorize_uam_as_basal_summary">Nur aktivieren, wenn Sie alle gegessen Kohlenhydrate zuverlässig eingegeben haben. Mit dieser Option werden plötzliche Steigerungen, die durch Autotune entdeckt werden, verwendet, um Änderungen an der Basalrate zu empfehlen.</string>
+    <string name="autotune_tune_insulin_curve_title">Insulinkurve anpassen</string>
+    <string name="autotune_tune_insulin_curve_summary">Nur einschalten, falls Du Free Peak verwendest. Diese Option passt sowohl den Gipfel der Wirkkurve an als auch die DIA Laufzeit</string>
+    <string name="autotune_default_tune_days_title">Anzahl der Tage an Daten</string>
+    <string name="autotune_circadian_ic_isf_title">Durchschnittsresultat im zirkadianen IC/ISF anwenden</string>
+    <string name="autotune_circadian_ic_isf_summary">Autotune wird keine zirkadianen Variationen einstellen. Diese Option wendet nur die durchschnittliche Änderung von IC und ISF auf Dein zirkadianes Eingangsprofil an</string>
+    <string name="autotune_additional_log_title">Fügen Sie weitere Log-Informationen zum Debuggen ein</string>
+    <string name="autotune_additional_log_summary">Nur einschalten, wenn von Du von den Entwicklern aufgefordert wirst, um ausführlichere Protokollinformationen zu senden, die beim Debuggen des Autotune Plugins hilfreich sind</string>
+    <string name="autotune_default_tune_days_summary">Standardanzahl der von Autotune zu verarbeitenden Daten (bis zu 30)</string>
+    <string name="autotune_tunedprofile_name">Angepasst</string>
+    <string name="autotune_profile">Profil :</string>
+    <string name="autotune_last_run">Letzte Ausführung :</string>
+    <string name="autotune_warning">Warnung :</string>
+    <string name="autotune_ic_warning">Ausgewähltes Profil hat %1$d IC-Werte. Autotune wird %2$.2f g/U verwenden</string>
+    <string name="autotune_isf_warning">Ausgewähltes Profil hat %1$d ISF-Werte. Autotune wird %2$.1f %3$s/U verwenden</string>
+    <string name="autotune_error">Fehler in den Eingabedaten, versuche erneut Autotune auszuführen oder reduziere die Anzahl der Tage</string>
+    <string name="autotune_error_more_days">Fehler in den Eingabedaten, erhöhe die Anzahl der Tage</string>
+    <string name="autotune_warning_during_run">Autotune Berechnung gestartet, bitte gedulde Dich einen Moment</string>
+    <string name="autotune_warning_after_run">Überprüfe die Ergebnisse sorgfältig, bevor Du sie verwendest!</string>
+    <string name="autotune_partial_result">Teilergebnistag %1$d / %2$d angepasst</string>
+    <string name="autotune_result">Ergebnis: %1$s</string>
+    <string name="autotune_param">Parameter</string>
+    <string name="autotune_percent">%</string>
+    <string name="autotune_missing">Fehlend</string>
+    <string name="autotune_run">Autotune ausführen</string>
+    <string name="autotune_check_input_profile_button">Eingabeprofil überprüfen</string>
+    <string name="autotune_compare_profile">Profile vergleichen</string>
+    <string name="autotune_copy_localprofile_button">In lokales Profil kopieren</string>
+    <string name="autotune_update_input_profile_button">Eingabeprofil anpassen</string>
+    <string name="autotune_revert_input_profile_button">Eingabeprofil zurücksetzen</string>
+    <string name="autotune_copy_local_profile_message">Neues lokales Profil aus diesem Autotune Profil erstellen?</string>
+    <string name="autotune_update_local_profile_message">Anpassen %1$s Profile mit dem Autotune Profile?</string>
+    <string name="autotune_revert_local_profile_message">%1$s Profil mit Eingabeprofil zurücksetzen?</string>
+    <string name="autotune_profile_invalid">Profil ungültig</string>
+    <!--    autoISF -->
 </resources>

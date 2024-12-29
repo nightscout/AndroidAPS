@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Autotune-->
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="oaps_shortname">OAPS</string>
     <string name="openapsma_profile_label">Profil</string>
     <string name="openapsma_autosensdata_label">Autosens adat</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Alapértelmezett érték: 3.0 (AMA) vagy 8.0 (SMB). Ez az alapértelmezett szénhidrát-felszívódás hatás 5 percenkénti beállítása. Az alapértelmezett érték 3 mg/dl/5 perc. Ez befolyásolja, hogy milyen gyorsan csökken a COB, és mekkora szénhidrát-felszívódást feltételezünk a jövőbeni előre jelzett vércukorszint kiszámításakor, amikor a BG a vártnál jobban esik, vagy nem úgy emelkedik, ahogy vártuk.</string>
     <!--    Verify if needed in safety-->
     <!--    Autotune   -->
     <!--    Loop -->
+    <!-- Autotune -->
+    <string name="autotune_compare_profile">Profilok összehasonlítása</string>
+    <!--    autoISF -->
 </resources>

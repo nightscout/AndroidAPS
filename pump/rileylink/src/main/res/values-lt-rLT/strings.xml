@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Niekada nebuvo sujungta</string>
+    <string name="pump_status_sleeping">Miego režime</string>
+    <string name="pump_status_waking_up">Pažadinimas</string>
+    <string name="pump_status_active">Aktyvi</string>
+    <string name="pump_status_error_comm">Ryšio klaida</string>
+    <string name="pump_status_timeout_comm">Ryšiui skirtas laikas baigėsi</string>
+    <string name="pump_status_pump_unreachable">Pompa nepasiekiama</string>
+    <string name="pump_status_invalid_config">Neteisinga konfigūracija</string>
     <!-- RL keys -->
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_button_scan_start">Skanuoti</string>
@@ -62,8 +71,6 @@
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Pompa Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
-    <string name="riley_link_common_yes">Taip</string>
-    <string name="riley_link_common_no">Ne</string>
     <!-- RileyLink - Preferences -->
     <string name="riley_link_show_battery_level">Rodyti baterijos įkrovimo lygį, gautą iš OrangeLink/EmaLink/DiaLink</string>
     <string name="riley_link_show_battery_level_summary">NEVEIKIA su originaliu RileyLink. Gali neveikti su kitomis RileyLink alternatyvomis.</string>

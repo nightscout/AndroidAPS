@@ -1,6 +1,6 @@
 package app.aaps.core.interfaces.notifications
 
-class NotificationUserMessage(text: String) : Notification() {
+class NotificationUserMessage(text: String, notifyLevel: Int = URGENT) : Notification() {
 
     init {
         var hash = text.hashCode()
@@ -8,6 +8,6 @@ class NotificationUserMessage(text: String) : Notification() {
         id = hash
         date = System.currentTimeMillis()
         this.text = text
-        level = URGENT
+        level = notifyLevel // URGENT
     }
 }

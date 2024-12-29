@@ -86,7 +86,7 @@ class AcceptActivity : ViewSelectorActivity() {
                 val confirmButton = view.findViewById<ImageView>(R.id.confirmbutton)
                 confirmButton.setOnClickListener {
                     if (actionKey.isNotEmpty()) startService(IntentWearToMobile(this@AcceptActivity, actionKey))
-                    startService(IntentCancelNotification(this@AcceptActivity))
+                    startForegroundService(IntentCancelNotification(this@AcceptActivity))
                     finishAffinity()
                 }
                 container.addView(view)

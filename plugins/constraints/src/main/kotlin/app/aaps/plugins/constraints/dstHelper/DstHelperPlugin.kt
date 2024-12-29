@@ -1,5 +1,7 @@
 package app.aaps.plugins.constraints.dstHelper
 
+import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.PluginConstraints
@@ -9,32 +11,30 @@ import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.core.interfaces.utils.T
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.plugins.constraints.R
-import dagger.android.HasAndroidInjector
 import java.util.Calendar
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class DstHelperPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     private val sp: SP,
     private val activePlugin: ActivePlugin,
+    private val uiInteraction: UiInteraction,
     private val loop: Loop
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
         .neverVisible(true)
         .alwaysEnabled(true)
-        .showInList(false)
+        .showInList { false }
         .pluginName(R.string.dst_plugin_name),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), PluginConstraints {
 
     companion object {
@@ -54,9 +54,9 @@ class DstHelperPlugin @Inject constructor(
         if (willBeDST(cal)) {
             val snoozedTo: Long = sp.getLong(R.string.key_snooze_dst_in24h, 0L)
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
-                activePlugin.activeOverview.addNotification(Notification.DST_IN_24H, rh.gs(R.string.dst_in_24h_warning), Notification.LOW, app.aaps.core.ui.R.string.snooze) {
+                uiInteraction.addNotification(Notification.DST_IN_24H, rh.gs(R.string.dst_in_24h_warning), Notification.LOW, app.aaps.core.ui.R.string.snooze, {
                     sp.putLong(R.string.key_snooze_dst_in24h, System.currentTimeMillis() + T.hours(24).msecs())
-                }
+                }, null)
             }
         }
         if (!value.value()) {
@@ -67,14 +67,19 @@ class DstHelperPlugin @Inject constructor(
             if (!loop.isSuspended) {
                 val snoozedTo: Long = sp.getLong(R.string.key_snooze_loop_disabled, 0L)
                 if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
-                    activePlugin.activeOverview.addNotification(Notification.DST_LOOP_DISABLED, rh.gs(R.string.dst_loop_disabled_warning), Notification.LOW, app.aaps.core.ui.R.string.snooze) {
-                        sp.putLong(R.string.key_snooze_loop_disabled, System.currentTimeMillis() + T.hours(24).msecs())
-                    }
+                    uiInteraction.addNotification(
+                        id = Notification.DST_LOOP_DISABLED,
+                        text = rh.gs(R.string.dst_loop_disabled_warning),
+                        level = Notification.LOW,
+                        actionButtonId = app.aaps.core.ui.R.string.snooze,
+                        action = { sp.putLong(R.string.key_snooze_loop_disabled, System.currentTimeMillis() + T.hours(24).msecs()) },
+                        validityCheck = null
+                    )
                 }
             } else {
                 aapsLogger.debug(LTag.CONSTRAINTS, "Loop already suspended")
             }
-            value.set(false, "DST in last 3 hours.", this)
+            value.set(false, rh.gs(R.string.dst_loop_disabled_error), this)
         }
         return value
     }

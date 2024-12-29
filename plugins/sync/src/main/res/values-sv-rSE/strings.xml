@@ -13,7 +13,6 @@
     <string name="ns_create_announcements_from_carbs_req_title">Skapa aviseringar för KH-förslag</string>
     <string name="ns_create_announcements_from_errors_summary">Skapa notiser i Nightscout vid fel eller lokala meddelanden (även synliga i Careportal/Behandlingar)</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Skapa Nightscout-aviseringar för KH-förslag</string>
-    <string name="description_ns_client">Synkroniserar dina data med Nightscout</string>
     <string name="description_ns_client_v3">Synkroniserar dina data med Nightscout genom v3 API</string>
     <string name="blocked_by_charging">Blockerad av laddningsinställningar</string>
     <string name="blocked_by_connectivity">Blockerad av anslutningsinställningar</string>
@@ -23,24 +22,11 @@
     <string name="ns_malfunction">Fel på NSClient. Överväg att starta om NSClient och Nightscout-webbplatsen.</string>
     <!-- NSClient -->
     <string name="no_write_permission">NS Client kan inte uppdatera Nightscout. Fel API secret?</string>
-    <string name="ns_client_v3">NSClientV3</string>
-    <string name="ns_client_v3_short_name">NSV3</string>
     <string name="ns_client">NSClient</string>
-    <string name="ns_client_short_name">NSCl</string>
     <string name="ns_client_url">URL:</string>
     <string name="restart">Starta om</string>
-    <string name="ns_client_internal_title">NSClient</string>
     <string name="ns_client_url_title">Nightscout-URL</string>
-    <string name="ns_client_url_dialog_message">Ange Nightscout-URL</string>
-    <string name="ns_client_secret_title">Nightscout API secret</string>
-    <string name="ns_client_secret_dialog_title">Nightscout API secret</string>
-    <string name="ns_client_secret_dialog_message">Ange Nightscout API secret (min 12 tecken)</string>
-    <string name="nsclient_token_title">NS åtkomstnyckel</string>
-    <string name="nsclient_token_dialog_title">NS åtkomstnyckel</string>
-    <string name="nsclient_token_dialog_message">Åtkomstnyckel genererad på Nighscouts admin-sida (minst 17 tecken)</string>
     <string name="deliver_now">Synkronisera nu</string>
-    <string name="clear_queue">Töm kö</string>
-    <string name="show_queue">Visa kö</string>
     <string name="queue">Kö:</string>
     <string name="status">Status:</string>
     <string name="clear_log">Töm logg</string>
@@ -88,18 +74,11 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Laddar upp data till Tidepool</string>
-    <string name="tidepool_upload_cgm">Ladda upp CGM-data</string>
-    <string name="tidepool_upload_bolus">Ladda upp behandlingar (insulin, kolhydrater)</string>
-    <string name="tidepool_upload_tbr">Ladda upp temp basaler</string>
-    <string name="tidepool_upload_profile">Ladda upp profilbyten och temp mål</string>
-    <string name="tidepool_upload_bg">Ladda upp BG-test</string>
     <string name="remove_all">Ta bort allt</string>
-    <string name="reset_start">Nollställ start</string>
     <string name="upload_now">Ladda upp nu</string>
     <string name="not_connected">Inte ansluten</string>
     <string name="read_only">Skrivskyddad</string>
     <string name="working">Arbetar</string>
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>
@@ -126,7 +105,6 @@
     <string name="wizard_result">Kalkylator:\nInsulin: %1$.2fU\nKolhydrater: %2$dg</string>
     <string name="quick_wizard_not_available">Vald snabbknapp inte längre tillgänglig. Vänligen uppdatera vyn</string>
     <string name="quick_wizard_message">Snabbsteg: %1$s\nInsulin: %2$.2fU\nKolhydrater: %3$dg</string>
-    <string name="wear_action_tempt_preset_error">Tempmål okänd förinställning: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Avbryt temp-mål?</string>
     <string name="wear_action_tempt_unit_error">Olika enheter på klocka och telefon!</string>
     <string name="wear_action_tempt_zero_message">Noll-temp - avbyta nuvarande temp-mål?</string>

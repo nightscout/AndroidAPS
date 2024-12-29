@@ -112,7 +112,6 @@
     <string name="bg_label">GLIC</string>
     <string name="calibration">Calibração</string>
     <string name="alarminxmin">Disparar alarme em %1$d min</string>
-    <string name="treatmentdeliveryerror">O Bolus relatou um erro. Verifique a quantidade administrada manualmente</string>
     <string name="bolus_reminder">Lembrete de bolus</string>
     <string name="duration_label">Duração</string>
     <string name="shortgramm">g</string>
@@ -400,53 +399,8 @@
     <string name="a11y_user">usuário</string>
     <!-- Autotune -->
     <string name="autotune">Autotune</string>
-    <string name="autotune_description">Ajuda com ajustes potenciais no perfil (FS, I:C e taxas basais)</string>
-    <string name="autotune_shortname">AT</string>
-    <string name="autotune_settings">Configurações Autotune</string>
-    <string name="autotune_auto_title">Automação de alternância de perfil</string>
-    <string name="autotune_auto_summary">Se ativado, o Autotune atualizará automaticamente e mudará para o perfil de entrada após o cálculo de uma regra de automação.</string>
-    <string name="autotune_categorize_uam_as_basal_title">Classificar RNA como basal</string>
-    <string name="autotune_categorize_uam_as_basal_summary">Ativar apenas se você inseriu confiavelmente todos os carboidratos consumidos, com esta opção aumentos repentinos vistos pelo Autotune serão usados para recomendar mudanças na taxa basal.</string>
-    <string name="autotune_tune_insulin_curve_title">Ajustar curva da insulina</string>
-    <string name="autotune_tune_insulin_curve_summary">Habilitar apenas se você usar pico livre. Esta opção irá ajustar a duração do pico e da DAI</string>
-    <string name="autotune_default_tune_days_title">Número de dias de dados</string>
-    <string name="autotune_circadian_ic_isf_title">Aplicar resultado médio em I:C/FS circadiano</string>
-    <string name="autotune_circadian_ic_isf_summary">Autotune não irá ajustar variações circadianas, esta opção somente aplica o ajuste médio do I:C e FS ao seu perfil de entrada circadiano</string>
-    <string name="autotune_additional_log_title">Incluir mais informações de log para depuração</string>
-    <string name="autotune_additional_log_summary">Acione somente se solicitado pelo dev para enviar mais informações de registro para ajudar a depurar o plugin Autotune</string>
-    <string name="autotune_default_tune_days_summary">Número padrão de dias de dados a serem processados por Autotune (até 30)</string>
-    <string name="autotune_tunedprofile_name">Ajustado</string>
-    <string name="autotune_profile">Perfil:</string>
     <string name="autotune_tune_days">Dias de sincronismo:</string>
-    <string name="autotune_last_run">Última execução :</string>
-    <string name="autotune_warning">Aviso :</string>
     <string name="autotune_select_profile">Selecione o perfil para ajustar</string>
-    <string name="autotune_ic_warning">O perfil selecionado tem %1$d valores de IC. Autotune vai usar %2$.2f g/U</string>
-    <string name="autotune_isf_warning">O perfil selecionado tem %1$d valores de ISF. Autotune usará %2$.1f %3$s/U</string>
-    <string name="autotune_error">Erro nos dados de entrada, tente executar novamente autotune ou reduza o número de dias</string>
-    <string name="autotune_error_more_days">Erro nos dados de entrada, tente reduzir o número de dias</string>
-    <string name="autotune_warning_during_run">Cálculos do Autotune iniciados, por favor aguarde</string>
-    <string name="autotune_warning_after_run">Verifique os resultados cuidadosamente antes de usá-los!</string>
-    <string name="autotune_partial_result">Resultado parcial - dia %1$d / %2$d ajustado</string>
-    <string name="autotune_result">Resultado: %1$s</string>
-    <string name="autotune_param">Parâmetro</string>
-    <string name="autotune_percent">%</string>
-    <string name="autotune_missing">Faltando</string>
-    <string name="autotune_profile_name">Autotune perfil: %1$s</string>
-    <string name="autotune_run">Executar Autotune</string>
-    <string name="autotune_check_input_profile_button">Verifique o perfil de entrada</string>
-    <string name="autotune_compare_profile">Comparar perfis</string>
-    <string name="autotune_copy_localprofile_button">Copiar para o perfil local</string>
-    <string name="autotune_update_input_profile_button">Atualizar perfil de entrada</string>
-    <string name="autotune_revert_input_profile_button">Reverter perfil de entrada</string>
-    <string name="autotune_copy_local_profile_message">Criar um novo perfil local a partir deste perfil Autotune?</string>
-    <string name="autotune_update_local_profile_message">Atualizar perfil %1$s com perfil do Autotune?</string>
-    <string name="autotune_revert_local_profile_message">Reverter o perfil %1$s para o perfil inicial?</string>
-    <string name="autotune_profile_invalid">Perfil inválido</string>
-    <string name="autotune_run_without_autoswitch">Autotune executado sem troca de perfil</string>
-    <string name="autotune_run_with_autoswitch">Autotune executado e perfil alterado automaticamente</string>
-    <string name="autotune_run_with_error">Erro durante a última execução do Autotune</string>
-    <string name="autotune_run_cancelled">Outra execução de Autotune foi detectada, execução cancelada</string>
     <!-- Alerts -->
     <string name="raise_notifications_as_android_notifications">Usar as notificações do sistema para alertas e notificações</string>
     <string name="urgent_alarm">Alarme Urgente</string>
@@ -526,7 +480,6 @@
     <string name="limitingpercentrate">A limitar rácio percentagem máx para %1$d%% porque %2$s</string>
     <string name="itmustbepositivevalue">deve ser valor positivo</string>
     <string name="limitingbolus">Limitando bólus para %1$.1f U porque %2$s</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Confirmação</string>
     <string name="message">Mensagem</string>
@@ -538,6 +491,8 @@
     <string name="close">Fechar</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Será perguntado pela senha mestre, que será necessária para desencriptar preferências importadas.</string>
+    <!-- <unattended_export> -->
+    <!-- <unattended_export result messages> -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">diminuição de %1$s para %2$s</string>
     <string name="a11y_plus_button_description">aumento de %1$s para %2$s</string>

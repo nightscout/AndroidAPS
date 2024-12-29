@@ -3,11 +3,9 @@
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_shortname">EOP2</string>
     <string name="eopatch_pump_description">Integración de bombas de insulina EOPatch2/GlucoMen Day Pump</string>
-    <string name="category_alerts">Alertas</string>
     <string name="low_reservoir">Alertas de reservorio bajo</string>
     <string name="patch_expiration_reminders">Recordatorio de expiración del parche</string>
     <string name="patch_buzzer_reminders">Recordatorios de sonidos del parche</string>
-    <string name="time_format_a_h_mm">h:mm a</string>
     <string name="eopatch_ble_status">Estado del bluetooth</string>
     <string name="eopatch_serial_number">Número de serie</string>
     <string name="eopatch_lot_number">Número de lote</string>
@@ -26,7 +24,6 @@
     <string name="time_1hr">1 hora</string>
     <string name="time_1hr_30min">1 hr 30 min</string>
     <string name="time_2hr">2 horas</string>
-    <string name="all_blank">\u0020</string>
     <string name="patch_safe_deactivation_desc">Para cambiar al nuevo parche, el parche actual debe ser descartado. Todo suministro de insulina por parte del parche será cancelado.</string>
     <string name="patch_discard_complete_title">El parche se ha desactivado por completo.</string>
     <string name="patch_discard_complete_desc">El parche ha sido desactivado.\nDescarte el parche.\nElimine el parche pegado a tu cuerpo.</string>
@@ -38,9 +35,6 @@
     <string name="patch_remaining_usage_period">Tiempo restante</string>
     <string name="patch_finish">Finalizar</string>
     <string name="patch_forced_discard">Descartar</string>
-    <string name="patch_comm_error_during_discard_status">Descartar el parche debido a un error de comunicación </string>
-    <string name="patch_comm_error_during_discard_desc">Para la desactivación normal, pulse \'Reintentar\'.\nPara desactivar unilateralmente, pulse \'Descartar\'.</string>
-    <string name="patch_comm_error_during_discard_desc_1">Para la desactivación normal, pulse \'Reintentar\'.</string>
     <string name="patch_comm_error_during_discard_desc_2">Para desactivar unilateralmente, pulse \"Descartar\".</string>
     <string name="patch_manually_turning_off_alarm_title">Apagar manualmente la alarma del parche</string>
     <string name="patch_manually_turning_off_alarm_desc_1">Si se desactiva unilateralmente durante un error de comunicación, es posible que el sonido de alarma del parche no deje de sonar.</string>
@@ -82,8 +76,6 @@
     <string name="patch_expiration_reminder_setting_title">Recordatorio de expiración del parche</string>
     <string name="patch_activate_reminder_title">Recordatorio de activación del parche</string>
     <string name="patch_activate_reminder_desc">La activación del parche no se ha completado.\n Continuar.</string>
-    <string name="patch_communication_check">Revisión de la comunicación del parche</string>
-    <string name="patch_communication_check_status_1">Comprobando comunicación con el parche…</string>
     <string name="patch_communication_check_helper_1">Acerca tu dispositivo inteligente al parche.</string>
     <string name="patch_communication_check_helper_2">Por favor, muévete a otra ubicación e inténtalo de nuevo.</string>
     <string name="patch_communication_failed">Error de comunicación</string>
@@ -114,7 +106,6 @@
     <string name="retry">Reintentar</string>
     <string name="string_caution_not_remove_needle_cap">[Caution] No retires el protector de la aguja ni el soporte adhesivo hasta recibir instrucciones adicionales</string>
     <string name="string_are_you_sure_to_discard_current_patch">¿Estás seguro de descartar el parche actual?</string>
-    <string name="string_unconfirmed_bolus_info_discard_confirm_message">Debido a una información no confirmada del bolo, el calculo no se puede utilizar hasta %s.\n\n¿Estás seguro de descartar  el parche actual?</string>
     <string name="needle_insertion_error_1">Error de inserción de la aguja</string>
     <string name="needle_insertion_error_2">Comprueba que la dirección del orificio que queda tras girar la palanca es recta y, a continuación, pulsa en \"Reintentar\".</string>
     <string name="needle_insertion_error_3">Pulsa \'Descartar\' para desactivar el parche</string>
@@ -126,7 +117,6 @@
     <string name="finish">Finalizar</string>
     <string name="string_temp_basal_remained_hhmm">tiempo restante: %1$s:%2$s</string>
     <string name="next">Siguiente</string>
-    <string name="patch_connection_fail">Reintentar después de la verificación de comunicación con el parche.</string>
     <string name="string_pause_failed">Suspención fallida</string>
     <string name="string_resume_failed">Reanudación fallida</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE, d MMM, aaaa hh:mm a</string>

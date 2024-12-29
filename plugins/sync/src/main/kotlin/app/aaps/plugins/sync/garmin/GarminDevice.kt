@@ -5,12 +5,14 @@ import com.garmin.android.connectiq.IQDevice
 data class GarminDevice(
     val client: GarminClient,
     val id: Long,
-    var name: String) {
+    var name: String
+) {
 
-    constructor(client: GarminClient, iqDevice: IQDevice): this(
+    constructor(client: GarminClient, iqDevice: IQDevice) : this(
         client,
         iqDevice.deviceIdentifier,
-        iqDevice.friendlyName) {}
+        iqDevice.friendlyName
+    )
 
     override fun toString(): String = "D[$name/$id]"
 

@@ -16,7 +16,7 @@ class CobDetailedComplication : BaseComplicationProviderService() {
     override fun buildComplicationData(dataType: Int, raw: RawDisplayData, complicationPendingIntent: PendingIntent): ComplicationData? {
         var complicationData: ComplicationData? = null
         if (dataType == ComplicationData.TYPE_SHORT_TEXT) {
-            val cob = displayFormat.detailedCob(raw)
+            val cob = displayFormat.detailedCob(raw, 0)
             val builder = ComplicationData.Builder(ComplicationData.TYPE_SHORT_TEXT)
                 .setShortText(ComplicationText.plainText(cob.first))
                 .setTapAction(complicationPendingIntent)

@@ -1,7 +1,6 @@
 package app.aaps.plugins.main.general.persistentNotification
 
 import android.app.Notification
-import android.app.Service
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
@@ -71,6 +70,6 @@ class DummyService : DaggerService() {
         } catch (e: Exception) {
             startForeground(4711, Notification())
         }
-        return Service.START_STICKY
+        return START_STICKY
     }
 }

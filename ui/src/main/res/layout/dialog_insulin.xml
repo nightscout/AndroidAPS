@@ -15,6 +15,7 @@
 
         <RelativeLayout
             style="@style/StyleDialogHeader"
+            android:id="@+id/header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center">
@@ -26,6 +27,7 @@
                 app:srcCompat="@drawable/ic_bolus" />
 
             <TextView
+                android:id="@+id/header_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"

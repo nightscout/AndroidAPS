@@ -1,36 +1,32 @@
 package app.aaps.plugins.sync.nsclient.extensions
 
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.TE
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.utils.JsonHelper
-import app.aaps.database.entities.TherapyEvent
 import app.aaps.plugins.sync.nsclient.data.NSMbg
 import org.json.JSONObject
 
-fun TherapyEvent.GlucoseUnit.toMainUnit(): GlucoseUnit =
-    if (this == TherapyEvent.GlucoseUnit.MGDL) GlucoseUnit.MGDL
-    else GlucoseUnit.MMOL
-
 fun therapyEventFromNsMbg(mbg: NSMbg) =
-    TherapyEvent(
-        type = TherapyEvent.Type.FINGER_STICK_BG_VALUE, //convert Mbg to finger stick because is coming from "entries" collection
+    TE(
+        type = TE.Type.FINGER_STICK_BG_VALUE, //convert Mbg to finger stick because is coming from "entries" collection
         timestamp = mbg.date,
         glucose = mbg.mbg,
-        glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
+        glucoseUnit = GlucoseUnit.MGDL
     )
 
-fun TherapyEvent.Companion.fromJson(jsonObject: JSONObject): TherapyEvent? {
-    val glucoseUnit = if (JsonHelper.safeGetString(jsonObject, "units", GlucoseUnit.MGDL.asText) == GlucoseUnit.MGDL.asText) TherapyEvent.GlucoseUnit.MGDL else TherapyEvent.GlucoseUnit.MMOL
+fun TE.Companion.fromJson(jsonObject: JSONObject): TE? {
+    val glucoseUnit = if (JsonHelper.safeGetString(jsonObject, "units", GlucoseUnit.MGDL.asText) == GlucoseUnit.MGDL.asText) GlucoseUnit.MGDL else GlucoseUnit.MMOL
     val timestamp =
         JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null)
             ?: JsonHelper.safeGetLongAllowNull(jsonObject, "date", null)
             ?: return null
-    val type = TherapyEvent.Type.fromString(JsonHelper.safeGetString(jsonObject, "eventType", TherapyEvent.Type.NONE.text))
+    val type = TE.Type.fromString(JsonHelper.safeGetString(jsonObject, "eventType", TE.Type.NONE.text))
     val duration = JsonHelper.safeGetLong(jsonObject, "duration")
     val durationInMilliseconds = JsonHelper.safeGetLongAllowNull(jsonObject, "durationInMilliseconds")
     val glucose = JsonHelper.safeGetDoubleAllowNull(jsonObject, "glucose")
-    val glucoseType = TherapyEvent.MeterType.fromString(JsonHelper.safeGetString(jsonObject, "glucoseType"))
+    val glucoseType = TE.MeterType.fromString(JsonHelper.safeGetString(jsonObject, "glucoseType"))
     val enteredBy = JsonHelper.safeGetStringAllowNull(jsonObject, "enteredBy", null)
     val note = JsonHelper.safeGetStringAllowNull(jsonObject, "notes", null)
     val id = JsonHelper.safeGetStringAllowNull(jsonObject, "identifier", null)
@@ -40,7 +36,7 @@ fun TherapyEvent.Companion.fromJson(jsonObject: JSONObject): TherapyEvent? {
 
     if (timestamp == 0L) return null
 
-    val te = TherapyEvent(
+    val te = TE(
         timestamp = timestamp,
         duration = durationInMilliseconds ?: T.mins(duration).msecs(),
         glucoseUnit = glucoseUnit,
@@ -51,24 +47,24 @@ fun TherapyEvent.Companion.fromJson(jsonObject: JSONObject): TherapyEvent? {
         note = note,
         isValid = isValid
     )
-    te.interfaceIDs.nightscoutId = id
+    te.ids.nightscoutId = id
     return te
 }
 
-fun TherapyEvent.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
+fun TE.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
     JSONObject()
         .put("eventType", type.text)
         .put("isValid", isValid)
         .put("created_at", dateUtil.toISOString(timestamp))
         .put("enteredBy", enteredBy)
-        .put("units", if (glucoseUnit == TherapyEvent.GlucoseUnit.MGDL) GlucoseUnit.MGDL.asText else GlucoseUnit.MMOL.asText)
+        .put("units", if (glucoseUnit == GlucoseUnit.MGDL) GlucoseUnit.MGDL.asText else GlucoseUnit.MMOL.asText)
         .also {
             if (duration != 0L) it.put("duration", T.msecs(duration).mins())
             if (duration != 0L) it.put("durationInMilliseconds", duration)
             if (note != null) it.put("notes", note)
             if (glucose != null) it.put("glucose", glucose)
             if (glucoseType != null) it.put("glucoseType", glucoseType!!.text)
-            if (isAdd && interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId)
-            if (type == TherapyEvent.Type.ANNOUNCEMENT) it.put("isAnnouncement", true)
+            if (isAdd && ids.nightscoutId != null) it.put("_id", ids.nightscoutId)
+            if (type == TE.Type.ANNOUNCEMENT) it.put("isAnnouncement", true)
         }
 

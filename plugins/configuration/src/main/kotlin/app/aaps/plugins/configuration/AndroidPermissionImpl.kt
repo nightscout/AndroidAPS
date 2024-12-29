@@ -19,7 +19,7 @@ import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.plugins.configuration.activities.DaggerAppCompatActivityWithResult
@@ -30,7 +30,8 @@ import javax.inject.Singleton
 class AndroidPermissionImpl @Inject constructor(
     private val rh: ResourceHelper,
     private val activePlugin: ActivePlugin,
-    private val config: Config
+    private val config: Config,
+    private val uiInteraction: UiInteraction
 ) : AndroidPermission {
 
     private var permissionBatteryOptimizationFailed = false
@@ -50,8 +51,8 @@ class AndroidPermissionImpl @Inject constructor(
         if (test) {
             if (activity is DaggerAppCompatActivityWithResult)
                 try {
-                    activity.requestMultiplePermissions.launch(permissions)
-                } catch (ignored: IllegalStateException) {
+                    activity.requestMultiplePermissions?.launch(permissions)
+                } catch (_: IllegalStateException) {
                     ToastUtils.errorToast(activity, rh.gs(R.string.error_asking_for_permissions))
                 }
         }
@@ -59,11 +60,11 @@ class AndroidPermissionImpl @Inject constructor(
             try {
                 if (activity is DaggerAppCompatActivityWithResult)
                     try {
-                        activity.callForBatteryOptimization.launch(null)
-                    } catch (ignored: IllegalStateException) {
+                        activity.callForBatteryOptimization?.launch(null)
+                    } catch (_: IllegalStateException) {
                         ToastUtils.errorToast(activity, rh.gs(R.string.error_asking_for_permissions))
                     }
-            } catch (e: ActivityNotFoundException) {
+            } catch (_: ActivityNotFoundException) {
                 permissionBatteryOptimizationFailed = true
                 OKDialog.show(activity, rh.gs(R.string.permission), rh.gs(R.string.alert_dialog_permission_battery_optimization_failed)) { activity.recreate() }
             }
@@ -85,22 +86,22 @@ class AndroidPermissionImpl @Inject constructor(
     }
 
     @Synchronized
-    override fun notifyForSMSPermissions(activity: FragmentActivity, smsCommunicator: SmsCommunicator) {
-        if (smsCommunicator.isEnabled()) {
-            if (permissionNotGranted(activity, Manifest.permission.RECEIVE_SMS))
-                activePlugin.activeOverview.addNotification(
-                    id = Notification.PERMISSION_SMS,
-                    text = rh.gs(app.aaps.core.ui.R.string.smscommunicator_missingsmspermission),
-                    level = Notification.URGENT,
-                    actionButtonId = R.string.request
-                ) {
+    override fun notifyForSMSPermissions(activity: FragmentActivity) {
+        if (permissionNotGranted(activity, Manifest.permission.RECEIVE_SMS))
+            uiInteraction.addNotification(
+                id = Notification.PERMISSION_SMS,
+                text = rh.gs(app.aaps.core.ui.R.string.smscommunicator_missingsmspermission),
+                level = Notification.URGENT,
+                actionButtonId = R.string.request,
+                action = {
                     askForPermission(
                         activity,
                         arrayOf(Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS, Manifest.permission.RECEIVE_MMS)
                     )
-                }
-            else activePlugin.activeOverview.dismissNotification(Notification.PERMISSION_SMS)
-        }
+                },
+                validityCheck = { permissionNotGranted(activity, Manifest.permission.RECEIVE_SMS) }
+            )
+        else uiInteraction.dismissNotification(Notification.PERMISSION_SMS)
     }
 
     @SuppressLint("MissingPermission")
@@ -110,15 +111,17 @@ class AndroidPermissionImpl @Inject constructor(
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 //  Manifest.permission.BLUETOOTH_CONNECT
                 if (permissionNotGranted(activity, Manifest.permission.BLUETOOTH_CONNECT) || permissionNotGranted(activity, Manifest.permission.BLUETOOTH_SCAN))
-                    activePlugin.activeOverview.addNotification(
+                    uiInteraction.addNotification(
                         id = Notification.PERMISSION_BT,
                         text = rh.gs(app.aaps.core.ui.R.string.need_connect_permission),
                         level = Notification.URGENT,
-                        actionButtonId = R.string.request
-                    ) { askForPermission(activity, arrayOf(Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT)) }
+                        actionButtonId = R.string.request,
+                        action = { askForPermission(activity, arrayOf(Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT)) },
+                        validityCheck = { permissionNotGranted(activity, Manifest.permission.BLUETOOTH_CONNECT) || permissionNotGranted(activity, Manifest.permission.BLUETOOTH_SCAN) }
+                    )
                 else {
                     activity.startActivity(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
-                    activePlugin.activeOverview.dismissNotification(Notification.PERMISSION_BT)
+                    uiInteraction.dismissNotification(Notification.PERMISSION_BT)
                 }
             }
     }
@@ -126,59 +129,73 @@ class AndroidPermissionImpl @Inject constructor(
     @Synchronized
     override fun notifyForBatteryOptimizationPermission(activity: FragmentActivity) {
         if (permissionNotGranted(activity, Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS))
-            activePlugin.activeOverview.addNotification(
+            uiInteraction.addNotification(
                 id = Notification.PERMISSION_BATTERY,
                 text = rh.gs(R.string.need_whitelisting, rh.gs(config.appName)),
                 level = Notification.URGENT,
-                actionButtonId = R.string.request
-            ) { askForPermission(activity, arrayOf(Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)) }
-        else activePlugin.activeOverview.dismissNotification(Notification.PERMISSION_BATTERY)
+                actionButtonId = R.string.request,
+                action = { askForPermission(activity, arrayOf(Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)) },
+                validityCheck = { permissionNotGranted(activity, Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS) }
+            )
+        else uiInteraction.dismissNotification(Notification.PERMISSION_BATTERY)
     }
 
     @Synchronized override fun notifyForStoragePermission(activity: FragmentActivity) {
-        if (permissionNotGranted(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE))
-            activePlugin.activeOverview.addNotification(
+        if (permissionNotGranted(activity, Manifest.permission.READ_EXTERNAL_STORAGE))
+            uiInteraction.addNotification(
                 id = Notification.PERMISSION_STORAGE,
                 text = rh.gs(R.string.need_storage_permission),
                 level = Notification.URGENT,
-                actionButtonId = R.string.request
-            ) { askForPermission(activity, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) }
-        else activePlugin.activeOverview.dismissNotification(Notification.PERMISSION_STORAGE)
+                actionButtonId = R.string.request,
+                action = { askForPermission(activity, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)) },
+                validityCheck = { permissionNotGranted(activity, Manifest.permission.READ_EXTERNAL_STORAGE) }
+            )
+        else uiInteraction.dismissNotification(Notification.PERMISSION_STORAGE)
     }
 
     @Synchronized override fun notifyForLocationPermissions(activity: FragmentActivity) {
-        if (permissionNotGranted(activity, Manifest.permission.ACCESS_FINE_LOCATION)) {
-            activePlugin.activeOverview.addNotification(
+        if (permissionNotGranted(activity, Manifest.permission.ACCESS_FINE_LOCATION) ||
+            permissionNotGranted(activity, Manifest.permission.ACCESS_COARSE_LOCATION)
+        ) {
+            uiInteraction.addNotification(
                 id = Notification.PERMISSION_LOCATION,
                 text = rh.gs(R.string.need_location_permission),
                 level = Notification.URGENT,
-                actionButtonId = R.string.request
-            ) { askForPermission(activity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)) }
-        } else activePlugin.activeOverview.dismissNotification(Notification.PERMISSION_LOCATION)
+                actionButtonId = R.string.request,
+                action = { askForPermission(activity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)) },
+                validityCheck = { permissionNotGranted(activity, Manifest.permission.ACCESS_FINE_LOCATION) || permissionNotGranted(activity, Manifest.permission.ACCESS_COARSE_LOCATION) }
+            )
+        } else if (permissionNotGranted(activity, Manifest.permission.ACCESS_BACKGROUND_LOCATION)) {
+            uiInteraction.addNotification(
+                id = Notification.PERMISSION_LOCATION,
+                text = rh.gs(R.string.need_background_location_permission),
+                level = Notification.URGENT,
+                actionButtonId = R.string.request,
+                action = { askForPermission(activity, arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION)) },
+                validityCheck = { permissionNotGranted(activity, Manifest.permission.ACCESS_BACKGROUND_LOCATION) }
+            )
+        } else uiInteraction.dismissNotification(Notification.PERMISSION_LOCATION)
     }
 
     @Synchronized override fun notifyForSystemWindowPermissions(activity: FragmentActivity) {
         // Check if Android Q or higher
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-            if (!Settings.canDrawOverlays(activity))
-                activePlugin.activeOverview.addNotification(
-                    id = Notification.PERMISSION_SYSTEM_WINDOW,
-                    text = rh.gs(R.string.need_location_permission),
-                    level = Notification.URGENT,
-                    actionButtonId = R.string.request
-                ) {
-                    // Check if Android Q or higher
-                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-                        // Show alert dialog to the user saying a separate permission is needed
-                        // Launch the settings activity if the user prefers
-                        val intent = Intent(
-                            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                            Uri.parse("package:" + activity.packageName)
-                        )
-                        activity.startActivity(intent)
-                    }
-                }
-            else activePlugin.activeOverview.dismissNotification(Notification.PERMISSION_SYSTEM_WINDOW)
-        }
+        if (!Settings.canDrawOverlays(activity))
+            uiInteraction.addNotification(
+                id = Notification.PERMISSION_SYSTEM_WINDOW,
+                text = rh.gs(R.string.need_location_permission),
+                level = Notification.URGENT,
+                actionButtonId = R.string.request,
+                action = {
+                    // Show alert dialog to the user saying a separate permission is needed
+                    // Launch the settings activity if the user prefers
+                    val intent = Intent(
+                        Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:" + activity.packageName)
+                    )
+                    activity.startActivity(intent)
+                },
+                validityCheck = { !Settings.canDrawOverlays(activity) }
+            )
+        else uiInteraction.dismissNotification(Notification.PERMISSION_SYSTEM_WINDOW)
     }
 }

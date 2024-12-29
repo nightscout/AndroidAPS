@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bg_label">BG</string>
     <string name="executing_right_now">הפקודה מבוצעת כעת</string>
     <string name="basal_value_below_minimum">ערך הבסיס מתחת למינימום. פרופיל אינו מוגדר!</string>
-    <string name="permission">הרשאה</string>
-    <string name="need_whitelisting">%1$s צריך ביטול אופטימיזציית סוללה בשביל תפקוד תקין</string>
-    <string name="need_location_permission">דרושה הרשאת מיקום עבור סריקת בלוטות\' וזיהוי WiFi</string>
-    <string name="need_storage_permission">דרושה הרשאת אחסון כדי שתוכלו לאחסן קובצי יומן והגדרות יצוא.</string>
     <!--       Stats -->
     <string name="veryLow" comment="below 3.1">נמוך מאוד</string>
     <string name="low" comment="3.1-3.9">נמוך</string>

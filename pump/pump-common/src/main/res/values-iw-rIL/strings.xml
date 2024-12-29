@@ -2,9 +2,6 @@
 <resources>
     <!-- PumoCommon - Pump Abstract -->
     <string name="pump_operation_not_supported_by_pump_driver">הפעולה לא נתמכת ע\"י המשאבה ו\\או מנהל ההתקן.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">הפעולה עוד לא נתמכת על ידי המשאבה.</string>
-    <string name="common_resultok">אישור</string>
-    <string name="pump_serial_number">המספר הסידורי של המשאבה</string>
     <string name="bolus_delivered_so_far">%1$.2f יח\' מתוך %2$.2f יח\' הוזרקו</string>
     <!-- PumpCommon - Pump Status -->
     <string name="pump_status_not_initialized">לא מאותחל</string>
@@ -46,33 +43,9 @@
     <string name="ble_config_scan_scanning">סורק</string>
     <string name="ble_config_scan_finished">הסריקה הושלמה</string>
     <string name="ble_config_scan_error">שגיאת סריקה: %1$d</string>
-    <string name="ble_config_connected_never">אף פעם</string>
     <string name="ble_config_remove">הסרה</string>
-    <!-- BLE Errors -->
-    <string name="ble_error_bt_disabled">בלוטות\' כבוי</string>
-    <string name="ble_error_no_bt_adapter">אין מתאם בלוטות\'</string>
-    <string name="ble_error_configured_pump_not_found">לא נמצאה משאבה מוגדרת</string>
-    <string name="ble_error_pump_unreachable">המשאבה אינה זמינה</string>
-    <string name="ble_error_failed_to_conn_to_ble_device">נכשל החיבור למכשיר בלוטות\'</string>
-    <string name="ble_error_encryption_failed">ההצפנה נכשלה</string>
-    <string name="ble_error_pump_found_unbonded">נמצאה משאבה שאינה מצומדת</string>
-    <!-- Pump Error -->
-    <string name="pump_settings_error_basal_profiles_not_enabled">הגדרת פרופילי הבזאלי\\תבניות אינה מאופשרת במשאבה. הפעילו אותן בגוף המשאבה.</string>
-    <string name="pump_settings_error_incorrect_basal_profile_selected">הפרופיל הבזאלי שהוגדר במשאבה שגוי (חייב להיות %s).</string>
-    <string name="pump_settings_error_wrong_tbr_type_set">סוג הבזאלי הזמני שהוגדר במשאבה שגוי (חייב להיות %s).</string>
-    <string name="pump_settings_error_wrong_max_bolus_set">מינון הבולוס המרבי המוגדר במשאבה אינו נכון (חייב להיות %1$.2f).</string>
-    <string name="pump_settings_error_wrong_max_basal_set">המינון הבזאלי המרבי המוגדר במשאבה אינו נכון (חייב להיות %1$.2f).</string>
     <!-- Pump History -->
     <string name="pump_history_type">סוג:</string>
-    <!-- PumpDeviceState -->
-    <string name="pump_status_never_contacted">מעולם לא נוצר קשר</string>
-    <string name="pump_status_sleeping">בשינה</string>
-    <string name="pump_status_waking_up">מתעורר</string>
-    <string name="pump_status_active">פעיל</string>
-    <string name="pump_status_error_comm">שגיאת תקשורת</string>
-    <string name="pump_status_timeout_comm">חריגה ממגבלת הזמן לתקשורת</string>
-    <string name="pump_status_pump_unreachable">המשאבה אינה זמינה</string>
-    <string name="pump_status_invalid_config">תצורה לא תקפה</string>
     <plurals name="duration_days">
         <item quantity="one">יום %1$d</item>
         <item quantity="two">יומיים</item>

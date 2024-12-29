@@ -39,7 +39,6 @@
     <string name="smscommunicator_stops_ns_with_code">För att inaktivera fjärrkommandon via SMS, svara med kod: %1$s \n\nTänk på att måste ha tillgång till huvudtelefonen för att kunna återaktivera.</string>
     <string name="smscommunicator_stopped_sms">Fjärrkommandon via SMS stoppas. För att återaktivera detta, använd Konfigurationsverktyget på huvudtelefonen.</string>
     <string name="smscommunicator_calibration_reply_with_code">För att skicka kalibrering %1$.2f, svara med kod %2$s</string>
-    <string name="smscommunicator_bolus_failed">Bolus misslyckades</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Minsta antal minuter som måste förflyta mellan en fjärrbolus och nästa</string>
     <string name="smscommunicator_remote_bolus_min_distance">Minsta antal minuter mellan fjärrbolus</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">För att redigera den här inställningen måste du, för din säkerhet, lägga till minst 2 telefonnummer.</string>
@@ -201,10 +200,6 @@
     <string name="overview_shortname">Hem</string>
     <string name="description_overview">Visar loopens nuvarande tillstånd och knappar för de vanligaste funktionerna</string>
     <string name="overview_buttons_selection">Knappar</string>
-    <string name="show_calibration_button_summary">Sänder kalibrering till xDrip eller öppnar kalibreringsrutan i Dexcom-appen</string>
-    <string name="show_cgm_button_summary">Öppnar xDrip+ eller Dexcom-appen. Bakåtknappen återgår till AAPS</string>
-    <string name="dexcom_app_not_installed">Dexcom-appen är inte installerad.</string>
-    <string name="dexcom_app_not_detected">Vänligen uppdatera din Dexcom-app till en supportad version</string>
     <string name="error_starting_cgm">Kunde inte starta CGM-appen. Kontrollera att den är installerad.</string>
     <string name="not_available_full">Ej tillgängligt</string>
     <string name="constraints_violation">Begränsning nådd</string>
@@ -226,12 +221,6 @@
     <string name="thirdcarbsincrement">Tredje snabbknabben för kolhydrater</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">Standardmålvärden</string>
-    <string name="eatingsoon_duration">Äta snart [min]</string>
-    <string name="eatingsoon_target">Mål vid Äta snart</string>
-    <string name="activity_duration">Träning [min]</string>
-    <string name="activity_target">Mål vid träning</string>
-    <string name="hypo_duration">Hypo [min]</string>
-    <string name="hypo_target">Mål vid Hypo</string>
     <string name="fill_bolus_title">Standardvärden för påfyllning/förfyllning </string>
     <string name="button1">Knapp 1</string>
     <string name="button2">Knapp 2</string>
@@ -259,7 +248,6 @@
     <string name="overview_show_deviation_slope">Avvikelsekurva</string>
     <string name="overview_show_activity">Insulinaktivitet (5m)</string>
     <string name="overview_show_bgi">Blodglukospåverkan</string>
-    <string name="overview_show_sensitivity">Känslighet (Sens)</string>
     <string name="overview_show_deviations">Avvikelser (Dev)</string>
     <string name="overview_show_cob">Aktiva KH (COB)</string>
     <string name="overview_show_iob">Aktivt insulin (IOB)</string>
@@ -274,7 +262,6 @@
     <string name="devslope_shortname">Devslope</string>
     <string name="treatments_shortname">Beh</string>
     <string name="heartRate_shortname">HF</string>
-    <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Graf-skala</string>
     <string name="graph_menu_divider_header">Graf</string>
     <!-- Skins -->
@@ -285,7 +272,6 @@
     <string name="skin">Tema</string>
     <string name="cannula_usage">användning:</string>
     <!--    Iob-->
-    <string name="send_logfiles">Skicka dagens loggfiler till utvecklarna tillsammans med denna datumstämpel. Oväntad situation.</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Visar en konstant avisering med en kort sammanfattning av vad din loop gör</string>
     <string name="old_data">Aktuellt BG saknas!</string>

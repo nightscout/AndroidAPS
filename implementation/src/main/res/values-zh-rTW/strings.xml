@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="executing_right_now">指令正在執行中</string>
+    <string name="basal_value_below_minimum">基礎值低於最低值。未設置檔案！</string>
+    <!--       Stats -->
+    <string name="veryLow" comment="below 3.1">非常低</string>
+    <string name="low" comment="3.1-3.9">低</string>
+    <string name="high" comment="10.0-13.9">高</string>
+    <string name="veryHigh" comment="above 13.9">非常高</string>
+    <string name="below" comment="below &quot;in range&quot;">低於範圍</string>
+    <string name="in_range">在範圍內</string>
+    <string name="above" comment="above &quot;in range&quot;">高於範圍</string>
+    <string name="hba1c">糖化血色素: </string>
+    <string name="std_deviation">標準差: %1$s</string>
+    <string name="detailed_14_days">詳細14天資料</string>
+    <string name="day_tir">白天 TIR</string>
+    <string name="night_tir">夜間 TIR</string>
+    <string name="carbs_short" comment="max 6 characters">碳水</string>
+</resources>

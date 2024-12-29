@@ -1,13 +1,13 @@
 package app.aaps.plugins.main.extensions
 
+import app.aaps.core.data.aps.SMBDefaults
+import app.aaps.core.data.model.TB
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.AutosensResult
-import app.aaps.core.interfaces.aps.SMBDefaults
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.interfaces.utils.T
-import app.aaps.core.main.extensions.iobCalc
-import app.aaps.database.entities.TemporaryBasal
+import app.aaps.core.objects.extensions.iobCalc
 import app.aaps.plugins.insulin.InsulinLyumjevPlugin
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
@@ -27,14 +27,14 @@ class TemporaryBasalExtensionKtTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun setup() {
-        insulin = InsulinLyumjevPlugin(profileInjector, rh, profileFunctions, rxBus, aapsLogger, config, hardLimits, uiInteraction)
+        insulin = InsulinLyumjevPlugin(rh, profileFunctions, rxBus, aapsLogger, config, hardLimits, uiInteraction)
         Mockito.`when`(activePlugin.activeInsulin).thenReturn(insulin)
         Mockito.`when`(dateUtil.now()).thenReturn(now)
     }
 
     @Test
     fun iobCalc() {
-        val temporaryBasal = TemporaryBasal(timestamp = now - 1, rate = 200.0, isAbsolute = false, duration = T.hours(1).msecs(), type = TemporaryBasal.Type.NORMAL)
+        val temporaryBasal = TB(timestamp = now - 1, rate = 200.0, isAbsolute = false, duration = T.hours(1).msecs(), type = TB.Type.NORMAL)
         // there should zero IOB after now
         assertThat(temporaryBasal.iobCalc(now, validProfile, insulin).basaliob).isWithin(0.01).of(0.0)
         // there should be significant IOB at EB finish

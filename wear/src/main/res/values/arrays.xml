@@ -17,20 +17,6 @@
         <item>5</item>
     </string-array>
 
-    <string-array name="delta_granularity">
-        <item>@string/pref_low</item>
-        <item>@string/pref_medium</item>
-        <item>@string/pref_high</item>
-        <item>@string/pref_auto</item>
-    </string-array>
-
-    <string-array name="delta_granularity_values">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-    </string-array>
-
     <string-array name="input_design">
         <item>@string/pref_default</item>
         <item>@string/pref_quick_righty</item>
@@ -115,6 +101,20 @@
         <item>manual</item>
         <item>cancel</item>
         <item>none</item>
+    </string-array>
+
+    <string-array name="heartrate_smoothing">
+        <item>@string/pref_1_min</item>
+        <item>@string/pref_5_min</item>
+        <item>@string/pref_10_min</item>
+        <item>@string/pref_15_min</item>
+    </string-array>
+
+    <string-array name="heartrate_smoothing_values">
+        <item>1</item>
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
     </string-array>
 
 </resources>

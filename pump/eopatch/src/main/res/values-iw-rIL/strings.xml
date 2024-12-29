@@ -3,11 +3,9 @@
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_shortname">EOP2</string>
     <string name="eopatch_pump_description">אינטגרציית משאבה עבור EOPatch2 / GlucoMen Day</string>
-    <string name="category_alerts">התראות</string>
     <string name="low_reservoir">התראות על כמות אינסולין נמוכה</string>
     <string name="patch_expiration_reminders">תזכורת תפוגת ה-Patch</string>
     <string name="patch_buzzer_reminders">התראות מצפצפות של ה-Patch</string>
-    <string name="time_format_a_h_mm">h:mm a</string>
     <string name="eopatch_ble_status">סטטוס BLE</string>
     <string name="eopatch_serial_number">מספר סידורי</string>
     <string name="eopatch_lot_number">מספר Lot</string>
@@ -26,7 +24,6 @@
     <string name="time_1hr">שעה</string>
     <string name="time_1hr_30min">שעה וחצי</string>
     <string name="time_2hr">שעתיים</string>
-    <string name="all_blank">\u0020</string>
     <string name="patch_safe_deactivation_desc">כדי להחליף ל Patch חדש, נדרש לנתק את ה-Patch הנוכחי. כל אספקת האינסולין מ-Patch תבוטל.</string>
     <string name="patch_discard_complete_title">ניתוק ה-Patch הושלם בהצלחה.</string>
     <string name="patch_discard_complete_desc">ה-Patch הושבת.\nהיפטר מה-Patch.\nהסר את ה-Patch המחובר לגוף שלך.</string>
@@ -38,7 +35,6 @@
     <string name="patch_remaining_usage_period">זמן נותר</string>
     <string name="patch_finish">סיום</string>
     <string name="patch_forced_discard">ניתוק</string>
-    <string name="patch_comm_error_during_discard_status">ניתוק Patch - שגיאת תקשורת במהלך ניתוק </string>
     <string name="patch_manually_turning_off_alarm_title">כיבוי ידני של התראות ה-Patch</string>
     <string name="patch_manually_turning_off_alarm_desc_1">אם מבוצעת השבתה באופן חד צדדי במהלך שגיאת תקשורת, ייתכן שצפצוף האזעקה מה- Patch לא ייפסק.</string>
     <string name="patch_manually_turning_off_alarm_desc_2">במקרה זה, ניתן לעצור את זה לחלוטין על ידי לחיצה על לחצן הפסקת ההתראה הידני ב-Patch כמו שמתואר להלן:</string>
@@ -94,7 +90,6 @@
     <string name="retry">נסה שוב</string>
     <string name="string_caution_not_remove_needle_cap">[Caution] אל תסירו את מכסה המחט ואת כיסוי הדבק עד להוראה נוספת.</string>
     <string name="string_are_you_sure_to_discard_current_patch">האם אתם בטוחים רוצים לנתק את ה-Patch הנוכחי?</string>
-    <string name="string_unconfirmed_bolus_info_discard_confirm_message">עקב מידע אינו וודאי בנוגע לבולוס, לא ניתן להשתמש ב-Bolus calc עד %s.\n\nהאם אתם בטוחים רוצים לנתק את ה-Patch הנוכחי?</string>
     <string name="needle_insertion_error_1">שגיאה בהכנסת מחט.</string>
     <string name="needle_insertion_error_2">בדקו שכיוון חור פתח המחט ישר, לאחר סיבוב מנוף החרדת המחט, ולאחר מכן לחצו \'נסה שוב\'.</string>
     <string name="needle_insertion_error_3">לחצו על \'ניתוק\' בכדי לנתק את ה-Patch.</string>
@@ -106,7 +101,6 @@
     <string name="finish">סיום</string>
     <string name="string_temp_basal_remained_hhmm">זמן נותר: %1$s:%2$s</string>
     <string name="next">הבא</string>
-    <string name="patch_connection_fail">נסה שוב אחרי ניסיון תקשורת לפאץ\'.</string>
     <string name="string_pause_failed">ההשעיה נכשלה.</string>
     <string name="string_resume_failed">חידוש ההזרקה נכשל.</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE, d MMM, yyyy hh:mm a</string>

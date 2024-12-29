@@ -1,19 +1,18 @@
 package app.aaps.plugins.sync.nsclient.data
 
 import android.text.Spanned
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
-import app.aaps.core.interfaces.utils.T
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.Preferences
 import app.aaps.core.utils.HtmlHelper
-import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.sync.R
-import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,7 +20,7 @@ import javax.inject.Singleton
 class ProcessedDeviceStatusDataImpl @Inject constructor(
     private val rh: ResourceHelper,
     private val dateUtil: DateUtil,
-    private val sp: SP,
+    private val preferences: Preferences,
     private val instantiator: Instantiator
 ) : ProcessedDeviceStatusData {
 
@@ -81,13 +80,13 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
                 .append("<b>")
                 .append(dateUtil.minAgo(rh, openAPSData.clockEnacted))
                 .append("</b> ")
-                .append(JsonHelper.safeGetString(enacted, "reason"))
+                .append(enacted.reason)
                 .append("<br>")
             if (suggested != null) string
                 .append("<b>")
                 .append(dateUtil.minAgo(rh, openAPSData.clockSuggested))
                 .append("</b> ")
-                .append(JsonHelper.safeGetString(suggested, "reason"))
+                .append(suggested.reason)
                 .append("<br>")
             return HtmlHelper.fromHtml(string.toString())
         }
@@ -101,11 +100,10 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
 
             // test warning level
             val level = when {
-                openAPSData.clockSuggested + T.mins(sp.getLong(app.aaps.core.utils.R.string.key_ns_alarm_urgent_stale_data_value, 31))
-                    .msecs() < dateUtil.now()                                                                                                                   -> ProcessedDeviceStatusData.Levels.URGENT
+                openAPSData.clockSuggested + T.mins(preferences.get(IntKey.NsClientUrgentAlarmStaleData).toLong()).msecs() < dateUtil.now() -> ProcessedDeviceStatusData.Levels.URGENT
 
-                openAPSData.clockSuggested + T.mins(sp.getLong(app.aaps.core.utils.R.string.key_ns_alarm_stale_data_value, 16)).msecs() < dateUtil.now() -> ProcessedDeviceStatusData.Levels.WARN
-                else                                                                                                                                            -> ProcessedDeviceStatusData.Levels.INFO
+                openAPSData.clockSuggested + T.mins(preferences.get(IntKey.NsClientAlarmStaleData).toLong()).msecs() < dateUtil.now()       -> ProcessedDeviceStatusData.Levels.WARN
+                else                                                                                                                        -> ProcessedDeviceStatusData.Levels.INFO
             }
             string.append("<span style=\"color:${level.toColor()}\">")
             if (openAPSData.clockSuggested != 0L) string.append(dateUtil.minAgo(rh, openAPSData.clockSuggested)).append(" ")
@@ -116,11 +114,8 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
     override val openApsTimestamp: Long
         get() = if (openAPSData.clockSuggested != 0L) openAPSData.clockSuggested else -1
 
-    override fun getAPSResult(): APSResult =
-        instantiator.provideAPSResultObject().also {
-            it.json = openAPSData.suggested
-            it.date = openAPSData.clockSuggested
-        }
+    override fun getAPSResult(): APSResult? =
+        openAPSData.suggested?.let { instantiator.provideAPSResultObject(it) }
 
     override val uploaderStatus: String
         get() {
@@ -149,7 +144,7 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
                 val uploader = pair.value as ProcessedDeviceStatusData.Uploader
                 if (minBattery >= uploader.battery) {
                     minBattery = uploader.battery
-                    isCharging = uploader.isCharging ?: false
+                    isCharging = uploader.isCharging == true
                     found = true
                 }
             }

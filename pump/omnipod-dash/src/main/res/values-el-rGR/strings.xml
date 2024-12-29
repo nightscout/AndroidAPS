@@ -10,8 +10,6 @@
     <string name="omnipod_dash_history_item_source">Πηγή</string>
     <string name="omnipod_dash_history_item_date">Ημερομηνία</string>
     <string name="omnipod_dash_history_type">Τύπος:</string>
-    <string name="omnipod_dash_history_bolus_value">%1$.2f U</string>
-    <string name="omnipod_dash_history_bolus_value_with_carbs">%1$.2f U, CH=%2$.1f g</string>
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_status">Κατάσταση Bluetooth</string>
     <string name="omnipod_dash_overview_bluetooth_address">Διεύθυνση Bluetooth</string>

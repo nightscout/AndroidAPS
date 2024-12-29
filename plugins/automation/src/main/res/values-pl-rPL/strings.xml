@@ -6,6 +6,8 @@
     <string name="automation_missing_task_name">Proszę wpisać nazwę zadania.</string>
     <string name="automation_missing_trigger">Proszę podać przynajmniej jedno wywołanie.</string>
     <string name="automation_missing_action">Proszę podać przynajmniej jedną akcję.</string>
+    <string name="exportsettings_message">Eksport ustawień: %1$s</string>
+    <string name="export_settings_short">Eksp. ust.</string>
     <string name="alarm_message">Alarm: %1$s</string>
     <string name="alarm_short">Alarm:</string>
     <string name="message_short">Inf:</string>
@@ -87,6 +89,20 @@
     <string name="cobcompared">Węgle %1$s %2$.0f</string>
     <string name="triggerHeartRate">Tętno</string>
     <string name="triggerHeartRateDesc">HR %1$s %2$.0f</string>
+    <string name="triggerSensorAgeLabel">Wiek sensora</string>
+    <string name="triggerSensorAgeDesc">Wiek sensora %1$s %2$.1f h</string>
+    <string name="triggerCannulaAgeLabel">Wiek wkłucia</string>
+    <string name="triggerCannulaAgeDesc">Wiek wkłucia %1$s %2$.1f h</string>
+    <string name="triggerPodChangeLabel">Aktywacja poda</string>
+    <string name="triggerPodChangeDesc">Pod aktywowany</string>
+    <string name="triggerInsulinAgeLabel">Wiek insuliny</string>
+    <string name="triggerInsulinAgeDesc">Wiek insuliny %1$s %2$.1f h</string>
+    <string name="triggerPumpBatteryAgeLabel">Wiek baterii pompy</string>
+    <string name="triggerPumpBatteryAgeDesc">Wiek baterii pompy %1$s %2$.1f h</string>
+    <string name="triggerReservoirLevelLabel">Poziom zbiornika</string>
+    <string name="triggerReservoirLevelDesc">Poziom zbiornika %1$s %2$.0f</string>
+    <string name="triggerPumpBatteryLevelLabel">Poziom baterii pompy</string>
+    <string name="triggerPumpBatteryLevelDesc">Poziom baterii pompy %1$s %2$.0f</string>
     <string name="iob_u">IOB [U]:</string>
     <string name="distance_short">Odległość [m]:</string>
     <string name="recurringTime">Powtarzający się czas</string>
@@ -104,8 +120,6 @@
     <string name="automation_event">Zdarzenie automatyzacji</string>
     <string name="reorder_label">Zmień kolejność</string>
     <string name="user_action">Akcja użytkownika</string>
-    <string name="remove_automation">Usuń automatyzację</string>
-    <string name="sort_automation">Sortuj automatyzację</string>
     <string name="remove_selected_items">Usuń wybrane pozycje</string>
     <string name="count_selected">Wybrany %1$d</string>
     <string name="system_automation">Automatyzacja systemowa</string>
@@ -116,4 +130,11 @@
     <string name="time_to_eat">Czas na posiłek!\nUruchom Kalkulator bolusa aby ponownie wykonać obliczenia.</string>
     <string name="time_to_bolus">Czas na bolus!\nUruchom Kalkulator bolusa aby ponownie wykonać obliczenia.</string>
     <string name="error_setting_reminder">Błąd podczas ustawiania przyszłego alarmu</string>
+    <!--    Autotune-->
+    <string name="autotune_profile_name">Profil Autotune %1$s</string>
+    <string name="autotune_run">Uruchom Autotune</string>
+    <string name="autotune_run_without_autoswitch">Autotune zakończył się bez przełączenia profilu</string>
+    <string name="autotune_run_with_autoswitch">W wyniku uruchomienia Autotune profil został automatycznie przełączony</string>
+    <string name="autotune_run_with_error">Błąd podczas ostatniego uruchomienia Autotune</string>
+    <string name="autotune_run_cancelled">Wykryto Autotune w toku, anulowano próbę kolejnego uruchomienia</string>
 </resources>

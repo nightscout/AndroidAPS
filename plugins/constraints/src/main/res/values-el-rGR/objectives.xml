@@ -26,11 +26,7 @@
     <string name="objectives_smb_objective">Ενεργοποιώντας επιπρόσθετα χαρακτηριστικά για χρήση κατά την ημέρα, όπως το SMB</string>
     <string name="objectives_smb_gate">Πρέπει να διαβάσετε τον οδηγό wiki και να αυξήσετε το maxIOB για να μπορέσει να λειτουργήσει σωστά το SMB! Μια καλή αρχή είναι maxIOB= μέσο bolus γεύματος + 3x το μέγιστο ημερήσιο του βασικού ρυθμού</string>
     <string name="objectives_smb_learned">Η χρήση SMB είναι ο στόχος σας. Ο αλγόριθμος Oref1 σχεδιάστηκε για να σας βοηθήσει και με τα bolus. Δεν θα πρέπει να δώσετε πλήρες bolus για το φαγητό σας, αλλά μόνο ένα μέρος του και αφήστε το AAPS να σας δώσει τα υπόλοιπα αν χρειαστεί. Με αυτόν τον τρόπο έχετε περισσότερο χώρο για εσφαλμένους υδατάνθρακες. Γνωρίζατε ότι μπορείτε να χορηγήσετε μόνο ένα ποσοστό του αποτελέσματος υπολογισμού του bolus για να μειώθει το μέγεθος του bolus;</string>
-    <string name="objectives_dyn_isf_objective">Ενεργοποίηση πρόσθετων λειτουργιών για χρήση κατά την ημέρα, όπως το πρόσθετο Δυναμικής ευαισθησίας</string>
-    <string name="objectives_dyn_isf_gate">Βεβαιωθείτε ότι το SMB λειτουργεί σωστά. Ενεργοποιήστε το πρόσθετο DynamicISF και προσδιορίστε την κατάλληλη βαθμονόμηση για τον οργανισμό σας. Είναι σκόπιμο να ξεκινήσετε με μια τιμή χαμηλότερη από 100% για μεγαλύτερη ασφάλεια.</string>
-    <string name="objectives_dyn_isf_learned">Το πρόσθετο Δυναμικής Ευαισθησίας βασίζεται στην ιδέα ότι η συνολική πρόσληψη ινσουλίνης και τα τρέχοντα επίπεδα γλυκόζης επηρεάζουν την πραγματική ευαισθησία. Το πρόσθετο DynamicISF μπορεί να ρυθμίσει τον Παράγοντα Ευαισθησίας Ινσουλίνης (ISF) που χρησιμοποιείται με βάση αυτό τον αλγόριθμο για εσάς.</string>
     <string name="objectives_auto_objective">Ενεργοποίηση αυτοματισμού</string>
-    <string name="objectives_auto_gate">Διαβάστε τη βιβλιογραφία σχετικά με το πώς λειτουργεί ο αυτοματισμός. Ρυθμίστε τους πρώτους απλούς κανόνες σας. Αντί για δράση αφήστε το AAPS να εμφανίζει μόνο ειδοποιήσεις. Όταν είστε σίγουροι ότι ο αυτοματισμός ενεργοποιείται την κατάλληλη στιγμή αντικαταστήστε την ειδοποίηση με πραγματική ενέργεια. (https://wiki.aaps.app/el/latest/Usage/Automation.html)</string>
     <string name="objectives_auto_learned">Ο αυτοματισμός μπορεί να είναι καλός υπηρέτης, αλλά ένας κακός δάσκαλος. Μην τον υπερχρησιμοποιείτε. Μην προσπαθήσετε να αντικαταστήσετε τον υποκείμενο αλγόριθμο. Ελέγξτε τον κανόνα με χρήση μηνυμάτων πριν από τη χρήση. Εξαρτάται από τη σειρά.</string>
     <string name="objectives_bgavailableinns">Το BG είναι διαθέσιμο στο NS ή στο Tidepool</string>
     <string name="objectives_pumpstatusavailableinns">Η κατάσταση της αντλίας είναι διαθέσιμη στο NS ή στο Tidepool</string>
@@ -77,10 +73,6 @@
     <string name="unfinshed_button">Επόμενο ημιτελές</string>
     <string name="requestcode">Κωδικός αιτήματος: %1$s</string>
     <string name="objectives_hint">(ελέγξτε όλες τις σωστές απαντήσεις)</string>
-    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/el/latest/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/el/latest/Getting-Started/Screenshots.html#the-homescreen</string>
-    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/el/latest/Configuration/Config-Builder.html</string>
-    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/el/latest/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">Δεν είστε συνδεδεμένοι στο internet</string>
     <string name="failedretrievetime">Απέτυχε η ανάκτηση ώρας</string>
     <string name="requirementnotmet">Αντικειμενικές προϋποθέσεις δεν πληρούνται</string>

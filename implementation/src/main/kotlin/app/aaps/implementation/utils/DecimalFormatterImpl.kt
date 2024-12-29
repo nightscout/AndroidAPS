@@ -2,11 +2,11 @@ package app.aaps.implementation.utils
 
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import dagger.Reusable
 import java.text.DecimalFormat
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@Reusable
 class DecimalFormatterImpl @Inject constructor(
     private val rh: ResourceHelper
 ) : DecimalFormatter {

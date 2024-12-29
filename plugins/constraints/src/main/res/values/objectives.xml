@@ -14,25 +14,23 @@
     <string name="objectives_openloop_gate">Run in Open Loop mode for a few days and manually enact lots of temp basals. Set up and use temporary and default temporary targets (e.g. for activity or hypo treatment carbs)</string>
     <string name="objectives_openloop_learned">Open loop can be used for recommendations if you don\'t have compatible pump or you are not ready to close the loop.</string>
     <string name="objectives_maxbasal_objective">Understanding your open loop, including its temp basal recommendations</string>
-    <string name="objectives_maxbasal_gate">Based on that experience, decide what max basal should be, and set it on the pump and preferences</string>
+    <string name="objectives_maxbasal_gate">Based on that experience, decide what max basal should be, and set it on the pump and preferences. In simple mode this value is calculated according to recommendation in wiki and it\'s not necessary to set it.</string>
+    <string name="objectives_maxbasal">Perform action to fulfill recommendation</string>
     <string name="objectives_maxbasal_learned">Take care about safety features and adjust safety parameters when necessary.</string>
     <string name="objectives_maxiobzero_objective">Starting to close the loop with Low Glucose Suspend</string>
-    <string name="objectives_maxiobzero_gate">Run in closed loop with max IOB = 0 for a few days without too many LGS events</string>
+    <string name="objectives_maxiobzero_gate">Run in closed loop with max IOB = 0 for a few days without too many LGS events. In simple mode this value is calculated according to recommendation in wiki and it\'s not necessary to set it.</string>
     <string name="objectives_maxiobzero_learned">Setting MaxIOB to zero prevents you from hypo and will not add more insulin above basal rate (except situation with negative IOB)</string>
     <string name="objectives_maxiob_objective">Tuning the closed loop, raising max IOB above 0 and gradually lowering BG targets</string>
     <string name="objectives_maxiob_gate">Run for a few days, and at least one night with no low BG alarms, before dropping BG</string>
     <string name="objectives_maxiob_learned">Update MaxIOB as a child grows. Do not allow to the system give you more insulin than you can cover by food = really high value is a bad idea.</string>
     <string name="objectives_autosens_objective">Adjust basals and ratios if needed, and then enable auto-sens</string>
-    <string name="objectives_autosens_gate">1 week successful daytime looping with regular carb entry</string>
+    <string name="objectives_autosens_gate">1 week successful daytime looping with regular carb entry. In simple mode autosens is enabled by default.</string>
     <string name="objectives_autosens_learned">If your autosens result is not oscillating around 100% your profile probably wrong.</string>
     <string name="objectives_smb_objective">Enabling additional features for daytime use, such as SMB</string>
-    <string name="objectives_smb_gate">You must read the wiki and raise maxIOB to get SMBs working fine! A good start is maxIOB=average mealbolus + 3 x max daily basal</string>
+    <string name="objectives_smb_gate">You must read the wiki and raise maxIOB to get SMBs working fine! A good start is maxIOB=average mealbolus + 3 x max daily basal. In simple mode this value is calculated according to recommendation in wiki and it\'s not necessary to set it.</string>
     <string name="objectives_smb_learned">Using SMB is your goal. Oref1 algorithm was designed to help you with your boluses as well. You should not give full bolus for your food but only part of it and let AAPS give you the rest if needed. This way you have more space for miscalculated carbs. Did you know that you can set a percentage of bolus calculator result to reduce the size of bolus?</string>
-    <string name="objectives_dyn_isf_objective">Enabling additional features for daytime use, such as Dynamic sensitivity plugin</string>
-    <string name="objectives_dyn_isf_gate">Ensure that SMB is functioning properly. Enable the DynamicISF plugin and identify the appropriate calibration for your body\'s uniqueness. It\'s advisable to begin with a value lower than 100% for safety.</string>
-    <string name="objectives_dyn_isf_learned">The Dynamic Sensitivity plugin is based on the idea that the total insulin intake and current glycemia levels affect the actual sensitivity. The DynamicISF plugin can adjust the Insulin Sensitivity Factor (ISF) used by the algorithm for you.</string>
     <string name="objectives_auto_objective">Enabling automation</string>
-    <string name="objectives_auto_gate">Read the docs on how automation works. Set up your first simple rules. Instead of action let AAPS display only notification. When you are sure automation is triggered at the right time replace notification by real action. (https://wiki.aaps.app/en/latest/Usage/Automation.html)</string>
+    <string name="objectives_auto_gate">Read the docs on how automation works. Set up your first simple rules. Instead of action let AAPS display only notification. When you are sure automation is triggered at the right time replace notification by real action. (https://wiki.aaps.app/en/latest/DailyLifeWithAaps/Automations.html)</string>
     <string name="objectives_auto_learned">Automation can be a good servant but a bad master. Don\'t overuse it. Do not try to replace underlying algorithm. Test the rule with message only before use. It depends on order.</string>
     <string name="objectives_bgavailableinns">BG available in NS or Tidepool</string>
     <string name="objectives_pumpstatusavailableinns">Pump status available in NS or Tidepool</string>
@@ -79,13 +77,14 @@
     <string name="unfinshed_button">Next unfinished</string>
     <string name="requestcode">Request code: %1$s</string>
     <string name="objectives_hint">(check all correct answers)</string>
-    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
-    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html</string>
-    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
     <string name="notconnected">Not connected to the internet</string>
     <string name="failedretrievetime">Failed retrieve time</string>
     <string name="requirementnotmet">Objective requirements not met</string>
     <string name="what_i_ve_learned">What I\'ve learned:</string>
+    <string name="verify_master_password">Verify you know master password</string>
 
 </resources>

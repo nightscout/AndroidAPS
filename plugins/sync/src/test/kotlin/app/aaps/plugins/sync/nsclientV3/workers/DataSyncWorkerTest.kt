@@ -19,6 +19,7 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import kotlin.test.assertIs
+import kotlin.time.Duration.Companion.seconds
 
 @ExperimentalCoroutinesApi
 internal class DataSyncWorkerTest : TestBase() {
@@ -55,7 +56,7 @@ internal class DataSyncWorkerTest : TestBase() {
     }
 
     @Test
-    fun doWorkAndLog() = runTest {
+    fun doWorkAndLog() = runTest(timeout = 30.seconds) {
         sut = TestListenableWorkerBuilder<DataSyncWorker>(context).build()
         `when`(nsClient.hasWritePermission).thenReturn(false)
         sut.doWorkAndLog()

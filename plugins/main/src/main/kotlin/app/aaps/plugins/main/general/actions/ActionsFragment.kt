@@ -7,9 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.extensions.toVisibility
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -32,15 +35,12 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.main.extensions.toStringMedium
-import app.aaps.core.main.extensions.toStringShort
+import app.aaps.core.objects.extensions.toStringMedium
+import app.aaps.core.objects.extensions.toStringShort
 import app.aaps.core.ui.UIRunnable
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.elements.SingleClickButton
-import app.aaps.database.ValueWrapper
-import app.aaps.database.entities.UserEntry.Action
-import app.aaps.database.entities.UserEntry.Sources
-import app.aaps.database.impl.AppRepository
+import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.databinding.ActionsFragmentBinding
 import app.aaps.plugins.main.general.overview.ui.StatusLightHandler
@@ -64,12 +64,13 @@ class ActionsFragment : DaggerFragment() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var iobCobCalculator: IobCobCalculator
+    @Inject lateinit var processedTbrEbData: ProcessedTbrEbData
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var config: Config
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var skinProvider: SkinProvider
     @Inject lateinit var uel: UserEntryLogger
-    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var loop: Loop
     @Inject lateinit var uiInteraction: UiInteraction
 
@@ -123,7 +124,7 @@ class ActionsFragment : DaggerFragment() {
             }
         }
         binding.extendedBolusCancel.setOnClickListener {
-            if (iobCobCalculator.getExtendedBolus(dateUtil.now()) != null) {
+            if (persistenceLayer.getExtendedBolusActiveAt(dateUtil.now()) != null) {
                 uel.log(Action.CANCEL_EXTENDED_BOLUS, Sources.Actions)
                 commandQueue.cancelExtended(object : Callback() {
                     override fun run() {
@@ -143,7 +144,7 @@ class ActionsFragment : DaggerFragment() {
             }
         }
         binding.cancelTempBasal.setOnClickListener {
-            if (iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now()) != null) {
+            if (processedTbrEbData.getTempBasalIncludingConvertedExtended(dateUtil.now()) != null) {
                 uel.log(Action.CANCEL_TEMP_BASAL, Sources.Actions)
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
@@ -240,12 +241,12 @@ class ActionsFragment : DaggerFragment() {
             binding.extendedBolus.visibility = View.GONE
             binding.extendedBolusCancel.visibility = View.GONE
         } else {
-            val activeExtendedBolus = repository.getExtendedBolusActiveAt(dateUtil.now()).blockingGet()
-            if (activeExtendedBolus is ValueWrapper.Existing) {
+            val activeExtendedBolus = persistenceLayer.getExtendedBolusActiveAt(dateUtil.now())
+            if (activeExtendedBolus != null) {
                 binding.extendedBolus.visibility = View.GONE
                 binding.extendedBolusCancel.visibility = View.VISIBLE
                 @Suppress("SetTextI18n")
-                binding.extendedBolusCancel.text = rh.gs(app.aaps.core.ui.R.string.cancel) + " " + activeExtendedBolus.value.toStringMedium(dateUtil, decimalFormatter)
+                binding.extendedBolusCancel.text = rh.gs(app.aaps.core.ui.R.string.cancel) + " " + activeExtendedBolus.toStringMedium(dateUtil, rh)
             } else {
                 binding.extendedBolus.visibility = View.VISIBLE
                 binding.extendedBolusCancel.visibility = View.GONE
@@ -256,12 +257,12 @@ class ActionsFragment : DaggerFragment() {
             binding.setTempBasal.visibility = View.GONE
             binding.cancelTempBasal.visibility = View.GONE
         } else {
-            val activeTemp = iobCobCalculator.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())
+            val activeTemp = processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())
             if (activeTemp != null) {
                 binding.setTempBasal.visibility = View.GONE
                 binding.cancelTempBasal.visibility = View.VISIBLE
                 @Suppress("SetTextI18n")
-                binding.cancelTempBasal.text = rh.gs(app.aaps.core.ui.R.string.cancel) + " " + activeTemp.toStringShort(decimalFormatter)
+                binding.cancelTempBasal.text = rh.gs(app.aaps.core.ui.R.string.cancel) + " " + activeTemp.toStringShort(rh)
             } else {
                 binding.setTempBasal.visibility = View.VISIBLE
                 binding.cancelTempBasal.visibility = View.GONE
@@ -276,7 +277,7 @@ class ActionsFragment : DaggerFragment() {
         val isPatchPump = pump.pumpDescription.isPatchPump
         binding.status.apply {
             cannulaOrPatch.text = if (cannulaOrPatch.text.isEmpty()) "" else if (isPatchPump) rh.gs(R.string.patch_pump) else rh.gs(R.string.cannula)
-            val imageResource = if (isPatchPump) app.aaps.core.main.R.drawable.ic_patch_pump_outline else R.drawable.ic_cp_age_cannula
+            val imageResource = if (isPatchPump) app.aaps.core.objects.R.drawable.ic_patch_pump_outline else R.drawable.ic_cp_age_cannula
             cannulaOrPatch.setCompoundDrawablesWithIntrinsicBounds(imageResource, 0, 0, 0)
             batteryLayout.visibility = (!isPatchPump || pump.pumpDescription.useHardwareLink).toVisibility()
             cannulaUsageLabel.visibility = isPatchPump.not().toVisibility()

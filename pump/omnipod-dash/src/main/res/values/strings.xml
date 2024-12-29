@@ -15,8 +15,6 @@
     <string name="omnipod_dash_history_item_source">Source</string>
     <string name="omnipod_dash_history_item_date">Date</string>
     <string name="omnipod_dash_history_type">Type:</string>
-    <string name="omnipod_dash_history_bolus_value">%1$.2f U</string>
-    <string name="omnipod_dash_history_bolus_value_with_carbs">%1$.2f U, CH=%2$.1f g</string>
 
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_status">Bluetooth Status</string>
@@ -31,7 +29,6 @@
     <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Trying to pair with the new Pod and prime it.\n\nWhen the initialization process has successfully been completed, you can press <b>Next</b>.</string>
 
     <string name="key_omnipod_common_preferences_category_confirmation_beeps" translatable="false">omnipod_common_preferences_category_confirmation</string>
-    <string name="key_common_preferences_category_other_settings" translatable="false">common_preferences_category_other</string>
     <string name="key_omnipod_common_notification_delivery_suspended_sound_enabled" translatable="false">AAPS.Omnipod.notification_delivery_suspended_sound_enabled</string>
     <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Sound when delivery suspended notification enabled</string>
 

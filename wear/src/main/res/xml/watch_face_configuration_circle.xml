@@ -5,6 +5,8 @@
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="@string/key_dark"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_dark"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
@@ -13,6 +15,8 @@
         android:defaultValue="false"
         android:key="@string/key_show_big_numbers"
         android:summary="Big numbers. (Circle WF)"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_big_numbers"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
@@ -21,6 +25,8 @@
         android:defaultValue="false"
         android:key="@string/key_show_ring_history"
         android:summary="Graphical history. (Circle WF)"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_ring_history"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
@@ -29,6 +35,8 @@
         android:defaultValue="true"
         android:key="softRingHistory"
         android:summary="Less eyecandy. (Circle WF)"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_light_ring_history"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
@@ -37,14 +45,9 @@
         android:defaultValue="true"
         android:key="animation"
         android:summary="Animations. (Circle WF)"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_animations"
-        app:wear_iconOff="@drawable/settings_off"
-        app:wear_iconOn="@drawable/settings_on" />
-
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="@string/key_vibrate_hourly"
-        android:title="@string/pref_vibrate_hourly"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
 

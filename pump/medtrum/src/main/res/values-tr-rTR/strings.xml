@@ -49,7 +49,6 @@
     <string name="alarm_expired">Süresi doldu</string>
     <string name="alarm_reservoir_empty">Rezervuar boş</string>
     <string name="alarm_patch_fault">Patch hatası</string>
-    <string name="alarm_patch_fault2">Patch hatası 2</string>
     <string name="alarm_base_fault">Temel hata</string>
     <string name="alarm_battery_out">Pil bitti</string>
     <string name="alarm_no_calibration">Kalibrasyon yok</string>
@@ -79,6 +78,7 @@
     <string name="patch_not_active_note">Bir sonraki adıma kadar pompa tabanı patch\'a bağlanmamalıdır!</string>
     <string name="connect_pump_base">Pompa tabanını yeni bir patch\'a bağlayın, kalan havayı çıkarın ve insülinle doldurun, ardından <b>İleri</b>\'ye basın.</string>
     <string name="note_min_70_units">Not: Etkinleştirme için minimum 70 ünite gereklidir.</string>
+    <string name="reservoir_text_and_level">Rezervuar: %.2f U</string>
     <string name="do_not_attach_to_body">Patch\'i henüz gövdeye takmayın.</string>
     <string name="half_press_needle">İğne düğmesine yarım basın. Daha sonra hazırlamayı başlatmak için <b>İleri</b>\'ye dokunun.</string>
     <string name="wait_for_priming">Lütfen pompa hazırlanırken bekleyin.</string>
@@ -89,6 +89,7 @@
     <string name="activating_pump">Pompa etkinleştiriliyor ve başlangıç bazal hızı ayarlanıyor. Lütfen bekleyin.</string>
     <string name="activating_error">Etkinleştirilemedi. Tekrar denemek için <b>Tekrar Dene</b>\'ye basın.</string>
     <string name="activating_complete">Yeni patch etkinleştirildi. %.2f ünite kaldı.</string>
+    <string name="can_export_settings">Bu pompa oturumunu daha sonra kurtarabilmek için ayarları dışa aktarabilirsiniz.</string>
     <string name="press_OK_to_return">Ana ekrana dönmek için <b>Tamam</b>\'a basın.</string>
     <string name="deactivate_sure">Mevcut patch\'i devre dışı bırakmak istediğinizden emin misiniz?</string>
     <string name="cancel_sure">Etkinleştirmeyi iptal etmek istediğinizden emin misiniz?</string>
@@ -108,7 +109,7 @@
     <string name="sn_input_title">Seri Numarası</string>
     <string name="sn_input_summary">Pompa tabanınızın seri numarasını girin.</string>
     <string name="sn_input_invalid">Geçersiz seri numarası!</string>
-    <string name="pump_unsupported">Pompa test edilmedi: %1$d! Destek için lütfen discord veya github üzerinden bizimle iletişime geçin</string>
+    <string name="pump_unsupported">Pompa test edilmedi: %1$s! Destek için lütfen discord veya github üzerinden bizimle iletişime geçin.</string>
     <string name="alarm_setting_title">Alarm Ayarları</string>
     <string name="alarm_setting_summary">Tercih ettiğiniz pompa alarm ayarlarını seçin.</string>
     <string name="pump_warning_notification_title">Pompa uyarısı hakkında bildirim</string>
@@ -121,9 +122,19 @@
     <string name="hourly_max_insulin_summary">Bir saatte izin verilen maksimum insülini (Ü) belirtin. Bu değer aşılırsa pompa askıya alınır.</string>
     <string name="daily_max_insulin_title">Günlük Maksimum insülin</string>
     <string name="daily_max_insulin_summary">Bir günde izin verilen maksimum insülini (Ü) belirtin. Bu değer aşılırsa pompa askıya alınır.</string>
+    <string name="scan_on_connection_error_title">Bağlantı hatası tarama</string>
+    <string name="scan_on_connection_error_summary">UYARI: Yalnızca bağlantı sorunlarınız varsa etkinleştirin. Etkinleştirilirse, sürücü pompaya yeniden bağlanmayı denemeden önce pompayı tekrar tarar. Konum izninizin \"Her zaman izin ver\" olarak ayarlandığından emin olun</string>
     <!-- treatment state-->
     <string name="getting_pump_status">Pompa durumu alınıyor</string>
+    <string name="syncing_records">Kayıtlar senkronize ediliyor, %1$d kaldı</string>
     <string name="getting_bolus_status">Bolus durumu alınıyor</string>
     <string name="getting_temp_basal_status">Geçici bazal durumu alınıyor</string>
     <string name="setting_pump_settings">Kullanıcı seçenekleri ayarları</string>
+    <!-- bolus-->
+    <string name="bolus_error_reason_user">Bolus kullanıcı tarafından iptal edildi</string>
+    <string name="bolus_error_reason_not_connected">Pompa bağlı değil</string>
+    <string name="bolus_error_reason_already_in_progress">Bolus zaten devam ediyor</string>
+    <string name="bolus_error_reason_unable_to_send_command">Bolus komutu gönderilemiyor</string>
+    <string name="bolus_error_reason_communication_lost">Bolus sırasında zaman aşımı</string>
+    <string name="bolus_error_reason_pump_error">Pompa hatası</string>
 </resources>

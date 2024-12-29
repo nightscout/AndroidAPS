@@ -30,15 +30,12 @@
     <string name="status">Statusas:</string>
     <string name="patient_name">Paciento vardas</string>
     <string name="patient_name_summary">Įrašykite paciento vardą arba slapyvardį, kad galima būtų atskirti tarp skirtingų konfigūracijų.</string>
-    <string name="privacy_settings">Privatumo nuostatos</string>
-    <string name="privacy_summary">Nurodykite el. pašto adresą (neprivaloma), jei norite gauti informaciją apie programos klaidas. Tai nėra automatizuota paslauga. Kūrėjai susisieks esant pavojingoms situacijoms.</string>
     <string name="diawarning">Svarbu: DKS profiliuose IVT turi būti bent 5 val. Tai atitinka 3 val. IVT įprastoje pompos terapijoje.</string>
     <string name="profile">Profilis</string>
     <string name="doprofileswitch">Profilio keitimas</string>
     <string name="exitwizard">Praleisti sąrankos vedlį</string>
     <string name="setupwizard_loop_description">Paspauskite mygtuką žemiau, norėdami leisti AndroidAPS patarti/atlikti bazės pakeitimus</string>
     <string name="setupwizard_sensitivity_description">Jautrumo įskiepis yra naudojamas jautrumo aptikimui ir AAO skaičiavimams. Daugiau informacijos:</string>
-    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="setupwizard_aps_description">Pasirinkite vieną iš esamų algoritmų. Jie yra išdėstyti nuo seniausio iki naujausio. Naujesni algoritmai yra galingesni ir agresyvesni. Taigi jei esate naujas vartotojas, geriau pradėti nuo AMA, o ne naujesnio. Nepamirškite perskaityti dokumentaciją ir sukonfigūruoti jį prieš naudojant.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Nustatykite RileyLink. Pasirinkę RileyLink, galėsite tęsti sąranką, kai tik RileyLink statusas bus „Prisijungta“. Tai gali užtrukti apie minutę.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Pastaba:</b> Sąranką galėsite tęsti, kai prijungsite pompą.\n</string>
@@ -47,8 +44,6 @@
     <string name="readstatus">Statuso nuskaitymas</string>
     <string name="data_choices">Duomenų pasirinkimas</string>
     <string name="fabric_upload">Duomenų perdavimas kūrėjams</string>
-    <string name="allow_automated_crash_reporting">Leisti automatinį pranešimų apie programos trikdžius ir funkcijų naudojimo duomenų siuntimą kūrėjams, naudojant fabric.io servisą.</string>
-    <string name="summary_email_for_crash_report">Šis identifikatorius bus pridėtas prie gedimų ataskaitų, kad skubiais atvejais galėtume su Jumis susisiekti. Jis neprivalomas.</string>
     <string name="identification">Identifikacija (el. paštas, FB, Discord slapyvardis ar kt.)</string>
     <string name="request">Užklausa</string>
     <string name="apsmode_title">DKS režimas</string>
@@ -96,7 +91,6 @@
     <string name="check_preferences_before_import">Prašom patikrinti nustatymus prieš importuojant:</string>
     <string name="check_preferences_cannot_import">Nustatymai negali būti importuoti!</string>
     <string name="check_preferences_dangerous_import">Nustatymai neturėtų būti importuoti!</string>
-    <string name="nav_export">Eksportuoti nustatymus</string>
     <string name="export_to">Eksportuoti nustatymus</string>
     <string name="import_from">Importuoti nustatymus iš</string>
     <string name="setting_imported">Nustatymai importuoti</string>
@@ -109,7 +103,6 @@
     <string name="restartingapp">Uždarant aplikaciją, taikyti nustatymus.</string>
     <string name="ue_exported">Naudotojo įrašai eksportuoti</string>
     <string name="protection">Apsauga</string>
-    <string name="master_password_missing">Pagrindinis slaptažodis nėra nustatytas!\n\nPrašome nustatyti savo pagrindinį slaptažodį Nustatymuose(%1$s &#8594; %2$s)</string>
     <!--    Maintenance-->
     <string name="maintenance">Servisas</string>
     <string name="maintenance_shortname">Serv</string>
@@ -132,11 +125,9 @@
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">eksportuota prieš %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">eksportuota %1$s</string>
     <string name="exported_less_than_hour_ago">eksportuota mažiau nei prieš valandą</string>
-    <string name="in_directory" comment="placeholder is for exported file path">kataloge: %1$s</string>
     <string name="preferences_import_list_title">Pasirinkite failą importavimui</string>
     <string name="metadata_warning_different_flavour">Nustatymai sukurti naudojant skirtingą AAPS versiją (%1$s), Jūsų turima: %2$s.\n\nKai kurių nustatymų gali trūkti arba jie gali būti neteisingi - po importavimo patikrinkite ir atnaujinkite nustatymus.</string>
     <string name="metadata_warning_different_device">Nustatymai buvo sukurti naudojant kitą prietaisą. Viskas gerai, jei importuojante iš senesnio/kito telefono, tačiau įsitikinkite, kad visi importuoti nustatymai yra teisingi!</string>
-    <string name="metadata_warning_outdated_format">Jūs naudojate pasenusį formatą iš senos AAPS versijos, kuris nėra saugus! Naudokite tik kraštutiniu atveju, jei neturite nustatymų failo dabartiniu, JSON formatu.</string>
     <string name="metadata_warning_old_export">Importuoti nustatymai yra %1$s d. senumo! Patikrinkite, gal pasirinkote neteisingą failą ir turite naujesnius? Nepamirškite reguliariai eksportuoti nustatymų!</string>
     <string name="metadata_warning_date_format">Neteisingas datos ir laiko formatas!</string>
     <string name="metadata_warning_different_version">Parametrai iš kitos palaikomosios programos versijos. Jei importuojate po atnaujinimo, tai yra normalu, bet po importavimo patikrinkite, ar visos nuostatos vis dar teisingos!</string>
@@ -154,8 +145,6 @@
     <string name="prefdecrypt_issue_wrong_algorithm">Nepalaikomas arba nepatikslintas šifravimo algoritmas!</string>
     <!-- Custom Watchface -->
     <string name="wear_import_custom_watchface_title">Pasirinkite laikrodžio ekraną</string>
-    <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">Iš naujo paleiskite telefoną arba sistemos nustatymuose iš naujo paleiskite AAPS \nkitaip AAPS negalės registruoti žurnalo įrašų (jie svarbūs stebint ir tikrinant, ar algoritmai veikia tinkamai)!</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">Failo formatas</string>
     <string name="metadata_label_created_at">Sukurta</string>
@@ -165,6 +154,5 @@
     <string name="metadata_label_device_model">Eksportuojamas prietaiso modelis</string>
     <string name="metadata_label_encryption">Failo šifravimas</string>
     <string name="metadata_format_new">Naujas šifruotas formatas</string>
-    <string name="metadata_format_debug">Naujas derinimo formatas (nešifruotas)</string>
     <string name="metadata_format_other">Nežinomas eksporto formatas</string>
 </resources>

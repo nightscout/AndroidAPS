@@ -6,7 +6,9 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.RemoteInput
+import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -14,7 +16,6 @@ import app.aaps.core.interfaces.notifications.NotificationHolder
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -27,11 +28,10 @@ import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.main.extensions.toStringShort
-import app.aaps.core.main.iob.generateCOBString
-import app.aaps.core.main.iob.round
+import app.aaps.core.objects.extensions.generateCOBString
+import app.aaps.core.objects.extensions.round
+import app.aaps.core.objects.extensions.toStringShort
 import app.aaps.plugins.main.R
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -40,7 +40,6 @@ import javax.inject.Singleton
 @Suppress("PrivatePropertyName", "DEPRECATION")
 @Singleton
 class PersistentNotificationPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     private val aapsSchedulers: AapsSchedulers,
@@ -49,6 +48,7 @@ class PersistentNotificationPlugin @Inject constructor(
     private val fabricPrivacy: FabricPrivacy,
     private val activePlugins: ActivePlugin,
     private val iobCobCalculator: IobCobCalculator,
+    private val processedTbrEbData: ProcessedTbrEbData,
     private val rxBus: RxBus,
     private val context: Context,
     private val notificationHolder: NotificationHolder,
@@ -64,9 +64,9 @@ class PersistentNotificationPlugin @Inject constructor(
         .pluginName(R.string.ongoingnotificaction)
         .enableByDefault(true)
         .alwaysEnabled(true)
-        .showInList(false)
+        .showInList { false }
         .description(R.string.description_persistent_notification),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ) {
 
     // For Android Auto
@@ -140,30 +140,30 @@ class PersistentNotificationPlugin @Inject constructor(
                 line1aa = rh.gs(app.aaps.core.ui.R.string.missed_bg_readings)
                 line1 = line1aa
             }
-            val activeTemp = iobCobCalculator.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())
+            val activeTemp = processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())
             if (activeTemp != null) {
-                line1 += "  " + activeTemp.toStringShort(decimalFormatter)
-                line1aa += "  " + activeTemp.toStringShort(decimalFormatter) + "."
+                line1 += "  " + activeTemp.toStringShort(rh)
+                line1aa += "  " + activeTemp.toStringShort(rh) + "."
             }
             //IOB
             val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
             val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
             line2 =
-                rh.gs(app.aaps.core.ui.R.string.treatments_iob_label_string) + " " + decimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U " + rh.gs(
+                rh.gs(app.aaps.core.ui.R.string.treatments_iob_label_string) + " " + rh.gs(app.aaps.core.ui.R.string.format_insulin_units, (bolusIob.iob + basalIob.basaliob)) + " " + rh.gs(
                     app.aaps.core.ui.R
                         .string.cob
                 ) + ": " + iobCobCalculator.getCobInfo(
                     "PersistentNotificationPlugin"
                 ).generateCOBString(decimalFormatter)
             val line2aa =
-                rh.gs(app.aaps.core.ui.R.string.treatments_iob_label_string) + " " + decimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U. " + rh.gs(
+                rh.gs(app.aaps.core.ui.R.string.treatments_iob_label_string) + " " + rh.gs(app.aaps.core.ui.R.string.format_insulin_units, (bolusIob.iob + basalIob.basaliob)) + ". " + rh.gs(
                     app.aaps.core.ui.R
                         .string.cob
                 ) + ": " + iobCobCalculator.getCobInfo(
                     "PersistentNotificationPlugin"
                 ).generateCOBString(decimalFormatter) + "."
-            line3 = decimalFormatter.to2Decimal(pump.baseBasalRate) + " U/h"
-            var line3aa = decimalFormatter.to2Decimal(pump.baseBasalRate) + " U/h."
+            line3 = rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, pump.baseBasalRate)
+            var line3aa = rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, pump.baseBasalRate) + "."
             line3 += " - " + profileFunction.getProfileName()
             line3aa += " - " + profileFunction.getProfileName() + "."
             /// For Android Auto

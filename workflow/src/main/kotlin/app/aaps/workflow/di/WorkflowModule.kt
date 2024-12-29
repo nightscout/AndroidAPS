@@ -1,6 +1,6 @@
 package app.aaps.workflow.di
 
-import app.aaps.core.main.workflow.CalculationWorkflow
+import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.workflow.CalculationWorkflowImpl
 import app.aaps.workflow.DummyWorker
 import app.aaps.workflow.InvokeLoopWorker

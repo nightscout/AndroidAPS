@@ -2,7 +2,7 @@ package app.aaps.workflow
 
 import android.content.Context
 import androidx.work.WorkerParameters
-import app.aaps.core.main.utils.worker.LoggingWorker
+import app.aaps.core.objects.workflow.LoggingWorker
 import kotlinx.coroutines.Dispatchers
 
 class DummyWorker(

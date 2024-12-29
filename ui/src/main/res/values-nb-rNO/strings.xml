@@ -3,7 +3,7 @@
     <string name="bolus_constraint_applied">Bolus-begrensning utført</string>
     <string name="carbs_constraint_applied">Karbohydrat-begrensning utført</string>
     <string name="temp_target_short">TT</string>
-    <string name="dialog_canceled">Dialog avbrutt</string>
+    <string name="dialog_canceled">Dialogvindu avbrutt</string>
     <string name="start_activity_tt">Start midlertidig mål for Aktivitet</string>
     <string name="start_eating_soon_tt">Start midlertidig mål for Spise snart</string>
     <string name="start_hypo_tt">Start midlertidig mål for Hypo</string>
@@ -17,7 +17,7 @@
     <!--     Activities-->
     <string name="activity_monitor">Aktivitetsmonitor</string>
     <string name="do_you_want_reset_stats">Vil du tilbakestille aktivitetsstatistikken?</string>
-    <string name="do_you_want_reset_tdd_stats">Vil du tilbakestille TDD statistikken?</string>
+    <string name="do_you_want_recalculate_tdd_stats">Vil du rekalkulere TDD-statistikken?</string>
     <string name="statistics">Statistikk</string>
     <string name="calculation_in_progress">Beregning pågår</string>
     <string name="invalid_age">Ugyldig alder</string>
@@ -80,24 +80,15 @@
     <string name="no_records_available">Ingen registreringer tilgjengelig</string>
     <string name="calculation_short">Kalk</string>
     <string name="treatments_iob_label_string">IOB:</string>
-    <string name="treatments_insulin_label_string">Insulin:</string>
     <string name="treatments_carbs_label_string">Karbo:</string>
-    <string name="treatments_iobtotal_label_string">Total IOB:</string>
-    <string name="treatments_iob_activity_total_label_string">Total IOB aktivitet:</string>
-    <string name="tempbasals_realduration_label_string">Varighet:</string>
     <string name="tempbasals_netratio_label_string">Ratio:</string>
-    <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="treatments_wizard_correction_label">Korr</string>
     <string name="meal_bolus">Måltid</string>
     <string name="prime">Prime</string>
-    <string name="profile_changes">Profilendringer</string>
-    <string name="tempt_targets">Midlertidig mål</string>
     <string name="carbs_and_bolus">Karbo og bolus</string>
     <string name="show_invalidated_records">Vis ugyldige / slettede registreringer</string>
     <string name="hide_invalidated_records">Skjul ugyldige / slettede registreringer</string>
-    <string name="refresh_from_nightscout">Oppdater fra Nightscout</string>
-    <string name="refresheventsfromnightscout">Oppdater fra NS</string>
     <string name="show_invalidated">Vis ugyldige</string>
     <string name="hide_invalidated">Skjul ugyldige</string>
     <string name="careportal_remove_started_events">Fjern oppføringer startet av AAPS</string>
@@ -126,31 +117,26 @@
     <!-- Other dialogs -->
     <string name="basal_rate">Basaldose</string>
     <!--    BolusProgressDialog-->
-    <string name="stop_pressed">STOPP er trykket</string>
+    <string name="stop_pressed">STOPP TRYKKET</string>
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">kun på klokke</string>
     <string name="a11y_only_on_phone">kun på telefon</string>
     <string name="quickwizard_settings">Innstillinger for hurtigknapp</string>
-    <string name="overview_edit_quickwizard_button_text">Knappetekst:</string>
-    <string name="overview_edit_quickwizard_carbs">Karbo:</string>
+    <string name="overview_edit_quickwizard_button_text">Knappetekst</string>
     <string name="overview_edit_quickwizard_valid">Gyldig:</string>
-    <string name="overview_edit_quickwizard_list_activity_add">Legg til</string>
-    <string name="overview_quickwizard_item_edit_button">Rediger</string>
-    <string name="overview_edit_quickwizard_show_on_device">Vis oppføring på enhet:</string>
-    <string name="overview_edit_quickwizard_use_bg">BS-beregning</string>
-    <string name="overview_edit_quickwizard_use_bolus_iob">Bolus IOB-beregning</string>
-    <string name="overview_edit_quickwizard_use_basal_iob">Basal IOB-beregning</string>
-    <string name="overview_edit_quickwizard_use_trend">Trend-beregning</string>
-    <string name="overview_edit_quickwizard_use_superbolus">Superbolus-beregning</string>
-    <string name="overview_edit_quickwizard_percentage">Prosent</string>
-    <string name="device_all">Alt</string>
-    <string name="device_phone">Telefon</string>
-    <string name="device_watch">Klokke</string>
-    <string name="positive_only">Bare positive</string>
-    <string name="negative_only">Bare negative</string>
-    <string name="overview_editquickwizard_usecob">COB-beregning</string>
-    <string name="overview_editquickwizard_usetemptarget">Beregning av midlertidig mål</string>
-    <string name="overview_editquickwizard_usepercentage">Prosent-beregning</string>
-    <string name="app_default">Standardverdi</string>
+    <string name="overview_edit_quickwizard_use_positive_iob_only">Kun positiv IOB</string>
+    <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
+    <string name="overview_edit_quickwizard_percentage_too_high">Prosent er for høy!</string>
     <string name="a11y_drag_and_drop_handle">håndtering av dra-og-slipp</string>
+    <string name="additional_ecarbs">Legg til eKarbo</string>
+    <string name="overview_edit_quickwizard_useforcalculation">Bruk i beregning:</string>
+    <string name="constraints_violation">Brudd på begrensninger</string>
+    <string name="change_your_input">Endre dine inndata!</string>
+    <string name="confirm_treatment">Bekreft behandling</string>
+    <string name="recalculate">Rekalkuler</string>
+    <string-array name="yes_no_positiveonly_negativeonly">
+        <item>Begge</item>
+        <item>Kun positiv</item>
+        <item>Kun negativ</item>
+    </string-array>
 </resources>

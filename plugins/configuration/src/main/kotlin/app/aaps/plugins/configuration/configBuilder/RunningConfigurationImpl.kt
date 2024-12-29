@@ -1,5 +1,9 @@
 package app.aaps.plugins.configuration.configBuilder
 
+import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.interfaces.aps.APS
+import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.Sensitivity
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
@@ -8,28 +12,28 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.smoothing.Smoothing
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.core.nssdk.localmodel.devicestatus.NSDeviceStatus
 import app.aaps.plugins.configuration.R
+import dagger.Reusable
 import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@Reusable
 class RunningConfigurationImpl @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val configBuilder: ConfigBuilder,
-    private val sp: SP,
+    private val preferences: Preferences,
     private val aapsLogger: AAPSLogger,
     private val config: Config,
     private val rh: ResourceHelper,
@@ -54,9 +58,13 @@ class RunningConfigurationImpl @Inject constructor(
                 val overviewInterface = activePlugin.activeOverview
                 val safetyInterface = activePlugin.activeSafety
                 val smoothingInterface = activePlugin.activeSmoothing
+                // APS interface is needed for dynamic sensitivity calculation
+                val apsInterface = activePlugin.activeAPS
 
                 json.put("insulin", insulinInterface.id.value)
                 json.put("insulinConfiguration", insulinInterface.configuration())
+                json.put("aps", apsInterface.algorithm.name)
+                json.put("apsConfiguration", apsInterface.configuration())
                 json.put("sensitivity", sensitivityInterface.id.value)
                 json.put("sensitivityConfiguration", sensitivityInterface.configuration())
                 json.put("smoothing", smoothingInterface.javaClass.simpleName)
@@ -93,6 +101,20 @@ class RunningConfigurationImpl @Inject constructor(
             }
         }
 
+        configuration.aps?.let {
+            val algorithm = APSResult.Algorithm.valueOf(it)
+            for (p in activePlugin.getSpecificPluginsListByInterface(APS::class.java)) {
+                val apsPlugin = p as APS
+                if (apsPlugin.algorithm == algorithm) {
+                    if (!p.isEnabled()) {
+                        aapsLogger.debug(LTag.CORE, "Changing aps plugin to ${apsPlugin.algorithm}")
+                        configBuilder.performPluginSwitch(p, true, PluginType.APS)
+                    }
+                    configuration.apsConfiguration?.let { ac -> apsPlugin.applyConfiguration(ac) }
+                }
+            }
+        }
+
         configuration.sensitivity?.let {
             val sensitivity = Sensitivity.SensitivityType.fromInt(it)
             for (p in activePlugin.getSpecificPluginsListByInterface(Sensitivity::class.java)) {
@@ -120,8 +142,8 @@ class RunningConfigurationImpl @Inject constructor(
         }
 
         configuration.pump?.let {
-            if (sp.getString(app.aaps.core.utils.R.string.key_virtualpump_type, "fake") != it) {
-                sp.putString(app.aaps.core.utils.R.string.key_virtualpump_type, it)
+            if (preferences.get(StringKey.VirtualPumpType) != it) {
+                preferences.put(StringKey.VirtualPumpType, it)
                 activePlugin.activePump.pumpDescription.fillFor(PumpType.getByDescription(it))
                 pumpSync.connectNewPump(endRunning = false) // do not end running TBRs, we call this only to accept data properly
                 aapsLogger.debug(LTag.CORE, "Changing pump type to $it")

@@ -93,7 +93,6 @@
     <string name="danar_disableeasymode">Απενεργοποιήστε την λειτουργία EasyUI στην αντλία</string>
     <string name="profile_set_failed">Αποτυχία ρύθμισης βασικού προφίλ</string>
     <string name="danar_bluetooth_status">Κατάσταση Bluetooth</string>
-    <string name="danar_iob_label">IOB αντλίας</string>
     <string name="firmware_label">Έκδοση</string>
     <string name="danar_pump_settings">Ρυθμίσεις αντλίας Dana</string>
     <string name="time_format_12h">12ω</string>
@@ -103,7 +102,6 @@
     <string name="danar_bt_name_title">DanaR συσκευή Bluetooth</string>
     <string name="danars_password_title">Κωδικός πρόσβασης αντλίας (μόνο v1)</string>
     <string name="danar_password_title">Κωδικός αντλίας</string>
-    <string name="danar_useextended_title">Χρησιμοποιήστε Εκτεταμένο bolus για &gt;200%%</string>
     <string name="bolusspeed">Ταχύτητα Bolus</string>
     <string name="selectedpump">Επιλεγμένη αντλία</string>
     <string name="rs_loginsulinchange_title">Καταγραφή αλλαγής δεξαμενής</string>

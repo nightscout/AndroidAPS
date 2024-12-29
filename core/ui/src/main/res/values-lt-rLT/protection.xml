@@ -28,4 +28,6 @@
     <string name="pin_cleared">PIN kodas išvalytas!</string>
     <string name="password_hint">Įveskite slaptažodį čia</string>
     <string name="pin_hint">Įveskite PIN čia</string>
+    <string name="master_password_not_set">Pagrindinis slaptažodis nenustatytas</string>
+    <string name="aaps_directory_not_selected">Neparinktas AAPS katalogas</string>
 </resources>

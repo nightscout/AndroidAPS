@@ -20,7 +20,7 @@
     <string name="smscommunicator_otp_export_successful">Tajné OTP heslo (vo formáte Base32) bolo vyexportované a skopírované do schránky. Vložte ho do autentikátora, alebo programátora OTP hardwaru!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Nainštalujte Autentifikátor</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Naskenujte kód pre nastavenie AAPS OTP kódov</string>
-    <string name="smscommunicator_otp_step3_test_header">3. Odtestujte jednorázové heslo</string>
+    <string name="smscommunicator_otp_step3_test_header">3. Otestujte jednorázové heslo</string>
     <string name="smscommunicator_otp_reset_header">Resetovať autentifikátory</string>
     <string name="smscommunicator_otp_install_info">Na každom sledovacom telefóne nainštalujte Autentifikátor, ktorý podporuje tokeny TOTP RFC 6238. Najobľúbenejšie bezplatné aplikácie sú:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">Resetovaním autentifikátora budú všetky už poskytnuté autentifikátory neplatné. Budete ich musieť znovu nastaviť!</string>
@@ -39,7 +39,7 @@
     <string name="smscommunicator_stops_ns_with_code">Pre vypnutie služby SMS komunikátora odpovedz SMS kódom %1$s.\n\n\Majte na pamäti, že opätovná reaktivácia je možná len priamo na AAPS master telefóne.</string>
     <string name="smscommunicator_stopped_sms">SMS komunikátor zastavený. Na jeho reaktiváciu, použite AAPS na master telefóne.</string>
     <string name="smscommunicator_calibration_reply_with_code">Pre odoslanie kalibrácie %1$.2f odpovedz SMS kódom %2$s</string>
-    <string name="smscommunicator_bolus_failed">Chyba pri aplikovaní bolusu</string>
+    <string name="smscommunicator_bolus_failed">Podávanie bolusu zlyhalo. Pred odoslaním ďalšieho príkazu overte skutočný stav!</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Minimálny počet minút, ktorý musí uplynúť medzi jedným vzdialeným bolusom a tým nasledujúcim</string>
     <string name="smscommunicator_remote_bolus_min_distance">Aspoň koľko minút musí uplynúť, medzi jedným vzdialeným bolusom a tým nasledujúcim</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">Pre vašu bezpečnosť,  musíte pridať aspoň 2 telefónne čísla, aby ste zmenili toto prednastavenie.</string>
@@ -153,6 +153,8 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">CIEĽ</string>
     <string name="basal_short">BAZ</string>
+    <string name="isf_dynamic_label">Váš algoritmus môže poskytnúť dynamický výpočet ISF. Nižšie uvedené hodnoty sú použité iba ako záložné v prípade chýbajúcich údajov</string>
+    <string name="ic_dynamic_label">Váš algoritmus môže poskytnúť dynamický výpočet ISF. Nižšie uvedené hodnoty sú použité iba ako záložné v prípade chýbajúcich údajov</string>
     <!-- Actions -->
     <string name="actions">Akcie</string>
     <string name="description_actions">Niektoré tlačidlá na rýchly prístup do spoločných funkcií</string>
@@ -189,7 +191,20 @@
     <string name="statuslights_bat_warning">Prah upozornenia na úroveň batérie v pumpe [%]</string>
     <string name="statuslights_bat_critical">Prah kritickej úrovne batérie v pumpe [%]</string>
     <string name="statuslights_copy_ns">Kopírovať nastavenia z NS</string>
+    <string name="graph_scale_6h">6h</string>
+    <string name="graph_scale_12h">12h</string>
+    <string name="graph_scale_18h">18h</string>
+    <string name="graph_scale_24h">24h</string>
+    <string name="graph_long_scale_6h">6 hodín</string>
+    <string name="graph_long_scale_12h">12 hodín</string>
+    <string name="graph_long_scale_18h">18 hodín</string>
+    <string name="graph_long_scale_24h">24 hodín</string>
     <string name="a11y_graph">graf</string>
+    <string name="a11y_graph_scale">vyberte rozsah grafu</string>
+    <string name="a11y_graph_scale_6h">rozsah grafu 6 hodín</string>
+    <string name="a11y_graph_scale_12h">rozsah grafu 12 hodín</string>
+    <string name="a11y_graph_scale_18h">rozsah grafu 18 hodín</string>
+    <string name="a11y_graph_scale_24h">rozsah grafu 24 hodín</string>
     <string name="a11y_insulin_label">inzulín</string>
     <string name="chart_menu">Grafové menu</string>
     <string name="a11y_bg_quality">kvalita glykémií</string>
@@ -201,10 +216,8 @@
     <string name="overview_shortname">PREH</string>
     <string name="description_overview">Zobrazenie aktuálneho stavu vašeho uzavretého okruhu a tlačidlá k najpoužívanejším ovládacím prvkom</string>
     <string name="overview_buttons_selection">Tlačidlá</string>
-    <string name="show_calibration_button_summary">Odošle kalibráciu do xDripu+, alebo otvorenie kalibračného dialógu BYODA</string>
-    <string name="show_cgm_button_summary">Otvorí xDrip+, alebo BYODA, tlačidlom späť sa vrátiš do AndroidAPS</string>
-    <string name="dexcom_app_not_installed">Dexcom aplikácia nie je nainštalovaná.</string>
-    <string name="dexcom_app_not_detected">Prosím aktualizuj tvoju Dexcom aplikáciu na podporovanú verziu</string>
+    <string name="show_calibration_button_summary">Odošle kalibráciu do xDrip+ (presvedčte sa, či je v xDrip+ povolené „Prijímať kalibrácie z iných aplikácií“ v nastavení \"Komunikácia s inými aplikáciami).</string>
+    <string name="show_cgm_button_summary">Otvorí xDrip+ (môžete použiť tlačítko späť na návrat do AAPS).</string>
     <string name="error_starting_cgm">Nie je možné spustiť aplikáciu CGM. Uistite sa, že je nainštalovaná.</string>
     <string name="not_available_full">Nedostupný</string>
     <string name="constraints_violation">Mimo povolený rozsah</string>
@@ -226,12 +239,12 @@
     <string name="thirdcarbsincrement">Tretí prídavok sacharidov</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">Predvolené nastavenie dočasných cieľov</string>
-    <string name="eatingsoon_duration">Trvanie \"blížiaceho sa jedla\"</string>
-    <string name="eatingsoon_target">Cieľ pre \"blížiace se jedlo\"</string>
-    <string name="activity_duration">Trvanie aktivity</string>
-    <string name="activity_target">Cieľ pri aktivite</string>
-    <string name="hypo_duration">Trvanie dočasného cieľa pri hypoglykémii</string>
-    <string name="hypo_target">Cieľová hodnota pri hypoglykémii</string>
+    <string name="eatingsoon_duration">Trvanie „Pred jedlom“ [min]</string>
+    <string name="eatingsoon_target">Cieľová hodnota „Pred jedlom“</string>
+    <string name="activity_duration">Trvanie „Aktivita“ [min]</string>
+    <string name="activity_target">Cieľová hodnota „Aktivita“</string>
+    <string name="hypo_duration">Trvanie „Hypoglykémia“ [min] </string>
+    <string name="hypo_target">Cieľová hodnota „Hypoglykémia“</string>
     <string name="fill_bolus_title">Štandardné množstvo inzulínu pre Plnenie/Doplňovanie</string>
     <string name="button1">Tlačidlo 1</string>
     <string name="button2">Tlačidlo 2</string>
@@ -259,12 +272,13 @@
     <string name="overview_show_deviation_slope">Odchýlka sklonu</string>
     <string name="overview_show_activity">Aktivita</string>
     <string name="overview_show_bgi">Vplyv na glykémiu (BGI)</string>
-    <string name="overview_show_sensitivity">Citlivosť</string>
+    <string name="overview_show_sensitivity">Zmena citlivosti</string>
     <string name="overview_show_deviations">Odchýlky</string>
     <string name="overview_show_cob">Aktívne sacharidy</string>
     <string name="overview_show_iob">Aktívny inzulín</string>
     <string name="overview_show_basals">Bazály</string>
     <string name="overview_show_abs_insulin">Celkový inzulín</string>
+    <string name="overview_show_variable_sens">Premenlivá citlivosť</string>
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAZ</string>
     <string name="deviation_shortname">DEV</string>
@@ -274,9 +288,11 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">OŠET</string>
     <string name="heartRate_shortname">TF</string>
-    <string name="sensitivity_shortname">SENZ</string>
+    <string name="sensitivity_shortname">SENS%</string>
+    <string name="variable_sensitivity_shortname">VSENS</string>
     <string name="graph_scale">Mierka grafu</string>
     <string name="graph_menu_divider_header">Graf</string>
+    <string name="temp_basal_overview_short_name">T:</string>
     <!-- Skins -->
     <string name="classic_description">Pôvodný vzhľad</string>
     <string name="lowres_description">Vzhľad pre nízke rozlišenie</string>
@@ -285,8 +301,10 @@
     <string name="skin">Vzhľad</string>
     <string name="cannula_usage">používanie:</string>
     <!--    Iob-->
-    <string name="send_logfiles">Odošlite dnešné súbory protokolov vývojárom spolu s týmto časom. Neočakávaná situácia.</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Zobrazuje priebežné oznámenia v Androide s krátkym prehľadom, čo práve uzavretý okruh robí</string>
     <string name="old_data">ZASTARALÉ DÁTA</string>
+    <string name="overview_show_steps">Kroky</string>
+    <string name="steps_shortname">KROKY</string>
+    <string name="simple_mode_enabled">Jednoduchý režim aktívny</string>
 </resources>

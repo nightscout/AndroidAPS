@@ -11,7 +11,6 @@
     <string name="current_master_password">Jelenlegi mesterjelszó</string>
     <string name="status">Állapot:</string>
     <string name="patient_name">Beteg neve</string>
-    <string name="privacy_settings">Adatvédelmi beállítások</string>
     <string name="profile">Profil</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink állapot:</string>
     <!--    ConfigBuilder-->
@@ -20,7 +19,6 @@
     <string name="configbuilder_loop">Loop</string>
     <!--ImportExport-->
     <string name="import_setting">Beállítások importálása</string>
-    <string name="nav_export">Beállítások exportálása</string>
     <string name="setting_imported">Beállítások importálva</string>
     <string name="old_master_password">Régi mesterjelszó</string>
     <string name="filenotfound">Fájl nem található</string>
@@ -28,7 +26,6 @@
     <string name="configbuilder_nightscoutversion_label">Nightscout verzió:</string>
     <!-- Maintenance -->
     <!-- Custom Watchface -->
-    <!-- Permissions -->
     <!-- Maintenance -->
     <string name="metadata_label_format">Fájlformátum</string>
     <string name="metadata_label_created_at">Létrehozva</string>
@@ -38,6 +35,5 @@
     <string name="metadata_label_device_model">Készülékmodell exportálása</string>
     <string name="metadata_label_encryption">Fájltitkosítás</string>
     <string name="metadata_format_new">Új titkosított formátom</string>
-    <string name="metadata_format_debug">Új hibakeresési formátum (nem titkosított)</string>
     <string name="metadata_format_other">Ismeretlen export formátum</string>
 </resources>

@@ -9,7 +9,6 @@
     <string name="smscommunicator_stops_ns_with_code">Da biste onemogućili uslugu SMS Remote Service, odgovorite s kodom %1$s.\n\nImajte na umu da ćete je moći ponovno aktivirati samo s AAPS glavnog pametnog telefona.</string>
     <string name="smscommunicator_stopped_sms">Usluga SMS Remote Service zaustavljena. Za ponovno aktiviranje upotrijebite AAPS na glavnom pametnom telefonu.</string>
     <string name="smscommunicator_calibration_reply_with_code">Za slanje kalibracije %1$.2f odgovorite s kodom %2$s</string>
-    <string name="smscommunicator_bolus_failed">Bolus nije uspio</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Najmanji broj minuta koji mora proći između jednog daljinskog bolusa i sljedećeg</string>
     <string name="smscommunicator_remote_bolus_min_distance">Koliko minuta mora proći najmanje između dva bolusa</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">Radi vaše sigurnosti, za uređivanje ove postavke morate dodati najmanje 2 telefonska broja.</string>

@@ -39,7 +39,6 @@
     <string name="smscommunicator_stops_ns_with_code">Norėdami išjungti SMS nuotolinį valdymą, atsakykite kodu %1$s.\n\n Turėkite omenyje, kad jūs funkciją galėsite atnaujinti tik tiesiai iš AAPS pagrindinio telefono.</string>
     <string name="smscommunicator_stopped_sms">SMS nuotolinio valdymo funkcija sustojo. Norėdami ją atnaujinti, naudokite AAPS pagrindinį išmanųjį telefoną.</string>
     <string name="smscommunicator_calibration_reply_with_code">Norėdami nusiųsti kalibraciją %1$.2f, atsakykite kodu %2$s</string>
-    <string name="smscommunicator_bolus_failed">Bolusas nesuleistas</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Minimalus minučių skaičius, kuris turi praeiti nuo vieno nuotolinio boluso iki kito</string>
     <string name="smscommunicator_remote_bolus_min_distance">Kiek mažiausiai minučių turi praeiti tarp vieno ir kito boluso</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">Jūsų saugumui, norėdami redaguoti šį pasirinkimą, jums reikia pridėti ne mažiau kaip 2 telefono numerius.</string>
@@ -139,7 +138,7 @@
     <string name="missing_profile_name">Profilio pavadinimas nėra įrašytas</string>
     <string name="error_in_ic_values">Insulino ir AV santykio (I:A) reikšmės klaida</string>
     <string name="error_in_basal_values">Bazės reikšmių klaida</string>
-    <string name="error_in_target_values">Tikslinės glikemijos reikšmės klaida</string>
+    <string name="error_in_target_values">Klaidinga glikemijos tikslo reikšmė</string>
     <string name="error_in_isf_values">JIF reikšmės klaida</string>
     <string name="profile_name_contains_dot">Profilio pavadinime yra taškų.\nŠios funkcijos NS nepalaiko.\nProfilis nebus įkeltas į NS.</string>
     <string name="invalid_profile_not_accepted">Neteisingas profilis %1$s nepriimtas iš NS</string>
@@ -201,10 +200,6 @@
     <string name="overview_shortname">PRADŽIA</string>
     <string name="description_overview">Rodo dabartinę Ciklo būseną ir pagrindinių veiksmų mygtukus</string>
     <string name="overview_buttons_selection">Mygtukai</string>
-    <string name="show_calibration_button_summary">Siunčia kalibravimą į xDrip+ arba atidaro modifikuotos Dexcom programos BYODA kalibravimo dialogą</string>
-    <string name="show_cgm_button_summary">Atidaro xDrip+ ar BYODA, o mygtukas ATGAL gražina į AAPS</string>
-    <string name="dexcom_app_not_installed">Dexcom app neįdiegta.</string>
-    <string name="dexcom_app_not_detected">Atnaujinkite savo Dexcom programėlės versiją</string>
     <string name="error_starting_cgm">Nepavyko paleisti NGJ programos.  Įsitikinkite, kad ji įdiegta.</string>
     <string name="not_available_full">Nėra duomenų</string>
     <string name="constraints_violation">Apribojimų pažeidimas</string>
@@ -226,12 +221,6 @@
     <string name="thirdcarbsincrement">Trečias angliavandenių kiekio žingsnis</string>
     <string name="cgm">NGJ</string>
     <string name="default_temptargets">Numatyti Laikini Tikslai</string>
-    <string name="eatingsoon_duration">\"Netrukus valgysiu\" trukmė</string>
-    <string name="eatingsoon_target">\"Netrukus valgysiu\" tikslas</string>
-    <string name="activity_duration">\"Aktyvumas\" trukmė</string>
-    <string name="activity_target">\"Aktyvumas\" tikslas</string>
-    <string name="hypo_duration">\"Hipo\" trukmė</string>
-    <string name="hypo_target">\"Hipo\" tikslas</string>
     <string name="fill_bolus_title">Standartiniai insulino kiekiai kateterio/kaniulės užpildymui</string>
     <string name="button1">Mygtukas 1</string>
     <string name="button2">Mygtukas 2</string>
@@ -258,7 +247,6 @@
     <string name="overview_show_deviation_slope">Nuokrypiai</string>
     <string name="overview_show_activity">Aktyvumas</string>
     <string name="overview_show_bgi">Glikemijos įtaka</string>
-    <string name="overview_show_sensitivity">Jautrumas insulinui</string>
     <string name="overview_show_deviations">Nuokrypiai</string>
     <string name="overview_show_cob">Aktyvūs angliavandeniai</string>
     <string name="overview_show_iob">Aktyvus insulinas organizme</string>
@@ -273,7 +261,6 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">ĮRAŠ</string>
     <string name="heartRate_shortname">ŠSD</string>
-    <string name="sensitivity_shortname">JAUTR</string>
     <string name="graph_scale">Grafiko mastelis</string>
     <string name="graph_menu_divider_header">Grafikas</string>
     <!-- Skins -->
@@ -284,7 +271,6 @@
     <string name="skin">Išvaizda</string>
     <string name="cannula_usage">naud:</string>
     <!--    Iob-->
-    <string name="send_logfiles">Siųsti šios dienos žurnalo įrašus kūrėjams dabar. Netikėta situacija.</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Rodo atsinaujinančius pranešimus su trumpa Ciklo veiklos apžvalga</string>
     <string name="old_data">SENI DUOMENYS</string>

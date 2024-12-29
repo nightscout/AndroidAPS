@@ -2,9 +2,6 @@
 <resources>
     <!-- PumoCommon - Pump Abstract -->
     <string name="pump_operation_not_supported_by_pump_driver">Opération non prise en charge par la pompe et/ou le pilote.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">Opération PAS ENCORE supportée par la pompe.</string>
-    <string name="common_resultok">OK</string>
-    <string name="pump_serial_number">Numéro de série de la pompe</string>
     <string name="bolus_delivered_so_far">%1$.2f U / %2$.2f U délivrés</string>
     <!-- PumpCommon - Pump Status -->
     <string name="pump_status_not_initialized">Non initialisé</string>
@@ -46,33 +43,9 @@
     <string name="ble_config_scan_scanning">Recherche en cours</string>
     <string name="ble_config_scan_finished">Recherche terminée</string>
     <string name="ble_config_scan_error">Erreur de scan : %1$d</string>
-    <string name="ble_config_connected_never">Jamais</string>
     <string name="ble_config_remove">Supprimer</string>
-    <!-- BLE Errors -->
-    <string name="ble_error_bt_disabled">Bluetooth désactivé</string>
-    <string name="ble_error_no_bt_adapter">Aucun adaptateur Bluetooth</string>
-    <string name="ble_error_configured_pump_not_found">Pompe configurée introuvable</string>
-    <string name="ble_error_pump_unreachable">Pompe hors de portée</string>
-    <string name="ble_error_failed_to_conn_to_ble_device">Échec de la connexion à l’appareil BLE</string>
-    <string name="ble_error_encryption_failed">Echec du cryptage</string>
-    <string name="ble_error_pump_found_unbonded">Pas de pompe appairée trouvée</string>
-    <!-- Pump Error -->
-    <string name="pump_settings_error_basal_profiles_not_enabled">Le réglage des profils de basal n\'est pas activé sur la pompe. Activez-le sur la pompe.</string>
-    <string name="pump_settings_error_incorrect_basal_profile_selected">Le profil Basal défini sur la pompe est incorrect (doit être %s).</string>
-    <string name="pump_settings_error_wrong_tbr_type_set">Mauvais type DBT (TBR) réglé sur la pompe (doit être %s).</string>
-    <string name="pump_settings_error_wrong_max_bolus_set">Mauvais paramètre Max Bolus sur la pompe (doit être %1$.2f).</string>
-    <string name="pump_settings_error_wrong_max_basal_set">Mauvais paramètre Max Basal sur la pompe (doit être %1$.2f).</string>
     <!-- Pump History -->
     <string name="pump_history_type">Type :</string>
-    <!-- PumpDeviceState -->
-    <string name="pump_status_never_contacted">Jamais contacté</string>
-    <string name="pump_status_sleeping">En veille</string>
-    <string name="pump_status_waking_up">Réveil en cours</string>
-    <string name="pump_status_active">Actif</string>
-    <string name="pump_status_error_comm">Erreur de communication</string>
-    <string name="pump_status_timeout_comm">Délai de communication dépassé</string>
-    <string name="pump_status_pump_unreachable">Pompe hors de portée</string>
-    <string name="pump_status_invalid_config">Configuration invalide</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d jour</item>
         <item quantity="other">%1$d jours</item>

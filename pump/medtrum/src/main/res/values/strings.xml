@@ -1,20 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- MedtrumPump -->
-    <string name="key_sn_input" translatable="false">sn_input</string>
-    <string name="key_alarm_setting" translatable="false">alarm_setting</string>
-    <string name="key_patch_expiration" translatable="false">patch_expiration</string>
-    <string name="key_pump_warning_notification" translatable="false">pump_warning_notification</string>
-    <string name="key_pump_warning_expiry_hour" translatable="false">pump_expiry_warning_hour</string>
-    <string name="key_hourly_max_insulin" translatable="false">hourly_max_insulin</string>
-    <string name="key_daily_max_insulin" translatable="false">daily_max_insulin</string>
-
-    <string name="key_medtrum_pump_settings" translatable="false">medtrum_pump_setting</string>
     <string name="key_pump_state" translatable="false">pump_state</string>
     <string name="key_active_alarms" translatable="false">active_alarms</string>
     <string name="key_last_connection" translatable="false">last_connection</string>
     <string name="key_bolus_start_time" translatable="false">bolus_start_time</string>
-    <string name="key_bolus_amount_to_be_delivered" translatable = "false">bolus_amount_to_be_delivered</string>
+    <string name="key_bolus_amount_to_be_delivered" translatable="false">bolus_amount_to_be_delivered</string>
     <string name="key_last_bolus_time" translatable="false">last_bolus_time</string>
     <string name="key_last_bolus_amount" translatable="false">last_bolus_amount</string>
     <string name="key_session_token" translatable="false">medtrum_session_token</string>
@@ -109,6 +100,7 @@
     <string name="patch_not_active_note">Pump base should not be connected to the patch until the next step!</string>
     <string name="connect_pump_base">Connect pump base to a new patch, remove the residual air and fill with insulin, then press <b>Next</b>.</string>
     <string name="note_min_70_units">Note: A minimum of 70 units is required for activation.</string>
+    <string name="reservoir_text_and_level">Reservoir: %.2f U</string>
     <string name="do_not_attach_to_body">Do not attach the patch to the body yet.</string>
     <string name="half_press_needle">Half-press needle button. Then tap <b>Next</b> to start prime.</string>
     <string name="wait_for_priming">Please wait for the priming to complete.</string>
@@ -119,6 +111,7 @@
     <string name="activating_pump">Activating pump and setting initial basal rate. Please Wait.</string>
     <string name="activating_error">Failed to activate, press <b>Retry</b> to try again.</string>
     <string name="activating_complete">New patch activated. %.2f Units remaining.</string>
+    <string name="can_export_settings">You can export the settings to be able to recover this patch session later.</string>
     <string name="press_OK_to_return">Press <b>OK</b> to return to main screen.</string>
 
     <string name="deactivate_sure">Are you sure that you want to deactivate the current patch?</string>
@@ -154,11 +147,21 @@
     <string name="hourly_max_insulin_summary">Specify the maximum units of insulin allowed per hour. If exceeded, the pump will suspend.</string>
     <string name="daily_max_insulin_title">Daily Maximum Insulin [Units]</string>
     <string name="daily_max_insulin_summary">Specify the maximum units of insulin allowed per day. If exceeded, the pump will suspend.</string>
+    <string name="scan_on_connection_error_title">Scan on connection error</string>
+    <string name="scan_on_connection_error_summary">WARNING: Only enable if you have connection problems. If enabled the driver scans for the pump again before trying to reconnect to the pump. Make sure you have Location permission set to "Always allow" </string>
 
     <!-- treatment state-->
     <string name="getting_pump_status">Getting pump status</string>
+    <string name="syncing_records">Syncing records, %1$d left</string>
     <string name="getting_bolus_status">Getting bolus status</string>
     <string name="getting_temp_basal_status">Getting temporary basal status</string>
     <string name="setting_pump_settings">Setting user options</string>
 
+    <!-- bolus-->
+    <string name="bolus_error_reason_user">Bolus cancelled by user</string>
+    <string name="bolus_error_reason_not_connected">Pump not connected</string>
+    <string name="bolus_error_reason_already_in_progress">Bolus already in progress</string>
+    <string name="bolus_error_reason_unable_to_send_command">Unable to send bolus command</string>
+    <string name="bolus_error_reason_communication_lost">Timeout getting bolus status</string>
+    <string name="bolus_error_reason_pump_error">Pump error</string>
 </resources>

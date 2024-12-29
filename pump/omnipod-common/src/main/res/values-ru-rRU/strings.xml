@@ -35,7 +35,6 @@
     <string name="omnipod_common_error_unexpected_exception">Непредвиденная ошибка. Сообщите об ошибке! (%1$s:%2$s).</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation">Подтверждение</string>
-    <string name="omnipod_common_confirmation_time_or_timezone_change">Время и/или часовой пояс изменены на Pod.</string>
     <string name="omnipod_common_confirmation_expiration_alerts_updated">Конфигурация оповещений обновлена в Pod.</string>
     <string name="omnipod_common_confirmation_time_on_pod_updated">Время на Pod обновлено.</string>
     <string name="omnipod_common_confirmation_suspended_delivery">Все подачи инсулина приостановлены.</string>
@@ -66,6 +65,7 @@
     <string name="omnipod_common_overview_reservoir_value">%1$.2f ед. осталось</string>
     <string name="omnipod_common_overview_reservoir_value_over50">Осталось свыше 50 ед</string>
     <string name="omnipod_common_overview_errors">Ошибки</string>
+    <string name="omnipod_common_uncertain">не подтверждено</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_cancel">Отменить</string>
     <string name="omnipod_common_wizard_button_finish">Завершить</string>
@@ -127,7 +127,6 @@
     <string name="omnipod_common_pod_status_normal">Норма</string>
     <string name="omnipod_common_pod_status_suspended">Приостановлено</string>
     <string name="omnipod_common_pod_status_pod_fault">Ошибка Pod</string>
-    <string name="omnipod_common_pod_status_activation_time_exceeded">Превышено время активации</string>
     <string name="omnipod_common_pod_status_inactive">Неактивирован</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Ошибка Pod: %1$03d %2$s</string>
     <!-- Omnipod - Commands -->
@@ -153,7 +152,6 @@
     <string name="omnipod_common_cmd_set_fake_suspended_tbr">Установить фейковый временный базал, так как Pod остановлен</string>
     <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Отменить фейковый временный базал, который был создан из-за приостановки действия Pod</string>
     <string name="omnipod_common_cmd_split_tbr">Разбить временный базаль из-за неясной ошибки при отмене</string>
-    <string name="omnipod_common_cmd_beep_config">Конфигурация звукового сигнала</string>
     <string name="omnipod_common_cmd_play_test_beep">Воспроизвести тестовый звуковой сигнал</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_finish_pairing_reminder">Напоминание о завершении сопряжения</string>
@@ -176,6 +174,7 @@
     <string name="omnipod_common_ok">OK</string>
     <string name="omnipod_common_cancel">Отменить</string>
     <string name="omnipod_common_warning">Внимание</string>
+    <string name="omnipod_common_disable_suspend_alerts">ОТКЛЮЧИТЬ ОПОВЕЩЕНИЯ ОБ ОСТАНОВЕ</string>
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">Только что</string>
     <string name="omnipod_common_less_than_a_minute_ago">Менее минуты назад</string>

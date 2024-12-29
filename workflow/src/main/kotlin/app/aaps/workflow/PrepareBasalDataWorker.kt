@@ -5,17 +5,17 @@ import android.graphics.DashPathEffect
 import android.graphics.Paint
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.graph.data.LineGraphSeries
+import app.aaps.core.graph.data.ScaledDataPoint
 import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.main.events.EventIobCalculationProgress
-import app.aaps.core.main.graph.OverviewData
-import app.aaps.core.main.graph.data.ScaledDataPoint
-import app.aaps.core.main.utils.worker.LoggingWorker
-import app.aaps.core.main.workflow.CalculationWorkflow
+import app.aaps.core.interfaces.rx.events.EventIobCalculationProgress
+import app.aaps.core.interfaces.workflow.CalculationWorkflow
+import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
-import com.jjoe64.graphview.series.LineGraphSeries
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
@@ -28,11 +28,7 @@ class PrepareBasalDataWorker(
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var rxBus: RxBus
-    private var ctx: Context
-
-    init {
-        ctx = rh.getThemedCtx(context)
-    }
+    private var ctx: Context = rh.getThemedCtx(context)
 
     class PrepareBasalData(
         val iobCobCalculator: IobCobCalculator, // cannot be injected : HistoryBrowser uses different instance

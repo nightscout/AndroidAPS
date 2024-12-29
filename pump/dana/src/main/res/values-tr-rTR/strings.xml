@@ -46,7 +46,7 @@
     <string name="largetimediff">Büyük zaman farkı:\nPompa saati 1,5 saatten fazla kapalı\nLütfen pompanın üzerindeki zamanı manuel olarak ayarlayın ve geçmişin pompadan okunmasından dolayı beklenmedik davranışlara neden olmadığından emin olun.\nMümkünse, zamanı değiştirmeden önce geçmişi pompadan silin veya son yanlış geçmiş girişinden sonra bir İES için Kapalı Döngü\'yü iptal edin, şu andan itibaren en az bir İES\'i devre dışı bırakın.</string>
     <string name="pairfirst">Lütfen pompanızı telefonunuzla bağlayın!</string>
     <string name="approachingdailylimit">Günlük İnsülin limitine yaklaşıldı</string>
-    <string name="startingbolus">Bolus teslimatı başlatılıyor</string>
+    <string name="startingbolus">Bolus iletimi başlatılıyor</string>
     <string name="waitingforestimatedbolusend">Bolus bitimi için bekleniyor. Kalan %1$d san.</string>
     <string name="stoppingtempbasal">Geçici bazal durduruluyor</string>
     <string name="settingextendedbolus">Yayma bolus ayarlanıyor</string>
@@ -93,7 +93,6 @@
     <string name="danar_disableeasymode">Pompada EasyUI modunu devre dışı bırak</string>
     <string name="profile_set_failed">Bazal profil ayarı başarısız oldu</string>
     <string name="danar_bluetooth_status">Bluetooth durumu</string>
-    <string name="danar_iob_label">Pompa AİNS</string>
     <string name="firmware_label">Aygıt Yazılımı</string>
     <string name="danar_pump_settings">Dana pompa ayarları</string>
     <string name="time_format_12h">12sa</string>
@@ -103,7 +102,7 @@
     <string name="danar_bt_name_title">DanaR Bluetooth aygıtı</string>
     <string name="danars_password_title">Pompa şifresi (yalnızca v1)</string>
     <string name="danar_password_title">Pompa Şifresi</string>
-    <string name="danar_useextended_title">Yayma bolusu &gt;200%% için kullan</string>
+    <string name="danar_useextended_title">&gt;200% için yayma bolus kullanın</string>
     <string name="bolusspeed">Bolus hızı</string>
     <string name="selectedpump">Seçilen Pompa</string>
     <string name="rs_loginsulinchange_title">Rezervuar değişikliği günlüğü</string>

@@ -17,7 +17,7 @@
     <!--     Activities-->
     <string name="activity_monitor">Monitor attività</string>
     <string name="do_you_want_reset_stats">Vuoi resettare le statistiche sull\'attività?</string>
-    <string name="do_you_want_reset_tdd_stats">Vuoi resettare le statistiche TDD?</string>
+    <string name="do_you_want_recalculate_tdd_stats">Vuoi ricalcolare le statistiche TDD?</string>
     <string name="statistics">Statistiche</string>
     <string name="calculation_in_progress">Calcolo in corso</string>
     <string name="invalid_age">Inserimento età non valido</string>
@@ -42,7 +42,7 @@
     <string name="record_pump_site_change">Registra cambio posizione cannula</string>
     <string name="record_insulin_cartridge_change">Registra cambio cartuccia insulina</string>
     <!-- InsulinDialog -->
-    <string name="do_not_bolus_record_only">No bolo, solo record</string>
+    <string name="do_not_bolus_record_only">Non fare il bolo, solo registrazione</string>
     <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Riusa %1$d%% %2$dh</string>
     <string name="timeshift_label">Time shift</string>
@@ -80,24 +80,15 @@
     <string name="no_records_available">Nessun record disponibile</string>
     <string name="calculation_short">Calc</string>
     <string name="treatments_iob_label_string">IOB:</string>
-    <string name="treatments_insulin_label_string">Insulina:</string>
     <string name="treatments_carbs_label_string">CHO:</string>
-    <string name="treatments_iobtotal_label_string">IOB totale:</string>
-    <string name="treatments_iob_activity_total_label_string">Attività IOB totale:</string>
-    <string name="tempbasals_realduration_label_string">Dur:</string>
     <string name="tempbasals_netratio_label_string">Rapporto:</string>
-    <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="treatments_wizard_correction_label">Corr</string>
     <string name="meal_bolus">Pasto</string>
     <string name="prime">Caricamento</string>
-    <string name="profile_changes">Modifiche al profilo</string>
-    <string name="tempt_targets">Target Temporanei</string>
     <string name="carbs_and_bolus">CHO e boli</string>
     <string name="show_invalidated_records">Mostra record non validi/rimossi</string>
     <string name="hide_invalidated_records">Nascondi record non validi/rimossi</string>
-    <string name="refresh_from_nightscout">Aggiorna da Nightscout</string>
-    <string name="refresheventsfromnightscout">Aggiornamento da NS</string>
     <string name="show_invalidated">Mostra invalidato</string>
     <string name="hide_invalidated">Nascondi invalidato</string>
     <string name="careportal_remove_started_events">Rimuovi le voci \"AAPS avviato\"</string>
@@ -131,26 +122,21 @@
     <string name="a11y_only_on_watch">solo su smartwatch</string>
     <string name="a11y_only_on_phone">solo su telefono</string>
     <string name="quickwizard_settings">Impostazioni Calcolatore rapido</string>
-    <string name="overview_edit_quickwizard_button_text">Testo:</string>
-    <string name="overview_edit_quickwizard_carbs">CHO:</string>
+    <string name="overview_edit_quickwizard_button_text">Testo del pulsante</string>
     <string name="overview_edit_quickwizard_valid">Valido:</string>
-    <string name="overview_edit_quickwizard_list_activity_add">Aggiungi</string>
-    <string name="overview_quickwizard_item_edit_button">Modifica</string>
-    <string name="overview_edit_quickwizard_show_on_device">Mostra voce sul dispositivo:</string>
-    <string name="overview_edit_quickwizard_use_bg">Calcolo BG</string>
-    <string name="overview_edit_quickwizard_use_bolus_iob">Calcolo IOB da bolo</string>
-    <string name="overview_edit_quickwizard_use_basal_iob">Calcolo IOB da basale</string>
-    <string name="overview_edit_quickwizard_use_trend">Calcolo trend</string>
-    <string name="overview_edit_quickwizard_use_superbolus">Calcolo superbolo</string>
-    <string name="overview_edit_quickwizard_percentage">Percentuale</string>
-    <string name="device_all">Tutto</string>
-    <string name="device_phone">Telefono</string>
-    <string name="device_watch">Smartwatch</string>
-    <string name="positive_only">Solo positivo</string>
-    <string name="negative_only">Solo negativo</string>
-    <string name="overview_editquickwizard_usecob">Calcolo COB</string>
-    <string name="overview_editquickwizard_usetemptarget">Calcolo target temporaneo</string>
-    <string name="overview_editquickwizard_usepercentage">Calcolo percentuale</string>
-    <string name="app_default">Predefinito applicazione</string>
+    <string name="overview_edit_quickwizard_use_positive_iob_only">Solo IOB positivo</string>
+    <string name="overview_edit_quickwizard_superbolus">Superbolo</string>
+    <string name="overview_edit_quickwizard_percentage_too_high">Percentuale troppo alta!</string>
     <string name="a11y_drag_and_drop_handle">trascina e rilascia</string>
+    <string name="additional_ecarbs">Aggiungi eCarbs</string>
+    <string name="overview_edit_quickwizard_useforcalculation">Utilizzati per il calcolo:</string>
+    <string name="constraints_violation">Violazione dei vincoli</string>
+    <string name="change_your_input">Cambia il tuo input!</string>
+    <string name="confirm_treatment">Si prega di confermare il trattamento</string>
+    <string name="recalculate">Ricalcola</string>
+    <string-array name="yes_no_positiveonly_negativeonly">
+        <item>Entrambi</item>
+        <item>Solo positivo</item>
+        <item>Solo negativo</item>
+    </string-array>
 </resources>

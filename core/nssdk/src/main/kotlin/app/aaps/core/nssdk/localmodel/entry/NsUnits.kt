@@ -7,6 +7,6 @@ enum class NsUnits(val value: String) {
 
     companion object {
 
-        fun fromString(name: String?) = values().firstOrNull { it.value == name } ?: MG_DL
+        fun fromString(name: String?) = NsUnits.entries.firstOrNull { it.value == name } ?: MG_DL
     }
 }

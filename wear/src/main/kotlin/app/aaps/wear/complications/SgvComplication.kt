@@ -25,8 +25,8 @@ class SgvComplication : BaseComplicationProviderService() {
         when (dataType) {
             ComplicationData.TYPE_SHORT_TEXT -> {
                 val builder = ComplicationData.Builder(ComplicationData.TYPE_SHORT_TEXT)
-                    .setShortText(ComplicationText.plainText(raw.singleBg.sgvString + raw.singleBg.slopeArrow + "\uFE0E"))
-                    .setShortTitle(ComplicationText.plainText(displayFormat.shortTrend(raw)))
+                    .setShortText(ComplicationText.plainText(raw.singleBg[0].sgvString + raw.singleBg[0].slopeArrow + "\uFE0E"))
+                    .setShortTitle(ComplicationText.plainText(displayFormat.shortTrend(raw, 0)))
                     .setTapAction(complicationPendingIntent)
                 complicationData = builder.build()
             }

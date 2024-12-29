@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Autotune-->
     <string name="dynisf_adjust_sensitivity">Basal 및 혈당 목표 수정을 위한 TDD 기반 민감도 비율 활성화</string>
     <string name="dynisf_adjust_sensitivity_summary">지난 24시간 TDD/7일 TDD를 사용하여 Basal 증가 또는 감소에 사용되는 민감도 비율을 계산하고, 이 옵션이 활성화된 경우 Autosens와 동일한 방식으로 혈당 목표도 조정합니다. 이 옵션을 끈 상태에서 시작하는 것이 좋습니다.</string>
-    <string name="DynISFAdjust_title" formatted="false">동적ISF 조정 계수 %</string>
-    <string name="DynISFAdjust_summary" formatted="false">동적ISF 에 대한 조정 계수. 더 호전적인 보정 양인 경우 100% 이상으로 설정하고, 덜 호전적인 보정의 경우 100% 미만으로 설정합니다.</string>
     <string name="high_temptarget_raises_sensitivity_title">높은 임시목표는 민감도를 올립니다.</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[임시목표 100이상을 위해 민감도를 올립니다.]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">낮은 임시목표는 민감도를 내립니다.</string>
@@ -62,9 +61,7 @@
     <string name="enable_smb_summary">더 빠른 작용을 위해 임시Basal 대신 Super Micro Bolus 사용</string>
     <string name="enable_uam_summary">알리지 않은 식사 감지</string>
     <string name="enable_smb_always">SMB를 항상 사용하기</string>
-    <string name="enable_smb_always_summary">Bolus와 독립적으로 항상 SMB를 사용합니다. G5처럼 잘 필터된 혈당출처와만 사용이 가능합니다.</string>
     <string name="enable_smb_after_carbs">탄수화물 이후 SMB를 사용합니다.</string>
-    <string name="enable_smb_after_carbs_summary">탄수화물 이후 6시간동안 SMB를 사용합니다, 0 COB이라도 적용됩니다. G5처럼 잘 필터된 혈당출처와만 사용이 가능합니다.</string>
     <string name="enable_smb_with_cob">COB와 SMB를 사용합니다.</string>
     <string name="enable_smb_with_cob_summary">활성화된 COB가 있으면 SMB를 사용합니다.</string>
     <string name="enable_smb_with_temp_target">임시 목표에서 SMB를 사용하기</string>
@@ -84,7 +81,6 @@
     <string name="smb_disabled_in_preferences">설정에서 SMB가 비활성화 되었습니다.</string>
     <string name="uam_disabled_in_preferences">설정에서 UAM이 비활성화 되었습니다.</string>
     <string name="autosens_disabled_in_preferences">설정에서 Autosens가 비활성화 되었습니다.</string>
-    <string name="autosens_disabled_in_dyn_isf">DynISF에서 Autosens 비활성화</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">%2$s로 인해 IOB가 %1$.1f U으로 제한됩니다.</string>
     <string name="maxvalueinpreferences">설정에서의 최대값</string>
@@ -117,4 +113,45 @@
     <string name="loop_open_mode_min_change">최소 요청 변경 [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">변경 사항이 %의 값보다 큰 경우에만 열린 루프의 새 변경 요청을 팝업합니다. 기본값은 20%입니다.</string>
     <string name="fallback_smb_no_tdd">SMB로 폴백. TDD 데이터가 충분하지 않습니다.</string>
+    <!-- Autotune -->
+    <string name="autotune_shortname">AT</string>
+    <string name="autotune_settings">Autotune 설정</string>
+    <string name="autotune_auto_title">자동 프로파일 전환</string>
+    <string name="autotune_auto_summary">옵션이 활성화되면, 자동화 규칙에서 계산한 후 Autotune이 자동으로 업데이트되고 입력 프로파일로 전환됩니다.</string>
+    <string name="autotune_categorize_uam_as_basal_title">UAM을 Basal로 분류하기</string>
+    <string name="autotune_categorize_uam_as_basal_summary">섭취한 모든 탄수화물을 안정적으로 입력한 경우에만 활성회됩니다. 이 옵션은 Autotune에 의해 표시되는 급격한 상승을 기본 속도로 변경을 권장하는 데 사용됩니다.</string>
+    <string name="autotune_tune_insulin_curve_title">인슐린 곡선 조정하기</string>
+    <string name="autotune_tune_insulin_curve_summary">사용 가능한 피크를 사용하는 경우에만 활성화됩니다. 이 옵션은 피크 및 DIA 시간을 조정합니다.</string>
+    <string name="autotune_default_tune_days_title">데이터 일 수</string>
+    <string name="autotune_circadian_ic_isf_title">일일 IC/ISF의 평균 결과 적용</string>
+    <string name="autotune_circadian_ic_isf_summary">Autotune은 매일 조정되지 않으며, 이 옵션은 주기적 입력 프로파일의 IC 및 ISF의 평균 조정에만 적용합니다.</string>
+    <string name="autotune_additional_log_title">디버깅을 위한 로그 정보를 더 포함합니다</string>
+    <string name="autotune_additional_log_summary">개발자가 Autotune 플러그인의 디버깅을 지원하기 위해 로그 정보를 더 보내도록 요청한 경우에만 활성화됩니다</string>
+    <string name="autotune_default_tune_days_summary">Autotune 에서 처리할 기본 데이터 일수 (최대 30일)</string>
+    <string name="autotune_tunedprofile_name">조정된</string>
+    <string name="autotune_profile">프로파일 :</string>
+    <string name="autotune_last_run">최근 실행 :</string>
+    <string name="autotune_warning">경고 :</string>
+    <string name="autotune_ic_warning">선택한 프로파일의 IC 값은 %1$d 입니다. Autotune은 %2$.2f g/U을 사용합니다.</string>
+    <string name="autotune_isf_warning">선택한 프로파일의 ISF 값은 %1$d 입니다. Autotune은 %2$.1f %3$s/U을 사용합니다.</string>
+    <string name="autotune_error">입력 데이터에서 오류가 발생했습니다. 다시 Autotune하거나, 일수를 줄이십시오</string>
+    <string name="autotune_error_more_days">입력 데이터에서 오류가 발생했습니다, 일수를 증가시키십시오</string>
+    <string name="autotune_warning_during_run">Autotune 계산이 시작되었습니다, 잠시 기다려 주십시오</string>
+    <string name="autotune_warning_after_run">사용하기 전에 결과를 주의 깊게 확인하세요!</string>
+    <string name="autotune_partial_result">부분 결과 날짜 %1$d / %2$d 조정됨</string>
+    <string name="autotune_result">결과: %1$s</string>
+    <string name="autotune_param">매개변수</string>
+    <string name="autotune_percent">%</string>
+    <string name="autotune_missing">누락</string>
+    <string name="autotune_run">Autotune 실행하기</string>
+    <string name="autotune_check_input_profile_button">입력 프로파일 확인하기</string>
+    <string name="autotune_compare_profile">프로파일 비교하기</string>
+    <string name="autotune_copy_localprofile_button">로컬 프로파일로 복사하기</string>
+    <string name="autotune_update_input_profile_button">입력 프로파일 확인하기</string>
+    <string name="autotune_revert_input_profile_button">입력 프로파일 되돌리기</string>
+    <string name="autotune_copy_local_profile_message">Autotune 프로파일에서 새로운 로컬 프로파일을 생성하시겠습니까?</string>
+    <string name="autotune_update_local_profile_message">Autotune 프로파일에서 %1$s 프로파일을 업데이트 하시겠습니까?</string>
+    <string name="autotune_revert_local_profile_message">입력 프로파일과 함께 %1$s 프로파일을 되돌리시겠습니까?</string>
+    <string name="autotune_profile_invalid">프로파일이 잘못되었습니다</string>
+    <!--    autoISF -->
 </resources>

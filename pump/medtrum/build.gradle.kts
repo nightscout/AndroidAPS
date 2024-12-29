@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.library")
+    alias(libs.plugins.android.library)
     id("kotlin-android")
     id("kotlin-kapt")
     id("android-module-dependencies")
@@ -8,25 +8,26 @@ plugins {
 }
 
 android {
-    namespace = "info.nightscout.pump.medtrum"
+    namespace = "app.aaps.pump.medtrum"
     buildFeatures {
         dataBinding = true
     }
 }
 
 dependencies {
-    implementation(project(":database:entities"))
-    implementation(project(":core:libraries"))
+    implementation(project(":core:data"))
     implementation(project(":core:interfaces"))
-    implementation(project(":core:main"))
+    implementation(project(":core:keys"))
+    implementation(project(":core:libraries"))
+    implementation(project(":core:objects"))
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
     implementation(project(":core:validators"))
     implementation(project(":pump:pump-common"))
 
     testImplementation(project(":shared:tests"))
-    testImplementation(project(":core:main"))
+    testImplementation(project(":core:objects"))
 
-    kapt(Libs.Dagger.compiler)
-    kapt(Libs.Dagger.androidProcessor)
+    kapt(libs.com.google.dagger.compiler)
+    kapt(libs.com.google.dagger.android.processor)
 }

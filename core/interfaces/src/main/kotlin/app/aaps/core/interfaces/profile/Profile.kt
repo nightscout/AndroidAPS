@@ -1,7 +1,8 @@
 package app.aaps.core.interfaces.profile
 
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -12,8 +13,16 @@ import org.json.JSONObject
 
 interface Profile {
 
+    /**
+     *
+     */
+    //val hasDynamicIsf: Boolean
+
     class ValidityCheck(var isValid: Boolean = true, val reasons: ArrayList<String> = arrayListOf())
 
+    /**
+     * Check validity of profile
+     */
     fun isValid(from: String, pump: Pump, config: Config, rh: ResourceHelper, rxBus: RxBus, hardLimits: HardLimits, sendNotifications: Boolean): ValidityCheck
 
     /**
@@ -59,12 +68,17 @@ interface Profile {
     /**
      * ISF value according to "now"" in MGDL
      */
-    fun getIsfMgdl(): Double
+    fun getIsfMgdl(caller: String): Double
 
     /**
-     * ISF value according to timestamp in MGDL
+     * ISF profile value according to "now"" in MGDL
      */
-    fun getIsfMgdl(timestamp: Long): Double
+    fun getProfileIsfMgdl(): Double
+
+    /**
+     * ISF value according to timestamp in MGDL for use in Wizard and COB calculations
+     */
+    fun getIsfMgdlForCarbs(timestamp: Long, caller: String, config: Config, processedDeviceStatusData: ProcessedDeviceStatusData): Double
 
     /**
      * Average target value according to "now" in MGDL

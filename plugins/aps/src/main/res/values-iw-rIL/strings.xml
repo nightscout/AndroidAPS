@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Autotune-->
     <string name="dynisf_adjust_sensitivity">אפשר יחס רגישות המבוסס על המינון היומי הכולל לשינוי מינון בזאלי וערכי מטרה</string>
     <string name="dynisf_adjust_sensitivity_summary">השתמש במינון יומי כולל של 24 שעות\\7 ימים האחרונים כדי לחשב יחס רגישות לצורך העלאה או הורדה של המינון הבזאלי ובנוסף להתאים את ערך המטרה אם אפשרויות אלו מופעלותת באופן דומה ל-Autosense. מומלץ להתחיל כשאפשרות זו כבויה</string>
-    <string name="DynISFAdjust_title" formatted="false">כיוונון פקטור הרגישות הדינאמית %</string>
-    <string name="DynISFAdjust_summary" formatted="false">כיוונון פקטור הרגישות הדינאמית. הגדירו יותר מ-100% לקבלת תיקונים אגרסיביים יותר ופחות מ-100% לקבלת תיקונים עדינים יותר.</string>
+    <string name="dyn_isf_adjust_title" formatted="false">כיוונון פקטור הרגישות הדינאמית %</string>
+    <string name="dyn_isf_adjust_summary" formatted="false">כיוונון פקטור הרגישות הדינאמית. קבעו יותר מ-100% לקבלת תיקונים אגרסיביים יותר ופחות מ-100% לקבלת תיקונים עדינים יותר.</string>
     <string name="high_temptarget_raises_sensitivity_title">ערך מטרה זמני גבוה מעלה את הרגישות</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[הגבר רגישות עבור ערך מטרה זמני >= 100]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">ערך מטרה זמני נמוך מוריד את הרגישות</string>
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[הורד רגישות עבור ערך מטרה זמני < 100]]></string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">רגישות דינאמית</string>
-    <string name="smb_interval_summary">תדירות מתן SMB בדקות</string>
+    <string name="openaps_auto_isf">רגישות אוטומטית</string>
+    <string name="smb_interval_summary">תדירות מתן SMB (דקות)</string>
     <string name="resistance_lowers_target_title">תנגודת מורידה את ערך המטרה</string>
     <string name="resistance_lowers_target_summary">כשמזוהה תנגודת, הורד את ערך המטרה של הגלוקוז</string>
     <string name="sensitivity_raises_target_title">רגישות מעלה את ערך המטרה</string>
@@ -19,6 +21,7 @@
     <string name="openapsma_no_glucose_data">אין ערכי סוכר זמינים</string>
     <string name="openaps_no_as_data">אין נתוני Autosens זמינים</string>
     <string name="dynisf_shortname">DynISF</string>
+    <string name="autoisf_shortname">רגישות אוטו\'</string>
     <string name="executing">מבצע</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">מערך של %1$d אלמנטים. \n ערך נוכחי:</string>
@@ -26,6 +29,7 @@
     <string name="description_ama">הישאר עם האלגוריתם של 2017</string>
     <string name="description_smb">האלגוריתם העדכני ביותר, עבור משתמשים מתקדמים בלבד</string>
     <string name="description_smb_dynamic_isf">האלגוריתם העדכני ביותר, נועד למשתמשים מתקדמים עם רגישות (ISF) דינאמית\\אוטומטית</string>
+    <string name="description_auto_isf">האלגוריתם העדכני ביותר, נועד למשתמשים מתקדמים עם ההרחבות השונות של רגישות אוטומטית</string>
     <string name="openapsama_bolus_snooze_dia_divisor">נמנום בולוס - מחלק משך פעילות אינסולין</string>
     <string name="openapsma_run">בצע</string>
     <string name="openapsma_last_run_label">ההפעלה האחרונה</string>
@@ -40,7 +44,7 @@
     <string name="openapsma_autosensdata_label">נתוני חישוב רגישות אוטו\'</string>
     <string name="openapsma_script_debug_data_label">תיקון באגים בסקריפט</string>
     <string name="openapsama_use_autosens">אפשר חישוב רגישות אוטומטי (Autosens)</string>
-    <string name="openapsma_max_basal_title">מינון בזאלי זמני מקסימלי (יח\'\שעה)</string>
+    <string name="openapsma_max_basal_title">מינון בזאלי זמני מקסימלי (יח\'\\שעה)</string>
     <string name="openapsma_max_basal_summary">ערך זה נקרא בזאלי מרבי ב-OpenAPS</string>
     <string name="openapsma_max_iob_title">בזאלי פעיל מרבי ש-OpenAPS יכול לספק (יחידות)</string>
     <string name="openapsma_max_iob_summary">ערך זה נקרא אינסולין פעיל מקסימלי (Max IOB) ב-OpenAPS. זהו מקסימום האינסולין הפעיל ב-[U] ש-APS מאפשר.</string>
@@ -61,10 +65,8 @@
     <string name="enable_smb">אפשר SMB</string>
     <string name="enable_smb_summary">השתמש בסופר מיקרו בולוסים במקום בבזאלי זמני לפעילות מהירה יותר</string>
     <string name="enable_uam_summary">זיהוי של ארוחות לא מוכרזות</string>
-    <string name="enable_smb_always">הפעלת SMB תמיד</string>
-    <string name="enable_smb_always_summary">אפשר SMB תמיד באופן עצמאי מבולוסים. אפשרי רק עם מקור ערכי סוכר עם דיוק של נתונים כמו G5</string>
-    <string name="enable_smb_after_carbs">הפעלת SMB אחרי פחמימות</string>
-    <string name="enable_smb_after_carbs_summary">הפעלת SMB במשך 6 ש\' אחרי פחמימות, גם אם אין פחמ\' פעילות. אפשרי רק עם מקור ערכי סוכר עם דיוק נתונים כמו G5</string>
+    <string name="enable_smb_always">הפעל SMB תמיד</string>
+    <string name="enable_smb_after_carbs">הפעל SMB אחרי פחמימות</string>
     <string name="enable_smb_with_cob">הפעלת SMB עם פחמ\' פעילות</string>
     <string name="enable_smb_with_cob_summary">הפעלת SMB כשיש פחמ\' פעילות.</string>
     <string name="enable_smb_with_temp_target">הפעלת SMB עם ערכי מטרה זמניים</string>
@@ -74,7 +76,7 @@
     <string name="smb_max_minutes_summary">מקסימום הדקות של בזאלי אליו SMB מוגבל</string>
     <string name="uam_smb_max_minutes">מקס\' דקות של SMB UAM</string>
     <string name="uam_smb_max_minutes_summary">מקס\' דקות של בזאלי להגבלת SMB לארוחות לא מוכרזות</string>
-    <string name="carbs_req_threshold">סף מינ\' הפחמימות הנדרשות להצעה</string>
+    <string name="carbs_req_threshold">סף מינימום הפחמימות הנדרשות להצעה</string>
     <string name="carbs_req_threshold_summary">כמות הפחמ\' המינימלית (גר\') הדרושה כדי שתוצג התראה על הצעת פחמימות. לא תוצגנה התראות על הצעות הנמוכות מכמות זו.</string>
     <string name="lgs_threshold_summary">ערך הסוכר שמתחתיו מושעה הזרקת אינסולין. ערך ברירת המחדל משתמש במודל מטרה סטנדרטי. המשתמש יכול להגדיר ערך בין 60 ל-100 מג\"\\ד\"ל. ערכים מתחת ל-65 מביאים לשימוש במודל ברירת המחדל</string>
     <string name="lgs_threshold_title">רמת הסוכר נמוכה מסף ההשהיה עקב סוכר נמוך</string>
@@ -84,7 +86,8 @@
     <string name="smb_disabled_in_preferences">SMB מושבת בהעדפות</string>
     <string name="uam_disabled_in_preferences">UAM מושבת בהעדפות</string>
     <string name="autosens_disabled_in_preferences">Autosens מושבת בהעדפות</string>
-    <string name="autosens_disabled_in_dyn_isf">אוטוסנס כבוי ברגישות דינאמית</string>
+    <string name="use_dynamic_sensitivity_title">אפשר רגישות דינמית</string>
+    <string name="use_dynamic_sensitivity_summary">שנה אלגוריתם לשימוש ברגישות דינמית במקום ערך הפרופיל</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">הגבלת IOB ל-%1$.1f יח\' בגלל %2$s</string>
     <string name="maxvalueinpreferences">ערך מקסימלי בהעדפות</string>
@@ -117,4 +120,56 @@
     <string name="loop_open_mode_min_change">מינימום לבקשה לשינוי [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">\"לולאה פתוחה\" תציג בקשת שינוי חדשה רק אם השינוי גדול מערך זה ב-%. ערך ברירת המחדל הוא 20%</string>
     <string name="fallback_smb_no_tdd">חוזר ל-SMB, אין מספיק נתוני מינון יומי.</string>
+    <string name="fallback_to_isf_no_tdd">חוזר לרגישות ע\"פ הפרופיל. אין מספיק נתונים.
+סיבה: %1$s</string>
+    <!-- Autotune -->
+    <string name="autotune_description">עזרה בכיוונונים פוטנציאליים בפרופיל (ISF, יחס פחמימות ומינונים בזאליים)</string>
+    <string name="autotune_shortname">AT</string>
+    <string name="autotune_settings">הגדרות כוונון אוטומטי</string>
+    <string name="autotune_auto_title">עדכון פרופיל מאוטומציה</string>
+    <string name="autotune_auto_summary">אם מופעל, Autotune יתעדכן אוטומטית ויעבור לפרופיל קלט לאחר חישוב שהופעל ע\"י אוטומציה.</string>
+    <string name="autotune_categorize_uam_as_basal_title">סווג ארוחות לא מוכרזות כבזאלי</string>
+    <string name="autotune_categorize_uam_as_basal_summary">הפעילו רק אם הזנתם בצורה מהימנה את כל הפחמימות שנאכלו. עם אפשרות זו, עליות פתאומיות שנראות על ידי הכוונון האוטומטי ישמשו כדי להמליץ על שינויים במינון הבזאלי.</string>
+    <string name="autotune_tune_insulin_curve_title">כיוונון עקומת פעילות האינסולין</string>
+    <string name="autotune_tune_insulin_curve_summary">אפשרו רק אם אתם משתמשים בשיא חופשי. אפשרות זו תכוונן את השיא ואת משך פעילות האינסולין</string>
+    <string name="autotune_default_tune_days_title">מספר ימי נתונים</string>
+    <string name="autotune_circadian_ic_isf_title">החל תוצאה ממוצעת ב-IC/ISF היומיים</string>
+    <string name="autotune_circadian_ic_isf_summary">כוונון אוטומטי לא יכוונן את הווריאציות הצירקדיות, אפשרות זו תחיל רק את הכוונון הממוצע של IC ו-ISF על פרופיל הקלט היומי</string>
+    <string name="autotune_additional_log_title">כלול מידע נוסף ביומן עבור דיבאגינג</string>
+    <string name="autotune_additional_log_summary">הפעילו רק אם נתבקשתם על ידי המפתח לשלוח מידע נוסף ביומן כדי לסייע באיתור באגים של תוסף הכיוונון האוטומטי</string>
+    <string name="autotune_default_tune_days_summary">ברירת המחדל של מספר ימי הנתונים לעיבוד על ידי הכיוונון האוטומטי (עד 30)</string>
+    <string name="autotune_tunedprofile_name">מכוונן</string>
+    <string name="autotune_profile">פרופיל :</string>
+    <string name="autotune_last_run">הפעלה אחרונה :</string>
+    <string name="autotune_warning">אזהרה :</string>
+    <string name="autotune_ic_warning">בפרופיל הנבחר יש %1$d ערכי יחס פחמימות. הכיוונון האוטומטי ישתמש ב-%2$.2f גר\'\\יח\'</string>
+    <string name="autotune_isf_warning">בפרופיל הנבחר יש %1$d ערכי יחס תיקון. הכיוונון האוטומטי ישתמש ב-%2$.1f %3$s\\יח\'</string>
+    <string name="autotune_error">שגיאה בנתוני הקלט, נסו להפעיל שוב או שנסו לצמצם את מספר הימים</string>
+    <string name="autotune_error_more_days">שגיאה בנתוני הקלט, נסו לצמצם את מספר הימים</string>
+    <string name="autotune_warning_during_run">חישוב הכוונון האוטומטי התחיל, אנא התאזרו בסבלנות</string>
+    <string name="autotune_warning_after_run">בדקו היטב את התוצאות לפני השימוש בהן!</string>
+    <string name="autotune_partial_result">יום תוצאה חלקי %1$d / %2$d מכוון</string>
+    <string name="autotune_result">תוצאה: %1$s</string>
+    <string name="autotune_param">פרמטר</string>
+    <string name="autotune_percent">%</string>
+    <string name="autotune_missing">חסר</string>
+    <string name="autotune_run">הפעל כוונון אוטומטי</string>
+    <string name="autotune_check_input_profile_button">בדיקת פרופיל הקלט</string>
+    <string name="autotune_compare_profile">השוואת פרופילים</string>
+    <string name="autotune_copy_localprofile_button">העתקה אל הפרופיל המקומי שלי</string>
+    <string name="autotune_update_input_profile_button">עדכן פרופיל קלט</string>
+    <string name="autotune_revert_input_profile_button">ביטול שינויים בפרופיל הקלט</string>
+    <string name="autotune_copy_local_profile_message">ליצור פרופיל מקומי חדש מפרופיל זה?</string>
+    <string name="autotune_update_local_profile_message">לעדכן את פרופיל %1$s עם הפרופיל המכוונן אוטומטית?</string>
+    <string name="autotune_revert_local_profile_message">להחזיר את פרופיל %1$s אל פרופיל קלט?</string>
+    <string name="autotune_profile_invalid">פרופיל לא חוקי</string>
+    <string name="not_available_full">לא זמין</string>
+    <string name="pump_disconnected">המשאבה מנותקת</string>
+    <!--    autoISF -->
+    <string name="autoISF_settings_title">הגדרות רגישות אוטומטית</string>
+    <string name="autoISF_settings_summary">רגישות אוטומטית מאפשרת להתאים את יחס הרגישות (ISF) לתרחישים שונים של התנהגות הסוכר\n\nיכול להתאים גם לשימוש עם SMB</string>
+    <string name="openapsama_enable_autoISF">אפשר התאמת רגישות בתגובה להתנהגות רמת הסוכר</string>
+    <string name="openapsama_smb_max_range_extension">הרחבת טווח SMB/UAM מקסימלי \n(smb_max_range_extension)</string>
+    <string name="openapsama_smb_delivery_ratio_summary">ערך ברירת מחדל: 0.5 זוהי מגבלת בטיחות נוספת של OpenAPS המגדירה איזה חלק מסך האינסולין הנדרש יכול להינתן כ-SMB. מגבלה זו נועדה למנוע כפילות הזרקת SMB הנגרמת מפקודות מהמטפל המרוחק בנוסף למכשיר הראשי. יש להגדיל ערך ניסיוני זה בהדרגה ובזהירות.</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">ערך ברירת מחדל: 0.5 זהו הקצה הנמוך של יחס שמתגבר באופן ליניארי ולא ערך קבוע כפי שמצוין לעיל.</string>
 </resources>

@@ -10,8 +10,6 @@
     <string name="omnipod_dash_history_item_source">מקור</string>
     <string name="omnipod_dash_history_item_date">תאריך</string>
     <string name="omnipod_dash_history_type">סוג:</string>
-    <string name="omnipod_dash_history_bolus_value">%1$.2f יח\'</string>
-    <string name="omnipod_dash_history_bolus_value_with_carbs">%1$.2f יח\', פחמ\'= %2$.1f גר\'</string>
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_status">מצב בלוטות\'</string>
     <string name="omnipod_dash_overview_bluetooth_address">כתובת בלוטות\'</string>

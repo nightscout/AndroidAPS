@@ -1,7 +1,6 @@
 package app.aaps.plugins.constraints.objectives
 
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.plugins.constraints.objectives.SntpClient
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test

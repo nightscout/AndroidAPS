@@ -67,6 +67,4 @@
     <!-- Omnipod Eros - Pod Activation Wizard -->
     <string name="omnipod_eros_pod_activation_wizard_start_pod_activation_text">Vul een nieuw Pod in met voldoende insuline voor 3 dagen.\n\nLuister naar twee piepjes van de Pod tijdens het vulproces. Deze geven aan dat de minimale hoeveelheid van 80E is bereikt. Ga door met vullen (ook na het horen van de twee piepjes) totdat het vulspuitje volledig leeg is.\n\nNa het vullen van de Pod kun je op <b>Volgende</b>drukken.\n\n<b>Opmerking:</b> verwijder op dit moment de naaldbeschermer van de Pod.\n<b>Opmerking:</b> Zet de RileyLink rechtop en plaats de Pod ongeveer vijf centimeter ervandaan.</string>
     <string name="omnipod_eros_pod_activation_wizard_initialize_pod_text">Er wordt nu geprobeerd om de Pod te koppelen en de canule te vullen.\n\nWanneer deze stap succesvol is afgerond, kan er op <b>Volgende</b> worden gedrukt.\n\n<b>Opmerking:</b> zet de RileyLink rechtop en leg de Pod er ongeveer 5 centimeter vandaan.</string>
-    <!-- Omnipod Eros - Other -->
-    <string name="omnipod_eros_uncertain">onzeker</string>
 </resources>

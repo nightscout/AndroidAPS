@@ -7,7 +7,6 @@ import androidx.annotation.RawRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.FragmentManager
 import app.aaps.MainActivity
-import app.aaps.R
 import app.aaps.activities.HistoryBrowseActivity
 import app.aaps.activities.MyPreferenceFragment
 import app.aaps.activities.PreferencesActivity
@@ -15,8 +14,9 @@ import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.nsclient.NSAlarm
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventDismissNotification
+import app.aaps.core.interfaces.rx.events.EventNewNotification
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.main.events.EventNewNotification
+import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.plugins.configuration.activities.SingleFragmentActivity
 import app.aaps.plugins.main.general.overview.notifications.NotificationWithAction
@@ -41,9 +41,11 @@ import app.aaps.ui.dialogs.WizardDialog
 import app.aaps.ui.services.AlarmSoundService
 import app.aaps.ui.services.AlarmSoundServiceHelper
 import app.aaps.ui.widget.Widget
+import dagger.Reusable
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
+@Reusable
 class UiInteractionImpl @Inject constructor(
     private val context: Context,
     private val rxBus: RxBus,
@@ -60,7 +62,9 @@ class UiInteractionImpl @Inject constructor(
     override val preferencesActivity: Class<*> = PreferencesActivity::class.java
     override val myPreferenceFragment: Class<*> = MyPreferenceFragment::class.java
     override val quickWizardListActivity: Class<*> = QuickWizardListActivity::class.java
-    override val prefGeneral: Int = R.xml.pref_general
+
+    override val unitsEntries = arrayOf<CharSequence>("mg/dL", "mmol/L")
+    override val unitsValues = arrayOf<CharSequence>("mg/dl", "mmol")
 
     override fun runAlarm(status: String, title: String, @RawRes soundId: Int) {
         val i = Intent(context, errorHelperActivity)
@@ -194,10 +198,10 @@ class UiInteractionImpl @Inject constructor(
         rxBus.send(EventNewNotification(NotificationWithAction(injector, nsAlarm)))
     }
 
-    override fun addNotificationWithAction(id: Int, text: String, level: Int, buttonText: Int, action: Runnable, @RawRes soundId: Int?, date: Long) {
+    override fun addNotificationWithAction(id: Int, text: String, level: Int, buttonText: Int, action: Runnable, validityCheck: (() -> Boolean)?, @RawRes soundId: Int?, date: Long) {
         rxBus.send(
             EventNewNotification(
-                NotificationWithAction(injector, id, text, level)
+                NotificationWithAction(injector = injector, id = id, text = text, level = level, validityCheck = validityCheck)
                     .action(buttonText, action)
                     .also {
                         it.date = date
@@ -207,10 +211,31 @@ class UiInteractionImpl @Inject constructor(
         )
     }
 
-    override fun showToastAndNotification(ctx: Context?, string: String?, soundID: Int) {
+    override fun addNotificationWithDialogResponse(id: Int, text: String, level: Int, @StringRes actionButtonId: Int, title: String, message: String, validityCheck: (() -> Boolean)?) {
+        rxBus.send(
+            EventNewNotification(
+                NotificationWithAction(injector, id, text, level, validityCheck)
+                    .also { n ->
+                        n.action(actionButtonId) {
+                            n.contextForAction?.let { OKDialog.show(it, title, message, null) }
+                        }
+                    })
+        )
+    }
+
+    override fun addNotification(id: Int, text: String, level: Int, @StringRes actionButtonId: Int, action: Runnable, validityCheck: (() -> Boolean)?) {
+        rxBus.send(
+            EventNewNotification(
+                NotificationWithAction(injector, id, text, level, validityCheck).apply {
+                    action(actionButtonId, action)
+                })
+        )
+    }
+
+    override fun showToastAndNotification(ctx: Context?, string: String, soundID: Int) {
         ToastUtils.showToastInUiThread(ctx, string)
         ToastUtils.playSound(ctx, soundID)
-        addNotification(Notification.TOAST_ALARM, string!!, Notification.URGENT)
+        addNotification(Notification.TOAST_ALARM, string, Notification.URGENT)
     }
 
     override fun startAlarm(@RawRes sound: Int, reason: String) {

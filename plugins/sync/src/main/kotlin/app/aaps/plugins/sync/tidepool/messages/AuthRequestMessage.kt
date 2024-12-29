@@ -1,16 +1,16 @@
 package app.aaps.plugins.sync.tidepool.messages
 
-import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.plugins.sync.R
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
 import okhttp3.Credentials
 
 object AuthRequestMessage : BaseMessage() {
 
-    fun getAuthRequestHeader(sp: SP): String? {
-        val username = sp.getStringOrNull(R.string.key_tidepool_username, null)
-        val password = sp.getStringOrNull(R.string.key_tidepool_password, null)
+    fun getAuthRequestHeader(preferences: Preferences): String? {
+        val username = preferences.get(StringKey.TidepoolUsername)
+        val password = preferences.get(StringKey.TidepoolPassword)
 
-        return if (username.isNullOrEmpty() || password.isNullOrEmpty()) null
+        return if (username.isEmpty() || password.isEmpty()) null
         else Credentials.basic(username.trim { it <= ' ' }, password)
     }
 }

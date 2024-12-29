@@ -39,7 +39,7 @@
     <string name="smscommunicator_stops_ns_with_code">Aby wyłączyć zdalne sterowanie SMS-ami odeślij kod %1$s.\n\nPamiętaj że możesz to ponownie włączyć tylko bezpośrednio w aplikacji AAPS na głównym telefonie.</string>
     <string name="smscommunicator_stopped_sms">Zatrzymano zdalne sterowanie SMS-ami. Aby ponownie włączyć użyj aplikacji AAPS na głównym telefonie.</string>
     <string name="smscommunicator_calibration_reply_with_code">Aby wysłać kalibrację %1$.2f wprowadź kod %2$s</string>
-    <string name="smscommunicator_bolus_failed">Bolus nieudany</string>
+    <string name="smscommunicator_bolus_failed">Bolus nie powiódł się. Zweryfikuj prawdziwy stan przed wysłaniem kolejnej komendy!</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Minimalna liczba minut która musi upłynąć pomiędzy jednym a drugim zdalnie podawanym bolusem</string>
     <string name="smscommunicator_remote_bolus_min_distance">Ile co najmniej minut musi upłynąć pomiędzy jednym a drugim bolusem</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">Dla twojego bezpieczeństwa, aby zmienić to ustawienie musisz dodać co najmniej 2 numery telefonów.</string>
@@ -153,6 +153,8 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">CEL</string>
     <string name="basal_short">BAS</string>
+    <string name="isf_dynamic_label">Twój algorytm może dostarczyć dynamiczne obliczenia ISF. Wartości poniżej są używane tylko awaryjnie w przypadku braku danych</string>
+    <string name="ic_dynamic_label">Twój algorytm może dostarczyć dynamiczne obliczenia IC. Wartości poniżej są używane tylko awaryjnie w przypadku braku danych</string>
     <!-- Actions -->
     <string name="actions">Akcje</string>
     <string name="description_actions">Niektóre przyciski umożliwiające szybki dostęp do typowych funkcji</string>
@@ -189,7 +191,20 @@
     <string name="statuslights_bat_warning">Próg ostrzeżenia o poziomie baterii pompy [%]</string>
     <string name="statuslights_bat_critical">Próg krytycznego poziomu baterii pompy [%]</string>
     <string name="statuslights_copy_ns">Kopiowanie ustawień z NS</string>
+    <string name="graph_scale_6h">6h</string>
+    <string name="graph_scale_12h">12h</string>
+    <string name="graph_scale_18h">18h</string>
+    <string name="graph_scale_24h">24h</string>
+    <string name="graph_long_scale_6h">6 godzin</string>
+    <string name="graph_long_scale_12h">12 godzin</string>
+    <string name="graph_long_scale_18h">18 godzin</string>
+    <string name="graph_long_scale_24h">24 godziny</string>
     <string name="a11y_graph">wykres</string>
+    <string name="a11y_graph_scale">wybierz skalę wykresu</string>
+    <string name="a11y_graph_scale_6h">skala wykresu 6 godzin</string>
+    <string name="a11y_graph_scale_12h">skala wykresu 12 godzin</string>
+    <string name="a11y_graph_scale_18h">skala wykresu 18 godzin</string>
+    <string name="a11y_graph_scale_24h">skala wykresu 24 godziny</string>
     <string name="a11y_insulin_label">insulina</string>
     <string name="chart_menu">Menu wykresu</string>
     <string name="a11y_bg_quality">jakość pomiaru glikemi</string>
@@ -201,10 +216,8 @@
     <string name="overview_shortname">HOME</string>
     <string name="description_overview">Wyświetla bieżący stan twojej pętli i przyciski dla większości typowych działań</string>
     <string name="overview_buttons_selection">Przyciski</string>
-    <string name="show_calibration_button_summary">Wysyła kalibrację do xDrip+ lub otwiera dialog kalibracji w Dexcom Patched</string>
-    <string name="show_cgm_button_summary">Otwiera xDrip+ lub Dexcom Patched, przycisk \"cofnij\" wraca do AAPS</string>
-    <string name="dexcom_app_not_installed">Apka Dexcom nie jest zainstalowana.</string>
-    <string name="dexcom_app_not_detected">Proszę uaktualnij swoją Apkę Dexcom do wersji wspieranej</string>
+    <string name="show_calibration_button_summary">Wysyła kalibrację do xDrip+ (upewnij się, że \'Akceptuj kalibracje\' są włączone w xDrip+ w sekcji \'Ustawienia innych aplikacji\').</string>
+    <string name="show_cgm_button_summary">Otwiera xDrip+ (możesz wrócić do AAPS androidowym przyciskiem \"cofnij\").</string>
     <string name="error_starting_cgm">Nie można uruchomić aplikacji CGM. Upewnij się, że została zainstalowana.</string>
     <string name="not_available_full">Niedostępne</string>
     <string name="constraints_violation">Naruszenie ograniczeń</string>
@@ -226,12 +239,12 @@
     <string name="thirdcarbsincrement">Trzeci stopień przyrostu węglow.</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">Domyślne tymczasowe wartości docelowe</string>
-    <string name="eatingsoon_duration">WkrótcePosiłek czas trwania</string>
-    <string name="eatingsoon_target">WkrótcePosiłek cel</string>
-    <string name="activity_duration">Ćwiczenia czas trwania</string>
-    <string name="activity_target">Ćwiczenia cel</string>
-    <string name="hypo_duration">Hipo czas trwania</string>
-    <string name="hypo_target">Hipo cel</string>
+    <string name="eatingsoon_duration">Czas trwania Wkrótce posiłek (minuty)</string>
+    <string name="eatingsoon_target">Wartość docelowa celu Wkrótce posiłek</string>
+    <string name="activity_duration">Czas trwania Ćwiczenia (minuty)</string>
+    <string name="activity_target">Wartość docelowa celu Ćwiczenia</string>
+    <string name="hypo_duration">Czas trwania Hipo (minuty)</string>
+    <string name="hypo_target">Wartość docelowa celu Hipo</string>
     <string name="fill_bolus_title">Rozpocznij/Wypełnij standardowe ilości insuliny</string>
     <string name="button1">Przycisk 1</string>
     <string name="button2">Przycisk 2</string>
@@ -258,12 +271,13 @@
     <string name="overview_show_deviation_slope">Krzywa odchylenie</string>
     <string name="overview_show_activity">Aktywność</string>
     <string name="overview_show_bgi">Wpływ na glikemię (BGI)</string>
-    <string name="overview_show_sensitivity">Wrażliwość</string>
+    <string name="overview_show_sensitivity">Zmiana wrażliwości</string>
     <string name="overview_show_deviations">Odchylenia</string>
     <string name="overview_show_cob">COB (Aktywne Węglow.)</string>
     <string name="overview_show_iob">IOB (Aktywna Insulina)</string>
     <string name="overview_show_basals">Dawki Bazowe</string>
     <string name="overview_show_abs_insulin">Cała insulina</string>
+    <string name="overview_show_variable_sens">Zmienna czułość</string>
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAZ</string>
     <string name="deviation_shortname">ODCH</string>
@@ -273,9 +287,11 @@
     <string name="devslope_shortname">KRZOD</string>
     <string name="treatments_shortname">TREAT</string>
     <string name="heartRate_shortname">HR</string>
-    <string name="sensitivity_shortname">SENS</string>
+    <string name="sensitivity_shortname">SENS%</string>
+    <string name="variable_sensitivity_shortname">VSENS</string>
     <string name="graph_scale">Skala wykresu</string>
     <string name="graph_menu_divider_header">Wykres</string>
+    <string name="temp_basal_overview_short_name">T:</string>
     <!-- Skins -->
     <string name="classic_description">Motyw oryginalny</string>
     <string name="lowres_description">Mały ekran</string>
@@ -284,8 +300,10 @@
     <string name="skin">Motyw</string>
     <string name="cannula_usage">użytkowanie:</string>
     <!--    Iob-->
-    <string name="send_logfiles">Wyślij dzisiejsze pliki logów razem z datą i czasem do programistów. Nieoczekiwana sytuacja.</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Wyświetla bieżące powiadomienia z krótkim omówieniem działania pętli</string>
     <string name="old_data">NIEAKTUALNE DANE</string>
+    <string name="overview_show_steps">Kroki</string>
+    <string name="steps_shortname">KROKI</string>
+    <string name="simple_mode_enabled">Włączony tryb uproszczony</string>
 </resources>

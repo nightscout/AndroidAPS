@@ -14,10 +14,13 @@ import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import app.aaps.core.interfaces.extensions.toVisibility
+import app.aaps.core.data.model.EB
+import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -25,20 +28,13 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventExtendedBolusChange
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.main.extensions.iobCalc
-import app.aaps.core.main.extensions.isInProgress
-import app.aaps.core.main.utils.ActionModeHelper
+import app.aaps.core.objects.extensions.iobCalc
+import app.aaps.core.objects.extensions.isInProgress
+import app.aaps.core.objects.ui.ActionModeHelper
 import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.database.entities.ExtendedBolus
-import app.aaps.database.entities.UserEntry.Action
-import app.aaps.database.entities.UserEntry.Sources
-import app.aaps.database.entities.ValueWithUnit
-import app.aaps.database.entities.interfaces.end
-import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.InvalidateExtendedBolusTransaction
 import app.aaps.ui.R
 import app.aaps.ui.activities.fragments.TreatmentsExtendedBolusesFragment.RecyclerViewAdapter.ExtendedBolusesViewHolder
 import app.aaps.ui.databinding.TreatmentsExtendedbolusFragmentBinding
@@ -63,15 +59,14 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment(), MenuProvider {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var uel: UserEntryLogger
-    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
 
     private var _binding: TreatmentsExtendedbolusFragmentBinding? = null
 
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
     private var menu: Menu? = null
-    private lateinit var actionHelper: ActionModeHelper<ExtendedBolus>
+    private lateinit var actionHelper: ActionModeHelper<EB>
     private var showInvalidated = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
@@ -94,13 +89,13 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment(), MenuProvider {
         val now = System.currentTimeMillis()
         binding.recyclerview.isLoading = true
         disposable += if (showInvalidated)
-            repository
-                .getExtendedBolusDataIncludingInvalidFromTime(now - millsToThePast, false)
+            persistenceLayer
+                .getExtendedBolusStartingFromTimeIncludingInvalid(now - millsToThePast, false)
                 .observeOn(aapsSchedulers.main)
                 .subscribe { list -> binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true) }
         else
-            repository
-                .getExtendedBolusDataFromTime(now - millsToThePast, false)
+            persistenceLayer
+                .getExtendedBolusesStartingFromTime(now - millsToThePast, false)
                 .observeOn(aapsSchedulers.main)
                 .subscribe { list -> binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true) }
     }
@@ -130,7 +125,7 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment(), MenuProvider {
         _binding = null
     }
 
-    private inner class RecyclerViewAdapter(private var extendedBolusList: List<ExtendedBolus>) : RecyclerView.Adapter<ExtendedBolusesViewHolder>() {
+    private inner class RecyclerViewAdapter(private var extendedBolusList: List<EB>) : RecyclerView.Adapter<ExtendedBolusesViewHolder>() {
 
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ExtendedBolusesViewHolder {
             val v = LayoutInflater.from(viewGroup.context).inflate(R.layout.treatments_extendedbolus_item, viewGroup, false)
@@ -139,8 +134,8 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment(), MenuProvider {
 
         override fun onBindViewHolder(holder: ExtendedBolusesViewHolder, position: Int) {
             val extendedBolus = extendedBolusList[position]
-            holder.binding.ns.visibility = (extendedBolus.interfaceIDs.nightscoutId != null).toVisibility()
-            holder.binding.ph.visibility = (extendedBolus.interfaceIDs.pumpId != null).toVisibility()
+            holder.binding.ns.visibility = (extendedBolus.ids.nightscoutId != null).toVisibility()
+            holder.binding.ph.visibility = (extendedBolus.ids.pumpId != null).toVisibility()
             holder.binding.invalid.visibility = extendedBolus.isValid.not().toVisibility()
             val newDay = position == 0 || !dateUtil.isSameDayGroup(extendedBolus.timestamp, extendedBolusList[position - 1].timestamp)
             holder.binding.date.visibility = newDay.toVisibility()
@@ -199,7 +194,7 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment(), MenuProvider {
 
     override fun onMenuItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.nav_remove_items -> actionHelper.startRemove()
+            R.id.nav_remove_items     -> actionHelper.startRemove()
 
             R.id.nav_show_invalidated -> {
                 showInvalidated = true
@@ -217,11 +212,11 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment(), MenuProvider {
                 true
             }
 
-            else -> false
+            else                      -> false
         }
     }
 
-    private fun getConfirmationText(selectedItems: SparseArray<ExtendedBolus>): String {
+    private fun getConfirmationText(selectedItems: SparseArray<EB>): String {
         if (selectedItems.size() == 1) {
             val bolus = selectedItems.valueAt(0)
             return rh.gs(app.aaps.core.ui.R.string.extended_bolus) + "\n" +
@@ -230,21 +225,21 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment(), MenuProvider {
         return rh.gs(app.aaps.core.ui.R.string.confirm_remove_multiple_items, selectedItems.size())
     }
 
-    private fun removeSelected(selectedItems: SparseArray<ExtendedBolus>) {
+    private fun removeSelected(selectedItems: SparseArray<EB>) {
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.removerecord), getConfirmationText(selectedItems), Runnable {
                 selectedItems.forEach { _, extendedBolus ->
-                    uel.log(
-                        Action.EXTENDED_BOLUS_REMOVED, Sources.Treatments,
-                        ValueWithUnit.Timestamp(extendedBolus.timestamp),
-                        ValueWithUnit.Insulin(extendedBolus.amount),
-                        ValueWithUnit.UnitPerHour(extendedBolus.rate),
-                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(extendedBolus.duration).toInt())
-                    )
-                    disposable += repository.runTransactionForResult(InvalidateExtendedBolusTransaction(extendedBolus.id))
-                        .subscribe(
-                            { aapsLogger.debug(LTag.DATABASE, "Removed extended bolus $extendedBolus") },
-                            { aapsLogger.error(LTag.DATABASE, "Error while invalidating extended bolus", it) })
+                    disposable += persistenceLayer.invalidateExtendedBolus(
+                        id = extendedBolus.id,
+                        action = Action.EXTENDED_BOLUS_REMOVED,
+                        source = Sources.Treatments,
+                        listValues = listOf(
+                            ValueWithUnit.Timestamp(extendedBolus.timestamp),
+                            ValueWithUnit.Insulin(extendedBolus.amount),
+                            ValueWithUnit.UnitPerHour(extendedBolus.rate),
+                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(extendedBolus.duration).toInt())
+                        )
+                    ).subscribe()
                 }
                 actionHelper.finish()
             })

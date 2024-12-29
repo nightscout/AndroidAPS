@@ -6,7 +6,7 @@ import androidx.work.workDataOf
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
-import app.aaps.core.main.utils.worker.LoggingWorker
+import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.plugins.sync.nsShared.events.EventNSClientUpdateGuiStatus
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import kotlinx.coroutines.Dispatchers

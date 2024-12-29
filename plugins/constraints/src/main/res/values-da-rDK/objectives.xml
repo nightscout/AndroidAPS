@@ -26,11 +26,7 @@
     <string name="objectives_smb_objective">Aktivering af yderligere funktioner til brug i dagtimerne, såsom SMB</string>
     <string name="objectives_smb_gate">Du skal læse wikien og hæve maxIOB for at få SMB\'er til at fungere fint! En god start er maxIOB=gennemsnitlig måltidsbolus + 3 x max daglig basal</string>
     <string name="objectives_smb_learned">Brug af SMB er dit mål. Oref1-algoritmen var designet til også at hjælpe dig med dine bolusser. Du bør ikke give fuld bolus for din mad, men kun en del af det og lade AAPS give dig resten, hvis det er nødvendigt. På denne måde har du mere plads til at fejlberegne kulhydrater. Vidste du, at du kan indstille en procentdel af boluslommeregnerens resultat for at reducere størrelsen af bolus?</string>
-    <string name="objectives_dyn_isf_objective">Aktiverer yderligere funktioner til brug i dagtimerne, såsom Dynamisk sensitivitet-plugin</string>
-    <string name="objectives_dyn_isf_gate">Sørg for, at SMB fungerer korrekt. Aktivér DynamicISF-plugin\'et og identificér den passende kalibrering for din krop specifikt. Det er tilrådeligt at begynde med en værdi, der er lavere end 100% af sikkerhedsmæssige årsager.</string>
-    <string name="objectives_dyn_isf_learned">Den Dynamiske Sensitivitetsplugin er baseret på den idé, at det totale insulinforbrug og nuværende glycæmi-niveauer påvirker din følsomhed. DynamicISF-plugin kan justere Insulinfølsomhedsfaktoren (ISF) som algoritmen benytter.</string>
     <string name="objectives_auto_objective">Aktiverer automatisering</string>
-    <string name="objectives_auto_gate">Læs dokumentationen om hvordan automatisering virker. Opsæt dine første enkle regler. I stedet for handling, lad kun AAPS vise notifikationer. Når du er sikker på, at automatisering udløses på det rigtige tidspunkt, skal du erstatte notifikationen med reel handling. (https://wiki.aaps.app/en/latest/Usage/Automation.html)</string>
     <string name="objectives_auto_learned">Automatisering kan være en god tjener, men en dårlig mester. Lad være med at overbruge den. Forsøg ikke at erstatte den underliggende algoritme. Test kun reglen med besked før brug. Det afhænger af rækkefølgen.</string>
     <string name="objectives_bgavailableinns">BS er tilgængeligt i NS eller Tidepool</string>
     <string name="objectives_pumpstatusavailableinns">Pumpestatus tilgængelig i NS eller Tidepool</string>
@@ -77,10 +73,6 @@
     <string name="unfinshed_button">Næste uafsluttede</string>
     <string name="requestcode">Anmod om kode: %1$s</string>
     <string name="objectives_hint">(tjek alle de korrekte svar)</string>
-    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/da/latest/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/da/latest/Getting-Started/Screenshots.html#the-homescreen</string>
-    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/da/latest/Configuration/Config-Builder.html</string>
-    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/da/latest/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">Ingen forbindelse til internettet</string>
     <string name="failedretrievetime">Tid kunne ikke hentes</string>
     <string name="requirementnotmet">Quiz krav ikke opfyldt</string>

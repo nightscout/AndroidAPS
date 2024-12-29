@@ -31,7 +31,7 @@ class WearApp : DaggerApplication(), OnSharedPreferenceChangeListener {
         exceptionHandlerWear.register()
         aapsLogger.debug(LTag.WEAR, "onCreate")
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this)
-        startService(Intent(this, DataLayerListenerServiceWear::class.java))
+        startForegroundService(Intent(this, DataLayerListenerServiceWear::class.java))
     }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> =

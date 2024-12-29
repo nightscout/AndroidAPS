@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="alert_r1_title">輸送胰島素</string>
+    <string name="alert_r2_title">漏掉胰島素輸送</string>
+    <string name="alert_r3_title">鬧鐘</string>
+    <string name="alert_r4_title">更換輸液組</string>
+    <string name="alert_r7_title">臨時基礎率完成</string>
+    <string name="alert_w31_title">卡匣剩餘量低</string>
+    <string name="alert_w32_title">電池電量過低</string>
+    <string name="alert_w33_title">無效的時間/日期</string>
+    <string name="alert_w34_title">保固到期</string>
+    <string name="alert_w36_title">臨時基礎率取消</string>
+    <string name="alert_w38_title">胰島素輸送取消</string>
+    <string name="alert_w39_title">貸款時間警告</string>
+    <string name="alert_m20_title">卡匣未插入</string>
+    <string name="alert_m21_title">卡匣空</string>
+    <string name="alert_m22_title">電池空</string>
+    <string name="alert_m23_title">自動關閉 - 幫浦停止</string>
+    <string name="alert_m24_title">阻塞</string>
+    <string name="alert_m25_title">貸款時間結束 - 操作結束</string>
+    <string name="alert_m26_title">卡匣更換未完成</string>
+    <string name="alert_m27_title">資料下載失敗</string>
+    <string name="alert_m28_title">暫停模式逾時</string>
+    <string name="alert_m29_title">電池類型未設定</string>
+    <string name="alert_m30_title">卡匣類型未設定</string>
+    <string name="alert_e6_title">機械故障</string>
+    <string name="alert_e10_title">回轉錯誤</string>
+    <string name="alert_e13_title">語言錯誤</string>
+</resources>

@@ -13,6 +13,7 @@
     <string name="objectives_openloop_learned">Otevřená smyčka může být použita pro doporučení, pokud nemáte kompatibilní pumpu nebo nejste připraveni uzavřít smyčku.</string>
     <string name="objectives_maxbasal_objective">Porozumět otevřené smyčce, včetně jejích doporučení ohledně dočasných bazálů</string>
     <string name="objectives_maxbasal_gate">Na základě předchozích zkušeností rozhodnout, jaký je třeba maximální bazál a nastavit ho v pumpě a v aplikaci</string>
+    <string name="objectives_maxbasal">Proveďte akci pro splnění doporučení</string>
     <string name="objectives_maxbasal_learned">Dejte pozor na bezpečnostní nastavení a v případě potřeby upravte bezpečnostní parametry.</string>
     <string name="objectives_maxiobzero_objective">Spustit uzavřenou smyčku pouze se zastavováním při nízké glykémii</string>
     <string name="objectives_maxiobzero_gate">Spustit uzavřenou smyčku s max IOB = 0 na několik dní s minimem nutných korekcí na nízkou glykémii</string>
@@ -25,12 +26,9 @@
     <string name="objectives_autosens_learned">Pokud váš výsledek autosens neosciluje kolem 100%, nastavení Vašeho profilu pravděpodobně špatné.</string>
     <string name="objectives_smb_objective">Povolit další funkce pro běžné používání jako SMB</string>
     <string name="objectives_smb_gate">Přečíst si dokumentaci a zvýšit maximání IOB, aby mohlo SMB fungovat. Pro začátek se dá použít velikost běžného bolusu + 3x maximální denní bazál</string>
-    <string name="objectives_smb_learned">Použití SMB je vaším cílem. Oref1 algoritmus byl navržen tak, aby vám pomohl i s vašimi bolusy. Neměli byste dávat úplný bolus pro vaše jídlo, ale jen jeho část a nechtat AAPS v případě potřeby dát zbytek. Takto máte větší rezervu pro špatně vypočtené sacharidy. Věděli jste, že můžete nastavit procento bolusové kalkulačky pro snížení velikosti bolusu?</string>
-    <string name="objectives_dyn_isf_objective">Povolit další funkce pro každodenní používání, jako je například Dynamic sensitivity plugin</string>
-    <string name="objectives_dyn_isf_gate">Ujistěte se, že SMB funguje správně. Povolte DynamicISF plugin a určete vhodnou kalibraci pro své tělo. Z důvodu bezpečnosti je vhodné začít s hodnotou nižší než 100 %.</string>
-    <string name="objectives_dyn_isf_learned">Modul dynamické citlivosti citlivosti je založen na myšlence, že celkový příjem inzulinu a aktuální hladiny glykémie ovlivňují skutečnou citlivost. DynamicISF plugin může pro vás upravit faktor citlivosti inzulínu (ISF) používaný algoritmem.</string>
+    <string name="objectives_smb_learned">Použití SMB je vaším cílem. Oref1 algoritmus byl navržen tak, aby vám pomohl i s bolusy. Neměli byste na jídlo vydávat celý bolus, ale jen jeho část, a nechat AAPS v případě potřeby dát zbytek. Takto máte větší rezervu pro špatně spočítané sacharidy. Věděli jste, že můžete nastavit procento bolusové kalkulačky pro snížení velikosti bolusu?</string>
     <string name="objectives_auto_objective">Povolení automatizace</string>
-    <string name="objectives_auto_gate">Přečtěte si na wiki, jak automatizace funguje. Nejdříve nastavte pouze jednoduchá pravidla. Namísto provádění akcí nechte AAPS zobrazovat pouze oznámení. Pokud jste si jistí, že je automatizace spouštěna v pravý čas, můžete oznámení nahradit prováděním akce. (https://wiki.aaps.app/cs/latest/Usage/Automation.html)</string>
+    <string name="objectives_auto_gate">Přečtěte si na wiki, jak automatizace funguje. Nejdříve nastavte pouze jednoduchá pravidla. Namísto provádění akcí nechte AAPS zobrazovat pouze oznámení. Pokud jste si jistí, že je automatizace spouštěna v pravý čas, můžete oznámení nahradit prováděním akce. (https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/Automations.html)</string>
     <string name="objectives_auto_learned">Automatizace může být dobrý sluha, ale špatný pán. Nepoužívejte ji nadměrně. Nesnažte se nahradit základní algoritmus. Otestujte pravidlo pouze se zprávou před použitím. Zpracování pravidel závisí na pořadí.</string>
     <string name="objectives_bgavailableinns">Glykémie dostupná v NS nebo Tidepoolu</string>
     <string name="objectives_pumpstatusavailableinns">Stav pumpy dostupný v NS nebo Tidepoolu</string>
@@ -77,12 +75,13 @@
     <string name="unfinshed_button">Další nedokončená</string>
     <string name="requestcode">Kód žádosti: %1$s</string>
     <string name="objectives_hint">(zatrhněte všechny správné odpovědi)</string>
-    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/cs/latest/Getting-Started/FAQ.html#co-delat-pri-sprchovani-a-koupani</string>
-    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/cs/latest/Getting-Started/Screenshots.html#hlavni-stranka</string>
-    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/cs/latest/Configuration/Config-Builder.html</string>
-    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/cs/latest/Getting-Started/Screenshots.html#hlavni-stranka</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/cs/latest/UsefulLinks/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/cs/latest/SettingUpAaps/ConfigBuilder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/cs/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
     <string name="notconnected">Chybí připojení k internetu</string>
     <string name="failedretrievetime">Nepodařilo se načíst čas</string>
     <string name="requirementnotmet">Požadavky cíle nejsou splněny</string>
     <string name="what_i_ve_learned">Co jsem se naučil:</string>
+    <string name="verify_master_password">Ověřte, zda znáte hlavní heslo</string>
 </resources>

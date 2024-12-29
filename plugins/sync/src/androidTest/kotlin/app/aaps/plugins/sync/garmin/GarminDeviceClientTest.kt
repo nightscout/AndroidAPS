@@ -34,38 +34,40 @@ import org.mockito.kotlin.whenever
 import java.util.concurrent.Executor
 
 @RunWith(AndroidJUnit4::class)
-class GarminDeviceClientTest: TestBase() {
+class GarminDeviceClientTest : TestBase() {
+
     private val serviceDescriptor = "com.garmin.android.apps.connectmobile.connectiq.IConnectIQService"
     private lateinit var client: GarminDeviceClient
     private lateinit var serviceConnection: ServiceConnection
     private lateinit var device: GarminDevice
     private val packageName = "TestPackage"
     private val actions = mutableMapOf<String, BroadcastReceiver>()
+
     // Maps app ids to intent actions.
     private val receivers = mutableMapOf<String, String>()
 
     private val receiver = mock<GarminReceiver>()
-    private val binder = mock<IBinder>() {
+    private val binder = mock<IBinder> {
         on { isBinderAlive } doReturn true
     }
-    private val ciqService = mock<IConnectIQService>() {
+    private val ciqService = mock<IConnectIQService> {
         on { asBinder() } doReturn binder
         on { connectedDevices } doReturn listOf(IQDevice(1L, "TDevice"))
         on { registerApp(any(), any(), any()) }.doAnswer { i ->
             receivers[i.getArgument<IQApp>(0).applicationId] = i.getArgument(1)
         }
     }
-    private val context = mock<Context>() {
+    private val context = mock<Context> {
         on { packageName } doReturn this@GarminDeviceClientTest.packageName
         on { registerReceiver(any<BroadcastReceiver>(), any()) } doAnswer { i ->
             actions[i.getArgument<IntentFilter>(1).getAction(0)] = i.getArgument(0)
             Intent()
         }
         on { unregisterReceiver(any()) } doAnswer { i ->
-            val keys = actions.entries.filter {(_, br) -> br == i.getArgument(0) }.map { (k, _) -> k }
+            val keys = actions.entries.filter { (_, br) -> br == i.getArgument(0) }.map { (k, _) -> k }
             keys.forEach { k -> actions.remove(k) }
         }
-        on { bindService(any(), eq(Context.BIND_AUTO_CREATE), any(), any()) }. doAnswer { i ->
+        on { bindService(any(), eq(Context.BIND_AUTO_CREATE), any(), any()) }.doAnswer { i ->
             serviceConnection = i.getArgument(3)
             i.getArgument<Executor>(2).execute {
                 serviceConnection.onServiceConnected(
@@ -74,7 +76,7 @@ class GarminDeviceClientTest: TestBase() {
             }
             true
         }
-        on { bindService(any(), any(), eq(Context.BIND_AUTO_CREATE)) }. doAnswer { i ->
+        on { bindService(any(), any(), eq(Context.BIND_AUTO_CREATE)) }.doAnswer { i ->
             serviceConnection = i.getArgument(1)
             serviceConnection.onServiceConnected(
                 GarminDeviceClient.CONNECTIQ_SERVICE_COMPONENT,
@@ -135,9 +137,11 @@ class GarminDeviceClientTest: TestBase() {
 
         client.sendMessage(GarminApplication(device, appId, "$appId-name"), data)
         verify(ciqService).sendMessage(
-            argThat { iqMsg -> data.contentEquals(iqMsg.messageData)
-                && iqMsg.notificationPackage == packageName
-                && iqMsg.notificationAction == client.sendMessageAction },
+            argThat { iqMsg ->
+                data.contentEquals(iqMsg.messageData)
+                    && iqMsg.notificationPackage == packageName
+                    && iqMsg.notificationAction == client.sendMessageAction
+            },
             argThat { iqDevice -> iqDevice.deviceIdentifier == device.id },
             argThat { iqApp -> iqApp?.applicationId == appId })
 
@@ -158,10 +162,12 @@ class GarminDeviceClientTest: TestBase() {
 
         client.sendMessage(GarminApplication(device, appId, "$appId-name"), data)
         verify(ciqService).sendMessage(
-            argThat { iqMsg -> data.contentEquals(iqMsg.messageData)
-                && iqMsg.notificationPackage == packageName
-                && iqMsg.notificationAction == client.sendMessageAction },
-            argThat {iqDevice -> iqDevice.deviceIdentifier == device.id },
+            argThat { iqMsg ->
+                data.contentEquals(iqMsg.messageData)
+                    && iqMsg.notificationPackage == packageName
+                    && iqMsg.notificationAction == client.sendMessageAction
+            },
+            argThat { iqDevice -> iqDevice.deviceIdentifier == device.id },
             argThat { iqApp -> iqApp?.applicationId == appId })
 
         val intent = Intent().apply {
@@ -180,10 +186,12 @@ class GarminDeviceClientTest: TestBase() {
 
         client.sendMessage(GarminApplication(device, appId, "$appId-name"), data)
         verify(ciqService).sendMessage(
-            argThat { iqMsg -> data.contentEquals(iqMsg.messageData)
-                && iqMsg.notificationPackage == packageName
-                && iqMsg.notificationAction == client.sendMessageAction },
-            argThat {iqDevice -> iqDevice.deviceIdentifier == device.id },
+            argThat { iqMsg ->
+                data.contentEquals(iqMsg.messageData)
+                    && iqMsg.notificationPackage == packageName
+                    && iqMsg.notificationAction == client.sendMessageAction
+            },
+            argThat { iqDevice -> iqDevice.deviceIdentifier == device.id },
             argThat { iqApp -> iqApp?.applicationId == appId })
 
         val intent = Intent().apply {
@@ -195,11 +203,13 @@ class GarminDeviceClientTest: TestBase() {
         verifyNoMoreInteractions(receiver)
 
         // Verify retry ...
-        verify(ciqService, timeout(10_000L).times( 2)).sendMessage(
-            argThat { iqMsg -> data.contentEquals(iqMsg.messageData)
-                && iqMsg.notificationPackage == packageName
-                && iqMsg.notificationAction == client.sendMessageAction },
-            argThat {iqDevice -> iqDevice.deviceIdentifier == device.id },
+        verify(ciqService, timeout(10_000L).times(2)).sendMessage(
+            argThat { iqMsg ->
+                data.contentEquals(iqMsg.messageData)
+                    && iqMsg.notificationPackage == packageName
+                    && iqMsg.notificationAction == client.sendMessageAction
+            },
+            argThat { iqDevice -> iqDevice.deviceIdentifier == device.id },
             argThat { iqApp -> iqApp?.applicationId == appId })
 
         intent.putExtra(GarminDeviceClient.EXTRA_STATUS, ConnectIQ.IQMessageStatus.SUCCESS.ordinal)
@@ -216,10 +226,12 @@ class GarminDeviceClientTest: TestBase() {
         client.sendMessage(GarminApplication(device, appId, "$appId-name"), data1)
         client.sendMessage(GarminApplication(device, appId, "$appId-name"), data2)
         verify(ciqService).sendMessage(
-            argThat { iqMsg -> data1.contentEquals(iqMsg.messageData)
-                && iqMsg.notificationPackage == packageName
-                && iqMsg.notificationAction == client.sendMessageAction },
-            argThat {iqDevice -> iqDevice.deviceIdentifier == device.id },
+            argThat { iqMsg ->
+                data1.contentEquals(iqMsg.messageData)
+                    && iqMsg.notificationPackage == packageName
+                    && iqMsg.notificationAction == client.sendMessageAction
+            },
+            argThat { iqDevice -> iqDevice.deviceIdentifier == device.id },
             argThat { iqApp -> iqApp?.applicationId == appId })
         verify(ciqService, atLeastOnce()).asBinder()
         verifyNoMoreInteractions(ciqService)
@@ -233,10 +245,12 @@ class GarminDeviceClientTest: TestBase() {
         verify(receiver).onSendMessage(client, device.id, appId, null)
 
         verify(ciqService, timeout(5000L)).sendMessage(
-            argThat { iqMsg -> data2.contentEquals(iqMsg.messageData)
-                && iqMsg.notificationPackage == packageName
-                && iqMsg.notificationAction == client.sendMessageAction },
-            argThat {iqDevice -> iqDevice.deviceIdentifier == device.id },
+            argThat { iqMsg ->
+                data2.contentEquals(iqMsg.messageData)
+                    && iqMsg.notificationPackage == packageName
+                    && iqMsg.notificationAction == client.sendMessageAction
+            },
+            argThat { iqDevice -> iqDevice.deviceIdentifier == device.id },
             argThat { iqApp -> iqApp?.applicationId == appId })
 
         actions[client.sendMessageAction]!!.onReceive(context, intent)
@@ -253,16 +267,20 @@ class GarminDeviceClientTest: TestBase() {
         client.sendMessage(GarminApplication(device, appId1, "$appId1-name"), data1)
         client.sendMessage(GarminApplication(device, appId2, "$appId2-name"), data2)
         verify(ciqService).sendMessage(
-            argThat { iqMsg -> data1.contentEquals(iqMsg.messageData)
-                && iqMsg.notificationPackage == packageName
-                && iqMsg.notificationAction == client.sendMessageAction },
-            argThat {iqDevice -> iqDevice.deviceIdentifier == device.id },
+            argThat { iqMsg ->
+                data1.contentEquals(iqMsg.messageData)
+                    && iqMsg.notificationPackage == packageName
+                    && iqMsg.notificationAction == client.sendMessageAction
+            },
+            argThat { iqDevice -> iqDevice.deviceIdentifier == device.id },
             argThat { iqApp -> iqApp?.applicationId == appId1 })
         verify(ciqService, timeout(5000L)).sendMessage(
-            argThat { iqMsg -> data2.contentEquals(iqMsg.messageData)
-                && iqMsg.notificationPackage == packageName
-                && iqMsg.notificationAction == client.sendMessageAction },
-            argThat {iqDevice -> iqDevice.deviceIdentifier == device.id },
+            argThat { iqMsg ->
+                data2.contentEquals(iqMsg.messageData)
+                    && iqMsg.notificationPackage == packageName
+                    && iqMsg.notificationAction == client.sendMessageAction
+            },
+            argThat { iqDevice -> iqDevice.deviceIdentifier == device.id },
             argThat { iqApp -> iqApp?.applicationId == appId2 })
 
         val intent1 = Intent().apply {

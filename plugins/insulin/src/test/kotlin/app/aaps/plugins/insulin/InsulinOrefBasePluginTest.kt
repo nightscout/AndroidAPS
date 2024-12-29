@@ -1,7 +1,8 @@
 package app.aaps.plugins.insulin
 
+import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.model.BS
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.configuration.Constants
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -9,10 +10,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.database.entities.Bolus
 import com.google.common.truth.Truth.assertThat
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -32,14 +30,13 @@ class InsulinOrefBasePluginTest {
     var shortDiaNotificationSend = false
 
     inner class InsulinBaseTest(
-        injector: HasAndroidInjector,
         rh: ResourceHelper,
         profileFunction: ProfileFunction,
         rxBus: RxBus,
         aapsLogger: AAPSLogger,
         config: Config,
         hardLimits: HardLimits
-    ) : InsulinOrefBasePlugin(injector, rh, profileFunction, rxBus, aapsLogger, config, hardLimits, uiInteraction) {
+    ) : InsulinOrefBasePlugin(rh, profileFunction, rxBus, aapsLogger, config, hardLimits, uiInteraction) {
 
         override fun sendShortDiaNotification(dia: Double) {
             shortDiaNotificationSend = true
@@ -68,14 +65,9 @@ class InsulinOrefBasePluginTest {
     @Mock lateinit var hardLimits: HardLimits
     @Mock lateinit var uiInteraction: UiInteraction
 
-    private var injector: HasAndroidInjector = HasAndroidInjector {
-        AndroidInjector {
-        }
-    }
-
     @BeforeEach
     fun setUp() {
-        sut = InsulinBaseTest(injector, rh, profileFunction, rxBus, aapsLogger, config, hardLimits)
+        sut = InsulinBaseTest(rh, profileFunction, rxBus, aapsLogger, config, hardLimits)
         `when`(hardLimits.minDia()).thenReturn(5.0)
     }
 
@@ -91,7 +83,7 @@ class InsulinOrefBasePluginTest {
 
     @Test
     fun testIobCalcForTreatment() {
-        val treatment = Bolus(timestamp = 0, amount = 10.0, type = Bolus.Type.NORMAL)
+        val treatment = BS(timestamp = 0, amount = 10.0, type = BS.Type.NORMAL)
         testPeak = 30
         testUserDefinedDia = 4.0
         val time = System.currentTimeMillis()

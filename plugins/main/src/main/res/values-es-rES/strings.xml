@@ -39,7 +39,7 @@
     <string name="smscommunicator_stops_ns_with_code">Para deshabilitar la respuesta de servicio remoto de SMS, responder con el código %1$s.\n\nTen en cuenta que solamente será capaz de reactivarlo directamente desde el móvil con la aplicación AAPS maestra.</string>
     <string name="smscommunicator_stopped_sms">Servicio remoto de SMS detenido. Para reactivarlo, utilice AAPS en el movil maestro.</string>
     <string name="smscommunicator_calibration_reply_with_code">Para enviar calibración %1$.2f responder con código %2$s</string>
-    <string name="smscommunicator_bolus_failed">Bolo fallido</string>
+    <string name="smscommunicator_bolus_failed">Bolo fallido. ¡Comprueba el estado real antes de enviar otro comando!</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Número mínimo de minutos que deben transcurrir entre un bolo remoto y el siguiente</string>
     <string name="smscommunicator_remote_bolus_min_distance">Cuántos minutos deben transcurrir, al menos, entre un bolo y el siguiente</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">Por tu seguridad, para editar esta preferencia es necesario añadir al menos 2 números de teléfono.</string>
@@ -64,10 +64,10 @@
     <string name="smscommunicator_extended_reply_with_code">Para iniciar un bolo extendido de %1$.2fU durante %2$d minutos, responder con el código %3$s</string>
     <string name="smscommunicator_carbs_reply_with_code">Para introducir %1$dg en %2$s, responder con el código %3$s</string>
     <string name="smscommunicator_basal_pct_reply_with_code">Para iniciar una basal de %1$d%% durante %2$d min, responder con el código %3$s</string>
-    <string name="smscommunicator_suspend_reply_with_code">Para suspender el lazo durante %1$d minutos, responde con el código %2$s</string>
-    <string name="smscommunicator_loop_resume_reply_with_code">Para reanudar el lazo, responde con el código %1$s</string>
-    <string name="smscommunicator_loop_enable_reply_with_code">Para activar el lazo, responder con el código %1$s</string>
-    <string name="smscommunicator_loop_disable_reply_with_code">Para desactivar el lazo, responder con el código %1$s</string>
+    <string name="smscommunicator_suspend_reply_with_code">Para suspender el bucle durante %1$d minutos, responde con el código %2$s</string>
+    <string name="smscommunicator_loop_resume_reply_with_code">Para reanudar el bucle, responde con el código %1$s</string>
+    <string name="smscommunicator_loop_enable_reply_with_code">Para activar el bucle, responder con el código %1$s</string>
+    <string name="smscommunicator_loop_disable_reply_with_code">Para desactivar el bucle, responder con el código %1$s</string>
     <string name="smscommunicator_tempbasal_set">Basal temporal %1$.2fU/h durante %2$d minutos iniciada correctamente</string>
     <string name="smscommunicator_extended_set">Bolo extendido de %1$.2fU durante %2$d minutos se inició correctamente</string>
     <string name="smscommunicator_carbs_set">Carbohidratos %1$d g ingresados correctamente</string>
@@ -84,17 +84,17 @@
     <string name="smscommunicator_unknown_command">Comando desconocido o respuesta incorrecta</string>
     <string name="smscommunicator_another_bolus_in_queue">Hay otro bolo en cola. Inténtalo de nuevo más tarde.</string>
     <string name="smscommunicator_wrong_duration">Duración incorrecta</string>
-    <string name="smscommunicator_loop_suspended">Lazo suspendido</string>
-    <string name="smscommunicator_loop_resumed">Lazo reanudado</string>
+    <string name="smscommunicator_loop_suspended">Bucle suspendido</string>
+    <string name="smscommunicator_loop_resumed">Bucle reanudado</string>
     <string name="smscommunicator_invalid_phone_number">Número de teléfono incorrecto para SMS</string>
     <string name="smscommunicator_calibration_sent">Calibración enviada. La recepción debe estar habilitada en xDrip+.</string>
     <string name="smscommunicator_calibration_failed">xDrip+ no está recibiendo calibraciones</string>
     <string name="smscommunicator_message_body">El cuerpo del mensaje es inválido</string>
     <string name="smscommunicator_report_pump_unreachable_summary">Enviar SMS si se activa un evento de bomba inaccesible</string>
     <string name="smscommunicator_pump_unreachable">Reportar bomba inalcanzable</string>
-    <string name="smscommunicator_set_lgs_reply_with_code">Para cambiar el modo lazo a LGS (Suspensión por glucosa baja) responde con el código %1$s</string>
-    <string name="smscommunicator_set_closed_loop_reply_with_code">Para cambiar el modo lazo a lazo cerrado, responde con código %1$s</string>
-    <string name="smscommunicator_current_loop_mode">Modo lazo actual: %1$s</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">Para cambiar el modo del bucle a LGS (Suspensión por glucosa baja) responde con el código %1$s</string>
+    <string name="smscommunicator_set_closed_loop_reply_with_code">Para cambiar el modo a bucle cerrado, responde con código %1$s</string>
+    <string name="smscommunicator_current_loop_mode">Modo bucle actual: %1$s</string>
     <string name="wrong_format">Formato incorrecto</string>
     <string name="sms_actual_bg">Glucosa:</string>
     <string name="sms_last_bg">Última Glucosa:</string>
@@ -108,7 +108,7 @@
     <string name="sms_profile_switch_created">Cambio de perfil creado</string>
     <string name="sms_wrong_tbr_duration">La duración de TBR debe ser un múltiplo de %1$d minutos y mayor a 0.</string>
     <string name="a11y_otp_qr_code">Código QR para la configuración de la contraseña de un sólo uso</string>
-    <string name="disabled_loop">Lazo desactivado</string>
+    <string name="disabled_loop">Bucle desactivado</string>
     <!-- Food-->
     <string name="food_short">Comida</string>
     <string name="description_food">Muestra los ajustes preestablecidos de alimentos definidos en Nightscout</string>
@@ -153,6 +153,8 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">OBJ</string>
     <string name="basal_short">BAS</string>
+    <string name="isf_dynamic_label">El algoritmo puede proporcionar cálculos dinámicos de ISF. Los valores se utilizan sólo como un recurso en caso de falta de datos</string>
+    <string name="ic_dynamic_label">El algoritmo puede proporcionar cálculos dinámicos de IC. Los valores se utilizan sólo como un recurso en caso de falta de datos</string>
     <!-- Actions -->
     <string name="actions">Acciones</string>
     <string name="description_actions">Algunos botones para acceder rápidamente a funciones comunes</string>
@@ -189,7 +191,20 @@
     <string name="statuslights_bat_warning">Umbral de advertencia de nivel de batería bomba [%]</string>
     <string name="statuslights_bat_critical">Umbral nivel crítico de la batería de bomba [%]</string>
     <string name="statuslights_copy_ns">Copiar ajustes desde Nightscout</string>
+    <string name="graph_scale_6h">6h</string>
+    <string name="graph_scale_12h">12h</string>
+    <string name="graph_scale_18h">18h</string>
+    <string name="graph_scale_24h">24h</string>
+    <string name="graph_long_scale_6h">6 horas</string>
+    <string name="graph_long_scale_12h">12 horas</string>
+    <string name="graph_long_scale_18h">18 horas</string>
+    <string name="graph_long_scale_24h">24 horas</string>
     <string name="a11y_graph">gráfico</string>
+    <string name="a11y_graph_scale">selecciona ecala del gráfico</string>
+    <string name="a11y_graph_scale_6h">6 horas de escala de gráfico</string>
+    <string name="a11y_graph_scale_12h">12 horas de escala de gráfico</string>
+    <string name="a11y_graph_scale_18h">18 horas de escala de gráfico</string>
+    <string name="a11y_graph_scale_24h">24 horas de escala de gráfico</string>
     <string name="a11y_insulin_label">insulina</string>
     <string name="chart_menu">Menú gráfico</string>
     <string name="a11y_bg_quality">calidad de glucosa en sangre</string>
@@ -199,12 +214,10 @@
     <string name="overview_cgm">MCG</string>
     <string name="overview">Inicio</string>
     <string name="overview_shortname">INICIO</string>
-    <string name="description_overview">Muestra el estado actual de tu lazo y los botones para las acciones más usadas</string>
+    <string name="description_overview">Muestra el estado actual de tu bucle y los botones para las acciones más usadas</string>
     <string name="overview_buttons_selection">Botones</string>
-    <string name="show_calibration_button_summary">Envía una calibración a xDrip+ o abre la pantalla de calibración de Dexcom BYODA</string>
-    <string name="show_cgm_button_summary">Abre xDrip+ o Dexcom BYODA. Si pulsas el botón atrás, regresa a AAPS</string>
-    <string name="dexcom_app_not_installed">La aplicación Dexcom no está instalada.</string>
-    <string name="dexcom_app_not_detected">Actualiza tu aplicación de Dexcom a una versión compatible</string>
+    <string name="show_calibration_button_summary">Envía una calibración a xDrip+ (asegúrate de que \'Aceptar Calibraciones\' está activado en xDrip+ bajo la opción \'Ajustes entre aplicaciones\').</string>
+    <string name="show_cgm_button_summary">Abre xDrip+ (puedes usar el botón atrás para volver a AAPS).</string>
     <string name="error_starting_cgm">No se pudo iniciar la aplicación CGM. Asegúrate de que está instalada.</string>
     <string name="not_available_full">No disponible</string>
     <string name="constraints_violation">Violación de restricciones</string>
@@ -226,12 +239,12 @@
     <string name="thirdcarbsincrement">Tercer incremento de carbohidratos</string>
     <string name="cgm">MCG</string>
     <string name="default_temptargets">Objetivo temporal por defecto</string>
-    <string name="eatingsoon_duration">Duración OT Comiendo Pronto</string>
-    <string name="eatingsoon_target">Objetivo Comiendo Pronto</string>
-    <string name="activity_duration">Duración OT Actividad</string>
-    <string name="activity_target">Objetivo Actividad</string>
-    <string name="hypo_duration">Duración OT Hipo</string>
-    <string name="hypo_target">Objetivo Hipo</string>
+    <string name="eatingsoon_duration">Duración Comiendo Pronto (minutos)</string>
+    <string name="eatingsoon_target">Valor Objetivo Comiendo Pronto</string>
+    <string name="activity_duration">Duración de la actividad (minutos)</string>
+    <string name="activity_target">Valor objetivo de la actividad</string>
+    <string name="hypo_duration">Duración de hipo (minutos)</string>
+    <string name="hypo_target">Valor objetivo de hipo</string>
     <string name="fill_bolus_title">Cebar/Llenar la cantidad de insulina estándar</string>
     <string name="button1">Botón 1</string>
     <string name="button2">Botón 2</string>
@@ -259,12 +272,13 @@
     <string name="overview_show_deviation_slope">Pendiente de desviación</string>
     <string name="overview_show_activity">Actividad</string>
     <string name="overview_show_bgi">Impacto de glucosa en sangre</string>
-    <string name="overview_show_sensitivity">Sensibilidad</string>
+    <string name="overview_show_sensitivity">Cambio de sensibilidad</string>
     <string name="overview_show_deviations">Desviaciones</string>
     <string name="overview_show_cob">Carbohidratos activos COB</string>
     <string name="overview_show_iob">Insulina activa</string>
     <string name="overview_show_basals">Basales</string>
     <string name="overview_show_abs_insulin">Insulina absoluta</string>
+    <string name="overview_show_variable_sens">Sensibilidad variable</string>
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
     <string name="deviation_shortname">DEV</string>
@@ -274,9 +288,11 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">TRAT</string>
     <string name="heartRate_shortname">RC</string>
-    <string name="sensitivity_shortname">Sens</string>
+    <string name="sensitivity_shortname">SENS%</string>
+    <string name="variable_sensitivity_shortname">VSENS</string>
     <string name="graph_scale">Escala gráfica</string>
     <string name="graph_menu_divider_header">Gráfico</string>
+    <string name="temp_basal_overview_short_name">T:</string>
     <!-- Skins -->
     <string name="classic_description">Tema original</string>
     <string name="lowres_description">Tema baja resolución</string>
@@ -285,8 +301,10 @@
     <string name="skin">Tema</string>
     <string name="cannula_usage">Uso:</string>
     <!--    Iob-->
-    <string name="send_logfiles">Enviar los archivos de registro de hoy a los desarrolladores. Situación inesperada.</string>
     <!--    PersistentNotification-->
-    <string name="description_persistent_notification">Muestra una notificación en curso con un breve resumen de lo que está haciendo tu lazo</string>
+    <string name="description_persistent_notification">Muestra una notificación en curso con un breve resumen de lo que está haciendo tu bucle</string>
     <string name="old_data">DATOS CADUCADOS</string>
+    <string name="overview_show_steps">Pasos</string>
+    <string name="steps_shortname">PASOS</string>
+    <string name="simple_mode_enabled">Modo simple habilitado</string>
 </resources>

@@ -112,7 +112,6 @@
     <string name="bg_label">КЗ</string>
     <string name="calibration">Калибрация</string>
     <string name="alarminxmin">Аларма след %1$d мин</string>
-    <string name="treatmentdeliveryerror">Грешка в болуса. Сам провери истинската стойност на доставения инсулин</string>
     <string name="bolus_reminder">Болус подсещане</string>
     <string name="duration_label">Продължителност</string>
     <string name="shortgramm">гр.</string>
@@ -400,53 +399,8 @@
     <string name="a11y_user">потребител</string>
     <!-- Autotune -->
     <string name="autotune">Autotune</string>
-    <string name="autotune_description">Помага за потенциални корекции на профила (ISF, въглехидратно число и базал)</string>
-    <string name="autotune_shortname">AT</string>
-    <string name="autotune_settings">Autotune настройки</string>
-    <string name="autotune_auto_title">Превключване на профил Автоматизация</string>
-    <string name="autotune_auto_summary">Ако е активирано, Autotune автоматично ще се актуализира и ще превключи към входен профил след изчисление от правило за автоматизация.</string>
-    <string name="autotune_categorize_uam_as_basal_title">Категоризирай UAM като базал</string>
-    <string name="autotune_categorize_uam_as_basal_summary">Активирайте само ако сте въвели надеждно всички изядени въглехидрати, с тази опция внезапните повишения, наблюдавани от Autotune, ще бъдат използвани за препоръчване на промени в базалната скорост.</string>
-    <string name="autotune_tune_insulin_curve_title">Настройте инсулиновата крива</string>
-    <string name="autotune_tune_insulin_curve_summary">Активирайте само ако използвате свободен пик. Тази опция ще настрои продължителността на пика и DIA</string>
-    <string name="autotune_default_tune_days_title">Брой дни с данни</string>
-    <string name="autotune_circadian_ic_isf_title">Приложи среден резултат за въглехидрати/чувствителност</string>
-    <string name="autotune_circadian_ic_isf_summary">Autotune няма да настройва циркадните вариации, тази опция прилага само средната настройка на IC и ISF към вашия циркаден входен профил</string>
-    <string name="autotune_additional_log_title">Включване на повече информация за отстраняване на грешки</string>
-    <string name="autotune_additional_log_summary">Използвайте само, ако някой разработчик е поискал от вас да му изпратите информация за дебъгване на Autotune</string>
-    <string name="autotune_default_tune_days_summary">Брой дни по подразбиране за обработка на информация от Autotune (до 30)</string>
-    <string name="autotune_tunedprofile_name">Настроен</string>
-    <string name="autotune_profile">Профил :</string>
     <string name="autotune_tune_days">Дни на настройка:</string>
-    <string name="autotune_last_run">Последно стартиран :</string>
-    <string name="autotune_warning">Внимание :</string>
     <string name="autotune_select_profile">Изберете профил за настройка</string>
-    <string name="autotune_ic_warning">Избраният профил е с въглехидратно число %1$d. Аутотюн ще използва въглехидратно число %2$.2f гр/Е</string>
-    <string name="autotune_isf_warning">Избраният профил е с инсулинова чувствителност %1$d. Autotune ще използва инсулинова чувствителност %2$.1f %3$s/U</string>
-    <string name="autotune_error">Грешка във въведените данни, опитайте се отново да стартирате Autotune или да намалите броя на дните</string>
-    <string name="autotune_error_more_days">Грешка във въведените данни, увеличете броя дни</string>
-    <string name="autotune_warning_during_run">Autotune започна изчисления, моля изчакайте</string>
-    <string name="autotune_warning_after_run">Проверете резултатите внимателно, преди да ги използвате!</string>
-    <string name="autotune_partial_result">Частичен резултат ден %1$d / %2$d настроен</string>
-    <string name="autotune_result">Резултат: %1$s</string>
-    <string name="autotune_param">Параметър</string>
-    <string name="autotune_percent">%</string>
-    <string name="autotune_missing">Липсва</string>
-    <string name="autotune_profile_name">Autotune профил %1$s</string>
-    <string name="autotune_run">Стартирай Autotune</string>
-    <string name="autotune_check_input_profile_button">Провери зададен профил</string>
-    <string name="autotune_compare_profile">Сравняване на профили</string>
-    <string name="autotune_copy_localprofile_button">Копиране в основен профил</string>
-    <string name="autotune_update_input_profile_button">Обновяване на начален профил</string>
-    <string name="autotune_revert_input_profile_button">Възстановяване на начален профил</string>
-    <string name="autotune_copy_local_profile_message">Създаване на нов основен профил от този Autotune профил?</string>
-    <string name="autotune_update_local_profile_message">Да се обнови ли %1$s профил с Autotune профил?</string>
-    <string name="autotune_revert_local_profile_message">Сменете профил %1$s с началния профил?</string>
-    <string name="autotune_profile_invalid">Невалиден профил</string>
-    <string name="autotune_run_without_autoswitch">Стартиране на Autotune без смяна на профила</string>
-    <string name="autotune_run_with_autoswitch">Стартиране на Autotune и автоматична смяна на профила</string>
-    <string name="autotune_run_with_error">Възникна грешка по време на последното стартиране на Autotune</string>
-    <string name="autotune_run_cancelled">Друго стартиране на Autotune е засечено, текущото е отказано</string>
     <!-- Alerts -->
     <string name="raise_notifications_as_android_notifications">Използвай системни известия за аларми и съобщения</string>
     <string name="urgent_alarm">Спешна аларма</string>
@@ -526,7 +480,6 @@
     <string name="limitingpercentrate">Ограничаване на максималната процентна стойност до %1$d%% поради %2$s</string>
     <string name="itmustbepositivevalue">трябва да бъде положително число</string>
     <string name="limitingbolus">Ограничаване на болус до %1$.1f Е поради %2$s</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Потвърждение</string>
     <string name="message">Съобщение</string>
@@ -538,6 +491,8 @@
     <string name="close">Затвори</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Парола, която е била използвана за криптиране на експортираните настройки.</string>
+    <!-- <unattended_export> -->
+    <!-- <unattended_export result messages> -->
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">понижение %1$s с %2$s</string>
     <string name="a11y_plus_button_description">увеличение %1$s с %2$s</string>

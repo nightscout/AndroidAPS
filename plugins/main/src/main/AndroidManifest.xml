@@ -31,10 +31,6 @@
         <service android:name=".general.persistentNotification.DummyService" />
 
         <service
-            android:name=".general.overview.notifications.DismissNotificationService"
-            android:exported="false" />
-
-        <service
             android:name="app.aaps.plugins.sync.wear.wearintegration.DataLayerListenerServiceMobile"
             android:exported="true">
             <intent-filter>

@@ -48,7 +48,6 @@
     <string name="alarm_expired">Išsijungė</string>
     <string name="alarm_reservoir_empty">Rezervuaras tuščias</string>
     <string name="alarm_patch_fault">Rezervuaro klaida</string>
-    <string name="alarm_patch_fault2">Rezerv. klaida 2</string>
     <string name="alarm_base_fault">Pagrindo klaida</string>
     <string name="alarm_battery_out">Tuščia baterija</string>
     <string name="alarm_no_calibration">Nėra kalibracijos</string>
@@ -105,7 +104,6 @@
     <string name="sn_input_title">Serijos numeris</string>
     <string name="sn_input_summary">Įveskite pompos pagrindo serijos numerį.</string>
     <string name="sn_input_invalid">Neteisingas serijos numeris!</string>
-    <string name="pump_unsupported">Pompa netestuota: %1$d! Susisiekite su mumis Discord arba Github kanalais</string>
     <string name="alarm_setting_title">Aliarmų nustatymai</string>
     <string name="alarm_setting_summary">Pasirinkite pompos aliarmų nustatymus</string>
     <string name="patch_expiration_title">Rezervuaras išsijungs</string>
@@ -119,4 +117,5 @@
     <string name="getting_bolus_status">Gaunamas boluso statusas</string>
     <string name="getting_temp_basal_status">Gaunamas laikinos bazės statusas</string>
     <string name="setting_pump_settings">Naudotojo nustatymai</string>
+    <!-- bolus-->
 </resources>

@@ -1,7 +1,6 @@
 <configuration>
     <!-- Create a file appender for a log in the application's data directory -->
-    <property name="EXT_FILES_DIR" scope="context"
-        value="${EXT_DIR:-/sdcard}/AAPS/logs/${PACKAGE_NAME}" />
+    <property name="EXT_FILES_DIR" scope="context" value="${EXT_DIR:-/sdcard}" />
     <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${EXT_FILES_DIR}/AndroidAPS.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">

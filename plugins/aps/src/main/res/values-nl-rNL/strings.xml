@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Autotune-->
     <string name="dynisf_adjust_sensitivity">Inschakelen van TDD gebaseerde gevoeligheid ratio voor basaal en glucose doel aanpassingen</string>
     <string name="dynisf_adjust_sensitivity_summary">Gebruikt de laatste 24u TDD/7D om de gevoeligheid te berekenen voor het verhogen of verlagen van de basaalstand en past het glucosedoel aan als deze opties zijn ingeschakeld, op dezelfde manier als Autosens dat doet. Advies is om te starten met deze optie uitgeschakeld</string>
-    <string name="DynISFAdjust_title" formatted="false">Dynamische Isf aanpassingsfactor %</string>
-    <string name="DynISFAdjust_summary" formatted="false">Aanpassingsfactor voor DynamicISF. Stel meer dan 100% in voor een agressievere correctie en minder dan 100% voor minder agressieve correctie.</string>
+    <string name="dyn_isf_adjust_title" formatted="false">DynamicISF Aanpassing Factor %</string>
+    <string name="dyn_isf_adjust_summary" formatted="false">Aanpassingsfactor voor DynamicISF. Stel meer dan 100% in voor een agressievere correctie en minder dan 100% voor minder agressieve correctie.</string>
     <string name="high_temptarget_raises_sensitivity_title">Hoog tijdelijk streefdoel verhoogt gevoeligheid</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Verhogen van de gevoeligheid voor temptargets > = 100]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Laag tijdelijk streefdoel verlaagt gevoeligheid</string>
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Lagere gevoeligheid voor temptargets < 100]]></string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamische ISF</string>
+    <string name="openaps_auto_isf">Auto ISF</string>
     <string name="smb_interval_summary">Tijdsinterval in minuten tussen afgeven van SMBs</string>
     <string name="resistance_lowers_target_title">Resistentie verlaagt het doel</string>
     <string name="resistance_lowers_target_summary">Wanneer insulineresistentie wordt gedetecteerd, wordt het BG streefdoel verlaagd</string>
@@ -19,6 +21,7 @@
     <string name="openapsma_no_glucose_data">Geen BG gegevens beschikbaar</string>
     <string name="openaps_no_as_data">Geen autosens-gegevens beschikbaar</string>
     <string name="dynisf_shortname">DYNISF</string>
+    <string name="autoisf_shortname">AUTOISF</string>
     <string name="executing">Uitvoeren</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Array van %1$d elementen. \nActuele waarde:</string>
@@ -26,6 +29,7 @@
     <string name="description_ama">Het algoritme uit 2017</string>
     <string name="description_smb">Meest recente algoritme voor gevorderde gebruikers</string>
     <string name="description_smb_dynamic_isf">Meest recente algoritme voor gevorderde gebruikers met dynamische/automatische ISF</string>
+    <string name="description_auto_isf">Meest recente algoritme voor gevorderde gebruikers met AutoISF uitbreidingen</string>
     <string name="openapsama_bolus_snooze_dia_divisor">Bolus snooze dia deler</string>
     <string name="openapsma_run">Nu uitvoeren</string>
     <string name="openapsma_last_run_label">Laatste berekening</string>
@@ -62,9 +66,9 @@
     <string name="enable_smb_summary">Gebruik Super Micro Bolussen in plaats van tijdelijke basaalstanden voor een snellere reactie</string>
     <string name="enable_uam_summary">Detectie van niet aangekondigde (UnAnnounced) Maaltijden</string>
     <string name="enable_smb_always">Activeer SMB altijd</string>
-    <string name="enable_smb_always_summary">Zet SMB altijd aan, onafhankelijk van bolussen. Enkel mogelijk met een BG bron met goed gefilterde data zoals de G5 of G6</string>
+    <string name="enable_smb_always_summary">Activeer SMB altijd onafhankelijk van COB, tijdelijke streefdoelen of bolussen. Alleen mogelijk bij BG bronnen met geavanceerd filteren van gegevens</string>
     <string name="enable_smb_after_carbs">Activeer SMB na koolhydraten</string>
-    <string name="enable_smb_after_carbs_summary">SMB actief gedurende 6u, zelfs met 0 COB. Enkel mogelijk met een BG bron met goed gefilterde data zoals de G5 of G6</string>
+    <string name="enable_smb_after_carbs_summary">Activeer SMB gedurende 6 uur na koolhydraten, zelfs met 0 COB. Alleen mogelijk bij BG bronnen met geavanceerd filteren van gegevens</string>
     <string name="enable_smb_with_cob">Activeer SMB met Koolhydraten</string>
     <string name="enable_smb_with_cob_summary">SMB actief tijdens actieve koolhydraten</string>
     <string name="enable_smb_with_temp_target">Gebruik SMB met tijdelijke streefdoelen</string>
@@ -84,7 +88,8 @@
     <string name="smb_disabled_in_preferences">SMB gedeactiveerd in de instellingen</string>
     <string name="uam_disabled_in_preferences">UAM gedeactiveerd in de instellingen</string>
     <string name="autosens_disabled_in_preferences">Autosens gedeactiveerd in de instellingen</string>
-    <string name="autosens_disabled_in_dyn_isf">Autosens uitgeschakeld in DynISF</string>
+    <string name="use_dynamic_sensitivity_title">Activeer dynamische gevoeligheid</string>
+    <string name="use_dynamic_sensitivity_summary">Pas algoritme aan om dynamische gevoeligheid te gebruiken in plaats van profielwaarde</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">IOB gelimiteerd tot %1$.1f E doordat %2$s</string>
     <string name="maxvalueinpreferences">Maximum waarde in instellingen</string>
@@ -117,4 +122,86 @@
     <string name="loop_open_mode_min_change">Minimale aanvraag wijziging [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Open Loop zal alleen een wijzigingsverzoek tonen als de verandering groter is dan deze waarde in %. De standaard waarde is 20%</string>
     <string name="fallback_smb_no_tdd">Terugvallen naar SMB. Niet genoeg TDD gegevens.</string>
+    <string name="fallback_to_isf_no_tdd">Terugval naar profiel gevoeligheid. Niet genoeg gegevens. Reden: %1$s</string>
+    <!-- Autotune -->
+    <string name="autotune_description">Hulp voor mogelijke aanpassingen van het profiel (ISF, koolhydraten en basaal insuline)</string>
+    <string name="autotune_shortname">AT</string>
+    <string name="autotune_settings">Autotune instellingen</string>
+    <string name="autotune_auto_title">Automatisering Profiel Wissel</string>
+    <string name="autotune_auto_summary">Indien ingeschakeld, wordt Autotune automatisch bijgewerkt en overschakelen naar invoerprofiel na de berekening van een automatiseringsregel.</string>
+    <string name="autotune_categorize_uam_as_basal_title">UAM als basaal categoriseren</string>
+    <string name="autotune_categorize_uam_as_basal_summary">Alleen inschakelen als u betrouwbaar alle koolhydraten ingevoerd en hebt opgegeten, met deze optie zullen plotselinge stijgingen van Autotune worden gebruikt om wijzigingen in de basaalstand aan te bevelen.</string>
+    <string name="autotune_tune_insulin_curve_title">Insuline curve afstellen</string>
+    <string name="autotune_tune_insulin_curve_summary">Alleen inschakelen als je free peak gebruikt. Deze optie zal piek en DIA afstemmen</string>
+    <string name="autotune_default_tune_days_title">Aantal dagen data</string>
+    <string name="autotune_circadian_ic_isf_title">Gemiddelde resultaat toepassen in circadiaan IC/ISF</string>
+    <string name="autotune_circadian_ic_isf_summary">Autotune zal de circadian (bioritme) variaties niet afstemmen, deze optie past alleen de gemiddelde tuning van IC en ISF toe op uw circadian invoerprofiel</string>
+    <string name="autotune_additional_log_title">Meer log-informatie voor foutopsporing toevoegen</string>
+    <string name="autotune_additional_log_summary">Schakel alleen in op verzoek van een onwikkelaar om meer log-informatie te sturen om Autotune plugin te helpen debuggen</string>
+    <string name="autotune_default_tune_days_summary">Standaard aantal dagen aan gegevens dat Autotune moet verwerken (tot 30)</string>
+    <string name="autotune_tunedprofile_name">Tuned</string>
+    <string name="autotune_profile">Profiel :</string>
+    <string name="autotune_last_run">Laatste berekening :</string>
+    <string name="autotune_warning">Waarschuwing :</string>
+    <string name="autotune_ic_warning">Het geselecteerde profiel heeft %1$d IC waarden. Autotune gebruikt %2$.2f g/E</string>
+    <string name="autotune_isf_warning">Het geselecteerde profiel heeft %1$d ISF waarden. Autotune gebruikt %2$.1f %3$s/E</string>
+    <string name="autotune_error">Fout in invoergegevens, probeer autotune opnieuw te starten of het aantal dagen te verminderen</string>
+    <string name="autotune_error_more_days">Fout in invoergegevens, verhoog het aantal dagen</string>
+    <string name="autotune_warning_during_run">Autotune berekening gestart, even geduld a.u.b.</string>
+    <string name="autotune_warning_after_run">Controleer de resultaten zorgvuldig voordat u het gebruikt!</string>
+    <string name="autotune_partial_result">Gedeeltelijk resultaat dag %1$d / %2$d afgestemd</string>
+    <string name="autotune_result">Resultaat: %1$s</string>
+    <string name="autotune_param">Parameter</string>
+    <string name="autotune_percent">%</string>
+    <string name="autotune_missing">Ontbreekt</string>
+    <string name="autotune_run">Autotune uitvoeren</string>
+    <string name="autotune_check_input_profile_button">Controleer invoerprofiel</string>
+    <string name="autotune_compare_profile">Vergelijk profielen</string>
+    <string name="autotune_copy_localprofile_button">Kopiëren naar lokaal profiel</string>
+    <string name="autotune_update_input_profile_button">Invoerprofiel bijwerken</string>
+    <string name="autotune_revert_input_profile_button">Invoerprofiel ongedaan maken</string>
+    <string name="autotune_copy_local_profile_message">Een lokaal profiel van dit Autotune profiel aanmaken?</string>
+    <string name="autotune_update_local_profile_message">Profiel %1$s bijwerken met Autotune Profiel?</string>
+    <string name="autotune_revert_local_profile_message">Profiel %1$s terugzetten met invoerprofiel?</string>
+    <string name="autotune_profile_invalid">Profiel ongeldig</string>
+    <string name="not_available_full">Niet beschikbaar</string>
+    <string name="pump_disconnected">Pomp niet verbonden</string>
+    <!--    autoISF -->
+    <string name="half_basal_exercise_target_title">Halve basaal bewegingsdoel</string>
+    <string name="half_basal_exercise_target_summary">Stel in op nummer, b.v. 160, wat betekent dat wanneer een tijdelijk streefdoel op 160 mg/dL is ingesteld en \"Hoog tijdelijk streefdoel verhoogt gevoeligheid\"=aan, zal basaal op 50%% worden ingesteld (120 = 75%%; 140 = 60%%).</string>
+    <string name="autoISF_settings_title">AutoISF instellingen</string>
+    <string name="autoISF_settings_summary">AutoISF maakt het mogelijk om de insulinegevoeligheidsfactor (ISF) aan te passen in verschillende scenario\'s van glucosedrag\n\nHet kan ook de SMB leveringsinstellingen aanpassen</string>
+    <string name="smb_delivery_settings_title">SMB leveringsinstellingen</string>
+    <string name="smb_delivery_settings_summary">Set van opties om de actuele SMB grootte te verhogen die kan worden geleverd in situaties waar ISF is versterkt, dwz een vrij laag ISF cijfer.\n\nGEBRUIK MET VOORZICHTIGHEID</string>
+    <string name="openapsama_enable_autoISF">ISF aanpassing op basis van glucose gedrag inschakelen</string>
+    <string name="openapsama_autoISF_max_summary">Vergelijkbaar met autosens_max definieert dit hoe sterk ISF kan worden.\n\nDe standaard waarde 1.0 schakelt dit effect effectief uit.\n\nWAARSCHUWING: Wees extreem voorzichtig bij het gebruik van waarden boven de 2,5</string>
+    <string name="openapsama_autoISF_min_summary">Vergelijkbaar met autosens_min definieert dit hoe zwak ISF kan worden.\n\nDe standaard waarde 1.0 schakelt dit effect effectief uit.</string>
+    <string name="openapsama_dura_ISF_weight_summary">Dit is het gewicht dat wordt toegepast wanneer de glucose gedurende langere tijd verhoogd blijft waardoor ISF wordt versterkt en de insulinetoediening mogelijk toeneemt.\n\nDe standaardwaarde 0.0 schakelt dit effect effectief uit.</string>
+    <string name="openapsama_lower_ISFrange_weight_summary">Dit is het gewicht dat wordt toegepast wanneer de glucose lager dan de doelwaarde is, wat ISF verzwakt en hiermee mogelijk de insulinetoediening verlaagd.\n\nDe standaardwaarde 0.0 schakelt dit effect effectief uit.</string>
+    <string name="openapsama_higher_ISFrange_weight_summary">Dit is het gewicht dat wordt toegepast wanneer de glucose hoger dan de doelwaarde is, wat ISF versterkt en hiermee mogelijk de insulinetoediening verhoogd.\n\nDe standaardwaarde 0.0 schakelt dit effect effectief uit.</string>
+    <string name="openapsama_pp_ISF_weight_summary">Dit is het gewicht dat wordt toegepast bij een stijgende glucose waardoor ISF versterkt wordt en de insulinetoediening mogelijk verhoogt.\n\nDe standaardwaarde 0.0 schakelt dit effect effectief uit.</string>
+    <string name="openapsama_bgAccel_ISF_weight_summary">Dit is het gewicht dat wordt toegepast wanneer de glucose waarde aan het versnellen is waardoor ISF versterkt en de insulinetoediening mogelijk toeneemt.\n\nDe standaardwaarde 0.0 schakelt dit effect effectief uit.</string>
+    <string name="openapsama_bgBrake_ISF_weight_summary">Dit is het gewicht dat wordt toegepast wanneer de glucose waarde aan het vertragen is waardoor ISF verzwakt en de insulinetoediening mogelijk vermindert.\n\nDe standaardwaarde 0.0 schakelt dit effect effectief uit.</string>
+    <string name="openapsama_autoISF_max">Max autoISF verhouding\n(autoISF_max)</string>
+    <string name="openapsama_autoISF_min">Min autoISF ratio\n(autoISF_min)</string>
+    <string name="openapsama_lower_ISFrange_weight">lager ISF-bereik gewicht\n(lower_ISFrange_weight)</string>
+    <string name="openapsama_higher_ISFrange_weight">hoger ISF-bereik gewicht\n(lhigher_ISFrange_weight)</string>
+    <string name="openapsama_pp_ISF_weight">ISF gewicht na maaltijd\n(pp_ISF_weight)</string>
+    <string name="openapsama_bgAccel_ISF_weight">Gewicht wanneer BG accelereert\n(bgAccel_ISF_weight)</string>
+    <string name="openapsama_bgBrake_ISF_weight">Gewicht wanneer BG afremt\n(bgBrake_ISF_weight)</string>
+    <string name="openapsama_dura_ISF_weight">dura_ISF weight\n(dura_ISF_weight)</string>
+    <string name="openapsama_smb_delivery_ratio">vaste SMB uitleveringsverhouding\n(smb_delivery_ratio)</string>
+    <string name="openapsama_smb_delivery_ratio_min">variabele SMB leveringsverhouding, ondergrens\n(smb_delivery_ratio_min)</string>
+    <string name="openapsama_smb_delivery_ratio_max">variabele SMB leveringsverhouding, bovengrens\n(smb_delivery_ratio_max)</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range">variabele SMB leveringsverhouding, gekoppelde glucosebereik\n(smb_delivery_ratio_bg_range)</string>
+    <string name="openapsama_smb_max_range_extension">SMB/UAM max bereik extensie\n(smb_max_range_extension)</string>
+    <string name="openapsama_smb_delivery_ratio_summary">Standaardwaarde: 0,5 Dit is een andere instelling voor de veiligheid van OpenAPS, en geeft aan welk deel van de benodigde totale insuline kan worden geleverd als SMB. Dit om te voorkomen dat mensen in een gevaarlijk situatie terechtkomen wanneer tegelijkertijd SMB verzoeken via een telefoon van een verzorger binnenkomen. Verhoog deze experimentele waarde langzaam en met voorzichtigheid.</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">Standaard waarde: 0.5 Dit is het ondergrens van een lineaire verhoging ratio in plaats van de bovenstaande vaste waarde.</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">Standaard waarde: 0.5 Dit is het bovengrens van een lineaire verhoging ratio in plaats van de bovenstaande vaste waarde.</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range_summary">Standaard waarde: 0. De lineaire verhoging van de SMB uitgangsratio wordt gekoppeld aan de glucose waarde [target_bg, target_bg+bg_range].\nOp target_bg is de SMB verhouding smb_delivery_ratio_min, op target_bg+bg_bereik is smb_delivery_ratio_max\nMet 0 is de lineaire verhoging SMB ratio uitgeschakeld en wordt de vaste smb_delivery_ratio gebruikt.</string>
+    <string name="openapsama_smb_max_range_extension_summary">Standaardwaarde: 1 Dit is een andere instelling voor de veiligheid van OpenAPS, en geeft aan met welke factor je de gebruikelijke 120 maxSMB/maxUAM minuten kunt overschrijden. Verhoog deze experimentele waarde langzaam en met voorzichtigheid.</string>
+    <string name="enableSMB_EvenOn_OddOff_always">Inschakelen van SMB afhankelijk van het feit dat het huidige doel een even getal is</string>
+    <string name="enableSMB_EvenOn_OddOff_always_summary">\ningeschakeld...\nals actief doel (mmol/L) een even decimaal\nheeft of het actieve doel (mg/dL) een even getal is\n\nanders uitgeschakeld</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Percentage van maxIOB waarbij SMB\'s worden uitgeschakeld.\nStandaardwaarde: 100%\nMet 100% wordt deze functie effectief uitgeschakeld.</string>
+    <string name="openapsama_iob_threshold_percent">maxIOB drempelpercentage voor SMB\n(iob_threshold_percent)</string>
 </resources>

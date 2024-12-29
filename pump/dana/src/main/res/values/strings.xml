@@ -1,20 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="key_danars_address" translatable="false">danars_address</string>
-    <string name="key_danars_name" translatable="false">danars_name</string>
-    <string name="key_danar_password" translatable="false">danar_password</string>
-    <string name="key_danars_password" translatable="false">danars_password</string>
-    <string name="key_danars_bolusspeed" translatable="false">danars_bolusspeed</string>
-    <string name="key_danars_pairingkey" translatable="false">danars_pairing_key_</string>
-    <string name="key_danars_v3_randompairingkey" translatable="false">danars_v3_randompairing_key_</string>
-    <string name="key_danars_v3_pairingkey" translatable="false">danars_v3_pairing_key_</string>
-    <string name="key_danars_v3_randomsynckey" translatable="false">danars_v3_randomsync_key_</string>
-    <string name="key_dana_ble5_pairingkey" translatable="false">dana_ble5_pairingkey</string>
-    <string name="key_rs_logcanulachange" translatable="false">rs_logcanulachange</string>
-    <string name="key_rs_loginsulinchange" translatable="false">rs_loginsulinchange</string>
-    <string name="key_rs_last_clear_key_request" translatable="false">rs_last_clear_key_request</string>
-    <string name="key_danar_bt_name" translatable="false">danar_bt_name</string>
-
     <string name="danars_pairing">Pairing</string>
     <string name="danars_no_device_available">No device found so far</string>
     <string name="danars_pairingok">Pairing OK</string>
@@ -108,7 +93,6 @@
     <string name="danar_disableeasymode">Disable EasyUI mode in pump</string>
     <string name="profile_set_failed">Setting of basal profile failed</string>
     <string name="danar_bluetooth_status">Bluetooth status</string>
-    <string name="danar_iob_label">Pump IOB</string>
     <string name="firmware_label">Firmware</string>
     <string name="danar_pump_settings">Dana pump settings</string>
     <string name="time_format_12h">12h</string>
@@ -118,7 +102,7 @@
     <string name="danar_bt_name_title">DanaR Bluetooth device</string>
     <string name="danars_password_title">Pump password (v1 only)</string>
     <string name="danar_password_title">Pump password</string>
-    <string name="danar_useextended_title">Use extended boluses for >200%%</string>
+    <string name="danar_useextended_title">Use extended boluses for >200%</string>
     <string name="bolusspeed">Bolus speed</string>
     <string name="selectedpump">Selected pump</string>
     <string name="rs_loginsulinchange_title">Log reservoir change</string>

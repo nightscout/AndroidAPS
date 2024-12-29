@@ -1,8 +1,8 @@
 package app.aaps.core.nssdk.mapper
 
-import com.google.gson.Gson
 import app.aaps.core.nssdk.localmodel.food.NSFood
 import app.aaps.core.nssdk.remotemodel.RemoteFood
+import com.google.gson.Gson
 
 /**
  * Convert to [RemoteFood] and back to [NSFood]
@@ -27,8 +27,8 @@ internal fun RemoteFood.toNSFood(): NSFood? {
                 srvModified = srvModified,
                 srvCreated = srvCreated,
                 subject = subject,
-                isReadOnly = isReadOnly ?: false,
-                isValid = isValid ?: true,
+                isReadOnly = isReadOnly == true,
+                isValid = isValid != false,
                 name = name,
                 category = category,
                 subCategory = subcategory,

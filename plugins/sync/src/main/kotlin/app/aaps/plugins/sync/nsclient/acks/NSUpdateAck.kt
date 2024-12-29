@@ -3,7 +3,6 @@ package app.aaps.plugins.sync.nsclient.acks
 import androidx.work.OneTimeWorkRequest
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.Event
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.utils.receivers.DataWorkerStorage
@@ -18,9 +17,8 @@ import org.json.JSONObject
  */
 class NSUpdateAck(
     val action: String,
-    var _id: String,
+    @Suppress("PropertyName") var _id: String,
     private val aapsLogger: AAPSLogger,
-    private val rxBus: RxBus,
     private val nsClientService: NSClientService,
     private val dateUtil: DateUtil,
     private val dataWorkerStorage: DataWorkerStorage,

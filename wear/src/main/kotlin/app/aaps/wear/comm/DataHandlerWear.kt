@@ -1,6 +1,5 @@
 package app.aaps.wear.comm
 
-import android.annotation.TargetApi
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -22,6 +21,10 @@ import app.aaps.core.interfaces.rx.events.EventWearDataToMobile
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.Preferences
 import app.aaps.wear.R
 import app.aaps.wear.interaction.WatchfaceConfigurationActivity
 import app.aaps.wear.interaction.actions.AcceptActivity
@@ -30,6 +33,7 @@ import app.aaps.wear.interaction.utils.Persistence
 import app.aaps.wear.tile.ActionsTileService
 import app.aaps.wear.tile.QuickWizardTileService
 import app.aaps.wear.tile.TempTargetTileService
+import app.aaps.wear.tile.UserActionTileService
 import com.google.android.gms.wearable.WearableListenerService
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -42,6 +46,7 @@ class DataHandlerWear @Inject constructor(
     private val rxBus: RxBus,
     private val aapsSchedulers: AapsSchedulers,
     private val sp: SP,
+    private val preferences: Preferences,
     private val aapsLogger: AAPSLogger,
     private val persistence: Persistence
 ) {
@@ -121,7 +126,7 @@ class DataHandlerWear @Inject constructor(
             .toObservable(EventData.Status::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe {
-                aapsLogger.debug(LTag.WEAR, "Status received from ${it.sourceNodeId}")
+                aapsLogger.debug(LTag.WEAR, "Status${it.dataset} received from ${it.sourceNodeId}")
                 persistence.store(it)
                 LocalBroadcastManager.getInstance(context).sendBroadcast(Intent(DataLayerListenerServiceWear.INTENT_NEW_DATA))
             }
@@ -129,7 +134,7 @@ class DataHandlerWear @Inject constructor(
             .toObservable(EventData.SingleBg::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe {
-                aapsLogger.debug(LTag.WEAR, "SingleBg received from ${it.sourceNodeId}")
+                aapsLogger.debug(LTag.WEAR, "SingleBg${it.dataset} received from ${it.sourceNodeId}")
                 persistence.store(it)
             }
         disposable += rxBus
@@ -151,22 +156,20 @@ class DataHandlerWear @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe {
                 aapsLogger.debug(LTag.WEAR, "Preferences received from ${it.sourceNodeId}")
-                if (it.wearControl != sp.getBoolean(R.string.key_wear_control, false)) {
-                    sp.putBoolean(R.string.key_wear_control, it.wearControl)
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        TileService.getUpdater(context).requestUpdate(ActionsTileService::class.java)
-                        TileService.getUpdater(context).requestUpdate(TempTargetTileService::class.java)
-                        TileService.getUpdater(context).requestUpdate(QuickWizardTileService::class.java)
-                    }
+                if (it.wearControl != preferences.get(BooleanKey.WearControl)) {
+                    preferences.put(BooleanKey.WearControl, it.wearControl)
+                    TileService.getUpdater(context).requestUpdate(ActionsTileService::class.java)
+                    TileService.getUpdater(context).requestUpdate(TempTargetTileService::class.java)
+                    TileService.getUpdater(context).requestUpdate(QuickWizardTileService::class.java)
                 }
                 sp.putBoolean(R.string.key_units_mgdl, it.unitsMgdl)
                 sp.putInt(R.string.key_bolus_wizard_percentage, it.bolusPercentage)
                 sp.putInt(R.string.key_treatments_safety_max_carbs, it.maxCarbs)
                 sp.putDouble(R.string.key_treatments_safety_max_bolus, it.maxBolus)
-                sp.putDouble(app.aaps.core.interfaces.R.string.key_insulin_button_increment_1, it.insulinButtonIncrement1)
-                sp.putDouble(app.aaps.core.interfaces.R.string.key_insulin_button_increment_2, it.insulinButtonIncrement2)
-                sp.putInt(R.string.key_carbs_button_increment_1, it.carbsButtonIncrement1)
-                sp.putInt(R.string.key_carbs_button_increment_2, it.carbsButtonIncrement2)
+                preferences.put(DoubleKey.OverviewInsulinButtonIncrement1, it.insulinButtonIncrement1)
+                preferences.put(DoubleKey.OverviewInsulinButtonIncrement2, it.insulinButtonIncrement2)
+                preferences.put(IntKey.OverviewCarbsButtonIncrement1, it.carbsButtonIncrement1)
+                preferences.put(IntKey.OverviewCarbsButtonIncrement2, it.carbsButtonIncrement2)
             }
         disposable += rxBus
             .toObservable(EventData.QuickWizard::class.java)
@@ -176,8 +179,18 @@ class DataHandlerWear @Inject constructor(
                 val serialized = it.serialize()
                 if (serialized != sp.getString(R.string.key_quick_wizard_data, "")) {
                     sp.putString(R.string.key_quick_wizard_data, serialized)
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                        TileService.getUpdater(context).requestUpdate(QuickWizardTileService::class.java)
+                    TileService.getUpdater(context).requestUpdate(QuickWizardTileService::class.java)
+                }
+            }
+        disposable += rxBus
+            .toObservable(EventData.UserAction::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe {
+                aapsLogger.debug(LTag.WEAR, "UserAction received from ${it.sourceNodeId}")
+                val serialized = it.serialize()
+                if (serialized != sp.getString(R.string.key_user_action_data, "")) {
+                    sp.putString(R.string.key_user_action_data, serialized)
+                    TileService.getUpdater(context).requestUpdate(UserActionTileService::class.java)
                 }
             }
         disposable += rxBus
@@ -226,9 +239,7 @@ class DataHandlerWear @Inject constructor(
         val vibrate = sp.getBoolean("vibrateOnBolus", true)
         vibratePattern = if (vibrate) longArrayOf(0, 50, 1000) else longArrayOf(0, 1, 1000)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            createBolusProgressChannels()
-        }
+        createBolusProgressChannels()
         val cancelIntent = Intent(context, DataLayerListenerServiceWear::class.java)
         cancelIntent.action = DataLayerListenerServiceWear.INTENT_CANCEL_BOLUS
         val cancelPendingIntent = PendingIntent.getService(context, 0, cancelIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
@@ -254,7 +265,7 @@ class DataHandlerWear @Inject constructor(
         }
     }
 
-    @TargetApi(value = 26) private fun createBolusProgressChannels() {
+    private fun createBolusProgressChannels() {
         createNotificationChannel(
             longArrayOf(0, 50, 1000),
             DataLayerListenerServiceWear.AAPS_NOTIFY_CHANNEL_ID_BOLUS_PROGRESS,
@@ -271,7 +282,7 @@ class DataHandlerWear @Inject constructor(
         )
     }
 
-    @TargetApi(value = 26) private fun createNotificationChannel(vibratePattern: LongArray, channelID: String, name: CharSequence, description: String, importance: Int) {
+    private fun createNotificationChannel(vibratePattern: LongArray, channelID: String, name: CharSequence, description: String, importance: Int) {
         val channel = NotificationChannel(channelID, name, importance)
         channel.description = description
         channel.enableVibration(true)
@@ -286,17 +297,15 @@ class DataHandlerWear @Inject constructor(
     private fun handleOpenLoopRequest(command: EventData.OpenLoopRequest) {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name: CharSequence = "AAPS Open Loop"
-            val description = "Open Loop request notification"
-            val channel = NotificationChannel(DataLayerListenerServiceWear.AAPS_NOTIFY_CHANNEL_ID_OPEN_LOOP, name, NotificationManager.IMPORTANCE_HIGH)
-            channel.description = description
-            channel.enableVibration(true)
+        val name: CharSequence = "AAPS Open Loop"
+        val description = "Open Loop request notification"
+        val channel = NotificationChannel(DataLayerListenerServiceWear.AAPS_NOTIFY_CHANNEL_ID_OPEN_LOOP, name, NotificationManager.IMPORTANCE_HIGH)
+        channel.description = description
+        channel.enableVibration(true)
 
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            context.getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
-        }
+        // Register the channel with the system; you can't change the importance
+        // or other notification behaviors after this
+        context.getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
         @Suppress("DEPRECATION")
         var builder = NotificationCompat.Builder(context, DataLayerListenerServiceWear.AAPS_NOTIFY_CHANNEL_ID_OPEN_LOOP)
             .setSmallIcon(R.drawable.notif_icon)

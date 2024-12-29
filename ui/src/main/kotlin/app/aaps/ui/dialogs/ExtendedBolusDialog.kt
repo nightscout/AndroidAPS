@@ -5,6 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -15,17 +18,15 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.SafeParse
-import app.aaps.core.main.constraints.ConstraintObject
-import app.aaps.core.main.utils.extensions.formatColor
+import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.core.objects.extensions.formatColor
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.HtmlHelper
-import app.aaps.database.entities.UserEntry
-import app.aaps.database.entities.ValueWithUnit
-import com.google.common.base.Joiner
-import dagger.android.HasAndroidInjector
 import app.aaps.ui.R
 import app.aaps.ui.databinding.DialogExtendedbolusBinding
+import com.google.common.base.Joiner
+import dagger.android.HasAndroidInjector
 import java.text.DecimalFormat
 import java.util.LinkedList
 import javax.inject.Inject
@@ -105,9 +106,11 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.extended_bolus), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                 uel.log(
-                    UserEntry.Action.EXTENDED_BOLUS, UserEntry.Sources.ExtendedBolusDialog,
-                    ValueWithUnit.Insulin(insulinAfterConstraint),
-                    ValueWithUnit.Minute(durationInMinutes)
+                    action = Action.EXTENDED_BOLUS, source = Sources.ExtendedBolusDialog,
+                    listValues = listOf(
+                        ValueWithUnit.Insulin(insulinAfterConstraint),
+                        ValueWithUnit.Minute(durationInMinutes)
+                    )
                 )
                 commandQueue.extendedBolus(insulinAfterConstraint, durationInMinutes, object : Callback() {
                     override fun run() {

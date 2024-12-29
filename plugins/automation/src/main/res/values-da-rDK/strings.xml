@@ -104,8 +104,6 @@
     <string name="automation_event">Automatiserings event</string>
     <string name="reorder_label">Omorganisering</string>
     <string name="user_action">Brugerhandling</string>
-    <string name="remove_automation">Fjern automatisering</string>
-    <string name="sort_automation">Sortér automatisering</string>
     <string name="remove_selected_items">Fjern valgte emner</string>
     <string name="count_selected">%1$d valgt</string>
     <string name="system_automation">System automatisering</string>
@@ -116,4 +114,10 @@
     <string name="time_to_eat">Tid til at spise!\nBrug Bolusguiden og beregn igen.</string>
     <string name="time_to_bolus">Tid til bolus!\nKør Bolus-guiden og lav beregningen igen.</string>
     <string name="error_setting_reminder">Fejl under indstilling af fremtidig alarm</string>
+    <!--    Autotune-->
+    <string name="autotune_run">Kør Autotune</string>
+    <string name="autotune_run_without_autoswitch">Autotune kørt uden profilskift</string>
+    <string name="autotune_run_with_autoswitch">Autotune kørte og profilen blev automatisk skiftet</string>
+    <string name="autotune_run_with_error">Fejl under sidste Autotune kørsel</string>
+    <string name="autotune_run_cancelled">Autotune kører allerede, annulleret</string>
 </resources>

@@ -2,9 +2,6 @@
 <resources>
     <!-- PumoCommon - Pump Abstract -->
     <string name="pump_operation_not_supported_by_pump_driver">Operació no compatible amb la bomba i/o controlador.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">Operació no compatible ENCARA amb la bomba.</string>
-    <string name="common_resultok">OK</string>
-    <string name="pump_serial_number">Número de sèrie bomba</string>
     <!-- PumpCommon - Pump Status -->
     <string name="pump_status_suspended">En pausa</string>
     <!-- PumpCommon - History Group -->
@@ -27,26 +24,9 @@
     <string name="ble_config_scan_scanning">Escanejant</string>
     <string name="ble_config_scan_finished">Escaneig finalitzat</string>
     <string name="ble_config_scan_error">Error d\'escaneig: %1$d</string>
-    <string name="ble_config_connected_never">Mai</string>
     <string name="ble_config_remove">Eliminar</string>
-    <!-- BLE Errors -->
-    <string name="ble_error_bt_disabled">Bluetooth desactivat</string>
-    <string name="ble_error_no_bt_adapter">No hi ha adaptador Bluetooth</string>
-    <string name="ble_error_pump_unreachable">Bomba no accessible</string>
-    <!-- Pump Error -->
-    <string name="pump_settings_error_basal_profiles_not_enabled">Perfils de basal configurats no activats a la bomba. Activeu-los a la bomba.</string>
-    <string name="pump_settings_error_wrong_max_bolus_set">Bolus màx. erroni configurat a la bomba (ha de ser %1$.2f).</string>
-    <string name="pump_settings_error_wrong_max_basal_set">Basal màx. errònia configurada a la bomba (ha de ser %1$.2f).</string>
     <!-- Pump History -->
     <string name="pump_history_type">Tipus:</string>
-    <!-- PumpDeviceState -->
-    <string name="pump_status_sleeping">En suspens</string>
-    <string name="pump_status_waking_up">Iniciant</string>
-    <string name="pump_status_active">Activa</string>
-    <string name="pump_status_error_comm">Error de comunicació</string>
-    <string name="pump_status_timeout_comm">Temps d\'espera excedit en la comunicació</string>
-    <string name="pump_status_pump_unreachable">Bomba no accessible</string>
-    <string name="pump_status_invalid_config">Configuració no vàlida</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d dia</item>
         <item quantity="other">%1$d dies</item>

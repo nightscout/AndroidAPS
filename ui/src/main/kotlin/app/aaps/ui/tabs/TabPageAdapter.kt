@@ -18,8 +18,6 @@ class TabPageAdapter(private val activity: AppCompatActivity) : FragmentStateAda
     fun getPluginAt(position: Int): PluginBase = visibleFragmentList[position]
 
     fun registerNewFragment(plugin: PluginBase) {
-        if (plugin.hasFragment() && plugin.isFragmentVisible()) {
-            visibleFragmentList.add(plugin)
-        }
+        visibleFragmentList.add(plugin)
     }
 }

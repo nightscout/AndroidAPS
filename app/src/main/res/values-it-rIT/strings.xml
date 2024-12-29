@@ -1,29 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
-    <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
-    <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="nav_preferences_plugin">%1$s Preferenze</string>
-    <string name="nav_refreshtreatments">Aggiorna trattamenti da NS</string>
     <string name="nav_exit">Esci</string>
     <string name="delta">Delta</string>
-    <string name="profile_label">Profilo</string>
     <string name="save">Salva</string>
-    <string name="reloadprofile">Ricarica profilo</string>
-    <string name="correctionbous">Corr</string>
-    <string name="ns_upload_only">Solo upload su NS (PERICOLOSO DISABILITARE)</string>
-    <string name="ns_upload_only_summary">Solo upload su NS (no sincronizzazione). Non ha effetto su SGV a meno che non sia selezionata una fonte locale come xDrip+. Non ha effetto sui profili mentre vengono usati i profili NS.\n!!! ATTENZIONE !!! Disabilitare questa opzione potrebbe causare malfunzionamenti e sovra-dosaggio di insulina se uno dei tuoi strumenti (AAPS, NS, xDrip+) è configurato in modo errato. Guarda attentamente se i dati visualizzati da AAPS corrispondono allo stato del micro!</string>
     <string name="wear">Smartwatch</string>
     <string name="nav_about">Informazioni su</string>
-    <string name="smscommunicator_missingphonestatepermission">Autorizzazione stato telefono mancante</string>
-    <string name="ns_alarm_options">Opzioni allarme</string>
-    <string name="ns_alarms">Crea notifiche da allarmi NS</string>
-    <string name="ns_announcements">Crea notifiche da avvisi NS</string>
-    <string name="ns_alarm_stale_data_value_label">Soglia dati non aggiornati [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Soglia dati non aggiornati da molto tempo [min]</string>
     <string name="sensitivity_warning">Attivando la funzione Autosense, ricorda di inserire tutti i carboidrati assunti. Altrimenti le deviazioni di glicemia dovute ai carboidrati saranno identificate erroneamente come variazione di sensibilità !!</string>
-    <string name="notloadedplugins">Non tutti i profili caricati!</string>
-    <string name="valuesnotstored">Valori non memorizzati!</string>
     <string name="invalid">NON VALIDO</string>
     <string name="gradually_increase_notification_volume">Aumenta gradualmente il volume per avvisi e notifiche</string>
     <string name="localalertsettings_title">Avvisi locali</string>
@@ -35,26 +18,16 @@
     <string name="close_navigation">Chiudi navigazione</string>
     <string name="remove_items">Rimuovi elementi</string>
     <string name="sort_items">Ordina elementi</string>
-    <string name="error_adding_treatment_title">Dati trattamento incompleti</string>
-    <string name="error_adding_treatment_message">Un trattamento (insulina: %1$.2f, carboidrati: %2$d, a: %3$s) non può essere aggiunto ai trattamenti. Controlla e aggiungi il record necessario.</string>
-    <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), ritardo: %3$d m</string>
-    <string name="profile_total">== ∑  %1$s U</string>
     <string name="unitsnosemicolon">Unità</string>
-    <string name="show_removed">Mostra rimossi</string>
-    <string name="clearqueueconfirm">Cancellare la coda? Tutti i dati in coda andranno persi!</string>
-    <string name="chartmenu">Menu grafico</string>
     <string name="authorizationfailed">Autorizzazione fallita</string>
-    <string name="copytolocalprofile_invalid">Impossibile creare il profilo. Il profilo non è valido.</string>
-    <string name="clear_filter">Cancella filtro</string>
     <string name="cannula">Cannula</string>
-    <string name="email_address">Indirizzo email</string>
-    <string name="remove_bg_readings">Rimuovi letture BG</string>
     <string name="identification_not_set">Identificazione non impostata in modalità dev</string>
-    <string name="a11y_dialog">dialogo</string>
     <!-- WEAR OS-->
-    <string name="wear_unknown_action_string">Comando sconosciuto:</string>
     <string name="remove_selected_items">Rimuovi elementi selezionati</string>
     <string name="count_selected">%1$d selezionati</string>
     <string name="sort_label">Ordina</string>
     <string name="search">Cerca</string>
+    <string name="simple_mode">Modalità semplice</string>
+    <string name="select">Seleziona</string>
+    <string name="set">Imposta</string>
 </resources>

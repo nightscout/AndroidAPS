@@ -13,17 +13,17 @@
 
     <application>
         <activity
-            android:name="info.nightscout.androidaps.plugins.pump.common.dialog.RileyLinkBLEConfigActivity"
+            android:name="app.aaps.pump.common.dialog.RileyLinkBLEConfigActivity"
             android:exported="false"
             android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="info.nightscout.androidaps.plugins.pump.common.dialog.RileyLinkBLEConfigActivity" />
+                <action android:name="app.aaps.pump.common.dialog.RileyLinkBLEConfigActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
         <activity
-            android:name="info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity"
+            android:name="app.aaps.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity"
             android:exported="false"
             android:label="@string/title_activity_rileylink_settings"
             android:theme="@style/AppTheme" />

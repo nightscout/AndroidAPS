@@ -2,7 +2,6 @@ package app.aaps.core.utils.receivers
 
 import android.content.Context
 import android.os.Bundle
-import androidx.annotation.OpenForTesting
 import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
@@ -12,7 +11,6 @@ import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@OpenForTesting
 @Singleton
 class DataWorkerStorage @Inject constructor(
     private val context: Context
@@ -67,10 +65,6 @@ class DataWorkerStorage @Inject constructor(
         WorkManager.getInstance(context)
             .enqueueUniqueWork(jobGroupName, ExistingWorkPolicy.APPEND_OR_REPLACE, request)
     }
-
-    fun beginUniqueWork(jobName: String, request: OneTimeWorkRequest) =
-        WorkManager.getInstance(context)
-            .beginUniqueWork(jobName, ExistingWorkPolicy.APPEND_OR_REPLACE, request)
 
     companion object {
 

@@ -14,36 +14,118 @@ import app.aaps.wear.interaction.utils.Persistence
  */
 class RawDisplayData {
 
-    var singleBg = EventData.SingleBg(
-        timeStamp = 0,
-        sgvString = "---",
-        glucoseUnits = "-",
-        slopeArrow = "--",
-        delta = "--",
-        deltaDetailed = "--",
-        avgDelta = "--",
-        avgDeltaDetailed = "--",
-        sgvLevel = 0,
-        sgv = 0.0,
-        high = 0.0,
-        low = 0.0,
-        color = 0,
-        deltaMgdl = null,
-        avgDeltaMgdl = null
+    var singleBg = arrayOf<EventData.SingleBg>(
+        EventData.SingleBg(
+            dataset = 0,
+            timeStamp = 0,
+            sgvString = "---",
+            glucoseUnits = "-",
+            slopeArrow = "--",
+            delta = "--",
+            deltaDetailed = "--",
+            avgDelta = "--",
+            avgDeltaDetailed = "--",
+            sgvLevel = 0,
+            sgv = 0.0,
+            high = 0.0,
+            low = 0.0,
+            color = 0,
+            deltaMgdl = null,
+            avgDeltaMgdl = null
+        ), EventData.SingleBg(
+            dataset = 1,
+            timeStamp = 0,
+            sgvString = "---",
+            glucoseUnits = "-",
+            slopeArrow = "--",
+            delta = "--",
+            deltaDetailed = "--",
+            avgDelta = "--",
+            avgDeltaDetailed = "--",
+            sgvLevel = 0,
+            sgv = 0.0,
+            high = 0.0,
+            low = 0.0,
+            color = 0,
+            deltaMgdl = null,
+            avgDeltaMgdl = null,
+        ), EventData.SingleBg(
+            dataset = 2,
+            timeStamp = 0,
+            sgvString = "---",
+            glucoseUnits = "-",
+            slopeArrow = "--",
+            delta = "--",
+            deltaDetailed = "--",
+            avgDelta = "--",
+            avgDeltaDetailed = "--",
+            sgvLevel = 0,
+            sgv = 0.0,
+            high = 0.0,
+            low = 0.0,
+            color = 0,
+            deltaMgdl = null,
+            avgDeltaMgdl = null,
+        )
     )
 
     // status bundle
-    var status = EventData.Status(
-        externalStatus = "no status",
-        iobSum = "IOB",
-        iobDetail = "-.--",
-        cob = "--g",
-        currentBasal = "-.--U/h",
-        battery = "--",
-        rigBattery = "--",
-        openApsStatus = -1,
-        bgi = "--",
-        batteryLevel = 1
+    var status = arrayOf<EventData.Status>(
+        EventData.Status(
+            dataset = 0,
+            externalStatus = "no status",
+            iobSum = "IOB",
+            iobDetail = "-.--",
+            cob = "--g",
+            currentBasal = "-.--U/h",
+            battery = "--",
+            rigBattery = "--",
+            openApsStatus = -1,
+            bgi = "--",
+            batteryLevel = 1,
+            patientName = "",
+            tempTarget = "--",
+            tempTargetLevel = 0,
+            reservoirString = "--",
+            reservoir = 0.0,
+            reservoirLevel = 0
+        ), EventData.Status(
+            dataset = 1,
+            externalStatus = "no status",
+            iobSum = "IOB",
+            iobDetail = "-.--",
+            cob = "--g",
+            currentBasal = "-.--U/h",
+            battery = "--",
+            rigBattery = "--",
+            openApsStatus = -1,
+            bgi = "--",
+            batteryLevel = 1,
+            patientName = "",
+            tempTarget = "--",
+            tempTargetLevel = 0,
+            reservoirString = "--",
+            reservoir = 0.0,
+            reservoirLevel = 0
+        ), EventData.Status(
+            dataset = 2,
+            externalStatus = "no status",
+            iobSum = "IOB",
+            iobDetail = "-.--",
+            cob = "--g",
+            currentBasal = "-.--U/h",
+            battery = "--",
+            rigBattery = "--",
+            openApsStatus = -1,
+            bgi = "--",
+            batteryLevel = 1,
+            patientName = "",
+            tempTarget = "--",
+            tempTargetLevel = 0,
+            reservoirString = "--",
+            reservoir = 0.0,
+            reservoirLevel = 0
+        )
     )
 
     var graphData = EventData.GraphData(
@@ -61,9 +143,9 @@ class RawDisplayData {
         "DisplayRawData{singleBg=$singleBg, status=$status, graphData=$graphData, treatmentData=$treatmentData}"
 
     fun updateFromPersistence(persistence: Persistence) {
-        persistence.readSingleBg()?.let { singleBg = it }
+        persistence.readSingleBg(singleBg).let { singleBg = it }
         persistence.readGraphData()?.let { graphData = it }
-        persistence.readStatus()?.let { status = it }
+        persistence.readStatus(status).let { status = it }
         persistence.readTreatments()?.let { treatmentData = it }
     }
 }

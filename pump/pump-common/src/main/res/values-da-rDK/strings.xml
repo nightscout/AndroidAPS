@@ -2,9 +2,6 @@
 <resources>
     <!-- PumoCommon - Pump Abstract -->
     <string name="pump_operation_not_supported_by_pump_driver">Operationen understøttes ikke af pumpen og/eller driveren.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">Operationen er ikke understøttet af pumpen ENDNU.</string>
-    <string name="common_resultok">OK</string>
-    <string name="pump_serial_number">Pumpe Serienummer</string>
     <string name="bolus_delivered_so_far">%1$.2f IE / %2$.2f IE leveret</string>
     <!-- PumpCommon - Pump Status -->
     <string name="pump_status_not_initialized">Ikke initialiseret</string>
@@ -46,33 +43,9 @@
     <string name="ble_config_scan_scanning">Scanning</string>
     <string name="ble_config_scan_finished">Scanning fuldendt</string>
     <string name="ble_config_scan_error">Scanningsfejl: %1$d</string>
-    <string name="ble_config_connected_never">Aldrig</string>
     <string name="ble_config_remove">Fjern</string>
-    <!-- BLE Errors -->
-    <string name="ble_error_bt_disabled">Bluetooth er deaktiveret</string>
-    <string name="ble_error_no_bt_adapter">Ingen bluetooth adapter</string>
-    <string name="ble_error_configured_pump_not_found">Konfigureret pumpe Ikke fundet</string>
-    <string name="ble_error_pump_unreachable">Pumpe utilgængelig</string>
-    <string name="ble_error_failed_to_conn_to_ble_device">Kunne Ikke forbinde til BLE enheden</string>
-    <string name="ble_error_encryption_failed">Kryptering mislykkedes</string>
-    <string name="ble_error_pump_found_unbonded">Fandt pumpe som ikke er forbundet</string>
-    <!-- Pump Error -->
-    <string name="pump_settings_error_basal_profiles_not_enabled">Basalprofil indstilling er ikke aktiveret på pumpen. Aktiver den på pumpen.</string>
-    <string name="pump_settings_error_incorrect_basal_profile_selected">Basal profil indstillet på pumpe er forkert (skal være %s).</string>
-    <string name="pump_settings_error_wrong_tbr_type_set">Forkert midlertidig basal type indstillet på pumpe (skal være %s).</string>
-    <string name="pump_settings_error_wrong_max_bolus_set">Forkert Max Bolus sat på Pump (skal være %1$.2f).</string>
-    <string name="pump_settings_error_wrong_max_basal_set">Forkert Max Basal sat på Pump (skal være %1$.2f).</string>
     <!-- Pump History -->
     <string name="pump_history_type">Type:</string>
-    <!-- PumpDeviceState -->
-    <string name="pump_status_never_contacted">Aldrig kontaktet</string>
-    <string name="pump_status_sleeping">Sovende</string>
-    <string name="pump_status_waking_up">Vågner</string>
-    <string name="pump_status_active">Aktiv</string>
-    <string name="pump_status_error_comm">Fejl i kommunikation</string>
-    <string name="pump_status_timeout_comm">Timeout ved kommunikation</string>
-    <string name="pump_status_pump_unreachable">Pumpe utilgængelig</string>
-    <string name="pump_status_invalid_config">Ugyldig konfiguration</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dage</item>

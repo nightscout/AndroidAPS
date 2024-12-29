@@ -10,8 +10,6 @@
     <string name="omnipod_dash_history_item_source">Origem</string>
     <string name="omnipod_dash_history_item_date">Data</string>
     <string name="omnipod_dash_history_type">Tipo:</string>
-    <string name="omnipod_dash_history_bolus_value">%1$.2f U</string>
-    <string name="omnipod_dash_history_bolus_value_with_carbs">%1$.2f U, Carboidratos=%2$.1f g</string>
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_status">Status do bluetooth</string>
     <string name="omnipod_dash_overview_bluetooth_address">Endereço Bluetooth</string>

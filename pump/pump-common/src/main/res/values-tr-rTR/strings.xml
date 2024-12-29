@@ -2,9 +2,6 @@
 <resources>
     <!-- PumoCommon - Pump Abstract -->
     <string name="pump_operation_not_supported_by_pump_driver">Pompa ve/veya sürücü tarafından desteklenmeyen işlem.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">İşlem HENÜZ pompa tarafından desteklenmiyor.</string>
-    <string name="common_resultok">Tamam</string>
-    <string name="pump_serial_number">Pompa Seri Numarası</string>
     <string name="bolus_delivered_so_far">%1$.2f Ü / %2$.2f Ü gönderildi</string>
     <!-- PumpCommon - Pump Status -->
     <string name="pump_status_not_initialized">Başlatılmadı</string>
@@ -46,33 +43,9 @@
     <string name="ble_config_scan_scanning">Taranıyor</string>
     <string name="ble_config_scan_finished">Tarama tamamlandı</string>
     <string name="ble_config_scan_error">Tarama Hatası:%1$d</string>
-    <string name="ble_config_connected_never">Asla</string>
     <string name="ble_config_remove">Kaldır</string>
-    <!-- BLE Errors -->
-    <string name="ble_error_bt_disabled">Bluetooth devre dışı</string>
-    <string name="ble_error_no_bt_adapter">Bluetooth Adaptörü Yok</string>
-    <string name="ble_error_configured_pump_not_found">Yapılandırılan Pompa Bulunamadı</string>
-    <string name="ble_error_pump_unreachable">Pompa ulaşılamıyor</string>
-    <string name="ble_error_failed_to_conn_to_ble_device">BLE Cihazına Bağlanılamadı</string>
-    <string name="ble_error_encryption_failed">Şifreleme Başarısız</string>
-    <string name="ble_error_pump_found_unbonded">Bağlı Pompa Bulunamadı</string>
-    <!-- Pump Error -->
-    <string name="pump_settings_error_basal_profiles_not_enabled">Bazal profiller/şablon ayarı pompada etkinleştirilmemiştir. Pompada etkinleştirin.</string>
-    <string name="pump_settings_error_incorrect_basal_profile_selected">Pompada ayarlanan bazal profili yanlış (%s olmalıdır).</string>
-    <string name="pump_settings_error_wrong_tbr_type_set">Pompada yanlış GBO tipi ayarlanmış (%s olmalıdır).</string>
-    <string name="pump_settings_error_wrong_max_bolus_set">Pompada Yanlış Maksimum Bolus ayarlanmış (%1$.2f olmalıdır).</string>
-    <string name="pump_settings_error_wrong_max_basal_set">Pompada Yanlış Maksimum Bazal ayarlanmış (%1$.2f olmalıdır).</string>
     <!-- Pump History -->
     <string name="pump_history_type">Tip:</string>
-    <!-- PumpDeviceState -->
-    <string name="pump_status_never_contacted">Hiçbir bağlantı yok</string>
-    <string name="pump_status_sleeping">Uyku Moduna Giriliyor</string>
-    <string name="pump_status_waking_up">Uyanıyor</string>
-    <string name="pump_status_active">Aktif</string>
-    <string name="pump_status_error_comm">İletişim hatası</string>
-    <string name="pump_status_timeout_comm">İletişimde zaman aşımı</string>
-    <string name="pump_status_pump_unreachable">Pompa\'ya ulaşılamıyor</string>
-    <string name="pump_status_invalid_config">Geçersiz yapılandırma</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d gün</item>
         <item quantity="other">%1$d gün</item>

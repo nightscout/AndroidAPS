@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bolus_constraint_applied">已套用注射限制</string>
+    <string name="carbs_constraint_applied">已套用碳水化合物限制</string>
+    <string name="temp_target_short">臨時目標</string>
+    <string name="dialog_canceled">對話框已取消</string>
+    <string name="start_activity_tt">開始活動(臨時目標)</string>
+    <string name="start_eating_soon_tt">即將開始用餐 (臨時目標)</string>
+    <string name="start_hypo_tt">開始低血糖(臨時目標)</string>
+    <string name="time_offset">時間偏移</string>
+    <string name="unit_minute_short">分鐘</string>
+    <string name="remind_to_bolus_later">稍後提醒注射</string>
+    <string name="a11y_carb_reminder">設定提醒</string>
+    <!--    Widget-->
+    <string name="configure">配置透明度</string>
+    <string name="widget_description">AAPS 小工具</string>
+    <!--     Activities-->
+    <string name="activity_monitor">活動監視器</string>
+    <string name="do_you_want_reset_stats">您要重置活動統計嗎？</string>
+    <string name="do_you_want_recalculate_tdd_stats">您要重新計算 TDD 統計嗎？</string>
+    <string name="statistics">統計資料</string>
+    <string name="calculation_in_progress">計算中</string>
+    <string name="invalid_age">年齡輸入無效</string>
+    <string name="invalid_weight">體重輸入無效</string>
+    <string name="id">ID：</string>
+    <string name="submit">送出</string>
+    <string name="age">年齡</string>
+    <string name="weight_label">體重</string>
+    <string name="most_common_profile">最常用的設定檔：</string>
+    <string name="survey_comment">注意：僅此畫面可見的資料會匿名上傳。ID 是分配給此 AAPS 安裝的。若您的主要設定檔變更，您可以再次提交資料，但請至少運行一週，以確保結果在範圍內可見。我們感謝您的協助。</string>
+    <string name="glucose_type">血糖類型</string>
+    <string name="bg_other">其他</string>
+    <string name="bg_meter">血糖機</string>
+    <string name="bg_sensor">傳感器</string>
+    <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s ISF：%2$.1f</string>
+    <string name="format_cob_ic">%1$.1f g IC：%2$.1f</string>
+    <string name="format_carbs_ic">%1$.0f g IC：%2$.1f</string>
+    <string name="treatments_wizard_total_label">總計</string>
+    <!-- FillDialog -->
+    <string name="fill_warning">請確保數量符合您的輸液套件規範！</string>
+    <string name="record_pump_site_change">紀錄幫浦位置更換</string>
+    <string name="record_insulin_cartridge_change">紀錄胰島素匣更換</string>
+    <!-- InsulinDialog -->
+    <string name="do_not_bolus_record_only">不注射，僅紀錄</string>
+    <!-- ProfileSwitchDialog -->
+    <string name="reuse_profile_pct_hours">重新使用 %1$d%% %2$小時</string>
+    <string name="timeshift_label">時間偏移</string>
+    <string name="percentage_label">百分比</string>
+    <!-- LoopDialog -->
+    <string name="suspendloopfor1h">暫停循環 1 小時</string>
+    <string name="suspendloopfor2h">暫停循環 2 小時</string>
+    <string name="suspendloopfor3h">暫停循環 3 小時</string>
+    <string name="suspendloopfor10h">暫停循環 10 小時</string>
+    <string name="disconnectpump">中斷幫浦連線</string>
+    <string name="disconnectpumpfor15m">中斷幫浦連線 15 分鐘</string>
+    <string name="disconnectpumpfor30m">中斷幫浦連線 30 分鐘</string>
+    <string name="disconnectpumpfor1h">中斷幫浦連線 1 小時</string>
+    <string name="disconnectpumpfor2h">中斷幫浦連線 2 小時</string>
+    <string name="disconnectpumpfor3h">中斷幫浦連線 3 小時</string>
+    <string name="resume">恢復</string>
+    <string name="reconnect">重新連線幫浦</string>
+    <string name="duration15m">15 分鐘</string>
+    <string name="duration30m">30 分鐘</string>
+    <string name="duration1h">1 小時</string>
+    <string name="duration2h">2 小時</string>
+    <string name="duration3h">3 小時</string>
+    <string name="duration10h">10 小時</string>
+    <!-- WizardDialog -->
+    <string name="a11_correction_percentage">修正結果百分比</string>
+    <string name="a11_correction_units">修正結果單位</string>
+    <string name="two_hours">2 小時</string>
+    <string name="result_insulin_carbs">結果：%1$s %2$s</string>
+    <string name="missing_carbs">缺少 %1$d g</string>
+    <string name="a11y_current_bg">目前血糖</string>
+    <string name="carb_time_label">碳水化合物時間</string>
+    <string name="a11y_set_carb_timer">設定碳水化合物計時器提醒</string>
+    <string name="show_calculation">顯示計算</string>
+    <!-- Treatments -->
+    <string name="no_records_available">無可用紀錄</string>
+    <string name="calculation_short">計算</string>
+    <string name="treatments_iob_label_string">IOB：</string>
+    <string name="treatments_carbs_label_string">碳水化合物：</string>
+    <string name="tempbasals_netratio_label_string">比例：</string>
+    <string name="tempbasals_iob_label_string">IOB：</string>
+    <string name="treatments_wizard_correction_label">修正</string>
+    <string name="meal_bolus">餐前注射</string>
+    <string name="prime">預填充</string>
+    <string name="carbs_and_bolus">碳水化合物與注射</string>
+    <string name="show_invalidated_records">顯示無效/已移除紀錄</string>
+    <string name="hide_invalidated_records">隱藏無效/已移除紀錄</string>
+    <string name="show_invalidated">顯示無效</string>
+    <string name="hide_invalidated">隱藏無效</string>
+    <string name="careportal_remove_started_events">移除 AAPS 已開始的條目</string>
+    <string name="hide_loop">隱藏循環</string>
+    <string name="show_loop">顯示循環</string>
+    <string name="user_entry">用戶入口</string>
+    <string name="clone_label">複製</string>
+    <string name="show_loop_records">顯示循環紀錄</string>
+    <string name="show_hide_records">隱藏循環紀錄</string>
+    <!-- ProfileHelperActivity -->
+    <string name="profile1">設定檔 1</string>
+    <string name="profile2">設定檔 2</string>
+    <string name="profile_type">設定檔類型</string>
+    <string name="basal_pct_from_tdd_label">基礎率百分比</string>
+    <string name="selected_profile">已選擇：</string>
+    <string name="compare_profile">比較設定檔</string>
+    <string name="nav_profile_helper">設定檔助手</string>
+    <string name="motol_default_profile">預設設定檔</string>
+    <string name="current_profile">目前設定檔</string>
+    <string name="available_profile">可用設定檔</string>
+    <string name="format_with_tdd">時間：%1$d 每日總劑量：%2$.0f U</string>
+    <string name="format_with_tdd_and_pct">時間：%1$d 每日總劑量：%2$.0f U %3$d%%</string>
+    <string name="format_with_weight">年齡：%1$d 體重：%2$.0f kg</string>
+    <string name="dpv_default_profile">DPV 預設設定檔</string>
+    <string name="invalid_pct">無效的百分比輸入</string>
+    <!-- Other dialogs -->
+    <string name="basal_rate">基礎率</string>
+    <!--    BolusProgressDialog-->
+    <string name="stop_pressed">已按下停止</string>
+    <!--QuickWizard-->
+    <string name="a11y_only_on_watch">僅在手錶上</string>
+    <string name="a11y_only_on_phone">僅在手機上</string>
+    <string name="quickwizard_settings">QuickWizard 設定</string>
+    <string name="overview_edit_quickwizard_button_text">按鈕文字</string>
+    <string name="overview_edit_quickwizard_valid">有效：</string>
+    <string name="overview_edit_quickwizard_use_positive_iob_only">僅使用正 IOB</string>
+    <string name="overview_edit_quickwizard_superbolus">超級注射</string>
+    <string name="overview_edit_quickwizard_percentage_too_high">百分比過高！</string>
+    <string name="a11y_drag_and_drop_handle">拖放操作把手</string>
+    <string name="additional_ecarbs">新增 eCarbs</string>
+    <string name="overview_edit_quickwizard_useforcalculation">用於計算：</string>
+    <string name="constraints_violation">限制違反</string>
+    <string name="change_your_input">更改您的輸入！</string>
+    <string name="confirm_treatment">請確認治療</string>
+    <string name="recalculate">重新計算</string>
+    <string-array name="yes_no_positiveonly_negativeonly">
+        <item>兩者皆是</item>
+        <item>僅正值</item>
+        <item>僅負值</item>
+    </string-array>
+</resources>

@@ -1,29 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
-    <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
-    <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="nav_preferences_plugin">Настройки %1$s</string>
-    <string name="nav_refreshtreatments">Синхронизировать назначения с NS</string>
     <string name="nav_exit">Выход</string>
     <string name="delta">изменение</string>
-    <string name="profile_label">Профиль</string>
     <string name="save">Сохранить</string>
-    <string name="reloadprofile">обновить профиль</string>
-    <string name="correctionbous">Коррекция</string>
-    <string name="ns_upload_only">(ОТКЛЮЧЕНИЕ ОПАСНО) Только загрузка в NS</string>
-    <string name="ns_upload_only_summary">Только загрузка в NS (синхронизация отключена). Не влияет на данные мониторинга если не выбран локальный источник, такой как xDrip. Профили, иные чем профиль NS не действуют.\n!!! ПРЕДУПРЕЖДЕНИЕ !!! Отключение этой опции может привести к сбою и передозировке инсулина, если какой-либо из компонентов (AAPS, NS, xDrip) настроен неправильно. Внимательно следите за тем, чтобы данные соответствовали состоянию помпы!</string>
     <string name="wear">Смарт-часы Wear</string>
     <string name="nav_about">о приложении</string>
-    <string name="smscommunicator_missingphonestatepermission">Отсутствует разрешение телефона</string>
-    <string name="ns_alarm_options">опции оповещения</string>
-    <string name="ns_alarms">Создать уведомления из оповещений NS</string>
-    <string name="ns_announcements">Создать уведомления из оповещений NS</string>
-    <string name="ns_alarm_stale_data_value_label">Порог оповещения об устаревших данных [min] (мин)</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Порог тревоги об устаревших данных [min] (мин)</string>
     <string name="sensitivity_warning">Активируя Autosense не забывайте вводить все съеденные углеводы. Иначе отклонения в углеводах будут неверно определены как изменение чувствительности !!</string>
-    <string name="notloadedplugins">не все профили загружены!</string>
-    <string name="valuesnotstored">Данные не сохранены!</string>
     <string name="invalid">НЕВЕРНО</string>
     <string name="gradually_increase_notification_volume">Постепенно увеличивать громкость оповещений и уведомлений</string>
     <string name="localalertsettings_title">Локальные оповещения</string>
@@ -35,26 +18,16 @@
     <string name="close_navigation">Cкрыть панель навигации</string>
     <string name="remove_items">Удалить элементы</string>
     <string name="sort_items">Сортировать элементы</string>
-    <string name="error_adding_treatment_title">Данные терапии неполные</string>
-    <string name="error_adding_treatment_message">Назначение (инсулин: %1$.2f, углеводы: %2$d, в: %3$s) не было добавлено. Пожалуйста, проверьте и при необходимости добавьте запись вручную.</string>
-    <string name="generated_ecarbs_note">eCarbs: %1$d г. (%2$d h), задержка: %3$d m</string>
-    <string name="profile_total">== ∑  %1$s ед</string>
     <string name="unitsnosemicolon">Единицы</string>
-    <string name="show_removed">Показать удаленные</string>
-    <string name="clearqueueconfirm">Очистить очередь? Все данные в очереди будут потеряны!</string>
-    <string name="chartmenu">Меню графика</string>
     <string name="authorizationfailed">Ошибка авторизации</string>
-    <string name="copytolocalprofile_invalid">Не удается создать локальный профиль. Настройки профиля неправильны.</string>
-    <string name="clear_filter">Очистить фильтр</string>
     <string name="cannula">Катетер помпы</string>
-    <string name="email_address">Адрес электронной почты</string>
-    <string name="remove_bg_readings">Удалить значения ГК</string>
     <string name="identification_not_set">Идентификация не задана в режиме разработчика</string>
-    <string name="a11y_dialog">диалог</string>
     <!-- WEAR OS-->
-    <string name="wear_unknown_action_string">Неизвестная команда:</string>
     <string name="remove_selected_items">Удалить выбранные элементы</string>
     <string name="count_selected">%1$d выбрано</string>
     <string name="sort_label">Сортировать</string>
     <string name="search">Поиск</string>
+    <string name="simple_mode">Простой режим</string>
+    <string name="select">Выбрать</string>
+    <string name="set">Задать</string>
 </resources>

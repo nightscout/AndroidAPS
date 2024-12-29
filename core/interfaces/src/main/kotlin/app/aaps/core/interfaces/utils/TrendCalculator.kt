@@ -1,7 +1,7 @@
 package app.aaps.core.interfaces.utils
 
+import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.interfaces.aps.AutosensDataStore
-import app.aaps.database.entities.GlucoseValue
 
 /**
  *  Convert BG direction value to trend arrow or calculate it if not provided
@@ -12,15 +12,15 @@ interface TrendCalculator {
     /**
      * Provide or calculate trend from newest bucketed data
      *
-     * @param autosensDataStore current store from IobCobCalculator
+     * @param autosensDataStore bucketed data
      * @return TrendArrow
      */
-    fun getTrendArrow(autosensDataStore: AutosensDataStore): GlucoseValue.TrendArrow?
+    fun getTrendArrow(autosensDataStore: AutosensDataStore): TrendArrow?
 
     /**
      * Provide or calculate trend from newest bucketed data
      *
-     * @param autosensDataStore current store from IobCobCalculator
+     * @param autosensDataStore bucketed data
      * @return string description of TrendArrow
      */
     fun getTrendDescription(autosensDataStore: AutosensDataStore): String

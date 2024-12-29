@@ -67,6 +67,4 @@
     <!-- Omnipod Eros - Pod Activation Wizard -->
     <string name="omnipod_eros_pod_activation_wizard_start_pod_activation_text">Yeni bir Pod\'u 3 gün yetecek kadar insülinle doldurun.\n\nDoldurma işlemi sırasında Pod\'dan iki bip sesi gelecektir. Bu ses, minimum 80Ü insülinin eklendiğini gösterir. İki bip sesini duyduktan sonra bile doldurma şırıngasını tamamen boşalttığınızdan emin olun.\n\nPod\'u doldurduktan sonra lütfen <b>İleri</b>\'ye basın.\n\n<b>Not:</b> Bu sırada Pod\'un iğne kapağını çıkarmayın.\n<b>Not:</b> lütfen RileyLink\'i dik konuma getirin ve Pod\'u ondan birkaç cm uzağa yerleştirin.</string>
     <string name="omnipod_eros_pod_activation_wizard_initialize_pod_text">Yeni Pod eşleştiriliyor ve kullanıma hazırlanıyor.\n\nBaşlatma işlemi başarıyla tamamlandığında, <b>İleri</b>\'ye basabilirsiniz.\n\n<b>Not:</b> lütfen RileyLink\'i dik konuma getirin ve Pod\'u ondan birkaç cm uzağa yerleştirin.</string>
-    <!-- Omnipod Eros - Other -->
-    <string name="omnipod_eros_uncertain">belirsiz</string>
 </resources>

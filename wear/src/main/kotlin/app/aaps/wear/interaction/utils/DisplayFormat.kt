@@ -59,11 +59,11 @@ class DisplayFormat @Inject internal constructor() {
         }
     }
 
-    fun shortTrend(raw: RawDisplayData): String {
+    fun shortTrend(raw: RawDisplayData, dataSet: Int): String {
         var minutes = "--"
-        val rawDelta = if (sp.getBoolean(R.string.key_show_detailed_delta, false)) raw.singleBg.deltaDetailed else raw.singleBg.delta
-        if (raw.singleBg.timeStamp > 0) {
-            minutes = shortTimeSince(raw.singleBg.timeStamp)
+        val rawDelta = if (sp.getBoolean(R.string.key_show_detailed_delta, false)) raw.singleBg[dataSet].deltaDetailed else raw.singleBg[dataSet].delta
+        if (raw.singleBg[dataSet].timeStamp > 0) {
+            minutes = shortTimeSince(raw.singleBg[dataSet].timeStamp)
         }
         if (minutes.length + rawDelta.length + deltaSymbol().length + 1 <= MAX_FIELD_LEN_SHORT) {
             return minutes + " " + deltaSymbol() + rawDelta
@@ -78,45 +78,45 @@ class DisplayFormat @Inject internal constructor() {
         return "$minutes $shortDelta"
     }
 
-    fun longGlucoseLine(raw: RawDisplayData): String {
-        val rawDelta = if (sp.getBoolean(R.string.key_show_detailed_delta, false)) raw.singleBg.deltaDetailed else raw.singleBg.delta
-        return raw.singleBg.sgvString + raw.singleBg.slopeArrow + " " + deltaSymbol() + SmallestDoubleString(rawDelta).minimise(8) + " (" + shortTimeSince(raw.singleBg.timeStamp) + ")"
+    fun longGlucoseLine(raw: RawDisplayData, dataSet: Int): String {
+        val rawDelta = if (sp.getBoolean(R.string.key_show_detailed_delta, false)) raw.singleBg[dataSet].deltaDetailed else raw.singleBg[dataSet].delta
+        return raw.singleBg[dataSet].sgvString + raw.singleBg[dataSet].slopeArrow + " " + deltaSymbol() + SmallestDoubleString(rawDelta).minimise(8) + " (" + shortTimeSince(raw.singleBg[dataSet].timeStamp) + ")"
     }
 
-    fun longDetailsLine(raw: RawDisplayData): String {
+    fun longDetailsLine(raw: RawDisplayData, dataSet: Int): String {
         val sepLong = "  " + verticalSeparatorSymbol() + "  "
         val sepShort = " " + verticalSeparatorSymbol() + " "
         val sepShortLen = sepShort.length
         val sepMin = " "
-        var line = raw.status.cob + sepLong + raw.status.iobSum + sepLong + basalRateSymbol() + raw.status.currentBasal
+        var line = raw.status[dataSet].cob + sepLong + raw.status[dataSet].iobSum + sepLong + basalRateSymbol() + raw.status[dataSet].currentBasal
         if (line.length <= MAX_FIELD_LEN_LONG) {
             return line
         }
-        line = raw.status.cob + sepShort + raw.status.iobSum + sepShort + raw.status.currentBasal
+        line = raw.status[dataSet].cob + sepShort + raw.status[dataSet].iobSum + sepShort + raw.status[dataSet].currentBasal
         if (line.length <= MAX_FIELD_LEN_LONG) {
             return line
         }
-        var remainingMax = MAX_FIELD_LEN_LONG - (raw.status.cob.length + raw.status.currentBasal.length + sepShortLen * 2)
-        val smallestIoB = SmallestDoubleString(raw.status.iobSum, SmallestDoubleString.Units.USE).minimise(max(MIN_FIELD_LEN_IOB, remainingMax))
-        line = raw.status.cob + sepShort + smallestIoB + sepShort + raw.status.currentBasal
+        var remainingMax = MAX_FIELD_LEN_LONG - (raw.status[dataSet].cob.length + raw.status[dataSet].currentBasal.length + sepShortLen * 2)
+        val smallestIoB = SmallestDoubleString(raw.status[dataSet].iobSum, SmallestDoubleString.Units.USE).minimise(max(MIN_FIELD_LEN_IOB, remainingMax))
+        line = raw.status[dataSet].cob + sepShort + smallestIoB + sepShort + raw.status[dataSet].currentBasal
         if (line.length <= MAX_FIELD_LEN_LONG) {
             return line
         }
-        remainingMax = MAX_FIELD_LEN_LONG - (smallestIoB.length + raw.status.currentBasal.length + sepShortLen * 2)
-        val simplifiedCob = SmallestDoubleString(raw.status.cob, SmallestDoubleString.Units.USE).minimise(max(MIN_FIELD_LEN_COB, remainingMax))
-        line = simplifiedCob + sepShort + smallestIoB + sepShort + raw.status.currentBasal
+        remainingMax = MAX_FIELD_LEN_LONG - (smallestIoB.length + raw.status[dataSet].currentBasal.length + sepShortLen * 2)
+        val simplifiedCob = SmallestDoubleString(raw.status[dataSet].cob, SmallestDoubleString.Units.USE).minimise(max(MIN_FIELD_LEN_COB, remainingMax))
+        line = simplifiedCob + sepShort + smallestIoB + sepShort + raw.status[dataSet].currentBasal
         if (line.length <= MAX_FIELD_LEN_LONG) {
             return line
         }
-        line = simplifiedCob + sepMin + smallestIoB + sepMin + raw.status.currentBasal
+        line = simplifiedCob + sepMin + smallestIoB + sepMin + raw.status[dataSet].currentBasal
         return line
     }
 
-    fun detailedIob(raw: RawDisplayData): Pair<String, String> {
-        val iob1 = SmallestDoubleString(raw.status.iobSum, SmallestDoubleString.Units.USE).minimise(MAX_FIELD_LEN_SHORT)
+    fun detailedIob(raw: RawDisplayData, dataSet: Int): Pair<String, String> {
+        val iob1 = SmallestDoubleString(raw.status[dataSet].iobSum, SmallestDoubleString.Units.USE).minimise(MAX_FIELD_LEN_SHORT)
         var iob2 = ""
-        if (raw.status.iobDetail.contains("|")) {
-            val iobs = raw.status.iobDetail.replace("(", "").replace(")", "").split("|").toTypedArray()
+        if (raw.status[dataSet].iobDetail.contains("|")) {
+            val iobs = raw.status[dataSet].iobDetail.replace("(", "").replace(")", "").split("|").toTypedArray()
             var iobBolus = SmallestDoubleString(iobs[0]).minimise(MIN_FIELD_LEN_IOB)
             if (iobBolus.trim().isEmpty()) {
                 iobBolus = "--"
@@ -130,8 +130,8 @@ class DisplayFormat @Inject internal constructor() {
         return create(iob1, iob2)
     }
 
-    fun detailedCob(raw: RawDisplayData): Pair<String, String> {
-        val cobMini = SmallestDoubleString(raw.status.cob, SmallestDoubleString.Units.USE)
+    fun detailedCob(raw: RawDisplayData, dataSet: Int): Pair<String, String> {
+        val cobMini = SmallestDoubleString(raw.status[dataSet].cob, SmallestDoubleString.Units.USE)
         var cob2 = ""
         if (cobMini.extra.isNotEmpty()) {
             cob2 = cobMini.extra + cobMini.units

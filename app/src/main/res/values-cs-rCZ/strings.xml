@@ -1,29 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
-    <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
-    <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="nav_preferences_plugin">Nastavení pluginu %1$s</string>
-    <string name="nav_refreshtreatments">Obnovit ošetření z NS</string>
     <string name="nav_exit">Konec</string>
     <string name="delta">Rozdíl</string>
-    <string name="profile_label">Profil</string>
     <string name="save">Uložit</string>
-    <string name="reloadprofile">Obnovit profil</string>
-    <string name="correctionbous">Korekce</string>
-    <string name="ns_upload_only">(NEBEZPEČNÉ ZAKÁZAT) Pouze odesílání do NS</string>
-    <string name="ns_upload_only_summary">Pouze nahrávání do NS. Neplatí pro glykémie, pokud je NS vybrán jako zdroj glykémií. Neplatí pro profily, pokud je vybraný NS Profil.\n!!! VAROVÁNÍ!!! Vypnutí této možnosti může způsobit chybné chování a předávkování inzulínem, pokud je některá z vašich komponent (AAPS, NS, xDrip+) špatně nastavena. Pečlivě sledujte, jestli data zobrazená v AAPS odpovídají stavu pumpy!</string>
     <string name="wear">Wear</string>
     <string name="nav_about">O aplikaci</string>
-    <string name="smscommunicator_missingphonestatepermission">Chybí oprávnění pro zjišťování stavu telefonu</string>
-    <string name="ns_alarm_options">Nastavení alarmů</string>
-    <string name="ns_alarms">Vytvořit oznámení z alarmů NS</string>
-    <string name="ns_announcements">Vytvořit oznámení z NS upozornění </string>
-    <string name="ns_alarm_stale_data_value_label">Mezní hodnota pro zastaralá data [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Urgentní mezní hodnota pro zastaralá data [min]</string>
     <string name="sensitivity_warning">Při zapnuté detekci sensitivity nezapomeňte vkládat všechny sacharidy. Jinak budou odchylky mylně vyhodnocovány jako změna sensitivity !!</string>
-    <string name="notloadedplugins">Všechny profily nenačteny!</string>
-    <string name="valuesnotstored">Hodnoty nejsou uloženy!</string>
     <string name="invalid">NEPLATNÝ</string>
     <string name="gradually_increase_notification_volume">Postupně zvyšovat hlasitost výstrah a oznámení</string>
     <string name="localalertsettings_title">Místní výstrahy</string>
@@ -35,26 +18,16 @@
     <string name="close_navigation">Zavřít menu</string>
     <string name="remove_items">Odstranit položky</string>
     <string name="sort_items">Seřadit položky</string>
-    <string name="error_adding_treatment_title">Data ošetření neúplná</string>
-    <string name="error_adding_treatment_message">Ošetření (inzulín: %1$.2f, sacharidy: %2$d, čas: %3$s) nelze přidat. Zkontrolujte a podle potřeby ručně přidejte záznam.</string>
-    <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), zpoždění: %3$d m</string>
-    <string name="profile_total">== ∑  %1$s U</string>
     <string name="unitsnosemicolon">Jednotky</string>
-    <string name="show_removed">Zobrazit odstraněné</string>
-    <string name="clearqueueconfirm">Vymazat frontu? Všechna data ve frontě budou ztracena!</string>
-    <string name="chartmenu">Možnosti grafu</string>
     <string name="authorizationfailed">Autorizace selhala</string>
-    <string name="copytolocalprofile_invalid">Nelze vytvořit profil. Profil je neplatný.</string>
-    <string name="clear_filter">Vymazat filtr</string>
     <string name="cannula">Kanyla</string>
-    <string name="email_address">E-mailová adresa</string>
-    <string name="remove_bg_readings">Odstranit glykémie</string>
     <string name="identification_not_set">Identifikace není nastavena ve vývojářském režimu</string>
-    <string name="a11y_dialog">dialog</string>
     <!-- WEAR OS-->
-    <string name="wear_unknown_action_string">Neznámý příkaz k akci:</string>
     <string name="remove_selected_items">Odstranit zvolené položky</string>
     <string name="count_selected">Vybráno: %1$d</string>
     <string name="sort_label">Seřadit</string>
     <string name="search">Hledat</string>
+    <string name="simple_mode">Zjednodušený režim</string>
+    <string name="select">Vybrat</string>
+    <string name="set">Nastavit</string>
 </resources>

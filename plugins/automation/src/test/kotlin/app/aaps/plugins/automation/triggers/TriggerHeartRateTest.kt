@@ -1,10 +1,9 @@
 package app.aaps.plugins.automation.triggers
 
-import app.aaps.database.entities.HeartRate
+import app.aaps.core.data.model.HR
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Single
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.verify
@@ -44,7 +43,7 @@ class TriggerHeartRateTest : TriggerTestBase() {
     fun shouldRunNotAvailable() {
         val t = TriggerHeartRate(injector).apply { comparator.value = Comparator.Compare.IS_NOT_AVAILABLE }
         assertThat(t.shouldRun()).isTrue()
-        verifyNoMoreInteractions(repository)
+        verifyNoMoreInteractions(persistenceLayer)
     }
 
     @Test
@@ -53,10 +52,10 @@ class TriggerHeartRateTest : TriggerTestBase() {
             heartRate.value = 100.0
             comparator.value = Comparator.Compare.IS_GREATER
         }
-        `when`(repository.getHeartRatesFromTime(now - t.averageHeartRateDurationMillis)).thenReturn(Single.just(emptyList()))
+        `when`(persistenceLayer.getHeartRatesFromTime(now - t.averageHeartRateDurationMillis)).thenReturn(emptyList())
         assertThat(t.shouldRun()).isFalse()
-        verify(repository).getHeartRatesFromTime(now - t.averageHeartRateDurationMillis)
-        verifyNoMoreInteractions(repository)
+        verify(persistenceLayer).getHeartRatesFromTime(now - t.averageHeartRateDurationMillis)
+        verifyNoMoreInteractions(persistenceLayer)
     }
 
     @Test
@@ -66,13 +65,13 @@ class TriggerHeartRateTest : TriggerTestBase() {
             comparator.value = Comparator.Compare.IS_GREATER
         }
         val hrs = listOf(
-            HeartRate(duration = 300_000, timestamp = now - 300_000, beatsPerMinute = 80.0, device = "test"),
-            HeartRate(duration = 300_000, timestamp = now, beatsPerMinute = 60.0, device = "test"),
+            HR(duration = 300_000, timestamp = now - 300_000, beatsPerMinute = 80.0, device = "test"),
+            HR(duration = 300_000, timestamp = now, beatsPerMinute = 60.0, device = "test"),
         )
-        `when`(repository.getHeartRatesFromTime(now - t.averageHeartRateDurationMillis)).thenReturn(Single.just(hrs))
+        `when`(persistenceLayer.getHeartRatesFromTime(now - t.averageHeartRateDurationMillis)).thenReturn(hrs)
         assertThat(t.shouldRun()).isFalse()
-        verify(repository).getHeartRatesFromTime(now - t.averageHeartRateDurationMillis)
-        verifyNoMoreInteractions(repository)
+        verify(persistenceLayer).getHeartRatesFromTime(now - t.averageHeartRateDurationMillis)
+        verifyNoMoreInteractions(persistenceLayer)
     }
 
     @Test
@@ -82,12 +81,12 @@ class TriggerHeartRateTest : TriggerTestBase() {
             comparator.value = Comparator.Compare.IS_GREATER
         }
         val hrs = listOf(
-            HeartRate(duration = 300_000, timestamp = now, beatsPerMinute = 120.0, device = "test"),
+            HR(duration = 300_000, timestamp = now, beatsPerMinute = 120.0, device = "test"),
         )
-        `when`(repository.getHeartRatesFromTime(now - t.averageHeartRateDurationMillis)).thenReturn(Single.just(hrs))
+        `when`(persistenceLayer.getHeartRatesFromTime(now - t.averageHeartRateDurationMillis)).thenReturn(hrs)
         assertThat(t.shouldRun()).isTrue()
-        verify(repository).getHeartRatesFromTime(now - t.averageHeartRateDurationMillis)
-        verifyNoMoreInteractions(repository)
+        verify(persistenceLayer).getHeartRatesFromTime(now - t.averageHeartRateDurationMillis)
+        verifyNoMoreInteractions(persistenceLayer)
     }
 
     @Test

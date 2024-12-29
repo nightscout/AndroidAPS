@@ -35,7 +35,6 @@
     <string name="omnipod_common_error_unexpected_exception">Erreur inconnue. Veuillez signaler ! (%1$s : %2$s).</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation">Confirmation</string>
-    <string name="omnipod_common_confirmation_time_or_timezone_change">Heure et/ou fuseau horaire changé sur le Pod.</string>
     <string name="omnipod_common_confirmation_expiration_alerts_updated">Configuration des alertes mise à jour dans le Pod.</string>
     <string name="omnipod_common_confirmation_time_on_pod_updated">L\'heure du Pod a été mise à jour.</string>
     <string name="omnipod_common_confirmation_suspended_delivery">Toutes les injections d\'insuline ont été suspendues.</string>
@@ -66,6 +65,7 @@
     <string name="omnipod_common_overview_reservoir_value">%1$.2f U restantes</string>
     <string name="omnipod_common_overview_reservoir_value_over50">Plus de 50 U restantes</string>
     <string name="omnipod_common_overview_errors">Erreurs</string>
+    <string name="omnipod_common_uncertain">incertain</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_cancel">Annuler</string>
     <string name="omnipod_common_wizard_button_finish">Terminer</string>
@@ -82,7 +82,7 @@
     <string name="omnipod_common_pod_activation_wizard_attach_pod_text">Préparez le site d\'injection. Enlevez la protection de l\'aiguille et le support adhésif et collez le Pod sur le site d\'injection.\n\nSi la canule est visible, appuyez sur <b>Annuler</b> et jetez votre Pod.\n\nAppuyez sur <b>Suivant</b> pour insérer la canule et démarrer l\'injection de la basal.</string>
     <string name="omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">Lorsque vous appuyez sur <b>OK</b>, la canule sera insérée. Assurez-vous d\'avoir collé le Pod sur le site de perfusion.</string>
     <string name="omnipod_common_pod_activation_wizard_insert_cannula_title">Insérer canule</string>
-    <string name="omnipod_common_pod_activation_wizard_insert_cannula_text">Tentative de définir le schéma de basal et d\'insertion de la canule.\n\nUne fois la canule correctement insérée, appuyez sur <b>Suivant</b>.</string>
+    <string name="omnipod_common_pod_activation_wizard_insert_cannula_text">Tentative pour définir le schéma de basal et d\'insertion de la canule.\n\nUne fois la canule correctement insérée, appuyez sur <b>Suivant</b>.</string>
     <string name="omnipod_common_pod_activation_wizard_pod_activated_title">Pod activé</string>
     <string name="omnipod_common_pod_activation_wizard_pod_activated_text">Le Pod est maintenant actif.\n\nVos débits de basal ont été programmés et la canule a été insérée.\n\nVeuillez vérifier que la canule a été insérée correctement et remplacez le Pod si vous pensez que ce n\'est pas le cas.</string>
     <!-- Omnipod - Pod Deactivation Wizard -->
@@ -124,9 +124,9 @@
     <string name="omnipod_common_pod_status_waiting_for_activation">Configuration en cours (en attente d\'activation du Pod)</string>
     <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">Configuration en cours (en attente d\'insertion de canule)</string>
     <string name="omnipod_common_pod_status_running">En cours d\'exécution</string>
+    <string name="omnipod_common_pod_status_normal">Normal</string>
     <string name="omnipod_common_pod_status_suspended">Suspendu</string>
     <string name="omnipod_common_pod_status_pod_fault">Défaut Pod</string>
-    <string name="omnipod_common_pod_status_activation_time_exceeded">Délai d\'activation dépassé</string>
     <string name="omnipod_common_pod_status_inactive">Inactif</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Défaut du Pod : %1$03d %2$s</string>
     <!-- Omnipod - Commands -->
@@ -152,7 +152,6 @@
     <string name="omnipod_common_cmd_set_fake_suspended_tbr">Définir un faux débit de basal temporaire car le Pod est suspendu</string>
     <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Annuler le faux débit de basal temporaire créé à cause du Pod suspendu</string>
     <string name="omnipod_common_cmd_split_tbr">Fractionner la basale temporaire en raison de l\'incertitude de l\'annulation</string>
-    <string name="omnipod_common_cmd_beep_config">Configuration bips</string>
     <string name="omnipod_common_cmd_play_test_beep">Tester bips</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_finish_pairing_reminder">Rappel fin d\'appairage</string>
@@ -175,6 +174,7 @@
     <string name="omnipod_common_ok">OK</string>
     <string name="omnipod_common_cancel">Annuler</string>
     <string name="omnipod_common_warning">Alerte</string>
+    <string name="omnipod_common_disable_suspend_alerts">DÉSACTIVER LES ALERTES SUSPENDUE</string>
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">À l\'instant</string>
     <string name="omnipod_common_less_than_a_minute_ago">Moins d\'une minute</string>

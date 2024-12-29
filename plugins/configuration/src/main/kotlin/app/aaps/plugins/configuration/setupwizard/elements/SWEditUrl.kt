@@ -32,7 +32,7 @@ class SWEditUrl(injector: HasAndroidInjector) : SWItem(injector, Type.URL) {
         editText.id = View.generateViewId()
         editText.inputType = InputType.TYPE_CLASS_TEXT
         editText.maxLines = 1
-        editText.setText(sp.getString(preferenceId, ""))
+        editText.setText(sp.getString(preference, ""))
         layout.addView(editText)
         super.generateDialog(layout)
         editText.addTextChangedListener(object : TextWatcher {
@@ -45,8 +45,8 @@ class SWEditUrl(injector: HasAndroidInjector) : SWItem(injector, Type.URL) {
         })
     }
 
-    fun preferenceId(preferenceId: Int): SWEditUrl {
-        this.preferenceId = preferenceId
+    fun preference(preference: String): SWEditUrl {
+        this.preference = preference
         return this
     }
 

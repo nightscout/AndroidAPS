@@ -24,8 +24,8 @@ class LongStatusFlippedComplication : BaseComplicationProviderService() {
         var complicationData: ComplicationData? = null
         when (dataType) {
             ComplicationData.TYPE_LONG_TEXT -> {
-                val glucoseLine = displayFormat.longGlucoseLine(raw)
-                val detailsLine = displayFormat.longDetailsLine(raw)
+                val glucoseLine = displayFormat.longGlucoseLine(raw, 0)
+                val detailsLine = displayFormat.longDetailsLine(raw, 0)
                 val builderLong = ComplicationData.Builder(ComplicationData.TYPE_LONG_TEXT)
                     .setLongTitle(ComplicationText.plainText(detailsLine))
                     .setLongText(ComplicationText.plainText(glucoseLine))

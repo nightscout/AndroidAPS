@@ -4,35 +4,58 @@ version: 2.1
 
 # Orbs are reusable packages of CircleCI configuration that you may share across projects, enabling you to create encapsulated, parameterized commands, jobs, and executors that can be used across multiple projects.
 orbs:
-  android: circleci/android@2.3.0
+  android: circleci/android@2.4.0
   codecov: codecov/codecov@3.3.0
 
 jobs:
   # Below is the definition of your job to build and test your app, you can rename and customize it as you want.
   build-and-test:
-    # These next lines define the Android machine image executor: https://circleci.com/docs/2.0/executor-types/
-    executor:
-      name: android/android-machine
-      resource-class: large
-      tag: 2023.11.1
+    machine: true
+    resource_class: nightscout/android
 
     steps:
       - checkout
 
-      - android/change-java-version:
-          java-version: 17
+      - run:
+          name: Create avd
+          command: |
+            echo "no" | /opt/android-sdk/cmdline-tools/latest/bin/avdmanager --verbose create avd -n citest -k "system-images;android-30;google_apis_playstore;x86" --force
 
-      - android/start-emulator-and-run-tests:
-          system-image: system-images;android-29;google_apis;x86
-          # Compile while the emulator starts to use the time.
-          post-emulator-launch-assemble-command: ./gradlew compileFullDebugUnitTestSources compileFullDebugAndroidTestSources
-          test-command: ./gradlew connectedFullDebugAndroidTest
+      - run:
+          name: Launch emulator
+          command: |
+            export ANDROID_SDK_ROOT=/opt/android-sdk
+            export ANDROID_HOME=/opt/android-sdk
+            emulator -avd citest -delay-adb -verbose -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+          background: true
 
-      - android/run-tests:
-          test-command: ./gradlew testFullDebugUnitTest
+      - run:
+          name: Run connectedFullDebugAndroidTest
+          command: |
+            export ANDROID_SDK_ROOT=/opt/android-sdk
+            export ANDROID_HOME=/opt/android-sdk
+            env
+            ./gradlew -Dorg.gradle.jvmargs=-Xmx6g connectedFullDebugAndroidTest
+          
+      - run:
+          name: Kill emulators
+          command: |
+            echo "Killing emulators"
+            adb devices | grep emulator | cut -f1 | while read -r line; do adb -s $line emu kill; done
+          
+      - run:
+          name: Run testFullDebugUnitTest
+          command: |
+            export ANDROID_SDK_ROOT=/opt/android-sdk
+            export ANDROID_HOME=/opt/android-sdk
+            ./gradlew -Dorg.gradle.jvmargs=-Xmx6g testFullDebugUnitTest
 
-      - android/run-tests:
-          test-command: ./gradlew --stacktrace jacocoAllDebugReport
+      - run:
+          run: Run jacocoAllDebugReport
+          command: |
+            export ANDROID_SDK_ROOT=/opt/android-sdk
+            export ANDROID_HOME=/opt/android-sdk
+            ./gradlew --stacktrace jacocoAllDebugReport
 
       - run:
           name: Save test results

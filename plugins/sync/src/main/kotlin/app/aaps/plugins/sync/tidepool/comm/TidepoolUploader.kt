@@ -3,14 +3,16 @@ package app.aaps.plugins.sync.tidepool.comm
 import android.content.Context
 import android.os.PowerManager
 import android.os.SystemClock
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.T
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.Preferences
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsclient.ReceiverDelegate
@@ -35,11 +37,12 @@ class TidepoolUploader @Inject constructor(
     private val rxBus: RxBus,
     private val ctx: Context,
     private val rh: ResourceHelper,
-    private val sp: SP,
+    private val preferences: Preferences,
     private val uploadChunk: UploadChunk,
     private val dateUtil: DateUtil,
     private val receiverDelegate: ReceiverDelegate,
-    private val config: Config
+    private val config: Config,
+    private val l: L
 ) {
 
     private val isAllowed get() = receiverDelegate.allowed
@@ -70,12 +73,14 @@ class TidepoolUploader @Inject constructor(
             httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
 
             val client = OkHttpClient.Builder()
-                .addInterceptor(httpLoggingInterceptor)
-                .addInterceptor(InfoInterceptor(aapsLogger))
-                .build()
+                .also {
+                    if (l.findByName(LTag.TIDEPOOL.tag).enabled && (config.isEngineeringMode() || config.isDev()))
+                        it.addInterceptor(httpLoggingInterceptor)
+                    it.addInterceptor(InfoInterceptor(aapsLogger))
+                }.build()
 
             retrofit = Retrofit.Builder()
-                .baseUrl(if (sp.getBoolean(R.string.key_tidepool_dev_servers, false)) INTEGRATION_BASE_URL else PRODUCTION_BASE_URL)
+                .baseUrl(if (preferences.get(BooleanKey.TidepoolUseTestServers)) INTEGRATION_BASE_URL else PRODUCTION_BASE_URL)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
@@ -85,7 +90,7 @@ class TidepoolUploader @Inject constructor(
 
     private fun createSession(): Session {
         val service = getRetrofitInstance()?.create(TidepoolApiService::class.java)
-        return Session(AuthRequestMessage.getAuthRequestHeader(sp), SESSION_TOKEN_HEADER, service)
+        return Session(AuthRequestMessage.getAuthRequestHeader(preferences), SESSION_TOKEN_HEADER, service)
     }
 
     fun resetInstance() {
@@ -123,13 +128,11 @@ class TidepoolUploader @Inject constructor(
                     releaseWakeLock()
                 })
             )
-            return
         } else {
             aapsLogger.debug(LTag.TIDEPOOL, "Cannot do login as user credentials have not been set correctly")
             connectionStatus = ConnectionStatus.FAILED
             rxBus.send(EventTidepoolStatus(("Invalid credentials")))
             releaseWakeLock()
-            return
         }
     }
 

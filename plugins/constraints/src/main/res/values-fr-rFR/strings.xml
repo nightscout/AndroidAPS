@@ -4,6 +4,7 @@
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">Changement d\'heure dans moins de 24 heures</string>
     <string name="dst_loop_disabled_warning">Changement d\'heure dans moins de 3 heures - Boucle fermée désactivée</string>
+    <string name="dst_loop_disabled_error">Le changement d\'heure a eu lieu il y a moins de 3 heures. La boucle fermée est temporairement désactivée, elle se réactivera automatiquement 3 heures après le changement d\'heure</string>
     <!-- Storage constraint -->
     <string name="disk_full">Boucle désactivée ! Libérez au moins %1$d Mo du stockage interne !</string>
     <!-- Version Checker -->

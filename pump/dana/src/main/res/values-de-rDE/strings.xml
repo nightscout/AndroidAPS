@@ -93,7 +93,6 @@
     <string name="danar_disableeasymode">EasyUI-Modus in der Pumpe deaktivieren</string>
     <string name="profile_set_failed">Setzen des Basal-Profils fehlgeschlagen</string>
     <string name="danar_bluetooth_status">Bluetooth-Status</string>
-    <string name="danar_iob_label">Pumpen-IOB</string>
     <string name="firmware_label">Firmware</string>
     <string name="danar_pump_settings">Dana Pumpen-Einstellungen</string>
     <string name="time_format_12h">12h</string>
@@ -103,7 +102,6 @@
     <string name="danar_bt_name_title">DanaR Blueetooth--Gerät</string>
     <string name="danars_password_title">Pumpen-Passwort (nur v1)</string>
     <string name="danar_password_title">Pumpen-Passwort</string>
-    <string name="danar_useextended_title">Benutze verzögerten Bolus für hohe TBR &gt;200%%</string>
     <string name="bolusspeed">Bolus-Geschwindigkeit</string>
     <string name="selectedpump">Ausgewählte Pumpe</string>
     <string name="rs_loginsulinchange_title">Reservoirwechsel aufzeichnen</string>

@@ -4,6 +4,7 @@
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">24 saat veya daha kısa süre içinde yaz saati değişikliği</string>
     <string name="dst_loop_disabled_warning">Yaz Saati Uygulaması 3 saatten daha kısa bir süre önce değişti - Kapalı döngü devre dışı</string>
+    <string name="dst_loop_disabled_error">Yaz Saati Uygulaması (DST) değişikliği 3 saatten kısa bir süre önce gerçekleşti. Kapalı döngü geçici olarak devre dışı bırakıldı. DST değişikliğinden 3 saat sonra otomatik olarak yeniden etkinleştirilecek</string>
     <!-- Storage constraint -->
     <string name="disk_full">Dahili depolama biriminden en az %1$d MB yer kaldı! Döngü devre dışı!</string>
     <!-- Version Checker -->

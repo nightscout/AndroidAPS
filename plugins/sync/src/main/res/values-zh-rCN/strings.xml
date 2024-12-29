@@ -9,7 +9,6 @@
     <string name="ns_create_announcements_from_carbs_req_title">从碳水需求警报创建NS公告</string>
     <string name="ns_create_announcements_from_errors_summary">为错误对话框和本地警报创建Nightscout公告(在治疗标签下的护理记录里也可查看)</string>
     <string name="ns_create_announcements_from_carbs_req_summary">为碳水化合物需求警报创建Nightscout网站的公告</string>
-    <string name="description_ns_client">将数据与 Nightscout 同步</string>
     <string name="blocked_by_charging">被充电选项阻止</string>
     <string name="blocked_by_connectivity">被连接选项阻止</string>
     <string name="unsupported_ns_version">不支持的 Nightscout 版本</string>
@@ -19,18 +18,10 @@
     <!-- NSClient -->
     <string name="no_write_permission">NSCLIENT 没有写权限。可能是NS的 API 密钥输错了？</string>
     <string name="ns_client">NSClient</string>
-    <string name="ns_client_short_name">NSCIient</string>
     <string name="ns_client_url">URL网址：</string>
     <string name="restart">重新启动</string>
-    <string name="ns_client_internal_title">NSClient</string>
     <string name="ns_client_url_title">Nightscout URL(网址)</string>
-    <string name="ns_client_url_dialog_message">输入您的 Nightscout URL(网址)</string>
-    <string name="ns_client_secret_title">NS API 密钥</string>
-    <string name="ns_client_secret_dialog_title">NS API 密钥</string>
-    <string name="ns_client_secret_dialog_message">输入 NS API 密钥 (最少12个字符)</string>
     <string name="deliver_now">立即输注</string>
-    <string name="clear_queue">清除队列</string>
-    <string name="show_queue">显示队列</string>
     <string name="queue">队列：</string>
     <string name="status">状态:</string>
     <string name="clear_log">清除日志</string>
@@ -76,14 +67,8 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">数据上传到Tidepool</string>
-    <string name="tidepool_upload_cgm">上传CGM数据</string>
-    <string name="tidepool_upload_bolus">上传治疗方案（胰岛素，碳水化合物）</string>
-    <string name="tidepool_upload_tbr">上传临时基础率</string>
-    <string name="tidepool_upload_profile">上传配置文件切换，临时目标</string>
-    <string name="tidepool_upload_bg">上传血糖值</string>
     <string name="remove_all">删除全部</string>
     <string name="upload_now">现在上传</string>
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <!--    DataBroadcast-->
     <!-- GarminPlugin -->
@@ -95,7 +80,6 @@
     <string name="wizard_result">计算. 向导:\n胰岛素: %1$.2fU\n碳水: %2$d克</string>
     <string name="quick_wizard_not_available">选定的快速向导不再可用，请刷新</string>
     <string name="quick_wizard_message">快速向导: %1$s\n胰岛素: %2$.2fU\n碳水: %3$d克</string>
-    <string name="wear_action_tempt_preset_error">未预设的临时目标： %1$s</string>
     <string name="wear_action_tempt_cancel_message">取消正在运行的临时目标？</string>
     <string name="wear_action_tempt_unit_error">手表和手机上使用了不同的单位！</string>
     <string name="wear_action_tempt_zero_message">无临时目标-取消正在运行的临时目标？</string>

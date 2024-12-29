@@ -106,12 +106,12 @@ class AAPSPumpStateStore(
         val hasState = internalSP.contains(PreferenceKeys.NONCE_KEY.str)
 
         internalSP.edit(commit = true) {
-            for (keys in PreferenceKeys.values())
+            for (keys in PreferenceKeys.entries)
                 remove(keys.str)
         }
 
         aapsMainSP.edit(commit = true) {
-            for (keys in PreferenceKeys.values())
+            for (keys in PreferenceKeys.entries)
                 remove(keys.str)
         }
 
@@ -193,7 +193,7 @@ class AAPSPumpStateStore(
     // Copies all pump state values from the AAPS main SP to the internal SP. This is supposed to be
     // called if the internal SP is empty. That way, a pump state can be imported from AAPS settings files.
     fun copyAllValuesFromAAPSMainSP(commit: Boolean) =
-        copyValuesBetweenSPs(commit, from = aapsMainSP, to = internalSP, keys = PreferenceKeys.values())
+        copyValuesBetweenSPs(commit, from = aapsMainSP, to = internalSP, keys = PreferenceKeys.entries.toTypedArray())
 
     // Copies all pump state values from the internal SP to the AAPS main SP to. The createPumpState()
     // function calls this after creating the pump state to ensure both SPs are in sync. Also, this
@@ -202,7 +202,7 @@ class AAPSPumpStateStore(
     // main SP is fully synced up with the one from the internal SP, and does not contain some old
     // state that is not in use anymore.
     fun copyAllValuesToAAPSMainSP(commit: Boolean) =
-        copyValuesBetweenSPs(commit, from = internalSP, to = aapsMainSP, keys = PreferenceKeys.values())
+        copyValuesBetweenSPs(commit, from = internalSP, to = aapsMainSP, keys = PreferenceKeys.entries.toTypedArray())
 
     private fun copyValuesBetweenSPs(commit: Boolean, from: SP, to: SP, keys: Array<PreferenceKeys>) {
         to.edit(commit) {

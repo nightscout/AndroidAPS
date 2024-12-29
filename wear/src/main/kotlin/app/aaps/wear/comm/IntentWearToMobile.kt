@@ -14,6 +14,5 @@ class IntentWearToMobile(context: Context, command: String) : Intent(context, Da
         })
     }
 
-    @Suppress("unused")
     constructor(context: Context, command: EventData) : this(context, command.serialize())
 }

@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/buttons"
+        android:fillViewport="true">
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:divider="@drawable/equil_line_point"
+            android:layerType="software"
+            android:showDividers="beginning|middle|end"
+            android:stretchColumns="0">
+
+            <TableRow
+                android:divider="@drawable/equil_line_point"
+                android:minHeight="30dp"
+                android:showDividers="beginning|middle|end">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:text="@string/equil_serialnumber"
+                    android:textSize="14sp" />
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/serial_number"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:textSize="14sp" />
+
+                    <ProgressBar
+                        style="?android:attr/progressBarStyle"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="right|center_vertical|center_horizontal|center"
+                        android:layout_marginEnd="8dp"
+                        android:visibility="gone" />
+                </FrameLayout>
+            </TableRow>
+
+
+            <TableRow
+                android:divider="@drawable/equil_line_point"
+                android:minHeight="30dp"
+                android:showDividers="beginning|middle|end">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:text="@string/equil_firmware_version"
+                    android:textSize="14sp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/firmwareVersion"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:textSize="14sp" />
+            </TableRow>
+
+            <TableRow
+                android:divider="@drawable/equil_line_point"
+                android:minHeight="30dp"
+                android:showDividers="beginning|middle|end">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:text="@string/equil_mode"
+                    android:textSize="14sp" />
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/mode"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:textSize="14sp" />
+
+                    <FrameLayout
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="right|center_vertical|center_horizontal|center"
+                        android:layout_marginEnd="8dp"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:id="@+id/btn_getmode"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/equil_ic_bluetooth_connecting" />
+
+                    </FrameLayout>
+                </FrameLayout>
+            </TableRow>
+
+            <TableRow
+                android:divider="@drawable/equil_line_point"
+                android:minHeight="30dp"
+                android:showDividers="beginning|middle|end">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:text="@string/equil_date_device"
+                    android:textSize="14sp" />
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/time_device"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:textSize="14sp" />
+
+                    <FrameLayout
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="right|center_vertical|center_horizontal|center"
+                        android:layout_marginEnd="8dp"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:id="@+id/imv_canclick_device_time"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/equil_ic_bluetooth_connecting" />
+
+                        <ProgressBar
+                            android:id="@+id/progress_device_time"
+                            style="?android:attr/progressBarStyle"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_gravity="center"
+                            android:visibility="gone" />
+                    </FrameLayout>
+                </FrameLayout>
+            </TableRow>
+
+            <TableRow
+                android:divider="@drawable/equil_line_point"
+                android:minHeight="30dp"
+                android:showDividers="beginning|middle|end">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:text="@string/battery_label"
+                    android:textSize="14sp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/battery"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:textSize="14sp" />
+            </TableRow>
+
+            <TableRow
+                android:divider="@drawable/equil_line_point"
+                android:minHeight="30dp"
+                android:showDividers="beginning|middle|end">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:text="@string/equil_insulin_reservoir"
+                    android:textSize="14sp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/insulin_reservoir"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:textSize="14sp" />
+            </TableRow>
+
+            <TableRow
+                android:divider="@drawable/equil_line_point"
+                android:minHeight="30dp"
+                android:showDividers="beginning|middle|end">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:text="@string/equil_basal_speed"
+                    android:textSize="14sp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/basal_speed"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:textSize="14sp" />
+            </TableRow>
+
+
+            <TableRow
+                android:divider="@drawable/equil_line_point"
+                android:minHeight="30dp"
+                android:showDividers="beginning|middle|end">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:text="@string/equil_temp_basal_rate"
+                    android:textSize="14sp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tempBasal"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:textSize="14sp" />
+            </TableRow>
+
+            <TableRow
+                android:divider="@drawable/equil_line_point"
+                android:minHeight="30dp"
+                android:showDividers="beginning|middle|end">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:text="@string/equil_total_delivered"
+                    android:textSize="14sp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/total_delivered"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:textSize="14sp" />
+            </TableRow>
+
+            <TableRow
+                android:divider="@drawable/equil_line_point"
+                android:minHeight="30dp"
+                android:showDividers="beginning|middle|end">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:text="@string/equil_last_bolus"
+                    android:textSize="14sp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/lastBolus"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:textSize="14sp" />
+            </TableRow>
+
+            <TableRow>
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imv"
+                    android:layout_width="140dp"
+                    android:layout_height="140dp"
+                    android:layout_span="1"
+                    app:srcCompat="@drawable/equil_ic_pump2" />
+            </TableRow>
+        </TableLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/buttons"
+        style="@style/Widget.MaterialComponents.CardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="2dp"
+        app:cardUseCompatPadding="false"
+        app:contentPadding="2dp">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_bind"
+                style="@style/ButtonSmallFontStyle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/equil_ic_settings"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp"
+                android:text="@string/equil_ble_config_confirmation_title"
+                android:visibility="gone" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_op_dressing"
+                style="@style/ButtonSmallFontStyle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/equil_ic_dressing"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp"
+                android:text="@string/equil_dressing" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_history"
+                style="@style/ButtonSmallFontStyle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/equil_ic_hositry"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp"
+                android:text="@string/equil_history" />
+
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_resume_delivery"
+                style="@style/ButtonSmallFontStyle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_equil_overview_resume_delivery"
+                android:drawablePadding="4dp"
+                android:text="@string/equil_common_overview_button_resume_delivery"
+                android:visibility="gone" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_suspend_delivery"
+                style="@style/ButtonSmallFontStyle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_equil_overview_suspend_delivery"
+                android:drawablePadding="4dp"
+                android:text="@string/equil_common_overview_button_suspend_delivery"
+                android:visibility="gone" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_unbind"
+                style="@style/ButtonSmallFontStyle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/equil_ic_settings"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp"
+                android:text="@string/equil_unbind" />
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </com.google.android.material.card.MaterialCardView>
+</RelativeLayout>

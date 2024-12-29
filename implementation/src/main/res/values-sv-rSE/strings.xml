@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bg_label">BG</string>
     <string name="executing_right_now">Kommando körs just nu</string>
     <string name="basal_value_below_minimum">Basal understiger miniminivå. Profilen sattes inte.</string>
-    <string name="permission">Behörighet</string>
-    <string name="need_whitelisting">%1$s behöver kunna kringgå batterisparfunktionerna för att fungera korrekt</string>
-    <string name="need_location_permission">Appen behöver platsåtkomst för bluetooth- och WiFi-identifiering</string>
-    <string name="need_storage_permission">Applikationen behöver lagringsbehörighet för att kunna lagra loggfiler och exportinställningar</string>
     <!--       Stats -->
     <string name="veryLow" comment="below 3.1">Lågt</string>
     <string name="low" comment="3.1-3.9">Låg</string>

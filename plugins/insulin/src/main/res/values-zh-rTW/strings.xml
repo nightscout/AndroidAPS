@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Insulin -->
+    <string name="lyumjev">Lyumjev</string>
+    <string name="description_insulin_rapid">Humalog和NovoRapid / NovoLog的胰島素預設</string>
+    <string name="description_insulin_ultra_rapid">Fiasp的胰島素預設</string>
+    <string name="description_insulin_lyumjev">Lyumjev的胰島素預設</string>
+    <string name="description_insulin_free_peak">允許您定義胰島素活性的峰值，僅應由高級用戶使用</string>
+    <string name="insulin_shortname">胰島素</string>
+    <string name="insulin_oref_peak">IOB曲線峰值時間</string>
+    <string name="insulin_peak_time">峰值時間 [分鐘]</string>
+    <string name="free_peak_oref">自訂峰值 Oref</string>
+    <string name="rapid_acting_oref">速效Oref</string>
+    <string name="ultra_rapid_oref">超速效 Oref</string>
+    <string name="dia_too_short">DIA為 %1$f 太短 - 改用 %2$f！</string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
+</resources>

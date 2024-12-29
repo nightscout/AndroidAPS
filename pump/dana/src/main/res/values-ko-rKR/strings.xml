@@ -93,7 +93,6 @@
     <string name="danar_disableeasymode">펌프에서 이지모드(EasyUI)를 해제하세요</string>
     <string name="profile_set_failed">Basal 프로파일 설정이 실패하였습니다</string>
     <string name="danar_bluetooth_status">블루투스 상태</string>
-    <string name="danar_iob_label">펌프 IOB</string>
     <string name="firmware_label">펌웨어</string>
     <string name="danar_pump_settings">다나 펌프 설정</string>
     <string name="time_format_12h">12h</string>
@@ -103,7 +102,6 @@
     <string name="danar_bt_name_title">다나R 블루투스</string>
     <string name="danars_password_title">펌프 비밀번호 (v1 전용)</string>
     <string name="danar_password_title">펌프 비밀번호</string>
-    <string name="danar_useextended_title">200%%이상 주입 위해 확장 Bolus 사용</string>
     <string name="bolusspeed">Bolus 속도</string>
     <string name="selectedpump">선택된 펌프</string>
     <string name="rs_loginsulinchange_title">주사기 교체 기록</string>

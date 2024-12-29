@@ -8,5 +8,5 @@ object EventOverviewBolusProgress : Event() {
     var t: Treatment? = null
     var percent = 0
 
-    fun isSMB(): Boolean = t?.isSMB ?: false
+    fun isSMB(): Boolean = t?.isSMB == true
 }

@@ -55,12 +55,12 @@ class ExceptionHandlerWear @Inject constructor(
         } finally {
             try {
                 oos?.close()
-            } catch (exx: IOException) {
+            } catch (_: IOException) {
                 // Ignore close exception
             }
             try {
                 bos.close()
-            } catch (exx: IOException) {
+            } catch (_: IOException) {
                 // Ignore close exception
             }
         }

@@ -20,6 +20,7 @@
     <string name="unsecure_fallback_biometric">Güvensiz Yedek</string>
     <string name="unsecure_fallback_descriotion_biometric">Biyometrik korumanın etkili olabilmesi için, geri dönüş için bir ana parola ayarlanması gerekir.\n\nLütfen bir ana parola belirleyin!</string>
     <string name="password_set">Şifre belirlendi!</string>
+    <string name="datastore_password_cleared">Dışa akatarım şifresi silindi!</string>
     <string name="pin_set">PIN ayarlandı!</string>
     <string name="password_not_set">Şifre ayarlanmamış</string>
     <string name="pin_not_set">PIN kodu oluşturulmadı</string>
@@ -28,4 +29,6 @@
     <string name="pin_cleared">PIN temizlendi!</string>
     <string name="password_hint">Parolayı buraya girin</string>
     <string name="pin_hint">PIN Kodunu buraya girin</string>
+    <string name="master_password_not_set">Ana parola ayarlanmadı</string>
+    <string name="aaps_directory_not_selected">AAPS dizini seçilmedi</string>
 </resources>

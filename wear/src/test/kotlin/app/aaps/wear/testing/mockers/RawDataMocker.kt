@@ -5,6 +5,7 @@ import app.aaps.core.interfaces.rx.weardata.EventData.SingleBg
 import app.aaps.core.interfaces.utils.SafeParse.stringToDouble
 import app.aaps.wear.WearTestBase
 import app.aaps.wear.data.RawDisplayData
+import kotlin.String
 
 class RawDataMocker {
 
@@ -22,93 +23,125 @@ class RawDataMocker {
                 else              -> "\u21c8"
             }
 
-        raw.singleBg = SingleBg(
-            WearTestBase.backInTime(0, 0, m, 0),
-            sgv!!,
-            "",
-            d,
-            deltaString,
-            deltaString,
-            "",
-            "",
-            0,
-            0.0,
-            0.0,
-            0.0,
-            0
+        raw.singleBg = arrayOf<SingleBg>(
+            SingleBg(
+                0,
+                WearTestBase.backInTime(0, 0, m, 0),
+                sgv!!,
+                "",
+                d,
+                deltaString,
+                deltaString,
+                "",
+                "",
+                0,
+                0.0,
+                0.0,
+                0.0,
+                0
+            )
         )
         return raw
     }
 
     fun rawDelta(m: Int, delta: String): RawDisplayData {
         val raw = RawDisplayData()
-        raw.singleBg = SingleBg(
-            WearTestBase.backInTime(0, 0, m, 0),
-            "",
-            "",
-            "",
-            delta,
-            delta,
-            "",
-            "",
-            0,
-            0.0,
-            0.0,
-            0.0,
-            0
+        raw.singleBg = arrayOf<SingleBg>(
+            SingleBg(
+                0,
+                WearTestBase.backInTime(0, 0, m, 0),
+                "",
+                "",
+                "",
+                delta,
+                delta,
+                "",
+                "",
+                0,
+                0.0,
+                0.0,
+                0.0,
+                0
+            )
         )
         return raw
     }
 
     fun rawCobIobBr(cob: String, iob: String, br: String): RawDisplayData {
         val raw = RawDisplayData()
-        raw.status = EventData.Status(
-            "",
-            iob,
-            "",
-            cob,
-            br,
-            "",
-            "",
-            0L,
-            "",
-            0
+        raw.status = arrayOf<EventData.Status>(
+            EventData.Status(
+                dataset = 0,
+                externalStatus = "",
+                iobSum = iob,
+                iobDetail = "",
+                cob = cob,
+                currentBasal = br,
+                battery = "",
+                rigBattery = "",
+                openApsStatus = 0L,
+                bgi = "",
+                batteryLevel = 0,
+                patientName = "",
+                tempTarget = "",
+                tempTargetLevel = 0,
+                reservoirString = "",
+                reservoir = 0.0,
+                reservoirLevel = 0
+            )
         )
         return raw
     }
 
     fun rawIob(iob: String, iob2: String): RawDisplayData {
         val raw = RawDisplayData()
-        raw.status = EventData.Status(
-            "",
-            iob,
-            iob2,
-            "",
-            "",
-            "",
-            "",
-            0L,
-            "",
-            0
+        raw.status = arrayOf<EventData.Status>(
+            EventData.Status(
+                dataset = 0,
+                externalStatus = "",
+                iobSum = iob,
+                iobDetail = iob2,
+                cob = "",
+                currentBasal = "",
+                battery = "",
+                rigBattery = "",
+                openApsStatus = 0L,
+                bgi = "",
+                batteryLevel = 0,
+                patientName = "",
+                tempTarget = "",
+                tempTargetLevel = 0,
+                reservoirString = "",
+                reservoir = 0.0,
+                reservoirLevel = 0
+            )
         )
         return raw
     }
 
     fun rawCob(cob: String?): RawDisplayData {
         val raw = RawDisplayData()
-        raw.status = EventData.Status(
-            "",
-            "",
-            "",
-            cob!!,
-            "",
-            "",
-            "",
-            0L,
-            "",
-            0
+        raw.status = arrayOf<EventData.Status>(
+            EventData.Status(
+                dataset = 0,
+                externalStatus = "",
+                iobSum = "",
+                iobDetail = "",
+                cob = cob!!,
+                currentBasal = "",
+                battery = "",
+                rigBattery = "",
+                openApsStatus = 0L,
+                bgi = "",
+                batteryLevel = 0,
+                patientName = "",
+                tempTarget = "",
+                tempTargetLevel = 0,
+                reservoirString = "",
+                reservoir = 0.0,
+                reservoirLevel = 0
+            )
         )
         return raw
     }
-
 }

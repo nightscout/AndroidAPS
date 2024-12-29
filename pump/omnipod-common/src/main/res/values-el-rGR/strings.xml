@@ -35,7 +35,6 @@
     <string name="omnipod_common_error_unexpected_exception">Παρουσιάστηκε μη αναμενόμενο σφάλμα. Παρακαλούμε να το αναφέρετε! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation">Επιβεβαίωση</string>
-    <string name="omnipod_common_confirmation_time_or_timezone_change">Η ώρα ή/και η ζώνη ώρας άλλαξαν στο Pod.</string>
     <string name="omnipod_common_confirmation_expiration_alerts_updated">Οι ρυθμίσεις ειδοποιήσεων έχουν ενημερωθεί στο Pod.</string>
     <string name="omnipod_common_confirmation_time_on_pod_updated">Η ώρα στο Pod έχει ενημερωθεί.</string>
     <string name="omnipod_common_confirmation_suspended_delivery">Όλη η χορήγηση ινσουλίνης έχει ανασταλεί.</string>
@@ -127,7 +126,6 @@
     <string name="omnipod_common_pod_status_running">Εκτελείτε</string>
     <string name="omnipod_common_pod_status_suspended">Σε αναστολή</string>
     <string name="omnipod_common_pod_status_pod_fault">Σφάλμα Pod</string>
-    <string name="omnipod_common_pod_status_activation_time_exceeded">Υπέρβαση χρόνου ενεργοποίησης</string>
     <string name="omnipod_common_pod_status_inactive">Ανενεργό</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Σφάλμα Pod: %1$03d %2$s</string>
     <!-- Omnipod - Commands -->
@@ -153,7 +151,6 @@
     <string name="omnipod_common_cmd_set_fake_suspended_tbr">Ορίστε ψεύτικο προσωρινό βασικό επειδή το Pod είναι σε αναστολή</string>
     <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Ακύρωση ψεύτικου προσωρινού βασικού που δημιουργήθηκε επειδή το Pod ήταν σε αναστολή</string>
     <string name="omnipod_common_cmd_split_tbr">Διαίρεση προσωρινού βασικού λόγω αβέβαιης αποτυχίας στην ακύρωση</string>
-    <string name="omnipod_common_cmd_beep_config">Ρύθμιση Ήχων</string>
     <string name="omnipod_common_cmd_play_test_beep">Αναπαραγωγή Δοκιμαστικού Ήχου</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_finish_pairing_reminder">Υπενθύμιση ολοκλήρωσης σύζευξης</string>

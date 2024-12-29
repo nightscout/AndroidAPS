@@ -39,7 +39,7 @@
     <string name="smscommunicator_stops_ns_with_code">SMS Uzak Hizmet desteğini devre dışı bırakmak için %1$s koduyla yanıt verin.\n\nBu hizmeti yalnızca AAPS yüklü ana telefondan yeniden etkinleştirebileceğinizi unutmayın.</string>
     <string name="smscommunicator_stopped_sms">SMS Uzak Hizmeti durduruldu. Yeniden etkinleştirmek için ana telefondaki AAPS\'i kullanın.</string>
     <string name="smscommunicator_calibration_reply_with_code">Kalibrasyon için %1$.2f gönderilecek, kod ile cevap ver %2$s</string>
-    <string name="smscommunicator_bolus_failed">Bolus başarısız</string>
+    <string name="smscommunicator_bolus_failed">Bolus başarısız oldu. Başka bir komut göndermeden önce gerçek durumu doğrulayın!</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Bir sms bolusu ile bir sonraki bolus arasında geçmesi gereken minimum süre (dk)</string>
     <string name="smscommunicator_remote_bolus_min_distance">Bir sms bolus gönderimi ile bir sonraki bolus arasında en az kaç dakika geçsin?</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">Güvenliğiniz için en az 2 telefon numarası eklemeniz gerekir.</string>
@@ -153,6 +153,8 @@
     <string name="dia_short">İES</string>
     <string name="target_short">HDF</string>
     <string name="basal_short">BAZ</string>
+    <string name="isf_dynamic_label">Algoritmanız İDF\'nin dinamik hesaplamasını sağlayabilir. Aşağıdaki değerler yalnızca eksik veri olması durumunda geri dönüş olarak kullanılır</string>
+    <string name="ic_dynamic_label">Algoritmanız Kİ\'nin dinamik hesaplamasını sağlayabilir. Aşağıdaki değerler yalnızca eksik veri olması durumunda geri dönüş olarak kullanılır</string>
     <!-- Actions -->
     <string name="actions">Eylemler</string>
     <string name="description_actions">Ortak özelliklere hızlıca erişmek için bazı düğmeler</string>
@@ -189,7 +191,20 @@
     <string name="statuslights_bat_warning">Pompa pil seviye uyarısı [%]</string>
     <string name="statuslights_bat_critical">Kritik pompa pili seviyesi [%]</string>
     <string name="statuslights_copy_ns">Ayarları NS\'den kopyala</string>
+    <string name="graph_scale_6h">6s</string>
+    <string name="graph_scale_12h">12s</string>
+    <string name="graph_scale_18h">18s</string>
+    <string name="graph_scale_24h">24s</string>
+    <string name="graph_long_scale_6h">6 saat</string>
+    <string name="graph_long_scale_12h">12 saat</string>
+    <string name="graph_long_scale_18h">18 saat</string>
+    <string name="graph_long_scale_24h">24 saat</string>
     <string name="a11y_graph">grafik</string>
+    <string name="a11y_graph_scale">grafik ölçeğini seç</string>
+    <string name="a11y_graph_scale_6h">6 saatlik ölçek</string>
+    <string name="a11y_graph_scale_12h">12 saatlik ölçek</string>
+    <string name="a11y_graph_scale_18h">18 saatlik ölçek</string>
+    <string name="a11y_graph_scale_24h">24 saatlik ölçek</string>
     <string name="a11y_insulin_label">insülin</string>
     <string name="chart_menu">Grafik menüsü</string>
     <string name="a11y_bg_quality">kan şekeri kalitesi</string>
@@ -201,10 +216,8 @@
     <string name="overview_shortname">GİRİŞ</string>
     <string name="description_overview">Döngünüzün mevcut durumunu ve en yaygın eylemler için düğmeleri görüntüler</string>
     <string name="overview_buttons_selection">Butonlar</string>
-    <string name="show_calibration_button_summary">xDrip+\'a bir kalibrasyon gönderir veya BYODA kalibrasyon iletişim kutusunu açar</string>
-    <string name="show_cgm_button_summary">xDrip+ veya BYODA\'yı açar, geri dönme düğmesi AAPS\'ye döndürür</string>
-    <string name="dexcom_app_not_installed">Dexcom uygulaması yüklü değil.</string>
-    <string name="dexcom_app_not_detected">Lütfen Dexcom uygulamanızı desteklenen sürüme güncelleyin</string>
+    <string name="show_calibration_button_summary">xDrip+\'a kalibrasyon gönderir (xDrip+\'ta Inter-App ayarları altında \"Kalibrasyonları Kabul Et\" seçeneğinin etkinleştirildiğinden emin olun).</string>
+    <string name="show_cgm_button_summary">xDrip+ uygulamasını açar (AAPS\'e dönmek için geri butonunu kullanabilirsiniz).</string>
     <string name="error_starting_cgm">CGM uygulaması başlatılamadı. Yüklendiğinden emin olun.</string>
     <string name="not_available_full">Mevcut değil</string>
     <string name="constraints_violation">Kısıtlamalar ihlali</string>
@@ -226,12 +239,12 @@
     <string name="thirdcarbsincrement">Üçüncü karbonhidrat artışı</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">Varsayılan Geçici hedefler</string>
-    <string name="eatingsoon_duration">yakında ye süresi</string>
-    <string name="eatingsoon_target">yakında ye hedefi</string>
-    <string name="activity_duration">aktivite süresi</string>
-    <string name="activity_target">aktivite hedefi</string>
-    <string name="hypo_duration">hipo süresi</string>
-    <string name="hypo_target">hipo hedefi</string>
+    <string name="eatingsoon_duration">Yakında Yemek süresi (dakika)</string>
+    <string name="eatingsoon_target">Yakında Yemek Hedef değeri</string>
+    <string name="activity_duration">Etkinlik süresi (dakika)</string>
+    <string name="activity_target">Etkinlik Hedef değeri</string>
+    <string name="hypo_duration">Hipo süresi (dakika)</string>
+    <string name="hypo_target">Hipo Hedef değeri</string>
     <string name="fill_bolus_title">Standart insülin miktarlarını Hazırla/Doldur</string>
     <string name="button1">Buton 1</string>
     <string name="button2">Buton 2</string>
@@ -259,12 +272,13 @@
     <string name="overview_show_deviation_slope">Sapma eğimi</string>
     <string name="overview_show_activity">Aktivite</string>
     <string name="overview_show_bgi">Kan Şekeri Etkisi</string>
-    <string name="overview_show_sensitivity">Duyarlılık</string>
+    <string name="overview_show_sensitivity">Duyarlılık değişikliği</string>
     <string name="overview_show_deviations">Sapma</string>
     <string name="overview_show_cob">Aktif Karbonhidrat</string>
     <string name="overview_show_iob">Aktif İnsülin</string>
     <string name="overview_show_basals">Bazallar</string>
     <string name="overview_show_abs_insulin">Mutlak insülin</string>
+    <string name="overview_show_variable_sens">Değişken duyarlılık</string>
     <string name="prediction_shortname">TAHMİN</string>
     <string name="basal_shortname">BAZAL</string>
     <string name="deviation_shortname">SAPMA</string>
@@ -274,9 +288,11 @@
     <string name="devslope_shortname">EĞİMSAPMA</string>
     <string name="treatments_shortname">TEDAVİ</string>
     <string name="heartRate_shortname">Nabız</string>
-    <string name="sensitivity_shortname">SENS</string>
+    <string name="sensitivity_shortname">DYRLLK%</string>
+    <string name="variable_sensitivity_shortname">DDYRLLK</string>
     <string name="graph_scale">Grafik ölçeği</string>
     <string name="graph_menu_divider_header">Grafik</string>
+    <string name="temp_basal_overview_short_name">GB:</string>
     <!-- Skins -->
     <string name="classic_description">Orjinal görünüm</string>
     <string name="lowres_description">Düşük çözünürlüklü görünüm</string>
@@ -285,8 +301,10 @@
     <string name="skin">Görünüm</string>
     <string name="cannula_usage">kullanım:</string>
     <!--    Iob-->
-    <string name="send_logfiles">Bu günün kayıt dosyalarını geliştiricilere gönderin. Beklenmedik bir durum.</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Döngü\'ün ne yaptığını kısa bir genel bakışla devam eden bir bildirimi gösterir</string>
     <string name="old_data">ESKİ VERİ</string>
+    <string name="overview_show_steps">Adımlar</string>
+    <string name="steps_shortname">ADMLR</string>
+    <string name="simple_mode_enabled">Basit Modu Etkinleştir</string>
 </resources>

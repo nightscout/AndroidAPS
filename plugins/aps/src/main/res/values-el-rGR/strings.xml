@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="DynISFAdjust_title" formatted="false">DynamicISF Συντελεστής Προσαρμογής %</string>
-    <string name="DynISFAdjust_summary" formatted="false">Συντελεστής Προσαρμογής για το DynamicISF. Ρυθμίστε περισσότερο από 100% για πιο επιθετικές διορθωτικές δόσεις και λιγότερο από 100% για λιγότερο επιθετικές διορθώσεις.</string>
+    <!--Autotune-->
     <string name="high_temptarget_raises_sensitivity_title">Ο υψηλός προσωρινός στόχος ανεβάζει την ευαισθησία</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Αύξηση ευαισθησίας για προσωρινό στόχο > = 100]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Ο χαμηλός προσωρινός στόχος μειώνει την ευαισθησία</string>
@@ -60,9 +59,7 @@
     <string name="enable_smb_summary">Χρησιμοποιήστε Super Micro Boluses αντί προσωρινού ρυθμού για ταχύτερα αποτελέσματα</string>
     <string name="enable_uam_summary">Ανίχνευση απαρατήρητων γευμάτων</string>
     <string name="enable_smb_always">Πάντα ενεργό SMB</string>
-    <string name="enable_smb_always_summary">Ενεργοποιήστε τις ΜΜΕ ανεξάρτητα από τα bolus. Πιθανόν μόνο με πηγές BG με καλό φιλτράρισμα δεδομένων, όπως το G5</string>
     <string name="enable_smb_after_carbs">Ενεργοποίηση SMB μετά από υδατάνθρακες</string>
-    <string name="enable_smb_after_carbs_summary">Ενεργοποίηση SMB για 6 ώρες μετά από υδατάνθρακες, ακόμη και με 0 COB. Πιθανόν μόνο με πηγή BG με καλό φιλτράρισμα δεδομένων όπως το G5</string>
     <string name="enable_smb_with_cob">Ενεργοποίηση SMB με COB</string>
     <string name="enable_smb_with_cob_summary">Ενεργοποίηση SMB όταν υπάρχει ενεργό COB.</string>
     <string name="enable_smb_with_temp_target">Ενεργοποίηση SMB με προσωρινούς στόχους</string>
@@ -114,4 +111,45 @@
     <string name="loop_open_mode_min_change">Ελάχιστο αίτημα για αλλαγή [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Το Ανοιχτό κύκλωμα θα εμφανίσει νέο μήνυμα αλλαγής μόνο αν η αλλαγή είναι μεγαλύτερη από αυτήν την τιμή σε %. Προεπιλεγμένη τιμή 20%</string>
     <string name="fallback_smb_no_tdd">Επιστροφή στο SMB. Δεν υπάρχουν αρκετά δεδομένα TDD.</string>
+    <!-- Autotune -->
+    <string name="autotune_shortname">AT</string>
+    <string name="autotune_settings">Ρυθμίσεις Autotune</string>
+    <string name="autotune_auto_title">Αυτοματισμός Εναλλαγής Προφίλ</string>
+    <string name="autotune_auto_summary">Αν ενεργοποιηθεί, το Autotune θα ενημερώνει αυτόματα και θα αλλάζει το προεπιλεγμένο Προφίλ μετά τον υπολογισμό από έναν κανόνα αυτοματισμού.</string>
+    <string name="autotune_categorize_uam_as_basal_title">Κατηγοριοποίηση του UAM ως βασικού</string>
+    <string name="autotune_categorize_uam_as_basal_summary">Ενεργοποιήστε μόνο αν έχετε εισαγάγει αξιόπιστα όλους τους υδατάνθρακες που καταναλώνονται, με αυτή την επιλογή ξαφνικές αυξήσεις που εμφανίζονται θα χρησιμοποιηθούν από το Autotune για να προτείνουν αλλαγές στο βασικό ρυθμό.</string>
+    <string name="autotune_tune_insulin_curve_title">Συντονισμός καμπύλης ινσουλίνης</string>
+    <string name="autotune_tune_insulin_curve_summary">Ενεργοποιήστε μόνο αν χρησιμοποιείτε free peak. Αυτή η επιλογή θα συντονίσει τις διάρκειες των peak και DIA</string>
+    <string name="autotune_default_tune_days_title">Αριθμός ημερών δεδομένων</string>
+    <string name="autotune_circadian_ic_isf_title">Εφαρμόστε το μέσο αποτέλεσμα σε κιρκαδικό IC/ISF</string>
+    <string name="autotune_circadian_ic_isf_summary">Το Autotune δεν θα συντονίσει τις κιρκαδικές παραλλαγές, αυτή η επιλογή ισχύει μόνο για του μέσο συντονισμό του IC και ISF στο κιρκαδικό προφίλ εισόδου σας</string>
+    <string name="autotune_additional_log_title">Συμπερίληψη περισσότερων πληροφοριών καταγραφής για τον εντοπισμό σφαλμάτων</string>
+    <string name="autotune_additional_log_summary">Ενεργοποιήστε μόνο αν ζητηθεί από τον προγραματιστή η αποστολή περισσότερων πληροφοριών καταγραφής για να βοηθήσει στην αποσφαλμάτωση του προσθέτου Autotune</string>
+    <string name="autotune_default_tune_days_summary">Προεπιλεγμένος αριθμός ημερών δεδομένων προς επεξεργασία από το Autotune (έως 30)</string>
+    <string name="autotune_tunedprofile_name">Συντονισμένο</string>
+    <string name="autotune_profile">Προφίλ :</string>
+    <string name="autotune_last_run">Τελευταίος Υπολογισμός :</string>
+    <string name="autotune_warning">Προειδοποίηση :</string>
+    <string name="autotune_ic_warning">Το επιλεγμένο προφίλ έχει τιμές IC %1$d. Το Autotune θα χρησιμοποιήσει %2$.2f g/U</string>
+    <string name="autotune_isf_warning">Το επιλεγμένο προφίλ έχει τιμές ISF %1$d. Το Autotune θα χρησιμοποιήσει %2$.1f %3$s/U</string>
+    <string name="autotune_error">Σφάλμα στα εισαχθέντα δεδομένα, προσπαθήστε να εκτελέσετε ξανά το autotune ή μειώστε τον αριθμό των ημερών</string>
+    <string name="autotune_error_more_days">Σφάλμα στα εισαχθέντα δεδομένα , αυξήστε τον αριθμό των ημερών</string>
+    <string name="autotune_warning_during_run">Ο υπολογισμός Autotune ξεκίνησε, παρακαλώ να είστε υπομονετικοί</string>
+    <string name="autotune_warning_after_run">Ελέγξτε προσεκτικά τα αποτελέσματα πριν τα χρησιμοποιήσετε!</string>
+    <string name="autotune_partial_result">Ημέρα μερικού αποτελέσματος %1$d / %2$d ρυθμίστηκε</string>
+    <string name="autotune_result">Αποτέλεσμα: %1$s</string>
+    <string name="autotune_param">Παράμετρος</string>
+    <string name="autotune_percent">%</string>
+    <string name="autotune_missing">Χαμένες</string>
+    <string name="autotune_run">Εκτέλεση Autotune</string>
+    <string name="autotune_check_input_profile_button">Έλεγχος προφίλ εισόδου</string>
+    <string name="autotune_compare_profile">Σύγκριση προφίλ</string>
+    <string name="autotune_copy_localprofile_button">Αντιγραφή στο τοπικό προφίλ</string>
+    <string name="autotune_update_input_profile_button">Ενημέρωση προφίλ εισόδου</string>
+    <string name="autotune_revert_input_profile_button">Επαναφορά προφίλ εισόδου</string>
+    <string name="autotune_copy_local_profile_message">Δημιουργία ενός νέου τοπικού προφίλ από αυτό το Προφίλ Autotune;</string>
+    <string name="autotune_update_local_profile_message">Ενημέρωση του προφίλ %1$s με το Προφίλ Autotune;</string>
+    <string name="autotune_revert_local_profile_message">Επαναφορά προφίλ %1$s με Προφίλ Εισαγωγής;</string>
+    <string name="autotune_profile_invalid">Μη έγκυρο προφίλ</string>
+    <!--    autoISF -->
 </resources>

@@ -25,9 +25,9 @@ class UploaderBatteryComplication : BaseComplicationProviderService() {
         @DrawableRes var burnInBatteryIcon = R.drawable.ic_battery_unknown_burnin
         var level = 0
         var levelStr = "???"
-        if (raw.status.battery.matches(Regex("^[0-9]+$"))) {
+        if (raw.status[0].battery.matches(Regex("^[0-9]+$"))) {
             try {
-                level = raw.status.battery.toInt()
+                level = raw.status[0].battery.toInt()
                 level = max(min(level, 100), 0)
                 levelStr = "$level%"
                 var iconNo = floor(level / 10.0).toInt()
@@ -62,8 +62,8 @@ class UploaderBatteryComplication : BaseComplicationProviderService() {
                     0    -> R.drawable.ic_battery_alert_variant_outline
                     else -> R.drawable.ic_battery_charging_wireless_outline
                 }
-            } catch (ex: NumberFormatException) {
-                aapsLogger.error(LTag.WEAR, "Cannot parse battery level of: " + raw.status.battery)
+            } catch (_: NumberFormatException) {
+                aapsLogger.error(LTag.WEAR, "Cannot parse battery level of: " + raw.status[0].battery)
             }
         }
         when (dataType) {

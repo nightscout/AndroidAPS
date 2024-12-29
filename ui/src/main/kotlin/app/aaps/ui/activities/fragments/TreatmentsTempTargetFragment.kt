@@ -14,11 +14,14 @@ import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import app.aaps.core.data.model.TT
+import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.extensions.toVisibility
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -27,23 +30,15 @@ import app.aaps.core.interfaces.rx.events.EventTempTargetChange
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.main.extensions.friendlyDescription
-import app.aaps.core.main.extensions.highValueToUnitsToString
-import app.aaps.core.main.extensions.lowValueToUnitsToString
-import app.aaps.core.main.utils.ActionModeHelper
+import app.aaps.core.objects.extensions.friendlyDescription
+import app.aaps.core.objects.extensions.highValueToUnitsToString
+import app.aaps.core.objects.extensions.lowValueToUnitsToString
+import app.aaps.core.objects.ui.ActionModeHelper
 import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.database.ValueWrapper
-import app.aaps.database.entities.TemporaryTarget
-import app.aaps.database.entities.UserEntry.Action
-import app.aaps.database.entities.UserEntry.Sources
-import app.aaps.database.entities.ValueWithUnit
-import app.aaps.database.entities.interfaces.end
-import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.InvalidateTemporaryTargetTransaction
 import app.aaps.ui.R
 import app.aaps.ui.activities.fragments.TreatmentsTempTargetFragment.RecyclerViewAdapter.TempTargetsViewHolder
 import app.aaps.ui.databinding.TreatmentsTemptargetFragmentBinding
@@ -66,8 +61,7 @@ class TreatmentsTempTargetFragment : DaggerFragment(), MenuProvider {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var config: Config
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var uel: UserEntryLogger
-    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var decimalFormatter: DecimalFormatter
 
     private var _binding: TreatmentsTemptargetFragmentBinding? = null
@@ -75,7 +69,7 @@ class TreatmentsTempTargetFragment : DaggerFragment(), MenuProvider {
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
     private var menu: Menu? = null
-    private lateinit var actionHelper: ActionModeHelper<TemporaryTarget>
+    private lateinit var actionHelper: ActionModeHelper<TT>
     private val disposable = CompositeDisposable()
     private val millsToThePast = T.days(30).msecs()
     private var showInvalidated = false
@@ -100,12 +94,12 @@ class TreatmentsTempTargetFragment : DaggerFragment(), MenuProvider {
         binding.recyclerview.isLoading = true
         disposable +=
             if (showInvalidated)
-                repository
+                persistenceLayer
                     .getTemporaryTargetDataIncludingInvalidFromTime(now - millsToThePast, false)
                     .observeOn(aapsSchedulers.main)
                     .subscribe { list -> binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true) }
             else
-                repository
+                persistenceLayer
                     .getTemporaryTargetDataFromTime(now - millsToThePast, false)
                     .observeOn(aapsSchedulers.main)
                     .subscribe { list -> binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true) }
@@ -136,10 +130,9 @@ class TreatmentsTempTargetFragment : DaggerFragment(), MenuProvider {
         _binding = null
     }
 
-    private inner class RecyclerViewAdapter(private var tempTargetList: List<TemporaryTarget>) : RecyclerView.Adapter<TempTargetsViewHolder>() {
+    private inner class RecyclerViewAdapter(private var tempTargetList: List<TT>) : RecyclerView.Adapter<TempTargetsViewHolder>() {
 
-        private val dbRecord = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
-        private val currentlyActiveTarget = if (dbRecord is ValueWrapper.Existing) dbRecord.value else null
+        private val currentlyActiveTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
 
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): TempTargetsViewHolder =
             TempTargetsViewHolder(LayoutInflater.from(viewGroup.context).inflate(R.layout.treatments_temptarget_item, viewGroup, false))
@@ -148,7 +141,7 @@ class TreatmentsTempTargetFragment : DaggerFragment(), MenuProvider {
         override fun onBindViewHolder(holder: TempTargetsViewHolder, position: Int) {
             val units = profileUtil.units
             val tempTarget = tempTargetList[position]
-            holder.binding.ns.visibility = (tempTarget.interfaceIDs.nightscoutId != null).toVisibility()
+            holder.binding.ns.visibility = (tempTarget.ids.nightscoutId != null).toVisibility()
             holder.binding.invalid.visibility = tempTarget.isValid.not().toVisibility()
             holder.binding.cbRemove.visibility = (tempTarget.isValid && actionHelper.isRemoving).toVisibility()
             if (actionHelper.isRemoving) {
@@ -200,7 +193,7 @@ class TreatmentsTempTargetFragment : DaggerFragment(), MenuProvider {
 
     override fun onMenuItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
-            R.id.nav_remove_items -> actionHelper.startRemove()
+            R.id.nav_remove_items     -> actionHelper.startRemove()
 
             R.id.nav_show_invalidated -> {
                 showInvalidated = true
@@ -218,10 +211,10 @@ class TreatmentsTempTargetFragment : DaggerFragment(), MenuProvider {
                 true
             }
 
-            else -> false
+            else                      -> false
         }
 
-    private fun getConfirmationText(selectedItems: SparseArray<TemporaryTarget>): String {
+    private fun getConfirmationText(selectedItems: SparseArray<TT>): String {
         if (selectedItems.size() == 1) {
             val tempTarget = selectedItems.valueAt(0)
             return "${rh.gs(app.aaps.core.ui.R.string.temporary_target)}: ${tempTarget.friendlyDescription(profileUtil.units, rh, profileUtil)}\n" +
@@ -230,22 +223,21 @@ class TreatmentsTempTargetFragment : DaggerFragment(), MenuProvider {
         return rh.gs(app.aaps.core.ui.R.string.confirm_remove_multiple_items, selectedItems.size())
     }
 
-    private fun removeSelected(selectedItems: SparseArray<TemporaryTarget>) {
+    private fun removeSelected(selectedItems: SparseArray<TT>) {
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.removerecord), getConfirmationText(selectedItems), Runnable {
                 selectedItems.forEach { _, tempTarget ->
-                    uel.log(
-                        Action.TT_REMOVED, Sources.Treatments,
-                        ValueWithUnit.Timestamp(tempTarget.timestamp),
-                        ValueWithUnit.TherapyEventTTReason(tempTarget.reason),
-                        ValueWithUnit.Mgdl(tempTarget.lowTarget),
-                        ValueWithUnit.Mgdl(tempTarget.highTarget).takeIf { tempTarget.lowTarget != tempTarget.highTarget },
-                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tempTarget.duration).toInt())
-                    )
-                    disposable += repository.runTransactionForResult(InvalidateTemporaryTargetTransaction(tempTarget.id))
-                        .subscribe(
-                            { aapsLogger.debug(LTag.DATABASE, "Removed temp target $tempTarget") },
-                            { aapsLogger.error(LTag.DATABASE, "Error while invalidating temporary target", it) })
+                    disposable += persistenceLayer.invalidateTemporaryTarget(
+                        id = tempTarget.id,
+                        action = Action.TT_REMOVED, source = Sources.Treatments, note = null,
+                        listValues = listOf(
+                            ValueWithUnit.Timestamp(tempTarget.timestamp),
+                            ValueWithUnit.TETTReason(tempTarget.reason),
+                            ValueWithUnit.Mgdl(tempTarget.lowTarget),
+                            ValueWithUnit.Mgdl(tempTarget.highTarget).takeIf { tempTarget.lowTarget != tempTarget.highTarget },
+                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tempTarget.duration).toInt())
+                        ).filterNotNull()
+                    ).subscribe()
                 }
                 actionHelper.finish()
             })

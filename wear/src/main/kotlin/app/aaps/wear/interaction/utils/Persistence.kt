@@ -1,17 +1,15 @@
 package app.aaps.wear.interaction.utils
 
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.rx.events.EventMobileToWear
 import app.aaps.core.interfaces.rx.weardata.CwfData
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
+import app.aaps.core.interfaces.rx.weardata.CwfResDataMap
 import app.aaps.core.interfaces.rx.weardata.EventData
-import app.aaps.core.interfaces.rx.weardata.EventData.Companion.deserialize
-import app.aaps.core.interfaces.rx.weardata.EventData.SingleBg
-import app.aaps.core.interfaces.rx.weardata.EventData.TreatmentData
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.shared.impl.weardata.ResFileMap
+import app.aaps.wear.R
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -20,7 +18,6 @@ import javax.inject.Singleton
  * Refactored by MilosKozak 25/04/2022
  */
 @Singleton
-@OpenForTesting
 open class Persistence @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil,
@@ -30,9 +27,13 @@ open class Persistence @Inject constructor(
     companion object {
 
         const val BG_DATA_PERSISTENCE_KEY = "bg_data"
+        const val BG1_DATA_PERSISTENCE_KEY = "bg1_data"
+        const val BG2_DATA_PERSISTENCE_KEY = "bg2_data"
         const val GRAPH_DATA_PERSISTENCE_KEY = "graph_data"
         const val TREATMENT_PERSISTENCE_KEY = "treatment_data"
         const val STATUS_PERSISTENCE_KEY = "status_data"
+        const val STATUS1_PERSISTENCE_KEY = "status1_data"
+        const val STATUS2_PERSISTENCE_KEY = "status2_data"
 
         const val KEY_COMPLICATIONS = "complications"
         const val KEY_LAST_SHOWN_SINCE_VALUE = "lastSince"
@@ -41,6 +42,7 @@ open class Persistence @Inject constructor(
 
         const val CUSTOM_WATCHFACE = "custom_watchface"
         const val CUSTOM_DEFAULT_WATCHFACE = "custom_default_watchface"
+        const val CUSTOM_DEFAULT_WATCHFACE_FULL = "custom_default_watchface_full"
     }
 
     fun getString(key: String, defaultValue: String): String {
@@ -83,38 +85,60 @@ open class Persistence @Inject constructor(
         putString(key, joinSet(set, "|"))
     }
 
-    fun readSingleBg(): SingleBg? {
+    fun readSingleBg(array: Array<EventData.SingleBg>): Array<EventData.SingleBg> {
+        val switch = sp.getBoolean(R.string.key_switch_external, false)
         try {
-            val s = sp.getStringOrNull(BG_DATA_PERSISTENCE_KEY, null)
+            var s = sp.getStringOrNull(BG_DATA_PERSISTENCE_KEY, null)
             //aapsLogger.debug(LTag.WEAR, "Loaded BG data: $s")
             if (s != null) {
-                return deserialize(s) as SingleBg
+                array[0] = EventData.deserialize(s) as EventData.SingleBg
+            }
+             s = sp.getStringOrNull(if (switch) BG2_DATA_PERSISTENCE_KEY else BG1_DATA_PERSISTENCE_KEY, null)
+            //aapsLogger.debug(LTag.WEAR, "Loaded BG data: $s")
+            if (s != null) {
+                array[1] = EventData.deserialize(s) as EventData.SingleBg
+            }
+            s = sp.getStringOrNull(if (switch) BG1_DATA_PERSISTENCE_KEY else BG2_DATA_PERSISTENCE_KEY, null)
+            //aapsLogger.debug(LTag.WEAR, "Loaded BG data: $s")
+            if (s != null) {
+                array[2] =  EventData.deserialize(s) as EventData.SingleBg
             }
         } catch (exception: Exception) {
             aapsLogger.error(LTag.WEAR, exception.toString())
         }
-        return null
+        return array
     }
 
-    fun readStatus(): EventData.Status? {
+    fun readStatus(array: Array<EventData.Status>): Array<EventData.Status> {
+        val switch = sp.getBoolean(R.string.key_switch_external, false)
         try {
-            val s = sp.getStringOrNull(STATUS_PERSISTENCE_KEY, null)
+            var s = sp.getStringOrNull(STATUS_PERSISTENCE_KEY, null)
             //aapsLogger.debug(LTag.WEAR, "Loaded Status data: $s")
             if (s != null) {
-                return deserialize(s) as EventData.Status
+                array[0] =  EventData.deserialize(s) as EventData.Status
+            }
+            s = sp.getStringOrNull(if (switch) STATUS2_PERSISTENCE_KEY else STATUS1_PERSISTENCE_KEY, null)
+            //aapsLogger.debug(LTag.WEAR, "Loaded Status data: $s")
+            if (s != null) {
+                array[1] =  EventData.deserialize(s) as EventData.Status
+            }
+            s = sp.getStringOrNull(if (switch) STATUS1_PERSISTENCE_KEY else STATUS2_PERSISTENCE_KEY, null)
+            //aapsLogger.debug(LTag.WEAR, "Loaded Status data: $s")
+            if (s != null) {
+                array[2] = EventData.deserialize(s) as EventData.Status
             }
         } catch (exception: Exception) {
             aapsLogger.error(LTag.WEAR, exception.toString())
         }
-        return null
+        return array
     }
 
-    fun readTreatments(): TreatmentData? {
+    fun readTreatments(): EventData.TreatmentData? {
         try {
             val s = sp.getStringOrNull(TREATMENT_PERSISTENCE_KEY, null)
             //aapsLogger.debug(LTag.WEAR, "Loaded Treatments data: $s")
             if (s != null) {
-                return deserialize(s) as TreatmentData
+                return EventData.deserialize(s) as EventData.TreatmentData
             }
         } catch (exception: Exception) {
             aapsLogger.error(LTag.WEAR, exception.toString())
@@ -127,7 +151,7 @@ open class Persistence @Inject constructor(
             val s = sp.getStringOrNull(GRAPH_DATA_PERSISTENCE_KEY, null)
             //aapsLogger.debug(LTag.WEAR, "Loaded Graph data: $s")
             if (s != null) {
-                return deserialize(s) as EventData.GraphData
+                return EventData.deserialize(s) as EventData.GraphData
             }
         } catch (exception: Exception) {
             aapsLogger.error(LTag.WEAR, exception.toString())
@@ -139,31 +163,38 @@ open class Persistence @Inject constructor(
         try {
             var s = sp.getStringOrNull(if (isDefault) CUSTOM_DEFAULT_WATCHFACE else CUSTOM_WATCHFACE, null)
             if (s != null) {
-                return deserialize(s) as EventData.ActionSetCustomWatchface
+                return EventData.deserialize(s) as EventData.ActionSetCustomWatchface
             } else {
                 s = sp.getStringOrNull(CUSTOM_DEFAULT_WATCHFACE, null)
                 if (s != null) {
-                    return deserialize(s) as EventData.ActionSetCustomWatchface
+                    return EventData.deserialize(s) as EventData.ActionSetCustomWatchface
                 }
             }
         } catch (exception: Exception) {
             aapsLogger.error(LTag.WEAR, exception.toString())
         }
         return null
+    }
+
+    private fun CwfData.simplify(): CwfData? = resData[ResFileMap.CUSTOM_WATCHFACE.fileName]?.let {
+        val simplifiedData: CwfResDataMap = mutableMapOf()
+        simplifiedData[ResFileMap.CUSTOM_WATCHFACE.fileName] = it
+        CwfData(json, metadata, simplifiedData)
     }
 
     fun readSimplifiedCwf(isDefault: Boolean = false): EventData.ActionSetCustomWatchface? {
         try {
-            var s = sp.getStringOrNull(if (isDefault) CUSTOM_DEFAULT_WATCHFACE else CUSTOM_WATCHFACE, null)
+            val defaultKey = if (sp.getBoolean(R.string.key_include_external, false)) CUSTOM_DEFAULT_WATCHFACE_FULL else CUSTOM_DEFAULT_WATCHFACE
+            var s = sp.getStringOrNull(if (isDefault) defaultKey else CUSTOM_WATCHFACE, null)
             if (s != null) {
-                return (deserialize(s) as EventData.ActionSetCustomWatchface).let {
-                    EventData.ActionSetCustomWatchface(it.customWatchfaceData.simplify() ?:it.customWatchfaceData)
+                return (EventData.deserialize(s) as EventData.ActionSetCustomWatchface).let {
+                    EventData.ActionSetCustomWatchface(it.customWatchfaceData.simplify() ?: it.customWatchfaceData)
                 }
 
             } else {
-                s = sp.getStringOrNull(CUSTOM_DEFAULT_WATCHFACE, null)
+                s = sp.getStringOrNull(defaultKey, null)
                 if (s != null) {
-                    return deserialize(s) as EventData.ActionSetCustomWatchface
+                    return EventData.deserialize(s) as EventData.ActionSetCustomWatchface
                 }
             }
         } catch (exception: Exception) {
@@ -172,10 +203,25 @@ open class Persistence @Inject constructor(
         return null
     }
 
-    fun store(singleBg: SingleBg) {
-        putString(BG_DATA_PERSISTENCE_KEY, singleBg.serialize())
-        aapsLogger.debug(LTag.WEAR, "Stored BG data: $singleBg")
-        markDataUpdated()
+    fun store(singleBg: EventData.SingleBg) {
+
+        when(singleBg.dataset) {
+            0 -> {
+                putString(BG_DATA_PERSISTENCE_KEY, singleBg.serialize())
+                aapsLogger.debug(LTag.WEAR, "Stored BG data: $singleBg")
+                markDataUpdated()
+            }
+
+            1 -> {
+                putString(BG1_DATA_PERSISTENCE_KEY, singleBg.serialize())
+                aapsLogger.debug(LTag.WEAR, "Stored BG1 data: $singleBg")
+            }
+
+            2 -> {
+                putString(BG2_DATA_PERSISTENCE_KEY, singleBg.serialize())
+                aapsLogger.debug(LTag.WEAR, "Stored BG2 data: $singleBg")
+            }
+        }
     }
 
     fun store(graphData: EventData.GraphData) {
@@ -183,19 +229,34 @@ open class Persistence @Inject constructor(
         aapsLogger.debug(LTag.WEAR, "Stored Graph data: $graphData")
     }
 
-    fun store(treatmentData: TreatmentData) {
+    fun store(treatmentData: EventData.TreatmentData) {
         putString(TREATMENT_PERSISTENCE_KEY, treatmentData.serialize())
         aapsLogger.debug(LTag.WEAR, "Stored Treatments data: $treatmentData")
     }
 
     fun store(status: EventData.Status) {
-        putString(STATUS_PERSISTENCE_KEY, status.serialize())
-        aapsLogger.debug(LTag.WEAR, "Stored Status data: $status")
+        when (status.dataset) {
+            0 -> {
+                putString(STATUS_PERSISTENCE_KEY, status.serialize())
+                aapsLogger.debug(LTag.WEAR, "Stored Status data: $status")
+            }
+
+            1 -> {
+                putString(STATUS1_PERSISTENCE_KEY, status.serialize())
+                aapsLogger.debug(LTag.WEAR, "Stored Status1 data: $status")
+            }
+
+            2 -> {
+                putString(STATUS2_PERSISTENCE_KEY, status.serialize())
+                aapsLogger.debug(LTag.WEAR, "Stored Status2 data: $status")
+            }
+        }
     }
 
-    fun store(customWatchface: EventData.ActionSetCustomWatchface, isdefault: Boolean = false) {
-        putString(if (isdefault) CUSTOM_DEFAULT_WATCHFACE else CUSTOM_WATCHFACE, customWatchface.serialize())
-        aapsLogger.debug(LTag.WEAR, "Stored Custom Watchface ${customWatchface.customWatchfaceData} ${isdefault}: $customWatchface")
+    fun store(customWatchface: EventData.ActionSetCustomWatchface, customWatchfaceFull: EventData.ActionSetCustomWatchface? = null, isDefault: Boolean = false) {
+        putString(if (isDefault) CUSTOM_DEFAULT_WATCHFACE else CUSTOM_WATCHFACE, customWatchface.serialize())
+        customWatchfaceFull?.let { putString(CUSTOM_DEFAULT_WATCHFACE_FULL, it.serialize()) }
+        aapsLogger.debug(LTag.WEAR, "Stored Custom Watchface ${customWatchface.customWatchfaceData} ${isDefault}: $customWatchface")
     }
 
     fun store(customWatchface: EventData.ActionUpdateCustomWatchface) {
@@ -203,15 +264,15 @@ open class Persistence @Inject constructor(
             if (customWatchface.customWatchfaceData.metadata[CwfMetadataKey.CWF_NAME] == savedCwData.customWatchfaceData.metadata[CwfMetadataKey.CWF_NAME] &&
                 customWatchface.customWatchfaceData.metadata[CwfMetadataKey.CWF_AUTHOR_VERSION] == savedCwData.customWatchfaceData.metadata[CwfMetadataKey.CWF_AUTHOR_VERSION]
             ) {
-                // if same name and author version, then resync metadata to watch to update filename and authorization
-                val newCwfData = CwfData(savedCwData.customWatchfaceData.json, customWatchface.customWatchfaceData.metadata, savedCwData.customWatchfaceData.resDatas)
+                // if same name and author version, then re-sync metadata to watch to update filename and authorization
+                val newCwfData = CwfData(savedCwData.customWatchfaceData.json, customWatchface.customWatchfaceData.metadata, savedCwData.customWatchfaceData.resData)
                 EventData.ActionSetCustomWatchface(newCwfData).also {
                     putString(CUSTOM_WATCHFACE, it.serialize())
                     aapsLogger.debug(LTag.WEAR, "Update Custom Watchface ${it.customWatchfaceData} : $customWatchface")
+                }
             }
         }
     }
-}
 
     fun setDefaultWatchface() {
         readCustomWatchface(true)?.let { store(it) }

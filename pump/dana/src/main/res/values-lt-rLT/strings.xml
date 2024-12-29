@@ -33,7 +33,7 @@
     <string name="basalmax">Maks. valandinė bazė</string>
     <string name="dailymax">Dienos maksimumas</string>
     <string name="bloodsugarmeasurementalert">Gliukozės kiekio kraujyje matavimo perspėjimas</string>
-    <string name="remaininsulinalert">Likusio insulino kiekis</string>
+    <string name="remaininsulinalert">Senka rezervuaras</string>
     <string name="missedbolus">Nesuleistas bolusas</string>
     <string name="invalidpairing">Netinkama susiejimo informacija. Bandoma susieti iš naujo</string>
     <string name="gettingpumpstatus">Gaunamas pompos statusas</string>
@@ -93,7 +93,6 @@
     <string name="danar_disableeasymode">Išjungti pompos EasyUI režimą</string>
     <string name="profile_set_failed">Nepavyko nustatyti bazės profilio</string>
     <string name="danar_bluetooth_status">Bluetooth statusas</string>
-    <string name="danar_iob_label">Pompos AIO</string>
     <string name="firmware_label">Programinė įranga</string>
     <string name="danar_pump_settings">Dana pompos nustatymai</string>
     <string name="time_format_12h">12h</string>
@@ -103,7 +102,6 @@
     <string name="danar_bt_name_title">DanaR Bluetooth įrenginys</string>
     <string name="danars_password_title">Pompos slaptažodis (tik v1)</string>
     <string name="danar_password_title">Pompos slaptažodis</string>
-    <string name="danar_useextended_title">Naudoti ištęstinį bolusą &gt;200%%</string>
     <string name="bolusspeed">Boluso greitis</string>
     <string name="selectedpump">Pasirinkta pompa</string>
     <string name="rs_loginsulinchange_title">Įrašyti rezervuaro keitimą</string>

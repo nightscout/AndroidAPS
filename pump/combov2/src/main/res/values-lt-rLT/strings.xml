@@ -4,7 +4,6 @@
     <string name="combov2_plugin_description">Originali pompos integracija Accu-Chek Combo pompoms</string>
     <string name="combov2_could_not_connect">Nepavyko prisijungti prie pompos</string>
     <string name="combov2_not_paired">Pompa nesusieta</string>
-    <string name="combov2_pump_terminated_connection">Pompa baigė prisijungimą</string>
     <string name="combov2_warning">Combo įspėjimas</string>
     <string name="combov2_error">Combo klaida</string>
     <string name="combov2_warning_4">Skambinkite pagalbos linija dėl atnaujinimo</string>
@@ -115,8 +114,6 @@ Jei po daugiau nei ~5 minučių ryšys neužmegztas:\n\n
     <string name="combov2_short_status_battery_state">Bat: %s</string>
     <string name="combov2_automatic_reservoir_entry">Automatiškai aptikti ir registruoti insulino rezervuaro keitimą</string>
     <string name="combov2_automatic_battery_entry">Automatiškai aptikti ir registruoti baterijos keitimą</string>
-    <string name="combov2_note_reservoir_change">Rezervuaro keitimą automatiškai įrašė combov2 valdiklis</string>
-    <string name="combov2_note_battery_change">Baterijos keitimą automatiškai įrašė combov2 valdiklis</string>
     <string name="combov2_timezone_changed">Laiko juosta pakeista</string>
     <string name="combov2_datetime_changed">Data ir/ar laikas pasikeitė</string>
     <string name="combov2_dst_started">Prasidėjo vasaros laikas</string>

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="key_danar_pump_settings" translatable="false">danar_pump_settings</string>
     <string name="unsupported_action_in_pump">Unsupported action in pump. Use AndroidAPS UI only!</string>
 </resources>

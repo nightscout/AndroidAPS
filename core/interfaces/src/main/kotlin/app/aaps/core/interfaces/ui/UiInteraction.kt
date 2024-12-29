@@ -22,7 +22,23 @@ interface UiInteraction {
     val myPreferenceFragment: Class<*>
     val quickWizardListActivity: Class<*>
 
-    val prefGeneral: Int
+    companion object {
+
+        const val PLUGIN_NAME = "PluginName"
+
+        /**
+         * Preference from [Preferences]
+         */
+        const val PREFERENCE = "Preference"
+    }
+
+    enum class Preferences { PROTECTION }
+
+    /**
+     * Arrays for preferences
+     */
+    val unitsEntries: Array<CharSequence>
+    val unitsValues: Array<CharSequence>
 
     /**
      * Show ErrorHelperActivity and start alarm
@@ -67,14 +83,40 @@ interface UiInteraction {
 
     fun runCareDialog(fragmentManager: FragmentManager, options: EventType, @StringRes event: Int)
 
+    /**
+     * Remove notification
+     * @param id if of notification
+     */
     fun dismissNotification(id: Int)
     fun addNotification(id: Int, text: String, level: Int)
     fun addNotificationValidFor(id: Int, text: String, level: Int, validMinutes: Int)
     fun addNotificationWithSound(id: Int, text: String, level: Int, @RawRes soundId: Int?)
     fun addNotificationValidTo(id: Int, date: Long, text: String, level: Int, validTo: Long)
     fun addNotificationWithAction(nsAlarm: NSAlarm)
-    fun addNotificationWithAction(id: Int, text: String, level: Int, buttonText: Int, action: Runnable, @RawRes soundId: Int? = null, date: Long = System.currentTimeMillis())
-    fun showToastAndNotification(ctx: Context?, string: String?, @RawRes soundID: Int)
+    fun addNotificationWithAction(id: Int, text: String, level: Int, @StringRes buttonText: Int, action: Runnable, validityCheck: (() -> Boolean)?, @RawRes soundId: Int? = null, date: Long = System.currentTimeMillis())
+
+    /**
+     * Add notification that shows dialog after clicking button
+     * @param id if of notification
+     * @text text of notification
+     * @level urgency level of notification
+     * @actionButtonId label of button
+     * @title Dialog title
+     * @message Dialog body
+     */
+    fun addNotificationWithDialogResponse(id: Int, text: String, level: Int, @StringRes buttonText: Int, title: String, message: String, validityCheck: (() -> Boolean)?)
+
+    /**
+     * Add notification that executes [Runnable] after clicking button
+     * @param id if of notification
+     * @text text of notification
+     * @level urgency level of notification
+     * @actionButtonId label of button
+     * @action Runnable to be run
+     */
+    fun addNotification(id: Int, text: String, level: Int, @StringRes actionButtonId: Int, action: Runnable, validityCheck: (() -> Boolean)?)
+
+    fun showToastAndNotification(ctx: Context?, string: String, @RawRes soundID: Int)
 
     fun startAlarm(@RawRes sound: Int, reason: String)
     fun stopAlarm(reason: String)

@@ -9,12 +9,15 @@ import androidx.core.view.MenuProvider
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceScreen
 import app.aaps.R
+import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.utils.extensions.safeGetSerializableExtra
 import app.aaps.databinding.ActivityPreferencesBinding
 import app.aaps.plugins.configuration.activities.DaggerAppCompatActivityWithResult
 
 class PreferencesActivity : DaggerAppCompatActivityWithResult(), PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
 
-    private var preferenceId = 0
+    private var pluginName: String? = null
+    private var customPreference: UiInteraction.Preferences? = null
     private var myPreferenceFragment: MyPreferenceFragment? = null
     private var searchView: SearchView? = null
 
@@ -29,9 +32,11 @@ class PreferencesActivity : DaggerAppCompatActivityWithResult(), PreferenceFragm
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         myPreferenceFragment = MyPreferenceFragment()
-        preferenceId = intent.getIntExtra("id", -1)
+        pluginName = intent.getStringExtra(UiInteraction.PLUGIN_NAME)
+        customPreference = intent?.safeGetSerializableExtra(UiInteraction.PREFERENCE, UiInteraction.Preferences::class.java)
         myPreferenceFragment?.arguments = Bundle().also {
-            it.putInt("id", preferenceId)
+            it.putString(UiInteraction.PLUGIN_NAME, pluginName)
+            it.putSerializable(UiInteraction.PREFERENCE, customPreference)
         }
         if (savedInstanceState == null)
             @Suppress("CommitTransaction")
@@ -71,7 +76,7 @@ class PreferencesActivity : DaggerAppCompatActivityWithResult(), PreferenceFragm
         val fragment = MyPreferenceFragment()
         fragment.arguments = Bundle().also {
             it.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, pref.key)
-            it.putInt("id", preferenceId)
+            it.putString(UiInteraction.PLUGIN_NAME, pluginName)
         }
         @Suppress("CommitTransaction")
         supportFragmentManager.beginTransaction().replace(R.id.frame_layout, fragment, pref.key).addToBackStack(pref.key).commit()

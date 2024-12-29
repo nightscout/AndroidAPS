@@ -5,6 +5,7 @@ import android.os.Bundle
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.rx.weardata.EventData.ActionResendData
+import app.aaps.core.keys.BooleanKey
 import app.aaps.wear.R
 import app.aaps.wear.interaction.actions.ECarbActivity
 import app.aaps.wear.interaction.actions.TempTargetActivity
@@ -22,7 +23,7 @@ class MainMenuActivity : MenuListActivity() {
 
     override fun provideElements(): List<MenuItem> =
         ArrayList<MenuItem>().apply {
-            if (!sp.getBoolean(R.string.key_wear_control, false)) {
+            if (!preferences.get(BooleanKey.WearControl)) {
                 add(MenuItem(R.drawable.ic_settings, getString(R.string.menu_settings)))
                 add(MenuItem(R.drawable.ic_sync, getString(R.string.menu_resync)))
             } else {

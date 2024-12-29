@@ -12,7 +12,7 @@ interface Sensitivity : ConfigExportImport {
 
         companion object {
 
-            private val map = values().associateBy(SensitivityType::value)
+            private val map = entries.associateBy(SensitivityType::value)
             fun fromInt(type: Int) = map[type]
         }
     }

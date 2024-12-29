@@ -1,32 +1,47 @@
 package app.aaps.core.validators
 
 import android.content.Context
+import android.content.res.TypedArray
 import android.util.AttributeSet
 import androidx.preference.EditTextPreference
 import androidx.preference.PreferenceViewHolder
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.SafeParse
+import app.aaps.core.keys.Preferences
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
-class ValidatingEditTextPreference(ctx: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : EditTextPreference(ctx, attrs, defStyleAttr, defStyleRes) {
+class ValidatingEditTextPreference(ctx: Context, attrs: AttributeSet?) : EditTextPreference(ctx, attrs) {
 
     private val validatorParameters: DefaultEditTextValidator.Parameters = obtainValidatorParameters(attrs)
     private var validator: DefaultEditTextValidator? = null
 
     @Inject lateinit var profileUtil: ProfileUtil
+    @Inject lateinit var preferences: Preferences
+
+    private val attributes: TypedArray = context.obtainStyledAttributes(attrs, R.styleable.SimpleFullModeSelector)
+    private val simpleMode: Boolean = attributes.getBoolean(R.styleable.SimpleFullModeSelector_simpleMode, true)
+    private val apsMode: Boolean = attributes.getBoolean(R.styleable.SimpleFullModeSelector_apsMode, true)
+    private val nsclientMode: Boolean = attributes.getBoolean(R.styleable.SimpleFullModeSelector_nsclientMode, true)
+    private val pumpControlMode: Boolean = attributes.getBoolean(R.styleable.SimpleFullModeSelector_pumpControlMode, true)
+
+    // PreferenceScreen is final so we cannot extend and modify behavior
+    private val hideParentScreenIfHidden: Boolean = attributes.getBoolean(R.styleable.SimpleFullModeSelector_hideParentScreenIfHidden, false)
 
     init {
-        (ctx.applicationContext as HasAndroidInjector).androidInjector().inject(this)
         setOnBindEditTextListener { editText -> validator = DefaultEditTextValidator(editText, validatorParameters, context) }
-        setOnPreferenceChangeListener { _, _ -> validator?.testValidity(false) ?: true }
+        setOnPreferenceChangeListener { _, _ -> validator?.testValidity(false) != false }
+        (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
+        if (preferences.simpleMode && !simpleMode) isVisible = false
+        if (preferences.apsMode && !apsMode) isVisible = false
+        if (preferences.nsclientMode && !nsclientMode) isVisible = false
+        if (preferences.pumpControlMode && !pumpControlMode) isVisible = false
     }
 
-    constructor(ctx: Context, attrs: AttributeSet, defStyle: Int)
-        : this(ctx, attrs, defStyle, 0)
-
-    constructor(ctx: Context, attrs: AttributeSet)
-        : this(ctx, attrs, androidx.preference.R.attr.editTextPreferenceStyle)
+    override fun onAttached() {
+        super.onAttached()
+        if (hideParentScreenIfHidden) parent?.isVisible = isVisible
+    }
 
     override fun onBindViewHolder(holder: PreferenceViewHolder) {
         super.onBindViewHolder(holder)
@@ -42,7 +57,7 @@ class ValidatingEditTextPreference(ctx: Context, attrs: AttributeSet, defStyleAt
         this.validatorParameters.maxNumber = max
     }
 
-    private fun obtainValidatorParameters(attrs: AttributeSet): DefaultEditTextValidator.Parameters {
+    private fun obtainValidatorParameters(attrs: AttributeSet?): DefaultEditTextValidator.Parameters {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.FormEditText, 0, 0)
         return DefaultEditTextValidator.Parameters(
             emptyAllowed = typedArray.getBoolean(R.styleable.FormEditText_emptyAllowed, false),
@@ -74,7 +89,7 @@ class ValidatingEditTextPreference(ctx: Context, attrs: AttributeSet, defStyleAt
     override fun onSetInitialValue(defaultValue: Any?) {
         text =
             if (validatorParameters.testType == EditTextValidator.TEST_BG_RANGE)
-                profileUtil.fromMgdlToUnits(SafeParse.stringToDouble(getPersistedString(defaultValue as String?)), profileUtil.units).toString()
+                profileUtil.valueInCurrentUnitsDetect(SafeParse.stringToDouble(getPersistedString(defaultValue as String?))).toString()
             else
                 getPersistedString(defaultValue as String?)
     }

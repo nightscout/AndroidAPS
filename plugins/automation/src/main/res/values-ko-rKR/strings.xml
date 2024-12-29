@@ -104,8 +104,6 @@
     <string name="automation_event">자동화 이벤트</string>
     <string name="reorder_label">정렬</string>
     <string name="user_action">사용자 동작</string>
-    <string name="remove_automation">자동 설정 제거하기</string>
-    <string name="sort_automation">자동 설정 분류하기</string>
     <string name="remove_selected_items">선택된 항목 제거하기</string>
     <string name="count_selected">%1$d 선택됨</string>
     <string name="system_automation">자동 설정 시스템</string>
@@ -116,4 +114,10 @@
     <string name="time_to_eat">식사할 시간입니다! \nBolus 마법사를 켜고 다시 계산하십시오.</string>
     <string name="time_to_bolus">Bolus 주입할 시간입니다! \nBolus 마법사를 켜고 다시 계산하십시오</string>
     <string name="error_setting_reminder">향후 경고 설정 중 오류 발생</string>
+    <!--    Autotune-->
+    <string name="autotune_run">Autotune 실행하기</string>
+    <string name="autotune_run_without_autoswitch">프로파일 변경 없이 Autotune이 실행되었습니다</string>
+    <string name="autotune_run_with_autoswitch">Autotune 및 프로파일 자동 전환이 실행되었습니다</string>
+    <string name="autotune_run_with_error">마지막 Autotune 실행시 오류가 발생했습니다</string>
+    <string name="autotune_run_cancelled">Autotune의 또 다른 실행이 감지되었습니다, 실행이 취소되었습니다</string>
 </resources>

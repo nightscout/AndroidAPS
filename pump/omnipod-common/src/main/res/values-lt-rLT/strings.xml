@@ -35,7 +35,6 @@
     <string name="omnipod_common_error_unexpected_exception">Įvyko netikėta klaida. Prašome pranešti! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation">Patvirtinimas</string>
-    <string name="omnipod_common_confirmation_time_or_timezone_change">Pod laikas ir/ar laiko zona pakeista.</string>
     <string name="omnipod_common_confirmation_expiration_alerts_updated">Pod perspėjimo konfigūracija atnaujinta.</string>
     <string name="omnipod_common_confirmation_time_on_pod_updated">Pod laikas atnaujintas.</string>
     <string name="omnipod_common_confirmation_suspended_delivery">Insulino tiekimas pilnai sustabdytas.</string>
@@ -66,6 +65,7 @@
     <string name="omnipod_common_overview_reservoir_value">liko %1$.2f v</string>
     <string name="omnipod_common_overview_reservoir_value_over50">Liko daugiau nei 50 v</string>
     <string name="omnipod_common_overview_errors">Klaidos</string>
+    <string name="omnipod_common_uncertain">nepatvirtinta</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_cancel">Atšaukti</string>
     <string name="omnipod_common_wizard_button_finish">Užbaigti</string>
@@ -124,9 +124,9 @@
     <string name="omnipod_common_pod_status_waiting_for_activation">Nustatoma (laukiama Pod aktyvavimo)</string>
     <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">Nustatoma (laukiama kaniulės įvedimo)</string>
     <string name="omnipod_common_pod_status_running">Vykdoma</string>
+    <string name="omnipod_common_pod_status_normal">Normalus</string>
     <string name="omnipod_common_pod_status_suspended">Sustabdyta</string>
     <string name="omnipod_common_pod_status_pod_fault">Pod klaida</string>
-    <string name="omnipod_common_pod_status_activation_time_exceeded">Baigėsi aktyvavimo laikas</string>
     <string name="omnipod_common_pod_status_inactive">Neaktyvus</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Pod klaida: %1$03d %2$s</string>
     <!-- Omnipod - Commands -->
@@ -152,7 +152,6 @@
     <string name="omnipod_common_cmd_set_fake_suspended_tbr">Nustatyta netikra laikina bazė, nes Pod sustabdytas</string>
     <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Atšaukti netikrą laikiną bazę, kuri buvo nustatyta dėl to, kad Pod buvo sustabdytas</string>
     <string name="omnipod_common_cmd_split_tbr">Laikina bazė padalinta dėl nežinomos klaidos atšaukiant ją</string>
-    <string name="omnipod_common_cmd_beep_config">Signalo nustatymai</string>
     <string name="omnipod_common_cmd_play_test_beep">Paleisti bandomąjį signalą</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_finish_pairing_reminder">Priminimas užbaigti susiejimą</string>
@@ -175,6 +174,7 @@
     <string name="omnipod_common_ok">OK</string>
     <string name="omnipod_common_cancel">Atšaukti</string>
     <string name="omnipod_common_warning">Perspėjimas</string>
+    <string name="omnipod_common_disable_suspend_alerts">IŠJUNGTI SUSTABDYMO ĮSPĖJIMUS</string>
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">Neseniai</string>
     <string name="omnipod_common_less_than_a_minute_ago">Mažiau nei prieš minutę</string>

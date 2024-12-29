@@ -15,20 +15,22 @@ import app.aaps.core.interfaces.rx.events.EventWearUpdateGui
 import app.aaps.core.interfaces.rx.weardata.CUSTOM_VERSION
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataMap
-import app.aaps.core.interfaces.rx.weardata.JsonKeyValues
-import app.aaps.core.interfaces.rx.weardata.JsonKeys
-import app.aaps.core.interfaces.rx.weardata.ResFileMap
-import app.aaps.core.interfaces.rx.weardata.ViewKeys
-import app.aaps.core.interfaces.rx.weardata.ZipWatchfaceFormat
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.Preferences
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.databinding.CwfInfosActivityBinding
 import app.aaps.plugins.sync.databinding.CwfInfosActivityPrefItemBinding
 import app.aaps.plugins.sync.databinding.CwfInfosActivityViewItemBinding
 import app.aaps.plugins.sync.wear.WearPlugin
+import app.aaps.shared.impl.weardata.JsonKeyValues
+import app.aaps.shared.impl.weardata.JsonKeys
+import app.aaps.shared.impl.weardata.ResFileMap
+import app.aaps.shared.impl.weardata.ViewKeys
+import app.aaps.shared.impl.weardata.ZipWatchfaceFormat
+import app.aaps.shared.impl.weardata.toDrawable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.json.JSONObject
@@ -37,7 +39,7 @@ import javax.inject.Inject
 class CwfInfosActivity : TranslatedDaggerAppCompatActivity() {
 
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var fabricPrivacy: FabricPrivacy
@@ -85,15 +87,15 @@ class CwfInfosActivity : TranslatedDaggerAppCompatActivity() {
 
     private fun updateGui() {
         wearPlugin.savedCustomWatchface?.let {
-            val cwfAuthorization = sp.getBoolean(app.aaps.core.utils.R.string.key_wear_custom_watchface_autorization, false)
+            val cwfAuthorization = preferences.get(BooleanKey.WearCustomWatchfaceAuthorization)
             val metadata = it.metadata
-            val drawable = it.resDatas[ResFileMap.CUSTOM_WATCHFACE.fileName]?.toDrawable(resources)
+            val drawable = it.resData[ResFileMap.CUSTOM_WATCHFACE.fileName]?.toDrawable(resources)
             binding.customWatchface.setImageDrawable(drawable)
             title = rh.gs(CwfMetadataKey.CWF_NAME.label, metadata[CwfMetadataKey.CWF_NAME])
             metadata[CwfMetadataKey.CWF_AUTHOR_VERSION]?.let { authorVersion ->
                 title = "${metadata[CwfMetadataKey.CWF_NAME]} ($authorVersion)"
             }
-            val fileName = metadata[CwfMetadataKey.CWF_FILENAME]?.let { "$it${ZipWatchfaceFormat.CWF_EXTENTION}" } ?: ""
+            val fileName = metadata[CwfMetadataKey.CWF_FILENAME]?.let { "$it${ZipWatchfaceFormat.CWF_EXTENSION}" } ?: ""
             binding.filelistName.text = rh.gs(CwfMetadataKey.CWF_FILENAME.label, fileName)
             binding.author.text = rh.gs(CwfMetadataKey.CWF_AUTHOR.label, metadata[CwfMetadataKey.CWF_AUTHOR] ?: "")
             binding.createdAt.text = rh.gs(CwfMetadataKey.CWF_CREATED_AT.label, metadata[CwfMetadataKey.CWF_CREATED_AT] ?: "")
@@ -200,7 +202,7 @@ class CwfInfosActivity : TranslatedDaggerAppCompatActivity() {
                     if (visibility || allViews)
                         visibleKeyPairs.add(Pair(viewKey, visibility))
                 }
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 aapsLogger.debug(LTag.WEAR, "Wrong key in json file: ${viewKey.key}")
             }
         }

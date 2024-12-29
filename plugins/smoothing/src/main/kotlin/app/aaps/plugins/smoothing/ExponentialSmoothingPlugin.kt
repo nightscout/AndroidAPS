@@ -1,24 +1,20 @@
 package app.aaps.plugins.smoothing
 
-import app.aaps.annotations.OpenForTesting
-import app.aaps.core.interfaces.iob.InMemoryGlucoseValue
+import app.aaps.core.data.iob.InMemoryGlucoseValue
+import app.aaps.core.data.model.TrendArrow
+import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smoothing.Smoothing
-import app.aaps.database.entities.GlucoseValue
-import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.max
 import kotlin.math.round
 
-@OpenForTesting
 @Singleton
 class ExponentialSmoothingPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper
 ) : PluginBase(
@@ -28,7 +24,7 @@ class ExponentialSmoothingPlugin @Inject constructor(
         .pluginName(R.string.exponential_smoothing_name)
         .shortName(R.string.smoothing_shortname)
         .description(R.string.description_exponential_smoothing),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), Smoothing {
 
     @Suppress("LocalVariableName")
@@ -125,13 +121,13 @@ class ExponentialSmoothingPlugin @Inject constructor(
             }
             for (i in 0 until minOf(ssBG.size, data.size)) { // noise at the beginning of the smoothing window is the greatest, so only include the 10 most recent values in the output
                 data[i].smoothed = max(round(ssBG[i]), 39.0) //Make 39 the smallest value as smaller values trigger errors (xDrip error state = 38)
-                data[i].trendArrow = GlucoseValue.TrendArrow.NONE
+                data[i].trendArrow = TrendArrow.NONE
             }
         } else {
             for (i in 0 until data.size) { // noise at the beginning of the smoothing window is the greatest, so only include the 10 most recent values in the output
                 data[i].smoothed = max(data[i].value, 39.0) // if insufficient smoothing data, copy 'value' into 'smoothed' data column so that it isn't empty; Make 39 the smallest value as smaller
                 // values trigger errors (xDrip error state = 38)
-                data[i].trendArrow = GlucoseValue.TrendArrow.NONE
+                data[i].trendArrow = TrendArrow.NONE
             }
         }
 

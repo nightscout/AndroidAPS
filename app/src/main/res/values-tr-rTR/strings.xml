@@ -1,29 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
-    <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
-    <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="nav_preferences_plugin">%1$s Tercihler</string>
-    <string name="nav_refreshtreatments">NS\'tan tedavileri güncelle</string>
     <string name="nav_exit">Çıkış</string>
     <string name="delta">Delta</string>
-    <string name="profile_label">Profil</string>
     <string name="save">Kaydet</string>
-    <string name="reloadprofile">Profili yeniden yükle</string>
-    <string name="correctionbous">Düzeltme</string>
-    <string name="ns_upload_only">(DEVRE DIŞI BIRAKILMASI TEHLİKELİ) Yalnızca NS yüklemelerinde</string>
-    <string name="ns_upload_only_summary">Yalnızca NS yüklemesi (senkronizasyon devre dışı). xDrip+ gibi yerel bir kaynak seçilmediği sürece SGV üzerinde etkili değildir. NS-Profili kullanılırken Profiller üzerinde etkili değildir.\n!!! UYARI !!! Bileşenlerinizden herhangi biri (AAPS, NS, xDrip+) yanlış yapılandırılmışsa, bu seçeneğin devre dışı bırakılması arızalara ve aşırı insülin dozuna neden olabilir. AAPS tarafından görüntülenen verilerin pompa durumuyla eşleşip eşleşmediğini dikkatlice izleyin!</string>
     <string name="wear">Wear</string>
     <string name="nav_about">Hakkında</string>
-    <string name="smscommunicator_missingphonestatepermission">Telefon durumu izni eksik</string>
-    <string name="ns_alarm_options">Alarm türleri</string>
-    <string name="ns_alarms">NS alarmlarından bildirimler oluşturun</string>
-    <string name="ns_announcements">NS duyurularından bildirimler oluşturun</string>
-    <string name="ns_alarm_stale_data_value_label">Eski veri eşiği [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Acil durum verileri eşiği [min]</string>
     <string name="sensitivity_warning">Otoduyarlılık özelliğini açarsanız tüm yenen karbonhidratları girmeyi unutmayın. Aksi halde, karbonhidrat sapmaları duyarlılık değiştikçe yanlış tanımlanacaktır!!</string>
-    <string name="notloadedplugins">Tüm profiller yüklenmedi!</string>
-    <string name="valuesnotstored">Değerler kaydedilmedi!</string>
     <string name="invalid">GEÇERSİZ</string>
     <string name="gradually_increase_notification_volume">Uyarılar ve bildirimler için ses seviyesini kademeli olarak artırın</string>
     <string name="localalertsettings_title">Yerel uyarılar</string>
@@ -35,26 +18,16 @@
     <string name="close_navigation">Navigasyonu kapat</string>
     <string name="remove_items">Öğeleri kaldır</string>
     <string name="sort_items">Öğeleri sırala</string>
-    <string name="error_adding_treatment_title">Tedavi verileri eksik</string>
-    <string name="error_adding_treatment_message">Tedavilere (insülin: %1$.2f, karbonhidrat: %2$d, %3$s) şeklinde bir tedavi eklenemedi. Lütfen kontrol edin ve uygun şekilde elle bir kayıt ekleyin.</string>
-    <string name="generated_ecarbs_note">yKarb: %1$d g (%2$d sa), gecikme: %3$d dk</string>
-    <string name="profile_total">== ∑  %1$s Ü</string>
     <string name="unitsnosemicolon">Birim</string>
-    <string name="show_removed">Kaldırılanları göster</string>
-    <string name="clearqueueconfirm">Kuyruk temizlensin mi? Kuyruktaki tüm veriler kaybedilecek!</string>
-    <string name="chartmenu">Grafik menüsü</string>
     <string name="authorizationfailed">Yetkilendirme başarısız oldu</string>
-    <string name="copytolocalprofile_invalid">Profil oluşturulamıyor. Profil geçersiz.</string>
-    <string name="clear_filter">Filtreyi temizle</string>
     <string name="cannula">Kanül</string>
-    <string name="email_address">E-posta adresi</string>
-    <string name="remove_bg_readings">KŞ okumalarını kaldır</string>
     <string name="identification_not_set">Tanımlama geliştirme modunda ayarlanmadı</string>
-    <string name="a11y_dialog">diyalog</string>
     <!-- WEAR OS-->
-    <string name="wear_unknown_action_string">Bilinmeyen eylem komutu:</string>
     <string name="remove_selected_items">Seçili nesneleri kaldır</string>
     <string name="count_selected">%1$d seçildi</string>
     <string name="sort_label">Sırala</string>
     <string name="search">Ara</string>
+    <string name="simple_mode">Basit mod</string>
+    <string name="select">Seçin</string>
+    <string name="set">Uygula</string>
 </resources>

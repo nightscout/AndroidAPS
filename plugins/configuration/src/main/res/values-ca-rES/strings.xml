@@ -27,8 +27,6 @@
     <string name="status">Estat:</string>
     <string name="patient_name">Nom del pacient</string>
     <string name="patient_name_summary">Si us plau, proporcioneu el nom o sobrenom del pacient per diferenciar entre diverses configuracions</string>
-    <string name="privacy_settings">Configuració de privacitat</string>
-    <string name="privacy_summary">Podeu proporcionar una adreçá de correu electrònic opcional si voleu ser informat sobre els errors de l\'app. No és un servei automàtic. En cas de situacions de perill, sereu contactats pels desenvolupadors de l\'app.</string>
     <string name="diawarning">Si us plau recordeu: els nous perfils d\'insulina requereixen una DIA de al menys 5h. Una DIA de 5-6h a un perfil nou és equivalent a DIA de 3h d\'un perfil antic.</string>
     <string name="profile">Perfil</string>
     <string name="doprofileswitch">Canviar de perfil</string>
@@ -42,8 +40,6 @@
     <string name="readstatus">Estat lectura</string>
     <string name="data_choices">Opcions de dades</string>
     <string name="fabric_upload">Enviar a fabric.io</string>
-    <string name="allow_automated_crash_reporting">Permetre enviament automàtic de dades d\'errors i ús de funcionalitats als desenvolupadors mitjançant el servei fabric.io.</string>
-    <string name="summary_email_for_crash_report">Aquesta identificació s\'adjuntarà als informes d\'errors, perquè puguem contactar-te en casos urgents. És opcional.</string>
     <string name="identification">Identificació (correu electrònic, FB, nick de Discord, etc.)</string>
     <string name="request">Petició</string>
     <string name="apsmode_title">Mode APS</string>
@@ -80,7 +76,6 @@
     <string name="check_preferences_before_import">Si us plau comproveu la configuració abans d\'importar:</string>
     <string name="check_preferences_cannot_import">La configuració no pot ser importada!</string>
     <string name="check_preferences_dangerous_import">La configuració no s\'hauria d\'importar!</string>
-    <string name="nav_export">Exportar configuració</string>
     <string name="export_to">Exportar configuració a</string>
     <string name="import_from">Importar configuració de</string>
     <string name="setting_imported">Configuració importada</string>
@@ -111,11 +106,9 @@
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportat fa %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">exportat a les %1$s</string>
     <string name="exported_less_than_hour_ago">exportat fa menys d\'una hora</string>
-    <string name="in_directory" comment="placeholder is for exported file path">al directori: %1$s</string>
     <string name="preferences_import_list_title">Selecciona l\'arxiu a importar</string>
     <string name="metadata_warning_different_flavour">La configuració va ser creada amb una altra versió d\'AAPS (%1$s) i ara teniu la: %2$s.\n\nAlguns dels valors poden faltar o no ser vàlids - si us plau, comproveu la configuració després d\'importar.</string>
     <string name="metadata_warning_different_device">La configuració va ser creada en un altre dispositiu. No hi ha problema si esteu important des d\'un telèfon més antic/diferent però comproveu que la configuració importada és correcta!</string>
-    <string name="metadata_warning_outdated_format">Esteu utilitzant un format obsolet heretat de versions antigues d\'APPS, i això pot donar problemes! Feu-ho només com a últim recurs, si no teniu una exportació feta en el format JSON actual.</string>
     <string name="metadata_warning_old_export">La configuració importada és de fa %1$s dies! Potser teniu una configuració més recent o heu escollit el fitxer incorrecte? Recordeu exportar la configuració regularment!</string>
     <string name="metadata_warning_date_format">Format de data-hora incorrecte!</string>
     <string name="metadata_warning_different_version">Configuració d\'una versió menor diferent. Cap problema si esteu important després d\'una actualització, però comproveu després d\'importar que la configuració encara sigui correcta!</string>
@@ -132,7 +125,6 @@
     <string name="prefdecrypt_issue_wrong_format">Falta la configuració per encriptar, el format de la configuració és incorrecte!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Algoritme d\'encriptació no compatible o no especificat!</string>
     <!-- Custom Watchface -->
-    <!-- Permissions -->
     <!-- Maintenance -->
     <string name="metadata_label_format">Format del fitxer</string>
     <string name="metadata_label_created_at">Creat:</string>
@@ -142,6 +134,5 @@
     <string name="metadata_label_device_model">Exportant model del dispositiu</string>
     <string name="metadata_label_encryption">Encriptació d\'arxius</string>
     <string name="metadata_format_new">Format nou d\'encriptació</string>
-    <string name="metadata_format_debug">Nou format de debug (no encriptat)</string>
     <string name="metadata_format_other">Format d\'exportació desconegut</string>
 </resources>

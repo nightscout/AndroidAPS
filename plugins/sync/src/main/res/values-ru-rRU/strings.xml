@@ -13,7 +13,7 @@
     <string name="ns_create_announcements_from_carbs_req_title">Создавать оповещения из напоминаний о необходимых углеводах</string>
     <string name="ns_create_announcements_from_errors_summary">Создать оповещение NS с диалогом об ошибке и оповещения на месте (также видимые в портале назначений в разделе лечение)</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Создавать оповещения Nightscout из напоминаний о необходимых углеводах</string>
-    <string name="description_ns_client">Синхронизирует данные с Nightscout</string>
+    <string name="description_ns_client">Синхронизирует данные с Nightscout при помощи API v1</string>
     <string name="description_ns_client_v3">Синхронизирует данные с Nightscout при помощи API v3</string>
     <string name="blocked_by_charging">Заблокировано опциями зарядки</string>
     <string name="blocked_by_connectivity">Заблокировано настройками подключения</string>
@@ -24,24 +24,20 @@
     <string name="ns_malfunction">Некорректная работа NSClient. Возможно следует перезапустить NS и NSClient.</string>
     <!-- NSClient -->
     <string name="no_write_permission">NS не имеет разрешения внести изменения. неверный API secret?</string>
-    <string name="ns_client_v3">NSClientV3</string>
-    <string name="ns_client_v3_short_name">NSV3</string>
+    <string name="ns_client_v3_short_name">NSv3</string>
     <string name="ns_client">клиент NS</string>
-    <string name="ns_client_short_name">КЛNS</string>
+    <string name="ns_client_short_name">NSv1</string>
     <string name="ns_client_url">Адрес URL:</string>
     <string name="restart">перезапуск</string>
-    <string name="ns_client_internal_title">клиент NS</string>
+    <string name="ns_client_title">NSClientV1</string>
+    <string name="ns_client_v3_title">NSClientV3</string>
     <string name="ns_client_url_title">URL-адрес Nightscout</string>
-    <string name="ns_client_url_dialog_message">введите URL адрес Nightscout</string>
-    <string name="ns_client_secret_title">API secret для NS</string>
-    <string name="ns_client_secret_dialog_title">API secret для NS</string>
-    <string name="ns_client_secret_dialog_message">введите API secret для NS (мин 12 знаков)</string>
-    <string name="nsclient_token_title">Атрибут защиты доступа в NS</string>
-    <string name="nsclient_token_dialog_title">Атрибут защиты доступа в NS</string>
-    <string name="nsclient_token_dialog_message">Атрибут защиты доступа в NS, созданный на странице администратора NS (минимум 17 символов)</string>
+    <string name="ns_client_url_dialog_message">Введите URL своего Nightscout (напр. https://yoursitename.yourplatform.dom)</string>
+    <string name="ns_client_secret_title">Ключ API Nightscout</string>
+    <string name="ns_client_secret_dialog_message">Введите ключ API вашего Nightscout (мин. 12 символов; пароль, записанный в переменных вашего Nightscout)</string>
+    <string name="nsclient_token_title">Код доступа Nightscout</string>
+    <string name="nsclient_token_dialog_message">Введите код доступа с уровнем привилегий admin, созданный в инструментах администратора Nightscout (мин. 17 символов, не ключ вашего API)</string>
     <string name="deliver_now">Подать сейчас</string>
-    <string name="clear_queue">очистка очереди</string>
-    <string name="show_queue">показать очередь</string>
     <string name="queue">очередь</string>
     <string name="status">состояние:</string>
     <string name="clear_log">очистка лога</string>
@@ -89,18 +85,11 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Загружает данные в Tidepool</string>
-    <string name="tidepool_upload_cgm">Загрузить данные мониторинга</string>
-    <string name="tidepool_upload_bolus">Загрузить лечение (инсулин, углеводы)</string>
-    <string name="tidepool_upload_tbr">Загрузить временные базалы</string>
-    <string name="tidepool_upload_profile">Загрузить переключения профиля, временные цели</string>
-    <string name="tidepool_upload_bg">Загрузить тесты ГК</string>
     <string name="remove_all">Удалить всё</string>
-    <string name="reset_start">Перезапустить старт</string>
     <string name="upload_now">Выгрузить (передать данные) сейчас</string>
     <string name="not_connected">Нет подключения</string>
     <string name="read_only">Только чтение</string>
     <string name="working">Обработка</string>
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip +</string>
     <string name="xdrip_shortname">XD</string>
@@ -123,7 +112,8 @@
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Подключение к устройству Garmin (Fenix, Edge, …)</string>
-    <string name="key_garmin_settings">Настройки Garmin</string>
+    <string name="garmin_local_http_server_port">Порт локального HTTP сервера</string>
+    <string name="garmin_local_http_server">Локальный HTTP сервер</string>
     <!--    Wear-->
     <string name="wear_shortname">WEAR</string>
     <string name="description_wear">Мониторить и контролировать AAPS при помощи часов WearOS.</string>
@@ -133,7 +123,7 @@
     <string name="wizard_result">Мастер:\nИнсулин: %1$.2fед\nУгл: %2$dг</string>
     <string name="quick_wizard_not_available">Выбранный мастер быстрого доступа больше недоступен, обновите плитку</string>
     <string name="quick_wizard_message">Мастер: %1$s\nИнсулин: %2$.2fЕд\nУгл: %3$dg</string>
-    <string name="wear_action_tempt_preset_error">Неизвестная конфигурация врем цели: %1$s</string>
+    <string name="user_action_not_available">Выбранное пользовательское действие %1$s более недоступно, пожалуйста, обновите плитку</string>
     <string name="wear_action_tempt_cancel_message">Отменить ВЦ?</string>
     <string name="wear_action_tempt_unit_error">На часах и телефоне различные единицы измерения!</string>
     <string name="wear_action_tempt_zero_message">Нулевая врем цель - отмена?</string>
@@ -146,10 +136,12 @@
     <string name="wear_settings">Настройки смарт-часов на Wear OS</string>
     <string name="wearcontrol_title">Контроль с часов</string>
     <string name="wearcontrol_summary">Ставить временные цели и вводить терапию с часов.</string>
+    <string name="wear_broadcast_data">Передавать данные</string>
+    <string name="wear_broadcast_data_summary">Передавать данные в AAPS или AAPSClient</string>
     <string name="wear_wizard_settings_summary">Расчеты включены в результат калькулятора: </string>
     <string name="wear_general_settings">Общие настройки</string>
-    <string name="wear_notifysmb_title">Оповещать об СМБ</string>
-    <string name="wear_notifysmb_summary">Показывать СМБ на часах как стандартный болюс.</string>
+    <string name="wear_notifysmb_title">Оповещать об SMB</string>
+    <string name="wear_notifysmb_summary">Показывать SMB на часах как стандартный болюс.</string>
     <string name="wear_custom_watchface_settings">Настройка циферблатов</string>
     <string name="wear_custom_watchface_authorization_title">Авторизация пользовательских циферблатов</string>
     <string name="wear_custom_watchface_authorization_summary">Авторизовать загруженные пользовательские циферблаты для изменения и блокировки некоторых параметров отображения часов в соответствии с дизайном часов</string>
@@ -158,6 +150,7 @@
     <string name="wear_infos_watchface">Циферблат Infos</string>
     <string name="wear_export_watchface">Экспортировать шаблон</string>
     <string name="wear_new_custom_watchface_exported">Пользовательский шаблон циферблата экспортирован</string>
+    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/en/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Повторить отправку всех данных</string>
     <string name="open_settings_on_wear">Открыть настройки на часах</string>
     <string name="cwf_infos_pref_locked">Список настроек, блокируемых циферблатом</string>
@@ -189,4 +182,5 @@
     <string name="tdd_line">%1$.2fед%1$.0f%%</string>
     <string name="today">Сегодня</string>
     <string name="weighted">взвешенный</string>
+    <string name="full_xdrip_sync_comment">Полная синхронизация? Это может занять длительное время и до завершения вы не увидите новые данные в xDrip+.</string>
 </resources>

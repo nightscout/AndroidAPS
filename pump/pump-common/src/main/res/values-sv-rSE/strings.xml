@@ -2,9 +2,6 @@
 <resources>
     <!-- PumoCommon - Pump Abstract -->
     <string name="pump_operation_not_supported_by_pump_driver">Operation stöds inte av pumpen/pumpdrivrutinen.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">Operationen stöds inte av pumpen ännu.</string>
-    <string name="common_resultok">OK</string>
-    <string name="pump_serial_number">Serienummer på pumpen</string>
     <string name="bolus_delivered_so_far">%1$.2fU / %2$.2fU levererat</string>
     <!-- PumpCommon - Pump Status -->
     <string name="pump_status_not_initialized">Inte initierad</string>
@@ -46,33 +43,9 @@
     <string name="ble_config_scan_scanning">Söker</string>
     <string name="ble_config_scan_finished">Sökning avslutad</string>
     <string name="ble_config_scan_error">Fel vid sökning: %1$d</string>
-    <string name="ble_config_connected_never">Aldrig</string>
     <string name="ble_config_remove">Ta bort</string>
-    <!-- BLE Errors -->
-    <string name="ble_error_bt_disabled">Bluetooth avstängt</string>
-    <string name="ble_error_no_bt_adapter">Ingen bluetoothadapter</string>
-    <string name="ble_error_configured_pump_not_found">Konfigurerad pump hittades inte</string>
-    <string name="ble_error_pump_unreachable">Pumpen kan inte nås</string>
-    <string name="ble_error_failed_to_conn_to_ble_device">Det gick inte att ansluta till BLE enheten</string>
-    <string name="ble_error_encryption_failed">Kryptering misslyckades</string>
-    <string name="ble_error_pump_found_unbonded">Hittade icke-ansluten pump</string>
-    <!-- Pump Error -->
-    <string name="pump_settings_error_basal_profiles_not_enabled">Basalprofiler är inte aktiverade på pumpen. Aktivera det i pumpens menyer.</string>
-    <string name="pump_settings_error_incorrect_basal_profile_selected">Fel basalprofilstyp inställd på pumpen (måste vara %s).</string>
-    <string name="pump_settings_error_wrong_tbr_type_set">Fel tempbasalstyp inställd på pumpen (måste vara %s).</string>
-    <string name="pump_settings_error_wrong_max_bolus_set">Fel max bolus i pumpen (måste vara %1$.2f).</string>
-    <string name="pump_settings_error_wrong_max_basal_set">Fel max basal i pumpen (måste vara %1$.2f).</string>
     <!-- Pump History -->
     <string name="pump_history_type">Typ:</string>
-    <!-- PumpDeviceState -->
-    <string name="pump_status_never_contacted">Aldrig ansluten</string>
-    <string name="pump_status_sleeping">Sover</string>
-    <string name="pump_status_waking_up">Väcker</string>
-    <string name="pump_status_active">Aktiv</string>
-    <string name="pump_status_error_comm">Kommunikationsfel</string>
-    <string name="pump_status_timeout_comm">Kommunikationstimeout</string>
-    <string name="pump_status_pump_unreachable">Pumpen kan inte nås</string>
-    <string name="pump_status_invalid_config">Felaktig konfiguration</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagar</item>

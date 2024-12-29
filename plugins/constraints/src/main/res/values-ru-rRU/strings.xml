@@ -4,6 +4,7 @@
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">Переход на летнее/зимнее время через 24 часа или менее</string>
     <string name="dst_loop_disabled_warning">Переход на зимнее/летнее время произошел менее 3 часов назад - Закрытый цикл выключен</string>
+    <string name="dst_loop_disabled_error">Смена летнего времени (DST) произошла менее 3 часов назад. Закрытый цикл временно отключен, автоматически включится через 3 часа после изменения DST</string>
     <!-- Storage constraint -->
     <string name="disk_full">Освободите по крайней мере %1$d MB из внутренней памяти! Цикл остановлен!</string>
     <!-- Version Checker -->
@@ -29,7 +30,7 @@
     <string name="closed_loop_disabled_on_dev_branch">Работает версия разработчика. Замкнутый цикл отключен.</string>
     <string name="closed_loop_disabled_with_eb">Замкнутый цикл отключен из-за работы Пролонгированного Болюса</string>
     <string name="smbalwaysdisabled">Опция супер микро болюс всегда и после углеводов отключена т. к. активный источник ГК не поддерживает комплексное фильтрование</string>
-    <string name="smbnotallowedinopenloopmode">СМБ не работают в режиме открытого цикла</string>
+    <string name="smbnotallowedinopenloopmode">Микроболюсы SMB не работают в режиме открытого цикла</string>
     <string name="maxvalueinpreferences">максимальное значение в настройках</string>
     <string name="hardlimit">жесткий предел</string>
     <string name="treatmentssafety_title">Безопасность терапии</string>

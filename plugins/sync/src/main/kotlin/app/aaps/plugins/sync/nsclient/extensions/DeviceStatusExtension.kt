@@ -1,10 +1,11 @@
 package app.aaps.plugins.sync.nsclient.extensions
 
+import app.aaps.core.data.model.DS
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.database.entities.DeviceStatus
+
 import org.json.JSONObject
 
-fun DeviceStatus.toJson(dateUtil: DateUtil): JSONObject =
+fun DS.toJson(dateUtil: DateUtil): JSONObject =
     JSONObject()
         .put("created_at", dateUtil.toISOString(timestamp))
         .also {

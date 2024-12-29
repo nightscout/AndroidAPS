@@ -1,8 +1,8 @@
 plugins {
-    id("com.android.library")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.ksp)
     id("kotlin-android")
-    id("kotlin-kapt")
-    id("kotlin-allopen")
+    kotlin("plugin.allopen")
     id("android-module-dependencies")
     id("test-module-dependencies")
     id("jacoco-module-dependencies")
@@ -12,11 +12,9 @@ android {
     namespace = "app.aaps.database.impl"
 
     defaultConfig {
-        kapt {
-            arguments {
-                arg("room.incremental", "true")
-                arg("room.schemaLocation", "$projectDir/schemas")
-            }
+        ksp {
+            arg("room.incremental", "true")
+            arg("room.schemaLocation", "$projectDir/schemas")
         }
     }
     sourceSets {
@@ -25,27 +23,24 @@ android {
 }
 
 dependencies {
-    implementation(project(":database:entities"))
+    api(libs.kotlin.stdlib.jdk8)
+    api(libs.kotlin.reflect)
+    api(libs.androidx.core)
 
-    api(Libs.Kotlin.stdlibJdk8)
-    api(Libs.Kotlin.reflect)
-    api(Libs.AndroidX.core)
+    api(libs.io.reactivex.rxjava3.rxandroid)
+    api(libs.io.reactivex.rxjava3.rxkotlin)
 
-    api(Libs.Rx.rxJava)
-    api(Libs.Rx.rxAndroid)
-    api(Libs.Rx.rxKotlin)
+    api(libs.com.google.code.gson)
 
-    api(Libs.Google.gson)
+    api(libs.androidx.room)
+    api(libs.androidx.room.runtime)
+    api(libs.androidx.room.rxjava3)
 
-    api(Libs.AndroidX.Room.room)
-    api(Libs.AndroidX.Room.runtime)
-    api(Libs.AndroidX.Room.rxJava3)
+    api(libs.com.google.dagger.android)
+    api(libs.com.google.dagger.android.support)
 
-    api(Libs.Dagger.android)
-    api(Libs.Dagger.androidSupport)
+    androidTestImplementation(libs.androidx.room.testing)
 
-    androidTestImplementation(Libs.AndroidX.Room.testing)
-
-    kapt(Libs.Dagger.compiler)
-    kapt(Libs.AndroidX.Room.compiler)
+    ksp(libs.com.google.dagger.compiler)
+    ksp(libs.androidx.room.compiler)
 }

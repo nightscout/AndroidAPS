@@ -1,29 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
-    <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
-    <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="nav_preferences_plugin">%1$s nustatymai</string>
-    <string name="nav_refreshtreatments">Atnaujinti terapiją iš NS</string>
     <string name="nav_exit">Išeiti</string>
     <string name="delta">Pokytis</string>
-    <string name="profile_label">Profilis</string>
     <string name="save">Išsaugoti</string>
-    <string name="reloadprofile">Atnaujinti profilį</string>
-    <string name="correctionbous">Korekcija</string>
-    <string name="ns_upload_only">(PAVOJINGA IŠJUNGTI) Tik įkeliama į NS</string>
-    <string name="ns_upload_only_summary">Tik įkelti į Nightscout (be sinchronizavimo). Netaikoma NGJ reikšmėms, nebent pasirinktas vietinis duomenų šaltinis, pvz., xDrip+. Taip pat netaikoma profilio duomenims, jei naudojamas NS profilis.\n!!! ĮSPĖJIMAS !!! Išjungus šią parinktį, galimas insulino perdozavimas, jei bet kuris iš komponentų (AAPS, NS, xDrip+) sukonfigūruotas neteisingai. Atidžiai stebėkite, ar AAPS rodomi duomenys atitinka pompos duomenis!</string>
     <string name="wear">Išmanieji laikrodžiai</string>
     <string name="nav_about">Apie</string>
-    <string name="smscommunicator_missingphonestatepermission">Trūksta telefono būsenos leidimo</string>
-    <string name="ns_alarm_options">Aliarmų nustatymai</string>
-    <string name="ns_alarms">Kurti pranešimus iš NS aliarmų</string>
-    <string name="ns_announcements">Kurti pranešimus iš NS perspėjimų</string>
-    <string name="ns_alarm_stale_data_value_label">Seni duomenys, riba [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Kritiškai seni duomenys, riba [min]</string>
     <string name="sensitivity_warning">Įjungę Autosens funkciją nepamirškite įvedinėti visus valgomus angliavandenius. To nedarant, angliavandenių sukeliami glikemijos svyravimai bus klaidingai identifikuojami kaip jautrumo pasikeitimai!</string>
-    <string name="notloadedplugins">Ne visi profiliai įkelti!</string>
-    <string name="valuesnotstored">Reikšmės neišsaugotos!</string>
     <string name="invalid">KLAIDA</string>
     <string name="gradually_increase_notification_volume">Palaipsniui didinkite įspėjimų ir pranešimų garso lygį</string>
     <string name="localalertsettings_title">Lokalūs perspėjimai</string>
@@ -35,26 +18,16 @@
     <string name="close_navigation">Uždaryti meniu</string>
     <string name="remove_items">Pašalinti elementus</string>
     <string name="sort_items">Rūšiuoti</string>
-    <string name="error_adding_treatment_title">Terapijos duomenys nepilni</string>
-    <string name="error_adding_treatment_message">Įrašas (insulinas: %1$.2f, angl.: %2$d, ties: %3$s) negali būti pridėtas. Prašome patikrinti ir rankiniu būdu atitinkamai įtraukti įrašą.</string>
-    <string name="generated_ecarbs_note">iAV.: %1$d g (%2$d h), atidėjimas: %3$d m</string>
-    <string name="profile_total">== ∑  %1$s vv</string>
     <string name="unitsnosemicolon">Vienetai</string>
-    <string name="show_removed">Parodyti pašalintus</string>
-    <string name="clearqueueconfirm">Išvalyti eilę? Visi eilės duomenys bus prarasti!</string>
-    <string name="chartmenu">Grafiko meniu</string>
     <string name="authorizationfailed">Autorizacija nepavyko</string>
-    <string name="copytolocalprofile_invalid">Nepavyksta sukurti profilio. Profilis neteisingas.</string>
-    <string name="clear_filter">Valyti filtrą</string>
     <string name="cannula">Kaniulė</string>
-    <string name="email_address">El. pašto adresas</string>
-    <string name="remove_bg_readings">Pašalinti glikemijos duomenis</string>
     <string name="identification_not_set">Kūrėjo režime tapatybė nenustatyta</string>
-    <string name="a11y_dialog">dialogas</string>
     <!-- WEAR OS-->
-    <string name="wear_unknown_action_string">Nežinoma komanda:</string>
     <string name="remove_selected_items">Pašalinti pasirinktus elementus</string>
     <string name="count_selected">%1$d pasirinkta</string>
     <string name="sort_label">Rūšiuoti</string>
     <string name="search">Ieškoti</string>
+    <string name="simple_mode">Paprastas Režimas</string>
+    <string name="select">Pasirinkti</string>
+    <string name="set">Nustatyti</string>
 </resources>

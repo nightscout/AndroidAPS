@@ -65,9 +65,11 @@ internal data class RemoteDeviceStatus(
         @SerializedName("pump") val pump: String?,
         @SerializedName("version") val version: String?,
         @SerializedName("insulin") val insulin: Int?,
+        @SerializedName("aps") val aps: String?,
         @SerializedName("sensitivity") val sensitivity: Int?,
         @SerializedName("smoothing") val smoothing: String?,
         @Contextual @SerializedName("insulinConfiguration") val insulinConfiguration: JsonObject?,
+        @Contextual @SerializedName("apsConfiguration") val apsConfiguration: JsonObject?,
         @Contextual @SerializedName("sensitivityConfiguration") val sensitivityConfiguration: JsonObject?,
         @Contextual @SerializedName("overviewConfiguration") val overviewConfiguration: JsonObject?,
         @Contextual @SerializedName("safetyConfiguration") val safetyConfiguration: JsonObject?

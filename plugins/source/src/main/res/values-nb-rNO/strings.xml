@@ -9,8 +9,6 @@
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Motta BS-verdier fra \'Build Your Own Dexcom App\'.</string>
-    <string name="eversense">Eversense App (patched)</string>
-    <string name="description_source_eversense">Motta BS-verdier fra den modifiserte Eversense-appen.</string>
     <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Motta BS-verdier fra Glimp.</string>
     <string name="mm640g">MM640G</string>
@@ -24,16 +22,18 @@
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">Motta BS-verdier fra Tomato app (MiaoMiao enhet)</string>
-    <string name="aidex">GlucoRx Aidex</string>
-    <string name="aidex_short">Aidex</string>
-    <string name="description_source_aidex">Motta BS-verdier fra GlucoRx Aidex CGM.</string>
     <string name="random_bg">Vilkårlig BS</string>
     <string name="description_source_random_bg">Generer vilkårlige BS-data (kun demo formål)</string>
     <string name="random_bg_short">BS</string>
-    <string name="do_xdrip_upload_title">Send BS-data til xDrip+</string>
-    <string name="do_xdrip_upload_summary">I xDrip+, velg 640G/Eversens som datakilde</string>
     <string name="bgsource_upload">Innstillinger for opplasting av BS</string>
     <string name="dexcom_log_ns_sensor_change_title">Logg sensorbytte til NS</string>
     <string name="dexcom_log_ns_sensor_change_summary">Opprett hendelse \"Sensorbytte\" automatisk i NS ved start av sensoren</string>
     <string name="direction">retning</string>
+    <string name="bg_generation_interval_minutes">BS-genereringsintervall i minutter</string>
+    <!-- Patched Ottai App -->
+    <string name="ottai_app">Ottai</string>
+    <string name="description_source_patched_ottai_app">Motta glukosedata fra appen Ottai.</string>
+    <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai Tag</string>
+    <string name="description_source_patched_syai_tag_app">Motta glukosedata fra appen Syai Tag.</string>
 </resources>

@@ -91,6 +91,7 @@
         <item name="ribbonTextWarningColor">@color/ribbonTextWarning</item>
         <!---Background  -->
         <item name="defaultBackground">@color/defaultBackground</item>
+        <item name="popupWindowBackground">@color/ribbonTextWarning</item>
         <!---Toast  -->
         <item name="toastBaseTextColor">@color/toastBase</item>
         <item name="toastBackgroundColor">@color/buttonBackground</item>
@@ -215,6 +216,7 @@
         <item name="devSlopePosColor">@color/devSlopePos</item>
         <item name="devSlopeNegColor">@color/devSlopeNeg</item>
         <item name="heartRateColor">@color/heartRate</item>
+        <item name="stepsColor">@color/steps</item>
         <item name="deviationGreyColor">@color/deviationGrey</item>
         <item name="deviationBlackColor">@color/deviationBlack</item>
         <item name="deviationGreenColor">@color/deviationGreen</item>
@@ -262,12 +264,11 @@
         <item name="android:titleTextStyle">@style/Theme.Aaps.ActionBar.TitleTextStyle</item>
     </style>
 
-    <style name="Theme.Aaps.ActionBar.TitleTextStyle"
-        parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+    <style name="Theme.Aaps.ActionBar.TitleTextStyle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textColor">?attr/defaultTextColor</item>
     </style>
 
-    <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>
+    <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge" />
 
     <style name="AppTheme.NoActionBar" parent="AppTheme">
         <item name="windowActionModeOverlay">true</item>
@@ -340,7 +341,7 @@
     </style>
 
     <!--    Common Buttons -->
-    <dimen name="gray_material_button_margin_horizontal">5dp</dimen>
+    <dimen name="gray_material_button_margin_horizontal">2dp</dimen>
 
     <style name="GrayButton" parent="Widget.MaterialComponents.Button">
         <item name="android:backgroundTint">@color/mtrl_btn_bg_color_selector_grey</item>
@@ -407,8 +408,7 @@
     </style>
 
     <!-- The launcher theme. It sets the main window background to the launch_screen drawable -->
-    <style name="AppTheme.Launcher"  parent="AppTheme.NoActionBar">
-    </style>
+    <style name="AppTheme.Launcher" parent="AppTheme.NoActionBar"></style>
 
     <style name="section_header_label">
         <item name="android:layout_width">match_parent</item>

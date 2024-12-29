@@ -61,8 +61,7 @@ data class PairingPIN(val pinDigits: IntArray) : Iterable<Int> {
         if (other == null) return false
         if (this::class != other::class) return false
         other as PairingPIN
-        if (!pinDigits.contentEquals(other.pinDigits)) return false
-        return true
+        return pinDigits.contentEquals(other.pinDigits)
     }
 
     override fun hashCode(): Int {

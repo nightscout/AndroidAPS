@@ -4,18 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.plugins.constraints.R
+import app.aaps.plugins.constraints.databinding.ObjectivesExamFragmentBinding
 import app.aaps.plugins.constraints.objectives.events.EventObjectivesUpdateGui
 import app.aaps.plugins.constraints.objectives.objectives.Objective
 import app.aaps.plugins.constraints.objectives.objectives.Objective.ExamTask
 import app.aaps.plugins.constraints.objectives.objectives.Objective.Option
 import dagger.android.support.DaggerDialogFragment
-import app.aaps.plugins.constraints.databinding.ObjectivesExamFragmentBinding
 import javax.inject.Inject
 
 class ObjectivesExamDialog : DaggerDialogFragment() {

@@ -1,25 +1,21 @@
 package app.aaps.plugins.smoothing
 
-import app.aaps.annotations.OpenForTesting
-import app.aaps.core.interfaces.iob.InMemoryGlucoseValue
+import app.aaps.core.data.iob.InMemoryGlucoseValue
+import app.aaps.core.data.model.TrendArrow
+import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smoothing.Smoothing
-import app.aaps.core.interfaces.utils.T
-import app.aaps.database.entities.GlucoseValue
-import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
 
-@OpenForTesting
 @Singleton
 class AvgSmoothingPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper
 ) : PluginBase(
@@ -29,7 +25,7 @@ class AvgSmoothingPlugin @Inject constructor(
         .pluginName(R.string.avg_smoothing_name)
         .shortName(R.string.smoothing_shortname)
         .description(R.string.description_avg_smoothing),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), Smoothing {
 
     override fun smooth(data: MutableList<InMemoryGlucoseValue>): MutableList<InMemoryGlucoseValue> {
@@ -46,7 +42,7 @@ class AvgSmoothingPlugin @Inject constructor(
             ) {
                 // We could further improve this by adding a weight to the neighbours, for simplicity this is not done.
                 data[i].smoothed = ((data[i - 1].value + data[i].value + data[i + 1].value) / 3.0)
-                data[i].trendArrow = GlucoseValue.TrendArrow.NONE
+                data[i].trendArrow = TrendArrow.NONE
             } else {
                 // data[i].smoothed = data[i].value
                 val currentTime = data[i].timestamp

@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">מעולם לא נוצר קשר</string>
+    <string name="pump_status_sleeping">בשינה</string>
+    <string name="pump_status_waking_up">מתעורר</string>
+    <string name="pump_status_active">פעיל</string>
+    <string name="pump_status_error_comm">שגיאת תקשורת</string>
+    <string name="pump_status_timeout_comm">חריגה ממגבלת הזמן לתקשורת</string>
+    <string name="pump_status_pump_unreachable">המשאבה אינה זמינה</string>
+    <string name="pump_status_invalid_config">תצורה לא תקפה</string>
     <!-- RL keys -->
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_button_scan_start">סרוק</string>
@@ -62,8 +71,6 @@
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">משאבת Medtronic</string>
     <string name="rileylink_target_device_omnipod">אומניפוד (Eros)</string>
-    <string name="riley_link_common_yes">כן</string>
-    <string name="riley_link_common_no">לא</string>
     <!-- RileyLink - Preferences -->
     <string name="riley_link_show_battery_level">הצג את רמת הסוללה המדווחת על-ידי OrangeLink/EmaLink</string>
     <string name="riley_link_show_battery_level_summary">לא עובד עם ריילילינק המקורי. עלול שלא לעבוד עם חלופות ריילילינק אחרות.</string>

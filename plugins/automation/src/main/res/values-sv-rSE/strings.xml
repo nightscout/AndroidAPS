@@ -104,8 +104,6 @@
     <string name="automation_event">Automationshändelse</string>
     <string name="reorder_label">Ändra ordning</string>
     <string name="user_action">Användaråtgärd</string>
-    <string name="remove_automation">Ta bort automatisering</string>
-    <string name="sort_automation">Sortera automatisering</string>
     <string name="remove_selected_items">Ta bort valda objekt</string>
     <string name="count_selected">%1$d valda</string>
     <string name="system_automation">Systemautomatisering</string>
@@ -116,4 +114,10 @@
     <string name="time_to_eat">Dags att äta!\nKör bolusguiden igen för ny beräkning.</string>
     <string name="time_to_bolus">Dags för bolus!\nKör Bolusguiden och gör beräkningar igen.</string>
     <string name="error_setting_reminder">Fel vid inställning av framtida alarm</string>
+    <!--    Autotune-->
+    <string name="autotune_run">Kör Autotune</string>
+    <string name="autotune_run_without_autoswitch">Autotune kördes utan byte av profil</string>
+    <string name="autotune_run_with_autoswitch">Autotune körde och profilen byttes automatiskt</string>
+    <string name="autotune_run_with_error">Fel under senaste körning av Autotune</string>
+    <string name="autotune_run_cancelled">En annan Autotune-körning upptäcktes, körning avbruten</string>
 </resources>

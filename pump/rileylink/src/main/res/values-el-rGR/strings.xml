@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- PumpDeviceState -->
     <!-- RL keys -->
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_button_scan_start">Σάρωση</string>
@@ -62,8 +63,6 @@
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Αντλία Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
-    <string name="riley_link_common_yes">Ναι</string>
-    <string name="riley_link_common_no">Όχι</string>
     <!-- RileyLink - Preferences -->
     <string name="riley_link_show_battery_level">Εμφάνιση στάθμης μπαταρίας που αναφέρθηκε από OrangeLink/EmaLink/DiaLink</string>
     <string name="riley_link_show_battery_level_summary">ΔΕΝ συνεργάζεται με το πρωτότυπο RileyLink. Μπορεί να μην συνεργαστεί με άλλες εναλλακτικές λύσεις RileyLink.</string>

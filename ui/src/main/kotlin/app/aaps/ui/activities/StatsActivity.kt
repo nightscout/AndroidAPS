@@ -5,6 +5,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
 import android.widget.TextView
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -14,9 +17,6 @@ import app.aaps.core.interfaces.stats.TirCalculator
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.core.ui.dialogs.OKDialog
-import app.aaps.database.entities.UserEntry.Action
-import app.aaps.database.entities.UserEntry.Sources
-import app.aaps.database.impl.AppRepository
 import app.aaps.ui.R
 import app.aaps.ui.activityMonitor.ActivityMonitor
 import app.aaps.ui.databinding.ActivityStatsBinding
@@ -35,7 +35,7 @@ class StatsActivity : TranslatedDaggerAppCompatActivity() {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
 
     private lateinit var binding: ActivityStatsBinding
     private val disposable = CompositeDisposable()
@@ -92,10 +92,10 @@ class StatsActivity : TranslatedDaggerAppCompatActivity() {
             }
         }
         binding.resetTdd.setOnClickListener {
-            OKDialog.showConfirmation(this, rh.gs(R.string.do_you_want_reset_tdd_stats)) {
+            OKDialog.showConfirmation(this, rh.gs(R.string.do_you_want_recalculate_tdd_stats)) {
                 handler.post {
                     uel.log(Action.STAT_RESET, Sources.Stats)
-                    repository.clearCachedTddData(0)
+                    persistenceLayer.clearCachedTddData(0)
                     runOnUiThread { recreate() }
                 }
             }

@@ -1,0 +1,194 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "391daa1e25629bafef27e6247e788e74",
+    "entities": [
+      {
+        "tableName": "insightBolusIDs",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`timestamp` INTEGER NOT NULL, `pumpSerial` TEXT, `bolusID` INTEGER, `startID` INTEGER, `endID` INTEGER, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pumpSerial",
+            "columnName": "pumpSerial",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "bolusID",
+            "columnName": "bolusID",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "startID",
+            "columnName": "startID",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "endID",
+            "columnName": "endID",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_insightBolusIDs_bolusID",
+            "unique": false,
+            "columnNames": [
+              "bolusID"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_insightBolusIDs_bolusID` ON `${TABLE_NAME}` (`bolusID`)"
+          },
+          {
+            "name": "index_insightBolusIDs_pumpSerial",
+            "unique": false,
+            "columnNames": [
+              "pumpSerial"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_insightBolusIDs_pumpSerial` ON `${TABLE_NAME}` (`pumpSerial`)"
+          },
+          {
+            "name": "index_insightBolusIDs_timestamp",
+            "unique": false,
+            "columnNames": [
+              "timestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_insightBolusIDs_timestamp` ON `${TABLE_NAME}` (`timestamp`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "insightHistoryOffsets",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`pumpSerial` TEXT NOT NULL, `offset` INTEGER NOT NULL, PRIMARY KEY(`pumpSerial`))",
+        "fields": [
+          {
+            "fieldPath": "pumpSerial",
+            "columnName": "pumpSerial",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "offset",
+            "columnName": "offset",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "pumpSerial"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_insightHistoryOffsets_pumpSerial",
+            "unique": false,
+            "columnNames": [
+              "pumpSerial"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_insightHistoryOffsets_pumpSerial` ON `${TABLE_NAME}` (`pumpSerial`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "insightPumpIDs",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`timestamp` INTEGER NOT NULL, `eventType` TEXT NOT NULL, `pumpSerial` TEXT, `eventID` INTEGER NOT NULL, PRIMARY KEY(`eventID`))",
+        "fields": [
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "eventType",
+            "columnName": "eventType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pumpSerial",
+            "columnName": "pumpSerial",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "eventID",
+            "columnName": "eventID",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "eventID"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_insightPumpIDs_timestamp",
+            "unique": false,
+            "columnNames": [
+              "timestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_insightPumpIDs_timestamp` ON `${TABLE_NAME}` (`timestamp`)"
+          },
+          {
+            "name": "index_insightPumpIDs_pumpSerial",
+            "unique": false,
+            "columnNames": [
+              "pumpSerial"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_insightPumpIDs_pumpSerial` ON `${TABLE_NAME}` (`pumpSerial`)"
+          },
+          {
+            "name": "index_insightPumpIDs_eventType",
+            "unique": false,
+            "columnNames": [
+              "eventType"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_insightPumpIDs_eventType` ON `${TABLE_NAME}` (`eventType`)"
+          }
+        ],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '391daa1e25629bafef27e6247e788e74')"
+    ]
+  }
+}

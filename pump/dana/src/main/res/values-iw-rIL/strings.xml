@@ -93,7 +93,6 @@
     <string name="danar_disableeasymode">ביטול מצב EasyUI במשאבה</string>
     <string name="profile_set_failed">הגדרת פרופיל הבזאלי נכשל</string>
     <string name="danar_bluetooth_status">מצב בלוטות\'</string>
-    <string name="danar_iob_label">אינסולין פעיל מהמשאבה</string>
     <string name="firmware_label">קושחה</string>
     <string name="danar_pump_settings">הגדרות משאבת Dana</string>
     <string name="time_format_12h">12 שעות</string>
@@ -103,7 +102,6 @@
     <string name="danar_bt_name_title">מכשיר בלוטות\' DanaR</string>
     <string name="danars_password_title">סיסמת משאבה (v1 בלבד)</string>
     <string name="danar_password_title">סיסמת משאבה</string>
-    <string name="danar_useextended_title">השתמש בבולוס ממושך של &gt;200%%</string>
     <string name="bolusspeed">מהירות בולוס</string>
     <string name="selectedpump">בחרו משאבה</string>
     <string name="rs_loginsulinchange_title">רשום החלפת מכל</string>

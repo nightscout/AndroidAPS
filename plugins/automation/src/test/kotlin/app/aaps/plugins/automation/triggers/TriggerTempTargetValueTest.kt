@@ -1,12 +1,10 @@
 package app.aaps.plugins.automation.triggers
 
-import app.aaps.core.interfaces.db.GlucoseUnit
-import app.aaps.database.ValueWrapper
-import app.aaps.database.entities.TemporaryTarget
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.TT
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Single
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -22,19 +20,16 @@ class TriggerTempTargetValueTest : TriggerTestBase() {
 
     @Test
     fun shouldRunTest() {
-        `when`(repository.getTemporaryTargetActiveAt(dateUtil.now())).thenReturn(
-            Single.just(
-                ValueWrapper.Existing(
-                    TemporaryTarget(
-                        duration = 60000,
-                        highTarget = 140.0,
-                        lowTarget = 140.0,
-                        reason = TemporaryTarget.Reason.CUSTOM,
-                        timestamp = now - 1
-                    )
-                )
+        `when`(persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())).thenReturn(
+            TT(
+                duration = 60000,
+                highTarget = 140.0,
+                lowTarget = 140.0,
+                reason = TT.Reason.CUSTOM,
+                timestamp = now - 1
             )
         )
+
         var t: TriggerTempTargetValue = TriggerTempTargetValue(injector).setUnits(GlucoseUnit.MMOL).setValue(7.7).comparator(Comparator.Compare.IS_EQUAL)
         assertThat(t.shouldRun()).isFalse()
         t = TriggerTempTargetValue(injector).setUnits(GlucoseUnit.MGDL).setValue(140.0).comparator(Comparator.Compare.IS_EQUAL)
@@ -56,7 +51,7 @@ class TriggerTempTargetValueTest : TriggerTestBase() {
         assertThat(t.shouldRun()).isFalse()
         t = TriggerTempTargetValue(injector).comparator(Comparator.Compare.IS_NOT_AVAILABLE)
         assertThat(t.shouldRun()).isFalse()
-        `when`(repository.getTemporaryTargetActiveAt(dateUtil.now())).thenReturn(Single.just(ValueWrapper.Absent()))
+        `when`(persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())).thenReturn(null)
         assertThat(t.shouldRun()).isTrue()
     }
 

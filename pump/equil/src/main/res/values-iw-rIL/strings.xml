@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--  start  -->
+    <!-- equil - Commands -->
+    <!--    推杆回退-->
+    <string name="equil_common_wizard_exit_confirmation_text">עוד לא סיימתם את כל השלבים. אתם בטוחים שברצונכם לצאת?</string>
+    <string name="equil_replace_reservoir">המכל ריק. נא להחליפו</string>
+    <string name="error_mustbe6hexadidits">חייב להיות באורך 6 תוים, מהתוים הבאים: ABCDEF0123456789</string>
+</resources>

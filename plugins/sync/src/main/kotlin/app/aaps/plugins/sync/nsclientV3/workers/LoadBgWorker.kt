@@ -7,13 +7,14 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.main.utils.worker.LoggingWorker
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.Preferences
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.localmodel.entry.NSSgvV3
+import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.plugins.sync.nsShared.NsIncomingDataProcessor
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import kotlinx.coroutines.Dispatchers
@@ -25,7 +26,7 @@ class LoadBgWorker(
 ) : LoggingWorker(context, params, Dispatchers.IO) {
 
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var context: Context
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var nsClientV3Plugin: NSClientV3Plugin
@@ -34,7 +35,7 @@ class LoadBgWorker(
     @Inject lateinit var storeDataForDb: StoreDataForDb
 
     override suspend fun doWorkAndLog(): Result {
-        if (!nsClientSource.isEnabled() && !sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_cgm, false))
+        if (!nsClientSource.isEnabled() && !preferences.get(BooleanKey.NsClientAcceptCgmData))
             return Result.success(workDataOf("Result" to "Load not enabled"))
 
         val nsAndroidClient = nsClientV3Plugin.nsAndroidClient ?: return Result.failure(workDataOf("Error" to "AndroidClient is null"))

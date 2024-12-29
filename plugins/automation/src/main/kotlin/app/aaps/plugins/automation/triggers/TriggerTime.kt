@@ -1,8 +1,8 @@
 package app.aaps.plugins.automation.triggers
 
 import android.widget.LinearLayout
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputDateTime
@@ -55,7 +55,7 @@ class TriggerTime(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyDescription(): String =
         rh.gs(R.string.atspecifiedtime, dateUtil.dateAndTimeString(time.value))
 
-    override fun icon(): Optional<Int> = Optional.of(app.aaps.core.main.R.drawable.ic_access_alarm_24dp)
+    override fun icon(): Optional<Int> = Optional.of(app.aaps.core.objects.R.drawable.ic_access_alarm_24dp)
 
     override fun duplicate(): Trigger = TriggerTime(injector, time.value)
 

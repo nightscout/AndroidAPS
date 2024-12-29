@@ -4,7 +4,6 @@
     <string name="combov2_plugin_description">Integración de bombas de insulina Accu-Chek Combo</string>
     <string name="combov2_could_not_connect">No se pudo conectar a la bomba</string>
     <string name="combov2_not_paired">No se encuentra emparejado a una bomba</string>
-    <string name="combov2_pump_terminated_connection">Conexión con la bomba terminada</string>
     <string name="combov2_warning">Advertencia de Combo</string>
     <string name="combov2_error">Error de Combo</string>
     <string name="combov2_warning_4">Contacte a la línea de soporte para actualizar</string>
@@ -115,8 +114,6 @@ Si no puedes establecer ninguna conexión después de unos ~5 minutos:\n\n
     <string name="combov2_short_status_battery_state">Batería: %s</string>
     <string name="combov2_automatic_reservoir_entry">Autodetectar y añadir automáticamente los cambios de reservorio de insulina</string>
     <string name="combov2_automatic_battery_entry">Autodetectar y añadir automáticamente los cambios de pila</string>
-    <string name="combov2_note_reservoir_change">Cambio del reservorio de insulina insertado automáticamente por el controlador Combov2</string>
-    <string name="combov2_note_battery_change">Cambio de pila insertado automáticamente por el controlador Combov2</string>
     <string name="combov2_timezone_changed">Zona horaria cambiada</string>
     <string name="combov2_datetime_changed">Fecha y/o hora cambiada</string>
     <string name="combov2_dst_started">Inicio del horario de verano (DST)</string>

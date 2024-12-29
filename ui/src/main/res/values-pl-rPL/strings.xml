@@ -17,7 +17,7 @@
     <!--     Activities-->
     <string name="activity_monitor">Monitor aktywności</string>
     <string name="do_you_want_reset_stats">Czy chcesz zresetować statystyki aktywności?</string>
-    <string name="do_you_want_reset_tdd_stats">Czy chcesz zresetować statystyki TDD?</string>
+    <string name="do_you_want_recalculate_tdd_stats">Czy chcesz ponownie przeliczyć statystyki DDI?</string>
     <string name="statistics">Statystyki</string>
     <string name="calculation_in_progress">Trwa obliczanie</string>
     <string name="invalid_age">Nieprawidłowy wpis wieku</string>
@@ -80,24 +80,15 @@
     <string name="no_records_available">Brak wpisów</string>
     <string name="calculation_short">Kalk</string>
     <string name="treatments_iob_label_string">IOB:</string>
-    <string name="treatments_insulin_label_string">Insulina:</string>
     <string name="treatments_carbs_label_string">Węglow.:</string>
-    <string name="treatments_iobtotal_label_string">Całkowita IOB:</string>
-    <string name="treatments_iob_activity_total_label_string">Aktywna IOB:</string>
-    <string name="tempbasals_realduration_label_string">Czas:</string>
     <string name="tempbasals_netratio_label_string">Iloczyn:</string>
-    <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="treatments_wizard_correction_label">Poprawka</string>
     <string name="meal_bolus">Posiłek</string>
     <string name="prime">Wypełnianie</string>
-    <string name="profile_changes">Zmiany profilu</string>
-    <string name="tempt_targets">Cele tymczasowe</string>
     <string name="carbs_and_bolus">Węglowodany i bolus</string>
     <string name="show_invalidated_records">Pokaż niepoprawne / usunięte wpisy</string>
     <string name="hide_invalidated_records">Ukryj niepoprawne / usunięte wpisy</string>
-    <string name="refresh_from_nightscout">Odśwież z Nightscout</string>
-    <string name="refresheventsfromnightscout">Odśwież z NS</string>
     <string name="show_invalidated">Pokaż niepoprawne</string>
     <string name="hide_invalidated">Ukryj niepoprawne</string>
     <string name="careportal_remove_started_events">Usuń wpisy o uruchomieniu AAPS</string>
@@ -131,26 +122,21 @@
     <string name="a11y_only_on_watch">tylko na zegarku</string>
     <string name="a11y_only_on_phone">tylko na telefonie</string>
     <string name="quickwizard_settings">Ustawienia Szybkiego Bolusa</string>
-    <string name="overview_edit_quickwizard_button_text">Tekst przycisku:</string>
-    <string name="overview_edit_quickwizard_carbs">Węglowodany:</string>
+    <string name="overview_edit_quickwizard_button_text">Tekst przycisku</string>
     <string name="overview_edit_quickwizard_valid">Ważny:</string>
-    <string name="overview_edit_quickwizard_list_activity_add">Dodaj</string>
-    <string name="overview_quickwizard_item_edit_button">Edytuj</string>
-    <string name="overview_edit_quickwizard_show_on_device">Pokaż wpis na urządzeniu:</string>
-    <string name="overview_edit_quickwizard_use_bg">Obliczenia BG</string>
-    <string name="overview_edit_quickwizard_use_bolus_iob">Obliczenia IOB z bolusów</string>
-    <string name="overview_edit_quickwizard_use_basal_iob">Obliczenia IOB z bazy</string>
-    <string name="overview_edit_quickwizard_use_trend">Obliczenia trendu</string>
-    <string name="overview_edit_quickwizard_use_superbolus">Obliczenia Superbolusa</string>
-    <string name="overview_edit_quickwizard_percentage">Procent</string>
-    <string name="device_all">Wszystkie</string>
-    <string name="device_phone">Telefon</string>
-    <string name="device_watch">Zegarek</string>
-    <string name="positive_only">Tylko pozytywne</string>
-    <string name="negative_only">Tylko negatywne</string>
-    <string name="overview_editquickwizard_usecob">Obliczenia COB</string>
-    <string name="overview_editquickwizard_usetemptarget">Obliczenie celu tymczasowego</string>
-    <string name="overview_editquickwizard_usepercentage">Obliczenia procentowe</string>
-    <string name="app_default">Domyślny aplikacji</string>
+    <string name="overview_edit_quickwizard_use_positive_iob_only">Tylko dodatnie wartości IoB</string>
+    <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
+    <string name="overview_edit_quickwizard_percentage_too_high">Zbyt wysoki procent!</string>
     <string name="a11y_drag_and_drop_handle">tryb \"Przeciągnij i upuść\"</string>
+    <string name="additional_ecarbs">Dodaj eCarbs</string>
+    <string name="overview_edit_quickwizard_useforcalculation">Użyj do obliczeń:</string>
+    <string name="constraints_violation">Naruszenie ograniczeń</string>
+    <string name="change_your_input">Zmień wprowadzone dane!</string>
+    <string name="confirm_treatment">Proszę potwierdzić leczenie</string>
+    <string name="recalculate">Przelicz</string>
+    <string-array name="yes_no_positiveonly_negativeonly">
+        <item>Obie</item>
+        <item>Tylko pozytywne</item>
+        <item>Tylko negatywne</item>
+    </string-array>
 </resources>

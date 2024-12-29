@@ -1,7 +1,6 @@
 package app.aaps.core.nssdk
 
 import android.content.Context
-import com.google.gson.JsonParser
 import app.aaps.core.nssdk.exceptions.DateHeaderOutOfToleranceException
 import app.aaps.core.nssdk.exceptions.InvalidAccessTokenException
 import app.aaps.core.nssdk.exceptions.InvalidFormatNightscoutException
@@ -32,6 +31,7 @@ import app.aaps.core.nssdk.remotemodel.RemoteFood
 import app.aaps.core.nssdk.remotemodel.RemoteTreatment
 import app.aaps.core.nssdk.utils.retry
 import app.aaps.core.nssdk.utils.toNotNull
+import com.google.gson.JsonParser
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -77,7 +77,6 @@ class NSAndroidClientImpl(
         logger = logger
     )
     override var lastStatus: Status? = null
-        private set
 
     /*
     * TODO: how should our result look like?
@@ -173,7 +172,7 @@ class NSAndroidClientImpl(
             return@callWrapper CreateUpdateResponse(
                 response = response.code(),
                 identifier = responseBody?.identifier,
-                isDeduplication = responseBody?.isDeduplication ?: false,
+                isDeduplication = responseBody?.isDeduplication == true,
                 deduplicatedIdentifier = responseBody?.deduplicatedIdentifier,
                 lastModified = responseBody?.lastModified
             )
@@ -301,7 +300,7 @@ class NSAndroidClientImpl(
             return@callWrapper CreateUpdateResponse(
                 response = response.code(),
                 identifier = response.body()?.identifier,
-                isDeduplication = response.body()?.isDeduplication ?: false,
+                isDeduplication = response.body()?.isDeduplication == true,
                 deduplicatedIdentifier = response.body()?.deduplicatedIdentifier,
                 lastModified = response.body()?.lastModified
             )

@@ -1,12 +1,13 @@
 package app.aaps.plugins.sync.nsclientV3.extensions
 
+import app.aaps.core.data.model.DS
 import app.aaps.core.nssdk.localmodel.devicestatus.NSDeviceStatus
-import app.aaps.database.entities.DeviceStatus
+
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializer
 import org.json.JSONObject
 
-fun DeviceStatus.toNSDeviceStatus(): NSDeviceStatus {
+fun DS.toNSDeviceStatus(): NSDeviceStatus {
     val deserializer: JsonDeserializer<JSONObject?> =
         JsonDeserializer<JSONObject?> { json, _, _ ->
             JSONObject(json.asJsonObject.toString())

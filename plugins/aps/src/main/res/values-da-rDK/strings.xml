@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="DynISFAdjust_title" formatted="false">DynamiskISF-justeringsfaktor %</string>
-    <string name="DynISFAdjust_summary" formatted="false">Justeringsfaktor for DynamiskISF. Indstil mere end 100% for mere aggressive korrektionsdoser og mindre end 100% for mindre aggressive korrektioner.</string>
+    <!--Autotune-->
     <string name="high_temptarget_raises_sensitivity_title">Høj midlertidig basal øger sensitivitet</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Hæv følsomheden for midlertidige basaler >= 100]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Lav midlertidig basal sænker sensitivitet</string>
@@ -60,9 +59,7 @@
     <string name="enable_smb_summary">Brug Super Mikro Boluser i stedet for midlertidig basal for hurtigere handling</string>
     <string name="enable_uam_summary">Detektering af uanmeldte måltider</string>
     <string name="enable_smb_always">Aktiver SMB altid</string>
-    <string name="enable_smb_always_summary">Aktiver SMB altid uafhængig af bolusser. Kun muligt med BS kilde, der har god filtrering af data såsom G5</string>
     <string name="enable_smb_after_carbs">Aktiver SMB efter kulhydrater</string>
-    <string name="enable_smb_after_carbs_summary">Aktiver SMB i 6 timer efter kulhydrater, selv med 0 COB. Kun muligt med BS kilde, der har god filtrering af data såsom G5</string>
     <string name="enable_smb_with_cob">Aktiver SMB med COB</string>
     <string name="enable_smb_with_cob_summary">Aktiver SMB når der er COB aktiv.</string>
     <string name="enable_smb_with_temp_target">Aktiver SMB med midlertidige mål</string>
@@ -82,7 +79,6 @@
     <string name="smb_disabled_in_preferences">SMB deaktiveret i præferencer</string>
     <string name="uam_disabled_in_preferences">UAM deaktiveret i præferencer</string>
     <string name="autosens_disabled_in_preferences">Autosens deaktiveret i præferencer</string>
-    <string name="autosens_disabled_in_dyn_isf">Autosens deaktiveret i DynISF</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">Begrænser IOB til %1$.1f IE på grund af %2$s</string>
     <string name="maxvalueinpreferences">max værdi i præferencer</string>
@@ -115,4 +111,45 @@
     <string name="loop_open_mode_min_change">Minimal anmodningsændring [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Åben Loop vil kun foreslå ny ændringsanmodning, hvis ændringen er større end denne værdi i %. Standardværdien er 20%</string>
     <string name="fallback_smb_no_tdd">Tilbagefalder til SMB. Ikke nok TDD-data.</string>
+    <!-- Autotune -->
+    <string name="autotune_shortname">AT</string>
+    <string name="autotune_settings">Autotune indstillinger</string>
+    <string name="autotune_auto_title">Automatisk profilskift</string>
+    <string name="autotune_auto_summary">Hvis aktiveret, vil Autotune automatisk opdatere og skifte til input-profil efter beregning ud fra en automatiseringsregel.</string>
+    <string name="autotune_categorize_uam_as_basal_title">Kategoriser UAM som basal</string>
+    <string name="autotune_categorize_uam_as_basal_summary">Aktiver kun hvis du har indtastet alle kulhydrater på pålidelig vis. Med denne indstilling vil pludselige stigninger set af Autotune, blive brugt til at anbefale ændringer af basal rate.</string>
+    <string name="autotune_tune_insulin_curve_title">Tilpas insulinkurven</string>
+    <string name="autotune_tune_insulin_curve_summary">Aktiver kun hvis du bruger egen peak værdi. Dette alternativ vil justere peak og DIA-varigheden</string>
+    <string name="autotune_default_tune_days_title">Antal dage med data</string>
+    <string name="autotune_circadian_ic_isf_title">Anvend gennemsnitligt resultat i døgnbaseret IC/ISF</string>
+    <string name="autotune_circadian_ic_isf_summary">Autotune vil ikke justere døgnrytme variationer, denne indstilling benytter gennemsnitlige værdier til justering af IC og ISF til din døgnrytme input profil</string>
+    <string name="autotune_additional_log_title">Inkludér flere logoplysninger for fejlfinding</string>
+    <string name="autotune_additional_log_summary">Aktivér kun hvis udviklerne beder dig om det, for at sende flere logoplysninger til at hjælpe med at fejlfinde Autotune plugin</string>
+    <string name="autotune_default_tune_days_summary">Standard antal dage data der skal behandles af Autotune (op til 30)</string>
+    <string name="autotune_tunedprofile_name">Justeret</string>
+    <string name="autotune_profile">Profil :</string>
+    <string name="autotune_last_run">Sidst kørt :</string>
+    <string name="autotune_warning">Advarsel :</string>
+    <string name="autotune_ic_warning">Autotune fungerer med kun én IC-værdi, din profil har %1$d værdier. Gennemsnitsværdi er %2$.2fg/E</string>
+    <string name="autotune_isf_warning">Autotune virker med kun én ISF-værdi, din profil har %1$d værdier. Gennemsnitlig værdi er %2$.1f%3$s/E</string>
+    <string name="autotune_error">Fejl i inputdata, prøv at køre autotune igen eller reducer antallet af dage</string>
+    <string name="autotune_error_more_days">Fejl i inputdata, øg antallet af dage</string>
+    <string name="autotune_warning_during_run">Automatisk beregning startet, vær venligst tålmodig</string>
+    <string name="autotune_warning_after_run">Kontrollér resultaterne omhyggeligt, før du bruger dem!</string>
+    <string name="autotune_partial_result">Delvis resultat dag %1$d / %2$d justeret</string>
+    <string name="autotune_result">Resultat: %1$s</string>
+    <string name="autotune_param">Parameter</string>
+    <string name="autotune_percent">%</string>
+    <string name="autotune_missing">Mangler</string>
+    <string name="autotune_run">Kør Autotune</string>
+    <string name="autotune_check_input_profile_button">Tjek input-profil</string>
+    <string name="autotune_compare_profile">Sammenlign profiler</string>
+    <string name="autotune_copy_localprofile_button">Kopier til lokal profil</string>
+    <string name="autotune_update_input_profile_button">Opdater input profil</string>
+    <string name="autotune_revert_input_profile_button">Gendan input profil</string>
+    <string name="autotune_copy_local_profile_message">Opret en ny lokal profil ud fra denne Autotune profil?</string>
+    <string name="autotune_update_local_profile_message">Opdater %1$s profil med Autotune profil?</string>
+    <string name="autotune_revert_local_profile_message">Gendan %1$s profil med Input-profilen?</string>
+    <string name="autotune_profile_invalid">Profil ugyldig</string>
+    <!--    autoISF -->
 </resources>

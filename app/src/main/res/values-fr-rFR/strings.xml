@@ -1,29 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
-    <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
-    <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="nav_preferences_plugin">Préférences de %1$s</string>
-    <string name="nav_refreshtreatments">Actualiser les données depuis NS</string>
     <string name="nav_exit">Quitter</string>
     <string name="delta">Delta</string>
-    <string name="profile_label">Profil</string>
     <string name="save">Enregistrer</string>
-    <string name="reloadprofile">Actualiser le profil</string>
-    <string name="correctionbous">Corr.</string>
-    <string name="ns_upload_only">(DÉSACTIVATION DANGEREUSE) Envoi NS uniquement</string>
-    <string name="ns_upload_only_summary">Envoi NS uniquement (sync désactivée). Inactif sur les Glycémie des capteurs sauf si une source locale comme xDrip+ est sélectionnée. Inactif sur les profils si Profil NS est sélectionné.\n!!! ATTENTION !!! La désactivation de cette option peut causer des dysfonctionnements et une surdose d\'insuline si l\'un de vos composants (AAPS, NS, xDrip+) est mal configuré. Vérifiez bien si les données affichées par AAPS correspondent à l’état de la pompe !</string>
     <string name="wear">Wear</string>
     <string name="nav_about">À propos</string>
-    <string name="smscommunicator_missingphonestatepermission">Autorisation du téléphone manquante</string>
-    <string name="ns_alarm_options">Options d\'alarme</string>
-    <string name="ns_alarms">Créer des notifications à partir des alarmes NS</string>
-    <string name="ns_announcements">Créer des notifications à partir des notifications NS</string>
-    <string name="ns_alarm_stale_data_value_label">Seuil sans nouvelle donnée Glyc. [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Seuil d\'urgence pour les données obsolètes [min]</string>
     <string name="sensitivity_warning">En activant la fonction Autosens, n’oubliez pas de rentrer tous les glucides consommés. Sinon les déviations de glucides seront incorrectement identifiées pour les changements de sensibilité !!</string>
-    <string name="notloadedplugins">Les profils ne sont pas tous téléchargés !</string>
-    <string name="valuesnotstored">Valeurs non enregistrées !</string>
     <string name="invalid">INVALIDE</string>
     <string name="gradually_increase_notification_volume">Augmentation progressive du volume pour les alertes et les notifications</string>
     <string name="localalertsettings_title">Alertes locales</string>
@@ -35,26 +18,16 @@
     <string name="close_navigation">Fermer navigation</string>
     <string name="remove_items">Supprimer des entrées</string>
     <string name="sort_items">Trier les objets</string>
-    <string name="error_adding_treatment_title">Données de traitement incomplètes</string>
-    <string name="error_adding_treatment_message">Le traitement (insuline : %1$.2f, glucides : %2$d, à : %3$s) n\'a pas pu être ajouté aux traitements. Vérifiez et ajoutez SVP manuellement ce traitement.</string>
-    <string name="generated_ecarbs_note">eCarbs : %1$d g (%2$d h), retard : %3$d m</string>
-    <string name="profile_total">== ∑  %1$s U</string>
     <string name="unitsnosemicolon">Unités</string>
-    <string name="show_removed">Afficher les éléments supprimés</string>
-    <string name="clearqueueconfirm">Effacer la queue ? Toutes les données en attente seront perdues !</string>
-    <string name="chartmenu">Menu Graph</string>
     <string name="authorizationfailed">Echec de l\'authentification</string>
-    <string name="copytolocalprofile_invalid">Impossible de créer le profil. Le profil est invalide.</string>
-    <string name="clear_filter">Effacer le filtre</string>
     <string name="cannula">Canule</string>
-    <string name="email_address">Adresse e-mail</string>
-    <string name="remove_bg_readings">Supprimer des Glycémies</string>
     <string name="identification_not_set">Identification non définie en mode dev</string>
-    <string name="a11y_dialog">dialogue</string>
     <!-- WEAR OS-->
-    <string name="wear_unknown_action_string">Commande inconnue :</string>
     <string name="remove_selected_items">Supprimer les entrées sélectionnées</string>
     <string name="count_selected">%1$d sélectionnée(s)</string>
     <string name="sort_label">Trier</string>
     <string name="search">Chercher</string>
+    <string name="simple_mode">Mode simple</string>
+    <string name="select">Choisir</string>
+    <string name="set">Appliquer</string>
 </resources>

@@ -49,7 +49,6 @@
     <string name="alarm_expired">Utløpt</string>
     <string name="alarm_reservoir_empty">Reservoaret er tomt</string>
     <string name="alarm_patch_fault">Feil på patch</string>
-    <string name="alarm_patch_fault2">Feil på patch 2</string>
     <string name="alarm_base_fault">Feil i base</string>
     <string name="alarm_battery_out">Batteri er tatt ut</string>
     <string name="alarm_no_calibration">Ingen kalibrering</string>
@@ -79,6 +78,7 @@
     <string name="patch_not_active_note">Pumpebase skal ikke kobles til patch før neste steg!</string>
     <string name="connect_pump_base">Koble pumpebase til ny patch, fjern overflødig luft og full med insulin. Deretter trykk <b>Neste</b>.</string>
     <string name="note_min_70_units">Merk: Minimum 70 enheter kreves for aktivering.</string>
+    <string name="reservoir_text_and_level">Reservoar: %.2f E</string>
     <string name="do_not_attach_to_body">Ikke koble patch til kroppen enda.</string>
     <string name="half_press_needle">Trykk nål-knappen halvveis. Trykk deretter <b>Neste</b> for å starte priming.</string>
     <string name="wait_for_priming">Vent mens priming fullføres.</string>
@@ -89,6 +89,7 @@
     <string name="activating_pump">Aktiverer pumpe og setter basaldose. Vennligst vent.</string>
     <string name="activating_error">Kunne ikke aktivere, trykk <b>Prøv igjen</b> for å prøve igjen.</string>
     <string name="activating_complete">Ny patch aktivert. %.2f enheter gjenstår.</string>
+    <string name="can_export_settings">Du kan eksportere innstillingene for å kunne gjenopprette denne patchøkten senere.</string>
     <string name="press_OK_to_return">Trykk <b>OK</b> for å gå tilbake til hovedskjermen.</string>
     <string name="deactivate_sure">Er du sikker på at du vil deaktivere det gjeldende patch?</string>
     <string name="cancel_sure">Er du sikker på at du vil avbryte aktiveringen?</string>
@@ -108,7 +109,7 @@
     <string name="sn_input_title">Serienummer</string>
     <string name="sn_input_summary">Skriv inn serienummeret til pumpens base.</string>
     <string name="sn_input_invalid">Ugyldig serienummer!</string>
-    <string name="pump_unsupported">Pumpe ikke testet: %1$d! Kontakt oss på discord eller github for støtte</string>
+    <string name="pump_unsupported">Pumpe er ikke testet: %1$s! Vennligst kontakt oss på discord eller github for støtte</string>
     <string name="alarm_setting_title">Alarminnstillinger</string>
     <string name="alarm_setting_summary">Velg dine foretrukne alarminnstillinger.</string>
     <string name="pump_warning_notification_title">Varsel om pumpeadvarsel</string>
@@ -121,9 +122,19 @@
     <string name="hourly_max_insulin_summary">Angi maksimalt antall enheter insulin tillatt per time. Hvis overskredet vil pumpen suspendere.</string>
     <string name="daily_max_insulin_title">Maks insulin per dag [Enheter]</string>
     <string name="daily_max_insulin_summary">Angi maksimalt antall enheter insulin tillatt per dag. Hvis overskredet vil pumpen suspendere.</string>
+    <string name="scan_on_connection_error_title">Skann ved tilkoblingsfeil</string>
+    <string name="scan_on_connection_error_summary">ADVARSEL: Aktiver kun hvis du har tilkoblingsproblemer. Hvis aktivert, skanner driveren etter pumpen på nytt før du prøver å koble til pumpen igjen. Pass på at du har posisjonstillatelse satt til \"Alltid tillat\" </string>
     <!-- treatment state-->
     <string name="getting_pump_status">Henter pumpestatus</string>
+    <string name="syncing_records">Synkroniserer poster, %1$d gjenstår</string>
     <string name="getting_bolus_status">Henter bolus status</string>
     <string name="getting_temp_basal_status">Henter midlertidig basal status</string>
     <string name="setting_pump_settings">Setter brukerinnstillinger</string>
+    <!-- bolus-->
+    <string name="bolus_error_reason_user">Bolus avbrutt av bruker</string>
+    <string name="bolus_error_reason_not_connected">Pumpe frakoblet</string>
+    <string name="bolus_error_reason_already_in_progress">Bolus pågår allerede</string>
+    <string name="bolus_error_reason_unable_to_send_command">Kunne ikke sende boluskommando</string>
+    <string name="bolus_error_reason_communication_lost">Tidsavbrudd ved bolusstatus</string>
+    <string name="bolus_error_reason_pump_error">Pumpefeil</string>
 </resources>

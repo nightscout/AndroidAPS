@@ -1,11 +1,11 @@
 package app.aaps.plugins.sync.nsclientV3.extensions
 
+import app.aaps.core.data.model.FD
+import app.aaps.core.data.model.IDs
 import app.aaps.core.nssdk.localmodel.food.NSFood
-import app.aaps.database.entities.Food
-import app.aaps.database.entities.embedments.InterfaceIDs
 
-fun NSFood.toFood(): Food =
-    Food(
+fun NSFood.toFood(): FD =
+    FD(
         isValid = isValid,
         name = name,
         category = category,
@@ -17,10 +17,10 @@ fun NSFood.toFood(): Food =
         energy = energy,
         unit = unit,
         gi = gi,
-        interfaceIDs_backing = InterfaceIDs(nightscoutId = identifier)
+        ids = IDs(nightscoutId = identifier)
     )
 
-fun Food.toNSFood(): NSFood =
+fun FD.toNSFood(): NSFood =
     NSFood(
         date = System.currentTimeMillis(),
         isValid = isValid,
@@ -34,5 +34,5 @@ fun Food.toNSFood(): NSFood =
         energy = energy,
         unit = unit,
         gi = gi,
-        identifier = interfaceIDs.nightscoutId,
+        identifier = ids.nightscoutId,
     )

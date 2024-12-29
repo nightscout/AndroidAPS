@@ -6,8 +6,6 @@
     <string name="dexcom_app_patched">BYODA德康补丁版(构建你自己的德康应用Build Your Own Dexcom App)</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">从德康补丁版接收血糖数据(Build Your Own Dexcom App)。</string>
-    <string name="eversense">Everyang App (补丁)</string>
-    <string name="description_source_eversense">从 Eversense 补丁app接收血糖值。</string>
     <string name="description_source_glimp">从 Glimp 接收血糖值。</string>
     <string name="description_source_mm640g">从美敦力600Series 的AndroidUploader 接收血糖值。</string>
     <string name="poctech">Poctech</string>
@@ -17,7 +15,7 @@
     <string name="tomato">番茄（喵喵）</string>
     <string name="tomato_short">番茄</string>
     <string name="description_source_tomato">从番茄app(喵喵设备) 接收血糖值</string>
-    <string name="aidex_short">Aidex动泰</string>
-    <string name="description_source_aidex">从GlucoRx Aidex动泰持续葡萄糖监测系统接收血糖值。</string>
     <string name="bgsource_upload">血糖上传设置</string>
+    <!-- Patched Ottai App -->
+    <!-- Patched Syai Tag App -->
 </resources>

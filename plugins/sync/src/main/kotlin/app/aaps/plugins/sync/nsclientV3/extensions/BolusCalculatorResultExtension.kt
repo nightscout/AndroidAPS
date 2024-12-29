@@ -1,27 +1,26 @@
 package app.aaps.plugins.sync.nsclientV3.extensions
 
-import app.aaps.core.interfaces.utils.T
+import app.aaps.core.data.model.BCR
+import app.aaps.core.data.time.T
 import app.aaps.core.nssdk.localmodel.entry.NsUnits
 import app.aaps.core.nssdk.localmodel.treatment.EventType
 import app.aaps.core.nssdk.localmodel.treatment.NSBolusWizard
-import app.aaps.database.entities.BolusCalculatorResult
 import com.google.gson.Gson
-import com.google.gson.JsonSyntaxException
 
-fun NSBolusWizard.toBolusCalculatorResult(): BolusCalculatorResult? =
+fun NSBolusWizard.toBolusCalculatorResult(): BCR? =
     try {
-        Gson().fromJson(bolusCalculatorResult, BolusCalculatorResult::class.java)
+        Gson().fromJson(bolusCalculatorResult, BCR::class.java)
             .also {
                 it.id = 0
                 it.isValid = isValid
-                it.interfaceIDs.nightscoutId = identifier
+                it.ids.nightscoutId = identifier
                 it.version = 0
             }
-    } catch (e: JsonSyntaxException) {
+    } catch (e: Exception) {
         null
     }
 
-fun BolusCalculatorResult.toNSBolusWizard(): NSBolusWizard =
+fun BCR.toNSBolusWizard(): NSBolusWizard =
     NSBolusWizard(
         eventType = EventType.BOLUS_WIZARD,
         isValid = isValid,
@@ -31,9 +30,9 @@ fun BolusCalculatorResult.toNSBolusWizard(): NSBolusWizard =
         bolusCalculatorResult = Gson().toJson(this).toString(),
         units = NsUnits.MG_DL,
         glucose = glucoseValue,
-        identifier = interfaceIDs.nightscoutId,
-        pumpId = interfaceIDs.pumpId,
-        pumpType = interfaceIDs.pumpType?.name,
-        pumpSerial = interfaceIDs.pumpSerial,
-        endId = interfaceIDs.endId
+        identifier = ids.nightscoutId,
+        pumpId = ids.pumpId,
+        pumpType = ids.pumpType?.name,
+        pumpSerial = ids.pumpSerial,
+        endId = ids.endId
     )
