@@ -70,7 +70,10 @@ class VersionCheckerUtilsImpl @Inject constructor(
             aapsLogger.debug(LTag.CORE, "Github master version not checked. No connectivity")
 
     @Suppress("SameParameterValue")
-    override fun compareWithCurrentVersion(newVersion: String?, currentVersion: String) {
+    /**
+     * @return true if there is a newer version available
+     */
+    override fun compareWithCurrentVersion(newVersion: String?, currentVersion: String): Boolean {
 
         val newVersionElements = newVersion.toNumberList()
         val currentVersionElements = currentVersion.toNumberList()
@@ -78,13 +81,12 @@ class VersionCheckerUtilsImpl @Inject constructor(
         aapsLogger.debug(LTag.CORE, "Compare versions: $currentVersion $currentVersionElements, $newVersion $newVersionElements")
         if (newVersionElements.isNullOrEmpty()) {
             onVersionNotDetectable()
-            return
+            return false
         }
 
         if (currentVersionElements.isNullOrEmpty()) {
             // current version scrambled?!
-            onNewVersionDetected(currentVersion, newVersion)
-            return
+            return onNewVersionDetected(currentVersion, newVersion)
         }
 
         newVersionElements.take(3).forEachIndexed { i, newElem ->
@@ -100,11 +102,13 @@ class VersionCheckerUtilsImpl @Inject constructor(
             }
         }
         onSameVersionDetected()
+        return false
     }
 
-    private fun onOlderVersionDetected() {
+    private fun onOlderVersionDetected(): Boolean {
         aapsLogger.debug(LTag.CORE, "Version newer than master. Are you developer?")
         setLastCheckTimestamp(dateUtil.now())
+        return false
     }
 
     private fun onSameVersionDetected() {
@@ -115,13 +119,14 @@ class VersionCheckerUtilsImpl @Inject constructor(
         aapsLogger.debug(LTag.CORE, "Fetch failed")
     }
 
-    private fun onNewVersionDetected(currentVersion: String, newVersion: String?) {
+    private fun onNewVersionDetected(currentVersion: String, newVersion: String?): Boolean {
         val now = dateUtil.now()
         if (now > sp.getLong(R.string.key_last_versionchecker_warning, 0) + WARN_EVERY) {
             aapsLogger.debug(LTag.CORE, "Version $currentVersion outdated. Found $newVersion")
             uiInteraction.addNotification(Notification.NEW_VERSION_DETECTED, rh.gs(R.string.versionavailable, newVersion.toString()), Notification.LOW)
             sp.putLong(R.string.key_last_versionchecker_warning, now)
         }
+        return true
     }
 
     private fun onExpireDateDetected(currentVersion: String, endDate: String?) {
@@ -149,11 +154,6 @@ class VersionCheckerUtilsImpl @Inject constructor(
         return digits.toIntArray()
     }
 
-    override fun findVersion(file: String?): String? {
-        val regex = "(.*)version(.*)\"(((\\d+)\\.)+(\\d+))\"(.*)".toRegex()
-        return file?.lines()?.filter { regex.matches(it) }?.firstNotNullOfOrNull { regex.matchEntire(it)?.groupValues?.getOrNull(3) }
-    }
-
     companion object {
 
         private val CHECK_EVERY = TimeUnit.DAYS.toMillis(1)
@@ -164,9 +164,3 @@ class VersionCheckerUtilsImpl @Inject constructor(
 fun String.numericVersionPart(): String =
     "(((\\d+)\\.)+(\\d+))(\\D(.*))?".toRegex().matchEntire(this)?.groupValues?.getOrNull(1)
         ?: ""
-/*
-@Suppress("unused") fun findVersion(file: String?): String? {
-    val regex = "(.*)version(.*)\"(((\\d+)\\.)+(\\d+))\"(.*)".toRegex()
-    return file?.lines()?.filter { regex.matches(it) }?.firstNotNullOfOrNull { regex.matchEntire(it)?.groupValues?.getOrNull(3) }
-}
-*/
