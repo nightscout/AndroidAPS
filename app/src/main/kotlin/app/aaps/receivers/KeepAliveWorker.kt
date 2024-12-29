@@ -11,7 +11,6 @@ import androidx.work.WorkManager
 import androidx.work.WorkQuery
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import app.aaps.MainApp
 import app.aaps.R
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
@@ -175,7 +174,7 @@ class KeepAliveWorker(
         else if (dateUtil.isOlderThan(activePlugin.activeAPS.lastAPSRun, 5)) shouldUploadStatus = true
         if (dateUtil.isOlderThan(lastIobUpload, IOB_UPDATE_FREQUENCY_IN_MINUTES) && shouldUploadStatus) {
             lastIobUpload = dateUtil.now()
-            loop.buildAndStoreDeviceStatus()
+            loop.buildAndStoreDeviceStatus("KeepAliveWorker")
         }
     }
 
