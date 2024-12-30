@@ -221,6 +221,7 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
     override fun onPause() {
         super.onPause()
         disposable.clear()
+        handler.removeCallbacksAndMessages(null)
     }
 
     private fun updateQueue() {
