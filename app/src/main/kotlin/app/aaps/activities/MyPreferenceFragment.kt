@@ -131,10 +131,8 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         if (pluginName != null) {
             val plugin = activePlugin.getPluginsList().firstOrNull { it.javaClass.simpleName == pluginName } ?: error("Plugin not found")
             addPreferencesIfEnabled(plugin, rootKey)
-        } else if (customPreference != null) {
-            when (customPreference!!) {
-                UiInteraction.Preferences.PROTECTION -> addProtectionScreen(rootKey)
-            }
+        } else if (customPreference == UiInteraction.Preferences.PROTECTION) {
+            addProtectionScreen(rootKey)
         } else {
             addGeneralScreen(rootKey)
             addProtectionScreen(rootKey)
