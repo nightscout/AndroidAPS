@@ -144,6 +144,7 @@ class Widget : AppWidgetProvider() {
         views.setTextColor(
             R.id.bg, when {
                 lastBgData.isLow()  -> rh.gc(app.aaps.core.ui.R.color.widget_low)
+                lastBgData.isVeryHigh()  -> rh.gc(app.aaps.core.ui.R.color.widget_low)
                 lastBgData.isHigh() -> rh.gc(app.aaps.core.ui.R.color.widget_high)
                 else                -> rh.gc(app.aaps.core.ui.R.color.widget_inrange)
             }

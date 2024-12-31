@@ -41,6 +41,11 @@ class LastBgDataImpl @Inject constructor(
             lastBg.valueToUnits(profileFunction.getUnits()) > preferences.get(UnitDoubleKey.OverviewHighMark)
         } == true
 
+    override fun isVeryHigh(): Boolean =
+        lastBg()?.let { lastBg ->
+            lastBg.valueToUnits(profileFunction.getUnits()) > preferences.get(UnitDoubleKey.OverviewVeryHighMark)
+        } == true
+
     @ColorInt
     override fun lastBgColor(context: Context?): Int =
         when {
