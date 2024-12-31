@@ -39,7 +39,7 @@ class InMemoryGlucoseValueDataPoint(
         val veryHighLine = preferences.get(UnitDoubleKey.OverviewVeryHighMark)
         val color = when {
             valueToUnits(units) < lowLine  -> rh.gac(context, app.aaps.core.ui.R.attr.bgLow)
-            veryHighLine > 0 && valueToUnits(units) > veryHighLine -> rh.gac(context, app.aaps.core.ui.R.attr.veryHighColor)
+            valueToUnits(units) > veryHighLine -> rh.gac(context, app.aaps.core.ui.R.attr.veryHighColor)
             valueToUnits(units) > highLine -> rh.gac(context, app.aaps.core.ui.R.attr.highColor)
             else                           -> rh.gac(context, app.aaps.core.ui.R.attr.bgInRange)
         }
