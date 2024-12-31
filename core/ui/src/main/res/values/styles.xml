@@ -116,6 +116,7 @@
         <!---BG color-->
         <item name="bgLow">@color/low</item>
         <item name="highColor">@color/high</item>
+        <item name="veryHighColor">@color/low</item>
         <item name="bgInRange">@color/tempTargetConfirmation</item>
         <!---Profile Helper -->
         <item name="helperProfileColor">@color/helperProfile</item>

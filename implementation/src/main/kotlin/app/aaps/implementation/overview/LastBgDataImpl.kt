@@ -50,6 +50,7 @@ class LastBgDataImpl @Inject constructor(
     override fun lastBgColor(context: Context?): Int =
         when {
             isLow()  -> rh.gac(context, app.aaps.core.ui.R.attr.bgLow)
+            isVeryHigh() -> rh.gac(context, app.aaps.core.ui.R.attr.veryHighColor)
             isHigh() -> rh.gac(context, app.aaps.core.ui.R.attr.highColor)
             else     -> rh.gac(context, app.aaps.core.ui.R.attr.bgInRange)
         }
