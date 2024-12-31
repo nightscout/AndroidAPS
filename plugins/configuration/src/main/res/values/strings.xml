@@ -84,6 +84,8 @@
     <string name="allow_hardware_pump_text">Attention: If you activate and connect to a hardware pump, AAPS will copy the basal settings from the profile to the pump, overwriting the existing basal rate stored on the pump. Make sure you have the correct basal setting in AAPS. If you are not sure or don\'t want to overwrite the basal settings on your pump, press cancel and repeat switching to the pump at a later time.</string>
     <string name="a11y_open_settings">open settings</string>
     <string name="nsclient_version_does_not_match">AAPSClient version doesn\'t match AAPS version. Please update.</string>
+    <string name="expand_category">Expand category</string>
+    <string name="collapse_category">Collapse category</string>
 
     <!--ImportExport-->
     <string name="nav_preferences">Preferences</string>
