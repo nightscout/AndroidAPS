@@ -16,8 +16,10 @@
     <string name="display_settings">Display Settings</string>
     <string name="low_mark">LOW mark</string>
     <string name="high_mark">HIGH mark</string>
+    <string name="very_high_mark">VERY HIGH mark</string>
     <string name="low_mark_comment">Lower value of in range area (display only)</string>
     <string name="high_mark_comment">Higher value of in range area (display only)</string>
+    <string name="very_high_mark_comment">Even Higher value of in range area (display only)</string>
     <string name="permission">Permission</string>
     <string name="need_system_window_permission">Application needs system window permission for notifications</string>
     <string name="need_location_permission">Application needs location permission for BT scan and WiFi identification</string>
