@@ -39,6 +39,7 @@
     <string name="smscommunicator_stops_ns_with_code">Norėdami išjungti SMS nuotolinį valdymą, atsakykite kodu %1$s.\n\n Turėkite omenyje, kad jūs funkciją galėsite atnaujinti tik tiesiai iš AAPS pagrindinio telefono.</string>
     <string name="smscommunicator_stopped_sms">SMS nuotolinio valdymo funkcija sustojo. Norėdami ją atnaujinti, naudokite AAPS pagrindinį išmanųjį telefoną.</string>
     <string name="smscommunicator_calibration_reply_with_code">Norėdami nusiųsti kalibraciją %1$.2f, atsakykite kodu %2$s</string>
+    <string name="smscommunicator_bolus_failed">Boluso leidimas nepavyko. Prieš siųsdami kitą komandą, patikrinkite realią būseną!</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Minimalus minučių skaičius, kuris turi praeiti nuo vieno nuotolinio boluso iki kito</string>
     <string name="smscommunicator_remote_bolus_min_distance">Kiek mažiausiai minučių turi praeiti tarp vieno ir kito boluso</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">Jūsų saugumui, norėdami redaguoti šį pasirinkimą, jums reikia pridėti ne mažiau kaip 2 telefono numerius.</string>
@@ -152,6 +153,8 @@
     <string name="dia_short">IVT</string>
     <string name="target_short">TIKSLAS</string>
     <string name="basal_short">VB</string>
+    <string name="isf_dynamic_label">Jūsų algoritmas gali dinamiškai apskaičiuoti JIF reikšmę. Pateiktos reikšmės naudojamos tik kaip atsarginis variantas, jei trūksta duomenų</string>
+    <string name="ic_dynamic_label">Jūsų algoritmas gali dinamiškai apskaičiuoti angliavandenių santykį. Pateiktos reikšmės naudojamos tik kaip atsarginis variantas, jei trūksta duomenų</string>
     <!-- Actions -->
     <string name="actions">Veiksmai</string>
     <string name="description_actions">Mygtukai greitesniam pagrindinių funkcijų paleidimui</string>
@@ -240,6 +243,8 @@
     <string name="eatingsoon_target">Netrukus valgysiu tikslinė reikšmė</string>
     <string name="activity_duration">Aktyvumo trukmė (minutėmis)</string>
     <string name="activity_target">Aktyvumo tikslinė reikšmė</string>
+    <string name="hypo_duration">Hipoglikemijos trukmė (minutėmis)</string>
+    <string name="hypo_target">Hipoglikemijos tikslinė reikšmė</string>
     <string name="fill_bolus_title">Standartiniai insulino kiekiai kateterio/kaniulės užpildymui</string>
     <string name="button1">Mygtukas 1</string>
     <string name="button2">Mygtukas 2</string>
@@ -266,11 +271,13 @@
     <string name="overview_show_deviation_slope">Nuokrypiai</string>
     <string name="overview_show_activity">Aktyvumas</string>
     <string name="overview_show_bgi">Glikemijos įtaka</string>
+    <string name="overview_show_sensitivity">Jautrumo keitimas</string>
     <string name="overview_show_deviations">Nuokrypiai</string>
     <string name="overview_show_cob">Aktyvūs angliavandeniai</string>
     <string name="overview_show_iob">Aktyvus insulinas organizme</string>
     <string name="overview_show_basals">Bazė</string>
     <string name="overview_show_abs_insulin">Insulinas absoliučiais vienetais</string>
+    <string name="overview_show_variable_sens">Kintamas jautrumas</string>
     <string name="prediction_shortname">PROGN</string>
     <string name="basal_shortname">VB</string>
     <string name="deviation_shortname">DEV</string>
@@ -280,8 +287,11 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">ĮRAŠ</string>
     <string name="heartRate_shortname">ŠSD</string>
+    <string name="sensitivity_shortname">JAUTR%</string>
+    <string name="variable_sensitivity_shortname">VSENS</string>
     <string name="graph_scale">Grafiko mastelis</string>
     <string name="graph_menu_divider_header">Grafikas</string>
+    <string name="temp_basal_overview_short_name">T:</string>
     <!-- Skins -->
     <string name="classic_description">Originali išvaizda</string>
     <string name="lowres_description">Žemos rezoliucijos išvaizda</string>
@@ -293,4 +303,7 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Rodo atsinaujinančius pranešimus su trumpa Ciklo veiklos apžvalga</string>
     <string name="old_data">SENI DUOMENYS</string>
+    <string name="overview_show_steps">Žingsniai</string>
+    <string name="steps_shortname">ŽINGSNIAI</string>
+    <string name="simple_mode_enabled">Paprastas režimas įjungtas</string>
 </resources>
