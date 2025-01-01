@@ -178,5 +178,30 @@
     <string name="openapsama_autoISF_min_summary">Panašiai kaip autosens_min, šis parametras apibrėžia, kiek silpnas gali tapti JIF.\n\n Numatytoji reikšmė 1,0 iš esmės išjungia šį efektą.</string>
     <string name="openapsama_dura_ISF_weight_summary">Tai svoris, kuris taikomas per ilgesnės trukmės aukštą glikemiją, ir kuris stiprina JIF, taip potencialiai didindamas insulino suleidimą.\n\nNumatytoji reikšmė 0,0 iš esmės išjungia šį efektą.</string>
     <string name="openapsama_lower_ISFrange_weight_summary">Tai svoris, kuris taikomas, kai glikemija yra mažesnė už tikslinę, ir kuris silpnina JIF, taip potencialiai mažindamas insulino suleidimą.\n\nNumatytoji reikšmė 0,0 iš esmės išjungia šį efektą.</string>
+    <string name="openapsama_higher_ISFrange_weight_summary">Tai svoris, kuris taikomas, kai glikemija didesnė už tikslinę, ir kuris stiprina JIF, taip potencialiai didindamas insulino suleidimą.\n\nNumatytoji reikšmė 0,0 iš esmės išjungia šį efektą.</string>
+    <string name="openapsama_pp_ISF_weight_summary">Tai svoris, kuris taikomas, kai glikemija kyla, ir kuris stiprina JIF, taip potencialiai didindamas insulino suleidimą.\n\nNumatytoji reikšmė 0,0 iš esmės išjungia šį efektą.</string>
+    <string name="openapsama_bgAccel_ISF_weight_summary">Tai svoris, kuris taikomas, kai glikemija sparčiai kyla, ir kuris stiprina JIF, taip potencialiai didindamas insulino suleidimą.\n\nNumatytoji reikšmė 0,0 iš esmės išjungia šį efektą.</string>
+    <string name="openapsama_bgBrake_ISF_weight_summary">Tai svoris, kuris taikomas, kai glikemija mažėja, ir kuris silpnina JIF, taip potencialiai mažindamas insulino suleidimą.\n\nNumatytoji reikšmė 0,0 iš esmės išjungia šį efektą.</string>
+    <string name="openapsama_autoISF_max">Maks. autoJIF dydis\n(autoISF_max)</string>
+    <string name="openapsama_autoISF_min">Min. autoJIF dydis\n(autoISF_min)</string>
+    <string name="openapsama_lower_ISFrange_weight">žemesnio JIF-diapazono svoris\n(lower_ISFrange_weight)</string>
+    <string name="openapsama_higher_ISFrange_weight">aukštesnio JIF-diapazono svoris\n(higher_ISFrange_weight)</string>
+    <string name="openapsama_pp_ISF_weight">JIF-diapazono svoris po valgio\n(pp_ISF_weight)</string>
+    <string name="openapsama_bgAccel_ISF_weight">Svoris, kai KG aktyviai kyla\n(bgAccel_ISF_weight)</string>
+    <string name="openapsama_bgBrake_ISF_weight">Svoris, kai KG kilimas sulėtėja\n(bgBrake_ISF_weight)</string>
+    <string name="openapsama_dura_ISF_weight">dura_ISF svoris\n(dura_ISF_weight)</string>
+    <string name="openapsama_smb_delivery_ratio">fiksuotas SMB suleidimo dydis\n(smb_delivery_ratio)</string>
+    <string name="openapsama_smb_delivery_ratio_min">kintamas SMB suleidimo dydis, apatinė riba\n(smb_delivery_ratio_min)</string>
+    <string name="openapsama_smb_delivery_ratio_max">kintamas SMB suleidimo dydis, viršutinė riba\n(smb_delivery_ratio_max)</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range">kintamas SMB suleidimo dydis, susietas su gliukozės diapazonu\n(smb_delivery_ratio_bg_range)</string>
+    <string name="openapsama_smb_max_range_extension">SMB/NDM maksimalaus dydžio prailginimas\n(smb_max_range_extension)</string>
     <string name="openapsama_smb_delivery_ratio_summary">Numatytoji reikšmė: 0,5. Tai yra dar vienas svarbus OpenAPS saugos apribojimas, kuris nurodo, kokią dalį viso reikalingo insulino galima skirti kaip SMB. Šis apribojimas skirtas išvengti pavojingų situacijų, kai SMB užklausos siunčiamos tuo pačiu metu sekėjo globėjo telefono. Šią eksperimentinę reikšmę didinkite lėtai ir atsargiai.</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">Numatytoji reikšmė: 0,5. Tai yra apatinė ribinė reikšmė, naudojama linijiniam santykiui didinti, o ne fiksuota reikšmė, kaip nurodyta aukščiau.</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">Numatytoji reikšmė: 0,5. Tai yra viršutinė ribinė reikšmė, naudojama linijiniam santykiui didinti, o ne fiksuota reikšmė, kaip nurodyta aukščiau.</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range_summary">Numatytoji reikšmė: 0. Linijiškai didėjantis SMB leidimo santykis yra susietas su gliukozės diapazonu [target_bg, target_bg+bg_range].\nTies target_bg SMB dydis yra smb_delivery_ratio_min, ties target_bg+bg_range yra smb_delivery_ratio_max\nTies 0, linijiškai didėjantis SMB leidimo santykis yra išjungiamas ir naudojamas fiksuotas smb_delivery_ratio dydis.</string>
+    <string name="openapsama_smb_max_range_extension_summary">Numatytoji reikšmė: 1. Tai dar vienas svarbus OpenAPS saugos apribojimas, kuris nurodo, kiek kartų galite viršyti įprastą 120 maxSMB/maxNDM minučių ribą. Šią eksperimentinę reikšmę didinkite lėtai ir atsargiai.</string>
+    <string name="enableSMB_EvenOn_OddOff_always">Įjungti alternatyvų SMB aktyvavimą, priklausomą nuo to, ar aktyvi tikslinė glikemija yra lyginis skaičius</string>
+    <string name="enableSMB_EvenOn_OddOff_always_summary">\nįjungta ...\njei aktyvaus tikslo (mmol/L) dešimtainė dalis yra lyginė\narba aktyvus tikslas (mg/dl) yra lyginis skaičius\n\nkitu atveju - išjungta</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Didžiausio AIO procentas, virš kurio SMB yra išjungiami.\nNumatytoji reikšmė: 100%\nEsant 100%, ši funkcija yra išjungta.</string>
+    <string name="openapsama_iob_threshold_percent">Didžiausio AIO ribos procentas SMB\n(iob_threshold_percent)</string>
 </resources>
