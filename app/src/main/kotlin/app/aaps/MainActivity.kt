@@ -100,6 +100,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     @Inject lateinit var iconsProvider: IconsProvider
     @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var signatureVerifierPlugin: SignatureVerifierPlugin
+    @Inject lateinit var maitenancePlugin: MaintenancePlugin
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var fileListProvider: FileListProvider
@@ -331,7 +332,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                 text = rh.gs(app.aaps.core.ui.R.string.aaps_directory_not_selected),
                 level = Notification.IMPORTANCE_HIGH,
                 buttonText = R.string.select,
-                action = { accessTree?.launch(null) },
+                action = { maitenancePlugin.selectAapsDirectory(this) },
                 validityCheck = { preferences.getIfExists(StringKey.AapsDirectoryUri).isNullOrEmpty() }
             )
     }
