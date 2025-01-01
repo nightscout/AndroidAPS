@@ -12,6 +12,7 @@
     <string name="pump_is_suspended_day_max">Pompa sustabdyta dėl viršyto paros insulino limito</string>
     <string name="patch_not_active">Rezervuaras neaktyvus</string>
     <string name="pump_setting_failed">Naudotojo nustatymai neįrašyti!</string>
+    <string name="pump_sync_error">Klaida sinchronizuojant istoriją iš pompos, įrašas buvo praleistas. Patikrinkite terapijos skirtuką, kad įsitikintumėte, ar bolusas buvo teisingai sinchronizuotas. Atidėkite pranešimą, ir, jei klaida pasikartos, pakeiskite pompos pagrindą ar pleistrą.</string>
     <!-- overview fragment -->
     <string name="ble_status_label">BLE statusas</string>
     <string name="last_connection_label">Pask. prijungimas</string>
@@ -77,6 +78,7 @@
     <string name="patch_not_active_note">Neprijunkite pagrindo prie rezervuaro iki kito žingsnio!</string>
     <string name="connect_pump_base">Prijunkite pompos pagrindą prie naujo rezervuaro, pašalinkite orą ir užpildykite insulinu, tada spauskite <b>Kitas</b>.</string>
     <string name="note_min_70_units">Svarbu: būtina užpildyti bent 70 v.</string>
+    <string name="reservoir_text_and_level">Rezervuaras: %.2f vv</string>
     <string name="do_not_attach_to_body">Kol kas neklijuokite pompos prie kūno.</string>
     <string name="half_press_needle">Spustelėkite adatos mygtuką. Spauskite <b>Kitas</b> pildymui pradėti.</string>
     <string name="wait_for_priming">Palaukite, kol baigsis pildymas.</string>
