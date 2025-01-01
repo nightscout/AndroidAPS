@@ -210,6 +210,7 @@
     <string name="tile_action_3">Veiksmas 3</string>
     <string name="tile_action_4">Veiksmas 4</string>
     <string name="datalayer_notification_title">Duomenų perdavimas priekinio plano režimu</string>
+    <string name="datalayer_notification_text">AAPS veikia pagrindiniame režime. Norėdami paslėpti pranešimą, eikite į Kūrėjo nustatymus, Programų pranešimus, Leidžiamas peržiūros programas, pasirinkite AAPS, Išjunkite paslaugų kanalų pranešimus pagrindiniame režime.</string>
     <string name="on">ĮJUNGTA</string>
     <string name="off">IŠJUNGTA</string>
     <string name="complication_full_status">Pilna informacija apie būklę</string>
