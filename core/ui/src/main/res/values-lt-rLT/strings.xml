@@ -169,11 +169,13 @@
     <string name="virtualpump_uploadstatus_title">Įkelti pompos statusą į NS arba Tidepool</string>
     <string name="suspendloop_label">Ciklas išjungtas/sustabdytas</string>
     <string name="iob_label">Aktyvus insulinas organizme (AIO)</string>
+    <string name="loopstatus_targets">TIKSLAI:</string>
     <string name="loopstatus_OAPS_result">OAPS REZULTATAS:</string>
     <string name="extended_bolus_data_point_graph">%1$.2f vv ( %2$.2f vv/h )</string>
     <string name="temp_basal_tsf_fake_extended">%1$.2f vv/val (%2$.2fE) @%3$s</string>
     <string name="temp_basal_tsf_absolute">%1$.2f vv/val @%2$s</string>
     <string name="temp_basal_tsf_percent">%1$.0f%% @%2$s</string>
+    <string name="extended_bolus_full">E %1$.2f vv/h @%2$s %3$s/%4$s min</string>
     <string name="extended_bolus_medium">%1$.2f vv/h %2$s/%3$s\'</string>
     <string name="nav_export">Eksportuoti nustatymus</string>
     <string name="location_permission_not_granted">Vietos nustatymo leidimas nesuteiktas. Suteikite leidimą Android nustatymuose.</string>
@@ -349,6 +351,7 @@
     <string name="uel_import_settings">IMPORTUOTI NUSTATYMUS</string>
     <string name="uel_select_directory">KATALOGO PARINKIMAS</string>
     <string name="uel_reset_databases">IŠVALYTI DUOMENŲ BAZES</string>
+    <string name="uel_reset_aps_results">APS REZULTATŲ NUSTATYMAS IŠ NAUJO</string>
     <string name="uel_cleanup_databases">IŠVALYTI DUOMBAZĘ</string>
     <string name="uel_export_databases">EKSPORTUOTI DUOMENŲ BAZES</string>
     <string name="uel_import_databases">IMPORTUOTI DUOMENŲ BAZES</string>
@@ -589,4 +592,8 @@
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f V</string>
     <string name="format_insulin_units">%1$.2f V</string>
+    <string name="percent_rate_duration">Dydis: %1$.2f%% (%2$.2f vv/val) Trukmė: %3$d min</string>
+    <string name="rate_percent_duration">Dydis: %1$.2f vv/val. (%2$.2f%%) Trukmė: %3$d min</string>
+    <string name="percent_rate_duration_formatted"><![CDATA[<b>Dydis</b>: %1$.2f%% (%2$.2f vv/val.)<br><b>Trukmė</b>: %3$d min<br>]]></string>
+    <string name="rate_percent_duration_formatted"><![CDATA[<b>Dydis</b>: %1$.2f vv/val. (%2$.2f%%) <br><b>Trukmė</b>: %3$d min<br>]]></string>
 </resources>
