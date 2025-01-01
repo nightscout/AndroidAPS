@@ -62,6 +62,7 @@
     <string name="pref_show_week_number">Rodyti savaitės numerį</string>
     <string name="pref_show_date">Rodyti datą</string>
     <string name="default_custom_watchface_comment">Numatytasis ekranas. Paspaudus EKSPORTUOTI, bus sukurtas ruošinys</string>
+    <string name="default_custom_watchface_external_comment">Numatytasis laikrodžio ciferblatas, įskaitant peržiūrą sekėjams. Galite spustelėti mygtuką EKSPORTUOTI CIFERBLATĄ, kad sugeneruotumėte šabloną</string>
     <string name="wear_default_watchface">Numatytasis ekranas</string>
     <string name="wear_more_watchfaces">Daugiau ciferblatų</string>
 </resources>
