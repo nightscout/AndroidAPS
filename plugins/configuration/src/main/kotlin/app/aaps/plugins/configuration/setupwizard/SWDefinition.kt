@@ -146,6 +146,14 @@ class SWDefinition @Inject constructor(
                     .label(R.string.high_mark)
                     .comment(R.string.high_mark_comment)
             )
+            .add(SWBreak(injector))
+            .add(
+                SWEditNumberWithUnits(injector, UnitDoubleKey.OverviewVeryHighMark.defaultValue * Constants.MGDL_TO_MMOLL, 5.0, 23.0)
+                    .preference(UnitDoubleKey.OverviewVeryHighMark)
+                    .updateDelay(5)
+                    .label(R.string.very_high_mark)
+                    .comment(R.string.very_high_mark_comment)
+            )
 
     private val screenPermissionWindow
         get() = SWScreen(injector, R.string.permission)

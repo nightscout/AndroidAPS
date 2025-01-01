@@ -126,6 +126,7 @@ class TizenPlugin @Inject constructor(
         bundle.putDouble("deltaMgdl", glucoseStatus.delta) // bg delta in mgdl
         bundle.putDouble("avgDeltaMgdl", glucoseStatus.shortAvgDelta) // average bg delta
         bundle.putDouble("high", preferences.get(UnitDoubleKey.OverviewHighMark)) // predefined top value of in range (green area)
+        bundle.putDouble("veryHigh", preferences.get(UnitDoubleKey.OverviewVeryHighMark)) // predefined very top value of in range (above yellow area)
         bundle.putDouble("low", preferences.get(UnitDoubleKey.OverviewLowMark)) // predefined bottom  value of in range
     }
 
