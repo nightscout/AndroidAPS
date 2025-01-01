@@ -169,7 +169,7 @@ class CarbsDialog : DialogFragmentWithDate() {
         }
         val plus3text = toSignedString(preferences.get(IntKey.OverviewCarbsButtonIncrement3))
         binding.plus3.text = plus3text
-        binding.plus2.contentDescription = rh.gs(app.aaps.core.ui.R.string.carbs) + " " + plus3text
+        binding.plus3.contentDescription = rh.gs(app.aaps.core.ui.R.string.carbs) + " " + plus3text
         binding.plus3.setOnClickListener {
             binding.carbs.value = max(0.0, binding.carbs.value + preferences.get(IntKey.OverviewCarbsButtonIncrement3))
             validateInputs()
