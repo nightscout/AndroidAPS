@@ -4,6 +4,7 @@
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">Laiko persukimas įvyks po 24 val. ar mažiau</string>
     <string name="dst_loop_disabled_warning">Laiko persukimas įvyko prieš mažiau nei 3 val. - Uždaras ciklas išjungtas</string>
+    <string name="dst_loop_disabled_error">Laiko pasukimas įvyko mažiau nei prieš 3 valandas. Uždaras ciklas laikinai išjungtas, automatiškai vėl įsijungs po 3 valandų nuo laiko pasukimo</string>
     <!-- Storage constraint -->
     <string name="disk_full">Atlaisvinkite ne mažiau kaip %1$d MB vidinėje atmintyje! Ciklas išjungtas!</string>
     <!-- Version Checker -->
