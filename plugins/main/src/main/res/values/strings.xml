@@ -265,6 +265,7 @@
     <string name="prefs_range_summary">High and low mark for the charts in Overview and Smartwatch</string>
     <string name="low_mark">LOW mark</string>
     <string name="high_mark">HIGH mark</string>
+    <string name="very_high_mark">VERY HIGH mark</string>
     <string name="short_tabtitles">Shorten tab titles</string>
     <string name="overview_show_notes_field_in_dialogs_title">Show notes field in treatment dialogs</string>
     <string name="deliverpartofboluswizard">Bolus wizard performs calculation but only this part of calculated insulin is delivered. Useful with SMB algorithm.</string>

@@ -262,6 +262,7 @@ class OverviewPlugin @Inject constructor(
                 title = rh.gs(R.string.prefs_range_title)
                 addPreference(AdaptiveUnitPreference(ctx = context, unitKey = UnitDoubleKey.OverviewLowMark, title = R.string.low_mark))
                 addPreference(AdaptiveUnitPreference(ctx = context, unitKey = UnitDoubleKey.OverviewHighMark, title = R.string.high_mark))
+                addPreference(AdaptiveUnitPreference(ctx = context, unitKey = UnitDoubleKey.OverviewVeryHighMark, title = R.string.very_high_mark))
             })
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.OverviewShortTabTitles, title = R.string.short_tabtitles))
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.OverviewShowNotesInDialogs, title = R.string.overview_show_notes_field_in_dialogs_title))
