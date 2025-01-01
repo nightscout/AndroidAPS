@@ -89,7 +89,7 @@
     <string name="uam_disabled_in_preferences">偏好設定中已停用UAM</string>
     <string name="autosens_disabled_in_preferences">偏好設定中已停用自動靈敏度</string>
     <string name="use_dynamic_sensitivity_title">啟用動態靈敏度</string>
-    <string name="use_dynamic_sensitivity_summary">調整算法以使用動態靈敏度而不是檔案值</string>
+    <string name="use_dynamic_sensitivity_summary">調整算法使用動態靈敏度，而不是設定檔中的 ISF 值</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">限制IOB到 %1$.1f U，因為 %2$s</string>
     <string name="maxvalueinpreferences">偏好設定中的最大值</string>
