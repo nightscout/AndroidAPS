@@ -85,6 +85,8 @@
     <string name="troubleshooting_wheretoask">Kur galima ieškoti pagalbos su AndroidAPS?</string>
     <string name="troubleshooting_fb">Galima kreiptis patarimo AAPS Users Facebook grupėje.</string>
     <string name="troubleshooting_wiki">Būtina skaityti (ir pakartotinai skaityti) AndroidAPS dokumentaciją.</string>
+    <string name="troubleshooting_discord">Galima prašyti patarimo, aptarti ar registruoti techninę problemą ar funkciją AAPS Discord kanale.</string>
+    <string name="troubleshooting_github">Github galite pateikti problemas, tokias kaip klaidos ir funkcijų užklausos.</string>
     <string name="troubleshooting_yourendo">Būtina kreiptis į savo diabeto kliniką/endokrinologą.</string>
     <string name="troubleshooting_hint1">https://wiki.aaps.app/en/latest/GettingHelp/WhereCanIGetHelp.html</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
