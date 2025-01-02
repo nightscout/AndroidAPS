@@ -217,6 +217,7 @@
     <string name="complication_full_status_flipped">Tam durum (çevrilmiş)</string>
     <string name="complication_blood_glucose">Kan Şekeri</string>
     <string name="complication_br_cob_iob">Nabız, AKRB &amp; AİNS</string>
+    <string name="complication_br_iob">Nabız &amp; AiNS</string>
     <string name="complication_cob_iob">AKRB &amp; AİNS</string>
     <string name="complication_cob_icon">AKRB simgesi</string>
     <string name="complication_cob_detailed">Detaylı AKRB</string>

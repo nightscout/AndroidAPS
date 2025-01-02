@@ -80,6 +80,8 @@
     <string name="allow_hardware_pump_text">Attenzione: se attivi e connetti un micro, AAPS copierà le impostazioni della basale dal profilo al micro, sovrascrivendo la velocità basale esistente memorizzata sul micro. Assicurati di avere la giusta impostazione della basale in AAPS. Se non sei sicuro o non vuoi sovrascrivere le impostazioni della basale sul micro, premi annulla e ripeti il processo in un altro momento.</string>
     <string name="a11y_open_settings">apri impostazioni</string>
     <string name="nsclient_version_does_not_match">La versione di AAPSClient non corrisponde alla versione di AAPS. Aggiorna.</string>
+    <string name="expand_category">Espandi categoria</string>
+    <string name="collapse_category">Comprimi categoria</string>
     <!--ImportExport-->
     <string name="nav_preferences">Preferenze</string>
     <string name="password_preferences_encrypt_prompt">Ti verrà richiesta la password master, che verrà usata per crittografare le preferenze esportate.</string>
