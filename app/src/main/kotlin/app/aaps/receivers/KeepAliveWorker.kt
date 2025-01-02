@@ -174,7 +174,7 @@ class KeepAliveWorker(
         else if (dateUtil.isOlderThan(activePlugin.activeAPS.lastAPSRun, 5)) shouldUploadStatus = true
         if (dateUtil.isOlderThan(lastIobUpload, IOB_UPDATE_FREQUENCY_IN_MINUTES) && shouldUploadStatus) {
             lastIobUpload = dateUtil.now()
-            loop.buildAndStoreDeviceStatus("KeepAliveWorker")
+            loop.scheduleBuildAndStoreDeviceStatus("KeepAliveWorker")
         }
     }
 
