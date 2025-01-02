@@ -21,6 +21,9 @@ import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZoneOffset
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import java.util.Calendar
 import java.util.Date
 import java.util.EnumSet
@@ -109,8 +112,9 @@ class DateUtilImpl @Inject constructor(private val context: Context) : DateUtil 
     }
 
     override fun dateString(mills: Long): String {
-        val df = DateFormat.getDateInstance(DateFormat.SHORT)
-        return df.format(mills)
+        val zonedTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(mills), ZoneId.systemDefault())
+        val dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
+        return zonedTime.format(dateFormatter)
     }
 
     override fun dateStringRelative(mills: Long, rh: ResourceHelper): String {
@@ -143,11 +147,9 @@ class DateUtilImpl @Inject constructor(private val context: Context) : DateUtil 
 
     override fun timeString(): String = timeString(now())
     override fun timeString(mills: Long): String {
-        var format = "hh:mma"
-        if (android.text.format.DateFormat.is24HourFormat(context)) {
-            format = "HH:mm"
-        }
-        return DateTime(mills).toString(DateTimeFormat.forPattern(format))
+        val zonedTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(mills), ZoneId.systemDefault())
+        val dateFormatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
+        return zonedTime.format(dateFormatter)
     }
 
     override fun secondString(): String = secondString(now())
@@ -188,11 +190,9 @@ class DateUtilImpl @Inject constructor(private val context: Context) : DateUtil 
         DateTime(mills).toString(DateTimeFormat.forPattern("ww"))
 
     override fun timeStringWithSeconds(mills: Long): String {
-        var format = "hh:mm:ssa"
-        if (android.text.format.DateFormat.is24HourFormat(context)) {
-            format = "HH:mm:ss"
-        }
-        return DateTime(mills).toString(DateTimeFormat.forPattern(format))
+        val zonedTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(mills), ZoneId.systemDefault())
+        val dateFormatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.MEDIUM)
+        return zonedTime.format(dateFormatter)
     }
 
     override fun dateAndTimeRangeString(start: Long, end: Long): String {
