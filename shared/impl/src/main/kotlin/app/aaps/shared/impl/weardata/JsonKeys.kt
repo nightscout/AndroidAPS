@@ -4,7 +4,6 @@ enum class JsonKeys(val key: String) {
     METADATA("metadata"),
     ENABLESECOND("enableSecond"),
     HIGHCOLOR("highColor"),
-    VERYHIGHCOLOR("veryHighColor"),
     MIDCOLOR("midColor"),
     LOWCOLOR("lowColor"),
     LOWBATCOLOR("lowBatColor"),
