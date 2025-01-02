@@ -29,7 +29,7 @@
     <string name="key_last_revoked_certs_check" translatable="false">last_revoked_certs_check</string>
     <string name="running_invalid_version">We have detected that you are running an invalid version. Loop disabled!</string>
     <string name="versionavailable">Version %1$s available</string>
-    <string name="version_expire">Version %1$s expire on %2$s</string>
+    <string name="version_expire">Version %1$s expire on %2$s (m/d/yy)</string>
 
     <!-- Signature verifier -->
     <string name="signature_verifier" translatable="false">Signature verifier</string>
