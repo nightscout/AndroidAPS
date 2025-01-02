@@ -1576,6 +1576,7 @@ class PersistenceLayerImpl @Inject constructor(
 
     override fun insertDeviceStatus(deviceStatus: DS) {
         repository.insert(deviceStatus.toDb())
+        aapsLogger.debug(LTag.DATABASE, "Inserted DeviceStatus $deviceStatus")
     }
 
     override fun updateDeviceStatusesNsIds(deviceStatuses: List<DS>): Single<PersistenceLayer.TransactionResult<DS>> =
@@ -1708,8 +1709,10 @@ class PersistenceLayerImpl @Inject constructor(
     override fun getCalculatedTotalDailyDose(timestamp: Long): TDD? =
         repository.getCalculatedTotalDailyDose(timestamp).map { it.fromDb() }.blockingGet()
 
-    override fun insertTotalDailyDose(totalDailyDose: TDD) =
+    override fun insertTotalDailyDose(totalDailyDose: TDD) {
         repository.insertTotalDailyDose(totalDailyDose.toDb())
+        aapsLogger.debug(LTag.DATABASE, "Inserted TDD $totalDailyDose")
+    }
 
     override fun insertOrUpdateTotalDailyDose(totalDailyDose: TDD): Single<PersistenceLayer.TransactionResult<TDD>> =
         repository.runTransactionForResult(SyncPumpTotalDailyDoseTransaction(totalDailyDose.toDb()))
