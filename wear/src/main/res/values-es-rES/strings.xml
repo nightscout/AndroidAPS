@@ -217,6 +217,7 @@
     <string name="complication_full_status_flipped">Estado completo (invertido)</string>
     <string name="complication_blood_glucose">Glucosa en sangre</string>
     <string name="complication_br_cob_iob">BR, COB &amp; IOB</string>
+    <string name="complication_br_iob">BR &amp; IOB</string>
     <string name="complication_cob_iob">COB &amp; IOB</string>
     <string name="complication_cob_icon">Icono COB</string>
     <string name="complication_cob_detailed">COB detallado</string>

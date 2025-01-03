@@ -167,10 +167,15 @@ class UiInteractionImpl @Inject constructor(
     }
 
     override fun runBolusProgressDialog(fragmentManager: FragmentManager, insulin: Double, id: Long) {
-        BolusProgressDialog().also {
-            it.setInsulin(insulin)
-            it.setId(id)
-            it.show(fragmentManager, "BolusProgress")
+        // Activity may be destroyed before Dialog pop up so try/catch
+        try {
+            BolusProgressDialog().also {
+                it.setInsulin(insulin)
+                it.setId(id)
+                it.show(fragmentManager, "BolusProgress")
+            }
+        } catch (_: Exception) {
+            // do nothing
         }
     }
 

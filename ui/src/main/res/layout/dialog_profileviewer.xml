@@ -391,7 +391,7 @@
         <app.aaps.core.graph.BasalProfileGraph
             android:id="@+id/basal_graph"
             android:layout_width="match_parent"
-            android:layout_height="100dip"
+            android:layout_height="300dip"
             android:layout_margin="20dp" />
 
         <View

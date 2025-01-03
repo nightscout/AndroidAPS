@@ -314,7 +314,7 @@ class LoopPlugin @Inject constructor(
                 lastRun.lastTBRRequest = 0
                 lastRun.lastSMBEnact = 0
                 lastRun.lastSMBRequest = 0
-                buildAndStoreDeviceStatus("APS result")
+                scheduleBuildAndStoreDeviceStatus("APS result")
 
                 if (isSuspended) {
                     aapsLogger.debug(LTag.APS, rh.gs(app.aaps.core.ui.R.string.loopsuspended))
@@ -440,7 +440,7 @@ class LoopPlugin @Inject constructor(
                                             rxBus.send(EventLoopUpdateGui())
                                         }
                                     })
-                                    buildAndStoreDeviceStatus("applyTBRRequest")
+                                    scheduleBuildAndStoreDeviceStatus("applyTBRRequest")
                                 } else {
                                     lastRun.tbrSetByPump = result
                                     lastRun.lastTBRRequest = lastRun.lastAPSRun
@@ -538,7 +538,7 @@ class LoopPlugin @Inject constructor(
                             lastRun.lastTBRRequest = lastRun.lastAPSRun
                             lastRun.lastTBREnact = dateUtil.now()
                             lastRun.lastOpenModeAccept = dateUtil.now()
-                            buildAndStoreDeviceStatus("acceptChangeRequest")
+                            scheduleBuildAndStoreDeviceStatus("acceptChangeRequest")
                             sp.incInt(app.aaps.core.utils.R.string.key_ObjectivesmanualEnacts)
                         }
                         rxBus.send(EventAcceptOpenLoopChange())
@@ -752,7 +752,22 @@ class LoopPlugin @Inject constructor(
         })
     }
 
-    override fun buildAndStoreDeviceStatus(reason: String) {
+    var task: Runnable? = null
+
+    override fun scheduleBuildAndStoreDeviceStatus(reason: String) {
+        class UpdateRunnable : Runnable {
+
+            override fun run() {
+                buildAndStoreDeviceStatus(reason)
+                task = null
+            }
+        }
+        task?.let { handler?.removeCallbacks(it) }
+        task = UpdateRunnable()
+        task?.let { handler?.postDelayed(it, 5000) }
+    }
+
+    fun buildAndStoreDeviceStatus(reason: String) {
         aapsLogger.debug(LTag.NSCLIENT, "Building DeviceStatus for $reason")
         val version = config.VERSION_NAME + "-" + config.BUILD_VERSION
         val profile = profileFunction.getProfile() ?: return

@@ -38,23 +38,81 @@ interface Loop {
      * Last APS run result
      */
     var lastRun: LastRun?
+
+    /**
+     * Variable to store reasons of disabled loop
+     */
     var closedLoopEnabled: Constraint<Boolean>?
+
+    /**
+     * Is loop suspended?
+     */
     val isSuspended: Boolean
+
+    /**
+     * Is Low Glucose Suspended mode set?
+     */
     val isLGS: Boolean
+
+    /**
+     * Is Superbolus running?
+     */
     val isSuperBolus: Boolean
+
+    /**
+     * Is pump disconnected?
+     */
     val isDisconnected: Boolean
 
+    /**
+     * Timestamp of last loop run triggered by new BG
+     */
     var lastBgTriggeredRun: Long
 
+    /**
+     * Invoke new loop run
+     *
+     * @param initiator Identifies who triggered the run
+     * @param allowNotification Allow notification to be sent (false in open loop mode)
+     * @param tempBasalFallback true if called from failed SMB
+     */
     fun invoke(initiator: String, allowNotification: Boolean, tempBasalFallback: Boolean = false)
 
+    /**
+     * Open loop mode trigger
+     */
     fun acceptChangeRequest()
+
+    /**
+     * Returns minutes to end of suspended loop
+     */
     fun minutesToEndOfSuspend(): Int
+
+    /**
+     * Simulate pump disconnection
+     */
     fun goToZeroTemp(durationInMinutes: Int, profile: Profile, reason: OE.Reason, action: Action, source: Sources, listValues: List<ValueWithUnit> = listOf())
+
+    /**
+     * Suspend loop
+     */
     fun suspendLoop(durationInMinutes: Int, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit>)
     fun disableCarbSuggestions(durationMinutes: Int)
-    fun buildAndStoreDeviceStatus(reason: String)
 
+    /**
+     * Schedule building of device status before sending to NS
+     *
+     * @param reason Initiator
+     */
+    fun scheduleBuildAndStoreDeviceStatus(reason: String)
+
+    /**
+     * UI loop modes
+     */
     fun entries(): Array<CharSequence>
+
+    /**
+     * loop modes
+     */
     fun entryValues(): Array<CharSequence>
 }

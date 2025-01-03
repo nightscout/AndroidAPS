@@ -13,6 +13,7 @@
     <string name="objectives_openloop_learned">Atviras ciklas gali būti naudojamas rekomendacijoms gauti, kol neturite tinkamos pompos arba nesate pasiruošę uždaram ciklui.</string>
     <string name="objectives_maxbasal_objective">Perpraskite atvirojo ciklo veikimą bei laikinos bazės rekomendacijas</string>
     <string name="objectives_maxbasal_gate">Remdamiesi šia patirtimi, nuspręskite, koks turėtų būti maksimalus bazės dydis bei įveskite jį pompoje ir programos Nustatymuose</string>
+    <string name="objectives_maxbasal">Atlikite veiksmą, kad įvykdytumėte rekomendaciją</string>
     <string name="objectives_maxbasal_learned">Būkite dėmesingi nustatydami saugumo parametrus ir derinkite juos, kai reikia.</string>
     <string name="objectives_maxiobzero_objective">Pradėkite uždaro ciklo režimą su pompos stabdymu esant žemai glikemijai</string>
     <string name="objectives_maxiobzero_gate">Keletą dienų praleiskite uždaro ciklo režime su kuo mažiau hipoglikemijų, kai AIO = 0</string>
@@ -27,6 +28,7 @@
     <string name="objectives_smb_gate">Norėdami, kad SMB veiktų gerai, turite perskaityti dokumentaciją ir padidinti maks AIO! Pradžiai patartina skaičiuoti taip: maksAIO=(didžiausia valandinė bazė x 3) + vidutinis bolusas</string>
     <string name="objectives_smb_learned">SMB yra Jūsų tikslas. Oref1 algoritmas sukurtas taip, kad taptų Jums pagalba su bolusavimu. Jūs galite nesileisti viso boluso maistui, susileiskite dalį, o AAPS padarys likusį darbą, jei reikės. Taip išvengsite klaidų dėl neteisingai apskaičiuotų AV. Ar žinote, kad galite skaičiuotuve nurodyti, kiek % apskaičiuoto boluso suleisti?</string>
     <string name="objectives_auto_objective">Automatizavimo įjungimas</string>
+    <string name="objectives_auto_gate">Perskaitykite dokumentaciją apie tai, kaip veikia automatizacija. Nustatykite savo pirmąsias paprastas taisykles. Vietoje veiksmo leiskite AAPS rodyti tik pranešimą. Kai būsite tikri, kad automatizacija suveikia tinkamu laiku, pakeiskite pranešimą tikru veiksmu. (https://wiki.aaps.app/en/latest/DailyLifeWithAaps/Automations.html)</string>
     <string name="objectives_auto_learned">Automatizacija gali būti lazda su dviem galais. Nepiktnaudžiaukite. Nebandykite keisti ją aprašančių algoritmų. Prieš įgalindami veiksmą, išbandykite rezultatą su pranešimu. Rezultatas labai priklauso nuo sąlygų eiliškumo.</string>
     <string name="objectives_bgavailableinns">Glikemija matoma NS arba Tidepool</string>
     <string name="objectives_pumpstatusavailableinns">Pompos statusas matomas NS arba Tidepool</string>
@@ -73,10 +75,13 @@
     <string name="unfinshed_button">Kitas neužbaigtas</string>
     <string name="requestcode">Paprašyti kodo: %1$s</string>
     <string name="objectives_hint">(pasirinkite visus teisingus atsakymus)</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
     <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html</string>
     <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
     <string name="notconnected">Neprisijungta prie interneto</string>
     <string name="failedretrievetime">Nepavyko nuskaityti laiko</string>
     <string name="requirementnotmet">Tikslo reikalavimai neįvykdyti</string>
     <string name="what_i_ve_learned">Ką išmokote:</string>
+    <string name="verify_master_password">Patikrinkite, ar žinote pagrindinį slaptažodį</string>
 </resources>

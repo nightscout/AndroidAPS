@@ -82,6 +82,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="allow_hardware_pump_text">ATTENTION : Si vous activez et connectez à une vraie pompe, AAPS copiera les paramètres basals du profil vers la pompe, écrasant le taux basal existant stocké sur la pompe. Assurez-vous d\'avoir correctement saisi et réglé les paramètres basal dans AAPS. Si vous ne savez pas ou si ne voulez pas écraser les paramètres basal sur votre pompe, appuyez sur Annuler et reporter la selection de la pompe à une date ultérieure.</string>
     <string name="a11y_open_settings">ouvrir les paramètres</string>
     <string name="nsclient_version_does_not_match">La version AAPSClient ne correspond pas à AAPS. Faites une mise à jour.</string>
+    <string name="expand_category">Développer la catégorie</string>
+    <string name="collapse_category">Replier la catégorie</string>
     <!--ImportExport-->
     <string name="nav_preferences">Préférences</string>
     <string name="password_preferences_encrypt_prompt">Le mot de passe principal vous sera demandé pour crypter les préférences exportées.</string>

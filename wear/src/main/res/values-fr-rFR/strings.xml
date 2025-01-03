@@ -217,6 +217,7 @@
     <string name="complication_full_status_flipped">État complet (transposé)</string>
     <string name="complication_blood_glucose">Glycémie</string>
     <string name="complication_br_cob_iob">DB, GA &amp; IA</string>
+    <string name="complication_br_iob">Basal &amp; IA</string>
     <string name="complication_cob_iob">GA &amp; IA</string>
     <string name="complication_cob_icon">Icône GA</string>
     <string name="complication_cob_detailed">GA détaillés</string>
