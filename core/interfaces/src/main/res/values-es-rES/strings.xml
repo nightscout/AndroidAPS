@@ -65,4 +65,7 @@
     <string name="default_custom_watchface_external_comment">Esfera de reloj predeterminada que incluye vistas externas para los seguidores. Puedes hacer clic en el botón EXPORTAR WATCHFACE para generar una plantilla</string>
     <string name="wear_default_watchface">Esfera por defecto</string>
     <string name="wear_more_watchfaces">Más esferas</string>
+    <string name="temp_basal_absolute_rate">%1$.2f U/h @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
 </resources>
