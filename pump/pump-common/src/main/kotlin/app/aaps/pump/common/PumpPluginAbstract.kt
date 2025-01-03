@@ -292,8 +292,8 @@ abstract class PumpPluginAbstract protected constructor(
                 ret += "LastBolus: ${decimalFormatter.to2Decimal(pumpStatusData.lastBolusAmount!!)}U @${DateFormat.format("HH:mm", it)}\n"
             }
         }
-        pumpSync.expectedPumpState().temporaryBasal?.let { ret += "Temp: ${it.toStringFull(dateUtil, decimalFormatter)}\n" }
-        pumpSync.expectedPumpState().extendedBolus?.let { ret += "Extended: ${it.toStringFull(dateUtil, decimalFormatter)}\n" }
+        pumpSync.expectedPumpState().temporaryBasal?.let { ret += "Temp: ${it.toStringFull(dateUtil, rh)}\n" }
+        pumpSync.expectedPumpState().extendedBolus?.let { ret += "Extended: ${it.toStringFull(dateUtil, rh)}\n" }
         ret += "IOB: ${pumpStatusData.iob}U\n"
         ret += "Reserv: ${decimalFormatter.to0Decimal(pumpStatusData.reservoirRemainingUnits)}U\n"
         ret += "Batt: ${pumpStatusData.batteryRemaining}\n"

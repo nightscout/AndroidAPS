@@ -1487,7 +1487,7 @@ class ComboV2Plugin @Inject constructor(
         temporaryBasal?.let {
             lines += rh.gs(
                 R.string.combov2_short_status_temp_basal,
-                it.toStringFull(dateUtil, decimalFormatter)
+                it.toStringFull(dateUtil, rh)
             )
         }
 
