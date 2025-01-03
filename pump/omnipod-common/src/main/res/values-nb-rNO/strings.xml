@@ -56,7 +56,7 @@
     <string name="omnipod_common_overview_last_connection">Siste tilkobling</string>
     <string name="omnipod_common_overview_last_bolus">Siste bolus</string>
     <string name="omnipod_common_overview_temp_basal_rate">Midlertidig basaldose</string>
-    <string name="omnipod_common_overview_base_basal_rate">Profilens basaldose</string>
+    <string name="omnipod_common_overview_base_basal_rate">Profilens basal</string>
     <string name="omnipod_common_overview_reservoir">Reservoar</string>
     <string name="omnipod_common_overview_pod_active_alerts">Aktive Pod-varsler</string>
     <string name="omnipod_common_overview_firmware_version">Firmwareversjon</string>
