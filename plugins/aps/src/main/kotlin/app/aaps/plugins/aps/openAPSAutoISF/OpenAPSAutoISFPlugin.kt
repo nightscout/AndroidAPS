@@ -194,6 +194,8 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         return sensitivity
     }
 
+    override fun getSensitivityOverviewString(): String? = null // placeholder for Auto ISF Detailed information for overview
+
     override fun specialEnableCondition(): Boolean {
         return config.isEngineeringMode() && config.isDev() &&
             try {
