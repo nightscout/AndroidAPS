@@ -157,7 +157,6 @@
     <!-- Omnipod - Short status -->
     <string name="omnipod_common_short_status_no_active_pod">Ingen aktiv pod</string>
     <string name="omnipod_common_short_status_last_connection">Sen ansl: %1$d min sedan</string>
-    <string name="omnipod_common_short_status_last_bolus">Sen Bolus: %1$s @ %2$s</string>
     <string name="omnipod_common_short_status_temp_basal">Temp: %1$s</string>
     <string name="omnipod_common_short_status_extended_bolus">Förl: %1$s</string>
     <string name="omnipod_common_short_status_reservoir">Res: %1$sU</string>

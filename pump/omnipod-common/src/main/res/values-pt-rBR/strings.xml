@@ -157,7 +157,6 @@
     <!-- Omnipod - Short status -->
     <string name="omnipod_common_short_status_no_active_pod">Nenhum Pod Ativo</string>
     <string name="omnipod_common_short_status_last_connection">Última conexão: %1$d minutos atrás</string>
-    <string name="omnipod_common_short_status_last_bolus">Último bolus: %1$s @ %2$s</string>
     <string name="omnipod_common_short_status_temp_basal">AlvoTemporário: %1$s</string>
     <string name="omnipod_common_short_status_extended_bolus">Estendido: %1$s</string>
     <string name="omnipod_common_short_status_reservoir">Reservatório: %1$sU</string>

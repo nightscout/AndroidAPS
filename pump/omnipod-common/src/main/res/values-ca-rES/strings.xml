@@ -156,7 +156,6 @@
     <!-- Omnipod - Short status -->
     <string name="omnipod_common_short_status_no_active_pod">Cap pod actiu</string>
     <string name="omnipod_common_short_status_last_connection">Darrera connexió: fa %1$d min</string>
-    <string name="omnipod_common_short_status_last_bolus">Darrer bolus: %1$s @ %2$s</string>
     <string name="omnipod_common_short_status_temp_basal">Temp: %1$s</string>
     <string name="omnipod_common_short_status_extended_bolus">Estès: %1$s</string>
     <string name="omnipod_common_short_status_reservoir">Reservori.: %1$s U</string>

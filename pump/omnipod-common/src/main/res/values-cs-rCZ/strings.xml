@@ -164,7 +164,7 @@
     <!-- Omnipod - Short status -->
     <string name="omnipod_common_short_status_no_active_pod">Žádný aktivní Pod</string>
     <string name="omnipod_common_short_status_last_connection">Poslední spoj: před %1$d min</string>
-    <string name="omnipod_common_short_status_last_bolus">Poslední bolus: %1$s @ %2$s</string>
+    <string name="omnipod_common_short_status_last_bolus">Poslední bolus: %1$sU @ %2$s</string>
     <string name="omnipod_common_short_status_temp_basal">Doč. bazál: %1$s</string>
     <string name="omnipod_common_short_status_extended_bolus">Prodl. bolus: %1$s</string>
     <string name="omnipod_common_short_status_reservoir">Zásobník: %1$sU</string>

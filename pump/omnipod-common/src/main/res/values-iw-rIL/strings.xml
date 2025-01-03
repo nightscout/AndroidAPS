@@ -163,7 +163,6 @@
     <!-- Omnipod - Short status -->
     <string name="omnipod_common_short_status_no_active_pod">אין פוד פעיל</string>
     <string name="omnipod_common_short_status_last_connection">חיבור אחרון: לפני %1$d דקות</string>
-    <string name="omnipod_common_short_status_last_bolus">בולוס אחרון: %1$s ב-%2$s</string>
     <string name="omnipod_common_short_status_temp_basal">בזאלי זמני: %1$s</string>
     <string name="omnipod_common_short_status_extended_bolus">ממושך: %1$s</string>
     <string name="omnipod_common_short_status_reservoir">מכל: %1$s יח\'</string>

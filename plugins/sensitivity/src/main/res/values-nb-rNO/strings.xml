@@ -17,7 +17,7 @@
     <string name="openapsama_autosens_min_summary">Standardverdi: 0.7\nDette er en multiplikatorbegrensning for autosens-sikkerhet. Den begrenser autosens til å redusere basalverdier, og øke isulinssensitivitet (ISF) og BS mål med ikke mer enn enn 30%.</string>
     <string name="openapsama_autosens_max">Maks autosens ratio</string>
     <string name="openapsama_autosens_min">Minimum autosens ratio</string>
-    <string name="openapsama_min_5m_carb_impact_summary">Standardverdi er: 3.0 (AMA) eller 8.0 (SMB). Dette er grunninnstillingen for KH-opptak per 5 minutt. Den påvirker hvor raskt COB skal reduseres, og benyttes i beregning av fremtidig BS-kurve når BS enten synker eller øker mer enn forventet. Standardverdi er 3mg/dl/5 min.</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Standardverdi: 3.0 (AMA) eller 8.0 (SMB). Dette er en innstilling for standard karboabsorpsjonsvirkning per 5 minutter. Standard forventet er 3mg/dl/5min. Dette påvirker hvor raskt COB avtar, og hvor mye karboabsorpsjon antas ved beregning av fremtidig forventet BS, når BS faller mer enn forventet, eller når det ikke stiger så mye som forventet.</string>
     <string name="absorption_cutoff_title">Maks absorpsjonstid for måltid [t]</string>
     <string name="absorption_cutoff_summary">Etter denne tiden forventes det at måltidet er absorbert. Eventuelle gjenværende karbo vil tas ut av beregninger.</string>
 </resources>

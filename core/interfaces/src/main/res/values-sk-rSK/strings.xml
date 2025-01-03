@@ -65,4 +65,7 @@
     <string name="default_custom_watchface_external_comment">Predvolený ciferník vrátane externých zobrazení pre sledovateľov, môžete kliknúť na tlačidlo EXPORTOVAŤ CIFERNÍK ak chcete vygenerovať šablónu</string>
     <string name="wear_default_watchface">Predvolený ciferník</string>
     <string name="wear_more_watchfaces">Ďalšie ciferníky</string>
+    <string name="temp_basal_absolute_rate">%1$.2f JI/h @%2$s %3$d/%4$d</string>
+    <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d</string>
+    <string name="temp_basal_extended_bolus">E %1$.2f JI/h @%2$s %3$d/%4$d min</string>
 </resources>

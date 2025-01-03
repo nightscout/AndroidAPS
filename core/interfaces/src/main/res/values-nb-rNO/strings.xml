@@ -65,4 +65,7 @@
     <string name="default_custom_watchface_external_comment">Standard urskive inkludert eksterne visninger for følgere, du kan klikke på knappen EKSPORTER URSKIVE for å generere en mal</string>
     <string name="wear_default_watchface">Standard urskive</string>
     <string name="wear_more_watchfaces">Flere urskiver</string>
+    <string name="temp_basal_absolute_rate">%1$.2f E/t @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_extended_bolus">F %1$.2f E/t @%2$s %3$d/%4$d min</string>
 </resources>

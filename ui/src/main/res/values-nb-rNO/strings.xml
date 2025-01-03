@@ -73,7 +73,7 @@
     <string name="result_insulin_carbs">Resultat: %1$s %2$s</string>
     <string name="missing_carbs">Mangler %1$d g</string>
     <string name="a11y_current_bg">nåværende blodsukker</string>
-    <string name="carb_time_label">Karbo-tid</string>
+    <string name="carb_time_label">Karbotid</string>
     <string name="a11y_set_carb_timer">angi nedtellingsalarm for karbo</string>
     <string name="show_calculation">Vis beregning</string>
     <!-- Treatments -->

@@ -164,7 +164,7 @@
     <!-- Omnipod - Short status -->
     <string name="omnipod_common_short_status_no_active_pod">Nessun pod attivo</string>
     <string name="omnipod_common_short_status_last_connection">Ultima conn.: %1$d min fa</string>
-    <string name="omnipod_common_short_status_last_bolus">Ultimo bolo: %1$s @ %2$s</string>
+    <string name="omnipod_common_short_status_last_bolus">Ultimo Bolo: %1$sU @ %2$s</string>
     <string name="omnipod_common_short_status_temp_basal">Temp: %1$s</string>
     <string name="omnipod_common_short_status_extended_bolus">Esteso: %1$s</string>
     <string name="omnipod_common_short_status_reservoir">Serb: %1$sU</string>
