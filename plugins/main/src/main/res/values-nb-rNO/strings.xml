@@ -276,7 +276,7 @@
     <string name="overview_show_cob">Aktive KH (COB)</string>
     <string name="overview_show_iob">Aktivt insulin (IOB)</string>
     <string name="overview_show_basals">Basaler</string>
-    <string name="overview_show_abs_insulin">Absolutt insulinmengde</string>
+    <string name="overview_show_abs_insulin">Absolutt insulin</string>
     <string name="overview_show_variable_sens">Variabel sensitivitet</string>
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
