@@ -50,6 +50,7 @@ import app.aaps.plugins.automation.triggers.TriggerPumpLastConnection
 import app.aaps.plugins.automation.triggers.TriggerRecurringTime
 import app.aaps.plugins.automation.triggers.TriggerReservoirLevel
 import app.aaps.plugins.automation.triggers.TriggerSensorAge
+import app.aaps.plugins.automation.triggers.TriggerStepsCount
 import app.aaps.plugins.automation.triggers.TriggerTempTarget
 import app.aaps.plugins.automation.triggers.TriggerTempTargetValue
 import app.aaps.plugins.automation.triggers.TriggerTime
@@ -103,6 +104,7 @@ abstract class AutomationModule {
     @ContributesAndroidInjector abstract fun triggerTime(): TriggerTime
     @ContributesAndroidInjector abstract fun triggerTimeRangeInjector(): TriggerTimeRange
     @ContributesAndroidInjector abstract fun triggerWifiSsidInjector(): TriggerWifiSsid
+    @ContributesAndroidInjector abstract fun triggerStepsCountInjector(): TriggerStepsCount
 
     @ContributesAndroidInjector abstract fun actionInjector(): Action
     @ContributesAndroidInjector abstract fun actionStopProcessingInjector(): ActionStopProcessing
