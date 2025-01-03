@@ -277,7 +277,7 @@
     <string name="overview_show_iob">Aktivt insulin (IOB)</string>
     <string name="overview_show_basals">Basaler</string>
     <string name="overview_show_abs_insulin">Absolutt insulin</string>
-    <string name="overview_show_variable_sens">Variabel sensitivitet</string>
+    <string name="overview_show_variable_sens">Dynamisk ISF</string>
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
     <string name="deviation_shortname">AVVIK</string>
@@ -288,7 +288,7 @@
     <string name="treatments_shortname">BEH</string>
     <string name="heartRate_shortname">PULS</string>
     <string name="sensitivity_shortname">SENS%</string>
-    <string name="variable_sensitivity_shortname">VSENS</string>
+    <string name="variable_sensitivity_shortname">DISF</string>
     <string name="graph_scale">Graf-skala</string>
     <string name="graph_menu_divider_header">Graf</string>
     <string name="temp_basal_overview_short_name">M:</string>
