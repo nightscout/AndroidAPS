@@ -188,8 +188,11 @@ class IobCobOrefWorker @Inject internal constructor(
                 for (recentCarbTreatment in recentCarbTreatments) {
                     autosensData.carbsFromBolus += recentCarbTreatment.amount
                     val isAAPSOrWeighted = activePlugin.activeSensitivity.isMinCarbsAbsorptionDynamic
-                    if (recentCarbTreatment.amount > 0)
-                        autosensData.activeCarbsList.add(fromCarbs(recentCarbTreatment, isAAPSOrWeighted, profileFunction, aapsLogger, dateUtil, preferences, config, processedDeviceStatusData))
+                    if (recentCarbTreatment.amount > 0) {
+                        val sens = profile.getIsfMgdlForCarbs(recentCarbTreatment.timestamp, "fromCarbs", config, processedDeviceStatusData)
+                        val ic = profile.getIc(recentCarbTreatment.timestamp)
+                        autosensData.activeCarbsList.add(fromCarbs(recentCarbTreatment, isOref1 = false, isAAPSOrWeighted, sens, ic, aapsLogger, dateUtil, preferences))
+                    }
                     autosensData.pastSensitivity += "[" + decimalFormatter.to0Decimal(recentCarbTreatment.amount) + "g]"
                 }
 
@@ -212,9 +215,9 @@ class IobCobOrefWorker @Inject internal constructor(
                     // but always assume at least 3mg/dL/5m (default) absorption per active treatment
                     val ci = max(deviation, totalMinCarbsImpact)
                     if (ci != deviation) autosensData.failOverToMinAbsorptionRate = true
-                    autosensData.absorbed = ci * profile.getIc(bgTime) / sens
+                    autosensData.this5MinAbsorption = ci * profile.getIc(bgTime) / sens
                     // and add that to the running total carbsAbsorbed
-                    autosensData.cob = max(previous.cob - autosensData.absorbed, 0.0)
+                    autosensData.cob = max(previous.cob - autosensData.this5MinAbsorption, 0.0)
                     autosensData.deductAbsorbedCarbs()
                     autosensData.usedMinCarbsImpact = totalMinCarbsImpact
                 }

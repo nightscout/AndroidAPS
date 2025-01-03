@@ -19,6 +19,7 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
+import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -90,7 +91,8 @@ class XdripPlugin @Inject constructor(
     private val dateUtil: DateUtil,
     aapsLogger: AAPSLogger,
     private val config: Config,
-    private val decimalFormatter: DecimalFormatter
+    private val decimalFormatter: DecimalFormatter,
+    private val glucoseStatusProvider: GlucoseStatusProvider
 ) : XDripBroadcast, Sync, PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -259,7 +261,7 @@ class XdripPlugin @Inject constructor(
                 .append("|")
                 .append(decimalFormatter.to2Decimal(basalIob.basaliob))
                 .append(")")
-        if (preferences.get(BooleanKey.XdripSendBgi)) {
+        if (preferences.get(BooleanKey.XdripSendBgi) && glucoseStatusProvider.glucoseStatusData != null) {
             val bgi = -(bolusIob.activity + basalIob.activity) * 5 * profileUtil.fromMgdlToUnits(profile.getIsfMgdl("XdripPlugin"))
             status.append(" ")
                 .append(if (bgi >= 0) "+" else "")
