@@ -65,4 +65,7 @@
     <string name="default_custom_watchface_external_comment">La watchface predefinita include le viste esterne per i follower, è possibile fare clic sul pulsante ESPORTA WATCHFACE per generare un modello</string>
     <string name="wear_default_watchface">Watchface predefinita</string>
     <string name="wear_more_watchfaces">Più quadranti</string>
+    <string name="temp_basal_absolute_rate">%1$.2f U/h @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
 </resources>
