@@ -609,7 +609,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                                 it.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.treatmentButton))
                                 it.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10f)
                                 it.layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 0.5f).also { l ->
-                                    l.setMargins(0, 0, rh.dpToPx(-4), 0)
+                                    l.setMargins(rh.dpToPx(1), 0, rh.dpToPx(1), 0)
                                 }
                                 it.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(app.aaps.core.ui.R.drawable.ic_user_options), null, null)
                                 it.text = event.title
