@@ -120,4 +120,5 @@
     <string name="autotune_run_with_autoswitch">Autotune a rulat și profilul a fost automat schimbat</string>
     <string name="autotune_run_with_error">Eroare în timpul ultimei rulări Autotune</string>
     <string name="autotune_run_cancelled">O altă rulare Autotune este detectată, rularea este anulată</string>
+    <!--    Steps count-->
 </resources>
