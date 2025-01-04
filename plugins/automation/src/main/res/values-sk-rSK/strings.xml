@@ -137,4 +137,5 @@
     <string name="autotune_run_with_autoswitch">Autotune spustený a profil automaticky prepnutý</string>
     <string name="autotune_run_with_error">Chyba pri poslednom spustení Autotune</string>
     <string name="autotune_run_cancelled">Bola zistená iná spustená úloha Autotune, spustenie zrušené</string>
+    <!--    Steps count-->
 </resources>
