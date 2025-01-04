@@ -615,7 +615,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                                 it.setCompoundDrawablePadding(rh.dpToPx(-4))
                                 it.setCompoundDrawablesWithIntrinsicBounds(
                                     null,
-                                    rh.gd(event.firstActionIcon() ?: app.aaps.core.ui.R.drawable.ic_user_options).also {
+                                    rh.gd(event.firstActionIcon() ?: app.aaps.core.ui.R.drawable.ic_user_options_24dp).also {
                                         it?.setBounds(rh.dpToPx(20), rh.dpToPx(20), rh.dpToPx(20), rh.dpToPx(20))
                                     }, null, null
                                 )
