@@ -120,4 +120,5 @@
     <string name="autotune_run_with_autoswitch">Autotune körde och profilen byttes automatiskt</string>
     <string name="autotune_run_with_error">Fel under senaste körning av Autotune</string>
     <string name="autotune_run_cancelled">En annan Autotune-körning upptäcktes, körning avbruten</string>
+    <!--    Steps count-->
 </resources>
