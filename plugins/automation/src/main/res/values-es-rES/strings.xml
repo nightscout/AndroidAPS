@@ -137,4 +137,5 @@
     <string name="autotune_run_with_autoswitch">Ejecutar Autotune y cambiar de perfil automáticamente</string>
     <string name="autotune_run_with_error">Error durante la última ejecución de Autotune</string>
     <string name="autotune_run_cancelled">Se ha detectado otra ejecución de Autotune, ejecución cancelada</string>
+    <!--    Steps count-->
 </resources>
