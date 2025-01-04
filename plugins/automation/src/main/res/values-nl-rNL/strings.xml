@@ -137,4 +137,5 @@
     <string name="autotune_run_with_autoswitch">Autotune uitgevoerd en profiel automatisch gewisseld</string>
     <string name="autotune_run_with_error">Fout tijdens laatste Autotune uitvoeren</string>
     <string name="autotune_run_cancelled">Een ander Autotune proces loopt nog, de uitvoering is geannuleerd</string>
+    <!--    Steps count-->
 </resources>
