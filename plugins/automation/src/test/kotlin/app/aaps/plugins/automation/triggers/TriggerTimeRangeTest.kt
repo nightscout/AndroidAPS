@@ -62,7 +62,7 @@ class TriggerTimeRangeTest : TriggerTestBase() {
     }
 
     @Test fun friendlyDescriptionTest() {
-        assertThat(TriggerTimeRange(injector).friendlyDescription()).isEqualTo("Time is between 12:34 PM and 12:34 PM")
+        assertThat(TriggerTimeRange(injector).friendlyDescription()).isEqualTo("Time is between 12:34PM and 12:34PM")
     }
 
     @Test fun iconTest() {
