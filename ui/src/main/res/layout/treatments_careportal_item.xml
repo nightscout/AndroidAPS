@@ -137,6 +137,7 @@
 
             <CheckBox
                 android:id="@+id/cb_remove"
+                style="@style/Widget.App.CheckBox"
                 android:layout_width="wrap_content"
                 android:layout_height="19dp"
                 android:layout_gravity="end"

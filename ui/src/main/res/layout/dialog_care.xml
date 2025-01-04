@@ -57,6 +57,7 @@
 
             <RadioButton
                 android:id="@+id/meter"
+                style="@style/Widget.App.RadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="false"
@@ -64,6 +65,7 @@
 
             <RadioButton
                 android:id="@+id/sensor"
+                style="@style/Widget.App.RadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
@@ -71,6 +73,7 @@
 
             <RadioButton
                 android:id="@+id/other"
+                style="@style/Widget.App.RadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/bg_other" />

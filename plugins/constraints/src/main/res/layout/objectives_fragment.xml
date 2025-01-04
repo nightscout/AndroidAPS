@@ -17,6 +17,7 @@
 
         <CheckBox
             android:id="@+id/fake"
+            style="@style/Widget.App.CheckBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"

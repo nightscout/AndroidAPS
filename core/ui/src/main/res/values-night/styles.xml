@@ -430,4 +430,13 @@
         <item name="android:textAlignment">center</item>
         <item name="android:textColor">#ff0000</item>
     </style>
+
+    <style name="Widget.App.RadioButton" parent="Widget.MaterialComponents.CompoundButton.RadioButton">
+        <item name="buttonTint">@color/button_tint</item>
+    </style>
+
+    <style name="Widget.App.CheckBox" parent="Widget.MaterialComponents.CompoundButton.CheckBox">
+        <item name="buttonTint">@color/button_tint</item>
+    </style>
+
 </resources>
