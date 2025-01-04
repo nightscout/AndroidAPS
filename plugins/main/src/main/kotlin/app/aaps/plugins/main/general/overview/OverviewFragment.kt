@@ -606,12 +606,19 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     if (event.isEnabled && event.canRun()) {
                         context?.let { context ->
                             SingleClickButton(context, null, app.aaps.core.ui.R.attr.customBtnStyle).also {
-                                it.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.treatmentButton))
+                                it.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.userOptionColor))
                                 it.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10f)
                                 it.layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 0.5f).also { l ->
                                     l.setMargins(rh.dpToPx(1), 0, rh.dpToPx(1), 0)
                                 }
-                                it.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(app.aaps.core.ui.R.drawable.ic_user_options), null, null)
+                                it.setPadding(rh.dpToPx(1), it.paddingTop, rh.dpToPx(1), it.paddingBottom)
+                                it.setCompoundDrawablePadding(rh.dpToPx(-4))
+                                it.setCompoundDrawablesWithIntrinsicBounds(
+                                    null,
+                                    rh.gd(event.firstActionIcon() ?: app.aaps.core.ui.R.drawable.ic_user_options).also {
+                                        it?.setBounds(rh.dpToPx(20), rh.dpToPx(20), rh.dpToPx(20), rh.dpToPx(20))
+                                    }, null, null
+                                )
                                 it.text = event.title
                                 it.setOnClickListener {
                                     OKDialog.showConfirmation(context, rh.gs(R.string.run_question, event.title), { handler.post { automation.processEvent(event) } })

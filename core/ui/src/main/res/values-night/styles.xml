@@ -145,6 +145,7 @@
         <item name="actionsError">@color/errorAlertBackground</item>
         <item name="automationBackgroundColor">@color/black</item>
         <item name="automationOverlayColor">@color/black_alpha_40</item>
+        <item name="actionColor">@color/actionColor</item>
         <!---BG source -->
         <item name="bgsourceError">@color/errorAlertBackground</item>
         <!---TDD-statistics -->
