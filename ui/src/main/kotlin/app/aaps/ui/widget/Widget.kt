@@ -120,7 +120,12 @@ class Widget : AppWidgetProvider() {
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         // Widgets allow click handlers to only launch pending intents
         views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent)
-        views.setInt(R.id.widget_layout, "setBackgroundColor", Color.argb(alpha, 0, 0, 0))
+        if (config.APS)
+            views.setInt(R.id.widget_layout, "setBackgroundColor", Color.argb(alpha, 0, 0, 0))
+        if (config.NSCLIENT1)
+            views.setInt(R.id.widget_layout, "setBackgroundColor", Color.argb(alpha, 0xE8, 0xC5, 0x0C))
+        if (config.NSCLIENT2)
+            views.setInt(R.id.widget_layout, "setBackgroundColor", Color.argb(alpha, 0x0F, 0xBB, 0xE0))
 
         handler.post {
             if (config.appInitialized) {
