@@ -95,6 +95,7 @@ data class GlucoseValue(
         LIBRE_1_BUBBLE,
         LIBRE_1_ATOM,
         LIBRE_1_GLIMP,
+        LIBRE_2,
         LIBRE_2_NATIVE,
         LIBRE_3,
         POCTECH_NATIVE,

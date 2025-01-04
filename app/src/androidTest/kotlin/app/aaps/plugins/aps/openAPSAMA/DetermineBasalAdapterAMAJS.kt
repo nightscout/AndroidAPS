@@ -89,7 +89,7 @@ class DetermineBasalAdapterAMAJS(private val scriptReader: ScriptReader, private
         val rhino = Context.enter()
         val scope: Scriptable = rhino.initStandardObjects()
         // Turn off optimization to make Rhino Android compatible
-        rhino.optimizationLevel = -1
+        rhino.isInterpretedMode = true
         try {
 
             //register logger callback for console.log and console.error
