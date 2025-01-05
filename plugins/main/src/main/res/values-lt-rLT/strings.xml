@@ -153,8 +153,6 @@
     <string name="dia_short">IVT</string>
     <string name="target_short">TIKSLAS</string>
     <string name="basal_short">VB</string>
-    <string name="isf_dynamic_label">Jūsų algoritmas gali dinamiškai apskaičiuoti JIF reikšmę. Pateiktos reikšmės naudojamos tik kaip atsarginis variantas, jei trūksta duomenų</string>
-    <string name="ic_dynamic_label">Jūsų algoritmas gali dinamiškai apskaičiuoti angliavandenių santykį. Pateiktos reikšmės naudojamos tik kaip atsarginis variantas, jei trūksta duomenų</string>
     <!-- Actions -->
     <string name="actions">Veiksmai</string>
     <string name="description_actions">Mygtukai greitesniam pagrindinių funkcijų paleidimui</string>
