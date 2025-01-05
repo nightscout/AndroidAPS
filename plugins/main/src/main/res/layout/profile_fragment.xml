@@ -219,7 +219,7 @@
                     android:layout_gravity="center"
                     android:layout_margin="10dp"
                     android:gravity="center"
-                    android:text="@string/ic_dynamic_label"
+                    android:text="@string/ic_dynamic_label_warning"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <LinearLayout
@@ -250,7 +250,7 @@
                     android:layout_gravity="center"
                     android:layout_margin="10dp"
                     android:gravity="center"
-                    android:text="@string/isf_dynamic_label"
+                    android:text="@string/isf_dynamic_label_warning"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <LinearLayout
