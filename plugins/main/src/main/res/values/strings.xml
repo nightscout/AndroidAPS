@@ -163,8 +163,8 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">TARG</string>
     <string name="basal_short">BAS</string>
-    <string name="isf_dynamic_label">Your algorithm can provide dynamic calculation of ISF. Values below are used only as a fallback in case of missing data</string>
-    <string name="ic_dynamic_label">Your algorithm can provide dynamic calculation of IC. Values below are used only as a fallback in case of missing data</string>
+    <string name="isf_dynamic_label_warning">Your algorithm can provide dynamic calculation of ISF. Values below can be used only as a fallback in case of missing data or as a reference value only</string>
+    <string name="ic_dynamic_label_warning">Your algorithm can provide dynamic calculation of IC. Values below cen be used only as a fallback in case of missing data or as a reference value only</string>
 
     <!-- Actions -->
     <string name="actions">Actions</string>
