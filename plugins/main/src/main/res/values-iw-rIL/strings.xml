@@ -153,8 +153,6 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">ע\' מטרה</string>
     <string name="basal_short">בזאלי</string>
-    <string name="isf_dynamic_label">האלגוריתם שלכם יכול לספק חישוב דינמי של רגישות לאינסולין. הערכים הבאים יהיו בשימוש רק במקרה של מחסור במידע</string>
-    <string name="ic_dynamic_label">האלגוריתם שלכם יכול לספק חישוב דינמי של יחס פחמימות לאינסולין. הערכים הבאים יהיו בשימוש רק במקרה של מחסור במידע</string>
     <!-- Actions -->
     <string name="actions">פעולות</string>
     <string name="description_actions">לחצנים לגישה מהירה לפונקציות שימושיות</string>
