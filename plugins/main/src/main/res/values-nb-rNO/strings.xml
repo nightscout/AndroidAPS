@@ -153,8 +153,6 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">MÅL</string>
     <string name="basal_short">BAS</string>
-    <string name="isf_dynamic_label">Algoritmen din kan gi dynamisk beregning av ISF. Verdiene nedenfor brukes bare som en reserveløsning i tilfelle av manglende data</string>
-    <string name="ic_dynamic_label">Algoritmen din kan gi dynamisk beregning av IK. Verdiene nedenfor brukes bare som en reserveløsning i tilfelle av manglende data</string>
     <!-- Actions -->
     <string name="actions">Handlinger</string>
     <string name="description_actions">Hurtigknapper for rask tilgang til ofte brukte funksjoner</string>
