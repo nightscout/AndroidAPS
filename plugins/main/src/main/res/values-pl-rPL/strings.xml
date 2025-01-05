@@ -153,8 +153,6 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">CEL</string>
     <string name="basal_short">BAS</string>
-    <string name="isf_dynamic_label">Twój algorytm może dostarczyć dynamiczne obliczenia ISF. Wartości poniżej są używane tylko awaryjnie w przypadku braku danych</string>
-    <string name="ic_dynamic_label">Twój algorytm może dostarczyć dynamiczne obliczenia IC. Wartości poniżej są używane tylko awaryjnie w przypadku braku danych</string>
     <!-- Actions -->
     <string name="actions">Akcje</string>
     <string name="description_actions">Niektóre przyciski umożliwiające szybki dostęp do typowych funkcji</string>
