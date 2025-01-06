@@ -63,7 +63,7 @@ class LoadBgWorker(
                         val action = if (isFirstLoad) "RCV-F" else "RCV"
                         rxBus.send(EventNSClientNewLog("◄ $action", "${sgvs.size} SVGs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
                         // Schedule processing of fetched data and continue of loading
-                        continueLoading = response.code != 304 && nsIncomingDataProcessor.processSgvs(sgvs)
+                        continueLoading = response.code != 304 && nsIncomingDataProcessor.processSgvs(sgvs, nsClientV3Plugin.doingFullSync)
                     } else {
                         // End first load
                         if (isFirstLoad) {

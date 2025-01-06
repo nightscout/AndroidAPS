@@ -466,7 +466,7 @@ class NSClientService : DaggerService() {
                             // take the newest
                             val profileStoreJson = profiles[profiles.length() - 1] as JSONObject
                             rxBus.send(EventNSClientNewLog("◄ PROFILE", "profile received"))
-                            nsIncomingDataProcessor.processProfile(profileStoreJson)
+                            nsIncomingDataProcessor.processProfile(profileStoreJson, false)
                         }
                     }
                     if (data.has("treatments")) {
@@ -563,7 +563,7 @@ class NSClientService : DaggerService() {
                         val sgvs = data.getJSONArray("sgvs")
                         if (sgvs.length() > 0) {
                             rxBus.send(EventNSClientNewLog("◄ DATA", "received " + sgvs.length() + " sgvs"))
-                            nsIncomingDataProcessor.processSgvs(sgvs)
+                            nsIncomingDataProcessor.processSgvs(sgvs, false)
                             storeDataForDb.storeGlucoseValuesToDb()
                         }
                     }
