@@ -137,4 +137,8 @@
     <string name="autotune_run_with_autoswitch">Autotune spuštěno a profil automaticky přepnut</string>
     <string name="autotune_run_with_error">Chyba při posledním spuštění Autotune</string>
     <string name="autotune_run_cancelled">Byla zjištěna jiná běžící úloha Autotune, spuštění zrušeno</string>
+    <!--    Steps count-->
+    <string name="triggerStepsCountLabel">Počet kroků</string>
+    <string name="triggerStepsCountDesc">Počet kroků za %1$s minut %2$s %3$.0f</string>
+    <string name="triggerStepsCountDropdownLabel">Délka měření</string>
 </resources>

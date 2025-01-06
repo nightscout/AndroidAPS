@@ -157,7 +157,6 @@
     <!-- Omnipod - Short status -->
     <string name="omnipod_common_short_status_no_active_pod">没有活动的 Pod</string>
     <string name="omnipod_common_short_status_last_connection">上次连接: %1$d 分钟以前</string>
-    <string name="omnipod_common_short_status_last_bolus">上传大剂量: %1$s @ %2$s</string>
     <string name="omnipod_common_short_status_temp_basal">临时: %1$s</string>
     <string name="omnipod_common_short_status_extended_bolus">扩展: %1$s</string>
     <string name="omnipod_common_short_status_reservoir">储药器v: %1$sU</string>

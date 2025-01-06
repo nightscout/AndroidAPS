@@ -137,4 +137,5 @@
     <string name="autotune_run_with_autoswitch">自動調整運行並自動切換檔案</string>
     <string name="autotune_run_with_error">上次自動調整運行時出錯</string>
     <string name="autotune_run_cancelled">偵測到另一個自動調整運行，運行已取消</string>
+    <!--    Steps count-->
 </resources>

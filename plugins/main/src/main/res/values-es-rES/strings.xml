@@ -153,8 +153,8 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">OBJ</string>
     <string name="basal_short">BAS</string>
-    <string name="isf_dynamic_label">El algoritmo puede proporcionar cálculos dinámicos de ISF. Los valores se utilizan sólo como un recurso en caso de falta de datos</string>
-    <string name="ic_dynamic_label">El algoritmo puede proporcionar cálculos dinámicos de IC. Los valores se utilizan sólo como un recurso en caso de falta de datos</string>
+    <string name="isf_dynamic_label_warning">El algoritmo puede proporcionar un cálculo dinámico del ISF. Los valores mostrados se pueden utilizar sólo como alternativa en caso de que falten datos o como valor de referencia</string>
+    <string name="ic_dynamic_label_warning">Su algoritmo puede proporcionar un cálculo dinámico de IC. Los valores mostrados se pueden utilizar sólo como alternativa en caso de que falten datos o como valor de referencia</string>
     <!-- Actions -->
     <string name="actions">Acciones</string>
     <string name="description_actions">Algunos botones para acceder rápidamente a funciones comunes</string>

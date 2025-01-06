@@ -61,8 +61,12 @@
     <string name="pref_show_ago">Afficher Min Passées</string>
     <string name="pref_show_week_number">Afficher numéro semaine</string>
     <string name="pref_show_date">Afficher la date</string>
+    <string name="pref_show_seconds">Afficher les secondes</string>
     <string name="default_custom_watchface_comment">Cadran par défaut, vous pouvez cliquer sur le bouton EXPORTER WATCHFACE pour générer un modèle</string>
     <string name="default_custom_watchface_external_comment">Cadran par défaut incluant les vues externes pour les suiveurs, vous pouvez cliquer sur le bouton EXPORTER LE MODÈLE pour générer un modèle</string>
     <string name="wear_default_watchface">Cadran par défaut</string>
     <string name="wear_more_watchfaces">Plus de cadrans</string>
+    <string name="temp_basal_absolute_rate">%1$.2f U/h @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
 </resources>

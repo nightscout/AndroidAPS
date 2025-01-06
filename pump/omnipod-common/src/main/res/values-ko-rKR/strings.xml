@@ -157,7 +157,6 @@
     <!-- Omnipod - Short status -->
     <string name="omnipod_common_short_status_no_active_pod">활성화된 Pod 없음</string>
     <string name="omnipod_common_short_status_last_connection">마지막 연결: %1$d 분 전</string>
-    <string name="omnipod_common_short_status_last_bolus">마지막 bolus: %1$s @ %2$s</string>
     <string name="omnipod_common_short_status_temp_basal">임시: %1$s</string>
     <string name="omnipod_common_short_status_extended_bolus">확장: %1$s</string>
     <string name="omnipod_common_short_status_reservoir">잔여 인슐린 양: %1$s U</string>

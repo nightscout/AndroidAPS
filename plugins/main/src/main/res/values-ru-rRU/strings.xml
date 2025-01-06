@@ -153,8 +153,6 @@
     <string name="dia_short">Время действия инсулина DIA</string>
     <string name="target_short">ЦЕЛЬ</string>
     <string name="basal_short">БАЗАЛ</string>
-    <string name="isf_dynamic_label">Алгоритм обеспечивает динамический расчет чувствительности к инсулину ISF. Значения ниже используются только в качестве запасного варианта при отсутствии данных</string>
-    <string name="ic_dynamic_label">Алгоритм обеспечивает динамический расчет углеводного коэффициента IC. Значения ниже используются только в качестве запасного варианта при отсутствии данных</string>
     <!-- Actions -->
     <string name="actions">Действия</string>
     <string name="description_actions">Кнопки быстрого доступа к некоторым распространенным настройкам</string>
