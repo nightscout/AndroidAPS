@@ -52,7 +52,7 @@ public class ConnectionEstablisher extends Thread {
         try {
             socket.connect();
             if (!isInterrupted()) callback.onConnectionSucceed();
-        } catch (IOException e) {
+        } catch (IOException | SecurityException e) {
             if (!isInterrupted()) callback.onConnectionFail(e, System.currentTimeMillis() - connectionStart);
         }
     }

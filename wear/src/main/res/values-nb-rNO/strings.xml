@@ -26,21 +26,21 @@
     <string name="pref_show_iob">Vis IOB</string>
     <string name="pref_show_detailed_iob">Vis detaljert IOB</string>
     <string name="pref_show_cob">Vis COB</string>
-    <string name="pref_show_delta">Vis Delta</string>
-    <string name="pref_show_detailed_delta">Vis detaljert Delta</string>
-    <string name="pref_show_avgdelta">Vis Gj.snittDelta</string>
+    <string name="pref_show_delta">Vis delta</string>
+    <string name="pref_show_detailed_delta">Vis detaljert delta</string>
+    <string name="pref_show_avgdelta">Vis gj.snittsdelta</string>
     <string name="pref_show_phone_battery">Vis telefonbatteri</string>
     <string name="pref_show_rig_battery">Vis riggens batteri</string>
     <string name="pref_show_basal_rate">Vis basaldose</string>
     <string name="pref_show_temp_target">Vis midlertidig mål</string>
     <string name="pref_show_reservoir_level">Vis reservoarnivå</string>
-    <string name="pref_show_loop_status">Vis loop status</string>
+    <string name="pref_show_loop_status">Vis loopstatus</string>
     <string name="pref_show_bg">Vis BS</string>
     <string name="pref_show_bgi">Vis BGI</string>
     <string name="pref_show_direction_arrow">Vis retningspil</string>
     <string name="pref_show_ago">Vis siden</string>
     <string name="pref_show_temp_basal">Vis midl. basal</string>
-    <string name="pref_show_bolus">Vis Bolus &amp; SMB</string>
+    <string name="pref_show_bolus">Vis bolus &amp; SMB</string>
     <string name="pref_show_grid">Vis rutenett</string>
     <string name="pref_dark" comment="Enables dark visual theme">Mørkt</string>
     <string name="pref_highlight_basals">Marker basaler</string>
@@ -56,7 +56,7 @@
     <string name="pref_5_min">5 min</string>
     <string name="pref_10_min">10 min</string>
     <string name="pref_15_min">15 min</string>
-    <string name="pref_input_design">Innlesing design</string>
+    <string name="pref_input_design">Inndatadesign</string>
     <string name="pref_default">Standard</string>
     <string name="pref_quick_righty">Raskt høyre</string>
     <string name="pref_quick_lefty">Raskt venstre</string>
@@ -217,6 +217,7 @@
     <string name="complication_full_status_flipped">Full status (omvendt)</string>
     <string name="complication_blood_glucose">Blodsukker</string>
     <string name="complication_br_cob_iob">BR, COB &amp; IOB</string>
+    <string name="complication_br_iob">BR &amp; IoB</string>
     <string name="complication_cob_iob">COB &amp; IOB</string>
     <string name="complication_cob_icon">COB-ikon</string>
     <string name="complication_cob_detailed">COB-detaljert</string>

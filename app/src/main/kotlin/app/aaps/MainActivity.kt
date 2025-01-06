@@ -100,6 +100,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     @Inject lateinit var iconsProvider: IconsProvider
     @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var signatureVerifierPlugin: SignatureVerifierPlugin
+    @Inject lateinit var maitenancePlugin: MaintenancePlugin
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var fileListProvider: FileListProvider
@@ -288,7 +289,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         }
         androidPermission.notifyForStoragePermission(this)
         androidPermission.notifyForBatteryOptimizationPermission(this)
-        if (!config.NSCLIENT) androidPermission.notifyForLocationPermissions(this)
+        if (!config.AAPSCLIENT) androidPermission.notifyForLocationPermissions(this)
         if (config.PUMPDRIVERS) {
             if (smsCommunicator.isEnabled())
                 androidPermission.notifyForSMSPermissions(this)
@@ -331,7 +332,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                 text = rh.gs(app.aaps.core.ui.R.string.aaps_directory_not_selected),
                 level = Notification.IMPORTANCE_HIGH,
                 buttonText = R.string.select,
-                action = { accessTree?.launch(null) },
+                action = { maitenancePlugin.selectAapsDirectory(this) },
                 validityCheck = { preferences.getIfExists(StringKey.AapsDirectoryUri).isNullOrEmpty() }
             )
     }
@@ -493,7 +494,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         val hashes: List<String> = signatureVerifierPlugin.shortHashes()
         if (hashes.isNotEmpty()) fabricPrivacy.setUserProperty("Hash", hashes[0])
         activePlugin.activePump.let { fabricPrivacy.setUserProperty("Pump", it::class.java.simpleName) }
-        if (!config.NSCLIENT && !config.PUMPCONTROL)
+        if (!config.AAPSCLIENT && !config.PUMPCONTROL)
             activePlugin.activeAPS.let { fabricPrivacy.setUserProperty("Aps", it::class.java.simpleName) }
         activePlugin.activeBgSource.let { fabricPrivacy.setUserProperty("BgSource", it::class.java.simpleName) }
         fabricPrivacy.setUserProperty("Profile", activePlugin.activeProfileSource.javaClass.simpleName)

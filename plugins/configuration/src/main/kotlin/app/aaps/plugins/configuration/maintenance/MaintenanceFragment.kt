@@ -172,8 +172,7 @@ class MaintenanceFragment : DaggerFragment() {
             }
         }
         binding.directory.setOnClickListener {
-            uel.log(Action.SELECT_DIRECTORY, Sources.Maintenance)
-            (requireActivity() as DaggerAppCompatActivityWithResult).accessTree?.launch(null)
+            maintenancePlugin.selectAapsDirectory(requireActivity() as DaggerAppCompatActivityWithResult)
         }
         binding.navLogsettings.setOnClickListener { startActivity(Intent(activity, LogSettingActivity::class.java)) }
         binding.exportCsv.setOnClickListener {

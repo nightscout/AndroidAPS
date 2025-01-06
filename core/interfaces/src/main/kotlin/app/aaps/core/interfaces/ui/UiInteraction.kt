@@ -93,7 +93,7 @@ interface UiInteraction {
     fun addNotificationWithSound(id: Int, text: String, level: Int, @RawRes soundId: Int?)
     fun addNotificationValidTo(id: Int, date: Long, text: String, level: Int, validTo: Long)
     fun addNotificationWithAction(nsAlarm: NSAlarm)
-    fun addNotificationWithAction(id: Int, text: String, level: Int, @StringRes buttonText: Int, action: Runnable, validityCheck: (() -> Boolean)?, @RawRes soundId: Int? = null, date: Long = System.currentTimeMillis())
+    fun addNotificationWithAction(id: Int, text: String, level: Int, @StringRes buttonText: Int, action: Runnable, validityCheck: (() -> Boolean)?, @RawRes soundId: Int? = null, date: Long = System.currentTimeMillis(), validTo: Long = 0)
 
     /**
      * Add notification that shows dialog after clicking button

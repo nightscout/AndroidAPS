@@ -65,6 +65,7 @@
     <string name="omnipod_common_overview_reservoir_value">liko %1$.2f v</string>
     <string name="omnipod_common_overview_reservoir_value_over50">Liko daugiau nei 50 v</string>
     <string name="omnipod_common_overview_errors">Klaidos</string>
+    <string name="omnipod_common_uncertain">nepatvirtinta</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_cancel">Atšaukti</string>
     <string name="omnipod_common_wizard_button_finish">Užbaigti</string>
@@ -123,6 +124,7 @@
     <string name="omnipod_common_pod_status_waiting_for_activation">Nustatoma (laukiama Pod aktyvavimo)</string>
     <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">Nustatoma (laukiama kaniulės įvedimo)</string>
     <string name="omnipod_common_pod_status_running">Vykdoma</string>
+    <string name="omnipod_common_pod_status_normal">Normalus</string>
     <string name="omnipod_common_pod_status_suspended">Sustabdyta</string>
     <string name="omnipod_common_pod_status_pod_fault">Pod klaida</string>
     <string name="omnipod_common_pod_status_inactive">Neaktyvus</string>
@@ -162,7 +164,6 @@
     <!-- Omnipod - Short status -->
     <string name="omnipod_common_short_status_no_active_pod">Nėra aktyvaus Pod</string>
     <string name="omnipod_common_short_status_last_connection">Pask. prijung: prieš %1$d min</string>
-    <string name="omnipod_common_short_status_last_bolus">PaskBolusas: %1$s @ %2$s</string>
     <string name="omnipod_common_short_status_temp_basal">Laik.bazė: %1$s</string>
     <string name="omnipod_common_short_status_extended_bolus">Ištęstas: %1$s</string>
     <string name="omnipod_common_short_status_reservoir">Rezerv: %1$svv</string>
@@ -172,6 +173,7 @@
     <string name="omnipod_common_ok">OK</string>
     <string name="omnipod_common_cancel">Atšaukti</string>
     <string name="omnipod_common_warning">Perspėjimas</string>
+    <string name="omnipod_common_disable_suspend_alerts">IŠJUNGTI SUSTABDYMO ĮSPĖJIMUS</string>
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">Neseniai</string>
     <string name="omnipod_common_less_than_a_minute_ago">Mažiau nei prieš minutę</string>

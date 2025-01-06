@@ -124,10 +124,9 @@ class DetermineBasalResult @Inject constructor(val injector: HasAndroidInjector)
             // rate
             var ret: String = if (rate == 0.0 && duration == 0) "${rh.gs(R.string.cancel_temp)} "
             else if (rate == -1.0) "${rh.gs(R.string.let_temp_basal_run)}\n"
-            else if (usePercent) "${rh.gs(R.string.rate)}: ${decimalFormatter.to2Decimal(percent.toDouble())}% (${decimalFormatter.to2Decimal(percent * pump.baseBasalRate / 100.0)} U/h) " +
-                "${rh.gs(R.string.duration)}: ${decimalFormatter.to2Decimal(duration.toDouble())} min "
-            else "${rh.gs(R.string.rate)}: ${decimalFormatter.to2Decimal(rate)} U/h (${decimalFormatter.to2Decimal(rate / pump.baseBasalRate * 100)}%) " +
-                "${rh.gs(R.string.duration)}: ${decimalFormatter.to2Decimal(duration.toDouble())} min "
+            else if (usePercent) "${rh.gs(R.string.percent_rate_duration, percent.toDouble(), percent * pump.baseBasalRate / 100.0, duration)} "
+            else "${rh.gs(R.string.rate_percent_duration, rate, rate / pump.baseBasalRate * 100.0, duration)} "
+
             // smb
             if (smb != 0.0) ret += "SMB: ${decimalFormatter.toPumpSupportedBolus(smb, activePlugin.activePump.pumpDescription.bolusStep)} "
             if (isCarbsRequired) {
@@ -150,12 +149,8 @@ class DetermineBasalResult @Inject constructor(val injector: HasAndroidInjector)
             var ret: String =
                 if (rate == 0.0 && duration == 0) rh.gs(R.string.cancel_temp) + "<br>"
                 else if (rate == -1.0) rh.gs(R.string.let_temp_basal_run) + "<br>"
-                else if (usePercent) "<b>" + rh.gs(R.string.rate) + "</b>: " + decimalFormatter.to2Decimal(percent.toDouble()) + "% " +
-                    "(" + decimalFormatter.to2Decimal(percent * pump.baseBasalRate / 100.0) + " U/h)<br>" +
-                    "<b>" + rh.gs(R.string.duration) + "</b>: " + decimalFormatter.to2Decimal(duration.toDouble()) + " min<br>"
-                else "<b>" + rh.gs(R.string.rate) + "</b>: " + decimalFormatter.to2Decimal(rate) + " U/h " +
-                    "(" + decimalFormatter.to2Decimal(rate / pump.baseBasalRate * 100.0) + "%) <br>" +
-                    "<b>" + rh.gs(R.string.duration) + "</b>: " + decimalFormatter.to2Decimal(duration.toDouble()) + " min<br>"
+                else if (usePercent) rh.gs(R.string.percent_rate_duration_formatted, percent.toDouble(), percent * pump.baseBasalRate / 100.0, duration)
+                else rh.gs(R.string.rate_percent_duration_formatted, rate, rate / pump.baseBasalRate * 100.0, duration)
 
             // smb
             if (smb != 0.0) ret += "<b>" + "SMB" + "</b>: " + decimalFormatter.toPumpSupportedBolus(smb, activePlugin.activePump.pumpDescription.bolusStep) + "<br>"

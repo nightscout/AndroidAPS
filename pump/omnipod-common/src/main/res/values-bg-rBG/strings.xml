@@ -158,7 +158,6 @@
     <!-- Omnipod - Short status -->
     <string name="omnipod_common_short_status_no_active_pod">Няма активен под</string>
     <string name="omnipod_common_short_status_last_connection">Последно свързване: преди %1$d минути</string>
-    <string name="omnipod_common_short_status_last_bolus">Болус: %1$s @ %2$s</string>
     <string name="omnipod_common_short_status_temp_basal">Врем базал: %1$s</string>
     <string name="omnipod_common_short_status_extended_bolus">Удължен: %1$s</string>
     <string name="omnipod_common_short_status_reservoir">Рез.: %1$sU</string>

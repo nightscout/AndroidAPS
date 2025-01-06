@@ -217,6 +217,7 @@
     <string name="complication_full_status_flipped">完整狀態（翻轉）</string>
     <string name="complication_blood_glucose">血糖</string>
     <string name="complication_br_cob_iob">BR、CoB及IoB</string>
+    <string name="complication_br_iob">BR &amp; IoB</string>
     <string name="complication_cob_iob">BR、CoB及IoB</string>
     <string name="complication_cob_icon">CoB圖示</string>
     <string name="complication_cob_detailed">CoB 詳細</string>

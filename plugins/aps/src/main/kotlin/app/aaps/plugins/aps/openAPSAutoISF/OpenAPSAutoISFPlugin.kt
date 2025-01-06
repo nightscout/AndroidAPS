@@ -207,8 +207,12 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
     }
 
     override fun specialShowInListCondition(): Boolean {
-        val pump = activePlugin.activePump
-        return pump.pumpDescription.isTempBasalCapable
+        try {
+            val pump = activePlugin.activePump
+            return pump.pumpDescription.isTempBasalCapable
+        } catch (_: Exception) {
+            return true
+        }
     }
 
     override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {

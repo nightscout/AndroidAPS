@@ -86,13 +86,13 @@ class NSDeviceStatusHandler @Inject constructor(
         var configurationDetected = false
         for (i in deviceStatuses.size - 1 downTo 0) {
             val nsDeviceStatus = deviceStatuses[i]
-            if (config.NSCLIENT) {
+            if (config.AAPSCLIENT) {
                 updatePumpData(nsDeviceStatus)
                 updateDeviceData(nsDeviceStatus)
                 updateOpenApsData(nsDeviceStatus)
                 updateUploaderData(nsDeviceStatus)
             }
-            if (config.NSCLIENT && !configurationDetected)
+            if (config.AAPSCLIENT && !configurationDetected)
                 nsDeviceStatus.configuration?.let {
                     // copy configuration of Insulin and Sensitivity from main AAPS
                     runningConfiguration.apply(it)

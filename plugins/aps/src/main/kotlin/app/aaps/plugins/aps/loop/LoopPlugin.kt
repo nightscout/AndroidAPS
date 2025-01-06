@@ -314,7 +314,7 @@ class LoopPlugin @Inject constructor(
                 lastRun.lastTBRRequest = 0
                 lastRun.lastSMBEnact = 0
                 lastRun.lastSMBRequest = 0
-                buildAndStoreDeviceStatus()
+                scheduleBuildAndStoreDeviceStatus("APS result")
 
                 if (isSuspended) {
                     aapsLogger.debug(LTag.APS, rh.gs(app.aaps.core.ui.R.string.loopsuspended))
@@ -394,7 +394,7 @@ class LoopPlugin @Inject constructor(
                                 //only send to wear if Native notifications are turned off
                                 if (!sp.getBoolean(app.aaps.core.ui.R.string.key_raise_notifications_as_android_notifications, true)) {
                                     // Send to Wear
-                                    sendToWear()
+                                    sendToWear(resultAfterConstraints.carbsRequiredText)
                                 }
                             }
                         } else {
@@ -427,20 +427,25 @@ class LoopPlugin @Inject constructor(
                                     // executing TBR may take some time thus give more time to SMB
                                     resultAfterConstraints.deliverAt = lastRun.lastTBREnact
                                     rxBus.send(EventLoopUpdateGui())
-                                    applySMBRequest(resultAfterConstraints, object : Callback() {
-                                        override fun run() {
-                                            // Callback is only called if a bolus was actually requested
-                                            if (result.enacted || result.success) {
-                                                lastRun.smbSetByPump = result
-                                                lastRun.lastSMBRequest = lastRun.lastAPSRun
-                                                lastRun.lastSMBEnact = dateUtil.now()
-                                            } else {
-                                                handler?.postDelayed({ invoke("tempBasalFallback", allowNotification, true) }, 1000)
+                                    if (resultAfterConstraints.isBolusRequested)
+                                        applySMBRequest(resultAfterConstraints, object : Callback() {
+                                            override fun run() {
+                                                // Callback is only called if a bolus was actually requested
+                                                if (result.enacted || result.success) {
+                                                    lastRun.smbSetByPump = result
+                                                    lastRun.lastSMBRequest = lastRun.lastAPSRun
+                                                    lastRun.lastSMBEnact = dateUtil.now()
+                                                    scheduleBuildAndStoreDeviceStatus("applySMBRequest")
+                                                } else {
+                                                    handler?.postDelayed({ invoke("tempBasalFallback", allowNotification, true) }, 1000)
+                                                }
+                                                rxBus.send(EventLoopUpdateGui())
                                             }
-                                            rxBus.send(EventLoopUpdateGui())
-                                        }
-                                    })
-                                    buildAndStoreDeviceStatus()
+                                        })
+                                    else {
+                                        aapsLogger.debug(LTag.APS, "No SMB requested")
+                                        scheduleBuildAndStoreDeviceStatus("applyTBRRequest")
+                                    }
                                 } else {
                                     lastRun.tbrSetByPump = result
                                     lastRun.lastTBRRequest = lastRun.lastAPSRun
@@ -465,7 +470,7 @@ class LoopPlugin @Inject constructor(
                         if (preferences.get(BooleanKey.WearControl)) {
                             builder.setLocalOnly(true)
                         }
-                        presentSuggestion(builder)
+                        presentSuggestion(builder, resultAfterConstraints.resultAsString())
                     } else if (allowNotification) {
                         dismissSuggestion()
                     }
@@ -482,7 +487,7 @@ class LoopPlugin @Inject constructor(
         dismissSuggestion()
     }
 
-    private fun presentSuggestion(builder: NotificationCompat.Builder) {
+    private fun presentSuggestion(builder: NotificationCompat.Builder, contentText: String) {
         // Creates an explicit intent for an Activity in your app
         val resultIntent = Intent(context, uiInteraction.mainActivity)
 
@@ -503,7 +508,7 @@ class LoopPlugin @Inject constructor(
         rxBus.send(EventNewOpenLoopNotification())
 
         // Send to Wear
-        sendToWear()
+        sendToWear(contentText)
     }
 
     private fun dismissSuggestion() {
@@ -513,13 +518,13 @@ class LoopPlugin @Inject constructor(
         rxBus.send(EventMobileToWear(EventData.CancelNotification(dateUtil.now())))
     }
 
-    private fun sendToWear() {
+    private fun sendToWear(contentText: String) {
         lastRun?.let {
             rxBus.send(
                 EventMobileToWear(
                     EventData.OpenLoopRequest(
                         rh.gs(R.string.open_loop_new_suggestion),
-                        it.constraintsProcessed.toString(),
+                        contentText,
                         EventData.OpenLoopRequestConfirmed(dateUtil.now())
                     )
                 )
@@ -538,7 +543,7 @@ class LoopPlugin @Inject constructor(
                             lastRun.lastTBRRequest = lastRun.lastAPSRun
                             lastRun.lastTBREnact = dateUtil.now()
                             lastRun.lastOpenModeAccept = dateUtil.now()
-                            buildAndStoreDeviceStatus()
+                            scheduleBuildAndStoreDeviceStatus("acceptChangeRequest")
                             sp.incInt(app.aaps.core.utils.R.string.key_ObjectivesmanualEnacts)
                         }
                         rxBus.send(EventAcceptOpenLoopChange())
@@ -650,10 +655,6 @@ class LoopPlugin @Inject constructor(
     }
 
     private fun applySMBRequest(request: APSResult, callback: Callback?) {
-        if (!request.isBolusRequested) {
-            aapsLogger.debug(LTag.APS, "No SMB requested")
-            return
-        }
         val pump = activePlugin.activePump
         val lastBolusTime = persistenceLayer.getNewestBolus()?.timestamp ?: 0L
         if (lastBolusTime != 0L && lastBolusTime + T.mins(preferences.get(IntKey.ApsMaxSmbFrequency).toLong()).msecs() > dateUtil.now()) {
@@ -752,7 +753,23 @@ class LoopPlugin @Inject constructor(
         })
     }
 
-    override fun buildAndStoreDeviceStatus() {
+    var task: Runnable? = null
+
+    override fun scheduleBuildAndStoreDeviceStatus(reason: String) {
+        class UpdateRunnable : Runnable {
+
+            override fun run() {
+                buildAndStoreDeviceStatus(reason)
+                task = null
+            }
+        }
+        task?.let { handler?.removeCallbacks(it) }
+        task = UpdateRunnable()
+        task?.let { handler?.postDelayed(it, 5000) }
+    }
+
+    fun buildAndStoreDeviceStatus(reason: String) {
+        aapsLogger.debug(LTag.NSCLIENT, "Building DeviceStatus for $reason")
         val version = config.VERSION_NAME + "-" + config.BUILD_VERSION
         val profile = profileFunction.getProfile() ?: return
         val profileName = profileFunction.getProfileName()

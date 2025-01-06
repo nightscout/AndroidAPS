@@ -167,10 +167,15 @@ class UiInteractionImpl @Inject constructor(
     }
 
     override fun runBolusProgressDialog(fragmentManager: FragmentManager, insulin: Double, id: Long) {
-        BolusProgressDialog().also {
-            it.setInsulin(insulin)
-            it.setId(id)
-            it.show(fragmentManager, "BolusProgress")
+        // Activity may be destroyed before Dialog pop up so try/catch
+        try {
+            BolusProgressDialog().also {
+                it.setInsulin(insulin)
+                it.setId(id)
+                it.show(fragmentManager, "BolusProgress")
+            }
+        } catch (_: Exception) {
+            // do nothing
         }
     }
 
@@ -198,7 +203,7 @@ class UiInteractionImpl @Inject constructor(
         rxBus.send(EventNewNotification(NotificationWithAction(injector, nsAlarm)))
     }
 
-    override fun addNotificationWithAction(id: Int, text: String, level: Int, buttonText: Int, action: Runnable, validityCheck: (() -> Boolean)?, @RawRes soundId: Int?, date: Long) {
+    override fun addNotificationWithAction(id: Int, text: String, level: Int, buttonText: Int, action: Runnable, validityCheck: (() -> Boolean)?, @RawRes soundId: Int?, date: Long, validTo: Long) {
         rxBus.send(
             EventNewNotification(
                 NotificationWithAction(injector = injector, id = id, text = text, level = level, validityCheck = validityCheck)

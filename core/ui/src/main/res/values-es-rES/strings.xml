@@ -586,4 +586,8 @@
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1f U</string>
     <string name="format_insulin_units">%1$.2f U</string>
+    <string name="percent_rate_duration">Ratio: %1$.2f%% (%2$.2f U/h) Duración: %3$d min</string>
+    <string name="rate_percent_duration">Ratio: %1$.2f U/h (%2$.2f%%) Duración: %3$d min</string>
+    <string name="percent_rate_duration_formatted"><![CDATA[<b>Ratio</b>: %1$.2f%% (%2$.2f U/h)<br><b>Duración</b>: %3$d min<br>]]></string>
+    <string name="rate_percent_duration_formatted"><![CDATA[<b>Ratio</b>: %1$.2f U/h (%2$.2f%%) <br><b>Duración</b>: %3$d min<br>]]></string>
 </resources>

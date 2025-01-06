@@ -56,7 +56,7 @@ class DexcomPlugin @Inject constructor(
 ), BgSource, DexcomBoyda {
 
     init {
-        if (!config.NSCLIENT) {
+        if (!config.AAPSCLIENT) {
             pluginDescription.setDefault()
         }
     }

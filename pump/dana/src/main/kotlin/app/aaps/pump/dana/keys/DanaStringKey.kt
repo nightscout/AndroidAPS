@@ -12,7 +12,9 @@ enum class DanaStringKey(
     override val showInPumpControlMode: Boolean = true,
     override val dependency: BooleanPreferenceKey? = null,
     override val negativeDependency: BooleanPreferenceKey? = null,
-    override val hideParentScreenIfHidden: Boolean = false
+    override val hideParentScreenIfHidden: Boolean = false,
+    override val isPassword: Boolean = false,
+    override val isPin: Boolean = false
 ) : StringPreferenceKey {
 
     DanaRName("danar_bt_name", ""),

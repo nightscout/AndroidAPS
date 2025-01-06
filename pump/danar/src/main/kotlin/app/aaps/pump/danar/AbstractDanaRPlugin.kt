@@ -433,10 +433,10 @@ abstract class AbstractDanaRPlugin protected constructor(
         }
         val (temporaryBasal, extendedBolus) = pumpSync.expectedPumpState()
         if (temporaryBasal != null) {
-            ret += "Temp: ${temporaryBasal.toStringFull(dateUtil, decimalFormatter)}\n"
+            ret += "Temp: ${temporaryBasal.toStringFull(dateUtil, rh)}\n"
         }
         if (extendedBolus != null) {
-            ret += "Extended: ${extendedBolus.toStringFull(dateUtil, decimalFormatter)}\n"
+            ret += "Extended: ${extendedBolus.toStringFull(dateUtil, rh)}\n"
         }
         if (!veryShort) {
             ret += "TDD: ${decimalFormatter.to0Decimal(danaPump.dailyTotalUnits)} / ${danaPump.maxDailyTotalUnits} U\n"

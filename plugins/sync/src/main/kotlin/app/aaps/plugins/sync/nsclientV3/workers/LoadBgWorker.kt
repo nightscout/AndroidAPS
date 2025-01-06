@@ -35,7 +35,7 @@ class LoadBgWorker(
     @Inject lateinit var storeDataForDb: StoreDataForDb
 
     override suspend fun doWorkAndLog(): Result {
-        if (!nsClientSource.isEnabled() && !preferences.get(BooleanKey.NsClientAcceptCgmData))
+        if (!nsClientSource.isEnabled() && !preferences.get(BooleanKey.NsClientAcceptCgmData) && !nsClientV3Plugin.doingFullSync)
             return Result.success(workDataOf("Result" to "Load not enabled"))
 
         val nsAndroidClient = nsClientV3Plugin.nsAndroidClient ?: return Result.failure(workDataOf("Error" to "AndroidClient is null"))
@@ -63,7 +63,7 @@ class LoadBgWorker(
                         val action = if (isFirstLoad) "RCV-F" else "RCV"
                         rxBus.send(EventNSClientNewLog("◄ $action", "${sgvs.size} SVGs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
                         // Schedule processing of fetched data and continue of loading
-                        continueLoading = response.code != 304 && nsIncomingDataProcessor.processSgvs(sgvs)
+                        continueLoading = response.code != 304 && nsIncomingDataProcessor.processSgvs(sgvs, nsClientV3Plugin.doingFullSync)
                     } else {
                         // End first load
                         if (isFirstLoad) {

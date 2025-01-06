@@ -299,4 +299,7 @@
     <color name="toastWarn">#FF8C00</color>
     <color name="toastInfo">#03A9F4</color>
 
+    <!--    Automations-->
+    <color name="actionColor">#FF8B00</color>
+
 </resources>

@@ -109,7 +109,7 @@ class CompatDbHelperTest @Inject constructor() {
         val now = dateUtil.now()
 
         // Set Profile in ProfilePlugin
-        nsIncomingDataProcessor.processProfile(JSONObject(profileData))
+        nsIncomingDataProcessor.processProfile(JSONObject(profileData), false)
         assertThat(activePlugin.activeProfileSource.profile).isNotNull()
 
         // Create a profile switch

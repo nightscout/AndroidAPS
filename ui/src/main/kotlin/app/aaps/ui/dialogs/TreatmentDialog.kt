@@ -104,7 +104,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (config.NSCLIENT) {
+        if (config.AAPSCLIENT) {
             binding.recordOnly.isChecked = true
             binding.recordOnly.isEnabled = false
         }

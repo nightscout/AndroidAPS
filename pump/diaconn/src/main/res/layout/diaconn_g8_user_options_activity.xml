@@ -117,18 +117,21 @@
 
                 <RadioButton
                     android:id="@+id/pumpscreentimeout_10"
+                    style="@style/Widget.App.RadioButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/diaconn_g8_pumpscreentimeout_10" />
 
                 <RadioButton
                     android:id="@+id/pumpscreentimeout_20"
+                    style="@style/Widget.App.RadioButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/diaconn_g8_pumpscreentimeout_20" />
 
                 <RadioButton
                     android:id="@+id/pumpscreentimeout_30"
+                    style="@style/Widget.App.RadioButton"
                     android:layout_width="171dp"
                     android:layout_height="wrap_content"
                     android:text="@string/diaconn_g8_pumpscreentimeout_30" />
@@ -193,18 +196,21 @@
 
                 <RadioButton
                     android:id="@+id/pumplang_english"
+                    style="@style/Widget.App.RadioButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/diaconn_g8_pumplang_english" />
 
                 <RadioButton
                     android:id="@+id/pumplang_korean"
+                    style="@style/Widget.App.RadioButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/diaconn_g8_pumplang_korean" />
 
                 <RadioButton
                     android:id="@+id/pumplang_chiness"
+                    style="@style/Widget.App.RadioButton"
                     android:layout_width="106dp"
                     android:layout_height="wrap_content"
                     android:text="@string/diaconn_g8_pumplang_chiness" />

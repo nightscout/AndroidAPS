@@ -39,7 +39,7 @@ class ActionStartTempTargetTest : ActionsTestBase() {
     }
 
     @Test fun iconTest() {
-        assertThat(sut.icon()).isEqualTo(app.aaps.core.objects.R.drawable.ic_temptarget_high)
+        assertThat(sut.icon()).isEqualTo(app.aaps.core.objects.R.drawable.ic_temptarget_high_24dp)
     }
 
     @Test fun doActionTest() {

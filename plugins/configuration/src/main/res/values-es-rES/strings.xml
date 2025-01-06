@@ -81,6 +81,8 @@
     <string name="allow_hardware_pump_text">Atención: Si activas y conectas una bomba con AAPS, AAPS copiará la configuración basal del perfil a la bomba, sobreescribiendo el perfil basal previo que tuviera almacenado la bomba. Asegúrate de que la configuración del perfil basal en AAPS es correcto. Si no estás seguro o no quieres sobreescribir la configuración del perfil basal de tu bomba, presiona cancelar y vincula la bomba más adelante.</string>
     <string name="a11y_open_settings">abrir ajustes</string>
     <string name="nsclient_version_does_not_match">La versión de AAPSClient no coincide con la versión de AAPS. Por favor, actualízala.</string>
+    <string name="expand_category">Expandir categoría</string>
+    <string name="collapse_category">Contraer categoría</string>
     <!--ImportExport-->
     <string name="nav_preferences">Preferencias</string>
     <string name="password_preferences_encrypt_prompt">Se le solicitará la contraseña maestra, que se utilizará para cifrar los ajustes exportados</string>
