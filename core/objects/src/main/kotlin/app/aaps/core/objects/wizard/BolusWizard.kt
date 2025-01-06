@@ -370,7 +370,7 @@ class BolusWizard @Inject constructor(
                 rh.gs(app.aaps.core.ui.R.string.bolus_constraint_applied_warn, calculatedTotalInsulin, insulinAfterConstraints)
                     .formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor)
             )
-        if (config.NSCLIENT && insulinAfterConstraints > 0)
+        if (config.AAPSCLIENT && insulinAfterConstraints > 0)
             actions.add(rh.gs(app.aaps.core.ui.R.string.bolus_recorded_only).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
         if (useAlarm && !advisor && carbs > 0 && carbTime > 0)
             actions.add(rh.gs(app.aaps.core.ui.R.string.alarminxmin, carbTime).formatColor(context, rh, app.aaps.core.ui.R.attr.infoColor))

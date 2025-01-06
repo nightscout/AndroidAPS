@@ -147,15 +147,15 @@ class NsIncomingDataProcessor @Inject constructor(
 
                 when (treatment) {
                     is NSBolus                  ->
-                        if (preferences.get(BooleanKey.NsClientAcceptInsulin) || config.NSCLIENT || doFullSync)
+                        if (preferences.get(BooleanKey.NsClientAcceptInsulin) || config.AAPSCLIENT || doFullSync)
                             storeDataForDb.addToBoluses(treatment.toBolus())
 
                     is NSCarbs                  ->
-                        if (preferences.get(BooleanKey.NsClientAcceptCarbs) || config.NSCLIENT || doFullSync)
+                        if (preferences.get(BooleanKey.NsClientAcceptCarbs) || config.AAPSCLIENT || doFullSync)
                             storeDataForDb.addToCarbs(treatment.toCarbs())
 
                     is NSTemporaryTarget        ->
-                        if (preferences.get(BooleanKey.NsClientAcceptTempTarget) || config.NSCLIENT || doFullSync) {
+                        if (preferences.get(BooleanKey.NsClientAcceptTempTarget) || config.AAPSCLIENT || doFullSync) {
                             if (treatment.duration > 0L) {
                                 // not ending event
                                 if (treatment.targetBottomAsMgdl() < Constants.MIN_TT_MGDL
@@ -172,18 +172,18 @@ class NsIncomingDataProcessor @Inject constructor(
                         }
 
                     is NSTemporaryBasal         ->
-                        if (preferences.get(BooleanKey.NsClientAcceptTbrEb) || config.NSCLIENT || doFullSync)
+                        if (preferences.get(BooleanKey.NsClientAcceptTbrEb) || config.AAPSCLIENT || doFullSync)
                             storeDataForDb.addToTemporaryBasals(treatment.toTemporaryBasal())
 
                     is NSEffectiveProfileSwitch ->
-                        if (preferences.get(BooleanKey.NsClientAcceptProfileSwitch) || config.NSCLIENT || doFullSync) {
+                        if (preferences.get(BooleanKey.NsClientAcceptProfileSwitch) || config.AAPSCLIENT || doFullSync) {
                             treatment.toEffectiveProfileSwitch(dateUtil)?.let { effectiveProfileSwitch ->
                                 storeDataForDb.addToEffectiveProfileSwitches(effectiveProfileSwitch)
                             }
                         }
 
                     is NSProfileSwitch          ->
-                        if (preferences.get(BooleanKey.NsClientAcceptProfileSwitch) || config.NSCLIENT || doFullSync) {
+                        if (preferences.get(BooleanKey.NsClientAcceptProfileSwitch) || config.AAPSCLIENT || doFullSync) {
                             treatment.toProfileSwitch(activePlugin, dateUtil)?.let { profileSwitch ->
                                 storeDataForDb.addToProfileSwitches(profileSwitch)
                             }
@@ -195,19 +195,19 @@ class NsIncomingDataProcessor @Inject constructor(
                         }
 
                     is NSTherapyEvent           ->
-                        if (preferences.get(BooleanKey.NsClientAcceptTherapyEvent) || config.NSCLIENT || doFullSync)
+                        if (preferences.get(BooleanKey.NsClientAcceptTherapyEvent) || config.AAPSCLIENT || doFullSync)
                             treatment.toTherapyEvent().let { therapyEvent ->
                                 storeDataForDb.addToTherapyEvents(therapyEvent)
                             }
 
                     is NSOfflineEvent           ->
-                        if (preferences.get(BooleanKey.NsClientAcceptOfflineEvent) && config.isEngineeringMode() || config.NSCLIENT || doFullSync)
+                        if (preferences.get(BooleanKey.NsClientAcceptOfflineEvent) && config.isEngineeringMode() || config.AAPSCLIENT || doFullSync)
                             treatment.toOfflineEvent().let { offlineEvent ->
                                 storeDataForDb.addToOfflineEvents(offlineEvent)
                             }
 
                     is NSExtendedBolus          ->
-                        if (preferences.get(BooleanKey.NsClientAcceptTbrEb) || config.NSCLIENT || doFullSync)
+                        if (preferences.get(BooleanKey.NsClientAcceptTbrEb) || config.AAPSCLIENT || doFullSync)
                             treatment.toExtendedBolus().let { extendedBolus ->
                                 storeDataForDb.addToExtendedBoluses(extendedBolus)
                             }
@@ -264,7 +264,7 @@ class NsIncomingDataProcessor @Inject constructor(
     }
 
     fun processProfile(profileJson: JSONObject, doFullSync: Boolean) {
-        if (preferences.get(BooleanKey.NsClientAcceptProfileStore) || config.NSCLIENT || doFullSync) {
+        if (preferences.get(BooleanKey.NsClientAcceptProfileStore) || config.AAPSCLIENT || doFullSync) {
             val store = instantiator.provideProfileStore(profileJson)
             val createdAt = store.getStartDate()
             val lastLocalChange = sp.getLong(app.aaps.core.utils.R.string.key_local_profile_last_change, 0)

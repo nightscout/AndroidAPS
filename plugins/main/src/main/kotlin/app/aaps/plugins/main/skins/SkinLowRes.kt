@@ -36,7 +36,7 @@ class SkinLowRes @Inject constructor(private val config: Config) : SkinInterface
     }
 
     override fun preProcessLandscapeOverviewLayout(binding: OverviewFragmentBinding, isLandscape: Boolean, isTablet: Boolean, isSmallHeight: Boolean) {
-        if (!config.NSCLIENT && isLandscape) moveButtonsLayout(binding.root)
+        if (!config.AAPSCLIENT && isLandscape) moveButtonsLayout(binding.root)
 
         binding.apply {
             infoCard.elevation = 0F

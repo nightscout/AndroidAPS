@@ -313,7 +313,7 @@ class NSClientV3Plugin @Inject constructor(
             handler?.post { executeLoop("REFRESH TOKEN", forceNew = true) }
             return
         }
-        if (config.NSCLIENT || nsClientSource.isEnabled()) {
+        if (config.AAPSCLIENT || nsClientSource.isEnabled()) {
             var origin = "5_MIN_AFTER_BG"
             var forceNew = true
             var toTime = lastLoadedSrvModified.collections.entries + T.mins(5).plus(T.secs(10)).msecs()

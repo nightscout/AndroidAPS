@@ -38,7 +38,7 @@ open class WearDataReceiver : DaggerBroadcastReceiver() {
                 }
                 // Check for allowed configuration
                 if (
-                    config.NSCLIENT1 && client == 2 ||
+                    config.AAPSCLIENT1 && client == 2 ||
                     (config.APS || config.PUMPCONTROL) && (client == 1 || client == 2)
                 ) {
                     // Send to phone

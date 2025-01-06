@@ -156,7 +156,7 @@ class NSSettingsStatusImpl @Inject constructor(
         }
         data = status
         aapsLogger.debug(LTag.NSCLIENT, "Received status: $status")
-        if (config.NSCLIENT) copyStatusLightsNsSettings(null)
+        if (config.AAPSCLIENT) copyStatusLightsNsSettings(null)
     }
 
     override fun getVersion(): String =

@@ -27,7 +27,7 @@ class NSClientMbgWorker(
     override suspend fun doWorkAndLog(): Result {
         val ret = Result.success()
 
-        val acceptNSData = preferences.get(BooleanKey.NsClientAcceptTherapyEvent) || config.NSCLIENT
+        val acceptNSData = preferences.get(BooleanKey.NsClientAcceptTherapyEvent) || config.AAPSCLIENT
         if (!acceptNSData) return Result.success(workDataOf("Result" to "Sync not enabled"))
 
         val mbgArray = dataWorkerStorage.pickupJSONArray(inputData.getLong(DataWorkerStorage.STORE_KEY, -1))

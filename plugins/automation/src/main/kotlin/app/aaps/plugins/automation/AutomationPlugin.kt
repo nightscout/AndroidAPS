@@ -146,7 +146,7 @@ class AutomationPlugin @Inject constructor(
         }
     }
 
-    override fun specialEnableCondition(): Boolean = !config.NSCLIENT
+    override fun specialEnableCondition(): Boolean = !config.AAPSCLIENT
 
     override fun onStart() {
         handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)

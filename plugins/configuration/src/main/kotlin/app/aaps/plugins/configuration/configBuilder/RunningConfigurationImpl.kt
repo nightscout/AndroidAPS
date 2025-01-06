@@ -80,7 +80,7 @@ class RunningConfigurationImpl @Inject constructor(
 
     // called in NSClient mode only
     override fun apply(configuration: NSDeviceStatus.Configuration) {
-        assert(config.NSCLIENT)
+        assert(config.AAPSCLIENT)
 
         configuration.version?.let {
             rxBus.send(EventNSClientNewLog("◄ VERSION", "Received AAPS version  $it"))
