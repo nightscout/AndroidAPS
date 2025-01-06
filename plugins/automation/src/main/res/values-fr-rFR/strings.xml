@@ -137,4 +137,8 @@
     <string name="autotune_run_with_autoswitch">Autotune exécuté et le profil automatiquement activé</string>
     <string name="autotune_run_with_error">Erreur lors de la dernière exécution d\'Autotune</string>
     <string name="autotune_run_cancelled">Une autre exécution d\'Autotune est détectée, l\'exécution est annulée</string>
+    <!--    Steps count-->
+    <string name="triggerStepsCountLabel">Compteur de pas</string>
+    <string name="triggerStepsCountDesc">Nombre de pas par %1$s minutes %2$s %3$.0f</string>
+    <string name="triggerStepsCountDropdownLabel">Durée de la mesure</string>
 </resources>

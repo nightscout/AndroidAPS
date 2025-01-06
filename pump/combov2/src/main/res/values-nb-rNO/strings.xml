@@ -107,7 +107,7 @@ knappene samtidig for å avbryte parringen)\n
     <string name="combov2_short_status_last_connection">Siste tilkobling: %1$d min siden</string>
     <string name="combov2_short_status_alert">Varsel: %s</string>
     <string name="combov2_short_status_last_bolus">LastBolus: %1$s E @ %2$s</string>
-    <string name="combov2_short_status_temp_basal">Temp: %s</string>
+    <string name="combov2_short_status_temp_basal">Midl. basal: %s</string>
     <string name="combov2_short_status_reservoir">Reservoar: %d E</string>
     <string name="combov2_short_status_battery_state_empty">tom</string>
     <string name="combov2_short_status_battery_state_low">lavt</string>
