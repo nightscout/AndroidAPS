@@ -5,6 +5,7 @@ import app.aaps.core.data.model.FD
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.IDs
 import app.aaps.core.data.model.SourceSensor
+import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
@@ -20,6 +21,7 @@ import app.aaps.core.interfaces.rx.events.EventDismissNotification
 import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.NSClientSource
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.Preferences
@@ -67,7 +69,8 @@ class NsIncomingDataProcessor @Inject constructor(
     private val storeDataForDb: StoreDataForDb,
     private val config: Config,
     private val instantiator: Instantiator,
-    private val profileSource: ProfileSource
+    private val profileSource: ProfileSource,
+    private val uiInteraction: UiInteraction
 ) {
 
     private fun toGv(jsonObject: JSONObject): GV? {
@@ -198,6 +201,19 @@ class NsIncomingDataProcessor @Inject constructor(
                         if (preferences.get(BooleanKey.NsClientAcceptTherapyEvent) || config.AAPSCLIENT || doFullSync)
                             treatment.toTherapyEvent().let { therapyEvent ->
                                 storeDataForDb.addToTherapyEvents(therapyEvent)
+                                if (therapyEvent.type ==  TE.Type.ANNOUNCEMENT &&
+                                    preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements) &&
+                                    therapyEvent.timestamp + T.mins(60).msecs() > dateUtil.now())
+                                    uiInteraction.addNotificationWithAction(
+                                        id = Notification.NS_ANNOUNCEMENT,
+                                        text = therapyEvent.note ?: "",
+                                        level = Notification.ANNOUNCEMENT,
+                                        buttonText = app.aaps.core.ui.R.string.snooze,
+                                        action = { },
+                                        validityCheck = null,
+                                        soundId = app.aaps.core.ui.R.raw.alarm,
+                                        validTo = dateUtil.now() + T.mins(60).msecs()
+                                    )
                             }
 
                     is NSOfflineEvent           ->

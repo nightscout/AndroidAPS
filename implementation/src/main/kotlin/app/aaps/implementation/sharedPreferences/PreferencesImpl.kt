@@ -55,9 +55,16 @@ class PreferencesImpl @Inject constructor(
             IntentKey::class.java,
         )
 
+    private fun isHidden(key: PreferenceKey) : Boolean =
+        if (apsMode && key.showInApsMode == false) true
+        else if (nsclientMode && key.showInNsClientMode == false) true
+        else if (pumpControlMode && key.showInPumpControlMode == false) true
+        else false
+
     override fun get(key: BooleanPreferenceKey): Boolean =
         if (!config.isEngineeringMode() && key.engineeringModeOnly) key.defaultValue
-        else if (simpleMode && key.defaultedBySM) key.defaultValue
+        else if (simpleMode && key.defaultedBySM) calculatedDefaultValue(key)
+        else if (key.calculatedDefaultValue && isHidden(key)) calculatedDefaultValue(key)
         else sp.getBoolean(key.key, calculatedDefaultValue(key))
 
     override fun getIfExists(key: BooleanPreferenceKey): Boolean? =
@@ -115,7 +122,7 @@ class PreferencesImpl @Inject constructor(
     override fun get(key: IntPreferenceKey): Int =
         if (!config.isEngineeringMode() && key.engineeringModeOnly) key.defaultValue
         else if (simpleMode && key.defaultedBySM) calculatedDefaultValue(key)
-        else if (key.engineeringModeOnly && !config.isEngineeringMode()) calculatedDefaultValue(key)
+        else if (key.calculatedDefaultValue && isHidden(key)) calculatedDefaultValue(key)
         else sp.getInt(key.key, calculatedDefaultValue(key))
 
     override fun getIfExists(key: IntPreferenceKey): Int? =
@@ -128,7 +135,7 @@ class PreferencesImpl @Inject constructor(
     override fun get(key: LongPreferenceKey): Long =
         if (!config.isEngineeringMode() && key.engineeringModeOnly) key.defaultValue
         else if (simpleMode && key.defaultedBySM) calculatedDefaultValue(key)
-        else if (key.engineeringModeOnly && !config.isEngineeringMode()) calculatedDefaultValue(key)
+        else if (key.calculatedDefaultValue && isHidden(key)) calculatedDefaultValue(key)
         else sp.getLong(key.key, calculatedDefaultValue(key))
 
     override fun getIfExists(key: LongPreferenceKey): Long? =
