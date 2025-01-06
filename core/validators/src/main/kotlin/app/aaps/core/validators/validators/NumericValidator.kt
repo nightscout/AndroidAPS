@@ -8,7 +8,7 @@ import android.widget.EditText
  *
  * @author Andrea Baccega <me></me>@andreabaccega.com>
  */
-class NumericValidator(_customErrorMessage: String?) : Validator(_customErrorMessage) {
+class NumericValidator(customErrorMessage: String?) : Validator(customErrorMessage) {
 
     override fun isValid(editText: EditText): Boolean {
         return TextUtils.isDigitsOnly(editText.text)

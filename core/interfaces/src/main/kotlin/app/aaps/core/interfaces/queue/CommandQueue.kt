@@ -7,6 +7,8 @@ import app.aaps.core.interfaces.pump.PumpSync
 
 interface CommandQueue {
 
+    var waitingForDisconnect: Boolean
+
     fun isRunning(type: Command.CommandType): Boolean
     fun pickup()
     fun clear()

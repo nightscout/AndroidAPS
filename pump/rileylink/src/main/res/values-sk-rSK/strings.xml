@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Nikdy nepripojené</string>
+    <string name="pump_status_sleeping">Spiaca</string>
+    <string name="pump_status_waking_up">Prebúdzanie</string>
+    <string name="pump_status_active">Aktívna</string>
+    <string name="pump_status_error_comm">Chyba komunikácie</string>
+    <string name="pump_status_timeout_comm">Uplynul časový limit komunikácie</string>
+    <string name="pump_status_pump_unreachable">Pumpa nedostupná</string>
+    <string name="pump_status_invalid_config">Neplatná konfigurácia</string>
     <!-- RL keys -->
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_button_scan_start">Vyhľadávanie</string>
@@ -62,8 +71,6 @@
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Pumpa Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
-    <string name="riley_link_common_yes">Áno</string>
-    <string name="riley_link_common_no">Nie</string>
     <!-- RileyLink - Preferences -->
     <string name="riley_link_show_battery_level">Zobraziť úroveň batérie reportovanú prostredníctvom OrangeLink/EmaLink/DiaLink</string>
     <string name="riley_link_show_battery_level_summary">NEPRACUJE s pôvodným RileyLinkom. Nemusí pracovať s inými alternatívami RileyLinku.</string>

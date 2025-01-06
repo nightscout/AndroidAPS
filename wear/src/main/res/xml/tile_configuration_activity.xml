@@ -6,27 +6,27 @@
         android:entries="@array/tile_action_names"
         android:entryValues="@array/tile_action_values"
         android:key="tile_action_1"
-        android:title="Action 1" />
+        android:title="@string/tile_action_1" />
 
     <ListPreference
         android:defaultValue="treatment"
         android:entries="@array/tile_action_names"
         android:entryValues="@array/tile_action_values"
         android:key="tile_action_2"
-        android:title="Action 2" />
+        android:title="@string/tile_action_2" />
 
     <ListPreference
         android:defaultValue="carbs"
         android:entries="@array/tile_action_names"
         android:entryValues="@array/tile_action_values"
         android:key="tile_action_3"
-        android:title="Action 3" />
+        android:title="@string/tile_action_3" />
 
     <ListPreference
         android:defaultValue="temp_target"
         android:entries="@array/tile_action_names"
         android:entryValues="@array/tile_action_values"
         android:key="tile_action_4"
-        android:title="Action 4" />
+        android:title="@string/tile_action_4" />
 
 </PreferenceScreen>

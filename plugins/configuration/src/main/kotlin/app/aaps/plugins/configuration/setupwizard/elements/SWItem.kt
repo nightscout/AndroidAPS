@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventSWUpdate
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.Preferences
 import dagger.android.HasAndroidInjector
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledFuture
@@ -26,6 +27,7 @@ open class SWItem(val injector: HasAndroidInjector, var type: Type) {
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var passwordCheck: PasswordCheck
 
     private val eventWorker = Executors.newSingleThreadScheduledExecutor()
@@ -44,7 +46,7 @@ open class SWItem(val injector: HasAndroidInjector, var type: Type) {
 
     var label: Int? = null
     var comment: Int? = null
-    var preferenceId = 0
+    var preference = "UNKNOWN"
 
     open fun label(@StringRes label: Int): SWItem {
         this.label = label
@@ -56,8 +58,8 @@ open class SWItem(val injector: HasAndroidInjector, var type: Type) {
         return this
     }
 
-    open fun save(value: String, updateDelay: Long) {
-        sp.putString(preferenceId, value)
+    open fun save(value: CharSequence, updateDelay: Long) {
+        sp.putString(preference, value.toString())
         scheduleChange(updateDelay)
     }
 
@@ -75,7 +77,7 @@ open class SWItem(val injector: HasAndroidInjector, var type: Type) {
 
             override fun run() {
                 aapsLogger.debug(LTag.CORE, "Firing EventPreferenceChange")
-                rxBus.send(EventPreferenceChange(rh.gs(preferenceId)))
+                rxBus.send(EventPreferenceChange(preference))
                 rxBus.send(EventSWUpdate(false))
                 scheduledEventPost = null
             }

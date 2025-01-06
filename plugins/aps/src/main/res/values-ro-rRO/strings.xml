@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Autotune-->
     <string name="dynisf_adjust_sensitivity">Activează raportul de sensibilitate bazat pe TDD pentru modificarea bazalei și a țintei glicemice</string>
     <string name="dynisf_adjust_sensitivity_summary">Folosește ultimele 24 de ore TDD/7D TDD pentru a calcula raportul de sensibilitate utilizat pentru creșterea sau scăderea ratei bazale, şi de asemenea ajustează ţinta glicemic[ dacă aceste opţiuni sunt activate, în acelaşi mod în care procedează Autosens. Este recomandat ca opțiunea să fie oprită la început</string>
-    <string name="DynISFAdjust_title" formatted="false">Factor de ajustare dinamic %</string>
-    <string name="DynISFAdjust_summary" formatted="false">Factorul de ajustare pentru DynamicISF. Setează mai mult de 100% pentru doze de corecție mai agresive și mai puțin de 100% pentru corecții mai puțin agresive.</string>
     <string name="high_temptarget_raises_sensitivity_title">Ținte temporare mai mari cresc sensibilitatea</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Creșterea sensibilității pentru ținte temporare >= 100]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Țintele temporare joase scad sensibilitatea</string>
@@ -62,9 +61,7 @@
     <string name="enable_smb_summary">Folosește SMB în locul bazalei temporare pentru reacție mai rapidă</string>
     <string name="enable_uam_summary">S-a detectat masă neanunțată</string>
     <string name="enable_smb_always">Activează SMB întotdeauna</string>
-    <string name="enable_smb_always_summary">Activează SMB întotdeauna independent de bolusuri. Este posibil doar în cazul unei surse de glicemii filtrate, cum ar fi G5</string>
     <string name="enable_smb_after_carbs">Activează SMB după carbohidrați</string>
-    <string name="enable_smb_after_carbs_summary">Activează SMB pentru 6 ore după carbohidrați, chiar și cu 0 COB. Este posibil doar cu o sursă de glicemii filtrate, ca datele din G5</string>
     <string name="enable_smb_with_cob">Activează SMB cu COB</string>
     <string name="enable_smb_with_cob_summary">Activează SMB atunci când sunt COB activi.</string>
     <string name="enable_smb_with_temp_target">Activează SMB cu ținte temporare</string>
@@ -84,7 +81,6 @@
     <string name="smb_disabled_in_preferences">SMB dezactivat în preferințe</string>
     <string name="uam_disabled_in_preferences">UAM dezactivat din setări</string>
     <string name="autosens_disabled_in_preferences">Autosens dezactivat în preferințe</string>
-    <string name="autosens_disabled_in_dyn_isf">Autosens dezactivat în DynISF</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">Se limitează IOB la %1$.1f U datorită %2$s</string>
     <string name="maxvalueinpreferences">valoare maximă în preferințe</string>
@@ -117,4 +113,45 @@
     <string name="loop_open_mode_min_change">Cerere de schimbare minimală [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Bucla deschisă va afișa o nouă cerere de schimbare doar dacă noua valoare este mai mare cu %. Valoarea implicită este 20%</string>
     <string name="fallback_smb_no_tdd">Revenire la SMB. Nu există suficiente date TDD.</string>
+    <!-- Autotune -->
+    <string name="autotune_shortname">AT</string>
+    <string name="autotune_settings">Setări Autotune</string>
+    <string name="autotune_auto_title">Automatizare schimbare profil</string>
+    <string name="autotune_auto_summary">Dacă este activată, Autotune va actualiza automat profilul și va comuta la profilul nou în baza unui calcul făcut cu regula de automatizare.</string>
+    <string name="autotune_categorize_uam_as_basal_title">Clasifică UAM ca bazală</string>
+    <string name="autotune_categorize_uam_as_basal_summary">Activează numai dacă ai introdus valori corecte de carbohidrați consumați. Cu această opțiune, creșterile bruște detectate de Autotune vor fi utilizate pentru a recomanda schimbări de rată bazală.</string>
+    <string name="autotune_tune_insulin_curve_title">Ajustați curba insulinei</string>
+    <string name="autotune_tune_insulin_curve_summary">Activați doar dacă folosiți vârf liber. Această opțiune va regla durata vârfului și a DIA</string>
+    <string name="autotune_default_tune_days_title">Număr de zile de date</string>
+    <string name="autotune_circadian_ic_isf_title">Aplică rezultatul mediu în circadian IC/ISF</string>
+    <string name="autotune_circadian_ic_isf_summary">Autotune nu va corecta variațiile circadiene. Această opțiune aplică o reglare medie a IC și ISF la profilul circadian înregistrat</string>
+    <string name="autotune_additional_log_title">Include mai multe informaţii de jurnal pentru depanare</string>
+    <string name="autotune_additional_log_summary">Activați numai dacă se solicită de către dezvoltator pentru a trimite mai multe informații în jurnal pentru a ajuta la depanarea pluginului Autotune</string>
+    <string name="autotune_default_tune_days_summary">Numărul implicit de zile de date pentru a fi procesate automat (până la 30)</string>
+    <string name="autotune_tunedprofile_name">Ajustat</string>
+    <string name="autotune_profile">Profil :</string>
+    <string name="autotune_last_run">Ultima executare :</string>
+    <string name="autotune_warning">Atenție :</string>
+    <string name="autotune_ic_warning">Profilul selectat are %1$d valori IC. Autotune va utiliza %2$.2f g/U</string>
+    <string name="autotune_isf_warning">Profilul selectat are %1$d valori ISF. Autotune va folosi %2$.1f %3$s/U</string>
+    <string name="autotune_error">Eroare în datele introduse, încercați să rulați din nou automat sau să reduceți numărul de zile</string>
+    <string name="autotune_error_more_days">Eroare în datele de introducere, mărește numărul de zile</string>
+    <string name="autotune_warning_during_run">Calcularea automată a început, vă rugăm să aveți răbdare</string>
+    <string name="autotune_warning_after_run">Verificați cu atenție rezultatele înainte de a le utiliza!</string>
+    <string name="autotune_partial_result">Rezultatul parțial din ziua %1$d / %2$d ajustat</string>
+    <string name="autotune_result">Rezultat: %1$s</string>
+    <string name="autotune_param">Param</string>
+    <string name="autotune_percent">%</string>
+    <string name="autotune_missing">Lipsă</string>
+    <string name="autotune_run">Rulează Autotune</string>
+    <string name="autotune_check_input_profile_button">Verificați profilul de intrare</string>
+    <string name="autotune_compare_profile">Compară profilurile</string>
+    <string name="autotune_copy_localprofile_button">Copiați în profilul local</string>
+    <string name="autotune_update_input_profile_button">Actualizați profilul de intrare</string>
+    <string name="autotune_revert_input_profile_button">Reveniţi la profilul de intrare</string>
+    <string name="autotune_copy_local_profile_message">Creați un profil local nou din acest profil Autotune?</string>
+    <string name="autotune_update_local_profile_message">Actualizați profilul %1$s cu Profil Autotune?</string>
+    <string name="autotune_revert_local_profile_message">Reveniți la profilul %1$s cu profilul de intrare?</string>
+    <string name="autotune_profile_invalid">Profil invalid</string>
+    <!--    autoISF -->
 </resources>

@@ -9,8 +9,6 @@
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Recevoir les valeurs de glycémie de l’application Dexcom patchée (BYODA).</string>
-    <string name="eversense">App Eversense (patché)</string>
-    <string name="description_source_eversense">Recevoir les valeurs de glycémie de l’app Eversense patchée.</string>
     <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Recevoir les glycémies depuis Glimp.</string>
     <string name="mm640g">Medtronic 640g</string>
@@ -24,16 +22,18 @@
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">Recevoir les valeurs de glycémie de l\'application Tomato (appareil MiaoMiao)</string>
-    <string name="aidex">GlucoRx Aidex</string>
-    <string name="aidex_short">Aidex</string>
-    <string name="description_source_aidex">Recevoir les valeurs de glycémie du MGC GlucoRx Aidex.</string>
     <string name="random_bg">Gly Aléatoire</string>
     <string name="description_source_random_bg">Générer des glycémies aléatoires (mode démo uniquement)</string>
     <string name="random_bg_short">Gly</string>
-    <string name="do_xdrip_upload_title">Transmettre les Gly vers xDrip+</string>
-    <string name="do_xdrip_upload_summary">Dans xDrip+ veuillez séléctionner 640g/Eversense comme source de données</string>
     <string name="bgsource_upload">Paramètres de téléchargement des glycémies</string>
     <string name="dexcom_log_ns_sensor_change_title">Enreg. du changement de capteur sur NS</string>
     <string name="dexcom_log_ns_sensor_change_summary">Créer automatiquement un événement \"Changement de capteur\" dans NS au démarrage du capteur</string>
     <string name="direction">direction</string>
+    <string name="bg_generation_interval_minutes">Interval de temps entre les glycémies (min)</string>
+    <!-- Patched Ottai App -->
+    <string name="ottai_app">Ottai</string>
+    <string name="description_source_patched_ottai_app">Recevoir les glycémies de l’application Ottai.</string>
+    <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai Tag</string>
+    <string name="description_source_patched_syai_tag_app">Recevoir les glycémies depuis l\'application Syai Tag.</string>
 </resources>

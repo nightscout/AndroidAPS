@@ -3,9 +3,9 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 plugins {
+    alias(libs.plugins.ksp)
     id("com.android.application")
     id("kotlin-android")
-    id("kotlin-kapt")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
     id("android-app-dependencies")
@@ -85,9 +85,9 @@ fun allCommitted(): Boolean {
             standardOutput = stdout
         }
         // ignore all changes done in .idea/codeStyles
-        val cleanedList: String = stdout.toString().replace("/(?m)^\\s*(M|A|D|\\?\\?)\\s*.*?\\.idea\\/codeStyles\\/.*?\\s*\$/", "")
+        val cleanedList: String = stdout.toString().replace(Regex("""(?m)^\s*(M|A|D|\?\?)\s*.*?\.idea\/codeStyles\/.*?\s*$"""), "")
             // ignore all files added to project dir but not staged/known to GIT
-            .replace("/(?m)^\\s*(\\?\\?)\\s*.*?\\s*\$/", "")
+            .replace(Regex("""(?m)^\s*(\?\?)\s*.*?\s*$"""), "")
         stringBuilder.append(cleanedList.trim())
     } catch (ignored: Exception) {
         return false // NoGitSystemAvailable
@@ -109,6 +109,9 @@ android {
         buildConfigField("String", "REMOTE", "\"${generateGitRemote()}\"")
         buildConfigField("String", "HEAD", "\"${generateGitBuild()}\"")
         buildConfigField("String", "COMMITTED", "\"${allCommitted()}\"")
+
+        // For Dagger injected instrumentation tests in app module
+        testInstrumentationRunner = "app.aaps.runners.InjectedTestRunner"
     }
 
     flavorDimensions.add("standard")
@@ -163,15 +166,16 @@ allprojects {
 }
 
 dependencies {
-    wearApp(project(":wear"))
-
     // in order to use internet"s versions you"d need to enable Jetifier again
     // https://github.com/nightscout/graphview.git
     // https://github.com/nightscout/iconify.git
     implementation(project(":shared:impl"))
-    implementation(project(":core:main"))
+    implementation(project(":core:data"))
+    implementation(project(":core:objects"))
+    implementation(project(":core:graph"))
     implementation(project(":core:graphview"))
     implementation(project(":core:interfaces"))
+    implementation(project(":core:keys"))
     implementation(project(":core:libraries"))
     implementation(project(":core:nssdk"))
     implementation(project(":core:utils"))
@@ -189,9 +193,8 @@ dependencies {
     implementation(project(":plugins:source"))
     implementation(project(":plugins:sync"))
     implementation(project(":implementation"))
-    implementation(project(":database:entities"))
     implementation(project(":database:impl"))
-    implementation(project(":pump:combo"))
+    implementation(project(":database:persistence"))
     implementation(project(":pump:combov2"))
     implementation(project(":pump:dana"))
     implementation(project(":pump:danars"))
@@ -199,7 +202,8 @@ dependencies {
     implementation(project(":pump:diaconn"))
     implementation(project(":pump:eopatch"))
     implementation(project(":pump:medtrum"))
-    implementation(project(":insight"))
+    implementation(project(":pump:equil"))
+    implementation(project(":pump:insight"))
     implementation(project(":pump:medtronic"))
     implementation(project(":pump:pump-common"))
     implementation(project(":pump:omnipod-common"))
@@ -210,15 +214,21 @@ dependencies {
     implementation(project(":workflow"))
 
     testImplementation(project(":shared:tests"))
+    androidTestImplementation(project(":shared:tests"))
+    androidTestImplementation(libs.androidx.test.rules)
+    androidTestImplementation(libs.org.skyscreamer.jsonassert)
+
+
+    kspAndroidTest(libs.com.google.dagger.android.processor)
 
     /* Dagger2 - We are going to use dagger.android which includes
      * support for Activity and fragment injection so we need to include
      * the following dependencies */
-    kapt(Libs.Dagger.androidProcessor)
-    kapt(Libs.Dagger.compiler)
+    ksp(libs.com.google.dagger.android.processor)
+    ksp(libs.com.google.dagger.compiler)
 
     // MainApp
-    api(Libs.Rx.rxDogTag)
+    api(libs.com.uber.rxdogtag2.rxdogtag)
 }
 
 println("-------------------")

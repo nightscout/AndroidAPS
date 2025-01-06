@@ -1,38 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="key_openapsama_max_daily_safety_multiplier" translatable="false">openapsama_max_daily_safety_multiplier</string>
-    <string name="key_openapsama_current_basal_safety_multiplier" translatable="false">openapsama_current_basal_safety_multiplier</string>
-    <string name="key_openapsama_autosens_adjusttargets" translatable="false">autosens_adjust_targets</string>
-    <string name="key_always_use_shortavg" translatable="false">always_use_shortavg</string>
-    <string name="key_openapsma_max_iob" translatable="false">openapsma_max_iob</string>
-    <string name="key_sensitivity_raises_target" translatable="false">sensitivity_raises_target</string>
-    <string name="key_resistance_lowers_target" translatable="false">resistance_lowers_target</string>
-    <string name="key_use_smb" translatable="false">use_smb</string>
-    <string name="key_use_uam" translatable="false">use_uam</string>
-    <string name="key_smb_interval" translatable="false">smbinterval</string>
-    <string name="key_enableSMB_always" translatable="false">enableSMB_always</string>
-    <string name="key_enableSMB_with_COB" translatable="false">enableSMB_with_COB</string>
-    <string name="key_enableSMB_with_temptarget" translatable="false">enableSMB_with_temptarget</string>
-    <string name="key_enableSMB_after_carbs" translatable="false">enableSMB_after_carbs</string>
-    <string name="key_allowSMB_with_high_temptarget" translatable="false">enableSMB_with_high_temptarget</string>
-    <string name="key_smb_max_minutes" translatable="false">smbmaxminutes</string>
-    <string name="key_uam_smb_max_minutes" translatable="false">uamsmbmaxminutes</string>
-    <string name="key_carbsReqThreshold" translatable="false">carbsReqThreshold</string>
-    <string name="key_openapssmb_max_iob" translatable="false">openapsmb_max_iob</string>
-    <string name="key_lgs_threshold" translatable="false">lgsThreshold</string>
-    <string name="key_DynISFAdjust" translatable="false">DynISFAdjust</string>
-    <string name="key_adjust_sensitivity" translatable="false">dynisf_adjust_sensitivity</string>
+    <!--Autotune-->
+    <string name="key_autotune_last_run" translatable="false">key_autotune_last_run</string>
 
     <string name="dynisf_adjust_sensitivity">Enable TDD based sensitivity ratio for basal and glucose target modification</string>
     <string name="dynisf_adjust_sensitivity_summary">Uses the last 24h TDD/7D TDD to calculate sensitivity ratio used for increasing or decreasing basal rate, and also adjust glucose target if these options are enabled, in the same way Autosens does. It is recommended to start with this option turned off</string>
-    <string name="DynISFAdjust_title" formatted="false">DynamicISF Adjustment Factor %</string>
-    <string name="DynISFAdjust_summary" formatted="false">Adjustment factor for DynamicISF. Set more than 100% for more aggressive correction doses, and less than 100% for less aggressive corrections.</string>
+    <string name="dyn_isf_adjust_title" formatted="false">DynamicISF Adjustment Factor %</string>
+    <string name="dyn_isf_adjust_summary" formatted="false">Adjustment factor for DynamicISF. Set more than 100% for more aggressive correction doses, and less than 100% for less aggressive corrections.</string>
     <string name="high_temptarget_raises_sensitivity_title">High temptarget raises sensitivity</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Raise sensitivity for temptargets >= 100]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Low temptarget lowers sensitivity</string>
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Lower sensitivity for temptargets < 100]]></string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamic ISF</string>
+    <string name="openaps_auto_isf">Auto ISF</string>
     <string name="smb_interval_summary">How frequently SMBs will be given in min</string>
     <string name="resistance_lowers_target_title">Resistance lowers target</string>
     <string name="resistance_lowers_target_summary">When resistance is detected, lower the target glucose</string>
@@ -42,6 +23,7 @@
     <string name="openapsma_no_glucose_data">No glucose data available</string>
     <string name="openaps_no_as_data">No autosens data available</string>
     <string name="dynisf_shortname">DYNISF</string>
+    <string name="autoisf_shortname">AUTOISF</string>
     <string name="executing">Executing</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Array of %1$d elements.\nActual value:</string>
@@ -49,6 +31,7 @@
     <string name="description_ama">State of the algorithm in 2017</string>
     <string name="description_smb">Most recent algorithm for advanced users</string>
     <string name="description_smb_dynamic_isf">Most recent algorithm for advanced users with dynamic/automatic ISF</string>
+    <string name="description_auto_isf">Most recent algorithm for advanced users with AutoISF extensions</string>
     <string name="openapsama_bolus_snooze_dia_divisor">Bolus snooze dia divisor</string>
 
     <string name="openapsma_run">Run now</string>
@@ -88,9 +71,9 @@
     <string name="enable_smb_summary">Use Super Micro Boluses instead of temp basal for faster action</string>
     <string name="enable_uam_summary">Detection of Unannounced meals</string>
     <string name="enable_smb_always">Enable SMB always</string>
-    <string name="enable_smb_always_summary">Enable SMB always independently to boluses. Possible only with BG source with nice filtering of data like G5</string>
+    <string name="enable_smb_always_summary">Enable SMB always independently to COB, temp targets or boluses. Possible only with BG sources with advanced filtering of data</string>
     <string name="enable_smb_after_carbs">Enable SMB after carbs</string>
-    <string name="enable_smb_after_carbs_summary">Enable SMB for 6h after carbs, even with 0 COB. Possible only with BG source with nice filtering of data like G5</string>
+    <string name="enable_smb_after_carbs_summary">Enable SMB for 6h after carbs, even with 0 COB. Possible only with BG sources with advanced filtering of data</string>
     <string name="enable_smb_with_cob">Enable SMB with COB</string>
     <string name="enable_smb_with_cob_summary">Enable SMB when there is COB active.</string>
     <string name="enable_smb_with_temp_target">Enable SMB with temp targets</string>
@@ -111,7 +94,8 @@
     <string name="smb_disabled_in_preferences">SMB disabled in preferences</string>
     <string name="uam_disabled_in_preferences">UAM disabled in preferences</string>
     <string name="autosens_disabled_in_preferences">Autosens disabled in preferences</string>
-    <string name="autosens_disabled_in_dyn_isf">Autosens disabled in DynISF</string>
+    <string name="use_dynamic_sensitivity_title">Enable dynamic sensitivity</string>
+    <string name="use_dynamic_sensitivity_summary">Adjust algorithm to use dynamic sensitivity instead of profile value</string>
 
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">Limiting IOB to %1$.1f U because of %2$s</string>
@@ -149,7 +133,96 @@
     <string name="loop_open_mode_min_change">Minimal request change [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Open Loop will popup new change request only if change is bigger than this value in %. Default value is 20%</string>
     <string name="fallback_smb_no_tdd">Fallback to SMB. Not enough TDD data.</string>
+    <string name="fallback_to_isf_no_tdd">Fallback to profile sensitivity. Not enough data. Reason: %1$s</string>
 
+    <!-- Autotune -->
+    <string name="autotune_description">Help for potential adjustments of profile (ISF, carb ratio, and basal rates)</string>
+    <string name="autotune_shortname">AT</string>
+    <string name="autotune_settings">Autotune settings</string>
+    <string name="autotune_auto_title">Automation Switch Profile</string>
+    <string name="autotune_auto_summary">If enabled, Autotune will automatically update and switch to input profile after calculation from an automation rule.</string>
+    <string name="autotune_categorize_uam_as_basal_title">Categorize UAM as basal</string>
+    <string name="autotune_categorize_uam_as_basal_summary">Enable only if you have reliably entered all carbs eaten, with this option sudden rises seen by Autotune will be used to recommend changes to the basal rate.</string>
+    <string name="autotune_tune_insulin_curve_title">Tune insulin curve</string>
+    <string name="autotune_tune_insulin_curve_summary">Enable only if you use free peak. This option will tune peak and DIA durations</string>
+    <string name="autotune_default_tune_days_title">Number of days of data</string>
+    <string name="autotune_circadian_ic_isf_title">Apply average result in circadian IC/ISF</string>
+    <string name="autotune_circadian_ic_isf_summary">Autotune will not tune circadian variations, this option only apply the average tuning of IC and ISF to your circadian input profile</string>
+    <string name="autotune_additional_log_title">Include more log information for debugging</string>
+    <string name="autotune_additional_log_summary">Switch on only if requested by dev to send more log information to help debugging Autotune plugin</string>
+    <string name="autotune_default_tune_days_summary">Default number of days of data to be processed by Autotune (up to 30)</string>
+    <string name="autotune_tunedprofile_name">Tuned</string>
+    <string name="autotune_profile">Profile :</string>
+    <string name="autotune_last_run">Last run :</string>
+    <string name="autotune_warning">Warning :</string>
+    <string name="autotune_ic_warning">Selected profile has %1$d IC values. Autotune will use %2$.2f g/U</string>
+    <string name="autotune_isf_warning">Selected profile has %1$d ISF values. Autotune will use %2$.1f %3$s/U</string>
+    <string name="autotune_error">Error in input data, try to run again autotune or reduce the number of days</string>
+    <string name="autotune_error_more_days">Error in input data, increase the number of days</string>
+    <string name="autotune_warning_during_run">Autotune calculation started, please be patient</string>
+    <string name="autotune_warning_after_run">Check the results carefully before using it!</string>
+    <string name="autotune_partial_result">Partial result day %1$d / %2$d tuned</string>
+    <string name="autotune_result">Result: %1$s</string>
+    <string name="autotune_param">Param</string>
+    <string name="autotune_percent">%</string>
+    <string name="autotune_missing">Missing</string>
+    <string name="autotune_run">Run Autotune</string>
+    <string name="autotune_check_input_profile_button">Check input profile</string>
+    <string name="autotune_compare_profile">Compare profiles</string>
+    <string name="autotune_copy_localprofile_button">Copy to local profile</string>
+    <string name="autotune_update_input_profile_button">Update input profile</string>
+    <string name="autotune_revert_input_profile_button">Revert input profile</string>
+    <string name="autotune_copy_local_profile_message">Create a new local profile from this Autotune Profile?</string>
+    <string name="autotune_update_local_profile_message">Update %1$s profile with Autotune Profile?</string>
+    <string name="autotune_revert_local_profile_message">Revert %1$s profile with Input Profile?</string>
+    <string name="autotune_profile_invalid">Profile invalid</string>
+    <string name="autotune_log_title" translatable="false">|Param|Profile|Tuned|%/Miss.\n</string>
+    <string name="autotune_log_separator" translatable="false">+------------------------------------------\n</string>
+    <string name="autotune_log_peak" translatable="false">| %1$4.4s |\t%2$d |\t%3$d |\n</string>
+    <string name="autotune_log_dia" translatable="false">| %1$4.4s |\t%2$3.1f |\t%3$3.1f |\n</string>
+    <string name="autotune_log_ic_isf" translatable="false">| %1$4.4s | %2$3.3f |\t%3$3.3f |\n</string>
+    <string name="autotune_log_basal" translatable="false">|\t%1$02.0f\t| %2$3.3f |%3$3.3f\t| %5$.0f%% / %4$d\n</string>
+    <string name="autotune_log_sum_basal" translatable="false">|\t∑\t|\t%1$3.1f |\t%2$3.1f |\n</string>
+    <string name="not_available_full">Not available</string>
+    <string name="pump_disconnected">Pump disconnected</string>
 
+    <!--    autoISF -->
+    <string name="half_basal_exercise_target_title">Half basal exercise target</string>
+    <string name="half_basal_exercise_target_summary">Set to a number, e.g. 160, which means when temp target is 160 mg/dL and High temptarget raises sensitivity=true, run 50%% basal at this level (120 = 75%%; 140 = 60%%).</string>
+    <string name="autoISF_settings_title">AutoISF settings</string>
+    <string name="autoISF_settings_summary">AutoISF allows to adapt the insulin sensitivity factor (ISF) in various scenarios of glucose behaviour\n\nIt can also adapt SMB delivery settings</string>
+    <string name="smb_delivery_settings_title">SMB delivery settings</string>
+    <string name="smb_delivery_settings_summary">Set of options to increase the actual SMB size which can be delivered in situations where ISF was strengthened, i.e. fairly low ISF figure.\n\nUSE WITH CAUTION</string>
+    <string name="openapsama_enable_autoISF">Enable ISF adaptation by glucose behaviour</string>
+    <string name="openapsama_autoISF_max_summary">Similar to autosens_max this defines how strong ISF can become.\n\nThe default value 1.0 effectively shuts off this effect.\n\nWARNING: Be extremely careful when using values above 2.5</string>
+    <string name="openapsama_autoISF_min_summary">Similar to autosens_min this defines how weak ISF can become.\n\nThe default value 1.0 effectively shuts off this effect.</string>
+    <string name="openapsama_dura_ISF_weight_summary">This is the weight applied during longer lasting, elevated glucose plateaus and which strengthens ISF thereby potentially increasing insulin delivery.\n\nThe default value 0.0 effectively shuts off this effect.</string>
+    <string name="openapsama_lower_ISFrange_weight_summary">This is the weight applied while glucose is below target and which weakens ISF thereby potentially reducing insulin delivery.\n\nThe default value 0.0 effectively shuts off this effect.</string>
+    <string name="openapsama_higher_ISFrange_weight_summary">This is the weight applied while glucose is above target and which strengthens ISF thereby potentially increasing insulin delivery.\n\nThe default value 0.0 effectively shuts off this effect.</string>
+    <string name="openapsama_pp_ISF_weight_summary">This is the weight applied while glucose is rising and which strengthens ISF thereby potentially increasing insulin delivery.\n\nThe default value 0.0 effectively shuts off this effect.</string>
+    <string name="openapsama_bgAccel_ISF_weight_summary">This is the weight applied while glucose accelerates and which strengthens ISF thereby potentially increasing insulin delivery.\n\nThe default value 0.0 effectively shuts off this effect.</string>
+    <string name="openapsama_bgBrake_ISF_weight_summary">This is the weight applied while glucose decelerates and which weakens ISF thereby potentially reducing insulin delivery.\n\nThe default value 0.0 effectively shuts off this effect.</string>
+    <string name="openapsama_autoISF_max">Max autoISF ratio\n(autoISF_max)</string>
+    <string name="openapsama_autoISF_min">Min autoISF ratio\n(autoISF_min)</string>
+    <string name="openapsama_lower_ISFrange_weight">lower ISF-range weight\n(lower_ISFrange_weight)</string>
+    <string name="openapsama_higher_ISFrange_weight">higher ISF-range weight\n(higher_ISFrange_weight)</string>
+    <string name="openapsama_pp_ISF_weight">postprandial ISF weight\n(pp_ISF_weight)</string>
+    <string name="openapsama_bgAccel_ISF_weight">Weight while BG accelerates\n(bgAccel_ISF_weight)</string>
+    <string name="openapsama_bgBrake_ISF_weight">Weight while BG decelerates\n(bgBrake_ISF_weight)</string>
+    <string name="openapsama_dura_ISF_weight">dura_ISF weight\n(dura_ISF_weight)</string>
+    <string name="openapsama_smb_delivery_ratio">fixed SMB delivery ratio\n(smb_delivery_ratio)</string>
+    <string name="openapsama_smb_delivery_ratio_min">variable SMB delivery ratio, lower end\n(smb_delivery_ratio_min)</string>
+    <string name="openapsama_smb_delivery_ratio_max">variable SMB delivery ratio, upper end\n(smb_delivery_ratio_max)</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range">variable SMB delivery ratio, mapped glucose range\n(smb_delivery_ratio_bg_range)</string>
+    <string name="openapsama_smb_max_range_extension">SMB/UAM max range extension\n(smb_max_range_extension)</string>
+    <string name="openapsama_smb_delivery_ratio_summary">Default value: 0.5 This is another key OpenAPS safety cap, and specifies what share of the total insulin required can be delivered as SMB. This is to prevent people from getting into dangerous territory by setting SMB requests from the caregivers phone at the same time. Increase this experimental value slowly and with caution.</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">Default value: 0.5 This is the lower end of a linearly increasing ratio rather than the fix value above.</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">Default value: 0.5 This is the upper end of a linearly increasing ratio rather than the fix value above.</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range_summary">Default value: 0. The linearly increasing SMB delivery ratio is mapped to the glucose range [target_bg, target_bg+bg_range].\nAt target_bg the SMB ratio is smb_delivery_ratio_min, at target_bg+bg_range it is smb_delivery_ratio_max\nWith 0 the linearly increasing SMB ratio is disabled and the fixed smb_delivery_ratio is used.</string>
+    <string name="openapsama_smb_max_range_extension_summary">Default value: 1 This is another key OpenAPS safety cap, and specifies by what factor you can exceed the regular 120 maxSMB/maxUAM minutes. Increase this experimental value slowly and with caution.</string>
+    <string name="enableSMB_EvenOn_OddOff_always">Enable alternative activation of SMB depending on active target being even number</string>
+    <string name="enableSMB_EvenOn_OddOff_always_summary">\nenabled ...\nif active target(mmol/L) has even decimal\nor active target(mg/dL) is even number\n\ndisabled otherwise</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Percentage of maxIOB above which SMBs are disabled.\nDefault value: 100%\nWith 100% this feature is effectively disabled.</string>
+    <string name="openapsama_iob_threshold_percent">maxIOB threshold percent for SMB\n(iob_threshold_percent)</string>
 
 </resources>

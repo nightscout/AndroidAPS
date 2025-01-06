@@ -39,7 +39,6 @@
     <string name="smscommunicator_stops_ns_with_code">Um die SMS-Fernsteuerung zu deaktivieren, antworte mit dem Code %1$s\n\nBeachte, dass Du diesen nur am AAPS-Master-Smartphone wieder aktivieren kannst.</string>
     <string name="smscommunicator_stopped_sms">SMS-Fernsteuerung gestoppt. Verwende das AAPS-Master-Smartphone, um sie wieder zu aktivieren.</string>
     <string name="smscommunicator_calibration_reply_with_code">Um die Kalibrierung %1$.2f zu senden, antworte mit dem Code %2$s.</string>
-    <string name="smscommunicator_bolus_failed">Bolus fehlgeschlagen</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Minimale Dauer in Minuten, die nach einem Remote-Bolus verstrichen sein muss, bevor ein neuer abgegeben werden kann.</string>
     <string name="smscommunicator_remote_bolus_min_distance">Anzahl der Minuten, die mindestens zwischen zwei Remote-Bolusabgaben liegen müssen.</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">Aus Sicherheitsgründen musst Du mindestens zwei Telefonnummern eintragen, um diese Voreinstellung zu ändern.</string>
@@ -201,10 +200,6 @@
     <string name="overview_shortname">HOME</string>
     <string name="description_overview">Zeigt den aktuellen Status deines Loops und Schaltflächen für die geläufigsten Aktionen an</string>
     <string name="overview_buttons_selection">Schaltflächen</string>
-    <string name="show_calibration_button_summary">Sendet eine Kalibierung an xDrip+ oder öffnet den BYODA Kalibrierungs-Dialog.</string>
-    <string name="show_cgm_button_summary">Öffnet xDrip+ oder BOYDA, mit der Zurück-Schaltfläche gelangst Du zurück zu AndroidAPS.</string>
-    <string name="dexcom_app_not_installed">Dexcom App ist nicht installiert.</string>
-    <string name="dexcom_app_not_detected">Bitte aktualisiere deine Dexcom App auf eine unterstützte Version</string>
     <string name="error_starting_cgm">CGM-Anwendung konnte nicht geöffnet werden. Stelle sicher, dass diese installiert ist.</string>
     <string name="not_available_full">Nicht verfügbar</string>
     <string name="constraints_violation">Beschränkungen wurden verletzt oder Limit erreicht.</string>
@@ -226,12 +221,6 @@
     <string name="thirdcarbsincrement">Dritte KH-Erhöhung</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">Vordefinierte temporäre Ziele</string>
-    <string name="eatingsoon_duration">Bald essen - Dauer</string>
-    <string name="eatingsoon_target">Bald essen - Ziel</string>
-    <string name="activity_duration">Aktivitätsdauer</string>
-    <string name="activity_target">Aktivitäts-Zielwert</string>
-    <string name="hypo_duration">Hypo-Dauer</string>
-    <string name="hypo_target">Hypo - Zielwert</string>
     <string name="fill_bolus_title">Füll-/Vorfüll-Standardmengen</string>
     <string name="button1">Schaltfläche 1</string>
     <string name="button2">Schaltfläche 2</string>
@@ -259,7 +248,6 @@
     <string name="overview_show_deviation_slope">Steigung der Abweichung</string>
     <string name="overview_show_activity">Aktivität</string>
     <string name="overview_show_bgi">Blutzuckerwirkung</string>
-    <string name="overview_show_sensitivity">Sensitivität</string>
     <string name="overview_show_deviations">Abweichungen</string>
     <string name="overview_show_cob">Aktive Kohlenhydrate</string>
     <string name="overview_show_iob">Aktives Insulin</string>
@@ -274,7 +262,6 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">BEH</string>
     <string name="heartRate_shortname">HF</string>
-    <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Diagrammskala</string>
     <string name="graph_menu_divider_header">Diagramm</string>
     <!-- Skins -->
@@ -285,8 +272,6 @@
     <string name="skin">Erscheinungsbild</string>
     <string name="cannula_usage">Abgegeben:</string>
     <!--    Iob-->
-    <string name="send_logfiles">Sende die heutigen Logdateien unter Angabe dieser Uhrzeit an die Entwickler.
-Unerwartetes Verhalten.</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Zeigt eine fortlaufende Benachrichtigung mit einer kurzen Übersicht darüber, was dein Loop derzeit tut</string>
     <string name="old_data">VERALTETE DATEN</string>

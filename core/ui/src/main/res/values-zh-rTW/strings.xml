@@ -1,0 +1,590 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    General-->
+    <string name="refresh">重新整理</string>
+    <string name="error">錯誤</string>
+    <string name="profile_set_ok">幫浦中的基礎率設定已更新</string>
+    <string name="invalid_input">輸入資料無效</string>
+    <string name="bolus_delivering">正在注射 %1$.2f U</string>
+    <string name="constraint_applied">已套用限制！</string>
+    <string name="tempbasals_iobtotal_label_string">總 IOB：</string>
+    <string name="tt_label">臨時目標</string>
+    <string name="pump_unreachable">幫浦無法使用</string>
+    <string name="insulin_unit_shortname">U</string>
+    <string name="pump_base_basal_rate">%1$.2f U/h</string>
+    <string name="pump_not_initialized_profile_not_set">幫浦未初始化，設定檔未設置！</string>
+    <string name="failed_update_basal_profile">更新基礎率設定失敗</string>
+    <string name="bolus_delivered_successfully">注射 %1$.2f U 已成功送達</string>
+    <string name="no_valid_basal_rate">未從幫浦讀取到有效的基礎率</string>
+    <string name="limiting_iob">因 %2$s 限制 IOB 為 %1$.1f U</string>
+    <string name="loop_disabled">循環因限制已停用</string>
+    <string name="event_type">事件類型</string>
+    <string name="reload">重新載入</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="save">儲存</string>
+    <string name="snooze">稍後提醒</string>
+    <string name="virtual_pump">虛擬幫浦</string>
+    <string name="constraints">限制</string>
+    <string name="superbolus">超級注射</string>
+    <string name="pump_paused">幫浦已暫停</string>
+    <string name="and">和</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">使用者</string>
+    <string name="result">結果</string>
+    <string name="settings">設定</string>
+    <string name="statuslights">狀態燈</string>
+    <string name="do_ns_upload_title">將血糖資料上傳至 NS 伺服器</string>
+    <string name="configbuilder_insulin">胰島素</string>
+    <string name="value_unavailable_short">無法使用</string>
+    <string name="master_password">主密碼</string>
+    <string name="ue_export_to_csv">匯出使用者輸入到 Excel (csv)</string>
+    <string name="confirm">確認</string>
+    <string name="pump">幫浦</string>
+    <string name="missed_bg_readings">遺失血糖讀取值</string>
+    <string name="treatments_iob_label_string">IOB：</string>
+    <string name="mute5min">靜音 5 分鐘</string>
+    <string name="mute">靜音</string>
+    <string name="success">成功</string>
+    <string name="advanced_settings_title">進階設定</string>
+    <string name="extendedbolusdeliveryerror">延長注射錯誤</string>
+    <string name="aps_mode_title">APS 模式</string>
+    <string name="extended_bolus">延長注射</string>
+    <string name="paused">已暫停</string>
+    <string name="tdd_total">總 TDD</string>
+    <string name="tdd_old_data">舊資料</string>
+    <string name="goingtodeliver">將注射 %1$.2f U</string>
+    <string name="waitingforpump">等待幫浦</string>
+    <string name="androidaps_start">AAPS 已啟動</string>
+    <string name="formatsignedinsulinunits">%1$+.2f U</string>
+    <string name="format_carbs">%1$d g</string>
+    <string name="format_hours">%1$.2f 小時</string>
+    <string name="format_mins">%1$d 分鐘</string>
+    <string name="objectives">目標</string>
+    <string name="please_wait">請稍候…</string>
+    <string name="stop">停止</string>
+    <string name="carbs">碳水化合物</string>
+    <string name="invalid_profile">無效的設定檔！</string>
+    <string name="no_profile_set">未設置設定檔</string>
+    <string name="active"><![CDATA[<已啟用的設定檔>]]></string>
+    <string name="date">日期</string>
+    <string name="units_label">單位</string>
+    <string name="dia_label">DIA</string>
+    <string name="ic_label">IC</string>
+    <string name="isf_label">ISF</string>
+    <string name="basal_label">基礎率</string>
+    <string name="target_label">目標</string>
+    <string name="dia_long_label">胰島素作用持續時間</string>
+    <string name="ic_long_label">胰島素對碳水化合物比率</string>
+    <string name="isf_long_label">胰島素敏感因子</string>
+    <string name="basal_long_label">基礎率</string>
+    <string name="target_long_label">血糖目標</string>
+    <string name="shortgram">g</string>
+    <string name="shortpercent">%</string>
+    <string name="bluetooth">藍牙</string>
+    <string name="btwatchdog_title">藍牙看門狗</string>
+    <string name="btwatchdog_summary">如果無法連線幫浦，將關閉手機的藍牙一秒鐘。這可能有助於某些藍牙異常的手機。</string>
+    <string name="virtualpump_resultok">確定</string>
+    <string name="pump_time_updated">幫浦時間已更新</string>
+    <string name="exit">退出</string>
+    <string name="removerecord">移除紀錄</string>
+    <string name="loopisdisabled">循環已停用</string>
+    <string name="alarm">警報</string>
+    <string name="exportsettings">匯出設定</string>
+    <string name="disableloop">停用循環</string>
+    <string name="enableloop">啟用循環</string>
+    <string name="resumeloop">恢復循環</string>
+    <string name="suspendloop">暫停循環</string>
+    <string name="duration_min_label">持續時間 [分鐘]</string>
+    <string name="notification">通知</string>
+    <string name="noprofile">尚未從 NS 載入設定檔</string>
+    <string name="exists">存在</string>
+    <string name="notexists">不存在</string>
+    <string name="glucose">血糖</string>
+    <string name="iob">IOB 活性胰島素</string>
+    <string name="cob">COB 活性碳水</string>
+    <string name="name_short">名稱：</string>
+    <string name="time">時間</string>
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="loading">載入中…</string>
+    <string name="notes_label">備註</string>
+    <string name="remove_button">移除</string>
+    <string name="add_new">新增</string>
+    <string name="addnew_above">在上方新增</string>
+    <string name="wrong_pump_data">資料來自不同的幫浦。更換幫浦驅動程式以重置幫浦狀態。</string>
+    <string name="bg_label">血糖</string>
+    <string name="calibration">校正</string>
+    <string name="alarminxmin">在 %1$d 分鐘內運行警報</string>
+    <string name="treatmentdeliveryerror">注射錯誤報告。請檢查實際注射的胰島素和碳水化合物量</string>
+    <string name="bolus_reminder">注射提醒</string>
+    <string name="duration_label">持續時間</string>
+    <string name="shortgramm">g</string>
+    <string name="pumpsuspended">幫浦已暫停</string>
+    <string name="notconfigured">未配置</string>
+    <string name="loopsuspended">循環已暫停</string>
+    <string name="trend_arrow">趨勢箭頭</string>
+    <string name="a11y_autosens_label">自動感應(autosens)</string>
+    <string name="required">需要</string>
+    <string name="a11y_arrow_double_down">快速下降</string>
+    <string name="a11y_arrow_single_down">下降</string>
+    <string name="a11y_arrow_forty_five_down">緩慢下降</string>
+    <string name="a11y_arrow_flat">穩定</string>
+    <string name="a11y_arrow_forty_five_up">緩慢上升</string>
+    <string name="a11y_arrow_single_up">上升</string>
+    <string name="a11y_arrow_double_up">快速上升</string>
+    <string name="a11y_arrow_none">無</string>
+    <string name="a11y_arrow_unknown">未知</string>
+    <string name="a11y_high">高</string>
+    <string name="a11y_inrange">在範圍內</string>
+    <string name="a11y_low">低</string>
+    <string name="average">平均</string>
+    <string name="tir">目標範圍內的時間占比(TIR)</string>
+    <string name="none"><![CDATA[<無>]]></string>
+    <string name="remove_label">移除</string>
+    <string name="activate_profile">啟用設定檔</string>
+    <string name="reset">重置</string>
+    <string name="profileswitch_ismissing">缺少 ProfileSwitch。請進行設定檔切換或按「啟用設定檔」以進行本地設定檔。</string>
+    <string name="profile">設定檔</string>
+    <string name="select_for_removal">選擇移除</string>
+    <string name="confirm_remove_multiple_items">您確定要移除 %1$d 項目嗎</string>
+    <string name="overview_treatment_label">治療</string>
+    <string name="copytolocalprofile">從此設定檔建立新設定檔？</string>
+    <string name="wear_wizard_settings">嚮導設定</string>
+    <string name="bg_trend_label">15 分鐘趨勢</string>
+    <string name="treatments_wizard_cob_label">COB 活性碳水</string>
+    <string name="bolus_iob_label">注射 IOB</string>
+    <string name="treatments_wizard_basaliob_label">基礎率 IOB</string>
+    <string name="invalid">無效</string>
+    <string name="login">登入</string>
+    <string name="prime_fill">注射/填充</string>
+    <string name="overview_insulin_label">胰島素</string>
+    <string name="stoptemptarget">停止臨時目標</string>
+    <string name="closedloop">閉環</string>
+    <string name="openloop">開環</string>
+    <string name="lowglucosesuspend">低血糖暫停(LGS)</string>
+    <string name="dia">DIA</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">ISF</string>
+    <string name="canceling_tbr_failed">取消臨時基礎失敗</string>
+    <string name="canceling_eb_failed">取消延長注射失敗</string>
+    <string name="virtualpump_uploadstatus_title">上傳幫浦狀態到 NS 或 Tidepool</string>
+    <string name="suspendloop_label">停用/暫停循環</string>
+    <string name="iob_label">IOB 活性胰島素</string>
+    <string name="loopstatus_targets">目標：</string>
+    <string name="loopstatus_OAPS_result">OAPS 結果：</string>
+    <string name="extended_bolus_data_point_graph">%1$.2f U ( %2$.2f U/h )</string>
+    <string name="temp_basal_tsf_fake_extended">%1$.2f U/h (%2$.2fE) @%3$s</string>
+    <string name="temp_basal_tsf_absolute">%1$.2f U/h @%2$s</string>
+    <string name="temp_basal_tsf_percent">%1$.0f%% @%2$s</string>
+    <string name="extended_bolus_full">E %1$.2f U/h @%2$s %3$s/%4$s 分鐘</string>
+    <string name="extended_bolus_medium">%1$.2f U/h %2$s/%3$s 分</string>
+    <string name="nav_export">匯出設定</string>
+    <string name="location_permission_not_granted">位置權限未獲授權。請在 Android 設定中允許。</string>
+    <!--    Protection-->
+    <string name="wrongpassword">密碼錯誤</string>
+    <string name="wrongpin">PIN 碼錯誤</string>
+    <string name="passwords_dont_match">密碼不一致</string>
+    <string name="pin_dont_match">PIN 碼不一致</string>
+    <!--    Profile-->
+    <string name="basalprofilenotaligned">基礎率值未對齊小時：%1$s</string>
+    <string name="minimalbasalvaluereplaced">基礎率值已被最低支援值取代：%1$s</string>
+    <string name="maximumbasalvaluereplaced">基礎率值已被最高支援值取代：%1$s</string>
+    <string name="profile_per_unit">/U</string>
+    <string name="profile_ins_units_per_hour">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+    <!--    ProfileFunction-->
+    <string name="startprofile">開始設定檔 %1$d%% 持續 %2$d 分鐘</string>
+    <!--    APSResult-->
+    <string name="cancel_temp">取消臨時基礎率</string>
+    <string name="let_temp_basal_run">讓臨時基礎率運行</string>
+    <string name="rate">速率</string>
+    <string name="duration">持續時間</string>
+    <string name="reason">原因</string>
+    <string name="nochangerequested">未請求更改</string>
+    <!--    ProfileSwitch-->
+    <string name="zerovalueinprofile">無效的設定檔：%1$s</string>
+    <!--    Temptarget-->
+    <string name="mins">%1$d 分鐘</string>
+    <!--    Translator-->
+    <string name="careportal">照護入口</string>
+    <string name="careportal_bgcheck">血糖檢查</string>
+    <string name="careportal_mbg">手動血糖或校正</string>
+    <string name="careportal_announcement">公告</string>
+    <string name="careportal_settings_export">設定匯出</string>
+    <string name="careportal_note">備註</string>
+    <string name="careportal_question">問題</string>
+    <string name="careportal_exercise">運動</string>
+    <string name="careportal_announcement_message">公告：%1$s</string>
+    <string name="careportal_settings_export_message">設定匯出: %1$s</string>
+    <string name="careportal_note_message">備註：%1$s</string>
+    <string name="careportal_question_message">問題：%1$s</string>
+    <string name="careportal_exercise_message">運動：%1$s</string>
+    <string name="careportal_pump_site_change">幫浦位置更改</string>
+    <string name="cgm_sensor_insert">CGM 傳感器植入</string>
+    <string name="careportal_cgmsensorstart">CGM 傳感器啟動</string>
+    <string name="careportal_cgm_sensor_stop">CGM 傳感器停止</string>
+    <string name="careportal_dad_alert">D.A.D. 警報</string>
+    <string name="careportal_insulin_cartridge_change">胰島素匣更換</string>
+    <string name="careportal_profileswitch">設定檔切換</string>
+    <string name="careportal_snackbolus">零食注射</string>
+    <string name="careportal_mealbolus">餐食注射</string>
+    <string name="careportal_correctionbolus">修正注射</string>
+    <string name="careportal_combobolus">組合注射</string>
+    <string name="careportal_tempbasalstart">臨時基礎率開始</string>
+    <string name="careportal_tempbasalend">臨時基礎率結束</string>
+    <string name="careportal_carbscorrection">碳水化合物修正</string>
+    <string name="careportal_openapsoffline">OpenAPS 離線</string>
+    <string name="pump_battery_change">幫浦電池更換</string>
+    <string name="temporary_target">臨時目標</string>
+    <string name="careportal_temporarytargetvalue">臨時目標值</string>
+    <string name="careportal_temporarytargetcancel">臨時目標取消</string>
+    <string name="boluswizard">注射嚮導</string>
+    <string name="glucosetype_finger">手指</string>
+    <string name="glucosetype_sensor">傳感器</string>
+    <string name="manual">手動操作</string>
+    <string name="unknown">未知</string>
+    <string name="eatingsoon">即將用餐</string>
+    <string name="hypo">低血糖</string>
+    <string name="activity">活動</string>
+    <string name="wear">WearOS手錶</string>
+    <string name="automation">自動化</string>
+    <string name="settingsexport">設定匯出</string>
+    <string name="custom">自訂</string>
+    <string name="loop">循環</string>
+    <string name="ns">NS</string>
+    <string name="record">紀錄</string>
+    <!--    Command-->
+    <string name="connectiontimedout">連線逾時</string>
+    <!--    PumpEnactResult-->
+    <string name="enacted">已執行</string>
+    <string name="comment">備註</string>
+    <string name="percent">百分比</string>
+    <string name="absolute">絕對值</string>
+    <string name="waitingforpumpresult">等待結果</string>
+    <string name="smb_shortname">SMB</string>
+    <!--    CarbsReq-->
+    <string name="carbsreq">%1$d g 額外碳水化合物需要在 %2$d 分鐘內</string>
+    <!--    TDDStatsActivity-->
+    <string name="cumulative_tdd">累積 TDD</string>
+    <string name="expweight">指數加權 TDD</string>
+    <string name="basalrate">基礎率</string>
+    <string name="bolus">注射</string>
+    <string name="tdd">每日總劑量(TDD)</string>
+    <string name="ratio">比率</string>
+    <string name="amount_days">天數</string>
+    <string name="weight">權重</string>
+    <string name="warning_Message">如果使用注射進行注射/填充，可能不準確！</string>
+    <string name="olddata_Message">舊資料，請按「重新載入」</string>
+    <string name="tbb">總基礎胰島素基礎量(TBB)</string>
+    <string name="tbb2">總基礎胰島素基礎量(TBB) * 2</string>
+    <!--    Ntp-->
+    <string name="timedetection">時間偵測</string>
+    <!-- User Entry -->
+    <string name="uel_bolus">注射</string>
+    <string name="uel_bolus_calculator">注射計算機</string>
+    <string name="uel_bolus_advisor">注射顧問</string>
+    <string name="uel_extended_bolus">延長注射</string>
+    <string name="uel_superbolus_tbr">超級注射臨時基礎率</string>
+    <string name="uel_carbs">碳水化合物</string>
+    <string name="uel_extended_carbs">延長碳水化合物</string>
+    <string name="uel_temp_basal">臨時基礎率</string>
+    <string name="uel_tt">臨時目標</string>
+    <string name="uel_new_profile">新設定檔</string>
+    <string name="uel_clone_profile">複製設定檔</string>
+    <string name="uel_store_profile">儲存設定檔</string>
+    <string name="uel_profile_switch">設定檔切換</string>
+    <string name="uel_profile_switch_cloned">設定檔切換已複製</string>
+    <string name="uel_closed_loop_mode">閉環模式</string>
+    <string name="uel_lgs_loop_mode">低血糖暫停循環模式</string>
+    <string name="uel_open_loop_mode">開環模式</string>
+    <string name="uel_loop_disabled">循環停用</string>
+    <string name="uel_loop_enabled">循環啟用</string>
+    <string name="uel_reconnect">重新連線</string>
+    <string name="uel_disconnect">斷線</string>
+    <string name="uel_resume">恢復</string>
+    <string name="uel_suspend">暫停</string>
+    <string name="uel_hw_pump_allowed">允許幫浦硬體</string>
+    <string name="uel_clear_pairing_keys">清除配對金鑰</string>
+    <string name="uel_accepts_temp_basal">接受臨時基礎率</string>
+    <string name="uel_cancel_temp_basal">取消臨時基礎率</string>
+    <string name="uel_cancel_bolus">取消注射</string>
+    <string name="uel_cancel_extended_bolus">取消延長注射</string>
+    <string name="uel_cancel_tt">取消臨時目標</string>
+    <string name="uel_careportal">照護</string>
+    <string name="uel_site_change">更換位置</string>
+    <string name="uel_reservoir_change">更換儲存器</string>
+    <string name="uel_calibration">校正</string>
+    <string name="uel_prime_bolus">注射注射</string>
+    <string name="uel_treatment">治療</string>
+    <string name="uel_careportal_ns_refresh">照護 NS 重新整理</string>
+    <string name="uel_profile_switch_ns_refresh">設定檔切換 NS 重新整理</string>
+    <string name="uel_treatments_ns_refresh">治療 NS 重新整理</string>
+    <string name="uel_tt_ns_refresh">臨時目標 NS 重新整理</string>
+    <string name="uel_automation_removed">自動化已移除</string>
+    <string name="uel_bg_removed">血糖已移除</string>
+    <string name="uel_careportal_removed">照護已移除</string>
+    <string name="uel_bolus_removed">注射已移除</string>
+    <string name="uel_carbs_removed">碳水化合物已移除</string>
+    <string name="uel_temp_basal_removed">臨時基礎率已移除</string>
+    <string name="uel_extended_bolus_removed">延長注射已移除</string>
+    <string name="uel_food">食物</string>
+    <string name="uel_food_removed">食物已移除</string>
+    <string name="uel_profile_removed">設定檔已移除</string>
+    <string name="uel_profile_switch_removed">設定檔切換已移除</string>
+    <string name="uel_restart_events_removed">重新啟動事件已移除</string>
+    <string name="uel_treatment_removed">治療已移除</string>
+    <string name="uel_tt_removed">臨時目標已移除</string>
+    <string name="uel_ns_paused">NS 已暫停</string>
+    <string name="uel_ns_resume">NS 已恢復</string>
+    <string name="uel_ns_queue_cleared">NS 佇列已清除</string>
+    <string name="uel_ns_settings_copied">NS 設定已複製</string>
+    <string name="uel_error_dialog_ok">錯誤對話框確定</string>
+    <string name="uel_error_dialog_mute">錯誤對話框靜音</string>
+    <string name="uel_error_dialog_mute_5min">錯誤對話框靜音 5 分鐘</string>
+    <string name="uel_objective_started">目標已開始</string>
+    <string name="uel_objective_unstarted">目標未開始</string>
+    <string name="uel_objectives_skipped">目標已跳過</string>
+    <string name="uel_stat_reset">統計已重置</string>
+    <string name="uel_delete_logs">刪除日誌</string>
+    <string name="uel_delete_future_treatments">刪除未來治療</string>
+    <string name="delete_future_treatments">刪除未來治療</string>
+    <string name="uel_export_settings">匯出設定</string>
+    <string name="uel_import_settings">匯入設定</string>
+    <string name="uel_select_directory">選擇目錄</string>
+    <string name="uel_reset_databases">重置資料庫</string>
+    <string name="uel_reset_aps_results">重置 APS 結果</string>
+    <string name="uel_cleanup_databases">清理資料庫</string>
+    <string name="uel_export_databases">匯出資料庫</string>
+    <string name="uel_import_databases">匯入資料庫</string>
+    <string name="uel_otp_export">OTP 匯出</string>
+    <string name="uel_otp_reset">OTP 重置</string>
+    <string name="uel_stop_sms">停止 SMS</string>
+    <string name="uel_export_csv">匯出使用者輸入</string>
+    <string name="uel_start_aaps">啟動 AAPS</string>
+    <string name="uel_exit_aaps">退出 AAPS</string>
+    <string name="uel_plugin_enabled">外掛已啟用</string>
+    <string name="uel_plugin_disabled">外掛已停用</string>
+    <string name="uel_unknown">未知</string>
+    <string name="ue_string">字串</string>
+    <string name="ue_source">來源</string>
+    <string name="ue_utc_offset">UTC 偏移</string>
+    <string name="ue_action">操作</string>
+    <string name="ue_timestamp">時間戳記</string>
+    <string name="ue_none">無單位</string>
+    <string name="uel_loop_change">循環已更改</string>
+    <string name="uel_loop_removed">循環已移除</string>
+    <string name="uel_other">其他</string>
+    <!-- HardLimits -->
+    <string name="profile_low_target">設定檔低目標</string>
+    <string name="profile_high_target">設定檔高目標</string>
+    <string name="temp_target_low_target">臨時目標低值</string>
+    <string name="temp_target_high_target">臨時目標高值</string>
+    <string name="temp_target_value">臨時目標值</string>
+    <string name="profile_dia">設定檔 DIA 值</string>
+    <string name="profile_sensitivity_value">設定檔敏感度值</string>
+    <string name="profile_max_daily_basal_value">最大設定檔基礎率值</string>
+    <string name="current_basal_value">目前基礎率值</string>
+    <string name="profile_carbs_ratio_value">設定檔碳水化合物比率值</string>
+    <string name="valuelimitedto">%1$.2f 限制為 %2$.2f</string>
+    <string name="valueoutofrange">»%1$s« 超出硬限制範圍</string>
+    <string name="value_out_of_hard_limits">»%1$s« %2$.2f 超出硬限制範圍</string>
+    <string name="basal_value">基礎率值</string>
+    <!-- Command Queue + readStatus reasons -->
+    <string name="bolus_u_min">注射 %1$.2f U</string>
+    <string name="carbs_g">碳水化合物 %1$d g</string>
+    <string name="extended_bolus_u_min">延長注射 %1$.2f U %2$d 分鐘</string>
+    <string name="load_events">載入事件</string>
+    <string name="clear_alarms">清除警報</string>
+    <string name="deactivate">停用</string>
+    <string name="update_time">更新時間</string>
+    <string name="load_history">載入歷史 %1$d</string>
+    <string name="load_tdds">載入 TDDs</string>
+    <string name="set_profile">設置設定檔</string>
+    <string name="set_user_settings">設置使用者設定</string>
+    <string name="smb_bolus_u">SMB 注射 %1$.2f U</string>
+    <string name="start_pump">啟動幫浦</string>
+    <string name="stop_pump">停止幫浦</string>
+    <string name="temp_basal_absolute">臨時基礎率 %1$.2f U/h %2$d 分鐘</string>
+    <string name="temp_basal_percent">臨時基礎率 %1$d%% %2$d 分鐘</string>
+    <string name="insight_set_tbr_over_notification">Insight 設置臨時基礎率超過通知</string>
+    <string name="read_status" comment="10 characters max for READSTATUS translation">讀取狀態 %1$s</string>
+    <string name="keepalive_status_outdated" comment="26 characters max for translation">保持存活。狀態過期。</string>
+    <string name="keepalive_basal_outdated" comment="26 characters max for translation">保持存活。基礎率過期。</string>
+    <string name="sms" comment="26 characters max for translation">SMS</string>
+    <string name="formatPercent">%1$.0f%%</string>
+    <string name="basal">基礎率</string>
+    <string name="basalpct">基礎率 %</string>
+    <string name="a11y_file">檔案</string>
+    <string name="a11y_user">使用者</string>
+    <!-- Autotune -->
+    <string name="autotune">自動調整</string>
+    <string name="autotune_tune_days">調整天數：</string>
+    <string name="autotune_select_profile">選擇設定檔以調整</string>
+    <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">使用系統通知來提示警報和通知</string>
+    <string name="urgent_alarm">緊急警報</string>
+    <string name="info">資訊</string>
+    <!-- BolusWizard -->
+    <string name="bolus_advisor">注射顧問</string>
+    <string name="bolus_advisor_message">您的血糖過高。建議不要立即用餐，等待血糖恢復正常。您想現在進行修正注射，並提醒您何時用餐嗎？這種情況下不會紀錄碳水化合物，當我們提醒您時，您必須再次使用嚮導。</string>
+    <string name="cobvsiob">COB 對 IOB</string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! 偵測到碳水化合物吸收緩慢：%2$d%% 的時間。請再次檢查您的計算。COB 可能被高估，因此可能會導致給予過多的胰島素 (建議取消計算機中的COB後再重新計算)!!!!!</font>]]></string>
+    <string name="partialboluswizard">傳送一部分的注射嚮導結果 [%]</string>
+    <string name="partialboluswizard_reset_time">舊血糖時間門檻值 [分鐘]</string>
+    <string name="bolus_constraint_applied_warn">注射限制已套用：%1$.2f U 至 %2$.2f U</string>
+    <string name="bolus_recorded_only">僅紀錄注射（不由幫浦傳送）</string>
+    <string name="advisoralarm">當到達用餐時間時提醒我</string>
+    <string name="no_action_selected">未選擇任何操作，無事發生</string>
+    <string name="carb_equal_zero_no_action">碳水化合物 = 0。未採取任何行動！</string>
+    <string name="wizard_no_insulin_required">不需要胰島素！</string>
+    <string name="wizard_no_actual_bg">沒有最近的血糖值可用於計算！</string>
+    <string name="wizard_no_active_profile">未設置活動設定檔！</string>
+    <string name="wizard_no_cob">未知的 COB！缺少血糖讀取值或最近的應用程式重啟？</string>
+    <string name="wizard_carbs_constraint">碳水化合物限制違規！</string>
+    <string name="wizard_explain_calc">計算（IC：%1$.1f，ISF：%2$.1f）</string>
+    <string name="wizard_explain_carbs">碳水化合物：%1$.2fU</string>
+    <string name="wizard_explain_cob">COB：%1$.0fg %2$.2fU</string>
+    <string name="wizard_explain_bg">血糖：%1$.2fU</string>
+    <string name="wizard_explain_iob">IOB：%1$.2fU</string>
+    <string name="wizard_explain_superbolus">超級注射：%1$.2fU</string>
+    <string name="wizard_explain_trend">15 分鐘趨勢：%1$.2fU</string>
+    <string name="wizard_explain_percent">百分比：%1$.2fU x %2$d%% ≈ %3$.2fU</string>
+    <string name="wizard_constraint_bolus_size">胰島素限制違規！\n無法傳送 %1$.2fU</string>
+    <string name="wizard_explain_tt">臨時目標：%1$s</string>
+    <string name="wizard_explain_tt_to">%1$s 至 %2$s</string>
+    <string name="wizard_pump_not_available">無可用幫浦！</string>
+    <string name="quickwizard">快速嚮導</string>
+    <!--    Preferences-->
+    <string name="child">兒童</string>
+    <string name="teenage">青少年</string>
+    <string name="adult">成人</string>
+    <string name="resistant_adult">胰島素抵抗的成人</string>
+    <string name="pregnant">孕婦</string>
+    <string name="patient_age_summary">請選擇患者類型以設置安全限制</string>
+    <string name="max_bolus_title">允許的最大注射 [U]</string>
+    <string name="max_carbs_title">允許的最大碳水化合物 [g]</string>
+    <string name="patient_type">患者類型</string>
+    <!--    Protection-->
+    <string name="unlock_settings">解鎖設定</string>
+    <!--    Pumps -->
+    <string name="battery_label">電池</string>
+    <string name="reservoir_label">儲存器</string>
+    <string name="last_connection_label">最後連線</string>
+    <string name="last_bolus_label">最後注射</string>
+    <string name="base_basal_rate_label">基礎率</string>
+    <string name="tempbasal_label">臨時基礎率</string>
+    <string name="extended_bolus_label">延長注射</string>
+    <string name="serial_number">序號</string>
+    <string name="disconnected">已中斷連線</string>
+    <string name="connecting">連線中</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">已點擊連線到幫浦</string>
+    <string name="reservoir_value">%1$.0f / %2$d U</string>
+    <string name="daily_units">每日單位</string>
+    <string name="pump_icon">幫浦圖示</string>
+    <string name="view_profile">查看設定檔</string>
+    <string name="pump_history">幫浦歷史</string>
+    <string name="stats">統計</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">幫浦驅動程式更改。</string>
+    <string name="device_changed" comment="26 characters max for translation">設備已更改</string>
+    <string name="bolus_ok" comment="26 characters max for translation">注射成功</string>
+    <string name="temp_basal_delivery_error">臨時基礎率傳送錯誤</string>
+    <string name="not_set_short">未設置</string>
+    <string name="pump_busy">幫浦忙碌中</string>
+    <string name="connection_error">幫浦連線錯誤</string>
+    <string name="reading_pump_history">讀取幫浦歷史</string>
+    <string name="password_cleared">密碼已清除！</string>
+    <string name="pairing">配對中</string>
+    <string name="initializing">初始化中…</string>
+    <string name="secs" comment="second short">%1$d 秒</string>
+    <!--    Constraints-->
+    <string name="limitingbasalratio">因 %2$s 限制最大基礎率為 %1$.2f U/h</string>
+    <string name="pumplimit">幫浦限制</string>
+    <string name="limitingpercentrate">因 %2$s 限制最大百分比速率為 %1$d%%</string>
+    <string name="itmustbepositivevalue">必須為正值</string>
+    <string name="limitingbolus">因 %2$s 限制注射為 %1$.1f U</string>
+    <!--    Dialogs-->
+    <string name="confirmation">確認</string>
+    <string name="message">訊息</string>
+    <string name="ok">確定</string>
+    <string name="cancel">取消</string>
+    <string name="dismiss">關閉</string>
+    <string name="yes">是</string>
+    <string name="no">否</string>
+    <string name="close">關閉</string>
+    <!-- TwoMessagesDialog -->
+    <string name="password_preferences_decrypt_prompt">您將被要求輸入主密碼，這是解密匯入偏好設定所需的。</string>
+    <!-- <unattended_export> -->
+    <string name="export_ok">確定</string>
+    <string name="export_warning">警告</string>
+    <string name="export_expired">過期</string>
+    <string name="export_disabled">停用</string>
+    <string name="export_failed">失敗</string>
+    <string name="export_alert">警報</string>
+    <!-- <unattended_export result messages> -->
+    <string name="export_result_message_exported">設定已匯出</string>
+    <string name="export_result_message_failed">設定匯出失敗!</string>
+    <string name="export_result_message_about_to_expire">設定已匯出: 密碼即將過期。請手動匯出並（重新）輸入密碼。</string>
+    <string name="export_result_message_expired">設定匯出已取消: 密碼已過期。請手動匯出並（重新）輸入!</string>
+    <string name="export_result_message_disabled">警告（自動化）: 設定匯出未啟用!</string>
+    <!-- NumberPicker -->
+    <string name="a11y_min_button_description">將 %1$s 減少 %2$s</string>
+    <string name="a11y_plus_button_description">將 %1$s 增加 %2$s</string>
+    <string name="you_are_on_allowed_limit">已達允許限制</string>
+    <string name="format_hour_minute">%1$dh %2$dm</string>
+    <!-- datetime layout -->
+    <string name="event_time_label">事件時間</string>
+    <!-- BluetoothDevicePreference -->
+    <string name="need_connect_permission">應用程式需要藍牙權限</string>
+    <!--    Combo-->
+    <string name="user_request" comment="26 characters max for translation">使用者請求</string>
+    <string name="pump_paired" comment="26 characters max for translation">幫浦已配對</string>
+    <!--    BlePreCheck-->
+    <string name="ble_not_supported">不支援藍牙低功耗。</string>
+    <string name="ble_not_supported_or_not_paired">不支援藍牙低功耗或設備未配對。</string>
+    <string name="ble_not_enabled">藍牙未啟用。</string>
+    <string name="location_not_found_title">未啟用位置</string>
+    <string name="location_not_found_message">為了使藍牙發現能在新設備上運作，必須啟用位置。AAPS 不會追蹤您的位置，配對成功後可將其停用。</string>
+    <!--    Preferences -->
+    <string name="nav_plugin_preferences">外掛偏好設定</string>
+    <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">缺少 SMS 權限</string>
+    <!-- About -->
+    <string name="cta_dont_kill_my_app_info">不要關閉我的應用程式？</string>
+    <string name="fabric_upload_disabled">異常日誌上傳已停用！</string>
+    <string name="about_link_urls">\n\n文件：https://wiki.aaps.app\n\nFacebook：https://www.facebook.com/groups/AndroidAPSUsers</string>
+    <plurals name="days">
+        <item quantity="other">%1$d 天</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="other">%1$d 小時</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="other">%1$d 分鐘</item>
+    </plurals>
+    <!--    Maintenance-->
+    <string name="cleanup_db_confirm">您確定要清理資料庫嗎？\n這將刪除追蹤的變更和超過 3 個月的歷史資料。</string>
+    <string name="cleanup_db_confirm_sync">您確定要清理資料庫嗎？\n這將刪除追蹤的變更和超過 3 個月的歷史資料。\n這樣做將大大加快完全同步的速度。</string>
+    <string name="cleared_entries">已清除項目</string>
+    <!--    Weekday-->
+    <string name="weekday_sunday_short">週日</string>
+    <string name="weekday_saturday_short">週六</string>
+    <string name="weekday_friday_short">週五</string>
+    <string name="weekday_thursday_short">週四</string>
+    <string name="weekday_wednesday_short">週三</string>
+    <string name="weekday_tuesday_short">週二</string>
+    <string name="weekday_monday_short">週一</string>
+    <!-- WeekdayPicker -->
+    <string name="monday_short">一</string>
+    <string name="tuesday_short">二</string>
+    <string name="wednesday_short">三</string>
+    <string name="thursday_short">四</string>
+    <string name="friday_short">五</string>
+    <string name="saturday_short">六</string>
+    <string name="sunday_short">日</string>
+    <!--    DecimalFormatterImpl -->
+    <string name="format_insulin_units1">%1$.1f U</string>
+    <string name="format_insulin_units">%1$.2f U</string>
+    <string name="percent_rate_duration">速率：%1$.2f%%（%2$.2f U/h）持續時間：%3$d 分鐘</string>
+    <string name="rate_percent_duration">速率：%1$.2f U/h（%2$.2f%%）持續時間：%3$d 分鐘</string>
+    <string name="percent_rate_duration_formatted"><![CDATA[<b>速率</b>：%1$.2f%%（%2$.2f U/h）<br><b>持續時間</b>：%3$d 分鐘<br>]]></string>
+    <string name="rate_percent_duration_formatted"><![CDATA[<b>速率</b>：%1$.2f U/h（%2$.2f%%）<br><b>持續時間</b>：%3$d 分鐘<br>]]></string>
+</resources>

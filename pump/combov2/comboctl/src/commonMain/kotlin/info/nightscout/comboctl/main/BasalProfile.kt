@@ -86,9 +86,7 @@ class BasalProfile(sourceFactors: List<Int>) {
         if (this::class != other::class) return false
 
         other as BasalProfile
-        if (factors != other.factors) return false
-
-        return true
+        return factors == other.factors
     }
 
     override fun hashCode(): Int {

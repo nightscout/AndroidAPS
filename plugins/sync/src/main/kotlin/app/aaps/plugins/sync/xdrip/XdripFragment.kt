@@ -20,6 +20,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.plugins.sync.R
@@ -37,7 +38,7 @@ class XdripFragment : DaggerFragment(), MenuProvider, PluginFragment {
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var dataSyncSelector: DataSyncSelectorXdripImpl
+    @Inject lateinit var dataSyncSelector: DataSyncSelectorXdrip
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var xdripPlugin: XdripPlugin
     @Inject lateinit var config: Config
@@ -81,7 +82,7 @@ class XdripFragment : DaggerFragment(), MenuProvider, PluginFragment {
             ID_MENU_FULL_SYNC -> {
                 context?.let { context ->
                     OKDialog.showConfirmation(
-                        context, rh.gs(R.string.ns_client), rh.gs(R.string.full_sync_comment),
+                        context, rh.gs(R.string.xdrip), rh.gs(R.string.full_xdrip_sync_comment),
                         Runnable { handler.post { dataSyncSelector.resetToNextFullSync() } }
                     )
                 }

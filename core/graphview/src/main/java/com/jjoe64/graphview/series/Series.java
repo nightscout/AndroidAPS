@@ -1,18 +1,18 @@
 /**
  * GraphView
  * Copyright (C) 2014  Jonas Gehring
- *
+ * <p>
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License,
  * with the "Linking Exception", which can be found at the license.txt
  * file in this program.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU General Public License
  * with the "Linking Exception" along with this program; if not,
  * write to the author Jonas Gehring <g.jjoe64@gmail.com>.
@@ -64,10 +64,10 @@ public interface Series<E extends DataPointInterface> {
      * important that the data comes in the sorted order
      * (from lowest to highest x-value).
      *
-     * @param from the minimal x-value
+     * @param from  the minimal x-value
      * @param until the maximal x-value
-     * @return  all datapoints between the from and until x-value
-     *          including the from and until data points.
+     * @return all datapoints between the from and until x-value
+     * including the from and until data points.
      */
     Iterator<E> getValues(double from, double until);
 
@@ -78,8 +78,8 @@ public interface Series<E extends DataPointInterface> {
      * the default scale and one time for the
      * second scale.
      *
-     * @param graphView corresponding graphview
-     * @param canvas canvas to draw on
+     * @param graphView     corresponding graphview
+     * @param canvas        canvas to draw on
      * @param isSecondScale true if the drawing is for the second scale
      */
     void draw(GraphView graphView, Canvas canvas, boolean isSecondScale);
@@ -90,8 +90,8 @@ public interface Series<E extends DataPointInterface> {
     String getTitle();
 
     /**
-     * @return  the color of the series. Used in the legend and should
-     *          be used for the plotted points or lines.
+     * @return the color of the series. Used in the legend and should
+     * be used for the plotted points or lines.
      */
     int getColor();
 

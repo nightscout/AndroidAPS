@@ -3,11 +3,9 @@
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_shortname">EOP2</string>
     <string name="eopatch_pump_description">Integrácia pumpy pre EOPatch2 / GlucoMen Day</string>
-    <string name="category_alerts">Výstrahy</string>
     <string name="low_reservoir">Výstraha nízkeho stavu zásobníka</string>
     <string name="patch_expiration_reminders">Pripomenutie expirácie Patch</string>
     <string name="patch_buzzer_reminders">Patch tón pripomenutia</string>
-    <string name="time_format_a_h_mm">H:mm</string>
     <string name="eopatch_ble_status">Stav BLE</string>
     <string name="eopatch_serial_number">Sériové číslo</string>
     <string name="eopatch_lot_number">Číslo šarže (LOT)</string>
@@ -26,7 +24,6 @@
     <string name="time_1hr">1 h</string>
     <string name="time_1hr_30min">1 h 30 min</string>
     <string name="time_2hr">2 h</string>
-    <string name="all_blank">\u0020</string>
     <string name="patch_safe_deactivation_desc">Ak chcete zmeniť na novú pumpu, musí byť aktuálna pumpa zahodená. Všetká dodávka inzulínu z pumpy bude zrušená.</string>
     <string name="patch_discard_complete_title">Zahodenie pumpy je dokončené.</string>
     <string name="patch_discard_complete_desc">Pumpa bola deaktivovaná.\nZahodenie pumpy.\nOdstráňte pumpu pripojenú k telu.</string>
@@ -38,9 +35,6 @@
     <string name="patch_remaining_usage_period">Zostávajúci čas</string>
     <string name="patch_finish">Dokončiť</string>
     <string name="patch_forced_discard">Zahodiť</string>
-    <string name="patch_comm_error_during_discard_status">Chyba komunikácie pri zahadzovaní pumpy</string>
-    <string name="patch_comm_error_during_discard_desc">Pre normálnu deaktiváciu kliknite na \'Opakovať\'.\nPre vynútenú deaktiváciu kliknite na \'Zahodiť\'.</string>
-    <string name="patch_comm_error_during_discard_desc_1">Pre normálnu deaktiváciu kliknite na \'Opakovať\'.</string>
     <string name="patch_comm_error_during_discard_desc_2">Pre vynútenú deaktiváciu kliknite na \"Zahodiť\".</string>
     <string name="patch_manually_turning_off_alarm_title">Ručné vypnutie alarmov pumpy</string>
     <string name="patch_manually_turning_off_alarm_desc_1">Pokiaľ je v priebehu chyby komunikácie pumpa vynútene deaktivovaná, nemusí sa vypnúť pípanie pumpy.</string>
@@ -82,8 +76,6 @@
     <string name="patch_expiration_reminder_setting_title">Pripomenutie expirácie pumpy</string>
     <string name="patch_activate_reminder_title">Pripomenutie aktivácie pumpy</string>
     <string name="patch_activate_reminder_desc">Aktivácia pumpy nebola dokončená.\n Pokračovať.</string>
-    <string name="patch_communication_check">Kontrola komunikácie s pumpou</string>
-    <string name="patch_communication_check_status_1">Kontrolujem komunikáciu s pumpou…</string>
     <string name="patch_communication_check_helper_1">Prineste mobil čo možno najbližšie ku pumpe.</string>
     <string name="patch_communication_check_helper_2">Prosím presuňte pumpu na iné miesto a skuste to znovu.</string>
     <string name="patch_communication_failed">Chyba komunikácie</string>
@@ -112,9 +104,8 @@
     <string name="string_changing">Mením</string>
     <string name="string_in_progress">Prebieha spracovanie</string>
     <string name="retry">Opakovať</string>
-    <string name="string_caution_not_remove_needle_cap">[Pozor] Neodstraňujte kryt ihly a náplasť, než príde požiadavka.</string>
+    <string name="string_caution_not_remove_needle_cap">[Pozor] Neodstraňujte kryt ihly a náplasť, kým nepríde ďalšia inštrukcia.</string>
     <string name="string_are_you_sure_to_discard_current_patch">Naozaj chcete zahodiť pumpu?</string>
-    <string name="string_unconfirmed_bolus_info_discard_confirm_message">Z dôvodu nepotvrdených bolusových informácií nie je možné kalkulačku použiť do %s.\n\nNaozaj chcete zahodiť aktuálnu pumpu?</string>
     <string name="needle_insertion_error_1">Chyba vloženia ihly.</string>
     <string name="needle_insertion_error_2">Skontroluj smer otvoru vľavo po otočení páky, že je rovný, a potom kliknite na \'Opakovať\'.</string>
     <string name="needle_insertion_error_3">Kliknite na \'Zahodiť\' pre deaktiváciu pumpy.</string>
@@ -126,7 +117,6 @@
     <string name="finish">Dokončiť</string>
     <string name="string_temp_basal_remained_hhmm">zostávajúci čas: %1$s:%2$s</string>
     <string name="next">Ďalšia</string>
-    <string name="patch_connection_fail">Opakujte po kontrole komunikácie s pumpou.</string>
     <string name="string_pause_failed">Pozastavenie zlyhalo.</string>
     <string name="string_resume_failed">Obnovenie zlyhalo.</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE, d MMM, yyyy HH:mm</string>

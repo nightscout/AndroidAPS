@@ -9,11 +9,9 @@ import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.AnimationDrawable
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
-import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -24,31 +22,34 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.text.toSpanned
 import androidx.recyclerview.widget.LinearLayoutManager
+import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.core.interfaces.aps.Loop
-import app.aaps.core.interfaces.aps.VariableSensitivityResult
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.configuration.Constants
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.db.GlucoseUnit
-import app.aaps.core.interfaces.extensions.runOnUiThread
-import app.aaps.core.interfaces.extensions.toVisibility
-import app.aaps.core.interfaces.extensions.toVisibilityKeepSpace
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
+import app.aaps.core.interfaces.overview.LastBgData
+import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.OverviewMenus
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ProtectionCheck
-import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
+import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -69,6 +70,7 @@ import app.aaps.core.interfaces.rx.events.EventUpdateOverviewCalcProgress
 import app.aaps.core.interfaces.rx.events.EventUpdateOverviewGraph
 import app.aaps.core.interfaces.rx.events.EventUpdateOverviewIobCob
 import app.aaps.core.interfaces.rx.events.EventUpdateOverviewSensitivity
+import app.aaps.core.interfaces.rx.events.EventWearUpdateTiles
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.DexcomBoyda
@@ -78,21 +80,21 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.main.constraints.ConstraintObject
-import app.aaps.core.main.extensions.directionToIcon
-import app.aaps.core.main.graph.OverviewData
-import app.aaps.core.main.iob.displayText
-import app.aaps.core.main.profile.ProfileSealed
-import app.aaps.core.main.wizard.QuickWizard
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.UnitDoubleKey
+import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.core.objects.extensions.directionToIcon
+import app.aaps.core.objects.extensions.displayText
+import app.aaps.core.objects.extensions.round
+import app.aaps.core.objects.profile.ProfileSealed
+import app.aaps.core.objects.wizard.QuickWizard
 import app.aaps.core.ui.UIRunnable
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.elements.SingleClickButton
-import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.core.utils.JsonHelper
-import app.aaps.database.entities.UserEntry.Action
-import app.aaps.database.entities.UserEntry.Sources
-import app.aaps.database.entities.interfaces.end
-import app.aaps.database.impl.AppRepository
+import app.aaps.core.ui.extensions.runOnUiThread
+import app.aaps.core.ui.extensions.toVisibility
+import app.aaps.core.ui.extensions.toVisibilityKeepSpace
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.databinding.OverviewFragmentBinding
 import app.aaps.plugins.main.general.overview.graphData.GraphData
@@ -117,9 +119,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var constraintChecker: ConstraintsChecker
@@ -141,19 +143,20 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var trendCalculator: TrendCalculator
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var uel: UserEntryLogger
-    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
     @Inject lateinit var overviewData: OverviewData
+    @Inject lateinit var lastBgData: LastBgData
     @Inject lateinit var automation: Automation
     @Inject lateinit var bgQualityCheck: BgQualityCheck
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var decimalFormatter: DecimalFormatter
+    @Inject lateinit var commandQueue: CommandQueue
 
     private val disposable = CompositeDisposable()
 
     private var smallWidth = false
     private var smallHeight = false
-    private lateinit var dm: DisplayMetrics
     private var axisWidth: Int = 0
     private lateinit var refreshLoop: Runnable
     private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
@@ -162,6 +165,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     private val secondaryGraphsLabel = ArrayList<TextView>()
 
     private var carbAnimation: AnimationDrawable? = null
+    private var lastUserAction = ""
 
     private var _binding: OverviewFragmentBinding? = null
 
@@ -169,24 +173,21 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     // onDestroyView.
     private val binding get() = _binding!!
 
+    //@SuppressLint("NewApi")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         OverviewFragmentBinding.inflate(inflater, container, false).also {
             _binding = it
-            //check screen width
-            dm = DisplayMetrics()
-            @Suppress("DEPRECATION")
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-                activity?.display?.getRealMetrics(dm)
-            else
-                activity?.windowManager?.defaultDisplay?.getMetrics(dm)
         }.root
 
+    //@SuppressLint("NewApi")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         // pre-process landscape mode
-        val screenWidth = dm.widthPixels
-        val screenHeight = dm.heightPixels
+        //check screen width
+        val wm = requireActivity().windowManager.currentWindowMetrics
+        val screenWidth = wm.bounds.width()
+        val screenHeight = wm.bounds.height()
         smallWidth = screenWidth <= Constants.SMALL_WIDTH
         smallHeight = screenHeight <= Constants.SMALL_HEIGHT
         val landscape = screenHeight < screenWidth
@@ -196,7 +197,14 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
         binding.notifications.setHasFixedSize(false)
         binding.notifications.layoutManager = LinearLayoutManager(view.context)
-        axisWidth = if (dm.densityDpi <= 120) 3 else if (dm.densityDpi <= 160) 10 else if (dm.densityDpi <= 320) 35 else if (dm.densityDpi <= 420) 50 else if (dm.densityDpi <= 560) 70 else 80
+        axisWidth = when {
+            resources.displayMetrics.densityDpi <= 120 -> 3
+            resources.displayMetrics.densityDpi <= 160 -> 10
+            resources.displayMetrics.densityDpi <= 320 -> 35
+            resources.displayMetrics.densityDpi <= 420 -> 50
+            resources.displayMetrics.densityDpi <= 560 -> 70
+            else                                       -> 80
+        }
         binding.graphsLayout.bgGraph.gridLabelRenderer?.gridColor = rh.gac(context, app.aaps.core.ui.R.attr.graphGrid)
         binding.graphsLayout.bgGraph.gridLabelRenderer?.reloadStyles()
         binding.graphsLayout.bgGraph.gridLabelRenderer?.labelVerticalWidth = axisWidth
@@ -215,7 +223,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             false
         }
         prepareGraphsIfNeeded(overviewMenus.setting.size)
-        context?.let { overviewMenus.setupChartMenu(it, binding.graphsLayout.chartMenuButton) }
+        overviewMenus.setupChartMenu(binding.graphsLayout.chartMenuButton, binding.graphsLayout.scaleButton)
+        binding.graphsLayout.scaleButton.text = overviewMenus.scaleString(overviewData.rangeToDisplay)
+
+        binding.graphsLayout.chartMenuButton.visibility = preferences.simpleMode.not().toVisibility()
 
         binding.activeProfile.setOnClickListener(this)
         binding.activeProfile.setOnLongClickListener(this)
@@ -407,31 +418,12 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
                 R.id.cgm_button          -> {
                     if (xDripSource.isEnabled())
-                        openCgmApp("com.eveningoutpost.dexdrip")
-                    else if (dexcomBoyda.isEnabled()) {
-                        dexcomBoyda.findDexcomPackageName()?.let {
-                            openCgmApp(it)
-                        }
-                            ?: ToastUtils.infoToast(activity, rh.gs(R.string.dexcom_app_not_installed))
-                    }
+                        openCgmApp("com.eveningoutpost.dexdrip", "Home")
                 }
 
                 R.id.calibration_button  -> {
                     if (xDripSource.isEnabled()) {
                         uiInteraction.runCalibrationDialog(childFragmentManager)
-                    } else if (dexcomBoyda.isEnabled()) {
-                        try {
-                            dexcomBoyda.findDexcomPackageName()?.let {
-                                startActivity(
-                                    Intent("com.dexcom.cgm.activities.MeterEntryActivity")
-                                        .setPackage(it)
-                                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                )
-                            }
-                                ?: ToastUtils.infoToast(activity, rh.gs(R.string.dexcom_app_not_installed))
-                        } catch (e: ActivityNotFoundException) {
-                            ToastUtils.infoToast(activity, rh.gs(R.string.dexcom_app_not_detected))
-                        }
                     }
                 }
 
@@ -442,17 +434,19 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                             val lastRun = loop.lastRun
                             loop.invoke("Accept temp button", false)
                             if (lastRun?.lastAPSRun != null && lastRun.constraintsProcessed?.isChangeRequested == true) {
-                                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable {
-                                    if (isAdded)
-                                        OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.tempbasal_label), lastRun.constraintsProcessed?.toSpanned()
-                                            ?: "".toSpanned(), {
-                                                                      uel.log(Action.ACCEPTS_TEMP_BASAL, Sources.Overview)
-                                                                      (context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?)?.cancel(Constants.notificationID)
-                                                                      rxBus.send(EventMobileToWear(EventData.CancelNotification(dateUtil.now())))
-                                                                      handler.post { loop.acceptChangeRequest() }
-                                                                      binding.buttonsLayout.acceptTempButton.visibility = View.GONE
-                                                                  })
-                                })
+                                runOnUiThread {
+                                    protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable {
+                                        if (isAdded)
+                                            OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.tempbasal_label), lastRun.constraintsProcessed?.resultAsSpanned()
+                                                ?: "".toSpanned(), {
+                                                                          uel.log(Action.ACCEPTS_TEMP_BASAL, Sources.Overview)
+                                                                          (context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?)?.cancel(Constants.notificationID)
+                                                                          rxBus.send(EventMobileToWear(EventData.CancelNotification(dateUtil.now())))
+                                                                          handler.post { loop.acceptChangeRequest() }
+                                                                          binding.buttonsLayout.acceptTempButton.visibility = View.GONE
+                                                                      })
+                                    })
+                                }
                             }
                         }
                     }
@@ -467,17 +461,12 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         }
     }
 
-    private fun openCgmApp(packageName: String) {
-        context?.let {
-            val packageManager = it.packageManager
-            try {
-                val intent = packageManager.getLaunchIntentForPackage(packageName)
-                    ?: throw ActivityNotFoundException()
-                intent.addCategory(Intent.CATEGORY_LAUNCHER)
-                it.startActivity(intent)
-            } catch (e: ActivityNotFoundException) {
-                OKDialog.show(it, "", rh.gs(R.string.error_starting_cgm))
-            }
+    @Suppress("SameParameterValue")
+    private fun openCgmApp(packageName: String, launchActivity: String) {
+        try {
+            requireContext().startActivity(Intent(Intent.ACTION_MAIN).setClassName(packageName, "$packageName.$launchActivity"))
+        } catch (_: ActivityNotFoundException) {
+            OKDialog.show(requireContext(), "", rh.gs(R.string.error_starting_cgm))
         }
     }
 
@@ -526,7 +515,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                         OKDialog.show(it, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), rh.gs(R.string.constraints_violation) + "\n" + rh.gs(R.string.change_your_input))
                         return
                     }
-                    wizard.confirmAndExecute(it)
+                    wizard.confirmAndExecute(it, quickWizardEntry)
                 }
             }
         }
@@ -539,6 +528,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val profile = profileFunction.getProfile()
         val profileName = profileFunction.getProfileName()
         val actualBG = iobCobCalculator.ads.actualBg()
+        var list = ""
 
         // QuickWizard button
         val quickWizardEntry = quickWizard.getActive()
@@ -547,7 +537,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             if (quickWizardEntry != null && lastBG != null && profile != null && pump.isInitialized() && !pump.isSuspended() && !loop.isDisconnected) {
                 binding.buttonsLayout.quickWizardButton.visibility = View.VISIBLE
                 val wizard = quickWizardEntry.doCalc(profile, profileName, lastBG)
-                binding.buttonsLayout.quickWizardButton.text = quickWizardEntry.buttonText() + "\n" + rh.gs(app.aaps.core.main.R.string.format_carbs, quickWizardEntry.carbs()) +
+                binding.buttonsLayout.quickWizardButton.text = quickWizardEntry.buttonText() + "\n" + rh.gs(app.aaps.core.objects.R.string.format_carbs, quickWizardEntry.carbs()) +
                     " " + rh.gs(app.aaps.core.ui.R.string.format_insulin_units, wizard.calculatedTotalInsulin)
                 if (wizard.calculatedTotalInsulin <= 0) binding.buttonsLayout.quickWizardButton.visibility = View.GONE
             } else binding.buttonsLayout.quickWizardButton.visibility = View.GONE
@@ -566,49 +556,54 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             _binding ?: return@runOnUiThread
             if (showAcceptButton && pump.isInitialized() && !pump.isSuspended() && (loop as PluginBase).isEnabled()) {
                 binding.buttonsLayout.acceptTempButton.visibility = View.VISIBLE
-                binding.buttonsLayout.acceptTempButton.text = "${rh.gs(R.string.set_basal_question)}\n${lastRun!!.constraintsProcessed}"
+                binding.buttonsLayout.acceptTempButton.text = "${rh.gs(R.string.set_basal_question)}\n${lastRun.constraintsProcessed?.resultAsString()}"
             } else {
                 binding.buttonsLayout.acceptTempButton.visibility = View.GONE
             }
 
             // **** Various treatment buttons ****
             binding.buttonsLayout.carbsButton.visibility =
-                (/*(!activePlugin.activePump.pumpDescription.storesCarbInfo || pump.isInitialized() && !pump.isSuspended()) &&*/ profile != null
-                    && sp.getBoolean(R.string.key_show_carbs_button, true)).toVisibility()
+                (profile != null && preferences.get(BooleanKey.OverviewShowCarbsButton)).toVisibility()
             binding.buttonsLayout.treatmentButton.visibility = (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null
-                && sp.getBoolean(R.string.key_show_treatment_button, false)).toVisibility()
+                && preferences.get(BooleanKey.OverviewShowTreatmentButton)).toVisibility()
             binding.buttonsLayout.wizardButton.visibility = (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null
-                && sp.getBoolean(R.string.key_show_wizard_button, true)).toVisibility()
-            binding.buttonsLayout.insulinButton.visibility = (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null
-                && sp.getBoolean(R.string.key_show_insulin_button, true)).toVisibility()
+                && preferences.get(BooleanKey.OverviewShowWizardButton)).toVisibility()
+            binding.buttonsLayout.insulinButton.visibility = (profile != null && preferences.get(BooleanKey.OverviewShowInsulinButton)).toVisibility()
+            if (loop.isDisconnected || !pump.isInitialized() || pump.isSuspended()) {
+                setRibbon(
+                    binding.buttonsLayout.insulinButton,
+                    app.aaps.core.ui.R.attr.ribbonTextWarningColor,
+                    app.aaps.core.ui.R.attr.ribbonWarningColor,
+                    rh.gs(app.aaps.core.ui.R.string.overview_insulin_label)
+                )
+            } else {
+                setRibbon(
+                    binding.buttonsLayout.insulinButton,
+                    app.aaps.core.ui.R.attr.icBolusColor,
+                    app.aaps.core.ui.R.attr.ribbonDefaultColor,
+                    rh.gs(app.aaps.core.ui.R.string.overview_insulin_label)
+                )
+            }
 
             // **** Calibration & CGM buttons ****
             val xDripIsBgSource = xDripSource.isEnabled()
-            val dexcomIsSource = dexcomBoyda.isEnabled()
-            binding.buttonsLayout.calibrationButton.visibility = (xDripIsBgSource && actualBG != null && sp.getBoolean(R.string.key_show_calibration_button, true)).toVisibility()
-            if (dexcomIsSource) {
-                binding.buttonsLayout.cgmButton.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(R.drawable.ic_byoda), null, null)
-                for (drawable in binding.buttonsLayout.cgmButton.compoundDrawables) {
-                    drawable?.mutate()
-                    drawable?.colorFilter = PorterDuffColorFilter(rh.gac(context, app.aaps.core.ui.R.attr.cgmDexColor), PorterDuff.Mode.SRC_IN)
-                }
-                binding.buttonsLayout.cgmButton.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.cgmDexColor))
-            } else if (xDripIsBgSource) {
-                binding.buttonsLayout.cgmButton.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(app.aaps.core.main.R.drawable.ic_xdrip), null, null)
+            binding.buttonsLayout.calibrationButton.visibility = (xDripIsBgSource && actualBG != null && preferences.get(BooleanKey.OverviewShowCalibrationButton)).toVisibility()
+            if (xDripIsBgSource) {
+                binding.buttonsLayout.cgmButton.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(app.aaps.core.objects.R.drawable.ic_xdrip), null, null)
                 for (drawable in binding.buttonsLayout.cgmButton.compoundDrawables) {
                     drawable?.mutate()
                     drawable?.colorFilter = PorterDuffColorFilter(rh.gac(context, app.aaps.core.ui.R.attr.cgmXdripColor), PorterDuff.Mode.SRC_IN)
                 }
                 binding.buttonsLayout.cgmButton.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.cgmXdripColor))
             }
-            binding.buttonsLayout.cgmButton.visibility = (sp.getBoolean(R.string.key_show_cgm_button, false) && (xDripIsBgSource || dexcomIsSource)).toVisibility()
+            binding.buttonsLayout.cgmButton.visibility = (preferences.get(BooleanKey.OverviewShowCgmButton) && xDripIsBgSource).toVisibility()
 
             // Automation buttons
             binding.buttonsLayout.userButtonsLayout.removeAllViews()
             val events = automation.userEvents()
-            if (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null)
+            if (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null && !config.showUserActionsOnWatchOnly())
                 for (event in events)
-                    if (event.isEnabled && event.canRun())
+                    if (event.isEnabled && event.canRun()) {
                         context?.let { context ->
                             SingleClickButton(context, null, app.aaps.core.ui.R.attr.customBtnStyle).also {
                                 it.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.treatmentButton))
@@ -622,13 +617,20 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                                     OKDialog.showConfirmation(context, rh.gs(R.string.run_question, event.title), { handler.post { automation.processEvent(event) } })
                                 }
                                 binding.buttonsLayout.userButtonsLayout.addView(it)
-                                for (drawable in it.compoundDrawables ) {
+                                for (drawable in it.compoundDrawables) {
                                     drawable?.mutate()
                                     drawable?.colorFilter = PorterDuffColorFilter(rh.gac(context, app.aaps.core.ui.R.attr.userOptionColor), PorterDuff.Mode.SRC_IN)
                                 }
                             }
                         }
+                        list += event.hashCode()
+                    }
             binding.buttonsLayout.userButtonsLayout.visibility = events.isNotEmpty().toVisibility()
+        }
+        if (list != lastUserAction) {
+            // Synchronize Watch Tiles with overview
+            lastUserAction = list
+            rxBus.send(EventWearUpdateTiles())
         }
     }
 
@@ -639,11 +641,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val closedLoopEnabled = constraintChecker.isClosedLoopAllowed()
 
         fun apsModeSetA11yLabel(stringRes: Int) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                binding.infoLayout.apsMode.stateDescription = rh.gs(stringRes)
-            } else {
-                binding.infoLayout.apsMode.contentDescription = rh.gs(app.aaps.core.ui.R.string.aps_mode_title) + " " + rh.gs(stringRes)
-            }
+            binding.infoLayout.apsMode.stateDescription = rh.gs(stringRes)
         }
 
         runOnUiThread {
@@ -695,7 +693,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     }
 
                     (loop as PluginBase).isEnabled() && closedLoopEnabled.value()               -> {
-                        binding.infoLayout.apsMode.setImageResource(app.aaps.core.main.R.drawable.ic_loop_closed)
+                        binding.infoLayout.apsMode.setImageResource(app.aaps.core.objects.R.drawable.ic_loop_closed)
                         apsModeSetA11yLabel(app.aaps.core.ui.R.string.closedloop)
                         binding.infoLayout.apsModeText.visibility = View.GONE
                     }
@@ -740,7 +738,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             secondaryGraphs.clear()
             secondaryGraphsLabel.clear()
             binding.graphsLayout.iobGraph.removeAllViews()
-            for (i in 1 until numOfGraphs) {
+            (1 until numOfGraphs).forEach {
                 val relativeLayout = RelativeLayout(context)
                 relativeLayout.layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
 
@@ -786,13 +784,13 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     @SuppressLint("SetTextI18n")
     fun updateBg() {
-        val lastBg = overviewData.lastBg(iobCobCalculator.ads)
-        val lastBgColor = overviewData.lastBgColor(context, iobCobCalculator.ads)
-        val isActualBg = overviewData.isActualBg(iobCobCalculator.ads)
+        val lastBg = lastBgData.lastBg()
+        val lastBgColor = lastBgData.lastBgColor(context)
+        val isActualBg = lastBgData.isActualBg()
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
         val trendDescription = trendCalculator.getTrendDescription(iobCobCalculator.ads)
         val trendArrow = trendCalculator.getTrendArrow(iobCobCalculator.ads)
-        val lastBgDescription = overviewData.lastBgDescription(iobCobCalculator.ads)
+        val lastBgDescription = lastBgData.lastBgDescription()
         runOnUiThread {
             _binding ?: return@runOnUiThread
             binding.infoLayout.bg.text = profileUtil.fromMgdlToStringInUnits(lastBg?.recalculated)
@@ -838,6 +836,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             } else {
                 binding.infoLayout.bgQuality.visibility = View.GONE
             }
+            binding.infoLayout.simpleMode.visibility = preferences.simpleMode.toVisibility()
         }
     }
 
@@ -865,10 +864,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     }
 
     private fun updateTemporaryBasal() {
-        val temporaryBasalText = overviewData.temporaryBasalText(iobCobCalculator)
-        val temporaryBasalColor = overviewData.temporaryBasalColor(context, iobCobCalculator)
-        val temporaryBasalIcon = overviewData.temporaryBasalIcon(iobCobCalculator)
-        val temporaryBasalDialogText = overviewData.temporaryBasalDialogText(iobCobCalculator)
+        val temporaryBasalText = overviewData.temporaryBasalText()
+        val temporaryBasalColor = overviewData.temporaryBasalColor(context)
+        val temporaryBasalIcon = overviewData.temporaryBasalIcon()
+        val temporaryBasalDialogText = overviewData.temporaryBasalDialogText()
         runOnUiThread {
             _binding ?: return@runOnUiThread
             binding.infoLayout.baseBasal.text = temporaryBasalText
@@ -880,9 +879,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     private fun updateExtendedBolus() {
         val pump = activePlugin.activePump
-        val extendedBolus = iobCobCalculator.getExtendedBolus(dateUtil.now())
-        val extendedBolusText = overviewData.extendedBolusText(iobCobCalculator)
-        val extendedBolusDialogText = overviewData.extendedBolusDialogText(iobCobCalculator)
+        val extendedBolus = persistenceLayer.getExtendedBolusActiveAt(dateUtil.now())
+        val extendedBolusText = overviewData.extendedBolusText()
+        val extendedBolusDialogText = overviewData.extendedBolusDialogText()
         runOnUiThread {
             _binding ?: return@runOnUiThread
             binding.infoLayout.extendedBolus.text = extendedBolusText
@@ -893,12 +892,13 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     private fun updateTime() {
         _binding ?: return
+        binding.graphsLayout.scaleButton.text = overviewMenus.scaleString(overviewData.rangeToDisplay)
         binding.infoLayout.time.text = dateUtil.timeString(dateUtil.now())
         // Status lights
         val pump = activePlugin.activePump
         val isPatchPump = pump.pumpDescription.isPatchPump
         binding.statusLightsLayout.apply {
-            cannulaOrPatch.setImageResource(if (isPatchPump) app.aaps.core.main.R.drawable.ic_patch_pump_outline else R.drawable.ic_cp_age_cannula)
+            cannulaOrPatch.setImageResource(if (isPatchPump) app.aaps.core.objects.R.drawable.ic_patch_pump_outline else R.drawable.ic_cp_age_cannula)
             cannulaOrPatch.contentDescription = rh.gs(if (isPatchPump) R.string.statuslights_patch_pump_age else R.string.statuslights_cannula_age)
             insulinAge.visibility = isPatchPump.not().toVisibility()
             batteryLayout.visibility = (!isPatchPump || pump.pumpDescription.useHardwareLink).toVisibility()
@@ -906,7 +906,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             val useBatteryLevel = (pump.model() == PumpType.OMNIPOD_EROS)
                 || (pump.model() != PumpType.ACCU_CHEK_COMBO && pump.model() != PumpType.OMNIPOD_DASH)
             pbLevel.visibility = useBatteryLevel.toVisibility()
-            statusLightsLayout.visibility = (sp.getBoolean(R.string.key_show_statuslights, true) || config.NSCLIENT).toVisibility()
+            statusLightsLayout.visibility = (preferences.get(BooleanKey.OverviewShowStatusLights) || config.NSCLIENT).toVisibility()
         }
         statusLightHandler.updateStatusLights(
             binding.statusLightsLayout.cannulaAge,
@@ -920,11 +920,21 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         )
     }
 
+    private fun bolusIob(): IobTotal = iobCobCalculator.calculateIobFromBolus().round()
+    private fun basalIob(): IobTotal = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
+    private fun iobText(): String =
+        rh.gs(app.aaps.core.ui.R.string.format_insulin_units, bolusIob().iob + basalIob().basaliob)
+
+    private fun iobDialogText(): String =
+        rh.gs(app.aaps.core.ui.R.string.format_insulin_units, bolusIob().iob + basalIob().basaliob) + "\n" +
+            rh.gs(app.aaps.core.ui.R.string.bolus) + ": " + rh.gs(app.aaps.core.ui.R.string.format_insulin_units, bolusIob().iob) + "\n" +
+            rh.gs(app.aaps.core.ui.R.string.basal) + ": " + rh.gs(app.aaps.core.ui.R.string.format_insulin_units, basalIob().basaliob)
+
     private fun updateIobCob() {
-        val iobText = overviewData.iobText(iobCobCalculator)
-        val iobDialogText = overviewData.iobDialogText(iobCobCalculator)
-        val displayText = overviewData.cobInfo(iobCobCalculator).displayText(rh, decimalFormatter)
-        val lastCarbsTime = overviewData.lastCarbsTime
+        val iobText = iobText()
+        val iobDialogText = iobDialogText()
+        val displayText = iobCobCalculator.getCobInfo("Overview COB").displayText(rh, decimalFormatter)
+        val lastCarbsTime = persistenceLayer.getNewestCarbs()?.timestamp ?: 0L
         runOnUiThread {
             _binding ?: return@runOnUiThread
             binding.infoLayout.iob.text = iobText
@@ -954,7 +964,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @SuppressLint("SetTextI18n")
     fun updateTemporaryTarget() {
         val units = profileFunction.getUnits()
-        val tempTarget = overviewData.temporaryTarget
+        val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
         runOnUiThread {
             _binding ?: return@runOnUiThread
             if (tempTarget != null) {
@@ -969,7 +979,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     // If the target is not the same as set in the profile then oref has overridden it
                     val targetUsed =
                         if (config.APS) loop.lastRun?.constraintsProcessed?.targetBG ?: 0.0
-                        else if (config.NSCLIENT) JsonHelper.safeGetDouble(processedDeviceStatusData.getAPSResult().json, "targetBG")
+                        else if (config.NSCLIENT) processedDeviceStatusData.getAPSResult()?.targetBG ?: 0.0
                         else 0.0
 
                     if (targetUsed != 0.0 && abs(profile.getTargetMgdl() - targetUsed) > 0.01) {
@@ -1008,7 +1018,11 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val graphData = GraphData(injector, binding.graphsLayout.bgGraph, overviewData)
         val menuChartSettings = overviewMenus.setting
         if (menuChartSettings.isEmpty()) return
-        graphData.addInRangeArea(overviewData.fromTime, overviewData.endTime, defaultValueHelper.determineLowLine(), defaultValueHelper.determineHighLine())
+        graphData.addInRangeArea(
+            overviewData.fromTime, overviewData.endTime,
+            preferences.get(UnitDoubleKey.OverviewLowMark),
+            preferences.get(UnitDoubleKey.OverviewHighMark)
+        )
         graphData.addBgReadings(menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal], context)
         graphData.addBucketedData()
         graphData.addTreatments(context)
@@ -1033,16 +1047,18 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val secondaryGraphsData: ArrayList<GraphData> = ArrayList()
 
         val now = System.currentTimeMillis()
-        for (g in 0 until min(secondaryGraphs.size, menuChartSettings.size + 1)) {
+        for (g in 0 until min(secondaryGraphs.size, menuChartSettings.size - 1)) {
             val secondGraphData = GraphData(injector, secondaryGraphs[g], overviewData)
             var useABSForScale = false
             var useIobForScale = false
             var useCobForScale = false
             var useDevForScale = false
             var useRatioForScale = false
+            var useVarSensForScale = false
             var useDSForScale = false
             var useBGIForScale = false
             var useHRForScale = false
+            var useSTEPSForScale = false
             when {
                 menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal]      -> useABSForScale = true
                 menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal]      -> useIobForScale = true
@@ -1050,8 +1066,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal]      -> useDevForScale = true
                 menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal]      -> useBGIForScale = true
                 menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]      -> useRatioForScale = true
+                menuChartSettings[g + 1][OverviewMenus.CharType.VAR_SEN.ordinal]  -> useVarSensForScale = true
                 menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] -> useDSForScale = true
                 menuChartSettings[g + 1][OverviewMenus.CharType.HR.ordinal]       -> useHRForScale = true
+                menuChartSettings[g + 1][OverviewMenus.CharType.STEPS.ordinal]    -> useSTEPSForScale = true
             }
             val alignDevBgiScale = menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal] && menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal]
 
@@ -1061,19 +1079,21 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             if (menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal]) secondGraphData.addDeviations(useDevForScale, 1.0)
             if (menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal]) secondGraphData.addMinusBGI(useBGIForScale, if (alignDevBgiScale) 1.0 else 0.8)
             if (menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]) secondGraphData.addRatio(useRatioForScale, if (useRatioForScale) 1.0 else 0.8)
+            if (menuChartSettings[g + 1][OverviewMenus.CharType.VAR_SEN.ordinal]) secondGraphData.addVarSens(useVarSensForScale, if (useVarSensForScale) 1.0 else 0.8)
             if (menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] && config.isDev()) secondGraphData.addDeviationSlope(
                 useDSForScale,
                 if (useDSForScale) 1.0 else 0.8,
                 useRatioForScale
             )
             if (menuChartSettings[g + 1][OverviewMenus.CharType.HR.ordinal]) secondGraphData.addHeartRate(useHRForScale, if (useHRForScale) 1.0 else 0.8)
+            if (menuChartSettings[g + 1][OverviewMenus.CharType.STEPS.ordinal]) secondGraphData.addSteps(useSTEPSForScale, if (useSTEPSForScale) 1.0 else 0.8)
 
             // set manual x bounds to have nice steps
             secondGraphData.formatAxis(overviewData.fromTime, overviewData.endTime)
             secondGraphData.addNowLine(now)
             secondaryGraphsData.add(secondGraphData)
         }
-        for (g in 0 until min(secondaryGraphs.size, menuChartSettings.size + 1)) {
+        for (g in 0 until min(secondaryGraphs.size, menuChartSettings.size - 1)) {
             secondaryGraphsLabel[g].text = overviewMenus.enabledTypes(g + 1)
             secondaryGraphs[g].visibility = (
                 menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal] ||
@@ -1082,8 +1102,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal] ||
                     menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal] ||
                     menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal] ||
+                    menuChartSettings[g + 1][OverviewMenus.CharType.VAR_SEN.ordinal] ||
                     menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] ||
-                    menuChartSettings[g + 1][OverviewMenus.CharType.HR.ordinal]
+                    menuChartSettings[g + 1][OverviewMenus.CharType.HR.ordinal] ||
+                    menuChartSettings[g + 1][OverviewMenus.CharType.STEPS.ordinal]
                 ).toVisibility()
             secondaryGraphsData[g].performUpdate()
         }
@@ -1097,35 +1119,39 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     private fun updateSensitivity() {
         _binding ?: return
-        val lastAutosensData = overviewData.lastAutosensData(iobCobCalculator)
+        val lastAutosensData = iobCobCalculator.ads.getLastAutosensData("Overview", aapsLogger, dateUtil)
         if (config.NSCLIENT && sp.getBoolean(app.aaps.core.utils.R.string.key_used_autosens_on_main_phone, false) ||
             !config.NSCLIENT && constraintChecker.isAutosensModeEnabled().value()
         ) {
-            binding.infoLayout.sensitivityIcon.setImageResource(app.aaps.core.main.R.drawable.ic_swap_vert_black_48dp_green)
+            binding.infoLayout.sensitivityIcon.setImageResource(app.aaps.core.objects.R.drawable.ic_swap_vert_black_48dp_green)
         } else {
-            binding.infoLayout.sensitivityIcon.setImageResource(app.aaps.core.main.R.drawable.ic_x_swap_vert)
+            binding.infoLayout.sensitivityIcon.setImageResource(app.aaps.core.objects.R.drawable.ic_x_swap_vert)
         }
 
         binding.infoLayout.sensitivity.text =
             lastAutosensData?.let {
-                String.format(Locale.ENGLISH, "%.0f%%", it.autosensResult.ratio * 100)
+                String.format(Locale.ENGLISH, "AS: %.0f%%", it.autosensResult.ratio * 100)
             } ?: ""
         // Show variable sensitivity
         val profile = profileFunction.getProfile()
         val request = loop.lastRun?.request
-        val isfMgdl = profile?.getIsfMgdl()
+        val isfMgdl = profile?.getProfileIsfMgdl()
+        val isfForCarbs = profile?.getIsfMgdlForCarbs(dateUtil.now(), "Overview", config, processedDeviceStatusData)
         val variableSens =
-            if (config.APS && request is VariableSensitivityResult) request.variableSens ?: 0.0
-            else if (config.NSCLIENT) JsonHelper.safeGetDouble(processedDeviceStatusData.getAPSResult().json, "variable_sens")
+            if (config.APS) request?.variableSens ?: 0.0
+            else if (config.NSCLIENT) processedDeviceStatusData.getAPSResult()?.variableSens ?: 0.0
             else 0.0
+        val ratioUsed = request?.autosensResult?.ratio ?: 1.0
 
         if (variableSens != isfMgdl && variableSens != 0.0 && isfMgdl != null) {
-            binding.infoLayout.variableSensitivity.text =
-                String.format(
-                    Locale.getDefault(), "%1$.1f→%2$.1f",
-                    profileUtil.fromMgdlToUnits(isfMgdl, profileFunction.getUnits()),
-                    profileUtil.fromMgdlToUnits(variableSens, profileFunction.getUnits())
-                )
+            var text = if (ratioUsed != 1.0 && ratioUsed != lastAutosensData?.autosensResult?.ratio) String.format(Locale.getDefault(), "Alg: %.0f%%\n", ratioUsed * 100) else ""
+            text += String.format(
+                Locale.getDefault(), "%1$.1f→%2$.1f (%3$.1f)",
+                profileUtil.fromMgdlToUnits(isfMgdl, profileFunction.getUnits()),
+                profileUtil.fromMgdlToUnits(variableSens, profileFunction.getUnits()),
+                profileUtil.fromMgdlToUnits(isfForCarbs ?: 0.0, profileFunction.getUnits())
+            )
+            binding.infoLayout.variableSensitivity.text = text
             binding.infoLayout.variableSensitivity.visibility = View.VISIBLE
         } else binding.infoLayout.variableSensitivity.visibility = View.GONE
     }

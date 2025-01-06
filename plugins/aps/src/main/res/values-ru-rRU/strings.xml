@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Autotune-->
     <string name="dynisf_adjust_sensitivity">Включить коэффициент чувствительности на основе суточной дозировки инсулина TDD для изменения базальной скорости и целевых значений гликемии</string>
     <string name="dynisf_adjust_sensitivity_summary">Если эти опции включены, AAPS использует последние 24 часа TDD/7D TDD для расчета коэффициента чувствительности, на основе которого производится увеличение или снижение скорости базала, а также коррекция целевой гликемии, как и при работе Autosens. Рекомендуется начинать при выключенной опции</string>
-    <string name="DynISFAdjust_title" formatted="false">Коэффициент регулировки динамического диапазона чувствительности ISF %</string>
-    <string name="DynISFAdjust_summary" formatted="false">Коэффициент корректировки динамического диапазона чувствительности ISF. Установите более 100% для агрессивных доз коррекции и менее 100% для менее агрессивной коррекции.</string>
+    <string name="dyn_isf_adjust_title" formatted="false">Коэффициент регулировки динамического диапазона чувствительности ISF %</string>
+    <string name="dyn_isf_adjust_summary" formatted="false">Коэффициент корректировки динамического диапазона чувствительности ISF. Установите более 100% для агрессивных доз коррекции и менее 100% для менее агрессивной коррекции.</string>
     <string name="high_temptarget_raises_sensitivity_title">Высокая ВЦ повышает чувствительность</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Повысить чувствительность для temptargets > = 100]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Низкая ВЦ снижает чувствительность</string>
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Понизить чувствительность для temptargets > = 100]]></string>
-    <string name="openapssmb">OpenAPS СМБ</string>
+    <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Динамический ISF</string>
+    <string name="openaps_auto_isf">Auto ISF</string>
     <string name="smb_interval_summary">Как часто SMB будут подаваться в минутах</string>
     <string name="resistance_lowers_target_title">Резистентность понижает цель</string>
     <string name="resistance_lowers_target_summary">При обнаружении резистентности целевой уровень гликемии понижается</string>
@@ -19,6 +21,7 @@
     <string name="openapsma_no_glucose_data">Данные гликемии недоступны</string>
     <string name="openaps_no_as_data">Данные autosens недоступны</string>
     <string name="dynisf_shortname">ДинISF</string>
+    <string name="autoisf_shortname">AUTOISF</string>
     <string name="executing">выполнение</string>
     <string name="openapsama">Помощник болюса OpenAPS AMA</string>
     <string name="array_of_elements">Массив %1$d элементов. \nActual актуальная величина:</string>
@@ -26,6 +29,7 @@
     <string name="description_ama">Состояние алгоритма в 2017 году</string>
     <string name="description_smb">Самый новый алгоритм для опытных пользователей</string>
     <string name="description_smb_dynamic_isf">Последний алгоритм для опытных пользователей с динамическим/автоматическим ISF</string>
+    <string name="description_auto_isf">Новейший алгоритм для опытных пользователей с динамическим изменением чувствительности к инсулину ISF</string>
     <string name="openapsama_bolus_snooze_dia_divisor">Делитель продолжительности действия инсулина при болюсе</string>
     <string name="openapsma_run">выполнить сейчас</string>
     <string name="openapsma_last_run_label">Предыдущее выполнение</string>
@@ -62,9 +66,9 @@
     <string name="enable_smb_summary">Для ускорения действия использовать супер микро болюсы SMB вместо временного базала</string>
     <string name="enable_uam_summary">Обнаружение незапланированного приема пищи</string>
     <string name="enable_smb_always">Всегда включать супер микро болюс SMB</string>
-    <string name="enable_smb_always_summary">Всегда включать супер микро болюс SMB независимо от болюсов. Возможно только для источников ГК с хорошей фильтрацией данных вроде G5</string>
+    <string name="enable_smb_always_summary">Включать SMB всегда, вне зависимости от активных углеводов, ВЦ или болюсов. Возможно только на источниках СК с хорошей фильтрацией данных</string>
     <string name="enable_smb_after_carbs">Включать супер микро болюс SMB после углеводов</string>
-    <string name="enable_smb_after_carbs_summary">Включать супер микро болюс SMB на 6 часов после углеводов, даже при 0 активных углеводов COB. Возможно только для источников ГК с хорошей фильтрацией данных вроде G5</string>
+    <string name="enable_smb_after_carbs_summary">Включать SMB на 6ч после приема пищи, даже при отсутствии активных углеводов. Возможно только на источниках СК с продвинутой фильтрацией данных</string>
     <string name="enable_smb_with_cob">Включать супер микро болюсы при активных углеводах COB</string>
     <string name="enable_smb_with_cob_summary">Включить супер микро болюс SMB, когда имеются активные углеводы COB.</string>
     <string name="enable_smb_with_temp_target">Включить супер микро болюсы SMB с временными целями</string>
@@ -84,7 +88,8 @@
     <string name="smb_disabled_in_preferences">Супер микро болюс SMB отключен в настройках</string>
     <string name="uam_disabled_in_preferences">Непредвиденный прием пищи UAM отключен в настройках</string>
     <string name="autosens_disabled_in_preferences">Автоматический подбор чувствительности Autosens отключен в настройках</string>
-    <string name="autosens_disabled_in_dyn_isf">Autosens отключён в DynISF</string>
+    <string name="use_dynamic_sensitivity_title">Включить динамическую чувствительность</string>
+    <string name="use_dynamic_sensitivity_summary">Настроить алгоритм на использование динамической чувствительности вместо значений профиля</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">Ограничение активного инсулина IOB до %1$.1f ед. из-за %2$s</string>
     <string name="maxvalueinpreferences">максимальное значение в настройках</string>
@@ -116,5 +121,87 @@
     <string name="loop_smb_set_by_pump_label">Супер микро болюс SMB задан помпой</string>
     <string name="loop_open_mode_min_change">Минимальный запрос на изменения [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Алгоритм ИПЖ выдаст всплывающее окно с запросом на новые изменения, только если изменение больше, чем это значение в %. Значение по умолчанию — 20%</string>
-    <string name="fallback_smb_no_tdd">Возврат к СМБ. Недостаточно данных TDD.</string>
+    <string name="fallback_smb_no_tdd">Возврат к SMB. Недостаточно данных TDD.</string>
+    <string name="fallback_to_isf_no_tdd">Откат к чувствительности из профиля. Недостаточно данных. Причина: %1$s</string>
+    <!-- Autotune -->
+    <string name="autotune_description">Помощь в возможной корректировке профиля (ISF, IC, базал)</string>
+    <string name="autotune_shortname">АвтТюн</string>
+    <string name="autotune_settings">Настройки Autotune</string>
+    <string name="autotune_auto_title">Профили Автонастройки </string>
+    <string name="autotune_auto_summary">При активации происходит обновление автонастройки и смена профиля на основе правила автоматизации  </string>
+    <string name="autotune_categorize_uam_as_basal_title">Классифицировать UAM как базал</string>
+    <string name="autotune_categorize_uam_as_basal_summary">Включите, если только вы точно ввели все съеденные углеводы. С этой опцией внезапные подъемы, зафиксированные Autotune, будут использованы для рекомендаций изменения базальной скорости.</string>
+    <string name="autotune_tune_insulin_curve_title">Настройка кривой инсулина</string>
+    <string name="autotune_tune_insulin_curve_summary">Включите, если используете беспиковый. Настроит пики и DIA</string>
+    <string name="autotune_default_tune_days_title">Количество дней с данными</string>
+    <string name="autotune_circadian_ic_isf_title">Применить усредненный суточный IC/ISF</string>
+    <string name="autotune_circadian_ic_isf_summary">Autotune не настраивает суточные вариации, эта опция только применяет усредненные коэффициенты IC и ISF к суточному профилю</string>
+    <string name="autotune_additional_log_title">Включить больше информации логов для отладки</string>
+    <string name="autotune_additional_log_summary">Включите только если разработчик просит отправить больше информации о логах для отладки плагина Autotune</string>
+    <string name="autotune_default_tune_days_summary">Количество дней обработки данных Autotune по умолчанию (до 30)</string>
+    <string name="autotune_tunedprofile_name">Настроено</string>
+    <string name="autotune_profile">Профиль:</string>
+    <string name="autotune_last_run">Последнее выполнение:</string>
+    <string name="autotune_warning">Внимание:</string>
+    <string name="autotune_ic_warning">Выбранный профиль имеет %1$d значений IC. Автоматически будет использоваться %2$.2f г/ед</string>
+    <string name="autotune_isf_warning">Выбранный профиль имеет %1$d значений ISF. Автоматически будет использоваться %2$.1f%3$s/ед</string>
+    <string name="autotune_error">Ошибка ввода данных, попробуйте запустить снова autotune или уменьшить количество дней</string>
+    <string name="autotune_error_more_days">Ошибка в данных, увеличьте количество дней</string>
+    <string name="autotune_warning_during_run">Идет настройка автоматизации, ждите</string>
+    <string name="autotune_warning_after_run">Перед использованием внимательно проверьте результаты!</string>
+    <string name="autotune_partial_result">Частичный результат дня %1$d / %2$d для расчета</string>
+    <string name="autotune_result">Результат: %1$s</string>
+    <string name="autotune_param">Парам</string>
+    <string name="autotune_percent">%</string>
+    <string name="autotune_missing">Отсутствует</string>
+    <string name="autotune_run">Выполнить Autotune</string>
+    <string name="autotune_check_input_profile_button">Проверьте профиль ввода</string>
+    <string name="autotune_compare_profile">Сравнить профили</string>
+    <string name="autotune_copy_localprofile_button">Копировать в локальный профиль</string>
+    <string name="autotune_update_input_profile_button">Обновить профиль ввода</string>
+    <string name="autotune_revert_input_profile_button">Вернуть профиль ввода</string>
+    <string name="autotune_copy_local_profile_message">Создать новый локальный профиль из этого профиля Autotune?</string>
+    <string name="autotune_update_local_profile_message">Обновить профиль %1$s профилем Autotune?</string>
+    <string name="autotune_revert_local_profile_message">Восстановить профиль %1$s с помощью входного профиля?</string>
+    <string name="autotune_profile_invalid">Неверный профиль</string>
+    <string name="not_available_full">Недоступно</string>
+    <string name="pump_disconnected">Помпа отключена</string>
+    <!--    autoISF -->
+    <string name="half_basal_exercise_target_title">Половина дозы базального инсулина при ВЦ Нагрузка</string>
+    <string name="half_basal_exercise_target_summary">Установливается как число, например, 160 означает, что при ВЦ 160 мг/дл и настройке \"Высокая ВЦ повышает чувствительность =true\", активируется 50%% базальной скорости (120 = 75%%; 140 = 60%%).</string>
+    <string name="autoISF_settings_title">Настройки AutoISF</string>
+    <string name="autoISF_settings_summary">АвтоISF позволяет адаптировать фактор чувствительности (ISF) к различных вариантам изменения гликемии\n\nОн также может изменять настройки микроболюсов SMB</string>
+    <string name="smb_delivery_settings_title">Настройки введения микроболюсов SMB</string>
+    <string name="smb_delivery_settings_summary">Набор параметров для увеличения фактического размера микроболюсов SMB, которые могут быть применены при усилении ISF, т.е. при низких значениях ISF.\n\nИСПОЛЬЗОВАТЬ С ОСТОРОЖНОСТЬЮ</string>
+    <string name="openapsama_enable_autoISF">Включить адаптивную чувствительность ISF в зависимости от поведения ГК</string>
+    <string name="openapsama_autoISF_max_summary">Аналогично autosense_max определяет, насколько сильным может стать ISF. Значение 1.0 по умолчанию его отключает. Предупреждение: Будьте предельно осторожны при использовании значений выше 2.5</string>
+    <string name="openapsama_autoISF_min_summary">Подобно autosens_min определяет насколько слабой может стать чувствительность ISF.\n\nЗначение по умолчанию 1.0 отключает этот эффект.</string>
+    <string name="openapsama_dura_ISF_weight_summary">Это вес, применяемый при длительных повышениях уровня глюкозы, который усиливает ISF, потенциально увеличивая подачу инсулина.\n\П Значение по умолчанию 0,0 отключает этот эффект.</string>
+    <string name="openapsama_lower_ISFrange_weight_summary">Это вектор, который ослабляет ISF при гликемии ниже цели и потенциально уменьшает подачу инсулина.\n\n Значение по умолчанию 0,0 отключает этот эффект.</string>
+    <string name="openapsama_higher_ISFrange_weight_summary">Это вектор, который усиливает ISF при гликемии выше цели и потенциально увеличивает подачу инсулина.\n\n Значение по умолчанию 0,0 отключает этот эффект.</string>
+    <string name="openapsama_pp_ISF_weight_summary">Это вектор, который усиливает ISF при подъеме гликемии и потенциально увеличивает подачу инсулина.\n\n Значение по умолчанию 0,0 отключает этот эффект.</string>
+    <string name="openapsama_bgAccel_ISF_weight_summary">Это вектор, который усиливает ISF при ускорении повышения гликемии и потенциально увеличивает подачу инсулина.\n\n Значение по умолчанию 0,0 отключает этот эффект.</string>
+    <string name="openapsama_bgBrake_ISF_weight_summary">Это вектор, который ослабляет ISF при замедлении изменений гликемии тем самым потенциально уменьшая подачу инсулина.\n\n Значение по умолчанию 0,0 отключает этот эффект.</string>
+    <string name="openapsama_autoISF_max">Макс. коэффициент autoISF\n(autoISF_max)</string>
+    <string name="openapsama_autoISF_min">Мин. коэффициент autoISF\n(autoISF_min)</string>
+    <string name="openapsama_lower_ISFrange_weight">Нагрузка диапазона ISF ниже цели\n(lower_ISFrange_weight)</string>
+    <string name="openapsama_higher_ISFrange_weight">Нагрузка диапазона ISF выше цели\n(higher_ISFrange_weight)</string>
+    <string name="openapsama_pp_ISF_weight">Изменяющая ISF после еды нагрузка\n(pp_ISF_weight)</string>
+    <string name="openapsama_bgAccel_ISF_weight">Нагрузка при ускорении изменения ГК\n(bgAccel_ISF_weight)</string>
+    <string name="openapsama_bgBrake_ISF_weight">Нагрузка при замедлении изменений ГК\n(bgBrake_ISF_weight)</string>
+    <string name="openapsama_dura_ISF_weight">Нагрузка ISF при застое ГК\n(dura_ISF_weight)</string>
+    <string name="openapsama_smb_delivery_ratio">Фикс. коэффициент ввода микроболюсов SMB\n(smb_delivery_ratio)</string>
+    <string name="openapsama_smb_delivery_ratio_min">Нижняя граница переменного коэффициента ввода микроболюсов SMB\n(smb_delivery_ratio_min)</string>
+    <string name="openapsama_smb_delivery_ratio_max">Верхняя граница переменного коэффициента ввода микроболюсов SMB\n(smb_delivery_ratio_max)</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range">Диапазон ГК переменного коэффициента ввода микроболюсов SMB\n(smb_delivery_ratio_bg_range)</string>
+    <string name="openapsama_smb_max_range_extension">Увеличение макс. диапазона SMB/UAM\n(smb_max_range_extension)</string>
+    <string name="openapsama_smb_delivery_ratio_summary">Значение по умолчанию: 0,5 Это еще один ключ безопасности OpenAPS, который указывает, какая доля всего требуемого инсулина может быть подана в виде микроболюсов SMB. Он создан для того, чтобы не допустить одновременной отправки запросов на SMB с телефона попечителей. Увеличивать эту экспериментальную величину медленно и с осторожностью.</string>
+    <string name="openapsama_smb_delivery_ratio_min_summary">Значение по умолчанию: 0,5. Это нижний предел линейно растущего коэффициента, а не фиксированная величина как выше.</string>
+    <string name="openapsama_smb_delivery_ratio_max_summary">Значение по умолчанию: 0,5. Это верхний предел линейно растущего коэффициента, а не фиксированная величина как выше.</string>
+    <string name="openapsama_smb_delivery_ratio_bg_range_summary">Значение по умолчанию: 0. Линейно увеличивающийся коэффициент для ввода микроболюсов SMB сопоставляется с диапазоном гликемии [целевая ГК, целевая ГК+диапазон ГК].\nДля параметра target_bg (целевая ГК) коэффициент SMB равен минимальному коэффициенту подачи микроболюсов (smb_delivery_ratio_min), для параметра target_bg+bg_range - максимальному (smb_delivery_ratio_max).\n При нуле линейно увеличивающийся коэффициент SMB отключен; используется фиксированный коэффициент smb_delivery_ratio.</string>
+    <string name="openapsama_smb_max_range_extension_summary">Значение по умолчанию: 1 Это еще один ключ безопасности OpenAPS который указывает, на какую величину можно превысить обычные 120 maxSMB/maxUAM минут. Увеличить его постепенно и с осторожностью.</string>
+    <string name="enableSMB_EvenOn_OddOff_always">Включить альтернативную активацию микроболюсов SMB при активной цели ГК выраженной целым числом</string>
+    <string name="enableSMB_EvenOn_OddOff_always_summary">\nвключены ...\nесли активная цель(ммоль/л) имеет четную десятичную часть\nили активная цель(мг/дл) - четное число\n\nв ином случае - отключены</string>
+    <string name="openapsama_iob_threshold_percent_summary" formatted="false">Процент maxIOB выше которого SMB отключаются.\nЗначение по умолчанию: 100%\nПри значении в 100%, функция не имеет эффекта.</string>
+    <string name="openapsama_iob_threshold_percent">Пороговый процент maxIOB для SMB\n(iob_threshold_percent)</string>
 </resources>

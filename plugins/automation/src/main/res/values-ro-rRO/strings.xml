@@ -104,8 +104,6 @@
     <string name="automation_event">Eveniment automatizare</string>
     <string name="reorder_label">Reordonează</string>
     <string name="user_action">Acțiunea utilizatorului</string>
-    <string name="remove_automation">Elimină automatizarea</string>
-    <string name="sort_automation">Sortează automatizarea</string>
     <string name="remove_selected_items">Ștergeți obiectele selectate</string>
     <string name="count_selected">%1$d selectat(e)</string>
     <string name="system_automation">Automatizare sistem</string>
@@ -116,4 +114,10 @@
     <string name="time_to_eat">E timpul pentru a mânca!\nRulează asistentul de bolusare și refă calculele.</string>
     <string name="time_to_bolus">Timpul sa faci bolus!\nRuleaza Calculatorul de Bolus pentru a face calculele din nou.</string>
     <string name="error_setting_reminder">Eroare la setarea alarmei viitoare</string>
+    <!--    Autotune-->
+    <string name="autotune_run">Rulează Autotune</string>
+    <string name="autotune_run_without_autoswitch">Autotune a rulat fără schimbarea profilului</string>
+    <string name="autotune_run_with_autoswitch">Autotune a rulat și profilul a fost automat schimbat</string>
+    <string name="autotune_run_with_error">Eroare în timpul ultimei rulări Autotune</string>
+    <string name="autotune_run_cancelled">O altă rulare Autotune este detectată, rularea este anulată</string>
 </resources>

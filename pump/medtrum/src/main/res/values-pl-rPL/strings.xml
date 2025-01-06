@@ -49,7 +49,6 @@
     <string name="alarm_expired">Ważność wygasła</string>
     <string name="alarm_reservoir_empty">Zbiornik w pompie jest pusty</string>
     <string name="alarm_patch_fault">Błąd Patcha</string>
-    <string name="alarm_patch_fault2">Błąd Patcha 2</string>
     <string name="alarm_base_fault">Błąd bazy</string>
     <string name="alarm_battery_out">Rozładowana bateria</string>
     <string name="alarm_no_calibration">Brak kalibracji</string>
@@ -79,6 +78,7 @@
     <string name="patch_not_active_note">Baza pompy nie powinna być podłączona do Patcha aż do następnego kroku!</string>
     <string name="connect_pump_base">Podłącz bazę pompy do nowego Patcha, usuń pozostałe powietrze i napełnij insuliną, a następnie naciśnij <b>Dalej</b>.</string>
     <string name="note_min_70_units">Uwaga: Do aktywacji wymagane jest co najmniej 70 jednostek.</string>
+    <string name="reservoir_text_and_level">Zbiornik: %.2f U</string>
     <string name="do_not_attach_to_body">Nie należy jeszcze przymocowywać Patcha do ciała.</string>
     <string name="half_press_needle">Wciśnij do połowy przycisk igły. Następnie naciśnij <b>Dalej</b> aby rozpocząć napełnianie.</string>
     <string name="wait_for_priming">Proszę poczekaj na zakończenie napełniania.</string>
@@ -89,6 +89,7 @@
     <string name="activating_pump">Aktywowanie pompy i ustawianie początkowej dawki bazowej. Proszę czekać.</string>
     <string name="activating_error">Błąd podczas aktywacji, naciśnij <b>Spróbuj ponownie</b>, aby spróbować ponownie.</string>
     <string name="activating_complete">Nowy Patch aktywowany. Pozostało %.2f jednostek.</string>
+    <string name="can_export_settings">Możesz wyeksportować ustawienia, aby móc odzyskać tę sesję patcha później.</string>
     <string name="press_OK_to_return">Naciśnij <b>OK</b>, aby powrócić do ekranu głównego.</string>
     <string name="deactivate_sure">Czy na pewno chcesz dezaktywować bieżący Patch?</string>
     <string name="cancel_sure">Czy na pewno chcesz anulować aktywację?</string>
@@ -108,7 +109,7 @@
     <string name="sn_input_title">Numer seryjny</string>
     <string name="sn_input_summary">Wprowadź numer seryjny bazy pompy.</string>
     <string name="sn_input_invalid">Nieprawidłowy numer seryjny!</string>
-    <string name="pump_unsupported">Pompa nieprzetestowana: %1$d! Skontaktuj się z nami na Discordzie lub github, aby uzyskać wsparcie</string>
+    <string name="pump_unsupported">Pompa nieprzetestowana: %1$s! Skontaktuj się z nami na Discordzie lub github, aby uzyskać wsparcie</string>
     <string name="alarm_setting_title">Ustawienia alarmu</string>
     <string name="alarm_setting_summary">Wybierz preferowaną konfigurację alarmu pompy.</string>
     <string name="pump_warning_notification_title">Powiadomienie o ostrzeżeniu pompy</string>
@@ -121,9 +122,19 @@
     <string name="hourly_max_insulin_summary">Określ maksymalną dozwoloną ilość jednostek insuliny podanych na godzinę. Po przekroczeniu tego limitu pompa zawiesi podaż insuliny.</string>
     <string name="daily_max_insulin_title">Maksymalna Insulina dziennie [jednostki]</string>
     <string name="daily_max_insulin_summary">Określ maksymalną dozwoloną ilość jednostek insuliny podanych na dzień. Po przekroczeniu tego limitu pompa zawiesi podaż insuliny.</string>
+    <string name="scan_on_connection_error_title">W razie błędów połączenia wykonaj skanowanie</string>
+    <string name="scan_on_connection_error_summary">OSTRZEŻENIE: Włącz tylko wtedy, gdy masz problemy z połączeniem. Jeśli włączono, sterownik skanuje w poszukiwaniu pompy przed ponowną próbą podłączenia do pompy. Upewnij się, że masz uprawnienia do lokalizacji ustawione na \"Zawsze zezwalaj\" dla AAPS w ustawieniach Androida </string>
     <!-- treatment state-->
     <string name="getting_pump_status">Uzyskiwanie statusu pompy</string>
+    <string name="syncing_records">Synchronizuję rekordy, pozostało %1$d</string>
     <string name="getting_bolus_status">Uzyskanie statusu bolusa</string>
     <string name="getting_temp_basal_status">Uzyskiwanie statusu bazy tymczasowej</string>
     <string name="setting_pump_settings">Ustawienie opcji użytkownika</string>
+    <!-- bolus-->
+    <string name="bolus_error_reason_user">Bolus anulowany przez użytkownika</string>
+    <string name="bolus_error_reason_not_connected">Pompa nie podłączona</string>
+    <string name="bolus_error_reason_already_in_progress">Bolus jest już w toku</string>
+    <string name="bolus_error_reason_unable_to_send_command">Nie można wysłać polecenia bolusa</string>
+    <string name="bolus_error_reason_communication_lost">Przekroczono limit czasu na informację o statusie bolusa</string>
+    <string name="bolus_error_reason_pump_error">Błąd pompy</string>
 </resources>

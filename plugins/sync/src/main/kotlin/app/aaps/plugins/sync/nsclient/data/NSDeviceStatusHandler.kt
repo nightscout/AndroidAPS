@@ -1,19 +1,19 @@
 package app.aaps.plugins.sync.nsclient.data
 
-import app.aaps.annotations.OpenForTesting
+import app.aaps.core.interfaces.aps.RT
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.core.nssdk.localmodel.devicestatus.NSDeviceStatus
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.core.utils.JsonHelper
-import app.aaps.plugins.sync.R
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -71,17 +71,17 @@ import javax.inject.Singleton
  */
 @Suppress("SpellCheckingInspection")
 @Singleton
-@OpenForTesting
 class NSDeviceStatusHandler @Inject constructor(
     private val sp: SP,
     private val config: Config,
     private val dateUtil: DateUtil,
     private val runningConfiguration: RunningConfiguration,
     private val processedDeviceStatusData: ProcessedDeviceStatusData,
-    private val uiInteraction: UiInteraction,
-    private val rh: ResourceHelper
+    private val aapsLogger: AAPSLogger,
+    private val persistenceLayer: PersistenceLayer
 ) {
 
+    private val disposable = CompositeDisposable()
     fun handleNewData(deviceStatuses: Array<NSDeviceStatus>) {
         var configurationDetected = false
         for (i in deviceStatuses.size - 1 downTo 0) {
@@ -152,8 +152,15 @@ class NSDeviceStatusHandler @Inject constructor(
                 val clock = dateUtil.fromISODateString(timestamp)
                 // check if this is new data
                 if (clock > processedDeviceStatusData.openAPSData.clockSuggested) {
-                    processedDeviceStatusData.openAPSData.suggested = it
+                    try {
+                        processedDeviceStatusData.openAPSData.suggested = RT.deserialize(it.toString()).apply { this.timestamp = clock }
+                    } catch (e: Exception) {
+                        aapsLogger.error(LTag.NSCLIENT, e.stackTraceToString())
+                    }
                     processedDeviceStatusData.openAPSData.clockSuggested = clock
+                    processedDeviceStatusData.getAPSResult()?.let { apsResult ->
+                        disposable += persistenceLayer.insertOrUpdateApsResult(apsResult).subscribe()
+                    }
                 }
             }
         }
@@ -162,7 +169,11 @@ class NSDeviceStatusHandler @Inject constructor(
                 val clock = dateUtil.fromISODateString(timestamp)
                 // check if this is new data
                 if (clock > processedDeviceStatusData.openAPSData.clockEnacted) {
-                    processedDeviceStatusData.openAPSData.enacted = it
+                    try {
+                        processedDeviceStatusData.openAPSData.enacted = RT.deserialize(it.toString()).apply { this.timestamp = clock }
+                    } catch (e: Exception) {
+                        aapsLogger.error(LTag.NSCLIENT, e.stackTraceToString())
+                    }
                     processedDeviceStatusData.openAPSData.clockEnacted = clock
                 }
             }

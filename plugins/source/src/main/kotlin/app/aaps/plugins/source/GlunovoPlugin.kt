@@ -1,59 +1,55 @@
 package app.aaps.plugins.source
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import android.os.Handler
 import android.os.HandlerThread
-import app.aaps.core.interfaces.configuration.Constants
+import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.SourceSensor
+import app.aaps.core.data.model.TrendArrow
+import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.database.entities.GlucoseValue
-import app.aaps.database.entities.TherapyEvent
-import app.aaps.database.entities.UserEntry
-import app.aaps.database.entities.ValueWithUnit
-import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.CgmSourceTransaction
-import app.aaps.database.transactions.TransactionGlucoseValue
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class GlunovoPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
     aapsLogger: AAPSLogger,
     private val sp: SP,
     private val context: Context,
-    private val repository: AppRepository,
+    private val persistenceLayer: PersistenceLayer,
     private val dateUtil: DateUtil,
-    private val uel: UserEntryLogger,
     private val fabricPrivacy: FabricPrivacy
-) : PluginBase(
+) : AbstractBgSourcePlugin(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
-        .pluginIcon(app.aaps.core.main.R.drawable.ic_glunovo)
-        .preferencesId(R.xml.pref_bgsource)
+        .pluginIcon(app.aaps.core.objects.R.drawable.ic_glunovo)
+        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .pluginName(R.string.glunovo)
         .shortName(R.string.glunovo)
+        .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_source_glunovo),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, resourceHelper
 ), BgSource {
 
-    private val handler = Handler(HandlerThread(this::class.java.simpleName + "Handler").also { it.start() }.looper)
-    private lateinit var refreshLoop: Runnable
+    private var handler: Handler? = null
+    private var refreshLoop: Runnable
 
     private val contentUri: Uri = Uri.parse("content://$AUTHORITY/$TABLE_NAME")
 
@@ -67,7 +63,7 @@ class GlunovoPlugin @Inject constructor(
             }
             val lastReadTimestamp = sp.getLong(R.string.key_last_processed_glunovo_timestamp, 0L)
             val differenceToNow = INTERVAL - (dateUtil.now() - lastReadTimestamp) % INTERVAL + T.secs(10).msecs()
-            handler.postDelayed(refreshLoop, differenceToNow)
+            handler?.postDelayed(refreshLoop, differenceToNow)
         }
     }
 
@@ -75,22 +71,25 @@ class GlunovoPlugin @Inject constructor(
 
     override fun onStart() {
         super.onStart()
-        handler.postDelayed(refreshLoop, T.secs(30).msecs()) // do not start immediately, app may be still starting
+        handler = Handler(HandlerThread(this::class.java.simpleName + "Handler").also { it.start() }.looper)
+        handler?.postDelayed(refreshLoop, T.secs(30).msecs()) // do not start immediately, app may be still starting
     }
 
     override fun onStop() {
         super.onStop()
-        handler.removeCallbacks(refreshLoop)
+        handler?.removeCallbacks(refreshLoop)
+        handler = null
         disposable.clear()
     }
 
+    @SuppressLint("CheckResult")
     private fun handleNewData() {
         if (!isEnabled()) return
 
         try {
             context.contentResolver.query(contentUri, null, null, null, null)?.let { cr ->
-                val glucoseValues = mutableListOf<TransactionGlucoseValue>()
-                val calibrations = mutableListOf<CgmSourceTransaction.Calibration>()
+                val glucoseValues = mutableListOf<GV>()
+                val calibrations = mutableListOf<PersistenceLayer.Calibration>()
                 cr.moveToFirst()
 
                 while (!cr.isAfterLast) {
@@ -117,20 +116,20 @@ class GlunovoPlugin @Inject constructor(
                     }
 
                     if (curr != 0.0)
-                        glucoseValues += TransactionGlucoseValue(
+                        glucoseValues += GV(
                             timestamp = timestamp,
                             value = value * Constants.MMOLL_TO_MGDL,
                             raw = 0.0,
                             noise = null,
-                            trendArrow = GlucoseValue.TrendArrow.NONE,
-                            sourceSensor = GlucoseValue.SourceSensor.GLUNOVO_NATIVE
+                            trendArrow = TrendArrow.NONE,
+                            sourceSensor = SourceSensor.GLUNOVO_NATIVE
                         )
                     else
                         calibrations.add(
-                            CgmSourceTransaction.Calibration(
+                            PersistenceLayer.Calibration(
                                 timestamp = timestamp,
                                 value = value,
-                                glucoseUnit = TherapyEvent.GlucoseUnit.MMOL
+                                glucoseUnit = GlucoseUnit.MMOL
                             )
                         )
                     sp.putLong(R.string.key_last_processed_glunovo_timestamp, timestamp)
@@ -139,28 +138,8 @@ class GlunovoPlugin @Inject constructor(
                 cr.close()
 
                 if (glucoseValues.isNotEmpty() || calibrations.isNotEmpty())
-                    repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, calibrations, null))
-                        .doOnError {
-                            aapsLogger.error(LTag.DATABASE, "Error while saving values from Glunovo App", it)
-                        }
+                    persistenceLayer.insertCgmSourceData(Sources.Glunovo, glucoseValues, calibrations, null)
                         .blockingGet()
-                        .also { savedValues ->
-                            savedValues.inserted.forEach {
-                                aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
-                            }
-                            savedValues.calibrationsInserted.forEach { calibration ->
-                                calibration.glucose?.let { glucoseValue ->
-                                    uel.log(
-                                        UserEntry.Action.CALIBRATION,
-                                        UserEntry.Sources.Dexcom,
-                                        ValueWithUnit.Timestamp(calibration.timestamp),
-                                        ValueWithUnit.TherapyEventType(calibration.type),
-                                        ValueWithUnit.fromGlucoseUnit(glucoseValue, calibration.glucoseUnit.toString)
-                                    )
-                                }
-                                aapsLogger.debug(LTag.DATABASE, "Inserted calibration $calibration")
-                            }
-                        }
             }
         } catch (e: SecurityException) {
             aapsLogger.error(LTag.CORE, "Exception", e)

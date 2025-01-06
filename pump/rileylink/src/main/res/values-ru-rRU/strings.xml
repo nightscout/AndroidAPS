@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Ранее не подключалась</string>
+    <string name="pump_status_sleeping">Спящий режим</string>
+    <string name="pump_status_waking_up">Пробуждение</string>
+    <string name="pump_status_active">Активна</string>
+    <string name="pump_status_error_comm">Ошибка связи</string>
+    <string name="pump_status_timeout_comm">Таймаут связи</string>
+    <string name="pump_status_pump_unreachable">Помпа недоступна</string>
+    <string name="pump_status_invalid_config">Недопустимая конфигурация</string>
     <!-- RL keys -->
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_button_scan_start">Сканировать</string>
@@ -62,8 +71,6 @@
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Помпа Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnompod (Eros)</string>
-    <string name="riley_link_common_yes">Да</string>
-    <string name="riley_link_common_no">Нет</string>
     <!-- RileyLink - Preferences -->
     <string name="riley_link_show_battery_level">Показать уровень батареи от OrangeLink/EmaLink/DiaLink</string>
     <string name="riley_link_show_battery_level_summary">НЕ РАБОТАЕТ с оригинальной RileyLink. Может не работать с альтернативными RileyLink.</string>

@@ -13,7 +13,7 @@
     <string name="ns_create_announcements_from_carbs_req_title">צור התראות על פחמימות דרושות</string>
     <string name="ns_create_announcements_from_errors_summary">יצירת הכרזת Nightscout עבור הודעות על שגיאות והתראות מקומיות (ניתנות להצגה בפורטל הטיפולים תחת \"טיפולים\")</string>
     <string name="ns_create_announcements_from_carbs_req_summary">צור הכרזות נייטסקאוט עבור התראות מסוג פחמימות דרושות</string>
-    <string name="description_ns_client">מסנכרן את נתוניכם עם Nightscout</string>
+    <string name="description_ns_client">סינכרון הנתונים שלכם עם נייטסקאוט באמצעות API v1</string>
     <string name="description_ns_client_v3">מסנכרן את הנתונים עם נייטסקאוט באמצעות v3 API</string>
     <string name="blocked_by_charging">חסום ע\"י הגדרות טעינה</string>
     <string name="blocked_by_connectivity">חסום ע\"י הגדרות חיבור</string>
@@ -24,24 +24,20 @@
     <string name="ns_malfunction">תקלה ב-NSClient. שקלו להפעיל את Nightscout ו-NSClient מחדש.</string>
     <!-- NSClient -->
     <string name="no_write_permission">ל-NSClient אין הרשאת כתיבה. סיסמת API שגויה?</string>
-    <string name="ns_client_v3">NSClientV3</string>
-    <string name="ns_client_v3_short_name">NSV3</string>
+    <string name="ns_client_v3_short_name">NSv3</string>
     <string name="ns_client">NSClient</string>
-    <string name="ns_client_short_name">NSCI</string>
+    <string name="ns_client_short_name">NSv1</string>
     <string name="ns_client_url">כתובת URL:</string>
     <string name="restart">הפעל מחדש</string>
-    <string name="ns_client_internal_title">NSClient</string>
+    <string name="ns_client_title">NSClientV1</string>
+    <string name="ns_client_v3_title">NSClientV3</string>
     <string name="ns_client_url_title">כתובת נייטסקאוט</string>
-    <string name="ns_client_url_dialog_message">הזינו את כתובת ה-Nightscout שלכם</string>
-    <string name="ns_client_secret_title">קוד API של Nightscout</string>
-    <string name="ns_client_secret_dialog_title">קוד API של Nightscout</string>
-    <string name="ns_client_secret_dialog_message">הזינו את קוד ה-API של Nightscout (מינימום 12 תווים)</string>
-    <string name="nsclient_token_title">אסימון גישה</string>
-    <string name="nsclient_token_dialog_title">אסימון גישה</string>
-    <string name="nsclient_token_dialog_message">אסימון גישה הופק בדף האדמיניסטרטור של NS (לפחות 17 תווים)</string>
+    <string name="ns_client_url_dialog_message">רשמו את כתובת הנייטסקאוט שלכם (לדוגמה https://yoursitename.yourplatform.com)</string>
+    <string name="ns_client_secret_title">סיסמת נייטסקאוט (API SECRET)</string>
+    <string name="ns_client_secret_dialog_message">רשמו את סיסמת הנייטסקאוט (באורך 12 תווים לפחות שהוגדרה בנייטסקאוט)</string>
+    <string name="nsclient_token_title">אסימון גישה של נייטסקאוט</string>
+    <string name="nsclient_token_dialog_message">רשמו את אסימון הגישה ברמת אדמיניסטרטור שיצרתם בכלי אדמין בנייטסקאוט (לפחות 17 תווים, זוהי אינה סיסמת הנייטסקאוט)</string>
     <string name="deliver_now">ספק עכשיו</string>
-    <string name="clear_queue">נקה תור</string>
-    <string name="show_queue">הצג תור</string>
     <string name="queue">תור:</string>
     <string name="status">סטטוס: </string>
     <string name="clear_log">נקה יומן</string>
@@ -49,24 +45,24 @@
     <string name="full_sync_comment">סנכרון מלא? זה ייקח שעות מרובות ולא תוכלו לראות נתונים חדשים בנייטסקאוט.</string>
     <string name="ns_sync_options">סינכרון</string>
     <string name="ns_upload_summary">פרופילים, בולוסים, פחמימות ומינונים בזאליים זמניים נטענים לנייטסקאוט</string>
-    <string name="ns_upload">טוען נתוני טיפול לנייטסקאוט</string>
+    <string name="ns_upload">שלח נתוני טיפולים לנייטסקאוט</string>
     <string name="ns_receive_profile_store">אחזר פרופילים שמורים</string>
     <string name="ns_receive_profile_store_summary">סינכרון פרופילים מעורך הפרופיל של נייטסקאוט לפרופיל מקומי</string>
-    <string name="ns_receive_temp_target">קבלת ערכי מטרה זמניים</string>
+    <string name="ns_receive_temp_target">קבל ערכי מטרה זמניים</string>
     <string name="ns_receive_temp_target_summary">קבלת ערכי מטרה זמניים שהוגדרו בנייטסקאוט או ב-NSClient</string>
-    <string name="ns_receive_profile_switch">קבלת החלפות פרופיל</string>
+    <string name="ns_receive_profile_switch">קבל החלפות פרופיל</string>
     <string name="ns_receive_profile_switch_summary">קבלת החלפות פרופיל שהוגדרו בנייטסקאוט או ב-NSClient</string>
     <string name="ns_receive_offline_event">אחזר אירועים לא מקוונים</string>
     <string name="ns_receive_offline_event_summary">קבל אירועים לא מקוונים שנרשמו דרך נייטסקאוט או NSClient</string>
     <string name="ns_receive_tbr_eb">קבל מינון בזאלי זמני ובולוס מושהה</string>
     <string name="ns_receive_tbr_eb_summary">קבל מינוני בזאלי זמני ובולוסים מושהים שהופעלו ממכשיר עוקב</string>
-    <string name="ns_receive_insulin">קבלת אינסולין</string>
+    <string name="ns_receive_insulin">קבל אינסולין</string>
     <string name="ns_receive_insulin_summary">קבלת אינסולין שהוזן באמצעות נייטסקאוט או NSClient (הוא לא מוזרק, רק מחושב רק כאינסולין פעיל)</string>
-    <string name="ns_receive_carbs">קבלת פחמימות</string>
+    <string name="ns_receive_carbs">קבל פחמימות</string>
     <string name="ns_receive_carbs_summary">קבלת פחמימות שנרשמו בנייטסקאוט או ב-NSClient</string>
     <string name="ns_receive_therapy_events">קבל אירועי טיפול</string>
     <string name="ns_receive_therapy_events_summary">קבלת אירועי טיפול (צינורית, אינסולין, החלפת סוללה) שצוינו באמצעות נייטסקאוט או NSClient</string>
-    <string name="ns_receive_cgm">קבלת\\טעינת נתוני סנסור</string>
+    <string name="ns_receive_cgm">קבל\\טען נתוני סנסור מנייטסקאוט</string>
     <string name="ns_receive_cgm_summary">קבלת נתוני סנסור מנייטסקאוט</string>
     <string name="ns_sync_slow">האט העלאות</string>
     <string name="ns_alarm_options">אפשרויות התראה</string>
@@ -89,18 +85,11 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">מעלה נתונים ל-Tidepool</string>
-    <string name="tidepool_upload_cgm">העלאת נתוני סנסור</string>
-    <string name="tidepool_upload_bolus">העלאת טיפולים (אינסולין, פחמימות)</string>
-    <string name="tidepool_upload_tbr">העלאת בזאלים זמניים</string>
-    <string name="tidepool_upload_profile">העלאת החלפת פרופילים, ערכי מטרה זמניים</string>
-    <string name="tidepool_upload_bg">העלאת בדיקות סוכר</string>
     <string name="remove_all">הסר הכל</string>
-    <string name="reset_start">אתחל התחלה</string>
     <string name="upload_now">העלה עכשיו</string>
     <string name="not_connected">לא מחובר</string>
     <string name="read_only">לקריאה בלבד</string>
     <string name="working">עובד</string>
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>
@@ -117,11 +106,16 @@
     <string name="xdrip_local_broadcasts_summary">שולח נתוני גלוקוז וטיפולים ל-xDrip+. יש לבחור את מקור הנתונים \"xDrip+ Sync Follower\" וקבלת נתונים חייבת להיות מופעלת בהגדרות &gt; הגדרות לשיתוף פעולה בין אפליקציות &gt; קבל גלוקוז\\טיפולים</string>
     <string name="xdrip_local_broadcasts_title">אפשר שידור ל-xDrip+</string>
     <!--    DataBroadcast-->
+    <string name="tizen">סמסונג Tizen</string>
+    <string name="tizen_short">TIZ</string>
+    <string name="tizen_description">שידור נתונים לאפליקציית Samsung G-Watch Wear (Tizen OS)</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">חיבור למכשיר Garmin</string>
-    <string name="key_garmin_settings">הגדרות Garmin</string>
+    <string name="garmin_local_http_server_port">פורט שרת HTTP מקומי</string>
+    <string name="garmin_local_http_server">שרת HTTP מקומי</string>
     <!--    Wear-->
+    <string name="wear_shortname">WEAR</string>
     <string name="description_wear">ניטור ושליטה ב-AndroidAPS באמצעות שעון WearOS.</string>
     <string name="no_watch_connected">(השעון לא מחובר)</string>
     <string name="pump_status">סטטוס המשאבה</string>
@@ -129,7 +123,7 @@
     <string name="wizard_result">מחשבון: %1$s\n אינס\': %2$.2f יח\'\nפחמ\': %3$d גר\'</string>
     <string name="quick_wizard_not_available">האשף המהיר שנבחר אינו זמין, נא לרענן את האריח</string>
     <string name="quick_wizard_message">אשף מהיר: %1$s\n אינס\': %2$.2f יח\'\nפחמ\': %3$d גר\'</string>
-    <string name="wear_action_tempt_preset_error">תצורה לא ידועה של מטרה זמנית: %1$s</string>
+    <string name="user_action_not_available">פעולת המשתמש %1$s אינה זמינה יותר, בבקשה רעננו את האריח</string>
     <string name="wear_action_tempt_cancel_message">מבטל ערך מטרה זמני נוכחי</string>
     <string name="wear_action_tempt_unit_error">יחידות המידה שונות בין הטלפון והשעון!</string>
     <string name="wear_action_tempt_zero_message">Zero-Temp-Target - בוטל, הפעלת ערכי מטרה זמניים?</string>
@@ -142,6 +136,8 @@
     <string name="wear_settings">הגדרות Wear</string>
     <string name="wearcontrol_title">שליטה מהשעון</string>
     <string name="wearcontrol_summary">הגדירו ערכי מטרה זמניים וציינו טיפולים מהשעון.</string>
+    <string name="wear_broadcast_data">שדר נתונים</string>
+    <string name="wear_broadcast_data_summary">שדר נתונים ל-AAPS או ל-AAPSClient</string>
     <string name="wear_wizard_settings_summary">חישובים הכלולים בתוצאת האשף:</string>
     <string name="wear_general_settings">הגדרות כלליות</string>
     <string name="wear_notifysmb_title">דיווח על SMB</string>
@@ -153,6 +149,7 @@
     <string name="wear_infos_watchface">פני שעון מידע</string>
     <string name="wear_export_watchface">ייצוא תבנית</string>
     <string name="wear_new_custom_watchface_exported">תבנית פני השעון יוצאה</string>
+    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/en/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">שלח מחדש את כל הנתונים</string>
     <string name="open_settings_on_wear">פתיחת הגדרות Wear</string>
     <string name="cwf_infos_pref_locked">רשימת העדפות ננעלה ע\"י פני השעון</string>
@@ -164,6 +161,7 @@
     <string name="grams_short">גר\'</string>
     <string name="hour_short">ש\'</string>
     <string name="no_active_profile">לא הופעלה החלפת פרופיל!</string>
+    <string name="profile_message">פרופיל:\n\nהיסט זמן: %1$d\אחוזים: %2$d%%</string>
     <string name="target_only_aps_mode">ערכי מטרה חלים רק במצב APS!</string>
     <string name="no_history">אין נתוני עבר!</string>
     <string name="temp_target">ערכי מטרה זמניים</string>
@@ -183,4 +181,5 @@
     <string name="tdd_line">%1$.2fיח\' %1$.0f%</string>
     <string name="today">היום</string>
     <string name="weighted">משוקלל</string>
+    <string name="full_xdrip_sync_comment">בטוחים שברצונכם לבצע סנכרון מלא? סנכרון מלא ייקח שעות מרובות ובינתיים לא תוכלו לראות נתונים חדשים ב-xDrip+.</string>
 </resources>

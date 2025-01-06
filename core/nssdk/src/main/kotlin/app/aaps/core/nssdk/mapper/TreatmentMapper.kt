@@ -1,6 +1,5 @@
 package app.aaps.core.nssdk.mapper
 
-import com.google.gson.Gson
 import app.aaps.core.nssdk.localmodel.entry.NsUnits
 import app.aaps.core.nssdk.localmodel.treatment.EventType
 import app.aaps.core.nssdk.localmodel.treatment.NSBolus
@@ -15,6 +14,7 @@ import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryTarget
 import app.aaps.core.nssdk.localmodel.treatment.NSTherapyEvent
 import app.aaps.core.nssdk.localmodel.treatment.NSTreatment
 import app.aaps.core.nssdk.remotemodel.RemoteTreatment
+import com.google.gson.Gson
 import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 
@@ -43,8 +43,8 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 srvCreated = this.srvCreated,
                 utcOffset = this.utcOffset ?: 0,
                 subject = this.subject,
-                isReadOnly = this.isReadOnly ?: false,
-                isValid = this.isValid ?: true,
+                isReadOnly = this.isReadOnly == true,
+                isValid = this.isValid != false,
                 eventType = this.eventType ?: EventType.MEAL_BOLUS,
                 notes = this.notes,
                 pumpId = this.pumpId,
@@ -53,10 +53,10 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 pumpSerial = this.pumpSerial,
                 insulin = this.insulin,
                 type = NSBolus.BolusType.fromString(this.type),
-                isBasalInsulin = isBasalInsulin ?: false
+                isBasalInsulin = isBasalInsulin == true
             )
 
-        carbs != null && carbs > 0                                         ->
+        carbs != null && carbs != 0.0                                         ->
             return NSCarbs(
                 date = treatmentTimestamp,
                 device = this.device,
@@ -66,8 +66,8 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 srvCreated = this.srvCreated,
                 utcOffset = this.utcOffset ?: 0,
                 subject = this.subject,
-                isReadOnly = this.isReadOnly ?: false,
-                isValid = this.isValid ?: true,
+                isReadOnly = this.isReadOnly == true,
+                isValid = this.isValid != false,
                 eventType = this.eventType ?: EventType.CARBS_CORRECTION,
                 notes = this.notes,
                 pumpId = this.pumpId,
@@ -94,8 +94,8 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                     srvCreated = this.srvCreated,
                     utcOffset = this.utcOffset ?: 0,
                     subject = this.subject,
-                    isReadOnly = this.isReadOnly ?: false,
-                    isValid = this.isValid ?: true,
+                    isReadOnly = this.isReadOnly == true,
+                    isValid = this.isValid != false,
                     eventType = this.eventType,
                     notes = this.notes,
                     pumpId = this.pumpId,
@@ -120,8 +120,8 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 srvCreated = this.srvCreated,
                 utcOffset = this.utcOffset ?: 0,
                 subject = this.subject,
-                isReadOnly = this.isReadOnly ?: false,
-                isValid = this.isValid ?: true,
+                isReadOnly = this.isReadOnly == true,
+                isValid = this.isValid != false,
                 eventType = this.eventType,
                 notes = this.notes,
                 pumpId = this.pumpId,
@@ -147,8 +147,8 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 srvCreated = srvCreated,
                 utcOffset = utcOffset ?: 0,
                 subject = subject,
-                isReadOnly = extendedEmulated?.isReadOnly ?: false,
-                isValid = extendedEmulated?.isValid ?: true,
+                isReadOnly = extendedEmulated?.isReadOnly == true,
+                isValid = extendedEmulated?.isValid != false,
                 eventType = EventType.COMBO_BOLUS,
                 notes = extendedEmulated?.notes,
                 pumpId = extendedEmulated?.pumpId,
@@ -178,8 +178,8 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 srvCreated = this.srvCreated,
                 utcOffset = this.utcOffset ?: 0,
                 subject = this.subject,
-                isReadOnly = this.isReadOnly ?: false,
-                isValid = this.isValid ?: true,
+                isReadOnly = this.isReadOnly == true,
+                isValid = this.isValid != false,
                 eventType = this.eventType,
                 notes = this.notes,
                 pumpId = this.pumpId,
@@ -211,8 +211,8 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 srvCreated = this.srvCreated,
                 utcOffset = this.utcOffset ?: 0,
                 subject = this.subject,
-                isReadOnly = this.isReadOnly ?: false,
-                isValid = this.isValid ?: true,
+                isReadOnly = this.isReadOnly == true,
+                isValid = this.isValid != false,
                 eventType = this.eventType,
                 notes = this.notes,
                 pumpId = this.pumpId,
@@ -242,8 +242,8 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 srvCreated = this.srvCreated,
                 utcOffset = this.utcOffset ?: 0,
                 subject = this.subject,
-                isReadOnly = this.isReadOnly ?: false,
-                isValid = this.isValid ?: true,
+                isReadOnly = this.isReadOnly == true,
+                isValid = this.isValid != false,
                 eventType = this.eventType,
                 notes = this.notes,
                 pumpId = this.pumpId,
@@ -273,8 +273,8 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 srvCreated = this.srvCreated,
                 utcOffset = this.utcOffset ?: 0,
                 subject = this.subject,
-                isReadOnly = this.isReadOnly ?: false,
-                isValid = this.isValid ?: true,
+                isReadOnly = this.isReadOnly == true,
+                isValid = this.isValid != false,
                 eventType = this.eventType,
                 notes = this.notes,
                 pumpId = this.pumpId,
@@ -307,8 +307,8 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 srvCreated = this.srvCreated,
                 utcOffset = this.utcOffset ?: 0,
                 subject = this.subject,
-                isReadOnly = this.isReadOnly ?: false,
-                isValid = this.isValid ?: true,
+                isReadOnly = this.isReadOnly == true,
+                isValid = this.isValid != false,
                 eventType = this.eventType,
                 notes = this.notes,
                 pumpId = this.pumpId,
@@ -334,8 +334,8 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 srvCreated = this.srvCreated,
                 utcOffset = this.utcOffset ?: 0,
                 subject = this.subject,
-                isReadOnly = this.isReadOnly ?: false,
-                isValid = this.isValid ?: true,
+                isReadOnly = this.isReadOnly == true,
+                isValid = this.isValid != false,
                 eventType = this.eventType,
                 notes = this.notes,
                 pumpId = this.pumpId,
@@ -360,8 +360,8 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 srvCreated = this.srvCreated,
                 utcOffset = this.utcOffset ?: 0,
                 subject = this.subject,
-                isReadOnly = this.isReadOnly ?: false,
-                isValid = this.isValid ?: true,
+                isReadOnly = this.isReadOnly == true,
+                isValid = this.isValid != false,
                 eventType = this.eventType,
                 notes = this.notes,
                 pumpId = this.pumpId,

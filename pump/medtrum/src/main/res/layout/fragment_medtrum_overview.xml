@@ -5,7 +5,7 @@
 
         <variable
             name="viewmodel"
-            type="info.nightscout.pump.medtrum.ui.viewmodel.MedtrumOverviewViewModel" />
+            type="app.aaps.pump.medtrum.ui.viewmodel.MedtrumOverviewViewModel" />
 
         <import type="android.view.View" />
 
@@ -117,7 +117,6 @@
                             android:paddingStart="5dp"
                             android:paddingEnd="5dp"
                             android:text="@{viewmodel.lastConnectionMinAgo}"
-                            android:textColor="@android:color/white"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -166,7 +165,6 @@
                             android:paddingStart="5dp"
                             android:paddingEnd="5dp"
                             android:text="@{viewmodel.medtrumPump.pumpStateFlow.toString()}"
-                            android:textColor="@android:color/white"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -206,7 +204,6 @@
                             android:paddingStart="5dp"
                             android:paddingEnd="5dp"
                             android:text="@{viewmodel.medtrumPump.lastBasalTypeFlow.toString()}"
-                            android:textColor="@android:color/white"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -246,7 +243,6 @@
                             android:paddingStart="5dp"
                             android:paddingEnd="5dp"
                             android:text='@{@string/current_basal_rate(viewmodel.medtrumPump.lastBasalRateFlow)}'
-                            android:textColor="@android:color/white"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -286,7 +282,6 @@
                             android:paddingStart="5dp"
                             android:paddingEnd="5dp"
                             android:text='@{viewmodel.lastBolus}'
-                            android:textColor="@android:color/white"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -326,7 +321,6 @@
                             android:paddingStart="5dp"
                             android:paddingEnd="5dp"
                             android:text='@{viewmodel.activeBolusStatus}'
-                            android:textColor="@android:color/white"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -375,7 +369,6 @@
                             android:paddingStart="5dp"
                             android:paddingEnd="5dp"
                             android:text="@{viewmodel.activeAlarms}"
-                            android:textColor="@android:color/white"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -424,7 +417,6 @@
                             android:paddingStart="5dp"
                             android:paddingEnd="5dp"
                             android:text='@{@string/reservoir_level(viewmodel.medtrumPump.reservoirFlow)}'
-                            android:textColor="@android:color/white"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -464,7 +456,6 @@
                             android:paddingStart="5dp"
                             android:paddingEnd="5dp"
                             android:text='@{@string/battery_voltage(viewmodel.medtrumPump.batteryVoltage_BFlow)}'
-                            android:textColor="@android:color/white"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -513,7 +504,6 @@
                             android:paddingStart="5dp"
                             android:paddingEnd="5dp"
                             android:text="@{viewmodel.pumpType}"
-                            android:textColor="@android:color/white"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -553,7 +543,6 @@
                             android:paddingStart="5dp"
                             android:paddingEnd="5dp"
                             android:text="@{viewmodel.fwVersion}"
-                            android:textColor="@android:color/white"
                             android:textSize="14sp" />
 
                     </LinearLayout>
@@ -594,7 +583,6 @@
                             android:paddingStart="5dp"
                             android:paddingEnd="5dp"
                             android:text="@{viewmodel.patchNo}"
-                            android:textColor="@android:color/white"
                             android:textSize="14sp" />
 
                     </LinearLayout>
@@ -634,7 +622,6 @@
                             android:paddingStart="5dp"
                             android:paddingEnd="5dp"
                             android:text="@{viewmodel.patchExpiry}"
-                            android:textColor="@android:color/white"
                             android:textSize="14sp" />
 
                     </LinearLayout>

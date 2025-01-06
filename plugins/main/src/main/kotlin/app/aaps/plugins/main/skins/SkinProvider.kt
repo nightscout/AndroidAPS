@@ -1,7 +1,7 @@
 package app.aaps.plugins.main.skins
 
-import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.plugins.main.R
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
 import app.aaps.plugins.main.di.SkinsModule
 import java.util.Collections
 import javax.inject.Inject
@@ -9,12 +9,12 @@ import javax.inject.Singleton
 
 @Singleton
 class SkinProvider @Inject constructor(
-    val sp: SP,
+    val preferences: Preferences,
     @SkinsModule.Skin val allSkins: Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards SkinInterface>
 ) {
 
     fun activeSkin(): SkinInterface =
-        list.firstOrNull { it.javaClass.name == sp.getString(R.string.key_skin, "") }
+        list.firstOrNull { it.javaClass.name == preferences.get(StringKey.GeneralSkin) }
             ?: list.first()
 
     val list: List<SkinInterface>

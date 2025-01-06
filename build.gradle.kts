@@ -8,21 +8,23 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:8.2.1")
-        classpath("com.google.gms:google-services:4.4.0")
-        classpath("com.google.firebase:firebase-crashlytics-gradle:2.9.9")
+        classpath(libs.com.android.tools.build)
+        classpath(libs.com.google.gms)
+        classpath(libs.com.google.firebase.gradle)
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
 
-        classpath(kotlin("gradle-plugin", version = Libs.Kotlin.kotlin))
-        classpath(kotlin("allopen", version = Libs.Kotlin.kotlin))
-        classpath(kotlin("serialization", version = Libs.Kotlin.kotlin))
+        classpath(libs.kotlin.gradlePlugin)
+        classpath(libs.kotlin.allopen)
+        classpath(libs.kotlin.serialization)
     }
 }
 
 plugins {
-    id("org.jlleitschuh.gradle.ktlint") version "12.0.3"
+    alias(libs.plugins.klint)
+    alias(libs.plugins.moduleDependencyGraph)
+    alias(libs.plugins.ksp)
 }
 
 allprojects {
@@ -32,14 +34,12 @@ allprojects {
         maven("https://maven.google.com")
         maven("https://jitpack.io")
     }
-    tasks.withType<KotlinCompile> {
-        kotlinOptions {
-            freeCompilerArgs = listOf(
-                "-opt-in=kotlin.RequiresOptIn",
-                "-opt-in=kotlin.ExperimentalUnsignedTypes",
-                "-Xjvm-default=all"     //Support @JvmDefault
-            )
-            jvmTarget = "11"
+    tasks.withType<KotlinCompile>().configureEach {
+        compilerOptions {
+            freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
+            freeCompilerArgs.add("-opt-in=kotlin.ExperimentalUnsignedTypes")
+            freeCompilerArgs.add("-Xjvm-default=all") //Support @JvmDefault
+            jvmTarget.set(Versions.jvmTarget)
         }
     }
     gradle.projectsEvaluated {
@@ -58,5 +58,5 @@ allprojects {
 apply(from = "jacoco_aggregation.gradle.kts")
 
 tasks.register<Delete>("clean").configure {
-    delete(rootProject.buildDir)
+    delete(rootProject.layout.buildDirectory)
 }

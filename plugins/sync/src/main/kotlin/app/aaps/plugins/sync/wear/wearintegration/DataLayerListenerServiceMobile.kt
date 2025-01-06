@@ -13,20 +13,17 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventMobileDataToWear
 import app.aaps.core.interfaces.rx.events.EventMobileToWear
+import app.aaps.core.interfaces.rx.events.EventMobileToWearWatchface
 import app.aaps.core.interfaces.rx.events.EventWearUpdateGui
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.wear.WearPlugin
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.CapabilityClient
 import com.google.android.gms.wearable.CapabilityInfo
-import com.google.android.gms.wearable.DataEvent
-import com.google.android.gms.wearable.DataEventBuffer
 import com.google.android.gms.wearable.DataMap
 import com.google.android.gms.wearable.MessageEvent
 import com.google.android.gms.wearable.Node
@@ -57,7 +54,6 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
     @Inject lateinit var wearPlugin: WearPlugin
     @Inject lateinit var sp: SP
     @Inject lateinit var config: Config
-    @Inject lateinit var repository: AppRepository
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsSchedulers: AapsSchedulers
@@ -78,9 +74,8 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
     private val disposable = CompositeDisposable()
 
     private val rxPath get() = getString(app.aaps.core.interfaces.R.string.path_rx_bridge)
-    private val rxDataPath get() = getString(app.aaps.core.interfaces.R.string.path_rx_data_bridge)
+    private val rxWatchfacePath get() = getString(app.aaps.core.interfaces.R.string.path_rx_data_bridge)
 
-    @ExperimentalSerializationApi
     override fun onCreate() {
         AndroidInjection.inject(this)
         super.onCreate()
@@ -91,9 +86,9 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
             .observeOn(aapsSchedulers.io)
             .subscribe { sendMessage(rxPath, it.payload.serialize()) }
         disposable += rxBus
-            .toObservable(EventMobileDataToWear::class.java)
+            .toObservable(EventMobileToWearWatchface::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe { sendMessage(rxDataPath, it.payload) }
+            .subscribe { sendMessage(rxWatchfacePath, it.payload) }
     }
 
     override fun onCapabilityChanged(p0: CapabilityInfo) {
@@ -108,41 +103,19 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
         scope.cancel()
     }
 
-    @Suppress("ControlFlowWithEmptyBody", "UNUSED_EXPRESSION")
-    override fun onDataChanged(dataEvents: DataEventBuffer) {
-        //aapsLogger.debug(LTag.WEAR, "onDataChanged")
-
-        if (wearPlugin.isEnabled()) {
-            dataEvents.forEach { event ->
-                if (event.type == DataEvent.TYPE_CHANGED) {
-                    val path = event.dataItem.uri.path
-
-                    aapsLogger.debug(LTag.WEAR, "onDataChanged: Path: $path, EventDataItem=${event.dataItem}")
-                    try {
-                        when (path) {
-                        }
-                    } catch (exception: Exception) {
-                        aapsLogger.error(LTag.WEAR, "Message failed", exception)
-                    }
-                }
-            }
-        }
-        super.onDataChanged(dataEvents)
-    }
-
     @ExperimentalSerializationApi
     override fun onMessageReceived(messageEvent: MessageEvent) {
         super.onMessageReceived(messageEvent)
 
         if (wearPlugin.isEnabled()) {
             when (messageEvent.path) {
-                rxPath     -> {
+                rxPath          -> {
                     aapsLogger.debug(LTag.WEAR, "onMessageReceived rxPath: ${String(messageEvent.data)}")
                     val command = EventData.deserialize(String(messageEvent.data))
                     rxBus.send(command.also { it.sourceNodeId = messageEvent.sourceNodeId })
                 }
 
-                rxDataPath -> {
+                rxWatchfacePath -> {
                     aapsLogger.debug(LTag.WEAR, "onMessageReceived rxDataPath: ${messageEvent.data.size}")
                     val command = EventData.deserializeByte(messageEvent.data)
                     rxBus.send(command.also { it.sourceNodeId = messageEvent.sourceNodeId })
@@ -166,7 +139,7 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
             aapsLogger.debug(LTag.WEAR, "Selected node: ${bestNode?.displayName} $transcriptionNodeId")
             rxBus.send(EventMobileToWear(EventData.ActionPing(System.currentTimeMillis())))
             rxBus.send(EventData.ActionResendData("WatchUpdaterService"))
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             fabricPrivacy.logCustom("WearOS_unsupported")
         }
     }
@@ -175,7 +148,7 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
     private fun pickBestNodeId(nodes: Set<Node>): Node? =
         nodes.firstOrNull { it.isNearby } ?: nodes.firstOrNull()
 
-    //@Suppress("unused")
+    @Suppress("unused")
     private fun sendData(path: String, vararg params: DataMap) {
         if (wearPlugin.isEnabled()) {
             scope.launch {

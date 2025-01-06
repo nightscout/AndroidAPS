@@ -2,11 +2,12 @@ package app.aaps.receivers
 
 import android.content.Context
 import android.content.Intent
+import app.aaps.core.data.pump.defs.TimeChangeType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.Pump
-import app.aaps.core.interfaces.utils.TimeChangeType
+import app.aaps.core.utils.receivers.BundleLogger
 import com.google.gson.Gson
 import dagger.android.DaggerBroadcastReceiver
 import java.util.Date

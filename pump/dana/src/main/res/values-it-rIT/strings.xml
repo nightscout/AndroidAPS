@@ -93,7 +93,6 @@
     <string name="danar_disableeasymode">Disabilita modalità EasyUI nel micro</string>
     <string name="profile_set_failed">Impostazione profilo basale fallita</string>
     <string name="danar_bluetooth_status">Stato bluetooth</string>
-    <string name="danar_iob_label">IOB micro</string>
     <string name="firmware_label">Firmware</string>
     <string name="danar_pump_settings">Impostazioni micro Dana</string>
     <string name="time_format_12h">12h</string>
@@ -103,7 +102,7 @@
     <string name="danar_bt_name_title">Dispositivo Bluetooth DanaR</string>
     <string name="danars_password_title">Password micro (solo v1)</string>
     <string name="danar_password_title">Password micro</string>
-    <string name="danar_useextended_title">Usa boli estesi per &gt;200%%</string>
+    <string name="danar_useextended_title">Usa boli estesi per &gt;200%</string>
     <string name="bolusspeed">Velocità bolo</string>
     <string name="selectedpump">Micro selezionato</string>
     <string name="rs_loginsulinchange_title">Registra cambio serbatorio</string>

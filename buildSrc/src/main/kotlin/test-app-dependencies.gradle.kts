@@ -6,22 +6,24 @@ plugins {
     id("kotlin-android")
 }
 
+// Convetion plugin should be used here to use libs.versions.toml
+// I was not successfull to implement it
 dependencies {
     testImplementation(kotlin("test"))
-    testImplementation(Libs.JUnit.jupiter)
-    testImplementation(Libs.JUnit.jupiterApi)
-    testImplementation(Libs.json)
-    testImplementation(Libs.Mockito.jupiter)
-    testImplementation(Libs.Mockito.kotlin)
-    testImplementation(Libs.jodaTime)
-    testImplementation(Libs.Google.truth)
-    testImplementation(Libs.jsonAssert)
+    testImplementation("org.junit.jupiter:junit-jupiter:5.11.3")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.3")
+    testImplementation("org.json:json:20230618")
+    testImplementation("org.mockito:mockito-junit-jupiter:5.14.2")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
+    testImplementation("joda-time:joda-time:2.13.0")
+    testImplementation("com.google.truth:truth:1.1.5")
+    testImplementation("org.skyscreamer:jsonassert:1.5.3")
 
-    androidTestImplementation(Libs.AndroidX.Test.espressoCore)
-    androidTestImplementation(Libs.AndroidX.Test.extKtx)
-    androidTestImplementation(Libs.AndroidX.Test.rules)
-    androidTestImplementation(Libs.AndroidX.Test.uiAutomator)
-    androidTestImplementation(Libs.Google.truth)
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.test.ext:junit-ktx:1.2.1")
+    androidTestImplementation("androidx.test:rules:1.6.1")
+    androidTestImplementation("com.google.truth:truth:1.1.5")
+    androidTestImplementation("androidx.test.uiautomator:uiautomator:2.2.0")
 }
 
 tasks.withType<Test> {

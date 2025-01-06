@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="DynISFAdjust_title" formatted="false">Настройка на динамична инсулинова чувствителност %</string>
-    <string name="DynISFAdjust_summary" formatted="false">Настройка на динамична инсулинова чувствителност. Настройте над 100% за по-агресивни корекционни дози и под 100% за по-не агресивни корекции.</string>
+    <!--Autotune-->
     <string name="high_temptarget_raises_sensitivity_title">Високите временни цели да вдигат ли чувствителността?</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Да вдигам ли чувствителността при цели над 5.6]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Ниските цели да свалят ли чувствителността ?</string>
@@ -60,9 +59,7 @@
     <string name="enable_smb_summary">Използвай супер микро болуси вместо временен базал за по бързо действие</string>
     <string name="enable_uam_summary">Детекция на необявено хранене (UAM)</string>
     <string name="enable_smb_always">Разреши SMB постоянно</string>
-    <string name="enable_smb_always_summary">Разрешава SMB постоянно и независимо от болусите. Възможно само с източник на КЗ с добра филтрация като G5  </string>
     <string name="enable_smb_after_carbs">Разреши SMB след въглехидрати</string>
-    <string name="enable_smb_after_carbs_summary">Разрешава SMB 6 часа след въглехидрати, дори при COB=0. Възможно само с източник на КЗ с добра филтрация като G5 приложение </string>
     <string name="enable_smb_with_cob">Разреши SMB с COB (въглехидрати)</string>
     <string name="enable_smb_with_cob_summary">Разрешава SMB, когато има активни COB</string>
     <string name="enable_smb_with_temp_target">Разреши SMB с временни цели</string>
@@ -113,4 +110,45 @@
     <string name="loop_smb_set_by_pump_label">SMB в помпата</string>
     <string name="loop_open_mode_min_change">Минимална стойност за промяна [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Отворен цикъл ще покаже запитването за промяна на базала, само ако е по-голяма от тази стойност в %. Стойността по подразбиране е 20%</string>
+    <!-- Autotune -->
+    <string name="autotune_shortname">AT</string>
+    <string name="autotune_settings">Autotune настройки</string>
+    <string name="autotune_auto_title">Превключване на профил Автоматизация</string>
+    <string name="autotune_auto_summary">Ако е активирано, Autotune автоматично ще се актуализира и ще превключи към входен профил след изчисление от правило за автоматизация.</string>
+    <string name="autotune_categorize_uam_as_basal_title">Категоризирай UAM като базал</string>
+    <string name="autotune_categorize_uam_as_basal_summary">Активирайте само ако сте въвели надеждно всички изядени въглехидрати, с тази опция внезапните повишения, наблюдавани от Autotune, ще бъдат използвани за препоръчване на промени в базалната скорост.</string>
+    <string name="autotune_tune_insulin_curve_title">Настройте инсулиновата крива</string>
+    <string name="autotune_tune_insulin_curve_summary">Активирайте само ако използвате свободен пик. Тази опция ще настрои продължителността на пика и DIA</string>
+    <string name="autotune_default_tune_days_title">Брой дни с данни</string>
+    <string name="autotune_circadian_ic_isf_title">Приложи среден резултат за въглехидрати/чувствителност</string>
+    <string name="autotune_circadian_ic_isf_summary">Autotune няма да настройва циркадните вариации, тази опция прилага само средната настройка на IC и ISF към вашия циркаден входен профил</string>
+    <string name="autotune_additional_log_title">Включване на повече информация за отстраняване на грешки</string>
+    <string name="autotune_additional_log_summary">Използвайте само, ако някой разработчик е поискал от вас да му изпратите информация за дебъгване на Autotune</string>
+    <string name="autotune_default_tune_days_summary">Брой дни по подразбиране за обработка на информация от Autotune (до 30)</string>
+    <string name="autotune_tunedprofile_name">Настроен</string>
+    <string name="autotune_profile">Профил :</string>
+    <string name="autotune_last_run">Последно стартиран :</string>
+    <string name="autotune_warning">Внимание :</string>
+    <string name="autotune_ic_warning">Избраният профил е с въглехидратно число %1$d. Аутотюн ще използва въглехидратно число %2$.2f гр/Е</string>
+    <string name="autotune_isf_warning">Избраният профил е с инсулинова чувствителност %1$d. Autotune ще използва инсулинова чувствителност %2$.1f %3$s/U</string>
+    <string name="autotune_error">Грешка във въведените данни, опитайте се отново да стартирате Autotune или да намалите броя на дните</string>
+    <string name="autotune_error_more_days">Грешка във въведените данни, увеличете броя дни</string>
+    <string name="autotune_warning_during_run">Autotune започна изчисления, моля изчакайте</string>
+    <string name="autotune_warning_after_run">Проверете резултатите внимателно, преди да ги използвате!</string>
+    <string name="autotune_partial_result">Частичен резултат ден %1$d / %2$d настроен</string>
+    <string name="autotune_result">Резултат: %1$s</string>
+    <string name="autotune_param">Параметър</string>
+    <string name="autotune_percent">%</string>
+    <string name="autotune_missing">Липсва</string>
+    <string name="autotune_run">Стартирай Autotune</string>
+    <string name="autotune_check_input_profile_button">Провери зададен профил</string>
+    <string name="autotune_compare_profile">Сравняване на профили</string>
+    <string name="autotune_copy_localprofile_button">Копиране в основен профил</string>
+    <string name="autotune_update_input_profile_button">Обновяване на начален профил</string>
+    <string name="autotune_revert_input_profile_button">Възстановяване на начален профил</string>
+    <string name="autotune_copy_local_profile_message">Създаване на нов основен профил от този Autotune профил?</string>
+    <string name="autotune_update_local_profile_message">Да се обнови ли %1$s профил с Autotune профил?</string>
+    <string name="autotune_revert_local_profile_message">Сменете профил %1$s с началния профил?</string>
+    <string name="autotune_profile_invalid">Невалиден профил</string>
+    <!--    autoISF -->
 </resources>

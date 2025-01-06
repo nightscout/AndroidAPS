@@ -1,85 +1,19 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingTop="2dp"
+    android:fillViewport="true"
     tools:context="app.aaps.plugins.sync.wear.WearFragment">
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/log"
-        style="@style/Widget.MaterialComponents.CardView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginTop="4dp"
-        app:cardCornerRadius="4dp"
-        app:contentPadding="2dp"
-        app:cardElevation="2dp"
-        app:cardUseCompatPadding="false"
-        android:layout_gravity="center">
-
-        <TextView
-            android:id="@+id/connected_device"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical|center_horizontal"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:text="@string/no_watch_connected"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            tools:ignore="HardcodedText" />
-
-        <androidx.gridlayout.widget.GridLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:padding="10dip"
-            app:columnCount="2">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/resend"
-                style="@style/GrayButton"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:drawableTop="@drawable/ic_refresh"
-                android:paddingLeft="0dp"
-                android:paddingRight="0dp"
-                android:text="@string/resend_all_data"
-                android:textColor="?attr/treatmentButton"
-                app:layout_gravity="fill"
-                app:layout_column="0"
-                app:layout_columnWeight="1"
-                app:layout_row="0" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/open_settings"
-                style="@style/GrayButton"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:drawableTop="@drawable/ic_settings"
-                android:paddingLeft="0dp"
-                android:paddingRight="0dp"
-                android:text="@string/open_settings_on_wear"
-                android:textColor="?attr/treatmentButton"
-                app:layout_gravity="fill"
-                app:layout_column="1"
-                app:layout_columnWeight="1"
-                app:layout_row="0" />
-
-        </androidx.gridlayout.widget.GridLayout>
-
-    </com.google.android.material.card.MaterialCardView>
-
-    <LinearLayout
-        android:id="@+id/custom_watchface_Layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingTop="2dp">
 
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/log"
             style="@style/Widget.MaterialComponents.CardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -92,7 +26,76 @@
             app:cardUseCompatPadding="false"
             android:layout_gravity="center">
 
+            <TextView
+                android:id="@+id/connected_device"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|center_horizontal"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="@string/no_watch_connected"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                tools:ignore="HardcodedText" />
 
+            <androidx.gridlayout.widget.GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:padding="10dp"
+                app:columnCount="2">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/resend"
+                    style="@style/GrayButton"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:drawableTop="@drawable/ic_refresh"
+                    android:paddingLeft="0dp"
+                    android:paddingRight="0dp"
+                    android:text="@string/resend_all_data"
+                    android:textColor="?attr/treatmentButton"
+                    app:layout_gravity="fill"
+                    app:layout_column="0"
+                    app:layout_columnWeight="1"
+                    app:layout_row="0" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/open_settings"
+                    style="@style/GrayButton"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:drawableTop="@drawable/ic_settings"
+                    android:paddingLeft="0dp"
+                    android:paddingRight="0dp"
+                    android:text="@string/open_settings_on_wear"
+                    android:textColor="?attr/treatmentButton"
+                    app:layout_gravity="fill"
+                    app:layout_column="1"
+                    app:layout_columnWeight="1"
+                    app:layout_row="0" />
+
+            </androidx.gridlayout.widget.GridLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <LinearLayout
+            android:id="@+id/custom_watchface_Layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.MaterialComponents.CardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginTop="4dp"
+                app:cardCornerRadius="4dp"
+                app:contentPadding="2dp"
+                app:cardElevation="2dp"
+                app:cardUseCompatPadding="false"
+                android:layout_gravity="center">
 
                 <TextView
                     android:id="@+id/custom_name"
@@ -107,7 +110,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:padding="10dip"
+                    android:padding="10dp"
                     app:columnCount="2">
 
                     <app.aaps.core.ui.elements.SingleClickButton
@@ -157,46 +160,48 @@
                         app:layout_columnWeight="1"
                         app:layout_gravity="fill"
                         app:layout_row="1"
-                        app:layout_column="0" />
+                        app:layout_column="1" />
 
                     <app.aaps.core.ui.elements.SingleClickButton
-                        android:id="@+id/default_custom"
+                        android:id="@+id/more_custom"
                         style="@style/GrayButton"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:drawableTop="@drawable/set_default"
+                        android:drawableTop="@drawable/more_cwf"
                         android:paddingStart="0dp"
                         android:paddingEnd="0dp"
-                        android:text="@string/wear_default_watchface"
+                        android:text="@string/wear_more_watchfaces"
                         android:textSize="12sp"
                         android:textColor="?attr/treatmentButton"
                         android:visibility="visible"
                         app:layout_columnWeight="1"
                         app:layout_gravity="fill"
                         app:layout_row="1"
-                        app:layout_column="1" />
+                        app:layout_column="0" />
 
                 </androidx.gridlayout.widget.GridLayout>
 
-        </com.google.android.material.card.MaterialCardView>
+            </com.google.android.material.card.MaterialCardView>
 
-        <LinearLayout
-            android:id="@+id/custom_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="20dp"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/cover_chart"
-                android:tag="cover_chart"
+            <LinearLayout
+                android:id="@+id/custom_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="visible"
-                android:orientation="vertical" />
+                android:padding="20dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/cover_chart"
+                    android:tag="cover_chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible"
+                    android:orientation="vertical" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
+</ScrollView>

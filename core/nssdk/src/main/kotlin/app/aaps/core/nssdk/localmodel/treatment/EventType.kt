@@ -14,6 +14,7 @@ enum class EventType(val text: String) {
     @SerializedName("BG Check") FINGER_STICK_BG_VALUE("BG Check"),
     @SerializedName("Exercise") EXERCISE("Exercise"),
     @SerializedName("Announcement") ANNOUNCEMENT("Announcement"),
+    @SerializedName("SettingsExport") SETTINGS_EXPORT("Settings Export"),
     @SerializedName("Question") QUESTION("Question"),
     @SerializedName("Note") NOTE("Note"),
     @SerializedName("OpenAPS Offline") APS_OFFLINE("OpenAPS Offline"),
@@ -38,7 +39,6 @@ enum class EventType(val text: String) {
     @SerializedName("<none>") NONE("<none>");
 
     companion object {
-
-        fun fromString(text: String?) = values().firstOrNull { it.text == text } ?: NONE
+        fun fromString(text: String?) = entries.firstOrNull { it.text == text } ?: NONE
     }
 }

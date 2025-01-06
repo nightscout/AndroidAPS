@@ -26,11 +26,7 @@
     <string name="objectives_smb_objective">Se activează opțiuni pentru uzul în timpul zilei, cum ar fi SMB</string>
     <string name="objectives_smb_gate">Trebuie sa citiți wiki și să măriți maxIOB pentru o funcționare corectă a SMB! Un start bun este maxIOB = (media bolusurilor prandiale) + (3x valoarea maximă a ratei bazale din zi)</string>
     <string name="objectives_smb_learned">Scopul tău este să folosești SMB. Algoritmul Oref1 a fost creat pentru a te ajuta și cu bolusurile. Nu ar trebui să administrezi un bolus complet pentru mâncare, ci doar o parte a acestuia, și să permiți AAPS să administreze restul, dacă este necesar. În acest fel ai mai mult loc de manevră pentru carbohidrați calculați greșit. Știai că poți seta un procent din rezultatul calculatorului de bolus pentru a reduce dimensiunea bolusului?</string>
-    <string name="objectives_dyn_isf_objective">Activarea unor caracteristici suplimentare pentru utilizare în timpul zilei, cum ar fi plugin-ul de sensibilitate dinamică</string>
-    <string name="objectives_dyn_isf_gate">Asigură-te că SMB funcționează corect. Activează plugin-ul DynamicISF pentru a determina calibrarea adecvată pentru unicitatea propriului organism. Pentru siguranță, este recomandat să începi cu o valoare mai mică decât 100%.</string>
-    <string name="objectives_dyn_isf_learned">Plugin-ul Sensibilitate Dinamică se bazează pe ideea că necesarul total de insulină şi nivelul actual al glicemiei afectează sensibilitatea reală. Plugin-ul DynamicISF poate ajusta factorul de sensibilitate la insulină (ISF) folosit de algoritm în cazul tău.</string>
     <string name="objectives_auto_objective">Activarea automatizării</string>
-    <string name="objectives_auto_gate">Citește documentația despre cum funcționează automatizările. Configurează primele reguli simple. În loc de acțiune, permite AAPS să afișeze doar notificări. Când te-ai asigurat că automatizarea se declanșează la momentul potrivit, înlocuiește notificarea cu acțiune reală. (https://wiki.aaps.app/en/latest/Usage/Automation.html)</string>
     <string name="objectives_auto_learned">Automatizarea poate fi un servitor bun, dar un stăpân rău. Nu o utiliza în exces. Nu încerca să înlocuiești algoritmul de bază. Mai întâi testează fiecare regulă cu un mesaj, înainte de activare. Regulile depind de prioritizări.</string>
     <string name="objectives_bgavailableinns">Glicemie disponibilă în NS sau Tidepool</string>
     <string name="objectives_pumpstatusavailableinns">Starea pompei este disponibilă în NS sau Tidepool</string>
@@ -77,10 +73,6 @@
     <string name="unfinshed_button">Următoarea nefinalizată</string>
     <string name="requestcode">Solicită codul: %1$s</string>
     <string name="objectives_hint">(bifați toate răspunsurile corecte)</string>
-    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
-    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html</string>
-    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">Nu există conexiune la internet</string>
     <string name="failedretrievetime">Nu s-a reușit preluarea timpului</string>
     <string name="requirementnotmet">Nu au fost îndeplinite cerințele obiectivului</string>

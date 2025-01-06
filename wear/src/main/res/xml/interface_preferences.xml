@@ -14,6 +14,8 @@
         android:defaultValue="true"
         android:key="showWizard"
         android:summary="Calculator from watch possible"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_wizard_in_menu"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
@@ -21,7 +23,18 @@
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="vibrateOnBolus"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_vibrate_on_bolus"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/key_vibrate_hourly"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
+        android:title="@string/pref_vibrate_hourly"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
 
@@ -29,6 +42,8 @@
         android:defaultValue="false"
         android:key="primefill"
         android:summary="Prime/Fill from watch possible"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_prime_in_menu"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
@@ -37,6 +52,8 @@
         android:defaultValue="true"
         android:key="@string/key_single_target"
         android:summary="Single temp-target instead of a range."
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_single_target"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
@@ -45,6 +62,8 @@
         android:defaultValue="false"
         android:key="@string/key_wizard_percentage"
         android:summary="Percentage correction."
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_wizard_percentage"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />

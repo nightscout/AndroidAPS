@@ -49,7 +49,6 @@
     <string name="alarm_expired">Scaduto</string>
     <string name="alarm_reservoir_empty">Serbatoio vuoto</string>
     <string name="alarm_patch_fault">Guasto patch</string>
-    <string name="alarm_patch_fault2">Guasto patch 2</string>
     <string name="alarm_base_fault">Guasto base</string>
     <string name="alarm_battery_out">Batteria scarica</string>
     <string name="alarm_no_calibration">No calibrazione</string>
@@ -79,6 +78,7 @@
     <string name="patch_not_active_note">La base del micro non deve essere collegata alla patch fino alla fase successiva!</string>
     <string name="connect_pump_base">Collegare la base del micro a una nuova patch, rimuovere l\'aria residua e riempire con insulina, quindi premere <b>Avanti</b>.</string>
     <string name="note_min_70_units">Nota: per l\'attivazione è richiesto un minimo di 70 unità.</string>
+    <string name="reservoir_text_and_level">Serbatoio: %.2f U</string>
     <string name="do_not_attach_to_body">Non attaccare ancora la patch al corpo.</string>
     <string name="half_press_needle">Premere a metà il tasto dell\'ago. Poi tocca <b>Avanti</b> per avviare il caricamento.</string>
     <string name="wait_for_priming">Attendi il completamento del caricamento.</string>
@@ -89,6 +89,7 @@
     <string name="activating_pump">Attivazione del micro e impostazione della velocità basale iniziale. Attendere.</string>
     <string name="activating_error">Impossibile attivare, premi <b>Riprova</b> per riprovare.</string>
     <string name="activating_complete">Nuova patch attivata. %.2f unità rimanenti.</string>
+    <string name="can_export_settings">È possibile esportare le impostazioni per poter recuperare questa patch in seguito.</string>
     <string name="press_OK_to_return">Premi <b>OK</b> per tornare alla schermata principale.</string>
     <string name="deactivate_sure">Sei sicuro di voler disattivare la patch corrente?</string>
     <string name="cancel_sure">Sei sicuro di voler annullare l\'attivazione?</string>
@@ -108,7 +109,7 @@
     <string name="sn_input_title">Numero seriale</string>
     <string name="sn_input_summary">Inserisci il numero di serie della base del micro.</string>
     <string name="sn_input_invalid">Numero di serie non valido!</string>
-    <string name="pump_unsupported">Micro non testato: %1$d! Contattaci su discord o github per supporto</string>
+    <string name="pump_unsupported">Micro non testato: %1$s! Contattaci su discord o github per supporto</string>
     <string name="alarm_setting_title">Impostazioni allarmi</string>
     <string name="alarm_setting_summary">Seleziona le tue impostazioni di allarme del micro preferite.</string>
     <string name="pump_warning_notification_title">Notifica di avviso del micro</string>
@@ -121,9 +122,19 @@
     <string name="hourly_max_insulin_summary">Specificare le unità massime di insulina consentite per ora. Se superate, il micro sarà sospeso.</string>
     <string name="daily_max_insulin_title">Insulina massima giornaliera [Units]</string>
     <string name="daily_max_insulin_summary">Specificare le unità massime di insulina consentite per giorno. Se superate, il micro sarà sospeso.</string>
+    <string name="scan_on_connection_error_title">Scansione in caso di errore di connessione</string>
+    <string name="scan_on_connection_error_summary">ATTENZIONE: Abilitare solo in caso di problemi di connessione. Se abilitato, il driver esegue una scansione della pompa prima di tentare di riconnettersi ad essa. Assicurati di avere impostato il permesso di Posizione su \"Consenti sempre\"</string>
     <!-- treatment state-->
     <string name="getting_pump_status">Ricezione stato micro</string>
+    <string name="syncing_records">Sincronizzazione record, %1$d rimasti</string>
     <string name="getting_bolus_status">Ricezione stato bolo</string>
     <string name="getting_temp_basal_status">Ricezione stato basale temporanea</string>
     <string name="setting_pump_settings">Impostazione opzioni utente</string>
+    <!-- bolus-->
+    <string name="bolus_error_reason_user">Bolo annullato dall\'utente</string>
+    <string name="bolus_error_reason_not_connected">Microinfusore non connesso</string>
+    <string name="bolus_error_reason_already_in_progress">Bolo già in corso</string>
+    <string name="bolus_error_reason_unable_to_send_command">Impossibile inviare il comando bolo</string>
+    <string name="bolus_error_reason_communication_lost">Timeout per ottenere lo stato del bolo</string>
+    <string name="bolus_error_reason_pump_error">Errore Microinfusore</string>
 </resources>

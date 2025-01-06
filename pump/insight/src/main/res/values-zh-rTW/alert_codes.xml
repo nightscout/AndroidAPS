@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="alert_r1_code">提醒 R1</string>
+    <string name="alert_r2_code">提醒 R2</string>
+    <string name="alert_r3_code">提醒 R3</string>
+    <string name="alert_r4_code">提醒 R4</string>
+    <string name="alert_r7_code">提醒 R7</string>
+    <string name="alert_w31_code">警告 W31</string>
+    <string name="alert_w32_code">警告 W32</string>
+    <string name="alert_w33_code">警告 W33</string>
+    <string name="alert_w34_code">警告 W34</string>
+    <string name="alert_w36_code">警告 W36</string>
+    <string name="alert_w38_code">警告 W38</string>
+    <string name="alert_w39_code">警告 W39</string>
+    <string name="alert_m20_code">維護 M20</string>
+    <string name="alert_m21_code">維護 M21</string>
+    <string name="alert_m22_code">維護 M22</string>
+    <string name="alert_m23_code">維護 M23</string>
+    <string name="alert_m24_code">維護 M24</string>
+    <string name="alert_m25_code">維護 M25</string>
+    <string name="alert_m26_code">維護 M26</string>
+    <string name="alert_m27_code">維護 M27</string>
+    <string name="alert_m28_code">維護 M28</string>
+    <string name="alert_m29_code">維護 M29</string>
+    <string name="alert_m30_code">維護 M30</string>
+    <string name="alert_e6_code">錯誤 E6</string>
+    <string name="alert_e10_code">錯誤 E10</string>
+    <string name="alert_e13_code">錯誤 E13</string>
+</resources>

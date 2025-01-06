@@ -35,7 +35,6 @@
     <string name="omnipod_common_error_unexpected_exception">Ett oväntat fel uppstod. Vänligen rapportera! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation">Bekräftelse</string>
-    <string name="omnipod_common_confirmation_time_or_timezone_change">Tid och/eller tidszon ändrad på Pod.</string>
     <string name="omnipod_common_confirmation_expiration_alerts_updated">Varningskonfigurationen har uppdaterats i Pod.</string>
     <string name="omnipod_common_confirmation_time_on_pod_updated">Tiden på Pod har uppdaterats.</string>
     <string name="omnipod_common_confirmation_suspended_delivery">All insulinleverans har stoppats.</string>
@@ -121,7 +120,6 @@
     <string name="omnipod_common_pod_status_running">Körs</string>
     <string name="omnipod_common_pod_status_suspended">Pausad</string>
     <string name="omnipod_common_pod_status_pod_fault">Podfel</string>
-    <string name="omnipod_common_pod_status_activation_time_exceeded">Aktiveringstiden har överskridits</string>
     <string name="omnipod_common_pod_status_inactive">Inaktiv</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Podfel: %1$03d %2$s</string>
     <!-- Omnipod - Commands -->
@@ -147,7 +145,6 @@
     <string name="omnipod_common_cmd_set_fake_suspended_tbr">Ställ in simulerad temp basal eftersom podden är avaktiverad</string>
     <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Avbryt simulerad temp basal eftersom podden är avaktiverad</string>
     <string name="omnipod_common_cmd_split_tbr">Dela upp temp basal på grund av okänt fel vid avbrott</string>
-    <string name="omnipod_common_cmd_beep_config">Pipkonfiguration</string>
     <string name="omnipod_common_cmd_play_test_beep">Spela upp testljud</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_finish_pairing_reminder">Påminnelse att slutföra parkoppling</string>

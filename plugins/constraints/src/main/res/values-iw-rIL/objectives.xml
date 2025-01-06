@@ -13,6 +13,7 @@
     <string name="objectives_openloop_learned">לולאה פתוחה יכולה להמליץ על הטיפול אם אין ברשתכם משאבה תואמת או אם אתם עוד לא מוכנים ללולאה סגורה.</string>
     <string name="objectives_maxbasal_objective">הבנה של הלולאה הפתוחה שלך, לרבות הבזאלים הזמניים וההמלצות</string>
     <string name="objectives_maxbasal_gate">בהתבסס על ניסיון זה, קבעו את הערך הבזאלי המקסימלי והגדירו אותו במשאבה</string>
+    <string name="objectives_maxbasal">בצע את הפעולה כמומלץ</string>
     <string name="objectives_maxbasal_learned">קחו בחשבון את אמצעי הבטיחות והתאימו את ערכי משתני הבטיחות במקרה הצורך.</string>
     <string name="objectives_maxiobzero_objective">מתחילים לסגור את הלולאה עם השהיה עקב רמת גלוקוז נמוכה</string>
     <string name="objectives_maxiobzero_gate">השתמשו בלולאה סגורה עם ערך IOB מקסימלי = 0 למשך מספר ימים, עם כמה שפחות ארועי השהיה עקב גלוקוז נמוך (LGS)</string>
@@ -26,11 +27,7 @@
     <string name="objectives_smb_objective">הפעלת פונקציות נוספות לשימוש במשך היום, כגון סופר מיקרו בולוסים (SMB)</string>
     <string name="objectives_smb_gate">חובה לקרוא את הויקי ולהעלות את ערך האינסולין הפעיל המרבי (maxIOB) כדי להפעיל את ה- SMB כראוי. התחלה טובה תהיה maxIOB=בולוס ארוחה טיפוסי + 3 פעמים ערך הבזאלי המקסימלי ביממה</string>
     <string name="objectives_smb_learned">שימוש ב-SMB הוא המטרה שלכם. אלגוריתם Oref1 תוכנן לעזור גם עם הבולוסים שלכם. אתם לא צריכים להזריק בולוס מלא למזון שלכם אלא רק על חלק ממנו ולתת ל-AAPS לטפל בשאר במידת הצורך. כך קל יותר להכיל טעויות בספירת פחמימות. הידעתם שאפשר להגדיר אחוז מתוצאת מחשבון הבולוס כדי להקטין את גודל הבולוס?</string>
-    <string name="objectives_dyn_isf_objective">הפעלת פונקציות נוספות לשימוש במשך היום כמו לדוגמה, רגישות דינאמית</string>
-    <string name="objectives_dyn_isf_gate">וודאו ש-SMB פועל היטב. הפעילו את הרגישות הדינאמית ומצאו את הכיול המתאים לגופכם. מטעמי בטיחות מומלץ להתחיל עם ערך הקטן מ-100%.</string>
-    <string name="objectives_dyn_isf_learned">הרגישות הדינאמית מתבססת על הרעיון שהזרקת האינסולין ורמת הסוכר משפיעות על הרגישות בפועל. הרגישות הדינאמית יכולה להתאים בשבילכם את יחס התיקון (ISF) בו האלגוריתם משתמש.</string>
     <string name="objectives_auto_objective">הפעלת אוטומציה</string>
-    <string name="objectives_auto_gate">קראו את המסמכים על אופן הפעולה של אוטומציות. הגדירו את התנאים הפשוטים הראשונים שלכם. במקום פעולה תנו ל-AAPS להציג הודעה בלבד. כאשר אתם בטוחים שהאוטומציה מופעלת בזמן הנכון, החליפו את ההודעה בפעולה אמיתית. (https://wiki.aaps.app/he/latest/Usage/Automation.html)</string>
     <string name="objectives_auto_learned">אוטומציה יכולה להיות משרת טוב אבל אדון רע. אל תשתמשו בהן יתר על המידה. אל תנסו להחליף את האלגוריתם הבסיסי. בדקו את התנאי של האוטומציה עם הודעה לפני השימוש.</string>
     <string name="objectives_bgavailableinns">נתוני הסוכר זמינים בנייטסקאוט או ב-Tidepool</string>
     <string name="objectives_pumpstatusavailableinns">סטטוס המשאבה זמין בנייטסקאוט או ב-Tidepool</string>
@@ -38,7 +35,7 @@
     <string name="accomplished">הושלמו: %1$s</string>
     <string name="objectives_usage_objective">למדו כיצד לשלוט ב-AndoridAPS</string>
     <string name="objectives_usage_gate">בצעו פעולות שונות ב-AndroidAPS</string>
-    <string name="objectives_usage_learned">למדתם איך להתמודד עם היסודות של AAPS. השליטה העיקרית היא מתוך מסך סקירה כללית והיא נגישה בלחיצה או בלחיצה ארוכה, פקודות נוספות נמצאות במסך הפעולות. עליכם לדעת איך לשים לשונית של תוסף בתפריט העליון שאותו ניתן לגלול או שיופיע ברשימה הימינית העליונה של תוספים מופעלים.</string>
+    <string name="objectives_usage_learned">למדתם איך להתמודד עם היסודות של AAPS. השליטה העיקרית היא מתוך מסך הסקירה הכללית הנעשית בלחיצה או בלחיצה ארוכה, פקודות נוספות נמצאות במסך הפעולות. עליכם לדעת איך לקבוע לשונית של תוסף בתפריט העליון שאותו ניתן לגלול או שיופיע ברשימה הימנית העליונה של תוספים מופעלים.</string>
     <string name="objectives_useprofileswitch">הגדירו פרופיל 90% למשך 10 דקות (לחיצה ארוכה על שם הפרופיל במסך הסקירה הכללית)</string>
     <string name="objectives_usedisconnectpump">דמו מקלחת. הגדירו ניתוק משאבה במשך שעה אחת (לחיצה ארוכה על לולאה פתוחה)</string>
     <string name="objectives_usereconnectpump">... והתחברו מחדש באותה הדרך</string>
@@ -77,12 +74,9 @@
     <string name="unfinshed_button">הבא שלא נענה</string>
     <string name="requestcode">בקשת קוד: %1$s</string>
     <string name="objectives_hint">(סמנו את כל התשובות הנכונות)</string>
-    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/he/latest/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/he/latest/Getting-Started/Screenshots.html#the-homescreen</string>
-    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/he/latest/Configuration/Config-Builder.html</string>
-    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/he/latest/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">אין חיבור לאינטרנט</string>
     <string name="failedretrievetime">אחזור השעה נכשל</string>
     <string name="requirementnotmet">דרישות המשימה לא נענו</string>
     <string name="what_i_ve_learned">מה שלמדתי:</string>
+    <string name="verify_master_password">וודאו שאתם יודעים וזוכרים את הסיסמה הראשית</string>
 </resources>

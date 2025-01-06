@@ -5,11 +5,12 @@ import android.os.Bundle
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
 import androidx.work.testing.TestListenableWorkerBuilder
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.receivers.Intents
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.T
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.Preferences
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.shared.impl.utils.DateUtilImpl
 import app.aaps.shared.tests.BundleMock
@@ -35,20 +36,20 @@ class XdripSourcePluginTest : TestBase() {
             if (it is XdripSourcePlugin.XdripSourceWorker) {
                 it.dataWorkerStorage = dataWorkerStorage
                 it.dateUtil = dateUtil
-                it.sp = sp
+                it.preferences = preferences
             }
         }
     }
 
-    @Mock lateinit var sp: SP
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var context: ContextWithInjector
+    @Mock lateinit var preferences: Preferences
 
     @BeforeEach
     fun setup() {
         `when`(context.applicationContext).thenReturn(context)
         `when`(context.androidInjector()).thenReturn(injector.androidInjector())
-        xdripSourcePlugin = XdripSourcePlugin(injector, rh, aapsLogger)
+        xdripSourcePlugin = XdripSourcePlugin(rh, aapsLogger)
         dateUtil = DateUtilImpl(context)
         dataWorkerStorage = DataWorkerStorage(context)
     }
@@ -59,11 +60,11 @@ class XdripSourcePluginTest : TestBase() {
     ): Pair<Bundle, XdripSourcePlugin.XdripSourceWorker> {
         val bundle = BundleMock.mock()
         sensorStartTime?.let { bundle.putLong(Intents.EXTRA_SENSOR_STARTED_AT, sensorStartTime) }
-        `when`(sp.getBoolean(R.string.key_dexcom_log_ns_sensor_change, false)).thenReturn(logNsSensorChange)
+        `when`(preferences.get(BooleanKey.BgSourceCreateSensorChange)).thenReturn(logNsSensorChange)
 
         lateinit var worker: XdripSourcePlugin.XdripSourceWorker
         TestListenableWorkerBuilder<XdripSourcePlugin.XdripSourceWorker>(context)
-            .setWorkerFactory(object: WorkerFactory() {
+            .setWorkerFactory(object : WorkerFactory() {
                 override fun createWorker(appContext: Context, workerClassName: String, workerParameters: WorkerParameters): XdripSourcePlugin.XdripSourceWorker {
                     worker = XdripSourcePlugin.XdripSourceWorker(context, workerParameters)
                     return worker

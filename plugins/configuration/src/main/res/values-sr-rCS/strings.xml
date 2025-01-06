@@ -37,7 +37,6 @@
     <string name="check_preferences_before_import">Proverite postavke pre uvoza:</string>
     <string name="check_preferences_cannot_import">Postavke se ne mogu uvesti!</string>
     <string name="check_preferences_dangerous_import">Postavke ne treba da se uvoze!</string>
-    <string name="nav_export">Izvezi podešavanja</string>
     <string name="export_to">Izvezi podešavanja u</string>
     <string name="import_from">Uvezi podešavanja iz</string>
     <string name="setting_imported">Podešavanja su uvezena</string>
@@ -54,6 +53,5 @@
     <string name="nav_resetdb">Poništite baze podataka</string>
     <!-- Maintenance -->
     <!-- Custom Watchface -->
-    <!-- Permissions -->
     <!-- Maintenance -->
 </resources>

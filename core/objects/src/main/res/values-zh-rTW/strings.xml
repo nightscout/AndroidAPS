@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="format_carbs">%1$d g</string>
+    <string name="count_selected">選擇了 %1$d 項</string>
+    <string name="remove_items">移除項目</string>
+    <string name="sort_items">排序項目</string>
+    <string name="remove_selected_items">移除選定項目</string>
+    <string name="sort_label">排序</string>
+</resources>

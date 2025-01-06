@@ -34,7 +34,7 @@ data class NSOfflineEvent(
 
         companion object {
 
-            fun fromString(reason: String?) = values().firstOrNull { it.name == reason } ?: OTHER
+            fun fromString(reason: String?) = Reason.entries.firstOrNull { it.name == reason } ?: OTHER
         }
     }
 }

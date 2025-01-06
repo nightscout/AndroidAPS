@@ -1,15 +1,16 @@
 package app.aaps.plugins.sync.nsclientV3.extensions
 
-import app.aaps.core.interfaces.utils.T
+import app.aaps.core.data.model.IDs
+import app.aaps.core.data.model.TT
+import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.data.time.T
 import app.aaps.core.nssdk.localmodel.entry.NsUnits
 import app.aaps.core.nssdk.localmodel.treatment.EventType
 import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryTarget
-import app.aaps.database.entities.TemporaryTarget
-import app.aaps.database.entities.embedments.InterfaceIDs
 import java.security.InvalidParameterException
 
-fun NSTemporaryTarget.toTemporaryTarget(): TemporaryTarget =
-    TemporaryTarget(
+fun NSTemporaryTarget.toTemporaryTarget(): TT =
+    TT(
         isValid = isValid,
         timestamp = date ?: throw InvalidParameterException(),
         utcOffset = T.mins(utcOffset ?: 0L).msecs(),
@@ -17,13 +18,13 @@ fun NSTemporaryTarget.toTemporaryTarget(): TemporaryTarget =
         highTarget = targetTop.asMgdl(),
         lowTarget = targetBottom.asMgdl(),
         duration = duration,
-        interfaceIDs_backing = InterfaceIDs(nightscoutId = identifier, pumpId = pumpId, pumpType = InterfaceIDs.PumpType.fromString(pumpType), pumpSerial = pumpSerial, endId = endId)
+        ids = IDs(nightscoutId = identifier, pumpId = pumpId, pumpType = PumpType.fromString(pumpType), pumpSerial = pumpSerial, endId = endId)
     )
 
-fun NSTemporaryTarget.Reason?.toReason(): TemporaryTarget.Reason =
-    TemporaryTarget.Reason.fromString(this?.text)
+fun NSTemporaryTarget.Reason?.toReason(): TT.Reason =
+    TT.Reason.fromString(this?.text)
 
-fun TemporaryTarget.toNSTemporaryTarget(): NSTemporaryTarget =
+fun TT.toNSTemporaryTarget(): NSTemporaryTarget =
     NSTemporaryTarget(
         eventType = EventType.TEMPORARY_TARGET,
         isValid = isValid,
@@ -34,12 +35,12 @@ fun TemporaryTarget.toNSTemporaryTarget(): NSTemporaryTarget =
         targetBottom = lowTarget,
         units = NsUnits.MG_DL,
         duration = duration,
-        identifier = interfaceIDs.nightscoutId,
-        pumpId = interfaceIDs.pumpId,
-        pumpType = interfaceIDs.pumpType?.name,
-        pumpSerial = interfaceIDs.pumpSerial,
-        endId = interfaceIDs.endId
+        identifier = ids.nightscoutId,
+        pumpId = ids.pumpId,
+        pumpType = ids.pumpType?.name,
+        pumpSerial = ids.pumpSerial,
+        endId = ids.endId
     )
 
-fun TemporaryTarget.Reason?.toReason(): NSTemporaryTarget.Reason =
+fun TT.Reason?.toReason(): NSTemporaryTarget.Reason =
     NSTemporaryTarget.Reason.fromString(this?.text)

@@ -9,6 +9,9 @@ import android.util.DisplayMetrics
 import android.view.WindowManager
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.preference.PreferenceCategory
+import androidx.preference.PreferenceManager
+import androidx.preference.PreferenceScreen
 import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
@@ -18,25 +21,26 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import app.aaps.core.data.model.HasIDs
+import app.aaps.core.data.model.data.Block
+import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.sync.Sync
-import app.aaps.database.entities.data.Block
-import app.aaps.database.entities.interfaces.TraceableDBEntry
-import app.aaps.database.impl.AppRepository
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.Preferences
+import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.openhumans.delegates.OHAppIDDelegate
 import app.aaps.plugins.sync.openhumans.delegates.OHCounterDelegate
 import app.aaps.plugins.sync.openhumans.delegates.OHStateDelegate
 import app.aaps.plugins.sync.openhumans.ui.OHFragment
 import app.aaps.plugins.sync.openhumans.ui.OHLoginActivity
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.Dispatchers
@@ -58,12 +62,11 @@ import javax.inject.Singleton
 
 @Singleton
 class OpenHumansUploaderPlugin @Inject internal constructor(
-    injector: HasAndroidInjector,
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
-    private val sp: SP,
+    private val preferences: Preferences,
     private val context: Context,
-    private val repository: AppRepository,
+    private val persistenceLayer: PersistenceLayer,
     private val openHumansAPI: OpenHumansAPI,
     stateDelegate: OHStateDelegate,
     counterDelegate: OHCounterDelegate,
@@ -76,9 +79,9 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
         .pluginName(R.string.open_humans)
         .shortName(R.string.open_humans_short)
         .description(R.string.open_humans_description)
-        .preferencesId(R.xml.pref_openhumans)
+        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .fragmentClass(OHFragment::class.qualifiedName),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ) {
 
     private var openHumansState by stateDelegate
@@ -108,7 +111,7 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
     }
 
     private fun onSharedPreferenceChanged(event: EventPreferenceChange) {
-        if (event.changedKey in arrayOf("key_oh_charging_only", "key_oh_wifi_only") && openHumansState != null) scheduleWorker(true)
+        if (event.changedKey in arrayOf(BooleanKey.OpenHumansWifiOnly.key, BooleanKey.OpenHumansChargingOnly.key) && openHumansState != null) scheduleWorker(true)
     }
 
     suspend fun login(bearerToken: String) = withContext(Dispatchers.IO) {
@@ -137,18 +140,18 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
         return messageDigest.digest().toHexString()
     }
 
-    private fun <T : TraceableDBEntry> ZipOutputStream.writeDBEntryFile(name: String, list: List<T>, block: JSONObject.(entry: T) -> Unit) = writeJSONArrayFile(name, list) {
+    private fun <T : HasIDs> ZipOutputStream.writeDBEntryFile(name: String, list: List<T>, block: JSONObject.(entry: T) -> Unit) = writeJSONArrayFile(name, list) {
         put("structureVersion", 2)
         put("id", it.id)
         put("version", it.version)
         put("dateCreated", it.dateCreated)
         put("isValid", it)
         put("referenceId", it.referenceId)
-        put("pumpType", it.interfaceIDs.pumpType)
-        put("pumpSerialHash", it.interfaceIDs.pumpSerial?.sha256())
-        put("pumpId", it.interfaceIDs.pumpId)
-        put("startId", it.interfaceIDs.startId)
-        put("endId", it.interfaceIDs.endId)
+        put("pumpType", it.ids.pumpType)
+        put("pumpSerialHash", it.ids.pumpSerial?.sha256())
+        put("pumpId", it.ids.pumpId)
+        put("startId", it.ids.startId)
+        put("endId", it.ids.endId)
         block(it)
     }
 
@@ -200,27 +203,27 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
     }
 
     private suspend fun uploadDataPaged(since: Long, until: Long, page: Int): Boolean {
-        val data = repository
+        val data = persistenceLayer
             .collectNewEntriesSince(since, until, 1000, 1000 * page)
-            .let { data -> data.copy(preferencesChanges = data.preferencesChanges.filter { it.key.isAllowedKey() }) }
+//            .let { data -> data.copy(preferencesChanges = data.preferencesChanges.filter { it.key.isAllowedKey() }) }
         val hasData = with(data) {
-            apsResults.isNotEmpty() ||
-                apsResultLinks.isNotEmpty() ||
-                bolusCalculatorResults.isNotEmpty() ||
+//            apsResults.isNotEmpty() ||
+//                apsResultLinks.isNotEmpty() ||
+            bolusCalculatorResults.isNotEmpty() ||
                 boluses.isNotEmpty() ||
                 carbs.isNotEmpty() ||
                 effectiveProfileSwitches.isNotEmpty() ||
                 extendedBoluses.isNotEmpty() ||
                 glucoseValues.isNotEmpty() ||
-                multiwaveBolusLinks.isNotEmpty() ||
+//                multiwaveBolusLinks.isNotEmpty() ||
                 offlineEvents.isNotEmpty() ||
-                preferencesChanges.isNotEmpty() ||
+//                preferencesChanges.isNotEmpty() ||
                 profileSwitches.isNotEmpty() ||
                 temporaryBasals.isNotEmpty() ||
                 temporaryTarget.isNotEmpty() ||
                 therapyEvents.isNotEmpty() ||
-                totalDailyDoses.isNotEmpty() ||
-                versionChanges.isNotEmpty()
+                totalDailyDoses.isNotEmpty() //||
+//                versionChanges.isNotEmpty()
         }
         if (!hasData) return false
 
@@ -274,31 +277,33 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
         zos.writeFile("UploadInfo.json", uploadInfo.toString().toByteArray())
         tags.add("UploadInfo")
 
-        if (data.apsResults.isNotEmpty()) {
-            zos.writeDBEntryFile("APSResults.json", data.apsResults) {
-                put("timestamp", it.timestamp)
-                put("utcOffset", it.utcOffset)
-                put("algorithm", it.algorithm.toString())
-                put("glucoseStatus", JSONObject(it.glucoseStatusJson))
-                put("currentTemp", JSONObject(it.currentTempJson))
-                put("iobData", JSONObject(it.iobDataJson))
-                put("profile", JSONObject(it.profileJson))
-                put("autosensData", JSONObject(it.autosensDataJson ?: ""))
-                put("mealData", JSONObject(it.mealDataJson))
-                put("isMicroBolusAllowed", it.isMicroBolusAllowed)
-                put("result", JSONObject(it.resultJson))
-            }
-            tags.add("APSResults")
-        }
+        /*
+                if (data.apsResults.isNotEmpty()) {
+                    zos.writeDBEntryFile("APSResults.json", data.apsResults) {
+                        put("timestamp", it.timestamp)
+                        put("utcOffset", it.utcOffset)
+                        put("algorithm", it.algorithm.toString())
+                        put("glucoseStatus", JSONObject(it.glucoseStatusJson))
+                        put("currentTemp", JSONObject(it.currentTempJson))
+                        put("iobData", JSONObject(it.iobDataJson))
+                        put("profile", JSONObject(it.profileJson))
+                        put("autosensData", JSONObject(it.autosensDataJson ?: ""))
+                        put("mealData", JSONObject(it.mealDataJson))
+                        put("isMicroBolusAllowed", it.isMicroBolusAllowed)
+                        put("result", JSONObject(it.resultJson))
+                    }
+                    tags.add("APSResults")
+                }
 
-        if (data.apsResultLinks.isNotEmpty()) {
-            zos.writeDBEntryFile("APSResultLinks.json", data.apsResultLinks) {
-                put("apsResultId", it.apsResultId)
-                put("smbId", it.smbId)
-                put("tbrId", it.tbrId)
-            }
-            tags.add("APSResultLinks")
-        }
+                if (data.apsResultLinks.isNotEmpty()) {
+                    zos.writeDBEntryFile("APSResultLinks.json", data.apsResultLinks) {
+                        put("apsResultId", it.apsResultId)
+                        put("smbId", it.smbId)
+                        put("tbrId", it.tbrId)
+                    }
+                    tags.add("APSResultLinks")
+                }
+        */
 
         if (data.bolusCalculatorResults.isNotEmpty()) {
             zos.writeDBEntryFile("BolusCalculatorResults.json", data.bolusCalculatorResults) {
@@ -342,8 +347,8 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
                 put("amount", it.amount)
                 put("type", it.type.toString())
                 put("isBasalInsulin", it.isBasalInsulin)
-                put("insulinEndTime", it.insulinConfiguration?.insulinEndTime)
-                put("peak", it.insulinConfiguration?.peak)
+                put("insulinEndTime", it.icfg?.insulinEndTime)
+                put("peak", it.icfg?.peak)
             }
             tags.add("Boluses")
         }
@@ -380,8 +385,8 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
                 put("originalPercentage", it.originalPercentage)
                 put("originalDuration", it.originalDuration)
                 put("originalEnd", it.originalEnd)
-                put("insulinEndTime", it.insulinConfiguration.insulinEndTime)
-                put("insulinEndTime", it.insulinConfiguration.peak)
+                put("insulinEndTime", it.iCfg.insulinEndTime)
+                put("insulinEndTime", it.iCfg.peak)
             }
             tags.add("EffectiveProfileSwitches")
         }
@@ -410,13 +415,15 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
             tags.add("GlucoseValues")
         }
 
-        if (data.multiwaveBolusLinks.isNotEmpty()) {
-            zos.writeDBEntryFile("MultiwaveBolusLinks.json", data.multiwaveBolusLinks) {
-                put("bolusId", it.bolusId)
-                put("extendedBolusId", it.extendedBolusId)
-            }
-            tags.add("MultiwaveBolusLinks")
-        }
+        /*
+                if (data.multiwaveBolusLinks.isNotEmpty()) {
+                    zos.writeDBEntryFile("MultiwaveBolusLinks.json", data.multiwaveBolusLinks) {
+                        put("bolusId", it.bolusId)
+                        put("extendedBolusId", it.extendedBolusId)
+                    }
+                    tags.add("MultiwaveBolusLinks")
+                }
+        */
 
         if (data.offlineEvents.isNotEmpty()) {
             zos.writeDBEntryFile("OfflineEvents.json", data.offlineEvents) {
@@ -428,18 +435,20 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
             tags.add("OfflineEvents")
         }
 
-        if (data.preferencesChanges.isNotEmpty()) {
-            zos.writeJSONArrayFile("PreferenceChanges.json", data.preferencesChanges) {
-                put("structureVersion", 2)
-                put("id", it.id)
-                put("timestamp", it.timestamp)
-                put("utcOffset", it.utcOffset)
-                put("structureVersion", 2)
-                put("key", it.key)
-                put("value", it.value)
-            }
-            tags.add("PreferenceChanges")
-        }
+        /*
+                if (data.preferencesChanges.isNotEmpty()) {
+                    zos.writeJSONArrayFile("PreferenceChanges.json", data.preferencesChanges) {
+                        put("structureVersion", 2)
+                        put("id", it.id)
+                        put("timestamp", it.timestamp)
+                        put("utcOffset", it.utcOffset)
+                        put("structureVersion", 2)
+                        put("key", it.key)
+                        put("value", it.value)
+                    }
+                    tags.add("PreferenceChanges")
+                }
+        */
 
         if (data.profileSwitches.isNotEmpty()) {
             zos.writeDBEntryFile("ProfileSwitches.json", data.profileSwitches) {
@@ -461,8 +470,8 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
                 put("timeshift", it.timeshift)
                 put("percentage", it.percentage)
                 put("duration", it.duration)
-                put("insulinEndTime", it.insulinConfiguration.insulinEndTime)
-                put("peak", it.insulinConfiguration.peak)
+                put("insulinEndTime", it.iCfg.insulinEndTime)
+                put("peak", it.iCfg.peak)
             }
             tags.add("ProfileSwitches")
         }
@@ -515,20 +524,22 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
             tags.add("TotalDailyDoses")
         }
 
-        if (data.versionChanges.isNotEmpty()) {
-            zos.writeJSONArrayFile("VersionChanges.json", data.versionChanges) {
-                put("structureVersion", 2)
-                put("id", it.id)
-                put("timestamp", it.timestamp)
-                put("utcOffset", it.utcOffset)
-                put("versionCode", it.versionCode)
-                put("versionName", it.versionName)
-                val customGitRemote = it.gitRemote != "https://github.com/nightscout/AndroidAPS.git"
-                put("customGitRemote", customGitRemote)
-                put("commitHash", if (customGitRemote) null else it.commitHash)
-            }
-            tags.add("VersionChanges")
-        }
+        /*
+                if (data.versionChanges.isNotEmpty()) {
+                    zos.writeJSONArrayFile("VersionChanges.json", data.versionChanges) {
+                        put("structureVersion", 2)
+                        put("id", it.id)
+                        put("timestamp", it.timestamp)
+                        put("utcOffset", it.utcOffset)
+                        put("versionCode", it.versionCode)
+                        put("versionName", it.versionName)
+                        val customGitRemote = it.gitRemote != "https://github.com/nightscout/AndroidAPS.git"
+                        put("customGitRemote", customGitRemote)
+                        put("commitHash", if (customGitRemote) null else it.commitHash)
+                    }
+                    tags.add("VersionChanges")
+                }
+        */
 
         zos.close()
         val bytes = baos.toByteArray()
@@ -555,8 +566,8 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
 
     private fun scheduleWorker(replace: Boolean, delay: Boolean = false) {
         val constraints = Constraints.Builder()
-            .setRequiredNetworkType(if (sp.getBoolean("key_oh_wifi_only", true)) NetworkType.UNMETERED else NetworkType.CONNECTED)
-            .setRequiresCharging(sp.getBoolean("key_oh_charging_only", false))
+            .setRequiredNetworkType(if (preferences.get(BooleanKey.OpenHumansWifiOnly)) NetworkType.UNMETERED else NetworkType.CONNECTED)
+            .setRequiresCharging(preferences.get(BooleanKey.OpenHumansChargingOnly))
             .setRequiresBatteryNotLow(true)
             .build()
         val workRequest = PeriodicWorkRequestBuilder<OpenHumansWorker>(1, TimeUnit.DAYS)
@@ -675,4 +686,16 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
         const val UPLOAD_NOTIFICATION_ID = 3126
     }
 
+    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
+        if (requiredKey != null) return
+        val category = PreferenceCategory(context)
+        parent.addPreference(category)
+        category.apply {
+            key = "open_humans_settings"
+            title = rh.gs(R.string.open_humans)
+            initialExpandedChildrenCount = 0
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.OpenHumansWifiOnly, title = R.string.only_upload_if_connected_to_wifi))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.OpenHumansChargingOnly, title = R.string.only_upload_if_charging))
+        }
+    }
 }

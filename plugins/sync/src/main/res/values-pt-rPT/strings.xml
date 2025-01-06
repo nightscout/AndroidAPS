@@ -9,7 +9,6 @@
     <string name="ns_create_announcements_from_carbs_req_title">Criar anúncios a partir dos alertas de hidratos necessários</string>
     <string name="ns_create_announcements_from_errors_summary">Criar um anúncio no Nightscout para caixas de diálogo de erro e alertas locais (também podem ser visualizados em Careportal sob tratamentos)</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Criar anúncios Nightscout para alertas de hidratos necessários</string>
-    <string name="description_ns_client">Sincroniza os seus dados com o Nightscout</string>
     <string name="unsupported_ns_version">Versão sem suporte do Nightscout</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
@@ -17,18 +16,10 @@
     <!-- NSClient -->
     <string name="no_write_permission">ClienteNS sem permissões para alterar dados. Tem a senha API correta?</string>
     <string name="ns_client">ClienteNS</string>
-    <string name="ns_client_short_name">CLNS</string>
     <string name="ns_client_url">URL:</string>
     <string name="restart">Reiniciar</string>
-    <string name="ns_client_internal_title">ClienteNS</string>
     <string name="ns_client_url_title">Nightscout URL</string>
-    <string name="ns_client_url_dialog_message">Introduza o Nightscout URL</string>
-    <string name="ns_client_secret_title">NS API secret</string>
-    <string name="ns_client_secret_dialog_title">NS API secret</string>
-    <string name="ns_client_secret_dialog_message">Insira NS API secret (min 12 caract.)</string>
     <string name="deliver_now">Administrar agora</string>
-    <string name="clear_queue">Limpar fila de espera</string>
-    <string name="show_queue">Mostrar file de espera</string>
     <string name="queue">Fila de espera:</string>
     <string name="status">Estado:</string>
     <string name="clear_log">Limpar Registo</string>
@@ -72,13 +63,7 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Enviar dados para Tidepool</string>
-    <string name="tidepool_upload_cgm">Enviar dados CGM</string>
-    <string name="tidepool_upload_bolus">Enviar tratamentos (insulina, hidratos)</string>
-    <string name="tidepool_upload_tbr">Enviar basais temporárias</string>
-    <string name="tidepool_upload_profile">Enviar trocas de perfil, alvos temporários</string>
-    <string name="tidepool_upload_bg">Enviar testes Glicose</string>
     <string name="upload_now">Fazer o upload agora</string>
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="xdrip_status_show_bgi_title">Mostrar IG</string>
     <string name="xdrip_status_show_bgi_summary">Adicionar IG à linha de estado</string>
@@ -95,7 +80,6 @@
     <string name="wizard_result">Calc. Assistente:\nInsulina: %1$.2fU\nHidratos: %2$dg</string>
     <string name="quick_wizard_not_available">O assistente rápido selecionado não está mais disponível, atualize o ecrã</string>
     <string name="quick_wizard_message">Assistente rápido: %1$s\nInsulina: %2$.2fU\nHidratos: %3$dg</string>
-    <string name="wear_action_tempt_preset_error">Predefinição de alvo temporário desconhecido: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Cancelando Alvos Temporários em execução?</string>
     <string name="wear_action_tempt_unit_error">Diferentes unidades usadas no relógio e telefone!</string>
     <string name="wear_action_tempt_zero_message">Alvo-temporário-Zero - cancelar Alvos -Temporários em progresso?</string>

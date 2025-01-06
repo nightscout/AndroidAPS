@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PhoneChecker -->
+    <!-- DST Helper -->
+    <string name="dst_in_24h_warning">24小時內或更短時間內將進行夏令時間變更</string>
+    <string name="dst_loop_disabled_warning">夏令時間變更在3小時內 - 已停用閉環</string>
+    <string name="dst_loop_disabled_error">夏令時間 (DST) 變更在3小時內發生。閉環暫時停用，將在DST變更後3小時自動重新啟用</string>
+    <!-- Storage constraint -->
+    <string name="disk_full">請釋放至少 %1$d MB 的內部儲存空間！已停用循環！</string>
+    <!-- Version Checker -->
+    <string name="old_version">舊版本</string>
+    <string name="very_old_version">非常舊的版本</string>
+    <string name="application_expired">應用已過期</string>
+    <string name="new_version_warning">至少 %1$d 天未檢查新版本！%2$d 天後回退到LGS，%3$d 天後將停用循環。請恢復網路連線！</string>
+    <string name="running_invalid_version">偵測到您正在運行無效版本。已停用循環！</string>
+    <string name="versionavailable">版本 %1$s 可用</string>
+    <string name="version_expire">版本 %1$s 將於 %2$s 過期</string>
+    <!-- Signature verifier -->
+    <!-- BG Quality -->
+    <string name="recalculated_data_used">使用重新計算的資料</string>
+    <string name="bg_too_close">血糖過於接近：\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">重新計算</string>
+    <string name="a11y_bg_quality_doubles">重複輸入</string>
+    <string name="a11y_bg_quality_flat">資料平坦。被認為是錯誤的</string>
+    <!-- Safety -->
+    <string name="limitingextendedbolus">由於 %2$s，將延長注射限製為 %1$.1f U</string>
+    <string name="limitingcarbs">由於 %2$s，將碳水化合物限制為 %1$d g</string>
+    <string name="pumpisnottempbasalcapable">幫浦無法使用臨時基礎速率</string>
+    <string name="closedmodedisabledinpreferences">偏好設定中已停用閉環模式</string>
+    <string name="closed_loop_disabled_on_dev_branch">運行開發版本。閉環已停用。</string>
+    <string name="closed_loop_disabled_with_eb">由於運行延長注射已停用閉環</string>
+    <string name="smbalwaysdisabled">由於啟用的血糖來源不支援高級過濾，SMB將在碳水化合物結束後停用</string>
+    <string name="smbnotallowedinopenloopmode">在開環模式中不允許SMB</string>
+    <string name="maxvalueinpreferences">偏好設定中的最大值</string>
+    <string name="hardlimit">硬限制</string>
+    <string name="treatmentssafety_title">治療安全</string>
+    <!-- Objectives -->
+    <string name="completed_well_done">完成，做得好！</string>
+    <string name="not_completed_yet">尚未完成</string>
+    <string name="time_elapsed">已過時間</string>
+    <string name="maxiobset">最大IOB設置正確</string>
+    <string name="hasbgdata">從選定的來源可獲取血糖</string>
+    <string name="synchaswritepermission">同步服務具有寫入權限</string>
+    <string name="loopenabled">循環已啟用</string>
+    <string name="apsselected">已選擇APS</string>
+    <string name="closedmodeenabled">閉環模式已啟用</string>
+    <string name="objectives_shortname">目標</string>
+    <string name="description_objectives">學習計劃</string>
+    <string name="doyouwantresetstart">您想要重置目標開始嗎？您可能會失去進度。</string>
+    <string name="objectives_next_button">下一步</string>
+    <string name="objectives_previous_button">上一步</string>
+    <string name="objectives_button_unfinish">重置完成狀態</string>
+    <string name="objectives_button_unstart">重置開始狀態</string>
+</resources>

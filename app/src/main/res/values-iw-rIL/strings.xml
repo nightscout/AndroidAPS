@@ -1,29 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
-    <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
-    <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="nav_preferences_plugin">העדפות %1$s</string>
-    <string name="nav_refreshtreatments">רענן טיפול מ-Nightscout</string>
     <string name="nav_exit">יציאה</string>
     <string name="delta">דלתא</string>
-    <string name="profile_label">פרופיל</string>
     <string name="save">שמירה</string>
-    <string name="reloadprofile">טעינה מחדש של הפרופיל</string>
-    <string name="correctionbous">תיקון</string>
-    <string name="ns_upload_only">(מסוכן להשבית) העלאה בלבד לנייטסקאוט</string>
-    <string name="ns_upload_only_summary">העלאה בלבד של נתונים לנייטסקאוט. לא מתאים לשימוש אלא אם מקור נתוני הסוכר הוא מקומי כדוגמת xDrip. לא מתאים לשימוש בפרופילים מקוונים מנייטסקאוט.\n!!! אזהרה !!! ביטול אפשרות זו עלולה לגרום לתקלות ולמינון יתר של אינסולין אם אחד או יותר מרכיבי המערכת (AAPS, xDrip, נייטסקאוט) אינו מוגדר כהלכה. וודאו היטב שהנתונים המוצגים ב-AAPS תואמים את מצב המשאבה!</string>
     <string name="wear">Wear</string>
     <string name="nav_about">אודות</string>
-    <string name="smscommunicator_missingphonestatepermission">הרשאת סטטוס הטלפון חסרה</string>
-    <string name="ns_alarm_options">אפשרויות התראה</string>
-    <string name="ns_alarms">ייצר התראות מאזעקות של Nightscout</string>
-    <string name="ns_announcements">ייצר התראות מהכרזות של Nightscout</string>
-    <string name="ns_alarm_stale_data_value_label">סף התיישנות נתונים [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">סף התיישנות נתונים דחוף [min]</string>
     <string name="sensitivity_warning">בהפעלת פונקציית ה-Autosens יש לזכור שחייבים להזין למערכת את כל הפחמימות שנאכלו. אחרת פחמימות לא יזוהו נכון כשינוי ברגישות!</string>
-    <string name="notloadedplugins">לא כל הפרופילים נטענו!</string>
-    <string name="valuesnotstored">הערכים לא נשמרו</string>
     <string name="invalid">לא חוקי</string>
     <string name="gradually_increase_notification_volume">הגבר את עוצמת הקול בהדרגה להתראות ולהודעות</string>
     <string name="localalertsettings_title">התראות מקומיות</string>
@@ -35,26 +18,16 @@
     <string name="close_navigation">סגור ניווט</string>
     <string name="remove_items">הסר פריטים</string>
     <string name="sort_items">מיין פריטים</string>
-    <string name="error_adding_treatment_title">נתוני טיפול לא שלמים</string>
-    <string name="error_adding_treatment_message">לא ניתן להוסיף טיפול (אינסולין: %1$.2f, פחמ\': %2$d, בשעה: %3$s) לטיפולים. נא לבדוק ולהוסיף רשומה באופן ידני כנדרש.</string>
-    <string name="generated_ecarbs_note">פחמימות ממושכות: %1$d גר\' (%2$d ש\'), עיכוב %3$d דק\'</string>
-    <string name="profile_total">== ∑  %1$s יח\'</string>
     <string name="unitsnosemicolon">יחידות</string>
-    <string name="show_removed">הצג מחוקים</string>
-    <string name="clearqueueconfirm">לנקות את התור? כל הנתונים בתור יאבדו!</string>
-    <string name="chartmenu">תפריט תרשים</string>
     <string name="authorizationfailed">ההרשאה נכשלה</string>
-    <string name="copytolocalprofile_invalid">לא ניתן ליצור פרופיל מקומי. הפרופיל אינו חוקי.</string>
-    <string name="clear_filter">נקה סינון</string>
     <string name="cannula">צינורית</string>
-    <string name="email_address">כתובת דוא\"ל</string>
-    <string name="remove_bg_readings">הסר קריאות רמת הסוכר</string>
     <string name="identification_not_set">אמצעי הזיהוי אינו מוגדר במצב מפתחים</string>
-    <string name="a11y_dialog">תיבת דו-שיח</string>
     <!-- WEAR OS-->
-    <string name="wear_unknown_action_string">פקודה לא ידועה:</string>
     <string name="remove_selected_items">הסר פריטים נבחרים</string>
     <string name="count_selected">%1$d נבחרו</string>
     <string name="sort_label">מיין</string>
     <string name="search">חיפוש</string>
+    <string name="simple_mode">מצב פשוט</string>
+    <string name="select">בחר</string>
+    <string name="set">הגדר</string>
 </resources>

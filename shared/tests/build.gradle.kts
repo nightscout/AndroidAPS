@@ -1,5 +1,6 @@
 plugins {
-    id("com.android.library")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.ksp)
     id("kotlin-android")
     id("android-module-dependencies")
     id("test-module-dependencies")
@@ -11,19 +12,19 @@ android {
 }
 
 dependencies {
-    implementation(project(":database:entities"))
-    implementation(project(":shared:impl"))
+    implementation(project(":core:data"))
     implementation(project(":core:interfaces"))
-    implementation(project(":core:main"))
+    implementation(project(":core:objects"))
+    implementation(project(":core:keys"))
+    implementation(project(":core:ui"))
     implementation(project(":core:utils"))
     implementation(project(":implementation"))
+    implementation(project(":shared:impl"))
 
 
-    api(Libs.Mockito.jupiter)
-    api(Libs.Mockito.kotlin)
-    api(Libs.JUnit.jupiterApi)
+    api(libs.org.mockito.junit.jupiter)
+    api(libs.org.mockito.kotlin)
+    api(libs.org.junit.jupiter.api)
 
-    //api "com.google.dagger:dagger:$dagger_version"
-    //api "com.google.dagger:dagger-android:$dagger_version"
-    //api "com.google.dagger:dagger-android-support:$dagger_version"
+    ksp(libs.com.google.dagger.compiler)
 }

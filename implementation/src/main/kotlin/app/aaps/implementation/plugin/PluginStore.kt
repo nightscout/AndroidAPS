@@ -1,8 +1,8 @@
 package app.aaps.implementation.plugin
 
+import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.Sensitivity
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.constraints.Safety
@@ -13,7 +13,6 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.overview.Overview
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.profile.ProfileSource
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.smoothing.Smoothing
@@ -25,8 +24,7 @@ import javax.inject.Singleton
 
 @Singleton
 class PluginStore @Inject constructor(
-    private val aapsLogger: AAPSLogger,
-    private val config: Config
+    private val aapsLogger: AAPSLogger
 ) : ActivePlugin {
 
     lateinit var plugins: List<@JvmSuppressWildcards PluginBase>
@@ -74,19 +72,16 @@ class PluginStore @Inject constructor(
     }
 
     override fun verifySelectionInCategories() {
-        var pluginsInCategory: ArrayList<PluginBase>?
 
         // PluginType.APS
-        if (!config.NSCLIENT && !config.PUMPCONTROL) {
-            pluginsInCategory = getSpecificPluginsList(PluginType.APS)
-            activeAPSStore = getTheOneEnabledInArray(pluginsInCategory, PluginType.APS) as APS?
-            if (activeAPSStore == null) {
-                activeAPSStore = getDefaultPlugin(PluginType.APS) as APS
-                (activeAPSStore as PluginBase).setPluginEnabled(PluginType.APS, true)
-                aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting APSInterface")
-            }
-            setFragmentVisibilities((activeAPSStore as PluginBase).name, pluginsInCategory, PluginType.APS)
+        var pluginsInCategory = getSpecificPluginsList(PluginType.APS)
+        activeAPSStore = getTheOneEnabledInArray(pluginsInCategory, PluginType.APS) as APS?
+        if (activeAPSStore == null) {
+            activeAPSStore = getDefaultPlugin(PluginType.APS) as APS
+            (activeAPSStore as PluginBase).setPluginEnabled(PluginType.APS, true)
+            aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting APSInterface")
         }
+        setFragmentVisibilities((activeAPSStore as PluginBase).name, pluginsInCategory, PluginType.APS)
 
         // PluginType.INSULIN
         pluginsInCategory = getSpecificPluginsList(PluginType.INSULIN)
@@ -178,13 +173,19 @@ class PluginStore @Inject constructor(
         get() = activeBgSourceStore ?: checkNotNull(activeBgSourceStore) { "No bg source selected" }
 
     override val activeProfileSource: ProfileSource
-        get() = activeProfile ?: checkNotNull(activeProfile) { "No profile selected" }
+        get() = activeProfile ?: wait() ?: activeProfile ?: checkNotNull(activeProfile) { "No profile selected" }
 
     override val activeInsulin: Insulin
         get() = activeInsulinStore ?: getDefaultPlugin(PluginType.INSULIN) as Insulin
 
+    private fun <T> wait(millis: Long = 3000): T? {
+        Thread.sleep(millis)
+        return null
+    }
+
+    // App may not be initialized yet. Wait before second return
     override val activeAPS: APS
-        get() = activeAPSStore ?: checkNotNull(activeAPSStore) { "No APS selected" }
+        get() = activeAPSStore ?: wait() ?: activeAPSStore ?: wait(5000) ?: activeAPSStore ?: checkNotNull(activeAPSStore) { "No APS selected" }
 
     override val activePump: Pump
         get() = activePumpStore

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="info.nightscout.pump.dana.DanaFragment">
+    tools:context=".DanaFragment">
 
     <ScrollView
         android:id="@+id/scrollview"
@@ -665,7 +665,7 @@
             style="@style/ButtonSmallFontStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginEnd="-2dp"
+            android:layout_marginEnd="@dimen/gray_material_button_margin_horizontal"
             android:layout_weight="1"
             android:drawableTop="@drawable/ic_dana_profile"
             android:ellipsize="end"
@@ -678,7 +678,7 @@
             style="@style/ButtonSmallFontStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginEnd="-2dp"
+            android:layout_marginEnd="@dimen/gray_material_button_margin_horizontal"
             android:layout_weight="1"
             android:drawableTop="@drawable/ic_pump_history"
             android:ellipsize="end"
@@ -692,7 +692,7 @@
             style="@style/ButtonSmallFontStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginEnd="-2dp"
+            android:layout_marginEnd="@dimen/gray_material_button_margin_horizontal"
             android:layout_weight="1"
             android:drawableTop="@drawable/ic_stats"
             android:ellipsize="end"
@@ -705,7 +705,7 @@
             style="@style/ButtonSmallFontStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginEnd="-2dp"
+            android:layout_marginEnd="@dimen/gray_material_button_margin_horizontal"
             android:layout_weight="1"
             android:drawableTop="@drawable/ic_user_options"
             android:ellipsize="end"

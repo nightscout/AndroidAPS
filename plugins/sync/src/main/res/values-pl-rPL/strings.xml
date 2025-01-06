@@ -13,7 +13,7 @@
     <string name="ns_create_announcements_from_carbs_req_title">Twórz powiadomienia z wymaganych dodatkowych węglowodanów (sugestii dosłodzenia)</string>
     <string name="ns_create_announcements_from_errors_summary">Twórz powiadomienia Nightscout o błędach i lokalnych alarmach (również widoczne w PortaluOpieki w ramach Leczenia)</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Twórz powiadomienia w Nighstcout na podstawie sugestii dosłodzenia</string>
-    <string name="description_ns_client">Synchronizuje twoje dane z Nightscout</string>
+    <string name="description_ns_client">Synchronizuje twoje dane z Nightscout używając API w wersji 1</string>
     <string name="description_ns_client_v3">Synchronizuje twoje dane z Nightscout używając API w wersji 3</string>
     <string name="blocked_by_charging">Zablokowane przez opcje ładowania</string>
     <string name="blocked_by_connectivity">Zablokowane przez opcje połączenia z internetem</string>
@@ -24,24 +24,20 @@
     <string name="ns_malfunction">Usterka NSClient. Spróbuj zrestartować NS i NSClient.</string>
     <!-- NSClient -->
     <string name="no_write_permission">NSCLIENT nie ma uprawnień do zapisu. Błędny API secret?</string>
-    <string name="ns_client_v3">NSClientV3</string>
-    <string name="ns_client_v3_short_name">NSV3</string>
+    <string name="ns_client_v3_short_name">NSv3</string>
     <string name="ns_client">NSClient</string>
-    <string name="ns_client_short_name">NSCI</string>
+    <string name="ns_client_short_name">NSv1</string>
     <string name="ns_client_url">URL:</string>
     <string name="restart">Restart</string>
-    <string name="ns_client_internal_title">NSClient</string>
+    <string name="ns_client_title">NSClientV1</string>
+    <string name="ns_client_v3_title">NSClientV3</string>
     <string name="ns_client_url_title">Nightscout URL</string>
-    <string name="ns_client_url_dialog_message">Wprowadź URL Nightscout</string>
-    <string name="ns_client_secret_title">NS API secret</string>
-    <string name="ns_client_secret_dialog_title">NS API secret</string>
-    <string name="ns_client_secret_dialog_message">Wprowadź NS API secret (min 12 znaków)</string>
-    <string name="nsclient_token_title">Token dostępu NS</string>
-    <string name="nsclient_token_dialog_title">Token dostępu NS</string>
-    <string name="nsclient_token_dialog_message">Token dostępu wygenerowany na stronie administratora w Nightscout (min. 17 znaków)</string>
+    <string name="ns_client_url_dialog_message">Wprowadź swój adres URL Nightscout (np.: https://twojastrona.twojaplatforma.domena.pl)</string>
+    <string name="ns_client_secret_title">Nightscout API secret</string>
+    <string name="ns_client_secret_dialog_message">Wprowadź API secret swojego Nightscouta (minimum 12 znaków zapisanych w zmiennych środowiskowych Nightscout lub w ustawieniach platformy która dostarcza Ci Nightscout)</string>
+    <string name="nsclient_token_title">Token dostępu do Nightscout</string>
+    <string name="nsclient_token_dialog_message">Wprowadź token dostępu do Nightscouta, wgenerowany (z rolą admin) na Twojej stronie Nightscout -> Menu hamburger ≡ -> Narzędzia administratora -> Obiekty (minimum 17 znaków, to NIE JEST nie twój API secret do Nightscouta!)</string>
     <string name="deliver_now">Dostarcz teraz</string>
-    <string name="clear_queue">Wyczyść kolejkę</string>
-    <string name="show_queue">Pokaż kolejkę</string>
     <string name="queue">Kolejka:</string>
     <string name="status">Status:</string>
     <string name="clear_log">Wyczyść log</string>
@@ -89,18 +85,11 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Prześlij dane do Tidepool</string>
-    <string name="tidepool_upload_cgm">Prześlij dane CGM</string>
-    <string name="tidepool_upload_bolus">Prześlij terapię (insulina, węglowodany)</string>
-    <string name="tidepool_upload_tbr">Prześlij bazy tymczasowe</string>
-    <string name="tidepool_upload_profile">Prześlij zmiany profilu, cele tymczasowe</string>
-    <string name="tidepool_upload_bg">Prześlij testowe BG</string>
     <string name="remove_all">Usuń wszystko</string>
-    <string name="reset_start">Resetuj start</string>
     <string name="upload_now">Prześlij teraz</string>
     <string name="not_connected">Nie połączono</string>
     <string name="read_only">Tylko do odczytu</string>
     <string name="working">Pracuje</string>
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>
@@ -117,10 +106,14 @@
     <string name="xdrip_local_broadcasts_summary">Wyślij dane dotyczące glikemii i leczenia do xDrip+. W ustawieniach xDrip+ należy ustawić \"Sprzętowe źródło danych\" na \"xDrip+ Sync Follower\" oraz włączyć akceptowanie danych: \"Ustawienia innych aplikacji\" - \"Akceptuj Glukozę/Akceptuj zabiegi\"</string>
     <string name="xdrip_local_broadcasts_title">Włącz nadawanie do xDrip+.</string>
     <!--    DataBroadcast-->
+    <string name="tizen">Samsung Tizen</string>
+    <string name="tizen_short">TIZ</string>
+    <string name="tizen_description">Transmisja danych do Samsung-owej aplikacji G-Watch Wear (Tinzen OS)</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Połączenie z urządzeniem Garmin (Fenix, Edge, …)</string>
-    <string name="key_garmin_settings">Ustawienia Garmin</string>
+    <string name="garmin_local_http_server_port">Port lokalnego serwera HTTP</string>
+    <string name="garmin_local_http_server">Lokalny serwer HTTP</string>
     <!--    Wear-->
     <string name="wear_shortname">WEAR</string>
     <string name="description_wear">Monitoruj i steruj AAPS używając zegarka z WearOS.</string>
@@ -130,7 +123,7 @@
     <string name="wizard_result">Kalkulator:\nInsulina: %1$.2fU\nWęgle: %2$dg</string>
     <string name="quick_wizard_not_available">Wybrany szybki bolus nie jest już dostępny, odśwież swój kafelek</string>
     <string name="quick_wizard_message">Szybki bolus: %1$s\nInsulina: %2$.2fU\nWęgle: %3$dg</string>
-    <string name="wear_action_tempt_preset_error">Nieznane ustawienie celu tymczasowego: %1$s</string>
+    <string name="user_action_not_available">Wybranaa akcja użytkownika %1$s nie jest już dostępna, odśwież swój kafelek</string>
     <string name="wear_action_tempt_cancel_message">Anulować bieżący cel tymczasowy?</string>
     <string name="wear_action_tempt_unit_error">Różne jednostki używane na zegarku i telefonie!</string>
     <string name="wear_action_tempt_zero_message">Zerowy cel tymczasowy - anulować bieżący cel tymczasowy?</string>
@@ -143,6 +136,8 @@
     <string name="wear_settings">Ustawienia Wear</string>
     <string name="wearcontrol_title">Sterowanie z zegarka</string>
     <string name="wearcontrol_summary">Ustawiaj wartości docelowe i wprowadzaj leczenie z zegarka.</string>
+    <string name="wear_broadcast_data">Nadawanie danych</string>
+    <string name="wear_broadcast_data_summary">Nadawaj dane do AAPS lub AAPSClient</string>
     <string name="wear_wizard_settings_summary">Obliczenia uwzględnione w wynikach kreatora:</string>
     <string name="wear_general_settings">Ustawienia ogólne</string>
     <string name="wear_notifysmb_title">Powiadom na SMB</string>
@@ -155,6 +150,7 @@
     <string name="wear_infos_watchface">O tarczy</string>
     <string name="wear_export_watchface">Eksportuj szablon</string>
     <string name="wear_new_custom_watchface_exported">Szablon tarczy niestandardowej wyeksportowany</string>
+    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/en/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Prześlij ponownie wszystkie dane</string>
     <string name="open_settings_on_wear">Otwórz ustawienia dla Wear</string>
     <string name="cwf_infos_pref_locked">Lista opcji zablokowanych przez tarczę</string>
@@ -186,4 +182,5 @@
     <string name="tdd_line">%1$.2fU %1$.0f%%</string>
     <string name="today">Dziś</string>
     <string name="weighted">ważone</string>
+    <string name="full_xdrip_sync_comment">Wykonać pełną synchronizację? Może ona trochę potrwać i aż do jej zakończenia nie zobaczysz nowych danych w xDrip+.</string>
 </resources>

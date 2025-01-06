@@ -1,29 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
-    <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
-    <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="nav_preferences_plugin">%1$s Ustawienia</string>
-    <string name="nav_refreshtreatments">Odśwież/pobierz zdarzenia z NS</string>
     <string name="nav_exit">Wyjście</string>
     <string name="delta">Delta</string>
-    <string name="profile_label">Profil</string>
     <string name="save">ZACHOWAJ</string>
-    <string name="reloadprofile">Załaduj profil ponownie</string>
-    <string name="correctionbous">Korekta</string>
-    <string name="ns_upload_only">(NIEBEZPIECZNIE TO WYŁĄCZYĆ) tylko przesyłanie NS</string>
-    <string name="ns_upload_only_summary">Tylko przesyłanie NS (wyłączona synchronizacja). Nie ma wpływu na pomiary glikemii (SGV), chyba że wybrane jest lokalne źródło, takie jak xDrip+. Nie wpływa na profile gdy używane są profile z Nightscout.\n!!! OSTRZEŻENIE !!! Wyłączenie tej opcji może spowodować nieprawidłowe działanie i przedawkowanie insuliny, jeśli którykolwiek z Twoich komponentów (AAPS, NS, xDrip+) nie jest skonfigurowany poprawnie. Uważnie obserwuj, czy dane wyświetlane przez AAPS są zgodne ze stanem pompy!</string>
     <string name="wear">Oprogramowanie Wear (Smartwatch)</string>
     <string name="nav_about">O programie</string>
-    <string name="smscommunicator_missingphonestatepermission">Brak uprawnień do wykrywania stanu telefonu</string>
-    <string name="ns_alarm_options">Opcje alarmu</string>
-    <string name="ns_alarms">Utwórz powiadomienia z alarmów NS</string>
-    <string name="ns_announcements">Utwórz powiadomienia z komunikatów NS</string>
-    <string name="ns_alarm_stale_data_value_label">Próg nieaktualne dane [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Próg uwaga nieaktualne dane [min]</string>
     <string name="sensitivity_warning">Przy włączonej funkcji Autosens pamiętaj, żeby wprowadzać wszystkie węglowodany. W innym wypadku odchylenia węglowodanów będą błędnie identyfikowane jako zmiany wrażliwości !!</string>
-    <string name="notloadedplugins">Nie wszystkie profile zostały załadowane!</string>
-    <string name="valuesnotstored">Wartości nie są przechowywane!</string>
     <string name="invalid">NIEPRAWIDŁOWY</string>
     <string name="gradually_increase_notification_volume">Stopniowo zwiększaj głośność ostrzeżeń i powiadomień</string>
     <string name="localalertsettings_title">Alarmy lokalne</string>
@@ -35,26 +18,16 @@
     <string name="close_navigation">Zamknij menu</string>
     <string name="remove_items">Usuń elementy</string>
     <string name="sort_items">Sortuj elementy</string>
-    <string name="error_adding_treatment_title">Niekompletne dane leczenie</string>
-    <string name="error_adding_treatment_message">Leczenie (insulina: %1$.2f, węglowodany: %2$d, czas:%3$s) nie mogą być dodane. Sprawdź i dodaj ręcznie rekord w razie potrzeby.</string>
-    <string name="generated_ecarbs_note">eWęgle: %1$d g (%2$d h), Opóźnienie: %3$d m</string>
-    <string name="profile_total">== ∑ %1$s U</string>
     <string name="unitsnosemicolon">Jednostki</string>
-    <string name="show_removed">Pokaż usunięte</string>
-    <string name="clearqueueconfirm">Wyczyścić kolejkę? Wszystkie dane w kolejce zostaną utracone!</string>
-    <string name="chartmenu">Menu wykresu</string>
     <string name="authorizationfailed">Autoryzacja nie powiodła się</string>
-    <string name="copytolocalprofile_invalid">Nie można utworzyć profilu. Profil jest nieprawidłowy.</string>
-    <string name="clear_filter">Wyczyść filtr</string>
     <string name="cannula">Kaniula</string>
-    <string name="email_address">Adres e-mail</string>
-    <string name="remove_bg_readings">Usuń odczyty glikemii</string>
     <string name="identification_not_set">Identyfikator nie jest ustawiony w trybie dev</string>
-    <string name="a11y_dialog">dialog</string>
     <!-- WEAR OS-->
-    <string name="wear_unknown_action_string">Nieznana akcja:</string>
     <string name="remove_selected_items">Usuń wybrane pozycje</string>
     <string name="count_selected">Wybrany %1$d</string>
     <string name="sort_label">Sortuj</string>
     <string name="search">Szukaj</string>
+    <string name="simple_mode">Tryb uproszczony</string>
+    <string name="select">Wybierz</string>
+    <string name="set">Ustaw</string>
 </resources>

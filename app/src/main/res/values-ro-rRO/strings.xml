@@ -1,29 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
-    <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
-    <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="nav_preferences_plugin">%1$s Preferințe</string>
-    <string name="nav_refreshtreatments">Reîncarcă tratamentele din NS</string>
     <string name="nav_exit">Ieșire</string>
     <string name="delta">Diferență</string>
-    <string name="profile_label">Profil</string>
     <string name="save">Salvează</string>
-    <string name="reloadprofile">Reîncarcă profilul</string>
-    <string name="correctionbous">Corecție</string>
-    <string name="ns_upload_only">(E PERICULOS SĂ DEZACTIVEZI) Doar încărcare în NS</string>
-    <string name="ns_upload_only_summary">Numai încărcare NS (sincronizare dezactivata). Nu este eficient pe SGV (rom. valori de glicemie din senzor) dacă nu este selectată o sursă locală ca xDrip. Nu este eficient pe Profiluri dacă sunt utilizate cele din NS.\n!!! ATENȚIE !!! Dezactivarea acestei opțiuni poate determina disfuncționalități și supradozaj cu insulină dacă oricare dintre componentele dumneavoastră (AAPS, NS, xDrip) este configurată greșit. Urmăriți cu atenție dacă datele afișate de AAPS se potrivesc cu starea pompei!</string>
     <string name="wear">Ceas</string>
     <string name="nav_about">Despre</string>
-    <string name="smscommunicator_missingphonestatepermission">Nu este acordată permisiunea de citire a stării telefonului</string>
-    <string name="ns_alarm_options">Opțiuni alarmare</string>
-    <string name="ns_alarms">Creare notificări din alarmele NS</string>
-    <string name="ns_announcements">Creare notificări din anunţurile NS</string>
-    <string name="ns_alarm_stale_data_value_label">Prag vechime date [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Prag date mult prea vechi [min]</string>
     <string name="sensitivity_warning">Trebuie introduși toți carbo la pornirea Autosens. În caz contrar, acțiunea carbo va fi percepută ca schimbare a sensibilității!</string>
-    <string name="notloadedplugins">Nu s-au încărcat toate profilurile!</string>
-    <string name="valuesnotstored">Nu s-au salvat valorile!</string>
     <string name="invalid">INVALID</string>
     <string name="gradually_increase_notification_volume">Creşterea treptată a volumului pentru alerte şi notificări</string>
     <string name="localalertsettings_title">Alerte locale</string>
@@ -35,24 +18,11 @@
     <string name="close_navigation">Închidere navigație</string>
     <string name="remove_items">Elimină obiecte</string>
     <string name="sort_items">Sortează obiecte</string>
-    <string name="error_adding_treatment_title">Date incomplete despre tratament</string>
-    <string name="error_adding_treatment_message">Un tratament (insulină: %1$.2f, carbohidrați: %2$d, la: %3$s) nu a putut fi înregistrat. Reverificați și apoi adăugați manual înregistrarea corectă.</string>
-    <string name="generated_ecarbs_note">eCarbohidrați: %1$d g (%2$d h), întârziere: %3$d m</string>
-    <string name="profile_total">== ∑  %1$s U</string>
     <string name="unitsnosemicolon">Unități</string>
-    <string name="show_removed">Arată ștergerile</string>
-    <string name="clearqueueconfirm">Ștergeți coada? Toate datele din coadă vor fi pierdute!</string>
-    <string name="chartmenu">Meniu diagramă</string>
     <string name="authorizationfailed">Autorizarea a eșuat</string>
-    <string name="copytolocalprofile_invalid">Nu se poate crea profilul. Profilul este invalid.</string>
-    <string name="clear_filter">Șterge filtru</string>
     <string name="cannula">Canula</string>
-    <string name="email_address">Adresă de e-mail</string>
-    <string name="remove_bg_readings">Eliminați valorile glicemiei</string>
     <string name="identification_not_set">Identificarea nu este setată în modul dezvoltator</string>
-    <string name="a11y_dialog">dialog</string>
     <!-- WEAR OS-->
-    <string name="wear_unknown_action_string">Comandă de acțiune necunoscută:</string>
     <string name="remove_selected_items">Șterge obiectele selectate</string>
     <string name="count_selected">%1$d selectat(e)</string>
     <string name="sort_label">Sortează</string>

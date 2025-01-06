@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- PumpDeviceState -->
     <!-- RL keys -->
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_button_scan_start">Escanejar</string>
@@ -61,8 +62,6 @@
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Bomba Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
-    <string name="riley_link_common_yes">Sí</string>
-    <string name="riley_link_common_no">No</string>
     <!-- RileyLink - Preferences -->
     <string name="riley_link_show_battery_level">Mostrar nivell de batería reportat per OrangeLink/EmaLink/DiaLink</string>
     <string name="riley_link_show_battery_level_summary">NO funciona amb el RileyLink original. Pot ser que no funcioni amb alternatives a RileyLink.</string>

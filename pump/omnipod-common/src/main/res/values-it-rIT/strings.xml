@@ -35,7 +35,6 @@
     <string name="omnipod_common_error_unexpected_exception">Si è verificato un errore imprevisto. Segnalalo! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation">Conferma</string>
-    <string name="omnipod_common_confirmation_time_or_timezone_change">Ora e/o fuso orario cambiati nel pod.</string>
     <string name="omnipod_common_confirmation_expiration_alerts_updated">La configurazione degli avvisi è stata aggiornata nel pod.</string>
     <string name="omnipod_common_confirmation_time_on_pod_updated">L\'ora nel pod è stata aggiornata.</string>
     <string name="omnipod_common_confirmation_suspended_delivery">Tutta l\'erogazione di insulina è stata sospesa.</string>
@@ -66,6 +65,7 @@
     <string name="omnipod_common_overview_reservoir_value">%1$.2f U rimanenti</string>
     <string name="omnipod_common_overview_reservoir_value_over50">Oltre 50 U rimanenti</string>
     <string name="omnipod_common_overview_errors">Errori</string>
+    <string name="omnipod_common_uncertain">incerto</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_cancel">Annulla</string>
     <string name="omnipod_common_wizard_button_finish">Fine</string>
@@ -124,9 +124,9 @@
     <string name="omnipod_common_pod_status_waiting_for_activation">Configurazione in corso (attesa attivazione pod)</string>
     <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">Configurazione in corso (attesa inserimento cannula)</string>
     <string name="omnipod_common_pod_status_running">In esecuzione</string>
+    <string name="omnipod_common_pod_status_normal">Normale</string>
     <string name="omnipod_common_pod_status_suspended">Sospeso</string>
     <string name="omnipod_common_pod_status_pod_fault">Guasto pod</string>
-    <string name="omnipod_common_pod_status_activation_time_exceeded">Tempo di attivazione superato</string>
     <string name="omnipod_common_pod_status_inactive">Inattivo</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Guasto pod: %1$03d %2$s</string>
     <!-- Omnipod - Commands -->
@@ -152,7 +152,6 @@
     <string name="omnipod_common_cmd_set_fake_suspended_tbr">Imposta basale temporanea fittizia perché il pod è sospeso</string>
     <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Cancella basale temporanea fittizia creata perché il pod era sospeso</string>
     <string name="omnipod_common_cmd_split_tbr">Divisione basale temporanea a causa di un errore indeterminato nella cancellazione</string>
-    <string name="omnipod_common_cmd_beep_config">Configurazione BIP</string>
     <string name="omnipod_common_cmd_play_test_beep">Esegui BIP di prova</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_finish_pairing_reminder">Fine promemoria associazione</string>
@@ -175,6 +174,7 @@
     <string name="omnipod_common_ok">OK</string>
     <string name="omnipod_common_cancel">Annulla</string>
     <string name="omnipod_common_warning">Avviso</string>
+    <string name="omnipod_common_disable_suspend_alerts">DISABILITA ALLARMI DI SOSPENSIONE</string>
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">Momenti fa</string>
     <string name="omnipod_common_less_than_a_minute_ago">Meno di un minuto fa</string>

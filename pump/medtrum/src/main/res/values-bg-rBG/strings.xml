@@ -45,7 +45,6 @@
     <string name="alarm_expired">Изтекъл срок</string>
     <string name="alarm_reservoir_empty">Резервоар празен</string>
     <string name="alarm_patch_fault">Дефект в пач помпата</string>
-    <string name="alarm_patch_fault2">Дефект в пач помпата 2</string>
     <string name="alarm_base_fault">Дефект в основата</string>
     <string name="alarm_battery_out">Няма батерия</string>
     <string name="alarm_no_calibration">Няма калибрация</string>
@@ -100,7 +99,6 @@
     <string name="sn_input_title">Сериен номер</string>
     <string name="sn_input_summary">Въведете серийния номер на вашата основа на помпа.</string>
     <string name="sn_input_invalid">Невалиден сериен номер!</string>
-    <string name="pump_unsupported">Помпата не е тествана: %1$d! Моля свържете се с нас в discord или github за поддръжка</string>
     <string name="alarm_setting_title">Настройки на аларма</string>
     <string name="alarm_setting_summary">Изберете предпочитани настройки за аларми на помпата.</string>
     <string name="patch_expiration_title">Срок на пач помпата</string>
@@ -112,4 +110,5 @@
     <string name="getting_bolus_status">Получава болус статус</string>
     <string name="getting_temp_basal_status">Получава статус на временен базал</string>
     <string name="setting_pump_settings">Задава потребителски настройки</string>
+    <!-- bolus-->
 </resources>

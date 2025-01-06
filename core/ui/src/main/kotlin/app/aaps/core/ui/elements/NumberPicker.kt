@@ -21,9 +21,9 @@ import android.view.accessibility.AccessibilityManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.LinearLayout
-import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.ui.R
 import app.aaps.core.ui.databinding.NumberPickerLayoutBinding
+import app.aaps.core.ui.toast.ToastUtils
 import java.text.NumberFormat
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
@@ -67,7 +67,7 @@ open class NumberPicker(context: Context, attrs: AttributeSet? = null) : LinearL
         false
     })
 
-    private fun Boolean.toVisibility() = if (this) View.VISIBLE else View.GONE
+    private fun Boolean.toVisibility() = if (this) VISIBLE else GONE
     private fun stringToDouble(inputString: String?, defaultValue: Double = 0.0): Double {
         var input = inputString ?: return defaultValue
         var result = defaultValue
@@ -76,11 +76,12 @@ open class NumberPicker(context: Context, attrs: AttributeSet? = null) : LinearL
         if (input == "") return defaultValue
         try {
             result = input.toDouble()
-        } catch (e: Exception) {
+        } catch (_: Exception) {
 //            log.error("Error parsing " + input + " to double");
         }
         return result
     }
+
     private inner class UpdateCounterTask(private val mInc: Boolean) : Runnable {
 
         private var repeated = 0

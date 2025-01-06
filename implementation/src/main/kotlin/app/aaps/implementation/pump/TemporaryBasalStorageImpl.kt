@@ -1,16 +1,14 @@
 package app.aaps.implementation.pump
 
-import app.aaps.annotations.OpenForTesting
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
-import app.aaps.core.interfaces.utils.T
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
 
-@OpenForTesting
 @Singleton
 class TemporaryBasalStorageImpl @Inject constructor(
     val aapsLogger: AAPSLogger
@@ -46,7 +44,7 @@ class TemporaryBasalStorageImpl @Inject constructor(
             }
         }
         // If not found, use last record if amount is the same
-        if (store.size > 0) {
+        if (store.isNotEmpty()) {
             val d = store[store.size - 1]
             if (abs(d.rate - rate) < 0.01) {
                 aapsLogger.debug(LTag.PUMP, "Using LAST & removing temporary basal info: $d")

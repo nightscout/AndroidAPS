@@ -1,25 +1,23 @@
 package app.aaps.plugins.constraints.bgQualityCheck
 
 import androidx.annotation.DrawableRes
+import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventBucketedDataCreated
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.plugins.constraints.R
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -30,7 +28,6 @@ import kotlin.math.min
 
 @Singleton
 class BgQualityCheckPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     private val rxBus: RxBus,
@@ -38,16 +35,15 @@ class BgQualityCheckPlugin @Inject constructor(
     private val aapsSchedulers:
     AapsSchedulers,
     private val fabricPrivacy: FabricPrivacy,
-    private val dateUtil: DateUtil,
-    private val activePlugin: ActivePlugin
+    private val dateUtil: DateUtil
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
         .neverVisible(true)
         .alwaysEnabled(true)
-        .showInList(false)
+        .showInList { false }
         .pluginName(R.string.bg_quality),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), PluginConstraints, BgQualityCheck {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
@@ -87,7 +83,7 @@ class BgQualityCheckPlugin @Inject constructor(
                     message = rh.gs(R.string.bg_too_close, dateUtil.dateAndTimeAndSecondsString(readings[i].timestamp), dateUtil.dateAndTimeAndSecondsString(readings[i + 1].timestamp))
                     return
                 }
-        if (lastBg?.sourceSensor?.isLibre() == true && isBgFlatForInterval(staleBgCheckPeriodMinutes, staleBgMaxDeltaMgdl) == true) {
+        if (lastBg?.sourceSensor?.isLibre1() == true && isBgFlatForInterval(staleBgCheckPeriodMinutes, staleBgMaxDeltaMgdl) == true) {
             state = BgQualityCheck.State.FLAT
             message = rh.gs(R.string.a11y_bg_quality_flat)
         } else if (iobCobCalculator.ads.lastUsed5minCalculation == true) {

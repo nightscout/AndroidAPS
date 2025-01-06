@@ -3,16 +3,18 @@ package app.aaps.core.interfaces.utils
 interface HardLimits {
     companion object {
 
+        val MAX_BOLUS = doubleArrayOf(5.0, 10.0, 17.0, 25.0, 60.0)
+
         // Very Hard Limits Ranges
         // First value is the Lowest and second value is the Highest a Limit can define
-        val VERY_HARD_LIMIT_MIN_BG = doubleArrayOf(80.0, 180.0)
-        val VERY_HARD_LIMIT_MAX_BG = doubleArrayOf(90.0, 200.0)
-        val VERY_HARD_LIMIT_TARGET_BG = doubleArrayOf(80.0, 200.0)
+        val LIMIT_MIN_BG = doubleArrayOf(80.0, 180.0)
+        val LIMIT_MAX_BG = doubleArrayOf(90.0, 200.0)
+        val LIMIT_TARGET_BG = doubleArrayOf(80.0, 200.0)
 
         // Very Hard Limits Ranges for Temp Targets
-        val VERY_HARD_LIMIT_TEMP_MIN_BG = intArrayOf(72, 180)
-        val VERY_HARD_LIMIT_TEMP_MAX_BG = intArrayOf(72, 270)
-        val VERY_HARD_LIMIT_TEMP_TARGET_BG = intArrayOf(72, 200)
+        val LIMIT_TEMP_MIN_BG = doubleArrayOf(72.0, 180.0)
+        val LIMIT_TEMP_MAX_BG = doubleArrayOf(72.0, 270.0)
+        val LIMIT_TEMP_TARGET_BG = doubleArrayOf(72.0, 200.0)
         val MIN_DIA = doubleArrayOf(5.0, 5.0, 5.0, 5.0, 5.0)
         val MAX_DIA = doubleArrayOf(9.0, 9.0, 9.0, 9.0, 10.0)
         val MIN_IC = doubleArrayOf(2.0, 2.0, 2.0, 2.0, 0.3)
@@ -44,4 +46,8 @@ interface HardLimits {
 
     fun verifyHardLimits(value: Double, valueName: Int, lowLimit: Double, highLimit: Double): Double
 
+    fun ageEntries(): Array<CharSequence>
+    fun ageEntryValues(): Array<CharSequence>
+
+    enum class AgeType { CHILD, TEENAGE, ADULT, RESISTANT_ADULT, PREGNANT }
 }

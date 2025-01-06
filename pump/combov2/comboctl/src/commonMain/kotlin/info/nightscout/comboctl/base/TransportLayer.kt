@@ -129,6 +129,7 @@ object TransportLayer {
     enum class Command(
         val id: Int
     ) {
+
         // Pairing commands
         REQUEST_PAIRING_CONNECTION(0x09),
         PAIRING_CONNECTION_REQUEST_ACCEPTED(0x0A),
@@ -147,7 +148,9 @@ object TransportLayer {
         ERROR_RESPONSE(0x06);
 
         companion object {
-            private val values = Command.values()
+
+            private val values = Command.entries.toTypedArray()
+
             /**
              * Converts an int to a command with the matching ID.
              *
@@ -204,6 +207,7 @@ object TransportLayer {
         var payload: ArrayList<Byte> = ArrayList(0),
         var machineAuthenticationCode: MachineAuthCode = NullMachineAuthCode
     ) {
+
         init {
             if (payload.size > MAX_VALID_PAYLOAD_SIZE) {
                 throw IllegalArgumentException(
@@ -243,7 +247,7 @@ object TransportLayer {
          *         contains a command ID that is unknown/unsupported.
          */
         constructor(bytes: List<Byte>) :
-                this(bytes, (bytes[PAYLOAD_LENGTH_BYTES_OFFSET + 1].toPosInt() shl 8) or bytes[PAYLOAD_LENGTH_BYTES_OFFSET + 0].toPosInt())
+            this(bytes, (bytes[PAYLOAD_LENGTH_BYTES_OFFSET + 1].toPosInt() shl 8) or bytes[PAYLOAD_LENGTH_BYTES_OFFSET + 0].toPosInt())
 
         /**
          * Serializes a packet to a binary representation suitable for framing and sending.
@@ -265,9 +269,11 @@ object TransportLayer {
             val bytes = ArrayList<Byte>(PACKET_HEADER_SIZE)
 
             bytes.add(version)
-            bytes.add(((if (sequenceBit) 0x80 else 0)
+            bytes.add(
+                ((if (sequenceBit) 0x80 else 0)
                     or (if (reliabilityBit) 0x20 else 0)
-                    or command.id).toByte())
+                    or command.id).toByte()
+            )
             bytes.add((payload.size and 0xFF).toByte())
             bytes.add(((payload.size shr 8) and 0xFF).toByte())
             bytes.add(address)
@@ -314,7 +320,7 @@ object TransportLayer {
             val headerData = toByteList(withMAC = false, withPayload = false)
             val calculatedCRC16 = calculateCRC16MCRF4XX(headerData)
             return (payload[0] == (calculatedCRC16 and 0xFF).toByte()) &&
-                    (payload[1] == ((calculatedCRC16 shr 8) and 0xFF).toByte())
+                (payload[1] == ((calculatedCRC16 shr 8) and 0xFF).toByte())
         }
 
         /**
@@ -413,13 +419,13 @@ object TransportLayer {
 
         override fun toString() =
             "version: ${version.toHexString(2)}" +
-                    "  command: ${command.name}" +
-                    "  sequence bit: $sequenceBit" +
-                    "  reliability bit: $reliabilityBit" +
-                    "  address: ${address.toHexString(2)}" +
-                    "  nonce: $nonce" +
-                    "  MAC: $machineAuthenticationCode" +
-                    "  payload: ${payload.size} byte(s): [${payload.toHexString()}]"
+                "  command: ${command.name}" +
+                "  sequence bit: $sequenceBit" +
+                "  reliability bit: $reliabilityBit" +
+                "  address: ${address.toHexString(2)}" +
+                "  nonce: $nonce" +
+                "  MAC: $machineAuthenticationCode" +
+                "  payload: ${payload.size} byte(s): [${payload.toHexString()}]"
     }
 
     /**
@@ -448,11 +454,12 @@ object TransportLayer {
         val reliable: Boolean = false,
         val sequenceBitOverride: Boolean? = null
     ) {
+
         override fun toString() =
             "command: ${command.name}" +
-                    "  reliable: $reliable" +
-                    "  sequenceBitOverride: ${sequenceBitOverride ?: "<not set>"}" +
-                    "  payload: ${payload.size} byte(s): [${payload.toHexString()}]"
+                "  reliable: $reliable" +
+                "  sequenceBitOverride: ${sequenceBitOverride ?: "<not set>"}" +
+                "  payload: ${payload.size} byte(s): [${payload.toHexString()}]"
     }
 
     /**
@@ -607,6 +614,7 @@ object TransportLayer {
         private val comboIO: ComboIO,
         private val onPacketReceiverException: (e: PacketReceiverException) -> Unit
     ) {
+
         // Invariant pump data from the state store. Retrieved
         // and cached into this instace when start() is called.
         private var cachedInvariantPumpData = InvariantPumpData.nullData()
@@ -622,8 +630,10 @@ object TransportLayer {
         // The last PacketReceiverException encountered in the
         // packet receiver coroutine.
         private var lastPacketReceiverException: PacketReceiverException? = null
+
         // Job instance representing the packet receiver coroutine.
         private var packetReceiverJob: Job? = null
+
         // Channel used for transporting the received packets from
         // the packet receiver to the receive() function.
         private var packetReceiverChannel = Channel<Packet>(
@@ -639,6 +649,7 @@ object TransportLayer {
          * so that [receive] can get them.
          */
         enum class ReceiverBehavior {
+
             FORWARD_PACKET,
             DROP_PACKET
         }
@@ -873,7 +884,7 @@ object TransportLayer {
          *** PRIVATE FUNCTIONS AND CLASSES ***
          *************************************/
 
-        private fun receiverIsOK() = packetReceiverJob?.isActive ?: false
+        private fun receiverIsOK() = packetReceiverJob?.isActive == true
 
         private fun startInternal(
             packetReceiverScope: CoroutineScope,
@@ -907,12 +918,14 @@ object TransportLayer {
                             // Pass through CancellationException to make sure coroutine
                             // cancellation is not broken by this try-catch block.
                             is CancellationException -> throw t
-                            is ComboException -> {
+
+                            is ComboException        -> {
                                 logger(LogLevel.DEBUG) { "Caught Combo exception in receive loop: $t" }
                                 logger(LogLevel.DEBUG) { "Combo exception stacktrace: ${t.stackTraceToString()}" }
                                 break
                             }
-                            else -> {
+
+                            else                     -> {
                                 logger(LogLevel.ERROR) {
                                     "FATAL: Unhandled throwable observed in receiver loop: ${t.stackTraceToString()}"
                                 }
@@ -1005,7 +1018,7 @@ object TransportLayer {
                     packet.verifyAuthentication(cachedInvariantPumpData.pumpClientCipher)
                 }
 
-                else -> true
+                else                   -> true
             }
             if (!packetIsValid)
                 throw PacketVerificationException(packet)
@@ -1016,7 +1029,7 @@ object TransportLayer {
             if (packet.reliabilityBit) {
                 logger(LogLevel.VERBOSE) {
                     "Got a transport layer ${packet.command.name} packet with its reliability bit set; " +
-                            "responding with ACK_RESPONSE packet; sequence bit: ${packet.sequenceBit}"
+                        "responding with ACK_RESPONSE packet; sequence bit: ${packet.sequenceBit}"
                 }
                 val ackResponsePacketInfo = createAckResponsePacketInfo(packet.sequenceBit)
 
@@ -1040,18 +1053,21 @@ object TransportLayer {
             // packet, while here, we are talking about an ACK_RESPONSE
             // packet coming _from_ the Combo.
             val skipPacket = when (packet.command) {
-                Command.ACK_RESPONSE -> {
+                Command.ACK_RESPONSE                        -> {
                     logger(LogLevel.VERBOSE) { "Got ACK_RESPONSE packet; skipping" }
                     true
                 }
+
                 Command.ERROR_RESPONSE,
                 Command.DATA,
                 Command.PAIRING_CONNECTION_REQUEST_ACCEPTED,
                 Command.KEY_RESPONSE,
                 Command.ID_RESPONSE,
                 Command.REGULAR_CONNECTION_REQUEST_ACCEPTED -> false
-                else -> {
-                    logger(LogLevel.WARN) { "Cannot process ${packet.command.name} packet coming from the Combo; skipping packet"
+
+                else                                        -> {
+                    logger(LogLevel.WARN) {
+                        "Cannot process ${packet.command.name} packet coming from the Combo; skipping packet"
                     }
                     true
                 }
@@ -1068,8 +1084,8 @@ object TransportLayer {
                 // (Not doing this for pairing connections since this
                 // flag is never used during pairing.)
                 Command.REGULAR_CONNECTION_REQUEST_ACCEPTED -> currentSequenceFlag = false
-                Command.ERROR_RESPONSE -> processErrorResponsePacket(packet)
-                else -> Unit
+                Command.ERROR_RESPONSE                      -> processErrorResponsePacket(packet)
+                else                                        -> Unit
             }
 
             return packet
@@ -1100,18 +1116,20 @@ object TransportLayer {
                 // pump state is not yet set up. It will be once
                 // the ID_RESPONSE packet (which is the response
                 // to REQUEST_ID) arrives.
-                Command.REQUEST_ID -> Nonce(byteArrayListOfInts(
-                    0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-                ))
+                Command.REQUEST_ID         -> Nonce(
+                    byteArrayListOfInts(
+                        0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+                    )
+                )
 
                 // These are the commands that are used in regular
                 // (= non-pairing) connections. They all increment
                 // the nonce.
                 Command.REQUEST_REGULAR_CONNECTION,
                 Command.ACK_RESPONSE,
-                Command.DATA -> pumpStateStore.incrementTxNonce(pumpAddress)
+                Command.DATA               -> pumpStateStore.incrementTxNonce(pumpAddress)
 
-                else -> throw Error("This is not a valid outgoing packet")
+                else                       -> throw Error("This is not a valid outgoing packet")
             }
 
             val address = when (outgoingPacketInfo.command) {
@@ -1123,9 +1141,9 @@ object TransportLayer {
                 Command.REQUEST_ID,
                 Command.REQUEST_REGULAR_CONNECTION,
                 Command.ACK_RESPONSE,
-                Command.DATA -> cachedInvariantPumpData.keyResponseAddress
+                Command.DATA               -> cachedInvariantPumpData.keyResponseAddress
 
-                else -> throw Error("This is not a valid outgoing packet")
+                else                       -> throw Error("This is not a valid outgoing packet")
             }
 
             val isCRCPacket = when (outgoingPacketInfo.command) {
@@ -1133,7 +1151,7 @@ object TransportLayer {
                 Command.REQUEST_KEYS,
                 Command.GET_AVAILABLE_KEYS -> true
 
-                else -> false
+                else                       -> false
             }
 
             val reliabilityBit = outgoingPacketInfo.reliable
@@ -1150,12 +1168,14 @@ object TransportLayer {
             val sequenceBit =
                 when {
                     outgoingPacketInfo.sequenceBitOverride != null -> outgoingPacketInfo.sequenceBitOverride
-                    reliabilityBit -> {
+
+                    reliabilityBit                                 -> {
                         val currentSequenceFlag = this.currentSequenceFlag
                         this.currentSequenceFlag = !this.currentSequenceFlag
                         currentSequenceFlag
                     }
-                    else -> false
+
+                    else                                           -> false
                 }
 
             val packet = Packet(
@@ -1186,9 +1206,9 @@ object TransportLayer {
                 Command.REQUEST_ID,
                 Command.REQUEST_REGULAR_CONNECTION,
                 Command.ACK_RESPONSE,
-                Command.DATA -> cachedInvariantPumpData.clientPumpCipher
+                Command.DATA               -> cachedInvariantPumpData.clientPumpCipher
 
-                else -> throw Error("This is not a valid outgoing packet")
+                else                       -> throw Error("This is not a valid outgoing packet")
             }
 
             // Authenticate the packet if necessary.

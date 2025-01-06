@@ -11,7 +11,7 @@ class Pair<F, S>(val first: F, val second: S) {
         if (other is Pair<*, *>) other.first == first && other.second == second
         else false
 
-    override fun toString(): String = "First: \"" + first.toString() + "\" Second: \"" + second.toString() + "\""
+    override fun toString(): String = "First: \"$first\" Second: \"$second\""
     override fun hashCode(): Int = Objects.hash(first, second)
 
     companion object {

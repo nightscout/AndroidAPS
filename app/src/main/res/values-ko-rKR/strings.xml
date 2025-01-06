@@ -1,29 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
-    <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
-    <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="nav_preferences_plugin">%1$s 설정</string>
-    <string name="nav_refreshtreatments">NS에서 관리 새로고침</string>
     <string name="nav_exit">종료</string>
     <string name="delta">증분</string>
-    <string name="profile_label">프로파일</string>
     <string name="save">저장</string>
-    <string name="reloadprofile">프로파일 새로고침</string>
-    <string name="correctionbous">교정주입</string>
-    <string name="ns_upload_only">(비활성화 시 위험함) NS에 업로드만 하기</string>
-    <string name="ns_upload_only_summary">NS에 업로드만 하기 (sync를 비활성화 함). xDrip+와 같은 로컬 출처를 선택한 경우 외에는 SGV에 영향을 주지 않음. NS 프로파일을 사용하는 동안 프로파일에 영향을 주지 않음.\n!!! 경고!!! 이 기능을 비활성화하면 일부 구성요소 (AAPS, NS, xDrip+) 가 잘못 설정되어 있을 때 잘못 작동하거나 인슐린의 과다주입을 야기할 수 있음. AAPS에서 보여지는 정보와 펌프 상태가 일치하는지 유의해서 관찰해야 함!</string>
     <string name="wear">워치</string>
     <string name="nav_about">버전정보</string>
-    <string name="smscommunicator_missingphonestatepermission">전화 상태 권한이 허가되지 않았습니다</string>
-    <string name="ns_alarm_options">알람 옵션</string>
-    <string name="ns_alarms">NS 알람에서 알림 만들기</string>
-    <string name="ns_announcements">NS 안내에서 알림 만들기</string>
-    <string name="ns_alarm_stale_data_value_label">누락 데이터 기준값 [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">위험 누락 데이터 기준값 [min]</string>
     <string name="sensitivity_warning">Autosense 기능을 켜면 모든 섭취된 탄수화물양을 입력하십시오. 그렇지 않으면 탄수화물 편차(deviations)가 민감도 변화로 잘못 인식될것입니다!!</string>
-    <string name="notloadedplugins">모든 프로파일이 로드되지 않았습니다.</string>
-    <string name="valuesnotstored">값이 저장되지 않았습니다!</string>
     <string name="invalid">유효하지 않음</string>
     <string name="gradually_increase_notification_volume">알람과 알림의 소리를 점차적으로 증가시킴</string>
     <string name="localalertsettings_title">자체 경고 기능</string>
@@ -35,24 +18,11 @@
     <string name="close_navigation">메뉴 닫기</string>
     <string name="remove_items">항목 제거하기</string>
     <string name="sort_items">항목 분류하기</string>
-    <string name="error_adding_treatment_title">관리 데이터가 불완전합니다</string>
-    <string name="error_adding_treatment_message">관리 데이터 (인슐린: %1$.2f, 탄수화물: %2$d, at: %3$s) 가 추가되지 못하였습니다. 확인해본 다음 적절한 데이터를 수동으로 입력하세요..</string>
-    <string name="generated_ecarbs_note">확장탄수화물: %1$d g (%2$d 시간), 지연: %3$d 분</string>
-    <string name="profile_total">== ∑  %1$s U</string>
     <string name="unitsnosemicolon">단위</string>
-    <string name="show_removed">삭제된 기록 표시</string>
-    <string name="clearqueueconfirm">대기열을 삭제하시겠습니까? 대기열에 있는 모든 데이터가 삭제됩니다!</string>
-    <string name="chartmenu">차트 메뉴</string>
     <string name="authorizationfailed">인증 실패</string>
-    <string name="copytolocalprofile_invalid">프로필을 생성하지 못했습니다. 프로필이 유효하지 않습니다.</string>
-    <string name="clear_filter">필터 지우기</string>
     <string name="cannula">캐뉼라</string>
-    <string name="email_address">이메일 주소</string>
-    <string name="remove_bg_readings">BG 판독 제거하기</string>
     <string name="identification_not_set">개발 모드에서 신원 확인이 설정되지 않았습니다.</string>
-    <string name="a11y_dialog">대화 상자</string>
     <!-- WEAR OS-->
-    <string name="wear_unknown_action_string">알 수 없는 작업 명령:</string>
     <string name="remove_selected_items">선택된 항목 제거하기</string>
     <string name="count_selected">%1$d 선택됨</string>
     <string name="sort_label">분류</string>

@@ -8,17 +8,24 @@ import app.aaps.plugins.sync.di.ClientSecret
 import app.aaps.plugins.sync.di.RedirectUrl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.suspendCancellableCoroutine
-import okhttp3.*
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.FormBody
+import okhttp3.MediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
+import okhttp3.Response
 import okio.BufferedSink
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
 import javax.inject.Inject
 import kotlin.coroutines.resumeWithException
 
-internal class OpenHumansAPI @Inject constructor(
+class OpenHumansAPI @Inject constructor(
     @BaseUrl
     private val baseUrl: String,
     @ClientId
@@ -135,7 +142,7 @@ internal class OpenHumansAPI @Inject constructor(
                 }
 
                 override fun onResponse(call: Call, response: Response) {
-                    it.resume(response, null)
+                    it.resume(response) { cause, _, _ -> ; }
                 }
             })
             it.invokeOnCancellation { call.cancel() }

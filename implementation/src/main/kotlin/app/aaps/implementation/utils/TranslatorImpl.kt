@@ -1,13 +1,13 @@
 package app.aaps.implementation.utils
 
+import app.aaps.core.data.model.OE
+import app.aaps.core.data.model.TE
+import app.aaps.core.data.model.TT
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.Translator
-import app.aaps.database.entities.OfflineEvent
-import app.aaps.database.entities.TemporaryTarget
-import app.aaps.database.entities.TherapyEvent
-import app.aaps.database.entities.UserEntry.Action
-import app.aaps.database.entities.UserEntry.Sources
-import app.aaps.database.entities.ValueWithUnit
 import dagger.Reusable
 import javax.inject.Inject
 
@@ -88,7 +88,9 @@ class TranslatorImpl @Inject internal constructor(
         Action.DELETE_FUTURE_TREATMENTS        -> rh.gs(app.aaps.core.ui.R.string.uel_delete_future_treatments)
         Action.EXPORT_SETTINGS                 -> rh.gs(app.aaps.core.ui.R.string.uel_export_settings)
         Action.IMPORT_SETTINGS                 -> rh.gs(app.aaps.core.ui.R.string.uel_import_settings)
+        Action.SELECT_DIRECTORY                -> rh.gs(app.aaps.core.ui.R.string.uel_select_directory)
         Action.RESET_DATABASES                 -> rh.gs(app.aaps.core.ui.R.string.uel_reset_databases)
+        Action.RESET_APS_RESULTS               -> rh.gs(app.aaps.core.ui.R.string.uel_reset_aps_results)
         Action.CLEANUP_DATABASES               -> rh.gs(app.aaps.core.ui.R.string.uel_cleanup_databases)
         Action.EXPORT_DATABASES                -> rh.gs(app.aaps.core.ui.R.string.uel_export_databases)
         Action.IMPORT_DATABASES                -> rh.gs(app.aaps.core.ui.R.string.uel_import_databases)
@@ -117,83 +119,84 @@ class TranslatorImpl @Inject internal constructor(
         else                         -> ""
     }
 
-    override fun translate(meterType: TherapyEvent.MeterType?): String = when (meterType) {
-        TherapyEvent.MeterType.FINGER -> rh.gs(app.aaps.core.ui.R.string.glucosetype_finger)
-        TherapyEvent.MeterType.SENSOR -> rh.gs(app.aaps.core.ui.R.string.glucosetype_sensor)
-        TherapyEvent.MeterType.MANUAL -> rh.gs(app.aaps.core.ui.R.string.manual)
+    override fun translate(meterType: TE.MeterType?): String = when (meterType) {
+        TE.MeterType.FINGER -> rh.gs(app.aaps.core.ui.R.string.glucosetype_finger)
+        TE.MeterType.SENSOR -> rh.gs(app.aaps.core.ui.R.string.glucosetype_sensor)
+        TE.MeterType.MANUAL -> rh.gs(app.aaps.core.ui.R.string.manual)
 
-        else                          -> rh.gs(app.aaps.core.ui.R.string.unknown)
+        else                -> rh.gs(app.aaps.core.ui.R.string.unknown)
     }
 
-    override fun translate(type: TherapyEvent.Type?): String = when (type) {
-        TherapyEvent.Type.FINGER_STICK_BG_VALUE   -> rh.gs(app.aaps.core.ui.R.string.careportal_bgcheck)
-        TherapyEvent.Type.SNACK_BOLUS             -> rh.gs(app.aaps.core.ui.R.string.careportal_snackbolus)
-        TherapyEvent.Type.MEAL_BOLUS              -> rh.gs(app.aaps.core.ui.R.string.careportal_mealbolus)
-        TherapyEvent.Type.CORRECTION_BOLUS        -> rh.gs(app.aaps.core.ui.R.string.careportal_correctionbolus)
-        TherapyEvent.Type.CARBS_CORRECTION        -> rh.gs(app.aaps.core.ui.R.string.careportal_carbscorrection)
-        TherapyEvent.Type.BOLUS_WIZARD            -> rh.gs(app.aaps.core.ui.R.string.boluswizard)
-        TherapyEvent.Type.COMBO_BOLUS             -> rh.gs(app.aaps.core.ui.R.string.careportal_combobolus)
-        TherapyEvent.Type.ANNOUNCEMENT            -> rh.gs(app.aaps.core.ui.R.string.careportal_announcement)
-        TherapyEvent.Type.NOTE                    -> rh.gs(app.aaps.core.ui.R.string.careportal_note)
-        TherapyEvent.Type.QUESTION                -> rh.gs(app.aaps.core.ui.R.string.careportal_question)
-        TherapyEvent.Type.EXERCISE                -> rh.gs(app.aaps.core.ui.R.string.careportal_exercise)
-        TherapyEvent.Type.CANNULA_CHANGE          -> rh.gs(app.aaps.core.ui.R.string.careportal_pump_site_change)
-        TherapyEvent.Type.PUMP_BATTERY_CHANGE     -> rh.gs(app.aaps.core.ui.R.string.pump_battery_change)
-        TherapyEvent.Type.SENSOR_STARTED          -> rh.gs(app.aaps.core.ui.R.string.careportal_cgmsensorstart)
-        TherapyEvent.Type.SENSOR_STOPPED          -> rh.gs(app.aaps.core.ui.R.string.careportal_cgm_sensor_stop)
-        TherapyEvent.Type.SENSOR_CHANGE           -> rh.gs(app.aaps.core.ui.R.string.cgm_sensor_insert)
-        TherapyEvent.Type.INSULIN_CHANGE          -> rh.gs(app.aaps.core.ui.R.string.careportal_insulin_cartridge_change)
-        TherapyEvent.Type.DAD_ALERT               -> rh.gs(app.aaps.core.ui.R.string.careportal_dad_alert)
-        TherapyEvent.Type.TEMPORARY_BASAL_START   -> rh.gs(app.aaps.core.ui.R.string.careportal_tempbasalstart)
-        TherapyEvent.Type.TEMPORARY_BASAL_END     -> rh.gs(app.aaps.core.ui.R.string.careportal_tempbasalend)
-        TherapyEvent.Type.PROFILE_SWITCH          -> rh.gs(app.aaps.core.ui.R.string.careportal_profileswitch)
-        TherapyEvent.Type.TEMPORARY_TARGET        -> rh.gs(app.aaps.core.ui.R.string.temporary_target)
-        TherapyEvent.Type.TEMPORARY_TARGET_CANCEL -> rh.gs(app.aaps.core.ui.R.string.careportal_temporarytargetcancel)
-        TherapyEvent.Type.APS_OFFLINE             -> rh.gs(app.aaps.core.ui.R.string.careportal_openapsoffline)
-        TherapyEvent.Type.NS_MBG                  -> rh.gs(app.aaps.core.ui.R.string.careportal_mbg)
+    override fun translate(type: TE.Type?): String = when (type) {
+        TE.Type.FINGER_STICK_BG_VALUE   -> rh.gs(app.aaps.core.ui.R.string.careportal_bgcheck)
+        TE.Type.SNACK_BOLUS             -> rh.gs(app.aaps.core.ui.R.string.careportal_snackbolus)
+        TE.Type.MEAL_BOLUS              -> rh.gs(app.aaps.core.ui.R.string.careportal_mealbolus)
+        TE.Type.CORRECTION_BOLUS        -> rh.gs(app.aaps.core.ui.R.string.careportal_correctionbolus)
+        TE.Type.CARBS_CORRECTION        -> rh.gs(app.aaps.core.ui.R.string.careportal_carbscorrection)
+        TE.Type.BOLUS_WIZARD            -> rh.gs(app.aaps.core.ui.R.string.boluswizard)
+        TE.Type.COMBO_BOLUS             -> rh.gs(app.aaps.core.ui.R.string.careportal_combobolus)
+        TE.Type.ANNOUNCEMENT            -> rh.gs(app.aaps.core.ui.R.string.careportal_announcement)
+        TE.Type.SETTINGS_EXPORT         -> rh.gs(app.aaps.core.ui.R.string.careportal_settings_export)
+        TE.Type.NOTE                    -> rh.gs(app.aaps.core.ui.R.string.careportal_note)
+        TE.Type.QUESTION                -> rh.gs(app.aaps.core.ui.R.string.careportal_question)
+        TE.Type.EXERCISE                -> rh.gs(app.aaps.core.ui.R.string.careportal_exercise)
+        TE.Type.CANNULA_CHANGE          -> rh.gs(app.aaps.core.ui.R.string.careportal_pump_site_change)
+        TE.Type.PUMP_BATTERY_CHANGE     -> rh.gs(app.aaps.core.ui.R.string.pump_battery_change)
+        TE.Type.SENSOR_STARTED          -> rh.gs(app.aaps.core.ui.R.string.careportal_cgmsensorstart)
+        TE.Type.SENSOR_STOPPED          -> rh.gs(app.aaps.core.ui.R.string.careportal_cgm_sensor_stop)
+        TE.Type.SENSOR_CHANGE           -> rh.gs(app.aaps.core.ui.R.string.cgm_sensor_insert)
+        TE.Type.INSULIN_CHANGE          -> rh.gs(app.aaps.core.ui.R.string.careportal_insulin_cartridge_change)
+        TE.Type.DAD_ALERT               -> rh.gs(app.aaps.core.ui.R.string.careportal_dad_alert)
+        TE.Type.TEMPORARY_BASAL_START   -> rh.gs(app.aaps.core.ui.R.string.careportal_tempbasalstart)
+        TE.Type.TEMPORARY_BASAL_END     -> rh.gs(app.aaps.core.ui.R.string.careportal_tempbasalend)
+        TE.Type.PROFILE_SWITCH          -> rh.gs(app.aaps.core.ui.R.string.careportal_profileswitch)
+        TE.Type.TEMPORARY_TARGET        -> rh.gs(app.aaps.core.ui.R.string.temporary_target)
+        TE.Type.TEMPORARY_TARGET_CANCEL -> rh.gs(app.aaps.core.ui.R.string.careportal_temporarytargetcancel)
+        TE.Type.APS_OFFLINE             -> rh.gs(app.aaps.core.ui.R.string.careportal_openapsoffline)
+        TE.Type.NS_MBG                  -> rh.gs(app.aaps.core.ui.R.string.careportal_mbg)
         /*
-                TherapyEvent.Type.TEMPORARY_BASAL         -> TODO()
-                TherapyEvent.Type.TUBE_CHANGE             -> TODO()
-                TherapyEvent.Type.FALLING_ASLEEP          -> TODO()
-                TherapyEvent.Type.BATTERY_EMPTY           -> TODO()
-                TherapyEvent.Type.RESERVOIR_EMPTY         -> TODO()
-                TherapyEvent.Type.OCCLUSION               -> TODO()
-                TherapyEvent.Type.PUMP_STOPPED            -> TODO()
-                TherapyEvent.Type.PUMP_STARTED            -> TODO()
-                TherapyEvent.Type.PUMP_PAUSED             -> TODO()
-                TherapyEvent.Type.WAKING_UP               -> TODO()
-                TherapyEvent.Type.SICKNESS                -> TODO()
-                TherapyEvent.Type.STRESS                  -> TODO()
-                TherapyEvent.Type.PRE_PERIOD              -> TODO()
-                TherapyEvent.Type.ALCOHOL                 -> TODO()
-                TherapyEvent.Type.CORTISONE               -> TODO()
-                TherapyEvent.Type.FEELING_LOW             -> TODO()
-                TherapyEvent.Type.FEELING_HIGH            -> TODO()
-                TherapyEvent.Type.LEAKING_INFUSION_SET    -> TODO()
+                TE.Type.TEMPORARY_BASAL         -> TODO()
+                TE.Type.TUBE_CHANGE             -> TODO()
+                TE.Type.FALLING_ASLEEP          -> TODO()
+                TE.Type.BATTERY_EMPTY           -> TODO()
+                TE.Type.RESERVOIR_EMPTY         -> TODO()
+                TE.Type.OCCLUSION               -> TODO()
+                TE.Type.PUMP_STOPPED            -> TODO()
+                TE.Type.PUMP_STARTED            -> TODO()
+                TE.Type.PUMP_PAUSED             -> TODO()
+                TE.Type.WAKING_UP               -> TODO()
+                TE.Type.SICKNESS                -> TODO()
+                TE.Type.STRESS                  -> TODO()
+                TE.Type.PRE_PERIOD              -> TODO()
+                TE.Type.ALCOHOL                 -> TODO()
+                TE.Type.CORTISONE               -> TODO()
+                TE.Type.FEELING_LOW             -> TODO()
+                TE.Type.FEELING_HIGH            -> TODO()
+                TE.Type.LEAKING_INFUSION_SET    -> TODO()
          */
-        TherapyEvent.Type.NONE                    -> rh.gs(app.aaps.core.ui.R.string.unknown)
+        TE.Type.NONE                    -> rh.gs(app.aaps.core.ui.R.string.unknown)
 
-        else                                      -> rh.gs(app.aaps.core.ui.R.string.unknown)
+        else                            -> rh.gs(app.aaps.core.ui.R.string.unknown)
     }
 
-    override fun translate(reason: TemporaryTarget.Reason?): String = when (reason) {
-        TemporaryTarget.Reason.CUSTOM       -> rh.gs(app.aaps.core.ui.R.string.custom)
-        TemporaryTarget.Reason.HYPOGLYCEMIA -> rh.gs(app.aaps.core.ui.R.string.hypo)
-        TemporaryTarget.Reason.EATING_SOON  -> rh.gs(app.aaps.core.ui.R.string.eatingsoon)
-        TemporaryTarget.Reason.ACTIVITY     -> rh.gs(app.aaps.core.ui.R.string.activity)
-        TemporaryTarget.Reason.AUTOMATION   -> rh.gs(app.aaps.core.ui.R.string.automation)
-        TemporaryTarget.Reason.WEAR         -> rh.gs(app.aaps.core.ui.R.string.wear)
+    override fun translate(reason: TT.Reason?): String = when (reason) {
+        TT.Reason.CUSTOM       -> rh.gs(app.aaps.core.ui.R.string.custom)
+        TT.Reason.HYPOGLYCEMIA -> rh.gs(app.aaps.core.ui.R.string.hypo)
+        TT.Reason.EATING_SOON  -> rh.gs(app.aaps.core.ui.R.string.eatingsoon)
+        TT.Reason.ACTIVITY     -> rh.gs(app.aaps.core.ui.R.string.activity)
+        TT.Reason.AUTOMATION   -> rh.gs(app.aaps.core.ui.R.string.automation)
+        TT.Reason.WEAR         -> rh.gs(app.aaps.core.ui.R.string.wear)
 
-        else                                -> rh.gs(app.aaps.core.ui.R.string.unknown)
+        else                   -> rh.gs(app.aaps.core.ui.R.string.unknown)
     }
 
-    override fun translate(reason: OfflineEvent.Reason?): String = when (reason) {
-        OfflineEvent.Reason.SUSPEND         -> rh.gs(app.aaps.core.ui.R.string.uel_suspend)
-        OfflineEvent.Reason.DISABLE_LOOP    -> rh.gs(app.aaps.core.ui.R.string.disableloop)
-        OfflineEvent.Reason.DISCONNECT_PUMP -> rh.gs(app.aaps.core.ui.R.string.uel_disconnect)
-        OfflineEvent.Reason.OTHER           -> rh.gs(app.aaps.core.ui.R.string.uel_other)
+    override fun translate(reason: OE.Reason?): String = when (reason) {
+        OE.Reason.SUSPEND         -> rh.gs(app.aaps.core.ui.R.string.uel_suspend)
+        OE.Reason.DISABLE_LOOP    -> rh.gs(app.aaps.core.ui.R.string.disableloop)
+        OE.Reason.DISCONNECT_PUMP -> rh.gs(app.aaps.core.ui.R.string.uel_disconnect)
+        OE.Reason.OTHER           -> rh.gs(app.aaps.core.ui.R.string.uel_other)
 
-        else                                -> rh.gs(app.aaps.core.ui.R.string.unknown)
+        else                      -> rh.gs(app.aaps.core.ui.R.string.unknown)
     }
 
     override fun translate(source: Sources): String = when (source) {
@@ -285,15 +288,16 @@ class TranslatorImpl @Inject internal constructor(
         Sources.Stats                              -> TODO()
         Sources.Aaps                               -> TODO()
         */
-        Sources.Automation -> rh.gs(app.aaps.core.ui.R.string.automation)
-        Sources.Autotune   -> rh.gs(app.aaps.core.ui.R.string.autotune)
-        Sources.Loop       -> rh.gs(app.aaps.core.ui.R.string.loop)
-        Sources.NSClient   -> rh.gs(app.aaps.core.ui.R.string.ns)
-        Sources.Pump       -> rh.gs(app.aaps.core.ui.R.string.pump)
-        Sources.SMS        -> rh.gs(app.aaps.core.ui.R.string.sms)
-        Sources.Wear       -> rh.gs(app.aaps.core.ui.R.string.wear)
-        Sources.Unknown    -> rh.gs(app.aaps.core.ui.R.string.unknown)
+        Sources.Automation     -> rh.gs(app.aaps.core.ui.R.string.automation)
+        Sources.SettingsExport -> rh.gs(app.aaps.core.ui.R.string.settingsexport)
+        Sources.Autotune       -> rh.gs(app.aaps.core.ui.R.string.autotune)
+        Sources.Loop           -> rh.gs(app.aaps.core.ui.R.string.loop)
+        Sources.NSClient       -> rh.gs(app.aaps.core.ui.R.string.ns)
+        Sources.Pump           -> rh.gs(app.aaps.core.ui.R.string.pump)
+        Sources.SMS            -> rh.gs(app.aaps.core.ui.R.string.sms)
+        Sources.Wear           -> rh.gs(app.aaps.core.ui.R.string.wear)
+        Sources.Unknown        -> rh.gs(app.aaps.core.ui.R.string.unknown)
 
-        else               -> source.name
+        else                   -> source.name
     }
 }

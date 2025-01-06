@@ -13,7 +13,6 @@ interface Objectives {
         const val AUTOSENS_OBJECTIVE = 7
         const val SMB_OBJECTIVE = 8
         const val AUTO_OBJECTIVE = 9
-        const val DYN_ISF_OBJECTIVE = 10
     }
 
     fun isAccomplished(index: Int): Boolean

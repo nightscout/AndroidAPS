@@ -11,9 +11,11 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import app.aaps.core.interfaces.extensions.toVisibility
+import app.aaps.core.data.model.FD
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -24,11 +26,7 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.UIRunnable
 import app.aaps.core.ui.dialogs.OKDialog
-import app.aaps.database.entities.Food
-import app.aaps.database.entities.UserEntry.Action
-import app.aaps.database.entities.UserEntry.Sources
-import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.InvalidateFoodTransaction
+import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.databinding.FoodFragmentBinding
 import app.aaps.plugins.main.databinding.FoodItemBinding
@@ -46,14 +44,14 @@ class FoodFragment : DaggerFragment() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var uiInteraction: UiInteraction
 
     private val disposable = CompositeDisposable()
-    private var unfiltered: List<Food> = arrayListOf()
-    private var filtered: MutableList<Food> = arrayListOf()
+    private var unfiltered: List<FD> = arrayListOf()
+    private var filtered: MutableList<FD> = arrayListOf()
 
     private var _binding: FoodFragmentBinding? = null
 
@@ -100,8 +98,8 @@ class FoodFragment : DaggerFragment() {
     }
 
     private fun swapAdapter() {
-        disposable += repository
-            .getFoodData()
+        disposable += persistenceLayer
+            .getFoods()
             .observeOn(aapsSchedulers.main)
             .subscribe { list ->
                 unfiltered = list
@@ -163,7 +161,7 @@ class FoodFragment : DaggerFragment() {
         val textFilter = binding.filter.text.toString()
         val categoryFilter = binding.categoryList.text.toString()
         val subcategoryFilter = binding.subcategoryList.text.toString()
-        val newFiltered = ArrayList<Food>()
+        val newFiltered = ArrayList<FD>()
         for (f in unfiltered) {
             if (f.category == null || f.subCategory == null) continue
             if (subcategoryFilter != rh.gs(app.aaps.core.ui.R.string.none) && f.subCategory != subcategoryFilter) continue
@@ -177,7 +175,7 @@ class FoodFragment : DaggerFragment() {
 
     fun Int?.isNotZero(): Boolean = this != null && this != 0
 
-    inner class RecyclerViewAdapter internal constructor(private var foodList: List<Food>) : RecyclerView.Adapter<RecyclerViewAdapter.FoodsViewHolder>() {
+    inner class RecyclerViewAdapter internal constructor(private var foodList: List<FD>) : RecyclerView.Adapter<RecyclerViewAdapter.FoodsViewHolder>() {
 
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): FoodsViewHolder {
             val v = LayoutInflater.from(viewGroup.context).inflate(R.layout.food_item, viewGroup, false)
@@ -208,20 +206,15 @@ class FoodFragment : DaggerFragment() {
 
             init {
                 binding.icRemove.setOnClickListener { v: View ->
-                    val food = v.tag as Food
+                    val food = v.tag as FD
                     activity?.let { activity ->
                         OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.removerecord) + "\n" + food.name, {
-                            uel.log(Action.FOOD_REMOVED, Sources.Food, food.name)
-                            disposable += repository.runTransactionForResult(InvalidateFoodTransaction(food.id))
-                                .subscribe(
-                                    { aapsLogger.error(LTag.DATABASE, "Invalidated food $it") },
-                                    { aapsLogger.error(LTag.DATABASE, "Error while invalidating food", it) }
-                                )
+                            disposable += persistenceLayer.invalidateFood(food.id, Action.FOOD_REMOVED, Sources.Food).subscribe()
                         }, null)
                     }
                 }
                 binding.icCalculator.setOnClickListener { v: View ->
-                    val food = v.tag as Food
+                    val food = v.tag as FD
                     activity?.let { activity ->
                         protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable {
                             if (isAdded) uiInteraction.runWizardDialog(childFragmentManager, food.carbs, food.name)

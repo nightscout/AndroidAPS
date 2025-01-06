@@ -6,6 +6,8 @@
     <string name="automation_missing_task_name">Zadejte prosím název úlohy.</string>
     <string name="automation_missing_trigger">Prosím zadejte alespoň jednu podmínku.</string>
     <string name="automation_missing_action">Prosím zadejte alespoň jednu akci.</string>
+    <string name="exportsettings_message">Export nastavení: %1$s</string>
+    <string name="export_settings_short">Text v ošetřeních:</string>
     <string name="alarm_message">Alarm: %1$s</string>
     <string name="alarm_short">Alarm:</string>
     <string name="message_short">Zpráva:</string>
@@ -87,6 +89,20 @@
     <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="triggerHeartRate">Tepová frekvence</string>
     <string name="triggerHeartRateDesc">TF %1$s %2$.0f</string>
+    <string name="triggerSensorAgeLabel">Stáří senzoru</string>
+    <string name="triggerSensorAgeDesc">Stáří senzoru %1$s %2$.1f h</string>
+    <string name="triggerCannulaAgeLabel">Stáří kanyly</string>
+    <string name="triggerCannulaAgeDesc">Stáří kanyly %1$s %2$.1f h</string>
+    <string name="triggerPodChangeLabel">Aktivace Podu</string>
+    <string name="triggerPodChangeDesc">Pod aktivován</string>
+    <string name="triggerInsulinAgeLabel">Stáří inzulínu</string>
+    <string name="triggerInsulinAgeDesc">Stáří inzulínu %1$s %2$.1f h</string>
+    <string name="triggerPumpBatteryAgeLabel">Stáří baterie v pumpě</string>
+    <string name="triggerPumpBatteryAgeDesc">Stáří baterie pumpy %1$s %2$.1f h</string>
+    <string name="triggerReservoirLevelLabel">Stav zásobníku</string>
+    <string name="triggerReservoirLevelDesc">Stav zásobníku %1$s %2$.0f</string>
+    <string name="triggerPumpBatteryLevelLabel">Úroveň nabití baterie pumpy</string>
+    <string name="triggerPumpBatteryLevelDesc">Úroveň nabití baterie pumpy %1$s %2$.0f</string>
     <string name="iob_u">IOB [U]:</string>
     <string name="distance_short">Vzdálenost [m]:</string>
     <string name="recurringTime">Opakující se čas</string>
@@ -104,8 +120,6 @@
     <string name="automation_event">Událost automatizace</string>
     <string name="reorder_label">Změna pořadí</string>
     <string name="user_action">Uživatelská akce</string>
-    <string name="remove_automation">Odstranit automatizaci</string>
-    <string name="sort_automation">Seřadit automatizace</string>
     <string name="remove_selected_items">Odstranit zvolené položky</string>
     <string name="count_selected">Vybráno: %1$d</string>
     <string name="system_automation">Automatizace systému</string>
@@ -116,4 +130,11 @@
     <string name="time_to_eat">Čas k jídlu!\nSpusťte Bolusovou kalkulačku a proveďte výpočet znovu.</string>
     <string name="time_to_bolus">Čas na bolus!\nSpusťte Bolusovou kalkulačku a proveďte výpočet znovu.</string>
     <string name="error_setting_reminder">Chyba při nastavení budoucího budíku</string>
+    <!--    Autotune-->
+    <string name="autotune_profile_name">Profil Autotune %1$s</string>
+    <string name="autotune_run">Spustit Autotune</string>
+    <string name="autotune_run_without_autoswitch">Autotune spuštěno bez přepnutí profilu</string>
+    <string name="autotune_run_with_autoswitch">Autotune spuštěno a profil automaticky přepnut</string>
+    <string name="autotune_run_with_error">Chyba při posledním spuštění Autotune</string>
+    <string name="autotune_run_cancelled">Byla zjištěna jiná běžící úloha Autotune, spuštění zrušeno</string>
 </resources>

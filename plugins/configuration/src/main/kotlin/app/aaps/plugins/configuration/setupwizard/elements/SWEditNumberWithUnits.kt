@@ -6,10 +6,11 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
-import app.aaps.core.interfaces.configuration.Constants
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.SafeParse
+import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.ui.elements.NumberPicker
 import dagger.android.HasAndroidInjector
 import java.text.DecimalFormat
@@ -41,7 +42,7 @@ class SWEditNumberWithUnits(injector: HasAndroidInjector, private val init: Doub
         label?.let { l.setText(it) }
         l.setTypeface(l.typeface, Typeface.BOLD)
         layout.addView(l)
-        var initValue = sp.getDouble(preferenceId, init)
+        var initValue = sp.getDouble(preference, init)
         initValue = profileUtil.valueInCurrentUnitsDetect(initValue)
         val numberPicker = NumberPicker(context)
         if (profileUtil.units == GlucoseUnit.MMOL)
@@ -58,8 +59,8 @@ class SWEditNumberWithUnits(injector: HasAndroidInjector, private val init: Doub
         super.generateDialog(layout)
     }
 
-    fun preferenceId(preferenceId: Int): SWEditNumberWithUnits {
-        this.preferenceId = preferenceId
+    fun preference(preference: UnitDoubleKey): SWEditNumberWithUnits {
+        this.preference = preference.key
         return this
     }
 

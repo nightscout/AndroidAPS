@@ -1,29 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
-    <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
-    <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="nav_preferences_plugin">Настройки на %1$s</string>
-    <string name="nav_refreshtreatments">Обнови леченията от NS</string>
     <string name="nav_exit">Изход</string>
     <string name="delta">Изменение (Δ)</string>
-    <string name="profile_label">Профил</string>
     <string name="save">Съхрани</string>
-    <string name="reloadprofile">Презареди профил</string>
-    <string name="correctionbous">Корекция</string>
-    <string name="ns_upload_only">(ОПАСНО ЗА ДЕАКТИВИРАНЕ) Само качвай данни в NS</string>
-    <string name="ns_upload_only_summary">Само качване в NS (изключи синхронизиране). Може да спре данните за КЗ, освен ако не е избран локален източник като xDrip +. Не е ефективно за профила, освен ако не ползвате NS профил.\n!!! ВНИМАНИЕ !!! Деактивирането на тази опция може да причини проблеми и предозиране с инсулин, ако някой от Вашите компоненти (AAPS, NS, xDrip +) е неправилно конфигуриран. Внимателно гледайте, ако данните, показани от AAPS съответстват на състоянието на помпата!</string>
     <string name="wear">Часовник</string>
     <string name="nav_about">За приложението</string>
-    <string name="smscommunicator_missingphonestatepermission">Липсва разрешение до данни от телефона</string>
-    <string name="ns_alarm_options">Опции за аларми</string>
-    <string name="ns_alarms">Известяване при NS аларми</string>
-    <string name="ns_announcements">Създаване на известия от NS съобщения</string>
-    <string name="ns_alarm_stale_data_value_label">Когато няма данни повече от [мин]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Много стари данни при повече от [мин]</string>
     <string name="sensitivity_warning">Когато включите Autosense, трябва да въвеждате ВСИЧКИ въглехидрати. В противен случай те ще се изчисляват грешно, като повишена чувствителност!!</string>
-    <string name="notloadedplugins">Не всички профили са заредени!</string>
-    <string name="valuesnotstored">Стойностите не са запазени!</string>
     <string name="invalid">НЕВАЛИДНО</string>
     <string name="gradually_increase_notification_volume">Постепенно увеличаване на звука за сигнали и аларми</string>
     <string name="localalertsettings_title">Локални аларми</string>
@@ -35,24 +18,11 @@
     <string name="close_navigation">Затвори меню</string>
     <string name="remove_items">Премахни артикули</string>
     <string name="sort_items">Подреди артикули</string>
-    <string name="error_adding_treatment_title">Данните за лечението не са пълни</string>
-    <string name="error_adding_treatment_message">Събитие (инсулин: %1$.2f, въглехидрати: %2$d, в: %3$s) не може да бъде добавено към събития. Моля уверете се, че е правилно и го добавете ръчно.</string>
-    <string name="generated_ecarbs_note">eCarbs: %1$d г (за %2$d ч), след: %3$d м</string>
-    <string name="profile_total">Общо  %1$s Е</string>
     <string name="unitsnosemicolon">Единици</string>
-    <string name="show_removed">Покажи премахнатите</string>
-    <string name="clearqueueconfirm">Изтрий опашка? Всички данни ще се загубят!</string>
-    <string name="chartmenu">Меню на графиката</string>
     <string name="authorizationfailed">Удостоверяването неуспешно</string>
-    <string name="copytolocalprofile_invalid">Създаването на профила невъзможно. Профилът е невалиден.</string>
-    <string name="clear_filter">Премахни филтъра</string>
     <string name="cannula">Канюла</string>
-    <string name="email_address">Електронна поща</string>
-    <string name="remove_bg_readings">Премахване показанията нa КЗ</string>
     <string name="identification_not_set">Идентификацията не е зададена в режим на разработчик</string>
-    <string name="a11y_dialog">диалог</string>
     <!-- WEAR OS-->
-    <string name="wear_unknown_action_string">Неизвестна команда:</string>
     <string name="remove_selected_items">Премахнете избраните елементи</string>
     <string name="count_selected">%1$d избрано</string>
     <string name="sort_label">Сортиране</string>

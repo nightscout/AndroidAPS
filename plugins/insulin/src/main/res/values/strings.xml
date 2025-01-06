@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Insulin -->
-    <string name="key_insulin_oref_peak_settings" translatable="false">insulin_oref_peak_settings</string>
-
     <string name="lyumjev">Lyumjev</string>
     <string name="description_insulin_rapid">Insulin preset for Humalog and NovoRapid / NovoLog</string>
     <string name="description_insulin_ultra_rapid">Insulin preset for Fiasp</string>

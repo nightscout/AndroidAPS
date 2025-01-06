@@ -49,7 +49,6 @@
     <string name="alarm_expired">Expiré</string>
     <string name="alarm_reservoir_empty">Réservoir vide</string>
     <string name="alarm_patch_fault">Défaut Patch</string>
-    <string name="alarm_patch_fault2">Défaut Patch 2</string>
     <string name="alarm_base_fault">Défaillance de la base</string>
     <string name="alarm_battery_out">Pile morte</string>
     <string name="alarm_no_calibration">Absence d\'étalonnage</string>
@@ -79,6 +78,7 @@
     <string name="patch_not_active_note">La base de la pompe ne doit pas être connectée au Patch avant l\'étape suivante !</string>
     <string name="connect_pump_base">Connectez la base de la pompe à un nouveau Patch, retirez l\'air résiduel et remplissez avec de l\'insuline, puis appuyez sur <b>Suivant</b>.</string>
     <string name="note_min_70_units">Remarque : Un minimum de 70 unités est requis pour l\'activation.</string>
+    <string name="reservoir_text_and_level">Réservoir: %.2fU</string>
     <string name="do_not_attach_to_body">Ne fixez pas encore le Patch sur le corps.</string>
     <string name="half_press_needle">Appuyez à mi-course sur le bouton de l\'aiguille. Puis appuyez sur <b>Suivant</b> pour démarrer l\'amorçage.</string>
     <string name="wait_for_priming">Merci de patienter jusqu\'à la fin de l\'amorçage.</string>
@@ -89,6 +89,7 @@
     <string name="activating_pump">Activation de la pompe et du débit de base initial. Veuillez patienter.</string>
     <string name="activating_error">Échec de l\'activation, appuyez sur <b>Réessayez</b> pour éssayer à nouveau.</string>
     <string name="activating_complete">Nouveau Patch activé. %.2f Unités restantes.</string>
+    <string name="can_export_settings">Vous pouvez exporter les paramètres pour pouvoir récupérer cette session de patch plus tard.</string>
     <string name="press_OK_to_return">Appuyez sur <b>OK</b> pour revenir à l\'écran principal.</string>
     <string name="deactivate_sure">Êtes-vous sûr de vouloir désactiver le Patch actuel ?</string>
     <string name="cancel_sure">Êtes-vous sûr de vouloir annuler l\'activation?</string>
@@ -108,7 +109,7 @@
     <string name="sn_input_title">Numéro de série</string>
     <string name="sn_input_summary">Entrez le numéro de série de la base de votre pompe.</string>
     <string name="sn_input_invalid">Numéro de série invalide !</string>
-    <string name="pump_unsupported">Pompe non testée : %1$d! Veuillez nous contacter sur discord ou github pour obtenir de l\'aide</string>
+    <string name="pump_unsupported">Pompe %1$s non testée ! Veuillez nous contacter sur discord ou github pour obtenir de l\'aide</string>
     <string name="alarm_setting_title">Paramètres d\'Alarme</string>
     <string name="alarm_setting_summary">Sélectionnez vos préférences d’alarme de votre pompe.</string>
     <string name="pump_warning_notification_title">Notification sur l\'alerte pompe</string>
@@ -121,9 +122,19 @@
     <string name="hourly_max_insulin_summary">Spécifiez le nombre maximum d\'unités d\'insuline autorisées par heure. Si ce montant est dépassé, la pompe sera suspendue.</string>
     <string name="daily_max_insulin_title">Insuline maximale quotidienne [Unités]</string>
     <string name="daily_max_insulin_summary">Spécifiez le nombre maximum d\'unités d\'insuline autorisées par jour. Si ce montant est dépassé, la pompe sera suspendue.</string>
+    <string name="scan_on_connection_error_title">Scanner en cas d\'erreur de connexion</string>
+    <string name="scan_on_connection_error_summary">AVERTISSEMENT : Activez uniquement en cas de problèmes de connexion. Si activé, le pilote recherche à nouveau la pompe avant de tenter de se reconnecter à la pompe. Assurez-vous d\'avoir défini l\'autorisation d\'emplacement sur \"Toujours autoriser\" </string>
     <!-- treatment state-->
     <string name="getting_pump_status">Mise à jour de l\'état pompe</string>
+    <string name="syncing_records">Synchronisation des enregistrements, %1$d restant</string>
     <string name="getting_bolus_status">Obtenir l\'état du bolus</string>
     <string name="getting_temp_basal_status">Obtenir le statut du basal temporaire</string>
     <string name="setting_pump_settings">Définir les options utilisateur</string>
+    <!-- bolus-->
+    <string name="bolus_error_reason_user">Bolus annulé par l\'utilisateur</string>
+    <string name="bolus_error_reason_not_connected">Pompe non connectée</string>
+    <string name="bolus_error_reason_already_in_progress">Bolus déjà en cours</string>
+    <string name="bolus_error_reason_unable_to_send_command">Impossible d\'envoyer la commande bolus</string>
+    <string name="bolus_error_reason_communication_lost">Délai de récupération de l\'état du bolus dépassé</string>
+    <string name="bolus_error_reason_pump_error">Erreur Pompe</string>
 </resources>

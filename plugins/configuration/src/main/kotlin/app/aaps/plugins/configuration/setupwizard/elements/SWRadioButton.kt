@@ -10,22 +10,22 @@ import dagger.android.HasAndroidInjector
 
 class SWRadioButton(injector: HasAndroidInjector) : SWItem(injector, Type.RADIOBUTTON) {
 
-    private var labelsArray = 0
-    private var valuesArray = 0
+    private var labelsArray: Array<CharSequence> = emptyArray()
+    private var valuesArray: Array<CharSequence> = emptyArray()
     private var radioGroup: RadioGroup? = null
 
-    fun option(labels: Int, values: Int): SWRadioButton {
+    fun option(labels: Array<CharSequence>, values: Array<CharSequence>): SWRadioButton {
         labelsArray = labels
         valuesArray = values
         return this
     }
 
-    private fun labels(): Array<String> {
-        return rh.gsa(labelsArray)
+    private fun labels(): Array<CharSequence> {
+        return labelsArray
     }
 
-    private fun values(): Array<String> {
-        return rh.gsa(valuesArray)
+    private fun values(): Array<CharSequence> {
+        return valuesArray
     }
 
     override fun generateDialog(layout: LinearLayout) {
@@ -38,7 +38,7 @@ class SWRadioButton(injector: HasAndroidInjector) : SWItem(injector, Type.RADIOB
         layout.addView(desc)
 
         // Get if there is already value in SP
-        val previousValue = sp.getString(preferenceId, "none")
+        val previousValue = preferences.get(preference)
         radioGroup = RadioGroup(context)
         radioGroup?.clearCheck()
         radioGroup?.orientation = LinearLayout.VERTICAL
@@ -59,8 +59,8 @@ class SWRadioButton(injector: HasAndroidInjector) : SWItem(injector, Type.RADIOB
         super.generateDialog(layout)
     }
 
-    fun preferenceId(preferenceId: Int): SWRadioButton {
-        this.preferenceId = preferenceId
+    fun preference(preference: String): SWRadioButton {
+        this.preference = preference
         return this
     }
 }

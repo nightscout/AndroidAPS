@@ -20,6 +20,7 @@
     <string name="unsecure_fallback_biometric">Fallback non sicuro</string>
     <string name="unsecure_fallback_descriotion_biometric">Per essere efficace, la protezione biometrica richiede una password master per impostare un\'alternativa in caso di necessità (fallback).\n\nImposta una password master!</string>
     <string name="password_set">Password impostata!</string>
+    <string name="datastore_password_cleared">Password di esportazione salvata cancellata!</string>
     <string name="pin_set">PIN impostato!</string>
     <string name="password_not_set">Password non impostata</string>
     <string name="pin_not_set">PIN non impostato</string>
@@ -28,4 +29,6 @@
     <string name="pin_cleared">PIN eliminato!</string>
     <string name="password_hint">Inserisci qui la password</string>
     <string name="pin_hint">Inserisci PIN</string>
+    <string name="master_password_not_set">Password principale non impostata</string>
+    <string name="aaps_directory_not_selected">Directory AAPS non selezionata</string>
 </resources>

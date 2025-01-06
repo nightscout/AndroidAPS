@@ -14,7 +14,8 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.stub
 import org.mockito.kotlin.verify
 
-class GarminMessengerTest: TestBase() {
+class GarminMessengerTest : TestBase() {
+
     private val context = mock<Context>()
 
     private var appId1 = "appId1"
@@ -25,15 +26,16 @@ class GarminMessengerTest: TestBase() {
     private val inMessages = mutableListOf<Pair<GarminApplication, Any>>()
     private var messenger = GarminMessenger(
         aapsLogger, context, apps, { app, msg -> inMessages.add(app to msg) },
-        enableConnectIq = false, enableSimulator = false)
-    private val client1 = mock<GarminClient>() {
+        enableConnectIq = false, enableSimulator = false
+    )
+    private val client1 = mock<GarminClient> {
         on { name } doReturn "Mock1"
         on { sendMessage(any(), any()) } doAnswer { a ->
             outMessages.add(a.getArgument<GarminApplication>(0) to a.getArgument(1))
             Unit
         }
     }
-    private val client2 = mock<GarminClient>() {
+    private val client2 = mock<GarminClient> {
         on { name } doReturn "Mock2"
         on { sendMessage(any(), any()) } doAnswer { a ->
             outMessages.add(a.getArgument<GarminApplication>(0) to a.getArgument(1))
@@ -54,6 +56,7 @@ class GarminMessengerTest: TestBase() {
             on { connectedDevices } doReturn listOf(device2)
         }
     }
+
     @AfterEach
     fun cleanup() {
         messenger.dispose()

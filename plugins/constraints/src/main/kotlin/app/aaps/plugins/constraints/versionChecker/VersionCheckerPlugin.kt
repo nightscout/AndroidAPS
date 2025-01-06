@@ -1,5 +1,6 @@
 package app.aaps.plugins.constraints.versionChecker
 
+import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.PluginConstraints
@@ -7,7 +8,6 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
@@ -15,7 +15,6 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.plugins.constraints.R
-import dagger.android.HasAndroidInjector
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -23,7 +22,6 @@ import kotlin.math.roundToInt
 
 @Singleton
 class VersionCheckerPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     private val sp: SP,
     rh: ResourceHelper,
     private val versionCheckerUtils: VersionCheckerUtils,
@@ -37,9 +35,9 @@ class VersionCheckerPlugin @Inject constructor(
         .mainType(PluginType.CONSTRAINTS)
         .neverVisible(true)
         .alwaysEnabled(true)
-        .showInList(false)
+        .showInList { false }
         .pluginName(R.string.version_checker),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), PluginConstraints {
 
     enum class GracePeriod(val warning: Long, val old: Long, val veryOld: Long) {

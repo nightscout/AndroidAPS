@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="DynISFAdjust_title" formatted="false">% do fator de Ajuste DynamicISF</string>
-    <string name="DynISFAdjust_summary" formatted="false">Fator de ajuste para DynamicISF. Defina mais de 100% para doses de correção mais agressivas e menos de 100% para correções menos agressivas.</string>
+    <!--Autotune-->
     <string name="high_temptarget_raises_sensitivity_title">Alto alvotempo aumenta sensibilidade</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Aumentar sensibilidade para alvostemp >= 100]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Baixo alvotemp baixa sensibilidade</string>
@@ -60,9 +59,7 @@
     <string name="enable_smb_summary">Use Super Micro Bólus em vez de basal temporária para uma ação mais rápida</string>
     <string name="enable_uam_summary">Deteção de Refeições Não Anunciadas (RNA)</string>
     <string name="enable_smb_always">SMB sempre activado</string>
-    <string name="enable_smb_always_summary">SMB sempre activo independentemente dos bólus. Possível apenas quando o medidor tive um bom filtro de dados como o G5</string>
     <string name="enable_smb_after_carbs">Activar SMB após hidratos</string>
-    <string name="enable_smb_after_carbs_summary">SMB ativo por 6h após HCs, mesmo com 0 HCA. Possível apenas quando o medidor tive um bom filtro de dados como o G5</string>
     <string name="enable_smb_with_cob">Ativar SMB com HCA</string>
     <string name="enable_smb_with_cob_summary">Ativar SMB quando tem HCA positivos.</string>
     <string name="enable_smb_with_temp_target">SMB activo com valores alvo temporários</string>
@@ -113,4 +110,8 @@
     <string name="loop_smb_set_by_pump_label">SMB definido pela bomba</string>
     <string name="loop_open_mode_min_change">Pedido de alteração Mínima [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">O Loop aberto irá solicitar uma alteração apenas se a mudança for maior do que este valor em %. O valor padrão é 20%</string>
+    <!-- Autotune -->
+    <string name="autotune_missing">Em falta</string>
+    <string name="autotune_compare_profile">Comparar Perfis</string>
+    <!--    autoISF -->
 </resources>

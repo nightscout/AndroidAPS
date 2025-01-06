@@ -4,11 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="info.nightscout.androidaps.plugins.pump.eopatch.code.PatchStep" />
+
+        <import type="app.aaps.pump.eopatch.code.PatchStep" />
+
         <variable
             name="viewModel"
-            type="info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel" />
+            type="app.aaps.pump.eopatch.ui.viewmodel.EopatchViewModel" />
     </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -92,7 +95,7 @@
             app:layout_constraintBottom_toTopOf="@+id/layout_patch_safe_deactivation_remaining_usage_period_value"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="+"
-            tools:visibility="visible"/>
+            tools:visibility="visible" />
 
         <LinearLayout
             android:id="@+id/layout_patch_safe_deactivation_remaining_usage_period_value"
@@ -109,7 +112,7 @@
                 android:text="@{viewModel.patchRemainedDays.toString()}"
                 android:textSize="16sp"
                 app:visibleOrGone="@{viewModel.patchRemainedDays > 0}"
-                tools:text="N"/>
+                tools:text="N" />
 
             <TextView
                 android:layout_width="wrap_content"

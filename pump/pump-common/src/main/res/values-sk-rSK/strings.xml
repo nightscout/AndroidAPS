@@ -2,9 +2,6 @@
 <resources>
     <!-- PumoCommon - Pump Abstract -->
     <string name="pump_operation_not_supported_by_pump_driver">Operácia nepodporovaná pumpou a/alebo ovládačom.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">Operácia zatiaľ nepodporovaná pumpou.</string>
-    <string name="common_resultok">OK</string>
-    <string name="pump_serial_number">Sériové číslo pumpy</string>
     <string name="bolus_delivered_so_far">Podané %1$.2f JI / %2$.2f JI</string>
     <!-- PumpCommon - Pump Status -->
     <string name="pump_status_not_initialized">Nie je inicializovaný</string>
@@ -46,33 +43,9 @@
     <string name="ble_config_scan_scanning">Vyhľadávanie</string>
     <string name="ble_config_scan_finished">Vyhľadávanie dokončené</string>
     <string name="ble_config_scan_error">Chyba vyhľadávania: %1$d</string>
-    <string name="ble_config_connected_never">Nikdy</string>
     <string name="ble_config_remove">Vymazať</string>
-    <!-- BLE Errors -->
-    <string name="ble_error_bt_disabled">Bluetooth je deaktivované</string>
-    <string name="ble_error_no_bt_adapter">Žiadny Bluetooth adaptér</string>
-    <string name="ble_error_configured_pump_not_found">Konfigurovaná pumpa nenájdená</string>
-    <string name="ble_error_pump_unreachable">Pumpa nedostupná</string>
-    <string name="ble_error_failed_to_conn_to_ble_device">Nepodarilo sa pripojiť k BLE zariadeniu</string>
-    <string name="ble_error_encryption_failed">Šifrovanie zlyhalo</string>
-    <string name="ble_error_pump_found_unbonded">Nájdená nespárovaná pumpa</string>
-    <!-- Pump Error -->
-    <string name="pump_settings_error_basal_profiles_not_enabled">Nastavenie bazálnych profilov/vzorov nie je na pumpe povolené. Povoľte ich na pumpe.</string>
-    <string name="pump_settings_error_incorrect_basal_profile_selected">Bazálny profil nastavený na pumpe je nesprávny (musí byť %s).</string>
-    <string name="pump_settings_error_wrong_tbr_type_set">Chybný typ dočasného bazálu nastavený na pumpe (musí byť %s).</string>
-    <string name="pump_settings_error_wrong_max_bolus_set">Chybný max. bolus na pumpe (musí byť %1$.2f).</string>
-    <string name="pump_settings_error_wrong_max_basal_set">Chybný max. bazál na pumpe (musí byť %1$.2f).</string>
     <!-- Pump History -->
     <string name="pump_history_type">Typ:</string>
-    <!-- PumpDeviceState -->
-    <string name="pump_status_never_contacted">Nikdy nepripojené</string>
-    <string name="pump_status_sleeping">Spiaca</string>
-    <string name="pump_status_waking_up">Prebúdzanie</string>
-    <string name="pump_status_active">Aktívna</string>
-    <string name="pump_status_error_comm">Chyba komunikácie</string>
-    <string name="pump_status_timeout_comm">Uplynul časový limit komunikácie</string>
-    <string name="pump_status_pump_unreachable">Pumpa nedostupná</string>
-    <string name="pump_status_invalid_config">Neplatná konfigurácia</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d deň</item>
         <item quantity="few">%1$d dní</item>

@@ -26,11 +26,7 @@
     <string name="objectives_smb_objective">Ativação de recursos adicionais para uso durante o dia, como SMB</string>
     <string name="objectives_smb_gate">Você deve ler a documentação e aumentar o maxIOB para que os SMBs funcionem bem! Um bom início de maxIOB = média de bolus nas refeições + 3x a sua maior basal do perfil</string>
     <string name="objectives_smb_learned">Usar SMB é o seu objetivo. O algoritmo Oref1 foi projetado para ajudá-lo também com seus bolus. Você não deve dar bolus completo para sua comida, apenas parte dela e deixar o AAPS lhe dar o resto, se necessário. Desta forma, você tem mais espaço para carboidratos mal calculado. Você sabia que pode definir uma porcentagem do resultado da calculadora de bolus para reduzir o tamanho do bolus?</string>
-    <string name="objectives_dyn_isf_objective">Ativar recursos adicionais para uso durante o dia, como plugin de Sensibilidade Dinâmica (DynamicISF)</string>
-    <string name="objectives_dyn_isf_gate">Certifique-se de que o SMB esteja funcionando corretamente. Habilite o plugin DynamicISF e identifique o ajuste apropriado para as características do seu corpo. É aconselhável começar com um valor inferior a 100% por segurança.</string>
-    <string name="objectives_dyn_isf_learned">O plugin de Sensibilidade Dinâmica baseia-se na ideia de que o total de insulina aplicada e os níveis de glicemia do momento afetam a sensibilidade real. O plugin DynamicISF pode ajustar o fator de sensibilidade de Insulina (FSI) usado pelo algoritmo para você.</string>
     <string name="objectives_auto_objective">Ativando a Automação</string>
-    <string name="objectives_auto_gate">Leia os documentos de como a automação funciona. Configure suas primeiras regras simples. Em vez de efetuar uma ação deixe AAPS apresentar apenas uma notificação. Quando você tiver certeza de que a automação é acionada no momento certo substitua a notificação por uma ação real. (https://wiki.aaps.app/en/latest/Usage/Automation.html)</string>
     <string name="objectives_auto_learned">A automação pode ser um bom servo, mas um mau mestre. Não extrapole. Não tente substituir o algoritmo subjacente. Teste a regra com a mensagem somente antes do uso. Ela depende da ordem.</string>
     <string name="objectives_bgavailableinns">Glicemia disponível em NS ou Tidepool</string>
     <string name="objectives_pumpstatusavailableinns">Status da bomba disponível no NS ou Tidepool</string>
@@ -77,10 +73,6 @@
     <string name="unfinshed_button">Próximo inacabado</string>
     <string name="requestcode">Pedir Código: %1$s</string>
     <string name="objectives_hint">(marque todas as respostas correctas)</string>
-    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
-    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html</string>
-    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">Não está conectado à internet</string>
     <string name="failedretrievetime">Falha no tempo de recuperação</string>
     <string name="requirementnotmet">Requisitos de objetivo não cumpridos</string>

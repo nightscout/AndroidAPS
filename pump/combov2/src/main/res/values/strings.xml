@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="combov2_plugin_name">Accu-Chek Combo</string>
-    <string name="combov2_plugin_shortname" translatable="false">COMBOV2</string>
+    <string name="combov2_plugin_shortname" translatable="false">COMBO</string>
     <string name="combov2_plugin_description">Native pump integration for Accu-Chek Combo pumps</string>
     <string name="combov2_could_not_connect">Could not connect to the pump</string>
     <string name="combov2_not_paired">Not paired to a pump</string>
-    <string name="combov2_pump_terminated_connection">Pump terminated connection</string>
     <string name="combov2_warning">Combo warning</string>
     <string name="combov2_error">Combo error</string>
     <string name="combov2_warning_4">Call hotline for update</string>
@@ -130,8 +129,6 @@ buttons at the same time to cancel pairing)\n
     <string name="key_combov2_automatic_battery_entry" translatable="false">combov2_automatic_battery_entry</string>
     <string name="combov2_automatic_reservoir_entry">Autodetect and automatically enter insulin reservoir change</string>
     <string name="combov2_automatic_battery_entry">Autodetect and automatically enter battery change</string>
-    <string name="combov2_note_reservoir_change">Insulin reservoir change inserted automatically by combov2 driver</string>
-    <string name="combov2_note_battery_change">Battery change inserted automatically by combov2 driver</string>
     <string name="combov2_timezone_changed">Timezone changed</string>
     <string name="combov2_datetime_changed">Date and/or time changed</string>
     <string name="combov2_dst_started">Daylight savings time (DST) started</string>

@@ -4,17 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.maintenance.PrefFileListProvider
+import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventMobileDataToWear
+import app.aaps.core.interfaces.rx.events.EventMobileToWearWatchface
 import app.aaps.core.interfaces.rx.weardata.CUSTOM_VERSION
-import app.aaps.core.interfaces.rx.weardata.CwfData
 import app.aaps.core.interfaces.rx.weardata.CwfFile
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey.CWF_AUTHOR
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey.CWF_AUTHOR_VERSION
@@ -23,23 +20,26 @@ import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey.CWF_FILENAME
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey.CWF_NAME
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey.CWF_VERSION
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataMap
-import app.aaps.core.interfaces.rx.weardata.CwfResDataMap
-import app.aaps.core.interfaces.rx.weardata.EventData
-import app.aaps.core.interfaces.rx.weardata.ResFileMap
-import app.aaps.core.interfaces.rx.weardata.ZipWatchfaceFormat
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.Preferences
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
+import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.plugins.configuration.R
 import app.aaps.plugins.configuration.databinding.CustomWatchfaceImportListActivityBinding
 import app.aaps.plugins.configuration.databinding.CustomWatchfaceImportListItemBinding
+import app.aaps.shared.impl.weardata.ResFileMap
+import app.aaps.shared.impl.weardata.ZipWatchfaceFormat
+import app.aaps.shared.impl.weardata.toDrawable
 import javax.inject.Inject
 
 class CustomWatchfaceImportListActivity : TranslatedDaggerAppCompatActivity() {
 
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var sp: SP
-    @Inject lateinit var prefFileListProvider: PrefFileListProvider
+    @Inject lateinit var preferences: Preferences
+    @Inject lateinit var fileListProvider: FileListProvider
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var versionCheckerUtils: VersionCheckerUtils
@@ -58,7 +58,7 @@ class CustomWatchfaceImportListActivity : TranslatedDaggerAppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(true)
 
         binding.recyclerview.layoutManager = LinearLayoutManager(this)
-        binding.recyclerview.adapter = RecyclerViewAdapter(prefFileListProvider.listCustomWatchfaceFiles().sortedBy { it.cwfData.metadata[CWF_NAME] })
+        binding.recyclerview.adapter = RecyclerViewAdapter(fileListProvider.listCustomWatchfaceFiles().sortedBy { it.cwfData.metadata[CWF_NAME] })
     }
 
     inner class RecyclerViewAdapter internal constructor(private var customWatchfaceFileList: List<CwfFile>) : RecyclerView.Adapter<RecyclerViewAdapter.CwfFileViewHolder>() {
@@ -70,13 +70,13 @@ class CustomWatchfaceImportListActivity : TranslatedDaggerAppCompatActivity() {
                     root.isClickable = true
                     customWatchfaceImportListItemBinding.root.setOnClickListener {
                         val customWatchfaceFile = filelistName.tag as CwfFile
-                        sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_watchface_name, customWatchfaceFile.cwfData.metadata[CWF_NAME] ?:"")
-                        sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_author_version, customWatchfaceFile.cwfData.metadata[CWF_AUTHOR_VERSION] ?:"")
-                        sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_filename, customWatchfaceFile.cwfData.metadata[CWF_FILENAME] ?:"")
+                        sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_watchface_name, customWatchfaceFile.cwfData.metadata[CWF_NAME] ?: "")
+                        sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_author_version, customWatchfaceFile.cwfData.metadata[CWF_AUTHOR_VERSION] ?: "")
+                        sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_filename, customWatchfaceFile.cwfData.metadata[CWF_FILENAME] ?: "")
 
                         val i = Intent()
-                        setResult(FragmentActivity.RESULT_OK, i)
-                        rxBus.send(EventMobileDataToWear(customWatchfaceFile.zipByteArray))
+                        setResult(RESULT_OK, i)
+                        rxBus.send(EventMobileToWearWatchface(customWatchfaceFile.zipByteArray))
                         finish()
                     }
                 }
@@ -95,9 +95,9 @@ class CustomWatchfaceImportListActivity : TranslatedDaggerAppCompatActivity() {
         override fun onBindViewHolder(holder: CwfFileViewHolder, position: Int) {
             val customWatchfaceFile = customWatchfaceFileList[position]
             val metadata = customWatchfaceFile.cwfData.metadata
-            val drawable = customWatchfaceFile.cwfData.resDatas[ResFileMap.CUSTOM_WATCHFACE.fileName]?.toDrawable(resources)
+            val drawable = customWatchfaceFile.cwfData.resData[ResFileMap.CUSTOM_WATCHFACE.fileName]?.toDrawable(resources)
             with(holder.customWatchfaceImportListItemBinding) {
-                val fileName = metadata[CWF_FILENAME]?.let { "$it${ZipWatchfaceFormat.CWF_EXTENTION}" } ?: ""
+                val fileName = metadata[CWF_FILENAME]?.let { "${it}.${ZipWatchfaceFormat.CWF_EXTENSION}" } ?: ""
                 filelistName.text = rh.gs(app.aaps.core.interfaces.R.string.metadata_wear_import_filename, fileName)
                 filelistName.tag = customWatchfaceFile
                 customWatchface.setImageDrawable(drawable)
@@ -112,7 +112,7 @@ class CustomWatchfaceImportListActivity : TranslatedDaggerAppCompatActivity() {
                 val colorAttr = if (checkCustomVersion(metadata)) app.aaps.core.ui.R.attr.metadataTextOkColor else app.aaps.core.ui.R.attr.metadataTextWarningColor
                 cwfVersion.setTextColor(rh.gac(cwfVersion.context, colorAttr))
                 val prefExisting = metadata.keys.any { it.isPref }
-                val prefSetting = sp.getBoolean(app.aaps.core.utils.R.string.key_wear_custom_watchface_autorization, false)
+                val prefSetting = preferences.get(BooleanKey.WearCustomWatchfaceAuthorization)
                 val prefColor = if (prefSetting) app.aaps.core.ui.R.attr.metadataTextWarningColor else app.aaps.core.ui.R.attr.importListFileNameColor
                 prefWarning.visibility = (prefExisting && prefSetting).toVisibility()
                 prefInfo.visibility = (prefExisting && !prefSetting).toVisibility()

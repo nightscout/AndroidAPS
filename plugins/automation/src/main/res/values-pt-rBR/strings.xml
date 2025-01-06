@@ -104,8 +104,6 @@
     <string name="automation_event">Evento de automação</string>
     <string name="reorder_label">Reordenar</string>
     <string name="user_action">Ação do usuário</string>
-    <string name="remove_automation">Remover Automação</string>
-    <string name="sort_automation">Classificar automação</string>
     <string name="remove_selected_items">Remover itens selecionados</string>
     <string name="count_selected">Selecionado %1$d</string>
     <string name="system_automation">Automação do Sistema</string>
@@ -116,4 +114,10 @@
     <string name="time_to_eat">Hora de comer!\nAbra o assistente de bolus e faça o cálculo novamente.</string>
     <string name="time_to_bolus">Hora do bolus!\nAbra o assistente de bolus e faça o cálculo novamente.</string>
     <string name="error_setting_reminder">Erro ao definir alarme futuro</string>
+    <!--    Autotune-->
+    <string name="autotune_run">Executar Autotune</string>
+    <string name="autotune_run_without_autoswitch">Autotune executado sem troca de perfil</string>
+    <string name="autotune_run_with_autoswitch">Autotune executado e perfil alterado automaticamente</string>
+    <string name="autotune_run_with_error">Erro durante a última execução do Autotune</string>
+    <string name="autotune_run_cancelled">Outra execução de Autotune foi detectada, execução cancelada</string>
 </resources>

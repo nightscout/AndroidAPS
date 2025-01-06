@@ -35,7 +35,6 @@
     <string name="omnipod_common_error_unexpected_exception">Beklenmedik bir hata oluştu. Lütfen raporlayın! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation">Onay</string>
-    <string name="omnipod_common_confirmation_time_or_timezone_change">Pod saat ve/veya saat dilimi değişti.</string>
     <string name="omnipod_common_confirmation_expiration_alerts_updated">Pod alarm yapılandırması güncellendi.</string>
     <string name="omnipod_common_confirmation_time_on_pod_updated">Pod saati güncellendi.</string>
     <string name="omnipod_common_confirmation_suspended_delivery">Tüm insülin iletimi durduruldu.</string>
@@ -66,6 +65,7 @@
     <string name="omnipod_common_overview_reservoir_value">%1$.2f Ü kaldı</string>
     <string name="omnipod_common_overview_reservoir_value_over50">50 Ü üzeri</string>
     <string name="omnipod_common_overview_errors">Hatalar</string>
+    <string name="omnipod_common_uncertain">belirsiz</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_cancel">İptal</string>
     <string name="omnipod_common_wizard_button_finish">Bitti</string>
@@ -127,7 +127,6 @@
     <string name="omnipod_common_pod_status_normal">Normal</string>
     <string name="omnipod_common_pod_status_suspended">Askıya Alındı</string>
     <string name="omnipod_common_pod_status_pod_fault">Pod Hatası</string>
-    <string name="omnipod_common_pod_status_activation_time_exceeded">Aktivasyon süresi aşıldı</string>
     <string name="omnipod_common_pod_status_inactive">İnaktif</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Pod Hatası: %1$03d %2$s</string>
     <!-- Omnipod - Commands -->
@@ -153,7 +152,6 @@
     <string name="omnipod_common_cmd_set_fake_suspended_tbr">Pod askıya alındığından sahte geçici bazal ayarlayın</string>
     <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Sahte geçici bazalı iptal edin</string>
     <string name="omnipod_common_cmd_split_tbr">İptaldeki belirsiz başarısızlık nedeniyle geçici bazal bölünmüş</string>
-    <string name="omnipod_common_cmd_beep_config">Bip Yapılandırması</string>
     <string name="omnipod_common_cmd_play_test_beep">Test Bip Sesi Çal</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_finish_pairing_reminder">Eşleştirme hatırlatıcısını bitir</string>
@@ -176,6 +174,7 @@
     <string name="omnipod_common_ok">Tamam</string>
     <string name="omnipod_common_cancel">İptal</string>
     <string name="omnipod_common_warning">Uyarı</string>
+    <string name="omnipod_common_disable_suspend_alerts">ASKIYA ALMA UYARILARINI DEVRE DIŞI BIRAK</string>
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">Dakika önce</string>
     <string name="omnipod_common_less_than_a_minute_ago">Bir dakikadan az bir süre önce</string>

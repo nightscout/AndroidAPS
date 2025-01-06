@@ -2,9 +2,6 @@
 <resources>
     <!-- PumoCommon - Pump Abstract -->
     <string name="pump_operation_not_supported_by_pump_driver">Operacja nie jest wspierana przez pompę i/lub sterownik pompy.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">Operacja nie jest JESZCZE wspierana przez pompę.</string>
-    <string name="common_resultok">OK</string>
-    <string name="pump_serial_number">Numer seryjny pompy</string>
     <string name="bolus_delivered_so_far">podano %1$.2f U / %2$.2f U</string>
     <!-- PumpCommon - Pump Status -->
     <string name="pump_status_not_initialized">Nie zainicjowany</string>
@@ -46,33 +43,9 @@
     <string name="ble_config_scan_scanning">Skanowanie</string>
     <string name="ble_config_scan_finished">Skanowanie zakończono</string>
     <string name="ble_config_scan_error">Błąd skanowania: %1$d</string>
-    <string name="ble_config_connected_never">Nigdy</string>
     <string name="ble_config_remove">Usuń</string>
-    <!-- BLE Errors -->
-    <string name="ble_error_bt_disabled">Bluetooth wyłączony</string>
-    <string name="ble_error_no_bt_adapter">Brak modułu Bluetooth</string>
-    <string name="ble_error_configured_pump_not_found">Nie znaleziono skonfigurowanej pompy</string>
-    <string name="ble_error_pump_unreachable">Pompa nieosiągalna</string>
-    <string name="ble_error_failed_to_conn_to_ble_device">Nie udało się połączyć z urządzeniem Bluetooth</string>
-    <string name="ble_error_encryption_failed">Szyfrowanie nie powiodło się</string>
-    <string name="ble_error_pump_found_unbonded">Znaleziono niesparowaną pompę</string>
-    <!-- Pump Error -->
-    <string name="pump_settings_error_basal_profiles_not_enabled">Ustawienia bazy/ wzorców nie są włączone w pompie. Włącz je na pompie.</string>
-    <string name="pump_settings_error_incorrect_basal_profile_selected">Profil bazowy ustawiony na pompie nie jest właściwy (musi być %s).</string>
-    <string name="pump_settings_error_wrong_tbr_type_set">Ustawiony na pompie typ dawki tymczasowej jest niewłaściwy (musi być %s).</string>
-    <string name="pump_settings_error_wrong_max_bolus_set">Ustawiony na pompie typ Bolus Maksymalny jest niewłaściwy (musi być %1$.2f).</string>
-    <string name="pump_settings_error_wrong_max_basal_set">Ustawiony na pompie typ Bolus Maksymalny jest niewłaściwy (musi być %1$.2f).</string>
     <!-- Pump History -->
     <string name="pump_history_type">Typ:</string>
-    <!-- PumpDeviceState -->
-    <string name="pump_status_never_contacted">Nigdy nie połączona</string>
-    <string name="pump_status_sleeping">Uśpiona</string>
-    <string name="pump_status_waking_up">Wybudza się</string>
-    <string name="pump_status_active">Aktywna</string>
-    <string name="pump_status_error_comm">Błąd komunikacji</string>
-    <string name="pump_status_timeout_comm">Przekroczony limit czasu połączenia</string>
-    <string name="pump_status_pump_unreachable">Pompa nieosiągalna</string>
-    <string name="pump_status_invalid_config">Nieprawidłowa konfiguracja</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d dzień</item>
         <item quantity="few">%1$d dni</item>

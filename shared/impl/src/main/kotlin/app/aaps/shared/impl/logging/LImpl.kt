@@ -15,7 +15,7 @@ class LImpl @Inject constructor(
     private var logElements: MutableList<LogElement> = ArrayList()
 
     init {
-        LTag.values().forEach { logElements.add(LogElementImpl(it, sp)) }
+        LTag.entries.forEach { logElements.add(LogElementImpl(it, sp)) }
     }
 
     override fun findByName(name: String): LogElement {

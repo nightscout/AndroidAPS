@@ -1,29 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
-    <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
-    <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="nav_preferences_plugin">%1$s Instellingen</string>
-    <string name="nav_refreshtreatments">Haal behandelingen op van NS</string>
     <string name="nav_exit">Afsluiten</string>
     <string name="delta">Verschil</string>
-    <string name="profile_label">Profiel</string>
     <string name="save">Opslaan</string>
-    <string name="reloadprofile">Herlaad profiel</string>
-    <string name="correctionbous">Correctie</string>
-    <string name="ns_upload_only">(GEVAARLIJK OM UIT TE SCHAKELEN) alleen NS upload</string>
-    <string name="ns_upload_only_summary">Alleen NS-upload. Heeft geen effect op de SGV, behalve als een lokale bron als xDrip geselecteerd is. Heeft geen effect op profielen wanneer NS-Profielen gebruikt worden.\n!!! WAARSCHUWING !!! Het uitschakelen van deze optie kan fouten veroorzaken en mogelijk resulteren in een overdosis insuline als een van de onderdelen (AAPS, NS, xDrip) onjuist is geconfigureerd. Let goed op of de gegevens van AAPS overeenkomen met de pompstatus!</string>
     <string name="wear">Wear</string>
     <string name="nav_about">Over</string>
-    <string name="smscommunicator_missingphonestatepermission">Machtiging ontbreekt voor telefoon gebruik</string>
-    <string name="ns_alarm_options">Alarm opties</string>
-    <string name="ns_alarms">Maak meldingen van NS alarmen</string>
-    <string name="ns_announcements">Maak meldingen van NS aankondigingen</string>
-    <string name="ns_alarm_stale_data_value_label">Oude gegevens sinds [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Alarm oude gegevens sinds [min]</string>
     <string name="sensitivity_warning">Bij het gebruik van Autosense, vergeet niet alle opgenomen koolhydraten in te geven. Anders zullen BG wijzigingen door maaltijden foutief geïnterpreteerd worden !!</string>
-    <string name="notloadedplugins">Niet alle profielen zijn geladen!</string>
-    <string name="valuesnotstored">Waarden niet opgeslagen!</string>
     <string name="invalid">Ongeldig</string>
     <string name="gradually_increase_notification_volume">Volume van notificaties en meldingen geleidelijk verhogen</string>
     <string name="localalertsettings_title">Lokaal gegenereerde waarschuwingen</string>
@@ -35,26 +18,16 @@
     <string name="close_navigation">Sluit navigatie</string>
     <string name="remove_items">Items verwijderen</string>
     <string name="sort_items">Sorteer items</string>
-    <string name="error_adding_treatment_title">Behandelingen data incompleet</string>
-    <string name="error_adding_treatment_message">Een Behandeling (insuline: %1$.2f, koolhydraten: %2$d, in: %3$s) niet konden worden toegevoegd aan Behandelingen. Gelieve te controleren en handmatig een record toe te voegen indien nodig.</string>
-    <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), vertraging: %3$d m</string>
-    <string name="profile_total">== ∑  %1$s E</string>
     <string name="unitsnosemicolon">Eenheden</string>
-    <string name="show_removed">Laat verwijderde items zien</string>
-    <string name="clearqueueconfirm">Wachtrij leegmaken? Alle gegevens in de wachtrij zullen verloren gaan!</string>
-    <string name="chartmenu">Grafiek menu</string>
     <string name="authorizationfailed">Autorisatie mislukt</string>
-    <string name="copytolocalprofile_invalid">Kan profiel niet aanmaken. Profiel is ongeldig.</string>
-    <string name="clear_filter">Verwijder filter</string>
     <string name="cannula">Canule</string>
-    <string name="email_address">E-mailadres</string>
-    <string name="remove_bg_readings">Verwijder BG metingen</string>
     <string name="identification_not_set">Identificatie niet ingesteld in dev modus</string>
-    <string name="a11y_dialog">dialoogvenster</string>
     <!-- WEAR OS-->
-    <string name="wear_unknown_action_string">Onbekend actie commando:</string>
     <string name="remove_selected_items">Geselecteerde items verwijderen</string>
     <string name="count_selected">%1$d geselecteerd</string>
     <string name="sort_label">Sorteren</string>
     <string name="search">Zoeken</string>
+    <string name="simple_mode">Eenvoudige modus</string>
+    <string name="select">Selecteer</string>
+    <string name="set">Stel in</string>
 </resources>

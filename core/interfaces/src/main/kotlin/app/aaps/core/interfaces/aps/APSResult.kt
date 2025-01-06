@@ -1,30 +1,29 @@
 package app.aaps.core.interfaces.aps
 
 import android.text.Spanned
+import app.aaps.core.data.model.GV
 import app.aaps.core.interfaces.constraints.Constraint
-import app.aaps.core.interfaces.iob.IobTotal
-import app.aaps.database.entities.GlucoseValue
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 
 interface APSResult {
 
     var date: Long
-    var json: JSONObject?
     var reason: String
     var rate: Double
     var percent: Int
     var duration: Int
     var smb: Double
-    var iob: IobTotal?
     var usePercent: Boolean
     var carbsReq: Int
     var carbsReqWithin: Int
     var deliverAt: Long
     var targetBG: Double
     var hasPredictions: Boolean
+    var variableSens: Double?
+    var isfMgdlForCarbs: Double? // used only to pass to AAPS client
+    var scriptDebug: List<String>?
 
-    val predictions: MutableList<GlucoseValue>
+    val predictionsAsGv: MutableList<GV>
     val latestPredictionsTime: Long
     val isChangeRequested: Boolean
     var isTempBasalRequested: Boolean
@@ -38,7 +37,29 @@ interface APSResult {
     var percentConstraint: Constraint<Int>?
     var smbConstraint: Constraint<Double>?
 
-    fun toSpanned(): Spanned
-    fun newAndClone(injector: HasAndroidInjector): APSResult
+    // Inputs
+    var algorithm: Algorithm
+    var autosensResult: AutosensResult?
+    var iobData: Array<IobTotal>?
+    var glucoseStatus: GlucoseStatus?
+    var currentTemp: CurrentTemp?
+    var oapsProfile: OapsProfile?
+    var oapsProfileAutoIsf: OapsProfileAutoIsf?
+    var mealData: MealData?
+
+    val iob: IobTotal? get() = iobData?.get(0)
+
+    fun resultAsString(): String
+    fun resultAsSpanned(): Spanned
+    fun newAndClone(): APSResult
     fun json(): JSONObject?
+    fun predictions(): Predictions?
+    fun rawData(): Any
+
+    enum class Algorithm {
+        UNKNOWN,
+        AMA,
+        SMB,
+        AUTO_ISF
+    }
 }

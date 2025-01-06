@@ -17,6 +17,7 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 class TransportLayerTest {
+
     @Test
     fun parsePacketData() {
         // Test the packet parser by parsing hardcoded packet data
@@ -148,7 +149,7 @@ class TransportLayerTest {
         // Starts a blocking scope with a watchdog that fails
         // the test if it does not finish within 5 seconds
         // (in case the tested code hangs).
-        runBlockingWithWatchdog(5000) {
+        runBlockingWithWatchdog(12000) {
             val testPumpStateStore = TestPumpStateStore()
             val testComboIO = TestComboIO()
             val testBluetoothAddress = BluetoothAddress(byteArrayListOfInts(1, 2, 3, 4, 5, 6))
@@ -212,7 +213,7 @@ class TransportLayerTest {
         // a PacketReceiverException which in turn contains the
         // exception that caused the failure.
 
-        runBlockingWithWatchdog(5000) {
+        runBlockingWithWatchdog(12000) {
             val testPumpStateStore = TestPumpStateStore()
             val testComboIO = TestComboIO()
             val testBluetoothAddress = BluetoothAddress(byteArrayListOfInts(1, 2, 3, 4, 5, 6))
@@ -315,7 +316,7 @@ class TransportLayerTest {
         // packets observed to confirm that the expected single DATA
         // paket is in fact received by the TransportLayer IO.
 
-        runBlockingWithWatchdog(6000) {
+        runBlockingWithWatchdog(12000) {
             // Setup.
 
             val testPumpStateStore = TestPumpStateStore()

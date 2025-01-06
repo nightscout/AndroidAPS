@@ -21,6 +21,7 @@
     <string name="permission">Permission</string>
     <string name="need_system_window_permission">Application needs system window permission for notifications</string>
     <string name="need_location_permission">Application needs location permission for BT scan and WiFi identification</string>
+    <string name="need_background_location_permission">Application needs background location permission for automations</string>
     <string name="need_storage_permission">Application needs storage permission to be able store log files and export settings</string>
     <string name="askforpermission">Ask for permission</string>
     <string name="need_whitelisting">%1$s needs battery optimization whitelisting for proper performance</string>
@@ -32,16 +33,13 @@
     <string name="status">Status:</string>
     <string name="patient_name">Patient name</string>
     <string name="patient_name_summary">Please provide patient name or nickname to differentiate among multiple setups</string>
-    <string name="privacy_settings">Privacy setting</string>
-    <string name="privacy_summary">You can provide optional email address if you want to be notified about app crashes. This is not an automated service. You will be contacted by developers in dangerous situations.</string>
     <string name="diawarning">Please remember: new insulin profiles require DIA at least 5h. DIA 5–6h on new profile is equal to DIA 3h on old insulin profiles.</string>
     <string name="profile">Profile</string>
     <string name="doprofileswitch">Do Profile Switch</string>
     <string name="exitwizard">Skip setup wizard</string>
     <string name="setupwizard_loop_description">Press the button below to enable AAPS to suggest/make basal changes</string>
-    <string name="key_setupwizard_processed" translatable="false">startupwizard_processed</string>
     <string name="setupwizard_sensitivity_description">Sensitivity plugin is used for sensitivity detection and COB calculation. For more info visit:</string>
-    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
     <string name="setupwizard_aps_description">Select one from availables algorithms. They are sorted from oldest to newest. Newer algorithm is usually more powerful and more aggressive. Thus if you are new looper you may probably start with AMA and not with latest one. Do not forget to read the OpenAPS documentation and configure it before use.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Please configure your RileyLink below. After selecting a RileyLink, it will be possible to continue setup once the RileyLink status is \"Connected\". This might take a minute.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Note:</b> You can continue setup once the pump has been set up.\n</string>
@@ -50,8 +48,8 @@
     <string name="readstatus">Read status</string>
     <string name="data_choices">Data Choices</string>
     <string name="fabric_upload">Fabric Upload</string>
-    <string name="allow_automated_crash_reporting">Allow automated crash reporting and feature usage data to be sent to the developers via the fabric.io service.</string>
-    <string name="summary_email_for_crash_report">This identification will attached to crash reports so we can contact you in urgent cases. It\'s optional.</string>
+    <string name="unattended_settings_export">Unattended Settings Export</string>
+    <string name="unattended_settings_export_summary">Enabling this will securely store your password on your phone</string>
     <string name="identification">Identification (email, FB or Discord nick etc)</string>
     <string name="request">Request</string>
     <string name="apsmode_title">APS Mode</string>
@@ -98,10 +96,11 @@
     <string name="check_preferences_import_btn">Import</string>
     <string name="check_preferences_import_anyway_btn">Import anyway (DANGEROUS!)</string>
     <string name="import_setting">Import settings</string>
+    <string name="aaps_directory">AAPS directory</string>
+    <string name="select_aaps_directory">Select AAPS directory for storing exports, configurations etc.</string>
     <string name="check_preferences_before_import">Please check preferences before importing:</string>
     <string name="check_preferences_cannot_import">Preferences cannot be imported!</string>
     <string name="check_preferences_dangerous_import">Preferences should not be imported!</string>
-    <string name="nav_export">Export settings</string>
     <string name="export_to">Export settings to</string>
     <string name="import_from">Import settings from</string>
     <string name="setting_imported">Settings imported</string>
@@ -109,12 +108,13 @@
     <string name="different_password_used">This file was exported and encrypted with different master password. Provide old master password to decrypt file.</string>
     <string name="master_password_will_be_replaced">As a result of successful import current master password WILL BE REPLACED with that old master password!</string>
     <string name="exported">Preferences exported</string>
+    <string name="exported_failed">Preferences export failed!</string>
     <string name="filenotfound">File not found</string>
     <string name="goto_main_try_again">Please go back to main screen and try again.</string>
     <string name="restartingapp">Exiting application to apply settings.</string>
     <string name="ue_exported">User Entries exported</string>
     <string name="protection">Protection</string>
-    <string name="master_password_missing">Master password is not set!\n\nPlease set your Master password in Preferences (%1$s &#8594; %2$s)</string>
+    <string name="master_password_missing">Master password is not set!\n\nPlease set your Master password in Preferences (%1$s)</string>
 
 
     <!--    Maintenance-->
@@ -123,11 +123,9 @@
     <string name="description_maintenance">Provides several functions for maintenance (eg. log sending, log deletion).</string>
     <string name="database_cleanup">Database cleanup</string>
     <string name="reset_db_confirm">Do you really want to reset the databases?</string>
+    <string name="reset_aps_results_confirm">Do you really want to reset stored APS results?</string>
     <string name="maintenance_settings">Maintenance Settings</string>
     <string name="maintenance_email">Email recipient</string>
-    <string name="key_maintenance_logs_email" translatable="false">maintenance_logs_email</string>
-    <string name="key_maintenance_logs_amount" translatable="false">maintenance_logs_amount</string>
-    <string name="key_logshipper_amount" translatable="false">logshipper_amount</string>
     <string name="maintenance_amount">No of Logs to send</string>
     <string name="send_all_logs">Send Logs by Email</string>
     <string name="delete_logs">Delete Logs</string>
@@ -143,11 +141,9 @@
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exported %1$s ago</string>
     <string name="exported_at" comment="at placeholder we add export date">exported at %1$s</string>
     <string name="exported_less_than_hour_ago">exported less than hour ago</string>
-    <string name="in_directory" comment="placeholder is for exported file path">in directory: %1$s</string>
     <string name="preferences_import_list_title">Select file to import</string>
     <string name="metadata_warning_different_flavour">Preferences were created with different variant of AAPS (%1$s) while you have: %2$s.\n\nSome settings may be missing or invalid - after importing please check and update your preferences.</string>
     <string name="metadata_warning_different_device">Preferences were created on a different device. It is OK if you are importing from older/different phone, but make sure imported preferences are correct!</string>
-    <string name="metadata_warning_outdated_format">You are using the outdated legacy format from old versions of AAPS, which is not secure! Only use it as a last resort, if you do not have an export in current, JSON format.</string>
     <string name="metadata_warning_old_export">Imported preferences are already %1$s days old! Maybe you have more up-to-date preferences or you choose the wrong file? Remember to export preferences regularly!</string>
     <string name="metadata_warning_date_format">Invalid date-time format!</string>
     <string name="metadata_warning_different_version">Preferences from different minor version of application. It is OK if you are importing after upgrade, but check after import if preferences are still correct!</string>
@@ -167,9 +163,6 @@
     <!-- Custom Watchface -->
     <string name="wear_import_custom_watchface_title">Select Custom Watchface</string>
 
-    <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">Please reboot your phone or restart AAPS from the System Settings \notherwise Android APS will not have logging (important to track and verify that the algorithms are working correctly)!</string>
-
     <!-- Maintenance -->
     <string name="metadata_label_format">File format</string>
     <string name="metadata_label_created_at">Created at</string>
@@ -179,7 +172,8 @@
     <string name="metadata_label_device_model">Exporting device model</string>
     <string name="metadata_label_encryption">File encryption</string>
     <string name="metadata_format_new">New encrypted format</string>
-    <string name="metadata_format_debug">New debug format (unencrypted)</string>
     <string name="metadata_format_other">Unknown export format</string>
+    <string name="reset_aps_results">Reset APS results</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Error accessing filesystem. Select AAPS directory properly.</string>
 
 </resources>

@@ -2,15 +2,13 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_watchface_large">AAPS(Büyük)</string>
-    <string name="label_watchface_big_chart">AAPS(BüyükGrafik)</string>
-    <string name="label_watchface_no_chart">AAPS(GrafikYok)</string>
     <string name="label_watchface_circle">AAPS(Daire)</string>
     <string name="label_watchface_digital_style">AAPS(DijitalStil)</string>
     <string name="label_watchface_custom">AAPS(Özel)</string>
     <string name="label_actions_tile">AAPS(Eylemler)</string>
     <string name="label_temp_target_tile">AAPS(Geçici Hedef)</string>
     <string name="label_quick_wizard_tile">AAPS(Hızlı Asistan)</string>
+    <string name="label_user_action_tile">AAPS(Kullanıcı Eylemi)</string>
     <string name="label_warning_sync">Veri yok!</string>
     <string name="label_warning_old">Eski veri!</string>
     <string name="label_warning_since">%1$s den beri</string>
@@ -18,7 +16,6 @@
     <string name="msg_warning_sync">%1$s\' den bu yana veri alınmıyor! Telefondaki AAPS \' nin veri gönderip göndermediğini kontrol edin</string>
     <string name="msg_warning_old">AAPS verileri %1$s eski! Sensörleri denetleyin, xDrip+, NS, AAPS yapılandırma ya da diğerleri!</string>
     <string name="pref_vibrate_on_bolus">Bolus\'ta Titreşim</string>
-    <string name="pref_units_for_actions">Eylemler için Birimler</string>
     <string name="units_short">Ü</string>
     <string name="pref_display_settings">Ekran</string>
     <string name="pref_graph_settings">Grafik</string>
@@ -26,7 +23,7 @@
     <string name="pref_others_settings">Diğer</string>
     <string name="pref_complication_settings">Komplikasyon</string>
     <string name="pref_show_date">Tarihi Göster</string>
-    <string name="pref_show_iob">IOB\'yi göster</string>
+    <string name="pref_show_iob">AİNS göster</string>
     <string name="pref_show_detailed_iob">Ayrıntılı AİNS göster</string>
     <string name="pref_show_cob">AKRB göster</string>
     <string name="pref_show_delta">Deltayı göster</string>
@@ -35,6 +32,8 @@
     <string name="pref_show_phone_battery">Telefon Pilini Göster</string>
     <string name="pref_show_rig_battery">Teçhizat Pilini Göster</string>
     <string name="pref_show_basal_rate">Bazal Oranı Göster</string>
+    <string name="pref_show_temp_target">Geçici Hedefi Göster</string>
+    <string name="pref_show_reservoir_level">Rezervuar Seviyesini Göster</string>
     <string name="pref_show_loop_status">Döngü Durumunu Göster</string>
     <string name="pref_show_bg">KŞ\'ni göster</string>
     <string name="pref_show_bgi">KŞ Etkisi Göster</string>
@@ -53,15 +52,15 @@
     <string name="pref_3_hours">3 saat</string>
     <string name="pref_4_hours">4 saat</string>
     <string name="pref_5_hours">5 saat</string>
+    <string name="pref_1_min">Devre dışı</string>
+    <string name="pref_5_min">5 dk</string>
+    <string name="pref_10_min">10 dk</string>
+    <string name="pref_15_min">15 dk</string>
     <string name="pref_input_design">Giriş Tasarımı</string>
     <string name="pref_default">Varsayılan</string>
     <string name="pref_quick_righty">Hızlı Sağ</string>
     <string name="pref_quick_lefty">Hızlı Sol</string>
     <string name="pref_modern_sparse">Modern Seyrek</string>
-    <string name="pref_low">Düşük</string>
-    <string name="pref_medium">Orta</string>
-    <string name="pref_high">Yüksek</string>
-    <string name="pref_auto">Otomatik</string>
     <string name="pref_big_numbers">Büyük Sayılar</string>
     <string name="pref_ring_history">Zil Geçmişi</string>
     <string name="pref_light_ring_history">Düşük zil Geçmişi</string>
@@ -94,6 +93,7 @@
     <string name="action_duration">Süre</string>
     <string name="action_tempt_confirmation">Geçici hedef talebi</string>
     <string name="action_quick_wizard_confirmation">Hızlı asistan talebi</string>
+    <string name="action_user_action_confirmation">Kullanıcı Eylemi Gerekli</string>
     <string name="action_treatment_confirmation">Tedavi talebi</string>
     <string name="action_bolus_confirmation">Bolus talebi</string>
     <string name="action_wizard_confirmation">Hesaplama talebi</string>
@@ -115,7 +115,6 @@
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Serbest miktar</string>
     <string name="action_confirm">ONAYLA</string>
     <string name="action_timeshift">vardiya</string>
-    <string name="action_bolus">Bolus</string>
     <string name="bolus_progress">Bolus İlerlemesi</string>
     <string name="press_to_cancel">iptal etmek için basın</string>
     <string name="cancel_bolus">BOLUS İPTAL ET</string>
@@ -152,6 +151,8 @@
     <string name="pref_simplify_ui_sum">Yalnızca zamanı ve KŞ\'ni göster</string>
     <string name="pref_vibrate_hourly">Saatlik titreşim</string>
     <string name="pref_show_weeknumber">Hafta numarasını göster</string>
+    <string name="pref_include_external">Şablona harici görünümleri dahil et</string>
+    <string name="pref_switch_external">Saat arayüzünde harici verileri değiştir</string>
     <string name="custom_pref_show_seconds">Saniyeyi göster</string>
     <string name="digitalstyle_pref_your_style">Stilin:</string>
     <string name="digitalstyle_style_none">stil yok</string>
@@ -184,17 +185,11 @@
     <string name="no_iob_u">--Ü</string>
     <string name="no_cob_g">--g</string>
     <string name="no_tmp_basal_u_h">-.--Ü/sa</string>
-    <string name="uploader_na">Y: --%</string>
-    <string name="no_status">D: --</string>
-    <string name="time_stamp_na_min_ago">-- Dak. önce</string>
-    <string name="delta_na">--- mg/dl</string>
-    <string name="no_loop_status">Döngü Durumu Yok</string>
     <string name="cob_000g">000g</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00Ü</string>
     <string name="snooze_alert">AAPS Uyarı Erteleme</string>
     <string name="sending_snooze">AAPS\'ye Erteleme Gönderme</string>
-    <string name="short_hour">sa</string>
     <string name="week_short">h</string>
     <string name="day_short">g</string>
     <string name="hour_short">sa</string>
@@ -204,4 +199,28 @@
     <string name="old_warning">!eski!</string>
     <string name="error">!hata!</string>
     <string name="pref_heartRateSampling">Nabız</string>
+    <string name="pref_heartRateSmoothing">Nabız yumuşatma</string>
+    <string name="pref_stepsSampling">Adım Saymayı Etkinleştir</string>
+    <string name="tile_tempt_1">Geçici Hedef 1</string>
+    <string name="tile_tempt_2">Geçici Hedef 2</string>
+    <string name="tile_tempt_3">Geçici Hedef 3</string>
+    <string name="tile_tempt_4">Geçici Hedef 4</string>
+    <string name="tile_action_1">Eylem 1</string>
+    <string name="tile_action_2">Eylem 2</string>
+    <string name="tile_action_3">Eylem 3</string>
+    <string name="tile_action_4">Eylem 4</string>
+    <string name="datalayer_notification_title">Veri Katmanı Ön Plan Hizmeti</string>
+    <string name="datalayer_notification_text">AAPS ön planda çalışıyor. Bildirimi gizlemek için Geliştirici seçenekleri, Uygulama bildirimleri, İzin verilen saat uygulamaları\'na gidin, AAPS\'yi seçin, Veri Katmanı Ön Plan Hizmet Kanalı bildirimini kapatın.</string>
+    <string name="on">AÇIK</string>
+    <string name="off">KAPALI</string>
+    <string name="complication_full_status">Tam durum</string>
+    <string name="complication_full_status_flipped">Tam durum (çevrilmiş)</string>
+    <string name="complication_blood_glucose">Kan Şekeri</string>
+    <string name="complication_br_cob_iob">Nabız, AKRB &amp; AİNS</string>
+    <string name="complication_cob_iob">AKRB &amp; AİNS</string>
+    <string name="complication_cob_icon">AKRB simgesi</string>
+    <string name="complication_cob_detailed">Detaylı AKRB</string>
+    <string name="complication_iob_icon">AİNS simgesi</string>
+    <string name="complication_iob_detailed">Detaylı AiNS</string>
+    <string name="complication_uploader_phone_battery">Yükleyici/Telefon Pili</string>
 </resources>

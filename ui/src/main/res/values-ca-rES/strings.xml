@@ -69,18 +69,12 @@
     <!-- Treatments -->
     <string name="calculation_short">Calc</string>
     <string name="treatments_iob_label_string">IOB:</string>
-    <string name="treatments_insulin_label_string">Insulina:</string>
     <string name="treatments_carbs_label_string">Carbs:</string>
-    <string name="treatments_iobtotal_label_string">IOB total:</string>
-    <string name="treatments_iob_activity_total_label_string">Activitat total IOB:</string>
-    <string name="tempbasals_realduration_label_string">Durada:</string>
     <string name="tempbasals_netratio_label_string">Ràtio:</string>
-    <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="treatments_wizard_correction_label">Corr</string>
     <string name="meal_bolus">Àpat</string>
     <string name="prime">Encebar</string>
-    <string name="refresheventsfromnightscout">Actualitzar des de NS</string>
     <string name="user_entry">Entrada d\'usuari</string>
     <string name="clone_label">Duplicar</string>
     <!-- ProfileHelperActivity -->

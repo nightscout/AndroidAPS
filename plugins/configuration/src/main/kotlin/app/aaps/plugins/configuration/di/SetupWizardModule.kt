@@ -16,7 +16,6 @@ import app.aaps.plugins.configuration.setupwizard.elements.SWHtmlLink
 import app.aaps.plugins.configuration.setupwizard.elements.SWInfoText
 import app.aaps.plugins.configuration.setupwizard.elements.SWItem
 import app.aaps.plugins.configuration.setupwizard.elements.SWPlugin
-import app.aaps.plugins.configuration.setupwizard.elements.SWPreference
 import app.aaps.plugins.configuration.setupwizard.elements.SWRadioButton
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -36,7 +35,6 @@ abstract class SetupWizardModule {
     @ContributesAndroidInjector abstract fun swEditEncryptedPasswordInjector(): SWEditEncryptedPassword
     @ContributesAndroidInjector abstract fun swEditUrlInjector(): SWEditUrl
     @ContributesAndroidInjector abstract fun swFragmentInjector(): SWFragment
-    @ContributesAndroidInjector abstract fun swPreferenceInjector(): SWPreference
     @ContributesAndroidInjector abstract fun swHtmlLinkInjector(): SWHtmlLink
     @ContributesAndroidInjector abstract fun swInfoTextInjector(): SWInfoText
     @ContributesAndroidInjector abstract fun swItemInjector(): SWItem

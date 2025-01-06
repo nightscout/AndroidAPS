@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.ServiceConnection
-import android.os.Build
 import android.os.IBinder
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -26,13 +25,13 @@ import java.util.Queue
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
-
 /** GarminClient that talks via the ConnectIQ app to a physical device. */
 class GarminDeviceClient(
     private val aapsLogger: AAPSLogger,
     private val context: Context,
     private val receiver: GarminReceiver,
-    private val retryWaitFactor: Long = 5L): Disposable, GarminClient {
+    private val retryWaitFactor: Long = 5L
+) : Disposable, GarminClient {
 
     override val name = "Device"
     private var executor = Executors.newSingleThreadExecutor { r ->
@@ -40,13 +39,14 @@ class GarminDeviceClient(
             name = "Garmin callback"
             isDaemon = true
             uncaughtExceptionHandler = UncaughtExceptionHandler { _, e ->
-                aapsLogger.error(LTag.GARMIN, "ConnectIQ callback failed", e) }
+                aapsLogger.error(LTag.GARMIN, "ConnectIQ callback failed", e)
+            }
         }
     }
     private var bindLock = Object()
     private var ciqService: IConnectIQService? = null
         get() {
-            synchronized (bindLock) {
+            synchronized(bindLock) {
                 if (field?.asBinder()?.isBinderAlive != true) {
                     field = null
                     if (state !in arrayOf(State.BINDING, State.RECONNECTING)) {
@@ -69,8 +69,10 @@ class GarminDeviceClient(
     private val registeredActions = mutableSetOf<String>()
     private val broadcastReceiver = mutableListOf<BroadcastReceiver>()
     private var state = State.DISCONNECTED
-    private val serviceIntent get() = Intent(CONNECTIQ_SERVICE_ACTION).apply {
-        component = CONNECTIQ_SERVICE_COMPONENT }
+    private val serviceIntent
+        get() = Intent(CONNECTIQ_SERVICE_ACTION).apply {
+            component = CONNECTIQ_SERVICE_COMPONENT
+        }
 
     @VisibleForTesting
     val sendMessageAction = createAction("SEND_MESSAGE")
@@ -83,7 +85,7 @@ class GarminDeviceClient(
         RECONNECTING,
     }
 
-    private val ciqServiceConnection = object: ServiceConnection {
+    private val ciqServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             var notifyReceiver: Boolean
             val ciq: IConnectIQService
@@ -119,11 +121,7 @@ class GarminDeviceClient(
     }
 
     private fun bindService() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            context.bindService(serviceIntent, Context.BIND_AUTO_CREATE, executor, ciqServiceConnection)
-        } else {
-            context.bindService(serviceIntent, ciqServiceConnection, Context.BIND_AUTO_CREATE)
-        }
+        context.bindService(serviceIntent, Context.BIND_AUTO_CREATE, executor, ciqServiceConnection)
     }
 
     override val connectedDevices: List<GarminDevice>
@@ -149,8 +147,10 @@ class GarminDeviceClient(
     /** Registers a callback [BroadcastReceiver] under the given action that will
      * used by the ConnectIQ app for callbacks.*/
     private fun registerReceiver(action: String, receive: (intent: Intent) -> Unit) {
-        val recv = object: BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent) { receive(intent) }
+        val recv = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent) {
+                receive(intent)
+            }
         }
         broadcastReceiver.add(recv)
         context.registerReceiver(recv, IntentFilter(action))
@@ -160,7 +160,7 @@ class GarminDeviceClient(
         aapsLogger.info(LTag.GARMIN, "registerForMessage $name $app")
         val action = createAction("ON_MESSAGE_${app.device.id}_${app.id}")
         val iqApp = IQApp(app.id)
-        synchronized (registeredActions) {
+        synchronized(registeredActions) {
             if (!registeredActions.contains(action)) {
                 registerReceiver(action) { intent: Intent -> onReceiveMessage(iqApp, intent) }
                 ciqService?.registerApp(iqApp, action, context.packageName)
@@ -182,13 +182,13 @@ class GarminDeviceClient(
     /** Receives callback from ConnectIQ about message transfers. */
     private fun onSendMessage(intent: Intent) {
         val statusOrd = intent.getIntExtra(EXTRA_STATUS, IQMessageStatus.FAILURE_UNKNOWN.ordinal)
-        val status = IQMessageStatus.values().firstOrNull { s -> s.ordinal == statusOrd } ?: IQMessageStatus.FAILURE_UNKNOWN
+        val status = IQMessageStatus.entries.firstOrNull { s -> s.ordinal == statusOrd } ?: IQMessageStatus.FAILURE_UNKNOWN
         val deviceId = getDevice(intent)
         val appId = intent.getStringExtra(EXTRA_APPLICATION_ID)?.uppercase()
         if (deviceId == null || appId == null) {
             aapsLogger.warn(LTag.GARMIN, "onSendMessage device='$deviceId' app='$appId'")
         } else {
-            synchronized (messageQueues) {
+            synchronized(messageQueues) {
                 val queue = messageQueues[deviceId to appId]
                 val msg = queue?.peek()
                 if (queue == null || msg == null) {
@@ -198,16 +198,18 @@ class GarminDeviceClient(
 
                 var errorMessage: String? = null
                 when (status) {
-                    IQMessageStatus.SUCCESS -> {}
+                    IQMessageStatus.SUCCESS                 -> {}
+
                     IQMessageStatus.FAILURE_DEVICE_NOT_CONNECTED,
                     IQMessageStatus.FAILURE_DURING_TRANSFER -> {
                         if (msg.attempt < MAX_RETRIES) {
-                            val  delaySec = retryWaitFactor * msg.attempt
+                            val delaySec = retryWaitFactor * msg.attempt
                             Schedulers.io().scheduleDirect({ retryMessage(deviceId, appId) }, delaySec, TimeUnit.SECONDS)
                             return
                         }
                     }
-                    else -> {
+
+                    else                                    -> {
                         errorMessage = "error $status"
                     }
                 }
@@ -229,7 +231,9 @@ class GarminDeviceClient(
 
     private class Message(
         val app: GarminApplication,
-        val data: ByteArray) {
+        val data: ByteArray
+    ) {
+
         var attempt: Int = 0
         val creation = Instant.now()
         var lastAttempt: Instant? = null
@@ -237,10 +241,10 @@ class GarminDeviceClient(
         val iqDevice get() = app.device.toIQDevice()
     }
 
-    private val messageQueues = mutableMapOf<Pair<Long, String>, Queue<Message>> ()
+    private val messageQueues = mutableMapOf<Pair<Long, String>, Queue<Message>>()
 
     override fun sendMessage(app: GarminApplication, data: ByteArray) {
-        val msg = synchronized (messageQueues) {
+        val msg = synchronized(messageQueues) {
             val msg = Message(app, data)
             val oldMessageCutOff = Instant.now().minusSeconds(30)
             val queue = messageQueues.getOrPut(app.device.id to app.id) { LinkedList() }
@@ -262,7 +266,7 @@ class GarminDeviceClient(
     }
 
     private fun retryMessage(deviceId: Long, appId: String) {
-        val msg = synchronized (messageQueues) {
+        val msg = synchronized(messageQueues) {
             messageQueues[deviceId to appId]?.peek() ?: return
         }
         sendMessage(msg)
@@ -278,6 +282,7 @@ class GarminDeviceClient(
     override fun toString() = "$name[$state]"
 
     companion object {
+
         const val CONNECTIQ_SERVICE_ACTION = "com.garmin.android.apps.connectmobile.CONNECTIQ_SERVICE_ACTION"
         const val EXTRA_APPLICATION_ID = "com.garmin.android.connectiq.EXTRA_APPLICATION_ID"
         const val EXTRA_REMOTE_DEVICE = "com.garmin.android.connectiq.EXTRA_REMOTE_DEVICE"
@@ -285,7 +290,8 @@ class GarminDeviceClient(
         const val EXTRA_STATUS = "com.garmin.android.connectiq.EXTRA_STATUS"
         val CONNECTIQ_SERVICE_COMPONENT = ComponentName(
             "com.garmin.android.apps.connectmobile",
-            "com.garmin.android.apps.connectmobile.connectiq.ConnectIQService")
+            "com.garmin.android.apps.connectmobile.connectiq.ConnectIQService"
+        )
 
         const val MAX_RETRIES = 10
     }

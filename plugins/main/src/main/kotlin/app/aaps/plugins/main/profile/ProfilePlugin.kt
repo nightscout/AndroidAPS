@@ -1,10 +1,10 @@
 package app.aaps.plugins.main.profile
 
 import androidx.fragment.app.FragmentActivity
-import app.aaps.annotations.OpenForTesting
+import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.configuration.Constants
-import app.aaps.core.interfaces.db.GlucoseUnit
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
@@ -12,7 +12,6 @@ import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileSource
@@ -24,17 +23,17 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventLocalProfileChanged
 import app.aaps.core.interfaces.rx.events.EventProfileStoreChanged
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.core.main.extensions.blockFromJsonArray
-import app.aaps.core.main.extensions.pureProfileFromJson
-import app.aaps.core.main.profile.ProfileSealed
+import app.aaps.core.objects.extensions.blockFromJsonArray
+import app.aaps.core.objects.extensions.pureProfileFromJson
+import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.main.R
-import dagger.android.HasAndroidInjector
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -42,10 +41,8 @@ import java.util.TimeZone
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@OpenForTesting
 @Singleton
 class ProfilePlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     rh: ResourceHelper,
@@ -57,18 +54,20 @@ class ProfilePlugin @Inject constructor(
     private val dateUtil: DateUtil,
     private val config: Config,
     private val instantiator: Instantiator,
-    private val decimalFormatter: DecimalFormatter
+    private val decimalFormatter: DecimalFormatter,
+    private val uiInteraction: UiInteraction
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.PROFILE)
         .fragmentClass(ProfileFragment::class.java.name)
         .enableByDefault(true)
-        .pluginIcon(app.aaps.core.main.R.drawable.ic_local_profile)
+        .simpleModePosition(PluginDescription.Position.TAB)
+        .pluginIcon(app.aaps.core.objects.R.drawable.ic_local_profile)
         .pluginName(R.string.localprofile)
         .shortName(R.string.localprofile_shortname)
         .description(R.string.description_profile_local)
         .setDefault(),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), ProfileSource {
 
     private var rawProfile: ProfileStore? = null
@@ -81,7 +80,7 @@ class ProfilePlugin @Inject constructor(
     }
 
     var isEdited: Boolean = false
-    var profiles: ArrayList<ProfileSource.SingleProfile> = ArrayList()
+    private var profiles: ArrayList<ProfileSource.SingleProfile> = ArrayList()
 
     val numOfProfiles get() = profiles.size
     override var currentProfileIndex = 0
@@ -115,11 +114,11 @@ class ProfilePlugin @Inject constructor(
                     ToastUtils.errorToast(activity, rh.gs(R.string.error_in_basal_values))
                     return false
                 }
-                if (low?.all { hardLimits.isInRange(it.amount, HardLimits.VERY_HARD_LIMIT_MIN_BG[0], HardLimits.VERY_HARD_LIMIT_MIN_BG[1]) } == false) {
+                if (low?.all { hardLimits.isInRange(it.amount, HardLimits.LIMIT_MIN_BG[0], HardLimits.LIMIT_MIN_BG[1]) } == false) {
                     ToastUtils.errorToast(activity, rh.gs(R.string.error_in_target_values))
                     return false
                 }
-                if (high?.all { hardLimits.isInRange(it.amount, HardLimits.VERY_HARD_LIMIT_MAX_BG[0], HardLimits.VERY_HARD_LIMIT_MAX_BG[1]) } == false) {
+                if (high?.all { hardLimits.isInRange(it.amount, HardLimits.LIMIT_MAX_BG[0], HardLimits.LIMIT_MAX_BG[1]) } == false) {
                     ToastUtils.errorToast(activity, rh.gs(R.string.error_in_target_values))
                     return false
                 }
@@ -132,11 +131,11 @@ class ProfilePlugin @Inject constructor(
                     ToastUtils.errorToast(activity, rh.gs(R.string.error_in_basal_values))
                     return false
                 }
-                if (low?.all { hardLimits.isInRange(profileUtil.convertToMgdl(it.amount, GlucoseUnit.MMOL), HardLimits.VERY_HARD_LIMIT_MIN_BG[0], HardLimits.VERY_HARD_LIMIT_MIN_BG[1]) } == false) {
+                if (low?.all { hardLimits.isInRange(profileUtil.convertToMgdl(it.amount, GlucoseUnit.MMOL), HardLimits.LIMIT_MIN_BG[0], HardLimits.LIMIT_MIN_BG[1]) } == false) {
                     ToastUtils.errorToast(activity, rh.gs(R.string.error_in_target_values))
                     return false
                 }
-                if (high?.all { hardLimits.isInRange(profileUtil.convertToMgdl(it.amount, GlucoseUnit.MMOL), HardLimits.VERY_HARD_LIMIT_MAX_BG[0], HardLimits.VERY_HARD_LIMIT_MAX_BG[1]) } == false) {
+                if (high?.all { hardLimits.isInRange(profileUtil.convertToMgdl(it.amount, GlucoseUnit.MMOL), HardLimits.LIMIT_MAX_BG[0], HardLimits.LIMIT_MAX_BG[1]) } == false) {
                     ToastUtils.errorToast(activity, rh.gs(R.string.error_in_target_values))
                     return false
                 }
@@ -236,19 +235,20 @@ class ProfilePlugin @Inject constructor(
             val newProfiles: ArrayList<ProfileSource.SingleProfile> = ArrayList()
             for (p in store.getProfileList()) {
                 val profile = store.getSpecificProfile(p.toString())
-                val validityCheck = profile?.let { ProfileSealed.Pure(profile).isValid("NS", activePlugin.activePump, config, rh, rxBus, hardLimits, false) } ?: Profile.ValidityCheck()
+                val validityCheck = profile?.let { ProfileSealed.Pure(profile, activePlugin).isValid("NS", activePlugin.activePump, config, rh, rxBus, hardLimits, false) } ?: Profile.ValidityCheck()
                 if (profile != null && validityCheck.isValid) {
                     val sp = copyFrom(profile, p.toString())
                     sp.name = p.toString()
                     newProfiles.add(sp)
                 } else {
-                    activePlugin.activeOverview.addNotificationWithDialogResponse(
-                        Notification.INVALID_PROFILE_NOT_ACCEPTED,
-                        rh.gs(R.string.invalid_profile_not_accepted, p.toString()),
-                        Notification.NORMAL,
-                        R.string.view,
-                        rh.gs(R.string.errors),
-                        validityCheck.reasons.joinToString(separator = "\n")
+                    uiInteraction.addNotificationWithDialogResponse(
+                        id = Notification.INVALID_PROFILE_NOT_ACCEPTED,
+                        text = rh.gs(R.string.invalid_profile_not_accepted, p.toString()),
+                        level = Notification.NORMAL,
+                        buttonText = R.string.view,
+                        title = rh.gs(R.string.errors),
+                        message = validityCheck.reasons.joinToString(separator = "\n"),
+                        validityCheck = null
                     )
                 }
             }
@@ -271,7 +271,7 @@ class ProfilePlugin @Inject constructor(
         if (rawProfile?.getSpecificProfile(newName) != null) {
             verifiedName += " " + dateUtil.now().toString()
         }
-        val profile = ProfileSealed.Pure(pureProfile)
+        val profile = ProfileSealed.Pure(pureProfile, activePlugin)
         val pureJson = pureProfile.jsonObject
         return ProfileSource.SingleProfile(
             name = verifiedName,
@@ -386,7 +386,7 @@ class ProfilePlugin @Inject constructor(
         isEdited = false
     }
 
-    fun createProfileStore(): ProfileStore {
+    private fun createProfileStore(): ProfileStore {
         val json = JSONObject()
         val store = JSONObject()
 
@@ -423,6 +423,6 @@ class ProfilePlugin @Inject constructor(
 
     override val profileName: String
         get() = rawProfile?.getDefaultProfile()?.let {
-            decimalFormatter.to2Decimal(ProfileSealed.Pure(it).percentageBasalSum()) + "U "
+            decimalFormatter.to2Decimal(ProfileSealed.Pure(it, activePlugin).percentageBasalSum()) + "U "
         } ?: "INVALID"
 }

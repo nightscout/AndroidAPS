@@ -1,29 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
-    <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
-    <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="nav_preferences_plugin">%1$s indstillinger</string>
-    <string name="nav_refreshtreatments">Opdater behandlinger fra NS</string>
     <string name="nav_exit">Afslut</string>
     <string name="delta">Delta</string>
-    <string name="profile_label">Profil</string>
     <string name="save">Gem</string>
-    <string name="reloadprofile">Genindlæs profil</string>
-    <string name="correctionbous">Korrektion</string>
-    <string name="ns_upload_only">(FARLIG AT DEAKTIVERE) Kun NS upload</string>
-    <string name="ns_upload_only_summary">Kun NS upload (Synkronisering deaktiveret). Ikke effektiv på SVG medmindre en lokal kilde såsom xDrip+ er valgt. Ikke effektiv på profiler når NS-Profil bliver brugt.\n!!! ADVSRSEL !!! Deaktivering af denne indstilling kan forårsage funktionsfejl og overdosis af insulin hvis nogle af dine komponenter (AAPS, NS xDrip+) er konfigureret forkert. Kig nøje efter om data fra AAPS matcher pumpens tilstand!</string>
     <string name="wear">Ur</string>
     <string name="nav_about">Om</string>
-    <string name="smscommunicator_missingphonestatepermission">Manglende telefonstatus tilladelse</string>
-    <string name="ns_alarm_options">Indstillinger for alarm</string>
-    <string name="ns_alarms">Opret notifikationer fra NS-alarmer</string>
-    <string name="ns_announcements">Opret notifikationer fra NS-meddelelser</string>
-    <string name="ns_alarm_stale_data_value_label">Forældet data grænse [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Akut forældet data grænse [min]</string>
     <string name="sensitivity_warning">Ved at slå funktionen Autosense til husk at indtaste alle spiste kulhydrater. Ellers vil kulhydrat afvigelser blive identificeret forkert som følsomheds ændring !!</string>
-    <string name="notloadedplugins">Ikke alle profiler er indlæst!</string>
-    <string name="valuesnotstored">Værdier ikke gemt!</string>
     <string name="invalid">UGYLDIG</string>
     <string name="gradually_increase_notification_volume">Gradvis øg lydstyrken for advarsler og meddelelser</string>
     <string name="localalertsettings_title">Lokale advarsler</string>
@@ -35,24 +18,11 @@
     <string name="close_navigation">Luk navigation</string>
     <string name="remove_items">Fjern elementer</string>
     <string name="sort_items">Sortér elementer</string>
-    <string name="error_adding_treatment_title">Behandlingsdata ukomplette</string>
-    <string name="error_adding_treatment_message">En behandling (insulin: %1$.2f, kulhydrater: %2$d, kl: %3$s) kunne ikke tilføjes til behandlinger. Tjek og tilføj venligst en note manuelt efter behov.</string>
-    <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), forsinkelse: %3$d m</string>
-    <string name="profile_total">== ∑  %1$s IE</string>
     <string name="unitsnosemicolon">Enheder</string>
-    <string name="show_removed">Vis fjernede</string>
-    <string name="clearqueueconfirm">Ryd køen? Alle data i køen vil gå tabt!</string>
-    <string name="chartmenu">Diagrammenu</string>
     <string name="authorizationfailed">Godkendelse mislykkedes</string>
-    <string name="copytolocalprofile_invalid">Kunne ikke oprette profil. Profilen er ugyldig.</string>
-    <string name="clear_filter">Nulstil filter</string>
     <string name="cannula">Kanyle</string>
-    <string name="email_address">E-mail adresse</string>
-    <string name="remove_bg_readings">Fjern BG aflæsninger</string>
     <string name="identification_not_set">Identifikation ikke indstillet i udvikler-tilstand</string>
-    <string name="a11y_dialog">dialog</string>
     <!-- WEAR OS-->
-    <string name="wear_unknown_action_string">Ukendt kommando:</string>
     <string name="remove_selected_items">Fjern valgte elementer</string>
     <string name="count_selected">%1$d valgt</string>
     <string name="sort_label">Sortér</string>

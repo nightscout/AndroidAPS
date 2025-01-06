@@ -3,12 +3,10 @@
     <string name="eopatch_shortname">이오패치</string>
     <string name="eopatch_pump_description">Pump integration for eopatch</string>
 
-    <string name="category_alerts">알람</string>
     <string name="low_reservoir">인슐린 부족 위험주의</string>
     <string name="patch_expiration_reminders">패치 사용 기간 만료 알림</string>
     <string name="patch_buzzer_reminders">패치 버저 알림</string>
 
-    <string name="time_format_a_h_mm">h:mm a</string>
     <string name="eopatch_ble_status">BLE 상태</string>
     <string name="eopatch_serial_number">일련 번호</string>
     <string name="eopatch_lot_number">로트 번호</string>
@@ -32,7 +30,6 @@
     <string name="time_1hr_30min">1시간 30분</string>
     <string name="time_2hr">2시간</string>
 
-    <string name="all_blank">\u0020</string>
     <string name="patch_safe_deactivation_desc">패치 교체를 시작하려면 사용 중인 패치를 폐기해야 합니다. 지금 사용 중인 패치의 모든 인슐린 주입이 취소됩니다.</string>
     <string name="patch_discard_complete_title">패치 폐기 완료</string>
     <string name="patch_discard_complete_desc">패치 사용이 중단되었습니다.\n패치를 폐기하세요.\n몸에 부착된 패치는 제거하세요.</string>
@@ -44,9 +41,6 @@
     <string name="patch_remaining_usage_period">잔여 사용 기간</string>
     <string name="patch_finish">마침</string>
     <string name="patch_forced_discard">강제 폐기</string>
-    <string name="patch_comm_error_during_discard_status">폐기 중 통신 오류</string>
-    <string name="patch_comm_error_during_discard_desc">패치를 정상적으로 사용 중단하려면 \'재시도\'를 터치하세요.\n패치를 강제로 사용 중단하려면 \'강제 폐기\'를 터치하세요.</string>
-    <string name="patch_comm_error_during_discard_desc_1">패치를 정상적으로 사용 중단하려면 \'재시도\'를 터치하세요.</string>
     <string name="patch_comm_error_during_discard_desc_2">패치를 강제로 사용 중단하려면 \'강제 폐기\'를 터치하세요.</string>
     <string name="patch_manually_turning_off_alarm_title">패치 알람을 수동으로 끄기</string>
     <string name="patch_manually_turning_off_alarm_desc_1">패치와 통신이 불가한 상태에서 강제로 사용을 중단하면, 패치에서 경보음이 정상적으로 멈추지 않을 수 있습니다.</string>
@@ -88,8 +82,6 @@
     <string name="patch_expiration_reminder_setting_title">패치 사용기간 만료 임박 알림</string>
     <string name="patch_activate_reminder_title">패치 적용 알림</string>
     <string name="patch_activate_reminder_desc">패치 적용이 완료되지 않았습니다.\n패치 적용을 시작합니다.</string>
-    <string name="patch_communication_check">패치 통신 점검</string>
-    <string name="patch_communication_check_status_1">패치 통신 점검 중입니다…</string>
     <string name="patch_communication_check_helper_1">스마트 기기를 패치에 가까이 가져가세요.</string>
     <string name="patch_communication_check_helper_2">다른 장소로 이동 후 재시도하세요.</string>
     <string name="patch_communication_failed">패치 통신 오류</string>
@@ -120,7 +112,6 @@
     <string name="retry">재시도</string>
     <string name="string_caution_not_remove_needle_cap">[주의] 별도의 지시가 있기 전까지 보호 테이프 및 바늘 덮개를 분리하지 마세요.</string>
     <string name="string_are_you_sure_to_discard_current_patch">정말 사용 중인 패치를 폐기하시겠습니까?</string>
-    <string name="string_unconfirmed_bolus_info_discard_confirm_message">미확인 볼루스 정보가 존재하여 %s까지 볼루스 계산기를 사용할 수 없습니다.\n\n그래도 폐기하시겠습니까?</string>
     <string name="needle_insertion_error_1">바늘 삽입 오류.</string>
     <string name="needle_insertion_error_2">바늘 작동버튼을 점검하신 후 \'재시도\'를 터치하세요.</string>
     <string name="needle_insertion_error_3">패치를 사용 중단하려면 \'폐기\'를 터치하세요.</string>
@@ -132,7 +123,6 @@
     <string name="finish">완료</string>
     <string name="string_temp_basal_remained_hhmm">%1$s시간 %2$s분 남음</string>
     <string name="next">다음</string>
-    <string name="patch_connection_fail">패치 통신 점검 후 다시 시도하세요.</string>
     <string name="string_pause_failed">주입 정지가 실패하였습니다.</string>
     <string name="string_resume_failed">주입 재개가 실패하였습니다.</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">yyyy. M. d (E) a hh:mm</string>

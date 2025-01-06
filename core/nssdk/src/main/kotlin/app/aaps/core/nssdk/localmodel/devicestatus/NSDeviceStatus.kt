@@ -65,9 +65,11 @@ data class NSDeviceStatus(
         @SerializedName("pump") val pump: String?,
         @SerializedName("version") val version: String?,
         @SerializedName("insulin") val insulin: Int?,
+        @SerializedName("aps") val aps: String?,
         @SerializedName("sensitivity") val sensitivity: Int?,
         @SerializedName("smoothing") val smoothing: String?,
         @Contextual @SerializedName("insulinConfiguration") val insulinConfiguration: JSONObject?,
+        @Contextual @SerializedName("apsConfiguration") val apsConfiguration: JSONObject?,
         @Contextual @SerializedName("sensitivityConfiguration") val sensitivityConfiguration: JSONObject?,
         @Contextual @SerializedName("overviewConfiguration") val overviewConfiguration: JSONObject?,
         @Contextual @SerializedName("safetyConfiguration") val safetyConfiguration: JSONObject?

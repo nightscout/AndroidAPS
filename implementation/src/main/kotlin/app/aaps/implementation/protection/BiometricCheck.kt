@@ -17,9 +17,10 @@ import androidx.biometric.BiometricPrompt.ERROR_USER_CANCELED
 import androidx.biometric.BiometricPrompt.ERROR_VENDOR
 import androidx.biometric.BiometricPrompt.PromptInfo
 import androidx.fragment.app.FragmentActivity
-import app.aaps.core.interfaces.extensions.runOnUiThread
 import app.aaps.core.interfaces.protection.PasswordCheck
+import app.aaps.core.keys.StringKey
 import app.aaps.core.ui.R
+import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.core.ui.toast.ToastUtils
 import java.util.concurrent.Executors
 
@@ -42,7 +43,7 @@ object BiometricCheck {
                         ToastUtils.errorToast(activity.baseContext, errString.toString())
                         // fallback to master password
                         runOnUiThread {
-                            passwordCheck.queryPassword(activity, R.string.master_password, app.aaps.core.utils.R.string.key_master_password, { ok?.run() }, { cancel?.run() }, { fail?.run() })
+                            passwordCheck.queryPassword(activity, R.string.master_password, StringKey.ProtectionMasterPassword.key, { ok?.run() }, { cancel?.run() }, { fail?.run() })
                         }
                     }
 
@@ -54,7 +55,7 @@ object BiometricCheck {
                         // no pin set
                         // fallback to master password
                         runOnUiThread {
-                            passwordCheck.queryPassword(activity, R.string.master_password, app.aaps.core.utils.R.string.key_master_password, { ok?.run() }, { cancel?.run() }, { fail?.run() })
+                            passwordCheck.queryPassword(activity, R.string.master_password, StringKey.ProtectionMasterPassword.key, { ok?.run() }, { cancel?.run() }, { fail?.run() })
                         }
                     }
 
@@ -63,7 +64,7 @@ object BiometricCheck {
                     ERROR_HW_NOT_PRESENT,
                     ERROR_NO_BIOMETRICS        ->
                         runOnUiThread {
-                            passwordCheck.queryPassword(activity, R.string.master_password, app.aaps.core.utils.R.string.key_master_password, { ok?.run() }, { cancel?.run() }, { fail?.run() })
+                            passwordCheck.queryPassword(activity, R.string.master_password, StringKey.ProtectionMasterPassword.key, { ok?.run() }, { cancel?.run() }, { fail?.run() })
                         }
                 }
             }

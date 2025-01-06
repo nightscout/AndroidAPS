@@ -46,7 +46,7 @@ class Comparator(private val rh: ResourceHelper) : Element {
 
             fun labels(rh: ResourceHelper): List<String> {
                 val list: MutableList<String> = ArrayList()
-                for (c in values()) {
+                for (c in Compare.entries) {
                     list.add(rh.gs(c.stringRes))
                 }
                 return list
@@ -71,7 +71,7 @@ class Comparator(private val rh: ResourceHelper) : Element {
                 }
                 onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                        value = Compare.values()[position]
+                        value = Compare.entries.toTypedArray()[position]
                     }
 
                     override fun onNothingSelected(parent: AdapterView<*>?) {}

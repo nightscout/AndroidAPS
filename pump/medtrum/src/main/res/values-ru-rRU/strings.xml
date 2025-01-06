@@ -49,7 +49,6 @@
     <string name="alarm_expired">Срок истек</string>
     <string name="alarm_reservoir_empty">Резервуар пуст</string>
     <string name="alarm_patch_fault">Ошибка патча</string>
-    <string name="alarm_patch_fault2">Ошибка патча 2</string>
     <string name="alarm_base_fault">Ошибка базы</string>
     <string name="alarm_battery_out">Батарея разряжена</string>
     <string name="alarm_no_calibration">Нет калибровки</string>
@@ -79,6 +78,7 @@
     <string name="patch_not_active_note">Не соединяйте основание и патч до следующего шага!</string>
     <string name="connect_pump_base">Соедините основание помпы и новый патч, удалите воздух и заполните инсулином, затем нажмите <b>Далее</b>.</string>
     <string name="note_min_70_units">Примечание: для активации требуется заполнить минимум 70 единиц.</string>
+    <string name="reservoir_text_and_level">Резервуар: %.2fед</string>
     <string name="do_not_attach_to_body">Пока не устанавливайте патч на тело.</string>
     <string name="half_press_needle">Слегка нажмите на кнопку иглы. Затем нажмите <b>Далее</b> для начала заправки.</string>
     <string name="wait_for_priming">Дождитесь окончания заправки.</string>
@@ -89,6 +89,7 @@
     <string name="activating_pump">Активация помпы и установка базальной скорости. Пожалуйста, подождите.</string>
     <string name="activating_error">Сбой активации, нажмите <b>Повторить</b>, чтобы попробовать еще раз.</string>
     <string name="activating_complete">Новый патч активирован. Заполнение %.2f единиц.</string>
+    <string name="can_export_settings">Можно экспортировать настройки, чтобы затем восстановить эту сессию патча.</string>
     <string name="press_OK_to_return">Нажмите <b>OK</b> для возврата к главному экрану.</string>
     <string name="deactivate_sure">Вы уверены, что хотите деактивировать текущий патч?</string>
     <string name="cancel_sure">Вы уверены, что хотите отменить активацию?</string>
@@ -108,7 +109,7 @@
     <string name="sn_input_title">Серийный номер</string>
     <string name="sn_input_summary">Введите серийный номер основания вашей помпы.</string>
     <string name="sn_input_invalid">Неверный серийный номер!</string>
-    <string name="pump_unsupported">Помпа не тестировалась: %1$d! Свяжитесь с нами в discord или github</string>
+    <string name="pump_unsupported">Помпа не тестировалась: %1$s! Свяжитесь с нами в discord или github по поводу поддержки</string>
     <string name="alarm_setting_title">Настройки оповещений</string>
     <string name="alarm_setting_summary">Выберите предпочитаемые параметры оповещений помпы.</string>
     <string name="pump_warning_notification_title">Уведомление об оповещениях помпы</string>
@@ -121,9 +122,19 @@
     <string name="hourly_max_insulin_summary">Укажите максимальное количество инсулина, допустимое для ввода в течение часа. Если оно будет превышено - помпа будет приостановлена.</string>
     <string name="daily_max_insulin_title">Максимальное количество инсулина в сутки</string>
     <string name="daily_max_insulin_summary">Укажите максимальное количество инсулина, допустимое для ввода в течение суток. Если оно будет превышено - помпа будет приостановлена.</string>
+    <string name="scan_on_connection_error_title">Ошибка соединения</string>
+    <string name="scan_on_connection_error_summary">ВНИМАНИЕ: Включайте только в случае проблем с подключением. Если включено, драйвер выполняет повторный поиск для подключения к помпе. Убедитесь, что доступ к местоположению установлен на \"Всегда разрешать\" </string>
     <!-- treatment state-->
     <string name="getting_pump_status">Получение статуса помпы</string>
+    <string name="syncing_records">Синхронизация записей, осталось %1$d</string>
     <string name="getting_bolus_status">Получение статуса болюса</string>
     <string name="getting_temp_basal_status">Получение статуса ВБС</string>
     <string name="setting_pump_settings">Настройка параметров пользователя</string>
+    <!-- bolus-->
+    <string name="bolus_error_reason_user">Болюс был отменен пользователем</string>
+    <string name="bolus_error_reason_not_connected">Помпа не подключена</string>
+    <string name="bolus_error_reason_already_in_progress">Болюс уже выполняется</string>
+    <string name="bolus_error_reason_unable_to_send_command">Невозможно отправить команду на болюс</string>
+    <string name="bolus_error_reason_communication_lost">Истекло время ожидания статуса болюса</string>
+    <string name="bolus_error_reason_pump_error">Ошибка помпы</string>
 </resources>

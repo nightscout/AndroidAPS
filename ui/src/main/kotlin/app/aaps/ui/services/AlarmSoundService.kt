@@ -1,6 +1,5 @@
 package app.aaps.ui.services
 
-import android.content.Context
 import android.content.Intent
 import android.media.AudioManager
 import android.media.MediaPlayer
@@ -12,7 +11,8 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.NotificationHolder
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.Preferences
 import dagger.android.DaggerService
 import javax.inject.Inject
 import kotlin.math.ln
@@ -23,7 +23,7 @@ class AlarmSoundService : DaggerService() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var notificationHolder: NotificationHolder
-    @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
 
     private var player: MediaPlayer? = null
     private var resourceId = app.aaps.core.ui.R.raw.error
@@ -82,7 +82,7 @@ class AlarmSoundService : DaggerService() {
             player?.isLooping = true
             val audioManager = getAudioManager()
             if (!audioManager.isMusicActive) {
-                if (sp.getBoolean(app.aaps.core.utils.R.string.key_gradually_increase_notification_volume, false)) {
+                if (preferences.get(BooleanKey.AlertIncreaseVolume)) {
                     currentVolumeLevel = 0
                     player?.setVolume(0f, 0f)
                     increaseVolumeHandler.postDelayed(volumeUpdater, VOLUME_INCREASE_INITIAL_SILENT_TIME_MILLIS)
@@ -107,7 +107,7 @@ class AlarmSoundService : DaggerService() {
         aapsLogger.debug(LTag.CORE, "onDestroy End")
     }
 
-    private fun getAudioManager() = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+    private fun getAudioManager() = getSystemService(AUDIO_SERVICE) as AudioManager
 
     // TODO replace with VolumeShaper when min API level >= 26
     private val volumeUpdater = object : Runnable {

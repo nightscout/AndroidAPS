@@ -5,7 +5,6 @@ import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.plugins.main.general.persistentNotification.DummyService
 import app.aaps.plugins.main.general.smsCommunicator.SmsCommunicatorPlugin
 import app.aaps.plugins.main.iob.iobCobCalculator.IobCobCalculatorPlugin
-import app.aaps.plugins.main.iob.iobCobCalculator.data.AutosensDataObject
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -18,7 +17,6 @@ import dagger.android.ContributesAndroidInjector
         ProfileModule::class,
         ProfileModule.Bindings::class,
         SkinsModule::class,
-        SkinsUiModule::class,
         ActionsModule::class,
         OverviewModule::class,
     ]
@@ -28,7 +26,6 @@ import dagger.android.ContributesAndroidInjector
 abstract class PluginsModule {
 
     @ContributesAndroidInjector abstract fun contributesDummyService(): DummyService
-    @ContributesAndroidInjector abstract fun autosensDataObjectInjector(): AutosensDataObject
 
     @Module
     interface Bindings {

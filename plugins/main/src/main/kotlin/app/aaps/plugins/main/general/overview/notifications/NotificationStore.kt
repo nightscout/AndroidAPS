@@ -25,6 +25,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.databinding.OverviewNotificationItemBinding
 import app.aaps.plugins.main.general.overview.notifications.events.EventUpdateOverviewNotification
+import app.aaps.plugins.main.general.overview.notifications.receivers.DismissNotificationReceiver
 import java.util.Collections
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -98,6 +99,12 @@ class NotificationStore @Inject constructor(
                 store.removeAt(i)
                 i--
             }
+            if (n is NotificationWithAction) {
+                if (n.validityCheck?.invoke() == false) {
+                    store.removeAt(i)
+                    i--
+                }
+            }
             i++
         }
     }
@@ -127,9 +134,8 @@ class NotificationStore @Inject constructor(
     }
 
     private fun deleteIntent(id: Int): PendingIntent {
-        val intent = Intent(context, DismissNotificationService::class.java)
-        intent.putExtra("alertID", id)
-        return PendingIntent.getService(context, id, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+        val intent = Intent(DismissNotificationReceiver.ACTION).putExtra("alertID", id)
+        return PendingIntent.getBroadcast(context, id, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
     fun createNotificationChannel() {

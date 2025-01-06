@@ -4,7 +4,6 @@
     <string name="combov2_plugin_description">Нативная интеграция с помпами Accu-Chek Combo</string>
     <string name="combov2_could_not_connect">Не удалось подключиться к помпе</string>
     <string name="combov2_not_paired">Нет сопряжения с помпой</string>
-    <string name="combov2_pump_terminated_connection">Помпа прекратила подключение</string>
     <string name="combov2_warning">Предупреждение от Combo</string>
     <string name="combov2_error">Ошибка Combo</string>
     <string name="combov2_warning_4">Позвонить на Горячую линию для обновления</string>
@@ -116,8 +115,6 @@
     <string name="combov2_short_status_battery_state">Батарея: %s</string>
     <string name="combov2_automatic_reservoir_entry">Автоматически определять и вносить запись о замене резервуара инсулина</string>
     <string name="combov2_automatic_battery_entry">Автоматически определять и вносить запись о замене батареи</string>
-    <string name="combov2_note_reservoir_change">Запись о замене резервуара инсулина автоматически вносится драйвером combov2</string>
-    <string name="combov2_note_battery_change">Запись о замене батареи автоматически вносится драйвером combov2</string>
     <string name="combov2_timezone_changed">Часовой пояс изменен</string>
     <string name="combov2_datetime_changed">Дата и/или время изменены</string>
     <string name="combov2_dst_started">Начато летнее/зимнее время (ДСТ)</string>

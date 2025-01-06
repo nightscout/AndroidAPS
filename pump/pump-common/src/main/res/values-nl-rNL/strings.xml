@@ -2,9 +2,6 @@
 <resources>
     <!-- PumoCommon - Pump Abstract -->
     <string name="pump_operation_not_supported_by_pump_driver">Bewerking niet ondersteund door pomp en/of driver.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">Operatie NOG niet ondersteund door de pomp.</string>
-    <string name="common_resultok">OK</string>
-    <string name="pump_serial_number">Serienummer van de pomp</string>
     <string name="bolus_delivered_so_far">%1$.2f E / %2$.2f E toegediend</string>
     <!-- PumpCommon - Pump Status -->
     <string name="pump_status_not_initialized">Niet geïnitialiseerd</string>
@@ -46,33 +43,9 @@
     <string name="ble_config_scan_scanning">Scannen</string>
     <string name="ble_config_scan_finished">Scannen voltooid</string>
     <string name="ble_config_scan_error">Scanfout: %1$d</string>
-    <string name="ble_config_connected_never">Nooit</string>
     <string name="ble_config_remove">Verwijderen</string>
-    <!-- BLE Errors -->
-    <string name="ble_error_bt_disabled">Bluetooth is uitgeschakeld</string>
-    <string name="ble_error_no_bt_adapter">Geen Bluetooth Adapter</string>
-    <string name="ble_error_configured_pump_not_found">Geconfigureerde pomp niet gevonden</string>
-    <string name="ble_error_pump_unreachable">Pomp niet bereikbaar</string>
-    <string name="ble_error_failed_to_conn_to_ble_device">Verbinding maken met BLE Apparaat mislukt</string>
-    <string name="ble_error_encryption_failed">Versleutelen is mislukt</string>
-    <string name="ble_error_pump_found_unbonded">Niet gekoppelde pomp gevonden</string>
-    <!-- Pump Error -->
-    <string name="pump_settings_error_basal_profiles_not_enabled">De instelling voor basaalprofielen/schemas is niet ingeschakeld op de pomp. Schakel dit in op de pomp.</string>
-    <string name="pump_settings_error_incorrect_basal_profile_selected">Basaal profiel ingesteld op pomp is onjuist (moet %s zijn).</string>
-    <string name="pump_settings_error_wrong_tbr_type_set">Verkeerd TBR-type ingesteld op pomp (moet %s zijn).</string>
-    <string name="pump_settings_error_wrong_max_bolus_set">Verkeerde Max Bolus instelling op pomp (moet %1$.2f zijn).</string>
-    <string name="pump_settings_error_wrong_max_basal_set">Verkeerde Max Basaal instelling op pomp (moet %1$.2f zijn).</string>
     <!-- Pump History -->
     <string name="pump_history_type">Type:</string>
-    <!-- PumpDeviceState -->
-    <string name="pump_status_never_contacted">Nooit verbonden</string>
-    <string name="pump_status_sleeping">Slapend</string>
-    <string name="pump_status_waking_up">Actief worden</string>
-    <string name="pump_status_active">Actief</string>
-    <string name="pump_status_error_comm">Communicatiefout</string>
-    <string name="pump_status_timeout_comm">Time-out bij communicatie</string>
-    <string name="pump_status_pump_unreachable">Pomp niet bereikbaar</string>
-    <string name="pump_status_invalid_config">Ongeldige configuratie</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagen</item>

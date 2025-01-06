@@ -13,6 +13,7 @@
     <string name="objectives_openloop_learned">Uyumlu pompanız yoksa veya kapalı döngüye hazır değilseniz, tavsiyeler için açık döngü kullanılabilir.</string>
     <string name="objectives_maxbasal_objective">Geçici bazal tavsiyeleri de dahil olmak üzere Açık Döngüyü anlamak</string>
     <string name="objectives_maxbasal_gate">Bu deneyime dayanarak, max bazalın ne olması gerektiğine karar vermeli ve bunu pompa ve tercihlere koymalısınız</string>
+    <string name="objectives_maxbasal">Öneriyi yerine getirmek için eylem gerçekleştirin</string>
     <string name="objectives_maxbasal_learned">Güvenlik özelliklerine dikkat edin ve gerektiğinde güvenlik parametrelerini ayarlayın.</string>
     <string name="objectives_maxiobzero_objective">Kapalı Döngü, (LGS) Düşük Glikoz Duraklatma modunda başlatılıyor</string>
     <string name="objectives_maxiobzero_gate">Kapalı Döngüyü, maks IOB = 0 olacak şekilde çok sayıda LGS (düşük KŞ) olmadan birkaç gün boyunca deneyin</string>
@@ -26,11 +27,8 @@
     <string name="objectives_smb_objective">SMB (Super Micro Bolus) gibi gündüz kullanımı için ek özelliklerin etkinleştirilmesi</string>
     <string name="objectives_smb_gate">(Super Micro Bolus) SMB\'lerın iyi çalışabilmesi için wiki\'yi okumalısınız ve maxIOB\'u yükseltmelisiniz! İyi bir başlangıç için maxIOB = ortalama yemek bolusu + 3 x max günlük bazaldır</string>
     <string name="objectives_smb_learned">SMB\'yi kullanmak sizin hedefinizdir. Oref1 algoritması, boluslarınızda da size yardımcı olmak için tasarlanmıştır. Yemeğiniz için bolusun tamamını değil, sadece bir kısmını vermeli ve gerekirse AAPS\'in size geri kalanını vermesine izin vermelisiniz. Bu şekilde yanlış hesaplanmış karbonhidratlar için daha fazla alanınız olur. Bolus miktarını azaltmak için bolus hesaplayıcı sonucunun bir yüzdesini ayarlayabileceğinizi biliyor muydunuz?</string>
-    <string name="objectives_dyn_isf_objective">Dinamik duyarlılık eklentisi gibi gündüz kullanımına yönelik ek özelliklerin etkinleştirilmesi</string>
-    <string name="objectives_dyn_isf_gate">SMB\'nin düzgün çalıştığından emin olun. DinamikİDF eklentisini etkinleştirin ve vücudunuza en uygun kalibrasyonu belirleyin. Güvenlik açısından %100\'den daha düşük bir değerle başlamanız tavsiye edilir.</string>
-    <string name="objectives_dyn_isf_learned">Dinamik Duyarlılık eklentisi, toplam insülin alımının ve mevcut glisemi seviyelerinin gerçek duyarlılığı etkilediği fikrine dayanmaktadır. DinamikİDF eklentisi, algoritmanın kullandığı İnsülin Duyarlılık Faktörünü (İDF) sizin için ayarlayabilir.</string>
     <string name="objectives_auto_objective">Otomasyonu etkinleştirme</string>
-    <string name="objectives_auto_gate">Otomasyonun nasıl çalıştığına dair dokümanları okuyun. İlk basit kurallarınızı belirleyin. Eylem yerine AAPS\'in yalnızca bildirim göndermesine izin verin. Otomasyonun doğru zamanda tetiklendiğinden emin olduğunuzda, bildirimi gerçek eylemle değiştirin. (https://wiki.aaps.app/tr/latest/Usage/Automation.html)</string>
+    <string name="objectives_auto_gate">Otomasyonun nasıl çalıştığını anlamak için ilgili dokümanları okuyun. İlk basit kurallarınızı ayarlayın. Eylem oluşturmak yerine AAPS\'in yalnızca bildirim görüntülemesini sağlayın. Otomasyonun doğru zamanda tetiklendiğinden emin olduğunuzda bildirimi eyleme dönüştürebilirsiniz. (https://wiki.aaps.app/en/latest/DailyLifeWithAaps/Automations.html)</string>
     <string name="objectives_auto_learned">Otomasyon iyi bir hizmetkar ama kötü bir efendi olabilir. Aşırı kullanmayın. Altta yatan algoritmayı değiştirmeye çalışmayın. Kuralı yalnızca kullanmadan önce mesajla test edin. Onayınıza bağlıdır.</string>
     <string name="objectives_bgavailableinns">KŞ NS veya Tidepool\'da mevcut</string>
     <string name="objectives_pumpstatusavailableinns">Pompa durumu NS veya Tidepool\'da mevcut</string>
@@ -70,19 +68,20 @@
     <string name="objectives_exam_learned_iob">APPS\'in sizin için iyi çalışıp çalışmadığını analiz ederseniz, AİNS grafiğini izlemek size birçok yararlı bilgi verebilir.</string>
     <string name="objectives_exam_learned_cob">AKRB hesaplaması, İDF ile Kİ arasındaki ilişkiye bağlıdır. Artan İDF veya azalan Kİ, daha uzun emilim sürelerine yol açacaktır. Ancak yüzdeli profil değiştirme, her iki değeri aynı anda değiştirir ve emilim süresi etkilenmez.</string>
     <string name="objectives_exam_learned_breadgrams">Karbonhidratların girişinde sadece grama izin verilir.</string>
-    <string name="objectives_exam_learned_ecarbs">E-karbonhidratlar, pompa dünyasında yayma bolusun yerine geçer.</string>
+    <string name="objectives_exam_learned_ecarbs">Y-karbonhidratlar, pompa dünyasında yayma bolusun yerine geçer.</string>
     <string name="objectives_exam_learned_nsclient">Uzaktan izleme ve kontrol mümkündür, ancak tüm özelliklerin uzaktan kullanılabilir olması gerekmez.</string>
     <string name="answerdisabledto">Yanıtlama devre dışı bırakıldı: %1$s</string>
     <string name="wronganswer">Yanlış Cevap!</string>
     <string name="unfinshed_button">Tamamlanmayan bir sonraki</string>
     <string name="requestcode">Kod: %1$s</string>
     <string name="objectives_hint">(tüm doğru cevapları kontrol edin)</string>
-    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/tr/latest/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/tr/latest/Getting-Started/Screenshots.html#the-homescreen</string>
-    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/tr/latest/Configuration/Config-Builder.html</string>
-    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/tr/latest/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
     <string name="notconnected">İnternete bağlı değil</string>
     <string name="failedretrievetime">Geri almada hata</string>
     <string name="requirementnotmet">Görev gereksinimleri karşılanmadı</string>
     <string name="what_i_ve_learned">Ne öğrendim:</string>
+    <string name="verify_master_password">Ana parolayı bildiğinizi doğrulayın</string>
 </resources>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">從未連線</string>
+    <string name="pump_status_sleeping">休眠中</string>
+    <string name="pump_status_waking_up">喚醒中</string>
+    <string name="pump_status_active">使用中</string>
+    <string name="pump_status_error_comm">通訊錯誤</string>
+    <string name="pump_status_timeout_comm">通訊逾時</string>
+    <string name="pump_status_pump_unreachable">幫浦無法使用</string>
+    <string name="pump_status_invalid_config">配置無效</string>
+    <!-- RL keys -->
+    <!-- RL BLE Config -->
+    <string name="riley_link_ble_config_button_scan_start">掃描</string>
+    <string name="riley_link_ble_config_scan_stop">停止</string>
+    <string name="riley_link_ble_config_scan_selected">已選擇</string>
+    <string name="riley_link_ble_config_scan_title">RileyLink 掃描</string>
+    <string name="riley_link_ble_config_scan_scanning">掃描中</string>
+    <string name="riley_link_ble_config_scan_finished">掃描完成</string>
+    <string name="riley_link_ble_config_scan_error">掃描錯誤：%1$d</string>
+    <string name="riley_link_ble_config_connected_never">從未連線</string>
+    <string name="riley_link_ble_config_scan_currently_selected_riley_link">目前選擇的 RileyLink</string>
+    <string name="riley_link_ble_config_remove_riley_link">移除</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation">你確定要移除你的 RileyLink 嗎？</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">移除 RileyLink</string>
+    <string name="riley_link_ble_config_no_riley_link_selected">未選擇 RileyLink</string>
+    <!-- RL Status Page -->
+    <string name="rileylink_settings_tab1">設定</string>
+    <string name="rileylink_settings_tab2">歷史</string>
+    <string name="rileylink_status">RileyLink 狀態</string>
+    <string name="medtronic_pump_status">幫浦狀態</string>
+    <string name="title_activity_rileylink_settings">RileyLink 設定</string>
+    <string name="rileylink_title">RileyLink</string>
+    <string name="rileylink_address">地址：</string>
+    <string name="rileylink_name">名稱：</string>
+    <string name="rileylink_battery_level">電池電量：</string>
+    <string name="rileylink_battery_level_value">%1$d%%</string>
+    <string name="rileylink_connection_status">連線狀態：</string>
+    <string name="rileylink_connection_error">連線錯誤：</string>
+    <string name="rileylink_device">裝置</string>
+    <string name="rileylink_device_type">裝置類型：</string>
+    <string name="rileylink_configured_device_model">配置的裝置型號：</string>
+    <string name="rileylink_connected_device_model">連線的裝置型號：</string>
+    <string name="rileylink_last_used_frequency">最近使用的頻率：</string>
+    <string name="rileylink_last_device_contact">最近的裝置聯繫：</string>
+    <string name="rileylink_firmware_version">韌體版本：</string>
+    <string name="rileylink_firmware_version_value">BLE113: %1$s\nCC110: %2$s</string>
+    <string name="rileylink_firmware_version_value_orange">Fw: %1$s\nHw: %2$s</string>
+    <string name="rileylink_pump_serial_number">幫浦序列號：</string>
+    <string name="rileylink_pump_frequency">幫浦頻率：</string>
+    <string name="rileylink_pump_frequency_value">%1$.2f MHz</string>
+    <!-- RL State -->
+    <string name="rileylink_state_bt_init">藍牙初始化中...</string>
+    <string name="rileylink_state_bt_error">藍牙錯誤</string>
+    <string name="rileylink_state_bt_ready">藍牙準備就緒</string>
+    <string name="rileylink_state_not_started">未開始</string>
+    <string name="rileylink_state_rl_init">RileyLink 初始化中...</string>
+    <string name="rileylink_state_rl_error">RileyLink 錯誤</string>
+    <string name="rileylink_state_pc_tune_up">調整 RileyLink 和幫浦</string>
+    <string name="rileylink_state_pc_error">連線幫浦時出現問題</string>
+    <string name="rileylink_state_connected">已連線</string>
+    <string name="rileylink_state_rl_ready">RileyLink 準備就緒</string>
+    <!-- RL Errors -->
+    <string name="rileylink_error_not_rl">裝置不是 RileyLink</string>
+    <string name="rileylink_error_unreachable">RileyLink 無法使用</string>
+    <string name="rileylink_error_bt_disabled">藍牙已停用</string>
+    <string name="rileylink_error_no_bt_adapter">無藍牙適配器</string>
+    <string name="rileylink_error_tuneup_failed">調整失敗</string>
+    <string name="rileylink_error_pump_unreachable">幫浦無法使用</string>
+    <string name="rileylink_error_pod_unreachable">Pod 無法使用</string>
+    <!-- RileyLink - Common -->
+    <string name="rileylink_target_device_medtronic">Medtronic 幫浦</string>
+    <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
+    <!-- RileyLink - Preferences -->
+    <string name="riley_link_show_battery_level">顯示 OrangeLink/EmaLink/DiaLink 回報的電池電量</string>
+    <string name="riley_link_show_battery_level_summary">不適用於原始 RileyLink。可能不適用於其他 RileyLink 替代品。</string>
+    <plurals name="duration_days">
+        <item quantity="other">%1$d 天</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="other">%1$d 小時</item>
+    </plurals>
+    <string name="orange_use_scanning_level">使用掃描</string>
+    <string name="orange_use_scanning_level_summary">在連線到 OrangeLink 之前進行掃描，應該能改善連線（如果需要，也可以用於其他 RileyLink 複製）</string>
+    <string name="rileylink_configuration">RileyLink 配置</string>
+</resources>

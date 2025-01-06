@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.interfaces.notifications.NotificationHolder
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -20,7 +19,6 @@ import javax.inject.Singleton
 
  */
 @Singleton
-@OpenForTesting
 class LocationServiceHelper @Inject constructor(
     private val notificationHolder: NotificationHolder
 ) {

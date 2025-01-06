@@ -23,7 +23,7 @@ class TriggerRecurringTime(injector: HasAndroidInjector) : Trigger(injector) {
     val time = InputTime(rh, dateUtil)
 
     constructor(injector: HasAndroidInjector, triggerRecurringTime: TriggerRecurringTime) : this(injector) {
-        this.time.value = triggerRecurringTime.time.value
+        time.value = triggerRecurringTime.time.value
         if (days.weekdays.size >= 0)
             System.arraycopy(triggerRecurringTime.days.weekdays, 0, days.weekdays, 0, triggerRecurringTime.days.weekdays.size)
     }
@@ -86,7 +86,7 @@ class TriggerRecurringTime(injector: HasAndroidInjector) : Trigger(injector) {
         return if (counter == 0) rh.gs(R.string.never) else sb.toString()
     }
 
-    override fun icon(): Optional<Int> = Optional.of(app.aaps.core.main.R.drawable.ic_access_alarm_24dp)
+    override fun icon(): Optional<Int> = Optional.of(app.aaps.core.objects.R.drawable.ic_access_alarm_24dp)
 
     override fun duplicate(): Trigger = TriggerRecurringTime(injector, this)
 

@@ -93,7 +93,6 @@
     <string name="danar_disableeasymode">Dezactivează modul EasyUI în pompă</string>
     <string name="profile_set_failed">Setarea profilului bazalei a eșuat</string>
     <string name="danar_bluetooth_status">Status Bluetooth</string>
-    <string name="danar_iob_label">IOB din pompă</string>
     <string name="firmware_label">Firmware</string>
     <string name="danar_pump_settings">Setări pompă Dana</string>
     <string name="time_format_12h">12h</string>
@@ -103,7 +102,6 @@
     <string name="danar_bt_name_title">Dispozitive bluetooth DanaR</string>
     <string name="danars_password_title">Parolă pompă (numai versiunea 1)</string>
     <string name="danar_password_title">Parola pompei</string>
-    <string name="danar_useextended_title">Folosiți bolusuri extinse pentru &gt;200%%</string>
     <string name="bolusspeed">Viteză bolusare</string>
     <string name="selectedpump">Pompa selectată</string>
     <string name="rs_loginsulinchange_title">Înregistrează schimbarea rezervorului</string>

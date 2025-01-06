@@ -10,8 +10,6 @@
     <string name="omnipod_dash_history_item_source">Šaltinis</string>
     <string name="omnipod_dash_history_item_date">Data</string>
     <string name="omnipod_dash_history_type">Tipas:</string>
-    <string name="omnipod_dash_history_bolus_value">%1$.2f v</string>
-    <string name="omnipod_dash_history_bolus_value_with_carbs">%1$.2f v, AV=%2$.1f g</string>
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_status">Bluetooth statusas</string>
     <string name="omnipod_dash_overview_bluetooth_address">Bluetooth adresas</string>

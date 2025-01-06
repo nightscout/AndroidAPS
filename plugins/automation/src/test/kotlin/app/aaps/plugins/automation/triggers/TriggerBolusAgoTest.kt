@@ -1,10 +1,8 @@
 package app.aaps.plugins.automation.triggers
 
-import app.aaps.database.ValueWrapper
-import app.aaps.database.entities.Bolus
+import app.aaps.core.data.model.BS
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.rxjava3.core.Single
 import org.json.JSONException
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
@@ -16,15 +14,11 @@ class TriggerBolusAgoTest : TriggerTestBase() {
     @Test
     fun shouldRunTest() {
         // Set last bolus time to now
-        `when`(repository.getLastBolusRecordOfTypeWrapped(Bolus.Type.NORMAL)).thenReturn(
-            Single.just(
-                ValueWrapper.Existing(
-                    Bolus(
-                        timestamp = now,
-                        amount = 0.0,
-                        type = Bolus.Type.NORMAL
-                    )
-                )
+        `when`(persistenceLayer.getNewestBolusOfType(BS.Type.NORMAL)).thenReturn(
+            BS(
+                timestamp = now,
+                amount = 0.0,
+                type = BS.Type.NORMAL
             )
         )
         `when`(dateUtil.now()).thenReturn(now + 10 * 60 * 1000) // set current time to now + 10 min
@@ -50,15 +44,11 @@ class TriggerBolusAgoTest : TriggerTestBase() {
         t = TriggerBolusAgo(injector).setValue(390).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.shouldRun()).isTrue()
         // Set last bolus time to 0
-        `when`(repository.getLastBolusRecordOfTypeWrapped(Bolus.Type.NORMAL)).thenReturn(
-            Single.just(
-                ValueWrapper.Existing(
-                    Bolus(
-                        timestamp = 0,
-                        amount = 0.0,
-                        type = Bolus.Type.NORMAL
-                    )
-                )
+        `when`(persistenceLayer.getNewestBolusOfType(BS.Type.NORMAL)).thenReturn(
+            BS(
+                timestamp = 0,
+                amount = 0.0,
+                type = BS.Type.NORMAL
             )
         )
         t = TriggerBolusAgo(injector).comparator(Comparator.Compare.IS_NOT_AVAILABLE)
@@ -86,6 +76,6 @@ class TriggerBolusAgoTest : TriggerTestBase() {
     }
 
     @Test fun iconTest() {
-        assertThat(TriggerBolusAgo(injector).icon().get()).isEqualTo(app.aaps.core.main.R.drawable.ic_bolus)
+        assertThat(TriggerBolusAgo(injector).icon().get()).isEqualTo(app.aaps.core.objects.R.drawable.ic_bolus)
     }
 }

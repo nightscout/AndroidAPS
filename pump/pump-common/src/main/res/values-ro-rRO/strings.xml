@@ -2,9 +2,6 @@
 <resources>
     <!-- PumoCommon - Pump Abstract -->
     <string name="pump_operation_not_supported_by_pump_driver">Operațiunea nu este suportată de către pompă și/sau driver.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">Operațiunea nu este ÎNCĂ suportată de către pompă.</string>
-    <string name="common_resultok">OK</string>
-    <string name="pump_serial_number">Număr serial pompă</string>
     <string name="bolus_delivered_so_far">%1$.2f U din %2$.2f U livrate</string>
     <!-- PumpCommon - Pump Status -->
     <string name="pump_status_not_initialized">Neiniţializat</string>
@@ -46,33 +43,9 @@
     <string name="ble_config_scan_scanning">Scanează</string>
     <string name="ble_config_scan_finished">Scanare terminată</string>
     <string name="ble_config_scan_error">Eroare la scanare: %1$d</string>
-    <string name="ble_config_connected_never">Niciodată</string>
     <string name="ble_config_remove">Șterge</string>
-    <!-- BLE Errors -->
-    <string name="ble_error_bt_disabled">Bluetooth dezactivat</string>
-    <string name="ble_error_no_bt_adapter">Nu există un adaptor Bluetooth</string>
-    <string name="ble_error_configured_pump_not_found">Pompa configurată nu a fost găsită</string>
-    <string name="ble_error_pump_unreachable">Pompă indisponibilă</string>
-    <string name="ble_error_failed_to_conn_to_ble_device">Nu s-a reușit conectarea la dispozitivul BLE</string>
-    <string name="ble_error_encryption_failed">Criptare eșuată</string>
-    <string name="ble_error_pump_found_unbonded">A fost găsită o pompă neîmperecheată</string>
-    <!-- Pump Error -->
-    <string name="pump_settings_error_basal_profiles_not_enabled">Setările de profil/șablon bazale nu sunt activate în pompă. Vă rugăm să le activați din pompă.</string>
-    <string name="pump_settings_error_incorrect_basal_profile_selected">Profilul bazal setat în pompă este incorect (trebuie să fie %s).</string>
-    <string name="pump_settings_error_wrong_tbr_type_set">Tip incorect de RBT setat în pompă (trebuie să fie %s).</string>
-    <string name="pump_settings_error_wrong_max_bolus_set">Bolus maxim setat incorect în pompă (trebuie să fie %1$.2f).</string>
-    <string name="pump_settings_error_wrong_max_basal_set">Bazala maximă setată incorect în pompă (trebuie să fie %1$.2f).</string>
     <!-- Pump History -->
     <string name="pump_history_type">Tip:</string>
-    <!-- PumpDeviceState -->
-    <string name="pump_status_never_contacted">Niciodată contactată</string>
-    <string name="pump_status_sleeping">În repaus</string>
-    <string name="pump_status_waking_up">Se pornește</string>
-    <string name="pump_status_active">Activă</string>
-    <string name="pump_status_error_comm">Eroare de comunicație</string>
-    <string name="pump_status_timeout_comm">Comunicația nu a reușit la timp</string>
-    <string name="pump_status_pump_unreachable">Pompă indisponibilă</string>
-    <string name="pump_status_invalid_config">Configurație invalidă</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d zi</item>
         <item quantity="few">%1$d zile</item>

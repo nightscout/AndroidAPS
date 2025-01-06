@@ -22,20 +22,21 @@ import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import app.aaps.core.interfaces.extensions.toVisibility
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventWearUpdateTiles
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.main.utils.ActionModeHelper
+import app.aaps.core.objects.ui.ActionModeHelper
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.dragHelpers.ItemTouchHelperAdapter
 import app.aaps.core.ui.dragHelpers.OnStartDragListener
 import app.aaps.core.ui.dragHelpers.SimpleItemTouchHelperCallback
+import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.core.utils.HtmlHelper
-import app.aaps.database.entities.UserEntry.Action
-import app.aaps.database.entities.UserEntry.Sources
 import app.aaps.plugins.automation.databinding.AutomationEventItemBinding
 import app.aaps.plugins.automation.databinding.AutomationFragmentBinding
 import app.aaps.plugins.automation.dialogs.EditEventDialog
@@ -128,7 +129,10 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener, MenuProvider {
         disposable += rxBus
             .toObservable(EventAutomationDataChanged::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe({ eventListAdapter.notifyDataSetChanged() }, fabricPrivacy::logException)
+            .subscribe({
+                           eventListAdapter.notifyDataSetChanged()
+                           rxBus.send(EventWearUpdateTiles())
+                       }, fabricPrivacy::logException)
         updateGui()
     }
 

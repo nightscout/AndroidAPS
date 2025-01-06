@@ -35,7 +35,6 @@
     <string name="omnipod_common_error_unexpected_exception">Er is een onverwachte fout opgetreden. A.u.b. rapporteren! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation">Bevestiging</string>
-    <string name="omnipod_common_confirmation_time_or_timezone_change">Tijd en/of tijdzone gewijzigd op de Pod.</string>
     <string name="omnipod_common_confirmation_expiration_alerts_updated">De instellingen voor meldingen zijn bijgewerkt in de Pod.</string>
     <string name="omnipod_common_confirmation_time_on_pod_updated">De tijd in de Pod is geüpdatet.</string>
     <string name="omnipod_common_confirmation_suspended_delivery">Alle insulinetoediening is onderbroken.</string>
@@ -66,6 +65,7 @@
     <string name="omnipod_common_overview_reservoir_value">%1$.2f E over</string>
     <string name="omnipod_common_overview_reservoir_value_over50">Meer dan 50 E over</string>
     <string name="omnipod_common_overview_errors">Storing</string>
+    <string name="omnipod_common_uncertain">onzeker</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_cancel">Afbreken</string>
     <string name="omnipod_common_wizard_button_finish">Voltooien</string>
@@ -127,7 +127,6 @@
     <string name="omnipod_common_pod_status_normal">Normaal</string>
     <string name="omnipod_common_pod_status_suspended">Onderbroken</string>
     <string name="omnipod_common_pod_status_pod_fault">Pod fout</string>
-    <string name="omnipod_common_pod_status_activation_time_exceeded">Activatie tijd verlopen</string>
     <string name="omnipod_common_pod_status_inactive">Inactief</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Pod foutmelding: %1$03d %2$s</string>
     <!-- Omnipod - Commands -->
@@ -153,7 +152,6 @@
     <string name="omnipod_common_cmd_set_fake_suspended_tbr">Vals tijdelijk basaal omdat insuline toediening onderbroken is</string>
     <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Annuleren van vals tijdelijk basaal wat was aangemaakt vanwege Pod onderbreking</string>
     <string name="omnipod_common_cmd_split_tbr">Tijdelijke basaal gesplitst als gevolg van een onzekere fout bij annulering</string>
-    <string name="omnipod_common_cmd_beep_config">Pieptoon instellingen</string>
     <string name="omnipod_common_cmd_play_test_beep">Test pieptoon afspelen</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_finish_pairing_reminder">Herinnering koppeling afronden</string>
@@ -176,6 +174,7 @@
     <string name="omnipod_common_ok">OK</string>
     <string name="omnipod_common_cancel">Afbreken</string>
     <string name="omnipod_common_warning">Waarschuwing</string>
+    <string name="omnipod_common_disable_suspend_alerts">UITSCHAKELEN SUSPEND ALARM</string>
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">Zojuist</string>
     <string name="omnipod_common_less_than_a_minute_ago">Minder dan een minuut geleden</string>

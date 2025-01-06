@@ -45,7 +45,7 @@ class QuickWizardSource @Inject constructor(private val context: Context, privat
 
     override fun getValidFor(): Long? {
         val quickMap = getQuickWizardData(sp)
-        if (quickMap.entries.size == 0) return null
+        if (quickMap.entries.isEmpty()) return null
 
         val sfm = secondsFromMidnight()
         var validTill = 24 * 60 * 60
@@ -59,7 +59,7 @@ class QuickWizardSource @Inject constructor(private val context: Context, privat
         }
 
         val validWithin = 60
-        //aapsLogger.info(LTag.WEAR, "getValidTill: sfm$sfm till$validTill d=$delta")
+        //aapsLogger.info(LTag.WEAR, "getValidTill: sfm$sfm till$validTill d=${(validTill - sfm + validWithin) * 1000L}")
         return (validTill - sfm + validWithin) * 1000L
     }
 

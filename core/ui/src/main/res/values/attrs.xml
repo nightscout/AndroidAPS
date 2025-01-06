@@ -63,6 +63,7 @@
     <attr name="ribbonTextWarningColor" format="reference|color" />
     <!---Background  -->
     <attr name="defaultBackground" format="reference|color" />
+    <attr name="popupWindowBackground" format="reference|color" />
     <!---Toast  -->
     <attr name="toastBaseTextColor" format="reference|color" />
     <attr name="toastBackgroundColor" format="reference|color" />
@@ -75,6 +76,7 @@
     <attr name="notificationLow" format="reference|color" />
     <attr name="notificationInfo" format="reference|color" />
     <attr name="notificationAnnouncement" format="reference|color" />
+    <attr name="notificationSettingsExport" format="reference|color" />
     <!---Disabled Text Color  -->
     <attr name="disabledTextColor" format="reference|color" />
     <!---Overview and History browser  -->
@@ -180,6 +182,7 @@
     <attr name="profileSwitchColor" format="reference|color" />
     <attr name="originalBgValueColor" format="reference|color" />
     <attr name="heartRateColor" format="reference|color" />
+    <attr name="stepsColor" format="reference|color" />
     <attr name="therapyEvent_NS_MBG" format="reference|color" />
     <attr name="therapyEvent_FINGER_STICK_BG_VALUE" format="reference|color" />
     <attr name="therapyEvent_EXERCISE" format="reference|color" />
@@ -219,5 +222,5 @@
     <attr name="profileColor" format="reference|color" />
     <attr name="crossTargetColor" format="reference|color" />
     <!---Custom button -->
-    <attr name="customBtnStyle" format="reference"/>
+    <attr name="customBtnStyle" format="reference" />
 </resources>

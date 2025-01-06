@@ -1,7 +1,7 @@
 package app.aaps.plugins.automation.triggers
 
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.utils.MidnightTime
-import app.aaps.core.interfaces.utils.T
 import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach

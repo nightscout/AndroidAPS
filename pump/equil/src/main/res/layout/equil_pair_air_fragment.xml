@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_hint1"
+        style="@style/pairTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/equil_hint2" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_hint2"
+        style="@style/pairText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="@string/equil_hint1" />
+
+
+
+    <LinearLayout
+        android:id="@+id/lyt_action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_air"
+            style="@style/GrayButton"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="@string/equil_air" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_finish"
+            style="@style/GrayButton"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="@string/equil_finish" />
+    </LinearLayout>
+</LinearLayout>

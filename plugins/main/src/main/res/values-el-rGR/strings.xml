@@ -39,7 +39,6 @@
     <string name="smscommunicator_stops_ns_with_code">Για να απενεργοποιήσετε το SMS Απομακρυσμένη Υπηρεσία απαντήστε με κωδικό %1$s.\n\n μπορείτε να το ενεργοποιήσετε ξανά απευθείας μόνο από το AAPS master smartphone.</string>
     <string name="smscommunicator_stopped_sms">Η απομάκρυσμένη υπηρεσία SMS σταμάτησε. Για να την ενεργοποιήσετε πάλι, χρησιμοποιήστε το AAPS στο κύριο τηλέφωνο.</string>
     <string name="smscommunicator_calibration_reply_with_code">Για αποστολή καλιμπραρίσματος %1$.2f στείλτε με κωδικό %2$s</string>
-    <string name="smscommunicator_bolus_failed">Αποτυχία Bolus</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Ελάχιστος χρόνος σε λεπτά που πρέπει να μεσολαβήσει μεταξύ μίας απομακρυσμένης έγχυσης (bolus) και της επόμενης</string>
     <string name="smscommunicator_remote_bolus_min_distance">Πόσα λεπτά, τουλάχιστον, πρέπει να μεσολαβήσουν μεταξύ μιας έγχυσης (bolus) και της επόμενης</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">Για την ασφάλειά σας, για να επεξεργαστείτε αυτή την προτίμηση πρέπει να προσθέσετε τουλάχιστον 2 αριθμούς τηλεφώνου.</string>
@@ -201,10 +200,6 @@
     <string name="overview_shortname">ΑΡΧΙΚΗ</string>
     <string name="description_overview">Εμφανίζει την τρέχουσα κατάσταση του κυκλώματός σας και τα πλήκτρα για τις πιο κοινές ενέργειες</string>
     <string name="overview_buttons_selection">Πλήκτρα</string>
-    <string name="show_calibration_button_summary">Στέλνει καλιμπράρισμα στο xDrip + ή ανοίγει το παράθυρο καλιμπραρίσματος του BYODA</string>
-    <string name="show_cgm_button_summary">Ανοίγει το xDrip + ή το BYODA, τα κουμπιά πίσω επιστρέφουν στο AAPS</string>
-    <string name="dexcom_app_not_installed">Η εφαρμογή Dexcom δεν είναι εγκατεστημένη.</string>
-    <string name="dexcom_app_not_detected">Ενημερώστε την εφαρμογή G5 στην υποστηριζόμενη έκδοση</string>
     <string name="error_starting_cgm">Δεν είναι δυνατή η εκκίνηση της εφαρμογής CGM. Βεβαιωθείτε ότι έχει εγκατασταθεί.</string>
     <string name="not_available_full">Μη διαθέσιμο</string>
     <string name="constraints_violation">Παραβίαση Περιορισμών</string>
@@ -226,12 +221,6 @@
     <string name="thirdcarbsincrement">Τρίτη αύξηση υδατανθράκων</string>
     <string name="cgm">CGM</string>
     <string name="default_temptargets">Προκαθορισμένος Στόχος-Προσ Ρυθμού</string>
-    <string name="eatingsoon_duration">Διάρκεια πλησιέστερου γεύματος</string>
-    <string name="eatingsoon_target">στόχος για γεύμα</string>
-    <string name="activity_duration">διάρκεια άσκησης</string>
-    <string name="activity_target">στόχος άσκησης</string>
-    <string name="hypo_duration">διάρκεια υπογλυκαιμίας</string>
-    <string name="hypo_target">στόχος υπογλυκαιμίας</string>
     <string name="fill_bolus_title">Πλήρωση/Γέμισμα στανταρ ποσότητες ινσουλίνης</string>
     <string name="button1">Πλήκτρο 1</string>
     <string name="button2">Πλήκτρο 2</string>
@@ -258,7 +247,6 @@
     <string name="overview_show_deviation_slope">Κλίση απόκλισης</string>
     <string name="overview_show_activity">Δραστηριότητα</string>
     <string name="overview_show_bgi">Επιπτώσεις Γλυκόζης Αίματος</string>
-    <string name="overview_show_sensitivity">Ευαισθησία</string>
     <string name="overview_show_deviations">Αποκλίσεις</string>
     <string name="overview_show_cob">Ενεργοί Υδατάνθρακες</string>
     <string name="overview_show_iob">Ενεργή Ινσουλίνη</string>
@@ -273,7 +261,6 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">ΘΕΡΑΠ</string>
     <string name="heartRate_shortname">HR</string>
-    <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Κλίμακα γραφήματος</string>
     <string name="graph_menu_divider_header">Γράφημα</string>
     <!-- Skins -->
@@ -284,7 +271,6 @@
     <string name="skin">Θέμα</string>
     <string name="cannula_usage">χρήσιμες συμβουλές:</string>
     <!--    Iob-->
-    <string name="send_logfiles">Στείλτε τα αρχεία καταγραφής της ημέρας στους προγραμματιστές μαζί με αυτή τη φορά. Απροσδόκητη κατάσταση.</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Εμφανίζει μία τρέχουσα ειδοποίηση με σύντομη επισκόπηση του τι κάνει το κύκλωμα τώρα</string>
     <string name="old_data">Παλιά Δεδομένα</string>

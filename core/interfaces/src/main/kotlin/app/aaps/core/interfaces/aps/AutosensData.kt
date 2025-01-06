@@ -15,6 +15,7 @@ interface AutosensData {
 
     var time: Long
     var bg: Double
+    var sens: Double
     var pastSensitivity: String
     var deviation: Double
     var validDeviation: Boolean

@@ -35,7 +35,6 @@
     <string name="omnipod_common_error_unexpected_exception">Došlo k neočekávané chybě. Prosíme o její nahlášeníní! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation">Potvrzení</string>
-    <string name="omnipod_common_confirmation_time_or_timezone_change">Čas a/nebo časová zóna změněna na Podu.</string>
     <string name="omnipod_common_confirmation_expiration_alerts_updated">Nastavení výstrahy bylo v Podu aktualizováno.</string>
     <string name="omnipod_common_confirmation_time_on_pod_updated">Čas na Podu byl aktualizován.</string>
     <string name="omnipod_common_confirmation_suspended_delivery">Všechny dodávky inzulínu byly pozastaveny.</string>
@@ -66,6 +65,7 @@
     <string name="omnipod_common_overview_reservoir_value">Zbývá %1$.2f U</string>
     <string name="omnipod_common_overview_reservoir_value_over50">Zbývá více než 50 U</string>
     <string name="omnipod_common_overview_errors">Chyby</string>
+    <string name="omnipod_common_uncertain">neznámé</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_cancel">Zrušit</string>
     <string name="omnipod_common_wizard_button_finish">Konec</string>
@@ -127,7 +127,6 @@
     <string name="omnipod_common_pod_status_normal">Normální</string>
     <string name="omnipod_common_pod_status_suspended">Pozastaveno</string>
     <string name="omnipod_common_pod_status_pod_fault">Chyba Podu</string>
-    <string name="omnipod_common_pod_status_activation_time_exceeded">Byl překročen čas aktivace</string>
     <string name="omnipod_common_pod_status_inactive">Neaktivní</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Chyba Podu: %1$03d %2$s</string>
     <!-- Omnipod - Commands -->
@@ -153,7 +152,6 @@
     <string name="omnipod_common_cmd_set_fake_suspended_tbr">Nastavit falešný dočasný bazál, protože Pod je pozastaven</string>
     <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Zrušit falešný dočasný bazál který byl vytvořen, protože Pod byl pozastaven</string>
     <string name="omnipod_common_cmd_split_tbr">Rozdělit dočasný bazál kvůli nejisté chybě při rušení</string>
-    <string name="omnipod_common_cmd_beep_config">Nastavení pípnutí</string>
     <string name="omnipod_common_cmd_play_test_beep">Přehrát testovací pípnutí</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_finish_pairing_reminder">Upomínka dokončení párování</string>
@@ -176,6 +174,7 @@
     <string name="omnipod_common_ok">OK</string>
     <string name="omnipod_common_cancel">Zrušit</string>
     <string name="omnipod_common_warning">Varování</string>
+    <string name="omnipod_common_disable_suspend_alerts">Vypnout varování pozastavení</string>
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">před chvílí</string>
     <string name="omnipod_common_less_than_a_minute_ago">Před méně než minutou</string>

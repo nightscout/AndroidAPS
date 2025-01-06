@@ -12,6 +12,8 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.weardata.EventData
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.wear.R
 import app.aaps.wear.comm.IntentWearToMobile
 import io.reactivex.rxjava3.disposables.Disposable
 import java.util.concurrent.TimeUnit
@@ -42,13 +44,14 @@ import kotlin.math.roundToInt
 class HeartRateListener(
     private val ctx: Context,
     private val aapsLogger: AAPSLogger,
+    sp: SP,
     aapsSchedulers: AapsSchedulers,
     now: Long = System.currentTimeMillis(),
 ) : SensorEventListener, Disposable {
 
     /** How often we send values to the phone. */
     private val samplingIntervalMillis = 60_000L
-    private val sampler = Sampler(now)
+    private val sampler = Sampler(now, sp)
     private var schedule: Disposable? = null
 
     /** We only use values with these accuracies and ignore NO_CONTACT and UNRELIABLE. */
@@ -133,7 +136,12 @@ class HeartRateListener(
         sampler.setHeartRate(timestampMillis, heartRate)
     }
 
-    private class Sampler(timestampMillis: Long) {
+    private class Sampler(timestampMillis: Long, val sp: SP) {
+
+        private val actionHeartRatehistory: MutableList<EventData.ActionHeartRate> = ArrayList()
+        private val averageHistory
+            get() = sp.getInt(R.string.key_heart_rate_smoothing, 1)
+        private val maxAverage = 15
 
         private var startMillis: Long = timestampMillis
         private var lastEventMillis: Long = timestampMillis
@@ -166,7 +174,9 @@ class HeartRateListener(
                 fix(timestampMillis)
                 return if (10 * activeMillis > lastEventMillis - startMillis) {
                     val bpm = beats / activeMillis.toMinute()
-                    EventData.ActionHeartRate(timestampMillis - startMillis, timestampMillis, bpm, device)
+                    actionHeartRatehistory.add(EventData.ActionHeartRate(timestampMillis - startMillis, timestampMillis, bpm, device))
+                    averageHeartrate(timestampMillis - startMillis, timestampMillis, device)
+                    //EventData.ActionHeartRate(timestampMillis - startMillis, timestampMillis, bpm, device)
                 } else {
                     null
                 }.also {
@@ -183,6 +193,36 @@ class HeartRateListener(
                 if (timestampMillis < lastEventMillis) return
                 fix(timestampMillis)
                 currentBpm = heartRate
+            }
+        }
+
+        fun averageHeartrate(duration: Long, timestamp: Long, device: String): EventData.ActionHeartRate? {
+            lock.withLock {
+                cleanActionHeartRatehistory(timestamp)  // clean oldest values from memory
+                var bpm = 0.0
+                var avgNb = 0
+                var allDuration = 0L
+                actionHeartRatehistory.forEach { hr ->
+                    if (hr.timestamp >= timestamp - (averageHistory - 1) * 62000L) {    // If smoothing disabled, only last BPM is sent
+                        bpm += hr.beatsPerMinute
+                        avgNb++
+                        allDuration += hr.duration
+                    }
+                }
+                return if (avgNb > averageHistory / 4 || allDuration.toMinute() > averageHistory.toDouble() / 2.0) {    // When average is enabled, send value only if average is done on a number of values that is above half the selected duration
+                    EventData.ActionHeartRate(duration, timestamp, bpm / avgNb, device)
+                } else
+                    null
+            }
+        }
+
+        fun cleanActionHeartRatehistory(timestamp: Long) {
+            val iterator = actionHeartRatehistory.iterator()
+            while (iterator.hasNext()) {
+                val hr = iterator.next()
+                if (hr.timestamp < timestamp - (maxAverage - 1) * 62000L) {   // keep in memory the max duration + 2s marging for each min
+                    iterator.remove()
+                }
             }
         }
     }

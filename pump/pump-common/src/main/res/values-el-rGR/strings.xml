@@ -2,9 +2,6 @@
 <resources>
     <!-- PumoCommon - Pump Abstract -->
     <string name="pump_operation_not_supported_by_pump_driver">Η λειτουργία δεν υποστηρίζεται από την αντλία ή/και οδηγό.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">Η λειτουργία δεν υποστηρίζεται ΑΚΟΜΑ από την αντλία.</string>
-    <string name="common_resultok">ΟΚ</string>
-    <string name="pump_serial_number">Σειριακός Αριθμός Αντλίας</string>
     <string name="bolus_delivered_so_far">%1$.2f U / %2$.2f U παραδόθηκαν</string>
     <!-- PumpCommon - Pump Status -->
     <string name="pump_status_not_initialized">Δεν αρχικοποιήθηκε</string>
@@ -46,33 +43,9 @@
     <string name="ble_config_scan_scanning">Σάρωση</string>
     <string name="ble_config_scan_finished">Η σάρωση ολοκληρώθηκε</string>
     <string name="ble_config_scan_error">Λάθος σάρωσης: %1$d</string>
-    <string name="ble_config_connected_never">Ποτέ</string>
     <string name="ble_config_remove">Μετακίνηση</string>
-    <!-- BLE Errors -->
-    <string name="ble_error_bt_disabled">Bluetooth απενεργοποιημένο</string>
-    <string name="ble_error_no_bt_adapter">Δεν υπάρχει προσαρμογέας Bluetooth</string>
-    <string name="ble_error_configured_pump_not_found">Η Ρυθμισμένη Αντλία Δεν Βρέθηκε</string>
-    <string name="ble_error_pump_unreachable">Η αντλία δεν είναι διαθέσιμη</string>
-    <string name="ble_error_failed_to_conn_to_ble_device">Αποτυχία Σύνδεσης Στη Συσκευή BLE</string>
-    <string name="ble_error_encryption_failed">Αποτυχία Κρυπτογράφησης</string>
-    <string name="ble_error_pump_found_unbonded">Δεν βρέθηκε συνδεδεμένη αντλία</string>
-    <!-- Pump Error -->
-    <string name="pump_settings_error_basal_profiles_not_enabled">Η ρύθμιση των βασικών προφίλ/μοτίβων δεν είναι ενεργοποιημένη στην αντλία. Ενεργοποιήστε τη στην αντλία.</string>
-    <string name="pump_settings_error_incorrect_basal_profile_selected">Το βασικό προφίλ που ορίστηκε στην αντλία είναι λάθος (πρέπει να είναι %s).</string>
-    <string name="pump_settings_error_wrong_tbr_type_set">Λάθος τύπος TBR ορίστηκε στην αντλία (πρέπει να είναι %s).</string>
-    <string name="pump_settings_error_wrong_max_bolus_set">Λάθος μέγιστο bolus ορίστηκε στην αντλία (πρέπει να είναι %1$.2f).</string>
-    <string name="pump_settings_error_wrong_max_basal_set">Λάθος μέγιστο Βασικού ορίστηκε στην αντλία (πρέπει να είναι %1$.2f).</string>
     <!-- Pump History -->
     <string name="pump_history_type">Τύπος:</string>
-    <!-- PumpDeviceState -->
-    <string name="pump_status_never_contacted">Δεν επικοινωνήθηκε ποτέ</string>
-    <string name="pump_status_sleeping">Sleeping</string>
-    <string name="pump_status_waking_up">Ξύπνημα</string>
-    <string name="pump_status_active">Ενεργή</string>
-    <string name="pump_status_error_comm">Σφάλμα με επικοινωνία</string>
-    <string name="pump_status_timeout_comm">Λήξη χρόνου επικοινωνίας</string>
-    <string name="pump_status_pump_unreachable">Η αντλία δεν είναι διαθέσιμη</string>
-    <string name="pump_status_invalid_config">Μη έγκυρη παραμετροποίηση</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d ημέρες</item>
         <item quantity="other">%1$d ημέρες</item>

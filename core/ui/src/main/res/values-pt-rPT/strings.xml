@@ -112,7 +112,6 @@
     <string name="bg_label">GLIC</string>
     <string name="calibration">Calibração</string>
     <string name="alarminxmin">Executar alarme em %1$d min</string>
-    <string name="treatmentdeliveryerror">Ocorreu um erro de bólus. Verifique manualmente a quantidade administrada</string>
     <string name="bolus_reminder">Lembrete de bólus</string>
     <string name="duration_label">Duração</string>
     <string name="shortgramm">g</string>
@@ -393,8 +392,6 @@
     <string name="basalpct">Basal %</string>
     <string name="a11y_user">utilizador</string>
     <!-- Autotune -->
-    <string name="autotune_missing">Em falta</string>
-    <string name="autotune_compare_profile">Comparar Perfis</string>
     <!-- Alerts -->
     <string name="raise_notifications_as_android_notifications">Utilizar as notificações do sistema para alertas e notificações</string>
     <string name="urgent_alarm">Alarme Urgente</string>
@@ -445,7 +442,6 @@
     <string name="limitingpercentrate">A limitar rácio percentagem máx para %1$d%% porque %2$s</string>
     <string name="itmustbepositivevalue">deve ser valor positivo</string>
     <string name="limitingbolus">A limitar bólus para %1$.1f U porque %2$s</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Confirmação</string>
     <string name="message">Mensagem</string>
@@ -457,6 +453,8 @@
     <string name="close">Fechar</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Ser-lhe-á pedida a senha mestra, que será necessária para desencriptar preferências importadas.</string>
+    <!-- <unattended_export> -->
+    <!-- <unattended_export result messages> -->
     <!-- NumberPicker -->
     <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- datetime layout -->

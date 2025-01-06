@@ -9,11 +9,13 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.FragmentManager
-import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.Preferences
+import app.aaps.core.ui.extensions.toVisibility
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
@@ -26,6 +28,7 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var dateUtil: DateUtil
 
     fun interface OnValueChangedListener {
@@ -77,7 +80,7 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
         eventTimeOriginal = savedInstanceState?.getLong("eventTimeOriginal") ?: dateUtil.nowWithoutMilliseconds()
         eventTime = savedInstanceState?.getLong("eventTime") ?: eventTimeOriginal
 
-        eventDateView = view.findViewById(app.aaps.core.ui.R.id.eventdate) as TextView?
+        eventDateView = view.findViewById<TextView>(app.aaps.core.ui.R.id.eventdate)
         eventDateView?.text = dateUtil.dateString(eventTime)
         eventDateView?.setOnClickListener {
             val selection = dateUtil.timeStampToUtcDateMillis(eventTime)
@@ -96,7 +99,7 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
                 .show(parentFragmentManager, "event_time_date_picker")
         }
 
-        eventTimeView = view.findViewById(app.aaps.core.ui.R.id.eventtime) as TextView?
+        eventTimeView = view.findViewById<TextView>(app.aaps.core.ui.R.id.eventtime)
         eventTimeView?.text = dateUtil.timeString(eventTime)
         eventTimeView?.setOnClickListener {
             val clockFormat = if (DateFormat.is24HourFormat(context)) TimeFormat.CLOCK_24H else TimeFormat.CLOCK_12H
@@ -116,10 +119,10 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
             timePicker.show(parentFragmentManager, "event_time_time_picker")
         }
 
-        (view.findViewById(app.aaps.core.ui.R.id.notes_layout) as View?)?.visibility =
-            sp.getBoolean(app.aaps.core.utils.R.string.key_show_notes_entry_dialogs, false).toVisibility()
+        (view.findViewById<View>(app.aaps.core.ui.R.id.notes_layout))?.visibility =
+            preferences.get(BooleanKey.OverviewShowNotesInDialogs).toVisibility()
 
-        (view.findViewById(app.aaps.core.ui.R.id.ok) as Button?)?.setOnClickListener {
+        (view.findViewById<Button>(app.aaps.core.ui.R.id.ok))?.setOnClickListener {
             synchronized(okClicked) {
                 if (okClicked.get()) {
                     aapsLogger.warn(LTag.UI, "guarding: ok already clicked for dialog: ${this.javaClass.simpleName}")
@@ -135,7 +138,7 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
                 }
             }
         }
-        (view.findViewById(app.aaps.core.ui.R.id.cancel) as Button?)?.setOnClickListener {
+        (view.findViewById<Button>(app.aaps.core.ui.R.id.cancel))?.setOnClickListener {
             aapsLogger.debug(LTag.APS, "Cancel pressed for dialog: ${this.javaClass.simpleName}")
             dismiss()
         }

@@ -87,6 +87,9 @@
     <string name="cobcompared">AAO %1$s %2$.0f</string>
     <string name="triggerHeartRate">Pulsas</string>
     <string name="triggerHeartRateDesc">Pulsas %1$s %2$.0f</string>
+    <string name="triggerPodChangeLabel">Pod aktyvavimas</string>
+    <string name="triggerPodChangeDesc">Pod aktyvuotas</string>
+    <string name="triggerInsulinAgeLabel">Insulino laikas</string>
     <string name="iob_u">AIO [U]:</string>
     <string name="distance_short">Atstumas [m]:</string>
     <string name="recurringTime">Pasikartojantis laikas</string>
@@ -104,8 +107,6 @@
     <string name="automation_event">Automatizuotas įvykis</string>
     <string name="reorder_label">Pertvarkyti</string>
     <string name="user_action">Naudotojo veiksmas</string>
-    <string name="remove_automation">Pašalinti automatizaciją</string>
-    <string name="sort_automation">Rūšiuoti automatizacijas</string>
     <string name="remove_selected_items">Pašalinti pasirinktus elementus</string>
     <string name="count_selected">%1$d pasirinkta</string>
     <string name="system_automation">Sistemos automatizacija</string>
@@ -116,4 +117,10 @@
     <string name="time_to_eat">Laikas valgyti!\nĮjunkite Boluso patarėją ir atlikite skaičiavimą dar kartą.</string>
     <string name="time_to_bolus">Laikas bolusui!\nĮjunkite Skaičiuotuvą ir pakartokite skaičiavimus.</string>
     <string name="error_setting_reminder">Klaida nustatant ateities perspėjimus</string>
+    <!--    Autotune-->
+    <string name="autotune_run">Paleisti Autotune</string>
+    <string name="autotune_run_without_autoswitch">Autotune veikė be profilio keitimo</string>
+    <string name="autotune_run_with_autoswitch">Autotune veikė ir profilis automatiškai pakeistas</string>
+    <string name="autotune_run_with_error">Paskutinio Autotune klaida</string>
+    <string name="autotune_run_cancelled">Nustatytas kitas Autotune veikimas, jis atšauktas</string>
 </resources>

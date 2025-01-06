@@ -2,15 +2,13 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_watchface_large">AAPS (Grande)</string>
-    <string name="label_watchface_big_chart">AAPS (Aumentado)</string>
-    <string name="label_watchface_no_chart">AAPS (SinGráfico)</string>
     <string name="label_watchface_circle">AAPS (Círculo)</string>
     <string name="label_watchface_digital_style">AAPS (Digital)</string>
     <string name="label_watchface_custom">AAPS(personalizado)</string>
     <string name="label_actions_tile">AAPS(Acciones)</string>
     <string name="label_temp_target_tile">AAPS(Objetivo Temporal)</string>
     <string name="label_quick_wizard_tile">AAPS(Asistente Rápido)</string>
+    <string name="label_user_action_tile">AAPS(Acción del usuario)</string>
     <string name="label_warning_sync">Sin datos</string>
     <string name="label_warning_old">Datos antiguos</string>
     <string name="label_warning_since">Desde %1$s</string>
@@ -18,7 +16,6 @@
     <string name="msg_warning_sync">No se han recibido datos desde %1$s. Comprobar si AAPS, (en el teléfono) envía los datos al reloj</string>
     <string name="msg_warning_old">Los datos de AAPS son %1$s antiguos. Comprueba el sensor, xDrip+, NS, configuración de AAPS y otros</string>
     <string name="pref_vibrate_on_bolus">Vibrar en bolos</string>
-    <string name="pref_units_for_actions">Unidades para Acciones</string>
     <string name="units_short">U</string>
     <string name="pref_display_settings">Pantalla</string>
     <string name="pref_graph_settings">Gráfico</string>
@@ -35,7 +32,9 @@
     <string name="pref_show_phone_battery">Mostrar batería del teléfono</string>
     <string name="pref_show_rig_battery">Mostrar batería de la plataforma</string>
     <string name="pref_show_basal_rate">Mostrar la tasa basal</string>
-    <string name="pref_show_loop_status">Mostrar estado del lazo</string>
+    <string name="pref_show_temp_target">Mostrar Objetivo Temporal</string>
+    <string name="pref_show_reservoir_level">Mostrar el nivel del reservorio</string>
+    <string name="pref_show_loop_status">Mostrar estado de bucle</string>
     <string name="pref_show_bg">Mostrar glucosa</string>
     <string name="pref_show_bgi">Mostrar BGI (Índice de glucosa en sangre)</string>
     <string name="pref_show_direction_arrow">Mostrar flecha de dirección</string>
@@ -53,15 +52,15 @@
     <string name="pref_3_hours">3 horas</string>
     <string name="pref_4_hours">4 horas</string>
     <string name="pref_5_hours">5 horas</string>
+    <string name="pref_1_min">deshabilitado</string>
+    <string name="pref_5_min">5 min</string>
+    <string name="pref_10_min">10 min</string>
+    <string name="pref_15_min">15 min</string>
     <string name="pref_input_design">Diseño de entrada</string>
     <string name="pref_default">Por defecto</string>
     <string name="pref_quick_righty">Rápido a la derecha</string>
     <string name="pref_quick_lefty">Rápido a la izquierda</string>
     <string name="pref_modern_sparse">Disperso moderno</string>
-    <string name="pref_low">Bajo</string>
-    <string name="pref_medium">Medio</string>
-    <string name="pref_high">Alto</string>
-    <string name="pref_auto">Auto</string>
     <string name="pref_big_numbers">Números grandes</string>
     <string name="pref_ring_history">Historial del aro</string>
     <string name="pref_light_ring_history">Historial de aro ligero</string>
@@ -94,6 +93,7 @@
     <string name="action_duration">Duración</string>
     <string name="action_tempt_confirmation">Objetivo Temporal Solicitado</string>
     <string name="action_quick_wizard_confirmation">Asistente Rápido Solicitado</string>
+    <string name="action_user_action_confirmation">Acción de usuario solicitada</string>
     <string name="action_treatment_confirmation">Tratamiento Solicitado</string>
     <string name="action_bolus_confirmation">Bolo Solicitado</string>
     <string name="action_wizard_confirmation">Calculadora Solicitada</string>
@@ -115,12 +115,11 @@
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Cantidad libre</string>
     <string name="action_confirm">CONFIRMAR</string>
     <string name="action_timeshift">Cambio de hora</string>
-    <string name="action_bolus">Bolo</string>
     <string name="bolus_progress">Progreso del bolo</string>
     <string name="press_to_cancel">Presiona para cancelar</string>
     <string name="cancel_bolus">CANCELAR BOLO</string>
     <string name="status_pump">Infusora</string>
-    <string name="status_loop">Lazo</string>
+    <string name="status_loop">Bucle</string>
     <string name="status_profile_switch">Cambio de perfil</string>
     <string name="status_tdd">TDD</string>
     <string name="activity_carb">COB</string>
@@ -152,6 +151,8 @@
     <string name="pref_simplify_ui_sum">Mostrar sólo la hora y la glucosa</string>
     <string name="pref_vibrate_hourly">Vibrar cada hora</string>
     <string name="pref_show_weeknumber">Mostrar número de semana</string>
+    <string name="pref_include_external">Incluir vistas externas en la plantilla</string>
+    <string name="pref_switch_external">Cambiar datos externos en la esfera del reloj</string>
     <string name="custom_pref_show_seconds">Mostrar segundos</string>
     <string name="digitalstyle_pref_your_style">Tu estilo:</string>
     <string name="digitalstyle_style_none">Sin estilo</string>
@@ -184,17 +185,11 @@
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
     <string name="no_tmp_basal_u_h">-.--U/h</string>
-    <string name="uploader_na">U: --%</string>
-    <string name="no_status">S: --</string>
-    <string name="time_stamp_na_min_ago">-- Hace min.</string>
-    <string name="delta_na">--- mg/dl</string>
-    <string name="no_loop_status">Sin estado del lazo</string>
     <string name="cob_000g">000g</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00U</string>
     <string name="snooze_alert">Posponer Alertas de AAPS</string>
     <string name="sending_snooze">Enviando aplazamientos a AAPS</string>
-    <string name="short_hour">h</string>
     <string name="week_short">s</string>
     <string name="day_short">d</string>
     <string name="hour_short">h</string>
@@ -204,4 +199,28 @@
     <string name="old_warning">¡antiguo!</string>
     <string name="error">!err!</string>
     <string name="pref_heartRateSampling">Ritmo cardíaco</string>
+    <string name="pref_heartRateSmoothing">Suavizado de RC</string>
+    <string name="pref_stepsSampling">Habilitar contador de pasos</string>
+    <string name="tile_tempt_1">Objetivo temporal 1</string>
+    <string name="tile_tempt_2">Objetivo temporal 2</string>
+    <string name="tile_tempt_3">Objetivo temporal 3</string>
+    <string name="tile_tempt_4">Objetivo temporal 4</string>
+    <string name="tile_action_1">Acción 1</string>
+    <string name="tile_action_2">Acción 2</string>
+    <string name="tile_action_3">Acción 3</string>
+    <string name="tile_action_4">Acción 4</string>
+    <string name="datalayer_notification_title">Servicio de primer plano de capa de datos</string>
+    <string name="datalayer_notification_text">AAPS está ejecutándose en primer plano. Para ocultar las notificaciones, vaya a las opciones de desarrollador, notificaciones de aplicaciones, aplicaciones de reloj, seleccione AAPS, desactive la notificación del canal de servicio de capa de datos.</string>
+    <string name="on">ENCENDIDO</string>
+    <string name="off">APAGADO</string>
+    <string name="complication_full_status">Estado completo</string>
+    <string name="complication_full_status_flipped">Estado completo (invertido)</string>
+    <string name="complication_blood_glucose">Glucosa en sangre</string>
+    <string name="complication_br_cob_iob">BR, COB &amp; IOB</string>
+    <string name="complication_cob_iob">COB &amp; IOB</string>
+    <string name="complication_cob_icon">Icono COB</string>
+    <string name="complication_cob_detailed">COB detallado</string>
+    <string name="complication_iob_icon">Icono IOB</string>
+    <string name="complication_iob_detailed">IOB detallado</string>
+    <string name="complication_uploader_phone_battery">Batería de teléfono que sube los datos</string>
 </resources>

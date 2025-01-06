@@ -1,6 +1,6 @@
 package app.aaps.plugins.automation.triggers
 
-import app.aaps.core.interfaces.iob.IobTotal
+import app.aaps.core.interfaces.aps.IobTotal
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat

@@ -16,7 +16,7 @@ class IobDetailedComplication : BaseComplicationProviderService() {
     override fun buildComplicationData(dataType: Int, raw: RawDisplayData, complicationPendingIntent: PendingIntent): ComplicationData? {
         var complicationData: ComplicationData? = null
         if (dataType == ComplicationData.TYPE_SHORT_TEXT) {
-            val iob = displayFormat.detailedIob(raw)
+            val iob = displayFormat.detailedIob(raw, 0)
             val builder = ComplicationData.Builder(ComplicationData.TYPE_SHORT_TEXT)
                 .setShortText(ComplicationText.plainText(iob.first))
                 .setTapAction(complicationPendingIntent)

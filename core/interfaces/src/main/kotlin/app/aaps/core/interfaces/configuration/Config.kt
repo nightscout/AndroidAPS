@@ -23,8 +23,12 @@ interface Config {
 
     var appInitialized: Boolean
 
+    fun isDev(): Boolean
     fun isEngineeringModeOrRelease(): Boolean
     fun isEngineeringMode(): Boolean
     fun isUnfinishedMode(): Boolean
-    fun isDev(): Boolean
+
+    fun showUserActionsOnWatchOnly(): Boolean
+    fun ignoreNightscoutV3Errors(): Boolean
+    fun doNotSendSmsOnProfileChange(): Boolean
 }

@@ -47,7 +47,6 @@
     <string name="alarm_expired">Έληξε</string>
     <string name="alarm_reservoir_empty">Δεξαμενή άδεια</string>
     <string name="alarm_patch_fault">Σφάλμα Patch</string>
-    <string name="alarm_patch_fault2">Σφάλμα Patch 2</string>
     <string name="alarm_base_fault">Σφάλμα βασικού</string>
     <string name="alarm_battery_out">Χωρίς μπαταρία</string>
     <string name="alarm_no_calibration">Χωρίς βαθμονόμηση</string>
@@ -102,7 +101,6 @@
     <string name="sn_input_title">Σειριακός Αριθμός</string>
     <string name="sn_input_summary">Εισάγετε τον σειριακό αριθμό της βάσης της αντλίας σας.</string>
     <string name="sn_input_invalid">Μη έγκυρος σειριακός αριθμός!</string>
-    <string name="pump_unsupported">Mη δοκιμασμένη αντλία: %1$d! Επικοινωνήστε μαζί μας στο discord ή στο github για υποστήριξη</string>
     <string name="alarm_setting_title">Ρυθμίσεις συναγερμού</string>
     <string name="alarm_setting_summary">Επιλέξτε τις προτιμώμενες ρυθμίσεις συναγερμού της αντλίας σας.</string>
     <string name="patch_expiration_title">Λήξη Patch</string>
@@ -114,4 +112,5 @@
     <string name="getting_bolus_status">Φόρτωση κατάστασης bolus</string>
     <string name="getting_temp_basal_status">Λήψη κατάστασης Προσ Ρυθμού</string>
     <string name="setting_pump_settings">Ρύθμιση επιλογών χρήστη</string>
+    <!-- bolus-->
 </resources>

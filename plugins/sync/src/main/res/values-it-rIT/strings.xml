@@ -13,7 +13,7 @@
     <string name="ns_create_announcements_from_carbs_req_title">Crea avvisi da CHO richiesti</string>
     <string name="ns_create_announcements_from_errors_summary">Crea avviso su Nightscout per finestre di errore e allarmi locali (visualizzabile anche nella sezione Portale sotto la voce Trattamenti)</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Crea avvisi su Nightscout dagli avvisi per CHO richiesti</string>
-    <string name="description_ns_client">Sincronizza i tuoi dati con Nightscout</string>
+    <string name="description_ns_client">Sincronizza i tuoi dati con Nightscout usando API v1</string>
     <string name="description_ns_client_v3">Sincronizza i tuoi dati con Nightscout usando API v3</string>
     <string name="blocked_by_charging">Bloccato dalle opzioni di ricarica</string>
     <string name="blocked_by_connectivity">Bloccato dalle opzioni di connettività</string>
@@ -24,24 +24,20 @@
     <string name="ns_malfunction">Malfunzionamento NSClient. Considera il riavvio di NS e NSClient.</string>
     <!-- NSClient -->
     <string name="no_write_permission">NSCLIENT non ha l\'autorizzazione di scrittura. API secret errato?</string>
-    <string name="ns_client_v3">NSClientV3</string>
     <string name="ns_client_v3_short_name">NSV3</string>
     <string name="ns_client">NSClient</string>
-    <string name="ns_client_short_name">NSCI</string>
+    <string name="ns_client_short_name">NSv1</string>
     <string name="ns_client_url">URL:</string>
     <string name="restart">Riavvio</string>
-    <string name="ns_client_internal_title">NSClient</string>
+    <string name="ns_client_title">NSClientV1</string>
+    <string name="ns_client_v3_title">NSClientV3</string>
     <string name="ns_client_url_title">URL di Nightscout</string>
-    <string name="ns_client_url_dialog_message">Inserisci il tuo URL di Nightscout</string>
-    <string name="ns_client_secret_title">API secret di NS</string>
-    <string name="ns_client_secret_dialog_title">API secret di NS</string>
-    <string name="ns_client_secret_dialog_message">Inserisci l\'API secret di NS (minimo 12 caratteri)</string>
-    <string name="nsclient_token_title">Token di accesso NS</string>
-    <string name="nsclient_token_dialog_title">Token di accesso NS</string>
-    <string name="nsclient_token_dialog_message">Token di accesso generato sulla pagina admin di NS (min 17 caratteri)</string>
+    <string name="ns_client_url_dialog_message">Inserisci l\'URL di Nightscout (es. https://yoursitename.yourplatform.dom)</string>
+    <string name="ns_client_secret_title">API Secret di Nightscout</string>
+    <string name="ns_client_secret_dialog_message">Inserisci il tuo API secret di Nightscout (minimo 12 caratteri della password registratata nelle variabili Nightscout)</string>
+    <string name="nsclient_token_title">Token di accesso Nightscout</string>
+    <string name="nsclient_token_dialog_message">Inserisci il tuo token di accesso di livello amministratore generato negli strumenti di amministrazione Nightscout (minimo 17 caratteri, non la tua API secret!)</string>
     <string name="deliver_now">Invia ora</string>
-    <string name="clear_queue">Cancella coda</string>
-    <string name="show_queue">Mostra coda</string>
     <string name="queue">Coda:</string>
     <string name="status">Stato:</string>
     <string name="clear_log">Cancella log</string>
@@ -89,18 +85,11 @@
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Carica dati su Tidepool</string>
-    <string name="tidepool_upload_cgm">Carica dati CGM</string>
-    <string name="tidepool_upload_bolus">Carica trattamenti (insulina, CHO)</string>
-    <string name="tidepool_upload_tbr">Carica basali temporanee</string>
-    <string name="tidepool_upload_profile">Carica cambi profilo, target temporanei</string>
-    <string name="tidepool_upload_bg">Carica test BG</string>
     <string name="remove_all">Rimuovi tutto</string>
-    <string name="reset_start">Avvio reset</string>
     <string name="upload_now">Carica adesso</string>
     <string name="not_connected">Non connesso</string>
     <string name="read_only">Sola lettura</string>
     <string name="working">In esecuzione</string>
-    <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>
@@ -123,7 +112,8 @@
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Connessione al dispositivo Garmin (Fenix, Edge, …)</string>
-    <string name="key_garmin_settings">Impostazioni Garmin</string>
+    <string name="garmin_local_http_server_port">Porta server HTTP locale</string>
+    <string name="garmin_local_http_server">Server HTTP locale</string>
     <!--    Wear-->
     <string name="wear_shortname">SMWA</string>
     <string name="description_wear">Monitora e controlla AAPS usando il tuo smartwatch WearOS.</string>
@@ -133,7 +123,7 @@
     <string name="wizard_result">Calc. Wizard:\nInsulina: %1$.2fU\nCHO: %2$dg</string>
     <string name="quick_wizard_not_available">Il calcolo rapido selezionato non è più disponibile, aggiorna il riquadro</string>
     <string name="quick_wizard_message">QuickWizard: %1$s\nInsulina: %2$.2fU\nCHO: %3$dg</string>
-    <string name="wear_action_tempt_preset_error">Preset sconosciuto target temporaneo: %1$s</string>
+    <string name="user_action_not_available">L\'azione utente selezionata %1$s non è più disponibile, aggiorna la tua casella</string>
     <string name="wear_action_tempt_cancel_message">Cancellare i target temporanei in esecuzione?</string>
     <string name="wear_action_tempt_unit_error">Differenti unità usate su smartwatch e telefono!</string>
     <string name="wear_action_tempt_zero_message">Nessuno target temporaneo - cancellare i target temporanei in esecuzione?</string>
@@ -146,6 +136,8 @@
     <string name="wear_settings">Impostazioni smartwatch</string>
     <string name="wearcontrol_title">Controlli da smartwatch</string>
     <string name="wearcontrol_summary">Imposta Target temporanei e inserisci trattamenti dallo smartwatch.</string>
+    <string name="wear_broadcast_data">Dati trasmissione</string>
+    <string name="wear_broadcast_data_summary">Trasmetti i dati ad AAPS o AAPSClient</string>
     <string name="wear_wizard_settings_summary">Calcoli inclusi nel risultato del Calcolatore:</string>
     <string name="wear_general_settings">Impostazioni generali</string>
     <string name="wear_notifysmb_title">Notifica SMB</string>
@@ -158,6 +150,7 @@
     <string name="wear_infos_watchface">Informazioni watchface</string>
     <string name="wear_export_watchface">Esporta template</string>
     <string name="wear_new_custom_watchface_exported">Esportato template personalizzato di Watchface</string>
+    <string name="wear_link_to_more_cwf_doc">https://androidaps.readthedocs.io/en/latest/ExchangeSiteCustomWatchfaces/index.html</string>
     <string name="resend_all_data">Invia di nuovo tutti i dati</string>
     <string name="open_settings_on_wear">Apri impostazioni sullo smartwatch</string>
     <string name="cwf_infos_pref_locked">Elenco impostazioni bloccate dalla watchface</string>
@@ -189,4 +182,5 @@
     <string name="tdd_line">%1$.2fU %1$.0f%%</string>
     <string name="today">Oggi</string>
     <string name="weighted">ponderato</string>
+    <string name="full_xdrip_sync_comment">Sincronizzazione completa? Potrebbe richiedere parecchio e fino alla fine del processo non vedrai nuovi dati in xDrip+.</string>
 </resources>

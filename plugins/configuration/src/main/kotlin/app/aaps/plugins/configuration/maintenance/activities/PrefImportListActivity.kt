@@ -5,10 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import app.aaps.core.interfaces.maintenance.PrefFileListProvider
+import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.maintenance.PrefsFile
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
@@ -23,7 +22,7 @@ import javax.inject.Inject
 class PrefImportListActivity : TranslatedDaggerAppCompatActivity() {
 
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var prefFileListProvider: PrefFileListProvider
+    @Inject lateinit var fileListProvider: FileListProvider
 
     private lateinit var binding: MaintenanceImportListActivityBinding
 
@@ -39,7 +38,7 @@ class PrefImportListActivity : TranslatedDaggerAppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(true)
 
         binding.recyclerview.layoutManager = LinearLayoutManager(this)
-        binding.recyclerview.adapter = RecyclerViewAdapter(prefFileListProvider.listPreferenceFiles())
+        binding.recyclerview.adapter = RecyclerViewAdapter(fileListProvider.listPreferenceFiles())
     }
 
     inner class RecyclerViewAdapter internal constructor(private var prefFileList: List<PrefsFile>) : RecyclerView.Adapter<RecyclerViewAdapter.PrefFileViewHolder>() {
@@ -54,7 +53,7 @@ class PrefImportListActivity : TranslatedDaggerAppCompatActivity() {
                         val i = Intent()
 
                         i.putExtra(PrefsFileContract.OUTPUT_PARAM, prefFile)
-                        setResult(FragmentActivity.RESULT_OK, i)
+                        setResult(RESULT_OK, i)
                         finish()
                     }
                 }
@@ -73,10 +72,8 @@ class PrefImportListActivity : TranslatedDaggerAppCompatActivity() {
         override fun onBindViewHolder(holder: PrefFileViewHolder, position: Int) {
             val prefFile = prefFileList[position]
             with(holder.maintenanceImportListItemBinding) {
-                filelistName.text = prefFile.file.name
+                filelistName.text = prefFile.name
                 filelistName.tag = prefFile
-
-                filelistDir.text = rh.gs(R.string.in_directory, prefFile.file.parentFile?.absolutePath)
 
                 metalineName.visibility = View.VISIBLE
                 metaDateTimeIcon.visibility = View.VISIBLE
@@ -89,7 +86,7 @@ class PrefImportListActivity : TranslatedDaggerAppCompatActivity() {
                 }
 
                 prefFile.metadata[PrefsMetadataKeyImpl.CREATED_AT]?.let {
-                    metaDateTime.text = prefFileListProvider.formatExportedAgo(it.value)
+                    metaDateTime.text = fileListProvider.formatExportedAgo(it.value)
                 }
 
                 prefFile.metadata[PrefsMetadataKeyImpl.AAPS_VERSION]?.let {

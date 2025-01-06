@@ -3,11 +3,9 @@
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_shortname">EOP2</string>
     <string name="eopatch_pump_description">Pumpintegration för EOPatch2 / GlucoMen Day</string>
-    <string name="category_alerts">Varningar</string>
     <string name="low_reservoir">Varningar för låg reservoar</string>
     <string name="patch_expiration_reminders">Påminnelse om att byta patch</string>
     <string name="patch_buzzer_reminders">Påminnelse om att byta patchvibrator</string>
-    <string name="time_format_a_h_mm">hh:mm</string>
     <string name="eopatch_ble_status">BLE Status</string>
     <string name="eopatch_serial_number">Serienummer</string>
     <string name="eopatch_lot_number">Lot-nummer</string>
@@ -26,7 +24,6 @@
     <string name="time_1hr">1 tim</string>
     <string name="time_1hr_30min">1 tim 30 min</string>
     <string name="time_2hr">2 tim</string>
-    <string name="all_blank">\u0020</string>
     <string name="patch_safe_deactivation_desc">För att byta pod måste den aktuella kasseras. All insulinleverans från den nuvarande podden kommer att stoppas.</string>
     <string name="patch_discard_complete_title">Kassering av podden är slutförd.</string>
     <string name="patch_discard_complete_desc">Podden har inaktiverats.\nDu kan nu ta bort den och kassera den.</string>
@@ -38,9 +35,6 @@
     <string name="patch_remaining_usage_period">Återstående tid</string>
     <string name="patch_finish">Slutför</string>
     <string name="patch_forced_discard">Kassera</string>
-    <string name="patch_comm_error_during_discard_status">Kommunikationsfel under kassering av pod </string>
-    <string name="patch_comm_error_during_discard_desc">För normal avaktivering, tryck på \'Försök igen\'.\nFör ensidig avaktivering, tryck på \'Kassera\'.</string>
-    <string name="patch_comm_error_during_discard_desc_1">För normal inaktivering, tryck på \'Försök igen\'.</string>
     <string name="patch_comm_error_during_discard_desc_2">För ensidig avaktivering, tryck på \'Kassera\'.</string>
     <string name="patch_manually_turning_off_alarm_title">Att manuellt stänga av poddens larm</string>
     <string name="patch_manually_turning_off_alarm_desc_1">Om podden avaktiveras ensidigt under ett kommunikationsfel, finns en risk att larmet från podden fortsätter.</string>
@@ -82,8 +76,6 @@
     <string name="patch_expiration_reminder_setting_title">Påminnelse om att byta pod</string>
     <string name="patch_activate_reminder_title">Påminnelse om podaktivering</string>
     <string name="patch_activate_reminder_desc">Podaktiveringen har inte slutförts.\n Fortsätt.</string>
-    <string name="patch_communication_check">Kontrollera kommunikation med pod</string>
-    <string name="patch_communication_check_status_1">Kontrollerar kommunikation…</string>
     <string name="patch_communication_check_helper_1">Flytta din smarta enhet närmare podden.</string>
     <string name="patch_communication_check_helper_2">Vänligen flytta till en annan plats och försök igen.</string>
     <string name="patch_communication_failed">Kommunikationsfel</string>
@@ -114,7 +106,6 @@
     <string name="retry">Försök igen</string>
     <string name="string_caution_not_remove_needle_cap">[Caution] Ta INTE bort kanylkåpan och den självhäftande undersidan tills vidare instruktioner ges.</string>
     <string name="string_are_you_sure_to_discard_current_patch">Är du säker på att du vill kassera den nuvarande podden?</string>
-    <string name="string_unconfirmed_bolus_info_discard_confirm_message">På grund av obekräftad bolusinformation kan boluskalkylatorn inte användas förrän %s.\n\nÄr du säker på att du vill kassera den nuvarande Patchen?</string>
     <string name="needle_insertion_error_1">Fel vid insättning av nål.</string>
     <string name="needle_insertion_error_2">Kontrollera att riktningen på hålet som är kvar efter att ha vridit spaken är rak och tryck sedan på \'Försök igen\'.</string>
     <string name="needle_insertion_error_3">Tryck på \'Kassera\' för att avaktivera pod.</string>
@@ -126,7 +117,6 @@
     <string name="finish">Slutför</string>
     <string name="string_temp_basal_remained_hhmm">återstående tid: %1$s:%2$s</string>
     <string name="next">Nästa</string>
-    <string name="patch_connection_fail">Försök igen efter kommunikationskontroll.</string>
     <string name="string_pause_failed">Avstängning misslyckades.</string>
     <string name="string_resume_failed">Återupptagande misslyckades.</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE d MMM yyyy hh:mm</string>

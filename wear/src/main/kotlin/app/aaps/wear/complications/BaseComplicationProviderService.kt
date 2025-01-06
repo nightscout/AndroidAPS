@@ -206,7 +206,7 @@ abstract class BaseComplicationProviderService : ComplicationProviderService() {
         // store what is currently rendered in 'SGV since' field, to detect if it was changed and need update
         persistence.putString(
             Persistence.KEY_LAST_SHOWN_SINCE_VALUE,
-            displayFormat.shortTimeSince(raw.singleBg.timeStamp)
+            displayFormat.shortTimeSince(raw.singleBg[0].timeStamp)
         )
 
         // by each render we clear stale flag to ensure it is re-rendered at next refresh detection round
@@ -220,12 +220,12 @@ abstract class BaseComplicationProviderService : ComplicationProviderService() {
                 buildNoSyncComplicationData(dataType, raw, complicationPendingIntent, infoToast, persistence.whenDataUpdated())
             }
 
-            wearUtil.msSince(raw.singleBg.timeStamp) > Constants.STALE_MS        -> {
+            wearUtil.msSince(raw.singleBg[0].timeStamp) > Constants.STALE_MS     -> {
                 // data arriving from phone AAPS, but it is outdated (uploader/NS/xDrip/Sensor error)
                 val infoToast = getTapWarningSinceIntent(
-                    applicationContext, thisProvider, complicationId, ComplicationAction.WARNING_OLD, raw.singleBg.timeStamp
+                    applicationContext, thisProvider, complicationId, ComplicationAction.WARNING_OLD, raw.singleBg[0].timeStamp
                 )
-                buildOutdatedComplicationData(dataType, raw, complicationPendingIntent, infoToast, raw.singleBg.timeStamp)
+                buildOutdatedComplicationData(dataType, raw, complicationPendingIntent, infoToast, raw.singleBg[0].timeStamp)
             }
 
             else                                                                 -> {
@@ -278,9 +278,9 @@ abstract class BaseComplicationProviderService : ComplicationProviderService() {
         val raw = RawDisplayData()
         raw.updateFromPersistence(persistence)
         val lastSince = persistence.getString(Persistence.KEY_LAST_SHOWN_SINCE_VALUE, "-")
-        val calcSince = displayFormat.shortTimeSince(raw.singleBg.timeStamp)
+        val calcSince = displayFormat.shortTimeSince(raw.singleBg[0].timeStamp)
         val isStale = (wearUtil.msSince(persistence.whenDataUpdated()) > Constants.STALE_MS
-            || wearUtil.msSince(raw.singleBg.timeStamp) > Constants.STALE_MS)
+            || wearUtil.msSince(raw.singleBg[0].timeStamp) > Constants.STALE_MS)
         val staleWasRefreshed = persistence.getBoolean(Persistence.KEY_STALE_REPORTED, false)
         val sinceWasChanged = lastSince != calcSince
         if (sinceWasChanged || isStale && !staleWasRefreshed) {

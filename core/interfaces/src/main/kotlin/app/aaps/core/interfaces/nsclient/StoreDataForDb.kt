@@ -1,51 +1,50 @@
 package app.aaps.core.interfaces.nsclient
 
-import app.aaps.database.entities.Bolus
-import app.aaps.database.entities.BolusCalculatorResult
-import app.aaps.database.entities.Carbs
-import app.aaps.database.entities.DeviceStatus
-import app.aaps.database.entities.EffectiveProfileSwitch
-import app.aaps.database.entities.ExtendedBolus
-import app.aaps.database.entities.Food
-import app.aaps.database.entities.GlucoseValue
-import app.aaps.database.entities.OfflineEvent
-import app.aaps.database.entities.ProfileSwitch
-import app.aaps.database.entities.TemporaryBasal
-import app.aaps.database.entities.TemporaryTarget
-import app.aaps.database.entities.TherapyEvent
-import app.aaps.database.transactions.TransactionGlucoseValue
+import app.aaps.core.data.model.BCR
+import app.aaps.core.data.model.BS
+import app.aaps.core.data.model.CA
+import app.aaps.core.data.model.DS
+import app.aaps.core.data.model.EB
+import app.aaps.core.data.model.EPS
+import app.aaps.core.data.model.FD
+import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.OE
+import app.aaps.core.data.model.PS
+import app.aaps.core.data.model.TB
+import app.aaps.core.data.model.TE
+import app.aaps.core.data.model.TT
 
 interface StoreDataForDb {
 
-    val glucoseValues: MutableList<TransactionGlucoseValue>
-    val boluses: MutableList<Bolus>
-    val carbs: MutableList<Carbs>
-    val temporaryTargets: MutableList<TemporaryTarget>
-    val effectiveProfileSwitches: MutableList<EffectiveProfileSwitch>
-    val bolusCalculatorResults: MutableList<BolusCalculatorResult>
-    val therapyEvents: MutableList<TherapyEvent>
-    val extendedBoluses: MutableList<ExtendedBolus>
-    val temporaryBasals: MutableList<TemporaryBasal>
-    val profileSwitches: MutableList<ProfileSwitch>
-    val offlineEvents: MutableList<OfflineEvent>
-    val foods: MutableList<Food>
+    fun addToGlucoseValues(payload: MutableList<GV>): Boolean
+    fun addToBoluses(payload: BS): Boolean
+    fun addToCarbs(payload: CA): Boolean
+    fun addToTemporaryTargets(payload: TT): Boolean
+    fun addToEffectiveProfileSwitches(payload: EPS): Boolean
+    fun addToBolusCalculatorResults(payload: BCR): Boolean
+    fun addToTherapyEvents(payload: TE): Boolean
+    fun addToExtendedBoluses(payload: EB): Boolean
+    fun addToTemporaryBasals(payload: TB): Boolean
+    fun addToProfileSwitches(payload: PS): Boolean
+    fun addToOfflineEvents(payload: OE): Boolean
+    fun addToFoods(payload: MutableList<FD>): Boolean
 
-    val nsIdGlucoseValues: MutableList<GlucoseValue>
-    val nsIdBoluses: MutableList<Bolus>
-    val nsIdCarbs: MutableList<Carbs>
-    val nsIdTemporaryTargets: MutableList<TemporaryTarget>
-    val nsIdEffectiveProfileSwitches: MutableList<EffectiveProfileSwitch>
-    val nsIdBolusCalculatorResults: MutableList<BolusCalculatorResult>
-    val nsIdTherapyEvents: MutableList<TherapyEvent>
-    val nsIdExtendedBoluses: MutableList<ExtendedBolus>
-    val nsIdTemporaryBasals: MutableList<TemporaryBasal>
-    val nsIdProfileSwitches: MutableList<ProfileSwitch>
-    val nsIdOfflineEvents: MutableList<OfflineEvent>
-    val nsIdDeviceStatuses: MutableList<DeviceStatus>
-    val nsIdFoods: MutableList<Food>
+    fun addToNsIdGlucoseValues(payload: GV): Boolean
+    fun addToNsIdBoluses(payload: BS): Boolean
+    fun addToNsIdCarbs(payload: CA): Boolean
+    fun addToNsIdTemporaryTargets(payload: TT): Boolean
+    fun addToNsIdEffectiveProfileSwitches(payload: EPS): Boolean
+    fun addToNsIdBolusCalculatorResults(payload: BCR): Boolean
+    fun addToNsIdTherapyEvents(payload: TE): Boolean
+    fun addToNsIdExtendedBoluses(payload: EB): Boolean
+    fun addToNsIdTemporaryBasals(payload: TB): Boolean
+    fun addToNsIdProfileSwitches(payload: PS): Boolean
+    fun addToNsIdOfflineEvents(payload: OE): Boolean
+    fun addToNsIdDeviceStatuses(payload: DS): Boolean
+    fun addToNsIdFoods(payload: FD): Boolean
 
-    val deleteTreatment: MutableList<String>
-    val deleteGlucoseValue: MutableList<String>
+    fun addToDeleteTreatment(payload: String): Boolean
+    fun addToDeleteGlucoseValue(payload: String): Boolean
 
     fun updateDeletedGlucoseValuesInDb()
     fun storeTreatmentsToDb()

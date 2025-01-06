@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="DynISFAdjust_title" formatted="false">Fator de Ajuste FSI dinâmico %</string>
-    <string name="DynISFAdjust_summary" formatted="false">Fator de ajuste para FSI dinâmico. Defina mais de 100%% para doses de correção mais agressivas e menos de 100%% para correções menos agressivas.</string>
+    <!--Autotune-->
     <string name="high_temptarget_raises_sensitivity_title">Alto alvotempo aumenta sensibilidade</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Aumentar sensibilidade para alvostemp >= 100]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Baixo alvotemp baixa sensibilidade</string>
@@ -60,9 +59,7 @@
     <string name="enable_smb_summary">Usar Super Micro Bolus (SMB) em vez de basal temporária para resposta mais rápida</string>
     <string name="enable_uam_summary">Detecção de refeições não anunciadas</string>
     <string name="enable_smb_always">SMB sempre ativo</string>
-    <string name="enable_smb_always_summary">SMB sempre activo independentemente dos bolus. Possível apenas quando o medidor tive um bom filtro de dados como o G5</string>
     <string name="enable_smb_after_carbs">Ativar SMB após refeição</string>
-    <string name="enable_smb_after_carbs_summary">SMB activo por 6h após carbs, mesmo com 0 COB. Possível apenas quando o medidor tive um bom filtro de dados como o G5</string>
     <string name="enable_smb_with_cob">Ativar SMB com COB</string>
     <string name="enable_smb_with_cob_summary">Ativar SMB quando houver carboidratos ativos.</string>
     <string name="enable_smb_with_temp_target">SMB activo com valores alvo temporários</string>
@@ -113,4 +110,45 @@
     <string name="loop_smb_set_by_pump_label">SMB definido pela bomba</string>
     <string name="loop_open_mode_min_change">Pedido de mudança mínima [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">O Loop aberto irá apresentar uma nova solicitação de alteração apenas se a mudança for maior do que este valor em %. O valor padrão é 20%</string>
+    <!-- Autotune -->
+    <string name="autotune_shortname">AT</string>
+    <string name="autotune_settings">Configurações Autotune</string>
+    <string name="autotune_auto_title">Automação de alternância de perfil</string>
+    <string name="autotune_auto_summary">Se ativado, o Autotune atualizará automaticamente e mudará para o perfil de entrada após o cálculo de uma regra de automação.</string>
+    <string name="autotune_categorize_uam_as_basal_title">Classificar RNA como basal</string>
+    <string name="autotune_categorize_uam_as_basal_summary">Ativar apenas se você inseriu confiavelmente todos os carboidratos consumidos, com esta opção aumentos repentinos vistos pelo Autotune serão usados para recomendar mudanças na taxa basal.</string>
+    <string name="autotune_tune_insulin_curve_title">Ajustar curva da insulina</string>
+    <string name="autotune_tune_insulin_curve_summary">Habilitar apenas se você usar pico livre. Esta opção irá ajustar a duração do pico e da DAI</string>
+    <string name="autotune_default_tune_days_title">Número de dias de dados</string>
+    <string name="autotune_circadian_ic_isf_title">Aplicar resultado médio em I:C/FS circadiano</string>
+    <string name="autotune_circadian_ic_isf_summary">Autotune não irá ajustar variações circadianas, esta opção somente aplica o ajuste médio do I:C e FS ao seu perfil de entrada circadiano</string>
+    <string name="autotune_additional_log_title">Incluir mais informações de log para depuração</string>
+    <string name="autotune_additional_log_summary">Acione somente se solicitado pelo dev para enviar mais informações de registro para ajudar a depurar o plugin Autotune</string>
+    <string name="autotune_default_tune_days_summary">Número padrão de dias de dados a serem processados por Autotune (até 30)</string>
+    <string name="autotune_tunedprofile_name">Ajustado</string>
+    <string name="autotune_profile">Perfil:</string>
+    <string name="autotune_last_run">Última execução :</string>
+    <string name="autotune_warning">Aviso :</string>
+    <string name="autotune_ic_warning">O perfil selecionado tem %1$d valores de IC. Autotune vai usar %2$.2f g/U</string>
+    <string name="autotune_isf_warning">O perfil selecionado tem %1$d valores de ISF. Autotune usará %2$.1f %3$s/U</string>
+    <string name="autotune_error">Erro nos dados de entrada, tente executar novamente autotune ou reduza o número de dias</string>
+    <string name="autotune_error_more_days">Erro nos dados de entrada, tente reduzir o número de dias</string>
+    <string name="autotune_warning_during_run">Cálculos do Autotune iniciados, por favor aguarde</string>
+    <string name="autotune_warning_after_run">Verifique os resultados cuidadosamente antes de usá-los!</string>
+    <string name="autotune_partial_result">Resultado parcial - dia %1$d / %2$d ajustado</string>
+    <string name="autotune_result">Resultado: %1$s</string>
+    <string name="autotune_param">Parâmetro</string>
+    <string name="autotune_percent">%</string>
+    <string name="autotune_missing">Faltando</string>
+    <string name="autotune_run">Executar Autotune</string>
+    <string name="autotune_check_input_profile_button">Verifique o perfil de entrada</string>
+    <string name="autotune_compare_profile">Comparar perfis</string>
+    <string name="autotune_copy_localprofile_button">Copiar para o perfil local</string>
+    <string name="autotune_update_input_profile_button">Atualizar perfil de entrada</string>
+    <string name="autotune_revert_input_profile_button">Reverter perfil de entrada</string>
+    <string name="autotune_copy_local_profile_message">Criar um novo perfil local a partir deste perfil Autotune?</string>
+    <string name="autotune_update_local_profile_message">Atualizar perfil %1$s com perfil do Autotune?</string>
+    <string name="autotune_revert_local_profile_message">Reverter o perfil %1$s para o perfil inicial?</string>
+    <string name="autotune_profile_invalid">Perfil inválido</string>
+    <!--    autoISF -->
 </resources>

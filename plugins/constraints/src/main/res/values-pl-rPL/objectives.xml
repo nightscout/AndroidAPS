@@ -13,6 +13,7 @@
     <string name="objectives_openloop_learned">Otwarta pętla może być użyta do sugerowania rekomendacji, przy braku kompatybilnej pompy lub gotowości do zamknięcia pętli.</string>
     <string name="objectives_maxbasal_objective">Zrozumienie działania otwartej pętli, wraz z jej rekomendacjami dawek tymczasowych</string>
     <string name="objectives_maxbasal_gate">Na podstawie tych doświadczeń zdecyduj jaka powinna być ustawiona maksymalna baza, i wprowadź ją w pompie i w ustawieniach AAPS</string>
+    <string name="objectives_maxbasal">Wykonaj działanie, aby spełnić rekomendację</string>
     <string name="objectives_maxbasal_learned">Należy zwrócić uwagę na dostępne zabezpieczenia i w razie potrzeby dostosować parametry bezpieczeństwa.</string>
     <string name="objectives_maxiobzero_objective">Rozpoczęcie zamknięcia pętli z zawieszeniem podawania bazy przy niskim poziomie cukru</string>
     <string name="objectives_maxiobzero_gate">Używaj przez kilka dni zamkniętej pętli (Closed Loop) z max IOB = 0 bez zbyt wielu incydentów niedocukrzeń</string>
@@ -26,11 +27,8 @@
     <string name="objectives_smb_objective">Włączanie dodatkowych funkcji do użytku, jak SMB (Super Mikro Bolusy)</string>
     <string name="objectives_smb_gate">Musisz przeczytać wiki i zwiększyć maxIOB, aby SMB działało dobrze! Dobrym początkiem jest maxIOB = średni bolus doposiłkowy + 3 x maks. spośród dziennych dawek bazowych</string>
     <string name="objectives_smb_learned">Używanie SMB jest Twoim celem. Algorytm Oref1 został zaprojektowany, aby pomóc Ci również w bolusach. Nie należy podawać pełnego bolusa do jedzenia, ale tylko jego część, a w razie potrzeby pozostawić resztę AAPS. W ten sposób masz więcej miejsca na błędnie obliczone węglowodany. Czy wiesz, że można w kalkulatorze ustawić procent wyniku bolusa, aby zmniejszyć rozmiar bolusa?</string>
-    <string name="objectives_dyn_isf_objective">Uruchomienie do codziennego użytku dodatkowych funkcji, takich jak plugin dynamicznej wrażliwości</string>
-    <string name="objectives_dyn_isf_gate">Upewnij się, że SMB działa poprawnie. Włącz wtyczkę DynamicISF i określ odpowiednią kalibrację pasującą do indywidualnego i unikalnego zapotrzebowania Twojego ciała. Dla bezpieczeństwa, wskazane jest rozpoczęcie od wartości niższej niż 100%.</string>
-    <string name="objectives_dyn_isf_learned">Wtyczka „Dynamiczna wrażliwość” opiera się na założeniu, że całkowita podaż insuliny i obecne poziomy glikemii wpływają na rzeczywistą wrażliwość. Wtyczka DynamicISF może dla Ciebie dostosowywać współczynnik wrażliwości na insulinę (ISF) używany przez algorytm.</string>
     <string name="objectives_auto_objective">Włączanie automatyzacji</string>
-    <string name="objectives_auto_gate">Przeczytaj dokumentację dotyczącą działania automatyzacji. Skonfiguruj swoje pierwsze proste zasady. Zamiast wykonania działania niech AAPS wyświetli tylko powiadomienie. Gdy masz pewność, że automatyzacja zostaje uruchomiona we właściwym czasie, zastąp powiadomienie rzeczywistą akcją. (https://wiki.aaps.app/en/latest/Usage/Automation.html)</string>
+    <string name="objectives_auto_gate">Przeczytaj dokumentację dotyczącą działania automatyzacji. Skonfiguruj swoje pierwsze proste reguły. Zamiast natychmiastowego wykonania akcji ustaw, aby AAPS wyświetlił tylko powiadomienie. Gdy masz pewność, że automatyzacja zostaje uruchomiona we właściwym czasie i we właściwy sposób, zastąp powiadomienie rzeczywistą akcją. (https://wiki.aaps.app/en/latest/DailyLifeWithAaps/Automations.html)</string>
     <string name="objectives_auto_learned">Automatyzacja może być dobrym sługą, ale złym panem. Nie nadużywaj jej. Nie próbuj zastąpić podwalin głównego algorytmu. Przed użyciem sprawdź regułę samym powiadomieniem. Zwróć uwagę na kolejność wykonania reguł.</string>
     <string name="objectives_bgavailableinns">Glikemia dostępna w NS lub Tidepool</string>
     <string name="objectives_pumpstatusavailableinns">Status pompy dostępny w NS lub Tidepool</string>
@@ -77,12 +75,13 @@
     <string name="unfinshed_button">Następny niedokończony</string>
     <string name="requestcode">Kod zapytania: %1$s</string>
     <string name="objectives_hint">(zaznacz wszystkie poprawne odpowiedzi)</string>
-    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
-    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html</string>
-    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/SettingUpAaps/ConfigBuilder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#the-homescreen</string>
     <string name="notconnected">Brak połączenia z Internetem</string>
     <string name="failedretrievetime">Nie udało się odzyskać</string>
     <string name="requirementnotmet">Wymagania celu nie zostały spełnione</string>
     <string name="what_i_ve_learned">Czego się nauczyłem:</string>
+    <string name="verify_master_password">Sprawdź, czy znasz hasło główne</string>
 </resources>

@@ -8,7 +8,13 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
-import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.data.model.BS
+import app.aaps.core.data.model.TE
+import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.pump.defs.ManufacturerType
+import app.aaps.core.data.pump.defs.PumpDescription
+import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.data.pump.defs.TimeChangeType
 import app.aaps.core.interfaces.androidPermissions.AndroidPermission
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
@@ -17,17 +23,15 @@ import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpPluginBase
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.pump.defs.ManufacturerType
-import app.aaps.core.interfaces.pump.defs.PumpDescription
-import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -41,8 +45,9 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.interfaces.utils.TimeChangeType
-import dagger.android.HasAndroidInjector
+import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.toast.ToastUtils
 import info.nightscout.comboctl.android.AndroidBluetoothInterface
 import info.nightscout.comboctl.base.BasicProgressStage
 import info.nightscout.comboctl.base.BluetoothException
@@ -59,8 +64,6 @@ import info.nightscout.comboctl.parser.AlertScreenContent
 import info.nightscout.comboctl.parser.AlertScreenException
 import info.nightscout.comboctl.parser.BatteryState
 import info.nightscout.comboctl.parser.ReservoirState
-import app.aaps.core.ui.dialogs.OKDialog
-import app.aaps.core.ui.toast.ToastUtils
 import info.nightscout.pump.combov2.activities.ComboV2PairingActivity
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
@@ -104,7 +107,6 @@ internal const val PUMP_ERROR_TIMEOUT_INTERVAL_MSECS = 1000L * 60 * 5
 
 @Singleton
 class ComboV2Plugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     commandQueue: CommandQueue,
@@ -117,7 +119,8 @@ class ComboV2Plugin @Inject constructor(
     private val uiInteraction: UiInteraction,
     private val androidPermission: AndroidPermission,
     private val config: Config,
-    private val decimalFormatter: DecimalFormatter
+    private val decimalFormatter: DecimalFormatter,
+    private val instantiator: Instantiator
 ) :
     PumpPluginBase(
         PluginDescription()
@@ -128,13 +131,8 @@ class ComboV2Plugin @Inject constructor(
             .shortName(R.string.combov2_plugin_shortname)
             .description(R.string.combov2_plugin_description)
             .preferencesId(R.xml.pref_combov2),
-        injector,
-        aapsLogger,
-        rh,
-        commandQueue
-    ),
-    Pump,
-    PluginConstraints {
+        aapsLogger, rh, commandQueue
+    ), Pump, PluginConstraints {
 
     // Coroutine scope and the associated job. All coroutines
     // that are started in this plugin are part of this scope.
@@ -861,7 +859,7 @@ class ComboV2Plugin @Inject constructor(
                 Notification.URGENT
             )
 
-            return PumpEnactResult(injector).apply {
+            return instantiator.providePumpEnactResult().apply {
                 success = false
                 enacted = false
                 comment = rh.gs(app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set)
@@ -873,7 +871,7 @@ class ComboV2Plugin @Inject constructor(
         rxBus.send(EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED))
         rxBus.send(EventDismissNotification(Notification.FAILED_UPDATE_PROFILE))
 
-        val pumpEnactResult = PumpEnactResult(injector)
+        val pumpEnactResult = instantiator.providePumpEnactResult()
 
         val requestedBasalProfile = profile.toComboCtlBasalProfile()
         aapsLogger.debug(LTag.PUMP, "Basal profile to set: $requestedBasalProfile")
@@ -975,7 +973,7 @@ class ComboV2Plugin @Inject constructor(
                     aapsLogger.debug(LTag.PUMP, "Auto-inserting reservoir change therapy event")
                     pumpSync.insertTherapyEventIfNewWithTimestamp(
                         timestamp = System.currentTimeMillis(),
-                        type = DetailedBolusInfo.EventType.INSULIN_CHANGE,
+                        type = TE.Type.INSULIN_CHANGE,
                         pumpId = null,
                         pumpType = PumpType.ACCU_CHEK_COMBO,
                         pumpSerial = serialNumber()
@@ -999,7 +997,7 @@ class ComboV2Plugin @Inject constructor(
                     aapsLogger.debug(LTag.PUMP, "Auto-inserting battery change therapy event")
                     pumpSync.insertTherapyEventIfNewWithTimestamp(
                         timestamp = System.currentTimeMillis(),
-                        type = DetailedBolusInfo.EventType.PUMP_BATTERY_CHANGE,
+                        type = TE.Type.PUMP_BATTERY_CHANGE,
                         pumpId = null,
                         pumpType = PumpType.ACCU_CHEK_COMBO,
                         pumpSerial = serialNumber()
@@ -1029,12 +1027,12 @@ class ComboV2Plugin @Inject constructor(
 
         val requestedBolusAmount = detailedBolusInfo.insulin.iuToCctlBolus()
         val bolusReason = when (detailedBolusInfo.bolusType) {
-            DetailedBolusInfo.BolusType.NORMAL  -> ComboCtlPump.StandardBolusReason.NORMAL
-            DetailedBolusInfo.BolusType.SMB     -> ComboCtlPump.StandardBolusReason.SUPERBOLUS
-            DetailedBolusInfo.BolusType.PRIMING -> ComboCtlPump.StandardBolusReason.PRIMING_INFUSION_SET
+            BS.Type.NORMAL  -> ComboCtlPump.StandardBolusReason.NORMAL
+            BS.Type.SMB     -> ComboCtlPump.StandardBolusReason.SUPERBOLUS
+            BS.Type.PRIMING -> ComboCtlPump.StandardBolusReason.PRIMING_INFUSION_SET
         }
 
-        val pumpEnactResult = PumpEnactResult(injector)
+        val pumpEnactResult = instantiator.providePumpEnactResult()
         pumpEnactResult.success = false
 
         if (isSuspended()) {
@@ -1055,7 +1053,7 @@ class ComboV2Plugin @Inject constructor(
         EventOverviewBolusProgress.t = Treatment(
             insulin = 0.0,
             carbs = 0,
-            isSMB = detailedBolusInfo.bolusType === DetailedBolusInfo.BolusType.SMB,
+            isSMB = detailedBolusInfo.bolusType === BS.Type.SMB,
             id = detailedBolusInfo.id
         )
 
@@ -1179,7 +1177,7 @@ class ComboV2Plugin @Inject constructor(
     }
 
     override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
-        val pumpEnactResult = PumpEnactResult(injector)
+        val pumpEnactResult = instantiator.providePumpEnactResult()
         pumpEnactResult.isPercent = false
 
         // Corner case: Current base basal rate is 0 IU. We cannot do
@@ -1230,7 +1228,7 @@ class ComboV2Plugin @Inject constructor(
     }
 
     override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
-        val pumpEnactResult = PumpEnactResult(injector)
+        val pumpEnactResult = instantiator.providePumpEnactResult()
         pumpEnactResult.isPercent = true
 
         val roundedPercentage = ((percent + 5) / 10) * 10
@@ -1262,7 +1260,7 @@ class ComboV2Plugin @Inject constructor(
     }
 
     override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
-        val pumpEnactResult = PumpEnactResult(injector)
+        val pumpEnactResult = instantiator.providePumpEnactResult()
         pumpEnactResult.isPercent = true
         pumpEnactResult.isTempCancel = enforceNew
         setTbrInternal(100, 0, tbrType = ComboCtlTbr.Type.NORMAL, force100Percent = enforceNew, pumpEnactResult)
@@ -1519,7 +1517,7 @@ class ComboV2Plugin @Inject constructor(
     override val isFakingTempsByExtendedBoluses = false
 
     override fun loadTDDs(): PumpEnactResult {
-        val pumpEnactResult = PumpEnactResult(injector)
+        val pumpEnactResult = instantiator.providePumpEnactResult()
         val acquiredPump = getAcquiredPump()
 
         runBlocking {
@@ -2025,7 +2023,7 @@ class ComboV2Plugin @Inject constructor(
                 pumpSync.syncBolusWithPumpId(
                     event.timestamp.toEpochMilliseconds(),
                     event.bolusAmount.cctlBolusToIU(),
-                    DetailedBolusInfo.BolusType.NORMAL,
+                    BS.Type.NORMAL,
                     event.bolusId,
                     PumpType.ACCU_CHEK_COMBO,
                     serialNumber()
@@ -2034,9 +2032,9 @@ class ComboV2Plugin @Inject constructor(
 
             is ComboCtlPump.Event.StandardBolusInfused -> {
                 val bolusType = when (event.standardBolusReason) {
-                    ComboCtlPump.StandardBolusReason.NORMAL               -> DetailedBolusInfo.BolusType.NORMAL
-                    ComboCtlPump.StandardBolusReason.SUPERBOLUS           -> DetailedBolusInfo.BolusType.SMB
-                    ComboCtlPump.StandardBolusReason.PRIMING_INFUSION_SET -> DetailedBolusInfo.BolusType.PRIMING
+                    ComboCtlPump.StandardBolusReason.NORMAL               -> BS.Type.NORMAL
+                    ComboCtlPump.StandardBolusReason.SUPERBOLUS           -> BS.Type.SMB
+                    ComboCtlPump.StandardBolusReason.PRIMING_INFUSION_SET -> BS.Type.PRIMING
                 }
                 pumpSync.syncBolusWithPumpId(
                     event.timestamp.toEpochMilliseconds(),
@@ -2425,7 +2423,7 @@ class ComboV2Plugin @Inject constructor(
         reportFinishedBolus(rh.gs(stringId), pumpEnactResult, succeeded)
 
     private fun createFailurePumpEnactResult(comment: Int) =
-        PumpEnactResult(injector)
+        instantiator.providePumpEnactResult()
             .success(false)
             .enacted(false)
             .comment(comment)

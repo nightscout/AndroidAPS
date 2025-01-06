@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- PumpDeviceState -->
     <!-- RL keys -->
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_button_scan_start">Keresés</string>
@@ -62,8 +63,6 @@
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Medtronic pumpa</string>
     <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
-    <string name="riley_link_common_yes">Igen</string>
-    <string name="riley_link_common_no">Nem</string>
     <!-- RileyLink - Preferences -->
     <string name="riley_link_show_battery_level">OrangeLink/EmaLink töltöttségének megjelenítése</string>
     <string name="riley_link_show_battery_level_summary">NEM MŰKÖDIK az eredeti RileyLink-el. Lehet nem működik bizonyos RileyLink alternatívákkal.</string>

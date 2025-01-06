@@ -35,7 +35,6 @@
     <string name="omnipod_common_error_unexpected_exception">Error inesperado. Por favor, informe! (tipo: %1$s:%2$s).</string>
     <!-- Omnipod - Confirmation -->
     <string name="omnipod_common_confirmation">Confirmación</string>
-    <string name="omnipod_common_confirmation_time_or_timezone_change">Tiempo y/o zona horaria cambiados en el Pod.</string>
     <string name="omnipod_common_confirmation_expiration_alerts_updated">La configuración de alerta ha sido actualizada en el Pod.</string>
     <string name="omnipod_common_confirmation_time_on_pod_updated">La hora del Pod se ha actualizado.</string>
     <string name="omnipod_common_confirmation_suspended_delivery">Se han suspendido todas las entregas de insulina.</string>
@@ -66,6 +65,7 @@
     <string name="omnipod_common_overview_reservoir_value">%1$.2f U restantes</string>
     <string name="omnipod_common_overview_reservoir_value_over50">Más de 50 U restantes</string>
     <string name="omnipod_common_overview_errors">Errores</string>
+    <string name="omnipod_common_uncertain">inseguro</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_cancel">Cancelar</string>
     <string name="omnipod_common_wizard_button_finish">Finalizar</string>
@@ -128,7 +128,6 @@
     <string name="omnipod_common_pod_status_normal">Normal</string>
     <string name="omnipod_common_pod_status_suspended">Suspendido</string>
     <string name="omnipod_common_pod_status_pod_fault">Error del Pod</string>
-    <string name="omnipod_common_pod_status_activation_time_exceeded">Tiempo de activación excedido</string>
     <string name="omnipod_common_pod_status_inactive">Inactivo</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Error del Pod: %1$03d %2$s</string>
     <!-- Omnipod - Commands -->
@@ -154,7 +153,6 @@
     <string name="omnipod_common_cmd_set_fake_suspended_tbr">Establece una base temporal falsa porque el Pod está suspendido</string>
     <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Cancelar la basal temporal falsa que se ha creado porque el Pod se ha suspendido</string>
     <string name="omnipod_common_cmd_split_tbr">Dividir basal temporal debido a un fallo incierto en la cancelación</string>
-    <string name="omnipod_common_cmd_beep_config">Configuración de Sonidos</string>
     <string name="omnipod_common_cmd_play_test_beep">Reproducir Sonido de Prueba</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_finish_pairing_reminder">Finalizar recordatorio de emparejamiento</string>
@@ -177,6 +175,7 @@
     <string name="omnipod_common_ok">OK</string>
     <string name="omnipod_common_cancel">Cancelar</string>
     <string name="omnipod_common_warning">Aviso</string>
+    <string name="omnipod_common_disable_suspend_alerts">DESACTIVAR ALERTAS DE SUSPENSIÓN</string>
     <!-- Omnipod - Times -->
     <string name="omnipod_common_moments_ago">Hace un momento</string>
     <string name="omnipod_common_less_than_a_minute_ago">Hace menos de un minuto</string>

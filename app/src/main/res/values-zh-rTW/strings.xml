@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_preferences_plugin">%1$s 偏好設定</string>
+    <string name="nav_exit">退出</string>
+    <string name="delta">增量</string>
+    <string name="save">儲存</string>
+    <string name="wear">WearOS手錶</string>
+    <string name="nav_about">關於</string>
+    <string name="sensitivity_warning">開啟自動感應功能時，請記得輸入所有用餐的碳水化合物。否則碳水化合物偏差將被錯誤識別為敏感性變化！</string>
+    <string name="invalid">無效</string>
+    <string name="gradually_increase_notification_volume">逐漸增加警報和通知的音量</string>
+    <string name="localalertsettings_title">本地警報</string>
+    <string name="enable_missed_bg_readings_alert">如果沒有接收到血糖資料，則發出警報</string>
+    <string name="enable_pump_unreachable_alert">幫浦無法用時發出警報</string>
+    <string name="pump_unreachable_threshold">幫浦無法用時的門檻值 [分鐘]</string>
+    <string name="enable_carbs_req_alert">需要碳水化合物時發出警報</string>
+    <string name="open_navigation">開啟導覽</string>
+    <string name="close_navigation">關閉導覽</string>
+    <string name="remove_items">移除項目</string>
+    <string name="sort_items">排序項目</string>
+    <string name="unitsnosemicolon">單位</string>
+    <string name="authorizationfailed">授權失敗</string>
+    <string name="cannula">套管</string>
+    <string name="identification_not_set">開發模式下未設置識別</string>
+    <!-- WEAR OS-->
+    <string name="remove_selected_items">移除選定的項目</string>
+    <string name="count_selected">選定 %1$d 項</string>
+    <string name="sort_label">排序</string>
+    <string name="search">搜尋</string>
+    <string name="simple_mode">簡易模式</string>
+    <string name="select">選擇</string>
+    <string name="set">設定</string>
+</resources>

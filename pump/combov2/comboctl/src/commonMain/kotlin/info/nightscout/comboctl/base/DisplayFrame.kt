@@ -55,9 +55,7 @@ data class DisplayFrame(val displayFramePixels: BooleanArray) : Iterable<Boolean
 
         other as DisplayFrame
 
-        if (!displayFramePixels.contentEquals(other.displayFramePixels)) return false
-
-        return true
+        return displayFramePixels.contentEquals(other.displayFramePixels)
     }
 
     override fun hashCode(): Int {

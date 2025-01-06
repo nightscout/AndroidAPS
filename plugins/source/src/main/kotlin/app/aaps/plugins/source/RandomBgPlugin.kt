@@ -6,25 +6,33 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.PowerManager
 import android.os.SystemClock
+import androidx.preference.PreferenceCategory
+import androidx.preference.PreferenceManager
+import androidx.preference.PreferenceScreen
+import app.aaps.core.data.model.CA
+import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.IDs
+import app.aaps.core.data.model.SourceSensor
+import app.aaps.core.data.model.TrendArrow
+import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.BgSource
-import app.aaps.core.interfaces.utils.T
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.Preferences
 import app.aaps.core.utils.isRunningTest
-import app.aaps.database.entities.GlucoseValue
-import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.CgmSourceTransaction
-import app.aaps.database.transactions.TransactionGlucoseValue
-import dagger.android.HasAndroidInjector
+import app.aaps.core.validators.preferences.AdaptiveIntPreference
+import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import java.security.SecureRandom
 import java.util.Calendar
 import java.util.GregorianCalendar
@@ -36,47 +44,47 @@ import kotlin.math.sin
 @Singleton
 class RandomBgPlugin @Inject constructor(
     private val context: Context,
-    injector: HasAndroidInjector,
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
-    private val repository: AppRepository,
+    private val persistenceLayer: PersistenceLayer,
     private val virtualPump: VirtualPump,
-    private val sp: SP,
+    private val preferences: Preferences,
     private val config: Config
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
         .pluginIcon(R.drawable.ic_dice)
-        .preferencesId(R.xml.pref_randombg)
+        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .pluginName(R.string.random_bg)
         .shortName(R.string.random_bg_short)
+        .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_source_random_bg),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), BgSource {
 
-    private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
-    private lateinit var refreshLoop: Runnable
+    private var handler: Handler? = null
+    private var refreshLoop: Runnable
     private var wakeLock: PowerManager.WakeLock? = null
     private var interval = 5L // minutes
 
     companion object {
 
-        const val min = 70 // mgdl
-        const val max = 190 // mgdl
-        const val period = 120.0 // minutes
+        const val MIN = 70 // mgdl
+        const val MAX = 190 // mgdl
+        const val PERIOD = 120.0 // minutes
     }
 
     init {
         refreshLoop = Runnable {
             updateInterval()
-            handler.postDelayed(refreshLoop, T.mins(interval).msecs())
+            handler?.postDelayed(refreshLoop, T.mins(interval).msecs())
             handleNewData()
         }
     }
 
     private fun updateInterval() {
-        interval = sp.getInt("randombg_interval_min", 5).toLong()
+        interval = preferences.get(IntKey.BgSourceRandomInterval).toLong()
     }
 
     private val disposable = CompositeDisposable()
@@ -86,12 +94,13 @@ class RandomBgPlugin @Inject constructor(
     @SuppressLint("WakelockTimeout")
     override fun onStart() {
         super.onStart()
+        handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
         updateInterval()
         val cal = GregorianCalendar()
         cal[Calendar.MILLISECOND] = 0
         cal[Calendar.SECOND] = 0
         cal[Calendar.MINUTE] -= cal[Calendar.MINUTE] % interval.toInt()
-        handler.postAtTime(refreshLoop, SystemClock.uptimeMillis() + cal.timeInMillis + T.mins(interval).msecs() + 1000 - System.currentTimeMillis())
+        handler?.postAtTime(refreshLoop, SystemClock.uptimeMillis() + cal.timeInMillis + T.mins(interval).msecs() + 1000 - System.currentTimeMillis())
         disposable.clear()
         wakeLock = (context.getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AAPS:RandomBgPlugin")
         wakeLock?.acquire()
@@ -99,37 +108,62 @@ class RandomBgPlugin @Inject constructor(
 
     override fun onStop() {
         super.onStop()
-        handler.removeCallbacks(refreshLoop)
+        handler?.removeCallbacks(refreshLoop)
+        handler = null
         if (wakeLock?.isHeld == true) wakeLock?.release()
     }
 
     override fun specialEnableCondition(): Boolean {
-        return isRunningTest() || virtualPump.isEnabled() && config.isEngineeringMode()
+        return isRunningTest() || virtualPump.isEnabled() && config.isEngineeringMode() || config.isUnfinishedMode()
     }
 
+    @SuppressLint("CheckResult")
     private fun handleNewData() {
         if (!isEnabled()) return
 
         val cal = GregorianCalendar()
         val currentMinute = cal[Calendar.MINUTE] + (cal[Calendar.HOUR_OF_DAY] % 2) * 60
-        val bgMgdl = min + ((max - min) + (max - min) * sin(currentMinute / period * 2 * PI)) / 2 + (SecureRandom().nextDouble() - 0.5) * (max - min) * 0.4
+        val bgMgdl = MIN + ((MAX - MIN) + (MAX - MIN) * sin(currentMinute / PERIOD * 2 * PI)) / 2 + (SecureRandom().nextDouble() - 0.5) * (MAX - MIN) * 0.08 * interval
 
         cal[Calendar.MILLISECOND] = 0
         cal[Calendar.SECOND] = 0
         cal[Calendar.MINUTE] -= cal[Calendar.MINUTE] % interval.toInt()
-        val glucoseValues = mutableListOf<TransactionGlucoseValue>()
-        glucoseValues += TransactionGlucoseValue(
-            timestamp = cal.timeInMillis,
+        val glucoseValues = mutableListOf<GV>()
+        glucoseValues += GV(
+            timestamp = cal.timeInMillis - T.secs(40).msecs() + SecureRandom().nextInt(T.secs(40).msecs().toInt()),
             value = bgMgdl,
             raw = 0.0,
             noise = null,
-            trendArrow = GlucoseValue.TrendArrow.entries.shuffled().first(),
-            sourceSensor = GlucoseValue.SourceSensor.RANDOM
+            trendArrow = TrendArrow.entries.shuffled().first(),
+            sourceSensor = SourceSensor.RANDOM
         )
-        disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
-            .subscribe({ savedValues ->
-                           savedValues.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted bg $it") }
-                       }, { aapsLogger.error(LTag.DATABASE, "Error while saving values from Random plugin", it) }
+        persistenceLayer.insertCgmSourceData(Sources.Random, glucoseValues, emptyList(), null)
+            .blockingGet()
+
+        //  Generate carbs around once in 4 hours
+        if (SecureRandom().nextDouble() <= 0.02) {
+            val ca = CA(
+                timestamp = cal.timeInMillis + T.mins(1).msecs(),
+                isValid = true,
+                amount = SecureRandom().nextInt(50).toDouble(),
+                duration = 0,
+                notes = "Random carbs",
+                ids = IDs()
             )
+            persistenceLayer.insertOrUpdateCarbs(ca, Action.TREATMENT, Sources.CarbDialog, ca.notes).blockingGet()
+        }
+    }
+
+    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
+        if (requiredKey != null) return
+        val category = PreferenceCategory(context)
+        parent.addPreference(category)
+        category.apply {
+            key = "bg_source_upload_settings"
+            title = rh.gs(R.string.random_bg)
+            initialExpandedChildrenCount = 0
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.BgSourceUploadToNs, title = app.aaps.core.ui.R.string.do_ns_upload_title))
+            addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.BgSourceRandomInterval, title = R.string.bg_generation_interval_minutes))
+        }
     }
 }

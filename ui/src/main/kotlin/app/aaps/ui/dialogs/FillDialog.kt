@@ -1,11 +1,17 @@
 package app.aaps.ui.dialogs
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import app.aaps.core.data.model.BS
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.TE
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -17,16 +23,12 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.SafeParse
-import app.aaps.core.main.constraints.ConstraintObject
-import app.aaps.core.main.utils.extensions.formatColor
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.core.objects.extensions.formatColor
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.HtmlHelper
-import app.aaps.database.entities.TherapyEvent
-import app.aaps.database.entities.UserEntry
-import app.aaps.database.entities.ValueWithUnit
-import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import app.aaps.ui.R
 import app.aaps.ui.databinding.DialogFillBinding
 import com.google.common.base.Joiner
@@ -41,11 +43,10 @@ class FillDialog : DialogFragmentWithDate() {
 
     @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var ctx: Context
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var uel: UserEntryLogger
-    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var decimalFormatter: DecimalFormatter
@@ -81,7 +82,7 @@ class FillDialog : DialogFragmentWithDate() {
             savedInstanceState?.getDouble("fill_insulin_amount")
                 ?: 0.0, 0.0, maxInsulin, bolusStep, decimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump.pumpDescription.bolusStep), true, binding.okcancel.ok
         )
-        val amount1 = sp.getDouble("fill_button1", 0.3)
+        val amount1 = preferences.get(DoubleKey.ActionsFillButton1)
         if (amount1 > 0) {
             binding.fillPresetButton1.visibility = View.VISIBLE
             binding.fillPresetButton1.text = decimalFormatter.toPumpSupportedBolus(amount1, activePlugin.activePump.pumpDescription.bolusStep) // + "U");
@@ -89,7 +90,7 @@ class FillDialog : DialogFragmentWithDate() {
         } else {
             binding.fillPresetButton1.visibility = View.GONE
         }
-        val amount2 = sp.getDouble("fill_button2", 0.0)
+        val amount2 = preferences.get(DoubleKey.ActionsFillButton2)
         if (amount2 > 0) {
             binding.fillPresetButton2.visibility = View.VISIBLE
             binding.fillPresetButton2.text = decimalFormatter.toPumpSupportedBolus(amount2, activePlugin.activePump.pumpDescription.bolusStep) // + "U");
@@ -97,7 +98,7 @@ class FillDialog : DialogFragmentWithDate() {
         } else {
             binding.fillPresetButton2.visibility = View.GONE
         }
-        val amount3 = sp.getDouble("fill_button3", 0.0)
+        val amount3 = preferences.get(DoubleKey.ActionsFillButton3)
         if (amount3 > 0) {
             binding.fillPresetButton3.visibility = View.VISIBLE
             binding.fillPresetButton3.text = decimalFormatter.toPumpSupportedBolus(amount3, activePlugin.activePump.pumpDescription.bolusStep) // + "U");
@@ -150,51 +151,44 @@ class FillDialog : DialogFragmentWithDate() {
                 OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.prime_fill), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     if (insulinAfterConstraints > 0) {
                         uel.log(
-                            UserEntry.Action.PRIME_BOLUS, UserEntry.Sources.FillDialog,
-                            notes,
-                            ValueWithUnit.Insulin(insulinAfterConstraints)
+                            action = Action.PRIME_BOLUS, source = Sources.FillDialog,
+                            note = notes,
+                            value = ValueWithUnit.Insulin(insulinAfterConstraints)
                         )
                         requestPrimeBolus(insulinAfterConstraints, notes)
                     }
-                    if (siteChange) {
-                        uel.log(
-                            UserEntry.Action.SITE_CHANGE, UserEntry.Sources.FillDialog,
-                            notes,
-                            ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
-                            ValueWithUnit.TherapyEventType(TherapyEvent.Type.CANNULA_CHANGE)
-                        )
-                        disposable += repository.runTransactionForResult(
-                            InsertIfNewByTimestampTherapyEventTransaction(
+                    if (siteChange)
+                        disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
+                            therapyEvent = TE(
                                 timestamp = eventTime,
-                                type = TherapyEvent.Type.CANNULA_CHANGE,
+                                type = TE.Type.CANNULA_CHANGE,
                                 note = notes,
-                                glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
-                            )
-                        ).subscribe(
-                            { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted therapy event $it") } },
-                            { aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it) }
-                        )
-                    }
-                    if (insulinChange) {
-                        // add a second for case of both checked
-                        uel.log(
-                            UserEntry.Action.RESERVOIR_CHANGE, UserEntry.Sources.FillDialog,
-                            notes,
-                            ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
-                            ValueWithUnit.TherapyEventType(TherapyEvent.Type.INSULIN_CHANGE)
-                        )
-                        disposable += repository.runTransactionForResult(
-                            InsertIfNewByTimestampTherapyEventTransaction(
+                                glucoseUnit = GlucoseUnit.MGDL
+                            ),
+                            action = Action.SITE_CHANGE, source = Sources.FillDialog,
+                            note = notes,
+                            listValues = listOf(
+                                ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
+                                ValueWithUnit.TEType(TE.Type.CANNULA_CHANGE)
+                            ).filterNotNull()
+                        ).subscribe()
+                    if (insulinChange)
+                    // add a second for case of both checked
+                        disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
+                            therapyEvent = TE(
                                 timestamp = eventTime + 1000,
-                                type = TherapyEvent.Type.INSULIN_CHANGE,
+                                type = TE.Type.INSULIN_CHANGE,
                                 note = notes,
-                                glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
-                            )
-                        ).subscribe(
-                            { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted therapy event $it") } },
-                            { aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it) }
-                        )
-                    }
+                                glucoseUnit = GlucoseUnit.MGDL
+                            ),
+                            action = Action.RESERVOIR_CHANGE, source = Sources.FillDialog,
+                            note = notes,
+                            listValues = listOf(
+                                ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
+                                ValueWithUnit.TEType(TE.Type.INSULIN_CHANGE)
+                            ).filterNotNull()
+
+                        ).subscribe()
                 }, null)
             }
         } else {
@@ -210,7 +204,7 @@ class FillDialog : DialogFragmentWithDate() {
         val detailedBolusInfo = DetailedBolusInfo()
         detailedBolusInfo.insulin = insulin
         detailedBolusInfo.context = context
-        detailedBolusInfo.bolusType = DetailedBolusInfo.BolusType.PRIMING
+        detailedBolusInfo.bolusType = BS.Type.PRIMING
         detailedBolusInfo.notes = notes
         commandQueue.bolus(detailedBolusInfo, object : Callback() {
             override fun run() {
@@ -229,7 +223,7 @@ class FillDialog : DialogFragmentWithDate() {
                 val cancelFail = {
                     queryingProtection = false
                     aapsLogger.debug(LTag.APS, "Dialog canceled on resume protection: ${this.javaClass.simpleName}")
-                    ToastUtils.warnToast(ctx, R.string.dialog_canceled)
+                    ToastUtils.warnToast(activity, R.string.dialog_canceled)
                     dismiss()
                 }
                 protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, { queryingProtection = false }, cancelFail, cancelFail)

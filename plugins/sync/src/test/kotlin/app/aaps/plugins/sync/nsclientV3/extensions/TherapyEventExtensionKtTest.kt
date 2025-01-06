@@ -1,9 +1,12 @@
 package app.aaps.plugins.sync.nsclientV3.extensions
 
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.IDs
+import app.aaps.core.data.model.TE
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.nssdk.localmodel.treatment.NSTherapyEvent
 import app.aaps.core.nssdk.mapper.convertToRemoteAndBack
-import app.aaps.database.entities.TherapyEvent
-import app.aaps.database.entities.embedments.InterfaceIDs
+import app.aaps.plugins.sync.extensions.contentEqualsTo
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
@@ -13,71 +16,71 @@ internal class TherapyEventExtensionKtTest : TestBaseWithProfile() {
 
     @Test
     fun toTherapyEvent() {
-        var therapyEvent = TherapyEvent(
+        var therapyEvent = TE(
             timestamp = 10000,
             isValid = true,
-            type = TherapyEvent.Type.ANNOUNCEMENT,
+            type = TE.Type.ANNOUNCEMENT,
             note = "ccccc",
             enteredBy = "dddd",
             glucose = 101.0,
-            glucoseType = TherapyEvent.MeterType.FINGER,
-            glucoseUnit = TherapyEvent.GlucoseUnit.MGDL,
+            glucoseType = TE.MeterType.FINGER,
+            glucoseUnit = GlucoseUnit.MGDL,
             duration = 3600000,
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 nightscoutId = "nightscoutId",
                 pumpId = 11000,
-                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpType = PumpType.DANA_I,
                 pumpSerial = "bbbb"
             )
         )
 
         var therapyEvent2 = (therapyEvent.toNSTherapyEvent().convertToRemoteAndBack() as NSTherapyEvent).toTherapyEvent()
         assertThat(therapyEvent.contentEqualsTo(therapyEvent2)).isTrue()
-        assertThat(therapyEvent.interfaceIdsEqualsTo(therapyEvent2)).isTrue()
+        assertThat(therapyEvent.ids.contentEqualsTo(therapyEvent2.ids)).isTrue()
 
 
-        therapyEvent = TherapyEvent(
+        therapyEvent = TE(
             timestamp = 10000,
             isValid = true,
-            type = TherapyEvent.Type.QUESTION,
+            type = TE.Type.QUESTION,
             note = null,
             enteredBy = null,
             glucose = null,
             glucoseType = null,
-            glucoseUnit = TherapyEvent.GlucoseUnit.MMOL,
+            glucoseUnit = GlucoseUnit.MMOL,
             duration = 30000,
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 nightscoutId = "nightscoutId",
                 pumpId = 11000,
-                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpType = PumpType.DANA_I,
                 pumpSerial = "bbbb"
             )
         )
 
         therapyEvent2 = (therapyEvent.toNSTherapyEvent().convertToRemoteAndBack() as NSTherapyEvent).toTherapyEvent()
         assertThat(therapyEvent.contentEqualsTo(therapyEvent2)).isTrue()
-        assertThat(therapyEvent.interfaceIdsEqualsTo(therapyEvent2)).isTrue()
+        assertThat(therapyEvent.ids.contentEqualsTo(therapyEvent2.ids)).isTrue()
 
-        therapyEvent = TherapyEvent(
+        therapyEvent = TE(
             timestamp = 10000,
             isValid = true,
-            type = TherapyEvent.Type.NOTE,
+            type = TE.Type.NOTE,
             note = "qqqq",
             enteredBy = null,
             glucose = 10.0,
             glucoseType = null,
-            glucoseUnit = TherapyEvent.GlucoseUnit.MGDL,
+            glucoseUnit = GlucoseUnit.MGDL,
             duration = 0,
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 nightscoutId = "nightscoutId",
                 pumpId = 11000,
-                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpType = PumpType.DANA_I,
                 pumpSerial = "bbbb"
             )
         )
 
         therapyEvent2 = (therapyEvent.toNSTherapyEvent().convertToRemoteAndBack() as NSTherapyEvent).toTherapyEvent()
         assertThat(therapyEvent.contentEqualsTo(therapyEvent2)).isTrue()
-        assertThat(therapyEvent.interfaceIdsEqualsTo(therapyEvent2)).isTrue()
+        assertThat(therapyEvent.ids.contentEqualsTo(therapyEvent2.ids)).isTrue()
     }
 }

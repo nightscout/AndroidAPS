@@ -99,7 +99,6 @@
     <string name="bg_label">Glucèmia</string>
     <string name="calibration">Calibració</string>
     <string name="alarminxmin">Executar alarma en %1$d min</string>
-    <string name="treatmentdeliveryerror">Error en el bolus. Comprova manualment la quantitat real subministrada</string>
     <string name="bolus_reminder">Recordatori de bolus</string>
     <string name="duration_label">Durada</string>
     <string name="shortgramm">g</string>
@@ -343,8 +342,6 @@
     <string name="basalpct">Basal %</string>
     <string name="a11y_user">usuari</string>
     <!-- Autotune -->
-    <string name="autotune_result">Resultat: %1$s</string>
-    <string name="autotune_compare_profile">Comparar perfils</string>
     <!-- Alerts -->
     <string name="raise_notifications_as_android_notifications">Utilitzar avisos del sistema per alarmes i avisos</string>
     <string name="urgent_alarm">Alarma urgent</string>
@@ -391,7 +388,6 @@
     <string name="limitingpercentrate">Limitant percentatge màx a %1$d%% a causa de %2$s</string>
     <string name="itmustbepositivevalue">ha de ser un valor positiu</string>
     <string name="limitingbolus">Limitant bolus a %1$.1f U a causa de %2$s</string>
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Confirmació</string>
     <string name="message">Missatge</string>
@@ -403,6 +399,8 @@
     <string name="close">Tancar</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Se us demanarà una clau mestra, es necessita per desencriptar la configuració importada.</string>
+    <!-- <unattended_export> -->
+    <!-- <unattended_export result messages> -->
     <!-- NumberPicker -->
     <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- datetime layout -->

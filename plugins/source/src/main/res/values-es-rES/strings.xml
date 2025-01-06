@@ -9,8 +9,6 @@
     <string name="dexcom_app_patched">Dexcom (BYODA)</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Recibir los valores de glucosa de la aplicación Dexcom \'Build Your Own Device\'</string>
-    <string name="eversense">Eversense App (parchada)</string>
-    <string name="description_source_eversense">Recibir los valores de glucosa de la aplicación Eversense parchada.</string>
     <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Recibir valores de glucosa de Glimp.</string>
     <string name="mm640g">MM640g</string>
@@ -24,16 +22,18 @@
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">Recibir los valores de glucosa de Tomato App (MiaoMiao) </string>
-    <string name="aidex">GlucoRx Aidex</string>
-    <string name="aidex_short">Aidex</string>
-    <string name="description_source_aidex">Recibir los valores de glucosa de GlucoRx Aidex CGMS</string>
     <string name="random_bg">Glucosa aleatoria</string>
     <string name="description_source_random_bg">Generar datos aleatorios de glucosa (sólo modo Demo)</string>
     <string name="random_bg_short">BG</string>
-    <string name="do_xdrip_upload_title">Enviar datos de glucosa a xDrip+</string>
-    <string name="do_xdrip_upload_summary">En xDrip+, selecciona 640G/Eversense como fuente de datos</string>
     <string name="bgsource_upload">Ajuste de subida de datos de glucosa</string>
     <string name="dexcom_log_ns_sensor_change_title">Registro de cambio de sensor en Nightscout</string>
     <string name="dexcom_log_ns_sensor_change_summary">Crear evento \"Cambio de sensor\" en Nightscout automáticamente al iniciar el sensor</string>
     <string name="direction">dirección</string>
+    <string name="bg_generation_interval_minutes">Intervalo de generación de BG en minutos</string>
+    <!-- Patched Ottai App -->
+    <string name="ottai_app">Ottai</string>
+    <string name="description_source_patched_ottai_app">Recibir datos de glucosa de la aplicación Ottai</string>
+    <!-- Patched Syai Tag App -->
+    <string name="syai_tag_app">Syai Tag</string>
+    <string name="description_source_patched_syai_tag_app">Recibir datos de glucosa de la aplicación Syai Tag</string>
 </resources>

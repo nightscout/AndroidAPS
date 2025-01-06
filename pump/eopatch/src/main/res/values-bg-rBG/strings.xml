@@ -3,11 +3,9 @@
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_shortname">EOP2</string>
     <string name="eopatch_pump_description">Интегриране на помпа EOPatch2 / GlucoMen Day</string>
-    <string name="category_alerts">Известия</string>
     <string name="low_reservoir">Предупреждение за празен резервоар</string>
     <string name="patch_expiration_reminders">Напомняне за изтичане на Patch</string>
     <string name="patch_buzzer_reminders">Звуково Напомняне за Patch</string>
-    <string name="time_format_a_h_mm">ч:мм а</string>
     <string name="eopatch_ble_status">Състояние на BLE</string>
     <string name="eopatch_serial_number">Сериен номер</string>
     <string name="eopatch_lot_number">Партиден(Лот) номер</string>
@@ -26,7 +24,6 @@
     <string name="time_1hr">1 час</string>
     <string name="time_1hr_30min">1 ч 30 мин</string>
     <string name="time_2hr">2 часа</string>
-    <string name="all_blank">\u0020</string>
     <string name="patch_safe_deactivation_desc">За да смените с нов Patch, текущият Patch трябва да бъде изхвърлен. Всички доставки на инсулин от Patch ще бъдат отменени.</string>
     <string name="patch_discard_complete_title">Изхвърлянето на Patch е завършено.</string>
     <string name="patch_discard_complete_desc">Patch е деактивиран.\nИзхвърлете Patch.\nПремахнете patch, прикрепен към тялото ви.</string>
@@ -38,9 +35,6 @@
     <string name="patch_remaining_usage_period">Оставащо време</string>
     <string name="patch_finish">Край</string>
     <string name="patch_forced_discard">Откажи</string>
-    <string name="patch_comm_error_during_discard_status">Отхвърляне на Patch Грешка в свързването по време на изхвърляне </string>
-    <string name="patch_comm_error_during_discard_desc">За нормално деактивиране докоснете „Повторен опит“.\nЗа едностранно деактивиране, натиснете „Отхвърляне“.</string>
-    <string name="patch_comm_error_during_discard_desc_1">За нормалното деактивиране, натиснете „Повторен опит“.</string>
     <string name="patch_comm_error_during_discard_desc_2">За едностранно деактивиране, натиснете „Отхвърляне“.</string>
     <string name="patch_manually_turning_off_alarm_title">Ръчно изключване на алармата на Patch</string>
     <string name="patch_manually_turning_off_alarm_desc_1">Ако се деактивира едностранно по време на грешка в свързването, звуковият сигнал на алармата може да не спре от Patch.</string>
@@ -82,8 +76,6 @@
     <string name="patch_expiration_reminder_setting_title">Напомняния за изтичане на Patch</string>
     <string name="patch_activate_reminder_title">Напомняне за активиране на Patch</string>
     <string name="patch_activate_reminder_desc">Активирането на Patch не е завършено.\n Продължете.</string>
-    <string name="patch_communication_check">Patch проверка за свързване</string>
-    <string name="patch_communication_check_status_1">Проверка на свързване с Patch…</string>
     <string name="patch_communication_check_helper_1">Доближете смарт устройството си до Patch.</string>
     <string name="patch_communication_check_helper_2">Моля, преместете се на друго място и опитайте отново.</string>
     <string name="patch_communication_failed">Грешка при свързване</string>
@@ -114,7 +106,6 @@
     <string name="retry">Повтори</string>
     <string name="string_caution_not_remove_needle_cap">[Caution] НЕ отстранявайте капачката на иглата и залепващата подложка до допълнителни инструкции.</string>
     <string name="string_are_you_sure_to_discard_current_patch">Сигурни ли сте, че ще изхвърлите настоящия Patch?</string>
-    <string name="string_unconfirmed_bolus_info_discard_confirm_message">Поради непотвърдена информация за болус, Болус калкулаторът не може да се използва до %s.\n\nСигурни ли сте, че ще отхвърлите текущия Patch?</string>
     <string name="needle_insertion_error_1">Грешка при поставяне на иглата.</string>
     <string name="needle_insertion_error_2">Проверете дали посоката на дупката, останала след завъртане на лоста, е права и след това натиснете „Опитай отново“.</string>
     <string name="needle_insertion_error_3">Натиснете „Отхвърляне“, за да деактивирате Patch.</string>
@@ -126,7 +117,6 @@
     <string name="finish">Край</string>
     <string name="string_temp_basal_remained_hhmm">оставащо време: %1$s:%2$s</string>
     <string name="next">Следващ</string>
-    <string name="patch_connection_fail">Опитайте отново след проверка на връзката с Patch.</string>
     <string name="string_pause_failed">Прекъсването е неуспешно.</string>
     <string name="string_resume_failed">Възобновяването е неуспешно.</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">ЕЕЕ, д МММ, гггг чч:мм а</string>

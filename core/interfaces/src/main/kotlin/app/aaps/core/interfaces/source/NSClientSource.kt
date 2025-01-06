@@ -1,9 +1,9 @@
 package app.aaps.core.interfaces.source
 
-import app.aaps.database.entities.GlucoseValue
+import app.aaps.core.data.model.GV
 
 interface NSClientSource {
 
     fun isEnabled(): Boolean
-    fun detectSource(glucoseValue: GlucoseValue)
+    fun detectSource(glucoseValue: GV)
 }

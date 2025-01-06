@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Autotune-->
     <string name="openapsma_disabled">Dodatak je onemogućen</string>
     <string name="openapsma_no_glucose_data">Nema dostupnih podataka o glukozi</string>
     <string name="description_ama">Stanje algoritma u 2017</string>
@@ -25,4 +26,7 @@
     <!--    Loop -->
     <string name="description_loop">Aktivirajte ili deaktivirajte implementaciju koja pokreće petlju.</string>
     <string name="loop_aps_label">APS</string>
+    <!-- Autotune -->
+    <string name="autotune_result">Rezultat: %1$s</string>
+    <!--    autoISF -->
 </resources>

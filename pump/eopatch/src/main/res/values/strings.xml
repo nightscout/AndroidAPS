@@ -7,19 +7,16 @@
     <string name="key_eopatch_bolus_current" translatable="false">eopatch_bolus_current</string>
     <string name="key_eopatch_normal_basal" translatable="false">eopatch_normal_basal</string>
     <string name="key_eopatch_temp_basal" translatable="false">eopatch_temp_basal</string>
-    <string name="key_eopatch_alarms" translatable="false">eopatch_alarms</string>
     <string name="colon" translatable="false">:</string>
 
     <string name="eopatch">EOPatch2</string>
     <string name="eopatch_shortname">EOP2</string>
     <string name="eopatch_pump_description">Pump integration for EOPatch2 / GlucoMen Day</string>
 
-    <string name="category_alerts">Alerts</string>
     <string name="low_reservoir">Low reservoir Alerts</string>
     <string name="patch_expiration_reminders">Patch expiration Reminder</string>
     <string name="patch_buzzer_reminders">Patch buzzer Reminders</string>
 
-    <string name="time_format_a_h_mm">h:mm a</string>
     <string name="eopatch_ble_status">BLE Status</string>
     <string name="eopatch_serial_number">Serial Number</string>
     <string name="eopatch_lot_number">Lot Number</string>
@@ -43,7 +40,6 @@
     <string name="time_1hr_30min">1 hr 30 min</string>
     <string name="time_2hr">2 hr</string>
 
-    <string name="all_blank">\u0020</string>
     <string name="patch_safe_deactivation_desc">To change to new Patch, the current Patch must be discarded. All insulin delivery from Patch will be canceled.</string>
     <string name="patch_discard_complete_title">Discarding the patch is completed.</string>
     <string name="patch_discard_complete_desc">Patch has been deactivated.\nDiscard the patch.\nRemove the patch attached to your body.</string>
@@ -55,9 +51,6 @@
     <string name="patch_remaining_usage_period">Remaining time</string>
     <string name="patch_finish">Finish</string>
     <string name="patch_forced_discard">Discard</string>
-    <string name="patch_comm_error_during_discard_status">Discard Patch Communication error during discard </string>
-    <string name="patch_comm_error_during_discard_desc">For the normal deactivation, Tap \'Retry\'.\nFor unilateral deactivation, Tap \'Discard\'.</string>
-    <string name="patch_comm_error_during_discard_desc_1">For the normal deactivation, Tap \'Retry\'.</string>
     <string name="patch_comm_error_during_discard_desc_2">For unilateral deactivation, Tap \'Discard\'.</string>
     <string name="patch_manually_turning_off_alarm_title">Manually turning off the Patch\'s Alarm</string>
     <string name="patch_manually_turning_off_alarm_desc_1">If deactivated unilaterally during a communication error, the Alarm beep may not stop from Patch.</string>
@@ -99,8 +92,6 @@
     <string name="patch_expiration_reminder_setting_title">Patch expiration Reminders</string>
     <string name="patch_activate_reminder_title">Patch activation Reminder</string>
     <string name="patch_activate_reminder_desc">Patch activation has not been completed.\n Continue.</string>
-    <string name="patch_communication_check">Patch communication check</string>
-    <string name="patch_communication_check_status_1">Checking Patch communication…</string>
     <string name="patch_communication_check_helper_1">Bring your smart device closer to the Patch.</string>
     <string name="patch_communication_check_helper_2">Please move to another location and try again.</string>
     <string name="patch_communication_failed">Communication Error</string>
@@ -131,7 +122,6 @@
     <string name="retry">Retry</string>
     <string name="string_caution_not_remove_needle_cap">[Caution] DO NOT remove the needle cap and the adhesive backing until further instruction.</string>
     <string name="string_are_you_sure_to_discard_current_patch">Are you sure to discard the current Patch?</string>
-    <string name="string_unconfirmed_bolus_info_discard_confirm_message">Due to an unconfirmed bolus information, Bolus calc cannot be used until %s.\n\nAre you sure to discard the current Patch?</string>
     <string name="needle_insertion_error_1">Needle insertion Error.</string>
     <string name="needle_insertion_error_2">Check the direction of the hole left after turning the lever is straight and then Tap \'Retry\'.</string>
     <string name="needle_insertion_error_3">Tap \'Discard\' to deactivate Patch.</string>
@@ -143,7 +133,6 @@
     <string name="finish">Finish</string>
     <string name="string_temp_basal_remained_hhmm">remaining time: %1$s:%2$s</string>
     <string name="next">Next</string>
-    <string name="patch_connection_fail">Retry after Patch communication check.</string>
     <string name="string_pause_failed">Suspension failed.</string>
     <string name="string_resume_failed">Resume failed.</string>
     <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE, d MMM, yyyy hh:mm a</string>

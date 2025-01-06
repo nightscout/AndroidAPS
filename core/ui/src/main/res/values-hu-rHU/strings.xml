@@ -102,7 +102,6 @@
     <string name="basal">Bázis</string>
     <string name="basalpct">Bázis %</string>
     <!-- Autotune -->
-    <string name="autotune_compare_profile">Profilok összehasonlítása</string>
     <!-- Alerts -->
     <string name="info">INFO</string>
     <!-- BolusWizard -->
@@ -119,7 +118,6 @@
     <string name="pairing">Párosítás</string>
     <string name="initializing">Inicializálás ...</string>
     <!--    Constraints-->
-    <!-- Locale -->
     <!--    Dialogs-->
     <string name="ok">OK</string>
     <string name="cancel">Mégse</string>
@@ -127,6 +125,8 @@
     <string name="no">Nem</string>
     <string name="close">Bezár</string>
     <!-- TwoMessagesDialog -->
+    <!-- <unattended_export> -->
+    <!-- <unattended_export result messages> -->
     <!-- NumberPicker -->
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->

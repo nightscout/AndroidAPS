@@ -93,7 +93,6 @@
     <string name="danar_disableeasymode">Deaktivovať v pumpe režim EasyUI</string>
     <string name="profile_set_failed">Nastavenie bazálneho profilu zlyhalo</string>
     <string name="danar_bluetooth_status">Stav Bluetooth</string>
-    <string name="danar_iob_label">IOB z pumpy</string>
     <string name="firmware_label">Firmware</string>
     <string name="danar_pump_settings">Nastavenie pumpy Dana</string>
     <string name="time_format_12h">12h</string>
@@ -103,7 +102,7 @@
     <string name="danar_bt_name_title">DanaR Bluetooth zariadenie</string>
     <string name="danars_password_title">Heslo pumpy (iba v1)</string>
     <string name="danar_password_title">Heslo do pumpy</string>
-    <string name="danar_useextended_title">Použiť predĺžené bolusy pre &gt;200%%</string>
+    <string name="danar_useextended_title">Použiť predĺžené bolusy pre &gt;200%</string>
     <string name="bolusspeed">Rýchlosť bolusu</string>
     <string name="selectedpump">Vybraná pumpa</string>
     <string name="rs_loginsulinchange_title">Zaznamenať výmenu zásobníka</string>

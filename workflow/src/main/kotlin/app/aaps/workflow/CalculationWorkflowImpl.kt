@@ -10,108 +10,44 @@ import androidx.work.WorkManager
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.rx.AapsSchedulers
-import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.Event
-import app.aaps.core.interfaces.rx.events.EventAppInitialized
-import app.aaps.core.interfaces.rx.events.EventNewHistoryData
-import app.aaps.core.interfaces.rx.events.EventOfflineChange
-import app.aaps.core.interfaces.rx.events.EventPreferenceChange
-import app.aaps.core.interfaces.rx.events.EventTherapyEventChange
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.main.graph.OverviewData
-import app.aaps.core.main.workflow.CalculationWorkflow
-import app.aaps.core.main.workflow.CalculationWorkflow.Companion.JOB
-import app.aaps.core.main.workflow.CalculationWorkflow.Companion.MAIN_CALCULATION
-import app.aaps.core.main.workflow.CalculationWorkflow.Companion.PASS
+import app.aaps.core.interfaces.workflow.CalculationWorkflow
+import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.JOB
+import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.MAIN_CALCULATION
+import app.aaps.core.interfaces.workflow.CalculationWorkflow.Companion.PASS
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.core.utils.worker.then
-import app.aaps.plugins.main.iob.iobCobCalculator.IobCobCalculatorPlugin
 import app.aaps.workflow.iob.IobCobOref1Worker
 import app.aaps.workflow.iob.IobCobOrefWorker
 import dagger.android.HasAndroidInjector
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class CalculationWorkflowImpl @Inject constructor(
-    aapsSchedulers: AapsSchedulers,
-    rh: ResourceHelper,
-    rxBus: RxBus,
     private val context: Context,
     private val injector: HasAndroidInjector,
     private val aapsLogger: AAPSLogger,
-    private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
     private val dataWorkerStorage: DataWorkerStorage,
     private val activePlugin: ActivePlugin
 ) : CalculationWorkflow {
-
-    private var disposable: CompositeDisposable = CompositeDisposable()
-
-    private val iobCobCalculator: IobCobCalculator
-        get() = activePlugin.activeIobCobCalculator // cross-dependency CalculationWorkflow x IobCobCalculator
-    private val overviewData: OverviewData
-        get() = (iobCobCalculator as IobCobCalculatorPlugin).overviewData
 
     init {
         // Verify definition
         var sumPercent = 0
         for (pass in CalculationWorkflow.ProgressData.entries) sumPercent += pass.percentOfTotal
         require(sumPercent == 100)
-
-        disposable += rxBus
-            .toObservable(EventTherapyEventChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ runOnEventTherapyEventChange() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventOfflineChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ runOnEventTherapyEventChange() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventPreferenceChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ event ->
-                           if (event.isChanged(rh.gs(app.aaps.core.utils.R.string.key_units))) {
-                               overviewData.reset()
-                               rxBus.send(EventNewHistoryData(0, false))
-                           }
-                           if (event.isChanged(rh.gs(app.aaps.core.utils.R.string.key_rangetodisplay))) {
-                               overviewData.initRange()
-                               runOnScaleChanged()
-                               rxBus.send(EventNewHistoryData(0, false))
-                           }
-                       }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventAppInitialized::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe(
-                {
-                    runCalculation(
-                        MAIN_CALCULATION,
-                        iobCobCalculator,
-                        overviewData,
-                        "onEventAppInitialized",
-                        System.currentTimeMillis(),
-                        bgDataReload = true,
-                        cause = it
-                    )
-                },
-                fabricPrivacy::logException
-            )
-
     }
 
     override fun stopCalculation(job: String, from: String) {
         aapsLogger.debug(LTag.WORKER, "Stopping calculation thread: $from")
         WorkManager.getInstance(context).cancelUniqueWork(job)
         val workStatus = WorkManager.getInstance(context).getWorkInfosForUniqueWork(job).get()
-        while (workStatus.size >= 1 && workStatus[0].state == WorkInfo.State.RUNNING)
+        while (workStatus.isNotEmpty() && workStatus[0].state == WorkInfo.State.RUNNING)
             SystemClock.sleep(100)
         aapsLogger.debug(LTag.WORKER, "Calculation thread stopped: $from")
     }
@@ -214,7 +150,7 @@ class CalculationWorkflowImpl @Inject constructor(
             .enqueue()
     }
 
-    private fun runOnEventTherapyEventChange() {
+    override fun runOnEventTherapyEventChange(overviewData: OverviewData) {
         WorkManager.getInstance(context)
             .beginUniqueWork(
                 MAIN_CALCULATION, ExistingWorkPolicy.APPEND,
@@ -231,7 +167,7 @@ class CalculationWorkflowImpl @Inject constructor(
 
     }
 
-    private fun runOnScaleChanged() {
+    override fun runOnScaleChanged(iobCobCalculator: IobCobCalculator, overviewData: OverviewData) {
         WorkManager.getInstance(context)
             .beginUniqueWork(
                 MAIN_CALCULATION, ExistingWorkPolicy.APPEND,

@@ -2,9 +2,6 @@
 <resources>
     <!-- PumoCommon - Pump Abstract -->
     <string name="pump_operation_not_supported_by_pump_driver">Operazione non supportata dal micro e/o dal driver.</string>
-    <string name="pump_operation_not_yet_supported_by_pump">Operazione NON ANCORA supportata dal micro.</string>
-    <string name="common_resultok">OK</string>
-    <string name="pump_serial_number">Numero seriale micro</string>
     <string name="bolus_delivered_so_far">%1$.2f U / %2$.2f U erogate</string>
     <!-- PumpCommon - Pump Status -->
     <string name="pump_status_not_initialized">Non inizializzato</string>
@@ -46,33 +43,9 @@
     <string name="ble_config_scan_scanning">Scansione</string>
     <string name="ble_config_scan_finished">Scansione terminata</string>
     <string name="ble_config_scan_error">Errore scansione: %1$d</string>
-    <string name="ble_config_connected_never">Mai</string>
     <string name="ble_config_remove">Rimuovi</string>
-    <!-- BLE Errors -->
-    <string name="ble_error_bt_disabled">Bluetooth disabilitato</string>
-    <string name="ble_error_no_bt_adapter">Nessun trasmettitore bluetooth</string>
-    <string name="ble_error_configured_pump_not_found">Micro configurato non trovato</string>
-    <string name="ble_error_pump_unreachable">Micro irraggiungibile</string>
-    <string name="ble_error_failed_to_conn_to_ble_device">Impossibile connettersi al dispositivo BLE</string>
-    <string name="ble_error_encryption_failed">Crittografia fallita</string>
-    <string name="ble_error_pump_found_unbonded">Trovato micro non collegato</string>
-    <!-- Pump Error -->
-    <string name="pump_settings_error_basal_profiles_not_enabled">L\'impostazione di modelli/profili basali non è abilitata sul micro. Abilitarla.</string>
-    <string name="pump_settings_error_incorrect_basal_profile_selected">Il profilo basale impostato sul micro non è corretto (deve essere %s).</string>
-    <string name="pump_settings_error_wrong_tbr_type_set">Il tipo di TBR impostato sul micro è errato (deve essere %s).</string>
-    <string name="pump_settings_error_wrong_max_bolus_set">Il bolo massimo impostato sul micro è errato (deve essere %1$.2f).</string>
-    <string name="pump_settings_error_wrong_max_basal_set">La basale massima impostata sul micro è errata (deve essere %1$.2f).</string>
     <!-- Pump History -->
     <string name="pump_history_type">Tipo:</string>
-    <!-- PumpDeviceState -->
-    <string name="pump_status_never_contacted">Mai contattato</string>
-    <string name="pump_status_sleeping">In sospensione</string>
-    <string name="pump_status_waking_up">Risveglio</string>
-    <string name="pump_status_active">Attivo</string>
-    <string name="pump_status_error_comm">Errore nella comunicazione</string>
-    <string name="pump_status_timeout_comm">Timeout della comunicazione</string>
-    <string name="pump_status_pump_unreachable">Micro irraggiungibile</string>
-    <string name="pump_status_invalid_config">Configurazione non valida</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d giorno</item>
         <item quantity="other">%1$d giorni</item>

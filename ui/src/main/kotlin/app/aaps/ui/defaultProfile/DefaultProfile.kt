@@ -1,11 +1,11 @@
 package app.aaps.ui.defaultProfile
 
-import app.aaps.core.main.extensions.pureProfileFromJson
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
+import app.aaps.core.objects.extensions.pureProfileFromJson
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.Locale

@@ -1,8 +1,8 @@
 package app.aaps.plugins.sync.garmin
 
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.database.entities.GlucoseValue
 import java.time.Instant
 
 /** Abstraction from all the functionality we need from the AAPS app. */
@@ -35,6 +35,12 @@ interface LoopHub {
     /** Returns the factor by which the basal rate is currently raised (> 1) or lowered (< 1). */
     val temporaryBasal: Double
 
+    /** Returns the lower bound of the target glucose range. */
+    val lowGlucoseMark: Double
+
+    /** Returns the upper bound of the target glucose range. */
+    val highGlucoseMark: Double
+
     /** Tells the loop algorithm that the pump is physically connected. */
     fun connectPump()
 
@@ -43,7 +49,7 @@ interface LoopHub {
     fun disconnectPump(minutes: Int)
 
     /** Retrieves the glucose values starting at from. */
-    fun getGlucoseValues(from: Instant, ascending: Boolean): List<GlucoseValue>
+    fun getGlucoseValues(from: Instant, ascending: Boolean): List<GV>
 
     /** Notifies the system that carbs were eaten and stores the value. */
     fun postCarbs(carbohydrates: Int)

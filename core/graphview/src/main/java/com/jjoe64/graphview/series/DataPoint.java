@@ -1,25 +1,23 @@
 /**
  * GraphView
  * Copyright (C) 2014  Jonas Gehring
- *
+ * <p>
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License,
  * with the "Linking Exception", which can be found at the license.txt
  * file in this program.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU General Public License
  * with the "Linking Exception" along with this program; if not,
  * write to the author Jonas Gehring <g.jjoe64@gmail.com>.
  */
 package com.jjoe64.graphview.series;
-
-import android.provider.ContactsContract;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -31,14 +29,14 @@ import java.util.Date;
  * @author jjoe64
  */
 public class DataPoint implements DataPointInterface, Serializable {
-    private static final long serialVersionUID=1428263322645L;
+    private static final long serialVersionUID = 1428263322645L;
 
     private final double x;
     private final double y;
 
     public DataPoint(double x, double y) {
-        this.x=x;
-        this.y=y;
+        this.x = x;
+        this.y = y;
     }
 
     public DataPoint(Date x, double y) {
@@ -58,6 +56,6 @@ public class DataPoint implements DataPointInterface, Serializable {
 
     @Override
     public String toString() {
-        return "["+x+"/"+y+"]";
+        return "[" + x + "/" + y + "]";
     }
 }

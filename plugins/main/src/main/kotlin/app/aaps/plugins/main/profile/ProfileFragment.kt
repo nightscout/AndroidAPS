@@ -8,8 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import app.aaps.core.interfaces.db.GlucoseUnit
-import app.aaps.core.interfaces.extensions.toVisibility
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -27,10 +30,9 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.main.profile.ProfileSealed
+import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.dialogs.OKDialog
-import app.aaps.database.entities.UserEntry
-import app.aaps.database.entities.ValueWithUnit
+import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.databinding.ProfileFragmentBinding
 import app.aaps.plugins.main.profile.ui.TimeListEdit
@@ -59,6 +61,7 @@ class ProfileFragment : DaggerFragment() {
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var decimalFormatter: DecimalFormatter
+    @Inject lateinit var loop: Loop
 
     private var disposable: CompositeDisposable = CompositeDisposable()
     private var inMenu = false
@@ -69,10 +72,10 @@ class ProfileFragment : DaggerFragment() {
         doEdit()
         basalView?.updateLabel(rh.gs(app.aaps.core.ui.R.string.basal_label) + ": " + sumLabel())
         profilePlugin.getEditedProfile()?.let {
-            binding.basalGraph.show(ProfileSealed.Pure(it))
-            binding.icGraph.show(ProfileSealed.Pure(it))
-            binding.isfGraph.show(ProfileSealed.Pure(it))
-            binding.targetGraph.show(ProfileSealed.Pure(it))
+            binding.basalGraph.show(ProfileSealed.Pure(it, null))
+            binding.icGraph.show(ProfileSealed.Pure(it, null))
+            binding.isfGraph.show(ProfileSealed.Pure(it, null))
+            binding.targetGraph.show(ProfileSealed.Pure(it, null))
             binding.insulinGraph.show(activePlugin.activeInsulin, SafeParse.stringToDouble(binding.dia.text))
         }
     }
@@ -89,7 +92,7 @@ class ProfileFragment : DaggerFragment() {
 
     private fun sumLabel(): String {
         val profile = profilePlugin.getEditedProfile()
-        val sum = profile?.let { ProfileSealed.Pure(profile).baseBasalSum() } ?: 0.0
+        val sum = profile?.let { ProfileSealed.Pure(profile, null).baseBasalSum() } ?: 0.0
         return " ∑" + decimalFormatter.to2Decimal(sum) + rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname)
     }
 
@@ -124,6 +127,9 @@ class ProfileFragment : DaggerFragment() {
         val activeProfile = profileFunction.getProfileName()
         val profileIndex = profiles.indexOf(activeProfile)
         profilePlugin.currentProfileIndex = if (profileIndex >= 0) profileIndex else 0
+        val aps = activePlugin.activeAPS
+        binding.isfDynamicLabel.visibility = aps.supportsDynamicIsf().toVisibility()
+        binding.icDynamicLabel.visibility = aps.supportsDynamicIc().toVisibility()
     }
 
     fun build() {
@@ -200,8 +206,8 @@ class ProfileFragment : DaggerFragment() {
                 rh.gs(app.aaps.core.ui.R.string.target_long_label),
                 currentProfile.targetLow,
                 currentProfile.targetHigh,
-                HardLimits.VERY_HARD_LIMIT_MIN_BG,
-                HardLimits.VERY_HARD_LIMIT_TARGET_BG,
+                HardLimits.LIMIT_MIN_BG,
+                HardLimits.LIMIT_TARGET_BG,
                 1.0,
                 DecimalFormat("0"),
                 save
@@ -217,12 +223,12 @@ class ProfileFragment : DaggerFragment() {
                     ("0.0"), save
             )
             val range1 = doubleArrayOf(
-                roundUp(profileUtil.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MIN_BG[0], GlucoseUnit.MMOL)),
-                roundDown(profileUtil.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MIN_BG[1], GlucoseUnit.MMOL))
+                roundUp(profileUtil.fromMgdlToUnits(HardLimits.LIMIT_MIN_BG[0], GlucoseUnit.MMOL)),
+                roundDown(profileUtil.fromMgdlToUnits(HardLimits.LIMIT_MIN_BG[1], GlucoseUnit.MMOL))
             )
             val range2 = doubleArrayOf(
-                roundUp(profileUtil.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MAX_BG[0], GlucoseUnit.MMOL)),
-                roundDown(profileUtil.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MAX_BG[1], GlucoseUnit.MMOL))
+                roundUp(profileUtil.fromMgdlToUnits(HardLimits.LIMIT_MAX_BG[0], GlucoseUnit.MMOL)),
+                roundDown(profileUtil.fromMgdlToUnits(HardLimits.LIMIT_MAX_BG[1], GlucoseUnit.MMOL))
             )
             aapsLogger.info(LTag.CORE, "TimeListEdit", "build: range1" + range1[0] + " " + range1[1] + " range2" + range2[0] + " " + range2[1])
             TimeListEdit(
@@ -266,10 +272,10 @@ class ProfileFragment : DaggerFragment() {
             }
         }
         profilePlugin.getEditedProfile()?.let {
-            binding.basalGraph.show(ProfileSealed.Pure(it))
-            binding.icGraph.show(ProfileSealed.Pure(it))
-            binding.isfGraph.show(ProfileSealed.Pure(it))
-            binding.targetGraph.show(ProfileSealed.Pure(it))
+            binding.basalGraph.show(ProfileSealed.Pure(it, null))
+            binding.icGraph.show(ProfileSealed.Pure(it, null))
+            binding.isfGraph.show(ProfileSealed.Pure(it, null))
+            binding.targetGraph.show(ProfileSealed.Pure(it, null))
             binding.insulinGraph.show(activePlugin.activeInsulin, SafeParse.stringToDouble(binding.dia.text))
         }
 
@@ -277,7 +283,7 @@ class ProfileFragment : DaggerFragment() {
             if (profilePlugin.isEdited) {
                 activity?.let { OKDialog.show(it, "", rh.gs(R.string.save_or_reset_changes_first)) }
             } else {
-                uel.log(UserEntry.Action.NEW_PROFILE, UserEntry.Sources.LocalProfile)
+                uel.log(Action.NEW_PROFILE, Sources.LocalProfile)
                 profilePlugin.addNewProfile()
                 build()
             }
@@ -288,10 +294,8 @@ class ProfileFragment : DaggerFragment() {
                 activity?.let { OKDialog.show(it, "", rh.gs(R.string.save_or_reset_changes_first)) }
             } else {
                 uel.log(
-                    UserEntry.Action.CLONE_PROFILE, UserEntry.Sources.LocalProfile, ValueWithUnit.SimpleString(
-                        profilePlugin.currentProfile()?.name
-                            ?: ""
-                    )
+                    action = Action.CLONE_PROFILE, source = Sources.LocalProfile,
+                    value = ValueWithUnit.SimpleString(profilePlugin.currentProfile()?.name ?: "")
                 )
                 profilePlugin.cloneProfile()
                 build()
@@ -302,10 +306,8 @@ class ProfileFragment : DaggerFragment() {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, rh.gs(R.string.delete_current_profile, profilePlugin.currentProfile()?.name), {
                     uel.log(
-                        UserEntry.Action.PROFILE_REMOVED, UserEntry.Sources.LocalProfile, ValueWithUnit.SimpleString(
-                            profilePlugin.currentProfile()?.name
-                                ?: ""
-                        )
+                        action = Action.PROFILE_REMOVED, source = Sources.LocalProfile,
+                        value = ValueWithUnit.SimpleString(profilePlugin.currentProfile()?.name ?: "")
                     )
                     profilePlugin.removeCurrentProfile()
                     build()
@@ -320,7 +322,11 @@ class ProfileFragment : DaggerFragment() {
         binding.units.text = rh.gs(R.string.units_colon) + " " + (if (currentProfile.mgdl) rh.gs(app.aaps.core.ui.R.string.mgdl) else rh.gs(app.aaps.core.ui.R.string.mmol))
 
         binding.profileswitch.setOnClickListener {
-            uiInteraction.runProfileSwitchDialog(childFragmentManager, profilePlugin.currentProfile()?.name)
+            if (loop.isDisconnected) {
+                activity?.let { activity -> OKDialog.show(activity, rh.gs(R.string.not_available_full), rh.gs(R.string.smscommunicator_pump_disconnected)) }
+            } else {
+                uiInteraction.runProfileSwitchDialog(childFragmentManager, profilePlugin.currentProfile()?.name)
+            }
         }
 
         binding.reset.setOnClickListener {
@@ -333,10 +339,8 @@ class ProfileFragment : DaggerFragment() {
                 return@setOnClickListener  //Should not happen as saveButton should not be visible if not valid
             }
             uel.log(
-                UserEntry.Action.STORE_PROFILE, UserEntry.Sources.LocalProfile, ValueWithUnit.SimpleString(
-                    profilePlugin.currentProfile()?.name
-                        ?: ""
-                )
+                action = Action.STORE_PROFILE, source = Sources.LocalProfile,
+                value = ValueWithUnit.SimpleString(profilePlugin.currentProfile()?.name ?: "")
             )
             profilePlugin.storeSettings(activity, dateUtil.now())
             build()

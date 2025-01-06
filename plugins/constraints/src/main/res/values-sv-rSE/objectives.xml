@@ -26,11 +26,7 @@
     <string name="objectives_smb_objective">Aktiverar ytterligare funktioner för användning dagtid, t ex SMB</string>
     <string name="objectives_smb_gate">Du måste läsa wikin och öka max IOB för att få SMB att fungera bra. En bra start är att sätta max IOB till din genomsnittliga måltidsbolus plus 3 gånger den högsta basalen du har under ett dygn</string>
     <string name="objectives_smb_learned">Att använda SMB är ditt mål. Oref1-algoritmen utformades även för att hjälpa dig med dina bolusar. Du bör inte ge full bolus till din mat utan bara en del av det och låt AAPS ge dig resten om det behövs. På så sätt har du mer utrymme för felberäknade kolhydrater. Visste du att du kan ställa in en procentandel av boluskalkylatorns resultat för att minska storleken på bolus?</string>
-    <string name="objectives_dyn_isf_objective">Aktiverar extra funktioner som kan användas dagtid, såsom insticksprogrammet för dynamisk känslighet</string>
-    <string name="objectives_dyn_isf_gate">Se till att SMB fungerar korrekt. Aktivera insticksprogrammet DynamicISF och identifiera lämplig kalibrering för just din kropp. Det är lämpligt att börja med ett värde lägre än 100% av säkerhetsskäl.</string>
-    <string name="objectives_dyn_isf_learned">Insticksprogrammet för dynamisk känslighet bygger på teorin att det totala insulinintaget och nuvarande blodsockernivåer påverkar insulinkänsligheten. Insticksprogrammet DynamicISF kan löpande justera insulinkänslighetsfaktorn (ISF) som används av algoritmen.</string>
     <string name="objectives_auto_objective">Aktivera automatisering</string>
-    <string name="objectives_auto_gate">Läs dokumentationen kring hur automatisering fungerar. Konfigurera dina första enkla regler. I stället för att ange en åtgärd, låt AAPS enbart visa en avisering. När du är säker på att automatisering utlöses vid rätt tidpunkt kan du ersätta aviseringen med verklig åtgärd. (https://wiki.aaps.app/en/latest/Usage/Automation.html)</string>
     <string name="objectives_auto_learned">Automation kan vara en bra tjänare men en dålig herre. Överanvänd den inte. Försök inte att ersätta underliggande algoritm. Testa regeln först med enbart meddelande innan du sätter igång den på riktigt. Automatiseringarna påverkas av ordningsföljden.</string>
     <string name="objectives_bgavailableinns">BG tillgängligt i NS eller Tidepool</string>
     <string name="objectives_pumpstatusavailableinns">Pumpstatus tillgängligt i NS eller Tidepool</string>
@@ -77,10 +73,6 @@
     <string name="unfinshed_button">Nästa icke slutförda</string>
     <string name="requestcode">Begärd kod: %1$s</string>
     <string name="objectives_hint">(markera ett eller flera alternativ)</string>
-    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
-    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html</string>
-    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">Inte ansluten till internet</string>
     <string name="failedretrievetime">Fel vid hämtning av tid</string>
     <string name="requirementnotmet">Målets krav är inte uppfyllda</string>

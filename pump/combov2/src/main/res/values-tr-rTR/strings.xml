@@ -4,7 +4,6 @@
     <string name="combov2_plugin_description">Accu-Chek Combo İnsülin Pompası Entegrasyonu</string>
     <string name="combov2_could_not_connect">Pompaya bağlanılamadı</string>
     <string name="combov2_not_paired">Bir pompayla eşleştirilmedi</string>
-    <string name="combov2_pump_terminated_connection">Bağlantıyı sonlandır</string>
     <string name="combov2_warning">Combo uyarısı</string>
     <string name="combov2_error">Combo hatası</string>
     <string name="combov2_warning_4">Güncelleme için yardım hattını arayın</string>
@@ -116,8 +115,6 @@ Eşleştirme başarıyla tamamlandığında pompanızda tamamlanan eşleştirmey
     <string name="combov2_short_status_battery_state">Pil: %s</string>
     <string name="combov2_automatic_reservoir_entry">İnsülin rezervuar değişikliğini otomatik olarak algıla ve otomatik olarak gir</string>
     <string name="combov2_automatic_battery_entry">Pil değişimini otomatik olarak algıla ve otomatik olarak gir</string>
-    <string name="combov2_note_reservoir_change">Combov2 sürücüsü tarafından otomatik olarak eklenen insülin rezervuar değişimi</string>
-    <string name="combov2_note_battery_change">Combov2 sürücüsü tarafından otomatik olarak eklenen pil değişimi</string>
     <string name="combov2_timezone_changed">Zaman dilimi değiştirildi</string>
     <string name="combov2_datetime_changed">Tarih ve/veya saat değişti</string>
     <string name="combov2_dst_started">Yaz saati uygulaması (DST) başladı</string>

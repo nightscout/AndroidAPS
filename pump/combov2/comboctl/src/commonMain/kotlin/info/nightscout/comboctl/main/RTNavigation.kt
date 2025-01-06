@@ -62,9 +62,7 @@ internal data class RTEdgeValue(val button: RTNavigationButton, val edgeValidity
 
         other as RTEdgeValue
 
-        if (button != other.button) return false
-
-        return true
+        return button == other.button
     }
 
     override fun hashCode(): Int {

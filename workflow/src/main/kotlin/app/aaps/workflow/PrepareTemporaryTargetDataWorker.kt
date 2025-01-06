@@ -3,21 +3,20 @@ package app.aaps.workflow
 import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.graph.data.LineGraphSeries
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.main.events.EventIobCalculationProgress
-import app.aaps.core.main.extensions.target
-import app.aaps.core.main.graph.OverviewData
-import app.aaps.core.main.utils.worker.LoggingWorker
-import app.aaps.core.main.workflow.CalculationWorkflow
+import app.aaps.core.interfaces.rx.events.EventIobCalculationProgress
+import app.aaps.core.interfaces.workflow.CalculationWorkflow
+import app.aaps.core.objects.extensions.target
+import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
-import app.aaps.database.ValueWrapper
-import app.aaps.database.impl.AppRepository
 import com.jjoe64.graphview.series.DataPoint
-import com.jjoe64.graphview.series.LineGraphSeries
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import kotlin.math.max
@@ -31,14 +30,10 @@ class PrepareTemporaryTargetDataWorker(
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var loop: Loop
     @Inject lateinit var rxBus: RxBus
-    private var ctx: Context
-
-    init {
-        ctx = rh.getThemedCtx(context)
-    }
+    private var ctx: Context = rh.getThemedCtx(context)
 
     class PrepareTemporaryTargetData(
         val overviewData: OverviewData
@@ -61,9 +56,9 @@ class PrepareTemporaryTargetDataWorker(
             if (isStopped) return Result.failure(workDataOf("Error" to "stopped"))
             val progress = (time - fromTime).toDouble() / (endTime - fromTime) * 100.0
             rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TEMPORARY_TARGET_DATA, progress.toInt(), null))
-            val tt = repository.getTemporaryTargetActiveAt(time).blockingGet()
-            val value: Double = if (tt is ValueWrapper.Existing) {
-                profileUtil.fromMgdlToUnits(tt.value.target())
+            val tt = persistenceLayer.getTemporaryTargetActiveAt(time)
+            val value: Double = if (tt != null) {
+                profileUtil.fromMgdlToUnits(tt.target())
             } else {
                 profileUtil.fromMgdlToUnits((profile.getTargetLowMgdl(time) + profile.getTargetHighMgdl(time)) / 2)
             }

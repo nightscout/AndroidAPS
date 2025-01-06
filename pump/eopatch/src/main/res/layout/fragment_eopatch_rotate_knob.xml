@@ -4,10 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="info.nightscout.androidaps.plugins.pump.eopatch.code.PatchStep" />
+
+        <import type="app.aaps.pump.eopatch.code.PatchStep" />
+
         <variable
             name="viewModel"
-            type="info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel" />
+            type="app.aaps.pump.eopatch.ui.viewmodel.EopatchViewModel" />
     </data>
 
     <ScrollView
@@ -209,7 +211,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:onSafeClick="@{() -> viewModel.discardPatchWithCommCheck()}"
-                    tools:visibility="visible"/>
+                    tools:visibility="visible" />
 
                 <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/guideline_button"

@@ -31,6 +31,7 @@ import kotlinx.datetime.Instant
  * @property type Type of this TBR.
  */
 data class Tbr(val timestamp: Instant, val percentage: Int, val durationInMinutes: Int, val type: Type) {
+
     enum class Type(val stringId: String) {
         /**
          * Normal TBR.
@@ -69,7 +70,9 @@ data class Tbr(val timestamp: Instant, val percentage: Int, val durationInMinute
         SUPERBOLUS("superbolus");
 
         companion object {
-            private val values = values()
+
+            private val values = Type.entries.toTypedArray()
+
             /**
              * Converts a string ID to a [Tbr.Type].
              *

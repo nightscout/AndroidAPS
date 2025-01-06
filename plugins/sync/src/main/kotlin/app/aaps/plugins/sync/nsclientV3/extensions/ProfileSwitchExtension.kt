@@ -1,27 +1,27 @@
 package app.aaps.plugins.sync.nsclientV3.extensions
 
+import app.aaps.core.data.model.IDs
+import app.aaps.core.data.model.PS
+import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.interfaces.utils.T
-import app.aaps.core.main.extensions.fromConstant
-import app.aaps.core.main.extensions.getCustomizedName
-import app.aaps.core.main.extensions.pureProfileFromJson
-import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.nssdk.localmodel.treatment.EventType
 import app.aaps.core.nssdk.localmodel.treatment.NSProfileSwitch
-import app.aaps.database.entities.ProfileSwitch
-import app.aaps.database.entities.embedments.InterfaceIDs
+import app.aaps.core.objects.extensions.getCustomizedName
+import app.aaps.core.objects.extensions.pureProfileFromJson
+import app.aaps.core.objects.profile.ProfileSealed
 import java.security.InvalidParameterException
 
-fun NSProfileSwitch.toProfileSwitch(activePlugin: ActivePlugin, dateUtil: DateUtil): ProfileSwitch? {
+fun NSProfileSwitch.toProfileSwitch(activePlugin: ActivePlugin, dateUtil: DateUtil): PS? {
     val pureProfile =
         profileJson?.let { pureProfileFromJson(it, dateUtil) ?: return null }
             ?: activePlugin.activeProfileSource.profile?.getSpecificProfile(profile) ?: return null
 
-    val profileSealed = ProfileSealed.Pure(pureProfile)
+    val profileSealed = ProfileSealed.Pure(value = pureProfile, activePlugin = null)
 
-    return ProfileSwitch(
+    return PS(
         isValid = isValid,
         timestamp = date ?: throw InvalidParameterException(),
         utcOffset = T.mins(utcOffset ?: 0L).msecs(),
@@ -29,17 +29,17 @@ fun NSProfileSwitch.toProfileSwitch(activePlugin: ActivePlugin, dateUtil: DateUt
         isfBlocks = profileSealed.isfBlocks,
         icBlocks = profileSealed.icBlocks,
         targetBlocks = profileSealed.targetBlocks,
-        glucoseUnit = ProfileSwitch.GlucoseUnit.fromConstant(profileSealed.units),
+        glucoseUnit = profileSealed.units,
         profileName = originalProfileName ?: profile,
         timeshift = timeShift ?: 0,
         percentage = percentage ?: 100,
         duration = originalDuration ?: T.mins(duration ?: 0).msecs(),
-        insulinConfiguration = profileSealed.insulinConfiguration,
-        interfaceIDs_backing = InterfaceIDs(nightscoutId = identifier, pumpId = pumpId, pumpType = InterfaceIDs.PumpType.fromString(pumpType), pumpSerial = pumpSerial, endId = endId)
+        iCfg = profileSealed.iCfg,
+        ids = IDs(nightscoutId = identifier, pumpId = pumpId, pumpType = PumpType.fromString(pumpType), pumpSerial = pumpSerial, endId = endId)
     )
 }
 
-fun ProfileSwitch.toNSProfileSwitch(dateUtil: DateUtil, decimalFormatter: DecimalFormatter): NSProfileSwitch {
+fun PS.toNSProfileSwitch(dateUtil: DateUtil, decimalFormatter: DecimalFormatter): NSProfileSwitch {
     val unmodifiedCustomizedName = getCustomizedName(decimalFormatter)
     // ProfileSealed.PS doesn't provide unmodified json -> reset it
     val notCustomized = this.copy()
@@ -57,11 +57,11 @@ fun ProfileSwitch.toNSProfileSwitch(dateUtil: DateUtil, decimalFormatter: Decima
         profile = unmodifiedCustomizedName,
         originalProfileName = profileName,
         originalDuration = duration,
-        profileJson = ProfileSealed.PS(notCustomized).toPureNsJson(dateUtil),
-        identifier = interfaceIDs.nightscoutId,
-        pumpId = interfaceIDs.pumpId,
-        pumpType = interfaceIDs.pumpType?.name,
-        pumpSerial = interfaceIDs.pumpSerial,
-        endId = interfaceIDs.endId
+        profileJson = ProfileSealed.PS(value = notCustomized, activePlugin = null).toPureNsJson(dateUtil),
+        identifier = ids.nightscoutId,
+        pumpId = ids.pumpId,
+        pumpType = ids.pumpType?.name,
+        pumpSerial = ids.pumpSerial,
+        endId = ids.endId
     )
 }

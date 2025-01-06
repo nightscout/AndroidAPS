@@ -13,6 +13,7 @@ package info.nightscout.comboctl.base
  * and [blockDecrypt]. Note that the latter two always process 16-byte blocks.
  */
 object Twofish {
+
     /**********************
      * INTERNAL CONSTANTS *
      **********************/
@@ -20,7 +21,7 @@ object Twofish {
     private const val BLOCK_SIZE = 16 // bytes in a data-block
     private const val MAX_ROUNDS = 16 // max # rounds (for allocating subkeys)
 
-   // Subkey array indices
+    // Subkey array indices
     private const val INPUT_WHITEN = 0
     private const val OUTPUT_WHITEN = INPUT_WHITEN + BLOCK_SIZE / 4
     private const val ROUND_SUBKEYS = OUTPUT_WHITEN + BLOCK_SIZE / 4 // 2*(# rounds)
@@ -215,8 +216,8 @@ object Twofish {
 
     private fun LFSR2(x: Int): Int =
         (x shr 2) xor
-        (if ((x and 0x02) != 0) GF256_FDBK_2 else 0) xor
-        (if ((x and 0x01) != 0) GF256_FDBK_4 else 0)
+            (if ((x and 0x02) != 0) GF256_FDBK_2 else 0) xor
+            (if ((x and 0x01) != 0) GF256_FDBK_4 else 0)
 
     private fun Mx_1(x: Int): Int = x
     private fun Mx_X(x: Int): Int = x xor LFSR2(x) // 5B
@@ -242,11 +243,10 @@ object Twofish {
     // @return  Remainder polynomial generated using RS code
     private fun RS_MDS_Encode(k0: Int, k1: Int): Int {
         var r = k1
-        for (i in 0 until 4) // shift 1 byte at a time
-            r = RS_rem(r)
+        (0 until 4) // shift 1 byte at a time
+            .forEach { r = RS_rem(r) }
         r = r xor k0
-        for (i in 0 until 4)
-            r = RS_rem(r)
+        (0 until 4).forEach { r = RS_rem(r) }
         return r
     }
 
@@ -270,9 +270,9 @@ object Twofish {
 
         if (k64Cnt2LSB == 1) {
             return MDS[0][(P[P_01][b0] and 0xFF) xor calcb0(k0)] xor
-                   MDS[1][(P[P_11][b1] and 0xFF) xor calcb1(k0)] xor
-                   MDS[2][(P[P_21][b2] and 0xFF) xor calcb2(k0)] xor
-                   MDS[3][(P[P_31][b3] and 0xFF) xor calcb3(k0)]
+                MDS[1][(P[P_11][b1] and 0xFF) xor calcb1(k0)] xor
+                MDS[2][(P[P_21][b2] and 0xFF) xor calcb2(k0)] xor
+                MDS[3][(P[P_31][b3] and 0xFF) xor calcb3(k0)]
         }
 
         if (k64Cnt2LSB == 0) { // same as 4
@@ -293,26 +293,26 @@ object Twofish {
 
         if (k64Cnt2LSB == 2) { // 128-bit keys (optimize for this case)
             return MDS[0][(P[P_01][(P[P_02][b0] and 0xFF) xor calcb0(k1)] and 0xFF) xor calcb0(k0)] xor
-                   MDS[1][(P[P_11][(P[P_12][b1] and 0xFF) xor calcb1(k1)] and 0xFF) xor calcb1(k0)] xor
-                   MDS[2][(P[P_21][(P[P_22][b2] and 0xFF) xor calcb2(k1)] and 0xFF) xor calcb2(k0)] xor
-                   MDS[3][(P[P_31][(P[P_32][b3] and 0xFF) xor calcb3(k1)] and 0xFF) xor calcb3(k0)]
+                MDS[1][(P[P_11][(P[P_12][b1] and 0xFF) xor calcb1(k1)] and 0xFF) xor calcb1(k0)] xor
+                MDS[2][(P[P_21][(P[P_22][b2] and 0xFF) xor calcb2(k1)] and 0xFF) xor calcb2(k0)] xor
+                MDS[3][(P[P_31][(P[P_32][b3] and 0xFF) xor calcb3(k1)] and 0xFF) xor calcb3(k0)]
         }
 
         return 0
     }
 
-    private fun Fe32(sBox: IntArray, x: Int, R: Int) =
-        sBox[0x000 + 2 * _b(x, R + 0) + 0] xor
-        sBox[0x000 + 2 * _b(x, R + 1) + 1] xor
-        sBox[0x200 + 2 * _b(x, R + 2) + 0] xor
-        sBox[0x200 + 2 * _b(x, R + 3) + 1]
+    private fun Fe32(sBox: IntArray, x: Int, r: Int) =
+        sBox[0x000 + 2 * _b(x, r + 0) + 0] xor
+            sBox[0x000 + 2 * _b(x, r + 1) + 1] xor
+            sBox[0x200 + 2 * _b(x, r + 2) + 0] xor
+            sBox[0x200 + 2 * _b(x, r + 3) + 1]
 
     private fun _b(x: Int, N: Int) =
         when (N and 3) {
-            0 -> calcb0(x)
-            1 -> calcb1(x)
-            2 -> calcb2(x)
-            3 -> calcb3(x)
+            0    -> calcb0(x)
+            1    -> calcb1(x)
+            2    -> calcb2(x)
+            3    -> calcb3(x)
             // NOTE: This else-branch is only here to shut up build errors.
             // This case cannot occur because the bitwise AND above excludes
             // all values outside of the 0-3 range.
@@ -343,24 +343,24 @@ object Twofish {
             mY[1] = Mx_Y(j1) and 0xFF
 
             MDS[0][i] = (m1[P_00] shl 0) or
-                        (mX[P_00] shl 8) or
-                        (mY[P_00] shl 16) or
-                        (mY[P_00] shl 24)
+                (mX[P_00] shl 8) or
+                (mY[P_00] shl 16) or
+                (mY[P_00] shl 24)
 
             MDS[1][i] = (mY[P_10] shl 0) or
-                        (mY[P_10] shl 8) or
-                        (mX[P_10] shl 16) or
-                        (m1[P_10] shl 24)
+                (mY[P_10] shl 8) or
+                (mX[P_10] shl 16) or
+                (m1[P_10] shl 24)
 
             MDS[2][i] = (mX[P_20] shl 0) or
-                        (mY[P_20] shl 8) or
-                        (m1[P_20] shl 16) or
-                        (mY[P_20] shl 24)
+                (mY[P_20] shl 8) or
+                (m1[P_20] shl 16) or
+                (mY[P_20] shl 24)
 
             MDS[3][i] = (mX[P_30] shl 0) or
-                        (m1[P_30] shl 8) or
-                        (mY[P_30] shl 16) or
-                        (mX[P_30] shl 24)
+                (m1[P_30] shl 8) or
+                (mY[P_30] shl 16) or
+                (mX[P_30] shl 24)
         }
     }
 
@@ -376,6 +376,7 @@ object Twofish {
      * not a key directly.
      */
     data class KeyObject(val sBox: IntArray, val subKeys: IntArray) {
+
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (other == null) return false
@@ -425,13 +426,13 @@ object Twofish {
             val j = k64Cnt - 1 - i
 
             k32e[i] = ((key[offset++].toPosInt() and 0xFF) shl 0) or
-                      ((key[offset++].toPosInt() and 0xFF) shl 8) or
-                      ((key[offset++].toPosInt() and 0xFF) shl 16) or
-                      ((key[offset++].toPosInt() and 0xFF) shl 24)
+                ((key[offset++].toPosInt() and 0xFF) shl 8) or
+                ((key[offset++].toPosInt() and 0xFF) shl 16) or
+                ((key[offset++].toPosInt() and 0xFF) shl 24)
             k32o[i] = ((key[offset++].toPosInt() and 0xFF) shl 0) or
-                      ((key[offset++].toPosInt() and 0xFF) shl 8) or
-                      ((key[offset++].toPosInt() and 0xFF) shl 16) or
-                      ((key[offset++].toPosInt() and 0xFF) shl 24)
+                ((key[offset++].toPosInt() and 0xFF) shl 8) or
+                ((key[offset++].toPosInt() and 0xFF) shl 16) or
+                ((key[offset++].toPosInt() and 0xFF) shl 24)
             sBoxKey[j] = RS_MDS_Encode(k32e[i], k32o[i]) // reverse order
         }
 
@@ -521,21 +522,21 @@ object Twofish {
         var inputOffset = offset
 
         var x0 = ((input[inputOffset++].toPosInt() and 0xFF) shl 0) or
-                 ((input[inputOffset++].toPosInt() and 0xFF) shl 8) or
-                 ((input[inputOffset++].toPosInt() and 0xFF) shl 16) or
-                 ((input[inputOffset++].toPosInt() and 0xFF) shl 24)
+            ((input[inputOffset++].toPosInt() and 0xFF) shl 8) or
+            ((input[inputOffset++].toPosInt() and 0xFF) shl 16) or
+            ((input[inputOffset++].toPosInt() and 0xFF) shl 24)
         var x1 = ((input[inputOffset++].toPosInt() and 0xFF) shl 0) or
-                 ((input[inputOffset++].toPosInt() and 0xFF) shl 8) or
-                 ((input[inputOffset++].toPosInt() and 0xFF) shl 16) or
-                 ((input[inputOffset++].toPosInt() and 0xFF) shl 24)
+            ((input[inputOffset++].toPosInt() and 0xFF) shl 8) or
+            ((input[inputOffset++].toPosInt() and 0xFF) shl 16) or
+            ((input[inputOffset++].toPosInt() and 0xFF) shl 24)
         var x2 = ((input[inputOffset++].toPosInt() and 0xFF) shl 0) or
-                 ((input[inputOffset++].toPosInt() and 0xFF) shl 8) or
-                 ((input[inputOffset++].toPosInt() and 0xFF) shl 16) or
-                 ((input[inputOffset++].toPosInt() and 0xFF) shl 24)
+            ((input[inputOffset++].toPosInt() and 0xFF) shl 8) or
+            ((input[inputOffset++].toPosInt() and 0xFF) shl 16) or
+            ((input[inputOffset++].toPosInt() and 0xFF) shl 24)
         var x3 = ((input[inputOffset++].toPosInt() and 0xFF) shl 0) or
-                 ((input[inputOffset++].toPosInt() and 0xFF) shl 8) or
-                 ((input[inputOffset++].toPosInt() and 0xFF) shl 16) or
-                 ((input[inputOffset].toPosInt() and 0xFF) shl 24)
+            ((input[inputOffset++].toPosInt() and 0xFF) shl 8) or
+            ((input[inputOffset++].toPosInt() and 0xFF) shl 16) or
+            ((input[inputOffset].toPosInt() and 0xFF) shl 24)
 
         val sBox = keyObject.sBox
         val subKeys = keyObject.subKeys
@@ -547,12 +548,10 @@ object Twofish {
 
         var k = ROUND_SUBKEYS
 
-        for (R in 0 until MAX_ROUNDS step 2) {
-            var t0: Int
-            var t1: Int
+        (0 until MAX_ROUNDS step 2).forEach { R ->
 
-            t0 = Fe32(sBox, x0, 0)
-            t1 = Fe32(sBox, x1, 3)
+            var t0: Int = Fe32(sBox, x0, 0)
+            var t1: Int = Fe32(sBox, x1, 3)
             x2 = x2 xor (t0 + t1 + subKeys[k++])
             x2 = (x2 ushr 1) or (x2 shl 31)
             x3 = (x3 shl 1) or (x3 ushr 31)
@@ -596,21 +595,21 @@ object Twofish {
         var inputOffset = offset
 
         var x2 = ((input[inputOffset++].toPosInt() and 0xFF) shl 0) or
-                 ((input[inputOffset++].toPosInt() and 0xFF) shl 8) or
-                 ((input[inputOffset++].toPosInt() and 0xFF) shl 16) or
-                 ((input[inputOffset++].toPosInt() and 0xFF) shl 24)
+            ((input[inputOffset++].toPosInt() and 0xFF) shl 8) or
+            ((input[inputOffset++].toPosInt() and 0xFF) shl 16) or
+            ((input[inputOffset++].toPosInt() and 0xFF) shl 24)
         var x3 = ((input[inputOffset++].toPosInt() and 0xFF) shl 0) or
-                 ((input[inputOffset++].toPosInt() and 0xFF) shl 8) or
-                 ((input[inputOffset++].toPosInt() and 0xFF) shl 16) or
-                 ((input[inputOffset++].toPosInt() and 0xFF) shl 24)
+            ((input[inputOffset++].toPosInt() and 0xFF) shl 8) or
+            ((input[inputOffset++].toPosInt() and 0xFF) shl 16) or
+            ((input[inputOffset++].toPosInt() and 0xFF) shl 24)
         var x0 = ((input[inputOffset++].toPosInt() and 0xFF) shl 0) or
-                 ((input[inputOffset++].toPosInt() and 0xFF) shl 8) or
-                 ((input[inputOffset++].toPosInt() and 0xFF) shl 16) or
-                 ((input[inputOffset++].toPosInt() and 0xFF) shl 24)
+            ((input[inputOffset++].toPosInt() and 0xFF) shl 8) or
+            ((input[inputOffset++].toPosInt() and 0xFF) shl 16) or
+            ((input[inputOffset++].toPosInt() and 0xFF) shl 24)
         var x1 = ((input[inputOffset++].toPosInt() and 0xFF) shl 0) or
-                 ((input[inputOffset++].toPosInt() and 0xFF) shl 8) or
-                 ((input[inputOffset++].toPosInt() and 0xFF) shl 16) or
-                 ((input[inputOffset].toPosInt() and 0xFF) shl 24)
+            ((input[inputOffset++].toPosInt() and 0xFF) shl 8) or
+            ((input[inputOffset++].toPosInt() and 0xFF) shl 16) or
+            ((input[inputOffset].toPosInt() and 0xFF) shl 24)
 
         val sBox = keyObject.sBox
         val subKeys = keyObject.subKeys
@@ -622,7 +621,7 @@ object Twofish {
 
         var k = TOTAL_SUBKEYS - 1
 
-        for (R in 0 until MAX_ROUNDS step 2) {
+        (0 until MAX_ROUNDS step 2).forEach { R ->
             var t0: Int
             var t1: Int
 

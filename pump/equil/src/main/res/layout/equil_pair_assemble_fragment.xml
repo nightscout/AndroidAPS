@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_hint1"
+        style="@style/pairTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/equil_ble_config_confirmation_title"
+        android:textStyle="bold" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_hint2"
+        style="@style/pairText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="@string/equil_assemble"
+        app:layout_constraintTop_toBottomOf="@+id/tv_hint1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imv"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_marginTop="15dp"
+            android:src="@drawable/equil_animation_wizard_assemble" />
+    </LinearLayout>
+
+
+</LinearLayout>

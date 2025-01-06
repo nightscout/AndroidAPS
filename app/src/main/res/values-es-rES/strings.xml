@@ -1,29 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
-    <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
-    <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="nav_preferences_plugin">Preferencias de %1$s</string>
-    <string name="nav_refreshtreatments">Actualizar los tratamientos desde Nightscout</string>
     <string name="nav_exit">Salir</string>
     <string name="delta">Delta</string>
-    <string name="profile_label">Perfil</string>
     <string name="save">Guardar</string>
-    <string name="reloadprofile">Recargar Perfil</string>
-    <string name="correctionbous">Corrección</string>
-    <string name="ns_upload_only">(PELIGROSO DESHABILITAR) Sólo subida a Nightscout</string>
-    <string name="ns_upload_only_summary">Sólo subir a Nightscout (sincronización desactivada). No es efectivo en SGV, a menos que se seleccione una fuente local como xDrip+. No es efectivo en perfiles, si se usan perfiles Nightscout.\n!!! ¡¡ADVERTENCIA!!! Desactivar esta opción puede causar mal funcionamiento y sobredosis de insulina, si cualquiera de sus componentes (AAPS, NS, xDrip+) está mal configurado. ¡Vigile cuidadosamente si los datos mostrados por AAPS coinciden con el estado de la bomba!</string>
     <string name="wear">Reloj</string>
     <string name="nav_about">Acerca de</string>
-    <string name="smscommunicator_missingphonestatepermission">Falta permiso de estado del teléfono</string>
-    <string name="ns_alarm_options">Opciones de alarmas</string>
-    <string name="ns_alarms">Crear notificaciones de alarmas desde Nightscout</string>
-    <string name="ns_announcements">Crear notificaciones desde Nightscout</string>
-    <string name="ns_alarm_stale_data_value_label">Datos antiguos limite [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Datos antiguos urgentes limite [min]</string>
     <string name="sensitivity_warning">Al activar Autosens, recuerda introducir todos carbohidratos que has comido, sino, las desviaciones de carbohidratos serán identificados incorrectamente, como un cambio de sensibilidad</string>
-    <string name="notloadedplugins">Faltan perfiles por cargar!</string>
-    <string name="valuesnotstored">Valores no guardados!</string>
     <string name="invalid">INVÁLIDO</string>
     <string name="gradually_increase_notification_volume">Aumentar gradualmente el volumen de las alertas y notificaciones</string>
     <string name="localalertsettings_title">Alertas locales</string>
@@ -35,26 +18,16 @@
     <string name="close_navigation">Cerrar navegación</string>
     <string name="remove_items">Eliminar elementos</string>
     <string name="sort_items">Ordenar elementos</string>
-    <string name="error_adding_treatment_title">Datos de tratamiento incompletos</string>
-    <string name="error_adding_treatment_message">Un tratamiento (insulina: %1$.2f, carbs: %2$d, at: %3$s) no ha podido ser añadido a tratamientos. Por favor compruebe y añada manualmente el registro apropiadamente.</string>
-    <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), retraso: %3$d m</string>
-    <string name="profile_total">== ∑%1$s U</string>
     <string name="unitsnosemicolon">Unidades</string>
-    <string name="show_removed">Mostrar eliminados</string>
-    <string name="clearqueueconfirm">¿Borrar cola? ¡Se perderán todos los datos de la cola!</string>
-    <string name="chartmenu">Menú gráfico</string>
     <string name="authorizationfailed">Autorización errónea</string>
-    <string name="copytolocalprofile_invalid">No se puede crear el perfil. El perfil es inválido.</string>
-    <string name="clear_filter">Borrar filtro</string>
     <string name="cannula">Cánula</string>
-    <string name="email_address">Dirección de correo electrónico</string>
-    <string name="remove_bg_readings">Eliminar lecturas de glucosa</string>
     <string name="identification_not_set">Identificación no establecida en el modo dev</string>
-    <string name="a11y_dialog">diálogo</string>
     <!-- WEAR OS-->
-    <string name="wear_unknown_action_string">Comando de acción desconocido:</string>
     <string name="remove_selected_items">Eliminar los elementos seleccionados</string>
     <string name="count_selected">%1$d selecionado</string>
     <string name="sort_label">Ordenar</string>
     <string name="search">Buscar</string>
+    <string name="simple_mode">Modo simple</string>
+    <string name="select">Seleccionar</string>
+    <string name="set">Establecer</string>
 </resources>

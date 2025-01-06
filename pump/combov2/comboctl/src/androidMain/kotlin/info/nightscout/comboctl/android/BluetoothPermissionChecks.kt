@@ -15,9 +15,6 @@ class AndroidBluetoothPermissionException(val missingPermissions: List<String>) 
 internal fun <T> checkForConnectPermission(androidContext: Context, block: () -> T) =
     checkForPermissions(androidContext, listOf(bluetoothConnectPermission), block)
 
-internal fun <T> checkForPermission(androidContext: Context, permission: String, block: () -> T) =
-    checkForPermissions(androidContext, listOf(permission), block)
-
 internal fun <T> checkForPermissions(androidContext: Context, permissions: List<String>, block: () -> T): T {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         val missingPermissions = permissions
@@ -35,7 +32,8 @@ internal fun <T> checkForPermissions(androidContext: Context, permissions: List<
 internal fun runIfScanPermissionGranted(androidContext: Context, block: () -> Unit): Boolean {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         if (ContextCompat.checkSelfPermission(androidContext, bluetoothScanPermission)
-            == PackageManager.PERMISSION_GRANTED) {
+            == PackageManager.PERMISSION_GRANTED
+        ) {
             block.invoke()
             true
         } else

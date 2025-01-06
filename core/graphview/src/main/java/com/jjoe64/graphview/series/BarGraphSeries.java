@@ -24,6 +24,8 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.ValueDependentColor;
 
@@ -99,8 +101,8 @@ public class BarGraphSeries<E extends DataPointInterface> extends BaseSeries<E> 
     /**
      * draws the bars on the canvas
      *
-     * @param graphView corresponding graphview
-     * @param canvas canvas
+     * @param graphView     corresponding graphview
+     * @param canvas        canvas
      * @param isSecondScale whether we are plotting the second scale or not
      */
     @Override
@@ -279,8 +281,8 @@ public class BarGraphSeries<E extends DataPointInterface> extends BaseSeries<E> 
      * set a hook to make the color of the bars depending
      * on the actually value/data.
      *
-     * @param mValueDependentColor  hook
-     *                              null to disable
+     * @param mValueDependentColor hook
+     *                             null to disable
      */
     public void setValueDependentColor(ValueDependentColor<E> mValueDependentColor) {
         this.mValueDependentColor = mValueDependentColor;
@@ -294,9 +296,9 @@ public class BarGraphSeries<E extends DataPointInterface> extends BaseSeries<E> 
     }
 
     /**
-     * @param mSpacing  spacing between the bars in percentage.
-     *                  0 => no spacing
-     *                  100 => the space between the bars is as big as the bars itself
+     * @param mSpacing spacing between the bars in percentage.
+     *                 0 => no spacing
+     *                 100 => the space between the bars is as big as the bars itself
      */
     public void setSpacing(int mSpacing) {
         this.mSpacing = mSpacing;
@@ -310,8 +312,8 @@ public class BarGraphSeries<E extends DataPointInterface> extends BaseSeries<E> 
     }
 
     /**
-     * @param mDrawValuesOnTop  flag whether the values should drawn
-     *                          above the bars as text
+     * @param mDrawValuesOnTop flag whether the values should drawn
+     *                         above the bars as text
      */
     public void setDrawValuesOnTop(boolean mDrawValuesOnTop) {
         this.mDrawValuesOnTop = mDrawValuesOnTop;
@@ -365,7 +367,7 @@ public class BarGraphSeries<E extends DataPointInterface> extends BaseSeries<E> 
      * @param y pixels
      * @return datapoint or null
      */
-    @Override
+    @Nullable @Override
     protected E findDataPoint(float x, float y) {
         for (Map.Entry<RectF, E> entry : mDataPoints.entrySet()) {
             if (x >= entry.getKey().left && x <= entry.getKey().right

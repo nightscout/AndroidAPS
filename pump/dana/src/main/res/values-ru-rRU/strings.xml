@@ -93,7 +93,6 @@
     <string name="danar_disableeasymode">отключить режим упрощенного интерфейса EasyUI в помпе</string>
     <string name="profile_set_failed">настройка базального профиля не состоялась</string>
     <string name="danar_bluetooth_status">статус блутус</string>
-    <string name="danar_iob_label">активный инсулин на помпе</string>
     <string name="firmware_label">Прошивка</string>
     <string name="danar_pump_settings">Настройки помпы Dana</string>
     <string name="time_format_12h">12 ч</string>
@@ -103,7 +102,7 @@
     <string name="danar_bt_name_title">устройство блутус danaR</string>
     <string name="danars_password_title">Пароль для помпы (только v1)</string>
     <string name="danar_password_title">пароль помпы</string>
-    <string name="danar_useextended_title">Для величин &gt;200%% пользуйтесь пролонгированным болюсом</string>
+    <string name="danar_useextended_title">Для величин &gt;200% пользуйтесь пролонгированным болюсом</string>
     <string name="bolusspeed">Скорость подачи болюса</string>
     <string name="selectedpump">Выбранная помпа</string>
     <string name="rs_loginsulinchange_title">Отслеживать замену резервуара</string>

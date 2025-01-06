@@ -1,5 +1,6 @@
 package app.aaps.core.interfaces.plugin
 
+import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.Sensitivity
 import app.aaps.core.interfaces.constraints.Objectives

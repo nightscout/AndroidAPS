@@ -4,6 +4,7 @@
     <string name="automation">Automatizálás</string>
     <string name="alarm_short">Riasztás:</string>
     <string name="or">vagy</string>
+    <string name="delta">Delta</string>
     <string name="locationis">%1$s %2$s</string>
     <string name="temptargetcompared">Átmeneti cél %1$s</string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
@@ -18,5 +19,8 @@
     <string name="condition">Feltétel:</string>
     <string name="taskname">Feladat neve</string>
     <string name="edit_short">SZERK</string>
+    <string name="remove_selected_items">Kiválasztott elemek törlése</string>
+    <string name="count_selected">%1$d kiválasztva</string>
     <!--    Reminders-->
+    <!--    Autotune-->
 </resources>

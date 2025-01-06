@@ -7,6 +7,8 @@
         android:key="@string/key_show_bg"
         android:summary="Show BG."
         android:title="@string/pref_show_bg"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
 
@@ -14,6 +16,8 @@
         android:defaultValue="true"
         android:key="@string/key_show_iob"
         android:summary="Show insulin on board."
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_show_iob"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
@@ -22,6 +26,8 @@
         android:defaultValue="false"
         android:key="@string/key_show_detailed_iob"
         android:summary="Break down IOB into bolus and basal IOB on the watchface"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_show_detailed_iob"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
@@ -30,6 +36,8 @@
         android:defaultValue="true"
         android:key="@string/key_show_cob"
         android:summary="Show carb on board."
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_show_cob"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
@@ -38,6 +46,8 @@
         android:defaultValue="false"
         android:key="@string/key_show_bgi"
         android:summary="Show BGI"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_show_bgi"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
@@ -46,6 +56,8 @@
         android:defaultValue="true"
         android:key="@string/key_show_delta"
         android:summary="Show delta."
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_show_delta"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
@@ -54,6 +66,8 @@
         android:defaultValue="true"
         android:key="@string/key_show_avg_delta"
         android:summary="Show the avgDelta."
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_show_avgdelta"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
@@ -62,6 +76,8 @@
         android:defaultValue="false"
         android:key="@string/key_show_detailed_delta"
         android:summary="Show delta with one more decimal place"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_show_detailed_delta"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
@@ -70,6 +86,8 @@
         android:defaultValue="true"
         android:key="@string/key_show_direction"
         android:summary="Show direction arrow"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_show_direction_arrow"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
@@ -78,6 +96,8 @@
         android:defaultValue="true"
         android:key="@string/key_show_ago"
         android:summary="Minutes since last reading."
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_show_ago"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
@@ -85,6 +105,8 @@
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="@string/key_show_uploader_battery"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_show_phone_battery"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
@@ -92,6 +114,8 @@
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="@string/key_show_rig_battery"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_show_rig_battery"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
@@ -99,13 +123,35 @@
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="@string/key_show_temp_basal"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_show_basal_rate"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
 
     <CheckBoxPreference
         android:defaultValue="true"
+        android:key="@string/key_show_temp_target"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
+        android:title="@string/pref_show_temp_target"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/key_show_reservoir_level"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
+        android:title="@string/pref_show_reservoir_level"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
         android:key="@string/key_show_external_status"
+        android:summaryOn="@string/on"
+        android:summaryOff="@string/off"
         android:title="@string/pref_show_loop_status"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />

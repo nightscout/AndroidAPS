@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Medtronic (MDT) - Base -->
+    <string name="description_pump_medtronic">Medtronic 幫浦整合，需要 RileyLink 設備和特定幫浦型號</string>
+    <!-- MDT Configuration -->
+    <string name="medtronic_serial_number">幫浦序號</string>
+    <string name="medtronic_pump_type">幫浦型號</string>
+    <string name="medtronic_pump_frequency">幫浦頻率</string>
+    <string name="medtronic_pump_bolus_delay">胰島素注射延後 (秒)</string>
+    <string name="medtronic_pump_max_bolus">幫浦最大注射量 (U)</string>
+    <string name="medtronic_pump_max_basal">幫浦最大基礎率 (U/h)</string>
+    <string name="medtronic_pump_encoding">Medtronic 編碼</string>
+    <string name="medtronic_pump_frequency_us_ca">美國和加拿大 (916 MHz)</string>
+    <string name="medtronic_pump_frequency_worldwide">全球 (868 MHz)</string>
+    <string name="medtronic_pump_encoding_4b6b_local">軟體 4b6b 編碼</string>
+    <string name="medtronic_pump_encoding_4b6b_rileylink">硬體 4b6b 編碼</string>
+    <string name="medtronic_custom_action_wake_and_tune">喚醒並調整</string>
+    <string name="medtronic_custom_action_clear_bolus_block">清除注射阻塞</string>
+    <string name="medtronic_custom_action_reset_rileylink">重置 RileyLink 配置</string>
+    <string name="medtronic_pump_battery_select">電池類型（電源檢視）</string>
+    <string name="medtronic_pump_battery_no">未選擇（簡易檢視）</string>
+    <string name="medtronic_pump_battery_alkaline">鹼性電池（延長檢視）</string>
+    <string name="medtronic_pump_battery_lithium">鋰電池（延長檢視）</string>
+    <string name="medtronic_pump_battery_nizn">鎳鋅電池（延長檢視）</string>
+    <string name="medtronic_pump_battery_nimh">鎳氫電池（延長檢視）</string>
+    <string name="medtronic_bolus_debugging">胰島素注射/治療除錯</string>
+    <!-- MDT Fragment -->
+    <string name="rl_battery_label">RileyLink 電池</string>
+    <!-- MDT Errors -->
+    <string name="medtronic_errors">錯誤</string>
+    <string name="medtronic_error_serial_not_set">未設定序號。</string>
+    <string name="medtronic_error_serial_invalid">序號無效。</string>
+    <string name="medtronic_error_pump_type_not_set">未設定幫浦型號。</string>
+    <string name="medtronic_error_pump_type_invalid">幫浦型號不支援。</string>
+    <string name="medtronic_error_pump_frequency_not_set">未設定幫浦頻率。</string>
+    <string name="medtronic_error_pump_frequency_invalid">幫浦頻率不支援。</string>
+    <string name="medtronic_error_rileylink_address_invalid">RileyLink 地址無效。</string>
+    <string name="medtronic_error_pump_type_set_differs_from_detected">偵測到的幫浦型號與配置的型號不同。</string>
+    <string name="medtronic_error_pump_basal_profiles_not_enabled">幫浦上未啟用基礎率設定。請在幫浦上啟用它。</string>
+    <string name="medtronic_error_pump_incorrect_basal_profile_selected">幫浦上選擇的基礎率設定不正確（必須為 STD）。</string>
+    <string name="medtronic_error_pump_wrong_tbr_type_set">幫浦上設置的臨時基礎率類型錯誤（必須為絕對值）。</string>
+    <string name="medtronic_error_pump_wrong_max_bolus_set">幫浦上設置的最大胰島素注射量錯誤（必須為 %1$.2f）。</string>
+    <string name="medtronic_error_pump_wrong_max_basal_set">幫浦上設置的最大基礎率錯誤（必須為 %1$.2f）。</string>
+    <string name="medtronic_error_operation_not_possible_no_configuration">無法進行操作。\n\n您需要先配置 Medtronic 幫浦，然後才能使用此操作。</string>
+    <string name="medtronic_error_pump_24h_time_change_requested">請求超過 24 小時的時間變更。</string>
+    <!-- MDT History -->
+    <!--    <string name="medtronic_history_group_basal">Basals</string>-->
+    <!--    <string name="medtronic_history_group_configuration">Configurations</string>-->
+    <!--    <string name="medtronic_history_group_notification">Notifications</string>-->
+    <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
+    <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
+    <!--    <string name="medtronic_history_group_all">All</string>-->
+    <string name="medtronic_pump_history">Medtronic 幫浦歷史紀錄</string>
+    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
+    <string name="medtronic_cmd_cancel_bolus_not_supported">您取消了胰島素注射，在幫浦上已設置後。由於 Medtronic 幫浦不支援取消，您需要手動取消它。將幫浦置於暫停模式，然後再恢復（如果您仍希望取消）。應用程序將在下一次更新時接收變更（少於 5 分鐘）。</string>
+    <string name="medtronic_cmd_cant_read_tbr">無法讀取目前臨時基礎率。</string>
+    <string name="medtronic_cmd_cant_cancel_tbr_stop_op">無法取消目前臨時基礎率。停止操作。</string>
+    <string name="medtronic_cmd_set_profile_pattern_overflow">設定失敗，因為以下模式的基礎率過大：%1$s</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered">無法輸送胰島素。</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">無法輸送胰島素，因為可用胰島素量 (%1$.2f) 小於所需胰島素注射量 (%2$.2f)。</string>
+    <string name="medtronic_cmd_tbr_could_not_be_delivered">無法設置臨時基礎率。</string>
+    <string name="medtronic_cmd_cant_cancel_tbr">無法取消目前臨時基礎率</string>
+    <string name="medtronic_cmd_basal_profile_could_not_be_set">無法設置基礎率。</string>
+    <string name="medtronic_cmd_basal_profile_not_set_is_same">基礎率相同，因此不會再次設置。</string>
+    <string name="medtronic_cmd_desc_get_history">獲取歷史紀錄 - 頁面 %1$d (%2$d/16)</string>
+    <string name="medtronic_cmd_desc_get_history_request">獲取歷史紀錄 - 頁面 %1$d</string>
+    <string name="medtronic_cmd_desc_get_time">獲取幫浦時間</string>
+    <string name="medtronic_cmd_desc_set_time">設置幫浦時間</string>
+    <string name="medtronic_cmd_desc_get_battery_status">獲取電池狀態</string>
+    <string name="medtronic_cmd_desc_get_settings">獲取設定</string>
+    <string name="medtronic_cmd_desc_get_model">獲取幫浦型號</string>
+    <string name="medtronic_cmd_desc_get_basal_profile">獲取基礎率設定</string>
+    <string name="medtronic_cmd_desc_set_basal_profile">設置基礎率設定</string>
+    <string name="medtronic_cmd_desc_get_tbr">取得臨時基礎</string>
+    <string name="medtronic_cmd_desc_set_tbr">設置臨時基礎</string>
+    <string name="medtronic_cmd_desc_cancel_tbr">取消臨時基礎</string>
+    <string name="medtronic_cmd_desc_set_bolus">設置胰島素注射</string>
+    <string name="medtronic_cmd_desc_get_remaining_insulin">獲取剩餘胰島素</string>
+    <string name="medtronic_pump_status_pump_unreachable">無法連線幫浦</string>
+    <string name="medtronic_warning">警告</string>
+    <!-- medtronic_warning -->
+    <string name="medtronic_pump_connected_now">現在</string>
+    <!-- combo_pump_connected_now -->
+    <string name="ago">前</string>
+    <string name="medtronic_notification_check_time_date">需要更新幫浦時鐘</string>
+    <!-- combo_notification_check_time_date -->
+    <string name="common_on">開</string>
+    <string name="common_off">關</string>
+    <string name="pump_time_updated">幫浦時間已更新</string>
+    <string name="set_neutral_temps_title">設置中性臨時基礎率</string>
+    <string name="set_neutral_temps_summary">如果啟用，將在每小時結束前取消臨時基礎率。這種方法可以幫助防止某些幫浦在整點發出聲音/震動。</string>
+    <string name="mdt_tbr_remaining">%1$.1f U/h（剩餘 %2$d 分鐘）</string>
+    <string name="invalid_history_data">偵測到無效的幫浦歷史紀錄資料。打開新問題並提供日誌。</string>
+    <string name="riley_statistics">RL 統計</string>
+    <string name="medtronic_history_type">類型：</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">點擊重新整理</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">排程狀態重新整理</string>
+</resources>

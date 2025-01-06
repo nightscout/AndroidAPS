@@ -9,6 +9,7 @@ interface ReceiverStatusStore {
 
     val isWifiConnected: Boolean
 
+    val isKnownNetworkStatus: Boolean
     val isConnected: Boolean
     fun updateNetworkStatus()
     var lastChargingEvent: EventChargingState?

@@ -10,18 +10,18 @@ import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.Round
-import app.aaps.core.interfaces.utils.SafeParse
-import dagger.android.HasAndroidInjector
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.Preferences
 import kotlin.math.max
 import kotlin.math.min
 
 abstract class AbstractSensitivityPlugin(
     pluginDescription: PluginDescription,
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
-    val sp: SP
-) : PluginBase(pluginDescription, aapsLogger, rh, injector), Sensitivity {
+    val sp: SP,
+    val preferences: Preferences
+) : PluginBase(pluginDescription, aapsLogger, rh), Sensitivity {
 
     abstract override fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult
 
@@ -32,8 +32,8 @@ abstract class AbstractSensitivityPlugin(
         return fillResult(
             ratio, carbsAbsorbed, pastSensitivity, ratioLimit, sensResult,
             deviationsArraySize,
-            SafeParse.stringToDouble(sp.getString(app.aaps.core.utils.R.string.key_openapsama_autosens_min, "0.7")),
-            SafeParse.stringToDouble(sp.getString(app.aaps.core.utils.R.string.key_openapsama_autosens_max, "1.2"))
+            preferences.get(DoubleKey.AutosensMin),
+            preferences.get(DoubleKey.AutosensMax)
         )
     }
 

@@ -39,7 +39,7 @@
     <string name="smscommunicator_stops_ns_with_code">לביטול שירות השליטה מרחוק באמצעות SMS השיבו עם הקוד %1$s. \n\nהשירות ניתן להפעלה מחדש ממכשיר ה-AAPS הראשי בלבד.</string>
     <string name="smscommunicator_stopped_sms">שירות השליטה מרחוק באמצעות SMS מופסק. על מנת להפעילו, השתמשו ב-AAPS במכשיר הראשי.</string>
     <string name="smscommunicator_calibration_reply_with_code">כדי לשלוח ערך כיול %1$.2f יש להשיב עם הקוד %2$s</string>
-    <string name="smscommunicator_bolus_failed">הבולוס נכשל</string>
+    <string name="smscommunicator_bolus_failed">הזרקת הבולוס נכשלה. נא לוודא את המצב האמיתי לפני שליחת פקודה נוספת!</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">מספר המינימלי (בדקות) שחייב לחלוף בין בולוס מרוחק אחד למשנהו</string>
     <string name="smscommunicator_remote_bolus_min_distance">מספר הדקות המינימלי שצריכות לחלוף, בין בולוס אחד למשנהו</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">למען בטחונכם, על מנת לערוך את העדפה זו, עליכם להוסיף לפחות שני מספרי טלפון.</string>
@@ -153,6 +153,8 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">ע\' מטרה</string>
     <string name="basal_short">בזאלי</string>
+    <string name="isf_dynamic_label">האלגוריתם שלכם יכול לספק חישוב דינמי של רגישות לאינסולין. הערכים הבאים יהיו בשימוש רק במקרה של מחסור במידע</string>
+    <string name="ic_dynamic_label">האלגוריתם שלכם יכול לספק חישוב דינמי של יחס פחמימות לאינסולין. הערכים הבאים יהיו בשימוש רק במקרה של מחסור במידע</string>
     <!-- Actions -->
     <string name="actions">פעולות</string>
     <string name="description_actions">לחצנים לגישה מהירה לפונקציות שימושיות</string>
@@ -189,7 +191,20 @@
     <string name="statuslights_bat_warning">סף התראה של רמת הסוללה [%]</string>
     <string name="statuslights_bat_critical">סף התראה קריטית של רמת הסוללה [%]</string>
     <string name="statuslights_copy_ns">העתקת הגדרות מ-Nightscout</string>
+    <string name="graph_scale_6h">6 שע\'</string>
+    <string name="graph_scale_12h">12 שע\'</string>
+    <string name="graph_scale_18h">18 שע\'</string>
+    <string name="graph_scale_24h">24 שע\'</string>
+    <string name="graph_long_scale_6h">6 שעות</string>
+    <string name="graph_long_scale_12h">12 שעות</string>
+    <string name="graph_long_scale_18h">18 שעות</string>
+    <string name="graph_long_scale_24h">24 שעות</string>
     <string name="a11y_graph">גרף</string>
+    <string name="a11y_graph_scale">בחר קנה מידה של הגרף</string>
+    <string name="a11y_graph_scale_6h">קנה מידת הגרף 6 שעות</string>
+    <string name="a11y_graph_scale_12h">קנה מידת הגרף 12 שעות</string>
+    <string name="a11y_graph_scale_18h">קנה מידת הגרף 18 שעות</string>
+    <string name="a11y_graph_scale_24h">קנה מידת הגרף 24 שעות</string>
     <string name="a11y_insulin_label">אינסולין</string>
     <string name="chart_menu">תפריט הגרף</string>
     <string name="a11y_bg_quality">איכות נתוני סוכר</string>
@@ -201,10 +216,8 @@
     <string name="overview_shortname">בית</string>
     <string name="description_overview">מציג את המצב הנוכחי של הלולאה ולחצני פעולות שימושיות</string>
     <string name="overview_buttons_selection">מקשים</string>
-    <string name="show_calibration_button_summary">שולח כיול ל- xDrip או פותח את חלון הכיול של אפליקציית Dexcom</string>
-    <string name="show_cgm_button_summary">פותח את xDrip או את דקסקום, לחיצה על אחורה מחזירה ל-AAPS</string>
-    <string name="dexcom_app_not_installed">אפליקציית Dexcom אינה מותקנת.</string>
-    <string name="dexcom_app_not_detected">עדכנו את יישום ה-Dexcom שלכם לגרסה נתמכת</string>
+    <string name="show_calibration_button_summary">שולח כיולים לאפליקציית xDrip+ (אנא ודאו ש\"קבל טיפולים\" מופעל בהגדרות xDrip+ תחת \"הגדרות לשיתוף פעולה בין אפליקציות\").</string>
+    <string name="show_cgm_button_summary">פותח את xDrip או את דקסקום, לחיצה על אחורה מחזירה ל-AAPS).</string>
     <string name="error_starting_cgm">לא ניתן היה להפעיל את יישום סנסור. וודא שהוא מותקן.</string>
     <string name="not_available_full">לא זמין</string>
     <string name="constraints_violation">הפרת מגבלות</string>
@@ -226,22 +239,16 @@
     <string name="thirdcarbsincrement">תוספת פחמימות שלישית</string>
     <string name="cgm">סנסור</string>
     <string name="default_temptargets">ברירות מחדל ערכי מטרה</string>
-    <string name="eatingsoon_duration">משך אוכלים בקרוב</string>
-    <string name="eatingsoon_target">ערך מטרת אוכלים בקרוב</string>
-    <string name="activity_duration">משך פעילות</string>
-    <string name="activity_target">ערך מטרת פעילות</string>
-    <string name="hypo_duration">משך היפו</string>
-    <string name="hypo_target">ערך מטרת היפו</string>
-    <string name="fill_bolus_title">מילוי\תיחול כמויות סטנדרטיות של אינסולין</string>
+    <string name="fill_bolus_title">מילוי\\תיחול כמויות סטנדרטיות של אינסולין</string>
     <string name="button1">כפתור 1</string>
     <string name="button2">כפתור 2</string>
     <string name="button3">כפתור 3</string>
-    <string name="prefs_range_title">טווח הצגה</string>
+    <string name="prefs_range_title">טווח להצגה</string>
     <string name="prefs_range_summary">סימוני גבוה ונמוך בתרשים סקירה כללית ובשעון חכם</string>
     <string name="low_mark">סימון נמוך</string>
     <string name="high_mark">סימון גבוה</string>
     <string name="short_tabtitles">קצר את כותרות הלשוניות</string>
-    <string name="overview_show_notes_field_in_dialogs_title">הצגת שדות הערות בתיבות דו-שיח של טיפול</string>
+    <string name="overview_show_notes_field_in_dialogs_title">הצג שדות הערות בתיבות דו-שיח של טיפול</string>
     <string name="deliverpartofboluswizard">אשף הבולוס מבצע חישוב אך רק חלק זה של האינסולין המחושב מוזרק. שימושי בשימוש עם אלגוריתם SMB.</string>
     <string name="deliver_part_of_boluswizard_reset_time">הוזרק 100% מהבולוס, אם ערך הסוכר בדם ישן </string>
     <string name="enable_bolus_advisor">אפשר את יועץ הבולוסים</string>
@@ -259,12 +266,13 @@
     <string name="overview_show_deviation_slope">שיפוע הסטייה</string>
     <string name="overview_show_activity">פעילות</string>
     <string name="overview_show_bgi">השפעת הסוכר בדם</string>
-    <string name="overview_show_sensitivity">רגישות</string>
+    <string name="overview_show_sensitivity">שינוי ברגישות</string>
     <string name="overview_show_deviations">סטיות</string>
     <string name="overview_show_cob">פחמימות פעילות</string>
     <string name="overview_show_iob">אניסולין פעיל</string>
     <string name="overview_show_basals">בזאלי</string>
     <string name="overview_show_abs_insulin">אינסולין מוחלט</string>
+    <string name="overview_show_variable_sens">רגישות משתנה</string>
     <string name="prediction_shortname">חיזוי</string>
     <string name="basal_shortname">בזאל\'</string>
     <string name="deviation_shortname">סטייה</string>
@@ -274,9 +282,11 @@
     <string name="devslope_shortname">שיפוע</string>
     <string name="treatments_shortname">TREAT</string>
     <string name="heartRate_shortname">דופק</string>
-    <string name="sensitivity_shortname">רגישות</string>
+    <string name="sensitivity_shortname">רגישות%</string>
+    <string name="variable_sensitivity_shortname">רג\' משתנה</string>
     <string name="graph_scale">קנה מידה של הגרף</string>
     <string name="graph_menu_divider_header">גרף</string>
+    <string name="temp_basal_overview_short_name">T:</string>
     <!-- Skins -->
     <string name="classic_description">סקין מקורי</string>
     <string name="lowres_description">סקין רזולוציה נמוכה</string>
@@ -285,8 +295,10 @@
     <string name="skin">סקין</string>
     <string name="cannula_usage">שימוש:</string>
     <!--    Iob-->
-    <string name="send_logfiles">שלח קובצי יומן של היום למפתחים יחד עם זמן זה. מצב לא צפוי.</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">מציג הודעה קבועה עם סקירה קצרה של מה שהלולאה שלכם עושה</string>
     <string name="old_data">נתונים ישנים</string>
+    <string name="overview_show_steps">צעדים</string>
+    <string name="steps_shortname">צעדים</string>
+    <string name="simple_mode_enabled">נבחר המצב הפשוט</string>
 </resources>

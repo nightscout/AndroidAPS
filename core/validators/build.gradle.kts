@@ -1,7 +1,7 @@
 plugins {
-    id("com.android.library")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.ksp)
     id("kotlin-android")
-    id("kotlin-kapt")
     id("android-module-dependencies")
     id("test-module-dependencies")
     id("jacoco-module-dependencies")
@@ -13,12 +13,14 @@ android {
 
 
 dependencies {
+    implementation(project(":core:data"))
     implementation(project(":core:interfaces"))
+    implementation(project(":core:keys"))
 
-    api(Libs.Dagger.android)
-    api(Libs.Dagger.androidSupport)
-    api(Libs.Google.Android.material)
+    api(libs.com.google.dagger.android)
+    api(libs.com.google.dagger.android.support)
+    api(libs.com.google.android.material)
 
-    kapt(Libs.Dagger.compiler)
-    kapt(Libs.Dagger.androidProcessor)
+    ksp(libs.com.google.dagger.compiler)
+    ksp(libs.com.google.dagger.android.processor)
 }

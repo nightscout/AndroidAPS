@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sensitivity_shortname">敏感度</string>
+    <string name="sensitivity_oref1">敏感度 Oref1</string>
+    <string name="sensitivity_aaps">敏感度 AAPS</string>
+    <string name="sensitivity_weighted_average">敏感度 加權平均</string>
+    <string name="description_sensitivity_aaps">敏感度的計算方式與Oref0相同，但可以指定過去的時間範圍。最小碳水化合物吸收時間從偏好設定中的最大碳水化合物吸收時間計算。</string>
+    <string name="description_sensitivity_oref1">敏感度根據過去8小時或24小時的資料計算（使用更敏感的方式）。如果碳水化合物未被吸收，將在偏好設定中指定的時間後切斷。外掛還計算UAM。</string>
+    <string name="description_sensitivity_weighted_average">敏感度是根據偏差的加權平均值計算的。較新的偏差權重較高。最小碳水化合物吸收時間從偏好設定中的最大碳水化合物吸收時間計算。此算法在追蹤敏感度變化方面最快。</string>
+    <string name="uam_disabled_oref1_not_selected">UAM已停用，因為它依賴Oref1敏感度外掛。</string>
+    <string name="absorption_settings_title">吸收設定</string>
+    <string name="absorption_max_time_title">餐食最大吸收時間 [小時]</string>
+    <string name="absorption_max_time_summary">預計餐食中的所有碳水化合物將被吸收的時間（以小時計）</string>
+    <string name="openapsama_autosens_period">自動敏感度間隔 [小時]</string>
+    <string name="openapsama_autosens_period_summary">過去敏感度偵測的時間（碳水化合物吸收時間不包括在內）</string>
+    <string name="openapsama_autosens_max_summary">預設值：1.2\n這是自動敏感度（以及即將推出的自動調整）比率的上限，設定了20％的最大限制，決定了自動敏感度可以調整的基礎速率上限、ISF的下限以及血糖目標的下限。</string>
+    <string name="openapsama_autosens_min_summary">預設值：0.7\n自動敏感度安全限制的另一端，設置了自動敏感度可以調整的基礎速率下限、ISF的上限和血糖目標的上限。</string>
+    <string name="openapsama_autosens_max">最大自動敏感度比率</string>
+    <string name="openapsama_autosens_min">最小自動敏感度比率</string>
+    <string name="openapsama_min_5m_carb_impact_summary">預設值：3.0（AMA）或8.0（SMB）。這是每5分鐘預設的碳水化合物吸收影響設定。預設值為每5分鐘3mg/dl。這影響到COB的衰減速度，以及在血糖下降超過預期或上升不如預期時，計算未來預測血糖時假設的碳水化合物吸收量。</string>
+    <string name="absorption_cutoff_title">餐食最大吸收時間 [小時]</string>
+    <string name="absorption_cutoff_summary">任何餐食被視為已吸收的時間點。剩餘的碳水化合物將被切斷。</string>
+</resources>

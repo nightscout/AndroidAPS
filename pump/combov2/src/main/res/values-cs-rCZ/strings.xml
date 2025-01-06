@@ -4,7 +4,6 @@
     <string name="combov2_plugin_description">Nativní integrace pro pumpy Accu-Chek Combo</string>
     <string name="combov2_could_not_connect">Nelze se připojit k pumpě</string>
     <string name="combov2_not_paired">Není spárováno s pumpou</string>
-    <string name="combov2_pump_terminated_connection">Spojení ukončené pumpou</string>
     <string name="combov2_warning">Varování Combo</string>
     <string name="combov2_error">Chyba Combo</string>
     <string name="combov2_warning_4">Zavolejte hotline pro aktualizaci</string>
@@ -115,8 +114,6 @@ Pokud po více než ~5 minutách není navázáno žádné spojení:\n\n
     <string name="combov2_short_status_battery_state">Bat: %s</string>
     <string name="combov2_automatic_reservoir_entry">Detekovat a vložit automaticky výmenu zásobníku</string>
     <string name="combov2_automatic_battery_entry">Detekovat a vložit automaticky výmenu baterie</string>
-    <string name="combov2_note_reservoir_change">Výměna zásobníku inzulínu automaticky vložena ovladačem combov2</string>
-    <string name="combov2_note_battery_change">Výměna baterie automaticky vložena ovladačem combov2</string>
     <string name="combov2_timezone_changed">Časové pásmo změněno</string>
     <string name="combov2_datetime_changed">Datum a/nebo čas změněn</string>
     <string name="combov2_dst_started">Začal letní čas (DST)</string>

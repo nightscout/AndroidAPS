@@ -6,8 +6,6 @@
     <string name="dexcom_app_patched">Dexcom (BYODA)</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Rebre els valors de glucosa de l\'aplicació Dexcom \'Build Your Own Device\'.</string>
-    <string name="eversense">App Eversense (\"parxejada\")</string>
-    <string name="description_source_eversense">Rebre valors de glucèmia de l\'app Eversense \"parxejada\".</string>
     <string name="description_source_glimp">Rebre valors de glucèmia de Glimp.</string>
     <string name="description_source_mm640g">Rebre valors de glucèmia del 600SeriesAndroidUploader.</string>
     <string name="poctech">Poctech</string>
@@ -18,4 +16,6 @@
     <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">Rebre valors de glucèmia de l\'app Tomato (dispositiu MiaoMiao)</string>
     <string name="bgsource_upload">Configuració enviament dades glucèmia</string>
+    <!-- Patched Ottai App -->
+    <!-- Patched Syai Tag App -->
 </resources>

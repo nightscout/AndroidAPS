@@ -1,9 +1,9 @@
 package app.aaps.core.interfaces.insulin
 
+import app.aaps.core.data.iob.Iob
+import app.aaps.core.data.model.BS
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.interfaces.configuration.ConfigExportImport
-import app.aaps.core.interfaces.iob.Iob
-import app.aaps.database.entities.Bolus
-import app.aaps.database.entities.embedments.InsulinConfiguration
 
 interface Insulin : ConfigExportImport {
 
@@ -19,7 +19,7 @@ interface Insulin : ConfigExportImport {
 
         companion object {
 
-            private val map = values().associateBy(InsulinType::value)
+            private val map = entries.associateBy(InsulinType::value)
             fun fromInt(type: Int) = map[type]
         }
     }
@@ -30,7 +30,7 @@ interface Insulin : ConfigExportImport {
     val dia: Double
     val peak: Int
 
-    fun iobCalcForTreatment(bolus: Bolus, time: Long, dia: Double): Iob
+    fun iobCalcForTreatment(bolus: BS, time: Long, dia: Double): Iob
 
-    val insulinConfiguration: InsulinConfiguration
+    val iCfg: ICfg
 }

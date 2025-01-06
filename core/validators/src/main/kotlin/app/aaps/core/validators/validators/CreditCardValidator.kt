@@ -5,17 +5,18 @@ import android.widget.EditText
 /**
  * This validator takes care of validating the edittext. The input will be valid only if the number is a valid credit card.
  */
-class CreditCardValidator(_customErrorMessage: String?) : Validator(_customErrorMessage) {
+class CreditCardValidator(customErrorMessage: String?) : Validator(customErrorMessage) {
 
     override fun isValid(editText: EditText): Boolean {
         return try {
             validateCardNumber(editText.text.toString())
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             false
         }
     }
 
     companion object {
+
         /**
          * Validates the credit card number using the Luhn algorithm
          *

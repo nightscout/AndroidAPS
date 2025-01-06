@@ -1,0 +1,208 @@
+<resources>
+    <string name="key_equil_devices" translatable="false">key_equil_devices</string>
+    <string name="key_equil_password" translatable="false">key_equil_password</string>
+    <string name="key_equil_alarm_battery_10" translatable="false">key_equil_alarm_battery_10</string>
+    <string name="key_equil_alarm_insulin_10" translatable="false">key_equil_alarm_insulin_10</string>
+    <string name="key_equil_alarm_insulin_5" translatable="false">key_equil_alarm_insulin_5</string>
+    <string name="key_equil_basal_set" translatable="false">key_equil_basal_set</string>
+    <string name="key_equil_state" translatable="false">key_equil_state1</string>
+    <string name="key_equil_pair_password" translatable="false">key_equil_pair_password</string>
+
+
+    <string name="equil_name">Equil 5.3</string>
+    <string name="equil_name_short">EQ</string>
+    <string name="equil_pump_description">Equil 5.3 or newer Patch Pump </string>
+
+    <!--  start  -->
+    <string name="equil_basal_speed">Base basal</string>
+    <string name="equil_bolus_delivered">%1$.3f U / %2$.3f U Delivered</string>
+    <string name="equil_btn_cancel">Cancel</string>
+    <string name="equil_btn_need">Need</string>
+    <string name="equil_btn_skip">Skip</string>
+    <string name="equil_date_device">Last connection</string>
+    <string name="equil_dressing">Change reservoir</string>
+    <string name="equil_dressing_onkey_msg">Automatically moving the plunger to the reservoir bottom. It will stop automatically upon reaching the bottom. Click \'Stop\' to interrupt if needed.</string>
+    <string name="equil_finish">Completed</string>
+    <string name="equil_next">Next</string>
+
+    <string name="equil_hint_dressing">This operation will stop insulin infusion and cause the pump plunger to retract to the bottom!</string>
+    <string name="equil_history">History</string>
+    <string name="equil_insulin_reservoir">Insulin reservoir</string>
+
+    <string name="equil_mode">Running mode</string>
+    <string name="equil_mode_running">Running</string>
+    <string name="equil_mode_stopped">Stopped</string>
+    <string name="equil_mode_suspended">Suspended</string>
+    <string name="equil_serialnumber">Device number</string>
+    <string name="equil_stop">Stop</string>
+    <string name="equil_success">Success</string>
+
+    <string name="equil_title_dressing">Change cartridge</string>
+    <string name="equil_title_history_events">History events</string>
+    <string name="equil_title_tips">Tips</string>
+    <string name="equil_tone">Alert tone</string>
+    <string name="equil_tone_mode_mute">Mute</string>
+    <string name="equil_tone_mode_shake">Vibrate only</string>
+    <string name="equil_tone_mode_tone">Tone only</string>
+    <string name="equil_tone_mode_tone_and_shake">Vibrate and tone</string>
+    <string name="equil_unit_u">%1$s U</string>
+    <string name="equil_unit_u_hours">%1$s U/H</string>
+    <string name="equil_unbind_content">This operation will stop insulin infusion and retract the pump plunger to the bottom! Also, it will delete the binding status.！</string>
+
+    <string name="equil_error_no_devices">No device</string>
+
+    <string name="equil_ble_config_confirmation_title">Pair Equil patch pump</string>
+
+
+    <string name="equil_error">Connection error</string>
+
+    <string name="equil_change">Change pump</string>
+    <string name="equil_change_content">Please detach the pump from the base plate.</string>
+
+    <string name="equil_unpair_alert">Are you sure you want to relinquish control over %1$s?</string>
+    <string name="equil_devices_number_hint">Device number</string>
+    <string name="equil_record_basal">Basal rate %1$s U/H</string>
+    <string name="equil_record_basal_temp">Temporary basal rate %1$s U/H</string>
+    <string name="equil_record_bolus">Bolus %1$s U</string>
+    <string name="equil_error_set_temp_basal_failed_validation">TBR duration must be greater than zero and a multiple of %1$s minutes.</string>
+    <string name="equil_not_enough_insulin">Not enough insulin left in the reservoir</string>
+    <string name="equil_low_battery">Low battery</string>
+    <string name="equil_low_insulin">Not enough insulin left in the reservoir</string>
+    <string name="equil_pump_not_run">Pump not running</string>
+    <string name="equil_pair">Pair</string>
+    <string name="equil_pair_error">Pair error</string>
+    <string name="equil_retry">Retry</string>
+    <string name="equil_fill">Prime/Fill</string>
+    <string name="equil_air">Purge air</string>
+    <string name="equil_temp_basal_rate">Temporary basal</string>
+    <string name="equil_total_delivered">Total delivered</string>
+    <string name="equil_last_bolus">Last bolus</string>
+    <string name="equil_firmware_version">Firmware version</string>
+    <string name="equil_shutdown_be">Equil will be off automatically</string>
+    <string name="equil_shutdown">Equil auto off</string>
+
+
+    <string name="equil_common_history_tbr_value">Rate： %1$.2f U/H，duration： %2$d minutes</string>
+    <string name="equil_common_history_bolus_value">%1$.2f U</string>
+    <string name="equil_history_type">Type：</string>
+
+    <!-- equil - Commands -->
+    <string name="equil_common_cmd_set_bolus">Set bolus</string>
+    <string name="equil_common_cmd_cancel_bolus">Cancel bolus</string>
+    <string name="equil_common_cmd_set_tbr">Set temporary basal</string>
+    <string name="equil_common_cmd_cancel_tbr">Cancel temporary basal</string>
+    <string name="equil_common_cmd_set_basal_schedule">Set basal schedule</string>
+    <string name="equil_common_cmd_set_time">Set time</string>
+    <string name="equil_common_cmd_suspend_delivery">Suspend delivery</string>
+    <string name="equil_common_cmd_resume_delivery">Resume delivery</string>
+    <string name="equil_common_cmd_pair">Pair Equil</string>
+    <string name="equil_common_cmd_insert_cannula">Insert cannula</string>
+    <string name="equil_common_cmd_unpair">UnPair Equil</string>
+    <string name="equil_common_cmd_alarm">Alarm</string>
+    <string name="equil_common_cmd_set_extended_bolus">Set extended bolus</string>
+    <string name="equil_common_cmd_cancel_extended_bolus">Cancel extended bolus</string>
+    <!--    推杆回退-->
+    <string name="equil_common_change_insulin">Push rod retraction</string>
+    <string name="equil_common_set_alarm_tone">Configure for notification sound only</string>
+    <string name="equil_common_set_alarm_shake">Configure for vibration only</string>
+    <string name="equil_common_set_alarm_mute">Configure for silent</string>
+    <string name="equil_common_set_alarm_tone_and_shake">Configure for notification sound and vibration</string>
+    <string name="equil_common_read_devices">Read device information</string>
+    <string name="equil_common_cmd_fill">Fill</string>
+
+    <string name="history_manual_confirm">Manual confirm</string>
+    <string name="equil_command_not_found">Devices not found</string>
+    <string name="equil_command_connect_error">Pump connection failure</string>
+
+    <string name="equil_command_connect_no_response">No response from pump</string>
+
+    <string name="equil_command__unknown">The unknown status of the command</string>
+    <string name="equil_install">Implant the pump into the body"</string>
+    <string name="equil_settings">Settings</string>
+    <string name="equil_settings_alarm_battery">Low battery alarm</string>
+    <string name="equil_settings_alarm_insulin">Low drug storage alarm</string>
+    <string name="equil_init_insulin_error">Initialization of the reservoir is not complete</string>
+
+    <string name="equil_history_group_all">All</string>
+    <string name="equil_history_group_pair">Pair</string>
+    <string name="equil_history_group_bolus">Boluses</string>
+    <string name="equil_history_group_basal">Basals</string>
+    <string name="equil_history_group_configuration">Configurations</string>
+    <string name="equil_tab_action">History action</string>
+    <string name="equil_tab_equil">Equil history</string>
+    <string name="equil_password_error">Equil pairing password is incorrect</string>
+    <string name="equil_none">none</string>
+
+    <string name="equil_history_item1">Reservoir-Low insulin level</string>
+    <string name="equil_history_item2">Reservoir-Empty insulin level</string>
+    <string name="equil_history_item3">Detected infusion blockage</string>
+    <string name="equil_history_item4">Detected motor reversal</string>
+    <string name="equil_history_item5">Detected motor malfunction</string>
+    <string name="equil_history_item6">Injection paused starting</string>
+    <string name="equil_history_item7">Injection already paused</string>
+    <string name="equil_history_item8">Automatic shutdown imminent</string>
+    <string name="equil_history_item9">Auto off!</string>
+    <string name="equil_history_item10">Prime reservoir</string>
+    <string name="equil_history_item11">Pump rewind</string>
+    <string name="equil_history_item12">Quick bolus started</string>
+    <string name="equil_history_item13">Temporary basal started</string>
+    <string name="equil_history_item14">Temporary basal ended</string>
+    <string name="equil_history_item15">Low battery level</string>
+    <string name="equil_history_item16">Battery empty!</string>
+    <string name="equil_history_item17">Power-on reset</string>
+    <string name="equil_history_item18">Abnormal infusion stopped</string>
+
+
+    <string name="equil_common_short_status_last_connection">LastConn: %1$d min ago</string>
+    <string name="equil_common_short_status_last_bolus">LastBolus: %1$s @ %2$s</string>
+    <string name="equil_common_short_status_temp_basal">Temp: %1$s</string>
+    <string name="equil_common_short_status_extended_bolus">Extended: %1$s</string>
+    <string name="equil_common_short_status_reservoir">Reservoir: %1$sU</string>
+    <string name="equil_common_overview_button_suspend_delivery">Suspend</string>
+    <string name="equil_common_overview_button_resume_delivery">Resume delivery</string>
+    <string name="equil_common_overview_temp_basal_value">%1$.2fU/h @%2$s (%3$d/%4$d min)</string>
+    <string name="equil_common_moments_ago">Moments ago</string>
+    <string name="equil_common_less_than_a_minute_ago">Less than a minute ago</string>
+    <string name="equil_common_time_ago">%1$s ago</string>
+    <string name="equil_common_composite_time">%1$s and %2$s</string>
+    <string name="equil_common_overview_last_bolus_value" translatable="false">%1$.2f %2$s (%3$s)</string>
+    <string name="equil_common_wizard_button_finish">Finish</string>
+    <string name="equil_common_wizard_button_next">Next</string>
+    <string name="equil_common_wizard_exit_confirmation_text">You haven\'t completed all steps yet. Are you sure you want to exit?</string>
+    <string name="equil_common_wizard_exit_confirmation_title">Exit</string>
+    <plurals name="equil_common_minutes">
+        <item quantity="one">%1$d minute</item>
+        <item quantity="other">%1$d minutes</item>
+    </plurals>
+    <plurals name="equil_common_hours">
+        <item quantity="one">%1$d hour</item>
+        <item quantity="other">%1$d hours</item>
+    </plurals>
+    <plurals name="equil_common_days">
+        <item quantity="one">%1$d day</item>
+        <item quantity="other">%1$d days</item>
+    </plurals>
+    <string name="equil_support_error">Firmware version too low. Not supported</string>
+    <string name="equil_password_tips">Please set a new password for pairing with the Equil v5.3 pump, this password will also be used for unpairing with the current pump in the future, so please be sure to remember it. Password rule: It must be 4 characters long, chosen from ABCDEF0123456789.</string>
+    <string name="delete">Delete</string>
+    <string name="equil_set_pair_password">Set pair password</string>
+
+    <string name="equil_hint1">After installing the pump onto the base plate, select whether to purge the air from the indwelling needle.</string>
+
+
+    <string name="equil_unbind">Unpair device</string>
+    <string name="equil_assemble">Please assemble the pump, the filled reservoir and the charged battery</string>
+    <string name="equil_devices_number">Enter new pump ID</string>
+    <string name="equil_insert">Please prime the reservoir until there is a drop of insulin on the needle tip</string>
+    <string name="equil_insert2">The pump must not be on the pump base.</string>
+    <string name="equil_attach">Please attach the pump to the base</string>
+    <string name="equil_hint2">Prime cannula</string>
+    <string name="equil_hint_dressing2">Please remove the pump from the base</string>
+    <string name="equil_unpair">Deactivate old pump %1$s?</string>
+    <string name="equil_pump_updated">Pump updated</string>
+
+    <string name="equil_maxbolus_tips">Max allowed bolus in pump [%1$sU]</string>
+    <string name="equil_replace_reservoir">The reservoir is empty. Please replace the reservoir</string>
+    <string name="sixhexanumber" translatable="false">^[A-F0-9]{6}$</string>
+    <string name="error_mustbe6hexadidits">Must be 6 characters of ABCDEF0123456789</string>
+</resources>

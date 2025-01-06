@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- PumpDeviceState -->
     <!-- RL keys -->
     <!-- RL BLE Config -->
     <string name="riley_link_ble_config_button_scan_start">스캔하기</string>
@@ -62,8 +63,6 @@
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">메드트로닉 펌프</string>
     <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
-    <string name="riley_link_common_yes">네</string>
-    <string name="riley_link_common_no">아니오</string>
     <!-- RileyLink - Preferences -->
     <string name="riley_link_show_battery_level">OrangeLink/EmaLink/DiaLink에서 보고한 배터리 잔량 나타내기</string>
     <string name="riley_link_show_battery_level_summary">오리지널 RileyLink와 작동하지 않음. 다른 RileyLink 대체 기기와도 작동하지 않을 수 있음.</string>

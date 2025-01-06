@@ -49,7 +49,6 @@
     <string name="alarm_expired">Expirované</string>
     <string name="alarm_reservoir_empty">Zásobník je prázdny</string>
     <string name="alarm_patch_fault">Chyba Patch</string>
-    <string name="alarm_patch_fault2">Chyba Patch 2</string>
     <string name="alarm_base_fault">Chyba základne</string>
     <string name="alarm_battery_out">Vybitá batéria</string>
     <string name="alarm_no_calibration">Žiadna kalibrácia</string>
@@ -79,6 +78,7 @@
     <string name="patch_not_active_note">Základňa by nemala byť pripojená ku kanyle až do dalšieho kroku!</string>
     <string name="connect_pump_base">Pripojte základňu k novej kanyle, odstráňte zostávajúci vzduch a doplňte inzulínom, potom stlačte tlačítko <b>Ďalšia</b>.</string>
     <string name="note_min_70_units">Poznámka: Pre aktiváciu je potrebných najmenej 70 jednotiek inzulínu.</string>
+    <string name="reservoir_text_and_level">Zásobník: %.2fJI</string>
     <string name="do_not_attach_to_body">Zatiaľ nepripájajte Patch k telu.</string>
     <string name="half_press_needle">Stlačte tlačítko ihly do polovice. Potom stlačte tlačítko <b>Ďalšia</b> pre spustenie plnenia.</string>
     <string name="wait_for_priming">Počkajte prosím na dokončenie plnenia.</string>
@@ -89,6 +89,7 @@
     <string name="activating_pump">Aktivácia Patch a nastavenie počiatočného bazálu. Počkajte prosím.</string>
     <string name="activating_error">Chyba pri aktivácii, stlačte <b>Opakovať</b> pre nový pokus.</string>
     <string name="activating_complete">Nový Patch aktivovaný. Zostáva %.2f jednotiek inzulínu.</string>
+    <string name="can_export_settings">Môžete exportovať nastavenia, aby ste mohli neskôr obnoviť túto reláciu pumpy.</string>
     <string name="press_OK_to_return">Stlačte <b>OK</b> pre návrat na hlavnú obrazovku.</string>
     <string name="deactivate_sure">Naozaj chcete deaktivovať súčasný Patch?</string>
     <string name="cancel_sure">Ste si istý, že chcete zrušiť aktiváciu?</string>
@@ -108,7 +109,7 @@
     <string name="sn_input_title">Sériové číslo</string>
     <string name="sn_input_summary">Zadajte sériové číslo základne Patch.</string>
     <string name="sn_input_invalid">Neplatné sériové číslo!</string>
-    <string name="pump_unsupported">Nevyskúšaná pumpa: %1$d! Kontaktujte nás na Discorde alebo Githube, kde získate podporu.</string>
+    <string name="pump_unsupported">Neodtestovaná pumpa: %1$s! Kontaktujte nás na Discorde alebo Githube, kde získate podporu.</string>
     <string name="alarm_setting_title">Nastavenie výstrah</string>
     <string name="alarm_setting_summary">Vyberte preferované nastavenie výstrah.</string>
     <string name="pump_warning_notification_title">Oznámenie o výstrahe pumpy</string>
@@ -121,9 +122,19 @@
     <string name="hourly_max_insulin_summary">Zadajte maximálny povolený počet jednotiek inzulínu za hodinu. Pokiaľ budú prekročené, pumpa bude pozastavená.</string>
     <string name="daily_max_insulin_title">Denný maximálny inzulín</string>
     <string name="daily_max_insulin_summary">Zadajte maximálny povolený počet jednotiek inzulínu za deň. Pokiaľ budú prekročené, pumpa bude pozastavená.</string>
+    <string name="scan_on_connection_error_title">Vykonať skenovanie pri chybách pripojenia</string>
+    <string name="scan_on_connection_error_summary">VAROVANIE: Povoľte iba pokiaľ máte problémy s pripojením. Pokiaľ je to povolené, skenuje pumpu znovu pred pokusom o opätovné pripojenie k pumpe. Uistite sa, že máte oprávnanie k polohe nastavené na \"Vždy povolené\"</string>
     <!-- treatment state-->
     <string name="getting_pump_status">Načítavam stav pumpy</string>
+    <string name="syncing_records">Synchronizujú sa záznamy, zostáva %1$d</string>
     <string name="getting_bolus_status">Načítavam stav bolusov</string>
     <string name="getting_temp_basal_status">Načítavam stav dočasných bazálov</string>
     <string name="setting_pump_settings">Nastavenie uživateľských volieb</string>
+    <!-- bolus-->
+    <string name="bolus_error_reason_user">Bolus zrušený používateľom</string>
+    <string name="bolus_error_reason_not_connected">Pumpa nie je pripojená</string>
+    <string name="bolus_error_reason_already_in_progress">Bolus už prebieha</string>
+    <string name="bolus_error_reason_unable_to_send_command">Nie je možné odoslať príkaz na bolus</string>
+    <string name="bolus_error_reason_communication_lost">Časový limit na získanie stavu bolusu uplynul</string>
+    <string name="bolus_error_reason_pump_error">Chyba pumpy</string>
 </resources>

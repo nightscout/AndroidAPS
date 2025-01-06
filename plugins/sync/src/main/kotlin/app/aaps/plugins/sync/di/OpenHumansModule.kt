@@ -12,6 +12,7 @@ import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 
+@Suppress("unused")
 @Module
 abstract class OpenHumansModule {
 

@@ -1,9 +1,11 @@
 package app.aaps.plugins.sync.nsclientV3.extensions
 
+import app.aaps.core.data.model.IDs
+import app.aaps.core.data.model.TT
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryTarget
 import app.aaps.core.nssdk.mapper.convertToRemoteAndBack
-import app.aaps.database.entities.TemporaryTarget
-import app.aaps.database.entities.embedments.InterfaceIDs
+import app.aaps.plugins.sync.extensions.contentEqualsTo
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
@@ -13,42 +15,42 @@ internal class TemporaryTargetExtensionKtTest : TestBaseWithProfile() {
 
     @Test
     fun toTemporaryTarget() {
-        var temporaryTarget = TemporaryTarget(
+        var temporaryTarget = TT(
             timestamp = 10000,
             isValid = true,
-            reason = TemporaryTarget.Reason.ACTIVITY,
+            reason = TT.Reason.ACTIVITY,
             highTarget = 100.0,
             lowTarget = 99.0,
             duration = 3600000,
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 nightscoutId = "nightscoutId",
                 pumpId = 11000,
-                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpType = PumpType.DANA_I,
                 pumpSerial = "bbbb"
             )
         )
 
         var temporaryTarget2 = (temporaryTarget.toNSTemporaryTarget().convertToRemoteAndBack() as NSTemporaryTarget).toTemporaryTarget()
         assertThat(temporaryTarget.contentEqualsTo(temporaryTarget2)).isTrue()
-        assertThat(temporaryTarget.interfaceIdsEqualsTo(temporaryTarget2)).isTrue()
+        assertThat(temporaryTarget.ids.contentEqualsTo(temporaryTarget2.ids)).isTrue()
 
-        temporaryTarget = TemporaryTarget(
+        temporaryTarget = TT(
             timestamp = 10000,
             isValid = true,
-            reason = TemporaryTarget.Reason.CUSTOM,
+            reason = TT.Reason.CUSTOM,
             highTarget = 150.0,
             lowTarget = 150.0,
             duration = 30000,
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 nightscoutId = "nightscoutId",
                 pumpId = 11000,
-                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpType = PumpType.DANA_I,
                 pumpSerial = "bbbb"
             )
         )
 
         temporaryTarget2 = (temporaryTarget.toNSTemporaryTarget().convertToRemoteAndBack() as NSTemporaryTarget).toTemporaryTarget()
         assertThat(temporaryTarget.contentEqualsTo(temporaryTarget2)).isTrue()
-        assertThat(temporaryTarget.interfaceIdsEqualsTo(temporaryTarget2)).isTrue()
+        assertThat(temporaryTarget.ids.contentEqualsTo(temporaryTarget2.ids)).isTrue()
     }
 }

@@ -49,7 +49,6 @@
     <string name="alarm_expired">Expirováno</string>
     <string name="alarm_reservoir_empty">Prázdný zásobník</string>
     <string name="alarm_patch_fault">Chyba Patche</string>
-    <string name="alarm_patch_fault2">Chyba Patche 2</string>
     <string name="alarm_base_fault">Chyba základny</string>
     <string name="alarm_battery_out">Vybitá baterie</string>
     <string name="alarm_no_calibration">Žádná kalibrace</string>
@@ -79,6 +78,7 @@
     <string name="patch_not_active_note">Základna by neměla být připojena ke kanyle až do dalšího kroku!</string>
     <string name="connect_pump_base">Připojte základnu k nové kanyle, odstraňte zbývající vzduch a doplňte inzulinem, poté stiskněte tlačítko <b>Další</b>.</string>
     <string name="note_min_70_units">Poznámka: Pro aktivaci je nutné nejméně 70 jednotek.</string>
+    <string name="reservoir_text_and_level">Zásobník: %.2fU</string>
     <string name="do_not_attach_to_body">Prozatím nepřipojujte Patch k tělu.</string>
     <string name="half_press_needle">Stiskněte tlačítko jehly do poloviny. Potom klepněte na <b>Další</b> pro spuštění plnění.</string>
     <string name="wait_for_priming">Počkejte prosím na dokončení plnění.</string>
@@ -89,6 +89,7 @@
     <string name="activating_pump">Aktivace Pacthe a nastavení počátečního bazálu. Počkejte prosím.</string>
     <string name="activating_error">Chyba při aktivaci, stiskněte <b>Opakovat</b> pro nový pokus.</string>
     <string name="activating_complete">Nový Patch aktivován. Zbývá %.2f jednotek.</string>
+    <string name="can_export_settings">Můžete exportovat nastavení, abyste mohli později obnovit tuto relaci pumpy.</string>
     <string name="press_OK_to_return">Stiskněte <b>OK</b> pro návrat na hlavní obrazovku.</string>
     <string name="deactivate_sure">Opravdu chcete deaktivovat současný Patch?</string>
     <string name="cancel_sure">Jste si jistý, že chcete zrušit aktivaci?</string>
@@ -96,7 +97,7 @@
     <string name="press_next_or_cancel">Stiskněte <b>Další</b> pro deaktivaci nebo <b>Zrušit</b> pro návrat na hlavní obrazovku.</string>
     <string name="deactivating_pump">Deaktivace Patche. Počkejte prosím.</string>
     <string name="deactivating_error">Nepodařilo se deaktivovat, stiskněte <b>Zahodit</b> pro zapomenutí Patche.</string>
-    <string name="retract_needle">Zatížení jehly. Odstraňte Patch z těla.</string>
+    <string name="retract_needle">Uvolněte jehlu. Odstraňte Patch z těla.</string>
     <string name="remove_base_discard_patch">Odstraňte základnu a vhodně zlikvidujte použitou kanylu.</string>
     <string name="press_next_or_OK">Stiskněte <b>OK</b> pro návrat na hlavní obrazovku. Stiskněte <b>Další</b> pro zahájení aktivace nového Patche.</string>
     <string name="activation_in_progress">Jejda! Něco se pokazilo, zdá se, že již probíhá aktivace.</string>
@@ -108,7 +109,7 @@
     <string name="sn_input_title">Sériové číslo</string>
     <string name="sn_input_summary">Zadejte sériové číslo základny Patche.</string>
     <string name="sn_input_invalid">Neplatné sériové číslo!</string>
-    <string name="pump_unsupported">Nevyzkoušená pumpa: %1$d! Kontaktujte nás na Discordu nebo Githubu, kde získáte podporu.</string>
+    <string name="pump_unsupported">Nevyzkoušená pumpa: %1$s! Kontaktujte nás na Discordu nebo Githubu, kde získáte podporu.</string>
     <string name="alarm_setting_title">Nastavení alarmů</string>
     <string name="alarm_setting_summary">Vyberte preferované nastavení alarmů.</string>
     <string name="pump_warning_notification_title">Oznámení o varování pumpy</string>
@@ -121,9 +122,19 @@
     <string name="hourly_max_insulin_summary">Zadejte maximální povolený počet jednotek inzulínu za hodinu. Pokud je překročeno, pumpa bude pozastavena.</string>
     <string name="daily_max_insulin_title">Denní maximum inzulínu [U]</string>
     <string name="daily_max_insulin_summary">Zadejte maximální povolené množství inzulínu za den. Pokud je překročeno, pumpa bude pozastavena.</string>
+    <string name="scan_on_connection_error_title">Provést skenování při chybách připojení</string>
+    <string name="scan_on_connection_error_summary">VAROVÁNÍ: Povolte pouze pokud máte problémy s připojením. Pokud je povoleno, skenuje pumpu znovu před pokusem o opětovné připojení k pumpě. Ujistěte se, že máte oprávnění k poloze nastaveno na \"Vždy povoleno\" </string>
     <!-- treatment state-->
     <string name="getting_pump_status">Nahrávám stav pumpy</string>
+    <string name="syncing_records">Synchronizace záznamů, %1$d zbývá</string>
     <string name="getting_bolus_status">Nahrávám stav bolusu</string>
     <string name="getting_temp_basal_status">Nahrávám stav dočasného bazálu</string>
     <string name="setting_pump_settings">Nastavení uživatelských voleb</string>
+    <!-- bolus-->
+    <string name="bolus_error_reason_user">Bolus zrušen uživatelem</string>
+    <string name="bolus_error_reason_not_connected">Pumpa není připojena</string>
+    <string name="bolus_error_reason_already_in_progress">Bolus již probíhá</string>
+    <string name="bolus_error_reason_unable_to_send_command">Příkaz bolusu nelze odeslat</string>
+    <string name="bolus_error_reason_communication_lost">Vypršel časový limit pro získání stavu bolusu</string>
+    <string name="bolus_error_reason_pump_error">Chyba pumpy</string>
 </resources>

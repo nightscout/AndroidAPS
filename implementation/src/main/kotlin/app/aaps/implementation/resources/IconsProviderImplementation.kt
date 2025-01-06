@@ -21,6 +21,6 @@ class IconsProviderImplementation @Inject constructor(private val config: Config
         when {
             config.NSCLIENT    -> R.drawable.ic_notif_nsclient
             config.PUMPCONTROL -> R.drawable.ic_notif_pumpcontrol
-            else               -> app.aaps.core.main.R.drawable.ic_notif_aaps
+            else               -> app.aaps.core.objects.R.drawable.ic_notif_aaps
         }
 }

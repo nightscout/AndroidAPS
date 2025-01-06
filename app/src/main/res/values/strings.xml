@@ -1,62 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="default_lang" translatable="false">System default</string>
-    <string name="en_lang" translatable="false">English</string>
-    <string name="cs_lang" translatable="false">Czech</string>
-    <string name="af_lang" translatable="false">Afrikaans</string>
-    <string name="bg_lang" translatable="false">Bulgarian</string>
-    <string name="nl_lang" translatable="false">Dutch</string>
-    <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
-    <string name="fr_lang" translatable="false">French</string>
-    <string name="de_lang" translatable="false">German</string>
-    <string name="dk_lang" translatable="false">Danish</string>
-    <string name="el_lang" translatable="false">Greek</string>
-    <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
-    <string name="zh_lang" translatable="false">Chinese</string>
-    <string name="ga_lang" translatable="false">Irish</string>
-    <string name="it_lang" translatable="false">Italian</string>
-    <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <string name="ko_lang" translatable="false">Korean</string>
-    <string name="lt_lang" translatable="false">Lithuanian</string>
-    <string name="no_lang" translatable="false">Norwegian</string>
-    <string name="pl_lang" translatable="false">Polish</string>
-    <string name="pt_lang" translatable="false">Portuguese</string>
-    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string>
-    <string name="ro_lang" translatable="false">Romanian</string>
-    <string name="ru_lang" translatable="false">Russian</string>
-    <string name="sk_lang" translatable="false">Slovak</string>
-    <string name="es_lang" translatable="false">Spanish</string>
-    <string name="sv_lang" translatable="false">Swedish</string>
-    <string name="tr_lang" translatable="false">Turkish</string>
-    <string name="key_smscommunicator_settings" translatable="false">smscommunicator</string>
-    <string name="key_protection_settings" translatable="false">protection</string>
     <string name="key_last_cleanup_run" translatable="false">last_cleanup_run</string>
     <string name="nav_preferences_plugin">%1$s Preferences</string>
-    <string name="nav_refreshtreatments">Refresh treatments from NS</string>
     <string name="nav_exit">Exit</string>
     <string name="delta">Delta</string>
-    <string name="profile_label">Profile</string>
     <string name="language" translatable="false">Language</string>
     <string name="save">Save</string>
-    <string name="reloadprofile">Reload profile</string>
-    <string name="correctionbous">Corr</string>
-    <string name="ns_upload_only">(DANGEROUS TO DISABLE) NS upload only</string>
-    <string name="ns_upload_only_summary">NS upload only (disabled sync). Not effective on SGV unless a local source like xDrip+ is selected. Not effective on Profiles while NS-Profiles is used.\n!!! WARNING !!! Disabling this option may cause malfunctions and insulin overdose if any of your component (AAPS, NS, xDrip+) is wrong configured. Carefully watch if data displayed by AAPS match the pump state!</string>
     <string name="wear">Wear</string>
     <string name="nav_about">About</string>
-    <string name="smscommunicator_missingphonestatepermission">Missing phone state permission</string>
-    <string name="ns_alarm_options">Alarm options</string>
-    <string name="key_ns_announcements" translatable="false">ns_announcements</string>
-    <string name="key_ns_alarms" translatable="false">ns_alarms</string>
-    <string name="key_ns_alarm_stale_data_value" translatable="false">nsalarm_staledatavalue</string>
-    <string name="key_ns_alarm_urgent_stale_data_value" translatable="false">nsalarm_urgent_staledatavalue</string>
-    <string name="ns_alarms">Create notifications from NS alarms</string>
-    <string name="ns_announcements">Create notifications from NS announcements</string>
-    <string name="ns_alarm_stale_data_value_label">Stale data threshold [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Urgent stale data threshold [min]</string>
     <string name="sensitivity_warning">By turning on Autosense feature remember to enter all eated carbs. Otherwise carbs deviations will be identified wrong as sensitivity change !!</string>
-    <string name="notloadedplugins">Not all profiles loaded!</string>
-    <string name="valuesnotstored">Values not stored!</string>
     <string name="invalid">INVALID</string>
     <string name="gradually_increase_notification_volume">Gradually increase the volume for alerts and notifications</string>
     <string name="localalertsettings_title">Local alerts</string>
@@ -68,27 +21,17 @@
     <string name="close_navigation">Close navigation</string>
     <string name="remove_items">Remove items</string>
     <string name="sort_items">Sort items</string>
-    <string name="error_adding_treatment_title">Treatment data incomplete</string>
-    <string name="error_adding_treatment_message">A treatment (insulin: %1$.2f, carbs: %2$d, at: %3$s) could not be added to treatments. Please check and manually add a record as appropriate.</string>
-    <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), delay: %3$d m</string>
-    <string name="profile_total">== ∑  %1$s U</string>
     <string name="unitsnosemicolon">Units</string>
-    <string name="show_removed">Show removed</string>
-    <string name="clearqueueconfirm">Clear queue? All data in queue will be lost!</string>
-    <string name="chartmenu">Chart menu</string>
     <string name="authorizationfailed">Authorization failed</string>
-    <string name="copytolocalprofile_invalid">Unable to create profile. Profile is invalid.</string>
-    <string name="clear_filter">Clear filter</string>
     <string name="cannula">Cannula</string>
-    <string name="email_address">Email address</string>
-    <string name="remove_bg_readings">Remove BG readings</string>
     <string name="identification_not_set">Identification not set in dev mode</string>
-    <string name="a11y_dialog">dialog</string>
     <!-- WEAR OS-->
-    <string name="wear_unknown_action_string">Unknown action command:</string>
     <string name="remove_selected_items">Remove selected items</string>
     <string name="count_selected">%1$d selected</string>
     <string name="sort_label">Sort</string>
     <string name="search">Search</string>
+    <string name="simple_mode">Simple mode</string>
+    <string name="select">Select</string>
+    <string name="set">Set</string>
 
 </resources>

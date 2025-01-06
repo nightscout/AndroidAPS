@@ -5,7 +5,9 @@ import android.hardware.Sensor
 import android.hardware.SensorManager
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.weardata.EventData.ActionHeartRate
+import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.shared.tests.AAPSLoggerTest
+import app.aaps.wear.R
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.disposables.Disposable
@@ -30,6 +32,7 @@ internal class HeartRateListenerTest {
         override val newThread: Scheduler = mock(Scheduler::class.java)
     }
     private val schedule = mock(Disposable::class.java)
+    private val sp = mock(SP::class.java)
     private val heartRates = mutableListOf<ActionHeartRate>()
     private val device = "unknown unknown"
 
@@ -40,7 +43,7 @@ internal class HeartRateListenerTest {
                 any(), eq(60_000L), eq(60_000L), eq(TimeUnit.MILLISECONDS)
             )
         ).thenReturn(schedule)
-        val listener = HeartRateListener(ctx, aapsLogger, aapsSchedulers, timestampMillis)
+        val listener = HeartRateListener(ctx, aapsLogger, sp, aapsSchedulers, timestampMillis)
         verify(aapsSchedulers.io).schedulePeriodicallyDirect(
             any(), eq(60_000L), eq(60_000L), eq(TimeUnit.MILLISECONDS)
         )
@@ -74,6 +77,7 @@ internal class HeartRateListenerTest {
 
     @Test
     fun onSensorChanged() {
+        `when`(sp.getInt(R.string.key_heart_rate_smoothing, 1)).thenReturn(1)
         val start = System.currentTimeMillis()
         val d1 = 10_000L
         val d2 = 20_000L
@@ -91,6 +95,7 @@ internal class HeartRateListenerTest {
 
     @Test
     fun onSensorChanged2() {
+        `when`(sp.getInt(R.string.key_heart_rate_smoothing, 1)).thenReturn(1)
         val start = System.currentTimeMillis()
         val d1 = 10_000L
         val d2 = 40_000L
@@ -111,6 +116,7 @@ internal class HeartRateListenerTest {
 
     @Test
     fun onSensorChangedMultiple() {
+        `when`(sp.getInt(R.string.key_heart_rate_smoothing, 1)).thenReturn(1)
         val start = System.currentTimeMillis()
         val d1 = 10_000L
         val d2 = 40_000L
@@ -132,6 +138,7 @@ internal class HeartRateListenerTest {
 
     @Test
     fun onSensorChangedNoContact() {
+        `when`(sp.getInt(R.string.key_heart_rate_smoothing, 1)).thenReturn(1)
         val start = System.currentTimeMillis()
         val d1 = 10_000L
         val d2 = 40_000L
@@ -148,6 +155,7 @@ internal class HeartRateListenerTest {
 
     @Test
     fun onAccuracyChanged() {
+        `when`(sp.getInt(R.string.key_heart_rate_smoothing, 1)).thenReturn(1)
         val start = System.currentTimeMillis()
         val d1 = 10_000L
         val d2 = 40_000L
@@ -162,4 +170,5 @@ internal class HeartRateListenerTest {
         assertThat(heartRates).containsExactly(ActionHeartRate(d3, start + d3, 95.0, device))
         listener.dispose()
     }
+
 }

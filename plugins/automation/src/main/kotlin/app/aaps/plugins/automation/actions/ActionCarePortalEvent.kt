@@ -2,21 +2,17 @@ package app.aaps.plugins.automation.actions
 
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
+import app.aaps.core.data.model.TE
+import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
-import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.T
-import app.aaps.core.main.extensions.fromConstant
 import app.aaps.core.utils.JsonHelper
-import app.aaps.database.entities.TherapyEvent
-import app.aaps.database.entities.UserEntry
-import app.aaps.database.entities.ValueWithUnit
-import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import app.aaps.plugins.automation.elements.InputCarePortalMenu
 import app.aaps.plugins.automation.elements.InputDuration
 import app.aaps.plugins.automation.elements.InputString
@@ -30,23 +26,18 @@ import javax.inject.Inject
 
 class ActionCarePortalEvent(injector: HasAndroidInjector) : Action(injector) {
 
-    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var sp: SP
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
-    @Inject lateinit var uel: UserEntryLogger
 
     private val disposable = CompositeDisposable()
 
     var note = InputString()
     var duration = InputDuration(0, InputDuration.TimeUnit.MINUTES)
     var cpEvent = InputCarePortalMenu(rh)
-    private var valuesWithUnit = mutableListOf<ValueWithUnit?>()
-
-    private constructor(injector: HasAndroidInjector, actionCPEvent: ActionCarePortalEvent) : this(injector) {
-        cpEvent = InputCarePortalMenu(rh, actionCPEvent.cpEvent.value)
-    }
+    private var valuesWithUnit = mutableListOf<ValueWithUnit>()
 
     override fun friendlyName(): Int = app.aaps.core.ui.R.string.careportal
     override fun shortDescription(): String = rh.gs(cpEvent.value.stringResWithValue, note.value)
@@ -56,34 +47,35 @@ class ActionCarePortalEvent(injector: HasAndroidInjector) : Action(injector) {
     override fun doAction(callback: Callback) {
         val enteredBy = sp.getString("careportal_enteredby", "AAPS")
         val eventTime = dateUtil.now()
-        val therapyEvent = TherapyEvent(
+        val therapyEvent = TE(
             timestamp = eventTime,
             type = cpEvent.value.therapyEventType,
-            glucoseUnit = TherapyEvent.GlucoseUnit.fromConstant(profileFunction.getUnits())
+            glucoseUnit = profileFunction.getUnits()
         )
-        valuesWithUnit.add(ValueWithUnit.TherapyEventType(therapyEvent.type))
+        valuesWithUnit.add(ValueWithUnit.TEType(therapyEvent.type))
 
         therapyEvent.enteredBy = enteredBy
-        if (therapyEvent.type == TherapyEvent.Type.QUESTION || therapyEvent.type == TherapyEvent.Type.ANNOUNCEMENT) {
+        if (therapyEvent.type == TE.Type.QUESTION || therapyEvent.type == TE.Type.ANNOUNCEMENT) {
             val glucoseStatus = glucoseStatusProvider.glucoseStatusData
             if (glucoseStatus != null) {
                 therapyEvent.glucose = glucoseStatus.glucose
-                therapyEvent.glucoseType = TherapyEvent.MeterType.SENSOR
+                therapyEvent.glucoseType = TE.MeterType.SENSOR
                 valuesWithUnit.add(ValueWithUnit.Mgdl(glucoseStatus.glucose))
-                valuesWithUnit.add(ValueWithUnit.TherapyEventMeterType(TherapyEvent.MeterType.SENSOR))
+                valuesWithUnit.add(ValueWithUnit.TEMeterType(TE.MeterType.SENSOR))
             }
         } else {
             therapyEvent.duration = T.mins(duration.value.toLong()).msecs()
-            valuesWithUnit.add(ValueWithUnit.Minute(duration.value).takeIf { duration.value != 0 })
+            valuesWithUnit.addAll(listOf(ValueWithUnit.Minute(duration.value).takeIf { duration.value != 0 }).filterNotNull())
         }
         therapyEvent.note = note.value
-        valuesWithUnit.add(ValueWithUnit.SimpleString(note.value).takeIf { note.value.isNotBlank() })
-        disposable += repository.runTransactionForResult(InsertIfNewByTimestampTherapyEventTransaction(therapyEvent))
-            .subscribe(
-                { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted therapy event $it") } },
-                { aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it) }
-            )
-        uel.log(UserEntry.Action.CAREPORTAL, UserEntry.Sources.Automation, title, valuesWithUnit)
+        valuesWithUnit.addAll(listOf(ValueWithUnit.SimpleString(note.value).takeIf { note.value.isNotBlank() }).filterNotNull())
+        disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
+            therapyEvent = therapyEvent,
+            action = app.aaps.core.data.ue.Action.CAREPORTAL,
+            source = Sources.Automation,
+            note = title,
+            listValues = valuesWithUnit
+        ).subscribe()
     }
 
     override fun toJSON(): String {

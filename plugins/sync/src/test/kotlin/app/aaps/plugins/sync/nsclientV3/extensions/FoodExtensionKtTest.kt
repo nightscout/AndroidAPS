@@ -1,18 +1,18 @@
 package app.aaps.plugins.sync.nsclientV3.extensions
 
+import app.aaps.core.data.model.FD
+import app.aaps.core.data.model.IDs
 import app.aaps.core.nssdk.localmodel.food.NSFood
 import app.aaps.core.nssdk.mapper.convertToRemoteAndBack
-import app.aaps.database.entities.Food
-import app.aaps.database.entities.embedments.InterfaceIDs
+import app.aaps.plugins.sync.extensions.contentEqualsTo
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
-@Suppress("SpellCheckingInspection")
 internal class FoodExtensionKtTest {
 
     @Test
     fun toFood() {
-        val food = Food(
+        val food = FD(
             isValid = true,
             name = "name",
             category = "category",
@@ -24,13 +24,13 @@ internal class FoodExtensionKtTest {
             energy = 23,
             unit = "g",
             gi = 25,
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 nightscoutId = "nightscoutId"
             )
         )
 
         val food2 = (food.toNSFood().convertToRemoteAndBack() as NSFood).toFood()
         assertThat(food.contentEqualsTo(food2)).isTrue()
-        assertThat(food.interfaceIdsEqualsTo(food2)).isTrue()
+        assertThat(food.ids.contentEqualsTo(food2.ids)).isTrue()
     }
 }

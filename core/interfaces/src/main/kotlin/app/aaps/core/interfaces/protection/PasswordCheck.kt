@@ -11,7 +11,7 @@ interface PasswordCheck {
     fun queryPassword(
         context: Context,
         @StringRes labelId: Int,
-        @StringRes preference: Int,
+        preference: String,
         ok: ((String) -> Unit)?,
         cancel: (() -> Unit)? = null,
         fail: (() -> Unit)? = null,
@@ -21,7 +21,7 @@ interface PasswordCheck {
     fun setPassword(
         context: Context,
         @StringRes labelId: Int,
-        @StringRes preference: Int,
+        preference: String,
         ok: ((String) -> Unit)? = null,
         cancel: (() -> Unit)? = null,
         clear: (() -> Unit)? = null,
@@ -34,7 +34,8 @@ interface PasswordCheck {
      * since this query does NOT check validity of password.
      */
     fun queryAnyPassword(
-        context: Context, @StringRes labelId: Int, @StringRes preference: Int, @StringRes passwordExplanation: Int?,
+        context: Context, @StringRes labelId: Int, preference: String, @StringRes passwordExplanation: Int?,
         @StringRes passwordWarning: Int?, ok: ((String) -> Unit)?, cancel: (() -> Unit)? = null
     )
+
 }
