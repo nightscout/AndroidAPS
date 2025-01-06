@@ -1163,7 +1163,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (variableSens != isfMgdl && variableSens != 0.0 && isfMgdl != null) {
             val okDialogText: ArrayList<String> = ArrayList()
             val overViewText: ArrayList<String> = ArrayList()
-            val autoSensHiddenRange = 0.2             //Hide Autosens value if below 20% of Autosens Range
+            val autoSensHiddenRange = 0.0             //Hide Autosens value if equals 100%
             val autoSensMax = 100.0 + (preferences.get(DoubleKey.AutosensMax) - 1.0) * autoSensHiddenRange * 100.0
             val autoSensMin = 100.0 + (preferences.get(DoubleKey.AutosensMin) - 1.0) * autoSensHiddenRange * 100.0
             lastAutosensRatio?.let {
