@@ -144,9 +144,9 @@ class OverviewMenusImpl @Inject constructor(
         chartButton.setOnClickListener { v: View ->
             var itemRow = 0
             val predictionsAvailable: Boolean = when {
-                config.APS      -> loop.lastRun?.request?.hasPredictions == true
-                config.NSCLIENT -> true
-                else            -> false
+                config.APS        -> loop.lastRun?.request?.hasPredictions == true
+                config.AAPSCLIENT -> true
+                else              -> false
             }
             val popup = PopupWindow(v.context)
             popup.setBackgroundDrawable(ColorDrawable(rh.gac(chartButton.context, app.aaps.core.ui.R.attr.popupWindowBackground)))

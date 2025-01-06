@@ -61,8 +61,12 @@
     <string name="pref_show_ago">Zobrazit aktualizováno před</string>
     <string name="pref_show_week_number">Zobrazit číslo týdne</string>
     <string name="pref_show_date">Zobrazit datum</string>
+    <string name="pref_show_seconds">Zobrazovat sekundy</string>
     <string name="default_custom_watchface_comment">Výchozí ciferník. Můžete kliknout na tlačítko EXPORTOVAT CIFERNÍK pro vygenerování šablony</string>
     <string name="default_custom_watchface_external_comment">Výchozí ciferník včetně externích zobrazení pro sledující, chcete-li vygenerovat šablonu, můžete kliknout na tlačítko EXPORTOVAT CIFERNÍK</string>
     <string name="wear_default_watchface">Výchozí ciferník</string>
     <string name="wear_more_watchfaces">Další ciferníky</string>
+    <string name="temp_basal_absolute_rate">%1$.2f U/h @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
 </resources>

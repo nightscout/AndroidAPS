@@ -1105,7 +1105,7 @@ class DataHandlerMobile @Inject constructor(
             // If the target is not the same as set in the profile then oref has overridden it
             val targetUsed =
                 if (config.APS) loop.lastRun?.constraintsProcessed?.targetBG ?: 0.0
-                else if (config.NSCLIENT) processedDeviceStatusData.getAPSResult()?.targetBG ?: 0.0
+                else if (config.AAPSCLIENT) processedDeviceStatusData.getAPSResult()?.targetBG ?: 0.0
                 else 0.0
 
             if (targetUsed != 0.0 && abs(profile.getTargetMgdl() - targetUsed) > 0.01) {

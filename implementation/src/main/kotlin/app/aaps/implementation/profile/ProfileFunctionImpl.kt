@@ -114,7 +114,7 @@ class ProfileFunctionImpl @Inject constructor(
         // Try to get it from device status
         // Remove this code after switch to api v3
         // ps == null
-        if (config.NSCLIENT) {
+        if (config.AAPSCLIENT) {
             processedDeviceStatusData.pumpData?.activeProfileName?.let { activeProfile ->
                 activePlugin.activeProfileSource.profile?.getSpecificProfile(activeProfile)?.let { ap ->
                     val sealed = ProfileSealed.Pure(ap, activePlugin)

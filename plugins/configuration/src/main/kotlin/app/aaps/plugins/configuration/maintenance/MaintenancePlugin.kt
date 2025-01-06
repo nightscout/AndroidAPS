@@ -194,7 +194,7 @@ class MaintenancePlugin @Inject constructor(
         builder.append("you have to do it manually)" + System.lineSeparator())
         builder.append("-------------------------------------------------------" + System.lineSeparator())
         builder.append(rh.gs(config.appName) + " " + config.VERSION + System.lineSeparator())
-        if (config.NSCLIENT) builder.append("NSCLIENT" + System.lineSeparator())
+        if (config.AAPSCLIENT) builder.append("NSCLIENT" + System.lineSeparator())
         builder.append("Build: " + config.BUILD_VERSION + System.lineSeparator())
         builder.append("Remote: " + config.REMOTE + System.lineSeparator())
         builder.append("Flavor: " + config.FLAVOR + config.BUILD_TYPE + System.lineSeparator())

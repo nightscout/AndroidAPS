@@ -120,4 +120,5 @@
     <string name="autotune_run_with_autoswitch">Το Autotune έτρεξε έγινε αυτόματη αλλαγή προφίλ</string>
     <string name="autotune_run_with_error">Σφάλμα κατά την τελευταία εκτέλεση του Autotune</string>
     <string name="autotune_run_cancelled">Εντοπίστηκε μια άλλη εκτέλεση του Autotune, η εκτέλεση ακυρώθηκε</string>
+    <!--    Steps count-->
 </resources>

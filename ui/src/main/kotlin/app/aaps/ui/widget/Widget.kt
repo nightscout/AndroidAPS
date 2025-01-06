@@ -122,9 +122,9 @@ class Widget : AppWidgetProvider() {
         views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent)
         if (config.APS)
             views.setInt(R.id.widget_layout, "setBackgroundColor", Color.argb(alpha, 0, 0, 0))
-        if (config.NSCLIENT1)
+        if (config.AAPSCLIENT1)
             views.setInt(R.id.widget_layout, "setBackgroundColor", Color.argb(alpha, 0xE8, 0xC5, 0x0C))
-        if (config.NSCLIENT2)
+        if (config.AAPSCLIENT2)
             views.setInt(R.id.widget_layout, "setBackgroundColor", Color.argb(alpha, 0x0F, 0xBB, 0xE0))
 
         handler.post {
@@ -292,7 +292,7 @@ class Widget : AppWidgetProvider() {
         val isfMgdl = profileFunction.getProfile()?.getProfileIsfMgdl()
         val variableSens =
             if (config.APS) request?.variableSens ?: 0.0
-            else if (config.NSCLIENT) processedDeviceStatusData.getAPSResult()?.variableSens ?: 0.0
+            else if (config.AAPSCLIENT) processedDeviceStatusData.getAPSResult()?.variableSens ?: 0.0
             else 0.0
         val ratioUsed = request?.autosensResult?.ratio ?: 1.0
         if (variableSens != isfMgdl && variableSens != 0.0 && isfMgdl != null) {

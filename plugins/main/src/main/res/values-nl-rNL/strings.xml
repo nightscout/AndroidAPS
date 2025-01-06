@@ -153,8 +153,6 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">DOEL</string>
     <string name="basal_short">BAS</string>
-    <string name="isf_dynamic_label">Uw algoritme kan een dynamische berekening van ISF bieden. De waarden hieronder worden alleen gebruikt om op terug te vallen in geval van ontbrekende gegevens</string>
-    <string name="ic_dynamic_label">Uw algoritme kan een dynamische berekening van IC bieden. De waarden hieronder worden alleen gebruikt om op terug te vallen in geval van ontbrekende gegevens</string>
     <!-- Actions -->
     <string name="actions">Acties</string>
     <string name="description_actions">Een aantal knoppen voor snelle toegang tot algemene functies</string>

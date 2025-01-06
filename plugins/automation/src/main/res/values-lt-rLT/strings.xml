@@ -137,4 +137,5 @@
     <string name="autotune_run_with_autoswitch">Autotune veikė ir profilis automatiškai pakeistas</string>
     <string name="autotune_run_with_error">Paskutinio Autotune klaida</string>
     <string name="autotune_run_cancelled">Nustatytas kitas Autotune veikimas, jis atšauktas</string>
+    <!--    Steps count-->
 </resources>

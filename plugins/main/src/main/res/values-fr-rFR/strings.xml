@@ -153,8 +153,8 @@
     <string name="dia_short">DAI</string>
     <string name="target_short">CIBLE</string>
     <string name="basal_short">BAS</string>
-    <string name="isf_dynamic_label">Votre algorithme peut fournir le calcul dynamique de la SI. Les valeurs ci-dessous ne sont utilisées que comme solution de secours en cas de données manquantes</string>
-    <string name="ic_dynamic_label">Votre algorithme peut fournir le calcul dynamique de la G/I. Les valeurs ci-dessous ne sont utilisées que comme solution de secours en cas de données manquantes</string>
+    <string name="isf_dynamic_label_warning">Votre algorithme peut fournir le calcul dynamique de la SI. Les valeurs ci-dessous sont utilisées comme solution de secours en cas de données manquantes ou comme valeur de référence pour le calcul de la SI</string>
+    <string name="ic_dynamic_label_warning">Votre algorithme peut fournir le calcul dynamique de la G/I. Les valeurs ci-dessous sont utilisées comme solution de secours en cas de données manquantes ou comme valeur de référence pour le calcul de la G/I</string>
     <!-- Actions -->
     <string name="actions">Actions</string>
     <string name="description_actions">Quelques boutons pour accéder rapidement aux fonctions communes</string>

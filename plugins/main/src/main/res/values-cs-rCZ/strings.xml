@@ -153,8 +153,8 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">CÍL</string>
     <string name="basal_short">BAZ</string>
-    <string name="isf_dynamic_label">Váš algoritmus může poskytnout dynamický výpočet ISF. Níže uvedené hodnoty jsou použity pouze jako záložní v případě chybějících údajů</string>
-    <string name="ic_dynamic_label">Váš algoritmus může poskytnout dynamický výpočet IC. Níže uvedené hodnoty jsou použity pouze jako záložní v případě chybějících dat</string>
+    <string name="isf_dynamic_label_warning">Váš algoritmus dokáže poskytovat dynamický výpočet ISF. Níže uvedené hodnoty mohou být použity pouze jako záložní v případě chybějících údajů nebo jako referenční</string>
+    <string name="ic_dynamic_label_warning">Váš algoritmus dokáže poskytovat dynamický výpočet IC. Níže uvedené hodnoty mohou být použity pouze jako záložní v případě chybějících údajů nebo jako referenční</string>
     <!-- Actions -->
     <string name="actions">Akce</string>
     <string name="description_actions">Tlačítka k běžně používaným úkonům</string>

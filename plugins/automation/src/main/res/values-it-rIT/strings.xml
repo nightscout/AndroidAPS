@@ -137,4 +137,8 @@
     <string name="autotune_run_with_autoswitch">Autotune eseguito e profilo cambiato automaticamente</string>
     <string name="autotune_run_with_error">Errore durante l\'ultima esecuzione di Autotune</string>
     <string name="autotune_run_cancelled">È stata rilevata un\'altra esecuzione di Autotune, esecuzione annullata</string>
+    <!--    Steps count-->
+    <string name="triggerStepsCountLabel">Conteggio Passi</string>
+    <string name="triggerStepsCountDesc">Conteggio passi per %1$s minuti %2$s %3$.0f</string>
+    <string name="triggerStepsCountDropdownLabel">Durata Della Misurazione</string>
 </resources>
