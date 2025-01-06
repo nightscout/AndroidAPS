@@ -236,6 +236,9 @@ sealed class ProfileSealed(
     override val dia: Double
         get() = iCfg.insulinEndTime / 1000.0 / 60.0 / 60.0
 
+    override val insulinProfile: ICfg
+        get() = iCfg
+
     override val timeshift: Int
         get() = ts
 

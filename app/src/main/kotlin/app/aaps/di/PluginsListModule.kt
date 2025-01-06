@@ -16,6 +16,7 @@ import app.aaps.plugins.constraints.safety.SafetyPlugin
 import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import app.aaps.plugins.constraints.storage.StorageConstraintPlugin
 import app.aaps.plugins.constraints.versionChecker.VersionCheckerPlugin
+import app.aaps.plugins.insulin.InsulinPlugin
 import app.aaps.plugins.insulin.InsulinLyumjevPlugin
 import app.aaps.plugins.insulin.InsulinOrefFreePeakPlugin
 import app.aaps.plugins.insulin.InsulinOrefRapidActingPlugin
@@ -119,6 +120,12 @@ abstract class PluginsListModule {
     @IntoMap
     @IntKey(42)
     abstract fun bindInsulinLyumjevPlugin(plugin: InsulinLyumjevPlugin): PluginBase
+
+    @Binds
+    @AllConfigs
+    @IntoMap
+    @IntKey(45)
+    abstract fun bindInsulinPlugin(plugin: InsulinPlugin): PluginBase
 
     @Binds
     @AllConfigs

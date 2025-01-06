@@ -72,6 +72,10 @@ abstract class InsulinOrefBasePlugin(
             return profile?.dia ?: hardLimits.minDia()
         }
 
+   override fun iobCalcForTreatment(bolus: BS, time: Long, iCfg: ICfg): Iob {
+        return iobCalcForTreatment(bolus, time, (iCfg.insulinEndTime / 3600.0 / 1000.0))
+    }
+
     override fun iobCalcForTreatment(bolus: BS, time: Long, dia: Double): Iob {
         assert(dia != 0.0)
         assert(peak != 0)

@@ -6,6 +6,8 @@
     <string name="description_insulin_ultra_rapid">Insulin preset for Fiasp</string>
     <string name="description_insulin_lyumjev">Insulin preset for Lyumjev</string>
     <string name="description_insulin_free_peak">Allows you to define the peak of the insulin activity and should only be used by advanced users</string>
+    <string name="description_insulin_plugin">Allows you to manage the different insulin you will use within AAPS</string>
+    <string name="insulin_plugin">Insulin</string>
     <string name="insulin_shortname">INS</string>
     <string name="insulin_oref_peak">IOB Curve Peak Time</string>
     <string name="insulin_peak_time">Peak Time [min]</string>

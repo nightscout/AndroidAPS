@@ -1,6 +1,7 @@
 package app.aaps.core.interfaces.profile
 
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.pump.Pump
@@ -32,6 +33,11 @@ interface Profile {
 
     //@Deprecated("Replace in favor of accessing InsulinProfile")
     val dia: Double
+
+    /**
+     * InsulinProfile
+     */
+    val insulinProfile: ICfg
 
     val percentage: Int
 
