@@ -33,6 +33,12 @@ interface APS : ConfigExportImport {
     fun supportsDynamicIc(): Boolean = false
 
     /**
+     * Dedicated string for Sensitivity OKDialog in overview on ISF calculation ?
+     * @return string or null if nothing to show
+     */
+    fun getSensitivityOverviewString(): String? = null
+
+    /**
      * Calculate current ISF
      * @param profile Actual profile to get multiplier form [ProfileSealed.EPS]
      * @param caller Caller identification for logging purposes
