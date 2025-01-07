@@ -138,4 +138,7 @@
     <string name="autotune_run_with_error">上次自動調整運行時出錯</string>
     <string name="autotune_run_cancelled">偵測到另一個自動調整運行，運行已取消</string>
     <!--    Steps count-->
+    <string name="triggerStepsCountLabel">步數統計</string>
+    <string name="triggerStepsCountDesc">每 %1$s 分鐘的步數統計 %2$s %3$.0f</string>
+    <string name="triggerStepsCountDropdownLabel">測量持續時間</string>
 </resources>
