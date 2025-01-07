@@ -85,7 +85,7 @@
     <string name="collapse_category">Sutraukti kategoriją</string>
     <!--ImportExport-->
     <string name="nav_preferences">Nustatymai</string>
-    <string name="password_preferences_encrypt_prompt">Jūsų paprašys nustatyti slaptažodį, kuris bus naudojamas užšifruojant eksportuojamus nustatymus.</string>
+    <string name="password_preferences_encrypt_prompt">Turėsite įrašyti slaptažodį, kuris bus naudojamas užšifruojant eksportuojamus nustatymus.</string>
     <string name="preferences_export_canceled">Eksportas nutrauktas! Nustatymai NE eksportuoti!</string>
     <string name="preferences_import_canceled">Importas nutrauktas! Nustatymai NEBUVO importuoti!</string>
     <string name="preferences_import_impossible">Negalima importuoti nustatymų!</string>
