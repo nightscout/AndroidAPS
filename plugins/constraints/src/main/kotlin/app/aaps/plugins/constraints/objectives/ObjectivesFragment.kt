@@ -107,12 +107,12 @@ class ObjectivesFragment : DaggerFragment() {
     override fun onPause() {
         super.onPause()
         disposable.clear()
+        handler.removeCallbacksAndMessages(null)
     }
 
     @Synchronized
     override fun onDestroyView() {
         super.onDestroyView()
-        handler.removeCallbacks(objectiveUpdater)
         _binding = null
     }
 

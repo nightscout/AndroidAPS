@@ -314,7 +314,7 @@ class LoopPlugin @Inject constructor(
                 lastRun.lastTBRRequest = 0
                 lastRun.lastSMBEnact = 0
                 lastRun.lastSMBRequest = 0
-                buildAndStoreDeviceStatus("APS result")
+                scheduleBuildAndStoreDeviceStatus("APS result")
 
                 if (isSuspended) {
                     aapsLogger.debug(LTag.APS, rh.gs(app.aaps.core.ui.R.string.loopsuspended))
@@ -427,20 +427,25 @@ class LoopPlugin @Inject constructor(
                                     // executing TBR may take some time thus give more time to SMB
                                     resultAfterConstraints.deliverAt = lastRun.lastTBREnact
                                     rxBus.send(EventLoopUpdateGui())
-                                    applySMBRequest(resultAfterConstraints, object : Callback() {
-                                        override fun run() {
-                                            // Callback is only called if a bolus was actually requested
-                                            if (result.enacted || result.success) {
-                                                lastRun.smbSetByPump = result
-                                                lastRun.lastSMBRequest = lastRun.lastAPSRun
-                                                lastRun.lastSMBEnact = dateUtil.now()
-                                            } else {
-                                                handler?.postDelayed({ invoke("tempBasalFallback", allowNotification, true) }, 1000)
+                                    if (resultAfterConstraints.isBolusRequested)
+                                        applySMBRequest(resultAfterConstraints, object : Callback() {
+                                            override fun run() {
+                                                // Callback is only called if a bolus was actually requested
+                                                if (result.enacted || result.success) {
+                                                    lastRun.smbSetByPump = result
+                                                    lastRun.lastSMBRequest = lastRun.lastAPSRun
+                                                    lastRun.lastSMBEnact = dateUtil.now()
+                                                    scheduleBuildAndStoreDeviceStatus("applySMBRequest")
+                                                } else {
+                                                    handler?.postDelayed({ invoke("tempBasalFallback", allowNotification, true) }, 1000)
+                                                }
+                                                rxBus.send(EventLoopUpdateGui())
                                             }
-                                            rxBus.send(EventLoopUpdateGui())
-                                        }
-                                    })
-                                    buildAndStoreDeviceStatus("applyTBRRequest")
+                                        })
+                                    else {
+                                        aapsLogger.debug(LTag.APS, "No SMB requested")
+                                        scheduleBuildAndStoreDeviceStatus("applyTBRRequest")
+                                    }
                                 } else {
                                     lastRun.tbrSetByPump = result
                                     lastRun.lastTBRRequest = lastRun.lastAPSRun
@@ -538,7 +543,7 @@ class LoopPlugin @Inject constructor(
                             lastRun.lastTBRRequest = lastRun.lastAPSRun
                             lastRun.lastTBREnact = dateUtil.now()
                             lastRun.lastOpenModeAccept = dateUtil.now()
-                            buildAndStoreDeviceStatus("acceptChangeRequest")
+                            scheduleBuildAndStoreDeviceStatus("acceptChangeRequest")
                             sp.incInt(app.aaps.core.utils.R.string.key_ObjectivesmanualEnacts)
                         }
                         rxBus.send(EventAcceptOpenLoopChange())
@@ -650,10 +655,6 @@ class LoopPlugin @Inject constructor(
     }
 
     private fun applySMBRequest(request: APSResult, callback: Callback?) {
-        if (!request.isBolusRequested) {
-            aapsLogger.debug(LTag.APS, "No SMB requested")
-            return
-        }
         val pump = activePlugin.activePump
         val lastBolusTime = persistenceLayer.getNewestBolus()?.timestamp ?: 0L
         if (lastBolusTime != 0L && lastBolusTime + T.mins(preferences.get(IntKey.ApsMaxSmbFrequency).toLong()).msecs() > dateUtil.now()) {
@@ -752,7 +753,22 @@ class LoopPlugin @Inject constructor(
         })
     }
 
-    override fun buildAndStoreDeviceStatus(reason: String) {
+    var task: Runnable? = null
+
+    override fun scheduleBuildAndStoreDeviceStatus(reason: String) {
+        class UpdateRunnable : Runnable {
+
+            override fun run() {
+                buildAndStoreDeviceStatus(reason)
+                task = null
+            }
+        }
+        task?.let { handler?.removeCallbacks(it) }
+        task = UpdateRunnable()
+        task?.let { handler?.postDelayed(it, 5000) }
+    }
+
+    fun buildAndStoreDeviceStatus(reason: String) {
         aapsLogger.debug(LTag.NSCLIENT, "Building DeviceStatus for $reason")
         val version = config.VERSION_NAME + "-" + config.BUILD_VERSION
         val profile = profileFunction.getProfile() ?: return

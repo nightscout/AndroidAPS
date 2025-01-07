@@ -103,7 +103,7 @@ class ConfigBuilderFragment : DaggerFragment() {
                 activity = requireActivity(),
                 parent = binding.categories
             )
-        if (!config.NSCLIENT) {
+        if (!config.AAPSCLIENT) {
             configBuilder.createViewsForPlugins(
                 title = R.string.configbuilder_bgsource,
                 description = R.string.configbuilder_bgsource_description,
@@ -202,7 +202,7 @@ class ConfigBuilderFragment : DaggerFragment() {
         if (isLocked && !queryingProtection) {
             activity?.let { activity ->
                 queryingProtection = true
-                val doUpdate = { activity.runOnUiThread { queryingProtection = false; updateProtectedUi() } }
+                val doUpdate = { activity.runOnUiThread { queryingProtection = false; if (_binding != null) updateProtectedUi() } }
                 protectionCheck.queryProtection(activity, PREFERENCES, doUpdate, doUpdate, doUpdate)
             }
         }

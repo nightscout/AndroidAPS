@@ -81,6 +81,8 @@
     <string name="allow_hardware_pump_text">POZOR: Pokud aktivuje a připojíte skutečnou pumpu, AAPS nakopíruje (a bude udržovat) nastavení bazálu z aktivního profilu do pumpy. Nastavení bazálu v pumpě bude přepsáno. Pokud si nejste jistí nebo nechcete přepsat bazály v pumpě, stiskněte Zrušit a opakujte přepnutí na jinou pumpu později.</string>
     <string name="a11y_open_settings">otevřít nastavení</string>
     <string name="nsclient_version_does_not_match">Verze AAPSClienta se neshoduje s verzí AAPS. Aktualizujte prosím.</string>
+    <string name="expand_category">Rozbalit kategorii</string>
+    <string name="collapse_category">Sbalit kategorii</string>
     <!--ImportExport-->
     <string name="nav_preferences">Nastavení</string>
     <string name="password_preferences_encrypt_prompt">Zobrazí se výzva k zadání hlavního hesla, které bude použito k šifrování exportovaných předvoleb.</string>

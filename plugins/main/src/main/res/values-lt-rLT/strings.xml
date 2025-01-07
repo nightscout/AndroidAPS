@@ -39,6 +39,7 @@
     <string name="smscommunicator_stops_ns_with_code">Norėdami išjungti SMS nuotolinį valdymą, atsakykite kodu %1$s.\n\n Turėkite omenyje, kad jūs funkciją galėsite atnaujinti tik tiesiai iš AAPS pagrindinio telefono.</string>
     <string name="smscommunicator_stopped_sms">SMS nuotolinio valdymo funkcija sustojo. Norėdami ją atnaujinti, naudokite AAPS pagrindinį išmanųjį telefoną.</string>
     <string name="smscommunicator_calibration_reply_with_code">Norėdami nusiųsti kalibraciją %1$.2f, atsakykite kodu %2$s</string>
+    <string name="smscommunicator_bolus_failed">Boluso leidimas nepavyko. Prieš siųsdami kitą komandą, patikrinkite realią būseną!</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Minimalus minučių skaičius, kuris turi praeiti nuo vieno nuotolinio boluso iki kito</string>
     <string name="smscommunicator_remote_bolus_min_distance">Kiek mažiausiai minučių turi praeiti tarp vieno ir kito boluso</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">Jūsų saugumui, norėdami redaguoti šį pasirinkimą, jums reikia pridėti ne mažiau kaip 2 telefono numerius.</string>
@@ -188,7 +189,20 @@
     <string name="statuslights_bat_warning">Perspėjimo apie senkančią pompos bateriją slenkstis [%]</string>
     <string name="statuslights_bat_critical">Perspėjimo apie kritiškai senkančią pompos bateriją slenkstis [%]</string>
     <string name="statuslights_copy_ns">Kopijuoti nustatymus iš NS</string>
+    <string name="graph_scale_6h">6h</string>
+    <string name="graph_scale_12h">12h</string>
+    <string name="graph_scale_18h">18h</string>
+    <string name="graph_scale_24h">24h</string>
+    <string name="graph_long_scale_6h">6 val.</string>
+    <string name="graph_long_scale_12h">12 val.</string>
+    <string name="graph_long_scale_18h">18 val.</string>
+    <string name="graph_long_scale_24h">24 val.</string>
     <string name="a11y_graph">grafikas</string>
+    <string name="a11y_graph_scale">parinkti grafiko mastelį</string>
+    <string name="a11y_graph_scale_6h">6 valandų grafiko mastelis</string>
+    <string name="a11y_graph_scale_12h">12 valandų grafiko mastelis</string>
+    <string name="a11y_graph_scale_18h">18 valandų grafiko mastelis</string>
+    <string name="a11y_graph_scale_24h">24 valandų grafiko mastelis</string>
     <string name="a11y_insulin_label">insulinas</string>
     <string name="chart_menu">Grafiko meniu</string>
     <string name="a11y_bg_quality">glikemijos duomenų kokybė</string>
@@ -200,6 +214,8 @@
     <string name="overview_shortname">PRADŽIA</string>
     <string name="description_overview">Rodo dabartinę Ciklo būseną ir pagrindinių veiksmų mygtukus</string>
     <string name="overview_buttons_selection">Mygtukai</string>
+    <string name="show_calibration_button_summary">Siunčia kalibraciją į xDrip+ (įsitikinkite, kad xDrip+ nustatymuose Inter-App modulyje yra įjungta „Priimti kalibravimus“).</string>
+    <string name="show_cgm_button_summary">Atidaro xDrip+ (mygtukas ATGAL gražina į AAPS).</string>
     <string name="error_starting_cgm">Nepavyko paleisti NGJ programos.  Įsitikinkite, kad ji įdiegta.</string>
     <string name="not_available_full">Nėra duomenų</string>
     <string name="constraints_violation">Apribojimų pažeidimas</string>
@@ -221,6 +237,12 @@
     <string name="thirdcarbsincrement">Trečias angliavandenių kiekio žingsnis</string>
     <string name="cgm">NGJ</string>
     <string name="default_temptargets">Numatyti Laikini Tikslai</string>
+    <string name="eatingsoon_duration">Netrukus valgysiu trukmė (minutėmis)</string>
+    <string name="eatingsoon_target">Netrukus valgysiu tikslinė reikšmė</string>
+    <string name="activity_duration">Aktyvumo trukmė (minutėmis)</string>
+    <string name="activity_target">Aktyvumo tikslinė reikšmė</string>
+    <string name="hypo_duration">Hipoglikemijos trukmė (minutėmis)</string>
+    <string name="hypo_target">Hipoglikemijos tikslinė reikšmė</string>
     <string name="fill_bolus_title">Standartiniai insulino kiekiai kateterio/kaniulės užpildymui</string>
     <string name="button1">Mygtukas 1</string>
     <string name="button2">Mygtukas 2</string>
@@ -247,11 +269,13 @@
     <string name="overview_show_deviation_slope">Nuokrypiai</string>
     <string name="overview_show_activity">Aktyvumas</string>
     <string name="overview_show_bgi">Glikemijos įtaka</string>
+    <string name="overview_show_sensitivity">Jautrumo keitimas</string>
     <string name="overview_show_deviations">Nuokrypiai</string>
     <string name="overview_show_cob">Aktyvūs angliavandeniai</string>
     <string name="overview_show_iob">Aktyvus insulinas organizme</string>
     <string name="overview_show_basals">Bazė</string>
     <string name="overview_show_abs_insulin">Insulinas absoliučiais vienetais</string>
+    <string name="overview_show_variable_sens">Kintamas jautrumas</string>
     <string name="prediction_shortname">PROGN</string>
     <string name="basal_shortname">VB</string>
     <string name="deviation_shortname">DEV</string>
@@ -261,8 +285,11 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">ĮRAŠ</string>
     <string name="heartRate_shortname">ŠSD</string>
+    <string name="sensitivity_shortname">JAUTR%</string>
+    <string name="variable_sensitivity_shortname">VSENS</string>
     <string name="graph_scale">Grafiko mastelis</string>
     <string name="graph_menu_divider_header">Grafikas</string>
+    <string name="temp_basal_overview_short_name">T:</string>
     <!-- Skins -->
     <string name="classic_description">Originali išvaizda</string>
     <string name="lowres_description">Žemos rezoliucijos išvaizda</string>
@@ -274,4 +301,7 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Rodo atsinaujinančius pranešimus su trumpa Ciklo veiklos apžvalga</string>
     <string name="old_data">SENI DUOMENYS</string>
+    <string name="overview_show_steps">Žingsniai</string>
+    <string name="steps_shortname">ŽINGSNIAI</string>
+    <string name="simple_mode_enabled">Paprastas režimas įjungtas</string>
 </resources>

@@ -6,6 +6,8 @@
     <string name="automation_missing_task_name">Įveskite užduoties pavadinimą.</string>
     <string name="automation_missing_trigger">Nurodykite mažiausiai vieną sąlygą.</string>
     <string name="automation_missing_action">Nurodykite mažiausiai vieną veiksmą.</string>
+    <string name="exportsettings_message">Nustatymų eksportas: %1$s</string>
+    <string name="export_settings_short">Tekstas terapijoje:</string>
     <string name="alarm_message">Aliarmas: %1$s</string>
     <string name="alarm_short">Aliarmas:</string>
     <string name="message_short">Žin:</string>
@@ -87,9 +89,20 @@
     <string name="cobcompared">AAO %1$s %2$.0f</string>
     <string name="triggerHeartRate">Pulsas</string>
     <string name="triggerHeartRateDesc">Pulsas %1$s %2$.0f</string>
+    <string name="triggerSensorAgeLabel">Sensoriaus laikas</string>
+    <string name="triggerSensorAgeDesc">Sensoriaus laikas %1$s %2$.1f val.</string>
+    <string name="triggerCannulaAgeLabel">Kateterio laikas</string>
+    <string name="triggerCannulaAgeDesc">Kateterio laikas %1$s %2$.1f val.</string>
     <string name="triggerPodChangeLabel">Pod aktyvavimas</string>
     <string name="triggerPodChangeDesc">Pod aktyvuotas</string>
     <string name="triggerInsulinAgeLabel">Insulino laikas</string>
+    <string name="triggerInsulinAgeDesc">Insulino laikas %1$s %2$.1f val.</string>
+    <string name="triggerPumpBatteryAgeLabel">Pompos baterijos laikas</string>
+    <string name="triggerPumpBatteryAgeDesc">Pompos baterijos laikas %1$s %2$.1f val.</string>
+    <string name="triggerReservoirLevelLabel">Rezervuaro lygis</string>
+    <string name="triggerReservoirLevelDesc">Rezervuaro lygis %1$s %2$.0f</string>
+    <string name="triggerPumpBatteryLevelLabel">Pompos baterijos lygis</string>
+    <string name="triggerPumpBatteryLevelDesc">Pompos baterijos lygis %1$s %2$.0f</string>
     <string name="iob_u">AIO [U]:</string>
     <string name="distance_short">Atstumas [m]:</string>
     <string name="recurringTime">Pasikartojantis laikas</string>
@@ -118,9 +131,11 @@
     <string name="time_to_bolus">Laikas bolusui!\nĮjunkite Skaičiuotuvą ir pakartokite skaičiavimus.</string>
     <string name="error_setting_reminder">Klaida nustatant ateities perspėjimus</string>
     <!--    Autotune-->
+    <string name="autotune_profile_name">Autotune profilis %1$s</string>
     <string name="autotune_run">Paleisti Autotune</string>
     <string name="autotune_run_without_autoswitch">Autotune veikė be profilio keitimo</string>
     <string name="autotune_run_with_autoswitch">Autotune veikė ir profilis automatiškai pakeistas</string>
     <string name="autotune_run_with_error">Paskutinio Autotune klaida</string>
     <string name="autotune_run_cancelled">Nustatytas kitas Autotune veikimas, jis atšauktas</string>
+    <!--    Steps count-->
 </resources>

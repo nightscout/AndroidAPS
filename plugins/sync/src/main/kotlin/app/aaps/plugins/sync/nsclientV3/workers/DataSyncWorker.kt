@@ -21,6 +21,10 @@ class DataSyncWorker(
     @Inject lateinit var nsClientV3Plugin: NSClientV3Plugin
 
     override suspend fun doWorkAndLog(): Result {
+        if (nsClientV3Plugin.doingFullSync) {
+            rxBus.send(EventNSClientNewLog("● RUN", "Full sync finished"))
+            nsClientV3Plugin.endFullSync()
+        }
         if (activePlugin.activeNsClient?.hasWritePermission == true || nsClientV3Plugin.nsClientV3Service?.wsConnected == true) {
             rxBus.send(EventNSClientNewLog("► UPL", "Start"))
             dataSyncSelectorV3.doUpload()

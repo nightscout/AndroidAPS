@@ -124,7 +124,7 @@ class InsulinDialog : DialogFragmentWithDate() {
         super.onViewCreated(view, savedInstanceState)
 
         val pump = activePlugin.activePump
-        if (config.NSCLIENT) {
+        if (config.AAPSCLIENT) {
             binding.recordOnly.isChecked = true
             binding.recordOnly.isEnabled = false
         }

@@ -37,6 +37,7 @@ class AutomationEventObject(private val injector: HasAndroidInjector) : Automati
 
     override fun canRun(): Boolean = trigger.shouldRun()
     override fun preconditionCanRun(): Boolean = getPreconditions().shouldRun()
+    override fun firstActionIcon(): Int? = actions.firstOrNull()?.icon()
 
     internal fun getPreconditions(): TriggerConnector {
         val trigger = TriggerConnector(injector, TriggerConnector.Type.AND)

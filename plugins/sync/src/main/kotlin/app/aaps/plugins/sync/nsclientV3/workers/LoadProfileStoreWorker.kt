@@ -56,7 +56,7 @@ class LoadProfileStoreWorker(
                     nsClientV3Plugin.storeLastLoadedSrvModified()
                     aapsLogger.debug(LTag.NSCLIENT, "PROFILE: $profile")
                     rxBus.send(EventNSClientNewLog("◄ RCV", "1 PROFILE from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
-                    nsIncomingDataProcessor.processProfile(profile)
+                    nsIncomingDataProcessor.processProfile(profile, nsClientV3Plugin.doingFullSync)
                 } else {
                     rxBus.send(EventNSClientNewLog("◄ RCV PROFILE END", "No new data from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
                 }

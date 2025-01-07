@@ -8,9 +8,12 @@ import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LoggerUtils
+import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -20,12 +23,14 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.validators.DefaultEditTextValidator
 import app.aaps.core.validators.EditTextValidator
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
 import app.aaps.core.validators.preferences.AdaptiveStringPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.configuration.R
+import app.aaps.plugins.configuration.activities.DaggerAppCompatActivityWithResult
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.io.File
@@ -47,7 +52,8 @@ class MaintenancePlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     private val config: Config,
     private val fileListProvider: FileListProvider,
-    private val loggerUtils: LoggerUtils
+    private val loggerUtils: LoggerUtils,
+    private val uel: UserEntryLogger
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -188,7 +194,7 @@ class MaintenancePlugin @Inject constructor(
         builder.append("you have to do it manually)" + System.lineSeparator())
         builder.append("-------------------------------------------------------" + System.lineSeparator())
         builder.append(rh.gs(config.appName) + " " + config.VERSION + System.lineSeparator())
-        if (config.NSCLIENT) builder.append("NSCLIENT" + System.lineSeparator())
+        if (config.AAPSCLIENT) builder.append("NSCLIENT" + System.lineSeparator())
         builder.append("Build: " + config.BUILD_VERSION + System.lineSeparator())
         builder.append("Remote: " + config.REMOTE + System.lineSeparator())
         builder.append("Flavor: " + config.FLAVOR + config.BUILD_TYPE + System.lineSeparator())
@@ -227,6 +233,15 @@ class MaintenancePlugin @Inject constructor(
         emailIntent.putExtra(Intent.EXTRA_STREAM, attachmentUri)
         emailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         return emailIntent
+    }
+
+    fun selectAapsDirectory(activity: DaggerAppCompatActivityWithResult) {
+        try {
+            uel.log(Action.SELECT_DIRECTORY, Sources.Maintenance)
+            activity.accessTree?.launch(null)
+        } catch (_: Exception) {
+            ToastUtils.errorToast(activity, "Unable to launch activity. This is an Android issue")
+        }
     }
 
     override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {

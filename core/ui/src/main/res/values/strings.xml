@@ -430,6 +430,12 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
+    <string name="sensitivity">Sensitivity</string>
+    <string name="isf_for_carbs">ISF for Calculator and Carbs Absorption: %1$.1f</string>
+    <string name="autosens_long">Autosens Value: %.0f%%</string>
+    <string name="autosens_short">AS: %.0f%%</string>
+    <string name="algorithm_long">Autosens in algorithm: %.0f%%</string>
+    <string name="algorithm_short">Alg: %.0f%%</string>
     <string name="a11y_file">file</string>
     <string name="a11y_user">user</string>
 

@@ -30,7 +30,8 @@ enum class CwfMetadataKey(val key: String, @StringRes val label: Int, val isPref
     CWF_PREF_WATCH_SHOW_BG("key_show_bg", R.string.pref_show_bg, true),
     CWF_PREF_WATCH_SHOW_LOOP_STATUS("key_show_loop_status", R.string.pref_show_loop_status, true),
     CWF_PREF_WATCH_SHOW_WEEK_NUMBER("key_show_week_number", R.string.pref_show_week_number, true),
-    CWF_PREF_WATCH_SHOW_DATE("key_show_date", R.string.pref_show_date, true);
+    CWF_PREF_WATCH_SHOW_DATE("key_show_date", R.string.pref_show_date, true),
+    CWF_PREF_WATCH_SHOW_SECONDS("key_show_seconds", R.string.pref_show_seconds, true);
 
     companion object {
 

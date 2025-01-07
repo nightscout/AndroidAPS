@@ -73,6 +73,7 @@ import app.aaps.plugins.automation.triggers.TriggerPumpLastConnection
 import app.aaps.plugins.automation.triggers.TriggerRecurringTime
 import app.aaps.plugins.automation.triggers.TriggerReservoirLevel
 import app.aaps.plugins.automation.triggers.TriggerSensorAge
+import app.aaps.plugins.automation.triggers.TriggerStepsCount
 import app.aaps.plugins.automation.triggers.TriggerTempTarget
 import app.aaps.plugins.automation.triggers.TriggerTempTargetValue
 import app.aaps.plugins.automation.triggers.TriggerTime
@@ -145,7 +146,7 @@ class AutomationPlugin @Inject constructor(
         }
     }
 
-    override fun specialEnableCondition(): Boolean = !config.NSCLIENT
+    override fun specialEnableCondition(): Boolean = !config.AAPSCLIENT
 
     override fun onStart() {
         handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
@@ -420,7 +421,8 @@ class AutomationPlugin @Inject constructor(
             TriggerHeartRate(injector),
             TriggerSensorAge(injector),
             TriggerCannulaAge(injector),
-            TriggerReservoirLevel(injector)
+            TriggerReservoirLevel(injector),
+            TriggerStepsCount(injector)
         )
 
         val pump = activePlugin.activePump

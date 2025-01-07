@@ -237,7 +237,7 @@ class ActionsFragment : DaggerFragment() {
                 !pump.isSuspended() &&
                 !loop.isDisconnected).toVisibility()
 
-        if (!pump.pumpDescription.isExtendedBolusCapable || !pump.isInitialized() || pump.isSuspended() || loop.isDisconnected || pump.isFakingTempsByExtendedBoluses || config.NSCLIENT) {
+        if (!pump.pumpDescription.isExtendedBolusCapable || !pump.isInitialized() || pump.isSuspended() || loop.isDisconnected || pump.isFakingTempsByExtendedBoluses || config.AAPSCLIENT) {
             binding.extendedBolus.visibility = View.GONE
             binding.extendedBolusCancel.visibility = View.GONE
         } else {
@@ -253,7 +253,7 @@ class ActionsFragment : DaggerFragment() {
             }
         }
 
-        if (!pump.pumpDescription.isTempBasalCapable || !pump.isInitialized() || pump.isSuspended() || loop.isDisconnected || config.NSCLIENT) {
+        if (!pump.pumpDescription.isTempBasalCapable || !pump.isInitialized() || pump.isSuspended() || loop.isDisconnected || config.AAPSCLIENT) {
             binding.setTempBasal.visibility = View.GONE
             binding.cancelTempBasal.visibility = View.GONE
         } else {
@@ -283,7 +283,7 @@ class ActionsFragment : DaggerFragment() {
             cannulaUsageLabel.visibility = isPatchPump.not().toVisibility()
             cannulaUsage.visibility = isPatchPump.not().toVisibility()
 
-            if (!config.NSCLIENT) {
+            if (!config.AAPSCLIENT) {
                 statusLightHandler.updateStatusLights(
                     cannulaAge, cannulaUsage, insulinAge,
                     reservoirLevel, sensorAge, sensorLevel,

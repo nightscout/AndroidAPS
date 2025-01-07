@@ -8,6 +8,7 @@
     <string name="label_actions_tile">AAPS(Veiksmai)</string>
     <string name="label_temp_target_tile">AAPS(laikinas tikslas)</string>
     <string name="label_quick_wizard_tile">AAPS(greitas vedlys)</string>
+    <string name="label_user_action_tile">AAPS (Vartotojo Veiksmai)</string>
     <string name="label_warning_sync">Nėra duomenų!</string>
     <string name="label_warning_old">Seni duomenys!</string>
     <string name="label_warning_since">Nuo %1$s</string>
@@ -31,6 +32,8 @@
     <string name="pref_show_phone_battery">Rodyti telefono bateriją</string>
     <string name="pref_show_rig_battery">Rodyti įrenginio bateriją</string>
     <string name="pref_show_basal_rate">Rodyti valandinę bazę</string>
+    <string name="pref_show_temp_target">Rodyti Laikiną Tikslą</string>
+    <string name="pref_show_reservoir_level">Rodyti rezervuaro lygį</string>
     <string name="pref_show_loop_status">Rodyti Ciklo statusą</string>
     <string name="pref_show_bg">Rodyti KG</string>
     <string name="pref_show_bgi">Rodyti GĮ</string>
@@ -49,6 +52,10 @@
     <string name="pref_3_hours">3 val.</string>
     <string name="pref_4_hours">4 val.</string>
     <string name="pref_5_hours">5 val.</string>
+    <string name="pref_1_min">išjungta</string>
+    <string name="pref_5_min">5 min</string>
+    <string name="pref_10_min">10 min</string>
+    <string name="pref_15_min">15 min</string>
     <string name="pref_input_design">Įvesties Dizainas</string>
     <string name="pref_default">Numatytasis</string>
     <string name="pref_quick_righty">Greitai dešinėn</string>
@@ -86,6 +93,7 @@
     <string name="action_duration">Trukmė</string>
     <string name="action_tempt_confirmation">Laikino tikslo užklausa</string>
     <string name="action_quick_wizard_confirmation">Greitojo vedlio užklausa</string>
+    <string name="action_user_action_confirmation">Reikalingas vartotojo veiksmas</string>
     <string name="action_treatment_confirmation">Terapijos užklausa</string>
     <string name="action_bolus_confirmation">Boluso užklausa</string>
     <string name="action_wizard_confirmation">Skaičiavimo užklausa</string>
@@ -143,6 +151,8 @@
     <string name="pref_simplify_ui_sum">Rodyti tik laiką ir KG</string>
     <string name="pref_vibrate_hourly">Vibruoti kas valandą</string>
     <string name="pref_show_weeknumber">Rodyti savaitės numerį</string>
+    <string name="pref_include_external">Įtraukti išorines peržiūras į šabloną</string>
+    <string name="pref_switch_external">Įjungti išorinius duomenis ciferblate</string>
     <string name="custom_pref_show_seconds">Rodyti sekundes</string>
     <string name="digitalstyle_pref_your_style">Jūsų stilius:</string>
     <string name="digitalstyle_style_none">jokio stiliaus</string>
@@ -189,4 +199,29 @@
     <string name="old_warning">!senas!</string>
     <string name="error">!klaida!</string>
     <string name="pref_heartRateSampling">Pulsas</string>
+    <string name="pref_heartRateSmoothing">Širdies ritmo glodinimas</string>
+    <string name="pref_stepsSampling">Įjungti žingsnių skaičiavimą</string>
+    <string name="tile_tempt_1">Laikinas tikslas 1</string>
+    <string name="tile_tempt_2">Laikinas tikslas 2</string>
+    <string name="tile_tempt_3">Laikinas tikslas 3</string>
+    <string name="tile_tempt_4">Laikinas tikslas 4</string>
+    <string name="tile_action_1">Veiksmas 1</string>
+    <string name="tile_action_2">Veiksmas 2</string>
+    <string name="tile_action_3">Veiksmas 3</string>
+    <string name="tile_action_4">Veiksmas 4</string>
+    <string name="datalayer_notification_title">Duomenų perdavimas priekinio plano režimu</string>
+    <string name="datalayer_notification_text">AAPS veikia pagrindiniame režime. Norėdami paslėpti pranešimą, eikite į Kūrėjo nustatymus, Programų pranešimus, Leidžiamas peržiūros programas, pasirinkite AAPS, Išjunkite paslaugų kanalų pranešimus pagrindiniame režime.</string>
+    <string name="on">ĮJUNGTA</string>
+    <string name="off">IŠJUNGTA</string>
+    <string name="complication_full_status">Pilna informacija apie būklę</string>
+    <string name="complication_full_status_flipped">Pilna informacija apie būklę (atvirkščiai)</string>
+    <string name="complication_blood_glucose">Kraujo glikemija</string>
+    <string name="complication_br_cob_iob">VB, AAO &amp; AIO</string>
+    <string name="complication_br_iob">VB &amp; AIO</string>
+    <string name="complication_cob_iob">AAO &amp; AIO</string>
+    <string name="complication_cob_icon">AAO ikonėlė</string>
+    <string name="complication_cob_detailed">AAO detaliau</string>
+    <string name="complication_iob_icon">AIO ikonėlė</string>
+    <string name="complication_iob_detailed">AIO detaliau</string>
+    <string name="complication_uploader_phone_battery">Telefono baterija</string>
 </resources>

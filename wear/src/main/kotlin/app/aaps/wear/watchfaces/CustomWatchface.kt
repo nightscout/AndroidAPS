@@ -232,7 +232,7 @@ class CustomWatchface : BaseWatchFace() {
                     DynProvider.init(this, json)
                 }
 
-                enableSecond = json.optBoolean(JsonKeys.ENABLESECOND.key) && sp.getBoolean(R.string.key_show_seconds, true)
+                enableSecond = json.optBoolean(JsonKeys.ENABLESECOND.key) && sp.getBoolean(PrefMap.SHOW_SECOND.prefKey, PrefMap.SHOW_SECOND.defaultValue as Boolean)
                 pointSize = json.optInt(JsonKeys.POINTSIZE.key, 2)
                 dayNameFormat = json.optString(JsonKeys.DAYNAMEFORMAT.key, "E").takeIf { it.matches(Regex("E{1,4}")) } ?: "E"
                 monthFormat = json.optString(JsonKeys.MONTHFORMAT.key, "MMM").takeIf { it.matches(Regex("M{1,4}")) } ?: "MMM"
@@ -447,7 +447,7 @@ class CustomWatchface : BaseWatchFace() {
     private enum class ViewMap(
         val key: String,
         @IdRes val id: Int,
-        @StringRes val pref: Int? = null,
+        val pref: PrefMap? = null,                  // PreMap key should be typeBool == true to manage visibility of associated View
         @IdRes val defaultDrawable: Int? = null,
         val customDrawable: ResFileMap? = null,
         val customHigh: ResFileMap? = null,
@@ -476,66 +476,66 @@ class CustomWatchface : BaseWatchFace() {
         FREETEXT3(ViewKeys.FREETEXT3.key, R.id.freetext3),
         FREETEXT4(ViewKeys.FREETEXT4.key, R.id.freetext4),
         PATIENT_NAME_EXT1(ViewKeys.PATIENT_NAME_EXT1.key, R.id.patient_name_ext1, external = 1),
-        IOB1_EXT1(ViewKeys.IOB1_EXT1.key, R.id.iob1_ext1, R.string.key_show_iob, external = 1),
-        IOB2_EXT1(ViewKeys.IOB2_EXT1.key, R.id.iob2_ext1, R.string.key_show_iob, external = 1),
-        COB1_EXT1(ViewKeys.COB1_EXT1.key, R.id.cob1_ext1, R.string.key_show_cob, external = 1),
-        COB2_EXT1(ViewKeys.COB2_EXT1.key, R.id.cob2_ext1, R.string.key_show_cob, external = 1),
-        DELTA_EXT1(ViewKeys.DELTA_EXT1.key, R.id.delta_ext1, R.string.key_show_delta, external = 1),
-        AVG_DELTA_EXT1(ViewKeys.AVG_DELTA_EXT1.key, R.id.avg_delta_ext1, R.string.key_show_avg_delta, external = 1),
-        TEMP_TARGET_EXT1(ViewKeys.TEMP_TARGET_EXT1.key, R.id.temp_target_ext1, R.string.key_show_temp_target, external = 1),
-        RESERVOIR_EXT1(ViewKeys.RESERVOIR_EXT1.key, R.id.reservoir_ext1, R.string.key_show_reservoir_level, external = 1),
-        RIG_BATTERY_EXT1(ViewKeys.RIG_BATTERY_EXT1.key, R.id.rig_battery_ext1, R.string.key_show_rig_battery, external = 1),
-        BASALRATE_EXT1(ViewKeys.BASALRATE_EXT1.key, R.id.basalRate_ext1, R.string.key_show_temp_basal, external = 1),
-        BGI_EXT1(ViewKeys.BGI_EXT1.key, R.id.bgi_ext1, R.string.key_show_bgi, external = 1),
-        STATUS_EXT1(ViewKeys.STATUS_EXT1.key, R.id.status_ext1, R.string.key_show_external_status, external = 1),
-        LOOP_EXT1(ViewKeys.LOOP_EXT1.key, R.id.loop_ext1, R.string.key_show_external_status, external = 1),
-        DIRECTION_EXT1(ViewKeys.DIRECTION_EXT1.key, R.id.direction_ext1, R.string.key_show_direction, external = 1),
-        TIMESTAMP_EXT1(ViewKeys.TIMESTAMP_EXT1.key, R.id.timestamp_ext1, R.string.key_show_ago, external = 1),
-        SGV_EXT1(ViewKeys.SGV_EXT1.key, R.id.sgv_ext1, R.string.key_show_bg, external = 1),
+        IOB1_EXT1(ViewKeys.IOB1_EXT1.key, R.id.iob1_ext1, PrefMap.SHOW_IOB, external = 1),
+        IOB2_EXT1(ViewKeys.IOB2_EXT1.key, R.id.iob2_ext1, PrefMap.SHOW_IOB, external = 1),
+        COB1_EXT1(ViewKeys.COB1_EXT1.key, R.id.cob1_ext1,PrefMap.SHOW_COB, external = 1),
+        COB2_EXT1(ViewKeys.COB2_EXT1.key, R.id.cob2_ext1,PrefMap.SHOW_COB, external = 1),
+        DELTA_EXT1(ViewKeys.DELTA_EXT1.key, R.id.delta_ext1,PrefMap.SHOW_DELTA, external = 1),
+        AVG_DELTA_EXT1(ViewKeys.AVG_DELTA_EXT1.key, R.id.avg_delta_ext1, PrefMap.SHOW_AVG_DELTA, external = 1),
+        TEMP_TARGET_EXT1(ViewKeys.TEMP_TARGET_EXT1.key, R.id.temp_target_ext1, PrefMap.SHOW_TEMP_TARGET, external = 1),
+        RESERVOIR_EXT1(ViewKeys.RESERVOIR_EXT1.key, R.id.reservoir_ext1, PrefMap.SHOW_RESERVOIR_LEVEL, external = 1),
+        RIG_BATTERY_EXT1(ViewKeys.RIG_BATTERY_EXT1.key, R.id.rig_battery_ext1, PrefMap.SHOW_RIG_BATTERY, external = 1),
+        BASALRATE_EXT1(ViewKeys.BASALRATE_EXT1.key, R.id.basalRate_ext1, PrefMap.SHOW_TEMP_BASAL, external = 1),
+        BGI_EXT1(ViewKeys.BGI_EXT1.key, R.id.bgi_ext1, PrefMap.SHOW_BGI, external = 1),
+        STATUS_EXT1(ViewKeys.STATUS_EXT1.key, R.id.status_ext1, PrefMap.SHOW_LOOP_STATUS, external = 1),
+        LOOP_EXT1(ViewKeys.LOOP_EXT1.key, R.id.loop_ext1, PrefMap.SHOW_LOOP_STATUS, external = 1),
+        DIRECTION_EXT1(ViewKeys.DIRECTION_EXT1.key, R.id.direction_ext1, PrefMap.SHOW_DIRECTION, external = 1),
+        TIMESTAMP_EXT1(ViewKeys.TIMESTAMP_EXT1.key, R.id.timestamp_ext1, PrefMap.SHOW_AGO, external = 1),
+        SGV_EXT1(ViewKeys.SGV_EXT1.key, R.id.sgv_ext1, PrefMap.SHOW_BG, external = 1),
         PATIENT_NAME_EXT2(ViewKeys.PATIENT_NAME_EXT2.key, R.id.patient_name_ext2, external = 2),
-        IOB1_EXT2(ViewKeys.IOB1_EXT2.key, R.id.iob1_ext2, R.string.key_show_iob, external = 2),
-        IOB2_EXT2(ViewKeys.IOB2_EXT2.key, R.id.iob2_ext2, R.string.key_show_iob, external = 2),
-        COB1_EXT2(ViewKeys.COB1_EXT2.key, R.id.cob1_ext2, R.string.key_show_cob, external = 2),
-        COB2_EXT2(ViewKeys.COB2_EXT2.key, R.id.cob2_ext2, R.string.key_show_cob, external = 2),
-        DELTA_EXT2(ViewKeys.DELTA_EXT2.key, R.id.delta_ext2, R.string.key_show_delta, external = 2),
-        AVG_DELTA_EXT2(ViewKeys.AVG_DELTA_EXT2.key, R.id.avg_delta_ext2, R.string.key_show_avg_delta, external = 2),
-        TEMP_TARGET_EXT2(ViewKeys.TEMP_TARGET_EXT2.key, R.id.temp_target_ext2, R.string.key_show_temp_target, external = 2),
-        RESERVOIR_EXT2(ViewKeys.RESERVOIR_EXT2.key, R.id.reservoir_ext2, R.string.key_show_reservoir_level, external = 2),
-        RIG_BATTERY_EXT2(ViewKeys.RIG_BATTERY_EXT2.key, R.id.rig_battery_ext2, R.string.key_show_rig_battery, external = 2),
-        BASALRATE_EXT2(ViewKeys.BASALRATE_EXT2.key, R.id.basalRate_ext2, R.string.key_show_temp_basal, external = 2),
-        BGI_EXT2(ViewKeys.BGI_EXT2.key, R.id.bgi_ext2, R.string.key_show_bgi, external = 2),
-        STATUS_EXT2(ViewKeys.STATUS_EXT2.key, R.id.status_ext2, R.string.key_show_external_status, external = 2),
-        LOOP_EXT2(ViewKeys.LOOP_EXT2.key, R.id.loop_ext2, R.string.key_show_external_status, external = 2),
-        DIRECTION_EXT2(ViewKeys.DIRECTION_EXT2.key, R.id.direction_ext2, R.string.key_show_direction, external = 2),
-        TIMESTAMP_EXT2(ViewKeys.TIMESTAMP_EXT2.key, R.id.timestamp_ext2, R.string.key_show_ago, external = 2),
-        SGV_EXT2(ViewKeys.SGV_EXT2.key, R.id.sgv_ext2, R.string.key_show_bg, external = 2),
+        IOB1_EXT2(ViewKeys.IOB1_EXT2.key, R.id.iob1_ext2, PrefMap.SHOW_IOB, external = 2),
+        IOB2_EXT2(ViewKeys.IOB2_EXT2.key, R.id.iob2_ext2, PrefMap.SHOW_IOB, external = 2),
+        COB1_EXT2(ViewKeys.COB1_EXT2.key, R.id.cob1_ext2, PrefMap.SHOW_COB, external = 2),
+        COB2_EXT2(ViewKeys.COB2_EXT2.key, R.id.cob2_ext2, PrefMap.SHOW_COB, external = 2),
+        DELTA_EXT2(ViewKeys.DELTA_EXT2.key, R.id.delta_ext2, PrefMap.SHOW_DELTA, external = 2),
+        AVG_DELTA_EXT2(ViewKeys.AVG_DELTA_EXT2.key, R.id.avg_delta_ext2, PrefMap.SHOW_AVG_DELTA, external = 2),
+        TEMP_TARGET_EXT2(ViewKeys.TEMP_TARGET_EXT2.key, R.id.temp_target_ext2, PrefMap.SHOW_TEMP_TARGET, external = 2),
+        RESERVOIR_EXT2(ViewKeys.RESERVOIR_EXT2.key, R.id.reservoir_ext2, PrefMap.SHOW_RESERVOIR_LEVEL, external = 2),
+        RIG_BATTERY_EXT2(ViewKeys.RIG_BATTERY_EXT2.key, R.id.rig_battery_ext2, PrefMap.SHOW_RIG_BATTERY, external = 2),
+        BASALRATE_EXT2(ViewKeys.BASALRATE_EXT2.key, R.id.basalRate_ext2, PrefMap.SHOW_TEMP_BASAL, external = 2),
+        BGI_EXT2(ViewKeys.BGI_EXT2.key, R.id.bgi_ext2, PrefMap.SHOW_BGI, external = 2),
+        STATUS_EXT2(ViewKeys.STATUS_EXT2.key, R.id.status_ext2, PrefMap.SHOW_LOOP_STATUS, external = 2),
+        LOOP_EXT2(ViewKeys.LOOP_EXT2.key, R.id.loop_ext2, PrefMap.SHOW_LOOP_STATUS, external = 2),
+        DIRECTION_EXT2(ViewKeys.DIRECTION_EXT2.key, R.id.direction_ext2, PrefMap.SHOW_DIRECTION, external = 2),
+        TIMESTAMP_EXT2(ViewKeys.TIMESTAMP_EXT2.key, R.id.timestamp_ext2, PrefMap.SHOW_AGO, external = 2),
+        SGV_EXT2(ViewKeys.SGV_EXT2.key, R.id.sgv_ext2, PrefMap.SHOW_BG, external = 2),
         PATIENT_NAME(ViewKeys.PATIENT_NAME.key, R.id.patient_name),
-        IOB1(ViewKeys.IOB1.key, R.id.iob1, R.string.key_show_iob),
-        IOB2(ViewKeys.IOB2.key, R.id.iob2, R.string.key_show_iob),
-        COB1(ViewKeys.COB1.key, R.id.cob1, R.string.key_show_cob),
-        COB2(ViewKeys.COB2.key, R.id.cob2, R.string.key_show_cob),
-        DELTA(ViewKeys.DELTA.key, R.id.delta, R.string.key_show_delta),
-        AVG_DELTA(ViewKeys.AVG_DELTA.key, R.id.avg_delta, R.string.key_show_avg_delta),
-        TEMP_TARGET(ViewKeys.TEMP_TARGET.key, R.id.temp_target, R.string.key_show_temp_target),
-        RESERVOIR(ViewKeys.RESERVOIR.key, R.id.reservoir, R.string.key_show_reservoir_level),
-        UPLOADER_BATTERY(ViewKeys.UPLOADER_BATTERY.key, R.id.uploader_battery, R.string.key_show_uploader_battery),
-        RIG_BATTERY(ViewKeys.RIG_BATTERY.key, R.id.rig_battery, R.string.key_show_rig_battery),
-        BASALRATE(ViewKeys.BASALRATE.key, R.id.basalRate, R.string.key_show_temp_basal),
-        BGI(ViewKeys.BGI.key, R.id.bgi, R.string.key_show_bgi),
-        STATUS(ViewKeys.STATUS.key, R.id.status, R.string.key_show_external_status),
+        IOB1(ViewKeys.IOB1.key, R.id.iob1, PrefMap.SHOW_IOB),
+        IOB2(ViewKeys.IOB2.key, R.id.iob2, PrefMap.SHOW_IOB),
+        COB1(ViewKeys.COB1.key, R.id.cob1, PrefMap.SHOW_COB),
+        COB2(ViewKeys.COB2.key, R.id.cob2, PrefMap.SHOW_COB),
+        DELTA(ViewKeys.DELTA.key, R.id.delta, PrefMap.SHOW_DELTA),
+        AVG_DELTA(ViewKeys.AVG_DELTA.key, R.id.avg_delta, PrefMap.SHOW_AVG_DELTA),
+        TEMP_TARGET(ViewKeys.TEMP_TARGET.key, R.id.temp_target, PrefMap.SHOW_TEMP_TARGET),
+        RESERVOIR(ViewKeys.RESERVOIR.key, R.id.reservoir, PrefMap.SHOW_RESERVOIR_LEVEL),
+        UPLOADER_BATTERY(ViewKeys.UPLOADER_BATTERY.key, R.id.uploader_battery, PrefMap.SHOW_UPLOADER_BATTERY),
+        RIG_BATTERY(ViewKeys.RIG_BATTERY.key, R.id.rig_battery, PrefMap.SHOW_RIG_BATTERY),
+        BASALRATE(ViewKeys.BASALRATE.key, R.id.basalRate, PrefMap.SHOW_TEMP_BASAL),
+        BGI(ViewKeys.BGI.key, R.id.bgi, PrefMap.SHOW_BGI),
+        STATUS(ViewKeys.STATUS.key, R.id.status, PrefMap.SHOW_LOOP_STATUS),
         TIME(ViewKeys.TIME.key, R.id.time),
         HOUR(ViewKeys.HOUR.key, R.id.hour),
         MINUTE(ViewKeys.MINUTE.key, R.id.minute),
-        SECOND(ViewKeys.SECOND.key, R.id.second, R.string.key_show_seconds),
+        SECOND(ViewKeys.SECOND.key, R.id.second, PrefMap.SHOW_SECOND),
         TIMEPERIOD(ViewKeys.TIMEPERIOD.key, R.id.timePeriod),
-        DAY_NAME(ViewKeys.DAY_NAME.key, R.id.day_name, R.string.key_show_date),
-        DAY(ViewKeys.DAY.key, R.id.day, R.string.key_show_date),
-        WEEK_NUMBER(ViewKeys.WEEK_NUMBER.key, R.id.week_number, R.string.key_show_week_number),
-        MONTH(ViewKeys.MONTH.key, R.id.month, R.string.key_show_date),
-        LOOP(ViewKeys.LOOP.key, R.id.loop, R.string.key_show_external_status),
-        DIRECTION(ViewKeys.DIRECTION.key, R.id.direction, R.string.key_show_direction),
-        TIMESTAMP(ViewKeys.TIMESTAMP.key, R.id.timestamp, R.string.key_show_ago),
-        SGV(ViewKeys.SGV.key, R.id.sgv, R.string.key_show_bg),
+        DAY_NAME(ViewKeys.DAY_NAME.key, R.id.day_name, PrefMap.SHOW_DATE),
+        DAY(ViewKeys.DAY.key, R.id.day, PrefMap.SHOW_DATE),
+        WEEK_NUMBER(ViewKeys.WEEK_NUMBER.key, R.id.week_number, PrefMap.SHOW_WEEK_NUMBER),
+        MONTH(ViewKeys.MONTH.key, R.id.month, PrefMap.SHOW_DATE),
+        LOOP(ViewKeys.LOOP.key, R.id.loop, PrefMap.SHOW_LOOP_STATUS),
+        DIRECTION(ViewKeys.DIRECTION.key, R.id.direction, PrefMap.SHOW_DIRECTION),
+        TIMESTAMP(ViewKeys.TIMESTAMP.key, R.id.timestamp, PrefMap.SHOW_AGO),
+        SGV(ViewKeys.SGV.key, R.id.sgv, PrefMap.SHOW_BG),
         COVER_PLATE(
             key = ViewKeys.COVER_PLATE.key,
             id = R.id.cover_plate,
@@ -563,7 +563,7 @@ class CustomWatchface : BaseWatchFace() {
         SECOND_HAND(
             key = ViewKeys.SECOND_HAND.key,
             id = R.id.second_hand,
-            pref = R.string.key_show_seconds,
+            pref = PrefMap.SHOW_SECOND,
             defaultDrawable = R.drawable.second_hand,
             customDrawable = ResFileMap.SECOND_HAND,
             customHigh = ResFileMap.SECOND_HAND_HIGH,
@@ -615,7 +615,7 @@ class CustomWatchface : BaseWatchFace() {
         var twinView: ViewMap? = null
             get() = field ?: viewJson?.let { viewJson -> ViewMap.fromKey(viewJson.optString(JsonKeys.TWINVIEW.key)).also { twinView = it } }
 
-        fun visibility(): Boolean = this.pref?.let { cwf.sp.getBoolean(it, true) } != false
+        fun visibility(): Boolean = this.pref?.let { cwf.sp.getBoolean(it.prefKey, it.defaultValue as Boolean) } != false
 
         fun textDrawable(): Drawable? = textDrawable
             ?: cwf.resDataMap[viewJson?.optString(JsonKeys.BACKGROUND.key)]?.toDrawable(cwf.resources, width, height)?.also { textDrawable = it }
@@ -814,29 +814,32 @@ class CustomWatchface : BaseWatchFace() {
     }
 
     // This class containt mapping between keys used within json of Custom Watchface and preferences
-    private enum class PrefMap(val key: String, @StringRes val prefKey: Int, val typeBool: Boolean) {
+    // Note defaultValue should be identical to default value in xml file,
+    // defaultValue Type set to Any for future updates (Boolean or String) (key_digital_style_frame_style, key_digital_style_frame_color are strings...)
+    private enum class PrefMap(val key: String, @StringRes val prefKey: Int, val defaultValue: Any, val typeBool: Boolean) {
 
-        SHOW_IOB(CwfMetadataKey.CWF_PREF_WATCH_SHOW_IOB.key, R.string.key_show_iob, true),
-        SHOW_DETAILED_IOB(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DETAILED_IOB.key, R.string.key_show_detailed_iob, true),
-        SHOW_COB(CwfMetadataKey.CWF_PREF_WATCH_SHOW_COB.key, R.string.key_show_cob, true),
-        SHOW_DELTA(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DELTA.key, R.string.key_show_delta, true),
-        SHOW_AVG_DELTA(CwfMetadataKey.CWF_PREF_WATCH_SHOW_AVG_DELTA.key, R.string.key_show_avg_delta, true),
-        SHOW_TEMP_TARGET(CwfMetadataKey.CWF_PREF_WATCH_SHOW_TEMP_TARGET.key, R.string.key_show_temp_target, true),
-        SHOW_RESERVOIR_LEVEL(CwfMetadataKey.CWF_PREF_WATCH_SHOW_RESERVOIR_LEVEL.key, R.string.key_show_reservoir_level, true),
-        SHOW_DETAILED_DELTA(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DETAILED_DELTA.key, R.string.key_show_detailed_delta, true),
-        SHOW_UPLOADER_BATTERY(CwfMetadataKey.CWF_PREF_WATCH_SHOW_UPLOADER_BATTERY.key, R.string.key_show_uploader_battery, true),
-        SHOW_RIG_BATTERY(CwfMetadataKey.CWF_PREF_WATCH_SHOW_RIG_BATTERY.key, R.string.key_show_rig_battery, true),
-        SHOW_TEMP_BASAL(CwfMetadataKey.CWF_PREF_WATCH_SHOW_TEMP_BASAL.key, R.string.key_show_temp_basal, true),
-        SHOW_DIRECTION(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DIRECTION.key, R.string.key_show_direction, true),
-        SHOW_AGO(CwfMetadataKey.CWF_PREF_WATCH_SHOW_AGO.key, R.string.key_show_ago, true),
-        SHOW_BG(CwfMetadataKey.CWF_PREF_WATCH_SHOW_BG.key, R.string.key_show_bg, true),
-        SHOW_BGI(CwfMetadataKey.CWF_PREF_WATCH_SHOW_BGI.key, R.string.key_show_bgi, true),
-        SHOW_LOOP_STATUS(CwfMetadataKey.CWF_PREF_WATCH_SHOW_LOOP_STATUS.key, R.string.key_show_external_status, true),
-        SHOW_WEEK_NUMBER(CwfMetadataKey.CWF_PREF_WATCH_SHOW_WEEK_NUMBER.key, R.string.key_show_week_number, true),
-        SHOW_DATE(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DATE.key, R.string.key_show_date, true),
-        PREF_UNITS(JsonKeyValues.PREF_UNITS.key, R.string.key_units_mgdl, true),
-        PREF_DARK(JsonKeyValues.PREF_DARK.key, R.string.key_dark, true),
-        PREF_MATCH_DIVIDER(JsonKeyValues.PREF_MATCH_DIVIDER.key, R.string.key_match_divider, true);
+        SHOW_IOB(CwfMetadataKey.CWF_PREF_WATCH_SHOW_IOB.key, R.string.key_show_iob, true, true),
+        SHOW_DETAILED_IOB(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DETAILED_IOB.key, R.string.key_show_detailed_iob, false, true),
+        SHOW_COB(CwfMetadataKey.CWF_PREF_WATCH_SHOW_COB.key, R.string.key_show_cob, true, true),
+        SHOW_DELTA(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DELTA.key, R.string.key_show_delta, true, true),
+        SHOW_AVG_DELTA(CwfMetadataKey.CWF_PREF_WATCH_SHOW_AVG_DELTA.key, R.string.key_show_avg_delta, true, true),
+        SHOW_TEMP_TARGET(CwfMetadataKey.CWF_PREF_WATCH_SHOW_TEMP_TARGET.key, R.string.key_show_temp_target, true, true),
+        SHOW_RESERVOIR_LEVEL(CwfMetadataKey.CWF_PREF_WATCH_SHOW_RESERVOIR_LEVEL.key, R.string.key_show_reservoir_level, true, true),
+        SHOW_DETAILED_DELTA(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DETAILED_DELTA.key, R.string.key_show_detailed_delta, false, true),
+        SHOW_UPLOADER_BATTERY(CwfMetadataKey.CWF_PREF_WATCH_SHOW_UPLOADER_BATTERY.key, R.string.key_show_uploader_battery, true, true),
+        SHOW_RIG_BATTERY(CwfMetadataKey.CWF_PREF_WATCH_SHOW_RIG_BATTERY.key, R.string.key_show_rig_battery, false, true),
+        SHOW_TEMP_BASAL(CwfMetadataKey.CWF_PREF_WATCH_SHOW_TEMP_BASAL.key, R.string.key_show_temp_basal, true, true),
+        SHOW_DIRECTION(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DIRECTION.key, R.string.key_show_direction, true, true),
+        SHOW_AGO(CwfMetadataKey.CWF_PREF_WATCH_SHOW_AGO.key, R.string.key_show_ago, true, true),
+        SHOW_BG(CwfMetadataKey.CWF_PREF_WATCH_SHOW_BG.key, R.string.key_show_bg, true, true),
+        SHOW_BGI(CwfMetadataKey.CWF_PREF_WATCH_SHOW_BGI.key, R.string.key_show_bgi, false, true),
+        SHOW_LOOP_STATUS(CwfMetadataKey.CWF_PREF_WATCH_SHOW_LOOP_STATUS.key, R.string.key_show_external_status, true, true),
+        SHOW_WEEK_NUMBER(CwfMetadataKey.CWF_PREF_WATCH_SHOW_WEEK_NUMBER.key, R.string.key_show_week_number, false, true),
+        SHOW_DATE(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DATE.key, R.string.key_show_date, false, true),
+        SHOW_SECOND(CwfMetadataKey.CWF_PREF_WATCH_SHOW_SECONDS.key, R.string.key_show_seconds, true, true),
+        PREF_UNITS(JsonKeyValues.PREF_UNITS.key, R.string.key_units_mgdl, true, true),
+        PREF_DARK(JsonKeyValues.PREF_DARK.key, R.string.key_dark, true, true),
+        PREF_MATCH_DIVIDER(JsonKeyValues.PREF_MATCH_DIVIDER.key, R.string.key_match_divider, false, true);
 
         var value: String = ""
 
@@ -1141,7 +1144,7 @@ class CustomWatchface : BaseWatchFace() {
         val prefKey = json.optString(JsonKeys.PREFKEY.key)
         PrefMap.fromKey(prefKey)?.let { prefMap ->
             val value = valPref[prefMap.key]
-                ?: (if (prefMap.typeBool) sp.getBoolean(prefMap.prefKey, false).toString() else sp.getString(prefMap.prefKey, "")).also {
+                ?: (if (prefMap.typeBool) sp.getBoolean(prefMap.prefKey, prefMap.defaultValue as Boolean).toString() else sp.getString(prefMap.prefKey, prefMap.defaultValue as String)).also {
                     valPref[prefMap.key] = it
                 }
             json.optJSONObject(value)?.let { nextJson ->
@@ -1169,7 +1172,7 @@ class CustomWatchface : BaseWatchFace() {
     }
 
     private fun checkPref() = valPref.any { (prefMap, s) ->
-        s != PrefMap.fromKey(prefMap)?.let { if (it.typeBool) sp.getBoolean(it.prefKey, false).toString() else sp.getString(it.prefKey, "") }
+        s != PrefMap.fromKey(prefMap)?.let { if (it.typeBool) sp.getBoolean(it.prefKey, it.defaultValue as Boolean).toString() else sp.getString(it.prefKey, it.defaultValue as String) }
     }
 }
 

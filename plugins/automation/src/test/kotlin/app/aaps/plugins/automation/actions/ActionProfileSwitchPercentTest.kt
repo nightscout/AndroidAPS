@@ -37,7 +37,7 @@ class ActionProfileSwitchPercentTest : ActionsTestBase() {
     }
 
     @Test fun iconTest() {
-        assertThat(sut.icon()).isEqualTo(app.aaps.core.ui.R.drawable.ic_actions_profileswitch)
+        assertThat(sut.icon()).isEqualTo(app.aaps.core.ui.R.drawable.ic_actions_profileswitch_24dp)
     }
 
     @Test fun doActionTest() {

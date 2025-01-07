@@ -65,9 +65,13 @@
     <string name="pref_show_ago">Show Ago</string>
     <string name="pref_show_week_number">Show Week number</string>
     <string name="pref_show_date">Show Date</string>
+    <string name="pref_show_seconds">Show Seconds</string>
     <string name="default_custom_watchface_comment">Default watchface, you can click on EXPORT WATCHFACE button to generate a template</string>
     <string name="default_custom_watchface_external_comment">Default watchface including external views for followers, you can click on EXPORT WATCHFACE button to generate a template</string>
     <string name="wear_default_watchface">Default Watchface</string>
     <string name="wear_more_watchfaces">More watchfaces</string>
+    <string name="temp_basal_absolute_rate">%1$.2f U/h @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_extended_bolus">E %1$.2f U/h @%2$s %3$d/%4$d min</string>
 
 </resources>

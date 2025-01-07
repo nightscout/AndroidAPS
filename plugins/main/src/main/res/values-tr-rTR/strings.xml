@@ -153,8 +153,6 @@
     <string name="dia_short">İES</string>
     <string name="target_short">HDF</string>
     <string name="basal_short">BAZ</string>
-    <string name="isf_dynamic_label">Algoritmanız İDF\'nin dinamik hesaplamasını sağlayabilir. Aşağıdaki değerler yalnızca eksik veri olması durumunda geri dönüş olarak kullanılır</string>
-    <string name="ic_dynamic_label">Algoritmanız Kİ\'nin dinamik hesaplamasını sağlayabilir. Aşağıdaki değerler yalnızca eksik veri olması durumunda geri dönüş olarak kullanılır</string>
     <!-- Actions -->
     <string name="actions">Eylemler</string>
     <string name="description_actions">Ortak özelliklere hızlıca erişmek için bazı düğmeler</string>

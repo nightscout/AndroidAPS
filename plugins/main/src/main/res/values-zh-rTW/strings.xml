@@ -153,8 +153,8 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">目標</string>
     <string name="basal_short">基礎速率</string>
-    <string name="isf_dynamic_label">你已啟用動態計算 ISF，以下數值僅在資料遺失時作為備用。</string>
-    <string name="ic_dynamic_label">你已啟用動態計算 IC，以下數值僅在資料遺失時作為備用。</string>
+    <string name="isf_dynamic_label_warning">你的演算法可以動態計算 ISF（胰島素敏感因子）。以下數值僅在資料遺失時作為備援使用。</string>
+    <string name="ic_dynamic_label_warning">你的演算法可以動態計算 IC（碳水化合物比值）。以下數值僅在資料遺失時作為備援使用。</string>
     <!-- Actions -->
     <string name="actions">手動操作</string>
     <string name="description_actions">一些快速查看常用功能的按鈕</string>

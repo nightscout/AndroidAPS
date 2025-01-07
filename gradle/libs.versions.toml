@@ -6,7 +6,7 @@ kotlin = "2.1.0"
 wearable = "2.9.0"
 room = "2.6.1"
 dagger = "2.54"
-mockito = "5.14.2"
+mockito = "5.15.2"
 junit = "5.11.4"
 okhttp = "4.12.0"
 retrofit = "2.11.0"
@@ -114,7 +114,7 @@ com-squareup-retrofit2-adapter-rxjava3 = { group = "com.squareup.retrofit2", nam
 com-squareup-retrofit2-converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
 
 org-apache-commons-lang3 = { group = "org.apache.commons", name = "commons-lang3", version = "3.17.0" }
-org-mozilla-rhino = { group = "org.mozilla", name = "rhino", version = "1.7.15" }
+org-mozilla-rhino = { group = "org.mozilla", name = "rhino", version = "1.8.0" }
 
 org-mockito-android = { group = "org.mockito", name = "mockito-android", version.ref = "mockito" }
 org-mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
@@ -131,7 +131,7 @@ com-madgag-spongycastle = { group = "com.madgag.spongycastle", name = "core", ve
 com-caverock-androidsvg = { group = "com.caverock", name = "androidsvg", version = "1.4" }
 net-danlew-android-joda = { group = "net.danlew", name = "android.joda", version = "2.13.0" }
 joda-time = { group = "joda-time", name = "joda-time", version = "2.13.0" }
-org-json = { group = "org.json", name = "json", version = "20240303" }
+org-json = { group = "org.json", name = "json", version = "20241224" }
 org-skyscreamer-jsonassert = { group = "org.skyscreamer", name = "jsonassert", version = "1.5.3" }
 com-scottyab-rootbeer-lib = { group = "com.scottyab", name = "rootbeer-lib", version = "0.1.1" }
 com-eatthepath-java-otp = { group = "com.eatthepath", name = "java-otp", version = "0.4.0" }

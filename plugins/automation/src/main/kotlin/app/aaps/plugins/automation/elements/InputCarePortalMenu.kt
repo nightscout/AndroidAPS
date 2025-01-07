@@ -36,10 +36,10 @@ class InputCarePortalMenu(private val rh: ResourceHelper) : Element {
             }
         @get:DrawableRes val drawableRes: Int
             get() = when (this) {
-                NOTE         -> app.aaps.core.objects.R.drawable.ic_cp_note
-                EXERCISE     -> app.aaps.core.objects.R.drawable.ic_cp_exercise
-                QUESTION     -> app.aaps.core.objects.R.drawable.ic_cp_question
-                ANNOUNCEMENT -> app.aaps.core.objects.R.drawable.ic_cp_announcement
+                NOTE         -> app.aaps.core.objects.R.drawable.ic_cp_note_24dp
+                EXERCISE     -> app.aaps.core.objects.R.drawable.ic_cp_exercise_24dp
+                QUESTION     -> app.aaps.core.objects.R.drawable.ic_cp_question_24dp
+                ANNOUNCEMENT -> app.aaps.core.objects.R.drawable.ic_cp_announcement_24dp
             }
 
         companion object {

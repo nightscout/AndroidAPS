@@ -41,6 +41,7 @@ import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.utils.isRunningTest
 import app.aaps.plugins.configuration.R
 import app.aaps.plugins.configuration.activities.DaggerAppCompatActivityWithResult
+import app.aaps.plugins.configuration.maintenance.MaintenancePlugin
 import app.aaps.plugins.configuration.setupwizard.elements.SWBreak
 import app.aaps.plugins.configuration.setupwizard.elements.SWButton
 import app.aaps.plugins.configuration.setupwizard.elements.SWEditEncryptedPassword
@@ -75,7 +76,8 @@ class SWDefinition @Inject constructor(
     private val cryptoUtil: CryptoUtil,
     private val config: Config,
     private val hardLimits: HardLimits,
-    private val uiInteraction: UiInteraction
+    private val uiInteraction: UiInteraction,
+    private val maintenancePlugin: MaintenancePlugin
 ) {
 
     lateinit var activity: AppCompatActivity
@@ -86,7 +88,7 @@ class SWDefinition @Inject constructor(
             when {
                 config.APS -> swDefinitionFull()
                 config.PUMPCONTROL -> swDefinitionPumpControl()
-                config.NSCLIENT -> swDefinitionNSClient()
+                config.AAPSCLIENT  -> swDefinitionNSClient()
             }
         }
         return screens
@@ -172,7 +174,7 @@ class SWDefinition @Inject constructor(
             .add(SWButton(injector)
                      .text(R.string.aaps_directory)
                      .visibility { preferences.getIfExists(StringKey.AapsDirectoryUri) == null }
-                     .action { (activity as DaggerAppCompatActivityWithResult).accessTree?.launch(null) })
+                     .action { maintenancePlugin.selectAapsDirectory(activity as DaggerAppCompatActivityWithResult) })
             .add(SWBreak(injector))
             .add(SWEventListener(injector, EventAAPSDirectorySelected::class.java).label(app.aaps.core.ui.R.string.settings).initialStatus(preferences.get(StringKey.AapsDirectoryUri)))
             .add(SWBreak(injector))

@@ -343,10 +343,10 @@ import javax.inject.Singleton
         }
         val (temporaryBasal, extendedBolus, _, profile) = pumpSync.expectedPumpState()
         if (temporaryBasal != null && profile != null) {
-            ret += rh.gs(R.string.equil_common_short_status_temp_basal, temporaryBasal.toStringFull(dateUtil, decimalFormatter) + "\n")
+            ret += rh.gs(R.string.equil_common_short_status_temp_basal, temporaryBasal.toStringFull(dateUtil, rh) + "\n")
         }
         if (extendedBolus != null) {
-            ret += rh.gs(R.string.equil_common_short_status_extended_bolus, extendedBolus.toStringFull(dateUtil, decimalFormatter) + "\n")
+            ret += rh.gs(R.string.equil_common_short_status_extended_bolus, extendedBolus.toStringFull(dateUtil, rh) + "\n")
         }
         ret += rh.gs(R.string.equil_common_short_status_reservoir, reservoirLevel)
         return ret.trim { it <= ' ' }
