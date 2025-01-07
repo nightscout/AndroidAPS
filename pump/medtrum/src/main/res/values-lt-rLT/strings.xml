@@ -3,7 +3,7 @@
     <!-- MedtrumPump -->
     <string name="medtrum">Medtrum</string>
     <string name="medtrum_pump_shortname">MT</string>
-    <string name="medtrum_pump_description">Medtrum Nano ir Medtrum 300U integracija</string>
+    <string name="medtrum_pump_description">Medtrum Nano ir Medtrum 300U pompos integracija</string>
     <string name="medtrum_pump_setting">Medtrum pompos nustatymai</string>
     <string name="pump_error">Pompos klaida: %1$s !! </string>
     <string name="pump_warning">Pompos įspėjimas: %1$s </string>
@@ -12,7 +12,7 @@
     <string name="pump_is_suspended_day_max">Pompa sustabdyta dėl viršyto paros insulino limito</string>
     <string name="patch_not_active">Rezervuaras neaktyvus</string>
     <string name="pump_setting_failed">Naudotojo nustatymai neįrašyti!</string>
-    <string name="pump_sync_error">Klaida sinchronizuojant istoriją iš pompos, įrašas buvo praleistas. Patikrinkite terapijos skirtuką, kad įsitikintumėte, ar bolusas buvo teisingai sinchronizuotas. Atidėkite pranešimą, ir, jei klaida pasikartos, pakeiskite pompos pagrindą ar pleistrą.</string>
+    <string name="pump_sync_error">Klaida įkeliant pompos istoriją, įrašas buvo praleistas. Patikrinkite terapijos skirtuką, kad įsitikintumėte, ar bolusas buvo teisingai sinchronizuotas. Atidėkite pranešimą, ir, jei klaida pasikartos, pakeiskite pompos pagrindą ar rezervuarą.</string>
     <!-- overview fragment -->
     <string name="ble_status_label">BLE statusas</string>
     <string name="last_connection_label">Pask. prijungimas</string>
