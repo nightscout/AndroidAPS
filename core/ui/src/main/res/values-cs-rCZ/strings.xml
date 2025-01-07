@@ -413,6 +413,12 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Bazál</string>
     <string name="basalpct">Bazál %</string>
+    <string name="sensitivity">Citlivost</string>
+    <string name="isf_for_carbs">ISF pro kalkulačku a absorbci sacharidů: %1$.1f</string>
+    <string name="autosens_long">Hodnota Autosense: %.0f%%</string>
+    <string name="autosens_short">AS: %.0f%%</string>
+    <string name="algorithm_long">Detekce citlivosti algoritmu: %.0f%%</string>
+    <string name="algorithm_short">Alg: %.0f%%</string>
     <string name="a11y_file">soubor</string>
     <string name="a11y_user">uživatel</string>
     <!-- Autotune -->

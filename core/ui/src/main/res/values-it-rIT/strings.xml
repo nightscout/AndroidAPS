@@ -413,6 +413,12 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basale</string>
     <string name="basalpct">% basale</string>
+    <string name="sensitivity">Sensibilità</string>
+    <string name="isf_for_carbs">ISF per Calcolatrice e Assorbimento di Carbo: %1$.1f</string>
+    <string name="autosens_long">Valore Autosens: %.0f%%</string>
+    <string name="autosens_short">AS: %.0f%%</string>
+    <string name="algorithm_long">Autosens nell\'algoritmo: %.0f%%</string>
+    <string name="algorithm_short">Alg: %.0f%%</string>
     <string name="a11y_file">file</string>
     <string name="a11y_user">utente</string>
     <!-- Autotune -->
