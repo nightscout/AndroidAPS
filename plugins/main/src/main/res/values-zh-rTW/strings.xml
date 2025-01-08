@@ -219,6 +219,7 @@
     <string name="show_calibration_button_summary">以下是翻譯成台灣繁體中文的結果：
 
 發送校準到 xDrip+（請確保在 xDrip+ 的設定中啟用「接受校準」功能）。</string>
+    <string name="show_cgm_button_summary">打開 xDrip+ 或 Dexcom 應用程式（您可以使用返回鍵回到 AAPS）。</string>
     <string name="not_available_full">不可用</string>
     <string name="constraints_violation">約束違反</string>
     <string name="change_your_input">更改您的輸入！</string>
