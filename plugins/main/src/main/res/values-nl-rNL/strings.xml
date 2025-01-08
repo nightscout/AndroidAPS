@@ -217,8 +217,6 @@
     <string name="description_overview">Toont de huidige Loop-status en knoppen voor meest gebruikte acties</string>
     <string name="overview_buttons_selection">Knoppen</string>
     <string name="show_calibration_button_summary">Verzend een kalibratie naar xDrip+ (zorg ervoor dat \'Accept Calibrations\' is ingeschakeld in xDrip+ onder Inter-App instellingen).</string>
-    <string name="show_cgm_button_summary">Opent xDrip+ (je kunt de terug knop gebruiken om terug te keren naar AAPS).</string>
-    <string name="error_starting_cgm">Kon de CGM applicatie niet starten. Zorg dat deze geïnstalleerd is.</string>
     <string name="not_available_full">Niet beschikbaar</string>
     <string name="constraints_violation">In strijd met beperkingen</string>
     <string name="change_your_input">Wijzig het ingegevene!</string>
