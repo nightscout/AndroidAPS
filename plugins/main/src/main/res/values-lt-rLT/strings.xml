@@ -217,8 +217,6 @@
     <string name="description_overview">Rodo dabartinę Ciklo būseną ir pagrindinių veiksmų mygtukus</string>
     <string name="overview_buttons_selection">Mygtukai</string>
     <string name="show_calibration_button_summary">Siunčia kalibraciją į xDrip+ (įsitikinkite, kad xDrip+ nustatymuose Inter-App modulyje yra įjungta „Priimti kalibravimus“).</string>
-    <string name="show_cgm_button_summary">Atidaro xDrip+ (mygtukas ATGAL gražina į AAPS).</string>
-    <string name="error_starting_cgm">Nepavyko paleisti NGJ programos.  Įsitikinkite, kad ji įdiegta.</string>
     <string name="not_available_full">Nėra duomenų</string>
     <string name="constraints_violation">Apribojimų pažeidimas</string>
     <string name="change_your_input">Pakeiskite įvestus duomenis!</string>
