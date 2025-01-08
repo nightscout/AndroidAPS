@@ -215,8 +215,6 @@
     <string name="description_overview">Отображает текущее состояние цикла и часто используемые кнопки</string>
     <string name="overview_buttons_selection">Кнопки</string>
     <string name="show_calibration_button_summary">Отправляет калибровку xDrip+ (убедитесь, что параметр \'Принимать калибровки\' включен в xDrip+ в Настройках между приложениями).</string>
-    <string name="show_cgm_button_summary">Открывает xDrip+ (чтобы вернуться к AAPS нажмите кнопку Назад).</string>
-    <string name="error_starting_cgm">Не удалось запустить приложения мониторинга СК. Убедитесь, что оно установлено.</string>
     <string name="not_available_full">Недоступно</string>
     <string name="constraints_violation">ограничение нарушено</string>
     <string name="change_your_input">измените введенные данные</string>
