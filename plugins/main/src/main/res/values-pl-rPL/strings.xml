@@ -215,8 +215,6 @@
     <string name="description_overview">Wyświetla bieżący stan twojej pętli i przyciski dla większości typowych działań</string>
     <string name="overview_buttons_selection">Przyciski</string>
     <string name="show_calibration_button_summary">Wysyła kalibrację do xDrip+ (upewnij się, że \'Akceptuj kalibracje\' są włączone w xDrip+ w sekcji \'Ustawienia innych aplikacji\').</string>
-    <string name="show_cgm_button_summary">Otwiera xDrip+ (możesz wrócić do AAPS androidowym przyciskiem \"cofnij\").</string>
-    <string name="error_starting_cgm">Nie można uruchomić aplikacji CGM. Upewnij się, że została zainstalowana.</string>
     <string name="not_available_full">Niedostępne</string>
     <string name="constraints_violation">Naruszenie ograniczeń</string>
     <string name="change_your_input">Zmień wprowadzone dane!</string>
