@@ -172,6 +172,19 @@ class NSClientV3Plugin @Inject constructor(
     internal var firstLoadContinueTimestamp = LastModified(LastModified.Collections()) // timestamp of last fetched data for every collection during initial load
     internal var initialLoadFinished = false
 
+    private val fullSyncSemaphore = Object()
+    /**
+     * Set to true if full sync is requested from fragment.
+     * In this case we must enable accepting all data from NS even when disabled in preferences
+     */
+    private var fullSyncRequested: Boolean = false
+
+    /**
+     * Full sync is performed right now
+     */
+    var doingFullSync = false
+        private set
+
     private val serviceConnection: ServiceConnection = object : ServiceConnection {
         override fun onServiceDisconnected(name: ComponentName) {
             aapsLogger.debug(LTag.NSCLIENT, "Service is disconnected")
@@ -300,7 +313,7 @@ class NSClientV3Plugin @Inject constructor(
             handler?.post { executeLoop("REFRESH TOKEN", forceNew = true) }
             return
         }
-        if (config.NSCLIENT || nsClientSource.isEnabled()) {
+        if (config.AAPSCLIENT || nsClientSource.isEnabled()) {
             var origin = "5_MIN_AFTER_BG"
             var forceNew = true
             var toTime = lastLoadedSrvModified.collections.entries + T.mins(5).plus(T.secs(10)).msecs()
@@ -404,6 +417,9 @@ class NSClientV3Plugin @Inject constructor(
         initialLoadFinished = false
         storeLastLoadedSrvModified()
         dataSyncSelectorV3.resetToNextFullSync()
+        synchronized(fullSyncSemaphore) {
+            fullSyncRequested = true
+        }
     }
 
     override fun handleClearAlarm(originalAlarm: NSAlarm, silenceTimeInMilliseconds: Long) {
@@ -472,7 +488,7 @@ class NSClientV3Plugin @Inject constructor(
                 }
                 result.identifier?.let {
                     dataPair.value.ids.nightscoutId = it
-                    storeDataForDb.nsIdDeviceStatuses.add(dataPair.value)
+                    storeDataForDb.addToNsIdDeviceStatuses(dataPair.value)
                     sp.putBoolean(app.aaps.core.utils.R.string.key_objectives_pump_status_is_available_in_ns, true)
                 }
                 slowDown()
@@ -519,7 +535,7 @@ class NSClientV3Plugin @Inject constructor(
                 }
                 result.identifier?.let {
                     dataPair.value.ids.nightscoutId = it
-                    storeDataForDb.nsIdGlucoseValues.add(dataPair.value)
+                    storeDataForDb.addToNsIdGlucoseValues(dataPair.value)
                 }
                 slowDown()
                 return true
@@ -565,7 +581,7 @@ class NSClientV3Plugin @Inject constructor(
                 }
                 result.identifier?.let {
                     dataPair.value.ids.nightscoutId = it
-                    storeDataForDb.nsIdFoods.add(dataPair.value)
+                    storeDataForDb.addToNsIdFoods(dataPair.value)
                 }
                 slowDown()
                 return true
@@ -634,52 +650,52 @@ class NSClientV3Plugin @Inject constructor(
                         when (dataPair) {
                             is DataSyncSelector.PairBolus                  -> {
                                 dataPair.value.ids.nightscoutId = it
-                                storeDataForDb.nsIdBoluses.add(dataPair.value)
+                                storeDataForDb.addToNsIdBoluses(dataPair.value)
                             }
 
                             is DataSyncSelector.PairCarbs                  -> {
                                 dataPair.value.ids.nightscoutId = it
-                                storeDataForDb.nsIdCarbs.add(dataPair.value)
+                                storeDataForDb.addToNsIdCarbs(dataPair.value)
                             }
 
                             is DataSyncSelector.PairBolusCalculatorResult  -> {
                                 dataPair.value.ids.nightscoutId = it
-                                storeDataForDb.nsIdBolusCalculatorResults.add(dataPair.value)
+                                storeDataForDb.addToNsIdBolusCalculatorResults(dataPair.value)
                             }
 
                             is DataSyncSelector.PairTemporaryTarget        -> {
                                 dataPair.value.ids.nightscoutId = it
-                                storeDataForDb.nsIdTemporaryTargets.add(dataPair.value)
+                                storeDataForDb.addToNsIdTemporaryTargets(dataPair.value)
                             }
 
                             is DataSyncSelector.PairTherapyEvent           -> {
                                 dataPair.value.ids.nightscoutId = it
-                                storeDataForDb.nsIdTherapyEvents.add(dataPair.value)
+                                storeDataForDb.addToNsIdTherapyEvents(dataPair.value)
                             }
 
                             is DataSyncSelector.PairTemporaryBasal         -> {
                                 dataPair.value.ids.nightscoutId = it
-                                storeDataForDb.nsIdTemporaryBasals.add(dataPair.value)
+                                storeDataForDb.addToNsIdTemporaryBasals(dataPair.value)
                             }
 
                             is DataSyncSelector.PairExtendedBolus          -> {
                                 dataPair.value.ids.nightscoutId = it
-                                storeDataForDb.nsIdExtendedBoluses.add(dataPair.value)
+                                storeDataForDb.addToNsIdExtendedBoluses(dataPair.value)
                             }
 
                             is DataSyncSelector.PairProfileSwitch          -> {
                                 dataPair.value.ids.nightscoutId = it
-                                storeDataForDb.nsIdProfileSwitches.add(dataPair.value)
+                                storeDataForDb.addToNsIdProfileSwitches(dataPair.value)
                             }
 
                             is DataSyncSelector.PairEffectiveProfileSwitch -> {
                                 dataPair.value.ids.nightscoutId = it
-                                storeDataForDb.nsIdEffectiveProfileSwitches.add(dataPair.value)
+                                storeDataForDb.addToNsIdEffectiveProfileSwitches(dataPair.value)
                             }
 
                             is DataSyncSelector.PairOfflineEvent           -> {
                                 dataPair.value.ids.nightscoutId = it
-                                storeDataForDb.nsIdOfflineEvents.add(dataPair.value)
+                                storeDataForDb.addToNsIdOfflineEvents(dataPair.value)
                             }
 
                             else                                           -> {
@@ -731,6 +747,13 @@ class NSClientV3Plugin @Inject constructor(
             while (workIsRunning()) Thread.sleep(5000)
         }
         rxBus.send(EventNSClientNewLog("● RUN", "Starting next round $origin"))
+        synchronized(fullSyncSemaphore) {
+            if (fullSyncRequested) {
+                fullSyncRequested = false
+                doingFullSync = true
+                rxBus.send(EventNSClientNewLog("● RUN", "Full sync is requested"))
+            }
+        }
         rxBus.send(EventNSClientUpdateGuiStatus())
         WorkManager.getInstance(context)
             .beginUniqueWork(
@@ -746,6 +769,12 @@ class NSClientV3Plugin @Inject constructor(
             .then(OneTimeWorkRequest.Builder(LoadDeviceStatusWorker::class.java).build())
             .then(OneTimeWorkRequest.Builder(DataSyncWorker::class.java).build())
             .enqueue()
+    }
+
+    fun endFullSync() {
+        synchronized(fullSyncSemaphore) {
+            doingFullSync = false
+        }
     }
 
     private fun executeUpload(origin: String, forceNew: Boolean) {

@@ -123,7 +123,7 @@ class CommandQueueImplementation @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .throttleLatest(3L, TimeUnit.SECONDS)
             .subscribe({
-                           if (config.NSCLIENT) { // Effective profileswitch should be synced over NS, do not create EffectiveProfileSwitch here
+                           if (config.AAPSCLIENT) { // Effective profileswitch should be synced over NS, do not create EffectiveProfileSwitch here
                                return@subscribe
                            }
                            aapsLogger.debug(LTag.PROFILE, "onEventProfileSwitchChanged")

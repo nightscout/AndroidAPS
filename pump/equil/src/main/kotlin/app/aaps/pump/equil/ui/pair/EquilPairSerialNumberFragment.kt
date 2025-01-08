@@ -33,6 +33,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.core.ui.toast.ToastUtils
+import app.aaps.core.utils.extensions.safeEnable
 import app.aaps.pump.equil.EquilConst
 import app.aaps.pump.equil.R
 import app.aaps.pump.equil.ble.GattAttributes
@@ -224,6 +225,7 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
         scanning = true
         progressPair.visibility = View.VISIBLE
         handler.postDelayed(stopScanAfterTimeoutRunnable, SCAN_PERIOD_MILLIS)
+        if (bluetoothAdapter?.isEnabled != true) bluetoothAdapter?.safeEnable(waitMilliseconds = 3000)
         bleScanner?.startScan(filters, settings, bleScanCallback)
         aapsLogger.debug(LTag.PUMPCOMM, "startLeDeviceScan: Scanning Start")
     }

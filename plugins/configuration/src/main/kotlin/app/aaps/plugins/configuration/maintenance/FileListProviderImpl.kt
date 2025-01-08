@@ -180,7 +180,7 @@ class FileListProviderImpl @Inject constructor(
     override fun newExportCsvFile(): DocumentFile? {
         val timeLocal = LocalDateTime.now().toString(DateTimeFormat.forPattern("yyyy-MM-dd'_'HHmmss"))
         val dir = ensureExportDirExists()
-        return dir?.createFile("application/csv", timeLocal + "_UserEntry")
+        return dir?.createFile("application/csv", timeLocal + "_UserEntry.csv")
     }
 
     override fun newCwfFile(filename: String, withDate: Boolean): DocumentFile? {

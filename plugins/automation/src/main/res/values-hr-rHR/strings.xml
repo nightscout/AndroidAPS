@@ -15,4 +15,5 @@
     <string name="autotune_run_with_autoswitch">Autotune je pokrenut i profil se automatski promijenio</string>
     <string name="autotune_run_with_error">Pogreška tijekom zadnjeg pokretanja automatskog podešavanja</string>
     <string name="autotune_run_cancelled">Otkriveno je još jedno pokretanje Autotunea, pokretanje je otkazano</string>
+    <!--    Steps count-->
 </resources>

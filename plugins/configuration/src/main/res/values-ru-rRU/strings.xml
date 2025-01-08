@@ -19,6 +19,7 @@
     <string name="permission">Права доступа</string>
     <string name="need_system_window_permission">Приложению требуется разрешение системного окна для уведомлений</string>
     <string name="need_location_permission">Приложению требуется разрешение на доступ к местоположению для сканирования BT и идентификации WiFi</string>
+    <string name="need_background_location_permission">Приложению необходим доступ к геолокации в любое время для автоматизаций</string>
     <string name="need_storage_permission">Приложение требует разрешения на доступ к записи в память, чтобы хранить файлы журналов и настройки экспорта</string>
     <string name="askforpermission">Запросить права доступа</string>
     <string name="need_whitelisting">для корректной работы %1$s необходимо включить в белый список оптимизации батареи</string>
@@ -36,6 +37,7 @@
     <string name="exitwizard">Пропустить Мастер установки</string>
     <string name="setupwizard_loop_description">Нажмите на кнопку ниже, чтобы AAPS мог предложить/внести изменения в базал</string>
     <string name="setupwizard_sensitivity_description">Плагин чувствительности Sensitivity применяется для определения чувствительности к инсулину и вычисления активных углеводов COB. Дополнительная информация:</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/ru/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
     <string name="setupwizard_aps_description">Выберите один из доступных алгоритмов. Они расположены от самых старых к самым новым. Более новый алгоритм обычно мощнее и агрессивнее. Если вы новый пользователь возможно вам лучше начать с помощника болюса AMA а не с новейшего алгоритма. Читайте документацию OpenAPS и определите свою конфигурацию.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Сконфигурируйте RileyLink. После выбора RileyLink можно будет продолжить установку если состояние RileyLink \"Соединено\". Это может занять минуту.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Примечание:</b> После инициализации помпы можно продолжить настройку\n</string>
@@ -44,6 +46,8 @@
     <string name="readstatus">Статус \'чтение\'</string>
     <string name="data_choices">Отбор данных</string>
     <string name="fabric_upload">Загрузка отчета для разработчиков</string>
+    <string name="unattended_settings_export">Автоматический экспорт настроек</string>
+    <string name="unattended_settings_export_summary">Включение данного параметра безопасно сохранит ваш пароль на этом телефоне</string>
     <string name="identification">Идентификация (электронная почта, ник в Facebook или Discord и т. п)</string>
     <string name="request">Запрос</string>
     <string name="apsmode_title">Режим APS</string>
@@ -161,4 +165,5 @@
     <string name="metadata_format_new">Новый зашифрованный формат</string>
     <string name="metadata_format_other">Неизвестный формат экспорта</string>
     <string name="reset_aps_results">Сбросить результаты APS</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Ошибка доступа к файловой системе. Выберите каталог AAPS правильно.</string>
 </resources>

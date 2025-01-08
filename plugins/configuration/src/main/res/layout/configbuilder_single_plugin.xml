@@ -9,6 +9,7 @@
 
     <RadioButton
         android:id="@+id/plugin_enabled_exclusive"
+        style="@style/Widget.App.RadioButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="6dp"
@@ -16,6 +17,7 @@
 
     <CheckBox
         android:id="@+id/plugin_enabled_inclusive"
+        style="@style/Widget.App.CheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="6dp"
@@ -83,12 +85,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:contentDescription="@string/a11y_open_settings"
         android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/a11y_open_settings"
         app:srcCompat="@drawable/ic_settings" />
 
     <CheckBox
         android:id="@+id/plugin_visibility"
+        style="@style/Widget.App.CheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:saveEnabled="false" />

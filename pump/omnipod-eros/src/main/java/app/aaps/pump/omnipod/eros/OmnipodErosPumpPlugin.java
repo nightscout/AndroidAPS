@@ -826,10 +826,10 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         }
         PumpSync.PumpState pumpState = pumpSync.expectedPumpState();
         if (pumpState.getTemporaryBasal() != null && pumpState.getProfile() != null) {
-            ret += rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_short_status_temp_basal, pumpState.getTemporaryBasal().toStringFull(dateUtil, decimalFormatter) + "\n");
+            ret += rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_short_status_temp_basal, pumpState.getTemporaryBasal().toStringFull(dateUtil, rh) + "\n");
         }
         if (pumpState.getExtendedBolus() != null) {
-            ret += rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_short_status_extended_bolus, pumpState.getExtendedBolus().toStringFull(dateUtil, decimalFormatter) + "\n");
+            ret += rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_short_status_extended_bolus, pumpState.getExtendedBolus().toStringFull(dateUtil, rh) + "\n");
         }
         ret += rh.gs(app.aaps.pump.omnipod.common.R.string.omnipod_common_short_status_reservoir, (getReservoirLevel() > OmnipodConstants.MAX_RESERVOIR_READING ? "50+" : decimalFormatter.to0Decimal(getReservoirLevel()))) + "\n";
         if (isUseRileyLinkBatteryLevel()) {

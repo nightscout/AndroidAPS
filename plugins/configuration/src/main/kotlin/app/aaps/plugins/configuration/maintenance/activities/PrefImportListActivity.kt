@@ -49,7 +49,7 @@ class PrefImportListActivity : TranslatedDaggerAppCompatActivity() {
                 with(maintenanceImportListItemBinding) {
                     root.isClickable = true
                     maintenanceImportListItemBinding.root.setOnClickListener {
-                        val prefFile = filelistName.tag as PrefsFile
+                        val prefFile = prefFileList[filelistName.tag as Int]
                         val i = Intent()
 
                         i.putExtra(PrefsFileContract.OUTPUT_PARAM, prefFile)
@@ -73,7 +73,7 @@ class PrefImportListActivity : TranslatedDaggerAppCompatActivity() {
             val prefFile = prefFileList[position]
             with(holder.maintenanceImportListItemBinding) {
                 filelistName.text = prefFile.name
-                filelistName.tag = prefFile
+                filelistName.tag = position
 
                 metalineName.visibility = View.VISIBLE
                 metaDateTimeIcon.visibility = View.VISIBLE

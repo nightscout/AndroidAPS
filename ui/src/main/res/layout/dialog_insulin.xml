@@ -55,6 +55,7 @@
 
             <CheckBox
                 android:id="@+id/start_eating_soon_tt"
+                style="@style/Widget.App.CheckBox"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
@@ -62,6 +63,7 @@
 
             <CheckBox
                 android:id="@+id/record_only"
+                style="@style/Widget.App.CheckBox"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="@string/do_not_bolus_record_only" />

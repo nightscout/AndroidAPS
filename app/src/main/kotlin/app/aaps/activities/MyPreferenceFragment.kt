@@ -34,10 +34,12 @@ import app.aaps.core.interfaces.rx.events.EventRebuildTabs
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.DoublePreferenceKey
 import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.IntPreferenceKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.StringPreferenceKey
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.utils.extensions.safeGetSerializable
 import app.aaps.core.validators.DefaultEditTextValidator
@@ -129,10 +131,8 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         if (pluginName != null) {
             val plugin = activePlugin.getPluginsList().firstOrNull { it.javaClass.simpleName == pluginName } ?: error("Plugin not found")
             addPreferencesIfEnabled(plugin, rootKey)
-        } else if (customPreference != null) {
-            when (customPreference!!) {
-                UiInteraction.Preferences.PROTECTION -> addProtectionScreen(rootKey)
-            }
+        } else if (customPreference == UiInteraction.Preferences.PROTECTION) {
+            addProtectionScreen(rootKey)
         } else {
             addGeneralScreen(rootKey)
             addProtectionScreen(rootKey)
@@ -281,13 +281,13 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         pref ?: return
         val keyDefinition = pref.key?.let { preferences.getIfExists(it) }
         when (keyDefinition) {
-            is IntKey,
-            is DoubleKey -> {
+            is IntPreferenceKey,
+            is DoublePreferenceKey -> {
                 if (pref is EditTextPreference && pref.text != null) pref.summary = pref.text
                 if (pref is ListPreference) pref.summary = pref.entry
             }
 
-            is StringKey -> {
+            is StringPreferenceKey -> {
                 val value = sp.getString(pref.key, "")
                 when {
                     // We use Preference and custom editor instead of EditTextPreference

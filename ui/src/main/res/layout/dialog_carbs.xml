@@ -53,6 +53,7 @@
 
             <CheckBox
                 android:id="@+id/activity_tt"
+                style="@style/Widget.App.CheckBox"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
@@ -60,12 +61,14 @@
 
             <CheckBox
                 android:id="@+id/eating_soon_tt"
+                style="@style/Widget.App.CheckBox"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="@string/start_eating_soon_tt" />
 
             <CheckBox
                 android:id="@+id/hypo_tt"
+                style="@style/Widget.App.CheckBox"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="@string/start_hypo_tt" />
@@ -106,6 +109,7 @@
 
                     <CheckBox
                         android:id="@+id/alarmCheckBox"
+                        style="@style/Widget.App.CheckBox"
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
                         android:layout_gravity="center_vertical"
@@ -272,6 +276,7 @@
 
             <CheckBox
                 android:id="@+id/bolusReminderCheckBox"
+                style="@style/Widget.App.CheckBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"

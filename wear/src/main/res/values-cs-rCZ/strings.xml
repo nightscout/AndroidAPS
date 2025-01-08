@@ -217,6 +217,7 @@
     <string name="complication_full_status_flipped">Kompletní stav (obráceně)</string>
     <string name="complication_blood_glucose">Glykémie</string>
     <string name="complication_br_cob_iob">Bazál, COB &amp; IOB</string>
+    <string name="complication_br_iob">Bazál &amp; IOB</string>
     <string name="complication_cob_iob">COB &amp; IOB</string>
     <string name="complication_cob_icon">Ikona COB</string>
     <string name="complication_cob_detailed">Detailní COB</string>

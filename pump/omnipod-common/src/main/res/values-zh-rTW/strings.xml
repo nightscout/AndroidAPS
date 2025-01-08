@@ -164,7 +164,7 @@
     <!-- Omnipod - Short status -->
     <string name="omnipod_common_short_status_no_active_pod">無可用的 Pod</string>
     <string name="omnipod_common_short_status_last_connection">最後連線：%1$d 分鐘前</string>
-    <string name="omnipod_common_short_status_last_bolus">最後劑量：%1$s @ %2$s</string>
+    <string name="omnipod_common_short_status_last_bolus">最後注射：%1$s U @ %2$s</string>
     <string name="omnipod_common_short_status_temp_basal">臨時基礎率：%1$s</string>
     <string name="omnipod_common_short_status_extended_bolus">延長劑量：%1$s</string>
     <string name="omnipod_common_short_status_reservoir">儲存槽：%1$sU</string>

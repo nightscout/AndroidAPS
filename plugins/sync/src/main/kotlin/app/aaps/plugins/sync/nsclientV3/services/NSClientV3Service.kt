@@ -224,15 +224,15 @@ class NSClientV3Service : DaggerService() {
         when (collection) {
             "devicestatus" -> docString.toNSDeviceStatus().let { nsDeviceStatusHandler.handleNewData(arrayOf(it)) }
             "entries"      -> docString.toNSSgvV3()?.let {
-                nsIncomingDataProcessor.processSgvs(listOf(it))
+                nsIncomingDataProcessor.processSgvs(listOf(it), doFullSync = false)
                 storeDataForDb.storeGlucoseValuesToDb()
             }
 
             "profile"      ->
-                nsIncomingDataProcessor.processProfile(docJson)
+                nsIncomingDataProcessor.processProfile(docJson, doFullSync = false)
 
             "treatments"   -> docString.toNSTreatment()?.let {
-                nsIncomingDataProcessor.processTreatments(listOf(it))
+                nsIncomingDataProcessor.processTreatments(listOf(it), doFullSync = false)
                 storeDataForDb.storeTreatmentsToDb()
             }
 
@@ -241,7 +241,8 @@ class NSClientV3Service : DaggerService() {
                 storeDataForDb.storeFoodsToDb()
             }
 
-            "settings"     -> {}
+            "settings"     -> { /* nothing to do for now */
+            }
         }
     }
 
@@ -252,11 +253,11 @@ class NSClientV3Service : DaggerService() {
         val identifier = response.optString("identifier") ?: return@Listener
         rxBus.send(EventNSClientNewLog("◄ WS DELETE", "$collection $identifier"))
         if (collection == "treatments") {
-            storeDataForDb.deleteTreatment.add(identifier)
+            storeDataForDb.addToDeleteTreatment(identifier)
             storeDataForDb.updateDeletedTreatmentsInDb()
         }
         if (collection == "entries") {
-            storeDataForDb.deleteGlucoseValue.add(identifier)
+            storeDataForDb.addToDeleteGlucoseValue(identifier)
             storeDataForDb.updateDeletedGlucoseValuesInDb()
         }
     }

@@ -23,7 +23,7 @@
     <string name="automation_trigger_pump_last_connection_description">最後連線幫浦 [分鐘前]</string>
     <string name="automation_trigger_pump_last_connection_compared">最後連線幫浦 %1$s %2$s 分鐘前</string>
     <string name="alreadyset">已設置</string>
-    <string name="profilepercentage">檔案百分比</string>
+    <string name="profilepercentage">設定檔百分比</string>
     <string name="startprofileforever">啟動檔案 %1$d%%</string>
     <string name="percent_u">百分比 [%]：</string>
     <string name="sendsmsactionlabel">發送簡訊：%1$s</string>
@@ -42,7 +42,7 @@
     <string name="notemptarget">臨時目標不存在</string>
     <string name="temptargetcomparedmgdl">臨時目標 %1$s %2$.0f %3$s</string>
     <string name="temptargetcomparedmmol">臨時目標 %1$s %2$.1f %3$s</string>
-    <string name="percentagecompared">檔案百分比 %1$s %2$d</string>
+    <string name="percentagecompared">設定檔百分比 %1$s %2$d</string>
     <string name="iobcompared">IOB %1$s %2$.1f</string>
     <string name="or">或</string>
     <string name="xor">互斥或</string>
@@ -137,4 +137,8 @@
     <string name="autotune_run_with_autoswitch">自動調整運行並自動切換檔案</string>
     <string name="autotune_run_with_error">上次自動調整運行時出錯</string>
     <string name="autotune_run_cancelled">偵測到另一個自動調整運行，運行已取消</string>
+    <!--    Steps count-->
+    <string name="triggerStepsCountLabel">步數統計</string>
+    <string name="triggerStepsCountDesc">每 %1$s 分鐘的步數統計 %2$s %3$.0f</string>
+    <string name="triggerStepsCountDropdownLabel">測量持續時間</string>
 </resources>

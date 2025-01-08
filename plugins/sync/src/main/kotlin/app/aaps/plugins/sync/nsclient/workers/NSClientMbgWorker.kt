@@ -27,7 +27,7 @@ class NSClientMbgWorker(
     override suspend fun doWorkAndLog(): Result {
         val ret = Result.success()
 
-        val acceptNSData = preferences.get(BooleanKey.NsClientAcceptTherapyEvent) || config.NSCLIENT
+        val acceptNSData = preferences.get(BooleanKey.NsClientAcceptTherapyEvent) || config.AAPSCLIENT
         if (!acceptNSData) return Result.success(workDataOf("Result" to "Sync not enabled"))
 
         val mbgArray = dataWorkerStorage.pickupJSONArray(inputData.getLong(DataWorkerStorage.STORE_KEY, -1))
@@ -35,7 +35,7 @@ class NSClientMbgWorker(
         for (i in 0 until mbgArray.length()) {
             val nsMbg = NSMbg(mbgArray.getJSONObject(i))
             if (!nsMbg.isValid()) continue
-            storeDataForDb.therapyEvents.add(therapyEventFromNsMbg(nsMbg))
+            storeDataForDb.addToTherapyEvents(therapyEventFromNsMbg(nsMbg))
         }
         // storeDataForDb.storeTreatmentsToDb() don't do this. It will be stored along with other treatments
         return ret

@@ -75,11 +75,11 @@
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_gravity="center"
-                    android:layout_marginEnd="-2dp"
+                    android:layout_marginEnd="@dimen/gray_material_button_margin_horizontal"
                     android:layout_weight="0.5"
+                    android:drawableTop="@drawable/ic_loop_closed"
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
-                    android:drawableTop="@drawable/ic_loop_closed"
                     android:text="@string/closedloop"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:visibility="gone" />
@@ -90,11 +90,11 @@
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_gravity="center"
-                    android:layout_marginEnd="-2dp"
+                    android:layout_marginEnd="@dimen/gray_material_button_margin_horizontal"
                     android:layout_weight="0.5"
+                    android:drawableTop="@drawable/ic_loop_lgs"
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
-                    android:drawableTop="@drawable/ic_loop_lgs"
                     android:text="@string/lowglucosesuspend"
                     android:visibility="gone" />
 
@@ -104,11 +104,11 @@
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_gravity="center"
-                    android:layout_marginEnd="-2dp"
+                    android:layout_marginEnd="@dimen/gray_material_button_margin_horizontal"
                     android:layout_weight="0.5"
+                    android:drawableTop="@drawable/ic_loop_open"
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
-                    android:drawableTop="@drawable/ic_loop_open"
                     android:text="@string/openloop"
                     android:visibility="gone" />
 
@@ -118,11 +118,11 @@
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_gravity="center"
-                    android:layout_marginEnd="-2dp"
+                    android:layout_marginEnd="@dimen/gray_material_button_margin_horizontal"
                     android:layout_weight="0.5"
+                    android:drawableTop="@drawable/ic_loop_resume"
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
-                    android:drawableTop="@drawable/ic_loop_resume"
                     android:text="@string/enableloop"
                     android:textSize="11sp"
                     android:visibility="gone" />
@@ -133,11 +133,11 @@
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_gravity="center"
-                    android:layout_marginEnd="-2dp"
+                    android:layout_marginEnd="@dimen/gray_material_button_margin_horizontal"
                     android:layout_weight="0.5"
+                    android:drawableTop="@drawable/ic_loop_disabled"
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
-                    android:drawableTop="@drawable/ic_loop_disabled"
                     android:text="@string/disableloop" />
 
             </LinearLayout>
@@ -174,7 +174,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_gravity="center"
-                android:layout_marginEnd="-2dp"
+                android:layout_marginEnd="@dimen/gray_material_button_margin_horizontal"
                 android:layout_weight="0.5"
                 android:drawableTop="@drawable/ic_loop_resume"
                 android:paddingStart="10dp"
@@ -194,11 +194,11 @@
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="0px"
                     android:layout_height="fill_parent"
-                    android:layout_marginEnd="-2dp"
+                    android:layout_marginEnd="@dimen/gray_material_button_margin_horizontal"
                     android:layout_weight="0.5"
+                    android:drawableTop="@drawable/ic_loop_paused"
                     android:paddingStart="5dp"
                     android:paddingEnd="5dp"
-                    android:drawableTop="@drawable/ic_loop_paused"
                     android:text="@string/duration1h" />
 
                 <app.aaps.core.ui.elements.SingleClickButton
@@ -206,11 +206,11 @@
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="0px"
                     android:layout_height="fill_parent"
-                    android:layout_marginEnd="-2dp"
+                    android:layout_marginEnd="@dimen/gray_material_button_margin_horizontal"
                     android:layout_weight="0.5"
+                    android:drawableTop="@drawable/ic_loop_paused"
                     android:paddingStart="5dp"
                     android:paddingEnd="5dp"
-                    android:drawableTop="@drawable/ic_loop_paused"
                     android:text="@string/duration2h" />
 
                 <app.aaps.core.ui.elements.SingleClickButton
@@ -218,11 +218,11 @@
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="0px"
                     android:layout_height="fill_parent"
-                    android:layout_marginEnd="-2dp"
+                    android:layout_marginEnd="@dimen/gray_material_button_margin_horizontal"
                     android:layout_weight="0.5"
+                    android:drawableTop="@drawable/ic_loop_paused"
                     android:paddingStart="5dp"
                     android:paddingEnd="5dp"
-                    android:drawableTop="@drawable/ic_loop_paused"
                     android:text="@string/duration3h" />
 
                 <app.aaps.core.ui.elements.SingleClickButton
@@ -230,11 +230,11 @@
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="0px"
                     android:layout_height="fill_parent"
-                    android:layout_marginEnd="-2dp"
+                    android:layout_marginEnd="@dimen/gray_material_button_margin_horizontal"
                     android:layout_weight="0.5"
+                    android:drawableTop="@drawable/ic_loop_paused"
                     android:paddingStart="5dp"
                     android:paddingEnd="5dp"
-                    android:drawableTop="@drawable/ic_loop_paused"
                     android:text="@string/duration10h" />
 
             </LinearLayout>
@@ -271,7 +271,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_gravity="center"
-                android:layout_marginEnd="-2dp"
+                android:layout_marginEnd="@dimen/gray_material_button_margin_horizontal"
                 android:layout_weight="0.5"
                 android:drawableTop="@drawable/ic_loop_reconnect"
                 android:paddingStart="10dp"
@@ -291,11 +291,11 @@
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="0px"
                     android:layout_height="fill_parent"
-                    android:layout_marginEnd="-2dp"
+                    android:layout_marginEnd="@dimen/gray_material_button_margin_horizontal"
                     android:layout_weight="0.5"
+                    android:drawableTop="@drawable/ic_loop_disconnected"
                     android:paddingStart="5dp"
                     android:paddingEnd="5dp"
-                    android:drawableTop="@drawable/ic_loop_disconnected"
                     android:text="@string/duration15m" />
 
                 <app.aaps.core.ui.elements.SingleClickButton
@@ -303,11 +303,11 @@
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="0px"
                     android:layout_height="fill_parent"
-                    android:layout_marginEnd="-2dp"
+                    android:layout_marginEnd="@dimen/gray_material_button_margin_horizontal"
                     android:layout_weight="0.5"
+                    android:drawableTop="@drawable/ic_loop_disconnected"
                     android:paddingStart="5dp"
                     android:paddingEnd="5dp"
-                    android:drawableTop="@drawable/ic_loop_disconnected"
                     android:text="@string/duration30m" />
 
                 <app.aaps.core.ui.elements.SingleClickButton
@@ -315,11 +315,11 @@
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="0px"
                     android:layout_height="fill_parent"
-                    android:layout_marginEnd="-2dp"
+                    android:layout_marginEnd="@dimen/gray_material_button_margin_horizontal"
                     android:layout_weight="0.5"
+                    android:drawableTop="@drawable/ic_loop_disconnected"
                     android:paddingStart="5dp"
                     android:paddingEnd="5dp"
-                    android:drawableTop="@drawable/ic_loop_disconnected"
                     android:text="@string/duration1h" />
 
                 <app.aaps.core.ui.elements.SingleClickButton
@@ -327,11 +327,11 @@
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="0px"
                     android:layout_height="fill_parent"
-                    android:layout_marginEnd="-2dp"
+                    android:layout_marginEnd="@dimen/gray_material_button_margin_horizontal"
                     android:layout_weight="0.5"
+                    android:drawableTop="@drawable/ic_loop_disconnected"
                     android:paddingStart="5dp"
                     android:paddingEnd="5dp"
-                    android:drawableTop="@drawable/ic_loop_disconnected"
                     android:text="@string/duration2h" />
 
                 <app.aaps.core.ui.elements.SingleClickButton
@@ -339,11 +339,11 @@
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="0px"
                     android:layout_height="fill_parent"
-                    android:layout_marginEnd="-2dp"
+                    android:layout_marginEnd="@dimen/gray_material_button_margin_horizontal"
                     android:layout_weight="0.5"
+                    android:drawableTop="@drawable/ic_loop_disconnected"
                     android:paddingStart="5dp"
                     android:paddingEnd="5dp"
-                    android:drawableTop="@drawable/ic_loop_disconnected"
                     android:text="@string/duration3h" />
 
             </LinearLayout>

@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="4dp"
-            android:importantForAccessibility="no"
+            android:contentDescription="@string/expand_category"
             app:srcCompat="@drawable/ic_expand_more_24"
             app:tint="?android:attr/colorAccent" />
 
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="4dp"
-            android:importantForAccessibility="no"
+            android:contentDescription="@string/collapse_category"
             app:srcCompat="@drawable/ic_expand_less_24"
             app:tint="?android:attr/colorAccent" />
 

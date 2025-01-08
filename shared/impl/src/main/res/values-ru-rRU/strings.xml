@@ -7,7 +7,17 @@
     <string name="cwf_comment_freetext2">Свободный текст 2</string>
     <string name="cwf_comment_freetext3">Свободный текст 3</string>
     <string name="cwf_comment_freetext4">Свободный текст 4</string>
+    <string name="cwf_comment_patient_name_ext">Имя пациента (из AAPSClient или AAPSClient2)</string>
+    <string name="cwf_comment_iob1_ext">Подпись IOB или сумма IOB если подробнее (из AAPSClient или AAPSClient2)</string>
+    <string name="cwf_comment_iob2_ext">Сумма IOB или (болюсный_IOB|базальный_IOB) в подробном виде (из AAPSClient или AAPSClient2)</string>
+    <string name="cwf_comment_cob2_ext">Значение COB (из AAPSClient или AAPSClient2)</string>
+    <string name="cwf_comment_delta_ext">Короткая дельта СК (из AAPSClient или AAPSClient2)</string>
+    <string name="cwf_comment_avg_delta_ext">Средняя дельта СК (15 мин) (из AAPSClient или AAPSClient2)</string>
+    <string name="cwf_comment_temp_target_ext">Временная цель или ее диапазон (из AAPSClient или AAPSClient2)</string>
+    <string name="cwf_comment_reservoir_ext">Уровень резервуара (из AAPSClient или AAPSClient2)</string>
+    <string name="cwf_comment_rig_battery_ext">Общий уровень заряда (%) (из AAPSClient или AAPSClient2)</string>
     <string name="cwf_comment_basalRate_ext">Базальная скорость (с AAPSClient или AAPSClient2)</string>
+    <string name="cwf_comment_bgi_ext">Значение BGI (из AAPSClient или AAPSClient2)</string>
     <string name="cwf_comment_status_ext">Обобщенный статус (с AAPSClient или AAPSClient2)</string>
     <string name="cwf_comment_loop_ext">Статус цикла и прошедшее время (от данных с AAPSClient или AAPSClient2)</string>
     <string name="cwf_comment_direction_ext">Стрелка тенденции (от AAPSClient или AAPSClient2)</string>

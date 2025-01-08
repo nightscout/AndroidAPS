@@ -19,6 +19,7 @@
     <string name="permission">Leidimas</string>
     <string name="need_system_window_permission">Programai reikalingas leidimas rodyti virš kitų programų</string>
     <string name="need_location_permission">Programai reikia vietos nustatymo leidimo, kad būtų galima naudoti Bluetooth ir WiFi</string>
+    <string name="need_background_location_permission">Aplikacijai reikalingas foninis vietos nustatymo leidimas automatizacijai</string>
     <string name="need_storage_permission">Programai reikia leidimo prieigai prie saugyklos, kad būtų išsaugomi žurnalo įrašai ir nustatymų eksportai</string>
     <string name="askforpermission">Prašyti leidimo</string>
     <string name="need_whitelisting">Įtraukite %1$s į baterijos optimizavimo išimčių sąrašą tinkamam veikimui užtikrinti</string>
@@ -36,6 +37,7 @@
     <string name="exitwizard">Praleisti sąrankos vedlį</string>
     <string name="setupwizard_loop_description">Paspauskite mygtuką žemiau, norėdami leisti AndroidAPS patarti/atlikti bazės pakeitimus</string>
     <string name="setupwizard_sensitivity_description">Jautrumo įskiepis yra naudojamas jautrumo aptikimui ir AAO skaičiavimams. Daugiau informacijos:</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/SensitivityDetectionAndCob.html</string>
     <string name="setupwizard_aps_description">Pasirinkite vieną iš esamų algoritmų. Jie yra išdėstyti nuo seniausio iki naujausio. Naujesni algoritmai yra galingesni ir agresyvesni. Taigi jei esate naujas vartotojas, geriau pradėti nuo AMA, o ne naujesnio. Nepamirškite perskaityti dokumentaciją ir sukonfigūruoti jį prieš naudojant.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Nustatykite RileyLink. Pasirinkę RileyLink, galėsite tęsti sąranką, kai tik RileyLink statusas bus „Prisijungta“. Tai gali užtrukti apie minutę.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Pastaba:</b> Sąranką galėsite tęsti, kai prijungsite pompą.\n</string>
@@ -44,6 +46,8 @@
     <string name="readstatus">Statuso nuskaitymas</string>
     <string name="data_choices">Duomenų pasirinkimas</string>
     <string name="fabric_upload">Duomenų perdavimas kūrėjams</string>
+    <string name="unattended_settings_export">Automatinis nustatymų eksportavimas</string>
+    <string name="unattended_settings_export_summary">Įjungus šią parinktį, jūsų slaptažodis bus saugiai saugomas jūsų telefone</string>
     <string name="identification">Identifikacija (el. paštas, FB, Discord slapyvardis ar kt.)</string>
     <string name="request">Užklausa</string>
     <string name="apsmode_title">DKS režimas</string>
@@ -77,6 +81,8 @@
     <string name="allow_hardware_pump_text">Dėmesio: jei aktyvuosite ir prijungsite realią pompą, AAPS nukopijuos bazės nustatymus iš profilio į pompą, todėl nustatymai pompoje gali pasikeisti. Įsitikinkite, kad bazės nustatymai AAPS yra teisingi. Jei nesate tikri arba nenorite keisti bazės nustatymų jūsų pompoje, paspauskite Atšaukti ir atlikite prijungimą prie pompos vėliau.</string>
     <string name="a11y_open_settings">atidaryti nustatymus</string>
     <string name="nsclient_version_does_not_match">AAPSClient ir AAPS versijos nesutampa. Atnaujinkite.</string>
+    <string name="expand_category">Išplėsti kategoriją</string>
+    <string name="collapse_category">Sutraukti kategoriją</string>
     <!--ImportExport-->
     <string name="nav_preferences">Nustatymai</string>
     <string name="password_preferences_encrypt_prompt">Jūsų paprašys nustatyti slaptažodį, kuris bus naudojamas užšifruojant eksportuojamus nustatymus.</string>
@@ -88,6 +94,8 @@
     <string name="check_preferences_import_btn">Importas</string>
     <string name="check_preferences_import_anyway_btn">Importuoti vistiek (PAVOJINGA!)</string>
     <string name="import_setting">Importuoti nustatymus</string>
+    <string name="aaps_directory">AAPS katalogas</string>
+    <string name="select_aaps_directory">Pasirinkite AAPS katalogą eksportavimams, konfigūracijoms ir kt. saugoti.</string>
     <string name="check_preferences_before_import">Prašom patikrinti nustatymus prieš importuojant:</string>
     <string name="check_preferences_cannot_import">Nustatymai negali būti importuoti!</string>
     <string name="check_preferences_dangerous_import">Nustatymai neturėtų būti importuoti!</string>
@@ -98,17 +106,20 @@
     <string name="different_password_used">Šis failas buvo eksportuotas ir užšifruotas su kitokiu pagrindiniu slaptažodžiu. Įveskite senąjį pagrindinį slaptažodį dešifruoti failui.</string>
     <string name="master_password_will_be_replaced">Sėkmingas importavimas reiškia, kad dabartinis pagrindinis slaptažodis BUS PAKEISTAS senuoju pagrindiniu slaptažodžiu!</string>
     <string name="exported">Nustatymai eksportuoti</string>
+    <string name="exported_failed">Nustatymų eksportavimas nepavyko!</string>
     <string name="filenotfound">Failas nerastas</string>
     <string name="goto_main_try_again">Prašome grįžti į pagrindinį ekraną ir bandyti dar kartą.</string>
     <string name="restartingapp">Uždarant aplikaciją, taikyti nustatymus.</string>
     <string name="ue_exported">Naudotojo įrašai eksportuoti</string>
     <string name="protection">Apsauga</string>
+    <string name="master_password_missing">Pagrindinis slaptažodis nėra nustatytas!\n\nPrašome nustatyti savo pagrindinį slaptažodį Nustatymuose (%1$s)</string>
     <!--    Maintenance-->
     <string name="maintenance">Servisas</string>
     <string name="maintenance_shortname">Serv</string>
     <string name="description_maintenance">Pateikia keletą serviso funkcijų (pvz., žurnalo įrašų siuntimas ar ištrynimas).</string>
     <string name="database_cleanup">Duomenų bazės valymas</string>
     <string name="reset_db_confirm">Ar tikrai norite iš naujo nustatyti duomenų bazę?</string>
+    <string name="reset_aps_results_confirm">Ar tikrai norite iš naujo nustatyti išsaugotus APS rezultatus?</string>
     <string name="maintenance_settings">Serviso nustatymai</string>
     <string name="maintenance_email">Gavėjo el. paštas</string>
     <string name="maintenance_amount">Siunčiamų įrašų skaičius</string>
@@ -155,4 +166,6 @@
     <string name="metadata_label_encryption">Failo šifravimas</string>
     <string name="metadata_format_new">Naujas šifruotas formatas</string>
     <string name="metadata_format_other">Nežinomas eksporto formatas</string>
+    <string name="reset_aps_results">Iš naujo nustatyti APS rezultatus</string>
+    <string name="error_accessing_filesystem_select_aaps_directory_properly">Klaida pasiekiant failų sistemą. Tinkamai pasirinkite AAPS katalogą.</string>
 </resources>

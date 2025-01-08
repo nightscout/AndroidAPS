@@ -49,7 +49,7 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
 
     override fun friendlyName(): Int = R.string.starttemptarget
     override fun shortDescription(): String = rh.gs(R.string.starttemptarget) + ": " + tt().friendlyDescription(value.units, rh, profileUtil)
-    @DrawableRes override fun icon(): Int = app.aaps.core.objects.R.drawable.ic_temptarget_high
+    @DrawableRes override fun icon(): Int = app.aaps.core.objects.R.drawable.ic_temptarget_high_24dp
 
     override fun doAction(callback: Callback) {
         disposable += persistenceLayer.insertAndCancelCurrentTemporaryTarget(

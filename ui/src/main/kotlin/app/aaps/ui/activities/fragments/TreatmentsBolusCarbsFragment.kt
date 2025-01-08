@@ -271,8 +271,8 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
                         actionHelper.updateSelection(position, ml, value)
                     }
                     holder.binding.root.setOnClickListener {
-                        holder.binding.cbBolusRemove.toggle()
-                        actionHelper.updateSelection(position, ml, holder.binding.cbBolusRemove.isChecked)
+                        holder.binding.cbCarbsRemove.toggle()
+                        actionHelper.updateSelection(position, ml, holder.binding.cbCarbsRemove.isChecked)
                     }
                     holder.binding.cbCarbsRemove.isChecked = actionHelper.isSelected(position)
                 }

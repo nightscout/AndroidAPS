@@ -80,7 +80,9 @@
     <string name="description_config_builder">用於配置活動外掛</string>
     <string name="allow_hardware_pump_text">注意：如果您啟用並連線到硬體幫浦，AAPS將從檔案中複製基礎設置到幫浦，覆蓋幫浦上存儲的現有基礎率。請確保您在AAPS中具有正確的基礎設置。如果您不確定或不想覆蓋幫浦上的基礎設置，請按取消並在稍後重複切換到幫浦。</string>
     <string name="a11y_open_settings">打開設置</string>
-    <string name="nsclient_version_does_not_match">AAPS客戶端版本與AAPS版本不匹配。請更新。</string>
+    <string name="nsclient_version_does_not_match">AAPSClient 版本與 AAPS 版本不一致，請更新為一致版本。</string>
+    <string name="expand_category">展開分類</string>
+    <string name="collapse_category">隱藏分類</string>
     <!--ImportExport-->
     <string name="nav_preferences">偏好設定</string>
     <string name="password_preferences_encrypt_prompt">您將被要求提供主密碼，該密碼將用於加密匯出的偏好設定。</string>

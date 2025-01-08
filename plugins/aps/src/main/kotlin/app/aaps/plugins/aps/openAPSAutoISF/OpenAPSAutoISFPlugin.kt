@@ -194,6 +194,8 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
         return sensitivity
     }
 
+    override fun getSensitivityOverviewString(): String? = null // placeholder for Auto ISF Detailed information for overview
+
     override fun specialEnableCondition(): Boolean {
         return config.isEngineeringMode() && config.isDev() &&
             try {
@@ -205,8 +207,12 @@ open class OpenAPSAutoISFPlugin @Inject constructor(
     }
 
     override fun specialShowInListCondition(): Boolean {
-        val pump = activePlugin.activePump
-        return pump.pumpDescription.isTempBasalCapable
+        try {
+            val pump = activePlugin.activePump
+            return pump.pumpDescription.isTempBasalCapable
+        } catch (_: Exception) {
+            return true
+        }
     }
 
     override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {

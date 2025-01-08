@@ -181,22 +181,11 @@ class EquilFragment : DaggerFragment() {
 
             binding.serialNumber.text = devName
             updateTempBasal()
-            runOnUiThread {
-                equilManager.equilState?.bolusRecord.let {
-                    if (it == null) {
-                        binding.lastBolus.text = "-"
-                    } else {
-                        val text =
-                            rh.gs(
-                                R.string.equil_common_overview_last_bolus_value,
-                                it.amount,
-                                rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname),
-                                readableDuration(Duration.ofMillis(System.currentTimeMillis() - it.startTime))
-                            )
-                        binding.lastBolus.text = text
-                    }
-
-                }
+            equilManager.equilState?.bolusRecord.let {
+                binding.lastBolus.text =
+                    if (it == null) "-"
+                    else
+                        rh.gs(R.string.equil_common_overview_last_bolus_value, it.amount, rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname), readableDuration(Duration.ofMillis(System.currentTimeMillis() - it.startTime)))
             }
 
             binding.btnBind.visibility = View.GONE
@@ -287,23 +276,14 @@ class EquilFragment : DaggerFragment() {
         val tempBasal = equilManager.equilState?.tempBasal
         if (tempBasal != null && equilManager.isTempBasalRunning()) {
             val startTime = tempBasal.startTime
-            val rate = tempBasal.rate
             val duration = tempBasal.duration / 60 / 1000
             val minutesRunning = Duration.ofMillis(System.currentTimeMillis() - startTime).toMinutes()
-            binding.tempBasal.text = rh.gs(
-                R.string.equil_common_overview_temp_basal_value,
-                rate,
-                dateUtil.timeString(startTime),
-                minutesRunning,
-                duration
-            )
+            binding.tempBasal.text = rh.gs(R.string.equil_common_overview_temp_basal_value, tempBasal.rate, dateUtil.timeString(startTime), minutesRunning, duration)
         } else {
             binding.tempBasal.text = "-"
         }
     }
 
-    @SuppressLint("SetTextI18n")
-    @Synchronized
     fun updateModel() {
         // binding.mode.text = equilPumpPlugin.equilManager.equilServiceData.mode.toString()
     }
@@ -326,7 +306,6 @@ class EquilFragment : DaggerFragment() {
         }
     }
 
-    @SuppressLint("SetTextI18n")
     @Synchronized
     fun changeInsulin() {
 

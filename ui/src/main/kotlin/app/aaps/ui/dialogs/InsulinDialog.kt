@@ -129,7 +129,7 @@ class InsulinDialog : DialogFragmentWithDate() {
         super.onViewCreated(view, savedInstanceState)
 
         val pump = activePlugin.activePump
-        if (config.NSCLIENT) {
+        if (config.AAPSCLIENT) {
             // If SmsAllowRemoteCommands is True and valid phone number is provided. then user might use either SMS command or record only.
             // Hardcode record_only option otherwise
             val allowSms = preferences.get(BooleanKey.SmsAllowRemoteCommands)

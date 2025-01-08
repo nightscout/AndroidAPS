@@ -5,6 +5,7 @@ import app.aaps.core.data.model.FD
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.IDs
 import app.aaps.core.data.model.SourceSensor
+import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
@@ -20,6 +21,7 @@ import app.aaps.core.interfaces.rx.events.EventDismissNotification
 import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.NSClientSource
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.Preferences
@@ -67,7 +69,8 @@ class NsIncomingDataProcessor @Inject constructor(
     private val storeDataForDb: StoreDataForDb,
     private val config: Config,
     private val instantiator: Instantiator,
-    private val profileSource: ProfileSource
+    private val profileSource: ProfileSource,
+    private val uiInteraction: UiInteraction
 ) {
 
     private fun toGv(jsonObject: JSONObject): GV? {
@@ -89,11 +92,11 @@ class NsIncomingDataProcessor @Inject constructor(
      * @return true if there was an accepted SGV
      */
     @Suppress("SpellCheckingInspection")
-    fun processSgvs(sgvs: Any): Boolean {
+    fun processSgvs(sgvs: Any, doFullSync: Boolean): Boolean {
         // Objective0
         sp.putBoolean(app.aaps.core.utils.R.string.key_objectives_bg_is_available_in_ns, true)
 
-        if (!nsClientSource.isEnabled() && !preferences.get(BooleanKey.NsClientAcceptCgmData)) return false
+        if (!nsClientSource.isEnabled() && !preferences.get(BooleanKey.NsClientAcceptCgmData) && !doFullSync) return false
 
         var latestDateInReceivedData: Long = 0
         aapsLogger.debug(LTag.NSCLIENT, "Received NS Data: $sgvs")
@@ -106,7 +109,8 @@ class NsIncomingDataProcessor @Inject constructor(
                 if (sgv.timestamp < dateUtil.now() + T.mins(1).msecs() && sgv.timestamp > latestDateInReceivedData) {
                     latestDateInReceivedData = sgv.timestamp
                     glucoseValues += sgv
-                }
+                } else
+                    aapsLogger.debug(LTag.NSCLIENT, "Ignoring record with wrong timestamp: $sgv")
             }
         } else if (sgvs is List<*>) { // V3 client
 
@@ -115,7 +119,8 @@ class NsIncomingDataProcessor @Inject constructor(
                 if (sgv.timestamp < dateUtil.now() && sgv.timestamp > latestDateInReceivedData) {
                     latestDateInReceivedData = sgv.timestamp
                     glucoseValues += sgv
-                }
+                } else
+                    aapsLogger.debug(LTag.NSCLIENT, "Ignoring record with wrong timestamp: $sgv")
             }
         }
         if (glucoseValues.isNotEmpty()) {
@@ -125,7 +130,7 @@ class NsIncomingDataProcessor @Inject constructor(
                 rxBus.send(EventDismissNotification(Notification.NS_ALARM))
                 rxBus.send(EventDismissNotification(Notification.NS_URGENT_ALARM))
             }
-            storeDataForDb.glucoseValues.addAll(glucoseValues)
+            storeDataForDb.addToGlucoseValues(glucoseValues)
         }
         return glucoseValues.isNotEmpty()
     }
@@ -135,25 +140,25 @@ class NsIncomingDataProcessor @Inject constructor(
      *
      * @return true if there was an accepted treatment
      */
-    fun processTreatments(treatments: List<NSTreatment>): Boolean {
+    fun processTreatments(treatments: List<NSTreatment>, doFullSync: Boolean): Boolean {
         try {
             var latestDateInReceivedData: Long = 0
             for (treatment in treatments) {
-                aapsLogger.debug(LTag.DATABASE, "Received NS treatment: $treatment")
+                aapsLogger.debug(LTag.NSCLIENT, "Received NS treatment: $treatment")
                 val date = treatment.date ?: continue
                 if (date > latestDateInReceivedData) latestDateInReceivedData = date
 
                 when (treatment) {
                     is NSBolus                  ->
-                        if (preferences.get(BooleanKey.NsClientAcceptInsulin) || config.NSCLIENT)
-                            storeDataForDb.boluses.add(treatment.toBolus())
+                        if (preferences.get(BooleanKey.NsClientAcceptInsulin) || config.AAPSCLIENT || doFullSync)
+                            storeDataForDb.addToBoluses(treatment.toBolus())
 
                     is NSCarbs                  ->
-                        if (preferences.get(BooleanKey.NsClientAcceptCarbs) || config.NSCLIENT)
-                            storeDataForDb.carbs.add(treatment.toCarbs())
+                        if (preferences.get(BooleanKey.NsClientAcceptCarbs) || config.AAPSCLIENT || doFullSync)
+                            storeDataForDb.addToCarbs(treatment.toCarbs())
 
                     is NSTemporaryTarget        ->
-                        if (preferences.get(BooleanKey.NsClientAcceptTempTarget) || config.NSCLIENT) {
+                        if (preferences.get(BooleanKey.NsClientAcceptTempTarget) || config.AAPSCLIENT || doFullSync) {
                             if (treatment.duration > 0L) {
                                 // not ending event
                                 if (treatment.targetBottomAsMgdl() < Constants.MIN_TT_MGDL
@@ -162,52 +167,65 @@ class NsIncomingDataProcessor @Inject constructor(
                                     || treatment.targetTopAsMgdl() > Constants.MAX_TT_MGDL
                                     || treatment.targetBottomAsMgdl() > treatment.targetTopAsMgdl()
                                 ) {
-                                    aapsLogger.debug(LTag.DATABASE, "Ignored TemporaryTarget $treatment")
+                                    aapsLogger.debug(LTag.NSCLIENT, "Ignored TemporaryTarget $treatment")
                                     continue
                                 }
                             }
-                            storeDataForDb.temporaryTargets.add(treatment.toTemporaryTarget())
+                            storeDataForDb.addToTemporaryTargets(treatment.toTemporaryTarget())
                         }
 
                     is NSTemporaryBasal         ->
-                        if (preferences.get(BooleanKey.NsClientAcceptTbrEb) || config.NSCLIENT)
-                            storeDataForDb.temporaryBasals.add(treatment.toTemporaryBasal())
+                        if (preferences.get(BooleanKey.NsClientAcceptTbrEb) || config.AAPSCLIENT || doFullSync)
+                            storeDataForDb.addToTemporaryBasals(treatment.toTemporaryBasal())
 
                     is NSEffectiveProfileSwitch ->
-                        if (preferences.get(BooleanKey.NsClientAcceptProfileSwitch) || config.NSCLIENT) {
+                        if (preferences.get(BooleanKey.NsClientAcceptProfileSwitch) || config.AAPSCLIENT || doFullSync) {
                             treatment.toEffectiveProfileSwitch(dateUtil)?.let { effectiveProfileSwitch ->
-                                storeDataForDb.effectiveProfileSwitches.add(effectiveProfileSwitch)
+                                storeDataForDb.addToEffectiveProfileSwitches(effectiveProfileSwitch)
                             }
                         }
 
                     is NSProfileSwitch          ->
-                        if (preferences.get(BooleanKey.NsClientAcceptProfileSwitch) || config.NSCLIENT) {
+                        if (preferences.get(BooleanKey.NsClientAcceptProfileSwitch) || config.AAPSCLIENT || doFullSync) {
                             treatment.toProfileSwitch(activePlugin, dateUtil)?.let { profileSwitch ->
-                                storeDataForDb.profileSwitches.add(profileSwitch)
+                                storeDataForDb.addToProfileSwitches(profileSwitch)
                             }
                         }
 
                     is NSBolusWizard            ->
                         treatment.toBolusCalculatorResult()?.let { bolusCalculatorResult ->
-                            storeDataForDb.bolusCalculatorResults.add(bolusCalculatorResult)
+                            storeDataForDb.addToBolusCalculatorResults(bolusCalculatorResult)
                         }
 
                     is NSTherapyEvent           ->
-                        if (preferences.get(BooleanKey.NsClientAcceptTherapyEvent) || config.NSCLIENT)
+                        if (preferences.get(BooleanKey.NsClientAcceptTherapyEvent) || config.AAPSCLIENT || doFullSync)
                             treatment.toTherapyEvent().let { therapyEvent ->
-                                storeDataForDb.therapyEvents.add(therapyEvent)
+                                storeDataForDb.addToTherapyEvents(therapyEvent)
+                                if (therapyEvent.type ==  TE.Type.ANNOUNCEMENT &&
+                                    preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements) &&
+                                    therapyEvent.timestamp + T.mins(60).msecs() > dateUtil.now())
+                                    uiInteraction.addNotificationWithAction(
+                                        id = Notification.NS_ANNOUNCEMENT,
+                                        text = therapyEvent.note ?: "",
+                                        level = Notification.ANNOUNCEMENT,
+                                        buttonText = app.aaps.core.ui.R.string.snooze,
+                                        action = { },
+                                        validityCheck = null,
+                                        soundId = app.aaps.core.ui.R.raw.alarm,
+                                        validTo = dateUtil.now() + T.mins(60).msecs()
+                                    )
                             }
 
                     is NSOfflineEvent           ->
-                        if (preferences.get(BooleanKey.NsClientAcceptOfflineEvent) && config.isEngineeringMode() || config.NSCLIENT)
+                        if (preferences.get(BooleanKey.NsClientAcceptOfflineEvent) && config.isEngineeringMode() || config.AAPSCLIENT || doFullSync)
                             treatment.toOfflineEvent().let { offlineEvent ->
-                                storeDataForDb.offlineEvents.add(offlineEvent)
+                                storeDataForDb.addToOfflineEvents(offlineEvent)
                             }
 
                     is NSExtendedBolus          ->
-                        if (preferences.get(BooleanKey.NsClientAcceptTbrEb) || config.NSCLIENT)
+                        if (preferences.get(BooleanKey.NsClientAcceptTbrEb) || config.AAPSCLIENT || doFullSync)
                             treatment.toExtendedBolus().let { extendedBolus ->
-                                storeDataForDb.extendedBoluses.add(extendedBolus)
+                                storeDataForDb.addToExtendedBoluses(extendedBolus)
                             }
                 }
             }
@@ -222,7 +240,7 @@ class NsIncomingDataProcessor @Inject constructor(
     }
 
     fun processFood(data: Any) {
-        aapsLogger.debug(LTag.DATABASE, "Received Food Data: $data")
+        aapsLogger.debug(LTag.NSCLIENT, "Received Food Data: $data")
 
         try {
             val foods = mutableListOf<FD>()
@@ -246,7 +264,7 @@ class NsIncomingDataProcessor @Inject constructor(
                         else     -> {
                             val food = FD.fromJson(jsonFood)
                             if (food != null) foods += food
-                            else aapsLogger.error(LTag.DATABASE, "Error parsing food", jsonFood.toString())
+                            else aapsLogger.error(LTag.NSCLIENT, "Error parsing food", jsonFood.toString())
                         }
                     }
                 }
@@ -254,15 +272,15 @@ class NsIncomingDataProcessor @Inject constructor(
                 for (i in 0 until data.size)
                     foods += (data[i] as NSFood).toFood()
             }
-            storeDataForDb.foods.addAll(foods)
+            storeDataForDb.addToFoods(foods)
         } catch (error: Exception) {
             aapsLogger.error("Error: ", error)
             rxBus.send(EventNSClientNewLog("◄ ERROR", error.localizedMessage))
         }
     }
 
-    fun processProfile(profileJson: JSONObject) {
-        if (preferences.get(BooleanKey.NsClientAcceptProfileStore) || config.NSCLIENT) {
+    fun processProfile(profileJson: JSONObject, doFullSync: Boolean) {
+        if (preferences.get(BooleanKey.NsClientAcceptProfileStore) || config.AAPSCLIENT || doFullSync) {
             val store = instantiator.provideProfileStore(profileJson)
             val createdAt = store.getStartDate()
             val lastLocalChange = sp.getLong(app.aaps.core.utils.R.string.key_local_profile_last_change, 0)

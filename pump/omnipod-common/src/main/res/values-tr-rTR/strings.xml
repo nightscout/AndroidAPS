@@ -164,7 +164,6 @@
     <!-- Omnipod - Short status -->
     <string name="omnipod_common_short_status_no_active_pod">Aktif Pod Yok</string>
     <string name="omnipod_common_short_status_last_connection">Son bağl: %1$d dak. önce</string>
-    <string name="omnipod_common_short_status_last_bolus">SonBolus: %1$s @ %2$s</string>
     <string name="omnipod_common_short_status_temp_basal">Geçici: %1$s</string>
     <string name="omnipod_common_short_status_extended_bolus">Yayma: %1$s</string>
     <string name="omnipod_common_short_status_reservoir">Rezerv: %1$sU</string>

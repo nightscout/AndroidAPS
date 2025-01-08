@@ -7,9 +7,10 @@ import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.R
 import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.DecimalFormatter
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -95,18 +96,14 @@ interface PumpSync {
                 if (isAbsolute) rate
                 else profile.getBasal(time) * rate / 100
 
-            fun toStringFull(dateUtil: DateUtil, decimalFormatter: DecimalFormatter): String {
+            fun toStringFull(dateUtil: DateUtil, rh: ResourceHelper): String {
                 return when {
                     isAbsolute -> {
-                        decimalFormatter.to2Decimal(rate) + "U/h @" +
-                            dateUtil.timeString(timestamp) +
-                            " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + durationInMinutes + "'"
+                        rh.gs(R.string.temp_basal_absolute_rate, rate, dateUtil.timeString(timestamp), getPassedDurationToTimeInMinutes(dateUtil.now()), durationInMinutes)
                     }
 
                     else       -> { // percent
-                        rate.toString() + "% @" +
-                            dateUtil.timeString(timestamp) +
-                            " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + durationInMinutes + "'"
+                        rh.gs(R.string.temp_basal_percent_rate, rate, dateUtil.timeString(timestamp), getPassedDurationToTimeInMinutes(dateUtil.now()), durationInMinutes)
                     }
                 }
             }
@@ -138,10 +135,8 @@ interface PumpSync {
             private fun getPassedDurationToTimeInMinutes(time: Long): Int =
                 ((min(time, end) - timestamp) / 60.0 / 1000).roundToInt()
 
-            fun toStringFull(dateUtil: DateUtil, decimalFormatter: DecimalFormatter): String =
-                "E " + decimalFormatter.to2Decimal(rate) + "U/h @" +
-                    dateUtil.timeString(timestamp) +
-                    " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + T.msecs(duration).mins() + "min"
+            fun toStringFull(dateUtil: DateUtil, rh: ResourceHelper): String =
+                rh.gs(R.string.temp_basal_extended_bolus, rate, dateUtil.timeString(timestamp), getPassedDurationToTimeInMinutes(dateUtil.now()), T.msecs(duration).mins())
         }
 
         data class Bolus(val timestamp: Long, val amount: Double)

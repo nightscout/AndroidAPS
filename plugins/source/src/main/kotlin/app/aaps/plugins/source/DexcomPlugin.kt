@@ -56,7 +56,7 @@ class DexcomPlugin @Inject constructor(
 ), BgSource, DexcomBoyda {
 
     init {
-        if (!config.NSCLIENT) {
+        if (!config.AAPSCLIENT) {
             pluginDescription.setDefault()
         }
     }
@@ -185,8 +185,15 @@ class DexcomPlugin @Inject constructor(
         }
     }
 
+    override fun dexcomPackages() = PACKAGE_NAMES
+
     companion object {
 
+        private val PACKAGE_NAMES = listOf(
+            "com.dexcom.g6.region1.mmol", "com.dexcom.g6.region2.mgdl",
+            "com.dexcom.g6.region3.mgdl", "com.dexcom.g6.region3.mmol",
+            "com.dexcom.g6", "com.dexcom.g7"
+        )
         const val PERMISSION = "com.dexcom.cgm.EXTERNAL_PERMISSION"
     }
 }

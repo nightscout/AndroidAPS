@@ -126,9 +126,15 @@
     <string name="scan_on_connection_error_summary">ВНИМАНИЕ: Включайте только в случае проблем с подключением. Если включено, драйвер выполняет повторный поиск для подключения к помпе. Убедитесь, что доступ к местоположению установлен на \"Всегда разрешать\" </string>
     <!-- treatment state-->
     <string name="getting_pump_status">Получение статуса помпы</string>
+    <string name="syncing_records">Синхронизация записей, осталось %1$d</string>
     <string name="getting_bolus_status">Получение статуса болюса</string>
     <string name="getting_temp_basal_status">Получение статуса ВБС</string>
     <string name="setting_pump_settings">Настройка параметров пользователя</string>
     <!-- bolus-->
+    <string name="bolus_error_reason_user">Болюс был отменен пользователем</string>
+    <string name="bolus_error_reason_not_connected">Помпа не подключена</string>
+    <string name="bolus_error_reason_already_in_progress">Болюс уже выполняется</string>
+    <string name="bolus_error_reason_unable_to_send_command">Невозможно отправить команду на болюс</string>
+    <string name="bolus_error_reason_communication_lost">Истекло время ожидания статуса болюса</string>
     <string name="bolus_error_reason_pump_error">Ошибка помпы</string>
 </resources>

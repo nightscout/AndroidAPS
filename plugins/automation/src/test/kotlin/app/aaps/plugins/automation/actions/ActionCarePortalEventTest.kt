@@ -45,7 +45,7 @@ class ActionCarePortalEventTest : ActionsTestBase() {
     }
 
     @Test fun iconTest() {
-        assertThat(sut.icon()).isEqualTo(app.aaps.core.objects.R.drawable.ic_cp_note)
+        assertThat(sut.icon()).isEqualTo(app.aaps.core.objects.R.drawable.ic_cp_note_24dp)
     }
 
     @Test fun doActionTest() {

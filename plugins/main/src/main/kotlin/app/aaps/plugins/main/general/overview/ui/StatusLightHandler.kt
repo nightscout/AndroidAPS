@@ -73,14 +73,14 @@ class StatusLightHandler @Inject constructor(
             if (cannulaUsage != null) scope.launch { handleUsage(cannulaUsage, insulinUnit) }
             handleLevel(reservoirLevel, IntKey.OverviewResCritical, IntKey.OverviewResWarning, pump.reservoirLevel, insulinUnit)
         }
-        if (!config.NSCLIENT) {
+        if (!config.AAPSCLIENT) {
             if (bgSource.sensorBatteryLevel != -1)
                 handleLevel(sensorBatteryLevel, IntKey.OverviewSbatCritical, IntKey.OverviewSbatWarning, bgSource.sensorBatteryLevel.toDouble(), "%")
             else
                 sensorBatteryLevel?.text = ""
         }
 
-        if (!config.NSCLIENT) {
+        if (!config.AAPSCLIENT) {
             // The Omnipod Eros does not report its battery level. However, some RileyLink alternatives do.
             // Depending on the user's configuration, we will either show the battery level reported by the RileyLink or "n/a"
             // Pump instance check is needed because at startup, the pump can still be VirtualPumpPlugin and that will cause a crash

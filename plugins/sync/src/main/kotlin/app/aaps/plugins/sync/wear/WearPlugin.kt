@@ -132,7 +132,7 @@ class WearPlugin @Inject constructor(
                 //  AAPSClient want pass data to AAPS
                 //  AAPSClient2 want pass data to AAPS or AAPSClient 1
                 // ) do it here as the data is prepared
-                if (config.NSCLIENT && preferences.get(BooleanKey.WearBroadcastData)) broadcastData(it.payload)
+                if (config.AAPSCLIENT && preferences.get(BooleanKey.WearBroadcastData)) broadcastData(it.payload)
             }
     }
 
@@ -167,7 +167,7 @@ class WearPlugin @Inject constructor(
 
     private fun broadcastData(payload: EventData) {
         // Identify and update source set before broadcast
-        val client = if (config.NSCLIENT1) 1 else if (config.NSCLIENT2) 2 else throw UnsupportedOperationException()
+        val client = if (config.AAPSCLIENT1) 1 else if (config.AAPSCLIENT2) 2 else throw UnsupportedOperationException()
         var dataToSend = when (payload) {
             is EventData.SingleBg -> payload.copy().apply { dataset = client }
             is EventData.Status   -> payload.copy().apply { dataset = client }
@@ -177,7 +177,7 @@ class WearPlugin @Inject constructor(
             Intent(Intents.AAPS_CLIENT_WEAR_DATA)
                 .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
                 .putExtras(Bundle().apply {
-                    putInt(WearDataReceiver.CLIENT, if (config.NSCLIENT1) 1 else if (config.NSCLIENT2) 2 else throw UnsupportedOperationException())
+                    putInt(WearDataReceiver.CLIENT, if (config.AAPSCLIENT1) 1 else if (config.AAPSCLIENT2) 2 else throw UnsupportedOperationException())
                     putString(WearDataReceiver.DATA, dataToSend.serialize())
                 })
         )
@@ -202,7 +202,7 @@ class WearPlugin @Inject constructor(
             title = rh.gs(R.string.wear_settings)
             initialExpandedChildrenCount = 0
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.WearControl, summary = R.string.wearcontrol_summary, title = R.string.wearcontrol_title))
-            if (config.NSCLIENT)
+            if (config.AAPSCLIENT)
                 addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.WearBroadcastData, summary = R.string.wear_broadcast_data_summary, title = R.string.wear_broadcast_data))
             addPreference(preferenceManager.createPreferenceScreen(context).apply {
                 key = "wear_wizard_settings"

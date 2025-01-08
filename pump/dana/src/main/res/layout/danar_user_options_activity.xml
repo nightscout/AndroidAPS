@@ -97,18 +97,21 @@
 
                 <RadioButton
                     android:id="@+id/pump_alarm_sound"
+                    style="@style/Widget.App.RadioButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/danar_pump_alarm_sound" />
 
                 <RadioButton
                     android:id="@+id/pump_alarm_vibrate"
+                    style="@style/Widget.App.RadioButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/danar_pump_alarm_vibrate" />
 
                 <RadioButton
                     android:id="@+id/pump_alarm_both"
+                    style="@style/Widget.App.RadioButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/danar_pump_alarm_both" />

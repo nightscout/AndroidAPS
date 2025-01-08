@@ -42,7 +42,7 @@ class PreferencesImpl @Inject constructor(
 
     override val simpleMode: Boolean get() = sp.getBoolean(BooleanKey.GeneralSimpleMode.key, BooleanKey.GeneralSimpleMode.defaultValue)
     override val apsMode: Boolean = config.APS
-    override val nsclientMode: Boolean = config.NSCLIENT
+    override val nsclientMode: Boolean = config.AAPSCLIENT
     override val pumpControlMode: Boolean = config.PUMPCONTROL
 
     private val prefsList: MutableList<Class<out PreferenceKey>> =
@@ -55,9 +55,16 @@ class PreferencesImpl @Inject constructor(
             IntentKey::class.java,
         )
 
+    private fun isHidden(key: PreferenceKey) : Boolean =
+        if (apsMode && key.showInApsMode == false) true
+        else if (nsclientMode && key.showInNsClientMode == false) true
+        else if (pumpControlMode && key.showInPumpControlMode == false) true
+        else false
+
     override fun get(key: BooleanPreferenceKey): Boolean =
         if (!config.isEngineeringMode() && key.engineeringModeOnly) key.defaultValue
-        else if (simpleMode && key.defaultedBySM) key.defaultValue
+        else if (simpleMode && key.defaultedBySM) calculatedDefaultValue(key)
+        else if (key.calculatedDefaultValue && isHidden(key)) calculatedDefaultValue(key)
         else sp.getBoolean(key.key, calculatedDefaultValue(key))
 
     override fun getIfExists(key: BooleanPreferenceKey): Boolean? =
@@ -115,7 +122,7 @@ class PreferencesImpl @Inject constructor(
     override fun get(key: IntPreferenceKey): Int =
         if (!config.isEngineeringMode() && key.engineeringModeOnly) key.defaultValue
         else if (simpleMode && key.defaultedBySM) calculatedDefaultValue(key)
-        else if (key.engineeringModeOnly && !config.isEngineeringMode()) calculatedDefaultValue(key)
+        else if (key.calculatedDefaultValue && isHidden(key)) calculatedDefaultValue(key)
         else sp.getInt(key.key, calculatedDefaultValue(key))
 
     override fun getIfExists(key: IntPreferenceKey): Int? =
@@ -128,7 +135,7 @@ class PreferencesImpl @Inject constructor(
     override fun get(key: LongPreferenceKey): Long =
         if (!config.isEngineeringMode() && key.engineeringModeOnly) key.defaultValue
         else if (simpleMode && key.defaultedBySM) calculatedDefaultValue(key)
-        else if (key.engineeringModeOnly && !config.isEngineeringMode()) calculatedDefaultValue(key)
+        else if (key.calculatedDefaultValue && isHidden(key)) calculatedDefaultValue(key)
         else sp.getLong(key.key, calculatedDefaultValue(key))
 
     override fun getIfExists(key: LongPreferenceKey): Long? =
@@ -195,9 +202,9 @@ class PreferencesImpl @Inject constructor(
     private fun calculatedDefaultValue(key: BooleanPreferenceKey): Boolean =
         if (key.calculatedDefaultValue)
             when (key) {
-                BooleanKey.OverviewKeepScreenOn                    -> config.NSCLIENT
-                BooleanKey.NsClientNotificationsFromAlarms         -> config.NSCLIENT
-                BooleanKey.NsClientNotificationsFromAnnouncements  -> config.NSCLIENT
+                BooleanKey.OverviewKeepScreenOn                    -> config.AAPSCLIENT
+                BooleanKey.NsClientNotificationsFromAlarms         -> config.AAPSCLIENT
+                BooleanKey.NsClientNotificationsFromAnnouncements  -> config.AAPSCLIENT
                 BooleanKey.NsClientLogAppStart                     -> config.APS
                 BooleanKey.NsClientCreateAnnouncementsFromErrors   -> config.APS
                 BooleanKey.NsClientCreateAnnouncementsFromCarbsReq -> config.APS

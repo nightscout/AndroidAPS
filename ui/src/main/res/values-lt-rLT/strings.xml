@@ -17,6 +17,7 @@
     <!--     Activities-->
     <string name="activity_monitor">Aktyvumo stebėjimas</string>
     <string name="do_you_want_reset_stats">Ar norite iš naujo nustatyti aktyvumo statistiką?</string>
+    <string name="do_you_want_recalculate_tdd_stats">Ar norite iš perskaičiuoti BPD statistiką?</string>
     <string name="statistics">Statistika</string>
     <string name="calculation_in_progress">Skaičiuojama</string>
     <string name="invalid_age">Neteisingas amžiaus įrašas</string>
@@ -121,6 +122,21 @@
     <string name="a11y_only_on_watch">tik laikrodyje</string>
     <string name="a11y_only_on_phone">tik telefone</string>
     <string name="quickwizard_settings">Greitojo patarėjo nustatymai</string>
+    <string name="overview_edit_quickwizard_button_text">Mygtuko tekstas</string>
     <string name="overview_edit_quickwizard_valid">Galioja:</string>
+    <string name="overview_edit_quickwizard_use_positive_iob_only">Tik teigiamas AIO</string>
+    <string name="overview_edit_quickwizard_superbolus">Superbolusas</string>
+    <string name="overview_edit_quickwizard_percentage_too_high">Procentas per aukštas!</string>
     <string name="a11y_drag_and_drop_handle">nutempti ir padėti</string>
+    <string name="additional_ecarbs">Pridėti ištęstus angliavandenius</string>
+    <string name="overview_edit_quickwizard_useforcalculation">Naudota skaičiavimams:</string>
+    <string name="constraints_violation">Apribojimų pažeidimas</string>
+    <string name="change_your_input">Pakeiskite įvestus duomenis!</string>
+    <string name="confirm_treatment">Patvirtinkite terapiją</string>
+    <string name="recalculate">Perskaičiuoti</string>
+    <string-array name="yes_no_positiveonly_negativeonly">
+        <item>Abu</item>
+        <item>Tik teigiamas</item>
+        <item>Tik neigiamas</item>
+    </string-array>
 </resources>

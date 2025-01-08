@@ -1060,7 +1060,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         temporaryBasal?.run {
             ret += rh.gs(
                 app.aaps.pump.omnipod.common.R.string.omnipod_common_short_status_temp_basal,
-                this.toStringFull(dateUtil, decimalFormatter)
+                this.toStringFull(dateUtil, rh)
             ) + "\n"
         }
         ret += rh.gs(
