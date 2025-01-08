@@ -365,7 +365,7 @@ class NSClientService : DaggerService() {
         nsEnabled = nsClientPlugin.isEnabled()
         nsURL = preferences.get(StringKey.NsClientUrl)
         nsAPISecret = preferences.get(StringKey.NsClientApiSecret)
-        nsDevice = sp.getString("careportal_enteredby", "")
+        nsDevice = "AAPS"
     }
 
     private val onAnnouncement = Emitter.Listener { args ->
