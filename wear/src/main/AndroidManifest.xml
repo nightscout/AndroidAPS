@@ -467,7 +467,7 @@
 
             <meta-data
                 android:name="androidx.wear.tiles.PREVIEW"
-                android:resource="@drawable/user_action_tiles" />
+                android:resource="@drawable/loop_states_tile" />
         </service>
 
         <receiver android:name=".complications.ComplicationTapBroadcastReceiver" />
