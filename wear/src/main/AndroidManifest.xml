@@ -456,6 +456,20 @@
                 android:resource="@drawable/user_action_tiles" />
         </service>
 
+        <service
+            android:name=".tile.LoopStateTileService"
+            android:exported="true"
+            android:label="@string/label_loop_state_title"
+            android:permission="com.google.android.wearable.permission.BIND_TILE_PROVIDER">
+            <intent-filter>
+                <action android:name="androidx.wear.tiles.action.BIND_TILE_PROVIDER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="androidx.wear.tiles.PREVIEW"
+                android:resource="@drawable/user_action_tiles" />
+        </service>
+
         <receiver android:name=".complications.ComplicationTapBroadcastReceiver" />
 
         <activity
@@ -523,6 +537,10 @@
 
         <activity
             android:name=".interaction.actions.BackgroundActionActivity"
+            android:exported="true" />
+
+        <activity
+            android:name=".interaction.actions.LoopStateTimedActivity"
             android:exported="true" />
 
         <activity

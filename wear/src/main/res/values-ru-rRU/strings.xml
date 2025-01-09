@@ -223,4 +223,7 @@
     <string name="complication_iob_icon">Иконка актИнс</string>
     <string name="complication_iob_detailed">АктИнс подробно</string>
     <string name="complication_uploader_phone_battery">Батарея загрузчика/телефона</string>
+    <string name="status_loop_state">Cост. цикла</string>
+    <string name="label_loop_state_title">AAPS(Сост. цикла)</string>
+    <string name="action_loop_state_selected">Запрошено сост. цикла</string>
 </resources>
