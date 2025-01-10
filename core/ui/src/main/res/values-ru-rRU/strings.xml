@@ -413,6 +413,7 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Базал</string>
     <string name="basalpct">Базал %</string>
+    <string name="sensitivity">Чувствительность</string>
     <string name="a11y_file">файл</string>
     <string name="a11y_user">пользователь</string>
     <!-- Autotune -->
