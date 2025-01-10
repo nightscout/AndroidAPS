@@ -81,6 +81,8 @@
     <string name="allow_hardware_pump_text">Внимание: Если вы активируете подключение к невиртуальной помпе, AAPS скопирует настройки базала в профиль помпы, перезаписывая существующие настройки, хранящиеся в ней. Убедитесь, что настройки базала в AAPS корректны. Если вы не уверены или не хотите перезаписать настройки базала на помпу, нажмите отменить и повторите подключение в другое время.</string>
     <string name="a11y_open_settings">открыть настройки</string>
     <string name="nsclient_version_does_not_match">Версия AAPSClient не совпадает с версией AAPS. Обновите версию.</string>
+    <string name="expand_category">Развернуть категорию</string>
+    <string name="collapse_category">Свернуть категорию</string>
     <!--ImportExport-->
     <string name="nav_preferences">Настройки</string>
     <string name="password_preferences_encrypt_prompt">Будет предложено ввести главный пароль, который будет использоваться для шифрования экспортированных параметров.</string>
