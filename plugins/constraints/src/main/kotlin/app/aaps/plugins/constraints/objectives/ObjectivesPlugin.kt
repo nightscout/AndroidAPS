@@ -15,6 +15,9 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.BooleanNonKey
+import app.aaps.core.keys.IntNonKey
+import app.aaps.core.keys.Preferences
 import app.aaps.plugins.constraints.R
 import app.aaps.plugins.constraints.objectives.objectives.Objective
 import app.aaps.plugins.constraints.objectives.objectives.Objective0
@@ -37,6 +40,7 @@ class ObjectivesPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     private val sp: SP,
+    private val preferences: Preferences
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
@@ -76,14 +80,14 @@ class ObjectivesPlugin @Inject constructor(
         }
         sp.putBoolean(app.aaps.core.utils.R.string.key_objectives_bg_is_available_in_ns, false)
         sp.putBoolean(app.aaps.core.utils.R.string.key_objectives_pump_status_is_available_in_ns, false)
-        sp.putInt(app.aaps.core.utils.R.string.key_ObjectivesmanualEnacts, 0)
+        preferences.put(IntNonKey.ObjectivesManualEnacts, 0)
         sp.putBoolean(app.aaps.core.utils.R.string.key_objectiveuseprofileswitch, false)
         sp.putBoolean(app.aaps.core.utils.R.string.key_objectiveusedisconnect, false)
         sp.putBoolean(app.aaps.core.utils.R.string.key_objectiveusereconnect, false)
         sp.putBoolean(app.aaps.core.utils.R.string.key_objectiveusetemptarget, false)
-        sp.putBoolean(app.aaps.core.utils.R.string.key_objectiveuseactions, false)
-        sp.putBoolean(app.aaps.core.utils.R.string.key_objectiveuseloop, false)
-        sp.putBoolean(app.aaps.core.utils.R.string.key_objectiveusescale, false)
+        preferences.put(BooleanNonKey.ObjectivesActionsUsed, false)
+        preferences.put(BooleanNonKey.ObjectivesLoopUsed, false)
+        preferences.put(BooleanNonKey.ObjectivesScaleUsed, false)
     }
 
     fun allPriorAccomplished(position: Int): Boolean {

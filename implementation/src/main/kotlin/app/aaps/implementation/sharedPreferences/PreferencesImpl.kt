@@ -16,6 +16,8 @@ import app.aaps.core.keys.BooleanPreferenceKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.DoublePreferenceKey
 import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.IntNonKey
+import app.aaps.core.keys.IntNonPreferenceKey
 import app.aaps.core.keys.IntPreferenceKey
 import app.aaps.core.keys.IntentKey
 import app.aaps.core.keys.LongPreferenceKey
@@ -57,6 +59,7 @@ class PreferencesImpl @Inject constructor(
             BooleanKey::class.java,
             BooleanNonKey::class.java,
             IntKey::class.java,
+            IntNonKey::class.java,
             DoubleKey::class.java,
             UnitDoubleKey::class.java,
             StringKey::class.java,
@@ -123,18 +126,25 @@ class PreferencesImpl @Inject constructor(
         sp.putDouble(key.key, value)
     }
 
+    override fun get(key: IntNonPreferenceKey): Int =
+        sp.getInt(key.key, key.defaultValue)
+
+    override fun getIfExists(key: IntNonPreferenceKey): Int? =
+        if (sp.contains(key.key)) sp.getInt(key.key, key.defaultValue) else null
+
+    override fun put(key: IntNonPreferenceKey, value: Int) {
+        sp.putInt(key.key, value)
+    }
+
+    override fun inc(key: IntNonPreferenceKey) {
+        sp.putInt(key.key, get(key) + 1)
+    }
+
     override fun get(key: IntPreferenceKey): Int =
         if (!config.isEngineeringMode() && key.engineeringModeOnly) key.defaultValue
         else if (simpleMode && key.defaultedBySM) calculatedDefaultValue(key)
         else if (key.calculatedDefaultValue && isHidden(key)) calculatedDefaultValue(key)
         else sp.getInt(key.key, calculatedDefaultValue(key))
-
-    override fun getIfExists(key: IntPreferenceKey): Int? =
-        if (sp.contains(key.key)) sp.getInt(key.key, calculatedDefaultValue(key)) else null
-
-    override fun put(key: IntPreferenceKey, value: Int) {
-        sp.putInt(key.key, value)
-    }
 
     override fun get(key: LongPreferenceKey): Long =
         if (!config.isEngineeringMode() && key.engineeringModeOnly) key.defaultValue
@@ -143,7 +153,7 @@ class PreferencesImpl @Inject constructor(
         else sp.getLong(key.key, calculatedDefaultValue(key))
 
     override fun getIfExists(key: LongPreferenceKey): Long? =
-        if (sp.contains(key.key)) sp.getLong(key.key, calculatedDefaultValue(key)) else null
+        if (sp.contains(key.key)) sp.getLong(key.key, key.defaultValue) else null
 
     override fun put(key: LongPreferenceKey, value: Long) {
         sp.putLong(key.key, value)

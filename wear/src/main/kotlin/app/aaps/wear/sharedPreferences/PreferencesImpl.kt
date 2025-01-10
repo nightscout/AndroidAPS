@@ -9,6 +9,8 @@ import app.aaps.core.keys.BooleanPreferenceKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.DoublePreferenceKey
 import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.IntNonKey
+import app.aaps.core.keys.IntNonPreferenceKey
 import app.aaps.core.keys.IntPreferenceKey
 import app.aaps.core.keys.IntentKey
 import app.aaps.core.keys.LongPreferenceKey
@@ -41,6 +43,7 @@ class PreferencesImpl @Inject constructor(
             BooleanKey::class.java,
             BooleanNonKey::class.java,
             IntKey::class.java,
+            IntNonKey::class.java,
             DoubleKey::class.java,
             UnitDoubleKey::class.java,
             StringKey::class.java,
@@ -90,14 +93,20 @@ class PreferencesImpl @Inject constructor(
         sp.putDouble(key.key, value)
     }
 
-    override fun get(key: IntPreferenceKey): Int = sp.getInt(key.key, key.defaultValue)
+    override fun get(key: IntNonPreferenceKey): Int = sp.getInt(key.key, key.defaultValue)
 
-    override fun getIfExists(key: IntPreferenceKey): Int? =
+    override fun getIfExists(key: IntNonPreferenceKey): Int? =
         if (sp.contains(key.key)) sp.getInt(key.key, key.defaultValue) else null
 
-    override fun put(key: IntPreferenceKey, value: Int) {
+    override fun put(key: IntNonPreferenceKey, value: Int) {
         sp.putInt(key.key, value)
     }
+
+    override fun inc(key: IntNonPreferenceKey) {
+        sp.putInt(key.key, get(key) + 1)
+    }
+
+    override fun get(key: IntPreferenceKey): Int = sp.getInt(key.key, key.defaultValue)
 
     override fun get(key: LongPreferenceKey): Long = sp.getLong(key.key, key.defaultValue)
 

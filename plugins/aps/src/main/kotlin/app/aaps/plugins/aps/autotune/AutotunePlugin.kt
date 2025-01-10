@@ -27,7 +27,6 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventLocalProfileChanged
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.keys.BooleanKey
@@ -45,6 +44,7 @@ import app.aaps.plugins.aps.autotune.data.ATProfile
 import app.aaps.plugins.aps.autotune.data.LocalInsulin
 import app.aaps.plugins.aps.autotune.data.PreppedGlucose
 import app.aaps.plugins.aps.autotune.events.EventAutotuneUpdateGui
+import app.aaps.plugins.aps.autotune.keys.AutotuneStringKey
 import dagger.android.HasAndroidInjector
 import org.json.JSONException
 import org.json.JSONObject
@@ -62,7 +62,6 @@ import javax.inject.Singleton
 class AutotunePlugin @Inject constructor(
     private val injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
-    private val sp: SP,
     private val preferences: Preferences,
     private val rxBus: RxBus,
     private val profileFunction: ProfileFunction,
@@ -102,6 +101,10 @@ class AutotunePlugin @Inject constructor(
     private lateinit var profile: Profile
     val days = WeekDay()
     val autotuneStartHour: Int = 4
+
+    init {
+        preferences.registerPreferences(AutotuneStringKey::class.java)
+    }
 
     override fun aapsAutotune(daysBack: Int, autoSwitch: Boolean, profileToTune: String, weekDays: BooleanArray?) {
         lastRunSuccess = false
@@ -185,7 +188,7 @@ class AutotunePlugin @Inject constructor(
                 log("Tune day " + (i + 1) + " of " + daysBack + " (" + currentCalcDay + " of " + calcDays + ")")
                 tunedProfile?.let {
                     autotuneIob.initializeData(from, to, it)  //autotuneIob contains BG and Treatments data from history (<=> query for ns-treatments and ns-entries)
-                    if (autotuneIob.boluses.isEmpty()) {
+                    if (autotuneIob.boluses.isEmpty) {
                         result = rh.gs(R.string.autotune_error)
                         log("No basal data on day ${i + 1}")
                         autotuneFS.exportResult(result)
@@ -407,14 +410,14 @@ class AutotunePlugin @Inject constructor(
         }
         json.put("result", result)
         json.put("updateButtonVisibility", updateButtonVisibility)
-        sp.putString(R.string.key_autotune_last_run, json.toString())
+        preferences.put(AutotuneStringKey.AutotuneLastRun, json.toString())
     }
 
     fun loadLastRun() {
         result = ""
         lastRunSuccess = false
         try {
-            val json = JSONObject(sp.getString(R.string.key_autotune_last_run, ""))
+            val json = JSONObject(preferences.get(AutotuneStringKey.AutotuneLastRun))
             lastNbDays = JsonHelper.safeGetString(json, "lastNbDays", "")
             lastRun = JsonHelper.safeGetLong(json, "lastRun")
             val pumpPeak = JsonHelper.safeGetInt(json, "pumpPeak")

@@ -83,6 +83,7 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.UnitDoubleKey
@@ -227,7 +228,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             overviewData.rangeToDisplay = if (overviewData.rangeToDisplay > 24) 6 else overviewData.rangeToDisplay
             sp.putInt(app.aaps.core.utils.R.string.key_rangetodisplay, overviewData.rangeToDisplay)
             rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.utils.R.string.key_rangetodisplay)))
-            sp.putBoolean(app.aaps.core.utils.R.string.key_objectiveusescale, true)
+            preferences.put(BooleanNonKey.ObjectivesScaleUsed, true)
             false
         }
         prepareGraphsIfNeeded(overviewMenus.setting.size)
@@ -293,7 +294,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                            overviewData.rangeToDisplay = it.hours
                            sp.putInt(app.aaps.core.utils.R.string.key_rangetodisplay, it.hours)
                            rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.utils.R.string.key_rangetodisplay)))
-                           sp.putBoolean(app.aaps.core.utils.R.string.key_objectiveusescale, true)
+                           preferences.put(BooleanNonKey.ObjectivesScaleUsed, true)
                        }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventBucketedDataCreated::class.java)

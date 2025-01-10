@@ -219,26 +219,44 @@ interface Preferences {
      * In SimpleMode return default value
      * In FullMode return value from [android.content.SharedPreferences]
      *
-     * @param key [IntPreferenceKey] enum
+     * @param key [IntNonPreferenceKey] enum
      * @return value
      */
-    fun get(key: IntPreferenceKey): Int
+    fun get(key: IntNonPreferenceKey): Int
 
     /**
      * Get [Int] value from [android.content.SharedPreferences] or null if doesn't exist
      *
-     * @param key [IntPreferenceKey] enum
+     * @param key [IntNonPreferenceKey] enum
      * @return value or null
      */
-    fun getIfExists(key: IntPreferenceKey): Int?
+    fun getIfExists(key: IntNonPreferenceKey): Int?
 
     /**
      * Update [Int] value in [android.content.SharedPreferences]
      *
-     * @param key [IntPreferenceKey] enum
+     * @param key [IntNonPreferenceKey] enum
      * @param value value
      */
-    fun put(key: IntPreferenceKey, value: Int)
+    fun put(key: IntNonPreferenceKey, value: Int)
+
+    /**
+     * Increment [Int] value in [android.content.SharedPreferences]
+     *
+     * @param key [IntNonPreferenceKey] enum
+     * @param value value
+     */
+    fun inc(key: IntNonPreferenceKey)
+
+    /**
+     * Get [Int] value from [android.content.SharedPreferences]
+     * In SimpleMode return default value
+     * In FullMode return value from [android.content.SharedPreferences]
+     *
+     * @param key [IntPreferenceKey] enum
+     * @return value
+     */
+    fun get(key: IntPreferenceKey): Int
 
     /* LONG */
 

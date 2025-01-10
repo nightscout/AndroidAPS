@@ -1,11 +1,11 @@
 package app.aaps.core.keys
 
-interface IntPreferenceKey : PreferenceKey {
+interface IntPreferenceKey : PreferenceKey, IntNonPreferenceKey {
 
     /**
      * Default value if not changed from preferences
      */
-    val defaultValue: Int
+    override val defaultValue: Int
 
     /**
      *  Minimal allowed value

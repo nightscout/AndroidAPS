@@ -60,7 +60,7 @@ class LoopPluginTest : TestBaseWithProfile() {
     @BeforeEach fun prepare() {
         preferenceManager = PreferenceManager(context)
         loopPlugin = LoopPlugin(
-            aapsLogger, aapsSchedulers, rxBus, sp, preferences, config,
+            aapsLogger, aapsSchedulers, rxBus, preferences, config,
             constraintChecker, rh, profileFunction, context, commandQueue, activePlugin, virtualPumpPlugin, iobCobCalculator, processedTbrEbData, receiverStatusStore, fabricPrivacy, dateUtil, uel,
             persistenceLayer, runningConfiguration, uiInteraction, instantiator, processedDeviceStatusData
         )
