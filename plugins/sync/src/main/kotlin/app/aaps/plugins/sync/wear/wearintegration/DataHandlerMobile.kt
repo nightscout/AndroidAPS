@@ -56,7 +56,6 @@ import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.rx.events.EventWearUpdateGui
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
 import app.aaps.core.interfaces.rx.weardata.EventData
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -68,6 +67,7 @@ import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.convertedToAbsolute
@@ -103,7 +103,6 @@ class DataHandlerMobile @Inject constructor(
     private val rxBus: RxBus,
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
-    private val sp: SP,
     private val preferences: Preferences,
     private val config: Config,
     private val iobCobCalculator: IobCobCalculator,
@@ -1531,12 +1530,12 @@ class DataHandlerMobile @Inject constructor(
         aapsLogger.debug(LTag.WEAR, "Custom Watchface received from ${command.sourceNodeId}")
         val cwfData = customWatchface.customWatchfaceData
         rxBus.send(EventWearUpdateGui(cwfData, command.exportFile))
-        val watchfaceName = sp.getString(app.aaps.core.utils.R.string.key_wear_cwf_watchface_name, "")
-        val authorVersion = sp.getString(app.aaps.core.utils.R.string.key_wear_cwf_author_version, "")
+        val watchfaceName = preferences.get(StringNonKey.WearCwfWatchfaceName)
+        val authorVersion = preferences.get(StringNonKey.WearCwfAuthorVersion)
         if (cwfData.metadata[CwfMetadataKey.CWF_NAME] != watchfaceName || cwfData.metadata[CwfMetadataKey.CWF_AUTHOR_VERSION] != authorVersion) {
-            sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_watchface_name, cwfData.metadata[CwfMetadataKey.CWF_NAME] ?: "")
-            sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_author_version, cwfData.metadata[CwfMetadataKey.CWF_AUTHOR_VERSION] ?: "")
-            sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_filename, cwfData.metadata[CwfMetadataKey.CWF_FILENAME] ?: "")
+            preferences.put(StringNonKey.WearCwfWatchfaceName, cwfData.metadata[CwfMetadataKey.CWF_NAME] ?: "")
+            preferences.put(StringNonKey.WearCwfAuthorVersion, cwfData.metadata[CwfMetadataKey.CWF_AUTHOR_VERSION] ?: "")
+            preferences.put(StringNonKey.WearCwfFileName, cwfData.metadata[CwfMetadataKey.CWF_FILENAME] ?: "")
         }
 
         if (command.exportFile)

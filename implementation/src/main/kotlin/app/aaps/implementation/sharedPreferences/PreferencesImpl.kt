@@ -8,7 +8,10 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.core.keys.BooleanComposedNonPreferenceKey
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.BooleanNonKey
+import app.aaps.core.keys.BooleanNonPreferenceKey
 import app.aaps.core.keys.BooleanPreferenceKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.DoublePreferenceKey
@@ -19,13 +22,15 @@ import app.aaps.core.keys.LongPreferenceKey
 import app.aaps.core.keys.NonPreferenceKey
 import app.aaps.core.keys.PreferenceKey
 import app.aaps.core.keys.Preferences
-import app.aaps.core.keys.String2PreferenceKey
+import app.aaps.core.keys.StringComposedNonPreferenceKey
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.StringNonKey
 import app.aaps.core.keys.StringNonPreferenceKey
 import app.aaps.core.keys.StringPreferenceKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.keys.UnitDoublePreferenceKey
 import dagger.Lazy
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.max
@@ -50,10 +55,12 @@ class PreferencesImpl @Inject constructor(
     private val prefsList: MutableList<Class<out NonPreferenceKey>> =
         mutableListOf(
             BooleanKey::class.java,
+            BooleanNonKey::class.java,
             IntKey::class.java,
             DoubleKey::class.java,
             UnitDoubleKey::class.java,
             StringKey::class.java,
+            StringNonKey::class.java,
             IntentKey::class.java,
         )
 
@@ -63,18 +70,21 @@ class PreferencesImpl @Inject constructor(
         else if (pumpControlMode && key.showInPumpControlMode == false) true
         else false
 
+    override fun get(key: BooleanNonPreferenceKey): Boolean =
+        sp.getBoolean(key.key, key.defaultValue)
+
+    override fun getIfExists(key: BooleanNonPreferenceKey): Boolean? =
+        if (sp.contains(key.key)) sp.getBoolean(key.key, key.defaultValue) else null
+
+    override fun put(key: BooleanNonPreferenceKey, value: Boolean) {
+        sp.putBoolean(key.key, value)
+    }
+
     override fun get(key: BooleanPreferenceKey): Boolean =
         if (!config.isEngineeringMode() && key.engineeringModeOnly) key.defaultValue
         else if (simpleMode && key.defaultedBySM) calculatedDefaultValue(key)
         else if (key.calculatedDefaultValue && isHidden(key)) calculatedDefaultValue(key)
         else sp.getBoolean(key.key, calculatedDefaultValue(key))
-
-    override fun getIfExists(key: BooleanPreferenceKey): Boolean? =
-        if (sp.contains(key.key)) sp.getBoolean(key.key, key.defaultValue) else null
-
-    override fun put(key: BooleanPreferenceKey, value: Boolean) {
-        sp.putBoolean(key.key, value)
-    }
 
     override fun get(key: StringNonPreferenceKey): String =
         sp.getString(key.key, key.defaultValue)
@@ -88,17 +98,6 @@ class PreferencesImpl @Inject constructor(
 
     override fun put(key: StringNonPreferenceKey, value: String) {
         sp.putString(key.key, value)
-    }
-
-    override fun get(key: String2PreferenceKey, appendix: String): String =
-        if (simpleMode && key.defaultedBySM) key.defaultValue
-        else sp.getString(key.key + key.delimiter + appendix, key.defaultValue)
-
-    override fun getIfExists(key: String2PreferenceKey, appendix: String): String? =
-        if (sp.contains(key.key + key.delimiter + appendix)) sp.getString(key.key + key.delimiter + appendix, key.defaultValue) else null
-
-    override fun put(key: String2PreferenceKey, appendix: String, value: String) {
-        sp.putString(key.key + key.delimiter + appendix, value)
     }
 
     override fun get(key: DoublePreferenceKey): Double =
@@ -154,8 +153,8 @@ class PreferencesImpl @Inject constructor(
         sp.remove(key.key)
     }
 
-    override fun remove(key: String2PreferenceKey, appendix: String) {
-        sp.remove(key.key + key.delimiter + appendix)
+    override fun remove(key: StringComposedNonPreferenceKey, vararg arguments: Any) {
+        sp.remove(String.format(Locale.ENGLISH, key.key, arguments))
     }
 
     override fun isUnitDependent(key: String): Boolean =
@@ -183,6 +182,26 @@ class PreferencesImpl @Inject constructor(
                     }
             }
         }
+
+    override fun get(key: BooleanComposedNonPreferenceKey, vararg arguments: Any): Boolean =
+        sp.getBoolean(key.composeKey(*arguments), key.defaultValue)
+
+    override fun getIfExists(key: BooleanComposedNonPreferenceKey, vararg arguments: Any): Boolean? =
+        if (sp.contains(key.composeKey(*arguments))) sp.getBoolean(key.composeKey(*arguments), key.defaultValue) else null
+
+    override fun put(key: BooleanComposedNonPreferenceKey, vararg arguments: Any, value: Boolean) {
+        sp.putBoolean(key.composeKey(*arguments), value)
+    }
+
+    override fun get(key: StringComposedNonPreferenceKey, vararg arguments: Any): String =
+        sp.getString(key.composeKey(*arguments), key.defaultValue)
+
+    override fun getIfExists(key: StringComposedNonPreferenceKey, vararg arguments: Any): String? =
+        if (sp.contains(key.composeKey(*arguments))) sp.getString(key.composeKey(*arguments), key.defaultValue) else null
+
+    override fun put(key: StringComposedNonPreferenceKey, vararg arguments: Any, value: String) {
+        sp.putString(key.composeKey(*arguments), value)
+    }
 
     override fun registerPreferences(clazz: Class<out NonPreferenceKey>) {
         if (clazz !in prefsList) prefsList.add(clazz)

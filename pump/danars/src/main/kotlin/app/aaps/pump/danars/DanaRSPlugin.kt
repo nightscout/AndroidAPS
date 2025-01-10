@@ -66,7 +66,7 @@ import app.aaps.pump.dana.keys.DanaBooleanKey
 import app.aaps.pump.dana.keys.DanaIntKey
 import app.aaps.pump.dana.keys.DanaIntentKey
 import app.aaps.pump.dana.keys.DanaLongKey
-import app.aaps.pump.dana.keys.DanaString2Key
+import app.aaps.pump.dana.keys.DanaStringComposedKey
 import app.aaps.pump.dana.keys.DanaStringKey
 import app.aaps.pump.danars.activities.BLEScanActivity
 import app.aaps.pump.danars.events.EventDanaRSDeviceChange
@@ -125,7 +125,7 @@ class DanaRSPlugin @Inject constructor(
         preferences.registerPreferences(DanaIntKey::class.java)
         preferences.registerPreferences(DanaBooleanKey::class.java)
         preferences.registerPreferences(DanaIntentKey::class.java)
-        preferences.registerPreferences(DanaString2Key::class.java)
+        preferences.registerPreferences(DanaStringComposedKey::class.java)
         preferences.registerPreferences(DanaLongKey::class.java)
     }
 
@@ -665,11 +665,11 @@ class DanaRSPlugin @Inject constructor(
     override fun canHandleDST(): Boolean = false
     override fun clearPairing() {
         aapsLogger.debug(LTag.PUMPCOMM, "Pairing keys cleared")
-        preferences.remove(DanaString2Key.DanaRsParingKey, mDeviceName)
-        preferences.remove(DanaString2Key.DanaRsV3RandomParingKey, mDeviceName)
-        preferences.remove(DanaString2Key.DanaRsV3ParingKey, mDeviceName)
-        preferences.remove(DanaString2Key.DanaRsV3RandomSyncKey, mDeviceName)
-        preferences.remove(DanaString2Key.DanaRsBle5PairingKey, mDeviceName)
+        preferences.remove(DanaStringComposedKey.DanaRsParingKey, mDeviceName)
+        preferences.remove(DanaStringComposedKey.DanaRsV3RandomParingKey, mDeviceName)
+        preferences.remove(DanaStringComposedKey.DanaRsV3ParingKey, mDeviceName)
+        preferences.remove(DanaStringComposedKey.DanaRsV3RandomSyncKey, mDeviceName)
+        preferences.remove(DanaStringComposedKey.DanaRsBle5PairingKey, mDeviceName)
     }
 
     override fun clearAllTables() = danaHistoryDatabase.clearAllTables()

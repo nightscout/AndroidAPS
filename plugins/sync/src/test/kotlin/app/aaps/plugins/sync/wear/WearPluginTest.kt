@@ -32,7 +32,7 @@ class WearPluginTest : TestBaseWithProfile() {
 
     @BeforeEach fun prepare() {
         rateLimit = RateLimit(dateUtil)
-        wearPlugin = WearPlugin(aapsLogger, rh, aapsSchedulers, sp, preferences, fabricPrivacy, rxBus, context, dataHandlerMobile, dataLayerListenerServiceMobileHelper, config)
+        wearPlugin = WearPlugin(aapsLogger, rh, aapsSchedulers, preferences, fabricPrivacy, rxBus, context, dataHandlerMobile, dataLayerListenerServiceMobileHelper, config)
     }
 
     @Test
