@@ -135,13 +135,55 @@ class SmsCommunicatorPlugin @Inject constructor(
     @Volatile var lastRemoteBolusTime: Long = 0
     override var messages = ArrayList<Sms>()
 
+    // BOLUS 1.2
+    // BOLUS 1.2 MEAL
+    // BOLUS 1.2 CARBS 12
+    // BOLUS 1.2 CARBS 12 21:37
+    // BOLUS 1.2 CARBS 12 21:37 ALARM
+    // BOLUS 1.2 CARBS 12 1:37 ALARM
+    // BOLUS 1.2 CARBS 12 0:3 ALARM
+    // BOLUS 1
+    // BOLUS 0.05
+    //
+    // BONUS 1
+    // BOLUS 1.2 CARBS 12 0:3 AARM
+    // BOLUS 1.2 CARBS 1:37 ALARM 12
+    //
+    // ^BOLUS\s+(\d+(?:.\d+)?)(\s((MEAL|CARBS\s(\d+)(\s((\d{1,2}:\d{1,2}(\sALARM)?)))?))?)?$
+    // better: ^BOLUS\s+(\d+(?:.\d+)?)\s*(?:(MEAL)|(?:CARBS\s+(\d+)(?:\s*(\d{1,2}:\d{1,2})(?:\s*ALARM)?)?)?)?$
+    //
+    //
+    // offset:
+    // todo: introduce named groups
+    // ^BOLUS\s+(\d+(?:.\d+)?)\s*(?:(MEAL)|(?:CARBS\s+(\d+)(?:\s*((?:\d{1,2}:\d{1,2})|(?:\+\d{1,2}))(?:\s*ALARM)?)?)?)?$
+    // BOLUS 1.2
+    // BOLUS 1.2 MEAL
+    // BOLUS 1.2 CARBS 12
+    // BOLUS 1.2 CARBS 12 21:37
+    // BOLUS 1.2 CARBS 12 21:37 ALARM
+    // BOLUS 1.2 CARBS 12 1:37 ALARM
+    // BOLUS 1.2 CARBS 12 0:3 ALARM
+    // BOLUS 1
+    // BOLUS 0.05
+    // BOLUS 1.2 CARBS 12 +37 ALARM
+    //
+    // BONUS 1
+    // BOLUS 1.2 CARBS 12 0:3 AARM
+    // BOLUS 1.2 CARBS 1:37 ALARM 12
+    // BOLUS 1.2 CARBS 12 +1:37 ALARM
+    // BOLUS 1.2 CARBS 12 -0:3 ALARM
+    // BOLUS 1.2 CARBS 12 -3 ALARM
+    // BOLUS 1.2 CARBS 12 37 ALARM
+
+
     private val commands = mapOf(
         "BG" to "BG",
         "LOOP" to "LOOP STOP/DISABLE/START/ENABLE/RESUME/STATUS/CLOSED/LGS\nLOOP SUSPEND 20",
         "AAPSCLIENT" to "AAPSCLIENT RESTART",
         "PUMP" to "PUMP\nPUMP CONNECT\nPUMP DISCONNECT 30\n",
         "BASAL" to "BASAL STOP/CANCEL\nBASAL 0.3\nBASAL 0.3 20\nBASAL 30%\nBASAL 30% 20\n",
-        "BOLUS" to "BOLUS 1.2\nBOLUS 1.2 MEAL",
+        "BOLUS" to "BOLUS 1.2\nBOLUS 1.2 MEAL\nBOLUS 1.2 CARBS 12\nBOLUS 1.2 CARBS 12 21:37\n",
+            //+ "BOLUS 1.2 CARBS 12 21:37 ALARM",
         "EXTENDED" to "EXTENDED STOP/CANCEL\nEXTENDED 2 120",
         "CAL" to "CAL 5.6",
         "PROFILE" to "PROFILE STATUS/LIST\nPROFILE 1\nPROFILE 2 30",
@@ -928,11 +970,14 @@ class SmsCommunicatorPlugin @Inject constructor(
 
     private fun processBOLUS(divided: Array<String>, receivedSms: Sms) {
         var bolus = SafeParse.stringToDouble(divided[1])
-        val isMeal = divided.size > 2 && divided[2].equals("MEAL", ignoreCase = true)
+        val isMeal = divided.size == 3 && divided[2].equals("MEAL", ignoreCase = true)
+        val carbsPresent = divided.size == 3 && divided[2].equals("CARBS", ignoreCase = true)
+
         bolus = constraintChecker.applyBolusConstraints(ConstraintObject(bolus, aapsLogger)).value()
-        if (divided.size == 3 && !isMeal) {
-            sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
-        } else if (bolus > 0.0) {
+        // if (divided.size == 3 && !isMeal) {
+        //     sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
+        // } else
+        if (bolus > 0.0) {
             val iob = iobCobCalculator.calculateIobFromBolus().round().iob + iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round().basaliob
             val passCode = generatePassCode()
             val reply = if (isMeal)
@@ -1002,6 +1047,8 @@ class SmsCommunicatorPlugin @Inject constructor(
                 }
             })
         } else sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
+
+
     }
 
     private fun toTodayTime(hhColonMm: String): Long {
