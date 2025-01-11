@@ -17,7 +17,6 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.Preferences
@@ -38,7 +37,6 @@ import kotlin.math.roundToInt
 class SensitivityOref1Plugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
-    sp: SP,
     preferences: Preferences,
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
@@ -53,7 +51,7 @@ class SensitivityOref1Plugin @Inject constructor(
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.description_sensitivity_oref1)
         .setDefault(),
-    aapsLogger, rh, sp, preferences
+    aapsLogger, rh, preferences
 ), PluginConstraints {
 
     override fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult {

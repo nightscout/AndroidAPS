@@ -40,10 +40,10 @@ class SensitivityWeightedAveragePluginTest : TestBaseWithProfile() {
     @BeforeEach fun prepare() {
         preferenceManager = PreferenceManager(context)
         sensitivityWeightedAveragePlugin = SensitivityWeightedAveragePlugin(
-            aapsLogger, rh, sp, preferences, profileFunction, dateUtil, persistenceLayer, activePlugin
+            aapsLogger, rh, preferences, profileFunction, dateUtil, persistenceLayer, activePlugin
         )
         sensitivityAAPSPlugin = SensitivityAAPSPlugin(
-            aapsLogger, rh, sp, preferences, profileFunction, dateUtil, persistenceLayer
+            aapsLogger, rh, preferences, profileFunction, dateUtil, persistenceLayer
         )
         Mockito.`when`(activePlugin.getPluginsList()).thenReturn(arrayListOf(sensitivityAAPSPlugin))
     }
