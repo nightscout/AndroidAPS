@@ -10,14 +10,8 @@
     <string name="key_active_pump_serial_number" translatable="false">active_pump_serial_number</string>
     <string name="key_next_pump_disconnected_alarm" translatable="false">nextPumpDisconnectedAlarm</string>
     <string name="key_next_missed_reading_alarm" translatable="false">nextMissedReadingsAlarm</string>
-    <string name="key_objectiveuseprofileswitch" translatable="false">ObjectivesProfileSwitchUsed</string>
-    <string name="key_objectiveusetemptarget" translatable="false">ObjectivesTempTargetUsed</string>
-    <string name="key_objectiveusedisconnect" translatable="false">ObjectivesDisconnectUsed</string>
-    <string name="key_objectiveusereconnect" translatable="false">ObjectivesReconnectUsed</string>
     <string name="key_wear_detailediob" translatable="false">wear_detailediob</string>
     <string name="key_wear_showbgi" translatable="false">wear_showbgi</string>
     <string name="key_wear_detailed_delta" translatable="false">wear_detailed_delta</string>
-    <string name="key_objectives_bg_is_available_in_ns" translatable="false">ObjectivesbgIsAvailableInNS</string>
-    <string name="key_objectives_pump_status_is_available_in_ns" translatable="false">ObjectivespumpStatusIsAvailableInNS</string>
 
 </resources>

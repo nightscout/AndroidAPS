@@ -26,7 +26,7 @@ import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.nsclient.NSAlarm
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
-import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -43,7 +43,6 @@ import app.aaps.core.interfaces.rx.events.EventProfileSwitchChanged
 import app.aaps.core.interfaces.rx.events.EventSWSyncStatus
 import app.aaps.core.interfaces.rx.events.EventTempTargetChange
 import app.aaps.core.interfaces.rx.events.EventTherapyEventChange
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.sync.DataSyncSelector
 import app.aaps.core.interfaces.sync.NsClient
@@ -52,10 +51,14 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.BooleanNonKey
+import app.aaps.core.keys.BooleanNonPreferenceKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.LongNonKey
+import app.aaps.core.keys.LongNonPreferenceKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.StringNonPreferenceKey
 import app.aaps.core.nssdk.NSAndroidClientImpl
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.remotemodel.LastModified
@@ -104,13 +107,12 @@ import javax.inject.Singleton
 @Singleton
 class NSClientV3Plugin @Inject constructor(
     aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
+    preferences: Preferences,
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
-    rh: ResourceHelper,
     private val context: Context,
     private val fabricPrivacy: FabricPrivacy,
-    private val sp: SP,
-    private val preferences: Preferences,
     private val receiverDelegate: ReceiverDelegate,
     private val config: Config,
     private val dateUtil: DateUtil,
@@ -120,7 +122,7 @@ class NSClientV3Plugin @Inject constructor(
     private val storeDataForDb: StoreDataForDb,
     private val decimalFormatter: DecimalFormatter,
     private val l: L
-) : NsClient, Sync, PluginBase(
+) : NsClient, Sync, PluginBaseWithPreferences(
     PluginDescription()
         .mainType(PluginType.SYNC)
         .fragmentClass(NSClientFragment::class.java.name)
@@ -129,8 +131,46 @@ class NSClientV3Plugin @Inject constructor(
         .shortName(R.string.ns_client_v3_short_name)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.description_ns_client_v3),
-    aapsLogger, rh
+    ownPreferences = listOf(NsclientBooleanKey::class.java, NsclientStringKey::class.java, NsclientLongKey::class.java),
+    aapsLogger, rh, preferences
 ) {
+
+    enum class NsclientBooleanKey(
+        override val key: String,
+        override val defaultValue: Boolean
+    ) : BooleanNonPreferenceKey {
+
+        NsPaused("ns_client_paused", false)
+    }
+
+    enum class NsclientStringKey(
+        override val key: String,
+        override val defaultValue: String
+    ) : StringNonPreferenceKey {
+
+        V3LastModified("ns_client_v3_last_modified", Json.encodeToString(LastModified.serializer(), LastModified(LastModified.Collections())))
+    }
+
+    enum class NsclientLongKey(
+        override val key: String,
+        override val defaultValue: Long
+    ) : LongNonPreferenceKey {
+
+        BolusLastSyncedId("ns_bolus_last_synced_id", 0L),
+        CarbsLastSyncedId("ns_carbs_last_synced_id", 0L),
+        BolusCalculatorLastSyncedId("ns_bolus_calculator_result_last_synced_id", 0L),
+        TemporaryTargetLastSyncedId("ns_temporary_target_last_sync", 0L),
+        FoodLastSyncedId("ns_food_last_sync", 0L),
+        GlucoseValueLastSyncedId("ns_glucose_value_last_sync", 0L),
+        TherapyEventLastSyncedId("ns_therapy_event_last_sync", 0L),
+        DeviceStatusLastSyncedId("ns_device_status_last_synced_id", 0L),
+        TemporaryBasalLastSyncedId("ns_temporary_basal_last_synced_id", 0L),
+        ExtendedBolusLastSyncedId("ns_extended_bolus_last_synced_id", 0L),
+        ProfileSwitchLastSyncedId("ns_profile_switch_last_synced_id", 0L),
+        EffectiveProfileSwitchLastSyncedId("ns_effective_profile_switch_last_synced_id", 0L),
+        OfflineEventLastSyncedId("ns_offline_event_last_synced_id", 0L),
+        ProfileStoreLastSyncedId("ns_profile_store_last_synced_timestamp", 0L),
+    }
 
     @Suppress("PrivatePropertyName")
     private val JOB_NAME: String = this::class.java.simpleName
@@ -148,7 +188,7 @@ class NSClientV3Plugin @Inject constructor(
     override val status
         get() =
             when {
-                sp.getBoolean(R.string.key_ns_paused, false)                                          -> rh.gs(app.aaps.core.ui.R.string.paused)
+                preferences.get(NsclientBooleanKey.NsPaused)                                          -> rh.gs(app.aaps.core.ui.R.string.paused)
                 isAllowed.not()                                                                       -> blockingReason
                 preferences.get(BooleanKey.NsClient3UseWs) && nsClientV3Service?.wsConnected == true  -> "WS: " + rh.gs(app.aaps.core.interfaces.R.string.connected)
                 preferences.get(BooleanKey.NsClient3UseWs) && nsClientV3Service?.wsConnected == false -> "WS: " + rh.gs(R.string.not_connected)
@@ -204,12 +244,7 @@ class NSClientV3Plugin @Inject constructor(
         super.onStart()
         handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
-        lastLoadedSrvModified = Json.decodeFromString(
-            sp.getString(
-                R.string.key_ns_client_v3_last_modified,
-                Json.encodeToString(LastModified.serializer(), LastModified(LastModified.Collections()))
-            )
-        )
+        lastLoadedSrvModified = Json.decodeFromString(preferences.get(NsclientStringKey.V3LastModified))
 
         setClient()
 
@@ -240,7 +275,7 @@ class NSClientV3Plugin @Inject constructor(
                            if (ev.isChanged(StringKey.NsClientAccessToken.key) ||
                                ev.isChanged(StringKey.NsClientUrl.key) ||
                                ev.isChanged(BooleanKey.NsClient3UseWs.key) ||
-                               ev.isChanged(rh.gs(R.string.key_ns_paused)) ||
+                               ev.isChanged(NsclientBooleanKey.NsPaused.key) ||
                                ev.isChanged(BooleanKey.NsClientNotificationsFromAlarms.key) ||
                                ev.isChanged(BooleanKey.NsClientNotificationsFromAnnouncements.key)
                            ) {
@@ -389,8 +424,8 @@ class NSClientV3Plugin @Inject constructor(
     }
 
     override fun pause(newState: Boolean) {
-        sp.putBoolean(R.string.key_ns_paused, newState)
-        rxBus.send(EventPreferenceChange(rh.gs(R.string.key_ns_paused)))
+        preferences.put(NsclientBooleanKey.NsPaused, newState)
+        rxBus.send(EventPreferenceChange(NsclientBooleanKey.NsPaused.key))
     }
 
     override fun detectedNsVersion(): String? = nsAndroidClient?.lastStatus?.version
@@ -491,7 +526,7 @@ class NSClientV3Plugin @Inject constructor(
                 result.identifier?.let {
                     dataPair.value.ids.nightscoutId = it
                     storeDataForDb.addToNsIdDeviceStatuses(dataPair.value)
-                    sp.putBoolean(app.aaps.core.utils.R.string.key_objectives_pump_status_is_available_in_ns, true)
+                    preferences.put(BooleanNonKey.ObjectivesPumpStatusIsAvailableInNS, true)
                 }
                 slowDown()
                 return true
@@ -729,12 +764,12 @@ class NSClientV3Plugin @Inject constructor(
         }
 
     fun storeLastLoadedSrvModified() {
-        sp.putString(R.string.key_ns_client_v3_last_modified, Json.encodeToString(LastModified.serializer(), lastLoadedSrvModified))
+        preferences.put(NsclientStringKey.V3LastModified, Json.encodeToString(LastModified.serializer(), lastLoadedSrvModified))
     }
 
     internal fun executeLoop(origin: String, forceNew: Boolean) {
         if (preferences.get(BooleanKey.NsClient3UseWs) && initialLoadFinished) return
-        if (sp.getBoolean(R.string.key_ns_paused, false)) {
+        if (preferences.get(NsclientBooleanKey.NsPaused)) {
             rxBus.send(EventNSClientNewLog("● RUN", "paused  $origin"))
             return
         }
@@ -780,7 +815,7 @@ class NSClientV3Plugin @Inject constructor(
     }
 
     private fun executeUpload(origin: String, forceNew: Boolean) {
-        if (sp.getBoolean(R.string.key_ns_paused, false)) {
+        if (preferences.get(NsclientBooleanKey.NsPaused)) {
             rxBus.send(EventNSClientNewLog("● RUN", "paused"))
             return
         }

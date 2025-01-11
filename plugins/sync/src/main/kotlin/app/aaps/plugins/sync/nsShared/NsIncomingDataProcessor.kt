@@ -19,11 +19,11 @@ import app.aaps.core.interfaces.profile.ProfileSource
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventDismissNotification
 import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.nssdk.localmodel.entry.NSSgvV3
@@ -62,7 +62,6 @@ import javax.inject.Singleton
 class NsIncomingDataProcessor @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val nsClientSource: NSClientSource,
-    private val sp: SP,
     private val preferences: Preferences,
     private val rxBus: RxBus,
     private val dateUtil: DateUtil,
@@ -95,7 +94,7 @@ class NsIncomingDataProcessor @Inject constructor(
     @Suppress("SpellCheckingInspection")
     fun processSgvs(sgvs: Any, doFullSync: Boolean): Boolean {
         // Objective0
-        sp.putBoolean(app.aaps.core.utils.R.string.key_objectives_bg_is_available_in_ns, true)
+        preferences.put(BooleanNonKey.ObjectivesBgIsAvailableInNs, true)
 
         if (!nsClientSource.isEnabled() && !preferences.get(BooleanKey.NsClientAcceptCgmData) && !doFullSync) return false
 

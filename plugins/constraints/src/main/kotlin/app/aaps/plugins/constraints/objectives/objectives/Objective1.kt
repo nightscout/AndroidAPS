@@ -16,22 +16,22 @@ class Objective1 @Inject constructor(injector: HasAndroidInjector) : Objective(i
     init {
         tasks.add(object : Task(this, R.string.objectives_useprofileswitch) {
             override fun isCompleted(): Boolean {
-                return sp.getBoolean(app.aaps.core.utils.R.string.key_objectiveuseprofileswitch, false)
+                return preferences.get(BooleanNonKey.ObjectivesProfileSwitchUsed)
             }
         })
         tasks.add(object : Task(this, R.string.objectives_usedisconnectpump) {
             override fun isCompleted(): Boolean {
-                return sp.getBoolean(app.aaps.core.utils.R.string.key_objectiveusedisconnect, false)
+                return preferences.get(BooleanNonKey.ObjectivesDisconnectUsed)
             }
         }.hint(Hint(R.string.disconnectpump_hint)))
         tasks.add(object : Task(this, R.string.objectives_usereconnectpump) {
             override fun isCompleted(): Boolean {
-                return sp.getBoolean(app.aaps.core.utils.R.string.key_objectiveusereconnect, false)
+                return preferences.get(BooleanNonKey.ObjectivesReconnectUsed)
             }
         }.hint(Hint(R.string.disconnectpump_hint)))
         tasks.add(object : Task(this, R.string.objectives_usetemptarget) {
             override fun isCompleted(): Boolean {
-                return sp.getBoolean(app.aaps.core.utils.R.string.key_objectiveusetemptarget, false)
+                return preferences.get(BooleanNonKey.ObjectivesTempTargetUsed)
             }
         }.hint(Hint(R.string.usetemptarget_hint)))
         tasks.add(object : Task(this, R.string.objectives_useactions) {

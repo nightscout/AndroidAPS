@@ -1,8 +1,6 @@
 package app.aaps.plugins.constraints.objectives
 
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Objectives
-import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
@@ -22,11 +20,9 @@ import org.mockito.Mockito.`when`
 class ObjectivesPluginTest : TestBase() {
 
     @Mock lateinit var rh: ResourceHelper
-    @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var sp: SP
     @Mock lateinit var preferences: Preferences
     @Mock lateinit var dateUtil: DateUtil
-    @Mock lateinit var config: Config
 
     private lateinit var objectivesPlugin: ObjectivesPlugin
 
@@ -42,7 +38,7 @@ class ObjectivesPluginTest : TestBase() {
     }
 
     @BeforeEach fun prepareMock() {
-        objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, rh, sp, preferences)
+        objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, rh, preferences)
         `when`(rh.gs(R.string.objectivenotstarted, 9)).thenReturn("Objective 9 not started")
         `when`(rh.gs(R.string.objectivenotstarted, 8)).thenReturn("Objective 8 not started")
         `when`(rh.gs(R.string.objectivenotstarted, 6)).thenReturn("Objective 6 not started")
