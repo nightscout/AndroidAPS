@@ -34,6 +34,7 @@ open class Persistence @Inject constructor(
         const val STATUS_PERSISTENCE_KEY = "status_data"
         const val STATUS1_PERSISTENCE_KEY = "status1_data"
         const val STATUS2_PERSISTENCE_KEY = "status2_data"
+        const val LOOP_STATES_PERSISTENCE_KEY = "loop_states"
 
         const val KEY_COMPLICATIONS = "complications"
         const val KEY_LAST_SHOWN_SINCE_VALUE = "lastSince"
@@ -232,6 +233,11 @@ open class Persistence @Inject constructor(
     fun store(treatmentData: EventData.TreatmentData) {
         putString(TREATMENT_PERSISTENCE_KEY, treatmentData.serialize())
         aapsLogger.debug(LTag.WEAR, "Stored Treatments data: $treatmentData")
+    }
+
+    fun store(states: EventData.LoopStatesList) {
+        putString(LOOP_STATES_PERSISTENCE_KEY, states.serialize())
+        aapsLogger.debug(LTag.WEAR, "Stored Loop states data: $states")
     }
 
     fun store(status: EventData.Status) {
