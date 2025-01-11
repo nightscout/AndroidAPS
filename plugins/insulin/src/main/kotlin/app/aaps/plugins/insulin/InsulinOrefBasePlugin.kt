@@ -37,7 +37,7 @@ abstract class InsulinOrefBasePlugin(
     PluginDescription()
         .mainType(PluginType.INSULIN)
         .fragmentClass(InsulinFragment::class.java.name)
-        .pluginIcon(R.drawable.ic_insulin)
+        .pluginIcon(app.aaps.core.objects.R.drawable.ic_insulin)
         .shortName(R.string.insulin_shortname)
         .visibleByDefault(false)
         .neverVisible(config.AAPSCLIENT),

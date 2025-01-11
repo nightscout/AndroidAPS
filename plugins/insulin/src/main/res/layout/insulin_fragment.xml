@@ -10,6 +10,24 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:hint="@string/select_insulin">
+
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/insulin_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
         <TextView
             android:id="@+id/name"
             android:layout_width="match_parent"
@@ -30,6 +48,39 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:textAppearance="?android:attr/textAppearanceMedium" /-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:paddingTop="5dp">
+
+            <TextView
+                android:id="@+id/peak_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="10dp"
+                android:text="@string/peak"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <app.aaps.core.ui.elements.NumberPicker
+                android:id="@+id/peak"
+                android:layout_width="130dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                app:customContentDescription="@string/peak" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/unit_minutes"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -69,6 +120,64 @@
             android:layout_width="match_parent"
             android:layout_height="200dip"
             android:layout_margin="20dp" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal">
+
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/update_profiles"
+                style="@style/GrayButton"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:text="@string/update_profiles"
+                android:visibility="gone"
+                app:icon="@drawable/ic_local_activate"
+                app:iconTint="@color/ic_local_activate" />
+
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/reset"
+                style="@style/GrayButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:paddingStart="1dp"
+                android:paddingEnd="1dp"
+                android:text="@string/reset"
+                android:visibility="gone"
+                app:icon="@drawable/ic_local_reset"
+                app:iconTint="@color/ic_local_reset" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/save"
+                style="@style/GrayButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:paddingStart="1dp"
+                android:paddingEnd="1dp"
+                android:text="@string/save"
+                android:visibility="gone"
+                app:icon="@drawable/ic_local_save"
+                app:iconTint="@color/ic_local_save" />
+        </LinearLayout>
 
     </LinearLayout>
 

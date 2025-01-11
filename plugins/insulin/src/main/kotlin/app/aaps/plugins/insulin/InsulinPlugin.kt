@@ -1,5 +1,6 @@
 package app.aaps.plugins.insulin
 
+import androidx.fragment.app.FragmentActivity
 import app.aaps.core.data.iob.Iob
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.ICfg
@@ -19,6 +20,7 @@ import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.extensions.toJson
+import app.aaps.core.ui.toast.ToastUtils
 import org.json.JSONArray
 import org.json.JSONObject
 import javax.inject.Inject
@@ -46,7 +48,7 @@ class InsulinPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.INSULIN)
         .fragmentClass(InsulinFragment::class.java.name)
-        .pluginIcon(R.drawable.ic_insulin)
+        .pluginIcon(app.aaps.core.objects.R.drawable.ic_insulin)
         .pluginName(R.string.insulin_plugin)
         .shortName(R.string.insulin_shortname)
         .visibleByDefault(true)
@@ -75,6 +77,8 @@ class InsulinPlugin @Inject constructor(
     private var insulins: ArrayList<ICfg> = ArrayList()
     private var defaultInsulinIndex = 0
     private var currentInsulinIndex = 0
+    val numOfInsulins get() = insulins.size
+    var isEdited: Boolean = false
 
     fun sendShortDiaNotification(dia: Double) {
         if (System.currentTimeMillis() - lastWarned > 60 * 1000) {
@@ -210,10 +214,44 @@ class InsulinPlugin @Inject constructor(
         return rh.gs(R.string.insulin_peak_time) + ": " + peak
     }
 
+    @Synchronized
+    fun isValidEditState(activity: FragmentActivity?): Boolean {
+        with(insulins[currentInsulinIndex]) {
+            if (insulinEndTime < hardLimits.minDia() || dia > hardLimits.maxDia()) {
+                ToastUtils.errorToast(activity, rh.gs(app.aaps.core.ui.R.string.value_out_of_hard_limits, rh.gs(app.aaps.core.ui.R.string.insulin_dia), dia))
+                return false
+            }
+            if (peak < hardLimits.minPeak() || dia > hardLimits.maxPeak()) {
+                ToastUtils.errorToast(activity, rh.gs(app.aaps.core.ui.R.string.value_out_of_hard_limits, rh.gs(app.aaps.core.ui.R.string.insulin_peak), peak))
+                return false
+            }
+            if (insulinLabel.isEmpty()) {
+                ToastUtils.errorToast(activity, rh.gs(R.string.missing_insulin_name))
+                return false
+            }
+            // Check Inulin name is unique and insulin parameters is unique
+            insulins.forEach {
+                if (it.hashCode() != this.hashCode()) {
+                    if (it.insulinLabel == insulinLabel) {
+                        ToastUtils.errorToast(activity, rh.gs(R.string.insulin_name_exists, insulinLabel))
+                        return false
+                    }
+                    if (isEqual(it)) {
+                        ToastUtils.errorToast(activity, rh.gs(R.string.insulin_duplicated, it.insulinLabel))
+                        return false
+                    }
+                }
+            }
+        }
+        return true
+    }
+
     fun insulinfromJson(json: JSONObject): ICfg =
         ICfg(
             insulinLabel = json.optString("insulinLabel", ""),
             insulinEndTime = json.optLong("insulinEndTime", 6 * 3600 * 1000),
             peak = json.optLong("peak", )
         )
+
+    fun currentInsulin(): ICfg? = if (numOfInsulins > 0 && currentInsulinIndex < numOfInsulins) insulins[currentInsulinIndex] else null
 }

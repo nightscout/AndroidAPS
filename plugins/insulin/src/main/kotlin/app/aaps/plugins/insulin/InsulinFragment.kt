@@ -6,6 +6,10 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.HardLimits
@@ -20,6 +24,8 @@ class InsulinFragment : DaggerFragment() {
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var hardLimits: HardLimits
     @Inject lateinit var rh: ResourceHelper
+    @Inject lateinit var insulinPlugin: InsulinPlugin
+    @Inject lateinit var uel: UserEntryLogger
 
     private var _binding: InsulinFragmentBinding? = null
 
@@ -51,6 +57,7 @@ class InsulinFragment : DaggerFragment() {
         binding.name.text = activePlugin.activeInsulin.friendlyName
         binding.comment.text = activePlugin.activeInsulin.comment
         //binding.dia.text = rh.gs(app.aaps.core.ui.R.string.dia) + ":  " + rh.gs(app.aaps.core.ui.R.string.format_hours, activePlugin.activeInsulin.dia)
+        binding.peak.setParams(activePlugin.activeInsulin.peak.toDouble(), hardLimits.minPeak(), hardLimits.maxPeak(), 1.0, DecimalFormat("0"), false, null, textWatch)
         binding.dia.setParams(activePlugin.activeInsulin.dia, hardLimits.minDia(), hardLimits.maxDia(), 0.1, DecimalFormat("0.0"), false, null, textWatch)
         binding.graph.show(activePlugin.activeInsulin)
     }
@@ -58,5 +65,67 @@ class InsulinFragment : DaggerFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun updateGUI() {
+        if (_binding == null) return
+        val isValid = insulinPlugin.isValidEditState(activity)
+        val isEdited = insulinPlugin.isEdited
+        if (isValid) {
+            this.view?.setBackgroundColor(rh.gac(context, app.aaps.core.ui.R.attr.okBackgroundColor))
+            binding.insulinList.isEnabled = true
+
+            if (isEdited) {
+                //edited insulin -> save first
+                binding.updateProfiles.visibility = View.GONE
+                binding.save.visibility = View.VISIBLE
+            } else {
+                binding.updateProfiles.visibility = View.VISIBLE
+                binding.save.visibility = View.GONE
+            }
+        } else {
+            this.view?.setBackgroundColor(rh.gac(context, app.aaps.core.ui.R.attr.errorBackgroundColor))
+            binding.insulinList.isEnabled = false
+            binding.updateProfiles.visibility = View.GONE
+            binding.save.visibility = View.GONE //don't save an invalid profile
+        }
+
+        //Show reset button if data was edited
+        if (isEdited) {
+            binding.reset.visibility = View.VISIBLE
+        } else {
+            binding.reset.visibility = View.GONE
+        }
+    }
+
+
+    fun build() {
+        val currentInsulin = insulinPlugin.currentInsulin() ?: return
+        binding.name.removeTextChangedListener(textWatch)
+        binding.name.setText(currentInsulin.insulinLabel)
+        binding.name.addTextChangedListener(textWatch)
+        binding.insulinList.filters = arrayOf()
+        binding.insulinList.setText(currentInsulin.insulinLabel)
+
+        binding.peak.setParams(activePlugin.activeInsulin.peak.toDouble(), hardLimits.minPeak(), hardLimits.maxPeak(), 1.0, DecimalFormat("0"), false, null, textWatch)
+        binding.dia.setParams(activePlugin.activeInsulin.dia, hardLimits.minDia(), hardLimits.maxDia(), 0.1, DecimalFormat("0.0"), false, null, textWatch)
+        binding.graph.show(activePlugin.activeInsulin)
+
+        binding.reset.setOnClickListener {
+            insulinPlugin.loadSettings()
+            build()
+        }
+        binding.save.setOnClickListener {
+            if (!insulinPlugin.isValidEditState(activity)) {
+                return@setOnClickListener  //Should not happen as saveButton should not be visible if not valid
+            }
+            uel.log(
+                action = Action.STORE_INSULIN, source = Sources.Insulin,
+                value = ValueWithUnit.SimpleString(insulinPlugin.currentInsulin()?.insulinLabel ?: "")
+            )
+            insulinPlugin.storeSettings()
+            build()
+        }
+        updateGUI()
     }
 }

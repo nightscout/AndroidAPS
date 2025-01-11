@@ -11,12 +11,16 @@
     <string name="insulin_shortname">INS</string>
     <string name="insulin_oref_peak">IOB Curve Peak Time</string>
     <string name="insulin_peak_time">Peak Time [min]</string>
+    <string name="update_profiles">Update Profiles</string>
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <string name="ultra_rapid_oref">Ultra-Rapid Oref</string>
     <string name="dia_too_short">DIA of %1$f too short - using %2$f instead!</string>
     <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
     <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
+    <string name="missing_insulin_name">Missing Insulin Name</string>
+    <string name="insulin_name_exists">Insulin Name %1$s already exists, select a new name</string>
+    <string name="insulin_duplicated">Insulin already exists with name: %1$s</string>
 
 
 </resources>

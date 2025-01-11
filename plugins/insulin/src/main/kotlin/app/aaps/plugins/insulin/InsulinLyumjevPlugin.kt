@@ -35,7 +35,7 @@ class InsulinLyumjevPlugin @Inject constructor(
 
     init {
         pluginDescription
-            .pluginIcon(R.drawable.ic_insulin)
+            .pluginIcon(app.aaps.core.objects.R.drawable.ic_insulin)
             .pluginName(R.string.lyumjev)
             .description(R.string.description_insulin_lyumjev)
     }
