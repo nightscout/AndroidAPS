@@ -27,6 +27,15 @@ import app.aaps.core.objects.aps.DetermineBasalResult
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
+import app.aaps.core.validators.preferences.AdaptiveClickPreference
+import app.aaps.core.validators.preferences.AdaptiveDoublePreference
+import app.aaps.core.validators.preferences.AdaptiveIntPreference
+import app.aaps.core.validators.preferences.AdaptiveIntentPreference
+import app.aaps.core.validators.preferences.AdaptiveListIntPreference
+import app.aaps.core.validators.preferences.AdaptiveListPreference
+import app.aaps.core.validators.preferences.AdaptiveStringPreference
+import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
+import app.aaps.core.validators.preferences.AdaptiveUnitPreference
 import app.aaps.implementation.instantiator.InstantiatorImpl
 import app.aaps.implementation.profile.ProfileStoreObject
 import app.aaps.implementation.profile.ProfileUtilImpl
@@ -84,6 +93,38 @@ open class TestBaseWithProfile : TestBase() {
                 it.profileFunction = profileFunction
                 it.rh = rh
                 it.decimalFormatter = decimalFormatter
+            }
+            if (it is AdaptiveDoublePreference) {
+                it.profileUtil = profileUtil
+                it.preferences = preferences
+            }
+            if (it is AdaptiveIntPreference) {
+                it.profileUtil = profileUtil
+                it.preferences = preferences
+                it.config = config
+            }
+            if (it is AdaptiveIntentPreference) {
+                it.preferences = preferences
+            }
+            if (it is AdaptiveUnitPreference) {
+                it.profileUtil = profileUtil
+                it.preferences = preferences
+            }
+            if (it is AdaptiveSwitchPreference) {
+                it.preferences = preferences
+                it.config = config
+            }
+            if (it is AdaptiveStringPreference) {
+                it.preferences = preferences
+            }
+            if (it is AdaptiveListPreference) {
+                it.preferences = preferences
+            }
+            if (it is AdaptiveListIntPreference) {
+                it.preferences = preferences
+            }
+            if (it is AdaptiveClickPreference) {
+                it.preferences = preferences
             }
             injectors.forEach { fn -> fn(it) }
         }

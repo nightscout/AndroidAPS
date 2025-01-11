@@ -1,6 +1,5 @@
 package app.aaps.plugins.aps.autotune
 
-import android.content.SharedPreferences
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
@@ -15,7 +14,6 @@ class AutotunePluginTest : TestBaseWithProfile() {
     @Mock lateinit var autotuneFS: AutotuneFS
     @Mock lateinit var autotuneIob: AutotuneIob
     @Mock lateinit var autotunePrep: AutotunePrep
-    @Mock lateinit var sharedPrefs: SharedPreferences
     @Mock lateinit var autotuneCore: AutotuneCore
     @Mock lateinit var uel: UserEntryLogger
     private lateinit var autotunePlugin: AutotunePlugin
@@ -25,12 +23,10 @@ class AutotunePluginTest : TestBaseWithProfile() {
             if (it is AdaptiveIntPreference) {
                 it.profileUtil = profileUtil
                 it.preferences = preferences
-                it.sharedPrefs = sharedPrefs
                 it.config = config
             }
             if (it is AdaptiveSwitchPreference) {
                 it.preferences = preferences
-                it.sharedPrefs = sharedPrefs
                 it.config = config
             }
         }

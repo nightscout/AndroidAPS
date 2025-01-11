@@ -1,7 +1,6 @@
 package app.aaps.core.validators.preferences
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.text.InputType
 import android.util.AttributeSet
 import androidx.annotation.StringRes
@@ -34,7 +33,6 @@ class AdaptiveIntPreference(
 
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var preferences: Preferences
-    @Inject lateinit var sharedPrefs: SharedPreferences
     @Inject lateinit var config: Config
 
     // Inflater constructor
@@ -64,11 +62,11 @@ class AdaptiveIntPreference(
             isVisible = false; isEnabled = false
         }
         preferenceKey.dependency?.let {
-            if (!sharedPrefs.getBoolean(it.key, false))
+            if (!preferences.get(it))
                 isVisible = false
         }
         preferenceKey.negativeDependency?.let {
-            if (sharedPrefs.getBoolean(it.key, false))
+            if (preferences.get(it))
                 isVisible = false
         }
         if (validatorParams != null) validatorParameters = validatorParams

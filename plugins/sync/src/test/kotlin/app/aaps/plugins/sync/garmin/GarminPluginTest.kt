@@ -1,6 +1,5 @@
 package app.aaps.plugins.sync.garmin
 
-import android.content.SharedPreferences
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.SourceSensor
@@ -11,8 +10,6 @@ import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.IntNonKey
 import app.aaps.core.keys.StringNonKey
-import app.aaps.core.validators.preferences.AdaptiveIntPreference
-import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth
 import org.junit.jupiter.api.AfterEach
@@ -51,24 +48,7 @@ class GarminPluginTest : TestBaseWithProfile() {
     private lateinit var gp: GarminPlugin
 
     @Mock private lateinit var loopHub: LoopHub
-    @Mock lateinit var sharedPrefs: SharedPreferences
     private val clock = Clock.fixed(Instant.ofEpochMilli(10_000), ZoneId.of("UTC"))
-
-    init {
-        addInjector {
-            if (it is AdaptiveIntPreference) {
-                it.profileUtil = profileUtil
-                it.preferences = preferences
-                it.sharedPrefs = sharedPrefs
-                it.config = config
-            }
-            if (it is AdaptiveSwitchPreference) {
-                it.preferences = preferences
-                it.sharedPrefs = sharedPrefs
-                it.config = config
-            }
-        }
-    }
 
     @BeforeEach
     fun setup() {

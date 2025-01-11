@@ -1,7 +1,6 @@
 package app.aaps.core.validators.preferences
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.text.InputType
 import android.util.AttributeSet
 import androidx.annotation.StringRes
@@ -31,7 +30,6 @@ class AdaptiveDoublePreference(
 
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var preferences: Preferences
-    @Inject lateinit var sharedPrefs: SharedPreferences
 
     // Inflater constructor
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, doubleKey = null, title = null)
@@ -58,11 +56,11 @@ class AdaptiveDoublePreference(
             isVisible = false; isEnabled = false
         }
         preferenceKey.dependency?.let {
-            if (!sharedPrefs.getBoolean(it.key, false))
+            if (!preferences.get(it))
                 isVisible = false
         }
         preferenceKey.negativeDependency?.let {
-            if (sharedPrefs.getBoolean(it.key, false))
+            if (preferences.get(it))
                 isVisible = false
         }
         validatorParameters = obtainValidatorParameters(attrs)
@@ -111,7 +109,7 @@ class AdaptiveDoublePreference(
     override fun onSetInitialValue(defaultValue: Any?) {
         text = try {
             getPersistedString(defaultValue as String?)
-        } catch (ignored: Exception) {
+        } catch (_: Exception) {
             getPersistedFloat(preferenceKey.defaultValue.toFloat()).toString()
         }
     }
@@ -119,7 +117,7 @@ class AdaptiveDoublePreference(
     override fun persistString(value: String?): Boolean =
         try {
             super.persistString(SafeParse.stringToDouble(value, 0.0).toString())
-        } catch (ignored: Exception) {
+        } catch (_: Exception) {
             false
         }
 }

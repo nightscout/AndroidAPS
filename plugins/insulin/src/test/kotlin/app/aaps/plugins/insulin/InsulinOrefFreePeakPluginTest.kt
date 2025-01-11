@@ -1,10 +1,8 @@
 package app.aaps.plugins.insulin
 
-import android.content.SharedPreferences
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.keys.IntKey
-import app.aaps.core.validators.preferences.AdaptiveIntPreference
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -22,18 +20,6 @@ class InsulinOrefFreePeakPluginTest : TestBaseWithProfile() {
     private lateinit var sut: InsulinOrefFreePeakPlugin
 
     @Mock lateinit var uiInteraction: UiInteraction
-    @Mock lateinit var sharedPrefs: SharedPreferences
-
-    init {
-        addInjector {
-            if (it is AdaptiveIntPreference) {
-                it.profileUtil = profileUtil
-                it.preferences = preferences
-                it.sharedPrefs = sharedPrefs
-                it.config = config
-            }
-        }
-    }
 
     @BeforeEach
     fun setup() {
