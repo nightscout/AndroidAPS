@@ -69,6 +69,7 @@ import javax.inject.Singleton
 @Singleton class EquilPumpPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
+    preferences: Preferences,
     commandQueue: CommandQueue,
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
@@ -79,17 +80,18 @@ import javax.inject.Singleton
     private val pumpSync: PumpSync,
     private val equilManager: EquilManager,
     private val decimalFormatter: DecimalFormatter,
-    private val instantiator: Instantiator,
-    private val preferences: Preferences
+    private val instantiator: Instantiator
 ) : PumpPluginBase(
-    PluginDescription()
+    pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
         .fragmentClass(EquilFragment::class.java.name)
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_equil_128)
         .pluginName(R.string.equil_name)
         .shortName(R.string.equil_name_short)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
-        .description(R.string.equil_pump_description), aapsLogger, rh, commandQueue
+        .description(R.string.equil_pump_description),
+    ownPreferences = listOf(EquilIntKey::class.java, EquilDoubleKey::class.java, EquilBooleanKey::class.java),
+    aapsLogger, rh, preferences, commandQueue
 ), Pump {
 
     override val pumpDescription: PumpDescription
@@ -98,12 +100,6 @@ import javax.inject.Singleton
 
     private val disposable = CompositeDisposable()
     private var statusChecker: Runnable
-
-    init {
-        preferences.registerPreferences(EquilIntKey::class.java)
-        preferences.registerPreferences(EquilDoubleKey::class.java)
-        preferences.registerPreferences(EquilBooleanKey::class.java)
-    }
 
     override fun onStart() {
         super.onStart()

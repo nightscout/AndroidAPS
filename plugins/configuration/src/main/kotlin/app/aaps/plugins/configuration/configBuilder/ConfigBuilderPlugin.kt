@@ -22,6 +22,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.ProfileSource
 import app.aaps.core.interfaces.protection.ProtectionCheck
@@ -52,15 +53,15 @@ import javax.inject.Singleton
 class ConfigBuilderPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
-    private val preferences: Preferences,
+    preferences: Preferences,
     private val rxBus: RxBus,
     private val activePlugin: ActivePlugin,
     private val uel: UserEntryLogger,
     private val pumpSync: PumpSync,
     private val protectionCheck: ProtectionCheck,
     private val uiInteraction: UiInteraction
-) : PluginBase(
-    PluginDescription()
+) : PluginBaseWithPreferences(
+    pluginDescription = PluginDescription()
         .mainType(PluginType.GENERAL)
         .fragmentClass(ConfigBuilderFragment::class.java.name)
         .alwaysEnabled(true)
@@ -68,14 +69,9 @@ class ConfigBuilderPlugin @Inject constructor(
         .pluginName(R.string.config_builder)
         .shortName(R.string.config_builder_shortname)
         .description(R.string.description_config_builder),
-    aapsLogger, rh
+    ownPreferences = listOf(ConfigurationBooleanKey::class.java, ConfigurationBooleanComposedKey::class.java),
+    aapsLogger, rh, preferences
 ), ConfigBuilder {
-
-    // Make plugin preferences available to AAPS
-    init {
-        preferences.registerPreferences(ConfigurationBooleanKey::class.java)
-        preferences.registerPreferences(ConfigurationBooleanComposedKey::class.java)
-    }
 
     override fun initialize() {
         loadSettings()

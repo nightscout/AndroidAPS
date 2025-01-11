@@ -83,16 +83,16 @@ import kotlin.math.max
 @Singleton
 class DanaRSPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
+    preferences: Preferences,
+    commandQueue: CommandQueue,
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
     private val context: Context,
-    rh: ResourceHelper,
     private val constraintChecker: ConstraintsChecker,
     private val profileFunction: ProfileFunction,
-    commandQueue: CommandQueue,
     private val danaPump: DanaPump,
     private val pumpSync: PumpSync,
-    private val preferences: Preferences,
     private val detailedBolusInfoStorage: DetailedBolusInfoStorage,
     private val temporaryBasalStorage: TemporaryBasalStorage,
     private val fabricPrivacy: FabricPrivacy,
@@ -102,7 +102,7 @@ class DanaRSPlugin @Inject constructor(
     private val decimalFormatter: DecimalFormatter,
     private val instantiator: Instantiator
 ) : PumpPluginBase(
-    PluginDescription()
+    pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
         .fragmentClass(DanaFragment::class.java.name)
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_danai_128)
@@ -111,23 +111,14 @@ class DanaRSPlugin @Inject constructor(
         .shortName(app.aaps.pump.dana.R.string.danarspump_shortname)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(app.aaps.pump.dana.R.string.description_pump_dana_rs),
-    aapsLogger, rh, commandQueue
+    ownPreferences = listOf(DanaStringKey::class.java, DanaIntKey::class.java, DanaBooleanKey::class.java, DanaIntentKey::class.java, DanaStringComposedKey::class.java, DanaLongKey::class.java),
+    aapsLogger, rh, preferences, commandQueue
 ), Pump, Dana, PluginConstraints, OwnDatabasePlugin {
 
     private val disposable = CompositeDisposable()
     private var danaRSService: DanaRSService? = null
     private var mDeviceAddress = ""
     var mDeviceName = ""
-
-    // Make plugin preferences available to AAPS
-    init {
-        preferences.registerPreferences(DanaStringKey::class.java)
-        preferences.registerPreferences(DanaIntKey::class.java)
-        preferences.registerPreferences(DanaBooleanKey::class.java)
-        preferences.registerPreferences(DanaIntentKey::class.java)
-        preferences.registerPreferences(DanaStringComposedKey::class.java)
-        preferences.registerPreferences(DanaLongKey::class.java)
-    }
 
     override val pumpDescription
         get() = PumpDescription().fillFor(danaPump.pumpType())

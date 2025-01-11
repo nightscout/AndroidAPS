@@ -38,10 +38,12 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.Preferences
 import app.aaps.core.utils.DateTimeUtil
 import app.aaps.pump.common.PumpPluginAbstract
 import app.aaps.pump.common.data.PumpStatus
 import app.aaps.pump.common.defs.PumpDriverState
+import app.aaps.pump.common.events.EventRileyLinkDeviceStatusChange
 import app.aaps.pump.common.hw.rileylink.RileyLinkConst
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkPumpDevice
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkPumpInfo
@@ -76,7 +78,6 @@ import app.aaps.pump.medtronic.util.MedtronicConst
 import app.aaps.pump.medtronic.util.MedtronicUtil
 import app.aaps.pump.medtronic.util.MedtronicUtil.Companion.isSame
 import dagger.android.HasAndroidInjector
-import app.aaps.pump.common.events.EventRileyLinkDeviceStatusChange
 import org.joda.time.LocalDateTime
 import java.util.Calendar
 import java.util.GregorianCalendar
@@ -95,12 +96,13 @@ import kotlin.math.floor
 class MedtronicPumpPlugin @Inject constructor(
     private val injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
+    preferences: Preferences,
+    commandQueue: CommandQueue,
     rxBus: RxBus,
     context: Context,
-    rh: ResourceHelper,
     activePlugin: ActivePlugin,
-    sp: SP,
-    commandQueue: CommandQueue,
+    private val sp: SP,
     fabricPrivacy: FabricPrivacy,
     private val medtronicUtil: MedtronicUtil,
     private val medtronicPumpStatus: MedtronicPumpStatus,
@@ -115,16 +117,17 @@ class MedtronicPumpPlugin @Inject constructor(
     decimalFormatter: DecimalFormatter,
     instantiator: Instantiator
 ) : PumpPluginAbstract(
-    PluginDescription() //
-        .mainType(PluginType.PUMP) //
-        .fragmentClass(MedtronicFragment::class.java.name) //
+    pluginDescription = PluginDescription()
+        .mainType(PluginType.PUMP)
+        .fragmentClass(MedtronicFragment::class.java.name)
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_veo_128)
-        .pluginName(R.string.medtronic_name) //
-        .shortName(R.string.medtronic_name_short) //
+        .pluginName(R.string.medtronic_name)
+        .shortName(R.string.medtronic_name_short)
         .preferencesId(R.xml.pref_medtronic)
-        .description(R.string.description_pump_medtronic),  //
+        .description(R.string.description_pump_medtronic),
+    ownPreferences = emptyList(),
     PumpType.MEDTRONIC_522_722,  // we default to most basic model, correct model from config is loaded later
-    rh, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy, dateUtil, aapsSchedulers, pumpSync, pumpSyncStorage, decimalFormatter, instantiator
+    rh, aapsLogger, preferences, commandQueue, rxBus, activePlugin, context, fabricPrivacy, dateUtil, aapsSchedulers, pumpSync, pumpSyncStorage, decimalFormatter, instantiator
 ), Pump, RileyLinkPumpDevice, PumpSyncEntriesCreator {
 
     private var rileyLinkMedtronicService: RileyLinkMedtronicService? = null

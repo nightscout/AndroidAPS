@@ -3,7 +3,6 @@ package app.aaps.pump.equil
 import android.content.SharedPreferences
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.ui.R
 import app.aaps.core.validators.preferences.AdaptiveDoublePreference
 import app.aaps.core.validators.preferences.AdaptiveListIntPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
@@ -50,20 +49,8 @@ class EquilPumpPluginTest : TestBaseWithProfile() {
         Mockito.`when`(rh.gs(anyInt())).thenReturn("")
         equilPumpPlugin =
             EquilPumpPlugin(
-                aapsLogger,
-                rh,
-                commandQueue,
-                aapsSchedulers,
-                rxBus,
-                context,
-                sp,
-                fabricPrivacy,
-                dateUtil,
-                pumpSync,
-                equilManager,
-                decimalFormatter,
-                instantiator,
-                preferences
+                aapsLogger, rh, preferences, commandQueue, aapsSchedulers, rxBus, context, sp,
+                fabricPrivacy, dateUtil, pumpSync, equilManager, decimalFormatter, instantiator
             )
     }
 

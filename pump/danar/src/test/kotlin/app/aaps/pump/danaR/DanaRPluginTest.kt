@@ -37,7 +37,6 @@ class DanaRPluginTest : TestBaseWithProfile() {
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var danaHistoryDatabase: DanaHistoryDatabase
 
-
     lateinit var danaPump: DanaPump
 
     private lateinit var danaRPlugin: DanaRPlugin
@@ -98,8 +97,8 @@ class DanaRPluginTest : TestBaseWithProfile() {
         `when`(rh.gs(app.aaps.core.ui.R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
         danaPump = DanaPump(aapsLogger, preferences, dateUtil, instantiator, decimalFormatter)
         danaRPlugin = DanaRPlugin(
-            aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, activePlugin, commandQueue, danaPump, dateUtil, fabricPrivacy, pumpSync,
-            preferences, uiInteraction, danaHistoryDatabase, decimalFormatter, instantiator
+            aapsLogger, rh, preferences, commandQueue, aapsSchedulers, rxBus, context, constraintChecker, activePlugin, danaPump, dateUtil, fabricPrivacy, pumpSync,
+            uiInteraction, danaHistoryDatabase, decimalFormatter, instantiator
         )
     }
 

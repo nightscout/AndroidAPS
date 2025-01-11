@@ -45,6 +45,7 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
@@ -109,6 +110,7 @@ internal const val PUMP_ERROR_TIMEOUT_INTERVAL_MSECS = 1000L * 60 * 5
 class ComboV2Plugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
+    preferences: Preferences,
     commandQueue: CommandQueue,
     private val context: Context,
     private val rxBus: RxBus,
@@ -123,7 +125,7 @@ class ComboV2Plugin @Inject constructor(
     private val instantiator: Instantiator
 ) :
     PumpPluginBase(
-        PluginDescription()
+        pluginDescription = PluginDescription()
             .mainType(PluginType.PUMP)
             .fragmentClass(ComboV2Fragment::class.java.name)
             .pluginIcon(R.drawable.ic_combov2)
@@ -131,7 +133,8 @@ class ComboV2Plugin @Inject constructor(
             .shortName(R.string.combov2_plugin_shortname)
             .description(R.string.combov2_plugin_description)
             .preferencesId(R.xml.pref_combov2),
-        aapsLogger, rh, commandQueue
+        ownPreferences = emptyList(),
+        aapsLogger, rh, preferences, commandQueue
     ), Pump, PluginConstraints {
 
     // Coroutine scope and the associated job. All coroutines

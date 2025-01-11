@@ -21,6 +21,7 @@ import org.joda.time.Instant;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -72,8 +73,10 @@ import app.aaps.core.interfaces.utils.DateUtil;
 import app.aaps.core.interfaces.utils.DecimalFormatter;
 import app.aaps.core.interfaces.utils.Round;
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy;
+import app.aaps.core.keys.Preferences;
 import app.aaps.core.utils.DateTimeUtil;
 import app.aaps.pump.common.defs.TempBasalPair;
+import app.aaps.pump.common.events.EventRileyLinkDeviceStatusChange;
 import app.aaps.pump.common.hw.rileylink.RileyLinkConst;
 import app.aaps.pump.common.hw.rileylink.RileyLinkUtil;
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkPumpDevice;
@@ -114,7 +117,6 @@ import app.aaps.pump.omnipod.eros.ui.OmnipodErosOverviewFragment;
 import app.aaps.pump.omnipod.eros.util.AapsOmnipodUtil;
 import app.aaps.pump.omnipod.eros.util.OmnipodAlertUtil;
 import dagger.android.HasAndroidInjector;
-import app.aaps.pump.common.events.EventRileyLinkDeviceStatusChange;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 /**
@@ -172,14 +174,15 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     public OmnipodErosPumpPlugin(
             HasAndroidInjector injector,
             AAPSLogger aapsLogger,
+            ResourceHelper rh,
+            Preferences preferences,
+            CommandQueue commandQueue,
             AapsSchedulers aapsSchedulers,
             RxBus rxBus,
             Context context,
-            ResourceHelper rh,
             SP sp,
             ErosPodStateManager podStateManager,
             AapsOmnipodErosManager aapsOmnipodErosManager,
-            CommandQueue commandQueue,
             FabricPrivacy fabricPrivacy,
             RileyLinkServiceData rileyLinkServiceData,
             DateUtil dateUtil,
@@ -193,15 +196,16 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
             DecimalFormatter decimalFormatter,
             Instantiator instantiator
     ) {
-        super(new PluginDescription() //
-                        .mainType(PluginType.PUMP) //
-                        .fragmentClass(OmnipodErosOverviewFragment.class.getName()) //
+        super(new PluginDescription()
+                        .mainType(PluginType.PUMP)
+                        .fragmentClass(OmnipodErosOverviewFragment.class.getName())
                         .pluginIcon(app.aaps.core.ui.R.drawable.ic_pod_128)
-                        .pluginName(R.string.omnipod_eros_name) //
-                        .shortName(R.string.omnipod_eros_name_short) //
-                        .preferencesId(R.xml.omnipod_eros_preferences) //
-                        .description(R.string.omnipod_eros_pump_description), //
-                aapsLogger, rh, commandQueue);
+                        .pluginName(R.string.omnipod_eros_name)
+                        .shortName(R.string.omnipod_eros_name_short)
+                        .preferencesId(R.xml.omnipod_eros_preferences)
+                        .description(R.string.omnipod_eros_pump_description),
+                Collections.emptyList(),
+                aapsLogger, rh, preferences, commandQueue);
         this.injector = injector;
         this.aapsLogger = aapsLogger;
         this.aapsSchedulers = aapsSchedulers;

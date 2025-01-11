@@ -265,26 +265,71 @@ interface Preferences {
      * In SimpleMode return default value
      * In FullMode return value from [android.content.SharedPreferences]
      *
+     * @param key [LongNonPreferenceKey] enum
+     * @return value
+     */
+    fun get(key: LongNonPreferenceKey): Long
+
+    /**
+     * Get [Long] value from [android.content.SharedPreferences] or null if doesn't exist
+     *
+     * @param key [LongNonPreferenceKey] enum
+     * @return value or null
+     */
+    fun getIfExists(key: LongNonPreferenceKey): Long?
+
+    /**
+     * Update [Long] value in [android.content.SharedPreferences]
+     *
+     * @param key [LongNonPreferenceKey] enum
+     * @param value value
+     */
+    fun put(key: LongNonPreferenceKey, value: Long)
+
+    /**
+     * Get [Long] value from [android.content.SharedPreferences]
+     * In SimpleMode return default value
+     * In FullMode return value from [android.content.SharedPreferences]
+     *
      * @param key [LongPreferenceKey] enum
      * @return value
      */
     fun get(key: LongPreferenceKey): Long
 
     /**
-     * Get [Long] value from [android.content.SharedPreferences] or null if doesn't exist
-     *
-     * @param key [LongPreferenceKey] enum
-     * @return value or null
+     * Get [String] value from [android.content.SharedPreferences]
+     * *
+     * @param key [LongComposedNonPreferenceKey] enum
+     * @param arguments arguments to compose final key using String::format
+     * @return value
      */
-    fun getIfExists(key: LongPreferenceKey): Long?
+    fun get(key: LongComposedNonPreferenceKey, vararg arguments: Any): Long
 
     /**
-     * Update [Long] value in [android.content.SharedPreferences]
+     * Get [String] value from [android.content.SharedPreferences] or null if doesn't exist
      *
-     * @param key [LongPreferenceKey] enum
+     * @param key [LongComposedNonPreferenceKey] enum
+     * @param arguments arguments to compose final key using String::format
+     * @return value or null
+     */
+    fun getIfExists(key: LongComposedNonPreferenceKey, vararg arguments: Any): Long?
+
+    /**
+     * Update [String] value in [android.content.SharedPreferences]
+     *
+     * @param key [LongComposedNonPreferenceKey] enum
+     * @param arguments arguments to compose final key using String::format
      * @param value value
      */
-    fun put(key: LongPreferenceKey, value: Long)
+    fun put(key: LongComposedNonPreferenceKey, vararg arguments: Any, value: Long)
+
+    /**
+     * Remove value from [android.content.SharedPreferences]
+     *
+     * @param key [LongComposedNonPreferenceKey] enum
+     * @param arguments arguments to compose final key using String::format
+     */
+    fun remove(key: LongComposedNonPreferenceKey, vararg arguments: Any)
 
     /* GENERAL */
 

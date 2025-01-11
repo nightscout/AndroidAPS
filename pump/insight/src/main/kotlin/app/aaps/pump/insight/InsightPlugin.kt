@@ -40,6 +40,7 @@ import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.Preferences
 import app.aaps.pump.insight.app_layer.Service
 import app.aaps.pump.insight.app_layer.history.StartReadingHistoryMessage
 import app.aaps.pump.insight.app_layer.history.StopReadingHistoryMessage
@@ -82,10 +83,11 @@ import kotlin.math.roundToLong
 @Singleton
 class InsightPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    private val rxBus: RxBus,
     rh: ResourceHelper,
-    private val sp: SP,
+    preferences: Preferences,
     commandQueue: CommandQueue,
+    private val rxBus: RxBus,
+    private val sp: SP,
     private val profileFunction: ProfileFunction,
     private val context: Context,
     config: Config,
@@ -95,7 +97,7 @@ class InsightPlugin @Inject constructor(
     private val insightDatabase: InsightDatabase,
     private val instantiator: Instantiator
 ) : PumpPluginBase(
-    PluginDescription()
+    pluginDescription = PluginDescription()
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_insight_128)
         .pluginName(R.string.insight_local)
         .shortName(R.string.insightpump_shortname)
@@ -103,7 +105,8 @@ class InsightPlugin @Inject constructor(
         .description(R.string.description_pump_insight_local)
         .fragmentClass(InsightFragment::class.java.name)
         .preferencesId(if (config.APS) R.xml.pref_insight_local_full else R.xml.pref_insight_local_pumpcontrol),
-    aapsLogger, rh, commandQueue
+    ownPreferences = emptyList(),
+    aapsLogger, rh, preferences, commandQueue
 ), Pump, Insight, PluginConstraints, InsightConnectionService.StateCallback, OwnDatabasePlugin {
 
     override val pumpDescription: PumpDescription = PumpDescription().also { it.fillFor(PumpType.ACCU_CHEK_INSIGHT) }

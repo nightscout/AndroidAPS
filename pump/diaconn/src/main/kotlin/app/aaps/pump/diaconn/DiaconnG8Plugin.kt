@@ -51,6 +51,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.pump.diaconn.database.DiaconnHistoryDatabase
@@ -67,13 +68,14 @@ import kotlin.math.max
 @Singleton
 class DiaconnG8Plugin @Inject constructor(
     aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
+    preferences: Preferences,
+    commandQueue: CommandQueue,
     private val rxBus: RxBus,
     private val context: Context,
-    rh: ResourceHelper,
     private val constraintChecker: ConstraintsChecker,
     private val profileFunction: ProfileFunction,
     private val sp: SP,
-    commandQueue: CommandQueue,
     private val diaconnG8Pump: DiaconnG8Pump,
     private val pumpSync: PumpSync,
     private val detailedBolusInfoStorage: DetailedBolusInfoStorage,
@@ -86,7 +88,7 @@ class DiaconnG8Plugin @Inject constructor(
     private val decimalFormatter: DecimalFormatter,
     private val instantiator: Instantiator
 ) : PumpPluginBase(
-    PluginDescription()
+    pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
         .fragmentClass(DiaconnG8Fragment::class.java.name)
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_diaconn_g8)
@@ -94,7 +96,8 @@ class DiaconnG8Plugin @Inject constructor(
         .shortName(R.string.diaconn_g8_pump_shortname)
         .preferencesId(R.xml.pref_diaconn)
         .description(R.string.description_pump_diaconn_g8),
-    aapsLogger, rh, commandQueue
+    ownPreferences = emptyList(),
+    aapsLogger, rh, preferences, commandQueue
 ), Pump, Diaconn, PluginConstraints, OwnDatabasePlugin {
 
     private val disposable = CompositeDisposable()

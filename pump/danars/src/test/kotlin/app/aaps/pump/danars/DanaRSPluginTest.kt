@@ -86,7 +86,6 @@ class DanaRSPluginTest : DanaRSTestBase() {
         }
     }
 
-
     @Test
     fun basalRateShouldBeLimited() {
         danaRSPlugin.setPluginEnabled(PluginType.PUMP, true)
@@ -120,25 +119,8 @@ class DanaRSPluginTest : DanaRSTestBase() {
 
         danaRSPlugin =
             DanaRSPlugin(
-                aapsLogger,
-                aapsSchedulers,
-                rxBus,
-                context,
-                rh,
-                constraintChecker,
-                profileFunction,
-                commandQueue,
-                danaPump,
-                pumpSync,
-                preferences,
-                detailedBolusInfoStorage,
-                temporaryBasalStorage,
-                fabricPrivacy,
-                dateUtil,
-                uiInteraction,
-                danaHistoryDatabase,
-                decimalFormatter,
-                instantiator
+                aapsLogger, rh, preferences, commandQueue, aapsSchedulers, rxBus, context, constraintChecker, profileFunction, danaPump, pumpSync, detailedBolusInfoStorage, temporaryBasalStorage,
+                fabricPrivacy, dateUtil, uiInteraction, danaHistoryDatabase, decimalFormatter, instantiator
             )
     }
 

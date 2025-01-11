@@ -58,7 +58,7 @@ class CarbTimerImplTest : TestBase() {
         dateUtil = DateUtilImpl(context)
         timerUtil = TimerUtil(context)
         automationPlugin = AutomationPlugin(
-            injector, rh, context, preferences, fabricPrivacy, loop, rxBus, constraintChecker, aapsLogger, aapsSchedulers, config, locationServiceHelper, dateUtil, activePlugin, timerUtil
+            injector, aapsLogger, rh, preferences, context, fabricPrivacy, loop, rxBus, constraintChecker, aapsSchedulers, config, locationServiceHelper, dateUtil, activePlugin, timerUtil
         )
     }
 

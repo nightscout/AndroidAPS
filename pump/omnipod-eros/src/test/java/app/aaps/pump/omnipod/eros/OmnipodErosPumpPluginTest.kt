@@ -43,9 +43,8 @@ class OmnipodErosPumpPluginTest : TestBaseWithProfile() {
 
         // mock all the things
         val plugin = OmnipodErosPumpPlugin(
-            injector, aapsLogger, TestAapsSchedulers(), rxBus, null,
-            rh, null, null, aapsOmnipodErosManager, commandQueue,
-            null, null, null, null,
+            injector, aapsLogger, rh, preferences, commandQueue, TestAapsSchedulers(), rxBus, null,
+            null, null, aapsOmnipodErosManager, null, null, null, null,
             rileyLinkUtil, null, null, pumpSync, uiInteraction, erosHistoryDatabase, decimalFormatter, instantiator
         )
         val pumpState = PumpSync.PumpState(null, null, null, null, "")

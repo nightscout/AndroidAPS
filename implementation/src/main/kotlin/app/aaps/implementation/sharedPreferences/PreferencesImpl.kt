@@ -20,6 +20,8 @@ import app.aaps.core.keys.IntNonKey
 import app.aaps.core.keys.IntNonPreferenceKey
 import app.aaps.core.keys.IntPreferenceKey
 import app.aaps.core.keys.IntentKey
+import app.aaps.core.keys.LongComposedNonPreferenceKey
+import app.aaps.core.keys.LongNonPreferenceKey
 import app.aaps.core.keys.LongPreferenceKey
 import app.aaps.core.keys.NonPreferenceKey
 import app.aaps.core.keys.PreferenceKey
@@ -146,21 +148,38 @@ class PreferencesImpl @Inject constructor(
         else if (key.calculatedDefaultValue && isHidden(key)) calculatedDefaultValue(key)
         else sp.getInt(key.key, calculatedDefaultValue(key))
 
+    override fun get(key: LongNonPreferenceKey): Long =
+        sp.getLong(key.key, key.defaultValue)
+
+    override fun getIfExists(key: LongNonPreferenceKey): Long? =
+        if (sp.contains(key.key)) sp.getLong(key.key, key.defaultValue) else null
+
+    override fun put(key: LongNonPreferenceKey, value: Long) {
+        sp.putLong(key.key, value)
+    }
+
     override fun get(key: LongPreferenceKey): Long =
         if (!config.isEngineeringMode() && key.engineeringModeOnly) key.defaultValue
         else if (simpleMode && key.defaultedBySM) calculatedDefaultValue(key)
         else if (key.calculatedDefaultValue && isHidden(key)) calculatedDefaultValue(key)
         else sp.getLong(key.key, calculatedDefaultValue(key))
 
-    override fun getIfExists(key: LongPreferenceKey): Long? =
-        if (sp.contains(key.key)) sp.getLong(key.key, key.defaultValue) else null
-
-    override fun put(key: LongPreferenceKey, value: Long) {
-        sp.putLong(key.key, value)
-    }
-
     override fun remove(key: NonPreferenceKey) {
         sp.remove(key.key)
+    }
+
+    override fun get(key: LongComposedNonPreferenceKey, vararg arguments: Any): Long =
+        sp.getLong(key.composeKey(arguments), key.defaultValue)
+
+    override fun getIfExists(key: LongComposedNonPreferenceKey, vararg arguments: Any): Long? =
+        if (sp.contains(key.composeKey(arguments))) sp.getLong(key.composeKey(arguments), key.defaultValue) else null
+
+    override fun put(key: LongComposedNonPreferenceKey, vararg arguments: Any, value: Long) {
+        sp.putLong(key.composeKey(arguments), value)
+    }
+
+    override fun remove(key: LongComposedNonPreferenceKey, vararg arguments: Any) {
+        sp.remove(String.format(Locale.ENGLISH, key.key, arguments))
     }
 
     override fun remove(key: StringComposedNonPreferenceKey, vararg arguments: Any) {

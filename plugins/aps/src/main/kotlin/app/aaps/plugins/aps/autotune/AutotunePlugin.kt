@@ -20,7 +20,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -61,8 +61,9 @@ import javax.inject.Singleton
 @Singleton
 class AutotunePlugin @Inject constructor(
     private val injector: HasAndroidInjector,
-    resourceHelper: ResourceHelper,
-    private val preferences: Preferences,
+    aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
+    preferences: Preferences,
     private val rxBus: RxBus,
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
@@ -73,10 +74,9 @@ class AutotunePlugin @Inject constructor(
     private val autotuneCore: AutotuneCore,
     private val config: Config,
     private val uel: UserEntryLogger,
-    aapsLogger: AAPSLogger,
     private val instantiator: Instantiator
-) : PluginBase(
-    PluginDescription()
+) : PluginBaseWithPreferences(
+    pluginDescription = PluginDescription()
         .mainType(PluginType.GENERAL)
         .fragmentClass(AutotuneFragment::class.qualifiedName)
         .pluginIcon(app.aaps.core.objects.R.drawable.ic_autotune)
@@ -85,7 +85,8 @@ class AutotunePlugin @Inject constructor(
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .showInList { config.isEngineeringMode() && config.isDev() }
         .description(R.string.autotune_description),
-    aapsLogger, resourceHelper
+    ownPreferences = listOf(AutotuneStringKey::class.java),
+    aapsLogger, rh, preferences
 ), Autotune {
 
     @Volatile override var lastRunSuccess: Boolean = false
@@ -101,10 +102,6 @@ class AutotunePlugin @Inject constructor(
     private lateinit var profile: Profile
     val days = WeekDay()
     val autotuneStartHour: Int = 4
-
-    init {
-        preferences.registerPreferences(AutotuneStringKey::class.java)
-    }
 
     override fun aapsAutotune(daysBack: Int, autoSwitch: Boolean, profileToTune: String, weekDays: BooleanArray?) {
         lastRunSuccess = false
@@ -188,7 +185,7 @@ class AutotunePlugin @Inject constructor(
                 log("Tune day " + (i + 1) + " of " + daysBack + " (" + currentCalcDay + " of " + calcDays + ")")
                 tunedProfile?.let {
                     autotuneIob.initializeData(from, to, it)  //autotuneIob contains BG and Treatments data from history (<=> query for ns-treatments and ns-entries)
-                    if (autotuneIob.boluses.isEmpty) {
+                    if (autotuneIob.boluses.isEmpty()) {
                         result = rh.gs(R.string.autotune_error)
                         log("No basal data on day ${i + 1}")
                         autotuneFS.exportResult(result)

@@ -132,17 +132,17 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         danaPump = DanaPump(aapsLogger, preferences, dateUtil, instantiator, decimalFormatter)
         objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, rh, sp, preferences)
         danaRPlugin = DanaRPlugin(
-            aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, activePlugin, commandQueue, danaPump, dateUtil, fabricPrivacy, pumpSync,
-            preferences, uiInteraction, danaHistoryDatabase, decimalFormatter, instantiator
+            aapsLogger, rh, preferences, commandQueue, aapsSchedulers, rxBus, context, constraintChecker, activePlugin, danaPump, dateUtil, fabricPrivacy, pumpSync,
+            uiInteraction, danaHistoryDatabase, decimalFormatter, instantiator
         )
         danaRSPlugin =
             DanaRSPlugin(
-                aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, profileFunction,
-                commandQueue, danaPump, pumpSync, preferences, detailedBolusInfoStorage, temporaryBasalStorage,
+                aapsLogger, rh, preferences, commandQueue, aapsSchedulers, rxBus, context, constraintChecker, profileFunction,
+                danaPump, pumpSync, detailedBolusInfoStorage, temporaryBasalStorage,
                 fabricPrivacy, dateUtil, uiInteraction, danaHistoryDatabase, decimalFormatter, instantiator
             )
         insightPlugin = InsightPlugin(
-            aapsLogger, rxBus, rh, sp, commandQueue, profileFunction,
+            aapsLogger, rh, preferences, commandQueue, rxBus, sp, profileFunction,
             context, config, dateUtil, insightDbHelper, pumpSync, insightDatabase, instantiator
         )
         openAPSSMBPlugin =
