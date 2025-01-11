@@ -34,9 +34,9 @@ class OpenHumansUploaderPluginTest : TestBaseWithProfile() {
     }
 
     @BeforeEach fun prepare() {
-        stateDelegate = OHStateDelegate(sp)
-        counterDelegate = OHCounterDelegate(sp)
-        appIdDelegate = OHAppIDDelegate(sp)
+        stateDelegate = OHStateDelegate(preferences)
+        counterDelegate = OHCounterDelegate(preferences)
+        appIdDelegate = OHAppIDDelegate(preferences)
         openHumansUploaderPlugin = OpenHumansUploaderPlugin(rh, aapsLogger, preferences, context, persistenceLayer, openHumansAPI, stateDelegate, counterDelegate, appIdDelegate, rxBus)
     }
 
