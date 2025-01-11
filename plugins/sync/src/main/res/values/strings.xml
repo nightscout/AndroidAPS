@@ -143,7 +143,7 @@
     <!--    DataBroadcast-->
     <string name="tizen">Companion App Broadcast</string>
     <string name="tizen_short">CAB</string>
-    <string name="tizen_description">Enables data broadcasting to companion apps on Samsung Tizen OS, Wear OS, and Android Auto devices, including G-Watch, G-Watch Wear, GlucoDataHandler and GlucoDataAuto.</string>
+    <string name="tizen_description">Enables data broadcasting to various external companion apps</string>
 
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
