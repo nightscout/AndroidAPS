@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.sync.DataSyncSelector
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.sync.R
@@ -678,7 +679,7 @@ class DataSyncSelectorV3 @Inject constructor(
     private suspend fun processChangedProfileStore() {
         if (isPaused) return
         val lastSync = sp.getLong(R.string.key_ns_profile_store_last_synced_timestamp, 0)
-        val lastChange = sp.getLong(app.aaps.core.utils.R.string.key_local_profile_last_change, 0)
+        val lastChange = preferences.get(LongNonKey.LocalProfileLastChange)
         if (lastChange == 0L) return
         if (lastChange > lastSync) {
             if (activePlugin.activeProfileSource.profile?.allProfilesValid != true) return

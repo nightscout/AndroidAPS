@@ -18,6 +18,7 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
 import app.aaps.core.nssdk.mapper.toNSDeviceStatus
@@ -300,7 +301,7 @@ class NSClientV3Service : DaggerService() {
         rxBus.send(EventNSClientNewLog("◄ ALARM", data.optString("message")))
         aapsLogger.debug(LTag.NSCLIENT, data.toString())
         if (preferences.get(BooleanKey.NsClientNotificationsFromAlarms)) {
-            val snoozedTo = sp.getLong(rh.gs(app.aaps.core.utils.R.string.key_snoozed_to) + data.optString("level"), 0L)
+            val snoozedTo = preferences.get(LongComposedKey.NotificationSnoozedTo, data.optString("level"))
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo)
                 uiInteraction.addNotificationWithAction(NSAlarmObject(data))
         }
@@ -311,7 +312,7 @@ class NSClientV3Service : DaggerService() {
         rxBus.send(EventNSClientNewLog("◄ URGENT ALARM", data.optString("message")))
         aapsLogger.debug(LTag.NSCLIENT, data.toString())
         if (preferences.get(BooleanKey.NsClientNotificationsFromAlarms)) {
-            val snoozedTo = sp.getLong(rh.gs(app.aaps.core.utils.R.string.key_snoozed_to) + data.optString("level"), 0L)
+            val snoozedTo = preferences.get(LongComposedKey.NotificationSnoozedTo, data.optString("level"))
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo)
                 uiInteraction.addNotificationWithAction(NSAlarmObject(data))
         }

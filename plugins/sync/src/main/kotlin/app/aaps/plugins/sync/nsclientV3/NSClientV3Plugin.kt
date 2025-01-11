@@ -53,6 +53,7 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
 import app.aaps.core.nssdk.NSAndroidClientImpl
@@ -173,6 +174,7 @@ class NSClientV3Plugin @Inject constructor(
     internal var initialLoadFinished = false
 
     private val fullSyncSemaphore = Object()
+
     /**
      * Set to true if full sync is requested from fragment.
      * In this case we must enable accepting all data from NS even when disabled in preferences
@@ -246,7 +248,7 @@ class NSClientV3Plugin @Inject constructor(
                                nsAndroidClient = null
                                setClient()
                            }
-                           if (ev.isChanged(rh.gs(app.aaps.core.utils.R.string.key_local_profile_last_change)))
+                           if (ev.isChanged(LongNonKey.LocalProfileLastChange.key))
                                executeUpload("PROFILE_CHANGE", forceNew = true)
 
                        }, fabricPrivacy::logException)

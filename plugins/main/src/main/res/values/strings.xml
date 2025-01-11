@@ -277,7 +277,6 @@
     <string name="run_question">Run %s?</string>
 
     <!--    OverviewMenu-->
-    <string name="key_graph_config" translatable="false">graphconfig</string>
     <string name="overview_show_predictions">Predictions</string>
     <string name="overview_show_treatments">Treatments</string>
     <string name="overview_show_heartRate">Heart Rate</string>

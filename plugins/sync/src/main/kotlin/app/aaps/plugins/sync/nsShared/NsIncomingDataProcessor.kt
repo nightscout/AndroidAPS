@@ -24,6 +24,7 @@ import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.nssdk.localmodel.entry.NSSgvV3
 import app.aaps.core.nssdk.localmodel.food.NSFood
@@ -201,9 +202,10 @@ class NsIncomingDataProcessor @Inject constructor(
                         if (preferences.get(BooleanKey.NsClientAcceptTherapyEvent) || config.AAPSCLIENT || doFullSync)
                             treatment.toTherapyEvent().let { therapyEvent ->
                                 storeDataForDb.addToTherapyEvents(therapyEvent)
-                                if (therapyEvent.type ==  TE.Type.ANNOUNCEMENT &&
+                                if (therapyEvent.type == TE.Type.ANNOUNCEMENT &&
                                     preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements) &&
-                                    therapyEvent.timestamp + T.mins(60).msecs() > dateUtil.now())
+                                    therapyEvent.timestamp + T.mins(60).msecs() > dateUtil.now()
+                                )
                                     uiInteraction.addNotificationWithAction(
                                         id = Notification.NS_ANNOUNCEMENT,
                                         text = therapyEvent.note ?: "",
@@ -283,7 +285,7 @@ class NsIncomingDataProcessor @Inject constructor(
         if (preferences.get(BooleanKey.NsClientAcceptProfileStore) || config.AAPSCLIENT || doFullSync) {
             val store = instantiator.provideProfileStore(profileJson)
             val createdAt = store.getStartDate()
-            val lastLocalChange = sp.getLong(app.aaps.core.utils.R.string.key_local_profile_last_change, 0)
+            val lastLocalChange = preferences.get(LongNonKey.LocalProfileLastChange)
             aapsLogger.debug(LTag.PROFILE, "Received profileStore: createdAt: $createdAt Local last modification: $lastLocalChange")
             if (createdAt > lastLocalChange || createdAt % 1000 == 0L) { // whole second means edited in NS
                 profileSource.loadFromStore(store)

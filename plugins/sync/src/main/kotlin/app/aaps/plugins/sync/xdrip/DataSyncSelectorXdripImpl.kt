@@ -13,6 +13,8 @@ import app.aaps.core.interfaces.sync.DataSyncSelector
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.LongNonKey
+import app.aaps.core.keys.Preferences
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.sync.R
 import dagger.Lazy
@@ -29,7 +31,8 @@ class DataSyncSelectorXdripImpl @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val xdripBroadcast: Lazy<XDripBroadcast>,
     private val persistenceLayer: PersistenceLayer,
-    private val rxBus: RxBus
+    private val rxBus: RxBus,
+    private val preferences: Preferences,
 ) : DataSyncSelectorXdrip {
 
     class QueueCounter(
@@ -553,7 +556,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
     private fun processChangedProfileStore() {
         if (!isEnabled) return
         val lastSync = sp.getLong(R.string.key_xdrip_profile_store_last_synced_timestamp, 0)
-        val lastChange = sp.getLong(app.aaps.core.utils.R.string.key_local_profile_last_change, 0)
+        val lastChange = preferences.get(LongNonKey.LocalProfileLastChange)
         if (lastChange == 0L) return
         if (lastChange > lastSync) {
             if (activePlugin.activeProfileSource.profile?.allProfilesValid != true) return

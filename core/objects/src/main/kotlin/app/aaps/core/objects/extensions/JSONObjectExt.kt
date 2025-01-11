@@ -3,12 +3,12 @@ package app.aaps.core.objects.extensions
 import androidx.annotation.StringRes
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.core.keys.BooleanPreferenceKey
+import app.aaps.core.keys.BooleanNonPreferenceKey
 import app.aaps.core.keys.DoublePreferenceKey
 import app.aaps.core.keys.IntPreferenceKey
 import app.aaps.core.keys.LongPreferenceKey
 import app.aaps.core.keys.Preferences
-import app.aaps.core.keys.StringPreferenceKey
+import app.aaps.core.keys.StringNonPreferenceKey
 import app.aaps.core.keys.UnitDoublePreferenceKey
 import org.json.JSONObject
 
@@ -27,10 +27,10 @@ fun JSONObject.put(key: UnitDoublePreferenceKey, preferences: Preferences): JSON
 fun JSONObject.putString(@StringRes key: Int, sp: SP, rh: ResourceHelper): JSONObject =
     if (sp.contains(key)) put(rh.gs(key), sp.getString(key, "")) else this
 
-fun JSONObject.put(key: StringPreferenceKey, preferences: Preferences): JSONObject =
+fun JSONObject.put(key: StringNonPreferenceKey, preferences: Preferences): JSONObject =
     this.also { it.put(key.key, preferences.get(key)) }
 
-fun JSONObject.put(key: BooleanPreferenceKey, preferences: Preferences): JSONObject =
+fun JSONObject.put(key: BooleanNonPreferenceKey, preferences: Preferences): JSONObject =
     this.also { it.put(key.key, preferences.get(key)) }
 
 fun JSONObject.store(key: IntPreferenceKey, preferences: Preferences): JSONObject {
@@ -53,22 +53,12 @@ fun JSONObject.store(key: UnitDoublePreferenceKey, preferences: Preferences): JS
     return this
 }
 
-fun JSONObject.storeString(@StringRes key: Int, sp: SP, rh: ResourceHelper): JSONObject {
-    if (has(rh.gs(key))) sp.putString(key, getString(rh.gs(key)).toString())
-    return this
-}
-
-fun JSONObject.store(key: StringPreferenceKey, preferences: Preferences): JSONObject {
+fun JSONObject.store(key: StringNonPreferenceKey, preferences: Preferences): JSONObject {
     if (has(key.key)) preferences.put(key, getString(key.key))
     return this
 }
 
-fun JSONObject.storeBoolean(@StringRes key: Int, sp: SP, rh: ResourceHelper): JSONObject {
-    if (has(rh.gs(key))) sp.putBoolean(key, getBoolean(rh.gs(key)))
-    return this
-}
-
-fun JSONObject.store(key: BooleanPreferenceKey, preferences: Preferences): JSONObject {
+fun JSONObject.store(key: BooleanNonPreferenceKey, preferences: Preferences): JSONObject {
     if (has(key.key)) preferences.put(key, getBoolean(key.key))
     return this
 }

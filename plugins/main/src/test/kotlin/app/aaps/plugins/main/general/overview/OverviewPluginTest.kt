@@ -72,8 +72,8 @@ class OverviewPluginTest : TestBaseWithProfile() {
 
     @BeforeEach fun prepare() {
         overviewPlugin = OverviewPlugin(
-            injector, notificationStore, fabricPrivacy, rxBus, sp, preferences,
-            aapsLogger, aapsSchedulers, rh, overviewData, overviewMenus, context, constraintsChecker, uiInteraction, nsSettingsStatus
+            aapsLogger, rh, preferences, notificationStore, fabricPrivacy, rxBus,
+            aapsSchedulers, overviewData, overviewMenus, context, constraintsChecker, uiInteraction, nsSettingsStatus
         )
         Mockito.`when`(uiInteraction.quickWizardListActivity).thenReturn(Activity::class.java)
     }

@@ -5,6 +5,7 @@ enum class StringNonKey(
     override val defaultValue: String,
 ) : StringNonPreferenceKey {
 
+    QuickWizard(key = "QuickWizard", defaultValue = "[]"),
     WearCwfWatchfaceName(key = "wear_cwf_watchface_name", defaultValue = ""),
     WearCwfAuthorVersion(key = "wear_cwf_author_version", defaultValue = ""),
     WearCwfFileName(key = "wear_cwf_filename", defaultValue = ""),

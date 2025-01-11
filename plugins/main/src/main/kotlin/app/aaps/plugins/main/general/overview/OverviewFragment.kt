@@ -85,6 +85,7 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.IntNonKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.objects.constraints.ConstraintObject
@@ -226,8 +227,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         binding.graphsLayout.bgGraph.setOnLongClickListener {
             overviewData.rangeToDisplay += 6
             overviewData.rangeToDisplay = if (overviewData.rangeToDisplay > 24) 6 else overviewData.rangeToDisplay
-            sp.putInt(app.aaps.core.utils.R.string.key_rangetodisplay, overviewData.rangeToDisplay)
-            rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.utils.R.string.key_rangetodisplay)))
+            preferences.put(IntNonKey.RangeToDisplay, overviewData.rangeToDisplay)
+            rxBus.send(EventPreferenceChange(IntNonKey.RangeToDisplay.key))
             preferences.put(BooleanNonKey.ObjectivesScaleUsed, true)
             false
         }
@@ -292,8 +293,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             .observeOn(aapsSchedulers.main)
             .subscribe({
                            overviewData.rangeToDisplay = it.hours
-                           sp.putInt(app.aaps.core.utils.R.string.key_rangetodisplay, it.hours)
-                           rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.utils.R.string.key_rangetodisplay)))
+                           preferences.put(IntNonKey.RangeToDisplay, it.hours)
+                           rxBus.send(EventPreferenceChange(IntNonKey.RangeToDisplay.key))
                            preferences.put(BooleanNonKey.ObjectivesScaleUsed, true)
                        }, fabricPrivacy::logException)
         disposable += rxBus
@@ -1149,7 +1150,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         _binding ?: return
         val lastAutosensData = iobCobCalculator.ads.getLastAutosensData("Overview", aapsLogger, dateUtil)
         val lastAutosensRatio = lastAutosensData?.let { it.autosensResult.ratio * 100 }
-        if (config.AAPSCLIENT && sp.getBoolean(app.aaps.core.utils.R.string.key_used_autosens_on_main_phone, false) ||
+        if (config.AAPSCLIENT && preferences.get(BooleanNonKey.AutosensUsedOnMainPhone) ||
             !config.AAPSCLIENT && constraintChecker.isAutosensModeEnabled().value()
         ) {
             binding.infoLayout.sensitivityIcon.setImageResource(

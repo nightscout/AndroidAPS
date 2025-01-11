@@ -9,4 +9,5 @@ enum class BooleanNonKey(
     ObjectivesLoopUsed("ObjectivesLoopUsed", false),
     ObjectivesActionsUsed("ObjectivesActionsUsed", false),
     ObjectivesScaleUsed("ObjectivesScaleUsed", false),
+    AutosensUsedOnMainPhone("used_autosens_on_main_phone", false),
 }

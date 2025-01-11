@@ -6,6 +6,7 @@ import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.BooleanNonPreferenceKey
 import app.aaps.core.keys.BooleanPreferenceKey
+import app.aaps.core.keys.DoubleComposedNonPreferenceKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.DoublePreferenceKey
 import app.aaps.core.keys.IntKey
@@ -13,7 +14,9 @@ import app.aaps.core.keys.IntNonKey
 import app.aaps.core.keys.IntNonPreferenceKey
 import app.aaps.core.keys.IntPreferenceKey
 import app.aaps.core.keys.IntentKey
+import app.aaps.core.keys.LongComposedKey
 import app.aaps.core.keys.LongComposedNonPreferenceKey
+import app.aaps.core.keys.LongNonKey
 import app.aaps.core.keys.LongNonPreferenceKey
 import app.aaps.core.keys.LongPreferenceKey
 import app.aaps.core.keys.NonPreferenceKey
@@ -46,6 +49,8 @@ class PreferencesImpl @Inject constructor(
             BooleanNonKey::class.java,
             IntKey::class.java,
             IntNonKey::class.java,
+            LongNonKey::class.java,
+            LongComposedKey::class.java,
             DoubleKey::class.java,
             UnitDoubleKey::class.java,
             StringKey::class.java,
@@ -95,6 +100,16 @@ class PreferencesImpl @Inject constructor(
         sp.putDouble(key.key, value)
     }
 
+    override fun get(key: DoubleComposedNonPreferenceKey, vararg arguments: Any): Double =
+        sp.getDouble(key.composeKey(*arguments), key.defaultValue)
+
+    override fun getIfExists(key: DoubleComposedNonPreferenceKey, vararg arguments: Any): Double? =
+        if (sp.contains(key.composeKey(*arguments))) sp.getDouble(key.composeKey(*arguments), key.defaultValue) else null
+
+    override fun put(key: DoubleComposedNonPreferenceKey, vararg arguments: Any, value: Double) {
+        sp.putDouble(key.composeKey(*arguments), value)
+    }
+
     override fun get(key: IntNonPreferenceKey): Int = sp.getInt(key.key, key.defaultValue)
 
     override fun getIfExists(key: IntNonPreferenceKey): Int? =
@@ -126,13 +141,13 @@ class PreferencesImpl @Inject constructor(
     }
 
     override fun get(key: LongComposedNonPreferenceKey, vararg arguments: Any): Long =
-        sp.getLong(key.composeKey(arguments), key.defaultValue)
+        sp.getLong(key.composeKey(*arguments), key.defaultValue)
 
     override fun getIfExists(key: LongComposedNonPreferenceKey, vararg arguments: Any): Long? =
-        if (sp.contains(key.composeKey(arguments))) sp.getLong(key.composeKey(arguments), key.defaultValue) else null
+        if (sp.contains(key.composeKey(*arguments))) sp.getLong(key.composeKey(*arguments), key.defaultValue) else null
 
     override fun put(key: LongComposedNonPreferenceKey, vararg arguments: Any, value: Long) {
-        sp.putLong(key.composeKey(arguments), value)
+        sp.putLong(key.composeKey(*arguments), value)
     }
 
     override fun remove(key: LongComposedNonPreferenceKey, vararg arguments: Any) {
@@ -157,23 +172,23 @@ class PreferencesImpl @Inject constructor(
             .find { it.key == key }
 
     override fun get(key: BooleanComposedNonPreferenceKey, vararg arguments: Any): Boolean =
-        sp.getBoolean(key.composeKey(arguments), key.defaultValue)
+        sp.getBoolean(key.composeKey(*arguments), key.defaultValue)
 
     override fun getIfExists(key: BooleanComposedNonPreferenceKey, vararg arguments: Any): Boolean? =
-        if (sp.contains(key.composeKey(arguments))) sp.getBoolean(key.composeKey(arguments), key.defaultValue) else null
+        if (sp.contains(key.composeKey(*arguments))) sp.getBoolean(key.composeKey(*arguments), key.defaultValue) else null
 
     override fun put(key: BooleanComposedNonPreferenceKey, vararg arguments: Any, value: Boolean) {
-        sp.putBoolean(key.composeKey(arguments), value)
+        sp.putBoolean(key.composeKey(*arguments), value)
     }
 
     override fun get(key: StringComposedNonPreferenceKey, vararg arguments: Any): String =
-        sp.getString(key.composeKey(arguments), key.defaultValue)
+        sp.getString(key.composeKey(*arguments), key.defaultValue)
 
     override fun getIfExists(key: StringComposedNonPreferenceKey, vararg arguments: Any): String? =
-        if (sp.contains(key.composeKey(arguments))) sp.getString(key.composeKey(arguments), key.defaultValue) else null
+        if (sp.contains(key.composeKey(*arguments))) sp.getString(key.composeKey(*arguments), key.defaultValue) else null
 
     override fun put(key: StringComposedNonPreferenceKey, vararg arguments: Any, value: String) {
-        sp.putString(key.composeKey(arguments), value)
+        sp.putString(key.composeKey(*arguments), value)
     }
 
     override fun remove(key: StringComposedNonPreferenceKey, vararg arguments: Any) {

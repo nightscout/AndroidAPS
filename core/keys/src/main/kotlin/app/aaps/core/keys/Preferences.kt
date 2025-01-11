@@ -184,6 +184,33 @@ interface Preferences {
      */
     fun put(key: DoublePreferenceKey, value: Double)
 
+    /**
+     * Get [String] value from [android.content.SharedPreferences]
+     * *
+     * @param key [DoubleComposedNonPreferenceKey] enum
+     * @param arguments arguments to compose final key using String::format
+     * @return value
+     */
+    fun get(key: DoubleComposedNonPreferenceKey, vararg arguments: Any): Double
+
+    /**
+     * Get [String] value from [android.content.SharedPreferences] or null if doesn't exist
+     *
+     * @param key [DoubleComposedNonPreferenceKey] enum
+     * @param arguments arguments to compose final key using String::format
+     * @return value or null
+     */
+    fun getIfExists(key: DoubleComposedNonPreferenceKey, vararg arguments: Any): Double?
+
+    /**
+     * Update [String] value in [android.content.SharedPreferences]
+     *
+     * @param key [DoubleComposedNonPreferenceKey] enum
+     * @param arguments arguments to compose final key using String::format
+     * @param value value
+     */
+    fun put(key: DoubleComposedNonPreferenceKey, vararg arguments: Any, value: Double)
+
     /* UNIT DOUBLE */
 
     /**
