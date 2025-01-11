@@ -35,6 +35,13 @@ interface LastBgData {
     fun isHigh(): Boolean
 
     /**
+     * Is last value above display high very target?
+     *
+     * @return true if above
+     */
+    fun isVeryHigh(): Boolean
+
+    /**
      * Evaluate color based on low - in - high
      *
      * @return color as resource

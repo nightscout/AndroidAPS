@@ -151,6 +151,7 @@ class Widget : AppWidgetProvider() {
         views.setTextColor(
             R.id.bg, when {
                 lastBgData.isLow()  -> rh.gc(app.aaps.core.ui.R.color.widget_low)
+                lastBgData.isVeryHigh()  -> rh.gc(app.aaps.core.ui.R.color.widget_very_high)
                 lastBgData.isHigh() -> rh.gc(app.aaps.core.ui.R.color.widget_high)
                 else                -> rh.gc(app.aaps.core.ui.R.color.widget_inrange)
             }
@@ -162,6 +163,7 @@ class Widget : AppWidgetProvider() {
         views.setInt(
             R.id.arrow, "setColorFilter", when {
                 lastBgData.isLow()  -> rh.gc(app.aaps.core.ui.R.color.widget_low)
+                lastBgData.isVeryHigh()  -> rh.gc(app.aaps.core.ui.R.color.widget_very_high)
                 lastBgData.isHigh() -> rh.gc(app.aaps.core.ui.R.color.widget_high)
                 else                -> rh.gc(app.aaps.core.ui.R.color.widget_inrange)
             }
