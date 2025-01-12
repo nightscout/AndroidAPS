@@ -124,7 +124,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
                 if (profileToCheck != null && ProfileSealed.Pure(profileToCheck, activePlugin).isValid("ProfileSwitch", activePlugin.activePump, config, rh, rxBus, hardLimits, false).isValid)
                     profileList.add(profileName)
             }
-            if (profileList.isEmpty) {
+            if (profileList.isEmpty()) {
                 dismiss()
                 return
             }

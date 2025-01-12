@@ -34,7 +34,7 @@ class SWEditEncryptedPassword(injector: HasAndroidInjector, private val cryptoUt
         button?.setText(app.aaps.core.ui.R.string.unlock_settings)
         button?.setOnClickListener {
             scanForActivity(context)?.let { activity ->
-                passwordCheck.queryPassword(activity, app.aaps.core.ui.R.string.master_password, StringKey.ProtectionMasterPassword.key, {
+                passwordCheck.queryPassword(activity, app.aaps.core.ui.R.string.master_password, StringKey.ProtectionMasterPassword, {
                     button?.visibility = View.GONE
                     editText?.visibility = View.VISIBLE
                     editText2?.visibility = View.VISIBLE

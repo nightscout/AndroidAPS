@@ -21,7 +21,6 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
-import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.protection.ProtectionCheck.ProtectionType.BIOMETRIC
 import app.aaps.core.interfaces.protection.ProtectionCheck.ProtectionType.CUSTOM_PASSWORD
@@ -69,7 +68,6 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var sp: SP
     @Inject lateinit var preferences: Preferences
-    @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var config: Config
     @Inject lateinit var passwordCheck: PasswordCheck
@@ -434,8 +432,8 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreference(
                 AdaptiveClickPreference(ctx = context, stringKey = StringKey.ProtectionMasterPassword, title = app.aaps.core.ui.R.string.master_password,
                                         onPreferenceClickListener = {
-                                            passwordCheck.queryPassword(context, app.aaps.plugins.configuration.R.string.current_master_password, StringKey.ProtectionMasterPassword.key, {
-                                                passwordCheck.setPassword(context, app.aaps.core.ui.R.string.master_password, StringKey.ProtectionMasterPassword.key)
+                                            passwordCheck.queryPassword(context, app.aaps.plugins.configuration.R.string.current_master_password, StringKey.ProtectionMasterPassword, {
+                                                passwordCheck.setPassword(context, app.aaps.core.ui.R.string.master_password, StringKey.ProtectionMasterPassword)
                                             })
                                             true
                                         }
@@ -445,7 +443,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreference(
                 AdaptiveClickPreference(ctx = context, stringKey = StringKey.ProtectionSettingsPassword, title = app.aaps.core.ui.R.string.settings_password,
                                         onPreferenceClickListener = {
-                                            passwordCheck.setPassword(context, app.aaps.core.ui.R.string.settings_password, StringKey.ProtectionSettingsPassword.key)
+                                            passwordCheck.setPassword(context, app.aaps.core.ui.R.string.settings_password, StringKey.ProtectionSettingsPassword)
                                             true
                                         },
                                         calculatedVisibility = { preferences.get(IntKey.ProtectionTypeSettings) == CUSTOM_PASSWORD.ordinal })
@@ -453,7 +451,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreference(
                 AdaptiveClickPreference(ctx = context, stringKey = StringKey.ProtectionSettingsPin, title = app.aaps.core.ui.R.string.settings_pin,
                                         onPreferenceClickListener = {
-                                            passwordCheck.setPassword(context, app.aaps.core.ui.R.string.settings_pin, StringKey.ProtectionSettingsPin.key, pinInput = true)
+                                            passwordCheck.setPassword(context, app.aaps.core.ui.R.string.settings_pin, StringKey.ProtectionSettingsPin, pinInput = true)
                                             true
                                         },
                                         calculatedVisibility = { preferences.get(IntKey.ProtectionTypeSettings) == CUSTOM_PIN.ordinal })
@@ -462,7 +460,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreference(
                 AdaptiveClickPreference(ctx = context, stringKey = StringKey.ProtectionApplicationPassword, title = app.aaps.core.ui.R.string.application_password,
                                         onPreferenceClickListener = {
-                                            passwordCheck.setPassword(context, app.aaps.core.ui.R.string.application_password, StringKey.ProtectionApplicationPassword.key)
+                                            passwordCheck.setPassword(context, app.aaps.core.ui.R.string.application_password, StringKey.ProtectionApplicationPassword)
                                             true
                                         },
                                         calculatedVisibility = { preferences.get(IntKey.ProtectionTypeApplication) == CUSTOM_PASSWORD.ordinal })
@@ -470,7 +468,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreference(
                 AdaptiveClickPreference(ctx = context, stringKey = StringKey.ProtectionApplicationPin, title = app.aaps.core.ui.R.string.application_pin,
                                         onPreferenceClickListener = {
-                                            passwordCheck.setPassword(context, app.aaps.core.ui.R.string.application_pin, StringKey.ProtectionApplicationPin.key, pinInput = true)
+                                            passwordCheck.setPassword(context, app.aaps.core.ui.R.string.application_pin, StringKey.ProtectionApplicationPin, pinInput = true)
                                             true
                                         },
                                         calculatedVisibility = { preferences.get(IntKey.ProtectionTypeApplication) == CUSTOM_PIN.ordinal })
@@ -479,7 +477,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreference(
                 AdaptiveClickPreference(ctx = context, stringKey = StringKey.ProtectionBolusPassword, title = app.aaps.core.ui.R.string.bolus_password,
                                         onPreferenceClickListener = {
-                                            passwordCheck.setPassword(context, app.aaps.core.ui.R.string.bolus_password, StringKey.ProtectionBolusPassword.key)
+                                            passwordCheck.setPassword(context, app.aaps.core.ui.R.string.bolus_password, StringKey.ProtectionBolusPassword)
                                             true
                                         },
                                         calculatedVisibility = { preferences.get(IntKey.ProtectionTypeBolus) == CUSTOM_PASSWORD.ordinal })
@@ -487,7 +485,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreference(
                 AdaptiveClickPreference(ctx = context, stringKey = StringKey.ProtectionBolusPin, title = app.aaps.core.ui.R.string.bolus_pin,
                                         onPreferenceClickListener = {
-                                            passwordCheck.setPassword(context, app.aaps.core.ui.R.string.bolus_pin, StringKey.ProtectionBolusPin.key, pinInput = true)
+                                            passwordCheck.setPassword(context, app.aaps.core.ui.R.string.bolus_pin, StringKey.ProtectionBolusPin, pinInput = true)
                                             true
                                         },
                                         calculatedVisibility = { preferences.get(IntKey.ProtectionTypeBolus) == CUSTOM_PIN.ordinal })

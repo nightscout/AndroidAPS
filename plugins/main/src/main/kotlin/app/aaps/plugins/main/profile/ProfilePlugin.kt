@@ -422,7 +422,7 @@ class ProfilePlugin @Inject constructor(
 
     fun removeCurrentProfile() {
         profiles.removeAt(currentProfileIndex)
-        if (profiles.isEmpty) addNewProfile()
+        if (profiles.isEmpty()) addNewProfile()
         currentProfileIndex = 0
         createAndStoreConvertedProfile()
         storeSettings(timestamp = dateUtil.now())

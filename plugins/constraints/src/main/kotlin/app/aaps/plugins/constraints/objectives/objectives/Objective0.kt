@@ -78,7 +78,7 @@ class Objective0(injector: HasAndroidInjector) : Objective(injector, "config", R
                 if (preferences.get(StringKey.ProtectionMasterPassword) == "") {
                     ToastUtils.errorToast(context, app.aaps.core.ui.R.string.master_password_not_set)
                 } else {
-                    passwordCheck.queryPassword(context, app.aaps.core.ui.R.string.master_password, StringKey.ProtectionMasterPassword.key,
+                    passwordCheck.queryPassword(context, app.aaps.core.ui.R.string.master_password, StringKey.ProtectionMasterPassword,
                                                 ok = {
                                                     task.answered = true
                                                     callback.run()

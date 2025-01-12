@@ -218,6 +218,12 @@ class AAPSPumpStateStore(
         }
     }
 
+    /***
+     * By @MilosKozak
+     * If changed see [ComboV2Plugin.ComboStringKey], [ComboV2Plugin.ComboIntKey], [ComboV2Plugin.ComboLongKey]
+     *
+     */
+
     private enum class PreferenceKeys(val str: String, val type: KClassifier) {
         BT_ADDRESS_KEY("combov2-bt-address-key", String::class),
         NONCE_KEY("combov2-nonce-key", String::class),

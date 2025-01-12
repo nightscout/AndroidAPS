@@ -2,7 +2,6 @@ package app.aaps.implementation.protection
 
 import android.content.Context
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -12,9 +11,9 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.protection.ExportPasswordDataStore
 import app.aaps.core.interfaces.protection.SecureEncrypt
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.Preferences
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -39,7 +38,7 @@ import javax.inject.Singleton
 @Singleton
 class ExportPasswordDataStoreImpl @Inject constructor(
     private var log: AAPSLogger,
-    private var sp: SP,
+    private var preferences: Preferences,
     private var config: Config
     ) : ExportPasswordDataStore {
 
@@ -66,7 +65,7 @@ class ExportPasswordDataStoreImpl @Inject constructor(
     }
 
     // Declare DataStore
-    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
+    private val Context.dataStore: DataStore<androidx.datastore.preferences.core.Preferences> by preferencesDataStore(
         name = DATASTORE_NAME
     )
 
@@ -89,7 +88,7 @@ class ExportPasswordDataStoreImpl @Inject constructor(
      */
     override fun exportPasswordStoreEnabled() : Boolean {
         // Is password storing enabled?
-        exportPasswordStoreIsEnabled  = sp.getBoolean(BooleanKey.MaintenanceEnableExportSettingsAutomation.key, false)
+        exportPasswordStoreIsEnabled  = preferences.get(BooleanKey.MaintenanceEnableExportSettingsAutomation)
         if (!exportPasswordStoreIsEnabled) return false // Easy, done!
 
         // Use fixed defaults for password validity window, optional overrule defaults from prefs:

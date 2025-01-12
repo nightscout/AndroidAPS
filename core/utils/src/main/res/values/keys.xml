@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    Keys-->
-    <string name="key_btwatchdog_lastbark" translatable="false">bt_watchdog_last</string>
     <string name="key_units_mgdl" translatable="false">units_mgdl</string>
     <string name="key_medtronic_settings" translatable="false">medtronic_settings</string>
     <string name="key_insight_local_settings" translatable="false">insight_local_settings</string>
-    <string name="key_active_pump_change_timestamp" translatable="false">active_pump_change_timestamp</string>
-    <string name="key_active_pump_type" translatable="false">active_pump_type</string>
-    <string name="key_active_pump_serial_number" translatable="false">active_pump_serial_number</string>
-    <string name="key_next_pump_disconnected_alarm" translatable="false">nextPumpDisconnectedAlarm</string>
-    <string name="key_next_missed_reading_alarm" translatable="false">nextMissedReadingsAlarm</string>
     <string name="key_wear_detailediob" translatable="false">wear_detailediob</string>
     <string name="key_wear_showbgi" translatable="false">wear_showbgi</string>
     <string name="key_wear_detailed_delta" translatable="false">wear_detailed_delta</string>

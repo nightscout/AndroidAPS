@@ -43,7 +43,7 @@ object BiometricCheck {
                         ToastUtils.errorToast(activity.baseContext, errString.toString())
                         // fallback to master password
                         runOnUiThread {
-                            passwordCheck.queryPassword(activity, R.string.master_password, StringKey.ProtectionMasterPassword.key, { ok?.run() }, { cancel?.run() }, { fail?.run() })
+                            passwordCheck.queryPassword(activity, R.string.master_password, StringKey.ProtectionMasterPassword, { ok?.run() }, { cancel?.run() }, { fail?.run() })
                         }
                     }
 
@@ -55,7 +55,7 @@ object BiometricCheck {
                         // no pin set
                         // fallback to master password
                         runOnUiThread {
-                            passwordCheck.queryPassword(activity, R.string.master_password, StringKey.ProtectionMasterPassword.key, { ok?.run() }, { cancel?.run() }, { fail?.run() })
+                            passwordCheck.queryPassword(activity, R.string.master_password, StringKey.ProtectionMasterPassword, { ok?.run() }, { cancel?.run() }, { fail?.run() })
                         }
                     }
 
@@ -64,7 +64,7 @@ object BiometricCheck {
                     ERROR_HW_NOT_PRESENT,
                     ERROR_NO_BIOMETRICS        ->
                         runOnUiThread {
-                            passwordCheck.queryPassword(activity, R.string.master_password, StringKey.ProtectionMasterPassword.key, { ok?.run() }, { cancel?.run() }, { fail?.run() })
+                            passwordCheck.queryPassword(activity, R.string.master_password, StringKey.ProtectionMasterPassword, { ok?.run() }, { cancel?.run() }, { fail?.run() })
                         }
                 }
             }
