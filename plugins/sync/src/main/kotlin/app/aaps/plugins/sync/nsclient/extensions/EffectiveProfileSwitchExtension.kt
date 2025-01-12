@@ -3,6 +3,7 @@ package app.aaps.plugins.sync.nsclient.extensions
 import app.aaps.core.data.model.EPS
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
@@ -30,7 +31,7 @@ fun EPS.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
             if (isAdd && ids.nightscoutId != null) it.put("_id", ids.nightscoutId)
         }
 
-fun EPS.Companion.fromJson(jsonObject: JSONObject, dateUtil: DateUtil): EPS? {
+fun EPS.Companion.fromJson(jsonObject: JSONObject, dateUtil: DateUtil, activeInsulin: Insulin): EPS? {
     val timestamp =
         JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null)
             ?: JsonHelper.safeGetLongAllowNull(jsonObject, "date", null)
@@ -51,7 +52,7 @@ fun EPS.Companion.fromJson(jsonObject: JSONObject, dateUtil: DateUtil): EPS? {
     val pumpSerial = JsonHelper.safeGetStringAllowNull(jsonObject, "pumpSerial", null)
 
     if (timestamp == 0L) return null
-    val pureProfile = pureProfileFromJson(JSONObject(profileJson), dateUtil) ?: return null
+    val pureProfile = pureProfileFromJson(JSONObject(profileJson), dateUtil, activeInsulin) ?: return null
     val profileSealed = ProfileSealed.Pure(value = pureProfile, activePlugin = null)
 
     return EPS(

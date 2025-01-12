@@ -21,6 +21,7 @@
     <string name="missing_insulin_name">Missing Insulin Name</string>
     <string name="insulin_name_exists">Insulin Name %1$s already exists, select a new name</string>
     <string name="insulin_duplicated">Insulin already exists with name: %1$s</string>
+    <string name="do_you_want_switch_insulin">Do you want to switch insulin and discard changes made to current insulin?</string>
 
 
 </resources>

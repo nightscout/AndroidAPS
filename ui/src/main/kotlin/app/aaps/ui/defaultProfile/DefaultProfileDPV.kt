@@ -1,6 +1,7 @@
 package app.aaps.ui.defaultProfile
 
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.core.interfaces.utils.DateUtil
@@ -15,6 +16,7 @@ import javax.inject.Singleton
 @Singleton
 class DefaultProfileDPV @Inject constructor(
     private val dateUtil: DateUtil,
+    private val activePlugin: ActivePlugin,
     private val profileUtil: ProfileUtil
 ) {
 
@@ -47,7 +49,7 @@ class DefaultProfileDPV @Inject constructor(
         profile.put("target_high", JSONArray().put(JSONObject().put("time", "00:00").put("value", profileUtil.fromMgdlToUnits(108.0, units))))
         profile.put("target_low", JSONArray().put(JSONObject().put("time", "00:00").put("value", profileUtil.fromMgdlToUnits(108.0, units))))
         profile.put("units", units.asText)
-        return pureProfileFromJson(profile, dateUtil)
+        return pureProfileFromJson(profile, dateUtil, activePlugin.activeInsulin)
     }
 
     private fun arrayToJson(b: Array<Double>, basalSum: Double): JSONArray {

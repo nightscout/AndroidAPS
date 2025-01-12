@@ -147,6 +147,7 @@
     <string name="delete_current_profile">Delete current profile?</string>
     <string name="units_colon">Units:</string>
     <string name="missing_profile_name">Missing profile name</string>
+    <string name="error_in_insulin_values">Error in Insulin values</string>
     <string name="error_in_ic_values">Error in IC values</string>
     <string name="error_in_basal_values">Error in basal values</string>
     <string name="error_in_target_values">Error in target values</string>

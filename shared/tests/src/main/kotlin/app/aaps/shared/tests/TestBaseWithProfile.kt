@@ -121,7 +121,7 @@ open class TestBaseWithProfile : TestBase() {
         Mockito.`when`(activePlugin.activePump).thenReturn(testPumpPlugin)
         Mockito.`when`(preferences.get(StringKey.GeneralUnits)).thenReturn(GlucoseUnit.MGDL.asText)
         hardLimits = HardLimitsMock(sp, preferences, rh)
-        validProfile = ProfileSealed.Pure(pureProfileFromJson(JSONObject(validProfileJSON), dateUtil)!!, activePlugin)
+        validProfile = ProfileSealed.Pure(pureProfileFromJson(JSONObject(validProfileJSON), dateUtil, activePlugin.activeInsulin)!!, activePlugin)
         effectiveProfileSwitch = EPS(
             timestamp = dateUtil.now(),
             basalBlocks = validProfile.basalBlocks,

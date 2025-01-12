@@ -180,7 +180,7 @@ class NsIncomingDataProcessor @Inject constructor(
 
                     is NSEffectiveProfileSwitch ->
                         if (preferences.get(BooleanKey.NsClientAcceptProfileSwitch) || config.AAPSCLIENT || doFullSync) {
-                            treatment.toEffectiveProfileSwitch(dateUtil)?.let { effectiveProfileSwitch ->
+                            treatment.toEffectiveProfileSwitch(dateUtil,activePlugin.activeInsulin)?.let { effectiveProfileSwitch ->
                                 storeDataForDb.addToEffectiveProfileSwitches(effectiveProfileSwitch)
                             }
                         }

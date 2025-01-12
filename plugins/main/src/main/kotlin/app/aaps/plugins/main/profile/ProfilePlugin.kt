@@ -29,6 +29,7 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.objects.extensions.blockFromJsonArray
 import app.aaps.core.objects.extensions.pureProfileFromJson
+import app.aaps.core.objects.extensions.toJson
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
@@ -91,6 +92,10 @@ class ProfilePlugin @Inject constructor(
     fun isValidEditState(activity: FragmentActivity?): Boolean {
         val pumpDescription = activePlugin.activePump.pumpDescription
         with(profiles[currentProfileIndex]) {
+            if (iCfg.getPeak() < hardLimits.minPeak() || iCfg.getPeak() > hardLimits.maxPeak() || iCfg.getDia() < hardLimits.minDia() || iCfg.getDia() > hardLimits.maxDia()) {
+                ToastUtils.errorToast(activity, rh.gs(R.string.error_in_insulin_values))
+                return false
+            }
             if (dia < hardLimits.minDia() || dia > hardLimits.maxDia()) {
                 ToastUtils.errorToast(activity, rh.gs(app.aaps.core.ui.R.string.value_out_of_hard_limits, rh.gs(app.aaps.core.ui.R.string.profile_dia), dia))
                 return false
@@ -156,6 +161,7 @@ class ProfilePlugin @Inject constructor(
     fun getEditedProfile(): PureProfile? {
         val profile = JSONObject()
         with(profiles[currentProfileIndex]) {
+            profile.put("icfg", iCfg.toJson())
             profile.put("dia", dia)
             profile.put("carbratio", ic)
             profile.put("sens", isf)
@@ -166,7 +172,7 @@ class ProfilePlugin @Inject constructor(
             profile.put("timezone", TimeZone.getDefault().id)
         }
         val defaultUnits = JsonHelper.safeGetStringAllowNull(profile, "units", null)
-        return pureProfileFromJson(profile, dateUtil, defaultUnits)
+        return pureProfileFromJson(profile, dateUtil, activePlugin.activeInsulin, defaultUnits)
     }
 
     @Synchronized
@@ -176,6 +182,7 @@ class ProfilePlugin @Inject constructor(
                 val localProfileNumbered = Constants.LOCAL_PROFILE + "_" + i + "_"
                 sp.putString(localProfileNumbered + "name", name)
                 sp.putBoolean(localProfileNumbered + "mgdl", mgdl)
+                sp.putString(localProfileNumbered + "icfg", iCfg.toJson().toString())
                 sp.putDouble(localProfileNumbered + "dia", dia)
                 sp.putString(localProfileNumbered + "ic", ic.toString())
                 sp.putString(localProfileNumbered + "isf", isf.toString())
@@ -213,6 +220,7 @@ class ProfilePlugin @Inject constructor(
                     ProfileSource.SingleProfile(
                         name = name,
                         mgdl = sp.getBoolean(localProfileNumbered + "mgdl", false),
+                        iCfg = activePlugin.activeInsulin.fromJson(JSONObject(sp.getString(localProfileNumbered + "icfg",activePlugin.activeInsulin.iCfg.toJson().toString()))),
                         dia = sp.getDouble(localProfileNumbered + "dia", Constants.defaultDIA),
                         ic = JSONArray(sp.getString(localProfileNumbered + "ic", defaultArray)),
                         isf = JSONArray(sp.getString(localProfileNumbered + "isf", defaultArray)),
@@ -276,6 +284,7 @@ class ProfilePlugin @Inject constructor(
         return ProfileSource.SingleProfile(
             name = verifiedName,
             mgdl = profile.units == GlucoseUnit.MGDL,
+            iCfg = pureProfile.iCfg.deepClone(),
             dia = pureJson.getDouble("dia"),
             ic = pureJson.getJSONArray("carbratio"),
             isf = pureJson.getJSONArray("sens"),
@@ -346,6 +355,7 @@ class ProfilePlugin @Inject constructor(
             ProfileSource.SingleProfile(
                 name = Constants.LOCAL_PROFILE + free,
                 mgdl = profileFunction.getUnits() == GlucoseUnit.MGDL,
+                iCfg = activePlugin.activeInsulin.iCfg,
                 dia = Constants.defaultDIA,
                 ic = JSONArray(defaultArray),
                 isf = JSONArray(defaultArray),
@@ -394,6 +404,7 @@ class ProfilePlugin @Inject constructor(
             for (i in 0 until numOfProfiles) {
                 profiles[i].run {
                     val profile = JSONObject()
+                    profile.put("icfg", iCfg.toJson())
                     profile.put("dia", dia)
                     profile.put("carbratio", ic)
                     profile.put("sens", isf)

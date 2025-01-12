@@ -21,6 +21,7 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.extensions.toJson
 import app.aaps.core.ui.toast.ToastUtils
+import dagger.Provides
 import org.json.JSONArray
 import org.json.JSONObject
 import javax.inject.Inject
@@ -33,6 +34,7 @@ import kotlin.math.pow
  *
  *
  */
+
 @Singleton
 class InsulinPlugin @Inject constructor(
     val preferences: Preferences,
@@ -74,9 +76,12 @@ class InsulinPlugin @Inject constructor(
                     hardLimits.maxDia()
             }
         }
+    override val peak: Int
+        get() = preferences.get(IntKey.InsulinOrefPeak)
+
     private var insulins: ArrayList<ICfg> = ArrayList()
     private var defaultInsulinIndex = 0
-    private var currentInsulinIndex = 0
+    var currentInsulinIndex = 0
     val numOfInsulins get() = insulins.size
     var isEdited: Boolean = false
 
@@ -95,6 +100,16 @@ class InsulinPlugin @Inject constructor(
             val profile = profileFunction.getProfile()
             return profile?.dia ?: hardLimits.minDia()
         }
+    val userDefinedPeak: Double
+        get() {
+            val profile = profileFunction.getProfile()
+            return profile?.insulinProfile?.peak?.toDouble() ?: hardLimits.minPeak()
+        }
+    fun insulinList(): ArrayList<CharSequence> {
+        val ret = ArrayList<CharSequence>()
+        insulins.forEach { ret.add(it.insulinLabel) }
+        return ret
+    }
 
     override fun onStart() {
         super.onStart()
@@ -163,7 +178,7 @@ class InsulinPlugin @Inject constructor(
     }
 
     override val iCfg: ICfg
-        get() = insulins[currentInsulinIndex]      // ICfg(friendlyName, (dia * 1000.0 * 3600.0).toLong(), T.mins(peak.toLong()).msecs())
+        get() = insulins[defaultInsulinIndex]      // ICfg(friendlyName, (dia * 1000.0 * 3600.0).toLong(), T.mins(peak.toLong()).msecs())
 
     override fun configuration(): JSONObject {
         val json = JSONObject()
@@ -186,7 +201,7 @@ class InsulinPlugin @Inject constructor(
             for (index in 0 until (it.length() - 1)) {
                 try {
                     val o = it.getJSONObject(index)
-                    insulins.add(insulinfromJson(o))
+                    insulins.add(fromJson(o))
 
                 } catch (e: Exception) {
                     //
@@ -206,9 +221,6 @@ class InsulinPlugin @Inject constructor(
             }
             return comment
         }
-
-    override val peak: Int
-        get() = preferences.get(IntKey.InsulinOrefPeak)
 
     fun commentStandardText(): String {
         return rh.gs(R.string.insulin_peak_time) + ": " + peak
@@ -245,13 +257,6 @@ class InsulinPlugin @Inject constructor(
         }
         return true
     }
-
-    fun insulinfromJson(json: JSONObject): ICfg =
-        ICfg(
-            insulinLabel = json.optString("insulinLabel", ""),
-            insulinEndTime = json.optLong("insulinEndTime", 6 * 3600 * 1000),
-            peak = json.optLong("peak", )
-        )
 
     fun currentInsulin(): ICfg? = if (numOfInsulins > 0 && currentInsulinIndex < numOfInsulins) insulins[currentInsulinIndex] else null
 }

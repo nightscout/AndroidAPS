@@ -1,6 +1,7 @@
 package app.aaps.ui.defaultProfile
 
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.core.interfaces.utils.DateUtil
@@ -19,7 +20,8 @@ import kotlin.math.abs
 @Singleton
 class DefaultProfile @Inject constructor(
     private val dateUtil: DateUtil,
-    private val profileUtil: ProfileUtil
+    private val profileUtil: ProfileUtil,
+    private val activePlugin: ActivePlugin
 ) {
 
     private var oneToFive: TreeMap<Double, Array<Double>> = TreeMap()
@@ -60,7 +62,7 @@ class DefaultProfile @Inject constructor(
         profile.put("target_high", JSONArray().put(JSONObject().put("time", "00:00").put("value", profileUtil.fromMgdlToUnits(108.0, units))))
         profile.put("target_low", JSONArray().put(JSONObject().put("time", "00:00").put("value", profileUtil.fromMgdlToUnits(108.0, units))))
         profile.put("units", units.asText)
-        return pureProfileFromJson(profile, dateUtil)
+        return pureProfileFromJson(profile, dateUtil, activePlugin.activeInsulin)
     }
 
     init {

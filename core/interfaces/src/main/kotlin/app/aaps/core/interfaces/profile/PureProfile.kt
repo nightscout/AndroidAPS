@@ -1,6 +1,7 @@
 package app.aaps.core.interfaces.profile
 
 import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.model.data.Block
 import app.aaps.core.data.model.data.TargetBlock
 import org.json.JSONObject
@@ -12,6 +13,7 @@ class PureProfile(
     var isfBlocks: List<Block>,
     var icBlocks: List<Block>,
     var targetBlocks: List<TargetBlock>,
+    var iCfg: ICfg,
     var dia: Double,
     var glucoseUnit: GlucoseUnit,
     var timeZone: TimeZone

@@ -321,6 +321,7 @@ sealed class ProfileSealed(
             icBlocks = icBlocks.shiftBlock(100.0 / percentage, timeshift),
             targetBlocks = targetBlocks.shiftTargetBlock(timeshift),
             glucoseUnit = units,
+            iCfg = iCfg,
             dia = when (this) {
                 is PS   -> this.value.iCfg.insulinEndTime / 3600.0 / 1000.0
                 is EPS  -> this.value.iCfg.insulinEndTime / 3600.0 / 1000.0

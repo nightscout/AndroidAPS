@@ -276,7 +276,8 @@ class ProfileFragment : DaggerFragment() {
             binding.icGraph.show(ProfileSealed.Pure(it, null))
             binding.isfGraph.show(ProfileSealed.Pure(it, null))
             binding.targetGraph.show(ProfileSealed.Pure(it, null))
-            binding.insulinGraph.show(activePlugin.activeInsulin, SafeParse.stringToDouble(binding.dia.text))
+            //binding.insulinGraph.show(activePlugin.activeInsulin, SafeParse.stringToDouble(binding.dia.text))
+            binding.insulinGraph.show(activePlugin.activeInsulin, it.iCfg)
         }
 
         binding.profileAdd.setOnClickListener {
