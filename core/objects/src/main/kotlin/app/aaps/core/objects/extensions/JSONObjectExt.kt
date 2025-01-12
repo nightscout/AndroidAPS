@@ -1,8 +1,5 @@
 package app.aaps.core.objects.extensions
 
-import androidx.annotation.StringRes
-import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.keys.BooleanNonPreferenceKey
 import app.aaps.core.keys.DoublePreferenceKey
 import app.aaps.core.keys.IntPreferenceKey
@@ -23,9 +20,6 @@ fun JSONObject.put(key: DoublePreferenceKey, preferences: Preferences): JSONObje
 
 fun JSONObject.put(key: UnitDoublePreferenceKey, preferences: Preferences): JSONObject =
     this.also { it.put(key.key, preferences.get(key)) }
-
-fun JSONObject.putString(@StringRes key: Int, sp: SP, rh: ResourceHelper): JSONObject =
-    if (sp.contains(key)) put(rh.gs(key), sp.getString(key, "")) else this
 
 fun JSONObject.put(key: StringNonPreferenceKey, preferences: Preferences): JSONObject =
     this.also { it.put(key.key, preferences.get(key)) }
