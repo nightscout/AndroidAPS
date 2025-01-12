@@ -50,6 +50,30 @@ interface Preferences {
 
     /**
      * Get [String] value from [android.content.SharedPreferences]
+     *
+     * @param key [StringNonPreferenceKey] enum
+     * @return value
+     */
+    fun get(key: StringNonPreferenceKey): String
+
+    /**
+     * Get [String] value from [android.content.SharedPreferences] or null if doesn't exist
+     *
+     * @param key [StringNonPreferenceKey] enum
+     * @return value or null
+     */
+    fun getIfExists(key: StringNonPreferenceKey): String?
+
+    /**
+     * Update [String] value in [android.content.SharedPreferences]
+     *
+     * @param key [StringNonPreferenceKey] enum
+     * @param value value
+     */
+    fun put(key: StringNonPreferenceKey, value: String)
+
+    /**
+     * Get [String] value from [android.content.SharedPreferences]
      * In SimpleMode return default value
      * In FullMode return value from [android.content.SharedPreferences]
      *
@@ -57,22 +81,6 @@ interface Preferences {
      * @return value
      */
     fun get(key: StringPreferenceKey): String
-
-    /**
-     * Get [String] value from [android.content.SharedPreferences] or null if doesn't exist
-     *
-     * @param key [StringPreferenceKey] enum
-     * @return value or null
-     */
-    fun getIfExists(key: StringPreferenceKey): String?
-
-    /**
-     * Update [String] value in [android.content.SharedPreferences]
-     *
-     * @param key [StringPreferenceKey] enum
-     * @param value value
-     */
-    fun put(key: StringPreferenceKey, value: String)
 
     /**
      * Get [String] value from [android.content.SharedPreferences]
@@ -212,7 +220,7 @@ interface Preferences {
      *
      * @param key [PreferenceKey] enum
      */
-    fun remove(key: PreferenceKey)
+    fun remove(key: NonPreferenceKey)
 
     /**
      * Remove value from [android.content.SharedPreferences]
@@ -229,18 +237,18 @@ interface Preferences {
     fun isUnitDependent(key: String): Boolean
 
     /**
-     * Find [PreferenceKey] definition
+     * Find [NonPreferenceKey] definition
      * @param key string representation of key
-     * @return [PreferenceKey]
+     * @return [NonPreferenceKey]
      */
-    fun get(key: String): PreferenceKey
+    fun get(key: String): NonPreferenceKey
 
     /**
-     * Find [PreferenceKey] definition
+     * Find [NonPreferenceKey] definition
      * @param key string representation of key
-     * @return [PreferenceKey] or null
+     * @return [NonPreferenceKey] or null
      */
-    fun getIfExists(key: String): PreferenceKey?
+    fun getIfExists(key: String): NonPreferenceKey?
 
     /**
      * Find all [PreferenceKey] which have `dependency` or `negativeDependency`
@@ -249,5 +257,9 @@ interface Preferences {
      */
     fun getDependingOn(key: String): List<PreferenceKey>
 
-    fun registerPreferences(clazz: Class<out PreferenceKey>)
+    /**
+     * Make new class available to Preference system
+     * Called from PluginBase::init
+     */
+    fun registerPreferences(clazz: Class<out NonPreferenceKey>)
 }

@@ -1,11 +1,11 @@
 package app.aaps.core.keys
 
-interface StringPreferenceKey : PreferenceKey {
+interface StringPreferenceKey : PreferenceKey, StringNonPreferenceKey {
 
     /**
      * Default value if not changed from preferences
      */
-    val defaultValue: String
+    override val defaultValue: String
     val isPassword: Boolean
     val isPin: Boolean
 }

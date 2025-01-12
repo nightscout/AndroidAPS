@@ -3,12 +3,12 @@ package app.aaps.core.keys
 /**
  * Defines shared preference encapsulation
  */
-interface PreferenceKey {
+interface PreferenceKey : NonPreferenceKey {
 
     /**
      * Associated [android.content.SharedPreferences] key
      */
-    val key: String
+    override val key: String
 
     /**
      * Affected by simple mode?
