@@ -97,7 +97,7 @@
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
     <string name="insulin_humalog">Humalog®</string>
-    <string name="insulin_actrapid">Actrapid®/Humalin R®/「常規」人胰島素。</string>
+    <string name="insulin_actrapid">Actrapid®/Humalin R®/「常規型」人胰島素。</string>
     <string name="insulin_hint1">https://wiki.aaps.app/zh-tw/latest/SettingUpAaps/ConfigBuilder.html#insulin</string>
     <string name="sensitivity_label">敏感性外掛</string>
     <string name="sensitivity_adjust">敏感性外掛允許AAPS調整因臨時或短期的胰島素敏感性變化（例如荷爾蒙變化或注射部位的吸收問題）。</string>

@@ -34,7 +34,7 @@
     <string name="objectives_hint1">https://wiki.aaps.app/en/latest/Maintenance/ExportImportSettings.html</string>
     <string name="objectives_hint2">https://wiki.aaps.app/en/latest/UsefulLinks/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
     <string name="noisycgm_label">Triukšmingi NGJ rodmenys</string>
-    <string name="noisycgm_whattodo">Ką reikėtų daryti, jei sensoriaus duomenys yra triukšmingi - besiblaškantys?</string>
+    <string name="noisycgm_whattodo">Ką reikėtų daryti, jei sensoriaus duomenys yra triukšmingi?</string>
     <string name="noisycgm_nothing">Nieko - AndroidAPS savaime susitvarkys.</string>
     <string name="noisycgm_pause">Išjungti uždarą ciklą, kad išvengtumėte per didelio ar per mažo insulino dozavimo.</string>
     <string name="noisycgm_replacesensor">Pakeisti sensorių, jei jo duomenys pastoviai triukšmingi ar netikslūs.</string>

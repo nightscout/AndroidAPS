@@ -200,7 +200,6 @@
     <string name="overview_shortname">Início</string>
     <string name="description_overview">Exibe o estado atual do seu loop e botões para ações mais comuns</string>
     <string name="overview_buttons_selection">Botões</string>
-    <string name="error_starting_cgm">Não foi possível lançar aplicação de monitorização contínua. Por favor verifique que está instalada.</string>
     <string name="not_available_full">Indisponível</string>
     <string name="constraints_violation">Violação das restrições</string>
     <string name="change_your_input">Altere sua entrada!</string>

@@ -413,6 +413,12 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Базал</string>
     <string name="basalpct">Базал %</string>
+    <string name="sensitivity">Чувствительность</string>
+    <string name="isf_for_carbs">ISF для калькулятора и усвоения углеводов: %1$.1f</string>
+    <string name="autosens_long">Значение Autosens: %.0f%%</string>
+    <string name="autosens_short">AS: %.0f%%</string>
+    <string name="algorithm_long">Autosens в алгоритме: %.0f%%</string>
+    <string name="algorithm_short">Alg: %.0f%%</string>
     <string name="a11y_file">файл</string>
     <string name="a11y_user">пользователь</string>
     <!-- Autotune -->
@@ -592,4 +598,8 @@
     <!--    DecimalFormatterImpl -->
     <string name="format_insulin_units1">%1$.1fед</string>
     <string name="format_insulin_units">%1$.2f ед</string>
+    <string name="percent_rate_duration">Скорость: %1$.2f%% (%2$.2f U/h) Продолжительность: %3$d мин</string>
+    <string name="rate_percent_duration">Скорость: %1$.2fед/ч (%2$.2f%%) Продолжительность %3$d мин</string>
+    <string name="percent_rate_duration_formatted"><![CDATA[<b>Скорость</b>:%1$.2f %% (%2$.2f ед/ч)<br><b> Продолжительность</b> %3$d мин<br>]]></string>
+    <string name="rate_percent_duration_formatted"><![CDATA[<b>Скорость</b>: %1$.2f ед/ч (%2$.2f%%) <br><b>Продолжительность</b>: %3$d мин<br>]]></string>
 </resources>

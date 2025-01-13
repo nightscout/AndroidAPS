@@ -417,7 +417,7 @@
     <string name="isf_for_carbs">ISF for kalkulator og karboabsorpsjon: %1$.1f</string>
     <string name="autosens_long">Autosens-verdi: %.0f%%</string>
     <string name="autosens_short">AS: %.0f%%</string>
-    <string name="algorithm_long">TDD-basert \"autosens\" i algoritmen: %.0f%%</string>
+    <string name="algorithm_long">Algoritmens sensitivitet: %.0f%%</string>
     <string name="algorithm_short">Alg: %.0f%%</string>
     <string name="a11y_file">fil</string>
     <string name="a11y_user">bruker</string>

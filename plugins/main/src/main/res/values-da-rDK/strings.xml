@@ -200,7 +200,6 @@
     <string name="overview_shortname">HJEM</string>
     <string name="description_overview">Viser den aktuelle tilstand af dit loop og knapper til de mest almindelige handlinger</string>
     <string name="overview_buttons_selection">Knapper</string>
-    <string name="error_starting_cgm">Kunne ikke starte CGM applikationen. Kontroller at den er installeret.</string>
     <string name="not_available_full">Ikke tilgængelig</string>
     <string name="constraints_violation">Begrænsninger overtrådt</string>
     <string name="change_your_input">Skift dit input!</string>

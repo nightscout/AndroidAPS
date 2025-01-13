@@ -413,6 +413,12 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">基礎率</string>
     <string name="basalpct">基礎率 %</string>
+    <string name="sensitivity">靈敏度</string>
+    <string name="isf_for_carbs">計算機和碳水化合物吸收的 ISF：%1$.1f</string>
+    <string name="autosens_long">自動靈敏值：%.0f%%</string>
+    <string name="autosens_short">AS: %.0f%%</string>
+    <string name="algorithm_long">演算法中的自動靈敏值：%.0f%%</string>
+    <string name="algorithm_short">Alg: %.0f%%</string>
     <string name="a11y_file">檔案</string>
     <string name="a11y_user">使用者</string>
     <!-- Autotune -->
