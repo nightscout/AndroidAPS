@@ -213,6 +213,8 @@ class MainApp : DaggerApplication() {
                 preferences.put(IntKey.ApsDynIsfAdjustmentFactor, dynIsf.toInt())
         } catch (_: Exception) { /* ignore */
         }
+        // Clear SmsOtpPassword if wrongly replaced
+        if (preferences.get(StringKey.SmsOtpPassword).length > 10) preferences.put(StringKey.SmsOtpPassword, "")
     }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
