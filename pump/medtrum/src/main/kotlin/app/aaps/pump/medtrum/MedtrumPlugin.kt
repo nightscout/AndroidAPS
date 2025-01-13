@@ -80,8 +80,8 @@ import kotlin.math.min
 @Singleton class MedtrumPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
+    preferences: Preferences,
     commandQueue: CommandQueue,
-    private val preferences: Preferences,
     private val constraintChecker: ConstraintsChecker,
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
@@ -95,25 +95,20 @@ import kotlin.math.min
     private val decimalFormatter: DecimalFormatter,
     private val instantiator: Instantiator
 ) : PumpPluginBase(
-    PluginDescription()
+    pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
         .fragmentClass(MedtrumOverviewFragment::class.java.name)
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_medtrum_128)
         .pluginName(R.string.medtrum)
         .shortName(R.string.medtrum_pump_shortname)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
-        .description(R.string.medtrum_pump_description), aapsLogger, rh, commandQueue
+        .description(R.string.medtrum_pump_description),
+    ownPreferences = listOf(MedtrumStringKey::class.java, MedtrumIntKey::class.java, MedtrumBooleanKey::class.java),
+    aapsLogger, rh, preferences, commandQueue
 ), Pump, Medtrum {
 
     private val disposable = CompositeDisposable()
     private var medtrumService: MedtrumService? = null
-
-    // Make plugin preferences available to AAPS
-    init {
-        preferences.registerPreferences(MedtrumStringKey::class.java)
-        preferences.registerPreferences(MedtrumIntKey::class.java)
-        preferences.registerPreferences(MedtrumBooleanKey::class.java)
-    }
 
     override fun onStart() {
         super.onStart()
@@ -437,7 +432,7 @@ import kotlin.math.min
             extended.put("BaseBasalRate", baseBasalRate)
             try {
                 extended.put("ActiveProfile", profileName)
-            } catch (ignored: Exception) {
+            } catch (_: Exception) {
                 // Ignore
             }
             pumpJson.put("status", status)

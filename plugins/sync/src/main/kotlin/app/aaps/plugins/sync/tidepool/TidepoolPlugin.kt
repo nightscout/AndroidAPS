@@ -10,7 +10,7 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -19,12 +19,13 @@ import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
 import app.aaps.core.interfaces.rx.events.EventNewBG
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventSWSyncStatus
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.interfaces.sync.Tidepool
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.LongNonPreferenceKey
+import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.core.validators.DefaultEditTextValidator
@@ -51,17 +52,17 @@ import javax.inject.Singleton
 class TidepoolPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
+    preferences: Preferences,
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
     private val context: Context,
     private val fabricPrivacy: FabricPrivacy,
     private val tidepoolUploader: TidepoolUploader,
     private val uploadChunk: UploadChunk,
-    private val sp: SP,
     private val rateLimit: RateLimit,
     private val receiverDelegate: ReceiverDelegate,
     private val uiInteraction: UiInteraction
-) : Sync, Tidepool, PluginBase(
+) : Sync, Tidepool, PluginBaseWithPreferences(
     PluginDescription()
         .mainType(PluginType.SYNC)
         .pluginName(R.string.tidepool)
@@ -69,8 +70,17 @@ class TidepoolPlugin @Inject constructor(
         .fragmentClass(TidepoolFragment::class.qualifiedName)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.description_tidepool),
-    aapsLogger, rh
+    ownPreferences = listOf(TidepoolLongKey::class.java),
+    aapsLogger, rh, preferences
 ) {
+
+    enum class TidepoolLongKey(
+        override val key: String,
+        override val defaultValue: Long
+    ) : LongNonPreferenceKey {
+
+        LastEnd("tidepool_last_end", 0L)
+    }
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -100,7 +110,7 @@ class TidepoolPlugin @Inject constructor(
                                aapsLogger.debug(LTag.TIDEPOOL, "Not connected for delete Dataset")
                            } else {
                                tidepoolUploader.deleteDataSet()
-                               sp.putLong(R.string.key_tidepool_last_end, 0)
+                               preferences.put(TidepoolLongKey.LastEnd, 0)
                                tidepoolUploader.doLogin()
                            }
                        }, fabricPrivacy::logException)
@@ -170,7 +180,7 @@ class TidepoolPlugin @Inject constructor(
                 }
             }
             textLog = HtmlHelper.fromHtml(newTextLog.toString())
-        } catch (e: OutOfMemoryError) {
+        } catch (_: OutOfMemoryError) {
             uiInteraction.showToastAndNotification(context, "Out of memory!\nStop using this phone !!!", app.aaps.core.ui.R.raw.error)
         }
     }

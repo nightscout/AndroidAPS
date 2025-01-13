@@ -43,6 +43,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.Preferences
 import app.aaps.core.utils.DateTimeUtil
 import app.aaps.pump.omnipod.common.definition.OmnipodCommandType
 import app.aaps.pump.omnipod.common.queue.command.CommandDeactivatePod
@@ -91,6 +92,10 @@ import kotlin.math.ceil
 
 @Singleton
 class OmnipodDashPumpPlugin @Inject constructor(
+    aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
+    preferences: Preferences,
+    commandQueue: CommandQueue,
     private val omnipodManager: OmnipodDashManager,
     private val podStateManager: OmnipodDashPodStateManager,
     private val sp: SP,
@@ -104,11 +109,20 @@ class OmnipodDashPumpPlugin @Inject constructor(
     private val uiInteraction: UiInteraction,
     private val decimalFormatter: DecimalFormatter,
     private val instantiator: Instantiator,
-    aapsLogger: AAPSLogger,
-    rh: ResourceHelper,
-    commandQueue: CommandQueue,
     private val dashHistoryDatabase: DashHistoryDatabase
-) : PumpPluginBase(pluginDescription, aapsLogger, rh, commandQueue), Pump, OmnipodDash, OwnDatabasePlugin {
+) : PumpPluginBase(
+    pluginDescription = PluginDescription()
+        .mainType(PluginType.PUMP)
+        .fragmentClass(OmnipodDashOverviewFragment::class.java.name)
+        .pluginIcon(app.aaps.core.ui.R.drawable.ic_pod_128)
+        .pluginName(R.string.omnipod_dash_name)
+        .shortName(R.string.omnipod_dash_name_short)
+        .preferencesId(R.xml.omnipod_dash_preferences)
+        .description(R.string.omnipod_dash_pump_description),
+    ownPreferences = emptyList(),
+    aapsLogger, rh, preferences, commandQueue
+),
+    Pump, OmnipodDash, OwnDatabasePlugin {
 
     @Volatile var bolusCanceled = false
     @Volatile var bolusDeliveryInProgress = false
@@ -124,15 +138,6 @@ class OmnipodDashPumpPlugin @Inject constructor(
         private const val BOLUS_RETRIES = 5 // number of retries for cancel/get bolus status
         private const val STATUS_CHECK_INTERVAL_MS = (60L * 1000)
         private const val RESERVOIR_OVER_50_UNITS_DEFAULT = 75.0
-
-        private val pluginDescription = PluginDescription()
-            .mainType(PluginType.PUMP)
-            .fragmentClass(OmnipodDashOverviewFragment::class.java.name)
-            .pluginIcon(app.aaps.core.ui.R.drawable.ic_pod_128)
-            .pluginName(R.string.omnipod_dash_name)
-            .shortName(R.string.omnipod_dash_name_short)
-            .preferencesId(R.xml.omnipod_dash_preferences)
-            .description(R.string.omnipod_dash_pump_description)
 
         private val pumpDescription = PumpDescription().fillFor(PumpType.OMNIPOD_DASH)
     }

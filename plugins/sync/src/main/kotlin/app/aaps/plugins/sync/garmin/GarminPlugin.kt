@@ -10,16 +10,16 @@ import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventNewBG
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringNonPreferenceKey
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
@@ -54,21 +54,29 @@ import kotlin.math.roundToInt
 class GarminPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,
+    preferences: Preferences,
     private val context: Context,
     private val loopHub: LoopHub,
-    private val rxBus: RxBus,
-    private val sp: SP,
-    private val preferences: Preferences
-) : PluginBase(
-    PluginDescription()
+    private val rxBus: RxBus
+) : PluginBaseWithPreferences(
+    pluginDescription = PluginDescription()
         .mainType(PluginType.SYNC)
         .pluginIcon(app.aaps.core.objects.R.drawable.ic_watch)
         .pluginName(R.string.garmin)
         .shortName(R.string.garmin)
         .description(R.string.garmin_description)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN),
-    aapsLogger, resourceHelper
+    ownPreferences = emptyList(),
+    aapsLogger, resourceHelper, preferences
 ) {
+
+    enum class GarminStringKey(
+        override val key: String,
+        override val defaultValue: String
+    ) : StringNonPreferenceKey {
+
+        AapsKey("garmin_aaps_key", ""),
+    }
 
     /** HTTP Server for local HTTP server communication (device app requests values) .*/
     private var server: HttpServer? = null
@@ -96,18 +104,18 @@ class GarminPlugin @Inject constructor(
     var newValue: Condition = valueLock.newCondition()
     private var lastGlucoseValueTimestamp: Long? = null
     private val glucoseUnitStr get() = if (loopHub.glucoseUnit == GlucoseUnit.MGDL) "mgdl" else "mmoll"
-    private val garminAapsKey get() = sp.getString("garmin_aaps_key", "")
+    private val garminAapsKey get() = preferences.get(GarminStringKey.AapsKey)
 
     private fun onPreferenceChange(event: EventPreferenceChange) {
         when (event.changedKey) {
             "communication_debug_mode"                                           -> setupGarminMessenger()
             BooleanKey.GarminLocalHttpServer.key, IntKey.GarminLocalHttpPort.key -> setupHttpServer()
-            "garmin_aaps_key"                                                    -> sendPhoneAppMessage()
+            GarminStringKey.AapsKey.key                                          -> sendPhoneAppMessage()
         }
     }
 
     private fun setupGarminMessenger() {
-        val enableDebug = sp.getBoolean("communication_ciq_debug_mode", false)
+        val enableDebug = false //sp.getBoolean("communication_ciq_debug_mode", false)
         garminMessenger?.dispose()
         garminMessenger = null
         aapsLogger.info(LTag.GARMIN, "initialize IQ messenger in debug=$enableDebug")
@@ -324,7 +332,7 @@ class GarminPlugin @Inject constructor(
         val value = getQueryParameter(uri, name)
         return try {
             if (value.isNullOrEmpty()) defaultValue else value.toLong()
-        } catch (e: NumberFormatException) {
+        } catch (_: NumberFormatException) {
             aapsLogger.error(LTag.GARMIN, "invalid $name value '$value'")
             defaultValue
         }

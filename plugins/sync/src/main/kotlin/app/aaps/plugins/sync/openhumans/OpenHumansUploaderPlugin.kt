@@ -26,14 +26,16 @@ import app.aaps.core.data.model.data.Block
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.LongNonPreferenceKey
 import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringNonPreferenceKey
 import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.openhumans.delegates.OHAppIDDelegate
@@ -64,7 +66,7 @@ import javax.inject.Singleton
 class OpenHumansUploaderPlugin @Inject internal constructor(
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
-    private val preferences: Preferences,
+    preferences: Preferences,
     private val context: Context,
     private val persistenceLayer: PersistenceLayer,
     private val openHumansAPI: OpenHumansAPI,
@@ -72,7 +74,7 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
     counterDelegate: OHCounterDelegate,
     appIdDelegate: OHAppIDDelegate,
     private val rxBus: RxBus
-) : Sync, PluginBase(
+) : Sync, PluginBaseWithPreferences(
     PluginDescription()
         .mainType(PluginType.SYNC)
         .pluginIcon(R.drawable.open_humans_white)
@@ -81,8 +83,31 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
         .description(R.string.open_humans_description)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .fragmentClass(OHFragment::class.qualifiedName),
-    aapsLogger, rh
+    ownPreferences = listOf(OhStringKey.AppId::class.java, OhLongKey.Counter::class.java),
+    aapsLogger, rh, preferences
 ) {
+
+    @Suppress("SpellCheckingInspection")
+    enum class OhStringKey(
+        override val key: String,
+        override val defaultValue: String
+    ) : StringNonPreferenceKey {
+
+        AppId("openhumans_appid", ""),
+        AccessToken("openhumans_access_token", ""),
+        RefreshToken("openhumans_refresh_token", ""),
+        ProjectMemberId("openhumans_project_member_id", ""),
+    }
+
+    enum class OhLongKey(
+        override val key: String,
+        override val defaultValue: Long
+    ) : LongNonPreferenceKey {
+
+        Counter("openhumans_counter", 1),
+        ExpiresAt("openhumans_expires_at", 0),
+        UploadOffset("openhumans_upload_offset", 0),
+    }
 
     private var openHumansState by stateDelegate
     private var uploadCounter by counterDelegate

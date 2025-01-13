@@ -15,7 +15,7 @@ import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.overview.Overview
 import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.OverviewMenus
-import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -26,21 +26,21 @@ import app.aaps.core.interfaces.rx.events.EventNewHistoryData
 import app.aaps.core.interfaces.rx.events.EventNewNotification
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventUpdateOverviewCalcProgress
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.IntentKey
+import app.aaps.core.keys.LongComposedNonPreferenceKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.StringNonKey
+import app.aaps.core.keys.StringNonPreferenceKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.objects.extensions.put
-import app.aaps.core.objects.extensions.putString
 import app.aaps.core.objects.extensions.store
-import app.aaps.core.objects.extensions.storeBoolean
-import app.aaps.core.objects.extensions.storeString
 import app.aaps.core.validators.preferences.AdaptiveClickPreference
 import app.aaps.core.validators.preferences.AdaptiveDoublePreference
 import app.aaps.core.validators.preferences.AdaptiveIntPreference
@@ -52,7 +52,6 @@ import app.aaps.plugins.main.general.overview.notifications.NotificationStore
 import app.aaps.plugins.main.general.overview.notifications.events.EventUpdateOverviewNotification
 import app.aaps.plugins.main.general.overview.notifications.receivers.DismissNotificationReceiver
 import app.aaps.shared.impl.rx.bus.RxBusImpl
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.json.JSONObject
@@ -61,23 +60,21 @@ import javax.inject.Singleton
 
 @Singleton
 class OverviewPlugin @Inject constructor(
-    private val injector: HasAndroidInjector,
+    aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
+    preferences: Preferences,
     private val notificationStore: NotificationStore,
     private val fabricPrivacy: FabricPrivacy,
     private val rxBus: RxBus,
-    private val sp: SP,
-    private val preferences: Preferences,
-    aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,
-    rh: ResourceHelper,
     private val overviewData: OverviewData,
     private val overviewMenus: OverviewMenus,
     private val context: Context,
     private val constraintsChecker: ConstraintsChecker,
     private val uiInteraction: UiInteraction,
     private val nsSettingStatus: NSSettingsStatus
-) : PluginBase(
-    PluginDescription()
+) : PluginBaseWithPreferences(
+    pluginDescription = PluginDescription()
         .mainType(PluginType.GENERAL)
         .fragmentClass(OverviewFragment::class.qualifiedName)
         .alwaysVisible(true)
@@ -88,8 +85,24 @@ class OverviewPlugin @Inject constructor(
         .shortName(R.string.overview_shortname)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.description_overview),
-    aapsLogger, rh
+    ownPreferences = listOf(OverviewComposedLongKey::class.java, OverviewStringKey::class.java),
+    aapsLogger, rh, preferences
 ), Overview {
+
+    enum class OverviewComposedLongKey(
+        override val key: String,
+        override val format: String,
+        override val defaultValue: Long
+    ) : LongComposedNonPreferenceKey
+
+    @Suppress("SpellCheckingInspection")
+    enum class OverviewStringKey(
+        override val key: String,
+        override val defaultValue: String
+    ) : StringNonPreferenceKey {
+
+        GraphConfig("graphconfig", "")
+    }
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -141,7 +154,7 @@ class OverviewPlugin @Inject constructor(
     override fun configuration(): JSONObject =
         JSONObject()
             .put(StringKey.GeneralUnits, preferences)
-            .putString(app.aaps.core.utils.R.string.key_quickwizard, sp, rh)
+            .put(StringNonKey.QuickWizard, preferences)
             .put(IntKey.OverviewEatingSoonDuration, preferences)
             .put(UnitDoubleKey.OverviewEatingSoonTarget, preferences)
             .put(IntKey.OverviewActivityDuration, preferences)
@@ -165,13 +178,13 @@ class OverviewPlugin @Inject constructor(
             .put(IntKey.OverviewBattWarning, preferences)
             .put(IntKey.OverviewBattCritical, preferences)
             .put(IntKey.OverviewBolusPercentage, preferences)
-            .put(rh.gs(app.aaps.core.utils.R.string.key_used_autosens_on_main_phone), constraintsChecker.isAutosensModeEnabled().value())
+            .put(BooleanNonKey.AutosensUsedOnMainPhone.key, constraintsChecker.isAutosensModeEnabled().value())
 
     override fun applyConfiguration(configuration: JSONObject) {
         val previousUnits = preferences.getIfExists(StringKey.GeneralUnits) ?: "old"
         configuration
             .store(StringKey.GeneralUnits, preferences)
-            .storeString(app.aaps.core.utils.R.string.key_quickwizard, sp, rh)
+            .store(StringNonKey.QuickWizard, preferences)
             .store(IntKey.OverviewEatingSoonDuration, preferences)
             .store(UnitDoubleKey.OverviewEatingSoonTarget, preferences)
             .store(IntKey.OverviewActivityDuration, preferences)
@@ -195,7 +208,7 @@ class OverviewPlugin @Inject constructor(
             .store(IntKey.OverviewBattWarning, preferences)
             .store(IntKey.OverviewBattCritical, preferences)
             .store(IntKey.OverviewBolusPercentage, preferences)
-            .storeBoolean(app.aaps.core.utils.R.string.key_used_autosens_on_main_phone, sp, rh)
+            .store(BooleanNonKey.AutosensUsedOnMainPhone, preferences)
 
         val newUnits = preferences.getIfExists(StringKey.GeneralUnits) ?: "new"
         if (previousUnits != newUnits) {
@@ -281,11 +294,13 @@ class OverviewPlugin @Inject constructor(
                 addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewBattCritical, title = R.string.statuslights_bat_critical))
                 addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewBageWarning, title = R.string.statuslights_bage_warning))
                 addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewBageCritical, title = R.string.statuslights_bage_critical))
-                addPreference(AdaptiveClickPreference(ctx = context, stringKey = StringKey.OverviewCopySettingsFromNs, title = R.string.statuslights_copy_ns,
-                                                      onPreferenceClickListener = {
-                                                          nsSettingStatus.copyStatusLightsNsSettings(context)
-                                                          true
-                                                      }))
+                addPreference(
+                    AdaptiveClickPreference(ctx = context, stringKey = StringKey.OverviewCopySettingsFromNs, title = R.string.statuslights_copy_ns,
+                                            onPreferenceClickListener = {
+                                                nsSettingStatus.copyStatusLightsNsSettings(context)
+                                                true
+                                            })
+                )
             })
             addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewBolusPercentage, dialogMessage = R.string.deliverpartofboluswizard, title = app.aaps.core.ui.R.string.partialboluswizard))
             addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.OverviewResetBolusPercentageTime, dialogMessage = R.string.deliver_part_of_boluswizard_reset_time, title = app.aaps.core.ui.R.string.partialboluswizard_reset_time))

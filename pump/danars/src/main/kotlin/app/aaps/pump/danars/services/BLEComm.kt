@@ -36,7 +36,7 @@ import app.aaps.core.utils.waitMillis
 import app.aaps.pump.dana.DanaPump
 import app.aaps.pump.dana.R
 import app.aaps.pump.dana.keys.DanaLongKey
-import app.aaps.pump.dana.keys.DanaString2Key
+import app.aaps.pump.dana.keys.DanaStringComposedKey
 import app.aaps.pump.dana.keys.DanaStringKey
 import app.aaps.pump.danars.DanaRSPlugin
 import app.aaps.pump.danars.activities.EnterPinActivity
@@ -184,9 +184,9 @@ class BLEComm @Inject internal constructor(
             val lastClearRequest = preferences.get(DanaLongKey.DanaRsLastClearKeyRequest)
             if (lastClearRequest != 0L && dateUtil.isOlderThan(lastClearRequest, 5)) {
                 aapsLogger.error(LTag.PUMPBTCOMM, "Clearing pairing keys !!!")
-                preferences.remove(DanaString2Key.DanaRsV3RandomParingKey, danaRSPlugin.mDeviceName)
-                preferences.remove(DanaString2Key.DanaRsV3ParingKey, danaRSPlugin.mDeviceName)
-                preferences.remove(DanaString2Key.DanaRsV3RandomSyncKey, danaRSPlugin.mDeviceName)
+                preferences.remove(DanaStringComposedKey.DanaRsV3RandomParingKey, danaRSPlugin.mDeviceName)
+                preferences.remove(DanaStringComposedKey.DanaRsV3ParingKey, danaRSPlugin.mDeviceName)
+                preferences.remove(DanaStringComposedKey.DanaRsV3RandomSyncKey, danaRSPlugin.mDeviceName)
                 ToastUtils.errorToast(context, R.string.invalidpairing)
                 danaRSPlugin.changePump()
             } else if (lastClearRequest == 0L) {
@@ -533,7 +533,7 @@ class BLEComm @Inject internal constructor(
             encryption = EncryptionType.ENCRYPTION_DEFAULT
             danaPump.ignoreUserPassword = false
             // Grab pairing key from preferences if exists
-            val pairingKey = preferences.get(DanaString2Key.DanaRsParingKey, danaRSPlugin.mDeviceName)
+            val pairingKey = preferences.get(DanaStringComposedKey.DanaRsParingKey, danaRSPlugin.mDeviceName)
             aapsLogger.debug(LTag.PUMPBTCOMM, "Using stored pairing key: $pairingKey")
             if (pairingKey.isNotEmpty()) {
                 sendPasskeyCheck(pairingKey)
@@ -549,7 +549,7 @@ class BLEComm @Inject internal constructor(
             danaPump.hwModel = decryptedBuffer[5].toInt()
             danaPump.protocol = decryptedBuffer[7].toInt()
             // grab randomSyncKey
-            preferences.put(DanaString2Key.DanaRsV3RandomSyncKey, danaRSPlugin.mDeviceName, String.format("%02x", decryptedBuffer[decryptedBuffer.size - 1]))
+            preferences.put(DanaStringComposedKey.DanaRsV3RandomSyncKey, danaRSPlugin.mDeviceName, value = String.format("%02x", decryptedBuffer[decryptedBuffer.size - 1]))
 
             if (danaPump.hwModel == 0x05) {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK V3 (OK)" + " " + DanaRSPacket.toHexString(decryptedBuffer))
@@ -569,9 +569,9 @@ class BLEComm @Inject internal constructor(
             danaPump.protocol = decryptedBuffer[7].toInt()
             val pairingKey = DanaRSPacket.asciiStringFromBuff(decryptedBuffer, 8, 6) // used while bonding
             if (decryptedBuffer[8] != 0.toByte())
-                preferences.put(DanaString2Key.DanaRsBle5PairingKey, danaRSPlugin.mDeviceName, pairingKey)
+                preferences.put(DanaStringComposedKey.DanaRsBle5PairingKey, danaRSPlugin.mDeviceName, value = pairingKey)
 
-            val storedPairingKey = preferences.get(DanaString2Key.DanaRsBle5PairingKey, danaRSPlugin.mDeviceName)
+            val storedPairingKey = preferences.get(DanaStringComposedKey.DanaRsBle5PairingKey, danaRSPlugin.mDeviceName)
             if (storedPairingKey.isBlank()) {
                 removeBond()
                 disconnect("Non existing pairing key")
@@ -625,13 +625,13 @@ class BLEComm @Inject internal constructor(
     // 2nd packet v3
     // 0x00 Start encryption, 0x01 Request pairing
     private fun sendV3PairingInformation() {
-        val randomPairingKey = preferences.get(DanaString2Key.DanaRsV3RandomParingKey, danaRSPlugin.mDeviceName)
-        val pairingKey = preferences.get(DanaString2Key.DanaRsV3ParingKey, danaRSPlugin.mDeviceName)
+        val randomPairingKey = preferences.get(DanaStringComposedKey.DanaRsV3RandomParingKey, danaRSPlugin.mDeviceName)
+        val pairingKey = preferences.get(DanaStringComposedKey.DanaRsV3ParingKey, danaRSPlugin.mDeviceName)
         if (randomPairingKey.isNotEmpty() && pairingKey.isNotEmpty()) {
             val tPairingKey = Base64.decode(pairingKey, Base64.DEFAULT)
             val tRandomPairingKey = Base64.decode(randomPairingKey, Base64.DEFAULT)
             var tRandomSyncKey: Byte = 0
-            val randomSyncKey = preferences.get(DanaString2Key.DanaRsV3RandomSyncKey, danaRSPlugin.mDeviceName)
+            val randomSyncKey = preferences.get(DanaStringComposedKey.DanaRsV3RandomSyncKey, danaRSPlugin.mDeviceName)
             if (randomSyncKey.isNotEmpty()) {
                 tRandomSyncKey = randomSyncKey.toInt(16).toByte()
             }
@@ -667,8 +667,8 @@ class BLEComm @Inject internal constructor(
         } else if (encryption == EncryptionType.ENCRYPTION_RSv3) {
             // decryptedBuffer[2] : 0x00 OK  0x01 Error, No pairing
             if (decryptedBuffer[2] == 0x00.toByte()) {
-                val randomPairingKey = preferences.get(DanaString2Key.DanaRsV3RandomParingKey, danaRSPlugin.mDeviceName)
-                val pairingKey = preferences.get(DanaString2Key.DanaRsV3ParingKey, danaRSPlugin.mDeviceName)
+                val randomPairingKey = preferences.get(DanaStringComposedKey.DanaRsV3RandomParingKey, danaRSPlugin.mDeviceName)
+                val pairingKey = preferences.get(DanaStringComposedKey.DanaRsV3ParingKey, danaRSPlugin.mDeviceName)
                 if (randomPairingKey.isNotEmpty() && pairingKey.isNotEmpty()) {
                     // expecting successful connect
                     isConnected = true
@@ -723,8 +723,8 @@ class BLEComm @Inject internal constructor(
 
     // 3rd packet v3 : only after entering PIN codes
     fun finishV3Pairing() {
-        val randomPairingKey = preferences.get(DanaString2Key.DanaRsV3RandomParingKey, danaRSPlugin.mDeviceName)
-        val pairingKey = preferences.get(DanaString2Key.DanaRsV3ParingKey, danaRSPlugin.mDeviceName)
+        val randomPairingKey = preferences.get(DanaStringComposedKey.DanaRsV3RandomParingKey, danaRSPlugin.mDeviceName)
+        val pairingKey = preferences.get(DanaStringComposedKey.DanaRsV3ParingKey, danaRSPlugin.mDeviceName)
         if (randomPairingKey.isNotEmpty() && pairingKey.isNotEmpty()) {
             val tPairingKey = Base64.decode(pairingKey, Base64.DEFAULT)
             val tRandomPairingKey = Base64.decode(randomPairingKey, Base64.DEFAULT)
@@ -750,7 +750,7 @@ class BLEComm @Inject internal constructor(
         sendTimeInfo()
         val pairingKey = byteArrayOf(decryptedBuffer[2], decryptedBuffer[3])
         // store pairing key to preferences
-        preferences.put(DanaString2Key.DanaRsParingKey, danaRSPlugin.mDeviceName, DanaRSPacket.bytesToHex(pairingKey))
+        preferences.put(DanaStringComposedKey.DanaRsParingKey, danaRSPlugin.mDeviceName, value = DanaRSPacket.bytesToHex(pairingKey))
         aapsLogger.debug(LTag.PUMPBTCOMM, "Got pairing key: " + DanaRSPacket.bytesToHex(pairingKey))
     }
 

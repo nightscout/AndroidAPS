@@ -14,11 +14,9 @@ import androidx.fragment.app.DialogFragment
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.BlePreCheck
-import app.aaps.core.interfaces.pump.WarnColors
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -55,13 +53,11 @@ class EquilFragment : DaggerFragment() {
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var sp: SP
-    @Inject lateinit var warnColors: WarnColors
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var blePreCheck: BlePreCheck
     @Inject lateinit var equilPumpPlugin: EquilPumpPlugin
     @Inject lateinit var protectionCheck: ProtectionCheck
-    @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var equilManager: EquilManager
 
     private var disposable: CompositeDisposable = CompositeDisposable()

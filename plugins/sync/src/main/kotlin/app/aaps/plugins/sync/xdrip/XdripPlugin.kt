@@ -23,7 +23,7 @@ import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -47,6 +47,7 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntentKey
+import app.aaps.core.keys.LongNonPreferenceKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.extensions.generateCOBString
 import app.aaps.core.objects.extensions.round
@@ -76,10 +77,11 @@ import javax.inject.Singleton
 
 @Singleton
 class XdripPlugin @Inject constructor(
-    private val preferences: Preferences,
+    aapsLogger: AAPSLogger,
+    rh: ResourceHelper,
+    preferences: Preferences,
     private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,
-    rh: ResourceHelper,
     private val aapsSchedulers: AapsSchedulers,
     private val context: Context,
     private val fabricPrivacy: FabricPrivacy,
@@ -89,12 +91,11 @@ class XdripPlugin @Inject constructor(
     private val rxBus: RxBus,
     private val uiInteraction: UiInteraction,
     private val dateUtil: DateUtil,
-    aapsLogger: AAPSLogger,
     private val config: Config,
     private val decimalFormatter: DecimalFormatter,
     private val glucoseStatusProvider: GlucoseStatusProvider
-) : XDripBroadcast, Sync, PluginBase(
-    PluginDescription()
+) : XDripBroadcast, Sync, PluginBaseWithPreferences(
+    pluginDescription = PluginDescription()
         .mainType(PluginType.SYNC)
         .fragmentClass(XdripFragment::class.java.name)
         .pluginIcon((app.aaps.core.objects.R.drawable.ic_blooddrop_48))
@@ -102,8 +103,30 @@ class XdripPlugin @Inject constructor(
         .shortName(R.string.xdrip_shortname)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.description_xdrip),
-    aapsLogger, rh
+    ownPreferences = listOf(XdripLongKey::class.java),
+    aapsLogger, rh, preferences
 ) {
+
+    enum class XdripLongKey(
+        override val key: String,
+        override val defaultValue: Long
+    ) : LongNonPreferenceKey {
+
+        BolusLastSyncedId("xdrip_bolus_last_synced_id", 0L),
+        CarbsLastSyncedId("xdrip_carbs_last_synced_id", 0L),
+        BolusCalculatorLastSyncedId("xdrip_bolus_calculator_result_last_synced_id", 0L),
+        TemporaryTargetLastSyncedId("xdrip_temporary_target_last_sync", 0L),
+        FoodLastSyncedId("xdrip_food_last_sync", 0L),
+        GlucoseValueLastSyncedId("xdrip_glucose_value_last_sync", 0L),
+        TherapyEventLastSyncedId("xdrip_therapy_event_last_sync", 0L),
+        DeviceStatusLastSyncedId("xdrip_device_status_last_synced_id", 0L),
+        TemporaryBasalLastSyncedId("xdrip_temporary_basal_last_synced_id", 0L),
+        ExtendedBolusLastSyncedId("xdrip_extended_bolus_last_synced_id", 0L),
+        ProfileSwitchLastSyncedId("profile_switch_last_synced_id", 0L),
+        EffectiveProfileSwitchLastSyncedId("xdrip_effective_profile_switch_last_synced_id", 0L),
+        OfflineEventLastSyncedId("xdrip_offline_event_last_synced_id", 0L),
+        ProfileStoreLastSyncedId("xdrip_profile_store_last_synced_timestamp", 0L),
+    }
 
     @Suppress("PrivatePropertyName")
     private val XDRIP_JOB_NAME: String = this::class.java.simpleName

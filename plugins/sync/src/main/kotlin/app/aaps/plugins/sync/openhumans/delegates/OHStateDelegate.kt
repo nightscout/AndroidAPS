@@ -2,15 +2,16 @@ package app.aaps.plugins.sync.openhumans.delegates
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.Preferences
 import app.aaps.plugins.sync.openhumans.OpenHumansState
+import app.aaps.plugins.sync.openhumans.OpenHumansUploaderPlugin
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.reflect.KProperty
 
 @Singleton
 internal class OHStateDelegate @Inject internal constructor(
-    private val sp: SP
+    private val preferences: Preferences
 ) {
 
     private var _value = MutableLiveData(loadState())
@@ -18,15 +19,11 @@ internal class OHStateDelegate @Inject internal constructor(
 
     private fun loadState(): OpenHumansState? {
         return OpenHumansState(
-            accessToken = sp.getStringOrNull("openhumans_access_token", null) ?: return null,
-            refreshToken = sp.getStringOrNull("openhumans_refresh_token", null) ?: return null,
-            expiresAt = if (sp.contains("openhumans_expires_at"))
-                sp.getLong("openhumans_expires_at", 0)
-            else
-                return null,
-            projectMemberId = sp.getStringOrNull("openhumans_project_member_id", null)
-                ?: return null,
-            uploadOffset = sp.getLong("openhumans_upload_offset", 0)
+            accessToken = preferences.getIfExists(OpenHumansUploaderPlugin.OhStringKey.AccessToken) ?: return null,
+            refreshToken = preferences.getIfExists(OpenHumansUploaderPlugin.OhStringKey.RefreshToken) ?: return null,
+            expiresAt = preferences.getIfExists(OpenHumansUploaderPlugin.OhLongKey.ExpiresAt) ?: return null,
+            projectMemberId = preferences.getIfExists(OpenHumansUploaderPlugin.OhStringKey.ProjectMemberId) ?: return null,
+            uploadOffset = preferences.get(OpenHumansUploaderPlugin.OhLongKey.UploadOffset)
         )
     }
 
@@ -35,17 +32,17 @@ internal class OHStateDelegate @Inject internal constructor(
     operator fun setValue(thisRef: Any?, property: KProperty<*>, value: OpenHumansState?) {
         this._value.value = value
         if (value == null) {
-            sp.remove("openhumans_access_token")
-            sp.remove("openhumans_refresh_token")
-            sp.remove("openhumans_expires_at")
-            sp.remove("openhumans_project_member_id")
-            sp.remove("openhumans_upload_offset")
+            preferences.remove(OpenHumansUploaderPlugin.OhStringKey.AccessToken)
+            preferences.remove(OpenHumansUploaderPlugin.OhStringKey.RefreshToken)
+            preferences.remove(OpenHumansUploaderPlugin.OhLongKey.ExpiresAt)
+            preferences.remove(OpenHumansUploaderPlugin.OhStringKey.ProjectMemberId)
+            preferences.remove(OpenHumansUploaderPlugin.OhLongKey.UploadOffset)
         } else {
-            sp.putString("openhumans_access_token", value.accessToken)
-            sp.putString("openhumans_refresh_token", value.refreshToken)
-            sp.putLong("openhumans_expires_at", value.expiresAt)
-            sp.putString("openhumans_project_member_id", value.projectMemberId)
-            sp.putLong("openhumans_upload_offset", value.uploadOffset)
+            preferences.put(OpenHumansUploaderPlugin.OhStringKey.AccessToken, value.accessToken)
+            preferences.put(OpenHumansUploaderPlugin.OhStringKey.RefreshToken, value.refreshToken)
+            preferences.put(OpenHumansUploaderPlugin.OhLongKey.ExpiresAt, value.expiresAt)
+            preferences.put(OpenHumansUploaderPlugin.OhStringKey.ProjectMemberId, value.projectMemberId)
+            preferences.put(OpenHumansUploaderPlugin.OhLongKey.UploadOffset, value.uploadOffset)
         }
     }
 }

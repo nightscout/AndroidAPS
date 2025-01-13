@@ -29,7 +29,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.rx.events.EventScale
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.keys.Preferences
 import app.aaps.plugins.main.R
 import com.google.gson.Gson
@@ -40,7 +39,6 @@ import javax.inject.Singleton
 class OverviewMenusImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
-    private val sp: SP,
     private val preferences: Preferences,
     private val rxBus: RxBus,
     private val config: Config,
@@ -113,14 +111,14 @@ class OverviewMenusImpl @Inject constructor(
     @Synchronized
     private fun storeGraphConfig() {
         val sts = Gson().toJson(_setting)
-        sp.putString(R.string.key_graph_config, sts)
+        preferences.put(OverviewPlugin.OverviewStringKey.GraphConfig, sts)
         aapsLogger.debug(sts)
     }
 
     @Synchronized
     override fun loadGraphConfig() {
         assert(CharTypeData.entries.size == OverviewMenus.CharType.entries.size)
-        val sts = sp.getString(R.string.key_graph_config, "")
+        val sts = preferences.get(OverviewPlugin.OverviewStringKey.GraphConfig)
         if (sts.isNotEmpty()) {
             _setting = Gson().fromJson(sts, Array<Array<Boolean>>::class.java).toMutableList()
             // reset when new CharType added

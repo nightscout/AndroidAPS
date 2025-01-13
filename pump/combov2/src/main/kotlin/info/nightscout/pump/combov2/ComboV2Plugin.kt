@@ -45,6 +45,10 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.keys.IntNonPreferenceKey
+import app.aaps.core.keys.LongNonPreferenceKey
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringNonPreferenceKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
@@ -109,6 +113,7 @@ internal const val PUMP_ERROR_TIMEOUT_INTERVAL_MSECS = 1000L * 60 * 5
 class ComboV2Plugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
+    preferences: Preferences,
     commandQueue: CommandQueue,
     private val context: Context,
     private val rxBus: RxBus,
@@ -123,7 +128,7 @@ class ComboV2Plugin @Inject constructor(
     private val instantiator: Instantiator
 ) :
     PumpPluginBase(
-        PluginDescription()
+        pluginDescription = PluginDescription()
             .mainType(PluginType.PUMP)
             .fragmentClass(ComboV2Fragment::class.java.name)
             .pluginIcon(R.drawable.ic_combov2)
@@ -131,8 +136,46 @@ class ComboV2Plugin @Inject constructor(
             .shortName(R.string.combov2_plugin_shortname)
             .description(R.string.combov2_plugin_description)
             .preferencesId(R.xml.pref_combov2),
-        aapsLogger, rh, commandQueue
+        ownPreferences = listOf(ComboStringKey::class.java, ComboIntKey::class.java, ComboLongKey::class.java),
+        aapsLogger, rh, preferences, commandQueue
     ), Pump, PluginConstraints {
+
+    /**
+     * Preference classes are not used by Combo driver at the moment but needs to listed
+     * to make them know to AAPS preferences system
+     */
+    @Suppress("unused")
+    enum class ComboStringKey(
+        override val key: String,
+        override val defaultValue: String
+    ) : StringNonPreferenceKey {
+
+        BtAddress("combov2-bt-address-key", ""),
+        Nonce("combov2-nonce-key", ""),
+        CpCipher("combov2-cp-cipher-key", ""),
+        PcCipher("combov2-pc-cipher-key", ""),
+        PumpID("combov2-pump-id-key", ""),
+        TbrType("combov2-tbr-type", ""),
+    }
+
+    @Suppress("unused")
+    enum class ComboIntKey(
+        override val key: String,
+        override val defaultValue: Int
+    ): IntNonPreferenceKey {
+        KeyResponseAddress("combov2-key-response-address-key", 0),
+        TbrPercentage("combov2-tbr-percentage", 0),
+        TbrDuration("combov2-tbr-duration", 0),
+        UtcOffset("combov2-utc-offset", 0),
+    }
+
+    @Suppress("unused")
+    enum class ComboLongKey(
+        override val key: String,
+        override val defaultValue: Long
+    ) : LongNonPreferenceKey{
+        TbrTimestamp("combov2-tbr-timestamp", 0),
+    }
 
     // Coroutine scope and the associated job. All coroutines
     // that are started in this plugin are part of this scope.

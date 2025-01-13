@@ -35,6 +35,7 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.Preferences
 import app.aaps.pump.eopatch.alarm.IAlarmManager
 import app.aaps.pump.eopatch.ble.IPatchManager
 import app.aaps.pump.eopatch.ble.PatchManagerExecutor
@@ -61,6 +62,7 @@ import kotlin.math.roundToInt
 class EopatchPumpPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
+    preferences: Preferences,
     commandQueue: CommandQueue,
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
@@ -77,14 +79,16 @@ class EopatchPumpPlugin @Inject constructor(
     private val patchConfig: PatchConfig,
     private val normalBasalManager: NormalBasalManager
 ) : PumpPluginBase(
-    PluginDescription()
+    pluginDescription = PluginDescription()
         .mainType(PluginType.PUMP)
         .fragmentClass(EopatchOverviewFragment::class.java.name)
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_eopatch2_128)
         .pluginName(R.string.eopatch)
         .shortName(R.string.eopatch_shortname)
         .preferencesId(R.xml.pref_eopatch)
-        .description(R.string.eopatch_pump_description), aapsLogger, rh, commandQueue
+        .description(R.string.eopatch_pump_description),
+    ownPreferences = emptyList(),
+    aapsLogger, rh, preferences, commandQueue
 ), Pump {
 
     private val mDisposables = CompositeDisposable()

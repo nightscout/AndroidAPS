@@ -1,11 +1,11 @@
 package app.aaps.core.keys
 
-interface BooleanPreferenceKey : PreferenceKey {
+interface BooleanPreferenceKey : PreferenceKey, BooleanNonPreferenceKey {
 
     /**
      * Default value if not changed from preferences
      */
-    val defaultValue: Boolean
+    override val defaultValue: Boolean
 
     /**
      * Default value is calculated instead of `defaultValue`

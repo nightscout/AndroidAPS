@@ -1,11 +1,11 @@
 package app.aaps.core.keys
 
-interface LongPreferenceKey : PreferenceKey {
+interface LongPreferenceKey : PreferenceKey, LongNonPreferenceKey {
 
     /**
      * Default value if not changed from preferences
      */
-    val defaultValue: Long
+    override val defaultValue: Long
 
     /**
      *  Minimal allowed value

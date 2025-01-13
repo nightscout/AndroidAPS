@@ -3,10 +3,10 @@ package app.aaps.plugins.constraints.signatureVerifier
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
+import app.aaps.core.keys.Preferences
 import app.aaps.plugins.constraints.versionChecker.VersionCheckerUtilsImpl
 import app.aaps.plugins.constraints.versionChecker.numericVersionPart
 import app.aaps.shared.tests.TestBase
@@ -27,15 +27,15 @@ class VersionCheckerUtilsKtTest : TestBase() {
 
     private lateinit var versionCheckerUtils: VersionCheckerUtils
 
-    @Mock lateinit var sp: SP
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
     @Mock lateinit var config: Lazy<Config>
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var uiInteraction: UiInteraction
+    @Mock lateinit var preferences: Preferences
 
     @BeforeEach fun setup() {
-        versionCheckerUtils = VersionCheckerUtilsImpl(aapsLogger, sp, rh, config, receiverStatusStore, dateUtil, uiInteraction)
+        versionCheckerUtils = VersionCheckerUtilsImpl(aapsLogger, preferences, rh, config, receiverStatusStore, dateUtil, uiInteraction)
     }
 
     @Test

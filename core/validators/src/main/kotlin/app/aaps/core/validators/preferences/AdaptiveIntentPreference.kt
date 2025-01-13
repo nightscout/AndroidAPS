@@ -2,11 +2,9 @@ package app.aaps.core.validators.preferences
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.util.AttributeSet
 import androidx.annotation.StringRes
 import androidx.preference.Preference
-import app.aaps.core.keys.IntentKey
 import app.aaps.core.keys.IntentPreferenceKey
 import app.aaps.core.keys.Preferences
 import dagger.android.HasAndroidInjector
@@ -22,7 +20,6 @@ class AdaptiveIntentPreference(
 ) : Preference(ctx, attrs) {
 
     @Inject lateinit var preferences: Preferences
-    @Inject lateinit var sharedPrefs: SharedPreferences
 
     // Inflater constructor
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, intentKey = null, intent = null)
@@ -47,11 +44,11 @@ class AdaptiveIntentPreference(
             isVisible = false; isEnabled = false
         }
         preferenceKey.dependency?.let {
-            if (!sharedPrefs.getBoolean(it.key, false))
+            if (!preferences.get(it))
                 isVisible = false
         }
         preferenceKey.negativeDependency?.let {
-            if (sharedPrefs.getBoolean(it.key, false))
+            if (preferences.get(it))
                 isVisible = false
         }
     }
