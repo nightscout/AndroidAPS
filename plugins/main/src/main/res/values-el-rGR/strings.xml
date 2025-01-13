@@ -200,7 +200,6 @@
     <string name="overview_shortname">ΑΡΧΙΚΗ</string>
     <string name="description_overview">Εμφανίζει την τρέχουσα κατάσταση του κυκλώματός σας και τα πλήκτρα για τις πιο κοινές ενέργειες</string>
     <string name="overview_buttons_selection">Πλήκτρα</string>
-    <string name="error_starting_cgm">Δεν είναι δυνατή η εκκίνηση της εφαρμογής CGM. Βεβαιωθείτε ότι έχει εγκατασταθεί.</string>
     <string name="not_available_full">Μη διαθέσιμο</string>
     <string name="constraints_violation">Παραβίαση Περιορισμών</string>
     <string name="change_your_input">Αλλάξτε αυτό που εισάγατε!</string>

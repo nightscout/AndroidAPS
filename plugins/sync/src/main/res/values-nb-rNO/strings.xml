@@ -62,8 +62,8 @@
     <string name="ns_receive_carbs_summary">Aksepter karbohydrater angitt med NS eller AAPSClient</string>
     <string name="ns_receive_therapy_events">Motta behandlingshendelser</string>
     <string name="ns_receive_therapy_events_summary">Godta behandlingshendelser (kanyle, insulin, batteribytte osv.) som er lagt inn gjennom NS eller AAPSClient</string>
-    <string name="ns_receive_cgm">Motta/tilbakefyll CGM data</string>
-    <string name="ns_receive_cgm_summary">Aksepter CGM data fra NS</string>
+    <string name="ns_receive_cgm">Motta/tilbakefyll BS-data</string>
+    <string name="ns_receive_cgm_summary">Aksepter BS-data fra Nightscout</string>
     <string name="ns_sync_slow">Reduser opplastingshastighet</string>
     <string name="ns_alarm_options">Alarmvalg</string>
     <string name="ns_alarms">Opprett varsler fra NS-alarmer</string>

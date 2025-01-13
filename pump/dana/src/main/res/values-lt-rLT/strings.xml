@@ -5,9 +5,9 @@
     <string name="danars_pairingok">Susieta OK</string>
     <string name="danars_pairingtimedout">Susiejimui skirtas laikas baigėsi</string>
     <string name="danars_waitingforpairing">Laukiama ryšio su pompa</string>
-    <string name="danarspump">Dana-i/RS</string>
+    <string name="danarspump">Dana-I/RS</string>
     <string name="danarspump_shortname">Dana</string>
-    <string name="description_pump_dana_rs">Integracija su DANA Diabecare RS ir Dana-i pompomis</string>
+    <string name="description_pump_dana_rs">DANA Diabecare RS ir Dana-I pompų integracija</string>
     <string name="maxbolusviolation">Pažeistas maks boluso limitas</string>
     <string name="commanderror">Komandos klaida</string>
     <string name="speederror">Greičio klaida</string>

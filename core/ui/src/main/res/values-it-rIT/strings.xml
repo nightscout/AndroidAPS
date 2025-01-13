@@ -255,7 +255,7 @@
     <!--    Command-->
     <string name="connectiontimedout">Time out connessione</string>
     <!--    PumpEnactResult-->
-    <string name="enacted">Attivato</string>
+    <string name="enacted">Emanato</string>
     <string name="comment">Commento</string>
     <string name="percent">Percento</string>
     <string name="absolute">Assoluto</string>

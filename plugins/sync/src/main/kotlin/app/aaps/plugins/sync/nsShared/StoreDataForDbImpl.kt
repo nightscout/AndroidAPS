@@ -24,7 +24,6 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -265,14 +264,6 @@ class StoreDataForDbImpl @Inject constructor(
         SystemClock.sleep(pause)
 
         synchronized(therapyEvents) {
-            if (preferences.get(BooleanKey.NsClientAcceptTherapyEvent) || config.AAPSCLIENT)
-                therapyEvents.filter { it.type == TE.Type.ANNOUNCEMENT }.forEach {
-                    if (it.timestamp > dateUtil.now() - 15 * 60 * 1000L &&
-                        it.note?.isNotEmpty() == true &&
-                        it.enteredBy != sp.getString("careportal_enteredby", "AndroidAPS") &&
-                        preferences.get(BooleanKey.NsClientNotificationsFromAnnouncements)
-                    ) uiInteraction.addNotificationValidFor(Notification.NS_ANNOUNCEMENT, it.note ?: "", Notification.ANNOUNCEMENT, 60)
-                }
             if (therapyEvents.isNotEmpty()) {
                 disposable += persistenceLayer.syncNsTherapyEvents(therapyEvents.toMutableList())
                     .subscribeBy { result ->

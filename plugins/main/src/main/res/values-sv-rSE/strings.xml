@@ -200,7 +200,6 @@
     <string name="overview_shortname">Hem</string>
     <string name="description_overview">Visar loopens nuvarande tillstånd och knappar för de vanligaste funktionerna</string>
     <string name="overview_buttons_selection">Knappar</string>
-    <string name="error_starting_cgm">Kunde inte starta CGM-appen. Kontrollera att den är installerad.</string>
     <string name="not_available_full">Ej tillgängligt</string>
     <string name="constraints_violation">Begränsning nådd</string>
     <string name="change_your_input">Ändra inmatning</string>

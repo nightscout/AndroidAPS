@@ -217,8 +217,7 @@
     <string name="description_overview">Viser loopens nåværende tilstand og knapper for de vanligste funksjonene</string>
     <string name="overview_buttons_selection">Knapper</string>
     <string name="show_calibration_button_summary">Sender en kalibrering til xDrip+ (sørg for at \'Aksepter kalibrering\' er aktivert i xDrip+ under Innstillinger mellom apper).</string>
-    <string name="show_cgm_button_summary">Åpner xDrip+ (du kan bruke tilbake-knappen for å gå tilbake til AAPS).</string>
-    <string name="error_starting_cgm">Kunne ikke starte CGM-programmet. Kontroller at det er installert.</string>
+    <string name="show_cgm_button_summary">Åpner xDrip+ eller Dexcom-appen (du kan bruke tilbake-knappen for å gå tilbake til AAPS).</string>
     <string name="not_available_full">Ikke tilgjengelig</string>
     <string name="constraints_violation">Brudd på begrensninger</string>
     <string name="change_your_input">Endre dine inndata!</string>

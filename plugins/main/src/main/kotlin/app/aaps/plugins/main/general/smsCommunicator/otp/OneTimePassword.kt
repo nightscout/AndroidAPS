@@ -47,13 +47,13 @@ class OneTimePassword @Inject constructor(
      */
     fun ensureKey(forceNewKey: Boolean = false) {
         val keyBytes: ByteArray
-        val strSecret = preferences.get(StringKey.SmsOtpPassword).trim()
+        val strSecret = preferences.get(StringKey.SmsOtpSecret).trim()
         if (strSecret.isEmpty() || forceNewKey) {
             val keyGenerator = KeyGenerator.getInstance(totp.algorithm)
             keyGenerator.init(Constants.OTP_GENERATED_KEY_LENGTH_BITS)
             val generatedKey = keyGenerator.generateKey()
             keyBytes = generatedKey.encoded
-            preferences.put(StringKey.SmsOtpPassword, Base64.encodeToString(keyBytes, Base64.NO_WRAP + Base64.NO_PADDING))
+            preferences.put(StringKey.SmsOtpSecret, Base64.encodeToString(keyBytes, Base64.NO_WRAP + Base64.NO_PADDING))
         } else {
             keyBytes = Base64.decode(strSecret, Base64.DEFAULT)
         }

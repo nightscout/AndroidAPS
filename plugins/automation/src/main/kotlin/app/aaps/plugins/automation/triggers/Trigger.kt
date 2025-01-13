@@ -17,7 +17,6 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.Preferences
 import app.aaps.plugins.automation.R
@@ -38,7 +37,6 @@ abstract class Trigger(val injector: HasAndroidInjector) {
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var profileUtil: ProfileUtil
-    @Inject lateinit var sp: SP
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var locationDataContainer: LastLocationDataContainer
     @Inject lateinit var persistenceLayer: PersistenceLayer

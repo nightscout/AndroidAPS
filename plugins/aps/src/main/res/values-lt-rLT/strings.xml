@@ -168,7 +168,7 @@
     <string name="pump_disconnected">Pompa atjungta</string>
     <!--    autoISF -->
     <string name="half_basal_exercise_target_title">Pusė bazinio insulino fizinio krūvio metu</string>
-    <string name="half_basal_exercise_target_summary">Nustatykite skaičių, pvz., 8,0, kuris reiškia, kad kai laikinas tikslas yra 8,0 mmol/l ir aukštas laikinas tikslas padidina jautrumą = TAIP, nustatykite 50% laikiną bazę šiame lygyje (6,0 = 75%; 4,8 = 60%).</string>
+    <string name="half_basal_exercise_target_summary">Nustatykite skaičių, pvz., 8,0, kuris reiškia, kad kai laikinas tikslas yra 8,0 mmol/l ir aukštas laikinas tikslas padidina jautrumą = TAIP, nustatykite 50%% laikiną bazę šiame lygyje (6,0 = 75%%; 4,8 = 60%%).</string>
     <string name="autoISF_settings_title">Automatinio JIF nustatymai</string>
     <string name="autoISF_settings_summary">Automatinis JIF leidžia koreguoti insulino jautrumo faktorių (JIF) įvairiose glikemijos elgsenos situacijose\n\nJis taip pat gali koreguoti SMB suleidimo nustatymus</string>
     <string name="smb_delivery_settings_title">SMB suleidimo nustatymai</string>

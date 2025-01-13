@@ -217,8 +217,7 @@
     <string name="description_overview">Zobrazení stavu a informací. Přístup k nejběžnějším ovládacím prvkům</string>
     <string name="overview_buttons_selection">Tlačítka</string>
     <string name="show_calibration_button_summary">Odešle kalibraci do xDrip+ (ujistěte se, že je v xDrip+ povoleno \'Příjímat kalibrace\' v nastavení komunikace mezi aplikacemi).</string>
-    <string name="show_cgm_button_summary">Otevře xDrip+ (můžete použít tlačítko zpět pro návrat do AAPS).</string>
-    <string name="error_starting_cgm">Nelze spustit aplikace CGM. Ujistěte se, že je nainstalovaná.</string>
+    <string name="show_cgm_button_summary">Otevře xDrip+ nebo Dexcom aplikaci (můžete použít tlačítko zpět pro návrat do AAPS).</string>
     <string name="not_available_full">Nedostupný</string>
     <string name="constraints_violation">Mimo povolený rozsah</string>
     <string name="change_your_input">Změňte zadání!</string>

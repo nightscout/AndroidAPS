@@ -29,7 +29,6 @@ import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventQueueChanged
 import app.aaps.core.interfaces.rx.events.EventTempBasalChange
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
@@ -53,7 +52,6 @@ class DanaFragment : DaggerFragment() {
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var danaPump: DanaPump
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var sp: SP
     @Inject lateinit var warnColors: WarnColors
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
@@ -63,7 +61,7 @@ class DanaFragment : DaggerFragment() {
     private var disposable: CompositeDisposable = CompositeDisposable()
 
     private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
-    private lateinit var refreshLoop: Runnable
+    private var refreshLoop: Runnable
     private var pumpStatus = ""
     private var pumpStatusIcon = "{fa-bluetooth-b}"
 

@@ -61,8 +61,12 @@
     <string name="pref_show_ago">Toon tijd geleden</string>
     <string name="pref_show_week_number">Weeknummer weergeven</string>
     <string name="pref_show_date">Toon datum</string>
+    <string name="pref_show_seconds">Seconden weergeven</string>
     <string name="default_custom_watchface_comment">Standaard watchface, u kunt op de EXPORT WATCHFACE knop klikken om een sjabloon te genereren</string>
     <string name="default_custom_watchface_external_comment">Standaard watchface inclusief externe weergaven voor volgers, u kunt klikken op EXPORT WATCHFACE knop om een sjabloon te genereren</string>
     <string name="wear_default_watchface">Standaard watchface</string>
     <string name="wear_more_watchfaces">Meer wijzerplaten</string>
+    <string name="temp_basal_absolute_rate">%1$.2f E/u @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_percent_rate">%1$.2f%% @%2$s %3$d/%4$d\'</string>
+    <string name="temp_basal_extended_bolus">E %1$.2f E/u @%2$s %3$d/%4$d min</string>
 </resources>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- SMS Communicator & OTP Authenticator -->
-    <string name="smscommunicator">SMS komunikatorius</string>
+    <string name="smscommunicator">SMS komandos</string>
     <string name="smscommunicator_shortname">SMS</string>
     <string name="description_sms_communicator">Nuotolinis AndroidAPS valdymas naudojant SMS komandas.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">iš Authenticator programėlės: %1$s, po to - PIN</string>
@@ -153,6 +153,8 @@
     <string name="dia_short">IVT</string>
     <string name="target_short">TIKSLAS</string>
     <string name="basal_short">VB</string>
+    <string name="isf_dynamic_label_warning">Algoritmas gali dinamiškai apskaičiuoti JIF reikšmę. Pateiktos reikšmės naudojamos tik kaip atsarginis variantas, jei trūksta duomenų</string>
+    <string name="ic_dynamic_label_warning">Algoritmas gali dinamiškai apskaičiuoti IA reikšmę. Pateiktos reikšmės naudojamos tik kaip atsarginis variantas, jei trūksta duomenų</string>
     <!-- Actions -->
     <string name="actions">Veiksmai</string>
     <string name="description_actions">Mygtukai greitesniam pagrindinių funkcijų paleidimui</string>
@@ -162,14 +164,14 @@
     <string name="extended_bolus_cancel_button">Atšaukti ištęstą bolusą</string>
     <string name="tools">Įrankiai</string>
     <string name="nav_history_browser">Istorija</string>
-    <string name="sensor_label">Iš sensoriaus</string>
-    <string name="age_label">amžius:</string>
+    <string name="sensor_label">Sensorius</string>
+    <string name="age_label">laikas:</string>
     <string name="level_label">lygis:</string>
     <string name="insulin_label">Insulinas</string>
     <string name="pb_label">Pompos baterija</string>
     <string name="cannula">Kaniulė</string>
     <string name="ebstopsloop">Ištęsto boluso funkcija sustabdys uždaro ciklo režimą ištęsto boluso veikimo metu. Ar tikrai norite patvirtinti savo pasirinkimą?</string>
-    <string name="statuslights_cannula_age">kateteris</string>
+    <string name="statuslights_cannula_age">kaniulė</string>
     <string name="statuslights_patch_pump_age">rezervuaro laikas</string>
     <string name="patch_pump">Patch pompa</string>
     <!-- Overview -->
@@ -215,8 +217,6 @@
     <string name="description_overview">Rodo dabartinę Ciklo būseną ir pagrindinių veiksmų mygtukus</string>
     <string name="overview_buttons_selection">Mygtukai</string>
     <string name="show_calibration_button_summary">Siunčia kalibraciją į xDrip+ (įsitikinkite, kad xDrip+ nustatymuose Inter-App modulyje yra įjungta „Priimti kalibravimus“).</string>
-    <string name="show_cgm_button_summary">Atidaro xDrip+ (mygtukas ATGAL gražina į AAPS).</string>
-    <string name="error_starting_cgm">Nepavyko paleisti NGJ programos.  Įsitikinkite, kad ji įdiegta.</string>
     <string name="not_available_full">Nėra duomenų</string>
     <string name="constraints_violation">Apribojimų pažeidimas</string>
     <string name="change_your_input">Pakeiskite įvestus duomenis!</string>
@@ -255,12 +255,12 @@
     <string name="overview_show_notes_field_in_dialogs_title">Rodyti pastabų laukelį terapijos dialoguose</string>
     <string name="deliverpartofboluswizard">Boluso skaičiuoklė atlieka skaičiavimus, tačiau tik dalis apskaičiuoto insulino yra suleidžiama. Naudinga kartu su SMB algoritmu.</string>
     <string name="deliver_part_of_boluswizard_reset_time">Suleisti 100% bolusą, jei glikemijos duomenys senesni nei</string>
-    <string name="enable_bolus_advisor">Įgalinti boluso patarėją</string>
-    <string name="enable_bolus_advisor_summary">Naudokite valgio priminimą, o ne patarėjo rezultatą, jei glikemija aukšta (\"prebolusas\")</string>
-    <string name="enablesuperbolus">Įgalinti superbolusus skaičiuoklėje</string>
+    <string name="enable_bolus_advisor">Įjungti boluso patarėją</string>
+    <string name="enable_bolus_advisor_summary">Naudokite priminimą valgyti vėliau, o ne patarėjo rezultatą esant aukštam gliukozės lygiui („pre-bolusas“)</string>
+    <string name="enablesuperbolus">Įjungti superbolusus skaičiuoklėje</string>
     <string name="enablesuperbolus_summary">Įgalina superbolusų naudojimą insulino skaičiuoklėje. Nenaudokite, kol nesuprantate, ką superbolus funkcija atlieka. NAUDODAMI AKLAI GALITE PERDOZUOTI INSULINO!</string>
-    <string name="enablebolusreminder">Įgalinti priminimą apie bolusą</string>
-    <string name="enablebolusreminder_summary">Naudoti priminimus apie bolusą su skaičiuotuvu        („post-bolusas“)</string>
+    <string name="enablebolusreminder">Įjungti bolusų priminimus</string>
+    <string name="enablebolusreminder_summary">Naudokite priminimą atlikti bolusą vėliau naudojant patarėją („post-bolusas“)</string>
     <string name="run_question">Vykdyti %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Prognozė</string>

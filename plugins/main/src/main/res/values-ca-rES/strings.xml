@@ -171,7 +171,6 @@
     <string name="overview_shortname">INICI</string>
     <string name="description_overview">Mostra l\'estat actual del llaç i botons per les accions més habituals</string>
     <string name="overview_buttons_selection">Botons</string>
-    <string name="error_starting_cgm">No s\'ha pogut iniciar l\'aplicació CGM. Assegureu-vos que està instal·lada.</string>
     <string name="not_available_full">No disponible</string>
     <string name="constraints_violation">Violació de restriccions</string>
     <string name="change_your_input">Modifiqueu les dades!</string>

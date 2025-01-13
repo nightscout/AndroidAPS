@@ -3,7 +3,7 @@
     <!-- MedtrumPump -->
     <string name="medtrum">Medtrum</string>
     <string name="medtrum_pump_shortname">MT</string>
-    <string name="medtrum_pump_description">Medtrum Nano ir Medtrum 300U integracija</string>
+    <string name="medtrum_pump_description">Medtrum Nano ir Medtrum 300U pompos integracija</string>
     <string name="medtrum_pump_setting">Medtrum pompos nustatymai</string>
     <string name="pump_error">Pompos klaida: %1$s !! </string>
     <string name="pump_warning">Pompos įspėjimas: %1$s </string>
@@ -12,18 +12,18 @@
     <string name="pump_is_suspended_day_max">Pompa sustabdyta dėl viršyto paros insulino limito</string>
     <string name="patch_not_active">Rezervuaras neaktyvus</string>
     <string name="pump_setting_failed">Naudotojo nustatymai neįrašyti!</string>
-    <string name="pump_sync_error">Klaida sinchronizuojant istoriją iš pompos, įrašas buvo praleistas. Patikrinkite terapijos skirtuką, kad įsitikintumėte, ar bolusas buvo teisingai sinchronizuotas. Atidėkite pranešimą, ir, jei klaida pasikartos, pakeiskite pompos pagrindą ar pleistrą.</string>
+    <string name="pump_sync_error">Klaida įkeliant pompos istoriją, įrašas buvo praleistas. Patikrinkite terapijos skirtuką, kad įsitikintumėte, ar bolusas buvo teisingai sinchronizuotas. Atidėkite pranešimą, ir, jei klaida pasikartos, pakeiskite pompos pagrindą ar rezervuarą.</string>
     <!-- overview fragment -->
     <string name="ble_status_label">BLE statusas</string>
     <string name="last_connection_label">Pask. prijungimas</string>
     <string name="active_bolus_label">Aktyvus bolusas</string>
     <string name="pump_state_label">Pompos būsena</string>
     <string name="active_alarms_label">Aktyvūs aliarmai</string>
-    <string name="reservoir_level"> %.2f v</string>
+    <string name="reservoir_level"> %.2f V</string>
     <string name="battery_voltage"> %.2f V</string>
     <string name="basal_type_label">Bazės tipas</string>
     <string name="basal_rate_label">Bazės dydis</string>
-    <string name="current_basal_rate"> %.2f v/val.</string>
+    <string name="current_basal_rate"> %.2f V/val.</string>
     <string name="pump_type_label">Pompos tipas</string>
     <string name="fw_version_label">FW versija</string>
     <string name="patch_no_label">Rezervuaro nr.</string>
@@ -56,7 +56,7 @@
     <string name="bolus_error">Boluso klaida</string>
     <!-- wizard-->
     <string name="retry">Kartoti</string>
-    <string name="next">Kitas</string>
+    <string name="next">Toliau</string>
     <string name="discard">Išjungti</string>
     <string name="step_prepare_patch">Įjungti rezervuarą</string>
     <string name="step_prepare_patch_connect">Prijungti ir užpildyti</string>
@@ -74,17 +74,17 @@
     <string name="no_profile_selected">Nepasirinktas profilis. Pasirinkite profilį ir bandykite dar kartą.</string>
     <string name="no_sn_in_settings">Nežinomas SN. Įveskite pompos pagrindo serijos numerį nustatymuose ir bandykite vėl.</string>
     <string name="base_serial">Pompos pagrindo SN: %1$X</string>
-    <string name="patch_begin_activation">Nėra aktyvaus rezervuaro. Spauskite <b>Kitas</b> ir pradėkite aktyvavimą.</string>
+    <string name="patch_begin_activation">Nėra aktyvaus rezervuaro. Spauskite <b>Toliau</b> ir pradėkite aktyvavimą.</string>
     <string name="patch_not_active_note">Neprijunkite pagrindo prie rezervuaro iki kito žingsnio!</string>
-    <string name="connect_pump_base">Prijunkite pompos pagrindą prie naujo rezervuaro, pašalinkite orą ir užpildykite insulinu, tada spauskite <b>Kitas</b>.</string>
+    <string name="connect_pump_base">Prijunkite pompos pagrindą prie naujo rezervuaro, pašalinkite orą ir užpildykite insulinu, tada spauskite <b>Toliau</b>.</string>
     <string name="note_min_70_units">Svarbu: būtina užpildyti bent 70 v.</string>
     <string name="reservoir_text_and_level">Rezervuaras: %.2f vv</string>
     <string name="do_not_attach_to_body">Kol kas neklijuokite pompos prie kūno.</string>
-    <string name="half_press_needle">Spustelėkite adatos mygtuką. Spauskite <b>Kitas</b> pildymui pradėti.</string>
+    <string name="half_press_needle">Spustelėkite adatos mygtuką. Spauskite <b>Toliau</b> pildymui pradėti.</string>
     <string name="wait_for_priming">Palaukite, kol baigsis pildymas.</string>
     <string name="priming_error">Pildymas nepavyko, spauskite <b>Kartoti</b>.</string>
-    <string name="press_next">Norėdami tęsti, spauskite <b>Kitas</b>.</string>
-    <string name="press_next_to_start_activation">Aktyvavimui pradėti spauskite <b>Kitas</b>.</string>
+    <string name="press_next">Norėdami tęsti, spauskite <b>Toliau</b>.</string>
+    <string name="press_next_to_start_activation">Aktyvavimui pradėti spauskite <b>Toliau</b>.</string>
     <string name="remove_safety_lock">Pašalinkite apsaugą. Priklijuokite pompą prie kūno. Paspauskite adatos mygtuką.</string>
     <string name="activating_pump">Palaukite, kol bus aktyvuota pompa ir nustatyta pradinė bazė.</string>
     <string name="activating_error">Aktyvavimas nepavyko, spauskite <b>Kartoti</b>.</string>
@@ -94,14 +94,14 @@
     <string name="deactivate_sure">Ar tikrai norite išjungti rezervuarą?</string>
     <string name="cancel_sure">Ar tikrai norite nutraukti įjungimą?</string>
     <string name="medtrum_deactivate_pump_confirm">Ar tikrai norite tęsti? Veiksmo nebus galima atšaukti!</string>
-    <string name="press_next_or_cancel">Jei norite išjungti, spauskite <b>Kitas</b>, jei norite grįžti į pradžios ekaraną, spauskite <b>Atšaukti</b>.</string>
+    <string name="press_next_or_cancel">Jei norite išjungti, spauskite <b>Toliau</b>, jei norite grįžti į pradžios ekaraną, spauskite <b>Atšaukti</b>.</string>
     <string name="deactivating_pump">Išjungiama. Palaukite.</string>
     <string name="deactivating_error">Išjungti nepavyko, spauskite <b>Išjungti</b>.</string>
     <string name="retract_needle">Ištraukite adatą. Nuimkite pompą nuo kūno.</string>
     <string name="remove_base_discard_patch">Nuimkite pompos pagrindą ir tinkamai pašalinkite naudotą rezervuarą.</string>
-    <string name="press_next_or_OK">Norėdami grįžti į pradžios ekraną, spauskite <b>OK</b>. Norėdami įjungti naują rezervuarą, spauskite <b>Kitas</b>.</string>
+    <string name="press_next_or_OK">Norėdami grįžti į pradžios ekraną, spauskite <b>OK</b>. Norėdami įjungti naują rezervuarą, spauskite <b>Toliau</b>.</string>
     <string name="activation_in_progress">Ups! Panašu, kad įjungimo procesas jau vyksta.</string>
-    <string name="press_retry_or_discard">Norėdami atnaujinti aktyvavimą, spauskite <b>Kitas</b>, norėdami atšaukti, spauskite <b>Baigti naudoti</b>.</string>
+    <string name="press_retry_or_discard">Norėdami atnaujinti aktyvavimą, spauskite <b>Toliau</b>, norėdami atšaukti, spauskite <b>Baigti naudoti</b>.</string>
     <string name="reading_activation_status">Palaukite, nuskaitomas pompos aktyvavimo statusas.</string>
     <!-- settings-->
     <string name="enable_pump_unreachable_alert_summary">Nepasiekiamumo įspėjimas priverstinai įjungtas, nes Medtrum pompa gali tapti nepasiekiama.</string>
@@ -123,7 +123,7 @@
     <string name="daily_max_insulin_title">Paros insulino limitas</string>
     <string name="daily_max_insulin_summary">Nustatykite maksimalų insulino kiekį parai. Jį viršijus pompa bus sustabdyta.</string>
     <string name="scan_on_connection_error_title">Skenuoti, jei kyla ryšio klaida</string>
-    <string name="scan_on_connection_error_summary">ĮSPĖJIMAS: Įjunkite tik tuo atveju, jei patiriate ryšio nesklandumų. Jei įjungta, tvarkyklė vėl nuskenuos pompą prieš bandydama prisijungti iš naujo. Įsitikinkite, kad vietos nustatymo leidimas nustatytas į „Visada leisti“ </string>
+    <string name="scan_on_connection_error_summary">ĮSPĖJIMAS: Įjunkite tik jei patiriate ryšio nesklandumų. Įjungus bus skenuojama pompa prieš bandant prisijungti iš naujo. Įsitikinkite, kad vietos nustatymo leidimas nustatytas „Leisti visada“ </string>
     <!-- treatment state-->
     <string name="getting_pump_status">Gaunamas pompos statusas</string>
     <string name="syncing_records">Sinchronizuojami įrašai, liko %1$d</string>

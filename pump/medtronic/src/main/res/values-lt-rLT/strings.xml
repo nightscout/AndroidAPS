@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Medtronic (MDT) - Base -->
-    <string name="description_pump_medtronic">Integracija su Medronic pompa reikalauja RileyLink įrenginio ir specialaus pompos modelio</string>
+    <string name="description_pump_medtronic">Medronic pompos integracija, reikalaujanti RileyLink įrenginio ir specialaus pompos modelio</string>
     <!-- MDT Configuration -->
     <string name="medtronic_serial_number">Pompos serijos Nr.</string>
     <string name="medtronic_pump_type">Pompos tipas</string>

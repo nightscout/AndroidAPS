@@ -138,5 +138,7 @@
     <string name="autotune_run_with_error">Fout tijdens laatste Autotune uitvoeren</string>
     <string name="autotune_run_cancelled">Een ander Autotune proces loopt nog, de uitvoering is geannuleerd</string>
     <!--    Steps count-->
+    <string name="triggerStepsCountLabel">Aantal stappen</string>
     <string name="triggerStepsCountDesc">Aantal stappen per %1$s minuten %2$s %3$.0f</string>
+    <string name="triggerStepsCountDropdownLabel">Metingsduur</string>
 </resources>

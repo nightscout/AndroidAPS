@@ -71,6 +71,7 @@ class AdaptiveDoublePreference(
             editText.inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
             editText.setSelectAllOnFocus(true)
             editText.setSingleLine()
+            editText.setSelection(editText.length())
         }
         setOnPreferenceChangeListener { _, _ -> validator?.testValidity(false) != false }
         setDefaultValue(preferenceKey.defaultValue)

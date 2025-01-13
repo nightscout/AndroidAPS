@@ -81,6 +81,7 @@ class AdaptiveIntPreference(
                 editText.inputType = InputType.TYPE_CLASS_NUMBER
             editText.setSelectAllOnFocus(true)
             editText.setSingleLine()
+            editText.setSelection(editText.length())
         }
         setOnPreferenceChangeListener { _, _ -> validator?.testValidity(false) != false }
         setDefaultValue(preferenceKey.defaultValue)
@@ -120,7 +121,7 @@ class AdaptiveIntPreference(
     override fun onSetInitialValue(defaultValue: Any?) {
         text = try {
             getPersistedString(defaultValue as String?)
-        } catch (ignored: Exception) {
+        } catch (_: Exception) {
             getPersistedInt(preferenceKey.defaultValue).toString()
         }
     }
@@ -128,7 +129,7 @@ class AdaptiveIntPreference(
     override fun persistString(value: String?): Boolean =
         try {
             super.persistString(SafeParse.stringToInt(value, 0).toString())
-        } catch (ignored: Exception) {
+        } catch (_: Exception) {
             false
         }
 }

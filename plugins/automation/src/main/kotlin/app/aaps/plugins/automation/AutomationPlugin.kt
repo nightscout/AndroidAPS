@@ -29,9 +29,9 @@ import app.aaps.core.interfaces.rx.events.EventBTChange
 import app.aaps.core.interfaces.rx.events.EventChargingState
 import app.aaps.core.interfaces.rx.events.EventNetworkChange
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
 import app.aaps.core.validators.preferences.AdaptiveListPreference
 import app.aaps.plugins.automation.actions.Action
@@ -51,6 +51,7 @@ import app.aaps.plugins.automation.elements.InputDelta
 import app.aaps.plugins.automation.events.EventAutomationDataChanged
 import app.aaps.plugins.automation.events.EventAutomationUpdateGui
 import app.aaps.plugins.automation.events.EventLocationChange
+import app.aaps.plugins.automation.keys.AutomationStringKey
 import app.aaps.plugins.automation.services.LocationServiceHelper
 import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.plugins.automation.triggers.TriggerAutosensValue
@@ -96,7 +97,7 @@ class AutomationPlugin @Inject constructor(
     private val injector: HasAndroidInjector,
     rh: ResourceHelper,
     private val context: Context,
-    private val sp: SP,
+    private val preferences: Preferences,
     private val fabricPrivacy: FabricPrivacy,
     private val loop: Loop,
     private val rxBus: RxBus,
@@ -140,6 +141,9 @@ class AutomationPlugin @Inject constructor(
     }
 
     init {
+        // Make plugin preferences available to AAPS
+        preferences.registerPreferences(AutomationStringKey::class.java)
+
         refreshLoop = Runnable {
             processActions()
             handler?.postDelayed(refreshLoop, T.secs(150).msecs())
@@ -214,13 +218,13 @@ class AutomationPlugin @Inject constructor(
             e.printStackTrace()
         }
 
-        sp.putString(keyAutomationEvents, array.toString())
+        preferences.put(AutomationStringKey.AutomationEvents, array.toString())
     }
 
     @Synchronized
     private fun loadFromSP() {
         automationEvents.clear()
-        val data = sp.getString(keyAutomationEvents, "")
+        val data = preferences.get(AutomationStringKey.AutomationEvents)
         if (data != "")
             try {
                 val array = JSONArray(data)

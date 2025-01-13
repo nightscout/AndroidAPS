@@ -116,7 +116,7 @@ class NsIncomingDataProcessor @Inject constructor(
 
             for (i in 0 until sgvs.size) {
                 val sgv = (sgvs[i] as NSSgvV3).toGV()
-                if (sgv.timestamp < dateUtil.now() && sgv.timestamp > latestDateInReceivedData) {
+                if (sgv.timestamp < dateUtil.now() + T.mins(1).msecs() && sgv.timestamp > latestDateInReceivedData) {
                     latestDateInReceivedData = sgv.timestamp
                     glucoseValues += sgv
                 } else

@@ -10,7 +10,6 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.queue.Callback
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.elements.InputCarePortalMenu
@@ -29,7 +28,6 @@ class ActionCarePortalEvent(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var sp: SP
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
 
     private val disposable = CompositeDisposable()
@@ -45,7 +43,7 @@ class ActionCarePortalEvent(injector: HasAndroidInjector) : Action(injector) {
     @DrawableRes override fun icon(): Int = cpEvent.value.drawableRes
 
     override fun doAction(callback: Callback) {
-        val enteredBy = sp.getString("careportal_enteredby", "AAPS")
+        val enteredBy = "AAPS"
         val eventTime = dateUtil.now()
         val therapyEvent = TE(
             timestamp = eventTime,

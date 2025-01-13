@@ -217,8 +217,7 @@
     <string name="description_overview">Zobrazenie aktuálneho stavu vašeho uzavretého okruhu a tlačidlá k najpoužívanejším ovládacím prvkom</string>
     <string name="overview_buttons_selection">Tlačidlá</string>
     <string name="show_calibration_button_summary">Odošle kalibráciu do xDrip+ (presvedčte sa, či je v xDrip+ povolené „Prijímať kalibrácie z iných aplikácií“ v nastavení \"Komunikácia s inými aplikáciami).</string>
-    <string name="show_cgm_button_summary">Otvorí xDrip+ (môžete použiť tlačítko späť na návrat do AAPS).</string>
-    <string name="error_starting_cgm">Nie je možné spustiť aplikáciu CGM. Uistite sa, že je nainštalovaná.</string>
+    <string name="show_cgm_button_summary">Otvorí xDrip+, alebo aplikáciu Dexcom (môžete použiť tlačítko späť na návrat do AAPS).</string>
     <string name="not_available_full">Nedostupný</string>
     <string name="constraints_violation">Mimo povolený rozsah</string>
     <string name="change_your_input">Zmeňte zadanie!</string>

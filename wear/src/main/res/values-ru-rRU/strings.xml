@@ -91,7 +91,7 @@
     <string name="menu_menu">Меню</string>
     <string name="quick_wizard_short">XL</string>
     <string name="action_duration">Длительность</string>
-    <string name="action_tempt_confirmation">Запрошена временная цель</string>
+    <string name="action_tempt_confirmation">Требуется Временная Цель</string>
     <string name="action_quick_wizard_confirmation">Запрошен мастер настройки</string>
     <string name="action_user_action_confirmation">Запрошено действие пользователя</string>
     <string name="action_treatment_confirmation">Запрошена терапия</string>
@@ -217,6 +217,7 @@
     <string name="complication_full_status_flipped">Полный статус (в обратном виде)</string>
     <string name="complication_blood_glucose">Гликемия</string>
     <string name="complication_br_cob_iob">База, актУг &amp; актИнс</string>
+    <string name="complication_br_iob">BR &amp; IoB</string>
     <string name="complication_cob_iob">АктУг &amp; актИнс</string>
     <string name="complication_cob_icon">Иконка актУг</string>
     <string name="complication_cob_detailed">АктУг подробно</string>

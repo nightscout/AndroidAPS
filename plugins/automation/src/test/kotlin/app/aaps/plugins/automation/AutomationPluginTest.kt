@@ -31,7 +31,7 @@ class AutomationPluginTest : TestBaseWithProfile() {
 
     @BeforeEach fun prepare() {
         automationPlugin = AutomationPlugin(
-            injector, rh, context, sp, fabricPrivacy, loop, rxBus, constraintChecker, aapsLogger,
+            injector, rh, context, preferences, fabricPrivacy, loop, rxBus, constraintChecker, aapsLogger,
             aapsSchedulers, config, locationServiceHelper, dateUtil, activePlugin, timerUtil
         )
     }

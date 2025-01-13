@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="combov2_plugin_name">Accu-Chek Combo</string>
-    <string name="combov2_plugin_description">Originali pompos integracija Accu-Chek Combo pompoms</string>
+    <string name="combov2_plugin_description">Accu-Chek Combo pompos integracija</string>
     <string name="combov2_could_not_connect">Nepavyko prisijungti prie pompos</string>
     <string name="combov2_not_paired">Pompa nesusieta</string>
     <string name="combov2_warning">Combo įspėjimas</string>

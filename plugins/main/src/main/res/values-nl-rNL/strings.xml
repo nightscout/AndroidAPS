@@ -153,6 +153,8 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">DOEL</string>
     <string name="basal_short">BAS</string>
+    <string name="isf_dynamic_label_warning">Uw algoritme kan een dynamische berekening van ISF leveren. De onderstaande waarden worden alleen gebruikt om op terug te vallen in geval van ontbrekende gegevens of als referentiewaarde</string>
+    <string name="ic_dynamic_label_warning">Uw algoritme kan een dynamische berekening van IC leveren. De onderstaande waarden worden alleen gebruikt om op terug te vallen in geval van ontbrekende gegevens of als referentiewaarde</string>
     <!-- Actions -->
     <string name="actions">Acties</string>
     <string name="description_actions">Een aantal knoppen voor snelle toegang tot algemene functies</string>
@@ -214,7 +216,8 @@
     <string name="overview_shortname">OVZ</string>
     <string name="description_overview">Toont de huidige Loop-status en knoppen voor meest gebruikte acties</string>
     <string name="overview_buttons_selection">Knoppen</string>
-    <string name="error_starting_cgm">Kon de CGM applicatie niet starten. Zorg dat deze geïnstalleerd is.</string>
+    <string name="show_calibration_button_summary">Verzend een kalibratie naar xDrip+ (zorg ervoor dat \'Accept Calibrations\' is ingeschakeld in xDrip+ onder Inter-App instellingen).</string>
+    <string name="show_cgm_button_summary">Opent xDrip+ of Dexcom App (je kunt de terug knop gebruiken om terug te keren naar AAPS).</string>
     <string name="not_available_full">Niet beschikbaar</string>
     <string name="constraints_violation">In strijd met beperkingen</string>
     <string name="change_your_input">Wijzig het ingegevene!</string>

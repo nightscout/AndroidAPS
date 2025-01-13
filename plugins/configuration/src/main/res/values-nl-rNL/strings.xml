@@ -81,6 +81,8 @@
     <string name="allow_hardware_pump_text">Let op: als u activeert en verbinding maakt met een hardwarepomp, kopieert AndroidAPS de basale instellingen van het profiel naar de pomp en overschrijft de bestaande basaal snelheid die in de pomp is opgeslagen. Zorg ervoor dat u de juiste basaal instelling hebt in AndroidAPS. Als u niet zeker weet of niet wilt dat de basaal instellingen op uw pomp worden overschreven, drukt u op Annuleren en herhaalt u het overschakelen naar de pomp op een later tijdstip.</string>
     <string name="a11y_open_settings">instellingen openen</string>
     <string name="nsclient_version_does_not_match">NSClient versie en AndroidAPS versie komen niet overeen. Update alsjeblieft.</string>
+    <string name="expand_category">Categorie uitvouwen</string>
+    <string name="collapse_category">Categorie samenvouwen</string>
     <!--ImportExport-->
     <string name="nav_preferences">Instellingen</string>
     <string name="password_preferences_encrypt_prompt">Je wordt gevraagd om een masterwachtwoord. Daarmee worden geëxporteerde instellingen versleuteld.</string>

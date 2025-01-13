@@ -162,7 +162,7 @@ class CareDialog : DialogFragmentWithDate() {
     }
 
     override fun submit(): Boolean {
-        val enteredBy = sp.getString("careportal_enteredby", "AndroidAPS")
+        val enteredBy = "AAPS"
         val unitResId = if (profileFunction.getUnits() == GlucoseUnit.MGDL) app.aaps.core.ui.R.string.mgdl else app.aaps.core.ui.R.string.mmol
 
         eventTime -= eventTime % 1000
