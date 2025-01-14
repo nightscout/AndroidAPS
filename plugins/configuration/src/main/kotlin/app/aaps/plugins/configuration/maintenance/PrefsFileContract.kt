@@ -4,21 +4,16 @@ import android.content.Context
 import android.content.Intent
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.fragment.app.FragmentActivity
-import app.aaps.core.interfaces.maintenance.PrefsFile
-import app.aaps.core.utils.extensions.safeGetParcelableExtra
 import app.aaps.plugins.configuration.maintenance.activities.PrefImportListActivity
 
-class PrefsFileContract : ActivityResultContract<Void?, PrefsFile?>() {
+class PrefsFileContract : ActivityResultContract<Void?, Boolean>() {
 
-    companion object {
-
-        const val OUTPUT_PARAM = "prefs_file"
-    }
-
-    override fun parseResult(resultCode: Int, intent: Intent?): PrefsFile? {
+    override fun parseResult(resultCode: Int, intent: Intent?): Boolean {
         return when (resultCode) {
-            FragmentActivity.RESULT_OK -> intent?.safeGetParcelableExtra(OUTPUT_PARAM, PrefsFile::class.java)
-            else                       -> null
+            // Do not pass full file through intent. It crash on large file
+            // FragmentActivity.RESULT_OK -> intent?.safeGetParcelableExtra(OUTPUT_PARAM, PrefsFile::class.java)
+            FragmentActivity.RESULT_OK -> true
+            else                       -> false
         }
     }
 

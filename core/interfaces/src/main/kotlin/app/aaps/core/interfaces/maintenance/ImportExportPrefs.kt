@@ -8,9 +8,8 @@ import org.json.JSONObject
 
 interface ImportExportPrefs {
 
-    fun importSharedPreferences(activity: FragmentActivity, importFile: PrefsFile)
+    fun doImportSharedPreferences(activity: FragmentActivity)
     fun importSharedPreferences(activity: FragmentActivity)
-    fun importSharedPreferences(fragment: Fragment)
     fun importCustomWatchface(activity: FragmentActivity)
     fun importCustomWatchface(fragment: Fragment)
     fun exportCustomWatchface(customWatchface: CwfData, withDate: Boolean = true)
@@ -20,4 +19,9 @@ interface ImportExportPrefs {
     fun exportSharedPreferencesNonInteractive(context: Context, password: String): Boolean
     fun exportUserEntriesCsv(activity: FragmentActivity)
     fun exportApsResult(algorithm: String?, input: JSONObject, output: JSONObject?)
+
+    /**
+     * Store for selected file from UI
+     */
+    var selectedImportFile: PrefsFile?
 }
