@@ -108,16 +108,16 @@ class AdaptiveDoublePreference(
 
     override fun onSetInitialValue(defaultValue: Any?) {
         text = try {
-            getPersistedString(defaultValue as String?)
-        } catch (_: Exception) {
             getPersistedFloat(preferenceKey.defaultValue.toFloat()).toString()
+        } catch (_: Exception) {
+            getPersistedString(defaultValue as String?)
         }
     }
 
     override fun persistString(value: String?): Boolean =
         try {
-            super.persistString(SafeParse.stringToDouble(value, 0.0).toString())
+            super.persistFloat(SafeParse.stringToDouble(value).toFloat())
         } catch (_: Exception) {
-            false
+            super.persistString(SafeParse.stringToFloat(value).toString())
         }
 }
