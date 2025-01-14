@@ -518,12 +518,17 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     private fun passwordResetCheck(context: Context) {
         val fh = fileListProvider.ensureExtraDirExists()?.findFile("PasswordReset")
         if (fh?.exists() == true) {
-            val sn = activePlugin.activePump.serialNumber()
-            preferences.put(StringKey.ProtectionMasterPassword, cryptoUtil.hashPassword(sn))
-            fh.delete()
-            // Also clear any stored password
-            exportPasswordDataStore.clearPasswordDataStore(context)
-            ToastUtils.okToast(context, context.getString(app.aaps.core.ui.R.string.password_set))
+            Thread {
+                // Wait for virtual pump. SN is not available immediately
+                while (activePlugin.activePump.serialNumber().isEmpty()) {
+                    Thread.sleep(100)
+                }
+                preferences.put(StringKey.ProtectionMasterPassword, cryptoUtil.hashPassword(activePlugin.activePump.serialNumber()))
+                fh.delete()
+                // Also clear any stored password
+                exportPasswordDataStore.clearPasswordDataStore(context)
+                ToastUtils.okToast(context, context.getString(app.aaps.core.ui.R.string.password_set))
+            }.start()
         }
     }
 
