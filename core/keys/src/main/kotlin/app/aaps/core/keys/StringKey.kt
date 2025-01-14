@@ -40,7 +40,6 @@ enum class StringKey(
 
     SmsAllowedNumbers("smscommunicator_allowednumbers", ""),
     SmsOtpPassword("smscommunicator_otp_password", "", dependency = BooleanKey.SmsAllowRemoteCommands, isPassword = true),
-    SmsOtpSecret("smscommunicator_otp_secret", ""), // Move to StringNonKey
 
     VirtualPumpType("virtualpump_type", "Generic AAPS"),
 
