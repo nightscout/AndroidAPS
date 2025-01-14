@@ -120,13 +120,14 @@ class AdaptiveUnitPreference(
         text = converted.toPlainString()
     }
 
-    override fun persistString(value: String?): Boolean =
-        try {
-            val numericValue = SafeParse.stringToDouble(value, preferenceKey.defaultValue)
-            summary = numericValue.toString()
-            val store = profileUtil.convertToMgdl(numericValue, profileUtil.units)
-            super.persistString(store.toString())
+    override fun persistString(value: String?): Boolean {
+        val numericValue = SafeParse.stringToDouble(value, preferenceKey.defaultValue)
+        summary = numericValue.toString()
+        val store = profileUtil.convertToMgdl(numericValue, profileUtil.units)
+        return try {
+            super.persistFloat(store.toFloat())
         } catch (_: Exception) {
-            false
+            super.persistString(store.toString())
         }
+    }
 }
