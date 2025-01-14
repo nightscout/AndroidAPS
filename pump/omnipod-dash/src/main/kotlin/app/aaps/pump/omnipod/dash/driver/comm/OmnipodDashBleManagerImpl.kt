@@ -1,8 +1,13 @@
 package app.aaps.pump.omnipod.dash.driver.comm
 
+import android.Manifest
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.core.app.ActivityCompat
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -142,6 +147,15 @@ class OmnipodDashBleManagerImpl @Inject constructor(
                         ?: throw FailedToConnectException("Missing bluetoothAddress, activate the pod first")
                 val podDevice = bluetoothAdapter?.getRemoteDevice(podAddress)
                     ?: throw ConnectException("Bluetooth not available")
+
+                if (podDevice.bondState == BluetoothDevice.BOND_NONE) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM && ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
+                        val result = podDevice.createBond()
+                        aapsLogger.debug(LTag.PUMPBTCOMM, "Bonding with pod resulted $result")
+                        Thread.sleep(10000)
+                    }
+                }
+
                 val conn = connection
                     ?: Connection(podDevice, aapsLogger, config, context, podState)
                 connection = conn
@@ -257,6 +271,22 @@ class OmnipodDashBleManagerImpl @Inject constructor(
     override fun disconnect(closeGatt: Boolean) {
         connection?.disconnect(closeGatt)
             ?: aapsLogger.info(LTag.PUMPBTCOMM, "Trying to disconnect a null connection")
+    }
+
+    override fun removeBond() {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM && ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
+                val device = bluetoothAdapter?.getRemoteDevice(podState.bluetoothAddress) ?: throw IllegalStateException("MAC address not found")
+                // At time of writing (2021-12-06), the removeBond method
+                // is inexplicably still marked with @hide, so we must use
+                // reflection to get to it and unpair this device.
+                val removeBondMethod = device::class.java.getMethod("removeBond")
+                val result = removeBondMethod.invoke(device)
+                aapsLogger.debug(LTag.PUMPBTCOMM, "Remove bond resulted $result")
+            }
+        } catch (t: Throwable) {
+            aapsLogger.error(LTag.PUMPBTCOMM, "Unpairing device with address ${podState.bluetoothAddress} failed with error $t")
+        }
     }
 
     companion object {
