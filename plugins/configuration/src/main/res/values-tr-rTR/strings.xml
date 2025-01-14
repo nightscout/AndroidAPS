@@ -81,6 +81,8 @@
     <string name="allow_hardware_pump_text">Dikkat: Eğer bir donanım pompasını etkinleştirir ve bağlarsanız, AAPS, bazal ayarları profilden pompaya aktaracaktır ve pompada kayıtlı mevcut bazal oranlarının üzerine yazacaktır. AAPS\'de doğru ayarların olduğundan emin olun. Emin değilseniz veya pompanızdaki bazal ayarların üzerine yazmak istemiyorsanız, iptal tuşuna basın ve daha sonra tekrar deneyin.</string>
     <string name="a11y_open_settings">ayarları aç</string>
     <string name="nsclient_version_does_not_match">AAPSClient sürümü, AAPS sürümü ile eşleşmiyor. Lütfen güncelle.</string>
+    <string name="expand_category">Kategoriyi genişlet</string>
+    <string name="collapse_category">Kategoriyi daralt</string>
     <!--ImportExport-->
     <string name="nav_preferences">Tercihler</string>
     <string name="password_preferences_encrypt_prompt">Dışa aktarılan tercihleri şifrelemek için kullanılacak ana parola sorulacaktır.</string>
