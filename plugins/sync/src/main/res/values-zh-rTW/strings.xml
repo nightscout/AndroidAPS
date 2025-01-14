@@ -80,7 +80,7 @@
     <string name="summary_tidepool_password">您的 Tidepool 登錄密碼</string>
     <string name="title_tidepool_password">登錄密碼</string>
     <string name="title_tidepool_test_login">測試 Tidepool 登錄</string>
-    <string name="summary_tidepool_dev_servers">如果啟用，上傳將轉到 https://int-app.tidepool.org 而不是常規的 https://app.tidepool.org/</string>
+    <string name="summary_tidepool_dev_servers">如果啟用，上傳將轉到 https://int-app.tidepool.org 而不是一般的 https://app.tidepool.org/</string>
     <string name="title_tidepool_dev_servers">使用集成（測試）伺服器</string>
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>

@@ -76,6 +76,7 @@ class AdaptiveStringPreference(
                 EditTextValidator.TEST_EMAIL     -> editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
                 EditTextValidator.TEST_HTTPS_URL -> editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI
             }
+            editText.setSelection(editText.length())
         }
         setOnPreferenceChangeListener { _, _ -> validator?.testValidity(false) != false }
         setDefaultValue(preferenceKey.defaultValue)

@@ -1,16 +1,16 @@
 # libs.versions.toml
 [versions]
-gradlePlugin = "8.7.3"
+gradlePlugin = "8.8.0"
 googleServices = "4.4.2"
 kotlin = "2.1.0"
 wearable = "2.9.0"
 room = "2.6.1"
-dagger = "2.54"
+dagger = "2.55"
 mockito = "5.15.2"
 junit = "5.11.4"
 okhttp = "4.12.0"
 retrofit = "2.11.0"
-kotlinx-serialization = "1.7.3"
+kotlinx-serialization = "1.8.0"
 kotlinx-coroutines = "1.10.1"
 work = "2.10.0"
 datastorePreferences = "1.1.1"
@@ -131,7 +131,7 @@ com-madgag-spongycastle = { group = "com.madgag.spongycastle", name = "core", ve
 com-caverock-androidsvg = { group = "com.caverock", name = "androidsvg", version = "1.4" }
 net-danlew-android-joda = { group = "net.danlew", name = "android.joda", version = "2.13.0" }
 joda-time = { group = "joda-time", name = "joda-time", version = "2.13.0" }
-org-json = { group = "org.json", name = "json", version = "20241224" }
+org-json = { group = "org.json", name = "json", version = "20250107" }
 org-skyscreamer-jsonassert = { group = "org.skyscreamer", name = "jsonassert", version = "1.5.3" }
 com-scottyab-rootbeer-lib = { group = "com.scottyab", name = "rootbeer-lib", version = "0.1.1" }
 com-eatthepath-java-otp = { group = "com.eatthepath", name = "java-otp", version = "0.4.0" }
@@ -141,7 +141,7 @@ io-socket-client = { group = "io.socket", name = "socket.io-client", version = "
 io-kotlintest-runner-junit5 = { group = "io.kotlintest", name = "kotlintest-runner-junit5", version = "3.4.2" }
 com-polidea-rxandroidble3 = { group = "com.polidea.rxandroidble3", name = "rxandroidble", version = "1.19.0" }
 com-jakewharton-rx3-replaying-share = { group = "com.jakewharton.rx3", name = "replaying-share", version = "3.0.0" }
-commons-codec = { group = "commons-codec", name = "commons-codec", version = "1.17.1" }
+commons-codec = { group = "commons-codec", name = "commons-codec", version = "1.17.2" }
 com-github-guepardoapps-kulid = { group = "com.github.guepardoapps", name = "kulid", version = "2.0.0.0" }
 com-thoughtworks-xstream = { group = "com.thoughtworks.xstream", name = "xstream", version = "1.4.21" }
 com-garmin-connectiq = { group = "com.garmin.connectiq", name = "ciq-companion-app-sdk", version = "2.0.3" }

@@ -24,14 +24,14 @@
     <string name="invalid_weight">Neteisingas svorio įrašas</string>
     <string name="id">ID:</string>
     <string name="submit">Pateikti</string>
-    <string name="age">Amžius</string>
+    <string name="age">Laikas</string>
     <string name="weight_label">Svoris</string>
     <string name="most_common_profile">Dažniausiai naudojamas profilis:</string>
     <string name="survey_comment">Pastaba: anonimiškai bus įkelti tik tie duomenys, kurie matomi šiame ekrane. Šiai AndroidAPS instaliacijai priskirtas ID. Galite pateikti duomenis dar kartą, jei pasikeitė jūsų pagrindinis profilis. Vis dėlto leiskite jam veikti bent savaitę, kad rezultatas atsispindėtų laike normos ribose. Ačiū už palaikymą.</string>
     <string name="glucose_type">Glikemijos tipas</string>
     <string name="bg_other">Kiti</string>
     <string name="bg_meter">Matuoklis</string>
-    <string name="bg_sensor">Iš sensoriaus</string>
+    <string name="bg_sensor">Sensorius</string>
     <!-- WizardDialog -->
     <string name="format_bg_isf">%1$s JIF: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IA: %2$.1f</string>
@@ -109,9 +109,9 @@
     <string name="motol_default_profile">Numatytasis profilis</string>
     <string name="current_profile">Dabartinis profilis</string>
     <string name="available_profile">Galimas profilis</string>
-    <string name="format_with_tdd">Amžius: %1$d BPD: %2$.0f U</string>
-    <string name="format_with_tdd_and_pct">Amžius: %1$d BPD: %2$.0f U %3$d%%</string>
-    <string name="format_with_weight">Amžius: %1$d Svoris: %2$.0f kg</string>
+    <string name="format_with_tdd">Laikas: %1$d BPD: %2$.0f U</string>
+    <string name="format_with_tdd_and_pct">Laikas: %1$d BPD: %2$.0f U %3$d%%</string>
+    <string name="format_with_weight">Laikas: %1$d Svoris: %2$.0f kg</string>
     <string name="dpv_default_profile">Numatytasis profilis</string>
     <string name="invalid_pct">Netinkamas % įrašas</string>
     <!-- Other dialogs -->

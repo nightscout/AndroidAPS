@@ -87,7 +87,7 @@ class StatusLightHandler @Inject constructor(
             val erosBatteryLinkAvailable = pump.model() == PumpType.OMNIPOD_EROS && pump.isUseRileyLinkBatteryLevel()
 
             if (pump.model().supportBatteryLevel || erosBatteryLinkAvailable) {
-                handleLevel(batteryLevel, IntKey.OverviewBattCritical, IntKey.OverviewSbatWarning, pump.batteryLevel.toDouble(), "%")
+                handleLevel(batteryLevel, IntKey.OverviewBattCritical, IntKey.OverviewBattWarning, pump.batteryLevel.toDouble(), "%")
             } else {
                 batteryLevel?.text = rh.gs(app.aaps.core.ui.R.string.value_unavailable_short)
                 batteryLevel?.setTextColor(rh.gac(batteryLevel.context, app.aaps.core.ui.R.attr.defaultTextColor))

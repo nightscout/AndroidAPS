@@ -13,7 +13,7 @@
     <string name="cwf_comment_cob2_ext">AAO reikšmė (iš AAPSClient ar AAPSClient2)</string>
     <string name="cwf_comment_delta_ext">Trumpa KG delta (iš AAPSClient ar AAPSClient2)</string>
     <string name="cwf_comment_avg_delta_ext">Vidutinė KG delta (15min) (iš AAPSClient ar AAPSClient2)</string>
-    <string name="cwf_comment_temp_target_ext">Laikinas tikslas arba Laikino Tikslo apatinė ir viršutinė ribos (iš AAPSClient arba AAPSClient2)</string>
+    <string name="cwf_comment_temp_target_ext">Laikinas tikslas arba laikino tikslo apatinė ir viršutinė ribos (iš AAPSClient arba AAPSClient2)</string>
     <string name="cwf_comment_reservoir_ext">Rezervuaro lygis (iš AAPSClient ar AAPSClient2)</string>
     <string name="cwf_comment_rig_battery_ext">Bendras sistemos baterijos lygis (%) (iš AAPSClient ar AAPSClient2)</string>
     <string name="cwf_comment_basalRate_ext">Valandinė bazė (iš AAPSClient ar AAPSClient2)</string>
@@ -30,7 +30,7 @@
     <string name="cwf_comment_cob2">AAO vertė</string>
     <string name="cwf_comment_delta">Trumpo laikotarpio pokytis</string>
     <string name="cwf_comment_avg_delta">Vidutinis pokytis (15 min)</string>
-    <string name="cwf_comment_temp_target">Laikinas tikslas arba Laikino tikslo apatinė ir viršutinė ribos</string>
+    <string name="cwf_comment_temp_target">Laikinas tikslas arba laikino tikslo apatinė ir viršutinė ribos</string>
     <string name="cwf_comment_reservoir">Rezervuaro lygis</string>
     <string name="cwf_comment_uploader_battery">Telefono baterija (%)</string>
     <string name="cwf_comment_rig_battery">Baterija (%)</string>

@@ -71,6 +71,7 @@ class AdaptiveDoublePreference(
             editText.inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
             editText.setSelectAllOnFocus(true)
             editText.setSingleLine()
+            editText.setSelection(editText.length())
         }
         setOnPreferenceChangeListener { _, _ -> validator?.testValidity(false) != false }
         setDefaultValue(preferenceKey.defaultValue)
@@ -109,16 +110,16 @@ class AdaptiveDoublePreference(
 
     override fun onSetInitialValue(defaultValue: Any?) {
         text = try {
-            getPersistedString(defaultValue as String?)
-        } catch (ignored: Exception) {
             getPersistedFloat(preferenceKey.defaultValue.toFloat()).toString()
+        } catch (_: Exception) {
+            getPersistedString(defaultValue as String?)
         }
     }
 
     override fun persistString(value: String?): Boolean =
         try {
-            super.persistString(SafeParse.stringToDouble(value, 0.0).toString())
-        } catch (ignored: Exception) {
-            false
+            super.persistFloat(SafeParse.stringToDouble(value).toFloat())
+        } catch (_: Exception) {
+            super.persistString(SafeParse.stringToFloat(value).toString())
         }
 }

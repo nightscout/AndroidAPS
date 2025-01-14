@@ -138,4 +138,7 @@
     <string name="autotune_run_with_error">Paskutinio Autotune klaida</string>
     <string name="autotune_run_cancelled">Nustatytas kitas Autotune veikimas, jis atšauktas</string>
     <!--    Steps count-->
+    <string name="triggerStepsCountLabel">Žingsniai</string>
+    <string name="triggerStepsCountDesc">Žingsnių skaičius per %1$s min %2$s %3$.0f</string>
+    <string name="triggerStepsCountDropdownLabel">Trukmė</string>
 </resources>
