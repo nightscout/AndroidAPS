@@ -12,6 +12,7 @@ import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -24,6 +25,7 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.UnitDoubleKey
+import app.aaps.core.objects.extensions.convertedToPercent
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.time.Clock
@@ -45,7 +47,8 @@ class LoopHubImpl @Inject constructor(
     private val profileUtil: ProfileUtil,
     private val persistenceLayer: PersistenceLayer,
     private val userEntryLogger: UserEntryLogger,
-    private val preferences: Preferences
+    private val preferences: Preferences,
+    private val processedTbrEbData: ProcessedTbrEbData
 ) : LoopHub {
 
     val disposable = CompositeDisposable()
@@ -89,8 +92,10 @@ class LoopHubImpl @Inject constructor(
     /** Returns the factor by which the basal rate is currently raised (> 1) or lowered (< 1). */
     override val temporaryBasal: Double
         get() {
-            val apsResult = loop.lastRun?.constraintsProcessed
-            return if (apsResult == null) Double.NaN else apsResult.percent / 100.0
+            return currentProfile?.let {
+                val tb = processedTbrEbData.getTempBasalIncludingConvertedExtended(clock.millis())
+                tb?.convertedToPercent(clock.millis(), it)?.div(100.0)
+            } ?: Double.NaN
         }
 
     override val lowGlucoseMark get() = profileUtil.convertToMgdl(
