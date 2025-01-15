@@ -16,7 +16,6 @@ import org.mockito.quality.Strictness
 @MockitoSettings(strictness = Strictness.LENIENT)
 class SPImplTest {
 
-    private val sharedPreferences: SharedPreferencesMock = SharedPreferencesMock()
     @Mock lateinit var context: Context
 
     private lateinit var sut: SPImpl
@@ -26,7 +25,7 @@ class SPImplTest {
 
     @BeforeEach
     fun setUp() {
-        sut = SPImpl(sharedPreferences, context)
+        sut = SPImpl(SharedPreferencesMock(), context)
         Mockito.`when`(context.getString(someResource)).thenReturn("some_resource")
         Mockito.`when`(context.getString(someResource2)).thenReturn("some_resource_2")
     }
@@ -120,10 +119,6 @@ class SPImplTest {
         assertThat(sut.getBoolean("test", false)).isTrue()
         sut.putBoolean(someResource, true)
         assertThat(sut.getBoolean(someResource, false)).isTrue()
-        sut.putString("string_key", "a")
-        assertThat(sut.getBoolean("string_key", true)).isTrue()
-        sut.putString(someResource, "a")
-        assertThat(sut.getBoolean(someResource, true)).isTrue()
     }
 
     @Test

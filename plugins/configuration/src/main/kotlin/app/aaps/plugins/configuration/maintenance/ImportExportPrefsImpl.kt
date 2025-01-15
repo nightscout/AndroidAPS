@@ -105,6 +105,8 @@ class ImportExportPrefsImpl @Inject constructor(
     private val dataWorkerStorage: DataWorkerStorage
 ) : ImportExportPrefs {
 
+    override var selectedImportFile: PrefsFile? = null
+
     override fun prefsFileExists(): Boolean = prefFileList.listPreferenceFiles().isNotEmpty()
     private val disposable = CompositeDisposable()
 
@@ -331,12 +333,6 @@ class ImportExportPrefsImpl @Inject constructor(
         return savePreferences(newFile, password)
     }
 
-    override fun importSharedPreferences(fragment: Fragment) {
-        fragment.activity?.let { fragmentAct ->
-            importSharedPreferences(fragmentAct)
-        }
-    }
-
     override fun importSharedPreferences(activity: FragmentActivity) {
 
         try {
@@ -372,7 +368,12 @@ class ImportExportPrefsImpl @Inject constructor(
         ZipWatchfaceFormat.saveCustomWatchface(context.contentResolver, newFile, customWatchface)
     }
 
-    override fun importSharedPreferences(activity: FragmentActivity, importFile: PrefsFile) {
+    // Do not pass full file through intent. It crash on large file
+    // override fun importSharedPreferences(activity: FragmentActivity, importFile: PrefsFile) {
+    override fun doImportSharedPreferences(activity: FragmentActivity) {
+
+        // File should be prepared here
+        val importFile = selectedImportFile ?: return
 
         askToConfirmImport(activity, importFile) { password ->
 
