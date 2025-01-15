@@ -404,6 +404,7 @@ class GarminPlugin @Inject constructor(
     /** Returns glucose values in Nightscout/Xdrip format. */
     @VisibleForTesting
     fun onSgv(uri: URI): CharSequence {
+        receiveHeartRate(uri)
         val count = getQueryParameter(uri, "count", 24L)
             .toInt().coerceAtMost(1000).coerceAtLeast(1)
         val briefMode = getQueryParameter(uri, "brief_mode", false)
