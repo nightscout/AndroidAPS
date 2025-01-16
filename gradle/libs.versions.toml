@@ -13,7 +13,7 @@ retrofit = "2.11.0"
 kotlinx-serialization = "1.8.0"
 kotlinx-coroutines = "1.10.1"
 work = "2.10.0"
-datastorePreferences = "1.1.1"
+datastorePreferences = "1.1.2"
 annotation = "1.9.1"
 
 [plugins]
