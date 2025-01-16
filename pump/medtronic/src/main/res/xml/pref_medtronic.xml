@@ -57,13 +57,13 @@
             validate:minNumber="1"
             validate:testType="numericRange" />
 
-        <ListPreference
-            android:defaultValue="10"
-            android:entries="@array/medtronicBolusDelay"
-            android:entryValues="@array/medtronicBolusDelay"
-            android:key="@string/key_medtronic_bolus_delay"
-            android:selectable="true"
-            android:title="@string/medtronic_pump_bolus_delay" />
+<!--        <ListPreference-->
+<!--            android:defaultValue="10"-->
+<!--            android:entries="@array/medtronicBolusDelay"-->
+<!--            android:entryValues="@array/medtronicBolusDelay"-->
+<!--            android:key="@string/key_medtronic_bolus_delay"-->
+<!--            android:selectable="true"-->
+<!--            android:title="@string/medtronic_pump_bolus_delay" />-->
 
         <ListPreference
             android:defaultValue="@string/key_medtronic_pump_encoding_4b6b_rileylink"
@@ -80,14 +80,6 @@
             android:key="@string/key_medtronic_battery_type"
             android:selectable="true"
             android:title="@string/medtronic_pump_battery_select" />
-
-        <ListPreference
-            android:defaultValue="@string/common_off"
-            android:entries="@array/onOff"
-            android:entryValues="@array/onOff"
-            android:key="@string/key_medtronic_bolus_debug"
-            android:selectable="true"
-            android:title="@string/medtronic_bolus_debugging" />
 
         <Preference
             android:enabled="true"

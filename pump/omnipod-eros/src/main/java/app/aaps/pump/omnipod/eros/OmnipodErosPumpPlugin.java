@@ -77,10 +77,10 @@ import app.aaps.core.keys.Preferences;
 import app.aaps.core.utils.DateTimeUtil;
 import app.aaps.pump.common.defs.TempBasalPair;
 import app.aaps.pump.common.events.EventRileyLinkDeviceStatusChange;
-import app.aaps.pump.common.hw.rileylink.RileyLinkConst;
 import app.aaps.pump.common.hw.rileylink.RileyLinkUtil;
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkPumpDevice;
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkPumpInfo;
+import app.aaps.pump.common.hw.rileylink.keys.RileyLinkLongKey;
 import app.aaps.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import app.aaps.pump.omnipod.common.definition.OmnipodCommandType;
 import app.aaps.pump.omnipod.common.queue.command.CommandDeactivatePod;
@@ -145,6 +145,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     private final FabricPrivacy fabricPrivacy;
     private final ResourceHelper rh;
     private final SP sp;
+    private final Preferences preferences;
     private final DateUtil dateUtil;
     @NonNull private final PumpDescription pumpDescription;
     @NonNull private final ServiceConnection serviceConnection;
@@ -214,6 +215,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         this.fabricPrivacy = fabricPrivacy;
         this.rh = rh;
         this.sp = sp;
+        this.preferences = preferences;
         this.dateUtil = dateUtil;
         this.podStateManager = podStateManager;
         this.rileyLinkServiceData = rileyLinkServiceData;
@@ -305,8 +307,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         // When PodStateManager is created, which causes an IllegalArgumentException for DateTimeZones not being recognized
         podStateManager.loadPodState();
 
-        lastConnectionTimeMillis = sp.getLong(
-                RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L);
+        lastConnectionTimeMillis = preferences.get(RileyLinkLongKey.LastGoodDeviceCommunicationTime);
 
         Intent intent = new Intent(context, RileyLinkOmnipodService.class);
         context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
@@ -475,9 +476,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     private void queueAcknowledgeAlertsCommand() {
         getCommandQueue().customCommand(new CommandSilenceAlerts(), new Callback() {
             @Override public void run() {
-                if (result != null) {
-                    aapsLogger.debug(LTag.PUMP, "Acknowledge alerts result: {} ({})", result.getSuccess(), result.getComment());
-                }
+                aapsLogger.debug(LTag.PUMP, "Acknowledge alerts result: {} ({})", result.getSuccess(), result.getComment());
             }
         });
     }

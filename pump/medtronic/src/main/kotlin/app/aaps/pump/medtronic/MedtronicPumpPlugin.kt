@@ -2,10 +2,14 @@ package app.aaps.pump.medtronic
 
 import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import android.os.SystemClock
 import androidx.preference.Preference
+import androidx.preference.PreferenceCategory
+import androidx.preference.PreferenceManager
+import androidx.preference.PreferenceScreen
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
@@ -40,14 +44,28 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.Preferences
 import app.aaps.core.utils.DateTimeUtil
+import app.aaps.core.validators.DefaultEditTextValidator
+import app.aaps.core.validators.EditTextValidator
+import app.aaps.core.validators.preferences.AdaptiveIntPreference
+import app.aaps.core.validators.preferences.AdaptiveIntentPreference
+import app.aaps.core.validators.preferences.AdaptiveListIntPreference
+import app.aaps.core.validators.preferences.AdaptiveListPreference
+import app.aaps.core.validators.preferences.AdaptiveStringPreference
+import app.aaps.core.validators.preferences.AdaptiveSwitchPreference
 import app.aaps.pump.common.PumpPluginAbstract
 import app.aaps.pump.common.data.PumpStatus
 import app.aaps.pump.common.defs.PumpDriverState
+import app.aaps.pump.common.dialog.RileyLinkBLEConfigActivity
 import app.aaps.pump.common.events.EventRileyLinkDeviceStatusChange
 import app.aaps.pump.common.hw.rileylink.RileyLinkConst
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkPumpDevice
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkPumpInfo
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkServiceState
+import app.aaps.pump.common.hw.rileylink.keys.RileyLinkIntentPreferenceKey
+import app.aaps.pump.common.hw.rileylink.keys.RileyLinkLongKey
+import app.aaps.pump.common.hw.rileylink.keys.RileylinkBooleanPreferenceKey
+import app.aaps.pump.common.hw.rileylink.keys.RileylinkStringKey
+import app.aaps.pump.common.hw.rileylink.keys.RileylinkStringPreferenceKey
 import app.aaps.pump.common.hw.rileylink.service.RileyLinkServiceData
 import app.aaps.pump.common.hw.rileylink.service.tasks.ResetRileyLinkConfigurationTask
 import app.aaps.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor
@@ -73,6 +91,10 @@ import app.aaps.pump.medtronic.defs.MedtronicUIResponseType
 import app.aaps.pump.medtronic.driver.MedtronicPumpStatus
 import app.aaps.pump.medtronic.events.EventMedtronicPumpConfigurationChanged
 import app.aaps.pump.medtronic.events.EventMedtronicPumpValuesChanged
+import app.aaps.pump.medtronic.keys.MedtronicBooleanPreferenceKey
+import app.aaps.pump.medtronic.keys.MedtronicIntNonKey
+import app.aaps.pump.medtronic.keys.MedtronicIntPreferenceKey
+import app.aaps.pump.medtronic.keys.MedtronicStringPreferenceKey
 import app.aaps.pump.medtronic.service.RileyLinkMedtronicService
 import app.aaps.pump.medtronic.util.MedtronicConst
 import app.aaps.pump.medtronic.util.MedtronicUtil
@@ -123,9 +145,13 @@ class MedtronicPumpPlugin @Inject constructor(
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_veo_128)
         .pluginName(R.string.medtronic_name)
         .shortName(R.string.medtronic_name_short)
-        .preferencesId(R.xml.pref_medtronic)
+        .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.description_pump_medtronic),
-    ownPreferences = emptyList(),
+    ownPreferences = listOf(
+        RileylinkBooleanPreferenceKey::class.java, RileyLinkIntentPreferenceKey::class.java, RileylinkStringKey::class.java, RileylinkStringPreferenceKey::class.java,
+        MedtronicBooleanPreferenceKey::class.java, MedtronicIntPreferenceKey::class.java, MedtronicStringPreferenceKey::class.java,
+        MedtronicIntNonKey::class.java
+    ),
     PumpType.MEDTRONIC_522_722,  // we default to most basic model, correct model from config is loaded later
     rh, aapsLogger, preferences, commandQueue, rxBus, activePlugin, context, fabricPrivacy, dateUtil, aapsSchedulers, pumpSync, pumpSyncStorage, decimalFormatter, instantiator
 ), Pump, RileyLinkPumpDevice, PumpSyncEntriesCreator {
@@ -180,7 +206,7 @@ class MedtronicPumpPlugin @Inject constructor(
     override fun updatePreferenceSummary(pref: Preference) {
         super.updatePreferenceSummary(pref)
         if (pref.key == rh.gs(app.aaps.pump.common.hw.rileylink.R.string.key_rileylink_mac_address)) {
-            val value = sp.getStringOrNull(app.aaps.pump.common.hw.rileylink.R.string.key_rileylink_mac_address, null)
+            val value = preferences.getIfExists(RileylinkStringPreferenceKey.MacAddress)
             pref.summary = value ?: rh.gs(app.aaps.core.ui.R.string.not_set_short)
         }
     }
@@ -189,7 +215,7 @@ class MedtronicPumpPlugin @Inject constructor(
         get() = "MedtronicPumpPlugin::"
 
     override fun initPumpStatusData() {
-        medtronicPumpStatus.lastConnection = sp.getLong(RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L)
+        medtronicPumpStatus.lastConnection = preferences.get(RileyLinkLongKey.LastGoodDeviceCommunicationTime)
         medtronicPumpStatus.lastDataTime = medtronicPumpStatus.lastConnection
         medtronicPumpStatus.previousConnection = medtronicPumpStatus.lastConnection
 
@@ -625,7 +651,7 @@ class MedtronicPumpPlugin @Inject constructor(
         }
 
         // LOG.debug("MedtronicPumpPlugin::deliverBolus - Starting wait period.");
-        val sleepTime = sp.getInt(MedtronicConst.Prefs.BolusDelay, 10) * 1000
+        val sleepTime = preferences.get(MedtronicIntPreferenceKey.BolusDelay) * 1000
         SystemClock.sleep(sleepTime.toLong())
         return if (bolusDeliveryType == BolusDeliveryType.CancelDelivery) {
             // LOG.debug("MedtronicPumpPlugin::deliverBolus - Delivery Canceled, before wait period.");
@@ -663,7 +689,7 @@ class MedtronicPumpPlugin @Inject constructor(
 
                 // we subtract insulin, exact amount will be visible with next remainingInsulin update.
                 medtronicPumpStatus.reservoirRemainingUnits = medtronicPumpStatus.reservoirRemainingUnits - detailedBolusInfo.insulin
-                incrementStatistics(if (detailedBolusInfo.bolusType === BS.Type.SMB) MedtronicConst.Statistics.SMBBoluses else MedtronicConst.Statistics.StandardBoluses)
+                preferences.inc(if (detailedBolusInfo.bolusType === BS.Type.SMB) MedtronicIntNonKey.SmbBoluses else MedtronicIntNonKey.StandardBoluses)
 
                 // calculate time for bolus and set driver to busy for that time
                 val bolusTime = (detailedBolusInfo.insulin * 42.0).toInt()
@@ -693,12 +719,6 @@ class MedtronicPumpPlugin @Inject constructor(
 
         // if (isLoggingEnabled())
         // LOG.warn("MedtronicPumpPlugin::deliverBolus - Stop Bolus Delivery.");
-    }
-
-    private fun incrementStatistics(statsKey: String) {
-        var currentCount = sp.getLong(statsKey, 0L)
-        currentCount++
-        sp.putLong(statsKey, currentCount)
     }
 
     // if enforceNew===true current temp basal is canceled and new TBR set (duration is prolonged),
@@ -781,7 +801,7 @@ class MedtronicPumpPlugin @Inject constructor(
             medtronicPumpStatus.runningTBRWithTemp = tempData
             pumpSyncStorage.addTemporaryBasalRateWithTempId(tempData, true, this)
 
-            incrementStatistics(MedtronicConst.Statistics.TBRsSet)
+            preferences.inc(MedtronicIntNonKey.TbrsSet)
             finishAction("TBR")
             instantiator.providePumpEnactResult().success(true).enacted(true) //
                 .absolute(absoluteRate).duration(durationInMinutes)
@@ -978,7 +998,7 @@ class MedtronicPumpPlugin @Inject constructor(
                     return 0L
                 }
                 lastPumpEntryTime
-            } catch (ex: Exception) {
+            } catch (_: Exception) {
                 aapsLogger.warn(LTag.PUMP, "Saved LastPumpHistoryEntry was invalid.")
                 0L
             }
@@ -1245,4 +1265,120 @@ class MedtronicPumpPlugin @Inject constructor(
         refreshCustomActionsList()
     }
 
+    override fun addPreferenceScreen(preferenceManager: PreferenceManager, parent: PreferenceScreen, context: Context, requiredKey: String?) {
+        if (requiredKey != null) return
+
+        val pumpTypeEntries = arrayOf<CharSequence>(
+            "Other (unsupported)",
+            "512",
+            "712",
+            "515",
+            "715",
+            "522",
+            "722",
+            "523 (Fw 2.4A or lower)",
+            "723 (Fw 2.4A or lower)",
+            "554 (EU Fw. &lt;= 2.6A)",
+            "754 (EU Fw. &lt;= 2.6A)",
+            "554 (CA Fw. &lt;= 2.7A)",
+            "754 (CA Fw. &lt;= 2.7A)"
+        )
+
+        val pumpFreqEntries = arrayOf<CharSequence>("US &amp; Canada (916 MHz)", "Worldwide (868 Mhz)")
+        val pumpTypeValues = arrayOf<CharSequence>("medtronic_pump_frequency_us_ca", "medtronic_pump_frequency_worldwide")
+
+        val bolusDelayEntries = arrayOf<CharSequence>("5", "10", "15")
+
+        val encodingEntries = arrayOf<CharSequence>(rh.gs(R.string.medtronic_pump_encoding_4b6b_local), rh.gs(R.string.medtronic_pump_encoding_4b6b_rileylink))
+        val encodingValues = arrayOf<CharSequence>("medtronic_pump_encoding_4b6b_local", "medtronic_pump_encoding_4b6b_rileylink")
+
+        val batteryEntries = arrayOf<CharSequence>(
+            rh.gs(R.string.medtronic_pump_battery_no),
+            rh.gs(R.string.medtronic_pump_battery_alkaline),
+            rh.gs(R.string.medtronic_pump_battery_lithium),
+            rh.gs(R.string.medtronic_pump_battery_nizn),
+            rh.gs(R.string.medtronic_pump_battery_nimh)
+        )
+        val batteryValues = arrayOf<CharSequence>(
+            "medtronic_pump_battery_no",
+            "medtronic_pump_battery_alkaline",
+            "medtronic_pump_battery_lithium",
+            "medtronic_pump_battery_nizn",
+            "medtronic_pump_battery_nimh",
+        )
+
+        val category = PreferenceCategory(context)
+        parent.addPreference(category)
+        category.apply {
+            key = "medtronic_settings"
+            title = rh.gs(R.string.medtronic_name)
+            initialExpandedChildrenCount = 0
+            addPreference(
+                AdaptiveStringPreference(
+                    ctx = context, stringKey = MedtronicStringPreferenceKey.Serial, title = R.string.medtronic_serial_number,
+                    validatorParams = DefaultEditTextValidator.Parameters(
+                        testType = EditTextValidator.TEST_REGEXP,
+                        customRegexp = rh.gs(R.string.sixdigitnumber),
+                        testErrorString = rh.gs(app.aaps.core.validators.R.string.error_mustbe6digitnumber)
+                    )
+                )
+            )
+            addPreference(
+                AdaptiveListPreference(
+                    ctx = context,
+                    stringKey = MedtronicStringPreferenceKey.PumpType,
+                    title = R.string.medtronic_pump_type,
+                    entries = pumpTypeEntries,
+                    entryValues = pumpTypeEntries
+                )
+            )
+            addPreference(
+                AdaptiveListPreference(
+                    ctx = context,
+                    stringKey = MedtronicStringPreferenceKey.PumpFreq,
+                    title = R.string.medtronic_pump_frequency,
+                    entries = pumpFreqEntries,
+                    entryValues = pumpTypeValues
+                )
+            )
+            addPreference(AdaptiveIntPreference(ctx = context, intKey = MedtronicIntPreferenceKey.MaxBasal, title = R.string.medtronic_pump_max_basal))
+            addPreference(AdaptiveIntPreference(ctx = context, intKey = MedtronicIntPreferenceKey.MaxBolus, title = R.string.medtronic_pump_max_bolus))
+            addPreference(
+                AdaptiveListIntPreference(
+                    ctx = context,
+                    intKey = MedtronicIntPreferenceKey.BolusDelay,
+                    title = R.string.medtronic_pump_bolus_delay,
+                    entries = bolusDelayEntries,
+                    entryValues = bolusDelayEntries
+                )
+            )
+            addPreference(
+                AdaptiveListPreference(
+                    ctx = context,
+                    stringKey = MedtronicStringPreferenceKey.Encoding,
+                    title = R.string.medtronic_pump_encoding,
+                    entries = encodingEntries,
+                    entryValues = encodingValues
+                )
+            )
+            addPreference(
+                AdaptiveListPreference(
+                    ctx = context,
+                    stringKey = MedtronicStringPreferenceKey.BatteryType,
+                    title = R.string.medtronic_pump_battery_select,
+                    entries = batteryEntries,
+                    entryValues = batteryValues
+                )
+            )
+            addPreference(
+                AdaptiveIntentPreference(
+                    ctx = context, intentKey = RileyLinkIntentPreferenceKey.MacAddressSelector, title = app.aaps.pump.common.hw.rileylink.R.string.rileylink_configuration,
+                    intent = Intent(context, RileyLinkBLEConfigActivity::class.java)
+                )
+            )
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = RileylinkBooleanPreferenceKey.OrangeUseScanning, title = app.aaps.pump.common.hw.rileylink.R.string.orange_use_scanning_level, summary = app.aaps.pump.common.hw.rileylink.R.string.orange_use_scanning_level_summary))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = RileylinkBooleanPreferenceKey.ShowReportedBatteryLevel, title = app.aaps.pump.common.hw.rileylink.R.string.riley_link_show_battery_level, summary = app.aaps.pump.common.hw.rileylink.R.string.riley_link_show_battery_level_summary))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = MedtronicBooleanPreferenceKey.SetNeutralTemp, title = R.string.set_neutral_temps_title, summary = R.string.set_neutral_temps_summary))
+        }
+    }
 }

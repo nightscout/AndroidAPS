@@ -7,11 +7,11 @@ import app.aaps.core.interfaces.pump.defs.PumpDeviceState
 import app.aaps.core.utils.DateTimeUtil
 import app.aaps.core.utils.pump.ByteUtil
 import app.aaps.pump.common.hw.rileylink.RileyLinkCommunicationManager
-import app.aaps.pump.common.hw.rileylink.RileyLinkConst
 import app.aaps.pump.common.hw.rileylink.ble.RileyLinkCommunicationException
 import app.aaps.pump.common.hw.rileylink.ble.data.RadioPacket
 import app.aaps.pump.common.hw.rileylink.ble.data.RadioResponse
 import app.aaps.pump.common.hw.rileylink.ble.defs.RLMessageType
+import app.aaps.pump.common.hw.rileylink.keys.RileyLinkLongKey
 import app.aaps.pump.common.hw.rileylink.service.tasks.WakeAndTuneTask
 import app.aaps.pump.medtronic.MedtronicPumpPlugin
 import app.aaps.pump.medtronic.comm.history.RawHistoryPage
@@ -77,9 +77,7 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
     @Inject
     fun onInit() {
         // we can't do this in the constructor, as sp only gets injected after the constructor has returned
-        medtronicPumpStatus.previousConnection = sp.getLong(
-            RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L
-        )
+        medtronicPumpStatus.previousConnection = preferences.get(RileyLinkLongKey.LastGoodDeviceCommunicationTime)
     }
 
     override fun createResponseMessage(payload: ByteArray): PumpMessage {
@@ -181,7 +179,7 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
                             + ByteUtil.shortHexString(rfSpyResponse.raw)
                     )
                 }
-            } catch (e: RileyLinkCommunicationException) {
+            } catch (_: RileyLinkCommunicationException) {
                 aapsLogger.warn(
                     LTag.PUMPCOMM, "isDeviceReachable. Failed to decode radio response: "
                         + ByteUtil.shortHexString(rfSpyResponse.raw)
@@ -279,7 +277,7 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
                     firstResponse = runCommandWithArgs(getHistoryMsg)
                     failed = false
                     break
-                } catch (e: RileyLinkCommunicationException) {
+                } catch (_: RileyLinkCommunicationException) {
                     aapsLogger.error(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "First call for PumpHistory failed (retry=%d)", retries))
                     failed = true
                 }
@@ -345,7 +343,7 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
                         try {
                             nextMsg = sendAndListen(ackMsg)
                             break
-                        } catch (e: RileyLinkCommunicationException) {
+                        } catch (_: RileyLinkCommunicationException) {
                             aapsLogger.error(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "Problem acknowledging frame response. (retry=%d)", retries))
                         }
                     }

@@ -12,6 +12,7 @@ import app.aaps.core.interfaces.plugin.ActivePlugin;
 import app.aaps.core.interfaces.pump.defs.PumpDeviceState;
 import app.aaps.core.interfaces.sharedPreferences.SP;
 import app.aaps.core.interfaces.utils.Round;
+import app.aaps.core.keys.Preferences;
 import app.aaps.core.utils.pump.ByteUtil;
 import app.aaps.pump.common.hw.rileylink.ble.RFSpy;
 import app.aaps.pump.common.hw.rileylink.ble.RileyLinkCommunicationException;
@@ -24,6 +25,7 @@ import app.aaps.pump.common.hw.rileylink.ble.data.RadioResponse;
 import app.aaps.pump.common.hw.rileylink.ble.defs.RLMessageType;
 import app.aaps.pump.common.hw.rileylink.ble.defs.RileyLinkBLEError;
 import app.aaps.pump.common.hw.rileylink.defs.RileyLinkPumpDevice;
+import app.aaps.pump.common.hw.rileylink.keys.RileyLinkLongKey;
 import app.aaps.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import app.aaps.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor;
 import app.aaps.pump.common.hw.rileylink.service.tasks.WakeAndTuneTask;
@@ -38,7 +40,7 @@ public abstract class RileyLinkCommunicationManager<T extends RLMessage> {
     private final int SCAN_TIMEOUT = 1500;
     private final int ALLOWED_PUMP_UNREACHABLE = 10 * 60 * 1000; // 10 minutes
     @Inject protected AAPSLogger aapsLogger;
-    @Inject protected SP sp;
+    @Inject protected Preferences preferences;
     @Inject protected RileyLinkServiceData rileyLinkServiceData;
     @Inject protected ServiceTaskExecutor serviceTaskExecutor;
     @Inject protected RFSpy rfspy;
@@ -402,7 +404,7 @@ public abstract class RileyLinkCommunicationManager<T extends RLMessage> {
     protected void rememberLastGoodDeviceCommunicationTime() {
         lastGoodReceiverCommunicationTime = System.currentTimeMillis();
 
-        sp.putLong(RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, lastGoodReceiverCommunicationTime);
+        preferences.put(RileyLinkLongKey.LastGoodDeviceCommunicationTime, lastGoodReceiverCommunicationTime);
 
         getPumpDevice().setLastCommunicationToNow();
     }
@@ -411,7 +413,7 @@ public abstract class RileyLinkCommunicationManager<T extends RLMessage> {
     private long getLastGoodReceiverCommunicationTime() {
         // If we have a value of zero, we need to load from prefs.
         if (lastGoodReceiverCommunicationTime == 0L) {
-            lastGoodReceiverCommunicationTime = sp.getLong(RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L);
+            lastGoodReceiverCommunicationTime = preferences.get(RileyLinkLongKey.LastGoodDeviceCommunicationTime);
             // Might still be zero, but that's fine.
         }
         double minutesAgo = (System.currentTimeMillis() - lastGoodReceiverCommunicationTime) / (1000.0 * 60.0);
