@@ -54,7 +54,7 @@ class InsulinPlugin @Inject constructor(
         .pluginName(R.string.insulin_plugin)
         .shortName(R.string.insulin_shortname)
         .visibleByDefault(true)
-        .neverVisible(config.NSCLIENT)
+        .neverVisible(config.AAPSCLIENT)
         .description(R.string.description_insulin_plugin),
     aapsLogger, rh
 ), Insulin {
@@ -70,14 +70,25 @@ class InsulinPlugin @Inject constructor(
                 dia
             } else {
                 sendShortDiaNotification(dia)
-                if (dia >= hardLimits.minDia())
+                if (dia < hardLimits.minDia())
                     hardLimits.minDia()
                 else
                     hardLimits.maxDia()
             }
         }
     override val peak: Int
-        get() = preferences.get(IntKey.InsulinOrefPeak)
+        get(): Int {
+            val peak = userDefinedPeak
+            return if (peak >= hardLimits.minPeak() && dia <= hardLimits.maxPeak()) {
+                peak.toInt()
+            } else {
+                sendShortDiaNotification(peak)
+                if (peak < hardLimits.minPeak())
+                    hardLimits.minPeak().toInt()
+                else
+                    hardLimits.maxDia().toInt()
+            }
+        }
 
     private var insulins: ArrayList<ICfg> = ArrayList()
     private var defaultInsulinIndex = 0
